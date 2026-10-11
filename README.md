@@ -33,10 +33,18 @@ The website presents six books with three original visual studies each. Book nav
 | Thinking with Type | T1 hierarchy; T2 reading measure; T3 repeated roles |
 | Grid Systems | G1 shared edges; G2 content proportions; G3 regular intervals |
 | Interaction of Color | C1 relative gray; C2 color in context; C3 hue comparison |
-| Refactoring UI | R1 quiet competition; R2 spacing scale; R3 label proximity |
+| Refactoring UI | R1 quiet competition; R2 spacing scale; R3 help-text ownership |
 | On Web Typography | W1 type voice; W2 complementary roles; W3 responsive type |
 | Practical Typography | B1 body leading; B2 selective emphasis; B3 punctuation |
 
 `npm test` covers catalog/navigation, every control, the focal/color/type invariants, eighteen story exports, and external Storybook arg updates. DOM tests do not establish visual browser acceptance: responsive layout and perceptual effects still require browser inspection. Original concept-review reports in `docs/` apply to the preceding HTML artifact; they are not React runtime evidence.
 
 Completed React/JSX verification is recorded in [verification](docs/verification.md), with separate automated-test and integrated-browser evidence, and independent source/reference approvals in [JSX review A](docs/jsx-review-a.md) and [JSX review B](docs/jsx-review-b.md).
+
+## Task-led comparison rebuild
+
+Every study now starts with a concrete reading task or perceptual prediction. The alternatives are professionally plausible compositions, not intentionally broken layouts. Captions identify the changing variables, invariants, and the tradeoff. C1–C3 show identical targets simultaneously in different contexts, with a neutral reveal that preserves their color, area, and position. These are contextual color demonstrations, not an explanation or reproduction of the dress photograph.
+
+T2 offers a plausible 44–76 ch range; W3 compares fixed and adaptive policies at the same requested width (280–640 px). Panels cap width on small screens. W1 explores associations rather than ranking fonts. B1 compares readable 135% and 155% leading; B2 compares policy scanning with action-oriented emphasis. These are observational experiments, not measured usability studies.
+
+The rebuilt test suite contains 45 checks of state transitions, story arguments, and fixed-content/color invariants. Historical verification reports describe earlier revisions; use a review report’s exact commit when evaluating which illustration it covers.
