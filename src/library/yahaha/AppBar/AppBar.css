@@ -1,0 +1,210 @@
+/* AppBar: the bar on top of every page. Contract variables only, plus the local --yh-appbar-* ones.
+   The header is a size container, so the row tightens when the bar itself is narrow (not the window). */
+
+.yh-appbar {
+  /* The gap between the bar's groups, and inside a group. */
+  --yh-appbar-gap: var(--space-4);
+  --yh-appbar-inner: var(--space-2);
+  container-type: inline-size;
+  container-name: yh-appbar;
+  box-sizing: border-box;
+  width: 100%;
+  flex: none;
+  border-bottom: var(--border-width) solid var(--border);
+  background: var(--surface-0);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+}
+
+.yh-appbar__row {
+  display: flex;
+  align-items: center;
+  gap: var(--yh-appbar-gap);
+  box-sizing: border-box;
+  /* The tabs reach the rule; everything else is centred on the tabs' line. */
+  min-height: calc(var(--control-h) + 2 * var(--space-2));
+  padding: var(--space-2) var(--space-4) 0;
+}
+
+/* The name: identity, not a control, so the quietest strong word on the bar. */
+.yh-appbar__name {
+  flex: none;
+  color: var(--text-2);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  white-space: nowrap;
+}
+
+/* The page nav: two runs split by a hairline, standing on the bar's rule. */
+.yh-appbar__nav {
+  display: flex;
+  flex: none;
+  align-items: stretch;
+  align-self: stretch;
+  margin-bottom: calc(-1 * var(--border-width));
+}
+
+.yh-appbar__runs-gap {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+/* The flexible middle: what plays, off the Stage; the first thing to give way. */
+.yh-appbar__middle {
+  display: flex;
+  flex: 1 1 0;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* The style's name gives way first; the tempo never does. */
+.yh-appbar__playing {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.yh-appbar__style {
+  min-width: 0;
+  margin-right: var(--space-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-1);
+  font-weight: var(--weight-strong);
+}
+
+.yh-appbar__tempo {
+  flex: none;
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-weight: var(--weight-numeral);
+}
+
+.yh-appbar__unit {
+  flex: none;
+  margin-left: var(--space-1);
+  color: var(--text-3);
+}
+
+.yh-appbar__end,
+.yh-appbar__switches,
+.yh-appbar__panic,
+.yh-appbar__status {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--yh-appbar-inner);
+}
+
+.yh-appbar__end,
+.yh-appbar__panic,
+.yh-appbar__status {
+  gap: var(--yh-appbar-gap);
+}
+
+/* The switches are a header's keys, not a panel's: a step less side padding than a lamp's own. */
+.yh-appbar__switches .yh-lampbutton {
+  padding-inline: var(--space-3);
+}
+
+/* Metronome and its ▾: one key in two halves, the popover hung under it. */
+.yh-appbar__metronome {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.yh-appbar__caret {
+  display: flex;
+}
+
+.yh-appbar__popover {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  z-index: 10;
+}
+
+/* The connections: words in secondary text, the dot carries the state. */
+.yh-appbar__launchkey {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-2);
+  text-transform: var(--label-case);
+  white-space: nowrap;
+}
+
+.yh-appbar__launchkey[data-connected='false'] {
+  color: var(--text-3);
+}
+
+/* As wide as its words, up to a cap. Trouble growing it pushes left into the flexible middle,
+   never right: Panic, at the edge, never moves. */
+.yh-appbar__health {
+  display: flex;
+  max-width: 12em;
+  min-width: 0;
+}
+
+/* Narrower bars, down to the 1217 board. What gives way, in order: the name (identity, no job
+   mid-song), the gaps, the Launchkey word (its dot, spoken name and title stay), the tabs' side
+   padding. Every control and every label stays. */
+@container yh-appbar (max-width: 1500px) {
+  .yh-appbar__row {
+    --yh-appbar-gap: var(--space-3);
+    padding-inline: var(--space-3);
+  }
+  .yh-appbar__nav .yh-chosen-tabs {
+    --yh-chosen-tabs-pad: var(--space-2);
+  }
+}
+
+@container yh-appbar (max-width: 1460px) {
+  .yh-appbar__name {
+    display: none;
+  }
+}
+
+@container yh-appbar (max-width: 1400px) {
+  .yh-appbar__launchkey-word {
+    display: none;
+  }
+}
+
+@container yh-appbar (max-width: 1320px) {
+  .yh-appbar__row {
+    --yh-appbar-gap: var(--space-2);
+    --yh-appbar-inner: var(--space-1);
+    padding-inline: var(--space-2);
+  }
+  .yh-appbar__health {
+    max-width: 9em;
+  }
+}
+
+@container yh-appbar (max-width: 1260px) {
+  .yh-appbar__nav .yh-chosen-tabs {
+    --yh-chosen-tabs-pad: var(--space-1);
+  }
+  .yh-appbar__runs-gap {
+    padding: 0 var(--space-1);
+  }
+  /* Once the Launchkey is a dot, the connections need no hairline of their own: the gap is enough. */
+  .yh-appbar__status > .yh-separator {
+    display: none;
+  }
+  .yh-appbar__switches .yh-lampbutton {
+    padding-inline: var(--space-2);
+  }
+  .yh-appbar__health {
+    max-width: 8em;
+  }
+}

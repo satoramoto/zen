@@ -1,0 +1,63 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
+import { withLibraryTheme } from '../../storybook';
+import { MetronomePopover } from './MetronomePopover';
+import { boardMetronome } from './AppBar.fixtures';
+
+/**
+ * The metronome's settings, opened by the app bar's Metronome ▾: the title, then Metronome
+ * On/Off, Volume (0–127, a line slider) and Bell on beat 1 (On/Off), each a settings row. A caption
+ * says when the click can't sound. Esc or a press outside it asks to close it.
+ */
+const meta = {
+  title: 'Library/Yahaha/Components/MetronomePopover',
+  component: MetronomePopover,
+  decorators: [withLibraryTheme],
+  parameters: { layout: 'centered' },
+  args: {
+    ...boardMetronome,
+    tipAction: fn(),
+    onOn: fn(),
+    onVolume: fn(),
+    onBell: fn(),
+    onClose: fn(),
+  },
+  argTypes: {
+    id: { control: 'text' },
+    on: { control: 'boolean' },
+    volume: { control: { type: 'number', min: 0, max: 127, step: 1 } },
+    bell: { control: 'boolean' },
+    audible: { control: 'boolean' },
+  },
+} satisfies Meta<typeof MetronomePopover>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** On, volume 90, the bell on. Off asks for the metronome off, End for volume 127; Esc and a press outside ask to close it. */
+export const Board: Story = {
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('dialog', { name: 'Metronome settings' })).toHaveAttribute('id', 'metronome-settings');
+    await userEvent.click(canvas.getByRole('button', { name: 'Metronome on/off' }));
+    await expect(args.onOn).toHaveBeenLastCalledWith(false);
+    const volume = canvas.getByRole('slider', { name: 'Metronome volume' });
+    volume.focus();
+    await userEvent.keyboard('{End}');
+    await expect(args.onVolume).toHaveBeenLastCalledWith(127);
+    await userEvent.keyboard('{Escape}');
+    await expect(args.onClose).toHaveBeenCalledTimes(1);
+    await fireEvent.pointerDown(document.body);
+    await expect(args.onClose).toHaveBeenCalledTimes(2);
+  },
+};
+
+/** Off, quiet, no bell. */
+export const Off: Story = {
+  args: { on: false, volume: 20, bell: false },
+};
+
+/** The built-in synth isn't running: a caption says the click can't sound. */
+export const NotAudible: Story = {
+  args: { audible: false },
+};
