@@ -70,6 +70,18 @@ describe('Display', () => {
     expect(screen.getByRole('button', { name: /^Right 2 sound: 41 Silk Strings, edited/ })).toBeInTheDocument();
   });
 
+  it('wires each part row to the tooltip action and tears it down', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { unmount } = render(<Display {...displayBoard} tipAction={tipAction} />);
+    const rows = displayBoard.parts!.length;
+    const partCalls = tipAction.mock.calls.filter((c: unknown[]) => c[1] === 'launchkey.fader_sound');
+    expect(partCalls).toHaveLength(rows);
+    const before = destroy.mock.calls.length;
+    unmount();
+    expect(destroy.mock.calls.length - before).toBeGreaterThanOrEqual(rows);
+  });
+
   it('marks an off part and drops the parts column when none are given', () => {
     const { unmount } = render(<Display {...displayPartOff} />);
     expect(screen.getByText('Right 1 · off')).toBeInTheDocument();

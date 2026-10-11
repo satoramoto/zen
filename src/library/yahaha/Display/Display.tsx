@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import { AccentBlock } from '../AccentBlock/AccentBlock';
 import { BarBeat } from '../BarBeat/BarBeat';
 import { Button, type TipAction } from '../Button/Button';
@@ -255,32 +255,9 @@ export function Display({
 
         {hasParts && (
           <ul className="yh-display__parts" aria-label="Sounds">
-            {parts!.map((p) => {
-              const tail = p.bass ? ' · bass' : p.off ? ' · off' : '';
-              return (
-                <li key={p.id}>
-                  <button
-                    type="button"
-                    className="yh-display__part"
-                    data-off={(p.off && !p.bass) || undefined}
-                    style={{ '--yh-display-part-hue': PART_HUE[p.id] } as CSSProperties}
-                    aria-label={`${p.name} sound: ${p.number ? `${p.number} ` : ''}${p.sound}${marksText(p)}. Opens the quick sound list`}
-                    data-tip="launchkey.fader_sound"
-                    onClick={() => onSound?.(p.id)}
-                  >
-                    <span className="yh-display__part-dot" aria-hidden="true" />
-                    <span className="yh-display__part-sound" aria-hidden="true">
-                      <span className="yh-display__part-name">{p.sound}</span>
-                      <PartMarks edited={p.edited} missing={p.missing} failed={p.failed} />
-                    </span>
-                    <span className="yh-display__part-part" aria-hidden="true">
-                      {p.name}
-                      {tail}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
+            {parts!.map((p) => (
+              <PartRow key={p.id} part={p} tipAction={tipAction} onSound={onSound} />
+            ))}
           </ul>
         )}
       </div>
@@ -293,3 +270,38 @@ export function Display({
 }
 
 export default Display;
+
+function PartRow({ part: p, tipAction, onSound }: { part: DisplayPart; tipAction?: TipAction; onSound?: (id: Part) => void }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || !tipAction) return;
+    const handle = tipAction(node, 'launchkey.fader_sound');
+    return () => handle?.destroy?.();
+  }, [tipAction]);
+  const tail = p.bass ? ' · bass' : p.off ? ' · off' : '';
+  return (
+    <li>
+      <button
+        ref={ref}
+        type="button"
+        className="yh-display__part"
+        data-off={(p.off && !p.bass) || undefined}
+        style={{ '--yh-display-part-hue': PART_HUE[p.id] } as CSSProperties}
+        aria-label={`${p.name} sound: ${p.number ? `${p.number} ` : ''}${p.sound}${marksText(p)}. Opens the quick sound list`}
+        data-tip="launchkey.fader_sound"
+        onClick={() => onSound?.(p.id)}
+      >
+        <span className="yh-display__part-dot" aria-hidden="true" />
+        <span className="yh-display__part-sound" aria-hidden="true">
+          <span className="yh-display__part-name">{p.sound}</span>
+          <PartMarks edited={p.edited} missing={p.missing} failed={p.failed} />
+        </span>
+        <span className="yh-display__part-part" aria-hidden="true">
+          {p.name}
+          {tail}
+        </span>
+      </button>
+    </li>
+  );
+}
