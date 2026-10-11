@@ -21,6 +21,8 @@ src/library/yahaha/<Name>/
 - Keep the original's stories: the same story names and the same sample data, so each pair can be compared one to one. Add stories for states the original lacks.
 - Keep what the original does for people: keyboard steps, wheel, press, a11y names. Change how it looks and is laid out.
 - It must read well under every theme pack in the toolbar, not only `yahaha-push`.
+- Colour means what `hues.ts` says: the four hues are the four parts; sections and other states use contract roles. Import its maps rather than writing your own.
+- The Stage and its regions follow `STAGE.md`.
 
 ## What each redesign records
 
