@@ -1,14 +1,18 @@
 /* SettingsRow: one setting on a Settings page. Reads only contract variables and its own --yh-settings-*. */
 
+/* The control column's minimum. A page sets it once on the stack so every hint starts on one line;
+   the default sits on the root at zero specificity, never on the row, so the stack's value inherits through. */
+:where(:root) {
+  --yh-settings-control-w: auto;
+}
+
 .yh-settings-row {
   /* The label column, set from `labelWidth`. */
   --yh-settings-label-w: 120px;
-  /* The control column's minimum; a page sets it once on the stack so every hint starts on one line. */
-  --yh-settings-control-w: auto;
   /* The band's inset: the text stays on the column edge, the hover band reaches past it. */
   --yh-settings-inset: var(--space-2);
   display: grid;
-  grid-template-columns: var(--yh-settings-label-w) minmax(var(--yh-settings-control-w), auto) minmax(0, 1fr);
+  grid-template-columns: var(--yh-settings-label-w) minmax(var(--yh-settings-control-w, auto), auto) minmax(0, 1fr);
   align-items: center;
   column-gap: var(--space-4);
   min-height: calc(var(--control-h) + var(--space-2));
