@@ -1,0 +1,103 @@
+/*
+ * Theme-independent tokens: the one radius, type, spacing, control sizes and line widths, from the
+ * Push canvas boards. The canvas doesn't name these; the names are ours, the values are its.
+ */
+
+:root {
+  /* The one radius: square, by the owner's call (the boards' 4px didn't fit the hardware feel) */
+  --radius: 0;
+
+  /* Type: DM Sans for words and numbers, JetBrains Mono for key and pad digits */
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  /* Three weights: light for readouts, regular for words, medium for titles and names. */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  /* Bold: the golden Stage's hero panel only (the owner's mockup draws its values and their
+     strong words bold). */
+  --weight-bold: 700;
+
+  /* The type scale: one text size for everything you read or press, and three large sizes for the
+     display's hero values only. One line or row uses one size: a label and its value differ by
+     colour and weight, never by size; only a hero value is large, and its small label ("next",
+     "BPM", "Bar") is `text` on the value's baseline. Each role is a `font` shorthand (weight,
+     size / line height, family) with its tracking beside it. A component sets both,
+     `font: var(--type-text)` and `letter-spacing: var(--tracking-text)`, and nothing else about
+     its type (a mono digit adds `font-family: var(--font-mono)`; digits that line up add
+     `font-variant-numeric: tabular-nums` after the shorthand, which resets it). No raw sizes,
+     weights or tracking in components. */
+  --type-text: var(--weight-regular) 13px / 16px var(--font-sans); /* every label, tab, caption, code, unit, word and sound name, and the hero values' small labels */
+  --tracking-text: 0;
+  --type-strong: var(--weight-medium) 13px / 16px var(--font-sans); /* the same size, stronger: header titles, the app and style names, part tags, values (knobs, faders, sends, chord notes) */
+  --tracking-strong: 0;
+  --type-large: var(--weight-light) 32px / 40px var(--font-sans); /* hero values: the tempo and the bar */
+  --tracking-large: -0.5px;
+  --type-display: var(--weight-light) 44px / 44px var(--font-sans); /* hero values: the playing and the next section */
+  --tracking-display: -1.5px;
+  --type-poster: var(--weight-light) 56px / 56px var(--font-sans); /* the display's second size: the playing section and the tempo, one size for both */
+  --tracking-poster: -2px;
+  --type-hero: var(--weight-light) 128px / 104px var(--font-sans); /* the chord; its step-down sizes are in stage-display.css */
+  --tracking-hero: -6px;
+  /* Glyphs, not text: ▲ ▼ ▾ beside or as a label, and ◀ ▶ alone. */
+  --glyph-sm: 10px;
+  --glyph-md: 12px;
+  /* A transport key's glyph band (▶ ■ ▲ ▼ ◢ ⟲ over the key's word, golden Stage): φ × the 13px
+     text (21.03), so the shape reads first and the word confirms it. */
+  --glyph-key: 21px;
+
+  /* Spacing */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-11: 11px; /* a header tab's top padding */
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+
+  /* Control heights */
+  --control-height: 32px; /* buttons in the section row and the band */
+  --control-height-compact: 28px; /* buttons in settings and strip rows */
+
+  /* Component sizes: the boards' fixed widths and heights */
+  --button-band-width: 88px; /* a band button */
+  --button-pair-width: 41px; /* each button of a pair */
+  --caret-width: 20px; /* a caret button */
+  --bar-height: 36px; /* the app bar, and a page tab */
+  /* A section header (GroupHeader, the app bar): a bright title over a bold full-width rule, then
+     a fixed gap before what it heads. */
+  --header-rule-width: 2px;
+  --header-gap: 12px; /* from the rule down to the section's controls */
+  /* The one tab style, for every one-of-many choice (page, fader page, layer, knob page, pad bank,
+     One Touch): a plain --tab-rest label at rest, the chosen one on a --neutral block in --on-ink.
+     Same type, side padding and block everywhere; in a header the block stands on the rule, on a
+     plain line (One Touch) it is centred. */
+  --tab-height-header: calc(var(--bar-height) - var(--header-rule-width)); /* a header tab: a 36px header row (or the app bar) minus its rule */
+  --tab-pad-side: var(--space-8); /* a tab's side padding (8, so the Pads header fits its five banks and the legend in 666px) */
+  --tab-block: 24px; /* the chosen block's height */
+  --group-header-height: 36px; /* a group header row, hairline included */
+  /* The one text baseline of a 36px header row (the app bar, a group header), from the row's top.
+     Every text in the row sits on it, and a chosen block's label sits on it too, so the label is
+     centred in its block (cap height centred in the 24px page block, mixed case in the 22px
+     header block) and the block stands on the line. */
+  --header-baseline: 28px;
+  /* The state language's lines: every clickable control's rest outline, and the waiting ring. */
+  --outline-width: 1px; /* rest (off) and disabled */
+  --outline-width-wait: 2px; /* waiting: queued or armed */
+  --block-height: var(--control-height); /* the accent block on the style line: as tall as ◀ ▶ */
+  --block-height-knob: var(--tab-block); /* the accent block at header size */
+  --chip-height: var(--control-height); /* a waiting chip at count and line size: as tall as the line's controls */
+  --chip-height-display: 44px; /* a waiting chip at display size: the section line's height */
+  --chip-max: 200px; /* a line chip's maximum width, border included */
+
+  /* Lines */
+  --line-width: 1px; /* hairlines, outlines, the focus ring */
+  --focus-offset: 2px;
+
+  /* Motion */
+  --long-press: 350ms; /* the hold time before a long press */
+}

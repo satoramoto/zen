@@ -1,0 +1,16 @@
+/* Every token, in layer order: the palette, the theme-independent scale, then the themes' roles. */
+@import './palette.css';
+@import './scale.css';
+@import './dark.css';
+@import './light.css';
+@import './state.css';
+/* Stage roles, one file per lane: each defines its own palette entries and dark and light roles. */
+@import './stage-band.css';
+@import './stage-display.css';
+@import './stage-frame.css';
+/* The blooms behind a screen (Blooms) and the ground a screen paints over them. */
+@import './blooms.css';
+/* The layout grid (a proposal, opt-in: Stage's `layout="grid"`). */
+@import './grid.css';
+/* Golden: intervals, shapes and their tunings, the fib scale (app/src/ui/Golden, docs/factory/golden.md). */
+@import './golden.css';

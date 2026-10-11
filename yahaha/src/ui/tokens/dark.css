@@ -1,0 +1,91 @@
+/*
+ * The dark theme, the default: semantic roles mapped onto the palette. The role names are the
+ * Push canvas's own (the board and kit `:root` lines of Stage-Dark.dc.html; KIT-DEBATE.md).
+ * Components read only these roles. Applies under `data-theme="dark"`.
+ */
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Ground, text and greys */
+  --g: var(--black); /* ground */
+  --t: var(--white); /* text, and the white "chosen" block */
+  --t2: var(--grey-84); /* secondary text */
+  --m: var(--grey-55); /* muted text, the off lamp's label */
+  --d: var(--grey-30); /* dimmed text, a disabled label */
+  --btn: var(--grey-09); /* button face, off */
+  --line: var(--grey-15); /* hairlines */
+  --past: var(--grey-20); /* past beat blocks */
+  --mbg: var(--grey-08); /* meter background */
+  --keyline: var(--black); /* white-key separator */
+  --util: var(--grey-35); /* utility pads */
+  --focus: var(--white); /* focus ring */
+
+  /* Lamps and states */
+  --lamp: var(--lime-400); /* switched-on face */
+  --lamp-ink: var(--black); /* label on the lamp face */
+  --lamp-line: var(--lime-400); /* a waiting lamp's outline and label on the ground */
+  --code-opacity: 0.6; /* the small code on the lamp face is --lamp-ink at this opacity */
+  --solid-ink: var(--black); /* label on a solid record face */
+  --rec: var(--red-400); /* record red */
+  --warn: var(--orange-400); /* missing, warning */
+  --ok: var(--green-400); /* connected, running */
+  --transport: var(--cyan-400); /* time (golden Stage): the transport, the tempo's + −, the metronome, their pad twins */
+
+  /* The state language, one treatment per state for every control (LampButton, Button,
+     ChosenTabs, OneTouchPicker, Pad):
+     - rest (off): no fill, a 1px outline in the control's hue, the label in that hue;
+     - on, chosen, playing: a solid fill in the hue, the label in --on-ink;
+     - waiting (queued, armed): a 2px ring in the hue over a faint fill of it (--wait-fill-opacity);
+     - disabled, absent: a 1px outline and the label in the control's own hue at reduced strength
+       (--absent-mix of it over the ground, state.css), never grey.
+     A neutral control's hue is --neutral; no control is grey. Tabs and One Touch numbers are a
+     run, not buttons: they have no rest outline, only the chosen --neutral block. */
+  --neutral: var(--t); /* a control without a hue of its own */
+  --on-ink: var(--black); /* the label on any solid fill */
+  --absent-mix: 40%; /* how much of its hue an absent control keeps over the ground */
+  --tab-rest: var(--t2); /* an unchosen tab or One Touch number */
+  --wait-fill-opacity: 0.16; /* the waiting fill: the hue at this opacity */
+
+  /* Text roles */
+  --caption-ink: var(--m); /* captions, small codes, units, a row's leading word */
+  --value-ink: var(--t); /* a value or name read at a glance */
+  --header-ink: var(--t); /* a section header's title */
+  --header-rule: var(--t); /* a section header's bold rule */
+
+  /* The violet accent: the style, the chord, knob arcs and values */
+  --a: var(--violet-300);
+
+  /* Part hues */
+  --r1: var(--blue-400);
+  --r2: var(--pink-400);
+  --r3: var(--orange-400);
+  --l: var(--teal-400);
+
+  /* Section hues */
+  --intro: var(--gold-400);
+  --main: var(--green-400);
+  --ending: var(--rose-400);
+  --brk: var(--plum-400);
+  --fill: var(--slate-400);
+
+  /* Glows */
+  --bg: 0 0 6px color-mix(in srgb, var(--green-400) 70%, transparent); /* running dot */
+  --ba: 0 0 18px color-mix(in srgb, var(--violet-300) 28%, transparent); /* accent text */
+  --ba2: 0 0 28px color-mix(in srgb, var(--violet-300) 28%, transparent); /* display-size chord */
+  --bw: 0 0 6px color-mix(in srgb, var(--white) 60%, transparent); /* white */
+  --bm: 0 0 18px color-mix(in srgb, var(--green-400) 30%, transparent); /* Main-hue text */
+  --bl: 0 0 6px color-mix(in srgb, var(--teal-400) 60%, transparent); /* L-zone line on the keys */
+  --dot-glow-mix: 70%; /* how much of a status dot's hue its glow carries, as --bg */
+
+  /* Status dot glows, one per dot hue (StatusDot). They read the theme's hue and --dot-glow-mix,
+     so light (0%) draws nothing without overriding them. */
+  --dot-glow-ok: 0 0 6px color-mix(in srgb, var(--ok) var(--dot-glow-mix), transparent);
+  --dot-glow-d: 0 0 6px color-mix(in srgb, var(--d) var(--dot-glow-mix), transparent);
+  --dot-glow-t: 0 0 6px color-mix(in srgb, var(--t) var(--dot-glow-mix), transparent);
+  --dot-glow-intro: 0 0 6px color-mix(in srgb, var(--intro) var(--dot-glow-mix), transparent);
+  --dot-glow-main: 0 0 6px color-mix(in srgb, var(--main) var(--dot-glow-mix), transparent);
+  --dot-glow-ending: 0 0 6px color-mix(in srgb, var(--ending) var(--dot-glow-mix), transparent);
+  --dot-glow-brk: 0 0 6px color-mix(in srgb, var(--brk) var(--dot-glow-mix), transparent);
+  --dot-glow-fill: 0 0 6px color-mix(in srgb, var(--fill) var(--dot-glow-mix), transparent);
+}

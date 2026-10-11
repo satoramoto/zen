@@ -1,0 +1,76 @@
+/*
+ * Palette: the named raw colours of the Push canvas (yahaha-research/push-canvas, the board and
+ * kit `:root` lines of Stage-Dark.dc.html and Stage-Light.dc.html). Nothing but the theme files
+ * (dark.css, light.css) reads these: components use the semantic roles. When the artist's palette
+ * arrives, this file is what changes.
+ *
+ * Greys are named by lightness (percent), hues by family and step (400 bright, for dark; 600-700
+ * deep, for light).
+ */
+
+:root {
+  /* Neutral greys */
+  --black: #000000;
+  --grey-07: #111111;
+  --grey-08: #141414;
+  --grey-09: #161616;
+  --grey-15: #262626;
+  --grey-17: #2b2b2b;
+  --grey-20: #333333;
+  --grey-23: #3a3a3a; /* the grey second-level tab block (Round 2's fader layer) */
+  --grey-30: #4d4d4d;
+  --grey-35: #5a5a5a;
+  --grey-39: #646464; /* the canvas's #6e6e6e (light muted text), darkened for AA contrast */
+  --grey-55: #8c8c8c;
+  --grey-84: #d6d6d6;
+  --white: #ffffff;
+
+  /* Warm greys (the light ground) */
+  --stone-65: #a8a7a3;
+  --stone-68: #b0afab;
+  --stone-76: #c4c3bf;
+  --stone-82: #d3d2ce;
+  --stone-88: #e2e1dd;
+  --stone-89: #e4e3df;
+  --stone-94: #f2f1ee;
+
+  /* Hues. Values marked C6 are darkened or lightened from the canvas to pass AA as text on the
+     ground and the button face, and under --solid-ink (Stage.md, C6). */
+  --lime-400: #9fe04a;
+  --lime-700: #4f8a0e;
+  --lime-750: #477b0c; /* the light waiting lime on the ground (LampButton D15) */
+  --green-400: #4fd66a;
+  --green-700: #19733a; /* C6; the canvas's #1c8040 */
+  --red-400: #e5534b;
+  --red-700: #b8322c;
+  --orange-400: #ff9a2e;
+  --orange-700: #a24d00; /* C6; the canvas's #c85f00 */
+  --violet-300: #a58cff;
+  --violet-600: #5b3fd6;
+  --blue-400: #3b8eff;
+  --blue-700: #1257d6;
+  --pink-400: #ff4f9e;
+  --pink-700: #c21668; /* C6; the canvas's #d0186f */
+  --teal-400: #16c7a6;
+  --teal-700: #007360; /* C6; the canvas's #008f78 */
+  --gold-400: #bfb24e;
+  --gold-700: #6e651a; /* C6; the canvas's #857a1f */
+  /* Cyan, the hue of time (golden Stage, iteration 7): the transport, the tempo's + and −, the
+     metronome and their pad twins. The one free hue: no section, no part and not the warning uses
+     it (iteration 6's amber sat 0.051 from Intro's gold in light and read as Intro). Each is the
+     candidate, in its theme, farthest (OKLab) from every section, part, warning, accent, lamp and
+     neutral hue while passing AA as text on the ground and the button face and under --on-ink.
+     Dark: OKLCH 0.885 0.139 201°, nearest teal-400 (Left) ΔE 0.156, white 0.180, green-400 (Main)
+     0.189, slate-400 (Fill) 0.232, gold-400 (Intro) 0.238, orange-400 (Right 3, the warning)
+     0.305. Light: 0.396 0.088 238°, nearest slate-600 (Fill) 0.119, teal-700 (Left) 0.138,
+     blue-700 (Right 1) 0.167, plum-600 (Break) 0.167, green-700 (Main) 0.175, gold-700 (Intro)
+     0.198, orange-700 0.253. */
+  --cyan-400: #3ff4ff;
+  --cyan-800: #004c70;
+  --rose-400: #c66060; /* C6; the canvas's #c45a5a */
+  --rose-700: #a84444;
+  --plum-400: #986faf; /* C6; the canvas's #8f62a8 */
+  --plum-600: #7a4a96;
+  --slate-400: #7a9ea6;
+  --slate-600: #476b76; /* C6; the canvas's #4d7480 */
+}

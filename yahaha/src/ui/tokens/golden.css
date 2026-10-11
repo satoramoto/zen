@@ -1,0 +1,92 @@
+/*
+ * Golden: the layout system that forces proportions at every scale (docs/factory/golden.md). The
+ * Golden primitives (app/src/ui/Golden/) take only the names below: an interval, a shape or a fib
+ * step, never a px.
+ *
+ *  - Intervals: the ratios a box or a cut may have, named as musical intervals; phi is the golden
+ *    ratio itself (1.618…), phi2 and phi3 its powers.
+ *  - Shapes: the interval each kind of control is drawn in. A tuning sets them (below).
+ *  - Fib: the Fibonacci spacing scale, for insets (padding inside a slot) and the gap of a band.
+ */
+
+:root {
+  /* Intervals: long side over short side. */
+  --interval-unison: 1;
+  --interval-minor-third: 1.2; /* 6 / 5 */
+  --interval-major-third: 1.25; /* 5 / 4 */
+  --interval-fourth: 1.333333; /* 4 / 3 */
+  --interval-root2: 1.414214; /* √2, the paper ratio */
+  --interval-fifth: 1.5; /* 3 / 2 */
+  --interval-phi: 1.618034; /* the golden ratio */
+  --interval-major-sixth: 1.666667; /* 5 / 3 */
+  --interval-octave: 2;
+  --interval-phi2: 2.618034; /* phi × phi = phi + 1 */
+  --interval-double-octave: 4; /* 4, and √2 to the fourth */
+  --interval-phi3: 4.236068; /* phi³ = 2 phi + 1 */
+  --interval-phi4: 6.854102; /* phi⁴ = 3 phi + 2: the step a bar takes off a half's outer edge */
+
+  /* Two lines of the small text (a knob's name that wraps once): two label-heights, for a GoldenBand. */
+  --label-lines-2: calc(2 * var(--label-height));
+
+  /* Fib: the spacing scale. */
+  --fib-2: 2px;
+  --fib-3: 3px;
+  --fib-5: 5px;
+  --fib-8: 8px;
+  --fib-13: 13px;
+  --fib-21: 21px;
+  --fib-34: 34px;
+  --fib-55: 55px;
+  --fib-89: 89px;
+  --fib-144: 144px;
+}
+
+/*
+ * Tunings: a set of shapes, to A/B a layout. Phi is the default; Just takes musical ratios; Root-two
+ * the paper ratio. A knob and a fader stand tall (the interval is height over width), a button lies
+ * wide, a pad is square; `--shape-steps` is GoldenSteps' step. Storybook's Tuning toolbar sets
+ * `data-tuning` on each story's frame.
+ */
+:root,
+[data-tuning='phi'] {
+  --shape-knob: var(--interval-phi);
+  --shape-fader: var(--interval-phi3);
+  --shape-pad: var(--interval-unison);
+  --shape-button: var(--interval-phi);
+  --shape-steps: var(--interval-phi);
+}
+
+[data-tuning='just'] {
+  --shape-knob: var(--interval-fifth);
+  --shape-fader: var(--interval-double-octave);
+  --shape-pad: var(--interval-unison);
+  --shape-button: var(--interval-major-sixth);
+  --shape-steps: var(--interval-fourth);
+}
+
+[data-tuning='root2'] {
+  --shape-knob: var(--interval-root2);
+  --shape-fader: var(--interval-double-octave);
+  --shape-pad: var(--interval-unison);
+  --shape-button: var(--interval-root2);
+  --shape-steps: var(--interval-root2);
+}
+
+/* GoldenOverlay's lines: the cuts, the insets, the spiral, and red for what breaks a rule
+   (a row that doesn't add up, a slot whose content overflows). A design aid, never on in the app. */
+[data-theme='dark'],
+[data-theme='light'] {
+  --golden-overlay-cut: color-mix(in srgb, var(--r1) 70%, transparent);
+  --golden-overlay-spiral: color-mix(in srgb, var(--a) 80%, transparent);
+  --golden-overlay-inset: color-mix(in srgb, var(--r1) 35%, transparent);
+  /* A cut's (and a spiral's) shade by nesting depth: 0 the outermost, cycling after 5. */
+  --golden-overlay-depth-0: color-mix(in srgb, var(--r1) 80%, transparent);
+  --golden-overlay-depth-1: color-mix(in srgb, var(--a) 75%, transparent);
+  --golden-overlay-depth-2: color-mix(in srgb, var(--l) 70%, transparent);
+  --golden-overlay-depth-3: color-mix(in srgb, var(--r2) 65%, transparent);
+  --golden-overlay-depth-4: color-mix(in srgb, var(--r3) 60%, transparent);
+  --golden-overlay-depth-5: color-mix(in srgb, var(--ok) 55%, transparent);
+  --golden-overlay-off: var(--rec);
+  --golden-overlay-off-fill: color-mix(in srgb, var(--rec) 18%, transparent);
+  --golden-report-ground: var(--g);
+}

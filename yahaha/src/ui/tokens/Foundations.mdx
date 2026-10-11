@@ -1,0 +1,206 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import palette from './palette.css?raw'
+import scale from './scale.css?raw'
+import dark from './dark.css?raw'
+import light from './light.css?raw'
+import state from './state.css?raw'
+import { useEffect, useState } from 'react'
+import { currentTheme, onTheme } from '../../../.storybook/theme'
+
+<Meta title="Foundations/Tokens" />
+
+export const useTheme = () => {
+  const [theme, setTheme] = useState(currentTheme)
+  useEffect(() => onTheme(setTheme), [])
+  return theme
+}
+
+export const Themed = ({ children }) => (
+  <div data-theme={useTheme()}>{children}</div>
+)
+
+export const tokens = (css, prefix = '') =>
+  [...css.matchAll(/^\s*(--[\w-]+)\s*:\s*([^;]+);(?:[ \t]*\/\*\s*(.*?)\s*\*\/)?/gm)]
+    .map((m) => ({ name: m[1], value: m[2].trim(), note: m[3] ?? '' }))
+    .filter((t) => t.name.startsWith(prefix))
+
+export const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(168px, 1fr))', gap: 'var(--space-12)', margin: 'var(--space-16) 0' }
+export const label = { font: 'var(--type-text)', letterSpacing: 'var(--tracking-text)', color: 'var(--caption-ink)' }
+export const name = { font: 'var(--type-text)', letterSpacing: 'var(--tracking-text)', fontFamily: 'var(--font-mono)', color: 'var(--t)' }
+
+export const isAmount = (value) =>
+  // A number or percentage (an opacity, a mix amount): listed by Amounts, not drawn as a swatch.
+  /^-?[\d.]+(%|ms)?$/.test(value)
+
+export const Amounts = ({ css, names }) => {
+  // Tokens listed by value: the amounts in `css`, or the tokens of `css` named in `names`.
+  const overrides = useTheme() === 'light' ? Object.fromEntries(tokens(light).map((t) => [t.name, t.value])) : {}
+  return (
+  <div style={{ margin: 'var(--space-16) 0' }}>
+    {tokens(css)
+      .filter((t) => (names ? names.includes(t.name) : isAmount(t.value)))
+      .map((t) => (
+        <div key={t.name} style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-16)' }}>
+          <span style={{ ...name, width: 200, flex: 'none' }}>{t.name}</span>
+          <span style={label}>{overrides[t.name] ?? t.value}{t.note ? ` · ${t.note}` : ''}</span>
+        </div>
+      ))}
+  </div>
+  )
+}
+
+export const Swatches = ({ css, glows = false }) => {
+  const overrides = useTheme() === 'light' ? Object.fromEntries(tokens(light).map((t) => [t.name, t.value])) : {}
+  return (
+  <div style={grid}>
+    {tokens(css)
+      .filter((t) => !isAmount(t.value))
+      .filter((t) => glows === /px/.test(t.value))
+      .map((t) => ({ ...t, value: overrides[t.name] ?? t.value, note: overrides[t.name] ? '' : t.note }))
+      .map((t) => (
+        <div key={t.name}>
+          <div
+            style={{
+              height: 40,
+              borderRadius: 'var(--radius)',
+              border: 'var(--line-width) solid var(--line)',
+              background: glows ? 'var(--btn)' : `var(${t.name})`,
+              boxShadow: glows ? `var(${t.name})` : undefined,
+            }}
+          />
+          <div style={name}>{t.name}</div>
+          <div style={label}>{t.value}{t.note ? ` · ${t.note}` : ''}</div>
+        </div>
+      ))}
+  </div>
+  )
+}
+
+export const typeRoles = [
+  ['--type-text', 'Main B 104 Accomp', 'Every label, caption, code, unit, word and sound name.'],
+  ['--type-strong', 'Main B 104 Accomp', 'Header titles, names, part tags and values (knobs, faders, sends, chord notes).'],
+  ['--type-large', '104', 'Hero values: the tempo and the bar.'],
+  ['--type-display', 'Main B', 'Hero values: the playing and the next section.'],
+  ['--type-hero', 'Am7', 'The chord (its step-downs are in stage-display.css).'],
+]
+
+export const Type = () => (
+  <div style={{ margin: 'var(--space-16) 0' }}>
+    {typeRoles.map(([role, sample, use]) => (
+      <div key={role} style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-16)', padding: 'var(--space-8) 0', overflow: 'hidden' }}>
+        <span style={{ ...name, width: 160, flex: 'none' }}>{role}</span>
+        <span style={{ font: `var(${role})`, letterSpacing: `var(--tracking-${role.slice(7)})`, color: 'var(--t)', whiteSpace: 'nowrap' }}>{sample}</span>
+        <span style={{ ...label, marginLeft: 'auto', flex: 'none' }}>{use}</span>
+      </div>
+    ))}
+    {tokens(scale, '--font-').map((t) => (
+      <div key={t.name} style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-16)' }}>
+        <span style={{ ...name, width: 160, flex: 'none' }}>{t.name}</span>
+        <span style={{ font: 'var(--type-strong)', letterSpacing: 'var(--tracking-strong)', fontFamily: `var(${t.name})`, color: 'var(--t)' }}>Pad 1 2 3 4 · C#m7</span>
+      </div>
+    ))}
+  </div>
+)
+
+export const face = (state, hue) => {
+  const base = { position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 88, height: 'var(--control-height)', font: 'var(--type-text)', letterSpacing: 'var(--tracking-text)', isolation: 'isolate' }
+  if (state === 'on') return { ...base, background: `var(${hue})`, color: 'var(--on-ink)' }
+  if (state === 'waiting') return { ...base, boxShadow: `inset 0 0 0 var(--outline-width-wait) var(${hue})`, color: `var(${hue})` }
+  // Absent: the control's own hue at --absent-mix over the ground (tokens/state.css), never grey.
+  if (state === 'absent') return { ...base, boxShadow: `inset 0 0 0 var(--outline-width) var(--absent-${hue.slice(2)})`, color: `var(--absent-${hue.slice(2)})` }
+  return { ...base, boxShadow: `inset 0 0 0 var(--outline-width) var(${hue})`, color: `var(${hue})` }
+}
+
+export const States = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, max-content)', gap: 'var(--space-12) var(--space-16)', margin: 'var(--space-16) 0' }}>
+    {['rest', 'on', 'waiting', 'absent'].map((s) => <span key={s} style={label}>{s}</span>)}
+    {['--neutral', '--r1', '--main', '--ok'].map((hue) =>
+      ['rest', 'on', 'waiting', 'absent'].map((s) => (
+        <span key={hue + s} style={face(s, hue)}>
+          {s === 'waiting' && <span style={{ position: 'absolute', inset: 0, zIndex: -1, background: `var(${hue})`, opacity: 'var(--wait-fill-opacity)' }} />}
+          {hue === '--neutral' ? 'Panic' : hue === '--ok' ? 'Start' : hue === '--main' ? 'Main A' : 'On'}
+        </span>
+      )),
+    )}
+  </div>
+)
+
+export const Sizes = ({ prefix, names }) => (
+  <div style={{ margin: 'var(--space-16) 0' }}>
+    {tokens(scale, prefix).filter((t) => !names || names.includes(t.name)).map((t) => (
+      <div key={t.name} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-16)', minHeight: 24 }}>
+        <span style={{ ...name, width: 200, flex: 'none' }}>{t.name}</span>
+        <span style={{ ...label, width: 64, flex: 'none' }}>{t.value}</span>
+        <span style={{ width: `var(${t.name})`, height: prefix === '--control-' ? `var(${t.name})` : 12, background: 'var(--a)', borderRadius: prefix === '--radius' ? `var(${t.name})` : 0 }} />
+      </div>
+    ))}
+  </div>
+)
+
+<Themed>
+
+# Tokens
+
+Every token the UI library has, in the theme the toolbar shows: flip the theme to review the other one. Components use only the **roles**; the **palette** is what the themes map the roles to (`src/ui/tokens/`, see `docs/factory/storybook-axioms.md`, axioms 2 and 5).
+
+## Roles
+
+The Push canvas's own names. A swatch is the role's colour in the current theme.
+
+<Swatches css={dark} />
+
+### Glows
+
+`none` in light.
+
+<Swatches css={dark} glows />
+
+### Amounts
+
+Opacities and mixes the roles apply to a colour.
+
+<Amounts css={dark} />
+
+## Palette
+
+The raw colours. Only the theme files read them.
+
+<Swatches css={palette} />
+
+## Type
+
+Five roles. One line or row uses one size: a label and its value differ by colour and weight, never by size; only the display's hero values are large. A component sets a role's `font` and its `--tracking-*`, nothing else.
+
+<Type />
+
+## State
+
+One treatment per state for every control. Rest: a 1px outline and label in the control's hue (`--neutral` when it has none). On, chosen, playing: a solid fill in the hue under `--on-ink`. Waiting: a 2px ring over a faint fill. Disabled or absent: the control's own hue at `--absent-mix` strength over the ground, outline and label, so an absent Intro pad reads as a faded yellow pad; never grey. Each hue has its token, `--absent-<hue>` (`tokens/state.css`); `--absent` is the neutral one. Tabs and One Touch numbers have no rest outline, only the chosen fill.
+
+<States />
+
+<Swatches css={state} />
+
+## Spacing
+
+<Sizes prefix="--space-" />
+
+## Radius
+
+<Sizes prefix="--radius" />
+
+## Controls
+
+<Sizes prefix="--control-" />
+
+## Component sizes
+
+The boards' fixed widths and heights.
+
+<Sizes prefix="--" names={['--button-band-width', '--button-pair-width', '--caret-width', '--header-rule-width', '--header-gap', '--outline-width', '--outline-width-wait', '--bar-height', '--tab-height-header', '--tab-pad-side', '--tab-block', '--group-header-height', '--block-height', '--block-height-knob', '--chip-height', '--chip-height-display', '--chip-max']} />
+
+## Motion
+
+<Amounts css={scale} names={['--long-press']} />
+
+</Themed>

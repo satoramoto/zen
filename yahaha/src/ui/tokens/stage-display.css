@@ -1,0 +1,204 @@
+/* Stage display roles (section row, style line, now playing and its bar row, sound row, display art): palette entries, sizes, and dark and light roles. */
+
+/* Palette: the display art's raw colours (Stage-Dark.dc.html's art gradients) and their light twins (ours). */
+:root {
+  --art-violet-38: #4a3b86; /* the art's core */
+  --art-violet-31: #3d3070; /* the core's rim */
+  --art-ink-02: #06050a; /* the near hill */
+  --art-ink-06: #0e0b16; /* the far hill */
+  --art-ink-04: #0b0814; /* the sky's middle */
+  --art-ink-13: #1c1033; /* the sky's foot */
+  --art-lilac-78: #c4b8f0; /* light: the art's core */
+  --art-lilac-84: #d4cbf3; /* light: the core's rim */
+  --art-stone-90: #e8e6ec; /* light: the near hill */
+  --art-stone-87: #dfdce6; /* light: the far hill */
+  --art-stone-92: #ecebef; /* light: the sky's middle */
+  --art-lilac-88: #ddd6f0; /* light: the sky's foot */
+
+  /* The bar row's greys (Skin2-Push-Dark.dc.html's #555, #6a6a6a and #1f1f1f). */
+  --grey-12: #1f1f1f; /* a bar still to come */
+  --grey-33: #555555; /* a past beat's dot, a coming beat's ring */
+  --grey-42: #6a6a6a; /* a past bar */
+}
+
+/* Theme-independent sizes */
+:root {
+  /* The section row and the display span the screen inside its 24px padding. */
+  --stage-row-width: 1392px;
+  --display-height: 300px;
+  --display-pad-top: 16px;
+  --display-pad-left: 24px;
+  --display-pad-bottom: 24px; /* the beat bar's distance from the display's bottom */
+  --display-border-width: var(--line-width); /* the display's transparent border */
+  --display-thirds-gap: calc(2 * var(--space-24)); /* between the display's thirds */
+  --display-thirds-align: center; /* the thirds' row, in the space above the beat bar */
+  --display-chord-gap: var(--space-8); /* the style line down to the chord */
+  --display-song-top: calc(var(--tab-block) + var(--space-8)); /* the middle third's section: level with the chord */
+  --now-tempo-gap: var(--space-24); /* the "then …" line down to the tempo */
+  --display-content-width: 814px; /* the style line, now playing and the sound row */
+  --display-art-width: 528px; /* the art at the display's right edge: the board's 38% of 1390 */
+
+  /* Style line */
+  --send-height: var(--control-height); /* the sends button: one height with the line's controls */
+  --style-name-max: 240px; /* the style's accent block; a longer name ends in an ellipsis */
+
+  /* Section row: Start / Stop leads the transport group, wider than its neighbours */
+  --start-stop-width: 120px;
+
+  /* The bar row: "Bar 3/4", the beat dots and the bar segments */
+  --bar-row-height: 24px;
+  --beat-dot: 8px;
+  --bar-segment-height: 4px; /* the segment's row; the line in it is --bar-line */
+  --bar-line: 2px;
+  --bar-segments-gap: 6px; /* from the bar row down to the segments */
+
+  /* Now playing */
+  --now-height: 162px;
+  --now-chord-width: 300px;
+  --now-section-width: 490px;
+  /* The hero family: the chord is --type-hero (scale.css); longer chord names step down so they
+     and "held" fit the 300px column. Each step sets the size and tracking over --type-hero. */
+  --hero-height: 104px; /* the chord's row: --type-hero's line height */
+  --hero-4: 96px; /* four characters (F♯m7, Dsus) */
+  --tracking-hero-4: -4px;
+  --hero-5: 80px; /* five (Cmaj7, Gsus4) */
+  --tracking-hero-5: -3px;
+  --hero-6: 64px; /* six or seven (F♯m7♭5, Cmaj7♯11) */
+  --tracking-hero-6: -2px;
+  --hero-8: 52px; /* eight or more (Csus4add9) */
+  --tracking-hero-8: -1px;
+  --label-height: 16px; /* the "Chord" and "Section" labels' row */
+  --note-width: 24px; /* one note of the chord's note row */
+  --note-row-height: 32px;
+  --bar-row-gap: 10px; /* from the section line down to the bar row */
+  --tempo-gap: 14px; /* from the bar segments down to the tempo row */
+
+  /* The golden Stage's transport row and hero panel, from the owner's mockup (its sizes and
+     weights, our face). The row's sizes are fixed; the panel's places are fractions of its own
+     box (its width for the columns, its height for the rows and its type), so it scales with the
+     screen. At 1440 × 900 the panel is 1398 × 288 and its lines 24px; its type roles resolve
+     against the panel (a size container). */
+  --type-golden-row: var(--weight-regular) 20px / 24px var(--font-sans); /* the controls row's words: the style line, One Touch */
+  --type-golden-unit: var(--weight-bold) 26px / 1 var(--font-sans); /* BPM */
+  --type-golden-sub: var(--weight-regular) calc(100cqh * 0.0833) / 1.2 var(--font-sans); /* the line under each hero value, − Tap + */
+  --tracking-golden-hero: -0.03em; /* the hero values' tight set */
+  --golden-key-width: 62px; /* a transport key (an icon alone), its row's height tall (the golden Stage sets it from the Pads header) */
+  --golden-key-icon: 16px; /* its icon's height */
+  --golden-row-height: calc(var(--control-height-compact) + 2 * var(--fib-3) + 2 * var(--line-width)); /* the controls row's box: 36 */
+  --golden-hero-col-1: 0.329; /* the chord's column's right edge */
+  --golden-hero-col-2: 0.683; /* the section's; the tempo's the rest */
+  --golden-hero-value-top: 0.126; /* the hero values' capital tops */
+  --golden-hero-value-size: 0.549; /* the hero values' size: capitals 0.38 of the panel's height */
+  --golden-hero-sub-foot: 0.763; /* the lines under them: their baseline */
+  --golden-hero-step-mid: 0.699; /* − Tap +: their middle, and across the tempo's column */
+  --golden-hero-step-minus: 0.2;
+  --golden-hero-step-tap: 0.51;
+  --golden-hero-step-plus: 0.81;
+  --golden-hero-step-glyph: 0.14; /* + and −: their size */
+  --golden-hero-rule-foot: 0.854; /* the columns' hairlines end */
+  --golden-hero-beat-top: 0.886; /* the beat bar */
+  --golden-hero-beat-depth: 0.064;
+
+  /* Sound row */
+  --sound-row-height: 44px;
+  --sound-row-gap: 20px; /* above the sound row */
+  --rack-cell-width: 200px;
+  --sound-cell-width: 145.5px; /* a quarter of what the rack cell and the gaps leave of 814 */
+  --part-label-width: 32px;
+}
+
+[data-theme='dark'] {
+  /* The display art: a dim violet glow over a dark sky and two hills, faded in from the ground at its left. */
+  --art-core: var(--art-violet-38);
+  --art-rim: var(--art-violet-31);
+  --art-glow-20: color-mix(in srgb, var(--violet-300) 20%, transparent);
+  --art-glow-6: color-mix(in srgb, var(--violet-300) 6%, transparent);
+  --art-glow-0: color-mix(in srgb, var(--violet-300) 0%, transparent);
+  --art-hill-near: var(--art-ink-02);
+  --art-hill-far: var(--art-ink-06);
+  --art-sky-top: var(--black);
+  --art-sky-mid: var(--art-ink-04);
+  --art-sky-foot: var(--art-ink-13);
+  --art-fade-100: var(--black);
+  --art-fade-60: color-mix(in srgb, var(--black) 60%, transparent);
+  --art-fade-20: color-mix(in srgb, var(--black) 20%, transparent);
+  --art-fade-10: color-mix(in srgb, var(--black) 10%, transparent);
+
+  /* The bar row: past beats filled grey, coming beats a grey ring, the current beat in the
+     section hue with an 8px glow; past bars a grey line, the current bar filling in its hue with a
+     6px glow, coming bars a dark line. */
+  --beat-dot-past: var(--grey-33);
+  --beat-dot-ring: var(--grey-33);
+  --bar-past: var(--grey-42);
+  --bar-rest: var(--grey-12);
+  --beat-glow-intro: 0 0 8px color-mix(in srgb, var(--intro) 70%, transparent);
+  --beat-glow-main: 0 0 8px color-mix(in srgb, var(--main) 70%, transparent);
+  --beat-glow-ending: 0 0 8px color-mix(in srgb, var(--ending) 70%, transparent);
+  --beat-glow-brk: 0 0 8px color-mix(in srgb, var(--brk) 70%, transparent);
+  --beat-glow-fill: 0 0 8px color-mix(in srgb, var(--fill) 70%, transparent);
+  --bar-glow-intro: 0 0 6px color-mix(in srgb, var(--intro) 25%, transparent);
+  --bar-glow-main: 0 0 6px color-mix(in srgb, var(--main) 25%, transparent);
+  --bar-glow-ending: 0 0 6px color-mix(in srgb, var(--ending) 25%, transparent);
+  --bar-glow-brk: 0 0 6px color-mix(in srgb, var(--brk) 25%, transparent);
+  --bar-glow-fill: 0 0 6px color-mix(in srgb, var(--fill) 25%, transparent);
+
+  /* The display-size playing section's glow, per section hue (--bm for Main). */
+  --section-glow-intro: 0 0 18px color-mix(in srgb, var(--intro) 30%, transparent);
+  --section-glow-main: var(--bm);
+  --section-glow-ending: 0 0 18px color-mix(in srgb, var(--ending) 30%, transparent);
+  --section-glow-brk: 0 0 18px color-mix(in srgb, var(--brk) 30%, transparent);
+  --section-glow-fill: 0 0 18px color-mix(in srgb, var(--fill) 30%, transparent);
+
+  /* The chord: the accent with the display glow; held, muted without it. */
+  --chord: var(--a);
+  --chord-glow: var(--ba2);
+  --chord-held: var(--m);
+
+  /* The golden Stage's transport row and hero panel: their outlines, the columns' hairlines and
+     the divider before Reset (the mockup's mid grey). */
+  --golden-rule: var(--grey-23);
+}
+
+[data-theme='light'] {
+  --art-core: var(--art-lilac-78);
+  --art-rim: var(--art-lilac-84);
+  --art-glow-20: color-mix(in srgb, var(--violet-600) 14%, transparent);
+  --art-glow-6: color-mix(in srgb, var(--violet-600) 5%, transparent);
+  --art-glow-0: color-mix(in srgb, var(--violet-600) 0%, transparent);
+  --art-hill-near: var(--art-stone-90);
+  --art-hill-far: var(--art-stone-87);
+  --art-sky-top: var(--stone-94);
+  --art-sky-mid: var(--art-stone-92);
+  --art-sky-foot: var(--art-lilac-88);
+  --art-fade-100: var(--stone-94);
+  --art-fade-60: color-mix(in srgb, var(--stone-94) 60%, transparent);
+  --art-fade-20: color-mix(in srgb, var(--stone-94) 20%, transparent);
+  --art-fade-10: color-mix(in srgb, var(--stone-94) 10%, transparent);
+
+  --beat-dot-past: var(--stone-65);
+  --beat-dot-ring: var(--stone-65);
+  --bar-past: var(--stone-65);
+  --bar-rest: var(--stone-82);
+  --beat-glow-intro: none;
+  --beat-glow-main: none;
+  --beat-glow-ending: none;
+  --beat-glow-brk: none;
+  --beat-glow-fill: none;
+  --bar-glow-intro: none;
+  --bar-glow-main: none;
+  --bar-glow-ending: none;
+  --bar-glow-brk: none;
+  --bar-glow-fill: none;
+
+  --section-glow-intro: none;
+  --section-glow-main: none;
+  --section-glow-ending: none;
+  --section-glow-brk: none;
+  --section-glow-fill: none;
+
+  --chord: var(--a);
+  --chord-glow: none;
+  --chord-held: var(--m);
+
+  --golden-rule: var(--stone-76);
+}
