@@ -1,32 +1,91 @@
 /* Display: the Stage's hero. Contract variables only, plus the local --yh-display-* ones below.
-   Every size scales with the region's width (container units on .yh-display), clamped to the
-   pack's own sizes, so the hero keeps its proportions from a 1440 to a 1217 wide Stage. */
+   .yh-display is a width container; the sizes live on .yh-display__frame inside it (a container
+   query styles only what is inside the container), in container units of the hero's width,
+   clamped between the pack's numeral size and the density's cap. They reach the primitives
+   through their `size` / `thickness` options (Display.tsx, DISPLAY_SIZES), not through their CSS.
+
+   Heights, compact density (push: unit 4, control 28, caption 11, label 13), with S the section
+   and tempo size and C the chord's:
+     2 × pad 8 + header (28 + rule 8 + 1) + 2 × gap 8 + beat (3 × 4) = 81
+       + the tallest cell: section caption 14 + 4 + line 1.15 S + 4 + next 28 = 50 + 1.15 S
+                           tempo caption 14 + 4 + line 1.15 S + 4 + keys 28 = 50 + 1.15 S
+                           chord caption 14 + 4 + 1.15 C + 8 + notes 17 = 43 + 1.15 C
+     = 131 + 1.15 S. S = 9cqi, capped at 60: a 436 px hero (S 39) is 176 px tall, a 660 px one
+     (S 59) 199, any wider one 200.
+   With parts, below a 900px hero they take one row under the readouts (+ 8 + 28: 235 px at 660)
+   and below 600px they drop; the Stage never shows them. Widths at 436 px (push, S 39): the
+   section as wide as its name, never cut ("Ending III" about 210 px), the tempo cell about 137,
+   two 12 px gaps, the chord the rest (about 83), its notes on one line, the fingering on the next
+   with an ellipsis.
+   Full density (pad 12–32, rule 12, gaps 16, beat 18, keys 4 lower): at the 1392 px region, S at
+   its cap of 80 (push): 44 + 41 + 32 + 18 + (54 + 92) = 281 px. */
 
 .yh-display {
-  /* The hero size: the section and the chord. */
-  --yh-display-hero: clamp(var(--size-display), 5.4cqw, calc(var(--size-display) * 2));
-  /* The tempo: a step below the hero. */
-  --yh-display-tempo: clamp(var(--size-numeral), 4.4cqw, calc(var(--size-numeral) * 2.5));
-  /* The hero's line box: the chord's (ChordReadout draws at 1.15). */
-  --yh-display-line: calc(var(--yh-display-hero) * 1.15);
-  --yh-display-pad: clamp(var(--space-3), 1.6cqw, var(--space-6));
-  --yh-display-gap: clamp(var(--space-4), 2.2cqw, calc(var(--space-6) * 1.5));
-
-  container-type: inline-size;
+  container: yh-display / inline-size;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   min-width: 0;
-  padding: var(--yh-display-pad);
   overflow: hidden;
   background: var(--surface-0);
   color: var(--text-1);
   font-family: var(--font-sans);
   letter-spacing: var(--tracking);
+}
+
+/* Full: roomy chrome, readouts up to twice the display size. */
+.yh-display__frame {
+  --yh-display-cap: calc(var(--size-display) * 2);
+  --yh-display-pad: clamp(var(--space-3), 1.6cqi, var(--space-6));
+  --yh-display-gap: clamp(var(--space-4), 2.2cqi, calc(var(--space-6) * 1.5));
+  --yh-display-rows: var(--space-4);
+  --yh-display-rule: var(--space-3);
+  --yh-display-next-h: var(--control-h);
+  --yh-display-keys-gap: var(--space-1);
+  --yh-display-beat-line: calc(var(--space-2) * 0.75);
+}
+/* Compact: tight chrome, readouts up to 60px (1.875 × the numeral size), within about 200px
+   tall. Auto is compact below a 1200px wide hero, which is every Stage column. */
+.yh-display[data-density='compact'] .yh-display__frame {
+  --yh-display-cap: calc(var(--size-numeral) * 1.875);
+  --yh-display-pad: var(--space-2);
+  --yh-display-gap: var(--space-4);
+  --yh-display-rows: var(--space-2);
+  --yh-display-rule: var(--space-2);
+  --yh-display-next-h: 0px;
+  --yh-display-keys-gap: 0px;
+  --yh-display-beat-line: var(--space-1);
+}
+@container yh-display (max-width: 1199px) {
+  .yh-display[data-density='auto'] .yh-display__frame {
+    --yh-display-cap: calc(var(--size-numeral) * 1.875);
+    --yh-display-pad: var(--space-2);
+    --yh-display-gap: var(--space-4);
+    --yh-display-rows: var(--space-2);
+    --yh-display-rule: var(--space-2);
+    --yh-display-next-h: 0px;
+    --yh-display-keys-gap: 0px;
+    --yh-display-beat-line: var(--space-1);
+  }
+}
+
+.yh-display__frame {
+  /* The readouts: the section and the tempo loudest, the chord a step behind. */
+  --yh-display-section: clamp(var(--size-numeral), 9cqi, var(--yh-display-cap));
+  --yh-display-tempo: clamp(var(--size-numeral), 9cqi, var(--yh-display-cap));
+  --yh-display-chord: clamp(var(--size-numeral), 8cqi, var(--yh-display-cap));
+  /* The section's line box, the one the tempo centres in (ChordReadout draws at 1.15 too). */
+  --yh-display-line: calc(var(--yh-display-section) * 1.15);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--yh-display-rows);
+  box-sizing: border-box;
+  height: 100%;
+  min-width: 0;
+  padding: var(--yh-display-pad);
 }
 
 /* The art sits behind everything at the right edge, at its own proportion. */
@@ -38,9 +97,6 @@
   aspect-ratio: 528 / 300;
   pointer-events: none;
 }
-.yh-display > :not(.yh-display__art) {
-  position: relative;
-}
 
 /* ---- The header: style and One Touch, quiet, one control-height line over a hairline ---- */
 
@@ -50,7 +106,7 @@
   justify-content: space-between;
   gap: var(--space-6);
   min-width: 0;
-  padding-bottom: var(--space-3);
+  padding-bottom: var(--yh-display-rule);
   border-bottom: var(--border-width) solid var(--border);
 }
 
@@ -62,14 +118,16 @@
   min-width: 0;
   white-space: nowrap;
 }
-/* The name gives way first, ending in an ellipsis; the metre keeps its width. */
+/* The name gives way first, ending in an ellipsis, but keeps about four control heights so it stays
+   readable; the metre yields after it. */
 .yh-display__style-name {
   display: flex;
   flex: 0 1 auto;
-  min-width: 0;
+  min-width: min(100%, calc(var(--control-h) * 4.5));
 }
 .yh-display__meta {
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
   max-width: 40%;
   margin-left: var(--space-3);
   overflow: hidden;
@@ -94,14 +152,83 @@
 .yh-display__readouts {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.15fr) minmax(max-content, 0.8fr);
-  align-content: center;
+  /* The section as wide as its name (never cut: it is the loudest thing on screen), the tempo as
+     wide as its reading, the chord the rest: it steps itself down to fit. */
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  /* safe: when the cells are taller than the room they overflow downwards (clipped), never up
+     over the header. */
+  align-content: safe center;
   align-items: start;
   column-gap: var(--yh-display-gap);
+  row-gap: var(--yh-display-rows);
   min-height: 0;
 }
-.yh-display[data-parts] .yh-display__readouts {
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) max-content minmax(0, 0.8fr);
+/* The parts are a fourth column only from a 900px hero, where a sound name has room; below that
+   they wrap to one row under the readouts, and below 600px they drop (the Stage never shows them:
+   its mixer names the sounds). */
+@container yh-display (min-width: 900px) {
+  .yh-display[data-parts] .yh-display__readouts {
+    grid-template-columns: max-content minmax(0, 1fr) max-content minmax(calc(var(--control-h) * 6), 0.8fr);
+  }
+}
+/* (These come before the base rules below, so they carry a .yh-display ancestor to win.) */
+@container yh-display (max-width: 899px) {
+  .yh-display .yh-display__parts {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: var(--space-2);
+  }
+  .yh-display .yh-display__parts > li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  /* One row: the dot (the part's hue, as on the mixer) names the part, so its name gives way;
+     "off" and "bass" stay. */
+  .yh-display .yh-display__part-label {
+    display: none;
+  }
+  .yh-display .yh-display__part-tail::before {
+    content: none;
+  }
+}
+@container yh-display (max-width: 599px) {
+  .yh-display .yh-display__parts {
+    display: none;
+  }
+}
+
+/* Narrow (a 436px Stage column): tighter gaps and keys, so the section, the chord and the tempo
+   each keep their own cell on one line. The chord's notes stay on one line, the fingering on its
+   own line with an ellipsis (its whole text is in the chord's spoken name and its tooltip). */
+@container yh-display (max-width: 599px) {
+  .yh-display[data-density] .yh-display__frame {
+    --yh-display-gap: var(--space-3);
+  }
+  .yh-display .yh-display__header {
+    gap: var(--space-3);
+  }
+  .yh-display .yh-display__tempo-keys {
+    gap: var(--space-1);
+  }
+  .yh-display .yh-display__tempo-keys .yh-button {
+    padding-inline: var(--space-2);
+  }
+  .yh-display .yh-display__chord .yh-chord-readout__tone + .yh-chord-readout__tone::before {
+    padding: 0 0.2em;
+  }
+}
+@container yh-display (max-width: 1199px) {
+  .yh-display .yh-display__chord .yh-chord-readout__tones {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .yh-display .yh-display__chord .yh-chord-readout__fingering {
+    max-width: 100%;
+    overflow: hidden;
+    overflow-wrap: normal;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .yh-display__cell {
@@ -127,19 +254,20 @@
   max-width: 100%;
   height: var(--yh-display-line);
   overflow: hidden;
-  font-size: var(--yh-display-hero);
+  font-size: var(--yh-display-section);
 }
 .yh-display__now[data-live] {
   padding: 0 0.2em;
   border-radius: var(--radius-control);
   background: var(--selected);
 }
-/* Neutral ink whatever kind the section is: sections never take a hue (hues.ts). */
+/* Its size comes from SectionName's `size`. Its ink stays here: on the --selected block the
+   primitive's playing colour (--selected) would vanish, so the name takes the block's text ink,
+   and stopped the muted ink. Sections never take a hue (hues.ts). */
 .yh-display .yh-display__now .yh-section-name {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  font-size: 1em;
   color: var(--text-3);
   text-shadow: none;
 }
@@ -153,7 +281,7 @@
   flex-wrap: wrap;
   align-items: center;
   column-gap: var(--space-3);
-  min-height: var(--control-h);
+  min-height: var(--yh-display-next-h);
   margin: var(--space-1) 0 0;
   font-size: var(--size-label);
   color: var(--text-2);
@@ -178,14 +306,10 @@
   content: none;
 }
 
-/* The chord: ChordReadout at the hero size. */
-.yh-display__chord .yh-chord-readout {
-  --yh-chord-readout-hero: var(--yh-display-hero);
-}
-
-/* The tempo: a step below the hero, centred in the hero's line box; Tap and Style tempo under it. */
+/* The chord's and the tempo's sizes come from their `size` options. The tempo is centred in the
+   section's line box, so the three captions and readouts share their lines; Tap and Style tempo
+   sit under it. */
 .yh-display__tempo .yh-tempo-readout {
-  --yh-tempo-readout-size: var(--yh-display-tempo);
   align-self: flex-start;
   height: calc(var(--yh-display-tempo) * 1.05);
   margin-block: calc((var(--yh-display-line) - var(--yh-display-tempo) * 1.05) / 2);
@@ -194,7 +318,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-top: var(--space-1);
+  margin-top: var(--yh-display-keys-gap);
 }
 
 /* ---- The parts: one quiet row each, the part's hue as its dot ---- */
@@ -243,12 +367,14 @@
   border-radius: var(--radius-pill);
   background: var(--yh-display-part-hue);
 }
+/* The sound name gives way (an ellipsis) before its marks; the marks never spill onto the part. */
 .yh-display__part-sound {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
+  overflow: hidden;
 }
 .yh-display__part-name {
   min-width: 0;
@@ -261,6 +387,10 @@
   color: var(--text-3);
   text-transform: var(--label-case);
 }
+.yh-display__part-tail::before {
+  content: ' · ';
+  white-space: pre;
+}
 .yh-display__part[data-off] .yh-display__part-dot {
   background: transparent;
   box-shadow: inset 0 0 0 var(--border-width) var(--yh-display-part-hue);
@@ -269,18 +399,13 @@
   color: var(--text-3);
 }
 
-/* ---- The beat: thick neutral segments, the lit beat twice as tall, readable across a room ---- */
+/* ---- The beat: thick segments, readable across a room ---- */
 
+/* The thickness comes from BarBeat's `thickness` (the lit beat three times it): 6px full, 4px
+   compact. Wider gaps than the primitive's, so four beats read as four from a distance; past beats
+   in the muted ink, so the lit beat is the only playing-role segment. */
 .yh-display .yh-display__beat .yh-bar-beat {
-  --yh-bar-beat-hue: var(--text-1);
-  --yh-bar-beat-line: var(--space-2);
-  --yh-bar-beat-lit: var(--space-4);
   gap: var(--space-3);
-}
-/* Three steps of one ink: to come (faint, a tint of the text on the ground, since some packs'
-   strong border is as dark as their text), past (muted), now (primary, taller). */
-.yh-display .yh-display__beat .yh-bar-beat__segment--future {
-  background: color-mix(in srgb, var(--text-1) 16%, var(--surface-0));
 }
 .yh-display .yh-display__beat .yh-bar-beat__segment--past {
   background: var(--text-3);

@@ -84,6 +84,24 @@ describe('FaderBank a11y', () => {
     expect(tipAction).toHaveBeenCalledWith(screen.getByRole('slider', { name: 'Master, level 100' }), 'mixer.master');
     expect(tipAction).toHaveBeenCalledWith(screen.getByRole('button', { name: /^Fader page is/ }), 'mixer.page');
   });
+
+  it('applies tipAction once to each tab, through ChosenTabs, with its own key', () => {
+    const tipAction = vi.fn();
+    setup({ tipAction });
+    for (const tab of screen.getAllByRole('tab')) {
+      const calls = tipAction.mock.calls.filter(([node]) => node === tab);
+      expect(calls).toEqual([[tab, tab.getAttribute('data-tip')]]);
+    }
+    expect(screen.getByRole('tab', { name: 'Reverb send' })).toHaveAttribute('data-tip', 'mixer.layer');
+    // No control gets the tooltip twice.
+    const nodes = tipAction.mock.calls.map(([node]) => node);
+    expect(new Set(nodes).size).toBe(nodes.length);
+  });
+
+  it('leaves the native title off every strip name, so only the app tooltip shows', () => {
+    const { bank } = setup();
+    expect(bank.querySelectorAll('[title]')).toHaveLength(0);
+  });
 });
 
 describe('FaderBank callbacks', () => {
@@ -147,6 +165,33 @@ describe('FaderBank layout', () => {
     expect(strip).toHaveAttribute('data-kind', 'off');
     expect(strip.querySelector('[data-mark="off"]')).toHaveTextContent('off');
     expect(strip.querySelector('[data-mark="missing"]')).not.toBeNull();
+  });
+
+  it('puts the marks on their own line under the sound, not beside it', () => {
+    setup();
+    const name = screen.getByRole('button', { name: 'Right 3, Brass Section, plugin missing: open Channel' });
+    const sound = name.querySelector('.yh-faderbank__sound') as HTMLElement;
+    expect(sound).toHaveTextContent(/^Brass Section$/);
+    expect(sound.querySelector('.yh-partmarks')).toBeNull();
+    const line = name.querySelector('.yh-faderbank__marks') as HTMLElement;
+    expect(line.parentElement).toBe(name);
+    expect(sound.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(line.querySelector('[data-mark="off"]')).not.toBeNull();
+  });
+
+  it('keeps the marks line on every strip while any has marks, and drops it when none do', () => {
+    const { rerender, props, bank } = setup();
+    expect(bank.querySelectorAll('.yh-faderbank__strip .yh-faderbank__marks')).toHaveLength(9);
+    const plain = panelStrips.map((s) => ({ ...s, kind: s.kind === 'off' ? ('part' as const) : s.kind, edited: false, missing: false, failed: false }));
+    rerender(<FaderBank {...props} strips={plain} />);
+    expect(bank.querySelectorAll('.yh-faderbank__marks')).toHaveLength(0);
+  });
+
+  it('lets every Fader fill its strip (fillHeight)', () => {
+    const { bank } = setup();
+    const faders = bank.querySelectorAll('.yh-faderbank__strip > .yh-fader');
+    expect(faders).toHaveLength(9);
+    for (const fader of faders) expect(fader).toHaveAttribute('data-fill-height');
   });
 
   it('puts dividers between parts, groups and Master, not before the empty slots', () => {

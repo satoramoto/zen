@@ -123,8 +123,8 @@ export const MissingSections: Story = {
 /** A fade-out under way while running. */
 export const Fading: Story = { args: { fading: true } };
 
-/** The 1217 × 752 Stage: the region 1169 wide, form and transport still side by side. */
+/** The 1217 × 752 Stage: the region 1169 wide, under 37.5 control heights, so the transport sits under the form. */
 export const At1217: Story = { parameters: { regionWidth: 1169 } };
 
-/** A narrow column (720): the transport moves under the form and shares its width. */
+/** A narrow column (720): the transport under the form, in two rows sharing its width. */
 export const Narrow: Story = { parameters: { regionWidth: 720 } };

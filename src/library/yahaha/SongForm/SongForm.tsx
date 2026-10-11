@@ -140,13 +140,23 @@ export interface SongFormProps {
  * caption, so order and grouping carry meaning a grid can't. Break and Auto Fill sit apart as
  * modifiers of the form, not steps in it. *Colour meaning* (`hues.ts`; color.md, "state changes:
  * structure, not circus"): no section takes a hue; what plays is the `--selected` fill, what's
- * next rings in `--accent` with a NEXT tag (shape as well as colour), absent sections a dashed
- * empty edge. *Hierarchy*: Start / Stop is the only `primary` key, twice the others' height, on
- * `--action` when stopped and `--success` while running, its word the action it will take; the
- * rest are equal cells in two rows, grouped by job (sync, fills and fade, accompaniment, reset).
- * *Waiting is one face*: Sync Start armed, a queued fill, a fade-in waiting for Start all use the
- * waiting ring, and the cue line above the form says in words what's coming ("Fill, then Main C
- * after bar 4").
+ * next rings in `--accent` with a NEXT tag (Pad's `accentNext`; shape as well as colour), absent
+ * sections a dashed empty edge, announced unavailable (`aria-disabled`, still focusable so the
+ * player hears they are missing) and deaf to presses (*affordance*). *Hierarchy*: Start / Stop is
+ * the transport's one `tall` key, two rows high with a heading-size label, its word the action it
+ * will take. Stopped, it is the screen's call to action, the `primary` fill in `--action`: nothing
+ * plays, so starting is the thing to do. Running, it is an outlined key in `--success`, not a
+ * filled one: mid-song the player reads the hero's section and chord first (STAGE.md 1), and a
+ * tall solid green key was the largest saturated area on screen, louder than the section name.
+ * Its size and place still make it the key to find without looking, and the outline in the
+ * running colour plus the word Stop say the band is going (color.md, restraint; one filled call
+ * to action at a time). The rest are equal cells in two rows, grouped by job (sync, fills and
+ * fade, accompaniment, reset). *Waiting is one face*: Sync Start armed, a queued fill, a fade-in
+ * waiting for Start all use the waiting ring, flashing with the queued section on the parent's
+ * `lit`, and the cue line above the form says in words what's coming ("Fill, then Main C after
+ * bar 4"). *Rhythm*: the width breakpoints are counted in control heights (the region's `em` is
+ * `--control-h`), so a denser or airier pack changes layout where its keys stop fitting, not at a
+ * fixed pixel width.
  *
  * **Kept.** Every control the originals had for these jobs and its callback (renamed React-style):
  * the ten sections and Break, Start / Stop (with hold-to-fade-stop from TransportColumn's Stop),
@@ -208,12 +218,13 @@ export function SongForm({
         state={PAD_STATE[stateOf(s.id)]}
         lit={lit}
         tagCorner
+        accentNext
+        fillCell
+        disabled={missing.has(s.id)}
         name={nameOf(s)}
         tip={s.tip}
         tipAction={tipAction}
-        onPress={() => {
-          if (!missing.has(s.id)) onSection?.(s.id);
-        }}
+        onPress={() => onSection?.(s.id)}
       />
     </div>
   );
@@ -279,9 +290,10 @@ export function SongForm({
           <div className="yh-songform__start">
             <Button
               label={running ? 'Stop' : 'Start'}
-              size="band"
-              variant="primary"
-              bar={running}
+              size="cell"
+              tall
+              variant={running ? 'secondary' : 'primary'}
+              hue={running ? 'ok' : 't'}
               pressed={running}
               name={running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped'}
               tip="transport.start_stop"
@@ -295,6 +307,7 @@ export function SongForm({
               label="Sync Start"
               size="cell"
               waiting={syncStart}
+              lit={lit}
               pressed={syncStart}
               name={syncStart ? 'Sync Start, armed' : 'Sync Start'}
               tip="transport.sync_start"
@@ -330,6 +343,7 @@ export function SongForm({
               symbol="up"
               size="cell"
               waiting={fillPending === 'up'}
+              lit={lit}
               name={`Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`}
               tip="transport.fill_up"
               tipAction={tipAction}
@@ -342,6 +356,7 @@ export function SongForm({
               symbol="down"
               size="cell"
               waiting={fillPending === 'down'}
+              lit={lit}
               name={`Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`}
               tip="transport.fill_down"
               tipAction={tipAction}
@@ -353,6 +368,7 @@ export function SongForm({
               label="Fade"
               size="cell"
               {...fadeFace}
+              lit={lit}
               pressed={fading}
               name={fading ? (running ? 'Fade, fading' : 'Fade in, waiting for Start') : running ? 'Fade out' : 'Fade in'}
               tip="transport.fade"

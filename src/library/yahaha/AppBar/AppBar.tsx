@@ -149,17 +149,7 @@ export function AppBar({
   width,
   end,
 }: AppBarProps) {
-  const bar = useRef<HTMLElement>(null);
   const caretBox = useRef<HTMLSpanElement>(null);
-
-  // The tabs and the health slot set `data-tip` but take no tooltip action; apply it here.
-  useEffect(() => {
-    const root = bar.current;
-    if (!root || !tipAction) return;
-    const nodes = root.querySelectorAll<HTMLElement>('.yh-appbar__nav [data-tip], .yh-appbar__status [data-tip]');
-    const handles = [...nodes].map((node) => tipAction(node, node.dataset.tip ?? ''));
-    return () => handles.forEach((handle) => handle?.destroy?.());
-  }, [tipAction, displayTabs, fullTabs, failedPart, synthOn, dropouts, bufferFrames, cpu]);
 
   // When the popover closes with focus inside it, focus would fall to the page: give it back to ▾.
   const wasOpen = useRef(metronomeOpen);
@@ -174,16 +164,16 @@ export function AppBar({
   const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
 
   return (
-    <header ref={bar} className="yh-appbar" style={style}>
+    <header className="yh-appbar" style={style}>
       <div className="yh-appbar__row">
         <span className="yh-appbar__name">yahaha</span>
 
         <nav className="yh-appbar__nav" aria-label="Pages">
-          <ChosenTabs tabs={displayTabs} chosen={chosen} size="page" onChoose={onChoose} />
+          <ChosenTabs tabs={displayTabs} chosen={chosen} size="page" onChoose={onChoose} tipAction={tipAction} />
           <span className="yh-appbar__runs-gap">
             <Separator />
           </span>
-          <ChosenTabs tabs={fullTabs} chosen={chosen} size="page" onChoose={onChoose} />
+          <ChosenTabs tabs={fullTabs} chosen={chosen} size="page" onChoose={onChoose} tipAction={tipAction} />
         </nav>
 
         <span className="yh-appbar__middle">
@@ -284,6 +274,7 @@ export function AppBar({
               dropouts={dropouts}
               bufferFrames={bufferFrames}
               cpu={cpu}
+              tipAction={tipAction}
               onOpen={onHealth}
             />
           </span>

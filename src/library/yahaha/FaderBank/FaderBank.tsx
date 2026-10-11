@@ -6,6 +6,7 @@ import { Fader } from '../Fader/Fader';
 import { GroupHeader } from '../GroupHeader/GroupHeader';
 import { LampButton, type LampHue } from '../LampButton/LampButton';
 import { PartMarks } from '../PartMarks/PartMarks';
+import { visibleMarks } from '../PartMarks/marks';
 import { Separator } from '../Separator/Separator';
 import './FaderBank.css';
 
@@ -163,26 +164,44 @@ function useTip(tipAction: TipAction | undefined, key: string | undefined) {
   return ref;
 }
 
-function StripName({ strip, tipAction, onOpen }: { strip: FaderStrip; tipAction?: TipAction; onOpen?: (id: string) => void }) {
+/** Whether the strip draws any PartMarks (edited, missing, failed, off). */
+const hasMarks = (strip: FaderStrip) =>
+  strip.kind !== 'parked' &&
+  visibleMarks({ edited: strip.edited, missing: strip.missing, failed: strip.failed, off: strip.kind === 'off' }).length > 0;
+
+function StripName({
+  strip,
+  marksLine,
+  tipAction,
+  onOpen,
+}: {
+  strip: FaderStrip;
+  marksLine: boolean;
+  tipAction?: TipAction;
+  onOpen?: (id: string) => void;
+}) {
   const ref = useTip(tipAction, strip.openTip);
   const off = strip.kind === 'off';
+  // No native `title`: the app's tooltip (tipAction with openTip) explains the button, and a
+  // title would show a second, browser tooltip over it.
   return (
     <button
       ref={ref}
       type="button"
       className="yh-faderbank__name"
       aria-label={strip.openName ?? strip.tag}
-      title={strip.sound ? `${strip.tag} · ${strip.sound}` : strip.tag}
       data-tip={strip.openTip}
       onClick={() => onOpen?.(strip.id)}
     >
       <span className="yh-faderbank__tag-text">{strip.tag}</span>
-      {/* Always two lines, so every fader above ends at the same height. The marks follow the
-          sound, which truncates first, so the part's name never does. */}
-      <span className="yh-faderbank__detail">
-        <span className="yh-faderbank__sound">{strip.sound ?? ' '}</span>
-        <PartMarks size="strip" edited={strip.edited} missing={strip.missing} failed={strip.failed} off={off} />
-      </span>
+      <span className="yh-faderbank__sound">{strip.sound ?? ' '}</span>
+      {/* The marks take their own line under the sound, so they never take its width. While any
+          strip in the bank has marks, every strip keeps the line, so the faders above end level. */}
+      {marksLine && (
+        <span className="yh-faderbank__marks">
+          <PartMarks size="strip" edited={strip.edited} missing={strip.missing} failed={strip.failed} off={off} />
+        </span>
+      )}
     </button>
   );
 }
@@ -202,11 +221,15 @@ function StripName({ strip, tipAction, onOpen }: { strip: FaderStrip; tipAction?
  * are neutral, and the function lamps light in neutral ink. *Grouping and hierarchy*
  * (`craft-details.md`, proximity): the strips fall into clusters with a hairline between them,
  * parts | Style and Multi Pad | Master, instead of nine equal columns; Master is set apart on its
- * own raised plate, a little wider, as the last word on loudness. *Clutter*: the unused faders 7
+ * own raised plate, a little wider, as the last word on loudness; the plate fills its column, so
+ * its edge lines up with the bank's, and Master sits inset on it. *Clutter*: the unused faders 7
  * and 8 shrink to narrow dotted slots with no name, so they hold their place (they are real
  * Launchkey faders) without taking a strip's width. *Numerals*: each level is the Fader's large
  * tabular numeral; under it the part's name in its hue and its sound in muted text, so a column
- * reads "72 · Right 2 · Silk Strings" top to bottom. *Off reads as off*: the name fades in its
+ * reads "72 · Right 2 · Silk Strings" top to bottom. The part's marks (edited, ⚠ missing, ✕
+ * failed, "off") take their own line under the sound, so they never cut the sound's name; while
+ * any strip has marks every strip keeps that line, so the faders end level. Each Fader fills its
+ * strip's height (`fillHeight`). *Off reads as off*: the name fades in its
  * own hue with the word "off", the fader and meters dim, and the lamp below says Off unlit; three
  * cues, none of them colour alone. *Soft takeover* is a state, so it is `--warning`: the Fader
  * draws where the hardware is and which way to move it, the strip is outlined, and the foot row
@@ -221,7 +244,9 @@ function StripName({ strip, tipAction, onOpen }: { strip: FaderStrip; tipAction?
  * strip is a Fader (a vertical slider with keys, wheel and drag) over a name button that opens
  * the part's page; the parked faders stay disabled sliders named "Fader 7 unused". The part
  * lamps' long press (swap mode), the Sound and Looper holds, and the page button's tap to flip
- * and hold for the fader picker. Every accessible name and tooltip key of the original.
+ * and hold for the fader picker. Every accessible name and tooltip key of the original; tooltips
+ * come only from `tipAction` (each control applies it once, the tabs through ChosenTabs), never
+ * a native `title`, so no control shows two.
  */
 export function FaderBank({
   strips,
@@ -253,6 +278,7 @@ export function FaderBank({
   const masterAt = strips.findIndex((strip) => strip.kind === 'master');
   const pageColumn = columns[masterAt >= 0 ? masterAt : strips.length - 1] ?? 1;
   const away = strips.filter((strip) => strip.kind !== 'parked' && strip.away !== undefined);
+  const marksLine = strips.some(hasMarks);
 
   const lampColumn = (lamp: BankLamp, i: number) => {
     const at = strips.findIndex((strip) => strip.id === lamp.id);
@@ -302,13 +328,20 @@ export function FaderBank({
   return (
     <section className="yh-faderbank" aria-label="Faders" data-layered={layered || undefined}>
       <GroupHeader title="Faders" detail={layerWord}>
-        <ChosenTabs size="header" label="Fader page (master button)" tabs={pageTabs} chosen={page} onChoose={onChoosePage} />
+        <ChosenTabs
+          size="header"
+          label="Fader page (master button)"
+          tabs={pageTabs}
+          chosen={page}
+          tipAction={tipAction}
+          onChoose={onChoosePage}
+        />
         <Separator />
         <span className="yh-faderbank__layer">
           <span className="yh-faderbank__layer-word" aria-hidden="true">
             Layer
           </span>
-          <ChosenTabs size="header" label="Fader layer" tabs={layerTabs} chosen={layer} onChoose={onChooseLayer} />
+          <ChosenTabs size="header" label="Fader layer" tabs={layerTabs} chosen={layer} tipAction={tipAction} onChoose={onChooseLayer} />
         </span>
       </GroupHeader>
 
@@ -342,6 +375,7 @@ export function FaderBank({
                 hue={strip.hue}
                 layered={layered && part}
                 empty={parked}
+                fillHeight
                 tip={strip.tip}
                 tipAction={tipAction}
                 onlevel={(level) => onLevel?.(strip.id, level)}
@@ -350,9 +384,10 @@ export function FaderBank({
                 <span className="yh-faderbank__name" aria-hidden="true">
                   <span className="yh-faderbank__tag-text">{' '}</span>
                   <span className="yh-faderbank__sound">{' '}</span>
+                  {marksLine && <span className="yh-faderbank__marks" />}
                 </span>
               ) : (
-                <StripName strip={strip} tipAction={tipAction} onOpen={onOpen} />
+                <StripName strip={strip} marksLine={marksLine} tipAction={tipAction} onOpen={onOpen} />
               )}
             </div>
           );

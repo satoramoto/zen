@@ -87,10 +87,11 @@
   background: var(--border);
 }
 
-/* Master's plate: one step up from the ground, behind its strip and the page button. */
+/* Master's plate: one step up from the ground, behind its strip and the page button. It fills its
+   column exactly, so its outer edge sits on the bank's edge; Master's strip and page button are
+   inset by the plate's padding instead of the plate overhanging them. */
 .yh-faderbank__plate {
   grid-row: 1 / 3;
-  margin: calc(-1 * var(--space-1));
   border-radius: var(--radius-card);
   background: var(--surface-1);
   box-shadow: inset 0 0 0 max(1px, var(--border-width)) var(--border);
@@ -106,17 +107,16 @@
   min-height: 0;
   border-radius: var(--radius-control);
 }
+.yh-faderbank__strip[data-kind='master'] {
+  margin: var(--space-1) var(--space-1) 0;
+}
+.yh-faderbank__lamp--page {
+  margin: 0 var(--space-1) var(--space-1);
+}
 .yh-faderbank__strip[data-hue='1'] { --yh-faderbank-ink: var(--hue-1); }
 .yh-faderbank__strip[data-hue='2'] { --yh-faderbank-ink: var(--hue-2); }
 .yh-faderbank__strip[data-hue='3'] { --yh-faderbank-ink: var(--hue-3); }
 .yh-faderbank__strip[data-hue='4'] { --yh-faderbank-ink: var(--hue-4); }
-
-/* The Fader fills the strip's height above its name, whatever the region gives it. */
-.yh-faderbank__strip > .yh-fader {
-  flex: 1 1 auto;
-  height: auto;
-  min-height: 0;
-}
 
 /* A strip whose hardware fader is away: outlined in the warning colour, so the column itself says it. */
 .yh-faderbank__strip[data-away]::after {
@@ -160,13 +160,16 @@ span.yh-faderbank__name {
   cursor: default;
 }
 
-.yh-faderbank__detail {
+/* The marks' own line under the sound: one caption line tall even when empty, so every strip's
+   name block is the same height and the faders above end level. */
+.yh-faderbank__marks {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
   max-width: 100%;
   min-width: 0;
+  min-height: calc(var(--size-caption) * 1.15);
+  overflow: hidden;
 }
 .yh-faderbank__tag-text {
   max-width: 100%;

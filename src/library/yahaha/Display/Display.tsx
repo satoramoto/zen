@@ -15,6 +15,21 @@ import './Display.css';
 
 export type { TipAction };
 
+/** The hero's chrome and readout cap: see `DisplayProps.density`. */
+export type DisplayDensity = 'auto' | 'full' | 'compact';
+
+/**
+ * The readouts' sizes, passed to each primitive's `size` (and BarBeat's `thickness`). Each is a
+ * local variable the hero's CSS sets from its width (container units) and its density's cap, so
+ * the primitives' own CSS is never overridden.
+ */
+export const DISPLAY_SIZES = {
+  section: 'var(--yh-display-section)',
+  chord: 'var(--yh-display-chord)',
+  tempo: 'var(--yh-display-tempo)',
+  beat: 'var(--yh-display-beat-line)',
+} as const;
+
 /** The loaded style: the header line, and One Touch. */
 export interface DisplayStyle {
   /** The style's name ("Sunday Drive Pop"). Empty: "No style". */
@@ -88,7 +103,18 @@ export interface DisplayProps {
   parts?: DisplayPart[];
   /** Draw the background art at the right edge. */
   art?: boolean;
-  /** The app's tooltip hook, applied to the buttons. */
+  /**
+   * How much room the hero takes around its readouts. `compact`: tight chrome (small padding, a
+   * short rule under the header, a thinner beat bar, no reserved line under the section) and the
+   * readouts capped at 60px (1.875 × the pack's numeral size), so the hero stays within about
+   * 200px tall (Display.css works the heights out).
+   * `full`: the roomy chrome, readouts up to twice the pack's display size, for a tall region.
+   * `auto` (default): `compact` while the hero is narrower than 1200px, `full` from there (a
+   * container query on the hero's own width). In every mode the readouts scale with the hero's
+   * width (container units), from the pack's numeral size up to the mode's cap.
+   */
+  density?: DisplayDensity;
+  /** The app's tooltip hook, applied to every control (the primitives apply it to their own). */
   tipAction?: TipAction;
   /** ‹: the previous style. */
   onPrev?: () => void;
@@ -131,18 +157,29 @@ function nextLine(n: DisplayNowPlaying): { status: string; next: string; when: s
  * − + Tap and Style tempo set the tempo. This is the Stage's only Tap.
  *
  * **Changed.** *Hierarchy:* the original set chord, section and tempo in three competing hues at
- * three sizes in three equal thirds. Here they share one hero size and neutral ink, ranked by
+ * three sizes in three equal thirds. Here they share neutral ink and nearly one size, ranked by
  * weight and place: the section first, the only element on the `--selected` block (the live
- * thing, `hues.ts`: what plays is `--selected`), then the chord in primary text, then the tempo a
- * step smaller (typography.md, "Type Scale": one display size, rank by weight and position). What's
+ * thing, `hues.ts`: what plays is `--selected`), the tempo at the section's size, and the chord a
+ * step behind in primary text (typography.md, "Type Scale": one display size, rank by weight and
+ * position). What's
  * next sits directly under the section in secondary text with WaitingChip's arrow, so "now → next"
  * reads as one phrase. *Colour meaning:* sections take no hue; the beat bar is neutral ink; the
  * only hues left are the four part dots, which mean the same part as the mixer and keyboard
  * (color.md, "Semantic colours"). *Hierarchy, quiet chrome:* the style header and One Touch move to
  * one caption-height line above the readouts, so they are found when wanted and never read first.
- * *Rhythm:* each readout has the same caption above it (Section, Chord, Tempo) on one baseline,
- * and every size scales with the region's width (container units, clamped to the pack's display
- * size), so the hero keeps its proportions from the 1440×900 Stage down to 1217×752.
+ * *Rhythm:* each readout has the same caption above it (Section, Chord, Tempo) on one baseline.
+ * *Hierarchy, at any size:* the section and the tempo are set at 9% of the hero's width and the
+ * chord at 8% (container units), never below the pack's numeral size, so wherever the region has
+ * room the readouts grow and dominate it, the way the owner's board drew them; the sizes reach each
+ * primitive through its own `size` option (and BarBeat's `thickness`), never by overriding its CSS.
+ * *Compact mode* (`density`): in a short region the chrome tightens (padding, the rule under the
+ * header, no reserved line under the section, a thinner beat bar) and the readouts stop at 60px,
+ * so the whole hero fits in about 200px (a 436px hero is 176px tall, a 660px one 199px); `full` keeps the roomy chrome and lets
+ * the readouts reach twice the display size; `auto`, the default, is compact below a 1200px wide
+ * hero (every Stage column) and full above it. *Narrow* (container queries on the width): the
+ * parts are a fourth column only from a 900px hero, one row under the readouts below that (the
+ * dots name the parts) and gone below 600px; at a 436px column the gaps and tempo keys tighten so
+ * the section, chord and tempo each keep their own cell, the fingering on one line with an ellipsis.
  * *Affordance:* the beat bar is drawn thick, the lit beat twice as tall, visible from across the
  * room; Tap is a real key, and the style tempo, once a hidden double-click, is a visible quiet key
  * beside it (the double-click still works).
@@ -151,13 +188,15 @@ function nextLine(n: DisplayNowPlaying): { status: string; next: string; when: s
  * sound list, tempo up/down holds, drag/scroll/keys on the number, back to the style's tempo); the
  * button names ("Next style (Track right)", "Sunday Drive Pop: open the Browser", "Left sound: 33
  * Finger Bass…", "Apply One Touch 3…", "Tempo up (Scene Launch)"); "Stopped", "Sync Start armed"
- * and "bar 3 of 4" on the small line; the beat bar's states; the chord stepping down to fit.
+ * and "bar 3 of 4" on the small line; the beat bar's states; the chord stepping down to fit; the
+ * app's `tipAction` on every control, applied once each (the primitives apply it to their own).
  */
 export function Display({
   style,
   nowPlaying,
   parts,
   art = false,
+  density = 'auto',
   tipAction,
   onPrev,
   onNext,
@@ -178,92 +217,109 @@ export function Display({
   const hasParts = (parts?.length ?? 0) > 0;
 
   return (
-    <section className="yh-display" aria-label="Stage display" data-running={running || undefined} data-parts={hasParts || undefined}>
+    <section
+      className="yh-display"
+      aria-label="Stage display"
+      data-density={density}
+      data-running={running || undefined}
+      data-parts={hasParts || undefined}
+    >
       {art && (
         <div className="yh-display__art">
           <DisplayArt />
         </div>
       )}
 
-      <header className="yh-display__header">
-        <div className="yh-display__style" role="group" aria-label="Style">
-          <Button symbol="prev" size="icon" variant="quiet" name="Previous style (Track left)" tip="style.prev" tipAction={tipAction} onPress={onPrev} />
-          <span className="yh-display__style-name" title={name}>
-            <AccentBlock as="button" label={name} name={`${name}: open the Browser`} tip="browser.open" tipAction={tipAction} onPress={onBrowse} />
-          </span>
-          <Button symbol="next" size="icon" variant="quiet" name="Next style (Track right)" tip="style.next" tipAction={tipAction} onPress={onNext} />
-          {queued ? (
-            <span className="yh-display__queued" title={`Next style: ${queued}`}>
-              <WaitingChip label={queued} hue="a" size="line" />
+      {/* The frame holds the sizes: a container query styles only what is inside the container. */}
+      <div className="yh-display__frame">
+        <header className="yh-display__header">
+          <div className="yh-display__style" role="group" aria-label="Style">
+            <Button symbol="prev" size="icon" variant="quiet" name="Previous style (Track left)" tip="style.prev" tipAction={tipAction} onPress={onPrev} />
+            <span className="yh-display__style-name" title={name}>
+              <AccentBlock as="button" label={name} name={`${name}: open the Browser`} tip="browser.open" tipAction={tipAction} onPress={onBrowse} />
             </span>
-          ) : (
-            meta && (
-              <span className="yh-display__meta" title={meta}>
-                {meta}
+            <Button symbol="next" size="icon" variant="quiet" name="Next style (Track right)" tip="style.next" tipAction={tipAction} onPress={onNext} />
+            {queued ? (
+              <span className="yh-display__queued" title={`Next style: ${queued}`}>
+                <WaitingChip label={queued} hue="a" size="line" />
               </span>
-            )
+            ) : (
+              meta && (
+                <span className="yh-display__meta" title={meta}>
+                  {meta}
+                </span>
+              )
+            )}
+          </div>
+          <div className="yh-display__ots">
+            <OneTouchPicker applied={style.oneTouch ?? 0} count={style.oneTouchCount ?? 4} tipAction={tipAction} onApply={onOneTouch} />
+          </div>
+        </header>
+
+        <div className="yh-display__readouts">
+          <div className="yh-display__cell yh-display__section" role="group" aria-label="Section">
+            <div className="yh-display__caption" aria-hidden="true">
+              Section
+            </div>
+            <div
+              className="yh-display__now"
+              role="img"
+              aria-label={`${running ? 'Playing' : 'Stopped on'} ${nowPlaying.playing.trim() || 'no section'}`}
+              data-live={running || undefined}
+            >
+              <SectionName label={nowPlaying.playing} idle={!running} size={DISPLAY_SIZES.section} />
+            </div>
+            <p className="yh-display__next">
+              {line.status && <span className="yh-display__status">{line.status}</span>}
+              {line.next && <WaitingChip label={line.next} size="count" />}
+              {line.when && <span className="yh-display__when">{line.when}</span>}
+            </p>
+          </div>
+
+          <div className="yh-display__cell yh-display__chord">
+            <ChordReadout {...nowPlaying.chord} tip="fingering.select" tipAction={tipAction} size={DISPLAY_SIZES.chord} />
+          </div>
+
+          <div className="yh-display__cell yh-display__tempo" role="group" aria-label="Tempo and Tap">
+            <div className="yh-display__caption" aria-hidden="true">
+              Tempo
+            </div>
+            <TempoReadout
+              bpm={nowPlaying.bpm}
+              size={DISPLAY_SIZES.tempo}
+              tipAction={tipAction}
+              onTempo={onTempo}
+              onPlus={onTempoUp}
+              onMinus={onTempoDown}
+              onReset={onStyleTempo}
+            />
+            <div className="yh-display__tempo-keys">
+              <Button
+                label="Tap"
+                size="md"
+                hold
+                name="Tap tempo"
+                tip="tempo.tap"
+                tipAction={tipAction}
+                onHold={(down) => down && onTap?.()}
+                onPress={onTap}
+              />
+              <Button label="Style tempo" size="md" variant="quiet" name="Back to the style's tempo" tip="tempo.reset" tipAction={tipAction} onPress={onStyleTempo} />
+            </div>
+          </div>
+
+          {hasParts && (
+            <ul className="yh-display__parts" aria-label="Sounds">
+              {parts!.map((p) => (
+                <PartRow key={p.id} part={p} tipAction={tipAction} onSound={onSound} />
+              ))}
+            </ul>
           )}
         </div>
-        <div className="yh-display__ots">
-          <OneTouchPicker applied={style.oneTouch ?? 0} count={style.oneTouchCount ?? 4} onApply={onOneTouch} />
+
+        <div className="yh-display__beat">
+          <BarBeat beat={running ? (nowPlaying.beat ?? 0) : 0} beats={nowPlaying.beats ?? 4} thickness={DISPLAY_SIZES.beat} />
         </div>
-      </header>
-
-      <div className="yh-display__readouts">
-        <div className="yh-display__cell yh-display__section" role="group" aria-label="Section">
-          <div className="yh-display__caption" aria-hidden="true">
-            Section
-          </div>
-          <div
-            className="yh-display__now"
-            role="img"
-            aria-label={`${running ? 'Playing' : 'Stopped on'} ${nowPlaying.playing.trim() || 'no section'}`}
-            data-live={running || undefined}
-          >
-            <SectionName label={nowPlaying.playing} idle={!running} />
-          </div>
-          <p className="yh-display__next">
-            {line.status && <span className="yh-display__status">{line.status}</span>}
-            {line.next && <WaitingChip label={line.next} size="count" />}
-            {line.when && <span className="yh-display__when">{line.when}</span>}
-          </p>
-        </div>
-
-        <div className="yh-display__cell yh-display__chord">
-          <ChordReadout {...nowPlaying.chord} tip="fingering.select" />
-        </div>
-
-        <div className="yh-display__cell yh-display__tempo" role="group" aria-label="Tempo and Tap">
-          <div className="yh-display__caption" aria-hidden="true">
-            Tempo
-          </div>
-          <TempoReadout bpm={nowPlaying.bpm} onTempo={onTempo} onPlus={onTempoUp} onMinus={onTempoDown} onReset={onStyleTempo} />
-          <div className="yh-display__tempo-keys">
-            <Button
-              label="Tap"
-              size="md"
-              hold
-              name="Tap tempo"
-              tip="tempo.tap"
-              tipAction={tipAction}
-              onHold={(down) => down && onTap?.()}
-              onPress={onTap}
-            />
-            <Button label="Style tempo" size="md" variant="quiet" name="Back to the style's tempo" tip="tempo.reset" tipAction={tipAction} onPress={onStyleTempo} />
-          </div>
-        </div>
-
-        {hasParts && (
-          <ul className="yh-display__parts" aria-label="Sounds">
-            {parts!.map((p) => (
-              <PartRow key={p.id} part={p} tipAction={tipAction} onSound={onSound} />
-            ))}
-          </ul>
-        )}
-      </div>
-
-      <div className="yh-display__beat">
-        <BarBeat beat={running ? (nowPlaying.beat ?? 0) : 0} beats={nowPlaying.beats ?? 4} />
       </div>
     </section>
   );
@@ -279,7 +335,8 @@ function PartRow({ part: p, tipAction, onSound }: { part: DisplayPart; tipAction
     const handle = tipAction(node, 'launchkey.fader_sound');
     return () => handle?.destroy?.();
   }, [tipAction]);
-  const tail = p.bass ? ' · bass' : p.off ? ' · off' : '';
+  // The " · " before it is CSS, so a one-row parts strip can drop the name and keep "off".
+  const tail = p.bass ? 'bass' : p.off ? 'off' : '';
   return (
     <li>
       <button
@@ -298,8 +355,8 @@ function PartRow({ part: p, tipAction, onSound }: { part: DisplayPart; tipAction
           <PartMarks edited={p.edited} missing={p.missing} failed={p.failed} />
         </span>
         <span className="yh-display__part-part" aria-hidden="true">
-          {p.name}
-          {tail}
+          <span className="yh-display__part-label">{p.name}</span>
+          {tail && <span className="yh-display__part-tail">{tail}</span>}
         </span>
       </button>
     </li>
