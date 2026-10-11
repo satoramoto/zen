@@ -1,0 +1,114 @@
+import { Fragment } from 'react';
+import './StatusLine.css';
+
+/** A control's tooltip, shown in the line's place while the control is hovered or focused. */
+export interface StatusHint {
+  /** The entry's title. */
+  title: string;
+  /** What the control does. */
+  body: string;
+  /** Its keys, already labelled ("Y", "Shift+Y / F5"). */
+  keys?: string | null;
+  /** Where it is on the Launchkey. */
+  launchkey?: string | null;
+}
+
+export interface StatusLineProps {
+  /** The hovered or focused control's tooltip: shown in place of the message while set. */
+  hint?: StatusHint | null;
+  /** `message.text`. `null` or `''`: no message, the line is empty. */
+  text?: string | null;
+  /** `message.error`: the error mark shows before the text. Ignored while there is no text. */
+  error?: boolean;
+  /** `message.seq`. A new value re-creates the button's contents, so a repeat is announced again. */
+  seq?: number;
+  /** A fixed width in px. Unset, the line fills its container. */
+  width?: number;
+  /** The tooltip key from `app/src/help/tooltips.ts`, as `data-tip` on the button. `null` turns it off. */
+  tip?: string | null;
+  /** Called on click, Enter or Space on the line's button; the parent sends `clearMessage`. */
+  onClear?: () => void;
+}
+
+/**
+ * The one line between the band and the keys that says what the app just did or refused.
+ *
+ * **Job:** show the last notice or error (`state.message`) in one quiet line a player can take in
+ * with a glance and put away with a click, Enter or Space; while a control is hovered or focused,
+ * show that control's tooltip in the same place. Empty, the row keeps its height so nothing below
+ * it moves.
+ *
+ * **Changed:** *colour meaning, never colour alone*: an error leads with a small chip, the warning
+ * triangle plus the word "Error" on a faint `--danger` tint, so shape, word and colour all say it,
+ * while the message itself stays in `--text-1` to read as plain words, not alarm (refero-design
+ * `color.md` › Semantic colors work through pairs). *Hierarchy*: in a hint the title is
+ * `--weight-strong` in `--text-1`, the body steps down to `--text-2`, and the key and Launchkey
+ * place sit right-aligned as small `--label-case` captions in `--text-3` with the keys drawn as
+ * keycaps, so the eye lands on the name, then what it does, then how to reach it
+ * (`typography.md` › weight creates hierarchy). *Affordance*: hover or keyboard focus shows a
+ * small clear mark at the line's end, so "click to dismiss" is visible without any coaching
+ * words; focus uses a `:focus-visible` ring in `--accent` (`craft-details.md` › Focus states).
+ * *Rhythm*: the row is `--control-h` tall and spaced on `--space-*`, so it sits on the same grid
+ * as the controls around it under every density.
+ *
+ * **Kept:** one line that ellipsises instead of wrapping, the `role="status"` polite live region,
+ * the button named by its content with a visually hidden "Error:" (so name and announcement match),
+ * contents keyed on `seq` inside a button that keeps focus, a hint that is `aria-hidden` while the
+ * message stays announced underneath it, `tip` as `data-tip`, no timer and no motion of its own.
+ */
+export function StatusLine({ hint = null, text = null, error = false, seq = 0, width, tip = 'display.status', onClear }: StatusLineProps) {
+  return (
+    <p className="yh-status-line" role="status" aria-live="polite" style={width === undefined ? undefined : { width: `${width}px` }}>
+      {hint ? (
+        <span className="yh-status-line-hint" aria-hidden="true">
+          <span className="yh-status-line-hint-title">{hint.title}</span>
+          <span className="yh-status-line-hint-body">{hint.body}</span>
+          {hint.keys || hint.launchkey ? (
+            <span className="yh-status-line-hint-meta">
+              {hint.keys ? (
+                <span className="yh-status-line-hint-place">
+                  <span className="yh-status-line-hint-label">Key</span> <kbd className="yh-status-line-key">{hint.keys}</kbd>
+                </span>
+              ) : null}
+              {hint.launchkey ? (
+                <span className="yh-status-line-hint-place">
+                  <span className="yh-status-line-hint-label">Launchkey:</span> <kbd className="yh-status-line-key">{hint.launchkey}</kbd>
+                </span>
+              ) : null}
+            </span>
+          ) : null}
+        </span>
+      ) : null}
+      {text ? (
+        <button
+          type="button"
+          className={hint ? 'yh-status-line-button yh-status-line-under' : 'yh-status-line-button'}
+          data-tip={tip ?? undefined}
+          onClick={() => onClear?.()}
+        >
+          <Fragment key={seq}>
+            {error ? (
+              <span className="yh-status-line-tag" aria-hidden="true">
+                <svg data-hue="warn" className="yh-status-line-mark" width="12" height="12" viewBox="0 0 12 12">
+                  <path d="M6 1.5 L11 10.5 H1 Z" />
+                  <path d="M6 5 V7.4" />
+                  <circle cx="6" cy="8.9" r="0.6" />
+                </svg>
+                Error
+              </span>
+            ) : null}
+            {/* The space after "Error:" sits outside the hidden span: the accessible name trims each
+                element's text, so a space inside it would be lost ("Error:Can't"). */}
+            <span className="yh-status-line-text">
+              {error ? <span className="yh-status-line-hidden">Error:</span> : null}
+              {error ? ` ${text}` : text}
+            </span>
+          </Fragment>
+          <svg className="yh-status-line-clear" aria-hidden="true" width="10" height="10" viewBox="0 0 10 10">
+            <path d="M2 2 L8 8 M8 2 L2 8" />
+          </svg>
+        </button>
+      ) : null}
+    </p>
+  );
+}

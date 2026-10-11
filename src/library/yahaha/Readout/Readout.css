@@ -1,0 +1,136 @@
+/* Readout: label and value on one line, the bar under them across the row's full drag span, the
+   knob code in its own column so rows line up. Only contract variables and the --yh-readout-*
+   ones declared here. */
+
+.yh-readout {
+  --yh-readout-track: color-mix(in srgb, var(--text-1) 14%, transparent);
+  --yh-readout-bar-h: 3px;
+  --yh-readout-code-w: 4ch;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto var(--yh-readout-code-w);
+  grid-template-rows: auto var(--yh-readout-bar-h);
+  align-items: baseline;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--control-h);
+  padding: var(--space-2) var(--space-1);
+  border-bottom: var(--border-width) solid var(--border);
+  color: var(--text-1);
+  white-space: nowrap;
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.yh-readout-label {
+  overflow: hidden;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  text-overflow: ellipsis;
+}
+
+.yh-readout-value {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+.yh-readout-number {
+  min-width: 4ch;
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--size-heading);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: right;
+}
+
+.yh-readout-unit {
+  min-width: 3ch;
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  letter-spacing: var(--tracking);
+}
+
+.yh-readout-code {
+  justify-self: end;
+}
+.yh-readout-code kbd {
+  display: inline-block;
+  min-width: 3ch;
+  padding: 0 var(--space-1);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: var(--size-caption);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.yh-readout-bar {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  position: relative;
+  align-self: center;
+  height: var(--yh-readout-bar-h);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--yh-readout-track);
+  transform-origin: center;
+  transition: transform 120ms ease-out;
+}
+.yh-readout-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent);
+}
+
+/* Affordance: the bar thickens under the pointer and while dragging. */
+.yh-readout:hover .yh-readout-bar,
+.yh-readout[data-dragging] .yh-readout-bar {
+  transform: scaleY(1.67);
+}
+.yh-readout[data-dragging] .yh-readout-number {
+  color: var(--accent);
+}
+
+.yh-readout:focus-visible {
+  outline: var(--border-width) solid var(--accent);
+  outline-offset: calc(-1 * var(--border-width));
+  border-radius: var(--radius-control);
+}
+.yh-readout:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.yh-readout--disabled {
+  cursor: default;
+}
+.yh-readout--disabled:hover .yh-readout-bar {
+  transform: none;
+}
+.yh-readout--disabled .yh-readout-label,
+.yh-readout--disabled .yh-readout-number,
+.yh-readout--disabled .yh-readout-unit,
+.yh-readout--disabled .yh-readout-code kbd {
+  color: var(--text-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-readout-bar {
+    transition: none;
+  }
+}

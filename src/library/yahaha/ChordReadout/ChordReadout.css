@@ -1,0 +1,97 @@
+/* ChordReadout: caption, the chord at display size, one small line under it. */
+.yh-chord-readout {
+  /* The hero's full size; the fit steps scale it down. */
+  --yh-chord-readout-hero: var(--size-display);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-sans);
+  letter-spacing: var(--tracking);
+}
+
+.yh-chord-readout__label {
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  color: var(--text-3);
+  text-transform: var(--label-case);
+}
+
+.yh-chord-readout__chord {
+  overflow: hidden;
+  /* A fixed line box at the full size, so stepping down never moves the line below. */
+  height: calc(var(--yh-chord-readout-hero) * 1.15);
+  font-family: var(--font-display);
+  font-size: var(--yh-chord-readout-hero);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.15;
+  color: var(--text-1);
+  white-space: nowrap;
+  text-overflow: clip;
+}
+.yh-chord-readout__chord[data-fit='4'] { font-size: calc(var(--yh-chord-readout-hero) * 0.82); }
+.yh-chord-readout__chord[data-fit='5'] { font-size: calc(var(--yh-chord-readout-hero) * 0.7); }
+.yh-chord-readout__chord[data-fit='6'] { font-size: calc(var(--yh-chord-readout-hero) * 0.6); }
+.yh-chord-readout__chord[data-fit='8'] { font-size: calc(var(--yh-chord-readout-hero) * 0.5); }
+
+/* The extension, printed as chord symbols are: raised and smaller. */
+.yh-chord-readout__ext {
+  margin-left: 0.04em;
+  font-size: 0.56em;
+  vertical-align: 0.62em;
+  line-height: 1;
+  letter-spacing: var(--tracking);
+}
+/* A slash bass sits back on the line, a step quieter than the chord. */
+.yh-chord-readout__bass {
+  margin-left: 0.06em;
+  font-size: 0.72em;
+  color: var(--text-2);
+}
+
+.yh-chord-readout__chord--none {
+  color: var(--text-4);
+}
+.yh-chord-readout--held .yh-chord-readout__chord,
+.yh-chord-readout--held .yh-chord-readout__bass {
+  color: var(--text-3);
+}
+
+/* One small line; a long fingering wraps to a second line rather than clip. */
+.yh-chord-readout__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  margin: var(--space-1) 0 0;
+  font-size: var(--size-label);
+  color: var(--text-3);
+}
+.yh-chord-readout__tones {
+  display: inline-flex;
+  white-space: nowrap;
+  font-family: var(--font-readout);
+  font-weight: var(--weight-numeral);
+  color: var(--text-2);
+}
+.yh-chord-readout__tone + .yh-chord-readout__tone::before {
+  content: '·';
+  padding: 0 0.4em;
+  color: var(--text-4);
+}
+.yh-chord-readout__fingering {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.yh-chord-readout__held {
+  padding: 0 var(--space-1);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--size-caption);
+  color: var(--text-2);
+  text-transform: var(--label-case);
+}
