@@ -38,3 +38,5 @@ The website presents six books with three original visual studies each. Book nav
 | Practical Typography | B1 body leading; B2 selective emphasis; B3 punctuation |
 
 `npm test` covers catalog/navigation, every control, the focal/color/type invariants, eighteen story exports, and external Storybook arg updates. DOM tests do not establish visual browser acceptance: responsive layout and perceptual effects still require browser inspection. Original concept-review reports in `docs/` apply to the preceding HTML artifact; they are not React runtime evidence.
+
+Completed React/JSX verification is recorded in [verification](docs/verification.md), with separate automated-test and integrated-browser evidence, and independent source/reference approvals in [JSX review A](docs/jsx-review-a.md) and [JSX review B](docs/jsx-review-b.md).

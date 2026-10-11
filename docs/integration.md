@@ -29,3 +29,7 @@ Independent source reviews and integrated browser validation are owned by the co
 - Scope: only T3 explanatory caption in `src/catalog.ts`; it now explicitly names metadata alignment as a changed variable.
 - Conflicts: none. `git diff --check HEAD^1 HEAD` passed on the merge.
 - Builds/tests not repeated for this prose-only correction, per coordinator direction; prior successful validation above remains the implementation evidence. Coordinator preview untouched.
+
+## Completed assignment cleanup
+
+Both final JSX reviews and coordinator-supplied integrated browser evidence are preserved in `docs/verification.md` and the linked review records. Verified source `3475ab675de594b07c2233d4827c9550bd1b9466` is an ancestor of the coordinator revision. The source worktree had no tracked or untracked changes; its only ignored entries were regenerable `node_modules`, `dist`, and `storybook-static`. Removed the completed temporary worktree with ordinary `git worktree remove`; retained `codex/illustrations`. Removed only the coordinator-designated disposable responsive-check wrapper. No preview processes or browser tabs were changed.
