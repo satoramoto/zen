@@ -1,0 +1,79 @@
+/* SendReadout: a flat inline button; lead caption, then name + level per send. Only contract
+   variables and the --yh-send-readout-* one declared here. */
+
+.yh-send-readout {
+  --yh-send-readout-hover: color-mix(in srgb, var(--text-1) 6%, transparent);
+
+  display: inline-flex;
+  flex: none;
+  align-items: baseline;
+  gap: var(--space-4);
+  box-sizing: border-box;
+  height: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-1);
+  font: inherit;
+  line-height: var(--control-h);
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease-out;
+}
+.yh-send-readout:hover {
+  background: var(--yh-send-readout-hover);
+}
+.yh-send-readout:focus-visible {
+  outline: var(--border-width) solid var(--accent);
+  outline-offset: var(--border-width);
+}
+.yh-send-readout:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.yh-send-readout-lead {
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+}
+
+.yh-send-readout-send {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.yh-send-readout-name {
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+}
+
+.yh-send-readout-level {
+  min-width: 3ch;
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--size-heading);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Colour meaning: a send at 0 is off, so its level drops to the faint role. */
+.yh-send-readout-send[data-off] .yh-send-readout-level {
+  color: var(--text-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-send-readout {
+    transition: none;
+  }
+}

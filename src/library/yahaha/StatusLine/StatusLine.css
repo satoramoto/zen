@@ -1,0 +1,177 @@
+/* StatusLine: one row on the control grid. The message reads as plain words in --text-1; an
+   error leads with a chip (mark + word on a faint danger tint), so colour never says it alone. */
+.yh-status-line {
+  --yh-status-line-ring: 2px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: var(--control-h);
+  margin: 0;
+  overflow: visible;
+  background: transparent;
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+.yh-status-line-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.yh-status-line-button:focus-visible {
+  outline: var(--yh-status-line-ring) solid var(--accent);
+  outline-offset: var(--space-1);
+}
+
+.yh-status-line-tag {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+  color: var(--text-1);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  line-height: 1;
+  text-transform: var(--label-case);
+}
+
+.yh-status-line-mark {
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: var(--danger);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.yh-status-line-mark circle {
+  fill: var(--danger);
+  stroke: none;
+}
+
+.yh-status-line-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The clear mark: shown on hover and keyboard focus, so dismissing is visible without words. */
+.yh-status-line-clear {
+  flex: none;
+  fill: none;
+  stroke: var(--text-3);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+.yh-status-line-button:hover .yh-status-line-clear,
+.yh-status-line-button:focus-visible .yh-status-line-clear {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-status-line-clear {
+    transition: none;
+  }
+}
+
+/* The hint: title, then what it does (ends in "…"), then the key and Launchkey place at the
+   right, which give way first when the line is short. */
+.yh-status-line-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.yh-status-line-hint-title {
+  flex: none;
+  color: var(--text-1);
+  font-weight: var(--weight-strong);
+}
+
+.yh-status-line-hint-body {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-2);
+}
+
+.yh-status-line-hint-meta {
+  flex: 0 100 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+}
+
+.yh-status-line-hint-place {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.yh-status-line-hint-label {
+  color: var(--text-3);
+  font-size: var(--size-caption);
+  text-transform: var(--label-case);
+}
+
+.yh-status-line-key {
+  padding: 0 var(--space-1);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-1);
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: var(--size-caption);
+  line-height: 1.5;
+}
+
+/* Under a hint the message keeps its place in the live region but isn't drawn; the hidden word
+   is read, not shown. */
+.yh-status-line-under,
+.yh-status-line-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

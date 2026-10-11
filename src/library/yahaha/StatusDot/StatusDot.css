@@ -1,0 +1,58 @@
+/* StatusDot: a lamp sized to the word it marks. Each hue maps to a palette role; the face
+   (solid or hollow) is the second channel, so colour never carries the state alone. */
+.yh-status-dot {
+  --yh-status-dot-hue: var(--success);
+  --yh-status-dot-size: 0.5em;
+  --yh-status-dot-round: 50%;
+  --yh-status-dot-ring: max(1.5px, var(--border-width));
+  display: inline-block;
+  flex: none;
+  align-self: center;
+  box-sizing: border-box;
+  width: var(--yh-status-dot-size);
+  height: var(--yh-status-dot-size);
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: var(--yh-status-dot-round);
+  vertical-align: middle;
+  background: var(--yh-status-dot-hue);
+}
+
+.yh-status-dot[data-size='sm'] {
+  --yh-status-dot-size: 0.4em;
+  min-width: 4px;
+  min-height: 4px;
+}
+
+/* The palette's lamp bloom: 0px on flat palettes, so nothing draws there. */
+.yh-status-dot[data-glow='true'] {
+  box-shadow: 0 0 var(--bloom) color-mix(in srgb, var(--yh-status-dot-hue) 70%, transparent);
+}
+
+.yh-status-dot[data-face='hollow'] {
+  background: transparent;
+  border: var(--yh-status-dot-ring) solid var(--yh-status-dot-hue);
+}
+
+.yh-status-dot[data-hue='d'] {
+  --yh-status-dot-hue: var(--text-4);
+}
+.yh-status-dot[data-hue='t'] {
+  --yh-status-dot-hue: var(--text-1);
+}
+.yh-status-dot[data-hue='intro'] {
+  --yh-status-dot-hue: var(--hue-1);
+}
+.yh-status-dot[data-hue='main'] {
+  --yh-status-dot-hue: var(--hue-2);
+}
+.yh-status-dot[data-hue='ending'] {
+  --yh-status-dot-hue: var(--hue-3);
+}
+.yh-status-dot[data-hue='brk'] {
+  --yh-status-dot-hue: var(--hue-4);
+}
+/* The contract has four categorical hues; Fill takes a fifth mixed from the first two. */
+.yh-status-dot[data-hue='fill'] {
+  --yh-status-dot-hue: color-mix(in srgb, var(--hue-1) 50%, var(--hue-2));
+}
