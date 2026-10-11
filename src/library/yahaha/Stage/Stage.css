@@ -1,0 +1,122 @@
+/* Stage: the whole app on one screen. Reads only contract variables and the --yh-stage-* ones
+   declared here. It lays the regions out and never reaches into one: each region fills the box
+   it is given. */
+
+/* The frame: the screen's size on the page. The screen inside it is zoomed to fit (Stage.tsx). */
+.yh-stage {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--surface-0);
+}
+
+.yh-stage__screen {
+  --yh-stage-pad: var(--space-5);
+  --yh-stage-gap: var(--space-4);
+  /* Between the regions of one row: wide enough that each reads as its own plane. */
+  --yh-stage-col-gap: calc(var(--yh-stage-gap) * 1.5);
+  /* The song form's width: inside its two-row-transport range (641–760 px), so the form and its
+     transport sit beside the hero at their shortest without the hero losing its width; a larger
+     density's keys need a little more of that range. */
+  --yh-stage-form-w: max(660px, calc(var(--control-h) * 20.2));
+  /* The least the hero takes: its three readouts side by side at the pack's display size. Where
+     the frame is narrower, the screen zooms down rather than squeezing the hero. */
+  --yh-stage-hero-min: calc(var(--control-h) * 22.5);
+  /* The least the mixer takes: enough fader travel to read a level by its position. */
+  --yh-stage-faders-min: calc(var(--control-h) * 9);
+
+  box-sizing: border-box;
+  display: grid;
+  /* bar | now (hero and song form) | band (mixer, knobs over pads) | status | keys. The band takes
+     the rest, and never less than it needs: then the screen is zoomed to fit instead. */
+  grid-template-rows: auto auto 1fr auto auto;
+  row-gap: var(--yh-stage-gap);
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--yh-stage-pad) var(--yh-stage-pad);
+  overflow: hidden;
+  background: var(--surface-0);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+}
+
+/* Every row may shrink to the screen, except the top row: its hero and form never go below their
+   least widths, so a narrow frame widens the screen's one column and the screen zooms to fit. */
+.yh-stage__screen > :not(.yh-stage__top) {
+  min-width: 0;
+}
+
+/* The bar runs edge to edge, as on every page. */
+.yh-stage__bar {
+  margin-inline: calc(-1 * var(--yh-stage-pad));
+}
+
+/* Now: the hero, and beside it the song form with the transport. */
+.yh-stage__top {
+  display: grid;
+  grid-template-columns: minmax(var(--yh-stage-hero-min), 1fr) calc(var(--yh-stage-form-w) + var(--yh-stage-col-gap) + var(--border-width));
+  column-gap: var(--yh-stage-col-gap);
+  align-items: stretch;
+}
+.yh-stage__display {
+  display: flex;
+}
+.yh-stage__display > * {
+  flex: 1 1 auto;
+}
+
+/* The song form stands on the hero's foot line, behind a hairline. */
+.yh-stage__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-left: var(--yh-stage-col-gap);
+  border-left: var(--border-width) solid var(--border);
+}
+
+/* The band: the mixer, and the knobs over the pads, under one hairline. */
+.yh-stage__band {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  column-gap: var(--yh-stage-col-gap);
+  padding-top: var(--yh-stage-gap);
+  border-top: var(--border-width) solid var(--border);
+}
+
+.yh-stage__faders {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: var(--yh-stage-faders-min);
+}
+.yh-stage__faders > * {
+  flex: 1 1 auto;
+}
+
+.yh-stage__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--yh-stage-gap);
+  min-width: 0;
+}
+.yh-stage__knobs {
+  flex: none;
+}
+.yh-stage__pads {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.yh-stage__pads > * {
+  flex: 1 1 auto;
+}
+
+.yh-stage__keys {
+  display: flex;
+}
+
+/* A story frame: cancels the library scope's padding so the screen sits at the window's corner. */
+.yh-stage-frame {
+  margin: calc(-1 * var(--space-6));
+}
