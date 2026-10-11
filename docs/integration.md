@@ -53,3 +53,12 @@ Validation on the resulting merge:
 - `npm run build:storybook`: passed, with non-fatal Node module.register deprecation and vendor chunk-size warnings.
 
 Independent teaching-quality reviews and integrated browser checks remain coordinator-owned and pending at this integration handoff. A known T1 explanatory-copy follow-up is expected and is not included in this revision. No servers changed, no main landing or remote action, and no source-worktree cleanup performed.
+
+## Teaching-quality review refinements
+
+- Coordinator prior commit: `09ff12b9fd429704daf680ecd2cb9f861105ece9`.
+- Immutable source: `034c42499566be4b9f52aae2967edd820b077081`, dependent on `0b2aade103368fd4264eff36b7494ba974796f79` already integrated above.
+- Resulting non-fast-forward merge: `15f6cd78535c2b020f3fc43e88242d1a03205e6a`.
+- Scope: T1 explanatory caption; G3/R3 specimen content; B1 leading of 125%/145% and corresponding tests/README. No conflicts or Integrator behavioral edits.
+- Combined `npm run typecheck`, `npm test` (45 tests), `npm run build`, `npm run build:storybook`, and merge diff check all passed. Same non-fatal deprecation/vendor-size warnings.
+- Preserved coordinator-owned untracked `public/agent-responsive-check.html`; it is not part of the commit. Preview untouched. Independent final reviews/browser acceptance remain pending; no cleanup, main landing, or remote actions.
