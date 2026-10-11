@@ -1,7 +1,7 @@
 // Fader's input: keys, wheel and drag ask for levels through `onlevel`, and steps in quick
 // succession count from the level last asked for until `level` catches up.
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Fader, type FaderProps } from './Fader';
@@ -150,6 +150,22 @@ describe('Fader drag', () => {
     fireEvent.pointerUp(fader, { pointerId: 1, clientY: 0 });
     fireEvent.pointerMove(fader, { pointerId: 1, clientY: 227 });
     expect(asked(onlevel)).toEqual([64, 70, 127]);
+  });
+
+  it('fillHeight marks the fader to fill its container (off by default) and a drag measures the rail', () => {
+    const onlevel = vi.fn<(level: number) => void>();
+    const { container, rerender } = render(<Fader name="Right 1 0" level={0} onlevel={onlevel} />);
+    const fader = within(container).getByRole('slider', { name: 'Right 1 0' });
+    expect(fader).not.toHaveAttribute('data-fill-height');
+    rerender(<Fader name="Right 1 0" level={0} onlevel={onlevel} fillHeight />);
+    expect(fader).toHaveAttribute('data-fill-height', 'true');
+    // A tall container: 400px of rail, so a quarter of the way up is a quarter of 127.
+    const rail = fader.querySelector('.yh-fader__rail') as HTMLElement;
+    rail.getBoundingClientRect = () => ({ top: 50, height: 400, bottom: 450, left: 0, right: 10, width: 10, x: 0, y: 50, toJSON() {} });
+    fireEvent.pointerDown(fader, { button: 0, pointerId: 1, clientY: 450 - 100 });
+    fireEvent.pointerMove(fader, { pointerId: 1, clientY: 50 });
+    fireEvent.pointerUp(fader, { pointerId: 1, clientY: 50 });
+    expect(asked(onlevel)).toEqual([32, 127]);
   });
 
   it('a secondary button does nothing', () => {

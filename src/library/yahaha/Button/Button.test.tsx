@@ -65,6 +65,29 @@ describe('Button faces and a11y', () => {
     expect(button).toHaveAttribute('data-face', 'off');
   });
 
+  it('lit drives the waiting flash: false marks the off phase, true or other faces carry no mark', () => {
+    const { button, rerender, props } = setup({ label: 'Fade', size: 'pair', waiting: true, lit: false });
+    expect(button).toHaveAttribute('data-face', 'waiting');
+    expect(button).toHaveAttribute('data-lit', 'false');
+    rerender(<Button {...props} lit />);
+    expect(button).not.toHaveAttribute('data-lit');
+    rerender(<Button {...props} lit={undefined} />);
+    expect(button).not.toHaveAttribute('data-lit');
+    rerender(<Button {...props} on />);
+    expect(button).toHaveAttribute('data-face', 'on');
+    expect(button).not.toHaveAttribute('data-lit');
+    rerender(<Button {...props} disabled />);
+    expect(button).not.toHaveAttribute('data-lit');
+  });
+
+  it('tall marks the primary key with any size; default is not tall', () => {
+    const { button, rerender, props } = setup({ label: 'Start', size: 'band', variant: 'primary', tall: true });
+    expect(button).toHaveAttribute('data-tall', '');
+    expect(button).toHaveAttribute('data-size', 'band');
+    rerender(<Button {...props} tall={undefined} />);
+    expect(button).not.toHaveAttribute('data-tall');
+  });
+
   it('pressed sets aria-pressed only when given, and never the look', () => {
     const { button, rerender, props } = setup({ label: '?', size: 'icon', pressed: true, name: 'Help mode' });
     expect(button).toHaveAttribute('aria-pressed', 'true');

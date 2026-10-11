@@ -23,6 +23,7 @@ const meta = {
     chosen: { control: 'select', options: [null, ...ALL_IDS] },
     size: { control: 'inline-radio', options: ['page', 'header', 'compact'] },
     label: { control: 'text' },
+    dense: { control: 'boolean' },
   },
 } satisfies Meta<typeof ChosenTabs>;
 
@@ -61,6 +62,17 @@ export const Disabled: Story = {
 /** Nothing chosen: every tab at rest, the first takes the Tab stop. */
 export const NoneChosen: Story = {
   args: { tabs: layerTabs, chosen: null, label: 'Fader layer' },
+};
+
+/** Dense: the tighter side padding a narrow region (the knob bank on a 1217 × 752 Stage) needs, under the default for comparison. */
+export const Dense: Story = {
+  args: { tabs: layerTabs, chosen: 'volume', label: 'Fader layer', dense: true },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: 'var(--space-4)', justifyItems: 'start' }}>
+      <ChosenTabs {...args} label="Fader layer (default)" dense={false} />
+      <ChosenTabs {...args} />
+    </div>
+  ),
 };
 
 /** The app bar's two runs side by side, as the header lays them out. */

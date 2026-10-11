@@ -1,4 +1,5 @@
-import { useEffect, useRef, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
+import { useEffect, useRef, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent, type RefObject } from 'react';
+import type { TipAction } from '../Pad/Pad';
 import './TempoReadout.css';
 
 export interface TempoReadoutProps {
@@ -22,6 +23,29 @@ export interface TempoReadoutProps {
   cells?: boolean;
   /** With `cells`: the unit set large, in the numeral's ink, rather than as a small label. */
   unitLarge?: boolean;
+  /** The number's tooltip key, rendered as its `data-tip`. Default `display.tempo`. */
+  tip?: string;
+  /**
+   * The app's tooltip action (`use:tip`), applied to the number with `tip` and to + and − with
+   * their own keys (`tempo.up`, `tempo.down`), as the original does.
+   */
+  tipAction?: TipAction;
+  /**
+   * The numeral's size, a CSS length ("96px", "var(--size-display)"), set as
+   * `--yh-tempo-readout-size` on the root; it wins over the `cells` fit. Default: that property's
+   * value, `--size-numeral` (or the container fit with `cells`).
+   */
+  size?: string;
+}
+
+/** Applies the app's tooltip action to a node while `tipAction` is set; destroyed on unmount or key change. */
+function useTip(ref: RefObject<HTMLElement | null>, tipAction: TipAction | undefined, key: string) {
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || !tipAction) return;
+    const handle = tipAction(node, key);
+    return () => handle?.destroy?.();
+  }, [ref, tipAction, key]);
 }
 
 /** Pixels of drag per BPM. */
@@ -72,13 +96,17 @@ function useHold(report: ((down: boolean) => void) | undefined) {
  * framed pair on the raised surface with one hairline between them, instead of bare glyphs that
  * read as text; the draggable number shows a faint well on hover and the `ns-resize` cursor
  * (craft-details.md). *Colour meaning:* no status colour; the accent appears only as the focus
- * ring, so it reads on light and dark packs alike (color.md).
+ * ring, so it reads on light and dark packs alike (color.md). *Sizing:* the numeral's size is one
+ * custom property, `--yh-tempo-readout-size` (default `--size-numeral`), which a parent sets on
+ * the root or passes as `size`; + and − scale from it, so a display can make the tempo its hero
+ * without overriding this widget's CSS.
  *
  * **Kept.** The spinbutton with its spoken value ("104 BPM"), the drag, wheel, key and
  * double-click gestures, the hold reporting with a single press from the keyboard, the button
- * names ("Tempo up (Scene Launch)", "Tempo down (Function)"), the `data-tip` keys, and `cells`,
- * where it fills its size container with the reading on the foot and + over − exactly as tall as
- * the number's capitals.
+ * names ("Tempo up (Scene Launch)", "Tempo down (Function)"), the `data-tip` keys, the app's
+ * `tipAction` on the number and both buttons with their keys, and `cells`, where it fills its
+ * size container with the reading on the foot and + over − exactly as tall as the number's
+ * capitals.
  */
 export function TempoReadout({
   bpm,
@@ -91,8 +119,16 @@ export function TempoReadout({
   onReset,
   cells = false,
   unitLarge = false,
+  tip = 'display.tempo',
+  tipAction,
+  size,
 }: TempoReadoutProps) {
   const number = useRef<HTMLSpanElement>(null);
+  const upButton = useRef<HTMLButtonElement>(null);
+  const downButton = useRef<HTMLButtonElement>(null);
+  useTip(number, tipAction, tip);
+  useTip(upButton, tipAction, 'tempo.up');
+  useTip(downButton, tipAction, 'tempo.down');
   const drag = useRef<{ id: number; y: number; from: number; last: number } | null>(null);
 
   const clamp = (n: number) => Math.min(max, Math.max(min, Math.round(n)));
@@ -155,7 +191,13 @@ export function TempoReadout({
     .join(' ');
 
   return (
-    <div className={classes} data-cells={cells || undefined} style={{ '--yh-tempo-readout-digits': digits } as CSSProperties}>
+    <div className={classes} data-cells={cells || undefined} style={
+        {
+          '--yh-tempo-readout-digits': digits,
+          ...(size === undefined ? {} : { '--yh-tempo-readout-size': size }),
+        } as CSSProperties
+      }
+    >
       <span className="yh-tempo-readout__reading">
         <span
           ref={number}
@@ -167,7 +209,7 @@ export function TempoReadout({
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuetext={`${bpm} ${unit}`}
-          data-tip="display.tempo"
+          data-tip={tip}
           onPointerDown={down}
           onPointerMove={move}
           onPointerUp={up}
@@ -182,10 +224,10 @@ export function TempoReadout({
         </span>
       </span>
       <span className="yh-tempo-readout__steps" role="group" aria-label="Tempo">
-        <button type="button" className="yh-tempo-readout__step" aria-label="Tempo up (Scene Launch)" data-tip="tempo.up" {...plus}>
+        <button ref={upButton} type="button" className="yh-tempo-readout__step" aria-label="Tempo up (Scene Launch)" data-tip="tempo.up" {...plus}>
           <span aria-hidden="true">+</span>
         </button>
-        <button type="button" className="yh-tempo-readout__step" aria-label="Tempo down (Function)" data-tip="tempo.down" {...minus}>
+        <button ref={downButton} type="button" className="yh-tempo-readout__step" aria-label="Tempo down (Function)" data-tip="tempo.down" {...minus}>
           <span aria-hidden="true">−</span>
         </button>
       </span>

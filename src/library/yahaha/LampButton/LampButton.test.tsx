@@ -74,10 +74,29 @@ describe('LampButton', () => {
     expect(destroy).toHaveBeenCalled();
   });
 
-  it('joins and fixes width', () => {
+  it('armed with on: the armed face, still pressed, and a press asks for off', async () => {
+    const onToggle = vi.fn();
+    const { rerender } = render(<LampButton label="Sync Start" on armed onToggle={onToggle} />);
+    const button = screen.getByRole('button', { name: 'Sync Start' });
+    expect(button).toHaveAttribute('data-face', 'armed');
+    expect(button).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(button);
+    expect(onToggle).toHaveBeenCalledWith(false);
+    rerender(<LampButton label="Sync Start" on armed rec />);
+    expect(button).toHaveAttribute('data-face', 'armed');
+    expect(button).toHaveAttribute('data-hue', 'rec');
+    rerender(<LampButton label="Sync Start" armed />);
+    expect(button).toHaveAttribute('data-face', 'off');
+    expect(button).toHaveAttribute('aria-pressed', 'false');
+    rerender(<LampButton label="Sync Start" on />);
+    expect(button).toHaveAttribute('data-face', 'on');
+  });
+
+  it('joins, and width is a minimum so the label never clips', () => {
     render(<LampButton label="Off" size="sm" width={64} join="start" />);
     const button = screen.getByRole('button');
-    expect(button.style.width).toBe('64px');
+    expect(button.style.minWidth).toBe('64px');
+    expect(button.style.width).toBe('');
     expect(button.className).toContain('yh-lampbutton--join-start');
     expect(button.className).toContain('yh-lampbutton--sm');
   });

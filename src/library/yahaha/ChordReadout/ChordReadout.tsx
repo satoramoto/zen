@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import type { TipAction } from '../Pad/Pad';
 import './ChordReadout.css';
 
 export interface ChordNote {
@@ -23,6 +24,13 @@ export interface ChordReadoutProps {
   label?: string;
   /** The fingering's tooltip key ("fingering.select"), set as `data-tip`, with the whole fingering as `data-tip-text`. */
   tip?: string;
+  /** The app's tooltip action (`use:tip`), applied to the fingering with `tip` when both are set. */
+  tipAction?: TipAction;
+  /**
+   * The hero's full size, a CSS length ("96px", "var(--size-display)"), set as
+   * `--yh-chord-readout-hero` on the root. Default: that property's value, `--size-display`.
+   */
+  size?: string;
 }
 
 /** Hero sizes, largest first: the chord takes the first at which it fits its column. */
@@ -53,15 +61,39 @@ function splitBass(extension: string): [string, string] {
  * (color.md, "Primary Accent", 60/30/10). *Colour meaning:* held dims the chord to `--text-3` and
  * adds an outlined "held" tag, a state word rather than a colour, since unsure isn't an error.
  * *Numerals:* the notes use the readout face so their spacing stays even as they change.
+ * *Sizing:* the hero's full size is one custom property, `--yh-chord-readout-hero` (default
+ * `--size-display`), which a parent sets on the root or passes as `size`, so a display can scale
+ * the chord without overriding this widget's CSS; the fit steps scale from it.
  *
  * **Kept.** The chord stepping down through hero sizes until it fits its column (measured after each
  * change and again once the web font loads); the small line that wraps the fingering onto a second
  * line rather than cutting it off; "—" when there's no chord; the spoken name ("Chord Am7: A C E G,
- * Fingered On Bass"); the fingering's tooltip as `data-tip` with the whole text as `data-tip-text`.
+ * Fingered On Bass"); the fingering's tooltip as `data-tip` with the whole text as `data-tip-text`,
+ * and the app's `tipAction` applied to the fingering with `tip`, as the original does.
  */
-export function ChordReadout({ chord, extension = '', notes = [], fingering = '', held = false, label = 'Chord', tip }: ChordReadoutProps) {
+export function ChordReadout({
+  chord,
+  extension = '',
+  notes = [],
+  fingering = '',
+  held = false,
+  label = 'Chord',
+  tip,
+  tipAction,
+  size,
+}: ChordReadoutProps) {
   const hero = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState<Fit>('full');
+  const fingeringRef = useRef<HTMLSpanElement>(null);
+  const [fit, setFit] = useState<Fit>('full');
+  const hasFingering = fingering !== '';
+
+  // The app's tooltip on the fingering, the readout's one hover target.
+  useEffect(() => {
+    const node = fingeringRef.current;
+    if (!node || !tipAction || tip === undefined) return;
+    const handle = tipAction(node, tip);
+    return () => handle?.destroy?.();
+  }, [tip, tipAction, hasFingering]);
 
   const none = chord.trim() === '';
   const [raised, bass] = splitBass(none ? '' : extension);
@@ -85,7 +117,7 @@ export function ChordReadout({ chord, extension = '', notes = [], fingering = ''
           break;
         }
       }
-      setSize(chosen);
+      setFit(chosen);
     };
     fit();
     // Measured again once the web font has loaded (the fallback is a different width) and when the column resizes.
@@ -96,20 +128,21 @@ export function ChordReadout({ chord, extension = '', notes = [], fingering = ''
       live = false;
       observer?.disconnect();
     };
-  }, [chord, extension, held]);
+  }, [chord, extension, held, size]);
 
   const classes = ['yh-chord-readout'];
   if (held) classes.push('yh-chord-readout--held');
+  const style = size === undefined ? undefined : ({ '--yh-chord-readout-hero': size } as CSSProperties);
 
   return (
-    <div className={classes.join(' ')} role="img" aria-label={spoken} data-held={held ? 'true' : 'false'}>
+    <div className={classes.join(' ')} role="img" aria-label={spoken} data-held={held ? 'true' : 'false'} style={style}>
       <div className="yh-chord-readout__label" aria-hidden="true">
         {label}
       </div>
       <div
         ref={hero}
         className={`yh-chord-readout__chord${none ? ' yh-chord-readout__chord--none' : ''}`}
-        data-fit={size}
+        data-fit={fit}
         aria-hidden="true"
       >
         {none ? '—' : chord}
@@ -128,7 +161,7 @@ export function ChordReadout({ chord, extension = '', notes = [], fingering = ''
           </span>
         )}
         {fingering && (
-          <span className="yh-chord-readout__fingering" data-tip={tip} data-tip-text={tip ? fingering : undefined}>
+          <span ref={fingeringRef} className="yh-chord-readout__fingering" data-tip={tip} data-tip-text={tip ? fingering : undefined}>
             {fingering}
           </span>
         )}

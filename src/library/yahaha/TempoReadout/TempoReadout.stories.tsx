@@ -21,6 +21,7 @@ const meta = {
     max: { control: { type: 'number', min: 5, max: 500, step: 1 } },
     cells: { control: 'boolean' },
     unitLarge: { control: 'boolean' },
+    size: { control: 'text' },
   },
 } satisfies Meta<typeof TempoReadout>;
 
@@ -57,6 +58,15 @@ export const AtMax: Story = {
 /** A two-digit tempo keeps the same width as 500, so the unit and keys don't move. */
 export const Slow: Story = {
   args: { bpm: 68, unit: 'BPM', min: 5, max: 500 },
+};
+
+/** New: a hero-sized numeral by `size` (set as `--yh-tempo-readout-size`); + and − scale with it. */
+export const HeroSize: Story = {
+  args: { bpm: 104, unit: 'BPM', min: 5, max: 500, size: 'var(--size-display)' },
+  play: async ({ canvasElement }) => {
+    const tempo = canvasElement.querySelector<HTMLElement>('.yh-tempo-readout')!;
+    await expect(tempo.style.getPropertyValue('--yh-tempo-readout-size')).toBe('var(--size-display)');
+  },
 };
 
 /** In cells: it fills a 360 × 80 size container; the reading on its foot, + over − beside it. */

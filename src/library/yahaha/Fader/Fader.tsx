@@ -27,6 +27,8 @@ export interface FaderProps {
   layered?: boolean;
   /** A fixed width in px. Default: fills its container. */
   width?: number;
+  /** Fill the container's height instead of the fixed six-control-heights travel; a drag still measures the rail. Default false. */
+  fillHeight?: boolean;
   /** With `kind="parked"`: a dotted ghost in the strip's faded hue instead of the dashed grey groove. */
   empty?: boolean;
   /** The tooltip key, rendered as `data-tip`. */
@@ -73,7 +75,10 @@ function splitValue(value: string): { word: string; num: string } {
  * neutral instead of borrowing the focus accent; meters are neutral (they measure sound, they are
  * not identity); soft takeover is a state, so it is drawn in `--warning`, with an arrow that says
  * which way to move the hardware instead of a bare ↕. Bloom on the fill comes from `--bloom`, so
- * flat palettes stay flat. Focus is a visible `--accent` ring (`craft-details.md` §1).
+ * flat palettes stay flat. Focus is a visible `--accent` ring (`craft-details.md` §1). *Alignment*:
+ * the opt-in `fillHeight` (off by default) lets the fader take its container's height, so a bank of
+ * strips lines up to whatever height the region gives it without overriding the fader's own size;
+ * a drag maps the pointer onto the rail's measured height, so the travel stays exact at any size.
  *
  * **Kept.** Fully controlled: a drag, ↑ ↓ → ← ±1, Page Up / Down ±10, Home, End and the wheel (±2 a
  * notch, trackpad deltas summed) ask through `onlevel` and move nothing themselves; quick repeats
@@ -92,6 +97,7 @@ export function Fader({
   hue = 't',
   layered = false,
   width,
+  fillHeight = false,
   empty = false,
   tip,
   tipAction,
@@ -220,6 +226,7 @@ export function Fader({
       data-kind={kind}
       data-hue={partHue}
       data-layered={layered || undefined}
+      data-fill-height={fillHeight || undefined}
       data-empty={parked && empty ? true : undefined}
       data-away={isAway ? (away! < level ? 'up' : away! > level ? 'down' : 'at') : undefined}
       data-tip={tip}

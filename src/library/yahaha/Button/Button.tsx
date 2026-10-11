@@ -48,6 +48,10 @@ export interface ButtonProps {
   chosen?: boolean;
   /** The waiting face: queued or armed, a double-weight ring over a faint tint. */
   waiting?: boolean;
+  /** The flash phase of the waiting face, driven by the parent (as on the Pad): `false` drops the tint and thins the ring to the rest outline in the tone; the label stays. Default `true`, the steady waiting face. Ignored by every other face. */
+  lit?: boolean;
+  /** A tall key, two control rows and the gap between them, its label at heading size: the primary key of a transport (Start / Stop). Default `false`. Works with any `size`. */
+  tall?: boolean;
   /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `r1` `r2` `r3` `l` the four part hues; `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent. */
   hue?: ButtonHue;
   /** Sets `aria-pressed` for a switch or a choice. Undefined: no `aria-pressed`. Never changes the look. */
@@ -112,7 +116,11 @@ const NEUTRAL = new Set<ButtonHue>(['t', 't2', 'm', 'lamp']);
  * instead of merely "a dimmer hue"; hover and press tint the face by its own tone; a visible
  * `:focus-visible` ring sits outside the face (craft-details.md §1). *Rhythm:* sizes derive from
  * `--control-h` and `--space-*`, so density packs scale every key together; labels follow
- * `--label-case` and `--tracking` and use tabular numerals (typography.md).
+ * `--label-case` and `--tracking` and use tabular numerals (typography.md). A `tall` key spans two
+ * control rows with a heading-size label, so the transport's primary key (Start / Stop) leads by
+ * size as well as fill (hierarchy). The waiting face can flash: the parent drives `lit`, as on the
+ * Pad, and its off phase keeps the label and a hairline ring in the tone, so a queued key blinks
+ * without the row jumping (affordance; craft-details.md).
  *
  * **Kept.** Every face comes from props, in the same precedence (disabled, chosen, on, waiting,
  * off); the outline is an inset shadow so faces never change size; the same glyphs, accessible
@@ -129,6 +137,8 @@ export function Button({
   on = false,
   chosen = false,
   waiting = false,
+  lit = true,
+  tall = false,
   hue = 't',
   pressed,
   popup,
@@ -218,6 +228,8 @@ export function Button({
       data-face={disabled ? 'disabled' : face}
       data-hue={drawn}
       data-join={join}
+      data-tall={tall ? '' : undefined}
+      data-lit={!disabled && face === 'waiting' && !lit ? 'false' : undefined}
       data-alone={label === '' ? '' : undefined}
       data-bar={running ? '' : undefined}
       data-contrast={disabled ? 'dim' : undefined}

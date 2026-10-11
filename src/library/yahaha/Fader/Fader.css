@@ -30,6 +30,12 @@
   user-select: none;
   -webkit-user-select: none;
 }
+/* fillHeight: the container's height, in a block, grid or flex parent; the rail is measured on drag. */
+.yh-fader[data-fill-height] {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+}
 .yh-fader[data-hue] { --yh-fader-ink: var(--hue); }
 .yh-fader[data-layered] { --yh-fader-ink: var(--text-2); }
 .yh-fader[data-kind='parked'] { cursor: default; }

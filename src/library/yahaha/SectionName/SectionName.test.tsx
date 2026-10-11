@@ -51,4 +51,12 @@ describe('SectionName', () => {
     expect(nameOf(container)).toHaveTextContent('—');
     expect(container.querySelector('.yh-section-name__variant')).toBeNull();
   });
+
+  it('sets the size as its custom property, keeping the tone, and none by default', () => {
+    const { container, rerender } = render(<SectionName label="Main B" />);
+    expect(nameOf(container).style.getPropertyValue('--yh-section-name-size')).toBe('');
+    rerender(<SectionName label="Main B" size="64px" />);
+    expect(nameOf(container).style.getPropertyValue('--yh-section-name-size')).toBe('64px');
+    expect(tone(container)).toBe(SECTION_STATE_COLOUR.playing);
+  });
 });

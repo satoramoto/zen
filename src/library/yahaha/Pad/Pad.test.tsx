@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Pad, padTone } from './Pad';
 
@@ -72,6 +72,41 @@ describe('Yahaha Pad', () => {
     expect(padTone('r2', 'idle', false)).toBe('hue-2');
     expect(padTone('r3', 'dark', false)).toBe('hue-3');
     expect(padTone('l', 'idle', false)).toBe('hue-4');
+  });
+
+  it('disabled: stays focusable, is aria-disabled, and ignores click, Enter and Space', async () => {
+    const onPress = vi.fn();
+    const user = userEvent.setup();
+    const { container, rerender } = render(<Pad label="Auto Fill" index="12" disabled onPress={onPress} />);
+    const pad = within(container).getByRole('button', { name: 'Auto Fill (pad 12)' });
+    expect(pad).toHaveAttribute('aria-disabled', 'true');
+    expect(pad).not.toBeDisabled();
+    await user.tab();
+    expect(pad).toHaveFocus();
+    await user.keyboard('{Enter}');
+    await user.keyboard(' ');
+    await user.click(pad);
+    expect(onPress).not.toHaveBeenCalled();
+    rerender(<Pad label="Auto Fill" index="12" onPress={onPress} />);
+    expect(pad).not.toHaveAttribute('aria-disabled');
+    await user.click(pad);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('accentNext marks the pad to ring NEXT in the accent; off by default', () => {
+    const { container, rerender } = render(<Pad label="Main C" state="next" />);
+    const pad = within(container).getByRole('button');
+    expect(pad).not.toHaveAttribute('data-next');
+    rerender(<Pad label="Main C" state="next" accentNext />);
+    expect(pad).toHaveAttribute('data-next', 'accent');
+  });
+
+  it('fillCell marks the pad to fill its cell; off by default', () => {
+    const { container, rerender } = render(<Pad label="Main C" />);
+    const pad = within(container).getByRole('button');
+    expect(pad).not.toHaveAttribute('data-fill');
+    rerender(<Pad label="Main C" fillCell />);
+    expect(pad).toHaveAttribute('data-fill', 'true');
   });
 
   it('renders tip as data-tip and applies the tip action', () => {

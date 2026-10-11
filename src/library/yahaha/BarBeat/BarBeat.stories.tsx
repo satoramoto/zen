@@ -73,3 +73,12 @@ export const Sections: Story = {
 
 /** A long bar: 7/8, beat 5. */
 export const SevenEight: Story = { args: { beat: 5, beats: 7 } };
+
+/** New: a thicker bar for reading across a room, `thickness` 6px; the lit beat stays three times it. */
+export const Thick: Story = {
+  args: { beat: 2, beats: 4, thickness: '6px' },
+  play: async ({ canvasElement }) => {
+    const bar = within(canvasElement).getByRole('img', { name: 'Beat 2 of 4' });
+    await expect(bar.style.getPropertyValue('--yh-bar-beat-line')).toBe('6px');
+  },
+};
