@@ -48,3 +48,7 @@ Every study now starts with a concrete reading task or perceptual prediction. Th
 T2 offers a plausible 44–76 ch range; W3 compares fixed and adaptive policies at the same requested width (280–640 px). Panels cap width on small screens. W1 explores associations rather than ranking fonts. B1 compares readable 125% and 145% leading; B2 compares policy scanning with action-oriented emphasis. These are observational experiments, not measured usability studies.
 
 The rebuilt test suite contains 45 checks of state transitions, story arguments, and fixed-content/color invariants. Historical verification reports describe earlier revisions; use a review report’s exact commit when evaluating which illustration it covers.
+
+## Realistic comparison rebuild
+
+The current18 examples use credible compositions, concrete reader tasks, and explicit tradeoffs. Color studies show identical targets in different contexts with a simultaneous neutral reveal. The updated [teaching reviews and browser verification](docs/rebuild-verification.md) supersede earlier example acceptance records.
