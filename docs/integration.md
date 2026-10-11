@@ -33,3 +33,23 @@ Independent source reviews and integrated browser validation are owned by the co
 ## Completed assignment cleanup
 
 Both final JSX reviews and coordinator-supplied integrated browser evidence are preserved in `docs/verification.md` and the linked review records. Verified source `3475ab675de594b07c2233d4827c9550bd1b9466` is an ancestor of the coordinator revision. The source worktree had no tracked or untracked changes; its only ignored entries were regenerable `node_modules`, `dist`, and `storybook-static`. Removed the completed temporary worktree with ordinary `git worktree remove`; retained `codex/illustrations`. Removed only the coordinator-designated disposable responsive-check wrapper. No preview processes or browser tabs were changed.
+
+## Realistic comparative studies rebuild
+
+- Persistent coordinator worktree: `/Users/ryan/Documents/Codex/2026-10-10/what-x20-2/work/awesome-design-coordinator`.
+- Coordinator branch: `codex/interactive-brief`; prior commit `db9bddb709ba8950ac833d01f5bdefa77dc7f385`.
+- The requested saved checkout was found on `main` at `000daf0cb94281c3bbda38c9b932faac72d2e667`. With coordinator authorization, attached the existing coordinator branch at the new persistent worktree above; preserved saved main unchanged.
+- Source worktree: `/Users/ryan/Documents/Codex/2026-10-10/what-x20-2/work/realistic-examples`, branch `codex/realistic-examples`.
+- Immutable ready source: `0b2aade103368fd4264eff36b7494ba974796f79`, based on prior coordinator `db9bddb709ba8950ac833d01f5bdefa77dc7f385`.
+- Resulting non-fast-forward merge: `eb6657fa1a27e1c018bec35543c4e0d412f3af36`.
+- Order: existing coordinator, then the single source rebuild. No conflicts or behavioral edits by Integrator.
+
+Validation on the resulting merge:
+
+- `git diff --check HEAD^1 HEAD`: passed.
+- `npm run typecheck`: passed.
+- `npm test`: passed, 45 tests in one file.
+- `npm run build`: passed.
+- `npm run build:storybook`: passed, with non-fatal Node module.register deprecation and vendor chunk-size warnings.
+
+Independent teaching-quality reviews and integrated browser checks remain coordinator-owned and pending at this integration handoff. A known T1 explanatory-copy follow-up is expected and is not included in this revision. No servers changed, no main landing or remote action, and no source-worktree cleanup performed.
