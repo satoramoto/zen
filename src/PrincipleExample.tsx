@@ -32,7 +32,7 @@ const labels: Partial<Record<ExampleId, [string, string]>> = {
   R3: ["Shared interval", "Clear ownership"],
   W2: ["One family", "Complementary roles"],
   W3: ["Fixed composition", "Adaptive composition"],
-  B1: ["Compact · 135%", "Open · 155%"],
+  B1: ["Compact · 125%", "Open · 145%"],
   B2: ["Several highlights", "Action highlight"],
   B3: ["CMS defaults", "Editorial marks"],
 };
@@ -52,29 +52,26 @@ function ArticleText() {
 function SettingsRows({ grouped = false }: { grouped?: boolean }) {
   return (
     <div className={`settings-rows ${grouped ? "grouped" : ""}`}>
-      {[
-        "Email digest",
-        "Product updates",
-        "Sign-in alerts",
-        "New device approval",
-      ].map((text, i) => (
-        <div className="setting-row" key={text}>
-          <div>
-            <strong>{text}</strong>
-            <small>
-              {
-                [
-                  "A weekly summary of your projects",
-                  "News from the studio",
-                  "Keep track of account activity",
-                  "Confirm unfamiliar devices",
-                ][i]
-              }
-            </small>
+      {["Cedar House", "North Studio", "River Market", "Eastside Museum"].map(
+        (text, i) => (
+          <div className="setting-row" key={text}>
+            <div>
+              <strong>{text}</strong>
+              <small>
+                {
+                  [
+                    "New comments and mentions",
+                    "New comments and mentions",
+                    "New comments and mentions",
+                    "New comments and mentions",
+                  ][i]
+                }
+              </small>
+            </div>
+            <span className="dummy-switch" aria-hidden="true" />
           </div>
-          <span className="dummy-switch" aria-hidden="true" />
-        </div>
-      ))}
+        ),
+      )}
     </div>
   );
 }
@@ -242,7 +239,7 @@ export function PrincipleExample({
     case "G3":
       specimen = (
         <div className="demo-paper">
-          <SectionLabel>Account preferences</SectionLabel>
+          <SectionLabel>Notifications / Your projects</SectionLabel>
           <h4>Stay in the loop.</h4>
           <SettingsRows grouped={active} />
         </div>
@@ -395,22 +392,18 @@ export function PrincipleExample({
     case "R3":
       specimen = (
         <div className={`demo-paper security ${active ? "owned" : ""}`}>
-          <SectionLabel>Security / Notifications</SectionLabel>
-          <h4>Account alerts</h4>
+          <SectionLabel>Preferences / Notifications</SectionLabel>
+          <h4>Stay connected</h4>
           <div className="security-option">
-            <strong>Sign-in emails</strong>
+            <strong>Email notifications</strong>
             <span className="tag">On</span>
           </div>
-          <p className="security-help">
-            Sent only when an unfamiliar device accesses your account.
-          </p>
+          <p className="security-help">Only mentions and direct messages.</p>
           <div className="security-option">
-            <strong>Weekly activity summary</strong>
-            <span className="tag">Off</span>
+            <strong>Mobile notifications</strong>
+            <span className="tag">On</span>
           </div>
-          <p className="security-help">
-            A digest of sign-ins and account changes from the past seven days.
-          </p>
+          <p className="security-help">Delivered while you are away.</p>
           <div className="security-footer">Changes are saved automatically</div>
         </div>
       );
@@ -490,7 +483,7 @@ export function PrincipleExample({
             style={{
               fontFamily: "Georgia, serif",
               fontSize: 16,
-              lineHeight: active ? 1.55 : 1.35,
+              lineHeight: active ? 1.45 : 1.25,
               maxWidth: "62ch",
             }}
           >

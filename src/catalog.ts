@@ -137,9 +137,9 @@ export const examples: Record<ExampleId, Example> = {
     topic: "Hierarchy",
     title: "Make the reading order visible",
     axiom:
-      "Use distinct typographic roles for a title, introduction, and supporting information.",
+      "Use distinct typographic roles to separate primary information from supporting context.",
     control: "Distinct type roles",
-    note: "Brand, amount, and deadline sizes and weights change. All words, positions, line items, and payment options remain fixed.",
+    note: "Brand, amount, and deadline sizes and weights change; brand and deadline contrast also change. Content, order, line items, and payment options remain fixed. Different type metrics can affect wrapping.",
     task: "Find the amount you need to pay and its deadline before reading the line items. Which version brings those together first?",
     takeaway:
       "Studio-led gives the sender a strong identity. Payment-led makes the next obligation more prominent. Hierarchy depends on what the reader came to do.",
@@ -204,7 +204,7 @@ export const examples: Record<ExampleId, Example> = {
       "Consistent spacing helps equivalent elements read as a related set.",
     control: "Regular intervals",
     note: "A locally adjusted list uses 18 / 26 / 18 px intervals between equivalent rows. A regular list repeats 20 px. Row content, padding, type, and divider style stay fixed.",
-    task: "Scan all four notification options. Which arrangement makes them feel like one recurring kind of decision?",
+    task: "Scan the notification settings for all four projects. Which arrangement makes them feel like one recurring kind of decision?",
     takeaway:
       "Small local spacing decisions can suggest an unintended subgroup. Regular intervals make equivalent rows feel related. Use a larger interval deliberately when the meaning really changes.",
     defaultApplied: true,
@@ -278,7 +278,7 @@ export const examples: Record<ExampleId, Example> = {
       "Place supporting text closer to the control it explains than to neighboring controls.",
     control: "Group labels and fields",
     note: "The first help sentence is equally spaced between its neighboring options in Shared interval. Clear ownership brings each help sentence closer to its own option and farther from the next. Content and typography remain fixed.",
-    task: "Which notification is sent only for an unfamiliar device: sign-in emails or the weekly summary?",
+    task: "Which channel is limited to mentions and direct messages: email or mobile notifications?",
     takeaway:
       "A sentence can look like a footnote for the option above or an introduction to the one below. Relative distance gives it an owner without adding a box or another label.",
     defaultApplied: true,
@@ -337,7 +337,7 @@ export const examples: Record<ExampleId, Example> = {
     axiom:
       "Prioritize body text conditions: font, size, line spacing, and measure.",
     control: "Reading density",
-    note: "Only leading changes: 135% or 155%. The same 16 px Georgia, maximum 62 ch measure, paragraphs, and margins remain fixed.",
+    note: "Only leading changes: 125% or 145%. The same 16 px Georgia, maximum 62 ch measure, paragraphs, and margins remain fixed.",
     task: "Read the paragraph in both settings. Notice how readily your eye returns to the next line and how much page space the text uses.",
     takeaway:
       "Both settings are readable, plausible choices. More leading separates the lines; compact leading keeps a long page shorter. Judge the relationship between line length, font, and density.",

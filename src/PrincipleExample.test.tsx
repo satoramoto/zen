@@ -153,9 +153,9 @@ describe("comparisons use actual specimen changes", () => {
     const { container } = render(<PrincipleExample id="B1" />);
     const paragraph = container.querySelector(".leading-text")!;
     const text = paragraph.innerHTML;
-    expect(paragraph).toHaveStyle({ fontSize: "16px", lineHeight: "1.55" });
-    fireEvent.click(screen.getByRole("button", { name: "Compact · 135%" }));
-    expect(paragraph).toHaveStyle({ fontSize: "16px", lineHeight: "1.35" });
+    expect(paragraph).toHaveStyle({ fontSize: "16px", lineHeight: "1.45" });
+    fireEvent.click(screen.getByRole("button", { name: "Compact · 125%" }));
+    expect(paragraph).toHaveStyle({ fontSize: "16px", lineHeight: "1.25" });
     expect(paragraph.innerHTML).toBe(text);
   });
   it("B2 keeps the required action bold in both alternatives", () => {
