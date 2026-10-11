@@ -2,13 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 import { Button } from '../../components';
 import { withLibraryTheme } from '../../storybook';
+import { HueLegend, PART_LEGEND, type HueLegendItem } from '../HueLegend/HueLegend';
 import { GroupHeader } from './GroupHeader';
 
 type Content = 'faders' | 'knobs' | 'pads' | 'none';
 type End = 'legend' | 'none';
 type Tab = { id: string; label: string; name?: string; tip?: string };
-type SectionHue = 'intro' | 'main' | 'ending' | 'brk' | 'fill';
-type LegendItem = { label: string; hue: SectionHue };
 
 /** The story's args: GroupHeader's own props plus the stand-in children's, mapped into `children` and `end`. */
 type Args = {
@@ -26,24 +25,7 @@ type Args = {
   bankChosen: string;
   onchooseBank: (id: string) => void;
   endContent: End;
-  legendItems: LegendItem[];
-};
-
-const SECTION_LEGEND: LegendItem[] = [
-  { label: 'Intro', hue: 'intro' },
-  { label: 'Main', hue: 'main' },
-  { label: 'Ending', hue: 'ending' },
-  { label: 'Break', hue: 'brk' },
-  { label: 'Fill', hue: 'fill' },
-];
-
-/** The lane's section-kind colours. */
-const SECTION_COLOUR: Record<SectionHue, string> = {
-  intro: 'var(--hue-3)',
-  main: 'var(--hue-4)',
-  ending: 'var(--hue-2)',
-  brk: 'var(--hue-1)',
-  fill: 'var(--accent)',
+  legendItems: HueLegendItem[];
 };
 
 /** The band header's fader page tabs (the master button). */
@@ -88,29 +70,6 @@ function StandInTabs({ label, tabs, chosen, onchoose }: { label: string; tabs: T
   );
 }
 
-/** Stand-in for a hue legend: a dot in each section kind's colour, then its word. */
-function StandInLegend({ items }: { items: LegendItem[] }) {
-  return (
-    <>
-      {items.map((item) => (
-        <span key={item.hue} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 'var(--space-1)', color: 'var(--text-2)' }}>
-          <span
-            aria-hidden
-            style={{
-              alignSelf: 'center',
-              width: 'var(--space-2)',
-              height: 'var(--space-2)',
-              borderRadius: 'var(--radius-pill)',
-              background: SECTION_COLOUR[item.hue],
-            }}
-          />
-          {item.label}
-        </span>
-      ))}
-    </>
-  );
-}
-
 function children(args: Args) {
   if (args.content === 'none') return undefined;
   if (args.content === 'faders') {
@@ -138,9 +97,10 @@ function children(args: Args) {
 }
 
 /**
- * The row that names a group of controls and holds its tabs, its hue legend at the right end
- * (`end`) and its page counter. The stories put stand-ins (ghost library Buttons as tabs, a dot
- * legend) into `children` and `end`; their args are grouped by child in the Controls panel.
+ * The row that names a group of controls and holds its tabs, its part legend at the right end
+ * (`end`) and its page counter. The stories put stand-in tabs (ghost library Buttons) into
+ * `children` and the redesigned HueLegend (the four parts; sections take no hue) into `end`; their
+ * args are grouped by child in the Controls panel.
  */
 const meta: Meta<Args> = {
   title: 'Library/Yahaha/Primitives/GroupHeader',
@@ -154,7 +114,7 @@ const meta: Meta<Args> = {
       level={args.level}
       id={args.id}
       width={args.width}
-      end={args.endContent === 'legend' ? <StandInLegend items={args.legendItems} /> : undefined}
+      end={args.endContent === 'legend' ? <HueLegend items={args.legendItems} /> : undefined}
     >
       {children(args)}
     </GroupHeader>
@@ -169,7 +129,7 @@ const meta: Meta<Args> = {
     bankChosen: '0',
     onchooseBank: fn(),
     endContent: 'none',
-    legendItems: SECTION_LEGEND,
+    legendItems: PART_LEGEND,
   },
   argTypes: {
     title: { control: 'text' },
@@ -211,7 +171,11 @@ export const Knobs: Story = {
   args: { title: 'Knobs', width: 666, content: 'knobs' },
 };
 
-/** Pads, the pad bank tabs with Sections chosen, and at the right end the five-hue section legend (`end`). */
+/**
+ * Pads, the pad bank tabs with Sections chosen, and at the right end the part legend (`end`). The
+ * section pads take no hue, so the old five-hue section legend is gone; the four parts' key is the
+ * one legend a header holds.
+ */
 export const Pads: Story = {
   args: { title: 'Pads', width: 666, content: 'pads', endContent: 'legend' },
 };
@@ -226,7 +190,7 @@ export const KnobsCount: Story = {
   args: { title: 'Knobs', width: 666, content: 'knobs', count: { label: 'Page', value: '1/6' } },
 };
 
-/** Pads with both the legend and the counter: the legend takes the slack, the counter follows it. */
+/** Pads with both the part legend and the counter: the legend takes the slack, the counter follows it. */
 export const PadsLegendCount: Story = {
   args: { title: 'Pads', width: 666, content: 'pads', endContent: 'legend', count: { label: 'Bank', value: '1/5' } },
 };

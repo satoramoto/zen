@@ -1,14 +1,21 @@
+import type { CSSProperties } from 'react';
+import { SECTION_STATE_COLOUR, type SectionState } from '../hues';
 import './SectionName.css';
 
-/** The five section kinds; each maps onto one contract colour (see SectionName.css). */
+/** The five section kinds. Kept as a hook (`data-hue`); a section takes no colour from its kind. */
 export type SectionHue = 'intro' | 'main' | 'ending' | 'brk' | 'fill';
 
 export interface SectionNameProps {
   /** The section's shown name ("Main B", "Intro II", "Fill"). Empty: "—". */
   label: string;
-  /** The section kind, which picks its colour. */
+  /**
+   * The section kind. Accepted for older callers and kept on `data-hue`, but it no longer picks a
+   * colour: sections take no hue (`../hues`).
+   */
   hue?: SectionHue;
-  /** The band is stopped: the name steps back to muted text, without its bloom. */
+  /** Where the section stands, which picks its colour role (`SECTION_STATE_COLOUR`). Default `playing`. */
+  state?: SectionState;
+  /** The band is stopped: the name steps back to the idle role, without its bloom. Same as `state="idle"`. */
   idle?: boolean;
 }
 
@@ -22,22 +29,31 @@ export interface SectionNameProps {
  * tracking, so it shares a baseline and weight with the tempo beside it (hierarchy; see
  * `references/typography.md` on one display size per screen). The variation letter ("B",
  * "II") is set in the readout face with tabular numerals, so "Main A" → "Main B" changes one
- * glyph without the word moving (numerals). The glow follows the palette's `--bloom`, so flat
- * packs draw it flat instead of a fake shadow (colour meaning: light only where the
- * hardware glows). Five section kinds share four categorical hues: Fill, the shortest
- * section, takes the accent (`references/color.md`: colour carries meaning, not decoration).
+ * glyph without the word moving (numerals). *Colour meaning*: the four categorical hues belong
+ * to the four parts (`../hues`), so a section no longer wears one; its colour says where it
+ * stands, not what kind it is: playing in `--selected` with the palette's `--bloom` (flat packs
+ * draw it flat), next in `--accent`, idle in secondary text, absent in faint text
+ * (`SECTION_STATE_COLOUR`). The word itself names the section (`references/color.md`: colour
+ * carries meaning, not decoration).
  *
- * **Kept**: one line, never wrapping; idle drops to muted text with no glow; an empty name
- * shows "—" rather than collapsing the layout.
+ * **Kept**: one line, never wrapping; idle drops out of the playing colour with no glow; an empty
+ * name shows "—" rather than collapsing the layout; the `hue` prop and `data-hue` hook.
  */
-export function SectionName({ label, hue = 'main', idle = false }: SectionNameProps) {
+export function SectionName({ label, hue = 'main', state, idle = false }: SectionNameProps) {
+  const stands: SectionState = idle ? 'idle' : (state ?? 'playing');
   const shown = label.trim() === '' ? '—' : label.trim();
   // Split "Main B" into its word and its variation so the variation can use numerals.
   const match = /^(.*\S)\s+(\S{1,3})$/.exec(shown);
   const word = match ? match[1] : shown;
   const variant = match ? match[2] : '';
   return (
-    <span className="yh-section-name" data-hue={hue} data-idle={idle ? 'true' : undefined}>
+    <span
+      className="yh-section-name"
+      data-hue={hue}
+      data-state={stands}
+      data-idle={idle ? 'true' : undefined}
+      style={{ '--yh-section-tone': SECTION_STATE_COLOUR[stands] } as CSSProperties}
+    >
       {word}
       {variant && (
         <>

@@ -37,24 +37,26 @@ export const Board: Story = {
   },
 };
 
-/** The dot before "Section" while Main B plays: Main's categorical hue with its bloom. */
+/** The dot before "Section" while Main B plays: the playing role (`--selected`) with its bloom; sections take no hue. */
 export const Section: Story = {
   args: { hue: 'main' },
   play: async ({ canvasElement }) => {
-    const dot = canvasElement.querySelector('[data-hue]');
+    const dot = canvasElement.querySelector<HTMLElement>('[data-hue]');
     await expect(dot).toHaveAttribute('data-hue', 'main');
     await expect(dot).toHaveAttribute('data-face', 'solid');
     await expect(dot).toHaveAttribute('data-glow', 'true');
+    await expect(dot?.style.getPropertyValue('--yh-status-dot-hue')).toBe('var(--selected)');
   },
 };
 
-/** The section dot in another section's hue, its bloom in that hue. */
+/** The section dot during an intro: the same playing role as Main, since a section is named by its word, not a colour. */
 export const Intro: Story = {
   args: { hue: 'intro' },
   play: async ({ canvasElement }) => {
-    const dot = canvasElement.querySelector('[data-hue]');
+    const dot = canvasElement.querySelector<HTMLElement>('[data-hue]');
     await expect(dot).toHaveAttribute('data-hue', 'intro');
     await expect(dot).toHaveAttribute('data-glow', 'true');
+    await expect(dot?.style.getPropertyValue('--yh-status-dot-hue')).toBe('var(--selected)');
   },
 };
 
@@ -132,7 +134,10 @@ export const NamedHidden: Story = {
   },
 };
 
-/** Every hue, solid and hollow, beside the word it marks: the dot scales with the label's size. */
+/**
+ * Every hue, solid and hollow, beside the word it marks: the dot scales with the label's size.
+ * The five section values all read the one playing role.
+ */
 export const Faces: Story = {
   render: () => (
     <div

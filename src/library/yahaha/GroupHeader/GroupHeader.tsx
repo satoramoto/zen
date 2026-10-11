@@ -16,7 +16,7 @@ export interface GroupHeaderProps {
   width?: number;
   /** What follows the title (the group's tabs, a page block); each top-level element is a row item. */
   children?: ReactNode;
-  /** What sits at the row's right end, before the counter: the header's hue legend, if it has one. */
+  /** What sits at the row's right end, before the counter: the header's part legend (HueLegend), if it has one. */
   end?: ReactNode;
 }
 
@@ -39,7 +39,8 @@ export interface GroupHeaderProps {
  * counter stay whole at the right end (`references/typography.md` §10, content overflow). The
  * rule under the row is `--border-strong` at `--border-width`, so it follows the chrome: a hairline
  * in flat packs, never a coloured bar (`references/color.md`: colour only where it is the
- * information, which here is the legend in `end`). One baseline, set by a strut, still runs
+ * information, which here is the part legend in `end`; sections take no hue, so a header never
+ * keys them). One baseline, set by a strut, still runs
  * through the title, the tabs, the legend and the counter.
  *
  * **Kept**: a real heading at the given level and `id`; `children` straight after the title as

@@ -1,9 +1,9 @@
 /* BarBeat: one segment per beat. Local variables: --yh-bar-beat-count (segments, set inline),
-   --yh-bar-beat-hue (the section's colour role), --yh-bar-beat-line and --yh-bar-beat-lit
-   (rest and lit heights). */
+   --yh-bar-beat-tone (the playing role, set inline from hues.ts; sections take no hue),
+   --yh-bar-beat-line and --yh-bar-beat-lit (rest and lit heights). */
 .yh-bar-beat {
   --yh-bar-beat-count: 4;
-  --yh-bar-beat-hue: var(--accent);
+  --yh-bar-beat-tone: var(--selected);
   --yh-bar-beat-line: max(2px, calc(var(--space-1) * 0.75));
   --yh-bar-beat-lit: calc(var(--yh-bar-beat-line) * 3);
   display: grid;
@@ -17,27 +17,20 @@
   height: var(--yh-bar-beat-lit);
 }
 
-.yh-bar-beat[data-hue='intro'] { --yh-bar-beat-hue: var(--hue-1); }
-.yh-bar-beat[data-hue='main'] { --yh-bar-beat-hue: var(--hue-2); }
-.yh-bar-beat[data-hue='ending'] { --yh-bar-beat-hue: var(--hue-3); }
-.yh-bar-beat[data-hue='brk'] { --yh-bar-beat-hue: var(--hue-4); }
-/* The contract has four categorical hues; Fill takes a fifth mixed from the first two. */
-.yh-bar-beat[data-hue='fill'] { --yh-bar-beat-hue: color-mix(in srgb, var(--hue-1) 50%, var(--hue-2)); }
-
 .yh-bar-beat__segment {
   height: var(--yh-bar-beat-line);
   border-radius: var(--radius-pill);
   background: var(--border-strong);
 }
 
-/* Past beats: the section's hue, a step below the lit one. */
+/* Past beats: the playing role, a step below the lit one. */
 .yh-bar-beat__segment--past {
-  background: color-mix(in srgb, var(--yh-bar-beat-hue) 70%, transparent);
+  background: color-mix(in srgb, var(--yh-bar-beat-tone) 70%, transparent);
 }
 
-/* The current beat: full hue, taller, with the pack's bloom (0px on flat packs). */
+/* The current beat: the full playing role, taller, with the pack's bloom (0px on flat packs). */
 .yh-bar-beat__segment--current {
   height: var(--yh-bar-beat-lit);
-  background: var(--yh-bar-beat-hue);
-  box-shadow: 0 0 var(--bloom) color-mix(in srgb, var(--yh-bar-beat-hue) 60%, transparent);
+  background: var(--yh-bar-beat-tone);
+  box-shadow: 0 0 var(--bloom) color-mix(in srgb, var(--yh-bar-beat-tone) 60%, transparent);
 }

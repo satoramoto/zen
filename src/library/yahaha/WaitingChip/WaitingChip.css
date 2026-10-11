@@ -24,15 +24,10 @@
   vertical-align: middle;
 }
 
-.yh-waiting-chip[data-hue='intro'] { --yh-waiting-chip-hue: var(--hue-1); }
-.yh-waiting-chip[data-hue='main'] { --yh-waiting-chip-hue: var(--hue-2); }
-.yh-waiting-chip[data-hue='ending'] { --yh-waiting-chip-hue: var(--hue-3); }
-.yh-waiting-chip[data-hue='brk'] { --yh-waiting-chip-hue: var(--hue-4); }
-/* The contract has four categorical hues; Fill takes a fifth mixed from the first two. */
-.yh-waiting-chip[data-hue='fill'] { --yh-waiting-chip-hue: color-mix(in srgb, var(--hue-1) 50%, var(--hue-2)); }
+/* A queued style. A waiting section gets the "next" role inline from hues.ts, never a part hue. */
 .yh-waiting-chip[data-hue='a'] { --yh-waiting-chip-hue: var(--accent); }
 
-/* "Next", by shape: a small forward-pointing arrow in the hue. */
+/* "Next", by shape: a small forward-pointing arrow in the role. */
 .yh-waiting-chip__arrow {
   display: inline-block;
   width: 0.45em;

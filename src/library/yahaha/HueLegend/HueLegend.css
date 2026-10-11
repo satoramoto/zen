@@ -30,7 +30,7 @@
   border-radius: var(--yh-huelegend-radius);
   background: var(--hue);
 }
-/* A section with no hue (Fill): an outlined chip, so it reads as "no colour of its own". */
+/* An entry with no part (a section, from older callers): an outlined chip, "no colour of its own". */
 .yh-huelegend__item:not([data-hue]) .yh-huelegend__chip {
   background: transparent;
   border: max(1px, var(--border-width)) solid var(--text-3);

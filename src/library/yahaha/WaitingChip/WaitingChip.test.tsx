@@ -21,6 +21,19 @@ describe('WaitingChip', () => {
     expect(chip).toHaveAttribute('data-size', 'count');
   });
 
+  it('a waiting section reads the "next" role, never a hue; a style and neutral need no inline tone', () => {
+    for (const hue of ['intro', 'main', 'ending', 'brk', 'fill'] as const) {
+      const { unmount } = render(<WaitingChip label="Next" hue={hue} />);
+      expect(screen.getByText('Next').style.getPropertyValue('--yh-waiting-chip-hue')).toBe('var(--accent)');
+      unmount();
+    }
+    for (const hue of ['a', 't'] as const) {
+      const { unmount } = render(<WaitingChip label="Next" hue={hue} />);
+      expect(screen.getByText('Next').getAttribute('style')).toBeNull();
+      unmount();
+    }
+  });
+
   it('a queued style on the line', () => {
     render(<WaitingChip label="Coastal Highway" hue="a" size="line" />);
     const chip = screen.getByText('Coastal Highway');
