@@ -1,0 +1,73 @@
+/*
+ * The blooms behind a screen (app/src/ui/Blooms): their hues and strength per theme, and the ground
+ * a screen paints under its regions. Blooms/blooms.ts picks the hues per palette. The hues are
+ * tuned so every text role still reaches AA on the brightest (dark) or darkest (light) spot the
+ * blooms make (Blooms/contrast.test.ts).
+ */
+
+[data-theme='dark'] {
+  /* Each bloom's core is its glow colour itself (below): the glows are already as strong as the text
+     allows, so they are drawn at full strength rather than faded in. Where two overlap, the one on
+     top covers the other rather than adding to it, so no spot is ever brighter than one glow. */
+  --bloom-peak: 100%;
+  --bloom-a: var(--bloom-glow-violet);
+  --bloom-r1: var(--bloom-glow-blue);
+  --bloom-r2: var(--bloom-glow-pink);
+  --bloom-r3: var(--bloom-glow-orange);
+  --bloom-l: var(--bloom-glow-teal);
+  --bloom-intro: var(--bloom-glow-gold);
+  --bloom-main: var(--bloom-glow-green);
+  --bloom-ending: var(--bloom-glow-rose);
+  --bloom-brk: var(--bloom-glow-plum);
+  --bloom-fill: var(--bloom-glow-slate);
+  /* The ground a screen and its opaque regions paint. A screen wrapper with a backdrop behind it
+     sets this to transparent for its subtree, so the blooms show through. */
+  --backdrop-ground: var(--g);
+}
+
+:root {
+  /* Dark's bloom glows: each hue as saturated as it goes at the most light the black ground can take
+     under the text. The dark red and plum text roles (--ending, --brk) leave the ground almost no
+     headroom (a luminance of about 0.008), so the glows spend it on colour, not brightness: mostly
+     red and blue, which cost little luminance, and almost no green, which costs the most. Deep
+     indigo, navy and magenta pools read plainly on black where a faded bright hue reads as grey. */
+  --bloom-glow-violet: #1b004f;
+  --bloom-glow-blue: #000a52;
+  --bloom-glow-pink: #30001d;
+  --bloom-glow-orange: #2c0a00;
+  --bloom-glow-teal: #00181e;
+  --bloom-glow-gold: #181400;
+  --bloom-glow-green: #001806;
+  --bloom-glow-rose: #2e000c;
+  --bloom-glow-plum: #27003c;
+  --bloom-glow-slate: #0a141e;
+  /* Light's bloom tints: each bright hue mixed into white until it is just lighter than the light
+     ground (--stone-94), so a bloom tints the ground and lifts it a hair, never darkening it under
+     the text (light's --lamp-line has almost no headroom on the ground). */
+  --bloom-tint-violet: #f4f1ff;
+  --bloom-tint-blue: #ebf4ff;
+  --bloom-tint-pink: #ffeff6;
+  --bloom-tint-orange: #fff0e0;
+  --bloom-tint-teal: #e1f8f3;
+  --bloom-tint-gold: #f5f3e3;
+  --bloom-tint-green: #e1f8e6;
+  --bloom-tint-rose: #faf1f1;
+  --bloom-tint-plum: #f5f1f7;
+  --bloom-tint-slate: #eff3f4;
+}
+
+[data-theme='light'] {
+  /* Much fainter on the light ground: a pastel lift, not a glow. */
+  --bloom-peak: 100%;
+  --bloom-a: var(--bloom-tint-violet);
+  --bloom-r1: var(--bloom-tint-blue);
+  --bloom-r2: var(--bloom-tint-pink);
+  --bloom-r3: var(--bloom-tint-orange);
+  --bloom-l: var(--bloom-tint-teal);
+  --bloom-intro: var(--bloom-tint-gold);
+  --bloom-main: var(--bloom-tint-green);
+  --bloom-ending: var(--bloom-tint-rose);
+  --bloom-brk: var(--bloom-tint-plum);
+  --bloom-fill: var(--bloom-tint-slate);
+  --backdrop-ground: var(--g);
+}

@@ -9,7 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "tsc --noEmit && vite build",
-    "build:storybook": "storybook build --disable-telemetry"
+    "build:storybook": "storybook build --disable-telemetry && npm --prefix yahaha run build-storybook -- --output-dir ../storybook-static/yahaha"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -1,0 +1,33 @@
+/*
+ * The layout grid (a proposal, opt-in: Stage's `layout="grid"`). An invisible grid for the
+ * 1440 × 900 screen, so every region starts and ends on the same lines:
+ *  - 15 columns, which divide into thirds (5 columns) and fifths (3 columns);
+ *  - one gutter between columns, 18px;
+ *  - the screen's side margins, 24px, so the columns fill the 1392px the screen always had;
+ *  - a 6px rhythm: rows start on multiples of it. 900 = 150 × 6, and the margin (4 units) and the
+ *    gutter (3 units) are multiples too, so the vertical and horizontal grids share one unit.
+ * 1392 = 15 × 76 + 14 × 18: a column is a whole 76px and every column line falls on a whole pixel.
+ */
+
+:root {
+  --grid-columns: 15;
+  --grid-unit: 6px; /* the vertical rhythm's base unit */
+  --grid-margin: 24px; /* the screen's side margins: 4 units */
+  --grid-gutter: 18px; /* between columns: 3 units */
+  --grid-width: calc(var(--screen-width) - 2 * var(--grid-margin)); /* 1392 */
+  --grid-column: calc((var(--grid-width) - (var(--grid-columns) - 1) * var(--grid-gutter)) / var(--grid-columns)); /* 76 */
+  /* Spans: n columns and the n − 1 gutters between them. */
+  --grid-span-3: calc(3 * var(--grid-column) + 2 * var(--grid-gutter)); /* a fifth: 264 */
+  --grid-span-5: calc(5 * var(--grid-column) + 4 * var(--grid-gutter)); /* a third: 452 */
+  --grid-span-6: calc(6 * var(--grid-column) + 5 * var(--grid-gutter)); /* two fifths: 546 */
+  --grid-span-9: calc(9 * var(--grid-column) + 8 * var(--grid-gutter)); /* three fifths: 828 */
+}
+
+/* The overlay that shows the grid (Stage's `overlay`): the columns as faint bands, the rhythm as
+   hairlines, every fourth line (24px) stronger. A design aid, never on in the app. */
+[data-theme='dark'],
+[data-theme='light'] {
+  --grid-overlay-column: color-mix(in srgb, var(--rec) 12%, transparent);
+  --grid-overlay-line: color-mix(in srgb, var(--r1) 14%, transparent);
+  --grid-overlay-line-major: color-mix(in srgb, var(--r1) 40%, transparent);
+}

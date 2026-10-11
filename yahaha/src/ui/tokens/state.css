@@ -1,0 +1,28 @@
+/*
+ * The state language's absent face, built from each theme's hues: a disabled or absent control
+ * (Intro III in a style without one, a disabled button) keeps its own hue at reduced strength,
+ * its outline and label --absent-mix of the hue over the ground, so an absent Intro pad reads as a
+ * faded yellow pad, clearly fainter than one at rest. Never grey. One token per hue a control can
+ * have; a component picks the one for its hue and never mixes a colour itself.
+ */
+
+[data-theme='dark'],
+[data-theme='light'] {
+  --absent-neutral: color-mix(in srgb, var(--neutral) var(--absent-mix), var(--g));
+  --absent-a: color-mix(in srgb, var(--a) var(--absent-mix), var(--g));
+  --absent-rec: color-mix(in srgb, var(--rec) var(--absent-mix), var(--g));
+  --absent-lamp: color-mix(in srgb, var(--lamp-line) var(--absent-mix), var(--g));
+  --absent-ok: color-mix(in srgb, var(--ok) var(--absent-mix), var(--g));
+  --absent-r1: color-mix(in srgb, var(--r1) var(--absent-mix), var(--g));
+  --absent-r2: color-mix(in srgb, var(--r2) var(--absent-mix), var(--g));
+  --absent-r3: color-mix(in srgb, var(--r3) var(--absent-mix), var(--g));
+  --absent-l: color-mix(in srgb, var(--l) var(--absent-mix), var(--g));
+  --absent-intro: color-mix(in srgb, var(--intro) var(--absent-mix), var(--g));
+  --absent-main: color-mix(in srgb, var(--main) var(--absent-mix), var(--g));
+  --absent-ending: color-mix(in srgb, var(--ending) var(--absent-mix), var(--g));
+  --absent-brk: color-mix(in srgb, var(--brk) var(--absent-mix), var(--g));
+  --absent-fill: color-mix(in srgb, var(--fill) var(--absent-mix), var(--g));
+  --absent-transport: color-mix(in srgb, var(--transport) var(--absent-mix), var(--g));
+  /* A control with no hue of its own (a disabled tab, a neutral button). */
+  --absent: var(--absent-neutral);
+}
