@@ -1,8 +1,11 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
 import './AccentBlock.css';
 
-/** The app's tooltip hook: given the element and a tooltip key; may return a cleanup. */
-export type TipAction = (node: HTMLElement, key: string) => void | (() => void);
+/** The app's tooltip hook (a Svelte action): given the element and a tooltip key; may return a handle. */
+export type TipAction = (
+  node: HTMLElement,
+  key: string,
+) => { update?: (key: string) => void; destroy?: () => void } | void;
 
 export interface AccentBlockProps {
   /** The text in the block ("Sunday Drive Pop", "Style", "Swap R1"). */
@@ -58,8 +61,8 @@ export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', 
 
   useEffect(() => {
     if (as !== 'button' || !tip || !tipAction || !ref.current) return;
-    const cleanup = tipAction(ref.current, tip);
-    return typeof cleanup === 'function' ? cleanup : undefined;
+    const handle = tipAction(ref.current, tip);
+    return () => handle?.destroy?.();
   }, [as, tip, tipAction]);
 
   if (as === 'button') {

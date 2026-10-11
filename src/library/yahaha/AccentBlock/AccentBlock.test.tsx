@@ -64,10 +64,15 @@ describe('AccentBlock', () => {
     expect(tipAction).not.toHaveBeenCalled();
   });
 
-  it('runs the tooltip hook cleanup on unmount', () => {
-    const cleanup = vi.fn();
-    const { unmount } = render(<AccentBlock label="Pop" as="button" tip="browser.open" tipAction={() => cleanup} />);
+  it('destroys the tooltip action handle when the tip changes and on unmount', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { rerender, unmount } = render(<AccentBlock label="Pop" as="button" tip="browser.open" tipAction={tipAction} />);
+    expect(destroy).not.toHaveBeenCalled();
+    rerender(<AccentBlock label="Pop" as="button" tip="browser.close" tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenLastCalledWith(screen.getByRole('button'), 'browser.close');
     unmount();
-    expect(cleanup).toHaveBeenCalledTimes(1);
+    expect(destroy).toHaveBeenCalledTimes(2);
   });
 });
