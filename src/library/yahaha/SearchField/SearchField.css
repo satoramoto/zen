@@ -1,0 +1,110 @@
+/* SearchField: a search input in the pack's input chrome. Reads only contract variables. */
+
+.yh-search-field {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 0;
+  height: var(--control-h);
+  padding: 0 var(--space-1) 0 var(--space-3);
+  border-style: solid;
+  border-color: var(--border-strong);
+  border-width: 0 var(--input-border-sides) var(--input-border-bottom);
+  border-radius: var(--radius-input);
+  background: var(--input-fill);
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  letter-spacing: var(--tracking);
+}
+
+.yh-search-field:hover {
+  border-color: var(--text-3);
+}
+
+.yh-search-field:focus-within {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.yh-search-field[data-filled] {
+  color: var(--text-2);
+}
+
+.yh-search-field__label {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  height: 100%;
+  cursor: text;
+}
+
+.yh-search-field__glass {
+  flex: none;
+}
+
+.yh-search-field__name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.yh-search-field__input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-input);
+  background: transparent;
+  color: var(--text-1);
+  caret-color: var(--accent);
+  font: inherit;
+  font-weight: var(--weight-body);
+  letter-spacing: inherit;
+  text-overflow: ellipsis;
+  outline: none;
+  appearance: none;
+}
+
+.yh-search-field__input::placeholder {
+  color: var(--text-3);
+  opacity: 1;
+}
+
+.yh-search-field__input::-webkit-search-decoration,
+.yh-search-field__input::-webkit-search-cancel-button,
+.yh-search-field__input::-webkit-search-results-button,
+.yh-search-field__input::-webkit-search-results-decoration {
+  appearance: none;
+}
+
+.yh-search-field__clear {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: calc(var(--control-h) - var(--space-2));
+  height: calc(var(--control-h) - var(--space-2));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.yh-search-field__clear:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
