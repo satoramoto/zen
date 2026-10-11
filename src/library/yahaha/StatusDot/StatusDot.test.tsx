@@ -35,6 +35,19 @@ describe('StatusDot', () => {
     expect(dot).toHaveAttribute('data-face', 'solid');
   });
 
+  it('gives every section the playing role, never a hue, and no inline tone to the others', () => {
+    for (const hue of ['intro', 'main', 'ending', 'brk', 'fill'] as const) {
+      const { container, unmount } = render(<StatusDot hue={hue} />);
+      expect(dotOf(container).style.getPropertyValue('--yh-status-dot-hue')).toBe('var(--selected)');
+      unmount();
+    }
+    for (const hue of ['ok', 'd', 't'] as const) {
+      const { container, unmount } = render(<StatusDot hue={hue} />);
+      expect(dotOf(container).getAttribute('style')).toBeNull();
+      unmount();
+    }
+  });
+
   it('a name makes it an image, solid or hollow', () => {
     const { rerender } = render(<StatusDot hue="ok" name="Running" />);
     const dot = screen.getByRole('img', { name: 'Running' });

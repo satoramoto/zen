@@ -1,5 +1,6 @@
-/* StatusDot: a lamp sized to the word it marks. Each hue maps to a palette role; the face
-   (solid or hollow) is the second channel, so colour never carries the state alone. */
+/* StatusDot: a lamp sized to the word it marks. Each hue maps to a palette role (a section's is
+   set inline from hues.ts: the playing role, never a part hue); the face (solid or hollow) is the
+   second channel, so colour never carries the state alone. */
 .yh-status-dot {
   --yh-status-dot-hue: var(--success);
   --yh-status-dot-size: 0.5em;
@@ -39,20 +40,4 @@
 }
 .yh-status-dot[data-hue='t'] {
   --yh-status-dot-hue: var(--text-1);
-}
-.yh-status-dot[data-hue='intro'] {
-  --yh-status-dot-hue: var(--hue-1);
-}
-.yh-status-dot[data-hue='main'] {
-  --yh-status-dot-hue: var(--hue-2);
-}
-.yh-status-dot[data-hue='ending'] {
-  --yh-status-dot-hue: var(--hue-3);
-}
-.yh-status-dot[data-hue='brk'] {
-  --yh-status-dot-hue: var(--hue-4);
-}
-/* The contract has four categorical hues; Fill takes a fifth mixed from the first two. */
-.yh-status-dot[data-hue='fill'] {
-  --yh-status-dot-hue: color-mix(in srgb, var(--hue-1) 50%, var(--hue-2));
 }

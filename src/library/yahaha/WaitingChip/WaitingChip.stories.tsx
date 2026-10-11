@@ -18,13 +18,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The count row's next section, Main: an arrow in the Main hue before "Main C". */
+/** The count row's next section, Main: an arrow in the "next" role (`--accent`) before "Main C"; sections take no hue. */
 export const Board: Story = {
   args: { label: 'Main C', hue: 'main', size: 'count' },
   play: async ({ canvasElement }) => {
     const chip = within(canvasElement).getByText('Main C');
     await expect(chip).toHaveAttribute('data-face', 'waiting');
     await expect(chip).toHaveAttribute('data-hue', 'main');
+    await expect(chip.style.getPropertyValue('--yh-waiting-chip-hue')).toBe('var(--accent)');
     await expect(chip).toHaveAttribute('data-size', 'count');
     await expect(within(canvasElement).queryByRole('button')).toBeNull();
     await expect(canvasElement.querySelector('a[href], button, input, select, textarea, [tabindex]')).toBeNull();
@@ -74,7 +75,10 @@ const NAMES: Record<WaitingHue, string> = {
   t: 'Main D',
 };
 
-/** Every hue at the count size, to compare the arrows' colours under each pack. */
+/**
+ * Every hue at the count size, to compare the arrows under each pack: every section and the
+ * queued style share the "next" role; only `t` is neutral.
+ */
 export const AllHues: Story = {
   args: { label: 'Main C' },
   render: () => (

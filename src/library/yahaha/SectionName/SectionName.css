@@ -1,7 +1,8 @@
-/* SectionName: the playing section's name. Reads only contract variables and --yh-section-hue. */
+/* SectionName: the playing section's name. Reads only contract variables and --yh-section-tone,
+   set inline from hues.ts by where the section stands (sections take no hue). */
 
 .yh-section-name {
-  --yh-section-hue: var(--hue-4);
+  --yh-section-tone: var(--selected);
   flex: none;
   display: inline-block;
   font-family: var(--font-display);
@@ -10,20 +11,12 @@
   letter-spacing: var(--tracking-display);
   line-height: 1;
   white-space: nowrap;
-  color: var(--yh-section-hue);
-  text-shadow: 0 0 var(--bloom) var(--yh-section-hue);
+  color: var(--yh-section-tone);
 }
 
-/* Five section kinds onto the contract's four hues plus the accent. */
-.yh-section-name[data-hue='intro'] { --yh-section-hue: var(--hue-3); }
-.yh-section-name[data-hue='main'] { --yh-section-hue: var(--hue-4); }
-.yh-section-name[data-hue='ending'] { --yh-section-hue: var(--hue-2); }
-.yh-section-name[data-hue='brk'] { --yh-section-hue: var(--hue-1); }
-.yh-section-name[data-hue='fill'] { --yh-section-hue: var(--accent); }
-
-.yh-section-name[data-idle='true'] {
-  color: var(--text-3);
-  text-shadow: none;
+/* Only what plays glows: the palette's bloom, 0px on flat packs. */
+.yh-section-name[data-state='playing'] {
+  text-shadow: 0 0 var(--bloom) var(--yh-section-tone);
 }
 
 .yh-section-name__variant {

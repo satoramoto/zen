@@ -5,13 +5,24 @@ import { BarBeat, beatState } from './BarBeat';
 const states = (container: HTMLElement) =>
   Array.from(container.querySelectorAll('[data-state]')).map((s) => s.getAttribute('data-state'));
 
+const tone = (bar: HTMLElement) => bar.style.getPropertyValue('--yh-bar-beat-tone');
+
 describe('BarBeat', () => {
   it('speaks the beat as one image and hides the segments', () => {
-    const { container } = render(<BarBeat beat={2} beats={4} hue="main" />);
-    const bar = screen.getByRole('img', { name: 'Beat 2 of 4' });
-    expect(bar).toHaveAttribute('data-hue', 'main');
+    const { container } = render(<BarBeat beat={2} beats={4} />);
+    screen.getByRole('img', { name: 'Beat 2 of 4' });
     for (const s of container.querySelectorAll('[data-state]')) expect(s).toHaveAttribute('aria-hidden', 'true');
     expect(states(container)).toEqual(['past', 'current', 'future', 'future']);
+  });
+
+  it('wears the playing role, never a section hue, whatever section is passed', () => {
+    for (const hue of ['intro', 'main', 'ending', 'brk', 'fill'] as const) {
+      const { unmount } = render(<BarBeat beat={1} hue={hue} />);
+      const bar = screen.getByRole('img');
+      expect(tone(bar)).toBe('var(--selected)');
+      expect(bar).not.toHaveAttribute('data-hue');
+      unmount();
+    }
   });
 
   it('stopped: every segment at rest', () => {
@@ -21,8 +32,8 @@ describe('BarBeat', () => {
   });
 
   it('a 3/4 bar on its last beat', () => {
-    const { container } = render(<BarBeat beat={3} beats={3} hue="ending" />);
-    expect(screen.getByRole('img', { name: 'Beat 3 of 3' })).toHaveAttribute('data-hue', 'ending');
+    const { container } = render(<BarBeat beat={3} beats={3} />);
+    expect(screen.getByRole('img', { name: 'Beat 3 of 3' })).toBeInTheDocument();
     expect(states(container)).toEqual(['past', 'past', 'current']);
   });
 
@@ -31,9 +42,9 @@ describe('BarBeat', () => {
     expect(states(container)).toHaveLength(1);
   });
 
-  it('defaults to a stopped 4-beat bar in main', () => {
+  it('defaults to a stopped 4-beat bar in the playing role', () => {
     const { container } = render(<BarBeat />);
-    expect(screen.getByRole('img', { name: 'Stopped' })).toHaveAttribute('data-hue', 'main');
+    expect(tone(screen.getByRole('img', { name: 'Stopped' }))).toBe('var(--selected)');
     expect(states(container)).toHaveLength(4);
   });
 

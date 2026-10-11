@@ -32,7 +32,7 @@ const PAD_BANKS = ['Sections', 'Quick Racks', 'Chord', 'Multi Pads', 'Setup'].ma
   label,
   tip: ['padpage.sections', 'padpage.racks', 'padpage.chord', 'padpage.multi_pads', 'padpage.setup'][i],
 }));
-const LEGEND = ['Intro', 'Main', 'Ending', 'Break', 'Fill'];
+const LEGEND = ['Right 1', 'Right 2', 'Right 3', 'Left'];
 
 describe('GroupHeader', () => {
   it('Board: a level-2 heading, both tab runs, no counter; each run reports its own choice', async () => {
