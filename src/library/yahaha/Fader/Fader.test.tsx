@@ -51,6 +51,20 @@ describe('Fader a11y', () => {
     expect(fader).toHaveAttribute('data-tip', 'mixer.panel.right1');
     expect(tipAction).toHaveBeenCalledWith(fader, 'mixer.panel.right1');
   });
+
+  it("calls the tip handle's `destroy` when `tip` changes and on unmount", () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const onlevel = vi.fn();
+    const props: FaderProps = { name: 'Right 1 90', value: '90', level: 90, onlevel, tip: 'a', tipAction };
+    const r = render(<Fader {...props} />);
+    expect(destroy).not.toHaveBeenCalled();
+    r.rerender(<Fader {...props} tip="b" />);
+    expect(destroy).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenLastCalledWith(expect.any(HTMLElement), 'b');
+    r.unmount();
+    expect(destroy).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('Fader keys', () => {

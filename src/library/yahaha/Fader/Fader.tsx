@@ -31,8 +31,11 @@ export interface FaderProps {
   empty?: boolean;
   /** The tooltip key, rendered as `data-tip`. */
   tip?: string;
-  /** The app's tooltip hook, called with the node and `tip` when both are set; may return a cleanup. */
-  tipAction?: (node: HTMLElement, key: string) => void | (() => void);
+  /** The app's tooltip hook, called with the node and `tip` when both are set; may return a handle whose `destroy` cleans up. */
+  tipAction?: (
+    node: HTMLElement,
+    key: string,
+  ) => { update?: (key: string) => void; destroy?: () => void } | void;
   /** Called with the level asked for (0–127, whole) on a drag (each level once), a key or the wheel. Not when parked. */
   onlevel?: (level: number) => void;
 }
@@ -159,8 +162,8 @@ export function Fader({
   useEffect(() => {
     const node = root.current;
     if (!node || !tipAction || tip === undefined) return;
-    const cleanup = tipAction(node, tip);
-    return typeof cleanup === 'function' ? cleanup : undefined;
+    const handle = tipAction(node, tip);
+    return () => handle?.destroy?.();
   }, [tip, tipAction]);
 
   const levelAt = (clientY: number) => {
