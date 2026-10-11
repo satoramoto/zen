@@ -1,0 +1,95 @@
+/* GroupHeader: the row that names a group of controls. Reads only contract variables and its own --yh-group-header-*. */
+
+.yh-group-header {
+  /* The row's height, rule included, and where its one baseline sits. */
+  --yh-group-header-h: calc(var(--control-h) + var(--space-3));
+  --yh-group-header-baseline: calc(var(--yh-group-header-h) - var(--space-3));
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--yh-group-header-h);
+  border-bottom: var(--border-width) solid var(--border-strong);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking);
+  line-height: 1.2;
+}
+
+/* The strut: no width, its bottom is the row's baseline; the negative margin cancels the gap after it. */
+.yh-group-header::before {
+  content: '';
+  flex: none;
+  width: 0;
+  height: var(--yh-group-header-baseline);
+  margin-right: calc(-1 * var(--space-4));
+}
+
+.yh-group-header__title {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: baseline;
+  min-width: 0;
+  margin: 0;
+  color: var(--text-1);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  /* Caps need air, and at the label size so does lower case (typography.md §8). */
+  letter-spacing: max(var(--tracking), 0.02em);
+  text-transform: var(--label-case);
+}
+
+.yh-group-header__name { flex: none; }
+
+.yh-group-header__sep {
+  flex: none;
+  /* The spaces around it are flex whitespace and collapse; this draws the gap they name. */
+  padding-inline: var(--space-1);
+  color: var(--text-3);
+  font-weight: var(--weight-body);
+}
+
+.yh-group-header__detail {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-2);
+  font-weight: var(--weight-body);
+}
+
+/* What follows the title: the group's own items, on the row's baseline. It gives way before the title. */
+.yh-group-header__body {
+  display: flex;
+  flex: 0 100 auto;
+  align-items: baseline;
+  gap: var(--space-4);
+  min-width: 0;
+  overflow: clip;
+  overflow-clip-margin: var(--space-2);
+}
+
+/* The right end: `end` (the legend), then the counter; whichever comes first takes the slack. */
+.yh-group-header__end {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.yh-group-header__count {
+  flex: none;
+  margin-left: auto;
+  color: var(--text-3);
+  font-weight: var(--weight-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.yh-group-header__end ~ .yh-group-header__count { margin-left: 0; }
+
+.yh-group-header__value {
+  color: var(--text-1);
+}

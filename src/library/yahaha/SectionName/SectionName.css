@@ -1,0 +1,33 @@
+/* SectionName: the playing section's name. Reads only contract variables and --yh-section-hue. */
+
+.yh-section-name {
+  --yh-section-hue: var(--hue-4);
+  flex: none;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: var(--size-numeral);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--yh-section-hue);
+  text-shadow: 0 0 var(--bloom) var(--yh-section-hue);
+}
+
+/* Five section kinds onto the contract's four hues plus the accent. */
+.yh-section-name[data-hue='intro'] { --yh-section-hue: var(--hue-3); }
+.yh-section-name[data-hue='main'] { --yh-section-hue: var(--hue-4); }
+.yh-section-name[data-hue='ending'] { --yh-section-hue: var(--hue-2); }
+.yh-section-name[data-hue='brk'] { --yh-section-hue: var(--hue-1); }
+.yh-section-name[data-hue='fill'] { --yh-section-hue: var(--accent); }
+
+.yh-section-name[data-idle='true'] {
+  color: var(--text-3);
+  text-shadow: none;
+}
+
+.yh-section-name__variant {
+  font-family: var(--font-readout);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+}

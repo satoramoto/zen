@@ -1,0 +1,61 @@
+/* SettingsRow: one setting on a Settings page. Reads only contract variables and its own --yh-settings-*. */
+
+/* The control column's minimum. A page sets it once on the stack so every hint starts on one line;
+   the default sits on the root at zero specificity, never on the row, so the stack's value inherits through. */
+:where(:root) {
+  --yh-settings-control-w: auto;
+}
+
+.yh-settings-row {
+  /* The label column, set from `labelWidth`. */
+  --yh-settings-label-w: 120px;
+  /* The band's inset: the text stays on the column edge, the hover band reaches past it. */
+  --yh-settings-inset: var(--space-2);
+  display: grid;
+  grid-template-columns: var(--yh-settings-label-w) minmax(var(--yh-settings-control-w, auto), auto) minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-4);
+  min-height: calc(var(--control-h) + var(--space-2));
+  margin-inline: calc(-1 * var(--yh-settings-inset));
+  padding-inline: var(--yh-settings-inset);
+  border-radius: var(--radius-control);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 120ms ease-out;
+}
+
+.yh-settings-row:hover,
+.yh-settings-row:focus-within {
+  background: var(--surface-1);
+}
+
+.yh-settings-row__label {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.yh-settings-row__control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.yh-settings-row__hint {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-settings-row { transition: none; }
+}

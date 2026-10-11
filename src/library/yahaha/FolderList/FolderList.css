@@ -1,0 +1,101 @@
+/* FolderList: a one-of-many column of folders. Reads only contract variables. */
+
+.yh-folder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  box-sizing: border-box;
+  min-height: 0;
+  padding: var(--space-1);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  letter-spacing: var(--tracking);
+}
+
+.yh-folder-list__row {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-3);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-weight: var(--weight-body);
+  letter-spacing: inherit;
+  line-height: 1.25;
+  text-align: start;
+  cursor: pointer;
+}
+
+.yh-folder-list__row:hover:not(:disabled):not([aria-current]) {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+
+.yh-folder-list__row[aria-current] {
+  background: var(--selected);
+  color: var(--selected-text);
+  font-weight: var(--weight-strong);
+}
+
+.yh-folder-list__row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.yh-folder-list__row:disabled {
+  color: var(--text-4);
+  cursor: default;
+}
+
+/* The name: the head truncates, the tail (a long name's last word) never does. */
+.yh-folder-list__label {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: pre;
+}
+
+.yh-folder-list__head {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.yh-folder-list__tail {
+  flex: none;
+}
+
+/* The count: a quiet right-aligned column of tabular numerals. */
+.yh-folder-list__count {
+  flex: none;
+  min-width: 3ch;
+  color: var(--text-3);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.yh-folder-list__row:hover:not(:disabled) .yh-folder-list__count {
+  color: var(--text-2);
+}
+
+.yh-folder-list__row[aria-current] .yh-folder-list__count {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.yh-folder-list__row:disabled .yh-folder-list__count {
+  color: var(--text-4);
+}

@@ -1,0 +1,63 @@
+/* PageList: a vertical list of pages. Reads only contract variables and its own --yh-page-list-*. */
+
+.yh-page-list {
+  --yh-page-list-pad: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.yh-page-list__row {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-h);
+  margin: 0;
+  padding: var(--space-1) var(--yh-page-list-pad);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease;
+}
+
+.yh-page-list__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.yh-page-list__row:not([aria-current='page']):hover {
+  color: var(--text-1);
+  background: var(--surface-2);
+}
+
+.yh-page-list__row[aria-current='page'] {
+  color: var(--selected-text);
+  background: var(--selected);
+}
+
+.yh-page-list__row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-page-list__row {
+    transition: none;
+  }
+}
