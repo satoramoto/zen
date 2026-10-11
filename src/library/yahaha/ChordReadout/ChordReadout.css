@@ -1,6 +1,6 @@
 /* ChordReadout: caption, the chord at display size, one small line under it. */
 .yh-chord-readout {
-  /* The hero's full size; the fit steps scale it down. */
+  /* The hero's full size; the fit steps scale it down. Set by a parent on this element or inline by `size`. */
   --yh-chord-readout-hero: var(--size-display);
 
   display: flex;

@@ -129,6 +129,46 @@ describe('ChosenTabs', () => {
     expect(onChoose).not.toHaveBeenCalled();
   });
 
+  it('runs the tip action on each tab with its own key, and destroys it on key change and unmount', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { container, rerender, unmount } = render(
+      <ChosenTabs tabs={displayPageTabs} chosen="stage" size="page" tipAction={tipAction} />,
+    );
+    const buttons = [...container.querySelectorAll('.yh-chosen-tabs > .yh-chosen-tabs__tab')];
+    expect(tipAction).toHaveBeenCalledTimes(displayPageTabs.length);
+    displayPageTabs.forEach((tab, i) => expect(tipAction).toHaveBeenCalledWith(buttons[i], tab.tip));
+
+    tipAction.mockClear();
+    const changed = displayPageTabs.map((tab) => (tab.id === 'looper' ? { ...tab, tip: 'nav.looper2' } : tab));
+    rerender(<ChosenTabs tabs={changed} chosen="stage" size="page" tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('button', { name: 'Looper' }), 'nav.looper2');
+
+    unmount();
+    expect(destroy).toHaveBeenCalledTimes(1 + displayPageTabs.length);
+  });
+
+  it('runs the tip action on tablist tabs too, and skips a tab with no tip', () => {
+    const tipAction = vi.fn();
+    render(
+      <ChosenTabs tabs={[layerTabs[0], { id: 'x', label: 'X' }]} chosen="volume" label="Fader layer" tipAction={tipAction} />,
+    );
+    expect(tipAction).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('tab', { name: 'Volume' }), 'mixer.layer');
+  });
+
+  it('dense marks the run so its padding tightens', () => {
+    const { container, rerender } = render(<ChosenTabs tabs={layerTabs} chosen="volume" label="Fader layer" />);
+    const run = () => container.querySelector('.yh-chosen-tabs');
+    expect(run()).not.toHaveAttribute('data-density');
+    rerender(<ChosenTabs tabs={layerTabs} chosen="volume" label="Fader layer" dense />);
+    expect(run()).toHaveAttribute('data-density', 'dense');
+    rerender(<ChosenTabs tabs={displayPageTabs} chosen="stage" size="page" dense />);
+    expect(run()).toHaveAttribute('data-density', 'dense');
+  });
+
   it('gives the first enabled tab the tab stop when nothing is chosen', () => {
     render(<ChosenTabs tabs={[{ ...layerTabs[0], disabled: true }, ...layerTabs.slice(1)]} chosen={null} />);
     expect(screen.getByRole('tab', { name: 'Pan' })).toHaveAttribute('tabindex', '0');

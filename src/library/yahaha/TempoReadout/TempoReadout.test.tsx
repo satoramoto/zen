@@ -101,3 +101,44 @@ describe('TempoReadout', () => {
     expect(root.style.getPropertyValue('--yh-tempo-readout-digits')).toBe('3');
   });
 });
+
+describe('TempoReadout options', () => {
+  const rootOf = (container: HTMLElement) => container.querySelector<HTMLElement>('.yh-tempo-readout')!;
+
+  it('applies the tooltip action to the number and both buttons with their keys', () => {
+    const tipAction = vi.fn();
+    const { container } = setup({ tipAction });
+    const root = rootOf(container);
+    expect(tipAction).toHaveBeenCalledTimes(3);
+    expect(tipAction).toHaveBeenCalledWith(root.querySelector('.yh-tempo-readout__bpm'), 'display.tempo');
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('button', { name: 'Tempo up (Scene Launch)' }), 'tempo.up');
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('button', { name: 'Tempo down (Function)' }), 'tempo.down');
+  });
+
+  it('takes the number tooltip key from `tip`, re-applying on change and destroying on unmount', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { container, rerender, unmount, number } = setup({ tip: 'tempo.a', tipAction });
+    expect(number).toHaveAttribute('data-tip', 'tempo.a');
+    expect(tipAction).toHaveBeenCalledWith(number, 'tempo.a');
+    rerender(<TempoReadout bpm={104} tip="tempo.b" tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenLastCalledWith(number, 'tempo.b');
+    expect(rootOf(container).querySelector('.yh-tempo-readout__bpm')).toHaveAttribute('data-tip', 'tempo.b');
+    unmount();
+    expect(destroy).toHaveBeenCalledTimes(4);
+  });
+
+  it('keeps the default number key without `tip`', () => {
+    const { number } = setup();
+    expect(number).toHaveAttribute('data-tip', 'display.tempo');
+  });
+
+  it('sets the numeral size as its custom property, and none by default', () => {
+    const { container, rerender } = setup();
+    expect(rootOf(container).style.getPropertyValue('--yh-tempo-readout-size')).toBe('');
+    rerender(<TempoReadout bpm={104} size="96px" />);
+    expect(rootOf(container).style.getPropertyValue('--yh-tempo-readout-size')).toBe('96px');
+    expect(rootOf(container).style.getPropertyValue('--yh-tempo-readout-digits')).toBe('3');
+  });
+});

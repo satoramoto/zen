@@ -85,3 +85,34 @@ describe('ChordReadout', () => {
     }
   });
 });
+
+describe('ChordReadout options', () => {
+  const rootOf = (container: HTMLElement) => container.querySelector<HTMLElement>('.yh-chord-readout')!;
+
+  it('applies the tooltip action to the fingering with the key, and destroys it on key change and unmount', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { container, rerender, unmount } = render(<ChordReadout chord="Am" fingering="Fingered" tip="fingering.select" tipAction={tipAction} />);
+    const fingering = rootOf(container).querySelector('.yh-chord-readout__fingering');
+    expect(tipAction).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenCalledWith(fingering, 'fingering.select');
+    rerender(<ChordReadout chord="Am" fingering="Fingered" tip="fingering.other" tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenLastCalledWith(fingering, 'fingering.other');
+    unmount();
+    expect(destroy).toHaveBeenCalledTimes(2);
+  });
+
+  it('applies no tooltip action without a key', () => {
+    const tipAction = vi.fn();
+    render(<ChordReadout chord="Am" fingering="Fingered" tipAction={tipAction} />);
+    expect(tipAction).not.toHaveBeenCalled();
+  });
+
+  it('sets the hero size as its custom property, and none by default', () => {
+    const { container, rerender } = render(<ChordReadout chord="Am" />);
+    expect(rootOf(container).style.getPropertyValue('--yh-chord-readout-hero')).toBe('');
+    rerender(<ChordReadout chord="Am" size="96px" />);
+    expect(rootOf(container).style.getPropertyValue('--yh-chord-readout-hero')).toBe('96px');
+  });
+});

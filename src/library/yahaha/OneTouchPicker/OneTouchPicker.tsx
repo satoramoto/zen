@@ -1,4 +1,17 @@
+import { useEffect, useState, type ButtonHTMLAttributes } from 'react';
+import type { TipAction } from '../Pad/Pad';
 import './OneTouchPicker.css';
+
+/** A number's button: renders `data-tip` and runs the tooltip action with its own key. */
+function NumberButton({ tip, tipAction, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { tip: string; tipAction?: TipAction }) {
+  const [node, setNode] = useState<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (!node || !tipAction) return;
+    const handle = tipAction(node, tip);
+    return () => handle?.destroy?.();
+  }, [node, tip, tipAction]);
+  return <button {...rest} ref={setNode} type="button" data-tip={tip} />;
+}
 
 export interface OneTouchPickerProps {
   /** The applied One Touch, 1 to `numbers`; 0 when none is. */
@@ -22,6 +35,8 @@ export interface OneTouchPickerProps {
   name?: string;
   /** Called with 1 to `count` when a number is pressed (applies it at once). */
   onApply?: (n: number) => void;
+  /** The app's tooltip action, applied to each number with its own key (`ots.<n>`). */
+  tipAction?: TipAction;
 }
 
 /**
@@ -37,7 +52,9 @@ export interface OneTouchPickerProps {
  * than merely dim. Digits use the readout face with tabular numerals so 1-4 sit on one rhythm
  * (`typography.md`), and the label is a caption in the label case above or beside the strip
  * (hierarchy: the label names, the numbers act). The `a` hue maps to `--accent`, the palette's
- * small-highlight colour, until the contract has a style hue.
+ * small-highlight colour, until the contract has a style hue. `tipAction` runs the app's tooltip
+ * action, in Pad's handle shape, on each number with that number's own key, since each number is
+ * its own control with its own tooltip; the label and group have none.
  *
  * **Kept.** A press asks for that One Touch through `onApply` and changes nothing itself; each number
  * is its own button with `aria-pressed` and a spoken name naming its Launchkey pad (Shift + pad 9-12);
@@ -54,6 +71,7 @@ export function OneTouchPicker({
   hue = 'neutral',
   name,
   onApply,
+  tipAction,
 }: OneTouchPickerProps) {
   const list = Array.from({ length: Math.max(0, numbers) }, (_, i) => i + 1);
   const spoken =
@@ -66,20 +84,20 @@ export function OneTouchPicker({
     const disabled = n > count;
     const face = cells ? (disabled ? 'disabled' : on ? 'on' : 'off') : on ? 'chosen' : 'off';
     return (
-      <button
+      <NumberButton
         key={n}
-        type="button"
         className={`yh-onetouchpicker__number${cells ? ' yh-onetouchpicker__cell' : ''}`}
         disabled={disabled}
         aria-pressed={on}
         aria-label={on ? `One Touch ${n}, applied (Shift + pad ${n + 8})` : `Apply One Touch ${n} (Shift + pad ${n + 8})`}
         data-face={face}
         data-ink={cells ? hue : undefined}
-        data-tip={`ots.${n}`}
+        tip={`ots.${n}`}
+        tipAction={tipAction}
         onClick={() => onApply?.(n)}
       >
         {n}
-      </button>
+      </NumberButton>
     );
   });
 

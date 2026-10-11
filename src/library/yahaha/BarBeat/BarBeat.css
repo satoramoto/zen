@@ -1,6 +1,7 @@
 /* BarBeat: one segment per beat. Local variables: --yh-bar-beat-count (segments, set inline),
    --yh-bar-beat-tone (the playing role, set inline from hues.ts; sections take no hue),
-   --yh-bar-beat-line and --yh-bar-beat-lit (rest and lit heights). */
+   --yh-bar-beat-line and --yh-bar-beat-lit (rest and lit heights; the `thickness` prop sets the
+   line inline). */
 .yh-bar-beat {
   --yh-bar-beat-count: 4;
   --yh-bar-beat-tone: var(--selected);
@@ -20,7 +21,9 @@
 .yh-bar-beat__segment {
   height: var(--yh-bar-beat-line);
   border-radius: var(--radius-pill);
-  background: var(--border-strong);
+  /* At rest: a faint tint of the text on the ground. Not --border-strong, which on some packs is
+     as dark as the text and would read as lit. */
+  background: color-mix(in srgb, var(--text-1) 16%, var(--surface-0));
 }
 
 /* Past beats: the playing role, a step below the lit one. */

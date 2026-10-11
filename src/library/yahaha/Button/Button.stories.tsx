@@ -34,6 +34,8 @@ const meta = {
     on: { control: 'boolean' },
     chosen: { control: 'boolean' },
     waiting: { control: 'boolean' },
+    lit: { control: 'boolean' },
+    tall: { control: 'boolean' },
     expanded: { control: 'boolean' },
     disabled: { control: 'boolean' },
     hold: { control: 'boolean' },
@@ -168,6 +170,32 @@ export const Waiting: Story = {
     const button = within(canvasElement).getByRole('button', { name: 'Fade, armed' });
     await expect(button).toHaveAttribute('data-face', 'waiting');
     await expect(button).toHaveAttribute('data-hue', 't');
+  },
+};
+
+/** New: the waiting face's flash, both phases side by side; the parent drives `lit`, the label stays. */
+export const WaitingFlash: Story = {
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+      <Button {...args} label="Fade" size="pair" waiting lit name="Fade, armed, lit" />
+      <Button {...args} label="Fade" size="pair" waiting lit={false} name="Fade, armed, unlit" />
+      <Button {...args} label="On" size="pair" hue="r1" waiting lit name="Right 1, armed, lit" />
+      <Button {...args} label="On" size="pair" hue="r1" waiting lit={false} name="Right 1, armed, unlit" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('button', { name: 'Fade, armed, unlit' })).toHaveAttribute('data-lit', 'false');
+    await expect(canvas.getByRole('button', { name: 'Fade, armed, lit' })).not.toHaveAttribute('data-lit');
+  },
+};
+
+/** New: a tall primary key, Start / Stop leading the transport: two control rows high, the label at heading size. */
+export const Tall: Story = {
+  args: { label: 'Start', size: 'band', variant: 'primary', tall: true, name: 'Start / Stop' },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Start / Stop' });
+    await expect(button).toHaveAttribute('data-tall', '');
   },
 };
 

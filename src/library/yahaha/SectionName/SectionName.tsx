@@ -17,6 +17,11 @@ export interface SectionNameProps {
   state?: SectionState;
   /** The band is stopped: the name steps back to the idle role, without its bloom. Same as `state="idle"`. */
   idle?: boolean;
+  /**
+   * The name's size, a CSS length ("64px", "var(--size-display)"), set as `--yh-section-name-size`
+   * on the root. Default: that property's value, `--size-numeral`.
+   */
+  size?: string;
 }
 
 /**
@@ -34,12 +39,14 @@ export interface SectionNameProps {
  * stands, not what kind it is: playing in `--selected` with the palette's `--bloom` (flat packs
  * draw it flat), next in `--accent`, idle in secondary text, absent in faint text
  * (`SECTION_STATE_COLOUR`). The word itself names the section (`references/color.md`: colour
- * carries meaning, not decoration).
+ * carries meaning, not decoration). *Sizing*: the size is one custom property,
+ * `--yh-section-name-size` (default `--size-numeral`), which a parent sets on the root or passes
+ * as `size`, so a display can make the name its hero without overriding this widget's CSS.
  *
  * **Kept**: one line, never wrapping; idle drops out of the playing colour with no glow; an empty
  * name shows "—" rather than collapsing the layout; the `hue` prop and `data-hue` hook.
  */
-export function SectionName({ label, hue = 'main', state, idle = false }: SectionNameProps) {
+export function SectionName({ label, hue = 'main', state, idle = false, size }: SectionNameProps) {
   const stands: SectionState = idle ? 'idle' : (state ?? 'playing');
   const shown = label.trim() === '' ? '—' : label.trim();
   // Split "Main B" into its word and its variation so the variation can use numerals.
@@ -52,7 +59,12 @@ export function SectionName({ label, hue = 'main', state, idle = false }: Sectio
       data-hue={hue}
       data-state={stands}
       data-idle={idle ? 'true' : undefined}
-      style={{ '--yh-section-tone': SECTION_STATE_COLOUR[stands] } as CSSProperties}
+      style={
+        {
+          '--yh-section-tone': SECTION_STATE_COLOUR[stands],
+          ...(size === undefined ? {} : { '--yh-section-name-size': size }),
+        } as CSSProperties
+      }
     >
       {word}
       {variant && (

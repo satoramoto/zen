@@ -3,10 +3,12 @@
 
 .yh-section-name {
   --yh-section-tone: var(--selected);
+  /* The name's size. Set by a parent on this element or inline by `size`. */
+  --yh-section-name-size: var(--size-numeral);
   flex: none;
   display: inline-block;
   font-family: var(--font-display);
-  font-size: var(--size-numeral);
+  font-size: var(--yh-section-name-size);
   font-weight: var(--weight-display);
   letter-spacing: var(--tracking-display);
   line-height: 1;

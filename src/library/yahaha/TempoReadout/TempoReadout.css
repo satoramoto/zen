@@ -1,6 +1,7 @@
 /* TempoReadout: a tabular number, its unit as a label, and a framed + over − pair.
    Local variables: --yh-tempo-readout-digits (the widest value's digit count, set inline),
-   --yh-tempo-readout-size (the numeral's size). */
+   --yh-tempo-readout-size (the numeral's size; set by a parent on this element or inline by `size`,
+   which also overrides the `cells` fit). */
 .yh-tempo-readout {
   --yh-tempo-readout-digits: 3;
   --yh-tempo-readout-size: var(--size-numeral);

@@ -15,6 +15,11 @@ export interface BarBeatProps {
    * and ignored, so code built on the old API still compiles.
    */
   hue?: BarBeatHue;
+  /**
+   * The resting segment's thickness, any CSS length (`'4px'`, `'var(--space-2)'`); the lit beat
+   * stays three times it. Default: the bar's own line, three quarters of `--space-1` (at least 2px).
+   */
+  thickness?: string;
 }
 
 export type BeatState = 'past' | 'current' | 'future';
@@ -37,8 +42,11 @@ export function beatState(n: number, beat: number): BeatState {
  * **Changed.** *Colour meaning:* the four categorical hues belong to the four parts (`../hues`),
  * so the bar no longer wears a section's hue; what it shows is what is playing, so it takes the
  * `--selected` role in every section (`SECTION_STATE_COLOUR.playing`), and the section is named
- * by the SectionName beside it, not by colour. The resting segments use the strong border role
- * instead of a fixed dark grey, so they stay visible on light packs (color.md). *Contrast and
+ * by the SectionName beside it, not by colour. The resting segments are a faint tint of the text on
+ * the ground (16% of `--text-1` in `--surface-0`) instead of a fixed dark grey or the strong border,
+ * which on some packs is as dark as the text and made beats to come read as lit (color.md). An
+ * optional `thickness` sets the resting line (the lit beat stays three times it) for regions read
+ * from across a room. *Contrast and
  * hierarchy:* the current beat differs by height as well as by glow, so it still stands out on
  * flat packs with no bloom and for readers who can't tell the colour (color.md). *Rhythm:*
  * segments are evenly spaced on the density's step and capped with the pack's pill radius; the
@@ -48,7 +56,7 @@ export function beatState(n: number, beat: number): BeatState {
  * **Kept.** The segment states and their order, the 1-based beat with 0 for stopped, at least
  * one segment, and the single `img` with its spoken name.
  */
-export function BarBeat({ beat = 0, beats = 4 }: BarBeatProps) {
+export function BarBeat({ beat = 0, beats = 4, thickness }: BarBeatProps) {
   const count = Math.max(1, Math.floor(beats));
   const spoken = beat > 0 ? `Beat ${beat} of ${beats}` : 'Stopped';
 
@@ -58,7 +66,13 @@ export function BarBeat({ beat = 0, beats = 4 }: BarBeatProps) {
       role="img"
       aria-label={spoken}
       data-playing={beat > 0 || undefined}
-      style={{ '--yh-bar-beat-count': count, '--yh-bar-beat-tone': SECTION_STATE_COLOUR.playing } as CSSProperties}
+      style={
+        {
+          '--yh-bar-beat-count': count,
+          '--yh-bar-beat-tone': SECTION_STATE_COLOUR.playing,
+          ...(thickness !== undefined && { '--yh-bar-beat-line': thickness }),
+        } as CSSProperties
+      }
     >
       {Array.from({ length: count }, (_, i) => {
         const state = beatState(i + 1, beat);

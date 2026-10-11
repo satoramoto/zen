@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { BarBeat, beatState } from './BarBeat';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+// jsdom gives import.meta.url a non-file scheme and vitest skips CSS; tests run from the repo root.
+const css = readFileSync(join(process.cwd(), 'src/library/yahaha/BarBeat/BarBeat.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 
 const states = (container: HTMLElement) =>
   Array.from(container.querySelectorAll('[data-state]')).map((s) => s.getAttribute('data-state'));
@@ -46,6 +51,20 @@ describe('BarBeat', () => {
     const { container } = render(<BarBeat />);
     expect(tone(screen.getByRole('img', { name: 'Stopped' }))).toBe('var(--selected)');
     expect(states(container)).toHaveLength(4);
+  });
+
+  it('rests on a tint of the text, not the strong border (equal to the text on some packs)', () => {
+    const rule = /\.yh-bar-beat__segment\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(rule).toContain('color-mix(in srgb, var(--text-1) 16%, var(--surface-0))');
+    expect(rule).not.toContain('--border-strong');
+  });
+
+  it('thickness sets the resting line inline; without it the CSS default stands', () => {
+    const { rerender } = render(<BarBeat beat={1} thickness="6px" />);
+    const bar = screen.getByRole('img');
+    expect(bar.style.getPropertyValue('--yh-bar-beat-line')).toBe('6px');
+    rerender(<BarBeat beat={1} />);
+    expect(bar.style.getPropertyValue('--yh-bar-beat-line')).toBe('');
   });
 
   it('beatState orders past, current and future', () => {

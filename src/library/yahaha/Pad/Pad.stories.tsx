@@ -31,6 +31,9 @@ const meta = {
     lit: { control: 'boolean' },
     tagCorner: { control: 'boolean' },
     transport: { control: 'boolean' },
+    accentNext: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    fillCell: { control: 'boolean' },
     name: { control: 'text' },
     tip: { control: 'text' },
   },
@@ -153,6 +156,38 @@ export const PartHueDark: Story = {
   args: { label: 'BANK -', index: '13', family: 'r3', state: 'dark', tip: 'padpage.racks' },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'hue-3');
+  },
+};
+
+/** New: `accentNext`, queued in `--accent` (hues.ts) instead of the pad's own colour, as the song form shows it. */
+export const NextAccent: Story = {
+  args: { label: 'Main C', index: '11', state: 'next', accentNext: true, name: 'Main C, queued after bar 4' },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-next', 'accent');
+  },
+};
+
+/** New: `disabled`, still focusable but marked unavailable; a press does nothing. */
+export const Disabled: Story = {
+  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'idle', disabled: true, onPress: fn() },
+  play: async ({ canvasElement, args }) => {
+    const pad = within(canvasElement).getByRole('button');
+    await expect(pad).toHaveAttribute('aria-disabled', 'true');
+    pad.click();
+    await expect(args.onPress).not.toHaveBeenCalled();
+  },
+};
+
+/** New: `fillCell`, the pad filling a wide, short cell instead of its fixed square. */
+export const FillCell: Story = {
+  args: { label: 'Main B', index: '10', state: 'playing', fillCell: true },
+  render: (args) => (
+    <div style={{ display: 'grid', width: 'calc(var(--control-h) * 5)', height: 'calc(var(--control-h) * 1.5)' }}>
+      <Pad {...args} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-fill', 'true');
   },
 };
 

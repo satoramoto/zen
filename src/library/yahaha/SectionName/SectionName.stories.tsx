@@ -17,6 +17,7 @@ const meta = {
     hue: { control: 'select', options: ['intro', 'main', 'ending', 'brk', 'fill'] },
     state: { control: 'inline-radio', options: ['playing', 'next', 'idle', 'absent'] },
     idle: { control: 'boolean' },
+    size: { control: 'text' },
   },
 } satisfies Meta<typeof SectionName>;
 
@@ -77,5 +78,14 @@ export const Next: Story = {
   args: { label: 'Main C', hue: 'main', state: 'next' },
   play: async ({ canvasElement }) => {
     await expect(tone(canvasElement)).toBe('var(--accent)');
+  },
+};
+
+/** New: the name as the display's hero, by `size` (set as `--yh-section-name-size`). */
+export const HeroSize: Story = {
+  args: { label: 'Main B', hue: 'main', size: 'var(--size-display)' },
+  play: async ({ canvasElement }) => {
+    const name = canvasElement.querySelector<HTMLElement>('.yh-section-name')!;
+    await expect(name.style.getPropertyValue('--yh-section-name-size')).toBe('var(--size-display)');
   },
 };

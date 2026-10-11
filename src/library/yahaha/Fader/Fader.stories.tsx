@@ -49,6 +49,7 @@ const meta = {
     hue: { control: 'select', options: ['r1', 'r2', 'r3', 'l', 'a', 't2', 't'] },
     layered: { control: 'boolean' },
     width: { control: 'number' },
+    fillHeight: { control: 'boolean' },
     tip: { control: 'text' },
   },
 } satisfies Meta<typeof Fader>;
@@ -128,6 +129,16 @@ export const Strip: Story = {
       <Fader {...args} {...Group.args} />
       <Fader {...args} {...Master.args} />
       <Fader {...args} {...Parked.args} />
+    </div>
+  ),
+};
+
+/** Added: `fillHeight`, the fader taking a tall container's height; a drag still tracks the rail. */
+export const FillHeight: Story = {
+  args: { fillHeight: true },
+  render: (args) => (
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(var(--control-h) * 10)' }}>
+      <Fader {...args} />
     </div>
   ),
 };

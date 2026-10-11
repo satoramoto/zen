@@ -79,6 +79,7 @@ const meta = {
     fingering: { control: 'text' },
     held: { control: 'boolean' },
     label: { control: 'text' },
+    size: { control: 'text' },
   },
 } satisfies Meta<typeof ChordReadout>;
 
@@ -107,6 +108,15 @@ export const Long: Story = { args: { ...chordLong } };
 
 /** A long fingering with Keyboard transpose: the small line wraps to a second line. */
 export const LongFingering: Story = { args: { ...chordLongFingering } };
+
+/** New: a larger hero by `size` (set as `--yh-chord-readout-hero`); the fit steps scale from it. */
+export const HeroSize: Story = {
+  args: { ...chordBoard, size: 'calc(var(--size-display) * 1.4)' },
+  play: async ({ canvasElement }) => {
+    const readout = canvasElement.querySelector<HTMLElement>('.yh-chord-readout')!;
+    await expect(readout.style.getPropertyValue('--yh-chord-readout-hero')).toBe('calc(var(--size-display) * 1.4)');
+  },
+};
 
 /** No chord yet: a dim dash, no notes. */
 export const Empty: Story = {

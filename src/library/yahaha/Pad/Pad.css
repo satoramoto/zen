@@ -74,8 +74,22 @@
   --yh-pad-ring-ink: var(--surface-0);
 }
 
-.yh-pad:hover { background: color-mix(in srgb, var(--surface-2), var(--text-1) 8%); }
-.yh-pad:active { transform: translateY(1px); }
+/* accentNext: queued reads as --accent (hues.ts), whatever the pad's own colour. */
+.yh-pad[data-next='accent'][data-state='next'] {
+  --yh-pad-ring: var(--accent);
+  --yh-pad-ring-ink: var(--surface-0);
+}
+
+/* fillCell: the pad takes its cell instead of the fixed square. */
+.yh-pad[data-fill] {
+  --yh-pad-width: 100%;
+  --yh-pad-height: 100%;
+  box-sizing: border-box;
+}
+
+/* :where keeps these at the specificity they had, so state faces still win over hover. */
+.yh-pad:hover:where(:not([aria-disabled='true'])) { background: color-mix(in srgb, var(--surface-2), var(--text-1) 8%); }
+.yh-pad:active:where(:not([aria-disabled='true'])) { transform: translateY(1px); }
 
 .yh-pad:focus-visible {
   outline: 2px solid var(--accent);
@@ -127,7 +141,12 @@
   background: transparent;
   color: var(--text-3);
 }
-.yh-pad[data-state='dark']:hover { background: color-mix(in srgb, var(--text-1) 4%, transparent); }
+.yh-pad[data-state='dark']:hover:where(:not([aria-disabled='true'])) { background: color-mix(in srgb, var(--text-1) 4%, transparent); }
+
+/* Disabled: still focusable, but a muted label, the not-allowed cursor and no press give, so it
+   doesn't read as something to press. */
+.yh-pad[aria-disabled='true'] { cursor: not-allowed; }
+.yh-pad[aria-disabled='true']:not([data-state='playing'], [data-state='running']) { color: var(--text-3); }
 
 /* NEXT / ARMED: a small solid chip out of the label's flow, so the label never moves. */
 .yh-pad__tag {

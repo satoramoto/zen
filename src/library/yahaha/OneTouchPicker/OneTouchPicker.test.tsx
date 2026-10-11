@@ -58,6 +58,19 @@ describe('OneTouchPicker', () => {
     expect(container.querySelector('.yh-onetouchpicker')).toHaveAttribute('data-orientation', 'vertical');
   });
 
+  it('runs the tip action on each number with its own key, destroying on unmount and when a number goes', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { container, rerender, unmount } = render(<OneTouchPicker tipAction={tipAction} />);
+    const numbers = [...container.querySelectorAll('.yh-onetouchpicker .yh-onetouchpicker__number')];
+    expect(tipAction).toHaveBeenCalledTimes(4);
+    numbers.forEach((b, i) => expect(tipAction).toHaveBeenCalledWith(b, `ots.${i + 1}`));
+    rerender(<OneTouchPicker numbers={3} tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(1);
+    unmount();
+    expect(destroy).toHaveBeenCalledTimes(4);
+  });
+
   it('renders cells with no wrapper for the parent grid', () => {
     const { container } = render(
       <div role="group" aria-label="One Touch Setting (OTS)">

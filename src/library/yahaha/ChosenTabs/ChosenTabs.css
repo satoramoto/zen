@@ -11,6 +11,11 @@
   border-bottom: var(--border-width) solid var(--border);
 }
 
+/* Dense: the tighter side padding a narrow region needs. */
+.yh-chosen-tabs[data-density='dense'] {
+  --yh-chosen-tabs-pad: var(--space-2);
+}
+
 .yh-chosen-tabs__tab {
   display: inline-flex;
   align-items: center;

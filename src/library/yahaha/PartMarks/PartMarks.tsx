@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import type { TipAction } from '../Pad/Pad';
 import { visibleMarks, type Mark } from './marks';
 import './PartMarks.css';
 
@@ -14,6 +16,10 @@ export interface PartMarksProps {
   bass?: boolean;
   /** The gap between marks: `cell` (the sound cell) or `strip` (the tighter fader strip name). */
   size?: 'cell' | 'strip';
+  /** The tooltip key, rendered as `data-tip` on the marks while any show. */
+  tip?: string;
+  /** The app's tooltip action, applied with `tip` when both are set and a mark shows. */
+  tipAction?: TipAction;
 }
 
 /** Which contract role each mark draws in; kept as `data-tone` so tests and parents can read it. */
@@ -44,17 +50,33 @@ const TONE: Record<Mark, string> = {
  * glyphs survive a 10px caption (icons.md › one stroke weight). *Hierarchy*: "bass" (the part
  * sounds) sits in secondary text and "off" (silent) in faint text, so the silent part recedes.
  * The words follow the theme's label case, and the dot takes the chrome's pill radius (a square
- * point in the square chromes, round in Linear).
+ * point in the square chromes, round in Linear). New `tip` and `tipAction` (Pad's handle shape)
+ * let the parent explain the marks on hover; the tooltip lives only while a mark shows.
  *
  * **Kept.** The facts and their precedence (⚠ wins over ✕, "bass" over "off") in `marks.ts`,
  * the drawing order, `marksText` for the parent's `aria-label`, hidden from assistive tech, and
  * rendering nothing when no mark shows.
  */
-export function PartMarks({ edited = false, missing = false, failed = false, off = false, bass = false, size = 'cell' }: PartMarksProps) {
+export function PartMarks({
+  edited = false,
+  missing = false,
+  failed = false,
+  off = false,
+  bass = false,
+  size = 'cell',
+  tip,
+  tipAction,
+}: PartMarksProps) {
   const marks = visibleMarks({ edited, missing, failed, off, bass });
+  const [node, setNode] = useState<HTMLSpanElement | null>(null);
+  useEffect(() => {
+    if (!node || !tipAction || tip === undefined) return;
+    const handle = tipAction(node, tip);
+    return () => handle?.destroy?.();
+  }, [node, tip, tipAction]);
   if (marks.length === 0) return null;
   return (
-    <span className="yh-partmarks" data-size={size} aria-hidden="true">
+    <span ref={setNode} className="yh-partmarks" data-size={size} data-tip={tip} aria-hidden="true">
       {marks.map((mark) => {
         if (mark === 'edited') return <span key={mark} className="yh-partmarks__dot" data-mark={mark} data-tone={TONE[mark]} />;
         if (mark === 'missing')

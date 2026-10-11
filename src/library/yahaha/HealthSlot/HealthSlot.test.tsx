@@ -77,6 +77,31 @@ describe('HealthSlot', () => {
     expect(screen.getByText('Audio', { exact: true })).toHaveAttribute('data-tip', 'custom.key');
   });
 
+  it('runs the tip action on the element that shows, moving it on a state change, destroying on unmount', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { rerender, unmount } = render(<HealthSlot tipAction={tipAction} />);
+    expect(tipAction).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenLastCalledWith(screen.getByText('Audio', { exact: true }), 'app.health');
+
+    rerender(<HealthSlot cpu={0.74} tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(1);
+    expect(tipAction).toHaveBeenCalledTimes(2);
+    expect(tipAction).toHaveBeenLastCalledWith(screen.getByRole('button', { name: 'CPU 74%' }), 'app.health');
+
+    rerender(<HealthSlot cpu={0.74} tip="other.key" tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(2);
+    expect(tipAction).toHaveBeenLastCalledWith(screen.getByRole('button', { name: 'CPU 74%' }), 'other.key');
+
+    rerender(<HealthSlot cpu={0.74} tip={null} tipAction={tipAction} />);
+    expect(destroy).toHaveBeenCalledTimes(3);
+    expect(tipAction).toHaveBeenCalledTimes(3);
+
+    rerender(<HealthSlot cpu={0.74} tipAction={tipAction} />);
+    unmount();
+    expect(destroy).toHaveBeenCalledTimes(4);
+  });
+
   it('pairs every state with a shape, not colour alone', () => {
     const { container, rerender } = render(<HealthSlot />);
     const state = () => container.firstElementChild?.getAttribute('data-state');

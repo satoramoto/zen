@@ -76,6 +76,12 @@
 .yh-button[data-size='cell'] { flex: 1 1 auto; width: 100%; min-width: 0; padding: 0 var(--space-2); }
 .yh-button[data-size='caret'] { width: calc(var(--control-h) * 0.625); min-width: 0; padding: 0; }
 
+/* Tall: the primary key of a transport, two control rows and their gap, the label at heading size. */
+.yh-button[data-tall] {
+  height: calc(var(--control-h) * 2 + var(--space-2));
+  font-size: var(--size-heading);
+}
+
 /* Joined keys square their shared corners. */
 .yh-button[data-join='start'] { border-top-right-radius: 0; border-bottom-right-radius: 0; }
 .yh-button[data-join='end'] { border-top-left-radius: 0; border-bottom-left-radius: 0; }
@@ -117,6 +123,11 @@
   background: color-mix(in oklab, var(--yh-button-tone) 16%, transparent);
   box-shadow: inset 0 0 0 var(--yh-button-ring) var(--yh-button-tone);
   color: var(--text-1);
+}
+/* The flash's off phase (the parent drives `lit`): no tint, the ring at rest weight in the tone. */
+.yh-button[data-face='waiting'][data-lit='false'] {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-tone);
 }
 
 /* Disabled: shown, not pressable; outline and label fade, whatever the face. */

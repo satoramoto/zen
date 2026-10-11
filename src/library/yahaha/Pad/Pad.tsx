@@ -36,6 +36,12 @@ export interface PadProps {
   tagCorner?: boolean;
   /** A transport pad (Start / Stop, Sync Start, Sync Stop, Tap, Auto Fill): `util` and `start` draw in `--action`. */
   transport?: boolean;
+  /** Ring NEXT in `--accent` (what `hues.ts` says "queued" is) instead of the pad's own colour. Default false. */
+  accentNext?: boolean;
+  /** Unavailable: `aria-disabled="true"`, still focusable, and a press does nothing. Default false. */
+  disabled?: boolean;
+  /** Fill the parent cell (width and height 100%) instead of the fixed square. Default false. */
+  fillCell?: boolean;
 }
 
 const PART_TONE: Partial<Record<PadFamily, PadTone>> = { r1: 'hue-1', r2: 'hue-2', r3: 'hue-3', l: 'hue-4' };
@@ -71,7 +77,12 @@ export function padTone(family: PadFamily, state: PadState, transport: boolean):
  * reads as structure, not as a fainter colour. *Typography* (typography.md 8): labels use
  * `--label-case` and `--tracking` at `--size-label`, the NEXT / ARMED tag at caption size with
  * tracking. Glow uses `--bloom`, so flat palettes stay flat. Focus is a 2px `--accent` ring
- * (craft-details.md 1).
+ * (craft-details.md 1). Three opt-in options, all off by default: `accentNext` rings NEXT in
+ * `--accent`, the contract's "queued" role (*colour meaning*, hues.ts), for regions such as the song
+ * form where queued must read the same on every pad; `disabled` keeps the pad in the tab order but
+ * marks it `aria-disabled` and ignores presses, drawn with a muted label and no press give
+ * (*affordance*: unavailable must not look pressable); `fillCell` makes the pad fill its grid cell,
+ * so banks lay out pads without overriding the pad's size variables (*alignment*).
  *
  * **Kept.** The label centred and wrapping only at word boundaries; no pad number on the face (it
  * goes into the accessible name); NEXT / ARMED out of the label's flow so the label never moves;
@@ -90,6 +101,9 @@ export function Pad({
   onPress,
   tagCorner = false,
   transport = false,
+  accentNext = false,
+  disabled = false,
+  fillCell = false,
 }: PadProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const tone = padTone(family, state, transport);
@@ -113,9 +127,14 @@ export function Pad({
       data-util={util || undefined}
       data-lit={tag ? String(lit) : undefined}
       data-tip={tip}
+      data-next={accentNext ? 'accent' : undefined}
+      data-fill={fillCell || undefined}
       aria-label={name ?? `${label}${index ? ` (pad ${index})` : ''}`}
       aria-pressed={state === 'playing' || state === 'running'}
-      onClick={() => onPress?.()}
+      aria-disabled={disabled || undefined}
+      onClick={() => {
+        if (!disabled) onPress?.();
+      }}
     >
       {tag && (
         <span className={`yh-pad__tag${tagCorner ? ' yh-pad__tag--corner' : ''}`} aria-hidden="true">

@@ -131,13 +131,30 @@
   box-shadow: 0 0 var(--bloom) var(--lamp-hue);
   animation: yh-lampbutton-blink 1s steps(2, jump-none) infinite;
 }
+/* Armed and pressed: engaged, waiting for its cue. The waiting ring over a stronger wash, the key
+   sunk as if held (an inset top shade, 1px down), the LED blinking. aria-pressed is true. */
+.yh-lampbutton[data-face='armed'] {
+  background: color-mix(in srgb, var(--lamp-hue) 28%, var(--surface-2));
+  border-color: var(--lamp-hue);
+  box-shadow:
+    inset 0 0 0 1px var(--lamp-hue),
+    inset 0 2px 0 color-mix(in srgb, var(--surface-0) 45%, transparent);
+  color: var(--text-1);
+  transform: translateY(1px);
+}
+.yh-lampbutton[data-face='armed']:hover { border-color: var(--lamp-hue); }
+.yh-lampbutton[data-face='armed'] .yh-lampbutton__led {
+  background: var(--lamp-hue);
+  box-shadow: 0 0 var(--bloom) var(--lamp-hue);
+  animation: yh-lampbutton-blink 1s steps(2, jump-none) infinite;
+}
 @keyframes yh-lampbutton-blink {
   from { opacity: 1; }
   to { opacity: 0.25; }
 }
 @media (prefers-reduced-motion: reduce) {
   .yh-lampbutton { transition: none; }
-  .yh-lampbutton[data-face='waiting'] .yh-lampbutton__led { animation: none; }
+  .yh-lampbutton:is([data-face='waiting'], [data-face='armed']) .yh-lampbutton__led { animation: none; }
 }
 
 /* Disabled: shown, not pressable. No fill, a dashed edge, a hollow LED in the hue. */

@@ -199,6 +199,32 @@ export const Armed: Story = {
   },
 };
 
+/** Added: armed and pressed, Sync Start engaged and waiting for the first chord: the ring, sunk, LED blinking. */
+export const ArmedPressed: Story = {
+  args: { label: 'Sync Start', on: true, armed: true, name: 'Sync Start, waiting for a chord' },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Sync Start, waiting for a chord' });
+    await expect(button).toHaveAttribute('data-face', 'armed');
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+  },
+};
+
+/** Added: `width` is a minimum, so a long label grows the key rather than clipping. */
+export const MinWidth: Story = {
+  args: { label: 'Off' },
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+      <LampButton label="Off" size="sm" width={64} />
+      <LampButton label="Manual Bass" size="sm" width={64} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const long = within(canvasElement).getByRole('button', { name: 'Manual Bass' });
+    const label = long.querySelector('.yh-lampbutton__label') as HTMLElement;
+    await expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth);
+  },
+};
+
 /** Added: Metronome joined to its ▾ caret (the board's `join` pair), off and lit. */
 export const JoinStart: Story = {
   args: { label: 'Metronome', join: 'start' },
@@ -219,6 +245,7 @@ const FACES = [
   { face: 'Off', props: {} },
   { face: 'Armed', props: { waiting: true } },
   { face: 'On', props: { on: true } },
+  { face: 'Armed on', props: { on: true, armed: true } },
   { face: 'Disabled', props: { disabled: true } },
 ] as const;
 

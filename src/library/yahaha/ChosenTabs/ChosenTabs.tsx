@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type ButtonHTMLAttributes, type FocusEvent, type KeyboardEvent } from 'react';
+import type { TipAction } from '../Pad/Pad';
 import './ChosenTabs.css';
 
 /** One choice in a ChosenTabs run. */
@@ -30,9 +31,34 @@ export interface ChosenTabsProps {
   label?: string;
   /** Called with a tab's `id` on a click (the chosen tab too), or when an arrow, Home or End moves to it. */
   onChoose?: (id: string) => void;
+  /** The tighter padding a narrow region needs (`--space-2` instead of `--space-3`). Default: false. */
+  dense?: boolean;
+  /** The app's tooltip action, applied to each tab that has a `tip`, with that tab's key. */
+  tipAction?: TipAction;
 }
 
 type Face = 'chosen' | 'off' | 'disabled';
+
+/** Applies `action` to `node` with `key` while all three are set; destroys it on change and unmount. */
+function useTip(node: HTMLElement | null, key: string | undefined, action: TipAction | undefined) {
+  useEffect(() => {
+    if (!node || !action || key === undefined) return;
+    const handle = action(node, key);
+    return () => handle?.destroy?.();
+  }, [node, key, action]);
+}
+
+interface TabButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  tip?: string;
+  tipAction?: TipAction;
+}
+
+/** One tab's button: renders `data-tip` and runs its own tooltip action. */
+function TabButton({ tip, tipAction, ...rest }: TabButtonProps) {
+  const [node, setNode] = useState<HTMLButtonElement | null>(null);
+  useTip(node, tip, tipAction);
+  return <button {...rest} ref={setNode} type="button" data-tip={tip} />;
+}
 
 function face(tab: TabItem, chosen: string | null): Face {
   if (tab.disabled) return 'disabled';
@@ -56,7 +82,10 @@ function face(tab: TabItem, chosen: string | null): Face {
  * tabular figures (`references/typography.md`, tabular numbers). Labels follow the pack's
  * `--label-case`, and the height follows `--control-h`, so the run sits on the same rhythm as the
  * pack's other controls (rhythm). Focus is a `:focus-visible` accent ring only for keyboard users
- * (`references/craft-details.md`, focus states).
+ * (`references/craft-details.md`, focus states). `dense` tightens each tab's side padding from
+ * `--space-3` to `--space-2`, so a narrow region keeps the whole run in view without faking it
+ * through the run's private variable (rhythm). `tipAction` runs the app's tooltip action on each
+ * tab with that tab's own `tip`, the same handle shape as Pad's.
  *
  * **Kept**: a run, not buttons: no outline at rest. Labels never wrap and never truncate (they are
  * one or two words). `page` is page navigation with `aria-current`; `header` and `compact` are a
@@ -64,9 +93,17 @@ function face(tab: TabItem, chosen: string | null): Face {
  * disabled tabs, and the keys never reaching the app's window handler. Controlled: it draws
  * `chosen` as given and only calls `onChoose`.
  */
-export function ChosenTabs({ tabs, chosen = null, size = 'header', label, onChoose }: ChosenTabsProps) {
+export function ChosenTabs({
+  tabs,
+  chosen = null,
+  size = 'header',
+  label,
+  onChoose,
+  dense = false,
+  tipAction,
+}: ChosenTabsProps) {
   const isList = size !== 'page';
-  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+  const root = useRef<HTMLDivElement>(null);
   // The tab holding tabindex 0 in a tablist: follows focus, reset to `chosen` when it changes.
   const [active, setActive] = useState<string | null>(chosen);
   useEffect(() => setActive(chosen), [chosen]);
@@ -98,7 +135,7 @@ export function ChosenTabs({ tabs, chosen = null, size = 'header', label, onChoo
     if (target === index) return;
     const tab = tabs[target];
     setActive(tab.id);
-    buttons.current[target]?.focus();
+    root.current?.querySelectorAll<HTMLButtonElement>(':scope > .yh-chosen-tabs__tab')[target]?.focus();
     onChoose?.(tab.id);
   }
 
@@ -107,23 +144,25 @@ export function ChosenTabs({ tabs, chosen = null, size = 'header', label, onChoo
     if (!(next instanceof Node) || !event.currentTarget.contains(next)) setActive(chosen);
   }
 
+  const density = dense ? 'dense' : undefined;
+
   if (!isList) {
     return (
-      <div className="yh-chosen-tabs" data-size={size}>
+      <div className="yh-chosen-tabs" data-size={size} data-density={density}>
         {tabs.map((tab) => (
-          <button
+          <TabButton
             key={tab.id}
-            type="button"
             className="yh-chosen-tabs__tab"
             aria-current={tab.id === chosen ? 'page' : undefined}
             aria-disabled={tab.disabled ? 'true' : undefined}
             aria-label={tab.name}
             data-face={face(tab, chosen)}
-            data-tip={tab.tip}
+            tip={tab.tip}
+            tipAction={tipAction}
             onClick={() => choose(tab)}
           >
             {tab.label}
-          </button>
+          </TabButton>
         ))}
       </div>
     );
@@ -131,20 +170,18 @@ export function ChosenTabs({ tabs, chosen = null, size = 'header', label, onChoo
 
   return (
     <div
+      ref={root}
       className="yh-chosen-tabs"
       data-size={size}
+      data-density={density}
       role="tablist"
       aria-label={label || undefined}
       aria-orientation="horizontal"
       onBlur={onBlur}
     >
       {tabs.map((tab, i) => (
-        <button
+        <TabButton
           key={tab.id}
-          ref={(node) => {
-            buttons.current[i] = node;
-          }}
-          type="button"
           role="tab"
           className="yh-chosen-tabs__tab"
           aria-selected={tab.id === chosen}
@@ -152,13 +189,14 @@ export function ChosenTabs({ tabs, chosen = null, size = 'header', label, onChoo
           aria-label={tab.name}
           tabIndex={i === stop ? 0 : -1}
           data-face={face(tab, chosen)}
-          data-tip={tab.tip}
+          tip={tab.tip}
+          tipAction={tipAction}
           onClick={() => choose(tab)}
           onFocus={() => setActive(tab.id)}
           onKeyDown={(event) => onKeyDown(event, i)}
         >
           {tab.label}
-        </button>
+        </TabButton>
       ))}
     </div>
   );

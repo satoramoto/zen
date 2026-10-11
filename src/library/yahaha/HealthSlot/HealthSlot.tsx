@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import type { TipAction } from '../Pad/Pad';
 import { health, type HealthTarget } from './health';
 import './HealthSlot.css';
 
@@ -18,6 +20,8 @@ export interface HealthSlotProps {
   width?: number;
   /** The tooltip key, as `data-tip` on the button (or the calm text); null turns it off. */
   tip?: string | null;
+  /** The app's tooltip action, applied with `tip` to whichever element carries `data-tip`. */
+  tipAction?: TipAction;
   /** Called with where to fix the trouble on a click, Enter or Space. */
   onOpen?: (target: HealthTarget) => void;
 }
@@ -57,7 +61,8 @@ function Words({ text }: { text: string }) {
  * changes (typography.md, "Tabular Numbers"). *Affordance:* a trouble row is a framed, tinted
  * button and every clickable row takes a hover tint and a pointer, so it reads as something to
  * press; the original was bare text with no hover. Focus is a `:focus-visible` ring in the accent
- * (craft-details.md, "Focus States").
+ * (craft-details.md, "Focus States"). `tipAction` runs the app's tooltip action, in Pad's handle
+ * shape, on whichever element carries `tip`, moving to the new one when calm turns to trouble.
  *
  * **Kept.** The one pure `health()` choice and its order (a silent failed plugin first), the exact
  * texts, "Audio off" staying neutral yet clickable, the hidden polite live region that says
@@ -73,12 +78,20 @@ export function HealthSlot({
   cpu = null,
   width,
   tip = 'app.health',
+  tipAction,
   onOpen,
 }: HealthSlotProps) {
   const shown = health({ failedPart, synthOn, dropouts, bufferFrames, cpu });
   const state = shown.target === null ? 'calm' : shown.hue === 'ending' ? 'trouble' : 'off';
   const dataTip = tip ?? undefined;
   const target = shown.target;
+  // The element carrying `data-tip`: the button in trouble, the calm text otherwise.
+  const [node, setNode] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!node || !tipAction || dataTip === undefined) return;
+    const handle = tipAction(node, dataTip);
+    return () => handle?.destroy?.();
+  }, [node, dataTip, tipAction]);
 
   return (
     <span
@@ -91,7 +104,13 @@ export function HealthSlot({
         {shown.label}
       </span>
       {target ? (
-        <button type="button" className="yh-health-slot__button" data-tip={dataTip} onClick={() => onOpen?.(target)}>
+        <button
+          ref={setNode}
+          type="button"
+          className="yh-health-slot__button"
+          data-tip={dataTip}
+          onClick={() => onOpen?.(target)}
+        >
           <span className="yh-health-slot__mark" aria-hidden="true" />
           <span className="yh-health-slot__text">
             <Words text={shown.text} />
@@ -99,7 +118,7 @@ export function HealthSlot({
       ) : (
         <span className="yh-health-slot__calm">
           <span className="yh-health-slot__mark" aria-hidden="true" />
-          <span className="yh-health-slot__text" aria-hidden="true" data-tip={dataTip}>
+          <span ref={setNode} className="yh-health-slot__text" aria-hidden="true" data-tip={dataTip}>
             {shown.text}
           </span>
         </span>
