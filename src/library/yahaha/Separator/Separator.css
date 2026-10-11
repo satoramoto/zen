@@ -1,0 +1,17 @@
+/* Separator: contract variables only. The short line is one line of label type, centred in the row. */
+.yh-separator {
+  display: block;
+  flex: none;
+  align-self: center;
+  width: max(1px, var(--border-width));
+  background: var(--border);
+}
+/* A short line has little length to be seen by, so it takes the stronger rule. */
+.yh-separator[data-length='short'] {
+  height: 1.2em;
+  background: var(--border-strong);
+  font-size: var(--size-label);
+}
+.yh-separator[data-length='full'] {
+  align-self: stretch;
+}

@@ -1,0 +1,55 @@
+/* DisplayArt: contract variables only. Every colour is the ground, a surface or the accent, mixed. */
+.yh-displayart {
+  --yh-displayart-sky: color-mix(in oklab, var(--accent) 10%, var(--surface-1));
+  --yh-displayart-far: color-mix(in oklab, var(--accent) 22%, var(--surface-2));
+  --yh-displayart-near: color-mix(in oklab, var(--accent) 8%, var(--surface-0));
+  --yh-displayart-sun: color-mix(in oklab, var(--accent) 45%, var(--surface-1));
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 528 / 300;
+  background: var(--yh-displayart-sky);
+}
+
+/* The sun: top right, clear of the readouts' middle band. The wrapper's shadow is the palette's bloom. */
+.yh-displayart__sun {
+  position: absolute;
+  right: 14%;
+  top: 16%;
+  width: 18%;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 0 calc(var(--bloom) * 6) var(--yh-displayart-sun));
+}
+.yh-displayart__disc {
+  width: 100%;
+  height: 100%;
+  clip-path: circle(50%);
+  background: var(--yh-displayart-sun);
+}
+
+.yh-displayart__hill {
+  position: absolute;
+}
+.yh-displayart__hill[data-hill='far'] {
+  right: -20%;
+  bottom: -30%;
+  width: 90%;
+  height: 70%;
+  clip-path: ellipse(50% 50% at 50% 50%);
+  background: var(--yh-displayart-far);
+}
+.yh-displayart__hill[data-hill='near'] {
+  left: -10%;
+  bottom: -38%;
+  width: 100%;
+  height: 76%;
+  clip-path: ellipse(50% 50% at 50% 50%);
+  background: var(--yh-displayart-near);
+}
+
+/* The fade from the ground on the left: readouts over the art keep the ground's contrast. */
+.yh-displayart__fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--surface-0) 0%, color-mix(in oklab, var(--surface-0) 60%, transparent) 25%, transparent 65%);
+}

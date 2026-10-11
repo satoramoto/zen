@@ -1,0 +1,37 @@
+/* HueLegend: contract variables only; --hue comes from library.css's [data-hue] rules. */
+.yh-huelegend {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-2);
+}
+.yh-huelegend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.yh-huelegend__chip {
+  /* A pad in miniature: its corners scaled down with it, so a 6px control radius doesn't make a pill. */
+  --yh-huelegend-radius: calc(var(--radius-control) / 3);
+  flex: none;
+  width: 1.1em;
+  height: 0.8em;
+  border-radius: var(--yh-huelegend-radius);
+  background: var(--hue);
+}
+/* A section with no hue (Fill): an outlined chip, so it reads as "no colour of its own". */
+.yh-huelegend__item:not([data-hue]) .yh-huelegend__chip {
+  background: transparent;
+  border: max(1px, var(--border-width)) solid var(--text-3);
+}
