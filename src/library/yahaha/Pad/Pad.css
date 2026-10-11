@@ -1,0 +1,164 @@
+/* Yahaha Pad: one band pad drawn as a key. Reads only contract variables and the --yh-pad-*
+   ones declared here. Tone (data-tone) picks the colour role; state (data-state) the structure. */
+
+.yh-pad {
+  /* Size: square by default; a layout may override width and height on this class. */
+  --yh-pad-size: calc(var(--control-h) * 2.25);
+  --yh-pad-width: var(--yh-pad-size);
+  --yh-pad-height: var(--yh-pad-size);
+  /* Tone: the solid fill, the text on it, the ring colour and the text on a solid ring chip. */
+  --yh-pad-fill: var(--selected);
+  --yh-pad-ink: var(--selected-text);
+  --yh-pad-ring: var(--text-1);
+  --yh-pad-ring-ink: var(--surface-0);
+  /* The idle edge: neutral pads take the strong border, coloured ones their own colour. */
+  --yh-pad-edge: var(--border-strong);
+  --yh-pad-label: var(--text-1);
+  --yh-pad-wait-ring: 2px;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--yh-pad-width);
+  min-width: 0;
+  height: var(--yh-pad-height);
+  margin: 0;
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--yh-pad-edge);
+  border-radius: var(--radius-control);
+  background: var(--surface-2);
+  color: var(--yh-pad-label);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out;
+}
+
+.yh-pad[data-util] { --yh-pad-label: var(--text-2); }
+
+.yh-pad[data-tone='hue-1'] { --yh-pad-fill: var(--hue-1); }
+.yh-pad[data-tone='hue-2'] { --yh-pad-fill: var(--hue-2); }
+.yh-pad[data-tone='hue-3'] { --yh-pad-fill: var(--hue-3); }
+.yh-pad[data-tone='hue-4'] { --yh-pad-fill: var(--hue-4); }
+.yh-pad[data-tone^='hue-'] {
+  --yh-pad-ink: var(--on-hue);
+  --yh-pad-ring: var(--yh-pad-fill);
+  --yh-pad-ring-ink: var(--on-hue);
+  --yh-pad-edge: var(--yh-pad-fill);
+}
+.yh-pad[data-tone='success'] {
+  --yh-pad-fill: var(--success);
+  --yh-pad-ink: var(--surface-0);
+  --yh-pad-ring: var(--success);
+  --yh-pad-edge: var(--success);
+}
+.yh-pad[data-tone='action'] {
+  --yh-pad-fill: var(--action);
+  --yh-pad-ink: var(--action-text);
+  --yh-pad-ring: var(--action);
+  --yh-pad-ring-ink: var(--action-text);
+  --yh-pad-edge: var(--action);
+}
+
+/* Armed needs attention whatever the pad is: warning, not identity. */
+.yh-pad[data-state='armed'] {
+  --yh-pad-ring: var(--warning);
+  --yh-pad-ring-ink: var(--surface-0);
+}
+
+.yh-pad:hover { background: color-mix(in srgb, var(--surface-2), var(--text-1) 8%); }
+.yh-pad:active { transform: translateY(1px); }
+
+.yh-pad:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The label: centred lines, wrapping only at word boundaries. */
+.yh-pad__label {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: normal;
+  word-break: normal;
+  text-wrap: balance;
+}
+
+/* Sounding: the solid fill, the label on it, a bloom on palettes that glow. */
+.yh-pad[data-state='playing'],
+.yh-pad[data-state='running'] {
+  border-color: var(--yh-pad-fill);
+  background: var(--yh-pad-fill);
+  color: var(--yh-pad-ink);
+  box-shadow: 0 0 calc(var(--bloom) * 2) color-mix(in srgb, var(--yh-pad-fill) 60%, transparent);
+}
+
+/* Waiting (next, armed): a heavier ring and a faint wash of it; the label stays primary text. */
+.yh-pad[data-state='next'],
+.yh-pad[data-state='armed'] {
+  border-color: var(--yh-pad-ring);
+  background: color-mix(in srgb, var(--yh-pad-ring) 14%, var(--surface-1));
+  color: var(--text-1);
+  box-shadow: inset 0 0 0 var(--yh-pad-wait-ring) var(--yh-pad-ring);
+}
+.yh-pad[data-state='armed'] {
+  box-shadow:
+    inset 0 0 0 var(--yh-pad-wait-ring) var(--yh-pad-ring),
+    0 0 var(--bloom) color-mix(in srgb, var(--yh-pad-ring) 60%, transparent);
+}
+/* The flash's off phase: the idle face with the ring's colour at rest weight; the words stay. */
+.yh-pad[data-lit='false'] {
+  background: var(--surface-2);
+  box-shadow: none;
+}
+
+/* Absent: no face, a dashed edge, a muted label. Structure says "not here", not a dimmer colour. */
+.yh-pad[data-state='dark'] {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--yh-pad-edge) 60%, transparent);
+  background: transparent;
+  color: var(--text-3);
+}
+.yh-pad[data-state='dark']:hover { background: color-mix(in srgb, var(--text-1) 4%, transparent); }
+
+/* NEXT / ARMED: a small solid chip out of the label's flow, so the label never moves. */
+.yh-pad__tag {
+  position: absolute;
+  top: var(--space-1);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-control);
+  background: var(--yh-pad-ring);
+  color: var(--yh-pad-ring-ink);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: max(var(--tracking), 0.06em);
+  text-transform: uppercase;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+/* tagCorner: the chip tucked into the top-right corner, so the pad reads as one line. */
+.yh-pad__tag--corner {
+  top: 0;
+  right: 0;
+  left: auto;
+  transform: none;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: var(--radius-control);
+  border-top-right-radius: var(--radius-control);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-pad { transition: none; }
+  .yh-pad:active { transform: none; }
+}

@@ -1,0 +1,134 @@
+/* Yahaha Button, redesigned. Reads only contract variables and the local --yh-button-* ones
+   declared here; no literal colours or radii.
+
+   --yh-button-tone   what the button belongs to: text colour (neutral), a part/section hue, or a state
+   --yh-button-fill   the solid face when on or chosen
+   --yh-button-ink    the label on that solid face
+   --yh-button-line   the rest outline
+   --yh-button-glow   lamp bloom when lit (0px for neutral, --bloom for coloured) */
+
+.yh-button {
+  --yh-button-tone: var(--text-1);
+  --yh-button-fill: var(--selected);
+  --yh-button-ink: var(--selected-text);
+  --yh-button-line: var(--border-strong);
+  --yh-button-glow: 0px;
+  --yh-button-ring: calc(var(--border-width) * 2);
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  height: var(--control-h);
+  min-width: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  /* The outline is an inset shadow, so no face ever changes the box. */
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-line);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out, color 80ms ease-out;
+}
+
+/* Tones. Part hues are identity (r1–l); sections (intro, main, fill, brk, ending) stay neutral, as
+   on the Pad, because four hues can't name five sections without one passing for a part. ok/rec
+   are state, a is the accent. Any coloured tone draws a solid hue when lit, with --on-hue ink and
+   lamp bloom. */
+.yh-button[data-hue='r1'] { --yh-button-tone: var(--hue-1); }
+.yh-button[data-hue='r2'] { --yh-button-tone: var(--hue-2); }
+.yh-button[data-hue='r3'] { --yh-button-tone: var(--hue-3); }
+.yh-button[data-hue='l'] { --yh-button-tone: var(--hue-4); }
+.yh-button[data-hue='ok'] { --yh-button-tone: var(--success); }
+.yh-button[data-hue='rec'] { --yh-button-tone: var(--danger); }
+.yh-button[data-hue='a'] { --yh-button-tone: var(--accent); }
+.yh-button:not([data-hue='t']) {
+  --yh-button-fill: var(--yh-button-tone);
+  --yh-button-ink: var(--on-hue);
+  --yh-button-line: var(--yh-button-tone);
+  --yh-button-glow: var(--bloom);
+}
+
+/* Sizes: all from the control height, so density packs scale every key together. */
+.yh-button[data-size='icon'] { width: var(--control-h); padding: 0; }
+.yh-button[data-size='band'] {
+  width: calc(var(--control-h) * 2.75);
+  justify-content: flex-start;
+  padding: 0 var(--space-3);
+}
+.yh-button[data-size='pair'] { width: calc(var(--control-h) * 1.3); padding: 0 var(--space-1); }
+.yh-button[data-size='cell'] { flex: 1 1 auto; width: 100%; min-width: 0; padding: 0 var(--space-2); }
+.yh-button[data-size='caret'] { width: calc(var(--control-h) * 0.625); min-width: 0; padding: 0; }
+
+/* Joined keys square their shared corners. */
+.yh-button[data-join='start'] { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.yh-button[data-join='end'] { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+.yh-button__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.yh-button__glyph { flex: none; font-size: 0.75em; line-height: 1; }
+.yh-button__glyph[data-glyph='prev'], .yh-button__glyph[data-glyph='next'] { font-size: 0.9em; }
+.yh-button__glyph[data-glyph='plus'], .yh-button__glyph[data-glyph='minus'] { font-size: 1.15em; }
+/* Next to a label, the glyph is secondary; alone it is the label. */
+.yh-button:not([data-alone]) .yh-button__glyph { opacity: 0.72; }
+
+/* Rank at rest. */
+.yh-button[data-face='off'][data-variant='primary'] {
+  background: var(--action);
+  box-shadow: inset 0 0 0 var(--border-width) var(--action);
+  color: var(--action-text);
+}
+.yh-button[data-face='off'][data-variant='quiet'] { box-shadow: none; color: var(--text-2); }
+
+/* Hover and press tint the face by its own tone. */
+@media (hover: hover) {
+  .yh-button[data-face='off']:hover { background: color-mix(in oklab, var(--yh-button-tone) 10%, transparent); }
+  .yh-button[data-face='off'][data-variant='quiet']:hover { color: var(--text-1); }
+  .yh-button[data-face='off'][data-variant='primary']:hover { background: color-mix(in oklab, var(--action) 86%, var(--surface-0)); }
+  .yh-button:is([data-face='on'], [data-face='chosen']):hover { background: color-mix(in oklab, var(--yh-button-fill) 88%, var(--surface-0)); }
+}
+.yh-button[data-face='off']:active { background: color-mix(in oklab, var(--yh-button-tone) 18%, transparent); }
+.yh-button[data-face='off'][data-variant='primary']:active { background: color-mix(in oklab, var(--action) 76%, var(--surface-0)); }
+
+/* On and chosen: a solid face, lit. */
+.yh-button:is([data-face='on'], [data-face='chosen']) {
+  background: var(--yh-button-fill);
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-fill), 0 0 var(--yh-button-glow) var(--yh-button-fill);
+  color: var(--yh-button-ink);
+}
+
+/* Waiting: queued or armed, a double-weight ring over a faint tint; the label stays legible. */
+.yh-button[data-face='waiting'] {
+  background: color-mix(in oklab, var(--yh-button-tone) 16%, transparent);
+  box-shadow: inset 0 0 0 var(--yh-button-ring) var(--yh-button-tone);
+  color: var(--text-1);
+}
+
+/* Disabled: shown, not pressable; outline and label fade, whatever the face. */
+.yh-button[data-face='disabled'] {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width) color-mix(in oklab, var(--yh-button-line) 45%, transparent);
+  color: color-mix(in oklab, var(--text-1) 38%, transparent);
+  cursor: not-allowed;
+}
+
+.yh-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-button { transition: none; }
+}
