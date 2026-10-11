@@ -1,0 +1,294 @@
+/* Keys: contract variables only, plus the local --yh-keys-* ones declared here.
+   Key faces are derived per scheme with light-dark() (the scope sets color-scheme from --scheme):
+   white keys are the lighter face and sharps the darker one in either scheme. */
+
+.yh-keys {
+  /* Geometry set from the layout (inline), with defaults. */
+  --yh-keys-black-w: 22px;
+  --yh-keys-split-x: 0px;
+  --yh-keys-split-step: 0;
+  /* Sizes, all from density. */
+  --yh-keys-ruler-h: calc(var(--control-h) * 0.8);
+  --yh-keys-strip-h: calc(var(--control-h) * 1.75);
+  --yh-keys-black-h: calc(var(--yh-keys-strip-h) * 0.6);
+  --yh-keys-flag-w: calc(var(--control-h) * 1.9);
+  --yh-keys-line: 2px;
+  --yh-keys-lamp: 2px;
+  --yh-keys-key-radius: calc(var(--radius-control) / 2);
+  /* Key faces (no contract token for them yet). */
+  --yh-keys-white: light-dark(var(--surface-0), color-mix(in oklab, var(--text-1) 16%, var(--surface-1)));
+  --yh-keys-black: light-dark(color-mix(in oklab, var(--text-1) 86%, var(--surface-0)), var(--surface-0));
+  --yh-keys-gap: light-dark(var(--border-strong), var(--surface-0));
+  --yh-keys-sharp-edge: light-dark(transparent, var(--border-strong));
+  --yh-keys-label: light-dark(var(--text-3), var(--text-2));
+
+  position: relative;
+  flex: none;
+  display: grid;
+  grid-template-rows: var(--yh-keys-ruler-h) var(--yh-keys-strip-h);
+  max-width: 100%;
+  font-family: var(--font-sans);
+  color: var(--text-1);
+}
+
+/* Part identity: each part's hue, used only for its zone lamp and held keys. */
+.yh-keys [data-part='l'], .yh-keys [data-held='l'] { --yh-keys-hue: var(--hue-4); }
+.yh-keys [data-part='r1'], .yh-keys [data-held='r1'] { --yh-keys-hue: var(--hue-1); }
+.yh-keys [data-part='r2'], .yh-keys [data-held='r2'] { --yh-keys-hue: var(--hue-2); }
+.yh-keys [data-part='r3'], .yh-keys [data-held='r3'] { --yh-keys-hue: var(--hue-3); }
+
+/* ── The ruler: which part owns which keys, and what each holds. */
+.yh-keys__ruler {
+  position: relative;
+  min-width: 0;
+}
+.yh-keys__zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: 0 var(--space-2);
+  overflow: hidden;
+  white-space: nowrap;
+}
+/* Leave room for the split flag where the zones meet. */
+.yh-keys__zone[data-split][data-side='left'] { padding-right: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
+.yh-keys__zone[data-split][data-side='right'] { padding-left: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
+.yh-keys__part {
+  flex: none;
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  color: var(--text-3);
+}
+.yh-keys__held {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-1);
+}
+.yh-keys__hint {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--size-caption);
+  color: var(--accent);
+}
+
+/* The split's name when the keys are only a picture. */
+.yh-keys__marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* ── The keys. */
+.yh-keys__body {
+  position: relative;
+}
+.yh-keys__strip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--yh-keys-gap);
+  border-radius: var(--radius-control);
+}
+/* The frame, drawn over the keys so it takes no width from them. */
+.yh-keys__strip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: var(--radius-control);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
+  pointer-events: none;
+}
+.yh-keys__white {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: var(--space-1);
+  border-right: 1px solid var(--yh-keys-gap);
+  border-radius: var(--yh-keys-key-radius);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background: var(--yh-keys-white);
+  color: var(--yh-keys-label);
+  font-family: var(--font-readout);
+  font-size: var(--size-caption);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.yh-keys__black {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  width: var(--yh-keys-black-w);
+  height: var(--yh-keys-black-h);
+  margin-left: calc(var(--yh-keys-black-w) / -2);
+  border-radius: var(--yh-keys-key-radius);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background: var(--yh-keys-black);
+  box-shadow: inset 0 0 0 1px var(--yh-keys-sharp-edge);
+}
+/* Held: the part's hue, glowing where the palette has bloom. */
+.yh-keys__white[data-held],
+.yh-keys__black[data-held] {
+  background: var(--yh-keys-hue);
+  box-shadow: 0 0 var(--bloom) var(--yh-keys-hue);
+  color: var(--on-hue);
+}
+.yh-keys__white[data-held] { z-index: 0; font-weight: var(--weight-strong); }
+.yh-keys__black[data-held] { z-index: 2; }
+
+/* A zone lamp along the top edge: the part's hue, lit while it sounds. */
+.yh-keys__lamp {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  height: var(--yh-keys-lamp);
+  background: color-mix(in oklab, var(--yh-keys-hue) 45%, transparent);
+}
+.yh-keys__lamp[data-on='true'] {
+  background: var(--yh-keys-hue);
+  box-shadow: 0 0 var(--bloom) var(--yh-keys-hue);
+}
+
+/* The split line: beside the black keys it runs along the split key's edge, below them along the
+   white keys' edge, joined across when the two differ. */
+.yh-keys__split {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.yh-keys__split > span {
+  position: absolute;
+  background: var(--text-1);
+}
+.yh-keys__split-top {
+  top: 0;
+  left: calc(var(--yh-keys-split-x) + var(--yh-keys-split-step) * var(--yh-keys-black-w) / 2 - var(--yh-keys-line) / 2);
+  width: var(--yh-keys-line);
+  height: var(--yh-keys-black-h);
+}
+.yh-keys__split-bottom {
+  top: var(--yh-keys-black-h);
+  bottom: 0;
+  left: calc(var(--yh-keys-split-x) - var(--yh-keys-line) / 2);
+  width: var(--yh-keys-line);
+}
+.yh-keys__split-join {
+  top: calc(var(--yh-keys-black-h) - var(--yh-keys-line));
+  left: calc(var(--yh-keys-split-x) - var(--yh-keys-line) / 2);
+  width: calc(var(--yh-keys-black-w) / 2 + var(--yh-keys-line));
+  height: var(--yh-keys-line);
+}
+.yh-keys__split[data-step='-1'] .yh-keys__split-join {
+  left: calc(var(--yh-keys-split-x) - var(--yh-keys-black-w) / 2 - var(--yh-keys-line) / 2);
+}
+
+/* Armed: an accent ring round the keys and a crosshair over them. */
+.yh-keys__pick {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: var(--radius-control);
+  box-shadow: inset 0 0 0 2px var(--accent);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* ── The split handle: a labelled flag on the split line, with a hit column down the keys. */
+.yh-keys__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 6;
+  width: var(--space-4);
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  touch-action: none;
+  outline: none;
+}
+.yh-keys__flag {
+  position: absolute;
+  top: var(--space-1);
+  height: calc(var(--yh-keys-ruler-h) - var(--space-1));
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: var(--yh-keys-flag-w);
+  padding: 0 var(--space-2);
+  background: var(--surface-2);
+  border: var(--border-width) solid var(--border-strong);
+  border-bottom: var(--yh-keys-line) solid var(--text-1);
+  border-radius: var(--radius-control);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+/* The grip: two short rules saying "this slides". */
+.yh-keys__grip {
+  flex: none;
+  width: 3px;
+  height: 45%;
+  border-left: 1px solid var(--text-3);
+  border-right: 1px solid var(--text-3);
+}
+.yh-keys__handle:hover .yh-keys__flag { background: var(--surface-3); }
+.yh-keys__handle:focus-visible .yh-keys__flag {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.yh-keys[data-picking] .yh-keys__flag {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.yh-keys[data-picking] .yh-keys__grip { border-color: var(--accent); }
+
+/* Locked: nothing slides, so no grip; dashed and faint. */
+.yh-keys__handle[aria-disabled='true'] { cursor: not-allowed; }
+.yh-keys__handle[aria-disabled='true'] .yh-keys__flag {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  border-bottom-style: solid;
+  border-bottom-color: var(--text-3);
+  color: var(--text-3);
+}
+.yh-keys__handle[aria-disabled='true'] .yh-keys__grip { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .yh-keys__flag { transition: background-color 120ms ease-out, border-color 120ms ease-out; }
+}

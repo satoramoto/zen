@@ -1,0 +1,112 @@
+/* LineSlider: a line you drag, then the value as a numeral.
+   Reads only contract variables and the --yh-lineslider-* ones declared here. */
+
+.yh-lineslider {
+  /* What the thumb's cut-out ring is drawn in; a parent on a raised surface may override it. */
+  --yh-lineslider-ground: var(--surface-0);
+  --yh-lineslider-line: 3px;
+  --yh-lineslider-rail: color-mix(in oklab, var(--text-1) 20%, transparent);
+  --yh-lineslider-rail-hover: color-mix(in oklab, var(--text-1) 32%, transparent);
+  --yh-lineslider-fill: var(--text-2);
+  --yh-lineslider-thumb: var(--text-1);
+  --yh-lineslider-thumb-w: var(--space-1);
+  --yh-lineslider-thumb-h: calc(var(--control-h) * 0.5);
+  --yh-lineslider-thumb-radius: min(var(--radius-control), 2px);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  vertical-align: middle;
+}
+
+.yh-lineslider[data-disabled] {
+  --yh-lineslider-rail: color-mix(in oklab, var(--text-1) 12%, transparent);
+  --yh-lineslider-rail-hover: var(--yh-lineslider-rail);
+  --yh-lineslider-fill: var(--text-4);
+  --yh-lineslider-thumb: var(--text-4);
+}
+
+/* The whole control height is the target, not just the 3px line. */
+.yh-lineslider__hit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: none;
+  height: var(--control-h);
+  padding: 0 calc(var(--yh-lineslider-thumb-w) / 2);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  touch-action: none;
+  outline: none;
+}
+.yh-lineslider[data-disabled] .yh-lineslider__hit { cursor: not-allowed; }
+.yh-lineslider__hit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.yh-lineslider__track {
+  position: relative;
+  flex: 1;
+  height: var(--yh-lineslider-line);
+  background: var(--yh-lineslider-rail);
+  border-radius: var(--yh-lineslider-thumb-radius);
+}
+.yh-lineslider__hit:hover .yh-lineslider__track { background: var(--yh-lineslider-rail-hover); }
+
+.yh-lineslider__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--yh-lineslider-fill);
+  border-radius: var(--yh-lineslider-thumb-radius);
+}
+
+.yh-lineslider__thumb {
+  position: absolute;
+  top: 50%;
+  width: var(--yh-lineslider-thumb-w);
+  height: var(--yh-lineslider-thumb-h);
+  background: var(--yh-lineslider-thumb);
+  border-radius: var(--yh-lineslider-thumb-radius);
+  box-shadow: 0 0 0 2px var(--yh-lineslider-ground);
+  transform: translate(-50%, -50%);
+  transition: background-color 120ms ease-out, height 120ms ease-out;
+}
+/* Accent only while it is the thing being worked: focused from the keyboard, or held. */
+.yh-lineslider__hit:focus-visible .yh-lineslider__thumb,
+.yh-lineslider__hit[data-held] .yh-lineslider__thumb {
+  background: var(--accent);
+}
+.yh-lineslider__hit[data-held] .yh-lineslider__thumb,
+.yh-lineslider:not([data-disabled]) .yh-lineslider__hit:hover .yh-lineslider__thumb {
+  height: calc(var(--yh-lineslider-thumb-h) + var(--space-1));
+}
+
+.yh-lineslider__readout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  white-space: nowrap;
+  line-height: 1;
+}
+.yh-lineslider__value {
+  display: inline-block;
+  text-align: right;
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--size-heading);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.yh-lineslider[data-disabled] .yh-lineslider__value { color: var(--text-3); }
+/* Units keep their case: "ms" is not "MS". */
+.yh-lineslider__unit {
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  letter-spacing: var(--tracking);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-lineslider__thumb { transition: none; }
+}

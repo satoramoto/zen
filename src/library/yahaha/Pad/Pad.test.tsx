@@ -1,0 +1,88 @@
+import { describe, expect, it, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Pad, padTone } from './Pad';
+
+describe('Yahaha Pad', () => {
+  it('presses on a pointer click', async () => {
+    const onPress = vi.fn();
+    render(<Pad label="Main B" index="10" onPress={onPress} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Main B (pad 10)' }));
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('presses on Enter and Space', async () => {
+    const onPress = vi.fn();
+    const user = userEvent.setup();
+    render(<Pad label="Main B" index="10" onPress={onPress} />);
+    await user.tab();
+    expect(screen.getByRole('button')).toHaveFocus();
+    await user.keyboard('{Enter}');
+    await user.keyboard(' ');
+    expect(onPress).toHaveBeenCalledTimes(2);
+  });
+
+  it('names itself from label and index, or from name', () => {
+    const { rerender } = render(<Pad label="Intro I" index="1" />);
+    expect(screen.getByRole('button', { name: 'Intro I (pad 1)' })).toBeInTheDocument();
+    expect(screen.queryByText('1')).toBeNull();
+    rerender(<Pad label="Intro I" />);
+    expect(screen.getByRole('button', { name: 'Intro I' })).toBeInTheDocument();
+    rerender(<Pad label="Intro III" index="3" name="Intro III (not in this style)" />);
+    expect(screen.getByRole('button', { name: 'Intro III (not in this style)' })).toBeInTheDocument();
+  });
+
+  it('is pressed while playing or running, not otherwise', () => {
+    const { rerender } = render(<Pad label="Main B" state="playing" />);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+    rerender(<Pad label="Start / Stop" family="start" state="running" />);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+    for (const state of ['idle', 'dark', 'next', 'armed'] as const) {
+      rerender(<Pad label="Main B" state={state} />);
+      expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
+    }
+  });
+
+  it('shows NEXT or ARMED out of the accessible name, in the corner with tagCorner', () => {
+    const { rerender } = render(<Pad label="Main C" index="11" state="next" />);
+    expect(screen.getByText('NEXT')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByRole('button', { name: 'Main C (pad 11)' })).toBeInTheDocument();
+    rerender(<Pad label="Ending I" state="armed" tagCorner />);
+    expect(screen.getByText('ARMED')).toHaveClass('yh-pad__tag--corner');
+    rerender(<Pad label="Main C" state="idle" />);
+    expect(screen.queryByText('NEXT')).toBeNull();
+  });
+
+  it('marks the flash phase only on waiting pads', () => {
+    const { rerender } = render(<Pad label="Main C" state="next" lit={false} />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-lit', 'false');
+    rerender(<Pad label="Main C" state="playing" lit={false} />);
+    expect(screen.getByRole('button')).not.toHaveAttribute('data-lit');
+  });
+
+  it('maps families onto contract tones', () => {
+    expect(padTone('main', 'playing', false)).toBe('neutral');
+    expect(padTone('util', 'idle', false)).toBe('neutral');
+    expect(padTone('start', 'running', false)).toBe('success');
+    expect(padTone('start', 'idle', false)).toBe('neutral');
+    expect(padTone('start', 'running', true)).toBe('action');
+    expect(padTone('util', 'armed', true)).toBe('action');
+    expect(padTone('main', 'idle', true)).toBe('neutral');
+    expect(padTone('r1', 'playing', false)).toBe('hue-1');
+    expect(padTone('r2', 'idle', false)).toBe('hue-2');
+    expect(padTone('r3', 'dark', false)).toBe('hue-3');
+    expect(padTone('l', 'idle', false)).toBe('hue-4');
+  });
+
+  it('renders tip as data-tip and applies the tip action', () => {
+    const destroy = vi.fn();
+    const tipAction = vi.fn(() => ({ destroy }));
+    const { unmount } = render(<Pad label="QUICK 1" family="r1" tip="padpage.racks" tipAction={tipAction} />);
+    const pad = screen.getByRole('button');
+    expect(pad).toHaveAttribute('data-tip', 'padpage.racks');
+    expect(pad).toHaveAttribute('data-tone', 'hue-1');
+    expect(tipAction).toHaveBeenCalledWith(pad, 'padpage.racks');
+    unmount();
+    expect(destroy).toHaveBeenCalled();
+  });
+});

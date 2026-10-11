@@ -1,0 +1,120 @@
+/* OneTouchPicker: a caption, then one segmented strip of numbers; the applied one a solid
+   selection block. Contract variables only, plus the local --ots-* ones declared here. */
+
+.yh-onetouchpicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+.yh-onetouchpicker[data-orientation='vertical'] {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.yh-onetouchpicker__label {
+  color: var(--text-3);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+}
+
+.yh-onetouchpicker__strip { display: inline-flex; }
+
+.yh-onetouchpicker__number {
+  --ots-ink: var(--text-2);
+  --ots-line: var(--border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-h);
+  height: var(--control-h);
+  margin: 0;
+  padding: 0;
+  border: var(--border-width) solid var(--ots-line);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ots-ink);
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+/* Joined into one strip: shared hairlines, only the outer corners rounded. */
+.yh-onetouchpicker__strip .yh-onetouchpicker__number:not(:first-child) {
+  margin-left: calc(-1 * var(--border-width));
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.yh-onetouchpicker__strip .yh-onetouchpicker__number:not(:last-child) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.yh-onetouchpicker__number:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+.yh-onetouchpicker__number[data-face='chosen'] {
+  position: relative;
+  z-index: 1;
+  border-color: var(--selected);
+  background: var(--selected);
+  color: var(--selected-text);
+}
+.yh-onetouchpicker__number[data-face='chosen']:hover { background: var(--selected); color: var(--selected-text); }
+.yh-onetouchpicker__number:disabled {
+  --ots-ink: var(--text-4);
+  --ots-line: var(--border);
+  text-decoration: line-through;
+  cursor: default;
+}
+.yh-onetouchpicker__number:focus-visible {
+  position: relative;
+  z-index: 2;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Cells: each element fills its parent's cell; numbers are outlined faces in their ink, the applied
+   one solid. `a` takes the accent until the contract names a style hue. */
+.yh-onetouchpicker__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+.yh-onetouchpicker__label.yh-onetouchpicker__cell { justify-content: flex-start; }
+.yh-onetouchpicker__number.yh-onetouchpicker__cell {
+  --ots-ink: var(--text-1);
+  --ots-on: var(--selected);
+  --ots-on-text: var(--selected-text);
+  border: 0;
+  border-radius: var(--radius-control);
+  box-shadow: inset 0 0 0 var(--border-width) var(--ots-line);
+}
+.yh-onetouchpicker__number.yh-onetouchpicker__cell[data-ink='a'] {
+  --ots-ink: var(--accent);
+  --ots-line: var(--accent);
+  --ots-on: var(--accent);
+  --ots-on-text: var(--surface-0);
+}
+.yh-onetouchpicker__number.yh-onetouchpicker__cell[data-face='on'] {
+  background: var(--ots-on);
+  color: var(--ots-on-text);
+  box-shadow: none;
+}
+.yh-onetouchpicker__number.yh-onetouchpicker__cell:disabled {
+  --ots-ink: var(--text-4);
+  --ots-line: var(--border);
+}

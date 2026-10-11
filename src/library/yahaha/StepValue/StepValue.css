@@ -1,0 +1,130 @@
+/* StepValue: a value set in place. Contract variables only, plus the local --yh-stepvalue-* below. */
+
+.yh-stepvalue {
+  /* The part's hue when it has one (library.css sets --hue from data-hue), else neutral ink. */
+  --yh-stepvalue-hue: var(--hue, var(--text-2));
+  --yh-stepvalue-ink: var(--text-1);
+  --yh-stepvalue-tag-ink: var(--text-2);
+  --yh-stepvalue-lit: var(--yh-stepvalue-hue);
+  --yh-stepvalue-h: calc(var(--control-h) * 0.85);
+  /* Where the value sits in its range, 0–1; the component sets it inline. */
+  --yh-stepvalue-fill: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--yh-stepvalue-h);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-control);
+  white-space: nowrap;
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.yh-stepvalue:hover,
+.yh-stepvalue[data-dragging] {
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+}
+
+.yh-stepvalue:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Tag: a label, with the part's hue as a swatch beside it. */
+.yh-stepvalue__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  color: var(--yh-stepvalue-tag-ink);
+}
+.yh-stepvalue__swatch {
+  width: calc(var(--space-2) * 0.75);
+  height: calc(var(--space-2) * 0.75);
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--yh-stepvalue-hue);
+}
+.yh-stepvalue:not([data-hue]) .yh-stepvalue__swatch {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
+}
+
+/* Value: the loudest thing; fixed-width figures, right-aligned so a column lines up. */
+.yh-stepvalue__value {
+  min-width: 3ch;
+  margin-left: auto;
+  text-align: end;
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--yh-stepvalue-ink);
+}
+
+/* Lamp (levels only): a hairline under the cell showing where the value sits in its range. */
+.yh-stepvalue__lamp {
+  position: absolute;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: calc(var(--space-1) * 0.5);
+  height: 2px;
+  background: var(--surface-3);
+  pointer-events: none;
+}
+.yh-stepvalue__lamp::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--yh-stepvalue-fill) * 100%);
+  background: var(--yh-stepvalue-lit);
+  box-shadow: 0 0 var(--bloom) var(--yh-stepvalue-lit);
+}
+.yh-stepvalue[data-dragging] {
+  --yh-stepvalue-lit: var(--accent);
+}
+
+/* A table cell: plain body ink, quieter than a level. */
+.yh-stepvalue[data-ink='t'] .yh-stepvalue__value {
+  font-weight: var(--weight-body);
+}
+
+/* Dim: a part that doesn't sound. Lower on the text ladder, lamp unlit. Still settable. */
+.yh-stepvalue[data-dim] {
+  --yh-stepvalue-ink: var(--text-3);
+  --yh-stepvalue-tag-ink: var(--text-3);
+  --yh-stepvalue-lit: var(--text-4);
+}
+.yh-stepvalue[data-dim] .yh-stepvalue__swatch {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-stepvalue-hue);
+}
+.yh-stepvalue[data-dim] .yh-stepvalue__lamp::after {
+  box-shadow: none;
+}
+
+/* Disabled: shown, not settable. */
+.yh-stepvalue[data-disabled] {
+  --yh-stepvalue-ink: var(--text-4);
+  --yh-stepvalue-tag-ink: var(--text-4);
+  --yh-stepvalue-lit: var(--text-4);
+  cursor: not-allowed;
+}
+.yh-stepvalue[data-disabled]:hover {
+  background: transparent;
+}
+.yh-stepvalue[data-disabled] .yh-stepvalue__swatch {
+  background: var(--text-4);
+  box-shadow: none;
+}
+.yh-stepvalue[data-disabled] .yh-stepvalue__lamp::after {
+  box-shadow: none;
+}
