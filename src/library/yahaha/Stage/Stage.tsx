@@ -1,0 +1,200 @@
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { AppBar, type AppBarProps } from '../AppBar/AppBar';
+import { Display, type DisplayProps } from '../Display/Display';
+import { FaderBank, type FaderBankProps } from '../FaderBank/FaderBank';
+import { Keys, type KeysProps } from '../Keys/Keys';
+import { KnobBank, type KnobBankProps } from '../KnobBank/KnobBank';
+import { PadBank, type PadBankProps } from '../PadBank/PadBank';
+import { SongForm, type SongFormProps } from '../SongForm/SongForm';
+import { StatusLine, type StatusLineProps } from '../StatusLine/StatusLine';
+import { tapTempo } from './tapTempo';
+import './Stage.css';
+
+/** The app's tooltip action, handed to every region. */
+export type StageTipAction = (node: HTMLElement, key: string) => void | { update?: (key: string) => void; destroy?: () => void };
+
+/** The slowest and fastest tempo a tap may set. */
+export const TEMPO_MIN = 40;
+export const TEMPO_MAX = 280;
+
+export interface StageProps {
+  /** The top bar: pages, the global switches (Metronome and its settings, Unison, Help, Panic), health. */
+  appBar: Omit<AppBarProps, 'width' | 'nowPlaying' | 'tipAction'>;
+  /**
+   * The hero: style, One Touch, section now and next, chord, tempo and the screen's one Tap, beat.
+   * Its `parts` column is never shown here (the mixer names every part's sound). `onTap` is
+   * called on each tap; once two or more taps are in time the Stage asks `onTempo` for their tempo.
+   */
+  display: Omit<DisplayProps, 'parts' | 'tipAction'>;
+  /** The song form and the screen's one transport cluster. */
+  songForm: Omit<SongFormProps, 'tipAction'>;
+  /** The mixer. */
+  faders: Omit<FaderBankProps, 'tipAction'>;
+  /** The eight knobs and their pages. */
+  knobs: Omit<KnobBankProps, 'tipAction'>;
+  /** The sixteen pads and their banks, always two rows of eight here. */
+  pads: Omit<PadBankProps, 'tipAction' | 'columns'>;
+  /** The keyboard: range, split, held notes. Its width follows the screen. */
+  keys: Omit<KeysProps, 'width' | 'tipAction'>;
+  /** The status line above the keys. */
+  status: Omit<StatusLineProps, 'width'>;
+  /** The app's tooltip action, passed to every region. */
+  tipAction?: StageTipAction;
+  /** The screen's size in px. Unset, it fills its container's width and the viewport's height. */
+  width?: number;
+  height?: number;
+}
+
+/** The board's width: the screen is never laid out narrower than this. */
+export const BOARD_WIDTH = 1440;
+
+/** The keys' width before the slot is measured (the 1440 board inside its margins). */
+const KEYS_FALLBACK = 1392;
+
+/** The keys slot's width in its own CSS px, measured as it resizes; `fallback` where nothing measures (jsdom). */
+function useSlotWidth(fallback: number) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(fallback);
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || typeof ResizeObserver === 'undefined') return;
+    const measure = () => {
+      const w = node.clientWidth;
+      if (w > 0) setWidth(w);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, width] as const;
+}
+
+/**
+ * Fits the screen to its frame. The screen is laid out at its natural size; when the regions need
+ * more room than the frame gives (a small screen, or a large-density pack), the whole screen is
+ * zoomed down by the one factor that makes it fit, so no region is squeezed out of shape and
+ * nothing is cut off. A zoomed screen is laid out wider than the frame, so it may refit a little
+ * taller; a few passes settle it. Nothing measures in jsdom: the screen stays at zoom 1.
+ */
+function useFit() {
+  const frame = useRef<HTMLDivElement>(null);
+  const screen = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const outer = frame.current;
+    const inner = screen.current;
+    if (!outer || !inner || typeof ResizeObserver === 'undefined') return;
+    const fit = () => {
+      const w = outer.clientWidth;
+      const h = outer.clientHeight;
+      if (w <= 0 || h <= 0) return;
+      // Never laid out narrower than the board: a smaller frame shows the board's layout, scaled.
+      let zoom = Math.min(1, w / BOARD_WIDTH);
+      for (let pass = 0; pass < 4; pass++) {
+        inner.style.zoom = String(zoom);
+        inner.style.width = `${w / zoom}px`;
+        inner.style.height = `${h / zoom}px`;
+        const room = Math.min(inner.clientHeight / inner.scrollHeight, inner.clientWidth / inner.scrollWidth);
+        if (room >= 0.999) break;
+        zoom *= room;
+      }
+      outer.dataset.zoom = zoom.toFixed(3);
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(outer);
+    return () => observer.disconnect();
+  }, []);
+  return [frame, screen] as const;
+}
+
+/**
+ * Stage: the whole app on one screen, what a player looks at while playing live.
+ *
+ * **Job.** Answer, mid-song and from a metre away, in this order: what is the band playing now
+ * (section, chord) and how fast; what comes next and where that sits in the song; then let the
+ * hands reach the controls (the mixer, knobs, pads) and see the keyboard's split and held notes.
+ * Every concept of the instrument is on this one screen, each in exactly one place.
+ *
+ * **Changed.** *One hierarchy, read top to bottom and left to right* (`STAGE.md` 1;
+ * `references/layout.md`, reading order): under a quiet page bar the screen has two rows. The top
+ * row is *now*: the Display (the hero) in the top-left corner, where the eye lands first, and
+ * beside it the song form, so "Main B → Main C" in the hero and the NEXT ring on the form read as
+ * one line; the form's own transport cluster sits under it, so Start / Stop is the largest key on
+ * screen and next to the sections it moves through. The bottom row is *the hands*: the mixer, then
+ * the knobs over the pads, the way the Launchkey lays them out, with the status line and the keys
+ * at the foot. The original put a row of switches above the hero, so the first thing read was not
+ * the music. *One place per job* (`STAGE.md` 3): the transport lives only in SongForm, Tap only
+ * in the Display (the Stage times its taps, `tapTempo.ts`), the global switches and Panic only in
+ * the AppBar. The Display's parts column is not shown: the mixer already names each part's sound
+ * under its fader in the part's hue, so a second list of sounds would be a second place for one
+ * fact. *Alignment and grouping*: the pads are two rows of eight under the eight knobs, so each
+ * knob stands over its two pads as on the hardware and the right half reads as one eight-wide
+ * grid; a 4 × 4 block would break that column alignment and leave half the width empty. The mixer
+ * stays a little wider than knobs and pads (1.1 : 1), which still leaves each knob room for its
+ * name. *Proportion*: the top row takes its own height, the bottom row the rest, so the mixer gets
+ * the fader travel. *Fit*: below the board's width the screen keeps the board's layout and is
+ * scaled to fit, rather than reflowed into a cramped second layout, so 1217 × 752 is the 1440
+ * board at 0.845; a pack whose density needs more room than the screen has (Ableton's larger
+ * controls) is zoomed down just enough, so nothing is ever cut off or pushed off screen.
+ *
+ * **Kept.** The original's regions and every one of their callbacks, passed straight through,
+ * so a region behaves the same here as in its own story; the 1440 × 900 board and the 1217 × 752
+ * small screen; the status line in the gap over the keys; the keys spanning the full width; the
+ * tap tempo rule (two or more taps in time, the last four count).
+ */
+export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height }: StageProps) {
+  const [keysSlot, keysWidth] = useSlotWidth(width === undefined ? KEYS_FALLBACK : Math.min(KEYS_FALLBACK, width - 48));
+  const [frame, screen] = useFit();
+  const taps = useRef<number[]>([]);
+
+  const onTap = () => {
+    display.onTap?.();
+    const next = tapTempo(taps.current, performance.now());
+    taps.current = next.taps;
+    if (next.bpm !== undefined) display.onTempo?.(Math.min(TEMPO_MAX, Math.max(TEMPO_MIN, next.bpm)));
+  };
+
+  const size: CSSProperties = {};
+  if (width !== undefined) size.width = `${width}px`;
+  if (height !== undefined) size.height = `${height}px`;
+
+  return (
+    <div ref={frame} className="yh-stage" style={size} role="group" aria-label="Stage">
+      <div ref={screen} className="yh-stage__screen">
+        <div className="yh-stage__bar">
+          <AppBar {...appBar} tipAction={tipAction} />
+        </div>
+        <div className="yh-stage__top">
+          <div className="yh-stage__display">
+            <Display {...display} parts={undefined} tipAction={tipAction} onTap={onTap} />
+          </div>
+          <div className="yh-stage__form">
+            <SongForm {...songForm} tipAction={tipAction} />
+          </div>
+        </div>
+        <div className="yh-stage__band">
+          <div className="yh-stage__faders">
+            <FaderBank {...faders} tipAction={tipAction} />
+          </div>
+          <div className="yh-stage__controls">
+            <div className="yh-stage__knobs">
+              <KnobBank {...knobs} tipAction={tipAction} />
+            </div>
+            <div className="yh-stage__pads">
+              <PadBank {...pads} columns={8} tipAction={tipAction} />
+            </div>
+          </div>
+        </div>
+        <div className="yh-stage__status">
+          <StatusLine {...status} />
+        </div>
+        <div className="yh-stage__keys" ref={keysSlot}>
+          <Keys {...keys} width={keysWidth} tipAction={tipAction} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Stage;
