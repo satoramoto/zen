@@ -1,0 +1,57 @@
+/* PartMarks: contract variables only. Sizes follow the caption type, so the marks scale with the theme. */
+.yh-partmarks {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.yh-partmarks[data-size='strip'] {
+  gap: var(--space-1);
+}
+.yh-partmarks > * {
+  flex: none;
+}
+
+.yh-partmarks__dot {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: var(--radius-pill);
+  background: var(--text-1);
+}
+
+.yh-partmarks__icon {
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.yh-partmarks__icon circle {
+  fill: currentColor;
+  stroke: none;
+}
+.yh-partmarks__icon[data-tone='warning'] {
+  color: var(--warning);
+}
+.yh-partmarks__icon[data-tone='danger'] {
+  color: var(--danger);
+}
+
+.yh-partmarks__word {
+  text-transform: var(--label-case);
+}
+.yh-partmarks__word[data-tone='muted'] {
+  color: var(--text-2);
+}
+.yh-partmarks__word[data-tone='faint'] {
+  color: var(--text-3);
+}
