@@ -26,7 +26,7 @@ const COMPONENT_SOURCES = [
   'library.css',
   ...filesIn('components', /\.tsx$/),
   ...filesIn('screens', /\.(tsx|css)$/),
-  ...filesUnder('yahaha', /\.(tsx|css)$/),
+  ...filesUnder('yahaha', /\.(tsx?|css)$/),
 ];
 const CONTRACT = new Set(Object.keys(toCssVars(packs[0].facets)));
 
