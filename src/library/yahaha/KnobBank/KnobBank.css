@@ -1,0 +1,58 @@
+/* KnobBank: the Knobs header with its page tabs, and eight knob slots across the region. Reads only
+   contract variables and the --yh-knobbank-* / --yh-knob-ring ones declared here. */
+
+.yh-knobbank {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-sans);
+  container: yh-knobbank / inline-size;
+}
+
+/* A narrow region (a 1217 × 752 Stage) tightens the six page tabs so the whole run stays in view. */
+@container yh-knobbank (max-width: 560px) {
+  .yh-knobbank .yh-chosen-tabs {
+    --yh-chosen-tabs-pad: var(--space-2);
+  }
+}
+
+.yh-knobbank__knobs {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  column-gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+/* Each slot is a size container: the knob's ring takes the slot's width, up to the density's size. */
+.yh-knobbank__slot {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  container-type: inline-size;
+}
+.yh-knobbank__slot .yh-knob {
+  --yh-knob-ring: min(calc(var(--control-h) * 2.25), calc(100cqi - 2 * var(--space-1)));
+  width: 100%;
+  padding: var(--space-1);
+}
+/* The value scales with the ring, a little larger than the knob's own default, so it reads first. */
+.yh-knobbank__slot .yh-knob__value {
+  font-size: min(var(--size-heading), calc(var(--yh-knob-ring) * 0.32));
+}
+
+/* An unmapped slot: a quiet dot where the ring's centre would be, nothing to read or press. */
+.yh-knobbank__empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: calc(var(--control-h) * 2);
+}
+.yh-knobbank__dot {
+  --yh-knobbank-dot: max(4px, calc(var(--space-1) + 1px));
+  width: var(--yh-knobbank-dot);
+  height: var(--yh-knobbank-dot);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--text-1) 22%, transparent);
+}
