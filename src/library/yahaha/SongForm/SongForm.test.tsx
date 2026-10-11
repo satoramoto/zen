@@ -1,0 +1,167 @@
+import { describe, expect, it, vi } from 'vitest';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ThemeScope, resolveTheme } from '../../theme';
+import { packs } from '../../themes/packs';
+import { SongForm, type SongFormProps } from './SongForm';
+import { songFormBoard, songFormFillPending, songFormSparse, songFormStopped, songFormSyncArmed } from './SongForm.fixtures';
+
+const renderForm = (props: SongFormProps = songFormBoard) => render(<SongForm {...props} />);
+
+describe('Yahaha SongForm', () => {
+  it('lays the sections out in the song’s order, Break and Auto Fill apart', () => {
+    renderForm();
+    const form = screen.getByRole('group', { name: 'Sections' });
+    const order = Array.from(form.querySelectorAll('[data-section]')).map((n) => n.getAttribute('data-section'));
+    expect(order).toEqual([
+      'intro1', 'intro2', 'intro3', 'mainA', 'mainB', 'mainC', 'mainD', 'ending1', 'ending2', 'ending3', 'break',
+    ]);
+    const mods = screen.getByRole('group', { name: 'Modifiers' });
+    expect(within(mods).getByRole('button', { name: 'Break' })).toBeInTheDocument();
+    expect(within(mods).getByRole('button', { name: 'Auto Fill' })).toBeInTheDocument();
+    // No Tap and no tempo here: they live in the Display.
+    expect(screen.queryByRole('button', { name: /tap/i })).toBeNull();
+  });
+
+  it('marks what plays now and what comes next, by name and pressed state', () => {
+    renderForm();
+    expect(screen.getByRole('button', { name: 'Main B, playing' })).toHaveAttribute('aria-pressed', 'true');
+    const next = screen.getByRole('button', { name: 'Main C, next, after bar 4' });
+    expect(next).toHaveAttribute('aria-pressed', 'false');
+    expect(next.closest('[data-section]')).toHaveAttribute('data-state', 'next');
+    expect(screen.getByRole('status')).toHaveTextContent('Main Cafter bar 4');
+  });
+
+  it('says the stopped band’s section is where it starts', () => {
+    renderForm(songFormStopped);
+    expect(screen.getByRole('button', { name: 'Main A, starts here' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('queues a pressed section, and ignores an absent one', async () => {
+    const onSection = vi.fn();
+    renderForm({ ...songFormSparse, onSection });
+    await userEvent.click(screen.getByRole('button', { name: 'Ending I' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Main C, not in this style' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Break, not in this style' }));
+    expect(onSection.mock.calls).toEqual([['ending1']]);
+    expect(screen.getByRole('button', { name: 'Intro III, not in this style' }).closest('[data-section]')).toHaveAttribute(
+      'data-state',
+      'absent',
+    );
+  });
+
+  it('Start / Stop says the action and calls back; held while running, it stops with a fade', async () => {
+    const onStartStop = vi.fn();
+    const onStopWithFade = vi.fn();
+    const { rerender } = render(<SongForm {...songFormStopped} onStartStop={onStartStop} onStopWithFade={onStopWithFade} />);
+    const stopped = screen.getByRole('button', { name: 'Start / Stop, stopped' });
+    expect(stopped).toHaveTextContent('Start');
+    expect(stopped).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(stopped);
+    expect(onStartStop).toHaveBeenCalledTimes(1);
+
+    rerender(<SongForm {...songFormBoard} onStartStop={onStartStop} onStopWithFade={onStopWithFade} />);
+    const running = screen.getByRole('button', { name: /Start \/ Stop, running/ });
+    expect(running).toHaveTextContent('Stop');
+    expect(running).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.pointer({ keys: '[MouseRight]', target: running });
+    expect(onStopWithFade).toHaveBeenCalledTimes(1);
+  });
+
+  it('every control works from the keyboard', async () => {
+    const calls: string[] = [];
+    const log = (name: string) => (...args: unknown[]) => calls.push([name, ...args].join(':'));
+    const user = userEvent.setup();
+    renderForm({
+      ...songFormBoard,
+      onSection: log('section'),
+      onAutoFill: log('autoFill'),
+      onStartStop: log('startStop'),
+      onSyncStart: log('syncStart'),
+      onSyncStop: log('syncStop'),
+      onAccomp: log('accomp'),
+      onFillUp: log('fillUp'),
+      onFillDown: log('fillDown'),
+      onFade: log('fade'),
+      onReset: log('reset'),
+    });
+    // Tab through every control, pressing each with Enter (sections) or Space (the rest).
+    for (let i = 0; i < 30; i++) {
+      await user.tab();
+      if (document.activeElement === document.body) break;
+      await user.keyboard(i % 2 ? ' ' : '{Enter}');
+    }
+    expect(calls).toEqual([
+      'section:intro1',
+      'section:intro2',
+      // Intro III is absent: no call.
+      'section:mainA',
+      'section:mainB',
+      'section:mainC',
+      'section:mainD',
+      'section:ending1',
+      'section:ending2',
+      // Ending III is absent.
+      'section:break',
+      'autoFill:true',
+      'startStop',
+      'syncStart:true',
+      'syncStop:true',
+      'accomp:false',
+      'fillUp',
+      'fillDown',
+      'fade',
+      'reset',
+    ]);
+  });
+
+  it('switches report the state asked for, and show their own', () => {
+    renderForm({ ...songFormSyncArmed, syncStop: true, autoFill: true });
+    expect(screen.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('data-face', 'waiting');
+    expect(screen.getByRole('button', { name: 'Sync Stop' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Auto Fill' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Accomp (ACMP)' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('status')).toHaveTextContent('Starts with the first chord');
+  });
+
+  it('a queued fill waits on its key and reads in the cue', () => {
+    renderForm(songFormFillPending);
+    expect(screen.getByRole('button', { name: 'Fill Up: a fill, then the next Main up, queued' })).toHaveAttribute(
+      'data-face',
+      'waiting',
+    );
+    expect(screen.getByRole('button', { name: 'Fill Down: a fill, then the next Main down' })).toHaveAttribute(
+      'data-face',
+      'off',
+    );
+    expect(screen.getByRole('status')).toHaveTextContent('Fill, then Main C');
+  });
+
+  it('Fade is on while fading out, and waits while a fade-in waits for Start', () => {
+    const { rerender } = render(<SongForm {...songFormBoard} fading />);
+    expect(screen.getByRole('button', { name: 'Fade, fading' })).toHaveAttribute('data-face', 'on');
+    rerender(<SongForm {...songFormStopped} fading />);
+    const waiting = screen.getByRole('button', { name: 'Fade in, waiting for Start' });
+    expect(waiting).toHaveAttribute('data-face', 'waiting');
+    expect(waiting).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('no section takes a part hue', () => {
+    const { container } = renderForm();
+    for (const pad of container.querySelectorAll('.yh-pad')) expect(pad.getAttribute('data-tone')).toBe('neutral');
+  });
+
+  it('renders under every theme pack', () => {
+    for (const pack of packs) {
+      const { facets } = resolveTheme({ theme: pack.id });
+      const { unmount } = render(
+        <ThemeScope facets={facets}>
+          <SongForm {...songFormBoard} />
+        </ThemeScope>,
+      );
+      expect(screen.getByRole('region', { name: 'Song form and transport' })).toBeInTheDocument();
+      unmount();
+    }
+  });
+});
