@@ -1,5 +1,5 @@
 /* Yahaha SongForm: the song's form and the transport cluster. Reads only contract variables and
-   the --yh-sf-* ones declared here; the --yh-pad-* ones it sets are Pad's own hooks. */
+   the --yh-sf-* ones declared here. */
 
 .yh-songform {
   --yh-sf-step-h: calc(var(--control-h) * 1.5);
@@ -11,10 +11,15 @@
   min-width: 0;
   color: var(--text-1);
   font-family: var(--font-sans);
+  /* The query container's em is one control height: container queries can't read var(), but they
+     resolve em against this element, so the breakpoints below are counted in keys and follow the
+     pack's density. Nothing inside inherits it (the inner grid resets the size). */
+  font-size: var(--control-h);
 }
 
 /* Wide: the form and the transport side by side, on one foot line. */
 .yh-songform__inner {
+  font-size: var(--size-body);
   display: grid;
   grid-template-columns: minmax(max-content, 1fr) auto;
   align-items: end;
@@ -137,10 +142,8 @@
 }
 .yh-songform__step--lamp { align-items: stretch; }
 
-/* A step is a Pad at the form's size; its letter or numeral reads at heading size. */
+/* A step is a Pad filling its cell (`fillCell`); its letter or numeral reads at heading size. */
 .yh-songform__step .yh-pad {
-  --yh-pad-width: 100%;
-  --yh-pad-height: 100%;
   font-size: var(--size-heading);
   font-variant-numeric: tabular-nums;
 }
@@ -158,12 +161,6 @@
   height: calc(var(--space-1) * 0.75);
   border-radius: var(--radius-pill);
   background: var(--text-1);
-}
-
-/* Next is the accent (hues.ts), not the pad's neutral ring. */
-.yh-songform__step[data-state='next'] .yh-pad {
-  --yh-pad-ring: var(--accent);
-  --yh-pad-ring-ink: var(--surface-0);
 }
 
 .yh-songform__step--lamp .yh-lampbutton {
@@ -198,48 +195,32 @@
 .yh-songform__key[data-key='reset'] { grid-area: reset; }
 .yh-songform__key[data-key='accomp'] { grid-area: accomp; margin-left: var(--space-3); }
 
-.yh-songform__start .yh-button {
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  font-size: var(--size-heading);
-}
-.yh-songform__key .yh-button,
+/* Start / Stop is Button's `tall` cell: two rows and their gap, exactly the start area. The lamps
+   have no tall size, so they take their cell's height here (Accomp spans both rows). */
 .yh-songform__key .yh-lampbutton {
-  width: 100%;
   height: 100%;
 }
 
-/* Below the 1440 board's width (the 1217 Stage, or any narrower column): the form across the
-   whole region, the transport one row under it, in the same order (Start / Stop first). */
-@container (max-width: 1279px) {
+/* The breakpoints are in control heights (this region's em is --control-h; see .yh-songform).
+   Side by side the region needs about 36 of them: the form's ten steps, Break and Auto Fill and
+   their gaps (about 18), the transport's Start / Stop and four key columns with theirs (about 17),
+   and the gap between. Under 37.5 (1275px at the regular density, the 1440 board at compact and
+   regular, not at airy) the form goes across the whole region and the transport sits under it,
+   in the same two rows, its keys sharing the width. */
+@container (max-width: 37.5em) {
   .yh-songform__inner {
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
     gap: var(--space-3);
   }
   .yh-songform__transport {
-    grid-template-columns: minmax(max-content, 1.4fr) repeat(7, minmax(max-content, 1fr));
-    grid-template-rows: calc(var(--control-h) * 1.25);
-    grid-template-areas: 'start sync-start sync-stop fill-up fill-down fade reset accomp';
-  }
-  .yh-songform__key[data-key='fill-down'] { margin-left: 0; }
-}
-
-/* Narrow (a column under 760): the transport back in two rows, keys sharing the width. */
-@container (max-width: 760px) {
-  .yh-songform__transport {
     grid-template-columns: minmax(max-content, 1.2fr) repeat(4, minmax(max-content, 1fr));
-    grid-template-rows: var(--control-h) var(--control-h);
-    grid-template-areas:
-      'start sync-start fill-up fade accomp'
-      'start sync-stop fill-down reset accomp';
   }
-  .yh-songform__key[data-key='fill-down'] { margin-left: var(--space-3); }
 }
 
-/* Very narrow: Break and Auto Fill move under the form's three parts. */
-@container (max-width: 640px) {
+/* Under 18.75 control heights (640px at regular) the three parts alone fill the line: Break and
+   Auto Fill move under them. */
+@container (max-width: 18.75em) {
   .yh-songform__line { flex-wrap: wrap; row-gap: var(--space-3); }
   .yh-songform__parts { flex-basis: 100%; }
   .yh-songform__mods { flex-basis: 100%; padding-left: 0; border-left: 0; }

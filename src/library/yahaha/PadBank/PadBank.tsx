@@ -50,7 +50,7 @@ export interface PadBankProps {
   bankName?: string;
   /** The flash phase of armed and queued pads. */
   lit?: boolean;
-  /** The app's tooltip hook, passed to every pad. */
+  /** The app's tooltip hook, passed to every pad and to the bank tabs. */
   tipAction?: TipAction;
   /** A bank tab was chosen (its index in `banks`), by click or arrow key. */
   onBank?: (index: number) => void;
@@ -106,7 +106,14 @@ export function PadBank({
   return (
     <section className="yh-padbank" aria-labelledby={headingId} lang="en">
       <GroupHeader title="Pads" id={headingId}>
-        <ChosenTabs size="header" label="Pad bank" tabs={tabs} chosen={chosen} onChoose={(id) => onBank?.(Number(id))} />
+        <ChosenTabs
+          size="header"
+          label="Pad bank"
+          tabs={tabs}
+          chosen={chosen}
+          tipAction={tipAction}
+          onChoose={(id) => onBank?.(Number(id))}
+        />
       </GroupHeader>
       <div className="yh-padbank__pads" data-columns={columns}>
         {pads.map((pad, i) => (
@@ -125,6 +132,7 @@ export function PadBank({
                 name={pad.name}
                 tip={pad.tip}
                 tipAction={tipAction}
+                fillCell
                 onPress={() => onPress?.(i)}
               />
             )}

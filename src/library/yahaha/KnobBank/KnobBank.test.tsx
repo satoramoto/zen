@@ -90,7 +90,18 @@ describe('KnobBank knobs', () => {
   it('passes the tooltip hook to every knob with its key', () => {
     const tipAction = vi.fn();
     setup({ tipAction });
-    expect(tipAction).toHaveBeenCalledTimes(7);
+    const calls = tipAction.mock.calls as [HTMLElement, string][];
+    expect(calls.filter(([, key]) => key === 'knobs.knob')).toHaveLength(7);
     expect(tipAction).toHaveBeenCalledWith(expect.any(HTMLElement), 'knobs.knob');
+  });
+
+  it('applies the tooltip hook once to each page tab, with knobs.page', () => {
+    const tipAction = vi.fn();
+    setup({ tipAction });
+    const calls = tipAction.mock.calls as [HTMLElement, string][];
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs).toHaveLength(knobPages.length);
+    for (const tab of tabs) expect(calls.filter(([node, key]) => node === tab && key === 'knobs.page')).toHaveLength(1);
+    expect(tipAction).toHaveBeenCalledTimes(7 + knobPages.length);
   });
 });

@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -84,8 +87,11 @@ describe('Display', () => {
 
   it('marks an off part and drops the parts column when none are given', () => {
     const { unmount } = render(<Display {...displayPartOff} />);
-    expect(screen.getByText('Right 1 · off')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^Right 1 sound/ })).toHaveAttribute('data-off', 'true');
+    const r1 = screen.getByRole('button', { name: /^Right 1 sound/ });
+    expect(r1).toHaveAttribute('data-off', 'true');
+    // The name and "off" in their own spans (the " · " between them is CSS), so a one-row strip can drop the name.
+    expect(r1.querySelector('.yh-display__part-label')).toHaveTextContent('Right 1');
+    expect(r1.querySelector('.yh-display__part-tail')).toHaveTextContent('off');
     unmount();
     render(<Display {...displayNoParts} />);
     expect(screen.queryByRole('list', { name: 'Sounds' })).toBeNull();
@@ -188,6 +194,56 @@ describe('Display', () => {
   it('an empty style name reads "No style"', () => {
     render(<Display {...displayBoard} style={{ ...displayBoard.style, name: '  ' }} />);
     expect(screen.getByRole('button', { name: 'No style: open the Browser' })).toBeInTheDocument();
+  });
+
+  it('marks its density: auto by default, compact or full when asked', () => {
+    const { rerender } = render(<Display {...displayBoard} />);
+    const display = () => screen.getByRole('region', { name: 'Stage display' });
+    expect(display()).toHaveAttribute('data-density', 'auto');
+    rerender(<Display {...displayBoard} density="compact" />);
+    expect(display()).toHaveAttribute('data-density', 'compact');
+    rerender(<Display {...displayBoard} density="full" />);
+    expect(display()).toHaveAttribute('data-density', 'full');
+  });
+
+  it('sizes the readouts through the primitives\' own options, from the hero\'s variables', () => {
+    const { container } = render(<Display {...displayBoard} density="compact" />);
+    const style = (sel: string) => (container.querySelector(sel) as HTMLElement).style;
+    expect(style('.yh-section-name').getPropertyValue('--yh-section-name-size')).toBe('var(--yh-display-section)');
+    expect(style('.yh-chord-readout').getPropertyValue('--yh-chord-readout-hero')).toBe('var(--yh-display-chord)');
+    expect(style('.yh-tempo-readout').getPropertyValue('--yh-tempo-readout-size')).toBe('var(--yh-display-tempo)');
+    expect(style('.yh-bar-beat').getPropertyValue('--yh-bar-beat-line')).toBe('var(--yh-display-beat-line)');
+  });
+
+  it('defines the sizes in container units, capped per density, with auto compact below 1200px', () => {
+    const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'Display.css'), 'utf8');
+    expect(css).toMatch(/container:\s*yh-display\s*\/\s*inline-size/);
+    expect(css).toMatch(/--yh-display-section:\s*clamp\(var\(--size-numeral\),\s*\d+(\.\d+)?cqi,\s*var\(--yh-display-cap\)\)/);
+    expect(css).toMatch(/--yh-display-tempo:\s*clamp\(var\(--size-numeral\),\s*\d+(\.\d+)?cqi,\s*var\(--yh-display-cap\)\)/);
+    expect(css).toMatch(/--yh-display-chord:\s*clamp\(var\(--size-numeral\),\s*\d+(\.\d+)?cqi,\s*var\(--yh-display-cap\)\)/);
+    expect(css).toMatch(/\.yh-display\[data-density='compact'\] \.yh-display__frame \{[^}]*--yh-display-cap:/);
+    expect(css).toMatch(/@container yh-display \(max-width: 1199px\) \{\s*\.yh-display\[data-density='auto'\] \.yh-display__frame \{[^}]*--yh-display-cap:/);
+    // The primitives' own size variables are set only through their options, never overridden here.
+    expect(css).not.toMatch(/--yh-(chord-readout-hero|tempo-readout-size|section-name-size|bar-beat-line|bar-beat-lit)\s*:/);
+  });
+
+  it('lays out narrow heroes without overlap: parts wrap below 900px and drop below 600px, cells never ride over the header', () => {
+    const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'Display.css'), 'utf8');
+    expect(css).toMatch(/\.yh-display__readouts \{[^}]*align-content:\s*safe center/);
+    // The section is never cut; the chord takes what is left and steps itself down.
+    expect(css).toMatch(/grid-template-columns:\s*max-content minmax\(0, 1fr\) max-content;/);
+    expect(css).toMatch(/@container yh-display \(min-width: 900px\) \{\s*\.yh-display\[data-parts\] \.yh-display__readouts \{[^}]*minmax\(calc\(var\(--control-h\) \* 6\), 0\.8fr\)/);
+    expect(css).toMatch(/@container yh-display \(max-width: 899px\) \{\s*\.yh-display \.yh-display__parts \{[^}]*grid-column:\s*1 \/ -1;[^}]*flex-direction:\s*row/);
+    expect(css).toMatch(/@container yh-display \(max-width: 599px\) \{\s*\.yh-display \.yh-display__parts \{\s*display:\s*none/);
+    expect(css).toMatch(/\.yh-chord-readout__fingering \{[^}]*white-space:\s*nowrap;[^}]*text-overflow:\s*ellipsis/);
+  });
+
+  it('hands the tooltip action to the primitives, each control\'s key applied once', () => {
+    const tipAction = vi.fn(() => ({ destroy: vi.fn() }));
+    render(<Display {...displayNoParts} tipAction={tipAction} />);
+    const keys = tipAction.mock.calls.map((c: unknown[]) => c[1] as string);
+    const once = ['style.prev', 'style.next', 'browser.open', 'ots.1', 'ots.2', 'ots.3', 'ots.4', 'fingering.select', 'display.tempo', 'tempo.up', 'tempo.down', 'tempo.tap', 'tempo.reset'];
+    for (const key of once) expect(keys.filter((k) => k === key), key).toHaveLength(1);
   });
 
   it('renders under every theme pack', () => {

@@ -64,6 +64,79 @@ describe('AppBar navigation', () => {
   });
 });
 
+/** A tooltip action that records each application and each destroy, per node. */
+function recordingTip() {
+  const applied: { node: HTMLElement; key: string; destroyed: boolean }[] = [];
+  const tipAction = vi.fn((node: HTMLElement, key: string) => {
+    const entry = { node, key, destroyed: false };
+    applied.push(entry);
+    return {
+      destroy: () => {
+        entry.destroyed = true;
+      },
+    };
+  });
+  const live = () => applied.filter((a) => !a.destroyed);
+  return { tipAction, applied, live };
+}
+
+describe('AppBar tooltips', () => {
+  it('applies the action exactly once to each tip node, with its own key', () => {
+    const { tipAction, applied } = recordingTip();
+    const { container } = setup({ tipAction, failedPart: 1 });
+    const nodes = [...container.querySelectorAll<HTMLElement>('[data-tip]')];
+    expect(nodes.length).toBeGreaterThan(0);
+    for (const node of nodes) {
+      const calls = applied.filter((a) => a.node === node);
+      expect(calls, node.dataset.tip).toHaveLength(1);
+      expect(calls[0].key).toBe(node.dataset.tip);
+    }
+    expect(applied.every((a) => nodes.includes(a.node))).toBe(true);
+  });
+
+  it('a rerender with the same props applies nothing again', () => {
+    const { tipAction, applied } = recordingTip();
+    const { rerender } = setup({ tipAction });
+    const before = applied.length;
+    rerender(<AppBar {...boardAppBar} tipAction={tipAction} />);
+    expect(applied).toHaveLength(before);
+  });
+
+  it('destroys the health tip when calm turns to trouble, and applies it once to the new node', () => {
+    const { tipAction, applied, live } = recordingTip();
+    const { rerender, container } = setup({ tipAction });
+    const calm = applied.filter((a) => a.key === 'app.health');
+    expect(calm).toHaveLength(1);
+    rerender(<AppBar {...boardAppBar} tipAction={tipAction} failedPart={1} />);
+    expect(calm[0].destroyed).toBe(true);
+    const button = container.querySelector<HTMLElement>('.yh-appbar__health [data-tip]');
+    const health = live().filter((a) => a.key === 'app.health');
+    expect(health).toHaveLength(1);
+    expect(health[0].node).toBe(button);
+    // The health change tore down and re-applied nothing else.
+    expect(applied.filter((a) => a.key === 'view.stage')).toHaveLength(1);
+  });
+
+  it('destroys a tab tip when its key changes', () => {
+    const { tipAction, applied, live } = recordingTip();
+    const { rerender } = setup({ tipAction });
+    const stage = applied.find((a) => a.key === 'view.stage');
+    expect(stage).toBeDefined();
+    const displayTabs = boardAppBar.displayTabs.map((t) => (t.tip === 'view.stage' ? { ...t, tip: 'view.stage2' } : t));
+    rerender(<AppBar {...boardAppBar} displayTabs={displayTabs} tipAction={tipAction} />);
+    expect(stage?.destroyed).toBe(true);
+    expect(live().filter((a) => a.key === 'view.stage2')).toHaveLength(1);
+  });
+
+  it('destroys every tip handle on unmount', () => {
+    const { tipAction, applied, live } = recordingTip();
+    const { unmount } = setup({ tipAction, failedPart: 1, metronomeOpen: true });
+    expect(applied.length).toBeGreaterThan(0);
+    unmount();
+    expect(live()).toEqual([]);
+  });
+});
+
 describe('AppBar switches', () => {
   it('asks for the next state of Metronome, Unison and help, and calls Panic', async () => {
     const { onMetronome, onUnison, onHelp, onPanic } = setup({ unison: true });
@@ -163,6 +236,32 @@ describe('AppBar metronome popover', () => {
     await userEvent.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(caret).toHaveFocus();
+  });
+
+  it('removes its window listeners once it closes: a later Esc or press outside calls nothing', () => {
+    const add = vi.spyOn(window, 'addEventListener');
+    const remove = vi.spyOn(window, 'removeEventListener');
+    const { rerender, onMetronomeClose } = setup({ metronomeOpen: true });
+    const added = add.mock.calls.filter(([type]) => type === 'keydown' || type === 'pointerdown');
+    expect(added.length).toBeGreaterThan(0);
+    rerender(<AppBar {...boardAppBar} onMetronomeClose={onMetronomeClose} metronomeOpen={false} />);
+    for (const [type, listener, options] of added) {
+      expect(remove).toHaveBeenCalledWith(type, listener, options);
+    }
+    add.mockRestore();
+    remove.mockRestore();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    fireEvent.pointerDown(document.body);
+    expect(onMetronomeClose).not.toHaveBeenCalled();
+  });
+
+  it('destroys the popover tips when it closes', () => {
+    const { tipAction, applied } = recordingTip();
+    const { rerender } = setup({ tipAction, metronomeOpen: true });
+    const inside = applied.filter((a) => a.key === 'metronome.volume' || a.key === 'metronome.bell');
+    expect(inside).toHaveLength(2);
+    rerender(<AppBar {...boardAppBar} tipAction={tipAction} metronomeOpen={false} />);
+    expect(inside.every((a) => a.destroyed)).toBe(true);
   });
 
   it("an Esc while it's open never reaches the window's own handlers", () => {

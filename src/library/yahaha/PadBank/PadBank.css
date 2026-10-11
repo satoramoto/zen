@@ -32,11 +32,8 @@
   min-width: 0;
   min-height: 0;
 }
-/* Each pad fills its cell; the Pad's own default is a fixed square. */
+/* Each pad fills its cell through the Pad's fillCell; the bank sets only its inset. */
 .yh-padbank__cell .yh-pad {
-  --yh-pad-width: 100%;
-  --yh-pad-height: 100%;
-  box-sizing: border-box;
   padding: var(--space-1);
 }
 /* A label wraps between words; a single word too long for its pad ("Retrigger" in caps at eight

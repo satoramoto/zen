@@ -88,7 +88,8 @@ describe('PadBank pads', () => {
     const { onPress } = setup({ pads: chordPads, bank: 1 });
     expect(screen.getAllByRole('button')).toHaveLength(8);
     const empty = screen.getByRole('img', { name: 'Pad 3: empty' });
-    expect(empty).toHaveTextContent('');
+    // No text at all (not the old "—" key): toHaveTextContent('') would pass for any text.
+    expect(empty.textContent).toBe('');
     fireEvent.click(empty);
     expect(onPress).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Manual Bass (pad 9)' })).toBeInTheDocument();
@@ -112,6 +113,29 @@ describe('PadBank pads', () => {
     expect(screen.getByRole('button', { name: 'Store (pad 15)' })).toHaveAttribute('data-lit', 'false');
     expect(screen.getByRole('button', { name: `Rack${NB}3 (pad 3)` })).toHaveAttribute('data-lit', 'false');
     expect(screen.getByRole('button', { name: `OTS${NB}1 (pad 9)` })).not.toHaveAttribute('data-lit');
+  });
+
+  it('each pad fills its cell through the Pad’s fillCell', () => {
+    const { container } = setup();
+    const pads = container.querySelectorAll('.yh-padbank__cell .yh-pad');
+    expect(pads).toHaveLength(quickRackPads.filter((p) => !p.empty).length);
+    for (const pad of pads) expect(pad).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('applies the tooltip hook once to each bank tab and each pad, with its key', () => {
+    const tipAction = vi.fn();
+    setup({ tipAction });
+    const calls = tipAction.mock.calls as [HTMLElement, string][];
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs).toHaveLength(4);
+    for (const tab of tabs) {
+      const onTab = calls.filter(([node]) => node === tab);
+      expect(onTab).toHaveLength(1);
+      expect(onTab[0][1]).toBe(tab.getAttribute('data-tip'));
+    }
+    const keyed = quickRackPads.filter((p) => !p.empty && p.tip !== undefined).length;
+    expect(calls.filter(([node]) => node.matches('.yh-pad'))).toHaveLength(keyed);
+    expect(tipAction).toHaveBeenCalledTimes(tabs.length + keyed);
   });
 
   it('a pad lit for a part wears that part’s tone; the banks’ own pads are neutral', () => {

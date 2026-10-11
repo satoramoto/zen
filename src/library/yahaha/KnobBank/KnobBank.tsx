@@ -34,7 +34,7 @@ export interface KnobBankProps {
   page?: number;
   /** The knob page's name ("Style", "Swap R1"): the one tab shown when `pages` is missing or empty. */
   pageLabel?: string;
-  /** The app's tooltip hook, passed to every knob. */
+  /** The app's tooltip hook, passed to every knob and to the page tabs. */
   tipAction?: TipAction;
   /** A page tab was chosen (its index in `pages`), by click or arrow key. */
   onPage?: (index: number) => void;
@@ -89,7 +89,14 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
   return (
     <section className="yh-knobbank" aria-labelledby={headingId}>
       <GroupHeader title="Knobs" id={headingId}>
-        <ChosenTabs size="header" label="Knob page" tabs={tabs} chosen={chosen} onChoose={(id) => onPage?.(Number(id))} />
+        <ChosenTabs
+          size="header"
+          label="Knob page"
+          tabs={tabs}
+          chosen={chosen}
+          tipAction={tipAction}
+          onChoose={(id) => onPage?.(Number(id))}
+        />
       </GroupHeader>
       <div className="yh-knobbank__knobs">
         {knobs.map((knob, i) => (

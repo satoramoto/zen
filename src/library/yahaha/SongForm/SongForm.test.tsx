@@ -50,6 +50,56 @@ describe('Yahaha SongForm', () => {
     );
   });
 
+  it('announces absent sections as unavailable, keeps them focusable, and ignores Enter on them', async () => {
+    const onSection = vi.fn();
+    const user = userEvent.setup();
+    renderForm({ ...songFormBoard, onSection });
+    const intro3 = screen.getByRole('button', { name: 'Intro III, not in this style' });
+    const ending3 = screen.getByRole('button', { name: 'Ending III, not in this style' });
+    expect(intro3).toHaveAttribute('aria-disabled', 'true');
+    expect(ending3).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('button', { name: 'Intro II' })).not.toHaveAttribute('aria-disabled');
+    intro3.focus();
+    expect(intro3).toHaveFocus();
+    await user.keyboard('{Enter}');
+    await user.click(ending3);
+    expect(onSection).not.toHaveBeenCalled();
+  });
+
+  it('rings the queued section in the accent', () => {
+    renderForm();
+    const next = screen.getByRole('button', { name: 'Main C, next, after bar 4' });
+    expect(next).toHaveAttribute('data-next', 'accent');
+    expect(next).toHaveAttribute('data-fill');
+  });
+
+  it('Start / Stop is the tall key: filled primary while stopped, outlined in the running colour while running', () => {
+    const { rerender } = render(<SongForm {...songFormStopped} />);
+    const stopped = screen.getByRole('button', { name: 'Start / Stop, stopped' });
+    expect(stopped).toHaveAttribute('data-tall');
+    expect(stopped).toHaveAttribute('data-variant', 'primary');
+    expect(stopped).toHaveAttribute('data-face', 'off');
+
+    rerender(<SongForm {...songFormBoard} />);
+    const running = screen.getByRole('button', { name: /^Start \/ Stop, running/ });
+    expect(running).toHaveAttribute('data-tall');
+    // Not the filled running face: an outline in --success, quieter than the hero's section name.
+    expect(running).toHaveAttribute('data-variant', 'secondary');
+    expect(running).toHaveAttribute('data-hue', 'ok');
+    expect(running).toHaveAttribute('data-face', 'off');
+    expect(running).not.toHaveAttribute('data-bar');
+  });
+
+  it('waiting keys flash with the queued section', () => {
+    const { rerender } = render(<SongForm {...songFormFillPending} lit={false} />);
+    expect(screen.getByRole('button', { name: /^Fill Up: .*queued$/ })).toHaveAttribute('data-lit', 'false');
+    rerender(<SongForm {...songFormSyncArmed} fading lit={false} />);
+    expect(screen.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('data-lit', 'false');
+    expect(screen.getByRole('button', { name: 'Fade in, waiting for Start' })).toHaveAttribute('data-lit', 'false');
+    rerender(<SongForm {...songFormSyncArmed} lit />);
+    expect(screen.getByRole('button', { name: 'Sync Start, armed' })).not.toHaveAttribute('data-lit');
+  });
+
   it('Start / Stop says the action and calls back; held while running, it stops with a fade', async () => {
     const onStartStop = vi.fn();
     const onStopWithFade = vi.fn();
