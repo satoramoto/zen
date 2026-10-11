@@ -1,7 +1,6 @@
-import { useEffect, useId, useState } from 'react';
-import { bookFor, examples, type ExampleId } from './catalog';
-
-export type Voice = 'editorial' | 'everyday' | 'technical';
+import { useEffect, useId, useState } from "react";
+import { bookFor, examples, type ExampleId } from "./catalog";
+export type Voice = "editorial" | "everyday" | "technical";
 export interface PrincipleExampleProps {
   id: ExampleId;
   applied?: boolean;
@@ -10,54 +9,680 @@ export interface PrincipleExampleProps {
   voice?: Voice;
   width?: number;
 }
-function useLiveValue<T,>(incoming: T) {
+function useLiveValue<T>(incoming: T) {
   const [value, setValue] = useState(incoming);
   useEffect(() => setValue(incoming), [incoming]);
   return [value, setValue] as const;
 }
-const garden = 'A small garden can change the rhythm of a whole street. Neighbors stop to talk. Children notice the first green shoots. A place once passed without a glance becomes somewhere worth returning to. The transformation begins with a little room, a little care, and enough time to notice what grows.';
-const notes = 'Good notes are an invitation to return. Leave enough room for a thought to unfold, and enough structure to find it again. A clear paragraph asks little of its reader. It gives each line space, keeps a steady rhythm, and lets the words carry the meaning. When the page feels calm, attention can settle on what matters.';
-const fontFamilies: Record<Voice, string> = {editorial:'Georgia, serif',everyday:'system-ui, sans-serif',technical:'ui-monospace, monospace'};
-const entries = ['Rooms for listening','The shape of silence','A slower afternoon'];
-
-export function PrincipleExample({id, applied, measure = 52, hue = 30, voice = 'editorial', width = 520}: PrincipleExampleProps) {
-  const example = examples[id];
-  const [active, setActive] = useLiveValue(applied ?? example.defaultApplied);
+const fonts: Record<Voice, string> = {
+  editorial: "Georgia, serif",
+  everyday: "system-ui, sans-serif",
+  technical: "ui-monospace, monospace",
+};
+const article =
+  "At six each morning, the bakery opens its side door to the street. There is no sign, only the scent of bread and the sound of trays. Neighbors arrive with their own bags. Some stay for coffee; others carry breakfast home. Over time, this small daily exchange has become a kind of public life: familiar faces, a borrowed umbrella, news passed quietly across the counter. The room was never designed as a meeting place. It became one because people had a reason to return.";
+const labels: Partial<Record<ExampleId, [string, string]>> = {
+  T1: ["Studio-led", "Payment-led"],
+  T3: ["Editorial cards", "Recurring roles"],
+  G1: ["Inline times", "Shared time column"],
+  G2: ["Equal columns", "Content-weighted"],
+  G3: ["Local intervals", "Regular intervals"],
+  R1: ["Even contrast", "Quieter context"],
+  R2: ["Local spacing", "Shared scale"],
+  R3: ["Shared interval", "Clear ownership"],
+  W2: ["One family", "Complementary roles"],
+  W3: ["Fixed composition", "Adaptive composition"],
+  B1: ["Compact · 135%", "Open · 155%"],
+  B2: ["Several highlights", "Action highlight"],
+  B3: ["CMS defaults", "Editorial marks"],
+};
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <div className="demo-label">{children}</div>;
+}
+function ArticleText() {
+  return (
+    <>
+      <p>{article}</p>
+      <p>
+        By noon the stools are empty again. A well-used room can be quiet, too.
+      </p>
+    </>
+  );
+}
+function SettingsRows({ grouped = false }: { grouped?: boolean }) {
+  return (
+    <div className={`settings-rows ${grouped ? "grouped" : ""}`}>
+      {[
+        "Email digest",
+        "Product updates",
+        "Sign-in alerts",
+        "New device approval",
+      ].map((text, i) => (
+        <div className="setting-row" key={text}>
+          <div>
+            <strong>{text}</strong>
+            <small>
+              {
+                [
+                  "A weekly summary of your projects",
+                  "News from the studio",
+                  "Keep track of account activity",
+                  "Confirm unfamiliar devices",
+                ][i]
+              }
+            </small>
+          </div>
+          <span className="dummy-switch" aria-hidden="true" />
+        </div>
+      ))}
+    </div>
+  );
+}
+export function PrincipleExample({
+  id,
+  applied,
+  measure = 58,
+  hue = 30,
+  voice = "editorial",
+  width = 520,
+}: PrincipleExampleProps) {
+  const e = examples[id];
+  const [active, setActive] = useLiveValue(applied ?? e.defaultApplied);
   const [lineWidth, setLineWidth] = useLiveValue(measure);
   const [surroundHue, setSurroundHue] = useLiveValue(hue);
   const [family, setFamily] = useLiveValue(voice);
   const [previewWidth, setPreviewWidth] = useLiveValue(width);
   const inputId = useId();
   const headingId = useId();
-  const isRange = id === 'T2' || id === 'C3' || id === 'W3';
-  const rangeValue = id === 'T2' ? lineWidth : id === 'C3' ? surroundHue : previewWidth;
-  const ref = example.reference ?? bookFor(id).reference;
-  const number = Object.keys(examples).indexOf(id) + 1;
+  const ref = e.reference ?? bookFor(id).reference;
+  const isColor = id.startsWith("C");
   let specimen;
-  switch(id) {
-    case 'T1': specimen = <div className="specimen hierarchy"><div className="kicker">Field notes / Issue 08</div><div className="title">A quieter kind of city</div><div className="deck">Finding room to breathe in the places we call home.</div><div className="meta">Maya Chen · 6 minute read</div></div>; break;
-    case 'T2': specimen = <div className="specimen measure-paper"><p className="reading" style={{maxWidth:`${lineWidth}ch`}}>{garden}</p><div className="measure-rule" style={{maxWidth:`${lineWidth}ch`}} aria-hidden="true"><span>←</span><span>{lineWidth} ch max</span><span>→</span></div></div>; break;
-    case 'T3': specimen = <div className="specimen entries">{entries.map((entry,index) => <div className="entry" key={entry}><div className="entry-title">{entry}</div><div className="meta">{['Essay · 8 minute read','Interview · 5 minute read','Field notes · 4 minute read'][index]}</div></div>)}</div>; break;
-    case 'G1': specimen = <div className="specimen"><div className="kicker section-label">A day of design / programme</div><div className="schedule">{['Opening remarks','Designing for everyday life','A conversation on craft'].map((title,index) => <div className="schedule-row" key={title}><span className="time">{['09:00','10:15','11:30'][index]}</span><div><strong>{title}</strong><div className="meta">{['Main hall','Studio two','Main hall'][index]}</div></div></div>)}</div></div>; break;
-    case 'G2': specimen = <div className="specimen"><div className="kicker section-label">The neighborhood journal</div><div className="editorial"><div><div className="title">A place to pause</div><p className="editorial-copy">At the corner of the old market, a small garden makes room for conversation. What began as a few planters has become a place to meet, linger, and watch the afternoon unfold.</p></div><aside className="garden-illustration" aria-label="An original geometric illustration of a plant"><svg viewBox="0 0 140 210" role="img" aria-label="Plant in a terracotta pot"><path d="M70 157V54" stroke="#405e54" strokeWidth="4"/><path d="M70 115C21 117 22 68 26 65C61 65 74 88 70 115Z" fill="#728c77"/><path d="M70 85C116 80 122 43 114 34C78 38 67 58 70 85Z" fill="#9bab91"/><path d="M39 143H101L92 190H48Z" fill="#c67856"/><path d="M32 143H108V153H32Z" fill="#b66849"/></svg><span className="meta">Room to grow</span></aside></div></div>; break;
-    case 'G3': specimen = <div className="specimen rhythm">{['01   Collect references','02   Find the structure','03   Make a first draft','04   Refine the details'].map(text => <div className="rhythm-row" key={text}>{text}</div>)}</div>; break;
-    case 'C1': specimen = <div className="swatch-pair" role="img" aria-label={active ? 'Two identical gray squares on identical backgrounds' : 'Identical gray squares against light and dark backgrounds'}><div className="color-field"><div className="gray-square" style={{backgroundColor:'#929292'}}/></div><div className="color-field"><div className="gray-square" style={{backgroundColor:'#929292'}}/></div></div>; break;
-    case 'C2': specimen = <div className="color-context"><div className="swatch-label"><span style={{backgroundColor:'#d79b54'}}/>Fixed accent · #D79B54</div><div className="context-ui"><div className="context-header"><span>Listening room</span><span aria-hidden="true">♫</span></div><p className="context-title">An evening, unhurried.</p><div className="accent-bar" style={{backgroundColor:'#d79b54'}}/><div className="track"><span className="accent-dot" style={{backgroundColor:'#d79b54'}}/><div>Evening collection<div className="context-meta">12 recordings · 48 minutes</div></div></div></div></div>; break;
-    case 'C3': specimen = <div className="hue-field" style={{backgroundColor:`hsl(${surroundHue} 45% 55%)`}} role="img" aria-label={`Fixed gray square against a ${surroundHue} degree hue surround`}><div className="gray-square" style={{backgroundColor:'#929292'}}/></div>; break;
-    case 'R1': specimen = <div className="specimen invoice"><div className="invoice-label">Balance due</div><div className="invoice-total" style={{fontSize:32,fontWeight:500}}>$240.00</div><div className="invoice-details"><span>Invoice 0042</span><span>Due October 30</span></div></div>; break;
-    case 'R2': specimen = <div className="specimen tokens">{['Research notes','Reference images','Project sketches'].map((label,index) => <div className="token-row" key={label}><span className="file-symbol" aria-hidden="true">▤</span><span>{label}</span><span className="file-count">{[12,8,4][index]}</span></div>)}</div>; break;
-    case 'R3': specimen = <div className="specimen"><div className="form-sample" role="img" aria-label="Illustrative contact fields showing label proximity">{['Name','Email','City'].map((label,index) => <div className="form-group" key={label}><div className="field-label">{label}</div><div className="input-sample">{['Maya Chen','maya@example.com','Portland'][index]}</div></div>)}</div></div>; break;
-    case 'W1': specimen = <div className="specimen voice"><div className="kicker">A travel journal</div><div className="voice-title" style={{fontFamily:fontFamilies[family]}}>The art of getting lost</div><div className="meta">Notes from the roads we didn’t plan to take.</div></div>; break;
-    case 'W2': specimen = <div className="specimen pairing"><div className="journal-nav" style={{fontFamily:active ? fontFamilies.everyday : fontFamilies.editorial}}>JOURNAL · PLACES · PEOPLE</div><div className="title">A slower afternoon</div><div className="body">A walk without a destination. A table by the window. An hour that belongs to no one else.</div></div>; break;
-    case 'W3': specimen = <div className="resize-stage"><div className="responsive-shell" style={{width:`${previewWidth}px`,maxWidth:'100%',containerType:'inline-size'}}><div className="responsive-paper"><div className="journal-nav">THE SLOW JOURNAL</div><div className="responsive-title">The art of getting lost</div><div className="responsive-body">Take the side street. Leave the map folded. Some places reveal themselves only when you stop looking for a destination.</div></div></div></div>; break;
-    case 'B1': specimen = <div className="specimen"><p className="leading-text" style={{fontFamily:'Georgia, serif',fontSize:17,lineHeight:active ? 1.35 : 1.05,maxWidth:'64ch'}}>{notes}</p></div>; break;
-    case 'B2': specimen = <div className="specimen"><p className="emphasis-text"><span style={{fontWeight:active ? 400 : 700}}>Before closing the notebook, </span><strong>save your changes.</strong><span style={{fontWeight:active ? 400 : 700}}> You can return at any time to revise the title, add a sketch, or continue the story.</span></p></div>; break;
-    case 'B3': specimen = <div className="specimen punctuation"><p>{active ? '“It’s a well-made notebook—bring it Friday, 2–4 pm.”' : '"It\'s a well-made notebook -- bring it Friday, 2-4 pm."'}</p><div className="glyph-key" aria-hidden="true"><span>{active ? '“ ”' : '" "'}<small>quotes</small></span><span>{active ? '’' : "'"}<small>apostrophe</small></span><span>{active ? '—' : '--'}<small>break</small></span><span>{active ? '–' : '-'}<small>range</small></span><span>-<small>compound</small></span></div></div>; break;
+  switch (id) {
+    case "T1":
+      specimen = (
+        <div className={`demo-paper payment ${active ? "payment-led" : ""}`}>
+          <div className="invoice-brand">
+            NORTH
+            <br />
+            STUDIO
+          </div>
+          <SectionLabel>Invoice / 0248</SectionLabel>
+          <div className="payment-total">$1,840.00</div>
+          <div className="payment-date">Due 24 October</div>
+          <div className="payment-rule" />
+          <div className="demo-line">
+            <span>Brand workshop</span>
+            <span>$1,200.00</span>
+          </div>
+          <div className="demo-line">
+            <span>Design consultation</span>
+            <span>$640.00</span>
+          </div>
+          <div className="demo-line muted">
+            <span>Billed to Cedar House</span>
+            <span>Net 14</span>
+          </div>
+          <span className="demo-button">View payment options →</span>
+        </div>
+      );
+      break;
+    case "T2":
+      specimen = (
+        <div className="demo-paper reading-paper">
+          <SectionLabel>Common ground / Dispatch 12</SectionLabel>
+          <h4>The room around the bread</h4>
+          <div className="reading" style={{ maxWidth: `${lineWidth}ch` }}>
+            <ArticleText />
+          </div>
+          <span className="demo-foot">
+            Same 16 px Georgia · 155% leading · width capped by the panel
+          </span>
+        </div>
+      );
+      break;
+    case "T3":
+      specimen = (
+        <div className={`demo-paper queue ${active ? "systematic" : ""}`}>
+          <SectionLabel>Your reading queue / 3 saved</SectionLabel>
+          {[
+            ["The room around the bread", "Essay", "8 min", "Maya Chen"],
+            ["Who owns the sidewalk?", "Interview", "12 min", "Jon Bell"],
+            ["A garden after dark", "Photo story", "4 min", "Alma Ortiz"],
+          ].map(([title, kind, time, author], i) => (
+            <div className={`queue-row row-${i}`} key={title}>
+              <span className="queue-art" aria-hidden="true">
+                {["◒", "╱", "✳"][i]}
+              </span>
+              <div>
+                <small className="queue-kind">{kind}</small>
+                <h4>{title}</h4>
+                <div className="queue-meta">
+                  <span>{author}</span>
+                  <span>{time}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+      break;
+    case "G1":
+      specimen = (
+        <div className={`demo-paper agenda ${active ? "aligned" : ""}`}>
+          <SectionLabel>Saturday / Design assembly</SectionLabel>
+          <h4>Find your next conversation.</h4>
+          {[
+            ["9:30", "Opening conversation", "Main hall"],
+            ["10:15–11:00", "Designing public spaces", "Studio 2"],
+            ["11:30", "Materials and memory", "Main hall"],
+          ].map(([time, title, room]) => (
+            <div className="agenda-row" key={time}>
+              <span className="agenda-time">{time}</span>
+              <div>
+                <strong>{title}</strong>
+                <small>{room}</small>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+      break;
+    case "G2":
+      specimen = (
+        <div className="demo-paper exhibition">
+          <SectionLabel>Exhibition / 18 Oct–08 Dec</SectionLabel>
+          <div
+            className="exhibition-grid"
+            style={{
+              gridTemplateColumns: active
+                ? "minmax(0,1.7fr) minmax(0,1fr)"
+                : "minmax(0,1fr) minmax(0,1fr)",
+            }}
+          >
+            <div>
+              <h4>Objects that stay</h4>
+              <p>
+                Why do we keep an ordinary object for a lifetime? Twenty makers
+                explore repair, memory, and the things that become part of a
+                home.
+              </p>
+              <p>
+                Visit the collection, then bring a small object to the Saturday
+                repair table.
+              </p>
+            </div>
+            <div className="exhibition-poster">
+              <svg
+                viewBox="0 0 180 210"
+                role="img"
+                aria-label="Original exhibition poster of a sculptural vessel"
+              >
+                <path
+                  d="M55 48H125L115 110Q157 173 90 185Q23 173 65 110Z"
+                  fill="#b66648"
+                />
+                <ellipse cx="90" cy="49" rx="35" ry="11" fill="#6c382b" />
+                <path
+                  d="M50 155Q90 169 130 155"
+                  fill="none"
+                  stroke="#e8b497"
+                  strokeWidth="3"
+                />
+              </svg>
+              <small>
+                Gallery 04
+                <br />
+                Free admission
+              </small>
+            </div>
+          </div>
+        </div>
+      );
+      break;
+    case "G3":
+      specimen = (
+        <div className="demo-paper">
+          <SectionLabel>Account preferences</SectionLabel>
+          <h4>Stay in the loop.</h4>
+          <SettingsRows grouped={active} />
+        </div>
+      );
+      break;
+    case "C1":
+      specimen = (
+        <div className={`context-pair ${active ? "revealed" : ""}`}>
+          <div className="perception-field gray-light">
+            <span
+              className="target-swatch"
+              style={{ backgroundColor: "#929292" }}
+            />
+          </div>
+          <div className="perception-field gray-dark">
+            <span
+              className="target-swatch"
+              style={{ backgroundColor: "#929292" }}
+            />
+          </div>
+          <div className="pair-caption">Same pixels: #929292 on both sides</div>
+        </div>
+      );
+      break;
+    case "C2":
+      specimen = (
+        <div className={`context-pair players ${active ? "revealed" : ""}`}>
+          {["light", "dark"].map((theme) => (
+            <div className={`music-context ${theme}`} key={theme}>
+              <div className="context-furniture">
+                <SectionLabel>STILL / Listening room</SectionLabel>
+                <div className="album-art" aria-hidden="true">
+                  ◒
+                </div>
+                <h4>After the rain</h4>
+                <p>Nala Sine · 4:32</p>
+              </div>
+              <div
+                className="target-swatch gold-progress"
+                style={{ backgroundColor: "#d79b54" }}
+              />
+              <div
+                className="context-furniture play-controls"
+                aria-hidden="true"
+              >
+                ↤　Ⅱ　↦
+              </div>
+            </div>
+          ))}
+          <div className="pair-caption">
+            Same progress bar: #D79B54 · same size
+          </div>
+        </div>
+      );
+      break;
+    case "C3":
+      specimen = (
+        <div className={`context-pair ${active ? "revealed" : ""}`}>
+          <div
+            className="perception-field"
+            style={{
+              backgroundColor: active
+                ? "#e5e5e5"
+                : `hsl(${surroundHue} 42% 62%)`,
+            }}
+          >
+            <span
+              className="target-swatch"
+              style={{ backgroundColor: "#9892a6" }}
+            />
+          </div>
+          <div
+            className="perception-field"
+            style={{
+              backgroundColor: active
+                ? "#e5e5e5"
+                : `hsl(${(surroundHue + 180) % 360} 42% 62%)`,
+            }}
+          >
+            <span
+              className="target-swatch"
+              style={{ backgroundColor: "#9892a6" }}
+            />
+          </div>
+          <div className="pair-caption">
+            Same muted violet: #9892A6 · opposing surround hues
+          </div>
+        </div>
+      );
+      break;
+    case "R1":
+      specimen = (
+        <div className={`demo-paper booking ${active ? "quiet" : ""}`}>
+          <div className="booking-context">
+            <SectionLabel>Your stay / Confirmation 8042</SectionLabel>
+            <h4>Cedar House</h4>
+            <div className="demo-line">
+              <span>Portland, Oregon</span>
+              <span>2 guests</span>
+            </div>
+          </div>
+          <div className="booking-focus">
+            <small>Check-in</small>
+            <strong>Friday, 24 October</strong>
+            <span>From 3:00 pm</span>
+          </div>
+          <div className="booking-context">
+            <div className="demo-line">
+              <span>2 nights · Garden room</span>
+              <span>$420 total</span>
+            </div>
+            <div className="demo-line">
+              <span>Host: Maya</span>
+              <span>Contact host ↗</span>
+            </div>
+          </div>
+        </div>
+      );
+      break;
+    case "R2":
+      specimen = (
+        <div className={`demo-paper file-panel ${active ? "scale" : ""}`}>
+          <SectionLabel>Project / Cedar House</SectionLabel>
+          <div className="files-toolbar">
+            <h4>Shared files</h4>
+            <span className="tag">3 items</span>
+          </div>
+          {[
+            ["Strategy.pdf", "Updated today", "1.4 MB"],
+            ["Reference board", "Updated yesterday", "12 images"],
+            ["Homepage.fig", "Updated 21 October", "8.2 MB"],
+          ].map(([name, date, size], i) => (
+            <div className={`file-item file-${i}`} key={name}>
+              <span className="file-icon" aria-hidden="true">
+                ▧
+              </span>
+              <div>
+                <strong>{name}</strong>
+                <small>{date}</small>
+              </div>
+              <span className="file-size">{size}</span>
+            </div>
+          ))}
+          <div className="file-footer">
+            Only people in this project can view these files.
+          </div>
+        </div>
+      );
+      break;
+    case "R3":
+      specimen = (
+        <div className={`demo-paper security ${active ? "owned" : ""}`}>
+          <SectionLabel>Security / Notifications</SectionLabel>
+          <h4>Account alerts</h4>
+          <div className="security-option">
+            <strong>Sign-in emails</strong>
+            <span className="tag">On</span>
+          </div>
+          <p className="security-help">
+            Sent only when an unfamiliar device accesses your account.
+          </p>
+          <div className="security-option">
+            <strong>Weekly activity summary</strong>
+            <span className="tag">Off</span>
+          </div>
+          <p className="security-help">
+            A digest of sign-ins and account changes from the past seven days.
+          </p>
+          <div className="security-footer">Changes are saved automatically</div>
+        </div>
+      );
+      break;
+    case "W1":
+      specimen = (
+        <div className="demo-paper voice-poster">
+          <SectionLabel>Eastside design museum / Autumn 2026</SectionLabel>
+          <div className="voice-art" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <h4 className="voice-title" style={{ fontFamily: fonts[family] }}>
+            Objects
+            <br />
+            that stay
+          </h4>
+          <div className="demo-line">
+            <span>Repair. Memory. Everyday life.</span>
+            <span>18 Oct–08 Dec</span>
+          </div>
+        </div>
+      );
+      break;
+    case "W2":
+      specimen = (
+        <div className="demo-paper journal">
+          <div
+            className="journal-nav"
+            style={{ fontFamily: active ? fonts.everyday : fonts.editorial }}
+          >
+            <span>COMMON GROUND</span>
+            <span>Essays　Places　About</span>
+          </div>
+          <SectionLabel>Dispatch 12 / Local life</SectionLabel>
+          <h4>The room around the bread</h4>
+          <p className="journal-deck">
+            A bakery, a borrowed umbrella, and the small rituals that make a
+            neighborhood.
+          </p>
+          <div className="journal-byline">Maya Chen · 8 minute read</div>
+          <div className="journal-body">{article}</div>
+        </div>
+      );
+      break;
+    case "W3":
+      specimen = (
+        <div className="resize-stage">
+          <div
+            className="responsive-shell"
+            style={{
+              width: `${previewWidth}px`,
+              maxWidth: "100%",
+              containerType: "inline-size",
+            }}
+          >
+            <div className={`adaptive-paper ${active ? "adaptive" : ""}`}>
+              <SectionLabel>Common ground / Dispatch 12</SectionLabel>
+              <h4>The room around the bread</h4>
+              <p className="adaptive-deck">
+                Small rituals make a neighborhood.
+              </p>
+              <div className="adaptive-body">{article}</div>
+            </div>
+          </div>
+        </div>
+      );
+      break;
+    case "B1":
+      specimen = (
+        <div className="demo-paper leading-paper">
+          <SectionLabel>Essay / Local life</SectionLabel>
+          <h4>A reason to return</h4>
+          <div
+            className="leading-text"
+            style={{
+              fontFamily: "Georgia, serif",
+              fontSize: 16,
+              lineHeight: active ? 1.55 : 1.35,
+              maxWidth: "62ch",
+            }}
+          >
+            <ArticleText />
+          </div>
+        </div>
+      );
+      break;
+    case "B2":
+      specimen = (
+        <div className={`demo-paper notice ${active ? "selective" : ""}`}>
+          <SectionLabel>Travel / Before you arrive</SectionLabel>
+          <h4>Your room is almost ready.</h4>
+          <p>
+            Check-in opens at{" "}
+            <span className="optional-emphasis">3:00 pm on Friday.</span> You
+            will find the key in the lockbox beside the blue door.
+          </p>
+          <p>
+            <strong>Send your arrival time by Thursday.</strong> This helps Maya
+            have everything ready for you.
+          </p>
+          <p>
+            The access code appears in{" "}
+            <span className="optional-emphasis">your booking details</span> on
+            the morning of your stay.{" "}
+            <span className="optional-emphasis">Parking is included</span> in
+            the courtyard.
+          </p>
+          <span className="demo-button">Message Maya →</span>
+        </div>
+      );
+      break;
+    case "B3":
+      specimen = (
+        <div className="demo-paper editorial-invite">
+          <SectionLabel>Eastside museum / In conversation</SectionLabel>
+          <h4>
+            {active
+              ? "“Objects have afterlives.”"
+              : '"Objects have afterlives."'}
+          </h4>
+          <p>
+            {active
+              ? "Join maker Ana Ruiz for a conversation about repair—it’s a way of seeing value in what we already own."
+              : "Join maker Ana Ruiz for a conversation about repair - it's a way of seeing value in what we already own."}
+          </p>
+          <div className="invite-time">
+            {active ? "Saturday, 2–4 pm" : "Saturday, 2-4 pm"}
+          </div>
+          <p>Bring one well-loved object.</p>
+          <div
+            className="punctuation-detail"
+            aria-label="Magnified punctuation sample"
+          >
+            {active ? "“ ”　’　—　–" : '" "　\'　-　-'}
+          </div>
+        </div>
+      );
+      break;
   }
-  return <article className={`example example-${id}`} data-example={id} data-applied={active} aria-labelledby={headingId}>
-    <div className="example-brief"><div className="eyebrow"><span className="example-number">{String(number).padStart(2,'0')}</span>{example.topic} <span className="example-code">{id}</span></div><h3 id={headingId}>{example.title}</h3><p className="axiom">{example.axiom}</p><a className="reference-link" href={ref.url} target="_blank" rel="noreferrer">{ref.label} <span aria-hidden="true">↗</span></a>{example.extraReference && <a className="reference-link" href={example.extraReference.url} target="_blank" rel="noreferrer">{example.extraReference.label} ↗</a>}</div>
-    <div className="experiment"><div className="experiment-toolbar">
-      {isRange ? <label className="range-control" htmlFor={inputId}><span>{example.control}<output>{rangeValue}{id==='T2' ? ' ch' : id==='C3' ? '°' : ' px'}</output></span><input id={inputId} type="range" min={id==='T2' ? 16 : id==='C3' ? 0 : 160} max={id==='T2' ? 76 : id==='C3' ? 360 : 640} value={rangeValue} onChange={event => {const value=Number(event.target.value); if(id==='T2')setLineWidth(value);else if(id==='C3')setSurroundHue(value);else setPreviewWidth(value);}}/></label> : id==='W1' ? <label className="select-control" htmlFor={inputId}><span>{example.control}</span><select id={inputId} value={family} onChange={event => setFamily(event.target.value as Voice)}><option value="editorial">Georgia · editorial</option><option value="everyday">System sans · everyday</option><option value="technical">Monospace · technical</option></select></label> : <label className="toggle-control" htmlFor={inputId}><input id={inputId} type="checkbox" checked={active} onChange={event=>setActive(event.target.checked)}/><span className="toggle-track" aria-hidden="true"/><span>{example.control}</span><span className="toggle-state" aria-hidden="true">{active ? 'ON' : 'OFF'}</span></label>}
-    </div><div className="specimen-stage">{specimen}</div><p className="observation"><span>Look closely</span>{example.note}</p></div>
-  </article>;
+  return (
+    <article
+      className={`example example-${id} rebuilt`}
+      data-example={id}
+      data-applied={active}
+      aria-labelledby={headingId}
+    >
+      <div className="example-brief">
+        <div className="eyebrow">
+          <span className="example-number">
+            {String(Object.keys(examples).indexOf(id) + 1).padStart(2, "0")}
+          </span>
+          {e.topic}
+          <span className="example-code">{id}</span>
+        </div>
+        <h3 id={headingId}>{e.title}</h3>
+        <p className="axiom">{e.axiom}</p>
+        <a
+          className="reference-link"
+          href={ref.url}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {ref.label} ↗
+        </a>
+        {e.extraReference && (
+          <a
+            className="reference-link"
+            href={e.extraReference.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {e.extraReference.label} ↗
+          </a>
+        )}
+      </div>
+      <div className="experiment">
+        <p className="reader-task">
+          <span>{isColor ? "Predict, then reveal" : "Try this task"}</span>
+          {e.task}
+        </p>
+        <div className="experiment-toolbar rebuilt-toolbar">
+          {labels[id] && (
+            <div
+              className="comparison-control"
+              role="group"
+              aria-label="Compare compositions"
+            >
+              {labels[id]!.map((label, index) => (
+                <button
+                  key={label}
+                  type="button"
+                  aria-pressed={active === (index === 1)}
+                  onClick={() => setActive(index === 1)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+          {isColor && (
+            <label className="reveal-control">
+              <input
+                type="checkbox"
+                checked={active}
+                onChange={(event) => setActive(event.target.checked)}
+              />{" "}
+              Remove the context
+            </label>
+          )}
+          {(id === "T2" || id === "C3" || id === "W3") && (
+            <label className="range-control" htmlFor={inputId}>
+              <span>
+                {e.control}
+                <output>
+                  {id === "T2"
+                    ? lineWidth
+                    : id === "C3"
+                      ? surroundHue
+                      : previewWidth}
+                  {id === "T2" ? " ch" : id === "C3" ? "°" : " px"}
+                </output>
+              </span>
+              <input
+                id={inputId}
+                type="range"
+                min={id === "T2" ? 44 : id === "C3" ? 0 : 280}
+                max={id === "T2" ? 76 : id === "C3" ? 360 : 640}
+                value={
+                  id === "T2"
+                    ? lineWidth
+                    : id === "C3"
+                      ? surroundHue
+                      : previewWidth
+                }
+                onChange={(event) => {
+                  const value = Number(event.target.value);
+                  if (id === "T2") setLineWidth(value);
+                  else if (id === "C3") setSurroundHue(value);
+                  else setPreviewWidth(value);
+                }}
+              />
+            </label>
+          )}
+          {id === "W1" && (
+            <label className="select-control" htmlFor={inputId}>
+              <span>Choose a voice</span>
+              <select
+                id={inputId}
+                value={family}
+                onChange={(event) => setFamily(event.target.value as Voice)}
+              >
+                <option value="editorial">Georgia · literary</option>
+                <option value="everyday">System sans · civic</option>
+                <option value="technical">Monospace · archival</option>
+              </select>
+            </label>
+          )}
+        </div>
+        <div className="specimen-stage rebuilt-stage">{specimen}</div>
+        <div className="teaching-notes">
+          <p>
+            <span>What changes</span>
+            {e.note}
+          </p>
+          <p>
+            <span>What to notice</span>
+            {e.takeaway}
+          </p>
+        </div>
+      </div>
+    </article>
+  );
 }
