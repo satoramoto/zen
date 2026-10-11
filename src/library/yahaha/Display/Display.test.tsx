@@ -32,7 +32,7 @@ function setup(props: Partial<DisplayProps> = {}) {
   return { ...view, calls };
 }
 
-const beatStates = (root: HTMLElement) => [...root.querySelectorAll('[data-state]')].map((b) => b.getAttribute('data-state'));
+const beatStates = (root: HTMLElement) => [...root.querySelectorAll('.yh-bar-beat__segment[data-state]')].map((b) => b.getAttribute('data-state'));
 
 describe('Display', () => {
   it('names itself and its regions', () => {
