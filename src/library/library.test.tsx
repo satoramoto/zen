@@ -15,9 +15,19 @@ const filesIn = (rel: string, ext: RegExp) =>
   readdirSync(join(dir, rel))
     .filter((f) => ext.test(f))
     .map((f) => `${rel}/${f}`);
+/** Every file under `rel`, at any depth, matching `ext`; stories and tests excluded. */
+const filesUnder = (rel: string, ext: RegExp) =>
+  readdirSync(join(dir, rel), { recursive: true, encoding: 'utf8' })
+    .filter((f) => ext.test(f) && !/\.(stories|test)\.tsx?$/.test(f))
+    .map((f) => `${rel}/${f}`);
 
 // Everything a component draws with: styles and markup, not theme data.
-const COMPONENT_SOURCES = ['library.css', ...filesIn('components', /\.tsx$/), ...filesIn('screens', /\.(tsx|css)$/)];
+const COMPONENT_SOURCES = [
+  'library.css',
+  ...filesIn('components', /\.tsx$/),
+  ...filesIn('screens', /\.(tsx|css)$/),
+  ...filesUnder('yahaha', /\.(tsx|css)$/),
+];
 const CONTRACT = new Set(Object.keys(toCssVars(packs[0].facets)));
 
 describe('token contract', () => {
