@@ -1,0 +1,74 @@
+/* PadBank: the Pads header with its bank tabs, and sixteen pad cells. Reads only contract
+   variables and the --yh-padbank-* / --yh-pad-* ones declared here. */
+
+.yh-padbank {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  font-family: var(--font-sans);
+}
+
+.yh-padbank__pads {
+  /* The least a row may be: room for a two-line label at the density's size. */
+  --yh-padbank-row: calc(var(--control-h) * 1.5);
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-rows: minmax(var(--yh-padbank-row), 1fr);
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+.yh-padbank__pads[data-columns='4'] {
+  --yh-padbank-row: calc(var(--control-h) * 1.25);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.yh-padbank__cell {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
+/* Each pad fills its cell; the Pad's own default is a fixed square. */
+.yh-padbank__cell .yh-pad {
+  --yh-pad-width: 100%;
+  --yh-pad-height: 100%;
+  box-sizing: border-box;
+  padding: var(--space-1);
+}
+/* A label wraps between words; a single word too long for its pad ("Retrigger" in caps at eight
+   a row) hyphenates, and only as a last resort breaks, rather than spilling over the edge. */
+.yh-padbank__cell .yh-pad__label {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+/* Eight a row, pads are narrow: labels drop to caption size, with at most a little tracking and
+   a thin side inset, so a caps pack's words still fit whole. */
+.yh-padbank__pads[data-columns='8'] .yh-pad {
+  padding-inline: 2px;
+  font-size: var(--size-caption);
+  letter-spacing: min(var(--tracking), 0.02em);
+}
+/* A waiting pad keeps its ARMED / NEXT chip clear of the label by moving the label below it. */
+.yh-padbank__cell .yh-pad[data-state='armed'],
+.yh-padbank__cell .yh-pad[data-state='next'] {
+  padding-top: calc(var(--size-caption) * 1.4 + var(--space-1) * 2);
+}
+
+/* Nothing assigned: a quiet dot where the key would be, nothing to read or press. */
+.yh-padbank__empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+.yh-padbank__dot {
+  --yh-padbank-dot: max(4px, calc(var(--space-1) + 1px));
+  width: var(--yh-padbank-dot);
+  height: var(--yh-padbank-dot);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--text-1) 22%, transparent);
+}
