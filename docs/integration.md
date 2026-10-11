@@ -62,3 +62,7 @@ Independent teaching-quality reviews and integrated browser checks remain coordi
 - Scope: T1 explanatory caption; G3/R3 specimen content; B1 leading of 125%/145% and corresponding tests/README. No conflicts or Integrator behavioral edits.
 - Combined `npm run typecheck`, `npm test` (45 tests), `npm run build`, `npm run build:storybook`, and merge diff check all passed. Same non-fatal deprecation/vendor-size warnings.
 - Preserved coordinator-owned untracked `public/agent-responsive-check.html`; it is not part of the commit. Preview untouched. Independent final reviews/browser acceptance remain pending; no cleanup, main landing, or remote actions.
+
+## Realistic-study assignment cleanup
+
+After both independent final reviews and coordinator browser acceptance were recorded in `a243269decd8672e974985c6b1eac17feb132c6a`, verified exact source `034c42499566be4b9f52aae2967edd820b077081` is an ancestor of that integrated revision. The developer worktree had no tracked or untracked changes; ignored entries were only regenerable `node_modules`, `dist`, and `storybook-static`. The coordinator reported the source owner finished, the developer preview stopped, and its allocated ports/processes absent. Removed `work/realistic-examples` with ordinary `git worktree remove`; retained branch `codex/realistic-examples`. The persistent coordinator worktree, integrated preview, and saved main checkout were untouched. No branch deletion or remote actions.
