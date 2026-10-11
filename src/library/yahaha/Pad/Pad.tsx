@@ -32,7 +32,7 @@ export interface PadProps {
   tipAction?: TipAction;
   /** Called on a click, Space or Enter. */
   onPress?: () => void;
-  /** Draw NEXT / ARMED as a chip in the top-right corner instead of a line above the label. */
+  /** Hang NEXT / ARMED on the top edge at the right, mostly outside the pad, instead of in a row above the label (the label stays centred). */
   tagCorner?: boolean;
   /** A transport pad (Start / Stop, Sync Start, Sync Stop, Tap, Auto Fill): `util` and `start` draw in `--action`. */
   transport?: boolean;
@@ -82,10 +82,14 @@ export function padTone(family: PadFamily, state: PadState, transport: boolean):
  * form where queued must read the same on every pad; `disabled` keeps the pad in the tab order but
  * marks it `aria-disabled` and ignores presses, drawn with a muted label and no press give
  * (*affordance*: unavailable must not look pressable); `fillCell` makes the pad fill its grid cell,
- * so banks lay out pads without overriding the pad's size variables (*alignment*).
+ * so banks lay out pads without overriding the pad's size variables (*alignment*). The NEXT / ARMED
+ * chip never covers the label (*hierarchy*: the name outranks the state, which the ring already
+ * says): at the top, the pad keeps the chip's row clear and centres the label below it; with
+ * `tagCorner` the chip hangs on the top edge, mostly outside the pad, so a one-letter song-form
+ * step keeps its letter centred and in line with its neighbours.
  *
  * **Kept.** The label centred and wrapping only at word boundaries; no pad number on the face (it
- * goes into the accessible name); NEXT / ARMED out of the label's flow so the label never moves;
+ * goes into the accessible name); NEXT / ARMED out of the label's flow;
  * the flash driven by the parent through `lit`; rings drawn without changing the pad's size; the
  * `tagCorner` and `transport` options of the golden Stage.
  */
@@ -126,6 +130,7 @@ export function Pad({
       data-family={family}
       data-util={util || undefined}
       data-lit={tag ? String(lit) : undefined}
+      data-tag={tag ? (tagCorner ? 'corner' : 'top') : undefined}
       data-tip={tip}
       data-next={accentNext ? 'accent' : undefined}
       data-fill={fillCell || undefined}

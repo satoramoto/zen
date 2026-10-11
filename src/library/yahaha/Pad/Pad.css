@@ -148,9 +148,15 @@
 .yh-pad[aria-disabled='true'] { cursor: not-allowed; }
 .yh-pad[aria-disabled='true']:not([data-state='playing'], [data-state='running']) { color: var(--text-3); }
 
-/* NEXT / ARMED: a small solid chip out of the label's flow, so the label never moves. */
+/* NEXT / ARMED: a small solid chip out of the label's flow, never over the label.
+   --yh-pad-tag-h is the chip's height (its caption line). */
+.yh-pad { --yh-pad-tag-h: calc(var(--size-caption) * 1.4); }
+/* A chip at the top: the pad keeps the chip's row clear above the label, so the label centres in
+   what is left, at any pad size. Doubled class: a bank that resets the pad's padding (`.cell .yh-pad`) must not undo this. */
+.yh-pad.yh-pad[data-tag='top'] { padding-top: calc(var(--yh-pad-tag-h) + var(--space-1) * 2); }
 .yh-pad__tag {
   position: absolute;
+  z-index: 1;
   top: var(--space-1);
   left: 50%;
   transform: translateX(-50%);
@@ -165,16 +171,17 @@
   line-height: 1.4;
   white-space: nowrap;
 }
-/* tagCorner: the chip tucked into the top-right corner, so the pad reads as one line. */
+/* tagCorner: the chip hangs on the pad's top edge at the right, mostly above it, so the label
+   stays centred, in line with its neighbours, and clear of the chip even on a pad one letter
+   high (the song form's steps). A tighter line keeps it short: its lower 40% reaches into the
+   pad's top padding, and its upper 60% fits in a bank's gap. */
 .yh-pad__tag--corner {
-  top: 0;
-  right: 0;
+  --yh-pad-tag-h: calc(var(--size-caption) * 1.2);
+  top: calc(var(--yh-pad-tag-h) * -0.6);
+  right: var(--space-1);
   left: auto;
   transform: none;
-  border-top-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: var(--radius-control);
-  border-top-right-radius: var(--radius-control);
+  line-height: 1.2;
 }
 
 @media (prefers-reduced-motion: reduce) {

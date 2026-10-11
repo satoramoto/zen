@@ -80,11 +80,58 @@ export const Next: Story = {
   },
 };
 
-/** Queued with `tagCorner`: NEXT tucked into the top-right corner. */
+/** Queued with `tagCorner`: NEXT hangs on the top edge at the right, so the label stays centred. */
 export const NextCorner: Story = {
   args: { label: 'Main C', index: '11', state: 'next', tagCorner: true, name: 'Main C, queued after bar 4 (flashing)' },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByText('NEXT')).toHaveClass('yh-pad__tag--corner');
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tag', 'corner');
+  },
+};
+
+/** The cells the Stage puts pads in: a song-form step, 4 × 4 and 2 × 8 bank cells, a narrow eight-a-row cell. */
+const CELLS: { name: string; width: string; height: string; label: string; font?: string; tagCorner?: boolean }[] = [
+  { name: 'Song-form step', width: 'calc(var(--control-h) * 1.1)', height: 'calc(var(--control-h) * 1.3)', label: 'C', font: 'var(--size-heading)', tagCorner: true },
+  { name: '4 × 4 cell', width: 'calc(var(--control-h) * 2.6)', height: 'calc(var(--control-h) * 1.25)', label: 'Main A' },
+  { name: '2 × 8 cell', width: 'calc(var(--control-h) * 1.95)', height: 'calc(var(--control-h) * 1.5)', label: 'Rack 4' },
+  { name: 'Narrow cell', width: 'calc(var(--control-h) * 1.6)', height: 'calc(var(--control-h) * 1.5)', label: 'Bank +', font: 'var(--size-caption)' },
+];
+
+/** Two boxes overlap (both laid out: jsdom lays nothing out, so there it checks nothing). */
+const overlaps = (a: DOMRect, b: DOMRect) =>
+  a.width > 0 && b.width > 0 && a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+
+/**
+ * New: NEXT and ARMED at every size the Stage uses a pad, the smallest first. The chip never
+ * covers the label: at the top the pad keeps the chip's row clear; in the corner it hangs on the
+ * top edge.
+ */
+export const TagClearance: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--space-6)', paddingTop: 'var(--space-3)' }}>
+      {/* The regions set the pad's type size on the pad itself; this stands in for them. */}
+      <style>{'.yh-pad-cell .yh-pad { font-size: var(--yh-pad-cell-font, var(--size-label)); }'}</style>
+      {(['next', 'armed'] as const).map((state) => (
+        <div key={state} style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'end' }}>
+          {CELLS.map((cell) => (
+            <div
+              key={cell.name}
+              className="yh-pad-cell"
+              style={{ display: 'grid', width: cell.width, height: cell.height, ['--yh-pad-cell-font' as string]: cell.font }}
+            >
+              <Pad label={cell.label} state={state} tagCorner={cell.tagCorner} fillCell name={`${cell.label}, ${state}, ${cell.name}`} />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    for (const pad of canvasElement.querySelectorAll<HTMLElement>('.yh-pad')) {
+      const tag = pad.querySelector('.yh-pad__tag')!.getBoundingClientRect();
+      const label = pad.querySelector('.yh-pad__label')!.getBoundingClientRect();
+      await expect(overlaps(tag, label), pad.getAttribute('aria-label') ?? '').toBe(false);
+    }
   },
 };
 

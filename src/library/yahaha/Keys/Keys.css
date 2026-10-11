@@ -1,6 +1,9 @@
 /* Keys: contract variables only, plus the local --yh-keys-* ones declared here.
-   Key faces are derived per scheme with light-dark() (the scope sets color-scheme from --scheme):
-   white keys are the lighter face and sharps the darker one in either scheme. */
+   Key faces are derived from the ground (--surface-0) with relative colour, so they read as a
+   keyboard in either scheme: light faces with dark sharps, tinted like the ground. Not with
+   light-dark(): the build polyfills it with variables that only a literal `color-scheme: light`
+   or `dark` sets, and the library scope sets `color-scheme: var(--scheme)`, so every face
+   resolved to nothing and the keys vanished. */
 
 .yh-keys {
   /* Geometry set from the layout (inline), with defaults. */
@@ -13,14 +16,18 @@
   --yh-keys-black-h: calc(var(--yh-keys-strip-h) * 0.6);
   --yh-keys-flag-w: calc(var(--control-h) * 1.9);
   --yh-keys-line: 2px;
-  --yh-keys-lamp: 2px;
+  --yh-keys-lamp: 3px;
   --yh-keys-key-radius: calc(var(--radius-control) / 2);
-  /* Key faces (no contract token for them yet). */
-  --yh-keys-white: light-dark(var(--surface-0), color-mix(in oklab, var(--text-1) 16%, var(--surface-1)));
-  --yh-keys-black: light-dark(color-mix(in oklab, var(--text-1) 86%, var(--surface-0)), var(--surface-0));
-  --yh-keys-gap: light-dark(var(--border-strong), var(--surface-0));
-  --yh-keys-sharp-edge: light-dark(transparent, var(--border-strong));
-  --yh-keys-label: light-dark(var(--text-3), var(--text-2));
+  /* Key faces (no contract token for them yet), from the ground's lightness `l` (0 dark, 1 light):
+     a dark ground gets soft grey faces, a light one near-paper faces; sharps, gaps and names stay
+     dark either way, so the keys read as keys whatever the scheme. */
+  --yh-keys-white: oklch(from var(--surface-0) calc(0.74 + l * 0.25) calc(c * 0.6) h);
+  --yh-keys-black: oklch(from var(--surface-0) calc(0.19 + l * 0.05) calc(c * 0.6) h);
+  --yh-keys-gap: oklch(from var(--surface-0) calc(0.36 + l * 0.24) calc(c * 0.6) h);
+  --yh-keys-sharp-edge: oklch(from var(--surface-0) calc(0.34 + l * 0.08) calc(c * 0.6) h);
+  --yh-keys-label: oklch(from var(--surface-0) calc(0.36 + l * 0.04) calc(c * 0.6) h);
+  /* The split line, drawn on the faces: dark, like the sharps' ink. */
+  --yh-keys-split-ink: var(--yh-keys-black);
 
   position: relative;
   flex: none;
@@ -185,7 +192,7 @@
 }
 .yh-keys__split > span {
   position: absolute;
-  background: var(--text-1);
+  background: var(--yh-keys-split-ink);
 }
 .yh-keys__split-top {
   top: 0;
