@@ -21,11 +21,35 @@ function setup(props: Partial<StageProps> = {}) {
 }
 
 describe('Stage', () => {
+  it('is stacked by default: the hero and transport, the song form strip, the band, the keys', () => {
+    const { container } = setup();
+    const screenNode = container.querySelector('.yh-stage__screen') as HTMLElement;
+    expect(screenNode).toHaveAttribute('data-layout', 'stacked');
+    expect(Array.from(screenNode.children).map((node) => node.className)).toEqual([
+      'yh-stage__bar',
+      'yh-stage__top',
+      'yh-stage__strip',
+      'yh-stage__band',
+      'yh-stage__keys',
+    ]);
+    const top = container.querySelector('.yh-stage__top') as HTMLElement;
+    expect(within(top).getByRole('region', { name: 'Stage display' })).toBeInTheDocument();
+    expect(within(top).getByRole('region', { name: 'Transport' })).toBeInTheDocument();
+    expect(within(container.querySelector('.yh-stage__strip') as HTMLElement).getByRole('region', { name: 'Song form' })).toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Song form and transport' })).toBeNull();
+  });
+
+  it('has no hue legend: the mixer names each part in its hue', () => {
+    const { container } = setup();
+    expect(container.querySelector('.yh-huelegend')).toBeNull();
+    expect(screen.queryByRole('list', { name: /legend/i })).toBeNull();
+  });
+
   it('lays out every region once', () => {
     setup();
     const stage = screen.getByRole('group', { name: 'Stage' });
     expect(within(stage).getAllByRole('navigation', { name: 'Pages' })).toHaveLength(1);
-    for (const name of ['Stage display', 'Song form and transport', 'Faders', 'Knobs', 'Pads']) {
+    for (const name of ['Stage display', 'Song form', 'Transport', 'Faders', 'Knobs', 'Pads']) {
       expect(within(stage).getAllByRole('region', { name })).toHaveLength(1);
     }
     expect(stage.querySelectorAll('.yh-keys')).toHaveLength(1);
@@ -78,27 +102,43 @@ describe('Stage', () => {
     }
   });
 
-  it('has every section and transport key once, in the song form', () => {
+  const SECTIONS = [/^Intro I\b(?!I)/, /^Intro II\b(?!I)/, /^Intro III/, /^Main A/, /^Main B/, /^Main C/, /^Main D/, /^Ending I\b(?!I)/, /^Ending II\b(?!I)/, /^Ending III/, /^Break/];
+  const TRANSPORT = [/^Start \/ Stop/, /^Sync Start/, 'Sync Stop', 'Auto Fill', /^Fill Up/, /^Fill Down/, /^Fade\b/, /^Section reset/, 'Accomp (ACMP)'];
+
+  it('has every section once, in the song form strip, and every transport key once, beside the hero', () => {
     setup();
-    const form = region('Song form and transport');
-    for (const name of [/^Intro I\b(?!I)/, /^Intro II\b(?!I)/, /^Intro III/, /^Main A/, /^Main B/, /^Main C/, /^Main D/, /^Ending I\b(?!I)/, /^Ending II\b(?!I)/, /^Ending III/, /^Break/]) {
+    const form = region('Song form');
+    for (const name of SECTIONS) {
       once(name);
       expect(form.getByRole('button', { name })).toBeInTheDocument();
     }
-    for (const name of [/^Start \/ Stop/, /^Sync Start/, 'Sync Stop', 'Auto Fill', /^Fill Up/, /^Fill Down/, /^Fade\b/, /^Section reset/, 'Accomp (ACMP)']) {
+    const transport = region('Transport');
+    for (const name of TRANSPORT) {
+      once(name);
+      expect(transport.getByRole('button', { name })).toBeInTheDocument();
+    }
+  });
+
+  it('split: the song form over the transport beside the hero, each key once', () => {
+    const { container } = setup({ layout: 'split' });
+    expect(container.querySelector('.yh-stage__screen')).toHaveAttribute('data-layout', 'split');
+    expect(container.querySelector('.yh-stage__strip')).toBeNull();
+    const top = container.querySelector('.yh-stage__top') as HTMLElement;
+    const form = within(within(top).getByRole('region', { name: 'Song form and transport' }));
+    for (const name of [...SECTIONS, ...TRANSPORT]) {
       once(name);
       expect(form.getByRole('button', { name })).toBeInTheDocument();
     }
   });
 
-  it('stacked: the transport beside the hero, the song form a strip under them, each key once', () => {
-    const { container } = setup({ layout: 'stacked' });
-    expect(screen.queryByRole('region', { name: 'Song form and transport' })).toBeNull();
-    const top = container.querySelector('.yh-stage__top') as HTMLElement;
-    const strip = container.querySelector('.yh-stage__strip') as HTMLElement;
-    expect(within(top).getByRole('region', { name: 'Transport' })).toBeInTheDocument();
-    expect(within(strip).getByRole('region', { name: 'Song form' })).toBeInTheDocument();
-    for (const name of [/^Main B/, /^Break/, 'Auto Fill', /^Start \/ Stop/, /^Fill Up/, 'Accomp (ACMP)']) once(name);
+  it('shows the Tempo knob at the hero tempo in every fixture', () => {
+    for (const fixture of [stageBoard, stageStopped]) {
+      const { unmount } = setup(fixture);
+      const bpm = fixture.display.nowPlaying.bpm;
+      expect(region('Knobs').getByRole('button', { name: new RegExp(`^Knob \\d: Tempo.*\\b${bpm}\\b`) })).toBeInTheDocument();
+      unmount();
+    }
+    expect(stageStopped.knobs.knobs.find((k) => k.label === 'Tempo')?.value).toBe('92');
   });
 
   it('has the mixer, eight knobs, sixteen pads in two rows of eight', () => {
@@ -234,7 +274,7 @@ describe('StagePlayground', () => {
   it('queues a section as next while running, and lands it on a second press', async () => {
     play();
     const user = userEvent.setup();
-    const form = region('Song form and transport');
+    const form = region('Song form');
     await user.click(form.getByRole('button', { name: 'Main D' }));
     expect(form.getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
     expect(region('Stage display').getByText('Main D')).toBeInTheDocument();
