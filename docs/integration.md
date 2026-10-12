@@ -1,0 +1,68 @@
+# Integration ledger
+
+## Initial React illustration integration
+
+- Coordinator worktree: `/Users/ryan/Code/satoramoto/awesome-design`
+- Coordinator branch: `codex/interactive-brief`
+- Coordinator pre-integration commit: `a57f6f85565814f988391b79c1d88091e4aafd6b`
+- Source branch: `codex/illustrations`
+- Source base: `000daf0cb94281c3bbda38c9b932faac72d2e667`
+- Ready source commit: `ebee0e39a98cff3741ffa2e5bdef3415ad6ed17d`
+- Resulting merge commit: `877024f352a581ac69a85d7c3906094f59777d9e`
+- Order: coordinator scaffold/configuration/documentation, then source illustration commit via non-fast-forward merge. No additional source dependencies.
+- Conflicts: none. No implementation changes made by Integrator.
+
+Validation on merge commit:
+
+- `npm run typecheck`: passed.
+- `npm test`: passed, 46 tests in one file using Vitest 4.1.11.
+- `npm run build`: passed.
+- `npm run build:storybook`: passed. Non-fatal Node module.register deprecation and Storybook bundle-size warnings remain.
+
+Independent source reviews and integrated browser validation are owned by the coordinator and were still pending at this handoff. Build/test success does not establish visual acceptance. No servers started or stopped; no main update, push, PR, branch deletion, or source-worktree cleanup performed. The source worktree is preserved for possible review fixes.
+
+## Typography caption review correction
+
+- Coordinator prior commit: `964b093d7ce504be8d0792d3b490b6edea33ded0`
+- Source commit: `3475ab675de594b07c2233d4827c9550bd1b9466`, dependent on initial source `ebee0e39a98cff3741ffa2e5bdef3415ad6ed17d` already integrated above.
+- Resulting non-fast-forward merge: `c5dc3f736b0b3a2e512ece4e3fc88b13e276798b`
+- Scope: only T3 explanatory caption in `src/catalog.ts`; it now explicitly names metadata alignment as a changed variable.
+- Conflicts: none. `git diff --check HEAD^1 HEAD` passed on the merge.
+- Builds/tests not repeated for this prose-only correction, per coordinator direction; prior successful validation above remains the implementation evidence. Coordinator preview untouched.
+
+## Completed assignment cleanup
+
+Both final JSX reviews and coordinator-supplied integrated browser evidence are preserved in `docs/verification.md` and the linked review records. Verified source `3475ab675de594b07c2233d4827c9550bd1b9466` is an ancestor of the coordinator revision. The source worktree had no tracked or untracked changes; its only ignored entries were regenerable `node_modules`, `dist`, and `storybook-static`. Removed the completed temporary worktree with ordinary `git worktree remove`; retained `codex/illustrations`. Removed only the coordinator-designated disposable responsive-check wrapper. No preview processes or browser tabs were changed.
+
+## Realistic comparative studies rebuild
+
+- Persistent coordinator worktree: `/Users/ryan/Documents/Codex/2026-10-10/what-x20-2/work/awesome-design-coordinator`.
+- Coordinator branch: `codex/interactive-brief`; prior commit `db9bddb709ba8950ac833d01f5bdefa77dc7f385`.
+- The requested saved checkout was found on `main` at `000daf0cb94281c3bbda38c9b932faac72d2e667`. With coordinator authorization, attached the existing coordinator branch at the new persistent worktree above; preserved saved main unchanged.
+- Source worktree: `/Users/ryan/Documents/Codex/2026-10-10/what-x20-2/work/realistic-examples`, branch `codex/realistic-examples`.
+- Immutable ready source: `0b2aade103368fd4264eff36b7494ba974796f79`, based on prior coordinator `db9bddb709ba8950ac833d01f5bdefa77dc7f385`.
+- Resulting non-fast-forward merge: `eb6657fa1a27e1c018bec35543c4e0d412f3af36`.
+- Order: existing coordinator, then the single source rebuild. No conflicts or behavioral edits by Integrator.
+
+Validation on the resulting merge:
+
+- `git diff --check HEAD^1 HEAD`: passed.
+- `npm run typecheck`: passed.
+- `npm test`: passed, 45 tests in one file.
+- `npm run build`: passed.
+- `npm run build:storybook`: passed, with non-fatal Node module.register deprecation and vendor chunk-size warnings.
+
+Independent teaching-quality reviews and integrated browser checks remain coordinator-owned and pending at this integration handoff. A known T1 explanatory-copy follow-up is expected and is not included in this revision. No servers changed, no main landing or remote action, and no source-worktree cleanup performed.
+
+## Teaching-quality review refinements
+
+- Coordinator prior commit: `09ff12b9fd429704daf680ecd2cb9f861105ece9`.
+- Immutable source: `034c42499566be4b9f52aae2967edd820b077081`, dependent on `0b2aade103368fd4264eff36b7494ba974796f79` already integrated above.
+- Resulting non-fast-forward merge: `15f6cd78535c2b020f3fc43e88242d1a03205e6a`.
+- Scope: T1 explanatory caption; G3/R3 specimen content; B1 leading of 125%/145% and corresponding tests/README. No conflicts or Integrator behavioral edits.
+- Combined `npm run typecheck`, `npm test` (45 tests), `npm run build`, `npm run build:storybook`, and merge diff check all passed. Same non-fatal deprecation/vendor-size warnings.
+- Preserved coordinator-owned untracked `public/agent-responsive-check.html`; it is not part of the commit. Preview untouched. Independent final reviews/browser acceptance remain pending; no cleanup, main landing, or remote actions.
+
+## Realistic-study assignment cleanup
+
+After both independent final reviews and coordinator browser acceptance were recorded in `a243269decd8672e974985c6b1eac17feb132c6a`, verified exact source `034c42499566be4b9f52aae2967edd820b077081` is an ancestor of that integrated revision. The developer worktree had no tracked or untracked changes; ignored entries were only regenerable `node_modules`, `dist`, and `storybook-static`. The coordinator reported the source owner finished, the developer preview stopped, and its allocated ports/processes absent. Removed `work/realistic-examples` with ordinary `git worktree remove`; retained branch `codex/realistic-examples`. The persistent coordinator worktree, integrated preview, and saved main checkout were untouched. No branch deletion or remote actions.
