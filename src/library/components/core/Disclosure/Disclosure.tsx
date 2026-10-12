@@ -1,5 +1,6 @@
 import { useToggle, type ControlSize } from '../Toggle/useToggle';
 import '../Toggle/size.css';
+import { focusRing } from '../../../primitives/Ring';
 import './Disclosure.css';
 
 export interface DisclosureProps {
@@ -41,7 +42,7 @@ export function Disclosure({
   return (
     <button
       type="button"
-      className="lib-disclosure lib-sized"
+      className={`lib-disclosure lib-sized ${focusRing}`}
       data-part="root"
       data-size={size}
       aria-label={ariaLabel}

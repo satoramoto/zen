@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent, type RefObject } from 'react';
 import type { TipAction } from '../Pad/Pad';
+import { focusRing } from '../../../primitives/Ring';
 import './TempoReadout.css';
 
 export interface TempoReadoutProps {
@@ -115,6 +116,12 @@ function useHold(report: ((down: boolean) => void) | undefined) {
  * `tipAction` on the number and both buttons with their keys, and `cells`, where it fills its
  * size container with the reading on the foot and + over − exactly as tall as the number's
  * capitals.
+ *
+ * **Tuning knobs.**
+ * - `--yh-tempo-readout-size`: the numeral's size (default `--size-numeral`; `cells` fits it to
+ *   the container); a parent sets it on the element, or `size` inline; + and − scale with it.
+ * - `--yh-tempo-readout-digits`: the widest value's digit count, set inline, so the number's
+ *   slot never jitters.
  */
 export function TempoReadout({
   bpm,
@@ -209,7 +216,7 @@ export function TempoReadout({
       <span className="yh-tempo-readout__reading" data-part="window" data-material="screen">
         <span
           ref={number}
-          className="yh-tempo-readout__bpm"
+          className={`yh-tempo-readout__bpm ${focusRing}`}
           data-part="value"
           role="spinbutton"
           tabIndex={0}

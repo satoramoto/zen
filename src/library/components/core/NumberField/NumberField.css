@@ -60,10 +60,7 @@
   user-select: none;
   -webkit-user-select: none;
 }
-.lib-number-field__body:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+/* Focus: the library's focus ring (`focusRing` on the body); the input draws its own ring below. */
 .lib-number-field__body[data-dragging] {
   cursor: grabbing;
 }

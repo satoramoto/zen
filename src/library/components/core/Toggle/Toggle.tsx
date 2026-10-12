@@ -1,5 +1,6 @@
 import type { CSSProperties, KeyboardEvent, ReactNode } from 'react';
 import { CONTROL_SIZES, useToggle, type ControlSize } from './useToggle';
+import { focusRing } from '../../../primitives/Ring';
 import './size.css';
 import './Toggle.css';
 
@@ -94,7 +95,7 @@ export function Toggle({
       )}
       <button
         type="button"
-        className="lib-toggle__key"
+        className={`lib-toggle__key ${focusRing}`}
         data-part="key"
         data-on={on || undefined}
         aria-pressed={momentary ? undefined : on}
@@ -166,7 +167,7 @@ export function Switch({
     <button
       type="button"
       role="switch"
-      className={`lib-switch lib-sized${!labelled && className ? ` ${className}` : ''}`}
+      className={`lib-switch lib-sized ${focusRing}${!labelled && className ? ` ${className}` : ''}`}
       data-part="switch"
       data-size={size}
       aria-label={ariaLabel}

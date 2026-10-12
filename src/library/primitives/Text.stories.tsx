@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../storybook';
 import { Text, TEXT_ROLES, TEXT_TONES, type TextRole, type TextTone } from './Text';
@@ -11,6 +12,12 @@ const SAMPLE: Record<TextRole, string> = {
   caption: 'Bar 12',
   code: 'C#m7 / 0:42',
 };
+
+/** `on-solid` is ink for a solid action fill, so it is shown on `--action`; every other tone on the page. */
+const ground = (tone: TextTone | 'inherit'): CSSProperties =>
+  tone === 'on-solid'
+    ? { background: 'var(--action)', borderRadius: 'var(--radius-control)', padding: 'var(--space-1) var(--space-2)' }
+    : {};
 
 interface TextArgs {
   role: TextRole;
@@ -36,7 +43,14 @@ const meta: Meta<TextArgs> = {
   },
   render: ({ role, tone, truncate, tabular, text, width }) => (
     <div style={{ width, padding: 'var(--space-4)' }}>
-      <Text role={role} tone={tone === 'inherit' ? undefined : tone} truncate={truncate} tabular={tabular} as="p">
+      <Text
+        role={role}
+        tone={tone === 'inherit' ? undefined : tone}
+        truncate={truncate}
+        tabular={tabular}
+        as="p"
+        style={ground(tone)}
+      >
         {text}
       </Text>
     </div>
@@ -73,7 +87,7 @@ export const AllRolesAndTones: Story = {
               {role}
             </Text>
             {TEXT_TONES.map((tone) => (
-              <Text key={tone} role={role} tone={tone}>
+              <Text key={tone} role={role} tone={tone} style={ground(tone)}>
                 {SAMPLE[role]}
               </Text>
             ))}

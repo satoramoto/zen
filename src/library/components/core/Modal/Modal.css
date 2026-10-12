@@ -32,7 +32,7 @@
 }
 
 .lib-modal__dialog {
-  --lib-modal-width: 440px; /* added */
+  --lib-modal-width: calc(var(--space-2) * 55); /* 440px at the 4px unit */
   position: relative;
   display: flex;
   box-sizing: border-box;
@@ -113,5 +113,5 @@
   justify-content: center;
 }
 .lib-modal[data-side='bottom'] > .lib-modal__dialog {
-  --lib-modal-width: 600px; /* added */
+  --lib-modal-width: calc(var(--space-2) * 75); /* 600px at the 4px unit */
 }

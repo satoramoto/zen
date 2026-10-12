@@ -14,7 +14,6 @@
   --yh-fader-level: 0;
   --yh-fader-away: 0;
   --yh-fader-m: 0;
-  --yh-fader-p: 0;
 
   position: relative;
   display: grid;
@@ -40,11 +39,6 @@
 .yh-fader[data-hue] { --yh-fader-ink: var(--hue); }
 .yh-fader[data-layered] { --yh-fader-ink: var(--text-2); }
 .yh-fader[data-kind='parked'] { cursor: default; }
-
-.yh-fader:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
 
 /* The numeral: the largest thing on the strip, in text ink so it holds contrast on every ground. */
 .yh-fader__head {
@@ -103,10 +97,9 @@
   width: var(--yh-fader-groove-w);
   transform: translateX(-50%);
 }
+/* The groove is a `well` Surface (no radius); this only places it. */
 .yh-fader__groove {
   top: 0;
-  background: var(--mat-well-texture), var(--mat-well-fill);
-  box-shadow: var(--mat-well-shadow);
 }
 /* Lit in the strip ink: the fill's colour is meaning, so it stays the ink in every material. */
 .yh-fader__fill {
@@ -173,11 +166,10 @@
   translate: calc(var(--yh-fader-groove-w) / 2 + 2px + var(--yh-fader-meter-w) / 2) 0;
   pointer-events: none;
 }
+/* The meter channel is a `well` Surface (no radius). */
 .yh-fader__meter {
   position: relative;
   width: var(--yh-fader-meter-w);
-  background: var(--mat-well-texture), var(--mat-well-fill);
-  box-shadow: var(--mat-well-shadow);
 }
 .yh-fader__meter::after {
   content: '';

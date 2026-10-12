@@ -59,6 +59,10 @@ export interface StatusDotProps {
  * **Kept:** the props (hue × hollow × glow × size rather than a state enum), the section values
  * of `hue` (so older callers compile), hidden keeping its box, decorative unless `name` is
  * given, a hidden dot silent to screen readers even when named, and no motion, focus or click.
+ *
+ * **Tuning knobs**
+ * - `--yh-status-dot-*`: the dot's `-hue` (its colour role; set inline for a section), `-size`
+ *   (its diameter in `em`, per `size`) and `-round` (its corner radius, round on every pack).
  */
 export function StatusDot({ hue = 'ok', hollow = false, glow = true, size = 'md', visible = true, name }: StatusDotProps) {
   // Absent is always the "not there" ring: a faint solid dot was invisible from a metre.

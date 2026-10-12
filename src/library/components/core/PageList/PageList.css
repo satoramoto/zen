@@ -1,7 +1,6 @@
-/* PageList: a vertical list of pages. Reads only contract variables and its own --yh-page-list-*. */
+/* PageList: a vertical list of pages. Reads only contract variables. */
 
 .yh-page-list {
-  --yh-page-list-pad: var(--space-3);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -16,7 +15,7 @@
   min-width: 0;
   min-height: var(--control-h);
   margin: 0;
-  padding: var(--space-2) var(--yh-page-list-pad);
+  padding: var(--space-2) var(--space-3);
   border: 0;
   border-radius: var(--radius-control);
   background: transparent;

@@ -5,15 +5,15 @@
   --yh-status-dot-hue: var(--success);
   --yh-status-dot-size: 0.5em;
   --yh-status-dot-round: 50%;
-  --yh-status-dot-ring: max(1.5px, var(--border-width));
   display: inline-block;
   flex: none;
   align-self: center;
   box-sizing: border-box;
   width: var(--yh-status-dot-size);
   height: var(--yh-status-dot-size);
-  min-width: 5px;
-  min-height: 5px;
+  /* A floor for tiny type: 5px at the 4px unit. */
+  min-width: calc(var(--space-1) * 1.25);
+  min-height: calc(var(--space-1) * 1.25);
   border-radius: var(--yh-status-dot-round);
   vertical-align: middle;
   background: var(--yh-status-dot-hue);
@@ -21,8 +21,8 @@
 
 .yh-status-dot[data-size='sm'] {
   --yh-status-dot-size: 0.4em;
-  min-width: 4px;
-  min-height: 4px;
+  min-width: var(--space-1);
+  min-height: var(--space-1);
 }
 
 /* A lit dot: the material set's glow in the dot's hue (nothing on flat sets). */
@@ -33,7 +33,8 @@
 
 .yh-status-dot[data-face='hollow'] {
   background: transparent;
-  border: var(--yh-status-dot-ring) solid var(--yh-status-dot-hue);
+  /* One and a half hairlines, so it stays a ring, not a smudge (1.5px on 1px sets). */
+  border: calc(var(--border-width) * 1.5) solid var(--yh-status-dot-hue);
 }
 
 /* Absent: always the ring (the component sets data-face='hollow'), in --text-3 so it still reads. */

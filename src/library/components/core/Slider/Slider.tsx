@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { defaultOrigin, fillFrom, hintAttribute, useReserved, type FillOrigin } from '../Param/fill';
 import type { Param } from '../Param/param';
 import { useParamGesture } from '../Param/useParamGesture';
+import { focusRing } from '../../../primitives/Ring';
 import './Slider.css';
 
 /** Caption above the control, beside it, or laid over a horizontal track. */
@@ -143,7 +144,7 @@ export function Slider({
         </span>
       )}
       <div className="lib-slider__frame" title={title}>
-        <div className="lib-slider__track" data-part="track" {...gesture.props}>
+        <div className={`lib-slider__track ${focusRing}`} data-part="track" {...gesture.props}>
           {filled && <span className="lib-slider__fill" data-part="fill" aria-hidden="true" />}
           {span !== null && <span className="lib-slider__span" data-part="span" aria-hidden="true" />}
           {span !== null && <span className="lib-slider__reach" data-part="reach" aria-hidden="true" />}

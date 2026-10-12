@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { focusRing } from '../../../primitives/Ring';
 import './RackCell.css';
 
 export interface RackCellProps {
@@ -41,6 +42,9 @@ export interface RackCellProps {
  * **Kept**: one flat button with its spoken name ("Rack: Sunday drive, on Quick Rack A1. Opens
  * the Rack page"), the "No rack" fallback, no slot shown when there is none, the mark after the
  * name, and the tooltip key as `data-tip`.
+ *
+ * **Tuning knobs.**
+ * - `--yh-rack-cell-width`: the cell's width on the row (default `12em`); the row may set it.
  */
 export function RackCell({ rack, slot = '', label = 'Rack', name, tip, mark, onPress }: RackCellProps) {
   const empty = rack.trim() === '';
@@ -50,7 +54,7 @@ export function RackCell({ rack, slot = '', label = 'Rack', name, tip, mark, onP
     <div className="yh-rack-cell">
       <button
         type="button"
-        className="yh-rack-cell__button"
+        className={`yh-rack-cell__button ${focusRing}`}
         aria-label={spoken}
         data-tip={tip}
         onClick={() => onPress?.()}

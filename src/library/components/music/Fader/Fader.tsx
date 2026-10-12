@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { HueSlot } from '../../core/hue';
+import { focusRing } from '../../../primitives/Ring';
+import { Surface } from '../../../primitives/Surface';
 import { FADER_MAX as MAX, useFader } from './useFader';
 import './Fader.css';
 
@@ -95,6 +97,11 @@ function splitValue(value: string): { word: string; num: string } {
  * count from the level last asked for until `level` catches up. The meter props (`meter`,
  * `meter2`, `peak`) as the original's, the off / parked / empty / layered looks, the warning ghost
  * cap and arrow for takeover, the word-over-number layer value, and the caller's accessible name.
+ *
+ * **Tuning knobs.**
+ * - `--yh-fader-*`: the strip ink (`-ink`), the cap's height, corner and ghost line (`-cap-h`,
+ *   `-cap-r`, `-line`), the groove and meter widths (`-groove-w`, `-meter-w`), and the 0–1
+ *   positions the component sets inline (`-level`, `-away`, `-m`).
  */
 export function Fader({
   name,
@@ -129,7 +136,7 @@ export function Fader({
   return (
     <div
       {...rootProps}
-      className="yh-fader"
+      className={`yh-fader ${focusRing}`}
       data-kind={kind}
       data-hue={partHue}
       data-layered={layered || undefined}
@@ -145,7 +152,7 @@ export function Fader({
       </span>
       <span className="yh-fader__travel" data-part="travel" aria-hidden="true">
         <span className="yh-fader__rail" ref={railRef}>
-          <span className="yh-fader__groove" data-part="groove" />
+          <Surface as="span" material="well" radius="none" className="yh-fader__groove" data-part="groove" />
           {!parked && <span className="yh-fader__fill" data-part="fill" />}
           {isAway && (
             <span
@@ -159,7 +166,10 @@ export function Fader({
         {showMeters && (
           <span className="yh-fader__meters">
             {/* One meter, the louder side: two read as a second, thinner fader at Stage scale. */}
-            <span
+            <Surface
+              as="span"
+              material="well"
+              radius="none"
               className="yh-fader__meter"
               data-part="meter"
               style={{ '--yh-fader-m': live ? clamp(Math.max(meter, meter2), 0, 1) : 0 } as CSSProperties}

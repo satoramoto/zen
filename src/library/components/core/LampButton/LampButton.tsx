@@ -1,6 +1,7 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { useLongPress } from './useLongPress';
 import type { HueSlot } from '../hue';
+import { focusRing } from '../../../primitives/Ring';
 import './LampButton.css';
 
 /** The hues a lamp can wear. `m` is the original's deprecated alias of `t` and draws exactly as it. */
@@ -99,6 +100,9 @@ export interface LampButtonProps {
  * `!on`), long press and right-click that never toggle, disabled that stays focusable with
  * `aria-disabled`, the accessible name override, the joined edges, the width prop, the three sizes,
  * and the `data-face` / `data-hue` / `data-contrast` hooks.
+ *
+ * **Tuning knobs**
+ * - `--yh-wait-ring`: the on, armed and waiting ring's weight, one weight across Button, LampButton and Pad.
  */
 export function LampButton({
   label,
@@ -135,7 +139,7 @@ export function LampButton({
   }, [tipAction, tip]);
 
   const style: CSSProperties | undefined = width === undefined ? undefined : { minWidth: `${width}px` };
-  const classes = ['yh-lampbutton', `yh-lampbutton--${size}`];
+  const classes = ['yh-lampbutton', `yh-lampbutton--${size}`, focusRing];
   if (width !== undefined) classes.push('yh-lampbutton--fixed');
   if (join) classes.push(`yh-lampbutton--join-${join}`);
 

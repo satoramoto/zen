@@ -1,15 +1,12 @@
 /* Readout: label and value on one line, the bar under them across the row's full drag span, the
-   knob code in its own column so rows line up. Only contract variables and the --yh-readout-*
-   ones declared here. */
+   knob code in its own column so rows line up. Contract variables only. */
 
 .yh-readout {
-  --yh-readout-track: color-mix(in srgb, var(--text-1) 14%, transparent);
-  --yh-readout-bar-h: 3px;
-  --yh-readout-code-w: 4ch;
-
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto var(--yh-readout-code-w);
-  grid-template-rows: auto var(--yh-readout-bar-h);
+  /* Label, value, and the knob code's fixed 4ch column. */
+  grid-template-columns: minmax(0, 1fr) auto 4ch;
+  /* The bar's row: three quarters of a step, a thin line. */
+  grid-template-rows: auto calc(var(--space-1) * 0.75);
   align-items: baseline;
   column-gap: var(--space-3);
   row-gap: var(--space-1);
@@ -88,10 +85,11 @@
   grid-row: 2;
   position: relative;
   align-self: center;
-  height: var(--yh-readout-bar-h);
+  height: calc(var(--space-1) * 0.75);
   overflow: hidden;
   border-radius: var(--radius-pill);
-  background: var(--yh-readout-track);
+  /* A tint of the text colour, so it shows on light and dark palettes alike. */
+  background: color-mix(in srgb, var(--text-1) 14%, transparent);
   transform-origin: center;
   transition: transform 120ms ease-out;
 }
