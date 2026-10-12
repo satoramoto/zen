@@ -268,42 +268,45 @@ export function Keys({
   return (
     <div
       className="yh-keys"
+      data-part="root"
       style={rootStyle}
       data-picking={armed ? '' : undefined}
       data-locked={splitLocked ? '' : undefined}
     >
-      <div className="yh-keys__ruler" aria-hidden="true">
+      <div className="yh-keys__ruler" data-part="ruler" aria-hidden="true">
         {zones.map((zone) => (
           <div
             key={zone.part}
             className="yh-keys__zone"
+            // A zone's data-part names its musical part (l, r1–r3), which the hue rules and tests read.
             data-part={zone.part}
             data-side={zone.part === 'l' ? 'left' : 'right'}
             data-split={topX !== null ? '' : undefined}
             data-on={zone.lit ? 'true' : 'false'}
             style={{ left: px(zone.from), width: px(Math.max(0, zone.to - zone.from)) }}
           >
-            <span className="yh-keys__part">{PART_NAMES[zone.part]}</span>
+            <span className="yh-keys__part" data-part="part-name">{PART_NAMES[zone.part]}</span>
             {armed && zone.part !== 'l' ? (
-              <span className="yh-keys__hint">Press a key to set the split · Esc cancels</span>
+              <span className="yh-keys__hint" data-part="hint">Press a key to set the split · Esc cancels</span>
             ) : (
-              zone.held.length > 0 && <span className="yh-keys__held">{zone.held.join(' ')}</span>
+              zone.held.length > 0 && <span className="yh-keys__held" data-part="held">{zone.held.join(' ')}</span>
             )}
           </div>
         ))}
         {!interactive && topX !== null && (
-          <span className="yh-keys__marker" style={{ left: px(topX) }}>
+          <span className="yh-keys__marker" data-part="marker" style={{ left: px(topX) }}>
             {splitName}
           </span>
         )}
       </div>
 
-      <div className="yh-keys__body">
-        <div className="yh-keys__strip" role="img" aria-label={label} ref={strip}>
+      <div className="yh-keys__body" data-part="body">
+        <div className="yh-keys__strip" data-part="strip" role="img" aria-label={label} ref={strip}>
           {keys.whites.map((key) => (
             <div
               key={key.note}
               className="yh-keys__white"
+              data-part="white"
               data-held={key.held ?? undefined}
               data-c={key.label ? '' : undefined}
               style={{ left: px(key.x), width: px(keys.whiteWidth) }}
@@ -315,15 +318,16 @@ export function Keys({
             <div
               key={key.note}
               className="yh-keys__black"
+              data-part="black"
               data-held={key.held ?? undefined}
               style={{ left: px(key.x) }}
             />
           ))}
           {keys.splitX !== null && (
-            <div className="yh-keys__split" data-step={keys.splitStep}>
-              <span className="yh-keys__split-top" />
-              {keys.splitStep !== 0 && <span className="yh-keys__split-join" />}
-              <span className="yh-keys__split-bottom" />
+            <div className="yh-keys__split" data-part="split" data-step={keys.splitStep}>
+              <span className="yh-keys__split-top" data-part="split-top" />
+              {keys.splitStep !== 0 && <span className="yh-keys__split-join" data-part="split-join" />}
+              <span className="yh-keys__split-bottom" data-part="split-bottom" />
             </div>
           )}
         </div>
@@ -331,6 +335,7 @@ export function Keys({
           // The pick surface: pointer only (the handle's arrows are the keyboard's way).
           <div
             className="yh-keys__pick"
+            data-part="pick"
             aria-hidden="true"
             onPointerDown={pickDown}
             onPointerMove={pickMove}
@@ -344,6 +349,7 @@ export function Keys({
         <span
           ref={handle}
           className="yh-keys__handle"
+          data-part="handle"
           role="slider"
           tabIndex={0}
           style={{ left: px(topX ?? 0) }}
@@ -367,8 +373,8 @@ export function Keys({
           onPointerUp={handleUp}
           onPointerCancel={handleCancel}
         >
-          <span className="yh-keys__flag">
-            <span className="yh-keys__grip" aria-hidden="true" />
+          <span className="yh-keys__flag" data-part="flag">
+            <span className="yh-keys__grip" data-part="grip" aria-hidden="true" />
             {splitName}
           </span>
         </span>

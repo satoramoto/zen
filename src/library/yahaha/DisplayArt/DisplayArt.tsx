@@ -28,19 +28,21 @@ export interface DisplayArtProps {
  * on a light ground left the near hill paler than the sky; the near hill's accent stops at 24%
  * (it was 48%, the loudest colour on a light screen); dark palettes are unchanged.
  * The picture fills its box at the original's 528 × 300 proportion instead of fixed pixels.
+ * *Materials:* the parts are named (`data-part`: art, sun, disc, hill, fade). The picture is
+ * drawn, not made of anything, so it reads no material; the display window behind it does.
  *
  * **Kept.** Purely decorative and hidden from assistive tech; the two hills and the sun; the fade
  * from the ground on the left (and `fade` off to show it bare) so readouts over the art stay clear.
  */
 export function DisplayArt({ fade = true }: DisplayArtProps) {
   return (
-    <div className="yh-displayart" data-fade={fade} aria-hidden="true">
-      <div className="yh-displayart__sun">
-        <div className="yh-displayart__disc" />
+    <div className="yh-displayart" data-part="art" data-fade={fade} aria-hidden="true">
+      <div className="yh-displayart__sun" data-part="sun">
+        <div className="yh-displayart__disc" data-part="disc" />
       </div>
-      <div className="yh-displayart__hill" data-hill="far" />
-      <div className="yh-displayart__hill" data-hill="near" />
-      {fade && <div className="yh-displayart__fade" />}
+      <div className="yh-displayart__hill" data-part="hill" data-hill="far" />
+      <div className="yh-displayart__hill" data-part="hill" data-hill="near" />
+      {fade && <div className="yh-displayart__fade" data-part="fade" />}
     </div>
   );
 }

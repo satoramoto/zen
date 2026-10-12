@@ -89,7 +89,10 @@ export interface LampButtonProps {
  * labels follow `--label-case` and `--tracking` at one weight in every face, so a lit key is as
  * wide as an off one; the code is set in the readout face with tabular figures, smaller and quieter
  * (typography.md: hierarchy by size and colour; no mono on the Stage). Corners follow
- * `--radius-control`, heights `--control-h`.
+ * `--radius-control`, heights `--control-h`. *Headless:* named parts (`face`, `lamp`, `label`,
+ * `code`); the face is made of the theme's `key` material, `--mat-key-pressed` while on, armed or
+ * held, and a lit LED sets `--lit` and wears `--mat-lit-glow`, so a material set restyles the lamp
+ * without touching it. Meaning still wins: the running and record fills, the rings and the wash stay.
  *
  * **Kept.** Fully controlled (the face and `aria-pressed` follow `on` alone; a press only asks for
  * `!on`), long press and right-click that never toggle, disabled that stays focusable with
@@ -140,6 +143,7 @@ export function LampButton({
       ref={ref}
       type="button"
       className={classes.join(' ')}
+      data-part="face"
       style={style}
       data-face={disabled ? 'disabled' : face}
       data-hue={drawn}
@@ -152,9 +156,15 @@ export function LampButton({
         if (!disabled) onToggle?.(!on);
       }}
     >
-      <span className="yh-lampbutton__led" aria-hidden="true" />
-      <span className="yh-lampbutton__label">{label}</span>
-      {code && <span className="yh-lampbutton__code">{code}</span>}
+      <span className="yh-lampbutton__led" data-part="lamp" aria-hidden="true" />
+      <span className="yh-lampbutton__label" data-part="label">
+        {label}
+      </span>
+      {code && (
+        <span className="yh-lampbutton__code" data-part="code">
+          {code}
+        </span>
+      )}
     </button>
   );
 }

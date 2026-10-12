@@ -26,5 +26,5 @@ export interface SeparatorProps {
  * assistive tech (the groups it splits are announced by their own roles); the parent spaces it.
  */
 export function Separator({ length = 'short' }: SeparatorProps) {
-  return <span className="yh-separator" data-length={length} aria-hidden="true" />;
+  return <span className="yh-separator" data-part="root" data-length={length} aria-hidden="true" />;
 }

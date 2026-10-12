@@ -94,6 +94,8 @@ export function knobName(knob: KnobItem, index: number): string {
  * fit the region of a 1217 × 752 Stage as well as a 1440 × 900 one without clipping, and the value
  * shrinks with the ring rather than overflowing it. *Alignment*: the bank fills its region instead
  * of a fixed band width, and the slots are an even eight-column grid on the library's spacing.
+ * *Materials*: the bank is a `plate` the knobs are mounted in, and each knob wears its own
+ * materials (Knob); parts are named with `data-part` (root, knobs, slot, empty).
  *
  * **Kept.** Holds no state: the page comes in `page`, a tab choice goes out by index, and every
  * knob change carries the knob's position. A region named "Knobs"; the header's one tab style
@@ -108,7 +110,7 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
   const slots = Array.from({ length: KNOB_SLOTS }, (_, i) => knobs[i] ?? UNUSED);
 
   return (
-    <section className="yh-knobbank" aria-label="Knobs" lang="en">
+    <section className="yh-knobbank" data-part="root" aria-label="Knobs" lang="en">
       <GroupHeader>
         <ChosenTabs
           size="header"
@@ -120,11 +122,17 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
           onChoose={(id) => onPage?.(Number(id))}
         />
       </GroupHeader>
-      <div className="yh-knobbank__knobs">
+      <div className="yh-knobbank__knobs" data-part="knobs">
         {slots.map((knob, i) => (
-          <div key={i} className="yh-knobbank__slot" data-unused={knob.unused || undefined}>
+          <div key={i} className="yh-knobbank__slot" data-part="slot" data-unused={knob.unused || undefined}>
             {knob.unused ? (
-              <span className="yh-knobbank__empty" role="img" aria-label={knobName(knob, i)} data-tip="knobs.knob">
+              <span
+                className="yh-knobbank__empty"
+                data-part="empty"
+                role="img"
+                aria-label={knobName(knob, i)}
+                data-tip="knobs.knob"
+              >
                 <span className="yh-knobbank__line" aria-hidden="true" />
                 <svg className="yh-knobbank__ring" viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true">
                   <path d={TRACK} />

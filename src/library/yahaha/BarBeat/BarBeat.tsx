@@ -43,13 +43,16 @@ export function beatState(n: number, beat: number): BeatState {
  * (`--text-1`), past beats the muted ink (`--text-3`, history, not "playing"), beats to come a
  * faint tint of the text on the ground (16% of `--text-1` in `--surface-0`), never the strong
  * border, which on some packs is as dark as the text (color.md). This is what the Display draws,
- * so the hero no longer overrides it. No section hue, no glow. *Hierarchy:* the current beat
+ * so the hero no longer overrides it. No section hue. *Hierarchy:* the current beat
  * differs by height (three times the line) as well as by ink, so it reads on flat packs and for
  * readers who can't tell the ink apart; beat 1 rests at twice the line, so the bar shows where it
  * starts. *Rhythm:* the cells sit `--space-3` apart, wide enough to count as four from a distance,
  * capped with the pack's pill radius; the bar keeps the lit height at every moment, so the line
  * under it never jumps (craft-details.md). An optional `thickness` sets the resting line for
- * regions read from across a room. It fills its container's width.
+ * regions read from across a room. It fills its container's width. *Materials:* the bar is a
+ * `screen` window (`data-part="window"`; none of its own on a screen already, as in the Display)
+ * and each beat a `cell`; the current one is lit (`data-lit`, `--lit` in `--text-1`) and wears
+ * the theme's `--mat-lit-glow`, which flat themes leave at nothing.
  *
  * **Kept.** The segment states and their order, the 1-based beat with 0 for stopped, at least
  * one segment, and the single `img` with its spoken name.
@@ -61,6 +64,8 @@ export function BarBeat({ beat = 0, beats = 4, thickness }: BarBeatProps) {
   return (
     <div
       className="yh-bar-beat"
+      data-part="window"
+      data-material="screen"
       role="img"
       aria-label={spoken}
       data-playing={beat > 0 || undefined}
@@ -77,7 +82,9 @@ export function BarBeat({ beat = 0, beats = 4, thickness }: BarBeatProps) {
           <span
             key={i}
             className={`yh-bar-beat__segment yh-bar-beat__segment--${state}`}
+            data-part="cell"
             data-state={state}
+            data-lit={state === 'current' || undefined}
             data-downbeat={i === 0 || undefined}
             aria-hidden="true"
           />

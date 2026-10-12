@@ -75,12 +75,9 @@
   align-content: start;
   gap: var(--space-3);
   padding: var(--space-4);
-  background: var(--card-fill);
-  border-style: solid;
-  border-color: var(--border);
-  border-width: var(--card-border-top) var(--card-border-sides) var(--card-border-sides);
+  background: var(--mat-plate-texture), var(--mat-plate-fill);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--mat-plate-shadow);
 }
 .lib-card__eyebrow { font-size: var(--size-caption); color: var(--text-3); text-transform: var(--label-case); }
 .lib-card__title {

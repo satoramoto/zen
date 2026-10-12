@@ -29,7 +29,9 @@
   padding: var(--space-2) var(--space-1);
   border: var(--border-width) solid var(--yh-pad-edge);
   border-radius: var(--radius-control);
-  background: var(--surface-2);
+  /* The face is a key: the theme's key material at rest. */
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
   color: var(--yh-pad-label);
   font-family: var(--font-sans);
   font-size: var(--size-label);
@@ -92,8 +94,18 @@
 }
 
 /* :where keeps these at the specificity they had, so state faces still win over hover. */
-.yh-pad:hover:where(:not([aria-disabled='true'])) { background: color-mix(in srgb, var(--surface-2), var(--text-1) 8%); }
-.yh-pad:active:where(:not([aria-disabled='true'])) { transform: translateY(1px); }
+/* Hover lays an 8% ink wash over the key material (a fill may be a gradient, so no color-mix on it).
+   Held, the key presses in: the material's pressed shadow. */
+.yh-pad:hover:where(:not([aria-disabled='true'])) {
+  background:
+    linear-gradient(color-mix(in srgb, var(--text-1) 8%, transparent), color-mix(in srgb, var(--text-1) 8%, transparent)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+}
+.yh-pad:active:where(:not([aria-disabled='true'])) {
+  transform: translateY(1px);
+  box-shadow: var(--mat-key-pressed);
+}
 
 .yh-pad:focus-visible {
   outline: 2px solid var(--accent);
@@ -110,22 +122,28 @@
   text-wrap: balance;
 }
 
-/* Sounding: the solid fill, the label on it, a bloom on palettes that glow. */
+/* Sounding: the solid fill (state wins over material), the label on it, the key pressed in, and a
+   bloom on palettes that glow. */
 .yh-pad[data-state='playing'],
 .yh-pad[data-state='running'] {
   border-color: var(--yh-pad-fill);
   background: var(--yh-pad-fill);
   color: var(--yh-pad-ink);
-  box-shadow: 0 0 calc(var(--bloom) * 2) color-mix(in srgb, var(--yh-pad-fill) 60%, transparent);
+  box-shadow:
+    var(--mat-key-pressed),
+    0 0 calc(var(--bloom) * 2) color-mix(in srgb, var(--yh-pad-fill) 60%, transparent);
 }
 
-/* onFace="ring": on, not sounding (a bank's pads, Auto Fill on). The raised face stays; the edge
-   and a ring take the fill colour, and a lit dot sits top-left. The solid fill stays with what plays. */
+/* onFace="ring": on, not sounding (a bank's pads, Auto Fill on). The key face stays, pressed in;
+   the edge and a ring take the fill colour, and a lit dot sits top-left. The solid fill stays with
+   what plays. */
 .yh-pad[data-on-face='ring'][data-state='playing'] {
   border-color: var(--yh-pad-fill);
-  background: var(--surface-2);
+  background: var(--mat-key-texture), var(--mat-key-fill);
   color: var(--text-1);
-  box-shadow: inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-fill);
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-fill),
+    var(--mat-key-pressed);
 }
 .yh-pad[data-on-face='ring'][data-state='playing']::after {
   content: '';
@@ -135,8 +153,9 @@
   width: calc(var(--space-1) * 1.5);
   height: calc(var(--space-1) * 1.5);
   border-radius: var(--radius-pill);
-  background: var(--yh-pad-fill);
-  box-shadow: 0 0 var(--bloom) var(--yh-pad-fill);
+  --lit: var(--yh-pad-fill);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
   pointer-events: none;
 }
 
@@ -146,17 +165,20 @@
   border-color: var(--yh-pad-ring);
   background: color-mix(in srgb, var(--yh-pad-ring) 14%, var(--surface-1));
   color: var(--text-1);
-  box-shadow: inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-ring);
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-ring),
+    var(--mat-key-shadow);
 }
 .yh-pad[data-state='armed'] {
   box-shadow:
     inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-ring),
-    0 0 var(--bloom) color-mix(in srgb, var(--yh-pad-ring) 60%, transparent);
+    0 0 var(--bloom) color-mix(in srgb, var(--yh-pad-ring) 60%, transparent),
+    var(--mat-key-shadow);
 }
-/* The flash's off phase: the idle face with the ring's colour at rest weight; the words stay. */
+/* The flash's off phase: the resting key with the ring's colour at rest weight; the words stay. */
 .yh-pad[data-lit='false'] {
-  background: var(--surface-2);
-  box-shadow: none;
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
 }
 
 /* Absent: no face, a dashed edge, a muted label. Structure says "not here", not a dimmer colour. */
@@ -164,6 +186,7 @@
   border-style: dashed;
   border-color: color-mix(in srgb, var(--yh-pad-edge) 60%, transparent);
   background: transparent;
+  box-shadow: none;
   color: var(--text-3);
 }
 .yh-pad[data-state='dark']:hover:where(:not([aria-disabled='true'])) { background: color-mix(in srgb, var(--text-1) 4%, transparent); }

@@ -70,6 +70,7 @@ export function StatusDot({ hue = 'ok', hollow = false, glow = true, size = 'md'
   return (
     <span
       className="yh-status-dot"
+      data-part="root"
       data-hue={hue}
       data-face={ring ? 'hollow' : 'solid'}
       data-glow={glows ? 'true' : 'false'}

@@ -122,6 +122,9 @@ export interface PadBankProps {
  * hangs under the tabs, centred across, and spare height goes below it. *Rhythm*: at least `--space-2` between pads, up to
  * `--space-3` when the region is wide, so sixteen keys read as sixteen, not as one slab. With no
  * height given, the room's height follows its width; the same bank also works as a 4 × 4 block.
+ * *Headless*: named parts (`plate`, `room`, `grid`, `cell`, `empty`); the region is made of the
+ * theme's `plate` material and each pad of its `key` material (the Pad's), so a material set
+ * restyles the bank without touching it.
  *
  * **Kept.** Holds no state: the bank comes in `bank` and the flash phase in `lit`; a tab choice
  * and a press go out by index. A region named "Pads"; the header's one tab style (ChosenTabs, a tablist with arrow keys),
@@ -148,7 +151,7 @@ export function PadBank({
   const armed = cells.filter((pad) => !pad.empty && pad.state === 'armed').length;
 
   return (
-    <section className="yh-padbank" aria-label="Pads" lang="en" data-armed={armed > ARMED_CHIPS ? 'many' : undefined}>
+    <section className="yh-padbank" data-part="plate" aria-label="Pads" lang="en" data-armed={armed > ARMED_CHIPS ? 'many' : undefined}>
       <GroupHeader>
         <ChosenTabs
           size="header"
@@ -160,12 +163,12 @@ export function PadBank({
           onChoose={(id) => onBank?.(Number(id))}
         />
       </GroupHeader>
-      <div className="yh-padbank__room" data-columns={columns}>
-        <div className="yh-padbank__pads" data-columns={columns}>
+      <div className="yh-padbank__room" data-part="room" data-columns={columns}>
+        <div className="yh-padbank__pads" data-part="grid" data-columns={columns}>
           {cells.map((pad, i) => (
-            <div key={i} className="yh-padbank__cell" data-empty={pad.empty || undefined}>
+            <div key={i} className="yh-padbank__cell" data-part="cell" data-empty={pad.empty || undefined}>
               {pad.empty ? (
-                <span className="yh-padbank__empty" role="img" aria-label={pad.name ?? `Pad ${i + 1}: empty`} />
+                <span className="yh-padbank__empty" data-part="empty" role="img" aria-label={pad.name ?? `Pad ${i + 1}: empty`} />
               ) : (
                 <Pad
                   label={pad.label}

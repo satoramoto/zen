@@ -1,0 +1,9 @@
+/* Yahaha's own tokens, mapped onto the contract's generic slots (hues.ts says what each means).
+   Role 1 is the current style; role 2 the controls that move time. */
+
+.lib-scope {
+  --style: var(--role-1);
+  --style-text: var(--role-1-text);
+  --transport: var(--role-2);
+  --transport-text: var(--role-2-text);
+}

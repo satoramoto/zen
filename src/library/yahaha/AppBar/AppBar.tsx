@@ -173,37 +173,37 @@ export function AppBar({
   const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
 
   return (
-    <header className="yh-appbar" style={style}>
-      <div className="yh-appbar__row">
-        <span className="yh-appbar__name">yahaha</span>
+    <header className="yh-appbar" data-part="root" style={style}>
+      <div className="yh-appbar__row" data-part="row">
+        <span className="yh-appbar__name" data-part="name">yahaha</span>
 
-        <nav className="yh-appbar__nav" aria-label="Pages">
+        <nav className="yh-appbar__nav" data-part="nav" aria-label="Pages">
           <ChosenTabs tabs={displayTabs} chosen={chosen} size="page" look="underline" onChoose={onChoose} tipAction={tipAction} />
-          <span className="yh-appbar__runs-gap">
+          <span className="yh-appbar__runs-gap" data-part="runs-gap">
             <Separator />
           </span>
           <ChosenTabs tabs={fullTabs} chosen={chosen} size="page" look="underline" onChoose={onChoose} tipAction={tipAction} />
         </nav>
 
-        <span className="yh-appbar__middle">
+        <span className="yh-appbar__middle" data-part="middle">
           {nowPlaying && (
-            <span className="yh-appbar__playing" aria-label={`Style ${nowPlaying.style}, ${nowPlaying.tempo} BPM`}>
-              <span className="yh-appbar__style">{nowPlaying.style}</span>
-              <span className="yh-appbar__tempo">{nowPlaying.tempo}</span>
-              <span className="yh-appbar__unit">BPM</span>
+            <span className="yh-appbar__playing" data-part="playing" aria-label={`Style ${nowPlaying.style}, ${nowPlaying.tempo} BPM`}>
+              <span className="yh-appbar__style" data-part="style">{nowPlaying.style}</span>
+              <span className="yh-appbar__tempo" data-part="tempo">{nowPlaying.tempo}</span>
+              <span className="yh-appbar__unit" data-part="unit">BPM</span>
             </span>
           )}
         </span>
 
         {end !== undefined && (
-          <span className="yh-appbar__end">
+          <span className="yh-appbar__end" data-part="end">
             <Separator />
             {end}
           </span>
         )}
 
-        <span className="yh-appbar__switches" role="group" aria-label="Global switches">
-          <span className="yh-appbar__metronome" role="group" aria-label="Metronome">
+        <span className="yh-appbar__switches" data-part="switches" role="group" aria-label="Global switches">
+          <span className="yh-appbar__metronome" data-part="metronome" role="group" aria-label="Metronome">
             <LampButton
               label="Metronome"
               on={metronome}
@@ -214,7 +214,7 @@ export function AppBar({
               tipAction={tipAction}
               onToggle={(next) => onMetronome?.(next)}
             />
-            <span ref={caretBox} className="yh-appbar__caret">
+            <span ref={caretBox} className="yh-appbar__caret" data-part="caret">
               <Button
                 symbol="caret"
                 size="caret"
@@ -229,7 +229,7 @@ export function AppBar({
               />
             </span>
             {metronomeOpen && (
-              <span className="yh-appbar__popover">
+              <span className="yh-appbar__popover" data-part="popover">
                 <MetronomePopover
                   id={metronomeId}
                   on={metronome}
@@ -265,19 +265,20 @@ export function AppBar({
           />
         </span>
 
-        <span className="yh-appbar__status" role="group" aria-label="Connections">
+        <span className="yh-appbar__status" data-part="status" role="group" aria-label="Connections">
           <Separator />
           <span
             className="yh-appbar__launchkey"
+            data-part="launchkey"
             role="status"
             title={launchkey ? 'Launchkey connected' : 'Launchkey not connected'}
             data-connected={launchkey ? 'true' : 'false'}
             aria-label={launchkey ? 'Launchkey connected' : 'Launchkey not connected'}
           >
             <StatusDot hue={launchkey ? 'ok' : 'd'} hollow={!launchkey} />
-            <span className="yh-appbar__launchkey-word">Launchkey</span>
+            <span className="yh-appbar__launchkey-word" data-part="launchkey-word">Launchkey</span>
           </span>
-          <span className="yh-appbar__health">
+          <span className="yh-appbar__health" data-part="health">
             <HealthSlot
               failedPart={failedPart}
               synthOn={synthOn}
@@ -290,7 +291,7 @@ export function AppBar({
           </span>
         </span>
 
-        <span className="yh-appbar__panic">
+        <span className="yh-appbar__panic" data-part="panic">
           <Separator />
           <Button
             label="Panic"

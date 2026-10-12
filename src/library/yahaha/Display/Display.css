@@ -28,10 +28,20 @@
   height: 100%;
   min-width: 0;
   overflow: hidden;
-  background: var(--surface-0);
+  /* The display window: the theme's `screen`. Its shadow is drawn by ::after, over the art, so a
+     recessed window's inner shadow is not hidden behind the picture. */
+  background: var(--mat-screen-texture), var(--mat-screen-fill);
   color: var(--text-1);
   font-family: var(--font-sans);
   letter-spacing: var(--tracking);
+}
+.yh-display::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--mat-screen-shadow);
+  pointer-events: none;
 }
 
 /* Full: roomy chrome; each readout's cap from the pack's display size. */
@@ -416,6 +426,11 @@
   height: var(--space-2);
   border-radius: var(--radius-pill);
   background: var(--yh-display-part-hue);
+}
+/* A sounding part's dot is lit: an LED in its hue, with the theme's glow. */
+.yh-display__part-dot[data-lit] {
+  --lit: var(--yh-display-part-hue);
+  box-shadow: var(--mat-lit-glow);
 }
 /* The sound name gives way (an ellipsis) before its marks; the marks never spill onto the part. */
 .yh-display__part-sound {

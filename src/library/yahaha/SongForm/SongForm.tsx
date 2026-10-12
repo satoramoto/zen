@@ -254,6 +254,7 @@ export function SongForm({
       <div
         key={s.id}
         className="yh-songform__step"
+        data-part="step"
         data-section={s.id}
         data-state={state}
         data-start={(state === 'playing' && !running) || undefined}
@@ -286,32 +287,32 @@ export function SongForm({
   const fadeFace = fading ? (running ? { on: true } : { waiting: true }) : {};
 
   return (
-    <section className="yh-songform" data-part={part} aria-label={REGION_LABEL[part]}>
-      <div className="yh-songform__inner">
+    <section className="yh-songform" data-part="root" data-half={part} aria-label={REGION_LABEL[part]}>
+      <div className="yh-songform__inner" data-part="inner">
         {part !== 'transport' && (
-          <div className="yh-songform__form" role="group" aria-label="Sections">
-            <span className="yh-songform__cue" role="status">
+          <div className="yh-songform__form" data-part="form" role="group" aria-label="Sections">
+            <span className="yh-songform__cue" data-part="cue" role="status">
               {cues.join('. ')}
             </span>
-            <ol className="yh-songform__parts">
+            <ol className="yh-songform__parts" data-part="groups">
               {FORM.map(({ part, caption, steps }) => (
-                <li key={part} className="yh-songform__part" data-part={part}>
-                  <span className="yh-songform__caption" aria-hidden="true">
+                <li key={part} className="yh-songform__part" data-part="group" data-group={part}>
+                  <span className="yh-songform__caption" data-part="caption" aria-hidden="true">
                     {caption}
                   </span>
-                  <div className="yh-songform__steps">{steps.map((s) => section(s))}</div>
+                  <div className="yh-songform__steps" data-part="steps">{steps.map((s) => section(s))}</div>
                 </li>
               ))}
             </ol>
-            <div className="yh-songform__mods" role="group" aria-label="Insert">
-              <div className="yh-songform__steps">{section(BREAK)}</div>
+            <div className="yh-songform__mods" data-part="mods" role="group" aria-label="Insert">
+              <div className="yh-songform__steps" data-part="steps">{section(BREAK)}</div>
             </div>
           </div>
         )}
 
         {part !== 'form' && (
-          <div className="yh-songform__transport" role="group" aria-label="Transport">
-            <div className="yh-songform__start">
+          <div className="yh-songform__transport" data-part="transport" role="group" aria-label="Transport">
+            <div className="yh-songform__start" data-part="start">
               <Button
                 label={running ? 'Stop' : 'Start'}
                 size="cell"
@@ -326,7 +327,7 @@ export function SongForm({
                 onLongPress={running ? onStopWithFade : undefined}
               />
             </div>
-            <div className="yh-songform__key" data-key="sync-start">
+            <div className="yh-songform__key" data-part="key" data-key="sync-start">
               <Button
                 label="Sync Start"
                 size="cell"
@@ -340,7 +341,7 @@ export function SongForm({
                 onPress={() => onSyncStart?.(!syncStart)}
               />
             </div>
-            <div className="yh-songform__key" data-key="sync-stop">
+            <div className="yh-songform__key" data-part="key" data-key="sync-stop">
               <Button
                 label="Sync Stop"
                 size="cell"
@@ -352,7 +353,7 @@ export function SongForm({
                 onPress={() => onSyncStop?.(!syncStop)}
               />
             </div>
-            <div className="yh-songform__key" data-key="fill-up">
+            <div className="yh-songform__key" data-part="key" data-key="fill-up">
               <Button
                 label="Fill"
                 symbol="up"
@@ -366,7 +367,7 @@ export function SongForm({
                 onPress={onFillUp}
               />
             </div>
-            <div className="yh-songform__key" data-key="fill-down">
+            <div className="yh-songform__key" data-part="key" data-key="fill-down">
               <Button
                 label="Fill"
                 symbol="down"
@@ -380,7 +381,7 @@ export function SongForm({
                 onPress={onFillDown}
               />
             </div>
-            <div className="yh-songform__key" data-key="fade">
+            <div className="yh-songform__key" data-part="key" data-key="fade">
               <Button
                 label="Fade"
                 size="cell"
@@ -393,7 +394,7 @@ export function SongForm({
                 onPress={onFade}
               />
             </div>
-            <div className="yh-songform__key" data-key="reset">
+            <div className="yh-songform__key" data-part="key" data-key="reset">
               <Button
                 label="Reset"
                 size="cell"
@@ -403,7 +404,7 @@ export function SongForm({
                 onPress={onReset}
               />
             </div>
-            <div className="yh-songform__key" data-key="accomp">
+            <div className="yh-songform__key" data-part="key" data-key="accomp">
               <LampButton
                 label="Accomp"
                 name="Accomp (ACMP)"
@@ -414,7 +415,7 @@ export function SongForm({
                 onToggle={onAccomp}
               />
             </div>
-            <div className="yh-songform__key" data-key="auto-fill">
+            <div className="yh-songform__key" data-part="key" data-key="auto-fill">
               <LampButton
                 label="Auto Fill"
                 size="cell"

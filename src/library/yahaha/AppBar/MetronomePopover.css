@@ -1,4 +1,4 @@
-/* MetronomePopover: a raised card of three settings rows. Contract variables only. */
+/* MetronomePopover: a raised plate of three settings rows. Contract variables only. */
 
 .yh-metronome-popover {
   display: flex;
@@ -9,8 +9,9 @@
   padding: var(--space-3) var(--space-4) var(--space-4);
   border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-card);
-  background: var(--surface-1);
-  box-shadow: var(--shadow-card);
+  /* A raised plate: the material set says what it is made of. */
+  background: var(--mat-plate-texture), var(--mat-plate-fill);
+  box-shadow: var(--mat-plate-shadow);
   color: var(--text-1);
   font-family: var(--font-sans);
   font-size: var(--size-body);

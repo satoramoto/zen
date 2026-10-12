@@ -60,24 +60,24 @@ export function GroupHeader({ title, detail, count, level = 2, id, width, childr
   const Heading = `h${level}` as 'h2' | 'h3' | 'h4';
   const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
   return (
-    <div className="yh-group-header" style={style} data-untitled={title ? undefined : true}>
+    <div className="yh-group-header" data-part="root" style={style} data-untitled={title ? undefined : true}>
       {title && (
-        <Heading className="yh-group-header__title" id={id} title={detail ? `${title} · ${detail}` : undefined}>
-          <span className="yh-group-header__name">{title}</span>
+        <Heading className="yh-group-header__title" data-part="title" id={id} title={detail ? `${title} · ${detail}` : undefined}>
+          <span className="yh-group-header__name" data-part="name">{title}</span>
           {detail && (
             <>
               {' '}
-              <span className="yh-group-header__sep">·</span>{' '}
-              <span className="yh-group-header__detail">{detail}</span>
+              <span className="yh-group-header__sep" data-part="sep">·</span>{' '}
+              <span className="yh-group-header__detail" data-part="detail">{detail}</span>
             </>
           )}
         </Heading>
       )}
-      {children !== undefined && children !== null && <div className="yh-group-header__body">{children}</div>}
-      {end !== undefined && end !== null && <span className="yh-group-header__end">{end}</span>}
+      {children !== undefined && children !== null && <div className="yh-group-header__body" data-part="body">{children}</div>}
+      {end !== undefined && end !== null && <span className="yh-group-header__end" data-part="end">{end}</span>}
       {count && (
-        <span className="yh-group-header__count">
-          {count.label} <span className="yh-group-header__value">{count.value}</span>
+        <span className="yh-group-header__count" data-part="count">
+          {count.label} <span className="yh-group-header__value" data-part="value">{count.value}</span>
         </span>
       )}
     </div>

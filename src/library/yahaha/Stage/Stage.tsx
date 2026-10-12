@@ -262,46 +262,46 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
   // Stacked: under the transport, which it most often speaks about ("starts at the next Start").
   // Split: at the foot of the knobs and pads, level with the mixer's Functions line.
   const statusLine = (
-    <div className="yh-stage__status">
+    <div className="yh-stage__status" data-part="status">
       <StatusLine {...status} />
     </div>
   );
 
   return (
-    <div ref={frame} className="yh-stage" style={size} role="group" aria-label="Stage">
-      <div ref={screen} className="yh-stage__screen" data-hero={heroDensity} data-layout={layout}>
-        <div className="yh-stage__bar">
+    <div ref={frame} className="yh-stage" data-part="root" style={size} role="group" aria-label="Stage">
+      <div ref={screen} className="yh-stage__screen" data-part="screen" data-hero={heroDensity} data-layout={layout}>
+        <div className="yh-stage__bar" data-part="bar">
           <AppBar {...appBar} tipAction={tipAction} />
         </div>
-        <div className="yh-stage__top">
-          <div className="yh-stage__display">
+        <div className="yh-stage__top" data-part="now">
+          <div className="yh-stage__display" data-part="hero">
             <Display {...display} parts={undefined} density={heroDensity} tipAction={tipAction} onTap={onTap} />
           </div>
-          <div className="yh-stage__form">
+          <div className="yh-stage__form" data-part="transport">
             <SongForm {...songForm} part={layout === 'stacked' ? 'transport' : 'both'} tipAction={tipAction} />
             {layout === 'stacked' && statusLine}
           </div>
         </div>
         {layout === 'stacked' && (
-          <div className="yh-stage__strip">
+          <div className="yh-stage__strip" data-part="strip">
             <SongForm {...songForm} part="form" tipAction={tipAction} />
           </div>
         )}
-        <div className="yh-stage__band">
-          <div className="yh-stage__faders">
+        <div className="yh-stage__band" data-part="band">
+          <div className="yh-stage__faders" data-part="faders">
             <FaderBank {...faders} tipAction={tipAction} />
           </div>
-          <div className="yh-stage__controls">
-            <div className="yh-stage__knobs">
+          <div className="yh-stage__controls" data-part="controls">
+            <div className="yh-stage__knobs" data-part="knobs">
               <KnobBank {...knobs} tipAction={tipAction} />
             </div>
-            <div className="yh-stage__pads">
+            <div className="yh-stage__pads" data-part="pads">
               <PadBank {...shownPads} columns={8} tipAction={tipAction} />
             </div>
             {layout === 'split' && statusLine}
           </div>
         </div>
-        <div className="yh-stage__keys" ref={keysSlot}>
+        <div className="yh-stage__keys" data-part="keys" ref={keysSlot}>
           <Keys {...keys} width={keysWidth} tipAction={tipAction} />
         </div>
       </div>

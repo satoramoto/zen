@@ -66,7 +66,10 @@ function splitBass(extension: string): [string, string] {
  * *Numerals:* the notes use the readout face so their spacing stays even as they change.
  * *Sizing:* the hero's full size is one custom property, `--yh-chord-readout-hero` (default
  * `--size-display`), which a parent sets on the root or passes as `size`, so a display can scale
- * the chord without overriding this widget's CSS; the fit steps scale from it.
+ * the chord without overriding this widget's CSS; the fit steps scale from it. *Materials:* the
+ * parts are named (`data-part`: window, chord, extension, bass, line, tones, tone, fingering,
+ * held); the readout is a `screen` window, none of its own when it already sits on a screen (the
+ * Display).
  *
  * **Kept.** The chord stepping down through hero sizes until it fits its column (measured after each
  * change and again once the web font loads); the small line that wraps the fingering onto a second
@@ -138,34 +141,43 @@ export function ChordReadout({
   const style = size === undefined ? undefined : ({ '--yh-chord-readout-hero': size } as CSSProperties);
 
   return (
-    <div className={classes.join(' ')} role="img" aria-label={spoken} data-held={held ? 'true' : 'false'} style={style}>
+    <div
+      className={classes.join(' ')}
+      data-part="window"
+      data-material="screen"
+      role="img"
+      aria-label={spoken}
+      data-held={held ? 'true' : 'false'}
+      style={style}
+    >
       <div
         ref={hero}
         className={`yh-chord-readout__chord${none ? ' yh-chord-readout__chord--none' : ''}`}
+        data-part="chord"
         data-fit={fit}
         aria-hidden="true"
       >
         {none ? '—' : chord}
-        {raised && <span className="yh-chord-readout__ext">{raised}</span>}
-        {bass && <span className="yh-chord-readout__bass">{bass}</span>}
+        {raised && <span className="yh-chord-readout__ext" data-part="extension">{raised}</span>}
+        {bass && <span className="yh-chord-readout__bass" data-part="bass">{bass}</span>}
       </div>
       {/* Drawn only: the readout's spoken name already says it whole. */}
-      <p className="yh-chord-readout__line" aria-hidden="true">
+      <p className="yh-chord-readout__line" data-part="line" aria-hidden="true">
         {notes.length > 0 && (
-          <span className="yh-chord-readout__tones">
+          <span className="yh-chord-readout__tones" data-part="tones">
             {notes.map((n, i) => (
-              <span key={i} className="yh-chord-readout__tone">
+              <span key={i} className="yh-chord-readout__tone" data-part="tone">
                 {n.note}
               </span>
             ))}
           </span>
         )}
         {fingering && (
-          <span ref={fingeringRef} className="yh-chord-readout__fingering" data-tip={tip} data-tip-text={tip ? fingering : undefined}>
+          <span ref={fingeringRef} className="yh-chord-readout__fingering" data-part="fingering" data-tip={tip} data-tip-text={tip ? fingering : undefined}>
             {fingering}
           </span>
         )}
-        {held && <span className="yh-chord-readout__held">held</span>}
+        {held && <span className="yh-chord-readout__held" data-part="held">held</span>}
       </p>
     </div>
   );

@@ -78,12 +78,12 @@ export function PartMarks({
   }, [node, tip, tipAction]);
   if (marks.length === 0) return null;
   return (
-    <span ref={setNode} className="yh-partmarks" data-size={size} data-tip={tip} aria-hidden="true">
+    <span ref={setNode} className="yh-partmarks" data-part="root" data-size={size} data-tip={tip} aria-hidden="true">
       {marks.map((mark) => {
-        if (mark === 'edited') return <span key={mark} className="yh-partmarks__dot" data-mark={mark} data-tone={TONE[mark]} />;
+        if (mark === 'edited') return <span key={mark} className="yh-partmarks__dot" data-part="dot" data-mark={mark} data-tone={TONE[mark]} />;
         if (mark === 'missing')
           return (
-            <svg key={mark} className="yh-partmarks__icon" data-mark={mark} data-tone={TONE[mark]} viewBox="0 0 12 12">
+            <svg key={mark} className="yh-partmarks__icon" data-part="icon" data-mark={mark} data-tone={TONE[mark]} viewBox="0 0 12 12">
               <path d="M6 1.25 11 10.25H1Z" />
               <path d="M6 4.75v2.5" />
               <circle cx="6" cy="8.6" r="0.5" />
@@ -91,12 +91,12 @@ export function PartMarks({
           );
         if (mark === 'failed')
           return (
-            <svg key={mark} className="yh-partmarks__icon" data-mark={mark} data-tone={TONE[mark]} viewBox="0 0 12 12">
+            <svg key={mark} className="yh-partmarks__icon" data-part="icon" data-mark={mark} data-tone={TONE[mark]} viewBox="0 0 12 12">
               <path d="M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25" />
             </svg>
           );
         return (
-          <span key={mark} className="yh-partmarks__word" data-mark={mark} data-tone={TONE[mark]}>
+          <span key={mark} className="yh-partmarks__word" data-part="word" data-mark={mark} data-tone={TONE[mark]}>
             {mark}
           </span>
         );

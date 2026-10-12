@@ -46,17 +46,18 @@ export function SettingsRow({ label, hint = '', labelWidth = 120, children }: Se
   return (
     <div
       className="yh-settings-row"
+      data-part="root"
       role="group"
       aria-labelledby={labelId}
       aria-describedby={hint ? hintId : undefined}
       style={style}
     >
-      <span className="yh-settings-row__label" id={labelId} title={label}>
+      <span className="yh-settings-row__label" data-part="label" id={labelId} title={label}>
         {label}
       </span>
-      <span className="yh-settings-row__control">{children}</span>
+      <span className="yh-settings-row__control" data-part="control">{children}</span>
       {hint && (
-        <span className="yh-settings-row__hint" id={hintId} title={hint}>
+        <span className="yh-settings-row__hint" data-part="hint" id={hintId} title={hint}>
           {hint}
         </span>
       )}

@@ -1,17 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { usePad, type TipAction } from './usePad';
 import './Pad.css';
+
+export type { TipAction };
 
 /** Section families, utilities, Start / Stop, and the four part hues the engine can light. */
 export type PadFamily = 'intro' | 'main' | 'ending' | 'brk' | 'fill' | 'util' | 'start' | 'r1' | 'r2' | 'r3' | 'l';
 export type PadState = 'idle' | 'dark' | 'playing' | 'next' | 'armed' | 'running';
 /** The colour role a pad draws in: neutral (`--selected`), a part hue, `--success` or `--transport`. */
 export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'success' | 'transport';
-
-/** A tooltip action in the shape of the app's `use:tip`: called with the node and the key. */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => { update?: (key: string) => void; destroy?: () => void } | void;
 
 export interface PadProps {
   /** The label, centred in the pad ("Main B", "Sync Start"); wraps at word boundaries, but a short last word (a numeral, a letter) stays with the word before it. */
@@ -118,12 +114,16 @@ export function padTone(family: PadFamily, state: PadState, transport: boolean):
  * chip never covers the label (*hierarchy*: the name outranks the state, which the ring already
  * says): at the top, the pad keeps the chip's row clear and centres the label below it; with
  * `tagCorner` the chip hangs on the top edge, mostly outside the pad, so a one-letter song-form
- * step keeps its letter centred and in line with its neighbours.
+ * step keeps its letter centred and in line with its neighbours. *Headless*: the press and the
+ * tooltip live in `usePad`; the markup is named parts (`face`, `chip`, `label`), and the face is
+ * made of the theme's `key` material at rest and `--mat-key-pressed` while sounding, on or held,
+ * its lit dot `--mat-lit-glow`, so a material set restyles the pad without touching it. State
+ * still wins over material: sounding keeps its solid fill, waiting its ring and wash.
  *
  * **Kept.** The label centred and wrapping only at word boundaries; no pad number on the face (it
  * goes into the accessible name); NEXT / ARMED out of the label's flow;
  * the flash driven by the parent through `lit`; rings drawn without changing the pad's size; the
- * `tagCorner` and `transport` options of the golden Stage.
+ * `tagCorner` and `transport` options of the golden Stage; the classes and `data-*` hooks.
  */
 export function Pad({
   label,
@@ -142,22 +142,17 @@ export function Pad({
   fillCell = false,
   onFace = 'fill',
 }: PadProps) {
-  const ref = useRef<HTMLButtonElement>(null);
+  const { ref, onClick } = usePad({ onPress, disabled, tip, tipAction });
   const tone = padTone(family, state, transport);
   const tag = state === 'next' ? 'NEXT' : state === 'armed' ? 'ARMED' : '';
   const util = family === 'util' || family === 'start';
-
-  useEffect(() => {
-    if (!ref.current || !tipAction || tip === undefined) return;
-    const handle = tipAction(ref.current, tip);
-    return () => handle?.destroy?.();
-  }, [tip, tipAction]);
 
   return (
     <button
       ref={ref}
       type="button"
       className="yh-pad"
+      data-part="face"
       data-state={state}
       data-tone={tone}
       data-family={family}
@@ -171,16 +166,16 @@ export function Pad({
       aria-label={name ?? `${label}${index ? ` (pad ${index})` : ''}`}
       aria-pressed={state === 'playing' || state === 'running'}
       aria-disabled={disabled || undefined}
-      onClick={() => {
-        if (!disabled) onPress?.();
-      }}
+      onClick={onClick}
     >
       {tag && (
-        <span className={`yh-pad__tag${tagCorner ? ' yh-pad__tag--corner' : ''}`} aria-hidden="true">
+        <span className={`yh-pad__tag${tagCorner ? ' yh-pad__tag--corner' : ''}`} data-part="chip" aria-hidden="true">
           {tag}
         </span>
       )}
-      <span className="yh-pad__label">{tieLastWord(label)}</span>
+      <span className="yh-pad__label" data-part="label">
+        {tieLastWord(label)}
+      </span>
     </button>
   );
 }

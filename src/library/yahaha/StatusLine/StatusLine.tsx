@@ -64,21 +64,21 @@ export interface StatusLineProps {
  */
 export function StatusLine({ hint = null, text = null, error = false, seq = 0, width, tip = 'display.status', onClear }: StatusLineProps) {
   return (
-    <p className="yh-status-line" role="status" aria-live="polite" style={width === undefined ? undefined : { width: `${width}px` }}>
+    <p className="yh-status-line" data-part="root" role="status" aria-live="polite" style={width === undefined ? undefined : { width: `${width}px` }}>
       {hint ? (
-        <span className="yh-status-line-hint" aria-hidden="true">
-          <span className="yh-status-line-hint-title">{hint.title}</span>
-          <span className="yh-status-line-hint-body">{hint.body}</span>
+        <span className="yh-status-line-hint" data-part="hint" aria-hidden="true">
+          <span className="yh-status-line-hint-title" data-part="hint-title">{hint.title}</span>
+          <span className="yh-status-line-hint-body" data-part="hint-body">{hint.body}</span>
           {hint.keys || hint.launchkey ? (
-            <span className="yh-status-line-hint-meta">
+            <span className="yh-status-line-hint-meta" data-part="hint-meta">
               {hint.keys ? (
-                <span className="yh-status-line-hint-place">
-                  <span className="yh-status-line-hint-label">Key</span> <kbd className="yh-status-line-key">{hint.keys}</kbd>
+                <span className="yh-status-line-hint-place" data-part="hint-place">
+                  <span className="yh-status-line-hint-label" data-part="hint-label">Key</span> <kbd className="yh-status-line-key" data-part="key">{hint.keys}</kbd>
                 </span>
               ) : null}
               {hint.launchkey ? (
-                <span className="yh-status-line-hint-place">
-                  <span className="yh-status-line-hint-label">Launchkey</span> <kbd className="yh-status-line-key">{hint.launchkey}</kbd>
+                <span className="yh-status-line-hint-place" data-part="hint-place">
+                  <span className="yh-status-line-hint-label" data-part="hint-label">Launchkey</span> <kbd className="yh-status-line-key" data-part="key">{hint.launchkey}</kbd>
                 </span>
               ) : null}
             </span>
@@ -89,13 +89,14 @@ export function StatusLine({ hint = null, text = null, error = false, seq = 0, w
         <button
           type="button"
           className={hint ? 'yh-status-line-button yh-status-line-under' : 'yh-status-line-button'}
+          data-part="button"
           data-tip={tip ?? undefined}
           onClick={() => onClear?.()}
         >
           <Fragment key={seq}>
             {error ? (
-              <span className="yh-status-line-tag" aria-hidden="true">
-                <svg data-hue="warn" className="yh-status-line-mark" width="12" height="12" viewBox="0 0 12 12">
+              <span className="yh-status-line-tag" data-part="tag" aria-hidden="true">
+                <svg data-hue="warn" className="yh-status-line-mark" data-part="mark" width="12" height="12" viewBox="0 0 12 12">
                   <path d="M6 1.5 L11 10.5 H1 Z" />
                   <path d="M6 5 V7.4" />
                   <circle cx="6" cy="8.9" r="0.6" />
@@ -105,12 +106,12 @@ export function StatusLine({ hint = null, text = null, error = false, seq = 0, w
             ) : null}
             {/* The space after "Error:" sits outside the hidden span: the accessible name trims each
                 element's text, so a space inside it would be lost ("Error:Can't"). */}
-            <span className="yh-status-line-text">
-              {error ? <span className="yh-status-line-hidden">Error:</span> : null}
+            <span className="yh-status-line-text" data-part="text">
+              {error ? <span className="yh-status-line-hidden" data-part="hidden">Error:</span> : null}
               {error ? ` ${text}` : text}
             </span>
           </Fragment>
-          <svg className="yh-status-line-clear" aria-hidden="true" width="10" height="10" viewBox="0 0 10 10">
+          <svg className="yh-status-line-clear" data-part="clear" aria-hidden="true" width="10" height="10" viewBox="0 0 10 10">
             <path d="M2 2 L8 8 M8 2 L2 8" />
           </svg>
         </button>

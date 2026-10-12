@@ -139,7 +139,11 @@ const SOLID = new Set<ButtonHue>(['ok', 'rec']);
  * Stop) leads by size as well as fill (hierarchy), and grows rather than reading "ST…". The waiting
  * face can flash: the parent drives `lit`, as on the Pad, and its off phase keeps the label and a
  * hairline ring in the tone, so a queued key blinks without the row jumping (affordance;
- * craft-details.md).
+ * craft-details.md). *Headless:* named parts (`face`, `label`, `glyph`); the face is made of the
+ * theme's `key` material, `--mat-key-pressed` while held, on or chosen, and the on dot is lit with
+ * `--mat-lit-glow`, so a material set restyles every key without touching it. Meaning still wins:
+ * the primary, running and recording fills, the rings, the underline and the dashed edge stay; a
+ * `quiet` key has no key material at all.
  *
  * **Kept.** Every face comes from props, in the same precedence (disabled, chosen, on, waiting,
  * off); the outline is an inset shadow so faces never change size; the same glyphs, accessible
@@ -242,6 +246,7 @@ export function Button({
       ref={node}
       type="button"
       className="yh-button"
+      data-part="face"
       data-size={size}
       data-variant={variant}
       data-face={disabled ? 'disabled' : face}
@@ -266,9 +271,13 @@ export function Button({
       onPointerCancel={pointerEnd}
       onLostPointerCapture={pointerEnd}
     >
-      {label !== '' && <span className="yh-button__label">{label}</span>}
+      {label !== '' && (
+        <span className="yh-button__label" data-part="label">
+          {label}
+        </span>
+      )}
       {symbol && (
-        <span className="yh-button__glyph" data-glyph={symbol} aria-hidden="true">
+        <span className="yh-button__glyph" data-part="glyph" data-glyph={symbol} aria-hidden="true">
           {GLYPHS[symbol]}
         </span>
       )}

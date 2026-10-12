@@ -42,7 +42,8 @@ export interface SectionNameProps {
  * `state` and `idle` still land on `data-state` for the parent's CSS. *Sizing*: the size is one
  * custom property, `--yh-section-name-size` (default `--size-numeral`), which a parent sets on the
  * root or passes as `size`, so a display can make the name its hero without overriding this
- * widget's CSS.
+ * widget's CSS. *Materials:* two named parts (`data-part`: name, variant); ink on whatever holds
+ * it, so it reads no material of its own.
  *
  * **Kept**: one line, never wrapping; an empty name shows "—" rather than collapsing the layout;
  * the `hue` prop and `data-hue` hook; `state` / `idle` on `data-state`.
@@ -57,6 +58,7 @@ export function SectionName({ label, hue = 'main', state, idle = false, size }: 
   return (
     <span
       className="yh-section-name"
+      data-part="name"
       data-hue={hue}
       data-state={stands}
       data-idle={idle ? 'true' : undefined}
@@ -66,7 +68,7 @@ export function SectionName({ label, hue = 'main', state, idle = false, size }: 
       {variant && (
         <>
           {' '}
-          <span className="yh-section-name__variant">{variant}</span>
+          <span className="yh-section-name__variant" data-part="variant">{variant}</span>
         </>
       )}
     </span>

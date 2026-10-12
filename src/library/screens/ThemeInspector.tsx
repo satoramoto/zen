@@ -1,4 +1,4 @@
-import type { Facets } from '../contract';
+import type { Facets, Mode } from '../contract';
 import { toCssVars } from '../contract';
 import type { ThemePack } from '../themes/packs';
 import { Card, SectionHead } from '../components';
@@ -8,8 +8,8 @@ import './inspector.css';
 // Shows the composed theme: where it came from, the rules it keeps, and
 // every contract variable with its current value.
 
-export function ThemeInspector({ pack, facets }: { pack: ThemePack; facets: Facets }) {
-  const vars = Object.entries(toCssVars(facets));
+export function ThemeInspector({ pack, facets, mode = 'dark' }: { pack: ThemePack; facets: Facets; mode?: Mode }) {
+  const vars = Object.entries(toCssVars(facets, mode));
   const colours = vars.filter(([, v]) => v.startsWith('#'));
   const rest = vars.filter(([, v]) => !v.startsWith('#'));
   const swapped = (Object.keys(facets) as (keyof Facets)[]).filter((k) => facets[k].id !== pack.facets[k].id);
@@ -59,7 +59,7 @@ export function ThemeInspector({ pack, facets }: { pack: ThemePack; facets: Face
       </section>
 
       <section>
-        <SectionHead aside={`${rest.length} tokens`}>Type, chrome, density</SectionHead>
+        <SectionHead aside={`${rest.length} tokens`}>Faces, scale, materials</SectionHead>
         <dl className="inspector__table">
           {rest.map(([name, value]) => (
             <div key={name}>

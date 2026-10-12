@@ -1,8 +1,8 @@
-import type { TypeFacet } from '../contract';
+import type { Faces } from '../contract';
 
-// Proprietary faces are swapped for the substitutes Refero names.
+// Proprietary faces are swapped for the substitutes Refero names. Sizes live in scales.ts.
 
-export const pushType: TypeFacet = {
+const push: Faces = {
   id: 'push',
   label: 'yahaha Push (DM Sans)',
   sans: "'DM Sans', system-ui, sans-serif",
@@ -16,10 +16,28 @@ export const pushType: TypeFacet = {
   tracking: '0em',
   trackingDisplay: '-0.01em',
   labelCase: 'none',
-  scale: { caption: 11, body: 14, label: 13, heading: 20, display: 40, numeral: 32 },
 };
 
-export const elektronType: TypeFacet = {
+// Yahaha before minimalism (ryangavin/yahaha@0dd53b6, app/src/app.css): Barlow for body,
+// Barlow Condensed for display, engraved panel print in spaced caps.
+const classic: Faces = {
+  id: 'classic',
+  label: 'yahaha classic (Barlow)',
+  sans: "'Barlow', 'Helvetica Neue', Arial, sans-serif",
+  display: "'Barlow Condensed', 'Arial Narrow', sans-serif",
+  mono: "ui-monospace, 'SF Mono', Menlo, monospace",
+  // The display glass draws its numerals in the condensed display face (tabular figures).
+  readout: "'Barlow Condensed', 'Arial Narrow', sans-serif",
+  weightBody: 400,
+  weightStrong: 600,
+  weightDisplay: 600,
+  weightNumeral: 600,
+  tracking: '0em',
+  trackingDisplay: '0.06em',
+  labelCase: 'uppercase',
+};
+
+const elektron: Faces = {
   id: 'elektron',
   label: 'Elektron (Neue Haas Grotesk)',
   sans: "'Helvetica Neue', Arial, sans-serif",
@@ -33,10 +51,9 @@ export const elektronType: TypeFacet = {
   tracking: '-0.017em',
   trackingDisplay: '-0.04em',
   labelCase: 'uppercase',
-  scale: { caption: 11, body: 14, label: 14, heading: 24, display: 48, numeral: 32 },
 };
 
-export const abletonType: TypeFacet = {
+const ableton: Faces = {
   id: 'ableton',
   label: 'Ableton (Futura → Jost)',
   sans: "'Jost', Futura, sans-serif",
@@ -50,10 +67,9 @@ export const abletonType: TypeFacet = {
   tracking: 'normal',
   trackingDisplay: 'normal',
   labelCase: 'none',
-  scale: { caption: 12, body: 16, label: 14, heading: 24, display: 56, numeral: 32 },
 };
 
-export const linearType: TypeFacet = {
+const linear: Faces = {
   id: 'linear',
   label: 'Linear (Inter)',
   sans: "'Inter', system-ui, sans-serif",
@@ -67,7 +83,6 @@ export const linearType: TypeFacet = {
   tracking: '-0.01em',
   trackingDisplay: '-0.022em',
   labelCase: 'none',
-  scale: { caption: 10, body: 14, label: 13, heading: 24, display: 48, numeral: 32 },
 };
 
-export const types = [pushType, elektronType, abletonType, linearType];
+export const faces: Faces[] = [push, classic, elektron, ableton, linear];

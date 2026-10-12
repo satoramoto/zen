@@ -14,10 +14,20 @@
   white-space: nowrap;
 }
 
+/* The reading is a readout window, made of the theme's `screen`. On a screen already (the
+   Display), it has no window of its own: it is the screen. */
 .yh-tempo-readout__reading {
   display: inline-flex;
   align-items: baseline;
   gap: var(--space-2);
+  border-radius: var(--radius-control);
+  background: var(--mat-screen-texture), var(--mat-screen-fill);
+  box-shadow: var(--mat-screen-shadow);
+}
+[data-material='screen'] .yh-tempo-readout__reading {
+  border-radius: 0px;
+  background: none;
+  box-shadow: none;
 }
 
 /* The value: the pack's readout face, tabular, right-aligned in a box as wide as the widest
@@ -57,10 +67,10 @@
   color: var(--text-3);
 }
 
-/* + over −: one framed pair of real keys, each a control height square, a hairline between them.
-   Neutral at rest (a transport key wears its hue only while active, hues.ts): the strong border
-   and secondary glyphs, the raised surface on hover, the transport fill with its paired ink only
-   while pressed. */
+/* + over −: one framed pair of real keys, each a control height square, a hairline between them,
+   each made of the theme's `key`. Neutral at rest (a transport key wears its hue only while
+   active, hues.ts): the strong border and secondary glyphs, a faint ink tint over the key on
+   hover, the transport fill with its paired ink and the pressed shadow only while pressed. */
 .yh-tempo-readout__steps {
   display: flex;
   flex-direction: column;
@@ -71,7 +81,6 @@
   height: calc(var(--control-h) * 2);
   border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-control);
-  background: var(--surface-1);
   overflow: hidden;
 }
 
@@ -84,7 +93,8 @@
   margin: 0;
   padding: 0;
   border: 0;
-  background: transparent;
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
   font-family: var(--font-readout);
   font-size: var(--size-heading);
   font-weight: var(--weight-numeral);
@@ -98,11 +108,15 @@
   border-top: var(--border-width) solid var(--border-strong);
 }
 .yh-tempo-readout__step:hover:not(:disabled) {
-  background: var(--surface-2);
+  background:
+    linear-gradient(color-mix(in srgb, var(--text-1) 8%, transparent), color-mix(in srgb, var(--text-1) 8%, transparent)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
   color: var(--text-1);
 }
 .yh-tempo-readout__step:active:not(:disabled) {
   background: var(--transport);
+  box-shadow: var(--mat-key-pressed);
   color: var(--transport-text);
 }
 .yh-tempo-readout__step:disabled {

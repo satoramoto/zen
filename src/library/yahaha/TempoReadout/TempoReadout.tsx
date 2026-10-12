@@ -104,7 +104,10 @@ function useHold(report: ((down: boolean) => void) | undefined) {
  * appears only as the focus ring (color.md). *Sizing:* the numeral's size is one
  * custom property, `--yh-tempo-readout-size` (default `--size-numeral`), which a parent sets on
  * the root or passes as `size`, so a display can make the tempo its hero without overriding this
- * widget's CSS; + and − keep the control size at any numeral size.
+ * widget's CSS; + and − keep the control size at any numeral size. *Materials:* the parts are
+ * named (`data-part`: root, window, value, unit, steps, step); the reading is a `screen` window
+ * (none of its own when it already sits on a screen, as in the Display) and + and − are `key`s,
+ * pressed with `--mat-key-pressed`, so the theme's materials decide how they are made.
  *
  * **Kept.** The spinbutton with its spoken value ("104 BPM"), the drag, wheel, key and
  * double-click gestures, the hold reporting with a single press from the keyboard, the button
@@ -196,17 +199,18 @@ export function TempoReadout({
     .join(' ');
 
   return (
-    <div className={classes} data-cells={cells || undefined} style={
+    <div className={classes} data-part="root" data-cells={cells || undefined} style={
         {
           '--yh-tempo-readout-digits': digits,
           ...(size === undefined ? {} : { '--yh-tempo-readout-size': size }),
         } as CSSProperties
       }
     >
-      <span className="yh-tempo-readout__reading">
+      <span className="yh-tempo-readout__reading" data-part="window" data-material="screen">
         <span
           ref={number}
           className="yh-tempo-readout__bpm"
+          data-part="value"
           role="spinbutton"
           tabIndex={0}
           aria-label={`Tempo, ${unit}. Drag, scroll or use the arrow keys; double-click for the style's tempo`}
@@ -224,15 +228,15 @@ export function TempoReadout({
         >
           {bpm}
         </span>
-        <span className="yh-tempo-readout__unit" aria-hidden="true">
+        <span className="yh-tempo-readout__unit" data-part="unit" aria-hidden="true">
           {unit}
         </span>
       </span>
-      <span className="yh-tempo-readout__steps" role="group" aria-label="Tempo">
-        <button ref={upButton} type="button" className="yh-tempo-readout__step" aria-label="Tempo up (Scene Launch)" data-tip="tempo.up" {...plus}>
+      <span className="yh-tempo-readout__steps" data-part="steps" role="group" aria-label="Tempo">
+        <button ref={upButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo up (Scene Launch)" data-tip="tempo.up" {...plus}>
           <span aria-hidden="true">+</span>
         </button>
-        <button ref={downButton} type="button" className="yh-tempo-readout__step" aria-label="Tempo down (Function)" data-tip="tempo.down" {...minus}>
+        <button ref={downButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo down (Function)" data-tip="tempo.down" {...minus}>
           <span aria-hidden="true">−</span>
         </button>
       </span>

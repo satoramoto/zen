@@ -5,10 +5,11 @@
   /* What the thumb's cut-out ring is drawn in; a parent on a raised surface may override it. */
   --yh-lineslider-ground: var(--surface-0);
   --yh-lineslider-line: 4px;
-  --yh-lineslider-rail: color-mix(in oklab, var(--text-1) 20%, transparent);
-  --yh-lineslider-rail-hover: color-mix(in oklab, var(--text-1) 32%, transparent);
-  --yh-lineslider-fill: var(--text-2);
-  --yh-lineslider-thumb: var(--text-1);
+  /* Hover's wash over the well; none at rest. */
+  --yh-lineslider-lift-ink: color-mix(in oklab, var(--text-1) 12%, transparent);
+  --yh-lineslider-lift: linear-gradient(transparent, transparent);
+  /* The fill is lit in neutral ink: the value belongs to no part. */
+  --lit: var(--text-2);
   --yh-lineslider-thumb-w: var(--space-2);
   --yh-lineslider-thumb-h: calc(var(--control-h) * 0.5);
   --yh-lineslider-thumb-radius: min(var(--radius-control), 2px);
@@ -19,18 +20,17 @@
 }
 
 .yh-lineslider[data-disabled] {
-  --yh-lineslider-rail: color-mix(in oklab, var(--text-1) 12%, transparent);
-  --yh-lineslider-rail-hover: var(--yh-lineslider-rail);
-  --yh-lineslider-fill: var(--text-4);
-  --yh-lineslider-thumb: var(--text-4);
+  --lit: var(--text-4);
 }
-/* Disabled is dashed, the Stage's one "shown, not usable" edge: the rail breaks into dashes. */
+/* Disabled is dashed, the Stage's one "shown, not usable" edge: state wins over material, and the
+   well breaks into dashes. */
 .yh-lineslider[data-disabled] .yh-lineslider__track {
   background: repeating-linear-gradient(
     to right,
-    var(--yh-lineslider-rail) 0 var(--space-1),
+    color-mix(in oklab, var(--text-1) 12%, transparent) 0 var(--space-1),
     transparent var(--space-1) var(--space-2)
   );
+  box-shadow: none;
 }
 
 /* The whole control height is the target, not just the 3px line. */
@@ -56,28 +56,41 @@
   position: relative;
   flex: 1;
   height: var(--yh-lineslider-line);
-  background: var(--yh-lineslider-rail);
+  /* The groove: the theme's `well`. */
+  background: var(--yh-lineslider-lift), var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: var(--mat-well-shadow);
   border-radius: var(--yh-lineslider-thumb-radius);
 }
-.yh-lineslider__hit:hover .yh-lineslider__track { background: var(--yh-lineslider-rail-hover); }
+.yh-lineslider:not([data-disabled]) .yh-lineslider__hit:hover .yh-lineslider__track {
+  --yh-lineslider-lift: linear-gradient(var(--yh-lineslider-lift-ink), var(--yh-lineslider-lift-ink));
+}
 
+/* The fill is lit: `--lit`, glowing as the theme's lit parts do. */
 .yh-lineslider__fill {
   position: absolute;
   inset: 0 auto 0 0;
-  background: var(--yh-lineslider-fill);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
   border-radius: var(--yh-lineslider-thumb-radius);
 }
+.yh-lineslider[data-disabled] .yh-lineslider__fill { box-shadow: none; }
 
 .yh-lineslider__thumb {
   position: absolute;
   top: 50%;
   width: var(--yh-lineslider-thumb-w);
   height: var(--yh-lineslider-thumb-h);
-  background: var(--yh-lineslider-thumb);
+  /* The thing you grab: the theme's `handle`, with a ring of the ground cut around it. */
+  background: var(--mat-handle-texture), var(--mat-handle-fill);
   border-radius: var(--yh-lineslider-thumb-radius);
-  box-shadow: 0 0 0 2px var(--yh-lineslider-ground);
+  box-shadow: var(--mat-handle-shadow);
+  outline: 2px solid var(--yh-lineslider-ground);
   transform: translate(-50%, -50%);
   transition: background-color 120ms ease-out, height 120ms ease-out;
+}
+.yh-lineslider[data-disabled] .yh-lineslider__thumb {
+  background: var(--text-4);
+  box-shadow: none;
 }
 /* Accent only while it is the thing being worked: focused from the keyboard, or held. */
 .yh-lineslider__hit:focus-visible .yh-lineslider__thumb,

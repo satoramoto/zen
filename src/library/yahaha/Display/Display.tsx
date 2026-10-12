@@ -246,6 +246,11 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
  * back to, so it is never mistaken for the transport's section reset; when the tempo already is
  * the style's (`styleTempo`), it takes the unavailable face (`--text-3`, `aria-disabled`, still
  * focusable), since there is nothing to reset.
+ * *Materials:* every part is named (`data-part`), and the hero is the display window, made of the
+ * theme's `screen` (`data-material="screen"`), so the readouts on it (tempo, chord, beat) drop
+ * windows of their own; a part's dot is lit (`--lit` in its hue, `--mat-lit-glow`) unless the part
+ * is off. The `--selected` block, the "then" tab and the part hues still say what they say,
+ * whatever the material.
  *
  * **Kept.** The data and every callback of the original (prev/next/browse, One Touch, a part's
  * sound list, tempo up/down holds, drag/scroll/keys on the number, back to the style's tempo); the
@@ -289,23 +294,25 @@ export function Display({
   return (
     <section
       className="yh-display"
+      data-part="display"
+      data-material="screen"
       aria-label="Stage display"
       data-density={density}
       data-running={running || undefined}
       data-parts={hasParts || undefined}
     >
       {art && (
-        <div className="yh-display__art">
+        <div className="yh-display__art" data-part="art">
           <DisplayArt />
         </div>
       )}
 
       {/* The frame holds the sizes: a container query styles only what is inside the container. */}
-      <div ref={frame} className="yh-display__frame" data-fit="1">
-        <header className="yh-display__header">
-          <div className="yh-display__style" role="group" aria-label="Style">
+      <div ref={frame} className="yh-display__frame" data-part="frame" data-fit="1">
+        <header className="yh-display__header" data-part="header">
+          <div className="yh-display__style" data-part="style" role="group" aria-label="Style">
             <Button symbol="prev" size="icon" variant="quiet" name="Previous style (Track left)" tip="style.prev" tipAction={tipAction} onPress={onPrev} />
-            <span className="yh-display__style-name" title={name}>
+            <span className="yh-display__style-name" data-part="style-name" title={name}>
               <AccentBlock
                 as="button"
                 label={name}
@@ -318,26 +325,27 @@ export function Display({
             </span>
             <Button symbol="next" size="icon" variant="quiet" name="Next style (Track right)" tip="style.next" tipAction={tipAction} onPress={onNext} />
             {queued ? (
-              <span className="yh-display__queued" title={`Next style: ${queued}`}>
+              <span className="yh-display__queued" data-part="queued" title={`Next style: ${queued}`}>
                 <WaitingChip label={queued} hue="a" size="line" />
               </span>
             ) : (
               meta && (
-                <span className="yh-display__meta" title={meta}>
+                <span className="yh-display__meta" data-part="meta" title={meta}>
                   {meta}
                 </span>
               )
             )}
           </div>
-          <div className="yh-display__ots">
+          <div className="yh-display__ots" data-part="one-touch">
             <OneTouchPicker applied={style.oneTouch ?? 0} count={style.oneTouchCount ?? 4} tipAction={tipAction} onApply={onOneTouch} />
           </div>
         </header>
 
-        <div className="yh-display__readouts">
-          <div className="yh-display__cell yh-display__section" role="group" aria-label="Section">
+        <div className="yh-display__readouts" data-part="readouts">
+          <div className="yh-display__cell yh-display__section" data-part="section" role="group" aria-label="Section">
             <div
               className="yh-display__now"
+              data-part="now"
               role="img"
               aria-label={`${running ? 'Playing' : 'Stopped on'} ${nowPlaying.playing.trim() || 'no section'}`}
               data-live={running || undefined}
@@ -345,29 +353,30 @@ export function Display({
               <SectionName label={nowPlaying.playing} idle={!running} size={DISPLAY_SIZES.section} />
             </div>
             {(line.status || line.next || line.when) && (
-              <p className="yh-display__next">
-                {line.status && <span className="yh-display__status">{line.status}</span>}
+              <p className="yh-display__next" data-part="next">
+                {line.status && <span className="yh-display__status" data-part="status">{line.status}</span>}
                 {(line.next || line.when) && (
                   <span
                     className="yh-display__then"
+                    data-part="then"
                     data-docked={running || undefined}
                     style={{ '--yh-display-then-hue': SECTION_STATE_COLOUR.next } as CSSProperties}
                   >
-                    <span className="yh-display__then-arrow" aria-hidden="true" />
-                    <span className="yh-display__then-word">then </span>
-                    {line.next && <span className="yh-display__then-name">{line.next}</span>}
-                    {line.when && <span className="yh-display__when">{line.when}</span>}
+                    <span className="yh-display__then-arrow" data-part="then-arrow" aria-hidden="true" />
+                    <span className="yh-display__then-word" data-part="then-word">then </span>
+                    {line.next && <span className="yh-display__then-name" data-part="then-name">{line.next}</span>}
+                    {line.when && <span className="yh-display__when" data-part="when">{line.when}</span>}
                   </span>
                 )}
               </p>
             )}
           </div>
 
-          <div className="yh-display__cell yh-display__chord">
+          <div className="yh-display__cell yh-display__chord" data-part="chord">
             <ChordReadout {...nowPlaying.chord} tip="fingering.select" tipAction={tipAction} size={DISPLAY_SIZES.chord} />
           </div>
 
-          <div className="yh-display__cell yh-display__tempo" role="group" aria-label="Tempo and Tap">
+          <div className="yh-display__cell yh-display__tempo" data-part="tempo" role="group" aria-label="Tempo and Tap">
             <TempoReadout
               bpm={nowPlaying.bpm}
               size={DISPLAY_SIZES.tempo}
@@ -377,10 +386,10 @@ export function Display({
               onMinus={onTempoDown}
               onReset={onStyleTempo}
             />
-            <div className="yh-display__beat">
+            <div className="yh-display__beat" data-part="beat">
               <BarBeat beat={running ? (nowPlaying.beat ?? 0) : 0} beats={nowPlaying.beats ?? 4} thickness={DISPLAY_SIZES.beat} />
             </div>
-            <div className="yh-display__tempo-keys">
+            <div className="yh-display__tempo-keys" data-part="tempo-keys">
               <Button
                 label="Tap"
                 size="md"
@@ -405,7 +414,7 @@ export function Display({
           </div>
 
           {hasParts && (
-            <ul className="yh-display__parts" aria-label="Sounds">
+            <ul className="yh-display__parts" data-part="parts" aria-label="Sounds">
               {parts!.map((p) => (
                 <PartRow key={p.id} part={p} tipAction={tipAction} onSound={onSound} />
               ))}
@@ -435,20 +444,21 @@ function PartRow({ part: p, tipAction, onSound }: { part: DisplayPart; tipAction
         ref={ref}
         type="button"
         className="yh-display__part"
+        data-part="part"
         data-off={(p.off && !p.bass) || undefined}
         style={{ '--yh-display-part-hue': PART_HUE[p.id] } as CSSProperties}
         aria-label={`${p.name} sound: ${p.number ? `${p.number} ` : ''}${p.sound}${marksText(p)}. Opens the quick sound list`}
         data-tip="launchkey.fader_sound"
         onClick={() => onSound?.(p.id)}
       >
-        <span className="yh-display__part-dot" aria-hidden="true" />
-        <span className="yh-display__part-sound" aria-hidden="true">
-          <span className="yh-display__part-name">{p.sound}</span>
+        <span className="yh-display__part-dot" data-part="part-dot" data-lit={!(p.off && !p.bass) || undefined} aria-hidden="true" />
+        <span className="yh-display__part-sound" data-part="part-sound" aria-hidden="true">
+          <span className="yh-display__part-name" data-part="part-name">{p.sound}</span>
           <PartMarks edited={p.edited} missing={p.missing} failed={p.failed} />
         </span>
-        <span className="yh-display__part-part" aria-hidden="true">
-          <span className="yh-display__part-label">{p.name}</span>
-          {tail && <span className="yh-display__part-tail">{tail}</span>}
+        <span className="yh-display__part-part" data-part="part-part" aria-hidden="true">
+          <span className="yh-display__part-label" data-part="part-label">{p.name}</span>
+          {tail && <span className="yh-display__part-tail" data-part="part-tail">{tail}</span>}
         </span>
       </button>
     </li>

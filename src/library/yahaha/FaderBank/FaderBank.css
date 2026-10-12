@@ -69,8 +69,8 @@
 .yh-faderbank__plate {
   grid-row: 1 / 3;
   border-radius: var(--radius-card);
-  background: var(--surface-1);
-  box-shadow: inset 0 0 0 max(1px, var(--border-width)) var(--border);
+  background: var(--mat-plate-texture), var(--mat-plate-fill);
+  box-shadow: var(--mat-plate-shadow);
 }
 
 .yh-faderbank__strip {

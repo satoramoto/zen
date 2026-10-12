@@ -1,6 +1,12 @@
 /* Stage: the whole app on one screen. Reads only contract variables and the --yh-stage-* ones
    declared here. It lays the regions out and never reaches into one: each region fills the box
-   it is given. */
+   it is given.
+
+   Materials: each region brings its own panel (the mixer, knobs and pads their `plate`, the hero
+   its `screen`, the keys their keybed). The regions with none (the transport column and the song
+   form strip) are parted by spacing and hairlines only, not a plate: a plate there would need
+   padding round its keys, a layout change, and in a flat set it would add a second hairline or a
+   filled card to what is drawn today. */
 
 /* The frame: the screen's size on the page. Stage.tsx lays the screen out at the frame's size,
    tightens the hero, and zooms only when the regions still need more room than the frame has. */

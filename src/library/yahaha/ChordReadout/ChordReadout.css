@@ -10,6 +10,16 @@
   min-width: 0;
   font-family: var(--font-sans);
   letter-spacing: var(--tracking);
+  /* A readout window, made of the theme's `screen`. */
+  border-radius: var(--radius-control);
+  background: var(--mat-screen-texture), var(--mat-screen-fill);
+  box-shadow: var(--mat-screen-shadow);
+}
+/* On a screen already (the Display), no window of its own: it is the screen. */
+[data-material='screen'] .yh-chord-readout {
+  border-radius: 0px;
+  background: none;
+  box-shadow: none;
 }
 
 .yh-chord-readout__chord {

@@ -71,7 +71,7 @@
 .yh-keys__zone[data-on='true'] {
   border-bottom-color: var(--yh-keys-hue);
 }
-/* Lit, the underline glows where the palette has bloom: around the line, not the whole zone. */
+/* Lit, the underline glows by the material set's lamp glow: around the line, not the whole zone. */
 .yh-keys__zone[data-on='true']::after {
   content: '';
   position: absolute;
@@ -79,7 +79,8 @@
   right: 0;
   bottom: 0;
   height: 0;
-  box-shadow: 0 0 var(--bloom) var(--yh-keys-hue);
+  --lit: var(--yh-keys-hue);
+  box-shadow: var(--mat-lit-glow);
   pointer-events: none;
 }
 /* Leave room for the split flag where the zones meet. */
@@ -136,6 +137,9 @@
   overflow: hidden;
   background: var(--yh-keys-gap);
   border-radius: var(--radius-control);
+  /* The keybed sits in the plate: the material's edges and drop, drawn outside the keys so they
+     take no width (inset layers fall under the keys). */
+  box-shadow: var(--mat-plate-shadow);
 }
 /* The frame, drawn over the keys so it takes no width from them. */
 .yh-keys__strip::after {
@@ -181,11 +185,12 @@
   background: var(--yh-keys-black);
   box-shadow: inset 0 0 0 1px var(--yh-keys-sharp-edge);
 }
-/* Held: the part's hue, glowing where the palette has bloom. */
+/* Held: lit in the part's hue, glowing by the material set's lamp glow. */
 .yh-keys__white[data-held],
 .yh-keys__black[data-held] {
+  --lit: var(--yh-keys-hue);
   background: var(--yh-keys-hue);
-  box-shadow: 0 0 var(--bloom) var(--yh-keys-hue);
+  box-shadow: var(--mat-lit-glow);
   color: var(--on-hue);
 }
 .yh-keys__white[data-held] { z-index: 0; font-weight: var(--weight-strong); }

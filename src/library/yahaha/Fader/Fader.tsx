@@ -1,4 +1,5 @@
-import { useEffect, useRef, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
+import type { CSSProperties } from 'react';
+import { FADER_MAX as MAX, useFader } from './useFader';
 import './Fader.css';
 
 export type FaderHue = 'r1' | 'r2' | 'r3' | 'l' | 'a' | 't2' | 't';
@@ -42,16 +43,8 @@ export interface FaderProps {
   onlevel?: (level: number) => void;
 }
 
-const MAX = 127;
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 const PART_HUE: Partial<Record<FaderHue, string>> = { r1: '1', r2: '2', r3: '3', l: '4' };
-
-/** ↑ / → +1, ↓ / ← −1, Page Up / Down ±10 (Home 0, End 127 below). */
-const STEPS: Record<string, number> = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1, PageUp: 10, PageDown: -10 };
-/** An ask the state hasn't confirmed is dropped after this pause, so `level` always wins in the end. */
-const SETTLE_MS = 400;
-/** A wheel notch in px: a trackpad's small deltas add up to one before the fader moves 2. */
-const WHEEL_PX = 20;
 
 /** "Rev 40" → a layer word and its number; "90" stays a number. */
 function splitValue(value: string): { word: string; num: string } {
@@ -86,7 +79,11 @@ function splitValue(value: string): { word: string; num: string } {
  * with no peak line, so it no longer reads as a second, thinner fader; an off part's number drops
  * to `--size-label`, so a silent "64" doesn't compete with the live levels. *Empty slot*: `empty`
  * draws the banks' one empty look, a faint solid groove (`--text-1` at 10%) with no cap, value or
- * edge, instead of a dotted thread.
+ * edge, instead of a dotted thread. *Headless* (2026-10): the behaviour lives in `useFader`; the
+ * markup is named parts (`data-part`: head, value, travel, groove, fill, ghost, cap, meter), and the
+ * look comes from the theme's Materials: the groove and meter channel are `well`, the cap a
+ * `handle` (its grip line stays the Fader's own, in ink), the fill is lit in the strip ink
+ * (`--lit`, `--mat-lit-glow`), so a material set can restyle the strip without touching it.
  *
  * **Kept.** Fully controlled: a drag, ↑ ↓ → ← ±1, Page Up / Down ±10, Home, End and the wheel (±2 a
  * notch, trackpad deltas summed) ask through `onlevel` and move nothing themselves; quick repeats
@@ -119,118 +116,15 @@ export function Fader({
   const frac = clamp(level, 0, MAX) / MAX;
   const { word, num } = splitValue(parked ? '' : value);
 
-  const root = useRef<HTMLDivElement>(null);
-  const rail = useRef<HTMLSpanElement>(null);
-
-  // The level last asked for, until the state catches up (see Kept above).
-  const asked = useRef<number | null>(null);
-  const askedAt = useRef(0);
-  const lastSent = useRef<number | null>(null);
-  const dragId = useRef<number | null>(null);
-  const wheelAcc = useRef(0);
-
-  useEffect(() => {
-    if (level === asked.current) asked.current = null;
-  }, [level]);
-
-  // Handlers read the latest props through this ref: the wheel listener is attached once.
-  const latest = useRef({ level, parked, onlevel });
-  latest.current = { level, parked, onlevel };
-
-  const base = () => {
-    if (asked.current !== null && Date.now() - askedAt.current > SETTLE_MS) asked.current = null;
-    return asked.current ?? clamp(latest.current.level, 0, MAX);
-  };
-
-  const ask = (next: number) => {
-    const v = clamp(Math.round(next), 0, MAX);
-    asked.current = v === latest.current.level ? null : v;
-    askedAt.current = Date.now();
-    // A drag repeats the same level on every pixel within a step: send each level once.
-    if (dragId.current !== null && v === lastSent.current) return;
-    lastSent.current = v;
-    latest.current.onlevel?.(v);
-  };
-  const askRef = useRef({ ask, base });
-  askRef.current = { ask, base };
-
-  // React's wheel listener is passive; this one must be able to stop the page scrolling.
-  useEffect(() => {
-    const node = root.current;
-    if (!node) return;
-    const wheel = (event: WheelEvent) => {
-      if (latest.current.parked || event.deltaY === 0) return;
-      event.preventDefault();
-      const px = event.deltaMode === 1 ? event.deltaY * WHEEL_PX : event.deltaMode === 2 ? event.deltaY * WHEEL_PX * 10 : event.deltaY;
-      if (Math.sign(px) !== Math.sign(wheelAcc.current)) wheelAcc.current = 0;
-      wheelAcc.current += px;
-      if (Math.abs(wheelAcc.current) < WHEEL_PX) return;
-      const dir = wheelAcc.current < 0 ? 1 : -1;
-      wheelAcc.current = 0;
-      askRef.current.ask(askRef.current.base() + 2 * dir);
-    };
-    node.addEventListener('wheel', wheel, { passive: false });
-    return () => node.removeEventListener('wheel', wheel);
-  }, []);
-
-  useEffect(() => {
-    const node = root.current;
-    if (!node || !tipAction || tip === undefined) return;
-    const handle = tipAction(node, tip);
-    return () => handle?.destroy?.();
-  }, [tip, tipAction]);
-
-  const levelAt = (clientY: number) => {
-    const box = rail.current?.getBoundingClientRect();
-    if (!box || box.height === 0) return level;
-    return Math.round(clamp(1 - (clientY - box.top) / box.height, 0, 1) * MAX);
-  };
-
-  const pointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (parked || event.button > 0) return;
-    dragId.current = event.pointerId;
-    lastSent.current = null;
-    try {
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-    } catch {
-      // jsdom and synthetic events have no pointer capture.
-    }
-    ask(levelAt(event.clientY));
-  };
-  const pointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (dragId.current === event.pointerId) ask(levelAt(event.clientY));
-  };
-  const pointerEnd = (event: PointerEvent<HTMLDivElement>) => {
-    if (dragId.current === event.pointerId) dragId.current = null;
-  };
-
-  const keyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (parked) return;
-    let next: number | null = null;
-    if (event.key in STEPS) next = base() + STEPS[event.key];
-    else if (event.key === 'Home') next = 0;
-    else if (event.key === 'End') next = MAX;
-    if (next === null) return;
-    event.preventDefault();
-    ask(next);
-  };
+  const { rootProps, railRef } = useFader({ name, value, level, parked, tip, tipAction, onlevel });
 
   const style = { '--yh-fader-level': frac, width: width === undefined ? undefined : `${width}px` } as CSSProperties;
   const partHue = layered ? undefined : PART_HUE[hue];
 
   return (
     <div
-      ref={root}
+      {...rootProps}
       className="yh-fader"
-      role="slider"
-      tabIndex={0}
-      aria-label={name}
-      aria-orientation="vertical"
-      aria-valuemin={0}
-      aria-valuemax={MAX}
-      aria-valuenow={clamp(Math.round(level), 0, MAX)}
-      aria-valuetext={parked ? undefined : value || undefined}
-      aria-disabled={parked ? true : undefined}
       data-kind={kind}
       data-hue={partHue}
       data-layered={layered || undefined}
@@ -239,30 +133,30 @@ export function Fader({
       data-away={isAway ? (away! < level ? 'up' : away! > level ? 'down' : 'at') : undefined}
       data-tip={tip}
       style={style}
-      onPointerDown={pointerDown}
-      onPointerMove={pointerMove}
-      onPointerUp={pointerEnd}
-      onPointerCancel={pointerEnd}
-      onKeyDown={keyDown}
     >
-      <span className="yh-fader__head" aria-hidden="true">
+      <span className="yh-fader__head" data-part="head" aria-hidden="true">
         {word && <span className="yh-fader__word">{word}</span>}
-        <span className="yh-fader__value">{num}</span>
+        <span className="yh-fader__value" data-part="value">{num}</span>
       </span>
-      <span className="yh-fader__travel" aria-hidden="true">
-        <span className="yh-fader__rail" ref={rail}>
-          <span className="yh-fader__groove" />
-          {!parked && <span className="yh-fader__fill" />}
+      <span className="yh-fader__travel" data-part="travel" aria-hidden="true">
+        <span className="yh-fader__rail" ref={railRef}>
+          <span className="yh-fader__groove" data-part="groove" />
+          {!parked && <span className="yh-fader__fill" data-part="fill" />}
           {isAway && (
-            <span className="yh-fader__ghost" style={{ '--yh-fader-away': clamp(away!, 0, MAX) / MAX } as CSSProperties} />
+            <span
+              className="yh-fader__ghost"
+              data-part="ghost"
+              style={{ '--yh-fader-away': clamp(away!, 0, MAX) / MAX } as CSSProperties}
+            />
           )}
-          {!parked && <span className="yh-fader__cap" />}
+          {!parked && <span className="yh-fader__cap" data-part="cap" />}
         </span>
         {showMeters && (
           <span className="yh-fader__meters">
             {/* One meter, the louder side: two read as a second, thinner fader at Stage scale. */}
             <span
               className="yh-fader__meter"
+              data-part="meter"
               style={{ '--yh-fader-m': live ? clamp(Math.max(meter, meter2), 0, 1) : 0 } as CSSProperties}
             />
           </span>

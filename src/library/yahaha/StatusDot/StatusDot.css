@@ -25,9 +25,10 @@
   min-height: 4px;
 }
 
-/* The palette's lamp bloom: 0px on flat palettes, so nothing draws there. */
+/* A lit part: the material set's glow in the dot's hue (nothing on flat sets). */
 .yh-status-dot[data-glow='true'] {
-  box-shadow: 0 0 var(--bloom) color-mix(in srgb, var(--yh-status-dot-hue) 70%, transparent);
+  --lit: var(--yh-status-dot-hue);
+  box-shadow: var(--mat-lit-glow);
 }
 
 .yh-status-dot[data-face='hollow'] {

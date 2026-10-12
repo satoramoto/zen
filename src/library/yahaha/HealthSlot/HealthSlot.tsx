@@ -36,7 +36,7 @@ function Words({ text }: { text: string }) {
     <>
       {text.split(/(?<![\p{L}\d])(\d+%?)/u).map((part, i) =>
         i % 2 ? (
-          <span key={i} className="yh-health-slot__num">
+          <span key={i} className="yh-health-slot__num" data-part="num">
             {part}
           </span>
         ) : (
@@ -54,9 +54,9 @@ function Words({ text }: { text: string }) {
  */
 function Mark({ state }: { state: 'calm' | 'off' | 'trouble' }) {
   return (
-    <span className="yh-health-slot__mark" data-state={state} aria-hidden="true">
+    <span className="yh-health-slot__mark" data-part="mark" data-state={state} aria-hidden="true">
       {state === 'trouble' ? (
-        <svg className="yh-health-slot__triangle" width="12" height="12" viewBox="0 0 12 12">
+        <svg className="yh-health-slot__triangle" data-part="triangle" width="12" height="12" viewBox="0 0 12 12">
           <path d="M6 1.5 L11 10.5 H1 Z" />
           <path d="M6 5 V7.4" />
           <circle cx="6" cy="8.9" r="0.6" />
@@ -126,11 +126,12 @@ export function HealthSlot({
   return (
     <span
       className={`yh-health-slot${width === undefined ? ' yh-health-slot--fill' : ''}`}
+      data-part="root"
       data-hue={shown.hue}
       data-state={state}
       style={width === undefined ? undefined : { width: `${width}px` }}
     >
-      <span role="status" className="yh-health-slot__live">
+      <span role="status" className="yh-health-slot__live" data-part="live">
         {shown.label}
       </span>
       {target ? (
@@ -138,18 +139,19 @@ export function HealthSlot({
           ref={setNode}
           type="button"
           className="yh-health-slot__button"
+          data-part="button"
           data-tip={dataTip}
           onClick={() => onOpen?.(target)}
         >
           <Mark state={state} />
-          <span className="yh-health-slot__text">
+          <span className="yh-health-slot__text" data-part="text">
             <Words text={shown.text} />
           </span>
         </button>
       ) : (
-        <span className="yh-health-slot__calm">
+        <span className="yh-health-slot__calm" data-part="calm">
           <Mark state={state} />
-          <span ref={setNode} className="yh-health-slot__text" aria-hidden="true" data-tip={dataTip}>
+          <span ref={setNode} className="yh-health-slot__text" data-part="text" aria-hidden="true" data-tip={dataTip}>
             {shown.text}
           </span>
         </span>

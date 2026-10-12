@@ -27,7 +27,9 @@
   padding: 0 var(--yh-chosen-tabs-pad);
   border: 0;
   border-radius: var(--radius-control) var(--radius-control) 0 0;
-  background: transparent;
+  /* Each tab is a key: the theme's key material at rest, pressed in while chosen or held. */
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
   color: var(--text-2);
   font-family: var(--font-sans);
   font-size: var(--size-label);
@@ -72,23 +74,36 @@
 }
 .yh-chosen-tabs[data-look='underline'] .yh-chosen-tabs__tab[data-face='chosen'] {
   color: var(--text-1);
-  background: transparent;
   font-weight: var(--weight-strong);
-  box-shadow: inset 0 calc(-1 * var(--yh-chosen-tabs-rule)) 0 var(--selected);
+  box-shadow:
+    inset 0 calc(-1 * var(--yh-chosen-tabs-rule)) 0 var(--selected),
+    var(--mat-key-pressed);
 }
 
-/* Block: the chosen tab is a full-height --selected block standing on the hairline. */
+/* Block: the chosen tab is a full-height --selected block standing on the hairline (state wins
+   over material). Hover washes the key with ink (a fill may be a gradient, so no color-mix on it). */
 .yh-chosen-tabs[data-look='block'] .yh-chosen-tabs__tab[data-face='off']:hover {
   color: var(--text-1);
-  background: var(--surface-2);
+  background:
+    linear-gradient(color-mix(in srgb, var(--text-1) 8%, transparent), color-mix(in srgb, var(--text-1) 8%, transparent)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
 }
 .yh-chosen-tabs[data-look='block'] .yh-chosen-tabs__tab[data-face='chosen'] {
   color: var(--selected-text);
   background: var(--selected);
+  box-shadow: var(--mat-key-pressed);
+}
+
+/* Held: the key presses in. */
+.yh-chosen-tabs__tab[data-face='off']:active {
+  box-shadow: var(--mat-key-pressed);
 }
 
 /* Disabled: still information, so readable (--text-3, never fainter), but not choosable. */
 .yh-chosen-tabs__tab[data-face='disabled'] {
+  background: transparent;
+  box-shadow: none;
   color: var(--text-3);
   cursor: not-allowed;
 }

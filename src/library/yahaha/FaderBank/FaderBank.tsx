@@ -266,6 +266,10 @@ function StripName({
  * and hold for the fader picker. Every accessible name and tooltip key of the original; tooltips
  * come only from `tipAction` (each control applies it once, the tabs through ChosenTabs), never
  * a native `title`, so no control shows two.
+ *
+ * **Headless** (2026-10): Master's plate (`data-part="plate"`) is the theme's `plate` material,
+ * and each strip's look comes from the Fader's own materials, so a material set restyles the
+ * mixer without touching it.
  */
 export function FaderBank({
   strips,
@@ -369,7 +373,7 @@ export function FaderBank({
         {dividers.map((column) => (
           <span key={`divider-${column}`} className="yh-faderbank__divider" style={{ gridColumn: column }} aria-hidden="true" />
         ))}
-        {masterAt >= 0 && <span className="yh-faderbank__plate" style={{ gridColumn: columns[masterAt] }} aria-hidden="true" />}
+        {masterAt >= 0 && <span className="yh-faderbank__plate" data-part="plate" style={{ gridColumn: columns[masterAt] }} aria-hidden="true" />}
 
         {strips.map((strip, i) => {
           const parked = strip.kind === 'parked';

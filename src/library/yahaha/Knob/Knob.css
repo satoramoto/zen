@@ -6,9 +6,12 @@
   --yh-knob-ring: calc(var(--control-h) * 2.25);
   /* The arc's ink: the part's hue when the knob says which part owns it, else text ink. */
   --yh-knob-ink: var(--hue, var(--text-1));
-  /* The unlit track: ink mixed into the ground, so it holds on light and dark palettes alike. */
-  --yh-knob-track: color-mix(in oklab, var(--text-1) 18%, transparent);
-  --yh-knob-track-hover: color-mix(in oklab, var(--text-1) 32%, transparent);
+  /* The lit arc's colour, read by the arc's glow. */
+  --lit: var(--yh-knob-ink);
+  /* Hover's wash over the well; none at rest. */
+  --yh-knob-lift-ink: color-mix(in oklab, var(--text-1) 14%, transparent);
+  --yh-knob-lift: linear-gradient(transparent, transparent);
+  --yh-knob-round: 50%;
   --yh-knob-stroke: 3.5px;
 
   display: inline-grid;
@@ -98,21 +101,53 @@
   stroke-width: var(--yh-knob-stroke);
   stroke-linecap: butt;
 }
+
+/* The well: the groove the arc runs in, the ring's full 270° sweep. It is a disc wearing the
+   `well` material, its edge on the stroke's outer edge (radius 20.75 of the 48 box, so an inset
+   shadow lands in the groove), its centre cut out to the stroke's inner edge (17.25, as % of the
+   closest side) and to the sweep (from 225° clockwise, butt ends), so any fill, gradient or
+   texture a material set gives it shows. Mask colours are alpha only. */
 .yh-knob__track {
-  stroke: var(--yh-knob-track);
-  transition: stroke 120ms ease-out;
+  position: absolute;
+  inset: 6.77%;
+  border-radius: var(--yh-knob-round);
+  background: var(--yh-knob-lift), var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: var(--mat-well-shadow);
+  -webkit-mask:
+    radial-gradient(closest-side, transparent 83.1%, black 83.15%),
+    conic-gradient(from 225deg, black 270deg, transparent 0);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(closest-side, transparent 83.1%, black 83.15%),
+    conic-gradient(from 225deg, black 270deg, transparent 0);
+  mask-composite: intersect;
 }
+/* Hover lifts the well: a wash of ink laid over its material. */
 .yh-knob:hover:not([data-unused]) .yh-knob__track,
 .yh-knob:focus-visible .yh-knob__track {
-  stroke: var(--yh-knob-track-hover);
+  --yh-knob-lift: linear-gradient(var(--yh-knob-lift-ink), var(--yh-knob-lift-ink));
 }
 .yh-knob[data-unused] .yh-knob__track {
-  stroke: color-mix(in oklab, var(--text-1) 9%, transparent);
+  opacity: 0.5;
 }
+
+/* The body: the round cap the arc sits around and the value sits on, made of `handle`. */
+.yh-knob__body {
+  position: absolute;
+  inset: 18%;
+  border-radius: var(--yh-knob-round);
+  background: var(--mat-handle-texture), var(--mat-handle-fill);
+  box-shadow: var(--mat-handle-shadow);
+}
+.yh-knob[data-unused] .yh-knob__body {
+  opacity: 0.5;
+}
+
 .yh-knob__lit {
-  stroke: var(--yh-knob-ink);
-  /* A lit arc is a lamp: it blooms on palettes that have bloom, and is flat where it is 0px. */
-  filter: drop-shadow(0 0 calc(var(--bloom) / 2) var(--yh-knob-ink));
+  stroke: var(--lit);
+  /* A lit arc is a lamp: the stroke's twin of `--mat-lit-glow`, blooming on palettes that have
+     bloom and flat where it is 0px. */
+  filter: drop-shadow(0 0 calc(var(--bloom) / 2) var(--lit));
 }
 .yh-knob__pointer {
   stroke: var(--text-1);

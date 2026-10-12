@@ -56,7 +56,10 @@ export interface AccentBlockProps {
  * reads before it is clicked; where it sits between ‹ and › step keys (`chevron={false}`) the
  * chevron goes, so the line doesn't show three arrows in a row. The plain label has neither.
  * *Rhythm*: heights come from `--control-h` (line) and three quarters of it (knob),
- * so the block sits flush with the density's controls beside it.
+ * so the block sits flush with the density's controls beside it. *Materials:* named parts
+ * (`data-part`: block, text, chevron); the button form is a `key` made of the theme's key
+ * material (hover tints it, a press uses `--mat-key-pressed`); the plain label keeps the raised
+ * `--surface-2`. The style's bar stays on the leading edge whatever the material.
  *
  * **Kept.** One line, ellipsized at its width with the whole name in the button's accessible
  * name; the `empty` text so the block never collapses; the two sizes; `button` versus `span`; the
@@ -82,14 +85,16 @@ export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', 
         className="yh-accentblock"
         style={style}
         aria-label={name}
+        data-part="block"
+        data-material="key"
         data-face="accent"
         data-size={size}
         data-tip={tip}
         onClick={() => onPress?.()}
       >
-        <span className="yh-accentblock__text">{shown}</span>
+        <span className="yh-accentblock__text" data-part="text">{shown}</span>
         {chevron && (
-          <svg className="yh-accentblock__chevron" viewBox="0 0 12 12" aria-hidden="true">
+          <svg className="yh-accentblock__chevron" data-part="chevron" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M4.5 2.5 8 6l-3.5 3.5" />
           </svg>
         )}
@@ -97,8 +102,8 @@ export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', 
     );
   }
   return (
-    <span className="yh-accentblock" style={style} data-face="accent" data-size={size}>
-      <span className="yh-accentblock__text">{shown}</span>
+    <span className="yh-accentblock" style={style} data-part="block" data-face="accent" data-size={size}>
+      <span className="yh-accentblock__text" data-part="text">{shown}</span>
     </span>
   );
 }

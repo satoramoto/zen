@@ -66,13 +66,13 @@ interface TabButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 function TabButton({ tip, tipAction, ...rest }: TabButtonProps) {
   const [node, setNode] = useState<HTMLButtonElement | null>(null);
   useTip(node, tip, tipAction);
-  return <button {...rest} ref={setNode} type="button" data-tip={tip} />;
+  return <button {...rest} ref={setNode} type="button" data-part="tab" data-tip={tip} />;
 }
 
 /** A tab's words; `data-label` lets CSS reserve the width of the chosen (strong) face. */
 function TabLabel({ label }: { label: string }) {
   return (
-    <span className="yh-chosen-tabs__label" data-label={label}>
+    <span className="yh-chosen-tabs__label" data-part="label" data-label={label}>
       {label}
     </span>
   );
@@ -108,7 +108,10 @@ function face(tab: TabItem, chosen: string | null): Face {
  * (`references/craft-details.md`, focus states). `dense` tightens each tab's side padding from
  * `--space-3` to `--space-2`, so a narrow region keeps the whole run in view without faking it
  * through the run's private variable (rhythm). `tipAction` runs the app's tooltip action on each
- * tab with that tab's own `tip`, the same handle shape as Pad's.
+ * tab with that tab's own `tip`, the same handle shape as Pad's. *Headless*: named parts (`run`,
+ * `tab`, `label`); each tab is made of the theme's `key` material, `--mat-key-pressed` while chosen
+ * or held, so a material set restyles the run without touching it. The underline and the `block`
+ * fill still win over material; a disabled tab has no key.
  *
  * **Kept**: a run, not buttons: no outline at rest. Labels never wrap and never truncate (they are
  * one or two words). `page` is page navigation with `aria-current`; `header` and `compact` are a
@@ -172,7 +175,7 @@ export function ChosenTabs({
 
   if (!isList) {
     return (
-      <div className="yh-chosen-tabs" data-size={size} data-density={density} data-look={look}>
+      <div className="yh-chosen-tabs" data-part="run" data-size={size} data-density={density} data-look={look}>
         {tabs.map((tab) => (
           <TabButton
             key={tab.id}
@@ -196,6 +199,7 @@ export function ChosenTabs({
     <div
       ref={root}
       className="yh-chosen-tabs"
+      data-part="run"
       data-size={size}
       data-density={density}
       data-look={look}
