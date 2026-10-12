@@ -1,12 +1,12 @@
 import { createContext, useContext, type ReactNode } from 'react';
 import type { Forms } from './types';
 
-/** The form the solver chose for the region a component sits in. */
-const FormContext = createContext<string | null>(null);
+/** The form the solver chose for the region a component sits in, and its parts' forms. */
+const FormContext = createContext<{ form: string; parts?: Readonly<Record<string, string>> } | null>(null);
 
-/** Hands `form` to every component inside (the assembled Screen wraps each region in one). */
-export function FormProvider({ form, children }: { form: string; children?: ReactNode }) {
-  return <FormContext.Provider value={form}>{children}</FormContext.Provider>;
+/** Hands `form` (and each part's form) to every component inside (the assembled Screen wraps each region in one). */
+export function FormProvider({ form, parts, children }: { form: string; parts?: Readonly<Record<string, string>>; children?: ReactNode }) {
+  return <FormContext.Provider value={{ form, parts }}>{children}</FormContext.Provider>;
 }
 
 /**
@@ -20,17 +20,21 @@ export function FormProvider({ form, children }: { form: string; children?: Reac
  * }
  * Display.forms = DISPLAY_FORMS;
  * ```
+ *
+ * In a region whose forms name their parts (`Form.parts`), a part passes its name: `useForm(
+ * TRANSPORT_FORMS, given, 'transport')` reads `parts.transport`.
  */
-export function useForm<Id extends string>(forms: Forms<Id>, given?: Id): Id {
+export function useForm<Id extends string>(forms: Forms<Id>, given?: Id, part?: string): Id {
   const chosen = useContext(FormContext);
   if (given !== undefined) return given;
-  const hit = forms.find((f) => f.id === chosen);
+  const id = part !== undefined && chosen?.parts?.[part] !== undefined ? chosen.parts[part] : chosen?.form;
+  const hit = forms.find((f) => f.id === id);
   return hit ? hit.id : forms[0].id;
 }
 
 /** The chosen form's id as it stands, or `null` outside an assembled screen. */
 export function useChosenForm(): string | null {
-  return useContext(FormContext);
+  return useContext(FormContext)?.form ?? null;
 }
 
 /** A component that declares its forms: a static `forms` and a `form` prop. */

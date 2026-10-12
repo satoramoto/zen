@@ -62,9 +62,14 @@ export const Stopped: Story = {
   args: { ...stageStopped },
 };
 
-/** The smallest screen, 1217 × 752: laid out at 100%, the hero compact, nothing cut off. */
+/** The smallest screen, 1217 × 752: the solver steps the controls, then the hero, down before it zooms; nothing cut off. */
 export const Small: Story = {
   args: { width: 1217, height: 752 },
+};
+
+/** 900 × 700: every region at a lean form, the body zoomed no further than the pack's 24 px target. */
+export const Narrow: Story = {
+  args: { width: 900, height: 700 },
 };
 
 /** The alternative `split` layout on the board: the hero, and beside it the song form over the transport. */

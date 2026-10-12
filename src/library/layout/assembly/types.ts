@@ -50,6 +50,28 @@ export interface Form<Id extends string = string> {
   grow?: { w?: boolean; h?: boolean };
   /** The most room it takes on an axis when it grows. */
   max?: Partial<Need>;
+  /**
+   * Height follows width: past `fixed`, the form keeps `w : h` (sixteen square pads in two rows
+   * of eight are `{ w: 8, h: 2, fixed: { w: <7 gaps>, h: <1 gap> } }`). Once the solver knows the
+   * form's width, its height is `fixed.h + (width − fixed.w) × h / w` (never below `min.h`): the
+   * room it is given on that axis is exactly that, so a square stays square and leaves no band.
+   */
+  ratio?: Ratio;
+  /**
+   * The form of each part inside the region, by part name, for a region that holds more than one
+   * component that declares forms (the song form with its transport): `{ form: 'strip',
+   * transport: 'keys' }`. A part reads its own with `useForm(forms, given, 'transport')`.
+   * `combineForms` builds such a region's forms from its parts'.
+   */
+  parts?: Readonly<Record<string, string>>;
+}
+
+/** A form's aspect: see `Form.ratio`. */
+export interface Ratio {
+  w: number;
+  h: number;
+  /** The part outside the ratio (gaps, captions). Default none. */
+  fixed?: Need;
 }
 
 /** A component's forms, most room first. */
@@ -92,6 +114,11 @@ export interface ScreenSpec {
    * runs straight from one to the other.
    */
   pairs?: readonly (readonly [string, string])[];
+  /**
+   * Room kept clear between the body and footer and the room's sides and foot (the header runs
+   * edge to edge, as an app bar does). Default none.
+   */
+  edge?: Length;
 }
 
 /** A box's four sides in px. */
@@ -134,6 +161,8 @@ export interface Placed {
   form: string;
   /** Its index in the region's forms (0 is the richest). */
   step: number;
+  /** The chosen form's parts' forms (`Form.parts`), when it names them. */
+  parts?: Readonly<Record<string, string>>;
   /** In px, relative to its zone (header, body or footer), before the body's zoom. */
   rect: Rect;
   zone: 'header' | 'body' | 'footer';

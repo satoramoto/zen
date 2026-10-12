@@ -1,14 +1,18 @@
 /* FaderBank: the Stage's mixer. Reads only contract variables. It fills its region's body (the
    page and layer tabs are the Region's): the strip grid (strips over their lamps), then the
    function row. The root is a column Stack (gap step 4: air between the strips and the Functions
-   rule); the grid's tracks come from the component. */
+   rule; step 1 in the short form); the grid's tracks come from the component.
+
+   Forms (`data-form`, FaderBank.forms.ts): every length that form declares is a step here, so the
+   two agree. `tall` is the board's layout; `short` takes each step tighter. The root fills the
+   Region body it sits in (a flex column), and the faders take whatever height is left. */
 
 .yh-faderbank {
   position: relative;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+  min-width: 0;
+  min-height: 0;
   container: yh-faderbank / inline-size;
   font-family: var(--font-sans);
   color: var(--text-1);
@@ -43,6 +47,11 @@
     column-gap: var(--space-2);
   }
 }
+/* Short: a step between strips and between the strips and their keys. */
+.yh-faderbank[data-form='short'] .yh-faderbank__grid {
+  column-gap: var(--space-1);
+  row-gap: var(--space-2);
+}
 
 /* Cluster dividers: a full-height hairline between parts, groups and Master. */
 .yh-faderbank__divider {
@@ -74,6 +83,18 @@
 .yh-faderbank__lamp--page {
   margin: 0 var(--space-2) var(--space-2);
 }
+.yh-faderbank[data-form='short'] .yh-faderbank__strip[data-kind='master'] {
+  margin: var(--space-1) var(--space-1) 0;
+}
+.yh-faderbank[data-form='short'] .yh-faderbank__lamp--page {
+  margin: 0 var(--space-1) var(--space-1);
+}
+/* Short: the Fader's numeral sits a step over its travel, with no room under it (the travel keeps
+   half a cap inside at each end). */
+.yh-faderbank[data-form='short'] .yh-faderbank__strip > .yh-fader {
+  gap: var(--space-1);
+  padding-bottom: 0;
+}
 
 /* An unused hardware fader: the banks' one empty-slot face (PadBank's empty pad, KnobBank's empty
    knob), a faint wash over the strip's whole footprint with no edge, no groove, no name and no
@@ -97,16 +118,19 @@
 
 /* The name: the part's name in its hue, over its sound in muted text. The whole block opens the
    part. The block and its two lines are Texts on the snug (1.15) leading: the name strong at label
-   size, the sound at caption size. */
+   size, the sound at caption size. It is a button, so never less than a control height; the short
+   form drops its padding. */
 .yh-faderbank__name {
   display: flex;
   flex: none;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  justify-content: center;
+  gap: 0;
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
+  min-height: var(--control-h);
   margin: 0;
   padding: var(--space-1) 0;
   border: 0;
@@ -125,6 +149,9 @@ button.yh-faderbank__name:focus-visible {
 }
 span.yh-faderbank__name {
   cursor: default;
+}
+.yh-faderbank[data-form='short'] .yh-faderbank__name {
+  padding: 0;
 }
 
 /* The marks' own line under the sound: one caption line tall even when empty, so every strip's
@@ -146,8 +173,12 @@ span.yh-faderbank__name {
   white-space: nowrap;
   color: var(--text-1);
 }
+/* The sound is data of any length: no inline size of its own (`contain`), so it takes the strip's
+   width and ellipsizes rather than widen the strip past its declared least. */
 .yh-faderbank__sound {
   flex: 0 1 auto;
+  contain: inline-size;
+  align-self: stretch;
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
@@ -178,9 +209,10 @@ span.yh-faderbank__name {
   grid-row: 2;
   min-width: 0;
 }
+/* A key keeps its own floor (its label, `max-content`), so it sets its strip's least width rather
+   than being cut. */
 .yh-faderbank__lamp > * {
   flex: 1 1 auto;
-  min-width: 0;
 }
 /* A strip-wide key has a strip's width only: a tighter side inset keeps "Off" and "Panel" whole
    at a 1217 × 752 Stage instead of cutting them to "O…". */
@@ -197,6 +229,9 @@ span.yh-faderbank__name {
   min-width: 0;
   padding-top: var(--space-3);
   border-top: max(1px, var(--border-width)) solid var(--border);
+}
+.yh-faderbank[data-form='short'] .yh-faderbank__foot {
+  padding-top: var(--space-2);
 }
 .yh-faderbank__functions {
   flex: 1 1 auto;

@@ -1,16 +1,32 @@
 /* KnobBank: eight knob slots across the Knobs region's body (the page tabs are the Region's). Reads only
-   contract variables and the Knob's --yh-knob-ring, which it sets for every slot (a full knob's and
-   an empty one's ring alike). */
+   contract variables, the Knob's --yh-knob-ring, which it sets for every slot (a full knob's and
+   an empty one's ring alike), and its own --yh-knobbank-h. Every length here is the one its form
+   declares in KnobBank.tsx (KNOB_BANK_FORMS): change one, change both. */
 
+/* The bank fills the box it is given (the Region body, a flex column). It is a size container,
+   so the rings read its height as well as their slot's width; with no height given it is its
+   form's ideal height. Spare height sits above and below the row, which stays centred. */
 .yh-knobbank {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  flex: 1 1 auto;
   box-sizing: border-box;
-  width: 100%;
+  height: var(--yh-knobbank-h);
   min-width: 0;
+  min-height: 0;
   /* No panel of its own: the bank sits inside a Region, which wears the theme's `plate`. */
   font-family: var(--font-sans);
-  container: yh-knobbank / inline-size;
+  container: yh-knobbank / size;
+}
+/* labelled: the knob's --space-1 all round, the name's two caption lines, --space-1, a 2.75
+   control-height ring. */
+.yh-knobbank[data-form='labelled'] {
+  --yh-knobbank-h: calc(var(--space-1) * 3 + var(--size-caption) * 2.6 + var(--control-h) * 2.75);
+}
+/* compact: the name, --space-1, a two control-height ring; no padding above or below. */
+.yh-knobbank[data-form='compact'] {
+  --yh-knobbank-h: calc(var(--space-1) + var(--size-caption) * 2.6 + var(--control-h) * 2);
 }
 
 .yh-knobbank__knobs {
@@ -19,32 +35,54 @@
   column-gap: var(--space-1);
 }
 
-/* Each slot is a size container: the knob's ring takes the slot's width, up to the density's size. */
+/* Each slot is an inline-size container: the knob's ring takes the slot's width (less the knob's
+   padding either side), the bank's height (less the name and the knob's spacing), up to the
+   form's cap. */
 .yh-knobbank__slot {
   display: flex;
   justify-content: center;
   min-width: 0;
   container-type: inline-size;
 }
-.yh-knobbank__slot .yh-knob,
-.yh-knobbank__empty {
-  --yh-knob-ring: min(calc(var(--control-h) * 2.75), calc(100cqi - 2 * var(--space-1)));
+.yh-knobbank[data-form='labelled'] :is(.yh-knobbank__slot .yh-knob, .yh-knobbank__empty) {
+  --yh-knob-ring: min(
+    calc(var(--control-h) * 3.5),
+    calc(100cqi - 2 * var(--space-1)),
+    calc(100cqh - 3 * var(--space-1) - var(--size-caption) * 2.6)
+  );
+  padding: var(--space-1);
+}
+.yh-knobbank[data-form='compact'] :is(.yh-knobbank__slot .yh-knob, .yh-knobbank__empty) {
+  --yh-knob-ring: min(
+    calc(var(--control-h) * 2.75),
+    calc(100cqi - 2 * var(--space-1)),
+    calc(100cqh - var(--space-1) - var(--size-caption) * 2.6)
+  );
+  padding: 0 var(--space-1);
 }
 .yh-knobbank__slot .yh-knob {
   width: 100%;
-  padding: var(--space-1);
 }
-/* The name takes the slot's whole width, and a slot too narrow for its longest word ("Retrigger"
-   in caps, eight across a 552px region) steps the name down a little rather than breaking the
-   word or cutting it: a name is never "Dynami…" or "DYNAMI / CS". (The name and the value are
-   the Knob's Texts: these are their knobs.) */
+
+/* The name takes the slot's whole width at the caption size. Labelled keeps every word whole
+   (a slot is at least the longest word, "Metronome" in bold capitals); compact lets a long word
+   break where it meets the edge ("Metron / ome"), so every name still fits its two lines and
+   none is cut to "Dynami…". (The name and the value are the Knob's Texts: these are their knobs.) */
 .yh-knobbank__slot .yh-knob__label {
   max-width: calc(100% + 2 * var(--space-1));
   margin-inline: calc(-1 * var(--space-1));
-  --text-size: min(var(--size-caption), 17cqi);
   --text-tracking: min(var(--tracking), 0em);
   overflow-wrap: normal;
   hyphens: manual;
+}
+/* Below its declared least (a bank drawn outside an assembled screen, narrower than the form
+   says), a labelled name steps down a little rather than being cut; at or above it, 17% of the
+   slot is more than the caption size, so this never bites. */
+.yh-knobbank[data-form='labelled'] .yh-knobbank__slot .yh-knob__label {
+  --text-size: min(var(--size-caption), 17cqi);
+}
+.yh-knobbank[data-form='compact'] .yh-knobbank__slot .yh-knob__label {
+  overflow-wrap: anywhere;
 }
 
 /* The value scales with the ring, larger than the knob's own default, so it reads first. */
@@ -62,7 +100,6 @@
   gap: var(--space-1);
   box-sizing: border-box;
   width: 100%;
-  padding: var(--space-1);
 }
 /* The knob's name block: two caption lines (Knob.css). */
 .yh-knobbank__line {

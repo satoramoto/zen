@@ -4,7 +4,9 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { FaderBank, FaderBankRegion, type FaderBankProps } from './FaderBank';
+import { FormProvider, principlesFor, resolveNeed } from '../../layout/assembly';
+import { packs } from '../../themes/packs';
+import { FADER_BANK_FORMS, FaderBank, FaderBankRegion, type FaderBankProps } from './FaderBank';
 import { faderPageTabs, functionLamps, layerTabs, panelStrips, partLamps, reverbStrips, styleStrips } from './FaderBank.fixtures';
 
 function setup(extra: Partial<FaderBankProps> = {}) {
@@ -167,6 +169,96 @@ describe('FaderBank callbacks', () => {
   });
 });
 
+describe('FaderBank forms', () => {
+  const ids = FADER_BANK_FORMS.map((f) => f.id);
+
+  it('declares tall then short, as FADER_BANK_FORMS and the static FaderBank.forms', () => {
+    expect(ids).toEqual(['tall', 'short']);
+    expect(FaderBank.forms).toBe(FADER_BANK_FORMS);
+  });
+
+  it('carries the form as data-form: tall by default, by prop, and through FormProvider', () => {
+    const { rerender, props } = setup();
+    const root = () => document.querySelector('.yh-faderbank') as HTMLElement;
+    expect(root()).toHaveAttribute('data-form', 'tall');
+    rerender(<FaderBankRegion {...props} form="short" />);
+    expect(root()).toHaveAttribute('data-form', 'short');
+    for (const form of ids) {
+      rerender(
+        <FormProvider form={form}>
+          <FaderBankRegion {...props} />
+        </FormProvider>,
+      );
+      expect(root()).toHaveAttribute('data-form', form);
+    }
+    // A form the bank doesn't have falls back to its first; a prop wins over the provider.
+    rerender(
+      <FormProvider form="two-rows">
+        <FaderBankRegion {...props} />
+      </FormProvider>,
+    );
+    expect(root()).toHaveAttribute('data-form', 'tall');
+    rerender(
+      <FormProvider form="short">
+        <FaderBankRegion {...props} form="tall" />
+      </FormProvider>,
+    );
+    expect(root()).toHaveAttribute('data-form', 'tall');
+  });
+
+  it.each(['tall', 'short'] as const)('keeps every control in the %s form', (form) => {
+    const { bank } = setup({ form });
+    expect(screen.getAllByRole('slider')).toHaveLength(9);
+    for (const name of ['Right 1, Stage Grand: open Channel', 'Left, Finger Bass: open Channel', 'Style volume: open the Style fader page', 'Multi Pad volume: open Multi Pads', 'Master: open Effects, master compressor and EQ', 'Fader page is Panel: click for Style', 'Harmony/Arpeggio on/off', 'Left Hold on/off'])
+      expect(screen.getByRole('button', { name })).toBeInTheDocument();
+    for (const sound of ['Stage Grand', 'Silk Strings', 'Brass Section', 'Finger Bass']) expect(bank).toHaveTextContent(sound);
+    expect(bank.querySelectorAll('.yh-lampbutton')).toHaveLength(partLamps.length + functionLamps.length);
+    expect(within(screen.getByRole('group', { name: 'Functions' })).getAllByRole('button')).toHaveLength(4);
+    expect(screen.getAllByRole('tab')).toHaveLength(faderPageTabs.length + layerTabs.length);
+    expect(screen.getByRole('status')).toHaveTextContent('Soft takeover Right 2 move up to 72');
+    expect(stripOf('Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)')).toHaveAttribute('data-away', 'up');
+    expect(stripOf('Right 1 · Stage Grand, level 90')).toHaveAttribute('data-hue', '1');
+    expect(bank.querySelector('[data-mark="off"]')).not.toBeNull();
+  });
+
+  it('is ordered under every pack: short is less tall than tall, and each min is within its ideal', () => {
+    for (const pack of packs) {
+      const p = principlesFor(pack.facets, pack.principles);
+      const [tall, short] = FADER_BANK_FORMS.map((f) => ({ min: resolveNeed(f.min, p), ideal: resolveNeed(f.ideal, p) }));
+      expect(short.min.h, pack.id).toBeLessThan(tall.min.h);
+      expect(short.min.w, pack.id).toBeLessThanOrEqual(tall.min.w);
+      for (const f of [tall, short]) {
+        expect(f.min.w, pack.id).toBeLessThanOrEqual(f.ideal.w);
+        expect(f.min.h, pack.id).toBeLessThanOrEqual(f.ideal.h);
+      }
+    }
+  });
+
+  it('resolves to the expected px at yahaha-classic (compact: unit 4, control 28)', () => {
+    const pack = packs.find((x) => x.id === 'yahaha-classic')!;
+    const p = principlesFor(pack.facets, pack.principles);
+    const px = (id: string) => {
+      const f = FADER_BANK_FORMS.find((x) => x.id === id)!;
+      return { min: resolveNeed(f.min, p), ideal: resolveNeed(f.ideal, p), grow: f.grow };
+    };
+    const tall = px('tall');
+    const short = px('short');
+    // Tall: the strip row (four parts at their "Off" key, Style, Multi Pad, two empty slots,
+    // Master on its plate, ten --space-2 gaps) is the widest thing; 10.5 control heights down.
+    expect(tall.min.w).toBeCloseTo(540.8);
+    expect(tall.min.h).toBeCloseTo(294.2);
+    expect(tall.ideal.w).toBeCloseTo(672);
+    expect(tall.ideal.h).toBeCloseTo(322.2);
+    expect(tall.grow).toEqual({ w: true, h: true });
+    // Short: the head (Panel Style | Vol Pan Reverb Chorus Delay) is the widest thing; 7.4 control heights down.
+    expect(short.min.w).toBeCloseTo(525);
+    expect(short.min.h).toBeCloseTo(206.2);
+    expect(short.ideal.w).toBeCloseTo(560);
+    expect(short.ideal.h).toBeCloseTo(222.2);
+    expect(short.grow).toEqual({ w: true });
+  });
+});
+
 describe('FaderBank body', () => {
   it('renders the chosen page body alone: no tabs, no region of its own', () => {
     render(<FaderBank strips={panelStrips} pageTabs={faderPageTabs} page="panel" layerTabs={layerTabs} layer="volume" partLamps={partLamps} functionLamps={functionLamps} />);
@@ -233,8 +325,10 @@ describe('FaderBank layout', () => {
       depth += ch === '(' ? 1 : ch === ')' ? -1 : 0;
     }
     expect(tracks).toHaveLength(11);
-    expect(tracks.filter((t) => t === 'minmax(0, 1fr)')).toHaveLength(6);
-    expect(tracks.filter((t) => t === 'minmax(0, 0.75fr)')).toHaveLength(2);
+    // A live strip never goes below its content (its name and key), so the declared least width holds.
+    expect(tracks.filter((t) => t === 'minmax(min-content, 1fr)')).toHaveLength(6);
+    expect(tracks.filter((t) => t === 'minmax(min-content, 1.25fr)')).toHaveLength(1);
+    expect(tracks.filter((t) => t === 'minmax(var(--space-4), 0.75fr)')).toHaveLength(2);
   });
 
   it('every key in the bank is one height: part lamps, page button and function lamps are cell keys', () => {

@@ -8,7 +8,16 @@ import { Tabs, type TabItem } from '../../layout/Tabs';
 import { Text } from '../../primitives/Text';
 import { HealthSlot, type HealthTarget } from '../HealthSlot/HealthSlot';
 import { MetronomePopover } from './MetronomePopover';
+import type { Forms } from '../../layout/assembly/types';
 import './AppBar.css';
+
+/**
+ * The bar's one form, for an assembled screen's header: one row, a control height between
+ * `--space-2` above and the tabs' room below (AppBar.css's row). Full width; it never steps.
+ */
+export const APP_BAR_FORMS: Forms<'bar'> = [
+  { id: 'bar', min: { w: 0, h: { control: 1, space: [2, 2] } }, ideal: { w: 0, h: { control: 1, space: [2, 2] } }, grow: { w: true } },
+];
 
 export type { HealthTarget } from '../HealthSlot/HealthSlot';
 export type { TabItem } from '../../layout/Tabs';

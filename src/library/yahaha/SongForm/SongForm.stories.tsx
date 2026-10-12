@@ -1,7 +1,19 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { SongForm } from './SongForm';
+import { resolveNeed, useScopePrinciples, type Forms as FormList } from '../../layout/assembly';
+import { Stack } from '../../primitives/Stack';
+import { Text } from '../../primitives/Text';
+import {
+  FORM_FORMS,
+  SONG_FORM_FORMS,
+  SongForm,
+  TRANSPORT_FORMS,
+  type FormFormId,
+  type SongFormPart,
+  type SongFormProps,
+  type TransportFormId,
+} from './SongForm';
 import {
   songFormBoard,
   songFormFillPending,
@@ -127,10 +139,10 @@ export const MissingSections: Story = {
 /** A fade-out under way while running: Fade rings in the ink colour, not a fill (a fill means sounding). */
 export const Fading: Story = { args: { fading: true } };
 
-/** The 1217 × 752 Stage: the region 1169 wide, under 50 control heights, so the transport sits under the form. */
+/** The 1217 × 752 Stage: the region 1169 wide, the form over the transport (as `both` always is), its steps at numeral size. */
 export const At1217: Story = { parameters: { regionWidth: 1169 } };
 
-/** A narrow column (720): the transport under the form, in two rows sharing its width; the step numerals one size down so the form stays one row. */
+/** A narrow column (720): the transport under the form, in two rows sharing its width; the steps at body size so the form stays one row. */
 export const Narrow: Story = { parameters: { regionWidth: 720 } };
 
 /**
@@ -151,15 +163,16 @@ export const FormPart: Story = {
 };
 
 /**
- * The form alone in the 1217 × 752 Stage's strip at its floor: 62 tall in the compact packs (the
- * steps one numeral and their inset, the captions over them), still one row.
+ * The form alone in the 1217 × 752 Stage's strip at its floor: the `strip` form's least, 66.3
+ * tall in the compact packs (the steps one numeral, their inset and borders, the captions over
+ * them), here 67; still one row.
  */
 export const FormPartSmall: Story = {
   args: { part: 'form' },
-  parameters: { regionWidth: 1169, regionHeight: 62 },
+  parameters: { regionWidth: 1169, regionHeight: 67 },
   play: async ({ canvasElement }) => {
     const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
-    await expect(Math.round(form.getBoundingClientRect().height)).toBe(62);
+    await expect(Math.round(form.getBoundingClientRect().height)).toBe(67);
   },
 };
 
@@ -180,12 +193,73 @@ export const TransportPart: Story = {
 
 /**
  * The transport alone given a height, as beside the 1440 × 900 hero: the key rows share it, and
- * past five control heights the labels grow with the keys (body size, Start / Stop at display).
+ * past five control heights tall and 25 wide (700 at the compact density) the labels grow with
+ * the keys (body size, Start / Stop at display).
  */
 export const TransportPartTall: Story = {
   args: { part: 'transport' },
-  parameters: { regionWidth: 560, regionHeight: 210 },
+  parameters: { regionWidth: 720, regionHeight: 210 },
 };
+
+/**
+ * Every form of each half, drawn in a box exactly its declared least (`min`) and its `ideal`, at
+ * the theme's scale (the toolbar's pack): nothing may be cut off at its least, and at its ideal it
+ * looks as designed. The dashed edge is the box; it clips, so a need that lied would show. The
+ * transport runs `keys` (two rows) → `tight` (three rows, no taller than the hero's least) →
+ * `compact` (four rows, the narrowest), each narrower than the one before.
+ */
+export const Forms: Story = {
+  render: (args) => <FormsSheet {...args} />,
+  play: async ({ canvasElement }) => {
+    const boxes = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-specimen]'));
+    await expect(boxes.length).toBe((TRANSPORT_FORMS.length + FORM_FORMS.length + SONG_FORM_FORMS.length) * 2);
+    for (const box of boxes) {
+      const name = box.getAttribute('data-specimen');
+      await expect(box.scrollWidth, `${name} width`).toBeLessThanOrEqual(box.clientWidth + 1);
+      await expect(box.scrollHeight, `${name} height`).toBeLessThanOrEqual(box.clientHeight + 1);
+    }
+  },
+};
+
+function FormsSheet(args: SongFormProps) {
+  const p = useScopePrinciples();
+  const rows: { part: SongFormPart; forms: FormList; pin: (id: string) => Partial<SongFormProps> }[] = [
+    { part: 'transport', forms: TRANSPORT_FORMS, pin: (id) => ({ transportForm: id as TransportFormId }) },
+    { part: 'form', forms: FORM_FORMS, pin: (id) => ({ formForm: id as FormFormId }) },
+    {
+      part: 'both',
+      forms: SONG_FORM_FORMS,
+      pin: (id) => {
+        const parts = SONG_FORM_FORMS.find((f) => f.id === id)!.parts!;
+        return { formForm: parts.form as FormFormId, transportForm: parts.transport as TransportFormId };
+      },
+    },
+  ];
+  return (
+    <Stack gap={6}>
+      {rows.flatMap(({ part, forms, pin }) =>
+        forms.flatMap((f) =>
+          (['min', 'ideal'] as const).map((at) => {
+            const { w, h } = resolveNeed(f[at], p);
+            return (
+              <Stack key={`${part}-${f.id}-${at}`} gap={2}>
+                <Text role="caption" tone="muted">
+                  {`${part} · ${f.id} · ${at} ${Math.round(w)} × ${Math.round(h)}`}
+                </Text>
+                <div
+                  data-specimen={`${part} ${f.id} ${at}`}
+                  style={{ width: w, height: h, display: 'flex', flexDirection: 'column', overflow: 'hidden', outline: '1px dashed var(--border)' }}
+                >
+                  <SongForm {...args} part={part} {...pin(f.id)} />
+                </div>
+              </Stack>
+            );
+          }),
+        ),
+      )}
+    </Stack>
+  );
+}
 
 /** The transport alone while stopped with Sync Start armed: Start the one fill, Sync Start the one transport-hue ring. */
 export const TransportPartStopped: Story = {

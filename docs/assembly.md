@@ -10,16 +10,22 @@ A component lists its **forms**, the ways it can be drawn, from most room to lea
 
 | Component | Forms |
 |---|---|
-| Display | `full → compact → minimal` |
-| PadBank | `two-rows → one-row` |
-| Tabs | `labels → short → menu` |
-| Fader | `tall → short` |
+| Display | `full → compact → minimal` (`DISPLAY_FORMS`) |
+| SongForm's transport | `keys → tight → compact` (`TRANSPORT_FORMS`) |
+| SongForm's strip | `strip → folded` (`FORM_FORMS`); both halves together `full → short` (`SONG_FORM_FORMS`) |
+| FaderBank | `tall → short` (`FADER_BANK_FORMS`) |
+| KnobBank | `labelled → compact` (`KNOB_BANK_FORMS`) |
+| PadBank | `two-rows → small → one-row` (`PAD_BANK_FORMS`) |
+| AppBar, StatusLine | one form each (`APP_BAR_FORMS`, `STATUS_LINE_FORMS`) |
+| Tabs (not yet) | `labels → short → menu` |
 
 Each form gives:
 
 - `min`: the least room it still works in;
 - `ideal`: the room it wants;
-- `grow`: whether it takes spare room on each axis past its ideal (up to an optional `max`).
+- `grow`: whether it takes spare room on each axis past its ideal (up to an optional `max`);
+- `ratio` (optional): height follows width. Past `ratio.fixed` (gaps, captions), the form keeps `w : h`: sixteen square pads in two rows of eight are `{ w: 8, h: 2, fixed: { w: <7 gaps>, h: <1 gap> } }`. Once the solver knows the region's width, it gives exactly `fixed.h + (width − fixed.w) × h / w` (never below `min.h`), so a square stays square and leaves no band; the spare goes to the growers;
+- `parts` (optional): for a region holding more than one component that declares forms, each part's form by name (`{ form: 'strip', transport: 'keys' }`). `combineForms(arrangement, gap, parts, list)` builds such a region's forms from its parts' needs, added up across or down.
 
 Sizes are in **scale units**, never measured and never in pixels. A `Units` value adds up what is present:
 
@@ -35,7 +41,9 @@ Sizes are in **scale units**, never measured and never in pixels. A `Units` valu
 
 `lengthSum`, `lengthMax`, `needsAcross(gap, …)` and `needsDown(gap, …)` add up a component's parts: side by side, the widths add and the height is the tallest.
 
-A component receives its form with `useForm(forms, given?)`. A `form` prop wins; otherwise it gets the form the assembled screen chose for its region; otherwise its first form. By convention the component also exposes its list as a static, `Display.forms`, so a region can add it up.
+A component receives its form with `useForm(forms, given?, part?)`. A `form` prop wins; otherwise it gets the form the assembled screen chose for its region (with `part`, that region form's `parts[part]`); otherwise its first form. By convention the component also exposes its list as a static, `Display.forms`, so a region can add it up.
+
+Needs must be **truthful**: at its `min`, under every scale and pack, the component draws every concept with nothing cut off, and it fills any box at least that size. The component's own CSS honours the numbers (sizes in control heights, space steps and text roles), and each component's tests hold its forms to that under every pack × scale.
 
 ## Regions add up their contents
 
@@ -49,13 +57,14 @@ interface ScreenSpec {
   footer?: RegionSpec[];   // fixed, full width: never steps down or zooms
   rows: Row[];             // the body, top to bottom
   pairs?: [string, string][];
+  edge?: Length;           // room round the body and footer; the header runs edge to edge
 }
 type Row = (RegionSpec | { rows: Row[] })[];  // a row's slot can hold a nested stack of rows
 ```
 
 There is no grid, no fraction and no breakpoint. A **pair** is two regions that share a column seam: they take one width, so the seam beside them runs straight. Both must sit in rows of the same stack, and be first in both rows or last in both. The solver refuses any other pair.
 
-Regions sit `--mat-plate-gap` apart, and the header and footer are that far from the body.
+Regions sit `--mat-plate-gap` apart, and the header and footer are that far from the body. The `edge` keeps the body and footer off the room's sides and foot (an app bar in the header still spans the room). Two arrangements of one screen are two specs (the Stage's `STAGE_SPEC` and `STAGE_SPLIT_SPEC`), never CSS.
 
 ## The principles
 
@@ -82,11 +91,11 @@ How the two systems map onto it:
 `assemble(spec, room, principles)` is pure and deterministic.
 
 1. **Start rich.** Every body region starts at its first form. The header and footer take their first form's ideal height at full width. The body gets the room that is left.
-2. **Step down by priority.** The fit test aims each form between its `min` and its `ideal` by density (dense 0, balanced ½, roomy 1). While the body overflows, the **lowest-priority** region whose next form is smaller on the overflowing axis steps down one form. Within that tier, a region whose step also shrinks the body goes first, and on a tie the later one in reading order.
+2. **Step down by priority.** The fit test aims each form between its `min` and its `ideal` by density (dense 0, balanced ½, roomy 1). While the body overflows, the **lowest-priority** region whose next form is smaller on the overflowing axis steps down one form. Within that tier, a region whose step also shrinks the body goes first, and on a tie the later one in reading order. A step that would make the body worse on an axis where it then overflows is no help and isn't taken (sixteen pads in one row are shorter than two rows of eight, but wider than the room).
 3. **Take back needless steps.** A step taken early can turn out not to be needed once a later one makes room. Picture a short sidebar beside a tall hero: stepping the sidebar down doesn't help until the hero shrinks too. So once the body fits, each stepped region tries its richer form again, highest priority first, and keeps it if the body still fits.
 4. **Fall back to dense.** If a roomier aim runs out of useful steps, the solver starts again aiming at each form's least.
-5. **Zoom last.** Only when no step down helps any more (normally, when every region is at its last form) is the body zoomed. It uses the one factor that fits the body's least, and never goes below `minTarget / control`. Below that it sets `overflow` and the screen scrolls. The header and footer never zoom.
-6. **Split the room.** Along each row (widths) and each stack (heights), every part gets its least. Then each priority tier, highest first, is raised toward its ideal. Then the spare goes to the parts that `grow`, highest priority first, in proportion to their ideals and up to their `max`. A row with no grower leaves its spare at the end. Across a row, regions stretch to the row's height, so there are no dead bands.
+5. **Zoom last.** Only when no step down helps any more (normally, when every region is at its last form) is the body zoomed. First every step that costs the body nothing is taken back (a narrower transport beside the hero, once the row below sets the width). The zoom is the one factor that fits the body's least, and never goes below `minTarget / control`. If it would, the solver takes back what the floor's room still holds (a step that traded one axis for the other) and tries again; failing that it sets `overflow`, keeps the leaner forms, and the screen scrolls. Under the zoom, any step the zoomed room still holds is taken back. The header and footer never zoom.
+6. **Split the room.** Along each row (widths) and each stack (heights), every part gets its least. Then each priority tier, highest first, is raised toward its ideal. Then the spare goes to the parts that `grow`, highest priority first, in proportion to their ideals and up to their `max`. A row with no grower leaves its spare at the end. Across a row, regions stretch to the row's height, so there are no dead bands. Widths never depend on heights, so a second pass, with every width known, gives each `ratio` form the height its width asks.
 
 The answer is a `Placement`: each region's `form`, `step` and `rect` (px, in its zone, before zoom), the three zones, `zoom`, `layout` (the body's box before zooming), `overflow`, and `steps`, the log of every step down and back.
 
@@ -120,8 +129,12 @@ With a 28 px control, a 4 px unit, a 12 px plate inset, an 8 px gap and `dense`:
 - **600 × 240.** The body has 204. The sidebar goes to `rail`, the pads to `one-row`, then (last of all) "now" goes to `compact`, and the body needs 196. Nothing can be taken back. There is no zoom.
 - **600 × 215** zooms the body to 179 / 196 = 0.913. At **400 × 150** the zoom would go below 24 / 28, so it stops there and sets `overflow`.
 
+## The Stage
+
+`yahaha/Stage/Stage.spec.ts` is the whole of the Stage's layout: header `bar`; footer `keys` then `status`; rows `[hero, transport]`, `[form]`, `[mixer, { rows: [[knobs], [pads]] }]`; the pair `hero`/`mixer`; edge `--space-2`. `Stage.assembly.test.ts` proves it at 1440 × 900, 1217 × 752 and 900 × 700 under every pack (the forms chosen, no overflow, zoom ≥ the floor, every region at least its form's least, nothing overlapping, the hero stepping only after the controls). visual[flow]'s frost materials (32 px gaps, 22 px insets) hold the floor and scroll below the board.
+
 ## What it doesn't do yet
 
-- **Aspect.** Needs are fixed per axis, so a square pad's height can't follow its width. A form can't yet say `ratio`.
-- **Region forms map one-to-one to a component's forms.** A region holding two declaring components passes the same form id to both. A per-part mapping (`parts: { pads: 'one-row' }`) comes later.
+- **Width follows height.** `ratio` runs one way: a form's height follows its width, not the reverse. A ratio region in a row shorter than its width asks centres its content.
+- **Tabs don't declare forms.** A region head is one control height; a head whose tabs need more width than the body puts it into the body's least width (FaderBank, KnobBank), with the widest material's tab chrome assumed.
 - **Text that wraps.** `chars` and `lines` count a fixed line.

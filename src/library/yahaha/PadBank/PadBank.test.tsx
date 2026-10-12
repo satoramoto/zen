@@ -5,10 +5,16 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PadBank, PadBankRegion, bankOnFace, type PadBankProps } from './PadBank';
+import { PAD_BANK_FORMS, PAD_GAP, PAD_MIN_SIDE, PAD_SMALL_SIDE, PadBank, PadBankRegion, bankOnFace, type PadBankForm, type PadBankProps } from './PadBank';
 import { allPadBanks, allPadsByBank, chordPads, padBanks, quickRackPads, quickRackStorePads, sectionPads } from './PadBank.fixtures';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { FormProvider } from '../../layout/assembly/forms';
+import { assemble } from '../../layout/assembly/assemble';
+import { CHAR_WIDTH, cssBox, cssPx, principlesFor, resolveLength, resolveNeed, stepPx } from '../../layout/assembly/units';
+import type { Form, Principles } from '../../layout/assembly/types';
+import { packs } from '../../themes/packs';
+import { scales } from '../../themes/scales';
 
 // jsdom lays nothing out, so squareness is checked on the stylesheet (and in the stories' play
 // functions, which measure in a browser). Tests run from the repo root.
@@ -311,13 +317,215 @@ describe('PadBank shape', () => {
     expect(room).toContain('place-content: start center;');
   });
 
-  it('keeps at least --space-2 between pads', () => {
-    expect(rule('.yh-padbank__pads')).toContain('--yh-padbank-gap: clamp(var(--space-2),');
+  it('keeps the one gap step the forms count between pads', () => {
+    expect(PAD_GAP).toBe(2);
+    expect(rule('.yh-padbank__pads')).toContain(`--yh-padbank-gap: var(--space-${PAD_GAP});`);
+  });
+
+  it('one row of sixteen is keyed on the form, and its room a sixteenth as tall', () => {
+    expect(rule(".yh-padbank[data-form='one-row'] .yh-padbank__pads")).toContain('--yh-padbank-cols: 16; --yh-padbank-rows: 1;');
+    expect(rule(".yh-padbank[data-form='one-row'] > .yh-padbank__room")).toContain('aspect-ratio: 16;');
+  });
+
+  it('small hides the waiting chip and gives its row back to the label, as many armed pads do', () => {
+    expect(padBankCss).toMatch(/\.yh-padbank\[data-form='small'\] \.yh-pad__tag \{\s*display: none;/);
+    expect(padBankCss).toMatch(
+      /\.yh-padbank\[data-form='small'\] \.yh-padbank__cell \.yh-pad\.yh-pad\[data-tag='top'\] \{\s*padding-top: var\(--space-1\);/,
+    );
+  });
+
+  it('the root fills the box it is given', () => {
+    const root = rule('.yh-padbank');
+    for (const d of ['flex: 1 1 auto;', 'min-width: 0;', 'min-height: 0;']) expect(root).toContain(d);
   });
 
   it('the room and the grid carry the column count', () => {
     const { container } = setup({ columns: 4 });
     expect(container.querySelector('.yh-padbank__room')).toHaveAttribute('data-columns', '4');
     expect(container.querySelector('.yh-padbank__room > .yh-padbank__pads')).toHaveAttribute('data-columns', '4');
+  });
+});
+
+/** Every pack, worn at every scale: the solver's principles for each. */
+const everyWay: { name: string; p: Principles; pack: (typeof packs)[number] }[] = packs.flatMap((pack) =>
+  scales.map((scale) => ({
+    name: `${pack.id} at ${scale.id}`,
+    pack,
+    p: principlesFor({ ...pack.facets, scale }, pack.principles),
+  })),
+);
+
+const formOf = (id: PadBankForm): Form<PadBankForm> => PAD_BANK_FORMS.find((f) => f.id === id)!;
+
+/** The height a form's ratio gives for a body `w` wide: `fixed.h + (w − fixed.w) × h / w`. */
+function ratioHeight(form: Form, w: number, p: Principles): number {
+  const r = form.ratio!;
+  const fixed = r.fixed ? resolveNeed(r.fixed, p) : { w: 0, h: 0 };
+  return fixed.h + ((w - fixed.w) * r.h) / r.w;
+}
+
+/** The square side the CSS draws in a `w` × `h` body: the tighter of the width's and the height's share. */
+function cssSide(id: PadBankForm, w: number, h: number, gap: number): number {
+  const [cols, rows] = id === 'one-row' ? [16, 1] : [8, 2];
+  return Math.min((w - gap * (cols - 1)) / cols, (h - gap * (rows - 1)) / rows);
+}
+
+describe('PadBank forms', () => {
+  const gridOf = (container: HTMLElement) => container.querySelector('.yh-padbank__pads')!;
+  const labels = () => screen.getAllByRole('button').map((b) => b.getAttribute('aria-label'));
+
+  it('declares two-rows, small, then one-row, as PadBank.forms', () => {
+    expect(PAD_BANK_FORMS.map((f) => f.id)).toEqual(['two-rows', 'small', 'one-row']);
+    expect(PadBank.forms).toBe(PAD_BANK_FORMS);
+    for (const f of PAD_BANK_FORMS) expect(f.grow).toEqual({ w: true });
+  });
+
+  it.each(['two-rows', 'small', 'one-row'] as const)('%s by prop (through the region): sixteen pads in order, data-form on the root', (form) => {
+    const { container } = setup({ pads: sectionPads, banks: allPadBanks, form });
+    expect(container.querySelector('.yh-padbank')).toHaveAttribute('data-form', form);
+    expect(gridOf(container).children).toHaveLength(16);
+    expect(gridOf(container)).toHaveAttribute('data-columns', form === 'one-row' ? '16' : '8');
+    expect(labels()).toEqual(sectionPads.map((pad, i) => pad.name ?? `${pad.label} (pad ${i + 1})`));
+  });
+
+  it.each(['two-rows', 'small', 'one-row'] as const)('%s through FormProvider (the assembled screen)', (form) => {
+    const { container } = render(
+      <FormProvider form={form}>
+        <PadBank pads={quickRackPads} />
+      </FormProvider>,
+    );
+    expect(container.querySelector('.yh-padbank')).toHaveAttribute('data-form', form);
+    expect(container.querySelectorAll('.yh-padbank__cell')).toHaveLength(16);
+  });
+
+  it('defaults to two-rows; a form prop wins over the screen’s; a chosen form wins over columns', () => {
+    const { container } = render(<PadBank pads={[]} />);
+    expect(container.querySelector('.yh-padbank')).toHaveAttribute('data-form', 'two-rows');
+    cleanup();
+    const prop = render(
+      <FormProvider form="one-row">
+        <PadBank pads={[]} form="two-rows" />
+      </FormProvider>,
+    );
+    expect(prop.container.querySelector('.yh-padbank')).toHaveAttribute('data-form', 'two-rows');
+    cleanup();
+    const chosen = render(
+      <FormProvider form="one-row">
+        <PadBank pads={[]} columns={4} />
+      </FormProvider>,
+    );
+    expect(chosen.container.querySelector('.yh-padbank')).toHaveAttribute('data-form', 'one-row');
+    expect(gridOf(chosen.container)).toHaveAttribute('data-columns', '16');
+    cleanup();
+    // On its own, columns 4 is the 4 × 4 block, outside the forms.
+    const four = render(<PadBank pads={[]} columns={4} />);
+    expect(four.container.querySelector('.yh-padbank')).not.toHaveAttribute('data-form');
+    expect(gridOf(four.container)).toHaveAttribute('data-columns', '4');
+  });
+
+  it.each(everyWay)('is ordered and consistent for $name', ({ p }) => {
+    const forms = PAD_BANK_FORMS.map((f) => ({ f, min: resolveNeed(f.min, p), ideal: resolveNeed(f.ideal, p) }));
+    const [two, small] = forms;
+    // Each later form is shorter at its least and its ideal; small is also narrower than two-rows.
+    for (let i = 1; i < forms.length; i++) {
+      expect(forms[i].min.h).toBeLessThan(forms[i - 1].min.h);
+      expect(forms[i].ideal.h).toBeLessThan(forms[i - 1].ideal.h);
+    }
+    expect(small.min.w).toBeLessThan(two.min.w);
+    expect(small.ideal.w).toBeLessThan(two.ideal.w);
+    for (const { f, min, ideal } of forms) {
+      expect(min.w).toBeLessThanOrEqual(ideal.w);
+      expect(min.h).toBeLessThanOrEqual(ideal.h);
+      // At its least and its ideal, the ratio's height is exactly the declared one: square pads.
+      expect(ratioHeight(f, min.w, p)).toBeCloseTo(min.h, 6);
+      expect(ratioHeight(f, ideal.w, p)).toBeCloseTo(ideal.h, 6);
+    }
+  });
+
+  it.each(everyWay)('a pad at the least keeps its face whole for $name', ({ p }) => {
+    const side = resolveLength(PAD_MIN_SIDE, p);
+    const smallSide = resolveLength(PAD_SMALL_SIDE, p);
+    const { caption } = p.scale.sizes;
+    const space1 = stepPx(1, p.scale.unit);
+    for (const s of [side, smallSide]) {
+      expect(s).toBeGreaterThanOrEqual(Math.max(p.scale.control, p.minTarget));
+      // Across: six caption characters inside the 2px insets and two borders of up to 1.5px.
+      expect(s).toBeGreaterThanOrEqual(6 * caption * CHAR_WIDTH + 2 * 2 + 2 * 1.5);
+    }
+    // Down: the chip's row (caption × 1.4), two snug label lines (caption × 1.15 each), three
+    // --space-1 insets and two borders.
+    expect(side).toBeGreaterThanOrEqual(caption * (1.4 + 2 * 1.15) + 3 * space1 + 3 - 1e-9);
+    // Small, with no chip: two snug label lines, one --space-1 above and below, two borders.
+    expect(smallSide).toBeGreaterThanOrEqual(caption * 2 * 1.15 + 2 * space1 + 3 - 1e-9);
+    // Every box at least the least: the CSS square is at least the form's least side, and fits.
+    const gap = stepPx(PAD_GAP, p.scale.unit);
+    for (const f of PAD_BANK_FORMS) {
+      const min = resolveNeed(f.min, p);
+      const least = f.id === 'small' ? smallSide : side;
+      for (const [w, h] of [[min.w, min.h], [min.w * 1.5, min.h], [min.w, min.h * 3], [min.w * 2, min.h * 1.2]]) {
+        const s = cssSide(f.id, w, h, gap);
+        expect(s).toBeGreaterThanOrEqual(least - 1e-9);
+        const [cols, rows] = f.id === 'one-row' ? [16, 1] : [8, 2];
+        expect(cols * s + (cols - 1) * gap).toBeLessThanOrEqual(w + 1e-9);
+        expect(rows * s + (rows - 1) * gap).toBeLessThanOrEqual(h + 1e-9);
+      }
+    }
+  });
+
+  it.each(everyWay)('the five bank tabs fit the head’s one row at each form’s least for $name', ({ pack, p }) => {
+    const scale = p.scale;
+    const facetScale = { ...pack.facets.scale, unit: scale.unit, control: scale.control };
+    const { tabs, plate } = pack.facets.materials;
+    const track = cssBox(tabs.pad, facetScale);
+    const tab = cssBox(tabs.tabPad, facetScale);
+    const chars = allPadBanks.join('').length;
+    const width =
+      track.left + track.right + (allPadBanks.length - 1) * cssPx(tabs.gap, facetScale) + allPadBanks.length * (tab.left + tab.right) + chars * scale.sizes.label * CHAR_WIDTH;
+    const head = cssBox(plate.head.inset, facetScale);
+    const inset = cssBox(plate.inset, facetScale);
+    for (const f of PAD_BANK_FORMS) {
+      const region = resolveLength(f.min.w, p) + inset.left + inset.right;
+      // (Small's least is sized to the row in the hardware materials: equal, up to rounding.)
+      expect(width).toBeLessThanOrEqual(region - head.left - head.right + 1e-9);
+    }
+  });
+
+  it('worked by hand: yahaha classic (compact: control 28, unit 4), a 552 px body', () => {
+    const p = principlesFor(packs.find((x) => x.id === 'yahaha-classic')!.facets, packs.find((x) => x.id === 'yahaha-classic')!.principles);
+    // The gap is --space-2: 8px. Two rows of eight: seven gaps across (56), one down (8).
+    // Each pad is (552 − 56) / 8 = 62 across, so the body is 2 × 62 + 8 = 132 tall.
+    expect(ratioHeight(formOf('two-rows'), 552, p)).toBe(132);
+    expect(cssSide('two-rows', 552, 132, 8)).toBe(62);
+    // One row of sixteen at 1200: fifteen gaps (120), each pad (1200 − 120) / 16 = 67.5, the body 67.5 tall.
+    expect(ratioHeight(formOf('one-row'), 1200, p)).toBe(67.5);
+    expect(cssSide('one-row', 1200, 67.5, 8)).toBe(67.5);
+    // The least: max(28, 6 × 11 × 0.6 + 7 = 46.6, 2.85 × 11 × 1.3 + 12 + 3 = 55.755) = 55.755.
+    expect(resolveLength(PAD_MIN_SIDE, p)).toBeCloseTo(55.755, 6);
+    expect(resolveNeed(formOf('two-rows').min, p)).toEqual({ w: expect.closeTo(8 * 55.755 + 56, 6), h: expect.closeTo(2 * 55.755 + 8, 6) });
+    // Small, no chip: max(28, 46.6, 1.77 × 11 × 1.3 + 8 + 3 = 36.311, the tabs' share
+    // 39 / 8 × 13 × 0.6 + 2 × 4 + 1.75 = 47.775) = 47.775: eight such pads and seven gaps are
+    // 438.2, the five hardware tabs' row. Its ideal is max(47.775, 2 × 28) = 56.
+    expect(resolveLength(PAD_SMALL_SIDE, p)).toBeCloseTo(47.775, 6);
+    expect(resolveNeed(formOf('small').min, p)).toEqual({ w: expect.closeTo(8 * 47.775 + 56, 6), h: expect.closeTo(2 * 47.775 + 8, 6) });
+    expect(resolveNeed(formOf('small').ideal, p)).toEqual({ w: expect.closeTo(8 * 56 + 56, 6), h: expect.closeTo(2 * 56 + 8, 6) });
+  });
+
+  it('assembled: the region’s height follows its width, and the pads are squares', () => {
+    const p = principlesFor(packs.find((x) => x.id === 'yahaha-classic')!.facets, packs.find((x) => x.id === 'yahaha-classic')!.principles);
+    const spec = { rows: [[{ id: 'pads', forms: PAD_BANK_FORMS, head: true }]] };
+    const placed = assemble(spec, { w: 600, h: 400 }, p).regions.pads;
+    expect(placed.form).toBe('two-rows');
+    const { inset, head } = p.plate;
+    const body = { w: placed.rect.w - inset.left - inset.right, h: placed.rect.h - inset.top - inset.bottom - head.top - head.bottom - p.scale.control };
+    const gap = stepPx(PAD_GAP, p.scale.unit);
+    expect(body.h).toBeCloseTo(ratioHeight(formOf('two-rows'), body.w, p), 6);
+    const side = (body.w - 7 * gap) / 8;
+    expect(cssSide('two-rows', body.w, body.h, gap)).toBeCloseTo(side, 6);
+    // Narrower than the two rows' least (8 × 55.755 + 56 ≈ 502 body), it steps down to small (≈ 429).
+    const narrow = assemble(spec, { w: 480, h: 400 }, p).regions.pads;
+    expect(narrow.form).toBe('small');
+    // Short of both two-row forms' least, it steps down to one row.
+    const short = assemble(spec, { w: 1200, h: 130 }, p).regions.pads;
+    expect(short.form).toBe('one-row');
   });
 });

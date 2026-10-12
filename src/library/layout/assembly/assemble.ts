@@ -2,7 +2,7 @@
 // deterministic: no DOM, no randomness, the same answer for the same input (docs/assembly.md).
 import type { Density } from '../../contract';
 import type { Form, Nest, Placed, Placement, Principles, Rect, RegionSpec, Row, ScreenSpec } from './types';
-import { resolveLength } from './units';
+import { resolveLength, resolveNeed } from './units';
 
 /** How far from a form's least toward its ideal the fit test aims, per density. */
 export const DENSITY_AIM: Record<Density, number> = { dense: 0, balanced: 0.5, roomy: 1 };
@@ -47,6 +47,8 @@ class Solver {
   readonly all = new Map<string, RegionNode>();
   readonly partner = new Map<string, string>();
   readonly steps = new Map<string, number>();
+  /** Each region's width from a first placement: what a `ratio` form's height follows. */
+  readonly widths = new Map<string, number>();
   readonly spec: ScreenSpec;
   readonly p: Principles;
   readonly body: StackNode;
@@ -164,7 +166,18 @@ class Solver {
       const f = this.form(n);
       const c = this.chrome(n.spec);
       const cap = (a: Axis) => (f.max?.[a] === undefined ? Infinity : Math.max(ideal[a], c[a] + resolveLength(f.max[a]!, this.p)));
-      return { min, ideal, max: { w: cap('w'), h: cap('h') }, grow: { w: !!f.grow?.w, h: !!f.grow?.h }, prio: n.prio };
+      const max = { w: cap('w'), h: cap('h') };
+      const grow = { w: !!f.grow?.w, h: !!f.grow?.h };
+      // Height follows width, once the width is known (the second placement pass).
+      const w = this.widths.get(n.spec.id);
+      if (f.ratio && w !== undefined) {
+        const fixed = f.ratio.fixed ? resolveNeed(f.ratio.fixed, this.p) : { w: 0, h: 0 };
+        const h = Math.max(min.h, c.h + fixed.h + (Math.max(0, w - c.w - fixed.w) * f.ratio.h) / f.ratio.w);
+        ideal.h = h;
+        max.h = h;
+        grow.h = false;
+      }
+      return { min, ideal, max, grow, prio: n.prio };
     }
     const main: Axis = n.kind === 'row' ? 'w' : 'h';
     const cross = other(main);
@@ -332,10 +345,17 @@ class Solver {
         break;
       }
       const smaller = (before: Size, after: Size) => (o.w && after.w < before.w - 1e-6) || (o.h && after.h < before.h - 1e-6);
+      // A step helps when its next form is smaller where the body overflows, and it doesn't trade
+      // that for an overflow it makes worse on the other axis (sixteen pads in one row are
+      // shorter than two rows of eight, but no help on a screen they're then too wide for).
+      const harmless = () => {
+        const m = this.measure(this.body, k);
+        return m.w <= Math.max(o.m.w, room.w) + EPS && m.h <= Math.max(o.m.h, room.h) + EPS;
+      };
       const useful = order.filter((r) => {
         if (at(r) >= r.spec.forms.length - 1) return false;
         const before = this.own(r, k);
-        return trial(r, 1, () => smaller(before, this.own(r, k)));
+        return trial(r, 1, () => smaller(before, this.own(r, k)) && harmless());
       });
       if (!useful.length) break;
       const tier = useful[0].prio;
@@ -345,11 +365,36 @@ class Solver {
       this.steps.set(pick.spec.id, at(pick) + 1);
     }
     if (!fits) return false;
+    this.takeBack(room, k, log);
+    return true;
+  }
+
+  /**
+   * Highest priority first, each stepped region tries its richer form again and keeps it if the
+   * body still fits `room` at aim `k`; repeated until nothing changes.
+   */
+  takeBack(room: Size | { free: Size }, k: number, log: string[]) {
+    const order = [...this.regions].sort((a, b) => a.prio - b.prio || b.order - a.order);
+    const at = (r: RegionNode) => this.steps.get(r.spec.id) ?? 0;
+    const trial = (r: RegionNode, fn: () => boolean): boolean => {
+      const id = r.spec.id;
+      const was = at(r);
+      this.steps.set(id, was - 1);
+      const out = fn();
+      this.steps.set(id, was);
+      return out;
+    };
     for (let changed = true; changed; ) {
       changed = false;
       for (const r of [...order].reverse()) {
         if (at(r) === 0) continue;
-        const ok = trial(r, -1, () => {
+        const before = this.measure(this.body, k);
+        const ok = trial(r, () => {
+          if ('free' in room) {
+            // Free: no larger on either axis than the body already is, or than `free` holds.
+            const m = this.measure(this.body, k);
+            return m.w <= Math.max(before.w, room.free.w) + 1e-6 && m.h <= Math.max(before.h, room.free.h) + 1e-6;
+          }
           const o = this.over(room, k);
           return !o.w && !o.h;
         });
@@ -359,7 +404,6 @@ class Solver {
         changed = true;
       }
     }
-    return true;
   }
 }
 
@@ -391,9 +435,11 @@ export function assemble(spec: ScreenSpec, room: { w: number; h: number }, princ
   const foot = fixedZone(spec.footer);
   const headH = head.h;
   const footH = foot.h;
+  const edge = resolveLength(spec.edge ?? 0, p);
+  const inner = Math.max(0, room.w - 2 * edge);
   const bodyY = headH + (spec.header?.length ? gap : 0);
-  const bodyH = Math.max(0, room.h - bodyY - footH - (spec.footer?.length ? gap : 0));
-  const body: Size = { w: room.w, h: bodyH };
+  const bodyH = Math.max(0, room.h - bodyY - footH - (spec.footer?.length ? gap : 0) - edge);
+  const body: Size = { w: inner, h: bodyH };
 
   // Forms.
   const steps: string[] = [];
@@ -409,24 +455,55 @@ export function assemble(spec: ScreenSpec, room: { w: number; h: number }, princ
   let zoom = 1;
   let overflow = false;
   if (!fits) {
-    const least = s.measure(s.body, 0);
-    zoom = Math.min(1, body.w / Math.max(1, least.w), body.h / Math.max(1, least.h));
+    // A step that turned out to cost the body nothing (the row it sits in is set by another
+    // region now) is taken back first: it never helped.
+    s.takeBack({ free: { w: 0, h: 0 } }, 0, steps);
     const floor = Math.min(1, p.minTarget / p.scale.control);
+    const zoomFor = () => {
+      const least = s.measure(s.body, 0);
+      return Math.min(1, body.w / Math.max(1, least.w), body.h / Math.max(1, least.h));
+    };
+    zoom = zoomFor();
+    // Below the floor, a step that only traded one axis for the other may be what stops the
+    // floor holding it (a transport taller than the hero beside it): take back what the floor's
+    // room still holds, and zoom again.
+    if (zoom < floor - 1e-9) {
+      const was = new Map(s.steps);
+      const logged = steps.length;
+      s.takeBack({ free: { w: body.w / floor, h: body.h / floor } }, 0, steps);
+      if (zoomFor() >= floor - 1e-9) zoom = zoomFor();
+      else {
+        // It overflows anyway: keep the leaner forms.
+        for (const [id, n] of was) s.steps.set(id, n);
+        steps.length = logged;
+      }
+    }
     if (zoom < floor - 1e-9) {
       zoom = floor;
       overflow = true;
     }
+    // Under the zoom, a step that never helped the binding row (a narrower transport beside a
+    // hero while the row below sets the width) is taken back if the zoomed room still holds it.
+    if (!overflow) s.takeBack({ w: body.w / zoom, h: body.h / zoom }, 0, steps);
   }
   const layout = { w: body.w / zoom, h: body.h / zoom };
 
   // Placement.
-  const rects: Record<string, Rect> = {};
+  let rects: Record<string, Rect> = {};
   s.place(s.body, { x: 0, y: 0, ...layout }, rects, new Map());
+  // Widths never depend on heights, so a second pass with every width known lets a `ratio`
+  // form's height follow its width.
+  if (s.regions.some((r) => s.form(r).ratio)) {
+    for (const r of s.regions) s.widths.set(r.spec.id, rects[r.spec.id].w);
+    rects = {};
+    s.place(s.body, { x: 0, y: 0, ...layout }, rects, new Map());
+  }
   const placed: Record<string, Placed> = {};
   const put = (id: string, rect: Rect, zone: Placed['zone']) => {
     const r = s.byId(id);
     const step = s.steps.get(id) ?? 0;
-    placed[id] = { id, form: r.spec.forms[step].id, step, rect, zone };
+    const form = r.spec.forms[step];
+    placed[id] = { id, form: form.id, step, rect, zone, ...(form.parts ? { parts: form.parts } : {}) };
   };
   let y = 0;
   (spec.header ?? []).forEach((r, i) => {
@@ -436,7 +513,7 @@ export function assemble(spec: ScreenSpec, room: { w: number; h: number }, princ
   for (const r of s.regions) put(r.spec.id, rects[r.spec.id], 'body');
   y = 0;
   (spec.footer ?? []).forEach((r, i) => {
-    put(r.id, { x: 0, y, w: room.w, h: foot.hs[i] }, 'footer');
+    put(r.id, { x: 0, y, w: inner, h: foot.hs[i] }, 'footer');
     y += foot.hs[i] + gap;
   });
 
@@ -445,8 +522,8 @@ export function assemble(spec: ScreenSpec, room: { w: number; h: number }, princ
     order: [...(spec.header ?? []).map((r) => r.id), ...s.regions.map((r) => r.spec.id), ...(spec.footer ?? []).map((r) => r.id)],
     zones: {
       header: { x: 0, y: 0, w: room.w, h: headH },
-      body: { x: 0, y: bodyY, w: body.w, h: body.h },
-      footer: { x: 0, y: room.h - footH, w: room.w, h: footH },
+      body: { x: edge, y: bodyY, w: body.w, h: body.h },
+      footer: { x: edge, y: room.h - edge - footH, w: inner, h: footH },
     },
     zoom,
     layout,

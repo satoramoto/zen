@@ -2,7 +2,7 @@
 import { RANKS, SPACE_STEPS, type Facets, type PackPrinciples, type Rank } from '../../contract';
 import type { Step } from '../../primitives/step';
 import type { TextRole } from '../../primitives/Text';
-import type { Box, Length, Need, Principles, Units } from './types';
+import type { Box, Form, Forms, Length, Need, Principles, Units } from './types';
 
 /** Each text role's leading, as Text.css sets it (a test holds the two together). */
 export const ROLE_LEADING: Record<TextRole, number> = {
@@ -64,6 +64,57 @@ export function needsAcross(gap: Step, ...needs: Need[]): Need {
 export function needsDown(gap: Step, ...needs: Need[]): Need {
   const gaps: Length = needs.length > 1 ? { space: Array<Step>(needs.length - 1).fill(gap) } : 0;
   return { w: lengthMax(...needs.map((n) => n.w)), h: lengthSum(...needs.map((n) => n.h), gaps) };
+}
+
+/**
+ * A region's forms from its parts' (`Form.parts`): each entry names a form of every part, and its
+ * needs are the parts' added up, side by side (`across`) or stacked (`down`) with a gap step
+ * between them. It grows on an axis where any part does, up to the parts' max when every grower
+ * names one. Ratios don't carry over (a region's form keeps none).
+ *
+ * ```ts
+ * combineForms('down', 2, { form: FORM_FORMS, transport: TRANSPORT_FORMS }, [
+ *   { id: 'roomy', parts: { form: 'strip', transport: 'keys' } },
+ *   { id: 'tight', parts: { form: 'strip', transport: 'compact' } },
+ * ]);
+ * ```
+ */
+export function combineForms<Id extends string>(
+  arrange: 'across' | 'down',
+  gap: Step,
+  parts: Readonly<Record<string, Forms>>,
+  list: readonly [{ id: Id; parts: Readonly<Record<string, string>> }, ...{ id: Id; parts: Readonly<Record<string, string>> }[]],
+): Forms<Id> {
+  const add = arrange === 'across' ? needsAcross : needsDown;
+  const out = list.map(({ id, parts: chosen }): Form<Id> => {
+    const picked = Object.entries(parts).map(([name, forms]) => {
+      const f = forms.find((x) => x.id === chosen[name]);
+      if (!f) throw new Error(`assembly: '${id}' names no form of part '${name}' (it has ${forms.map((x) => x.id).join(', ')})`);
+      return f;
+    });
+    const grow = { w: picked.some((f) => f.grow?.w), h: picked.some((f) => f.grow?.h) };
+    const maxOn = (a: 'w' | 'h'): Length | undefined => {
+      const growers = picked.filter((f) => f.grow?.[a]);
+      if (!grow[a] || growers.some((f) => f.max?.[a] === undefined)) return undefined;
+      const sizes = picked.map((f) => (f.grow?.[a] ? f.max![a]! : f.ideal[a]));
+      const along = arrange === 'across' ? 'w' : 'h';
+      return a === along ? lengthSum(...sizes, { space: Array<Step>(picked.length - 1).fill(gap) }) : lengthMax(...sizes);
+    };
+    const max: Partial<Need> = {};
+    for (const a of ['w', 'h'] as const) {
+      const m = maxOn(a);
+      if (m !== undefined) max[a] = m;
+    }
+    return {
+      id,
+      parts: chosen,
+      min: add(gap, ...picked.map((f) => f.min)),
+      ideal: add(gap, ...picked.map((f) => f.ideal)),
+      ...(grow.w || grow.h ? { grow } : {}),
+      ...(Object.keys(max).length ? { max } : {}),
+    };
+  });
+  return out as unknown as Forms<Id>;
 }
 
 /* ---------- the materials' CSS lengths ---------- */

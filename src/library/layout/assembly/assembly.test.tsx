@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { packs } from '../../themes/packs';
 import { TEXT_ROLES } from '../../primitives/Text';
 import { Screen } from '../Screen';
-import { DEMO_SPEC, PAD_FORMS } from './Assembly.fixtures';
+import { DEMO_SPEC, NOW_FORMS, PAD_FORMS } from './Assembly.fixtures';
 import {
   assemble,
   cssBox,
@@ -16,6 +16,8 @@ import {
   resolveLength,
   ROLE_LEADING,
   useForm,
+  combineForms,
+  type RegionSpec,
   type Principles,
   type ScreenSpec,
 } from '.';
@@ -171,5 +173,78 @@ describe('Screen with a spec', () => {
   it('without principles, reads the first pack', () => {
     render(<Screen name="Plain" spec={DEMO_SPEC} room={{ w: 1440, h: 900 }} regions={{}} />);
     expect(screen.getByRole('group', { name: 'Plain' }).querySelector('[data-region="now"]')).toHaveAttribute('data-form', 'full');
+  });
+
+  it('hands each part of a region its own form', () => {
+    function Part({ name }: { name: string }) {
+      return <p data-testid={name}>{useForm([{ id: 'a', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } }, { id: 'b', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } }], undefined, name)}</p>;
+    }
+    const spec: ScreenSpec = {
+      rows: [[{ id: 'both', forms: [{ id: 'mixed', parts: { left: 'a', right: 'b' }, min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } }] }]],
+    };
+    render(<Screen name="Parts" spec={spec} room={{ w: 400, h: 200 }} principles={P} regions={{ both: <><Part name="left" /><Part name="right" /></> }} />);
+    expect(screen.getByTestId('left')).toHaveTextContent('a');
+    expect(screen.getByTestId('right')).toHaveTextContent('b');
+  });
+});
+
+describe('assemble: ratio, parts, edge', () => {
+  const pads = (min: number): RegionSpec => ({
+    id: 'pads',
+    forms: [{ id: 'grid', min: { w: { control: min }, h: { control: min / 4 } }, ideal: { w: { control: min }, h: { control: min / 4 } }, grow: { w: true }, ratio: { w: 4, h: 1 } }],
+  });
+  const tall: RegionSpec = { id: 'tall', forms: [{ id: 'one', min: { w: { control: 4 }, h: { control: 4 } }, ideal: { w: { control: 4 }, h: { control: 4 } }, grow: { h: true } }] };
+
+  it('a ratio form takes exactly the height its width asks, and the rest goes to the growers', () => {
+    // 1000 wide, no plate: the pads are 1000 wide, so 250 tall; the grower below takes the rest.
+    const p = assemble({ rows: [[{ ...pads(8), plate: false }], [{ ...tall, plate: false }]] }, { w: 1000, h: 600 }, P);
+    expect(p.regions.pads.rect.h).toBeCloseTo(250, 6);
+    expect(p.regions.tall.rect.h).toBeCloseTo(600 - 250 - 8, 6);
+  });
+
+  it('a ratio counts its fixed part and the plate outside the aspect', () => {
+    const spec: ScreenSpec = { rows: [[{ ...pads(8), forms: [{ ...pads(8).forms[0], ratio: { w: 4, h: 1, fixed: { w: { px: 24 }, h: { px: 6 } } } }] }], [tall]] };
+    const p = assemble(spec, { w: 1000, h: 600 }, P);
+    // (1000 − 24 plate − 24 fixed) / 4 + 6 fixed + 24 plate
+    expect(p.regions.pads.rect.h).toBeCloseTo(952 / 4 + 6 + 24, 6);
+  });
+
+  it('combineForms adds the parts up and keeps their names', () => {
+    const [both] = combineForms('down', 2, { a: NOW_FORMS, b: PAD_FORMS }, [{ id: 'x', parts: { a: 'compact', b: 'one-row' } }]);
+    expect(both.parts).toEqual({ a: 'compact', b: 'one-row' });
+    expect(resolveLength(both.min.h, P)).toBe(3 * 28 + 8 + 2 * 28);
+    expect(resolveLength(both.min.w, P)).toBe(8 * 28);
+    expect(both.grow).toEqual({ w: true, h: false });
+    expect(() => combineForms('across', 2, { a: NOW_FORMS }, [{ id: 'y', parts: { a: 'nope' } }])).toThrow(/names no form/);
+  });
+
+  it('the edge keeps the body and footer off the sides and foot; the header runs edge to edge', () => {
+    const spec: ScreenSpec = { ...DEMO_SPEC, footer: [{ id: 'foot', plate: false, forms: [{ id: 'f', min: { w: 0, h: { control: 1 } }, ideal: { w: 0, h: { control: 1 } } }] }], edge: { space: 5 } };
+    const p = assemble(spec, { w: 1440, h: 900 }, P);
+    expect(p.zones.header).toEqual({ x: 0, y: 0, w: 1440, h: 28 });
+    // --space-5 is 24 at a 4 px unit.
+    expect(p.zones.body).toMatchObject({ x: 24, w: 1392 });
+    expect(p.zones.footer).toEqual({ x: 24, y: 900 - 24 - 28, w: 1392, h: 28 });
+    expect(p.regions.foot.rect.w).toBe(1392);
+  });
+
+  it('never takes a step that trades an overflow for a worse one on the other axis', () => {
+    // The wide form is shorter but too wide for the room: the solver zooms rather than take it.
+    const spec: ScreenSpec = {
+      rows: [
+        [
+          {
+            id: 'bank',
+            forms: [
+              { id: 'two', min: { w: { control: 8 }, h: { control: 4 } }, ideal: { w: { control: 8 }, h: { control: 4 } } },
+              { id: 'one', min: { w: { control: 16 }, h: { control: 2 } }, ideal: { w: { control: 16 }, h: { control: 2 } } },
+            ],
+          },
+        ],
+      ],
+    };
+    const p = assemble(spec, { w: 300, h: 130 }, P);
+    expect(p.regions.bank.form).toBe('two');
+    expect(p.zoom).toBeLessThan(1);
   });
 });

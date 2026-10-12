@@ -10,13 +10,16 @@ const BOARD = { width: 702, height: 368 };
 /** The same region on a 1217×752 Stage. */
 const SMALL = { width: 593, height: 311 };
 
-const inRegion =
-  (size: { width: number; height: number }): Decorator =>
-  (Story) => (
+/** The region's box: `parameters.region` (default the board's), or `'none'` for a story that sizes its own. */
+const inRegion: Decorator = (Story, { parameters }) => {
+  const size = (parameters.region ?? BOARD) as { width: number; height: number } | 'none';
+  if (size === 'none') return <Story />;
+  return (
     <div style={{ display: 'grid', width: size.width, height: size.height }}>
       <Story />
     </div>
   );
+};
 
 /**
  * The Stage's mixer, as the Stage draws it: one `Region` named Mixer whose views are the fader
@@ -28,7 +31,7 @@ const inRegion =
 const meta = {
   title: 'Yahaha/Components/FaderBank',
   component: FaderBankRegion,
-  decorators: [inRegion(BOARD), withLibraryTheme],
+  decorators: [inRegion, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
   args: {
@@ -91,7 +94,36 @@ export const ReverbLayer: Story = {
 
 /** Added: the region a 1217×752 Stage gives the mixer (593×311). */
 export const SmallStage: Story = {
-  decorators: [inRegion(SMALL)],
+  parameters: { region: SMALL },
+};
+
+/**
+ * Added: the two forms (`FaderBank.forms`), each in a region the size of its least at the compact
+ * scale (the body plus a 12 px plate inset and a 36 px head): `tall` 565 × 354 (travel 3 control
+ * heights) and `short` 549 × 266 (travel 1 control height and a `--space-3`). Every strip, key,
+ * mark and tab is in both.
+ */
+export const Forms: Story = {
+  parameters: { region: 'none' },
+  render: (args) => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-5)', alignItems: 'flex-start' }}>
+      <div style={{ display: 'grid', width: 565, height: 354 }}>
+        <FaderBankRegion {...args} name="Mixer, tall" form="tall" />
+      </div>
+      <div style={{ display: 'grid', width: 549, height: 266 }}>
+        <FaderBankRegion {...args} name="Mixer, short" form="short" />
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    for (const form of ['tall', 'short']) {
+      const region = canvas.getByRole('region', { name: `Mixer, ${form}` });
+      await expect(region.querySelector('.yh-faderbank')).toHaveAttribute('data-form', form);
+      await expect(within(region).getAllByRole('slider')).toHaveLength(9);
+      await expect(within(region).getByRole('button', { name: /^Fader page is Panel/ })).toBeInTheDocument();
+    }
+  },
 };
 
 /** Added: the Style page: faders 1–8 are the style's parts, all neutral (no keyboard part, no hue); 9 stays Master. */

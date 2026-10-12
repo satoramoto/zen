@@ -1,6 +1,12 @@
 import { Fragment } from 'react';
 import { Text } from '../../primitives/Text';
+import type { Forms } from '../../layout/assembly/types';
 import './StatusLine.css';
+
+/** The line's one form, for an assembled screen's footer: one control height, full width. */
+export const STATUS_LINE_FORMS: Forms<'line'> = [
+  { id: 'line', min: { w: 0, h: { control: 1 } }, ideal: { w: 0, h: { control: 1 } }, grow: { w: true } },
+];
 
 /** A control's tooltip, shown in the line's place while the control is hovered or focused. */
 export interface StatusHint {

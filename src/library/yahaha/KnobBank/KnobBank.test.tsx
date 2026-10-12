@@ -4,10 +4,112 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { KnobBank, KnobBankRegion, type KnobBankProps } from './KnobBank';
+import { FormProvider, principlesFor, resolveNeed } from '../../layout/assembly';
+import { packs } from '../../themes/packs';
+import { KNOB_BANK_FORMS, KNOB_PAGE_NAMES, KnobBank, KnobBankRegion, type KnobBankProps } from './KnobBank';
 import { knobPages, reverbKnobs, styleKnobs } from './KnobBank.fixtures';
 
 afterEach(() => cleanup());
+
+describe('KnobBank forms', () => {
+  const ids = KNOB_BANK_FORMS.map((f) => f.id);
+  const root = () => document.querySelector('.yh-knobbank') as HTMLElement;
+  const eight = () => {
+    expect(document.querySelectorAll('.yh-knobbank__slot')).toHaveLength(8);
+    expect(screen.getAllByRole('button')).toHaveLength(7);
+    expect(screen.getByRole('img', { name: 'Knob 7: unused' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Knob 1: Dynamics (DynCtrl) 127' })).toHaveTextContent('Dynamics');
+    expect(screen.getByRole('button', { name: 'Knob 8: Tempo (Tempo) 104' })).toHaveTextContent('104');
+  };
+
+  it('is labelled then compact, and is the static KnobBank.forms', () => {
+    expect(ids).toEqual(['labelled', 'compact']);
+    expect(KnobBank.forms).toBe(KNOB_BANK_FORMS);
+  });
+
+  it('defaults to the first form', () => {
+    render(<KnobBank knobs={styleKnobs} />);
+    expect(root()).toHaveAttribute('data-form', 'labelled');
+  });
+
+  it.each(ids)('draws %s by prop, through the region, and through FormProvider, with all eight knobs', (id) => {
+    render(<KnobBank knobs={styleKnobs} form={id} />);
+    expect(root()).toHaveAttribute('data-form', id);
+    eight();
+    cleanup();
+    render(<KnobBankRegion knobs={styleKnobs} pages={knobPages} form={id} />);
+    expect(root()).toHaveAttribute('data-form', id);
+    eight();
+    cleanup();
+    render(
+      <FormProvider form={id}>
+        <KnobBankRegion knobs={styleKnobs} pages={knobPages} />
+      </FormProvider>,
+    );
+    expect(root()).toHaveAttribute('data-form', id);
+    eight();
+  });
+
+  it('a form prop wins over the screen’s choice', () => {
+    render(
+      <FormProvider form="compact">
+        <KnobBank knobs={styleKnobs} form="labelled" />
+      </FormProvider>,
+    );
+    expect(root()).toHaveAttribute('data-form', 'labelled');
+  });
+
+  it('sizes the head from the same pages the fixtures name', () => {
+    expect([...KNOB_PAGE_NAMES]).toEqual(knobPages);
+  });
+
+  it.each(packs.map((p) => [p.id, p] as const))('%s: min ≤ ideal ≤ max, each later form smaller at its min, the ring ≥ a target', (_, pack) => {
+    const p = principlesFor(pack.facets, pack.principles);
+    const target = Math.max(p.scale.control, p.minTarget);
+    const sized = KNOB_BANK_FORMS.map((f) => ({
+      min: resolveNeed(f.min, p),
+      ideal: resolveNeed(f.ideal, p),
+      maxH: f.max?.h ? resolveNeed({ w: 0, h: f.max.h }, p).h : Infinity,
+    }));
+    for (const s of sized) {
+      expect(s.min.w).toBeLessThanOrEqual(s.ideal.w);
+      expect(s.min.h).toBeLessThanOrEqual(s.ideal.h);
+      expect(s.ideal.h).toBeLessThanOrEqual(s.maxH);
+    }
+    for (let i = 1; i < sized.length; i++) {
+      const [a, b] = [sized[i - 1].min, sized[i].min];
+      expect(b.w < a.w || b.h < a.h).toBe(true);
+      expect(b.w).toBeLessThanOrEqual(a.w);
+      expect(b.h).toBeLessThanOrEqual(a.h);
+    }
+    // compact at its least: the ring is what's left of the height after the name and --space-1.
+    const caption = p.scale.sizes.caption;
+    expect(sized[1].min.h - p.scale.unit - caption * 2.6).toBeCloseTo(target);
+  });
+
+  it('yahaha-classic (compact scale: control 28, unit 4, caption 11, label 13): the px', () => {
+    const pack = packs.find((x) => x.id === 'yahaha-classic')!;
+    const p = principlesFor(pack.facets, pack.principles);
+    const px = (i: number) => {
+      const f = KNOB_BANK_FORMS[i];
+      return { min: resolveNeed(f.min, p), ideal: resolveNeed(f.ideal, p), maxH: resolveNeed({ w: 0, h: f.max!.h! }, p).h };
+    };
+    const close = (got: { w: number; h: number }, w: number, h: number) => {
+      expect(got.w).toBeCloseTo(w, 5);
+      expect(got.h).toBeCloseTo(h, 5);
+    };
+    // labelled: slots of 11 caption characters (72.6) → 8 × 72.6 + 7 × 4; 3 × 4 + 28.6 + 1.5 × 28.
+    close(px(0).min, 608.8, 82.6);
+    // ideal: slots of 2.75 × 28 + 2 × 4 = 85 → 708; 12 + 28.6 + 77.
+    close(px(0).ideal, 708, 117.6);
+    expect(px(0).maxH).toBeCloseTo(138.6, 5);
+    // compact: slots of 7 caption characters (46.2) → 397.6, wider than the tabs (386.2); 4 + 28.6 + 28.
+    close(px(1).min, 397.6, 60.6);
+    // ideal: slots of 2 × 28 + 8 = 64 → 540; 4 + 28.6 + 56.
+    close(px(1).ideal, 540, 88.6);
+    expect(px(1).maxH).toBeCloseTo(109.6, 5);
+  });
+});
 
 function setup(props: Partial<KnobBankProps> = {}) {
   const onPage = vi.fn<(index: number) => void>();

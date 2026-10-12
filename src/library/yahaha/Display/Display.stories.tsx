@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { Decorator } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn } from 'storybook/test';
+import { useScopePrinciples } from '../../layout/assembly/AssembledScreen';
+import { resolveNeed } from '../../layout/assembly/units';
 import { withLibraryTheme } from '../../storybook';
-import { Display } from './Display';
+import { DISPLAY_FORMS, Display, type DisplayProps } from './Display';
 import {
   displayBoard,
   displayFillToEnding,
@@ -20,13 +22,14 @@ import {
 /**
  * The original's hero regions on a 1440×900 Stage (1392 × 288) and a 1217×752 one; the redesigned
  * Stage's hero column beside the song form at 1440×900 (about 660 × 250); the column a 1217×752
- * Stage has once it isn't zoomed (about 436 × 200); and a short, wide region.
+ * Stage has once it isn't zoomed (436 × 200 there; here 454, the compact form's least); and a
+ * short, wide region.
  */
 const REGIONS = {
   large: { width: 1392, height: 288 },
   small: { width: 1169, height: 241 },
   column: { width: 660, height: 250 },
-  columnSmall: { width: 436, height: 200 },
+  columnSmall: { width: 454, height: 200 },
   short: { width: 1169, height: 200 },
 } as const;
 
@@ -76,6 +79,7 @@ const meta = {
     parts: { control: 'object' },
     art: { control: 'boolean' },
     density: { control: 'inline-radio', options: ['auto', 'full', 'compact'] },
+    form: { control: 'inline-radio', options: [undefined, 'full', 'compact', 'minimal'] },
   },
 } satisfies Meta<typeof Display>;
 
@@ -97,7 +101,7 @@ export const LongChord: Story = { args: { ...displayLongChord } };
 /** A long style name: the genre · metre drops first, then the name ends in an ellipsis (the full name in its title). */
 export const LongStyleName: Story = { args: { ...displayLongStyle } };
 
-/** A long fingering: the small line wraps to a second line, nothing is cut off. */
+/** A long fingering: the notes over it, the fingering on one line ending in an ellipsis (whole in the chord's spoken name and tooltip). */
 export const LongFingering: Story = { args: { ...displayLongFingering } };
 
 /** Right 1 and Right 3 off: their dots hollow, "· off" after the part's name (just "off" in the one-row strip of a narrow hero). */
@@ -117,14 +121,14 @@ export const NoParts: Story = { args: { ...displayNoParts } };
 
 /**
  * The Stage's hero column at 1440×900, 660 × 250: auto is compact there, so the readouts stop at
- * their compact caps (60 / 52 / 44); below a 900px hero the parts wrap to one row under the
- * readouts (their dots name the parts).
+ * their compact caps (60 / 52 / 44); below a 900px hero the parts are not drawn (the Stage's
+ * mixer names the sounds).
  */
 export const StageColumn: Story = { parameters: { region: 'column' } };
 
 /**
- * The column a 1217×752 Stage has unzoomed, 436 × 200: the same ranks, scaled with the width,
- * tighter gaps and keys, no chord notes. Below a 600px hero the parts drop (the Stage never shows them).
+ * About the column a 1217×752 Stage has unzoomed, at the compact form's least width on the compact
+ * scale (454 × 200): every readout at its floor, the notes over the fingering.
  */
 export const StageColumnSmall: Story = { parameters: { region: 'columnSmall' } };
 
@@ -149,6 +153,52 @@ export const SmallStageLongChord: Story = { args: { ...displayLongChord }, param
 /** At the style's own tempo (104 of 104): the Style tempo key takes the unavailable face, still focusable. */
 export const AtStyleTempo: Story = {
   args: { nowPlaying: { ...displayBoard.nowPlaying, styleTempo: displayBoard.nowPlaying.bpm } },
+};
+
+/** The three forms side by side, each in a frame exactly its least, resolved for the pack worn. */
+function FormsAtLeast(args: DisplayProps) {
+  const p = useScopePrinciples();
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 24, padding: 16 }}>
+      {DISPLAY_FORMS.map((f) => {
+        const { w, h } = resolveNeed(f.min, p);
+        return (
+          <figure key={f.id} style={{ margin: 0, display: 'grid', gap: 8 }}>
+            <figcaption style={{ font: 'inherit', opacity: 0.7 }}>
+              {f.id}: {Math.round(w)} × {Math.round(h)} ({(w / p.scale.control).toFixed(1)} × {(h / p.scale.control).toFixed(1)} control heights)
+            </figcaption>
+            <div data-testid={`form-${f.id}`} style={{ display: 'flex', width: w, height: h }}>
+              <Display {...args} form={f.id} />
+            </div>
+          </figure>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * Full, compact and minimal at their least: every concept drawn, nothing cut off (the needs are
+ * Display.forms.ts's, resolved against this pack's scale). Without parts, as the Stage draws it.
+ */
+export const Forms: Story = {
+  args: { ...displayNoParts },
+  render: (args) => <FormsAtLeast {...args} />,
+  play: async ({ canvasElement }) => {
+    for (const id of ['full', 'compact', 'minimal']) {
+      const frame = canvasElement.querySelector<HTMLElement>(`[data-testid='form-${id}']`)!;
+      const display = frame.querySelector<HTMLElement>('.yh-display')!;
+      await expect(display).toHaveAttribute('data-form', id);
+      // The hero fills its frame and its content stays inside it.
+      const box = frame.getBoundingClientRect();
+      for (const el of display.querySelectorAll<HTMLElement>('[data-part]')) {
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || getComputedStyle(el).position === 'absolute') continue;
+        await expect(r.right, `${id} ${el.dataset.part} right`).toBeLessThanOrEqual(box.right + 1);
+        await expect(r.bottom, `${id} ${el.dataset.part} bottom`).toBeLessThanOrEqual(box.bottom + 1);
+      }
+    }
+  },
 };
 
 /** With the background art at the right edge, without parts. */

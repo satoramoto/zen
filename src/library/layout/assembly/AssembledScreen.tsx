@@ -50,8 +50,11 @@ function useRoom(given?: { w: number; h: number }) {
   return [ref, given ?? room ?? FALLBACK_ROOM] as const;
 }
 
-/** The nearest scope's principles resolved, or the first pack's. */
-function useScopePrinciples(given?: Principles): Principles {
+/**
+ * The nearest ThemeScope's principles resolved (the first pack's outside one), as the assembled
+ * screen reads them: so a screen can turn a placed rect into its content's px (less the plate).
+ */
+export function useScopePrinciples(given?: Principles): Principles {
   const scope = useThemeScope();
   return useMemo(() => {
     if (given) return given;
@@ -78,14 +81,16 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
   const [ref, room] = useRoom(given);
   const p = useScopePrinciples(principles);
   const placement = useMemo(() => assemble(spec, room, p), [spec, room, p]);
-  useLayoutEffect(() => onPlacement?.(placement), [placement, onPlacement]);
+  useLayoutEffect(() => {
+    onPlacement?.(placement);
+  }, [placement, onPlacement]);
 
   const slot = (id: string) => {
     const placed = placement.regions[id];
     const content = regions[id];
     return (
       <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} style={at(placed.rect)}>
-        <FormProvider form={placed.form}>{typeof content === 'function' ? content(placed.form, placed) : content}</FormProvider>
+        <FormProvider form={placed.form} parts={placed.parts}>{typeof content === 'function' ? content(placed.form, placed) : content}</FormProvider>
       </div>
     );
   };

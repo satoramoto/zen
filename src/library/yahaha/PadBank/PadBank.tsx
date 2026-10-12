@@ -1,6 +1,10 @@
 import { Region } from '../../layout/Region';
 import { Pad, type PadFamily, type PadOnFace, type PadState, type TipAction } from '../../components/music/Pad/Pad';
 import { PART_HUE_INDEX, type Part } from '../hues';
+import { useChosenForm, useForm } from '../../layout/assembly/forms';
+import { lengthMax, needsAcross, needsDown } from '../../layout/assembly/units';
+import type { Forms, Length, Need } from '../../layout/assembly/types';
+import type { Step } from '../../primitives/step';
 import './PadBank.css';
 
 export type { TipAction };
@@ -51,6 +55,101 @@ export const PAD_SLOTS = 16;
 /** The most armed pads that still carry their ARMED chip; past this the ring alone says it. */
 export const ARMED_CHIPS = 2;
 
+/* ---------- forms: the room the pads take (docs/assembly.md) ---------- */
+
+/** The bank's forms: two rows of eight (the Launchkey's layout), the same with smaller chipless pads, or all sixteen in one row. */
+export type PadBankForm = 'two-rows' | 'small' | 'one-row';
+
+/** The space between pads, as a step: PadBank.css's `--yh-padbank-gap` reads the same one. */
+export const PAD_GAP: Step = 2;
+
+/**
+ * The least side a pad keeps its face whole at, the larger of three:
+ * - a target (`target: 1`: a control height, or the pack's `minTarget` if larger);
+ * - across: six caption characters (`Ending`, `Start /`: the longest words wrap whole), the face's
+ *   2 px side insets (PadBank.css) and its two borders (up to 1.5 px each);
+ * - down: a waiting pad's top chip and two label lines (the chip's row is the caption × 1.4, each
+ *   snug label line the caption × 1.15: 3.7 caption sizes, which is 2.85 caption lines at their
+ *   1.3 leading), the face's insets (two `--space-1` above the label, one below, Pad.css) and
+ *   its two borders.
+ */
+export const PAD_MIN_SIDE: Length = lengthMax(
+  { target: 1 },
+  { chars: { caption: 6 }, px: 7 },
+  { lines: { caption: 2.85 }, space: [1, 1, 1], px: 3 },
+);
+
+/** A comfortable pad: 2.5 control heights (the library Pad's own size), never below the least. */
+export const PAD_IDEAL_SIDE: Length = lengthMax(PAD_MIN_SIDE, { control: 2.5 });
+
+/**
+ * The least side of a `small` pad, which carries no waiting chip (its ring alone says ARMED /
+ * NEXT, PadBank.css), the larger of three:
+ * - a target (`target: 1`), as `PAD_MIN_SIDE`;
+ * - across: the same six caption characters, 2 px side insets and two borders;
+ * - down: two snug label lines (the caption × 1.15 each: 2.3 caption sizes, 1.77 caption lines
+ *   at their 1.3 leading, rounded up), one `--space-1` inset above and one below, and the two borders;
+ * - the bank tabs: eight pads and their seven gaps must be as wide as the head's one row of five
+ *   tabs, so each pad takes an eighth of that row less the gaps. The row is the five names'
+ *   39 label characters plus the widest materials' tab chrome (hardware: ten `--space-3` tab
+ *   insets, 30 units, and a 3 px track inset each side and four 2 px gaps, 14 px); a material
+ *   with more chrome must raise this (the tabs test checks every pack).
+ */
+export const PAD_SMALL_SIDE: Length = lengthMax(
+  { target: 1 },
+  { chars: { caption: 6 }, px: 7 },
+  { lines: { caption: 1.77 }, space: [1, 1], px: 3 },
+  // (39 label characters + 30 units + 14 px − 7 × --space-2, which is 2 units) / 8.
+  { chars: { label: 39 / 8 }, unit: (30 - 7 * 2) / 8, px: 14 / 8 },
+);
+
+/** A comfortable `small` pad: 2 control heights, never below its least. */
+export const PAD_SMALL_IDEAL_SIDE: Length = lengthMax(PAD_SMALL_SIDE, { control: 2 });
+
+/** `rows` rows of `columns` square pads of side `side`, `PAD_GAP` apart. */
+function padGrid(columns: number, rows: number, side: Length): Need {
+  const pad: Need = { w: side, h: side };
+  const row = needsAcross(PAD_GAP, ...Array<Need>(columns).fill(pad));
+  return needsDown(PAD_GAP, ...Array<Need>(rows).fill(row));
+}
+
+/** `n` gap steps (the gaps between `n + 1` pads), outside a form's ratio. */
+const gaps = (n: number): Length => (n > 0 ? { space: Array<Step>(n).fill(PAD_GAP) } : 0);
+
+/**
+ * The bank's forms, most room first, for the Pads region's BODY only (the region's plate, its
+ * head inset and the bank tabs' one control-height row are the solver's). All grow across, and
+ * their height follows their width (`ratio`), so every pad is a square and the body has no band:
+ *
+ * - `two-rows`: two rows of eight (pads 1–8 over 9–16), the Launchkey's layout.
+ * - `small`: the same two rows of eight, but no pad shows the ARMED / NEXT chip (the ring alone
+ *   says it waits), so its pads go down to `PAD_SMALL_SIDE`, narrower and shorter.
+ * - `one-row`: all sixteen in one row, 1–16, under half the height.
+ */
+export const PAD_BANK_FORMS: Forms<PadBankForm> = [
+  {
+    id: 'two-rows',
+    min: padGrid(8, 2, PAD_MIN_SIDE),
+    ideal: padGrid(8, 2, PAD_IDEAL_SIDE),
+    grow: { w: true },
+    ratio: { w: 8, h: 2, fixed: { w: gaps(7), h: gaps(1) } },
+  },
+  {
+    id: 'small',
+    min: padGrid(8, 2, PAD_SMALL_SIDE),
+    ideal: padGrid(8, 2, PAD_SMALL_IDEAL_SIDE),
+    grow: { w: true },
+    ratio: { w: 8, h: 2, fixed: { w: gaps(7), h: gaps(1) } },
+  },
+  {
+    id: 'one-row',
+    min: padGrid(16, 1, PAD_MIN_SIDE),
+    ideal: padGrid(16, 1, PAD_IDEAL_SIDE),
+    grow: { w: true },
+    ratio: { w: 16, h: 1, fixed: { w: gaps(15), h: 0 } },
+  },
+];
+
 /** The song-section families: on, they are sounding, so they keep the Pad's solid fill. */
 const SECTION_FAMILIES: ReadonlySet<BankPadFamily> = new Set<BankPadFamily>(['intro', 'main', 'ending', 'brk', 'fill']);
 
@@ -65,7 +164,16 @@ const EMPTY: PadItem = { label: '', family: 'util', state: 'idle', empty: true }
 export interface PadBankProps {
   /** The sixteen pads, row by row. Fewer: the rest are empty cells; more: those past sixteen are ignored. */
   pads: PadItem[];
-  /** Pads a row: 8 (two rows of eight, the Launchkey's layout) or 4 (a 4 × 4 grid: 1–4, 5–8, 9–12, 13–16). */
+  /**
+   * The bank's form (`PAD_BANK_FORMS`): `two-rows` (two rows of eight), `small` (two rows of
+   * eight, smaller pads without the waiting chip) or `one-row` (sixteen in a row). Wins over the form an assembled screen chose for the region, which wins over `columns`.
+   */
+  form?: PadBankForm;
+  /**
+   * The bank on its own, outside the forms: 4 draws a 4 × 4 grid (1–4, 5–8, 9–12, 13–16); 8 is
+   * the `two-rows` form. Used only when no `form` is given and no assembled screen chose one, so
+   * a screen that assembles the region always decides its shape.
+   */
   columns?: 4 | 8;
   /** The pad bank names, one view of the Pads region each, in order ("Sections", "Quick Racks", "Chord", "Multi Pads", "Setup"). */
   banks?: string[];
@@ -125,9 +233,18 @@ export interface PadBankProps {
  * on the hardware): every pad, empty and dark ones too, is a square with the contract's rounded
  * corners, never a stretched rectangle. Its side is the tighter of the room's width over the
  * columns and its height over the rows, so a wide, short region gets smaller squares; the grid
- * hangs under the tabs, centred across, and spare height goes below it. *Rhythm*: at least `--space-2` between pads, up to
- * `--space-3` when the region is wide, so sixteen keys read as sixteen, not as one slab. With no
- * height given, the room's height follows its width; the same bank also works as a 4 × 4 block.
+ * hangs under the tabs, centred across, and spare height goes below it. *Rhythm*: `--space-2`
+ * between pads (`PAD_GAP`, the step the forms count), so sixteen keys read as sixteen, not as one
+ * slab. With no height given, the room's height follows its width; the same bank also works as a
+ * 4 × 4 block. *Forms* (`PAD_BANK_FORMS`, `PadBank.forms`; docs/assembly.md): `two-rows` (two
+ * rows of eight), `small` (two rows of eight whose pads drop the waiting chip and let the ring
+ * say it, so they can be smaller) and `one-row` (sixteen in a row, 1–16, under half the height), read with
+ * `useForm`, so an assembled screen can trade the bank's height away before it zooms; the root
+ * carries `data-form`, and a form changes only the bank's own grid. Each declares its body's
+ * needs truthfully (`PAD_MIN_SIDE`: a pad keeps its chip and two caption lines whole;
+ * `PAD_SMALL_SIDE`: two caption lines, no chip) and a
+ * `ratio`, so its height follows its width and the pads stay square. `columns` 4 is the bank on
+ * its own, outside the forms: it applies only when no form is given or chosen.
  * *Headless*: named parts (`plate`, `room`, `grid`, `cell`, `empty`); the bank paints no panel of its
  * own (it sits inside a screen's `Region`, which the theme's `plate` material draws) and each pad
  * wears the theme's `key` material (the Pad's), so a material set
@@ -139,24 +256,37 @@ export interface PadBankProps {
  * primitive (a waiting pad's ARMED / NEXT chip and the room it keeps above the label are the Pad's
  * own; the bank sets only the inset), and the spoken names ("Rack 1 (pad 1)", "Pad 12: empty").
  *
- * **Tuning knobs.** `--yh-padbank-gap` (the space between pads), `--yh-padbank-cols` and
- * `--yh-padbank-rows` (the grid the square side is fitted to, set from `columns`),
+ * **Tuning knobs.** `--yh-padbank-gap` (the space between pads: `--space-2`, as `PAD_GAP`; a
+ * different step must change both), `--yh-padbank-cols` and `--yh-padbank-rows` (the grid the
+ * square side is fitted to, set from the form or `columns`),
  * `--yh-padbank-cell` (the square pad's side, the tighter of the room's width and height share).
  */
 export function PadBank({
   pads,
-  columns = 8,
+  form: given,
+  columns,
   lit = true,
   tipAction,
   onPress,
 }: PadBankProps) {
+  const form = useForm(PAD_BANK_FORMS, given);
+  const chosen = useChosenForm();
+  // `columns` 4 is the bank outside the forms: only when neither the prop nor a screen names a form.
+  const fourByFour = columns === 4 && given === undefined && !PAD_BANK_FORMS.some((f) => f.id === chosen);
+  const shown = fourByFour ? 4 : form === 'one-row' ? 16 : 8;
   const cells = Array.from({ length: PAD_SLOTS }, (_, i) => pads[i] ?? EMPTY);
   const armed = cells.filter((pad) => !pad.empty && pad.state === 'armed').length;
 
   return (
-    <div className="yh-padbank" data-part="root" lang="en" data-armed={armed > ARMED_CHIPS ? 'many' : undefined}>
-      <div className="yh-padbank__room" data-part="room" data-columns={columns}>
-        <div className="yh-padbank__pads" data-part="grid" data-columns={columns}>
+    <div
+      className="yh-padbank"
+      data-part="root"
+      lang="en"
+      data-form={fourByFour ? undefined : form}
+      data-armed={armed > ARMED_CHIPS ? 'many' : undefined}
+    >
+      <div className="yh-padbank__room" data-part="room" data-columns={shown}>
+        <div className="yh-padbank__pads" data-part="grid" data-columns={shown}>
           {cells.map((pad, i) => (
             <div key={i} className="yh-padbank__cell" data-part="cell" data-empty={pad.empty || undefined}>
               {pad.empty ? (
@@ -185,6 +315,7 @@ export function PadBank({
     </div>
   );
 }
+PadBank.forms = PAD_BANK_FORMS;
 
 export interface PadBankRegionProps extends PadBankProps {
   /** The region's name. Default "Pads". */
@@ -197,7 +328,9 @@ export interface PadBankRegionProps extends PadBankProps {
 /**
  * The pads as a screen region: a library `Region` whose views are the pad banks (or the one
  * `bankName` view), each tab with its tooltip key, and the PadBank for the chosen bank as its
- * body. The bank stays the caller's (`bank`, `onBank`, by index).
+ * body. The bank stays the caller's (`bank`, `onBank`, by index). `form` passes through to the
+ * bank (or comes from the assembled screen); `PAD_BANK_FORMS` are the body's needs, so the
+ * region's spec says `head: true` and the solver adds the tabs' row.
  */
 export function PadBankRegion({ name = 'Pads', area, className, ...pads }: PadBankRegionProps) {
   const { banks = [], bank = 0, bankTips = [], bankName = '' } = pads;

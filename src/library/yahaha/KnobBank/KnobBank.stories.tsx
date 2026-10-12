@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { KnobBankRegion, type KnobItem } from './KnobBank';
+import { KNOB_BANK_FORMS, KnobBankRegion, type KnobItem } from './KnobBank';
 import { knobPages, knobsByPage, reverbKnobs, styleKnobs } from './KnobBank.fixtures';
 
 /**
@@ -16,8 +16,9 @@ const meta = {
   component: KnobBankRegion,
   decorators: [
     withLibraryTheme,
-    (Story) => (
-      <div style={{ width: 552 }}>
+    // The region's width on the board's Stage; a story may set its own (`parameters.width`).
+    (Story, { parameters }) => (
+      <div style={{ width: (parameters.width as number | string | undefined) ?? 552 }}>
         <Story />
       </div>
     ),
@@ -38,6 +39,7 @@ const meta = {
     pages: { control: 'object' },
     page: { control: { type: 'number', min: 0, max: knobPages.length - 1, step: 1 } },
     pageLabel: { control: 'text' },
+    form: { control: 'inline-radio', options: KNOB_BANK_FORMS.map((f) => f.id) },
   },
 } satisfies Meta<typeof KnobBankRegion>;
 
@@ -89,6 +91,33 @@ export const At1217: Story = {
       </div>
     ),
   ],
+};
+
+/**
+ * New: the bank's forms (`KNOB_BANK_FORMS`), each at about its least width at the compact scale
+ * (plus the region's plate): `labelled`, every name whole and the full ring; `compact`, names
+ * that may break across their two lines and rings down to one target. The page tabs set the
+ * compact width. Choose a form with the `form` control on the other stories.
+ */
+export const Forms: Story = {
+  parameters: { width: 'auto' },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: 24, justifyItems: 'start' }}>
+      {KNOB_BANK_FORMS.map((f) => (
+        <div key={f.id} style={{ width: f.id === 'labelled' ? 640 : 424 }} data-testid={`form-${f.id}`}>
+          <KnobBankRegion {...args} knobs={knobsByPage[1]} page={1} form={f.id} />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    for (const f of KNOB_BANK_FORMS) {
+      const box = within(within(canvasElement).getByTestId(`form-${f.id}`));
+      await expect(box.getByRole('tabpanel').querySelector('[data-form]')).toHaveAttribute('data-form', f.id);
+      await expect(box.getByRole('button', { name: /^Knob 6: Metronome/ })).toBeInTheDocument();
+      await expect(box.getByRole('img', { name: 'Knob 7: unused' })).toBeInTheDocument();
+    }
+  },
 };
 
 /** New: a working bank: tabs switch page, keys / drag / wheel step a knob's level 0–127. */

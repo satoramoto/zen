@@ -31,10 +31,14 @@
 .yh-padbank__room[data-columns='4'] {
   aspect-ratio: 1;
 }
+/* One row of sixteen: a sixteenth as tall as it is wide (the gaps make it a little less). */
+.yh-padbank[data-form='one-row'] > .yh-padbank__room {
+  aspect-ratio: 16;
+}
 
 .yh-padbank__pads {
-  /* Room to breathe: at least --space-2 between pads, up to --space-3 when the room is wide. */
-  --yh-padbank-gap: clamp(var(--space-2), 2cqw, var(--space-3));
+  /* Room to breathe: --space-2 between pads, the step the forms count (PAD_GAP). */
+  --yh-padbank-gap: var(--space-2);
   /* Every pad is a square, its side the tighter of the room's width over eight columns and its
      height over two rows (gaps taken out). */
   --yh-padbank-cols: 8;
@@ -55,6 +59,10 @@
   --yh-padbank-cols: 4;
   --yh-padbank-rows: 4;
 }
+.yh-padbank[data-form='one-row'] .yh-padbank__pads {
+  --yh-padbank-cols: 16;
+  --yh-padbank-rows: 1;
+}
 
 .yh-padbank__cell {
   display: flex;
@@ -72,10 +80,11 @@
   overflow-wrap: break-word;
   hyphens: auto;
 }
-/* Eight a row, pads are narrow: labels drop to caption size, with at most a little tracking and
-   a thin side inset, so a caps pack's words still fit whole. (The Pad's face is a Text: these
-   are its knobs.) */
-.yh-padbank__pads[data-columns='8'] .yh-pad {
+/* In every form (eight or sixteen a row), pads are narrow: labels drop to caption size, with at
+   most a little tracking and a thin side inset, so a caps pack's words still fit whole. PAD_MIN_SIDE
+   and PAD_SMALL_SIDE count these: six caption characters, the 2px insets and the borders. (The Pad's face is a Text:
+   these are its knobs.) */
+.yh-padbank[data-form] .yh-pad {
   padding-inline: 2px;
   --text-size: var(--size-caption);
   --text-tracking: min(var(--tracking), 0.02em);
@@ -94,10 +103,14 @@
 }
 
 /* More than two pads armed at once: the warning rings say it; the chips would fill the row with
-   ARMED over the labels. The pad then gives the chip's row back to its label. */
-.yh-padbank[data-armed='many'] .yh-pad__tag {
+   ARMED over the labels. The pad then gives the chip's row back to its label. The `small` form
+   does the same for every waiting pad: its pads have no room for the chip (PAD_SMALL_SIDE counts
+   two label lines and one --space-1 above and below), so the ring alone says ARMED / NEXT. */
+.yh-padbank[data-armed='many'] .yh-pad__tag,
+.yh-padbank[data-form='small'] .yh-pad__tag {
   display: none;
 }
-.yh-padbank[data-armed='many'] .yh-padbank__cell .yh-pad.yh-pad[data-tag='top'] {
+.yh-padbank[data-armed='many'] .yh-padbank__cell .yh-pad.yh-pad[data-tag='top'],
+.yh-padbank[data-form='small'] .yh-padbank__cell .yh-pad.yh-pad[data-tag='top'] {
   padding-top: var(--space-1);
 }

@@ -1,5 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import type * as React from 'react';
+import { useChosenForm, useForm } from '../../layout/assembly/forms';
 import { AccentBlock } from '../AccentBlock/AccentBlock';
 import { Button, type TipAction } from '../../components/core/Button/Button';
 import { BarBeat } from '../../components/music/BarBeat/BarBeat';
@@ -14,12 +15,17 @@ import { DisplayArt } from '../DisplayArt/DisplayArt';
 import { OneTouchPicker } from '../OneTouchPicker/OneTouchPicker';
 import { WaitingChip } from '../WaitingChip/WaitingChip';
 import { PART_HUE, SECTION_STATE_COLOUR, type Part } from '../hues';
+import { DISPLAY_FORMS, displayLengthCss, type DisplayForm } from './Display.forms';
 import './Display.css';
 
 export type { TipAction };
+export { DISPLAY_FORMS, DISPLAY_CAPS, DISPLAY_GROWTH, DISPLAY_CHROME, DISPLAY_CONTENT, displayLengthCss, type DisplayForm } from './Display.forms';
 
-/** The hero's chrome and readout cap: see `DisplayProps.density`. */
+/** The hero's form when nothing else picks one: see `DisplayProps.density`. */
 export type DisplayDensity = 'auto' | 'full' | 'compact';
+
+/** `auto` picks `full` from a hero this many CSS pixels wide, `compact` below. */
+export const AUTO_FULL_WIDTH = 1200;
 
 /**
  * The readouts' sizes, passed to each primitive's `size` (and BarBeat's `thickness`). Each is a
@@ -109,14 +115,15 @@ export interface DisplayProps {
   /** Draw the background art at the right edge. */
   art?: boolean;
   /**
-   * How much room the hero takes around its readouts. `compact`: tight chrome (small padding, a
-   * short rule under the header, thinner beat cells) and the section, tempo and chord capped at
-   * 60 / 52 / 44px (from the pack's numeral size), so the hero stays within about 200px tall
-   * (Display.css works the heights out).
-   * `full`: the roomy chrome, the caps at 96 / 84 / 72px (from the pack's display size).
-   * `auto` (default): `compact` while the hero is narrower than 1200px, `full` from there (a
-   * container query on the hero's own width). In every mode the readouts scale with the hero's
-   * width (container units), from the pack's numeral size up to the mode's cap.
+   * The form to draw (`DISPLAY_FORMS`): `full`, `compact` or `minimal`. Wins over everything
+   * else. Unset: the form the assembled screen chose for the hero's region (`useChosenForm()`),
+   * and outside an assembled screen, `density`.
+   */
+  form?: DisplayForm;
+  /**
+   * Standalone only (no `form`, no assembled screen): `compact` or `full` picks that form;
+   * `auto` (default) is `compact` while the hero is narrower than `AUTO_FULL_WIDTH` (1200 CSS
+   * pixels, measured), `full` from there. Inside an assembled screen the screen's form wins.
    */
   density?: DisplayDensity;
   /** The app's tooltip hook, applied to every control (the primitives apply it to their own). */
@@ -203,6 +210,29 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
 }
 
 /**
+ * `density="auto"`: `full` once the hero's own box is `AUTO_FULL_WIDTH` wide, `compact` below
+ * (and where nothing measures). Only watches while `on`.
+ */
+function useAutoForm(root: React.RefObject<HTMLElement | null>, on: boolean): 'full' | 'compact' {
+  const [wide, setWide] = useState(false);
+  useLayoutEffect(() => {
+    const el = root.current;
+    if (!on || !el) return;
+    const read = () => setWide(el.clientWidth >= AUTO_FULL_WIDTH);
+    read();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(read);
+    observer?.observe(el);
+    return () => observer?.disconnect();
+  }, [root, on]);
+  return wide ? 'full' : 'compact';
+}
+
+/** Each form's least as the CSS the readouts scale from (`--yh-display-min-w`, `-min-h`). */
+const LEAST_CSS = Object.fromEntries(
+  DISPLAY_FORMS.map((f) => [f.id, { '--yh-display-min-w': displayLengthCss(f.min.w), '--yh-display-min-h': displayLengthCss(f.min.h) } as CSSProperties]),
+) as Record<DisplayForm, CSSProperties>;
+
+/**
  * Display: the Stage's hero, what the band is doing right now.
  *
  * **Job.** Answer, from a metre away and mid-song, three questions in order: which section is
@@ -213,21 +243,23 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
  *
  * **Changed.** *Hierarchy:* the original set chord, section and tempo in three competing hues in
  * three equal thirds. Here they share neutral ink and are ranked by size and place: the section
- * largest (12% of the hero's width, up to 96px at `full`), the only thing on a solid fill, the
- * `--selected` block (a solid fill means "sounding", `hues.ts`); the tempo next (10.5%, up to
- * 84px), the loudest number; the chord a step behind (9%, up to 72px). Each has its own cap per
- * density (`--yh-display-cap-*`) rather than one shared cap, so the ranking holds at every width
- * (typography.md, "Type Scale"). A long section name steps all three down together (by tenths, to
- * 0.6) until they fit the row, so the section is never cut, the chord keeps its cell and the
- * ranking holds.
+ * largest (up to three numeral sizes at `full`, 96 at numeral 32), the only thing on a solid fill,
+ * the `--selected` block (a solid fill means "sounding", `hues.ts`); the tempo next (up to 2.625),
+ * the loudest number; the chord a step behind (up to 2.25). Each starts at the pack's numeral size
+ * and takes a share of the room past its form's least, on both axes, up to its own cap per form
+ * (`DISPLAY_CAPS`, `DISPLAY_GROWTH`), so the ranking holds at every size and no box at least the
+ * form's least is overflowed (typography.md, "Type Scale"). A long section name steps all three
+ * down together (by tenths, to 0.6) until they fit the row, so the section is never cut, the
+ * chord keeps its cell and the ranking holds.
  * *Hierarchy, one place per job:* what's next is said once, a "then" tab hanging flush under the
- * section block: one and a half control heights, `--text-1` on `--surface-2`, an arrow in the next
- * role (`--accent`, `SECTION_STATE_COLOUR.next`), the next section's name at 35% of the section's
- * size (never below heading size, so about 34px under a 96px block rather than a 14px footnote),
- * then when ("fill after bar 4") at label size. Where the bar is is drawn, not written: four beat
- * cells under the tempo (the lit beat in `--text-1`, beat 1 marked), where the old full-width beat
- * bar made a 300px slab louder than the chord; at `full` the cells are `--space-3` thick, enough to
- * read from a metre. *Rhythm, room to breathe:* the groups (header, readouts, the beat and the
+ * section block: `--text-1` on `--surface-2`, an arrow in the next role (`--accent`,
+ * `SECTION_STATE_COLOUR.next`) and the next section's name at 35% of the section's size (never
+ * below heading size, so about 34px under a 96px block rather than a 14px footnote), with when
+ * ("fill after bar 4") under them at label size, so the tab is never wider than the block needs.
+ * Where the bar is is drawn, not written: four beat cells under the tempo (the lit beat in
+ * `--text-1`, beat 1 marked), where the old full-width beat bar made a 300px slab louder than the
+ * chord; at `full` the cells are `--space-2` thick, enough to read from a metre. *Rhythm, room to
+ * breathe:* the groups (header, readouts, the beat and the
  * tempo keys) stand a step further apart on the `--space-*` scale than the controls inside them,
  * so each reads as one group; spacing makes the room, never smaller or fainter text (color.md).
  * *Hierarchy, quiet chrome:* the "Section / Chord / Tempo" captions are gone (a block, a chord
@@ -238,11 +270,16 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
  * (measured, like the section's fit). *Colour meaning:* sections take no hue; the tempo's ± keys
  * are neutral at rest (transport wears its hue only while active); the only hues left are the four
  * part dots, which mean the same part as the mixer and keyboard (color.md, "Semantic colours").
- * *Compact mode* (`density`): in a short region the chrome tightens (padding, the rule under the
- * header, thinner beat cells) and the caps drop to 60 / 52 / 44px; `auto`, the default, is compact
- * below a 1200px wide hero. *Narrow* (container queries): the parts are a fourth column only from a
- * 900px hero, one row under the readouts below that and gone below 600px; below 600px the chord's
- * notes drop too (never read mid-song), the fingering keeps one line with an ellipsis.
+ * *Forms* (`DISPLAY_FORMS`, docs/assembly.md): `full` (the roomy chrome, the large caps),
+ * `compact` (tight padding, a short rule, thinner beat cells, caps 1.875 / 1.625 / 1.375 numeral
+ * sizes) and `minimal` (Tap and Style tempo move into the header beside One Touch, whose caption
+ * goes; no rule; a hairline beat; caps 1.25 / 1.125 / 1). Each form's needs are in scale units,
+ * from the same steps and Text roles as Display.css, and the hero never draws below its form's
+ * least (`min-width`, `min-height`). Which form: the `form` prop wins; then the form the assembled
+ * screen chose for the hero's region; then `density` (`auto`, the default, is compact below a
+ * 1200 CSS pixel wide hero). The fingering keeps one line with an ellipsis past sixteen
+ * characters; the notes stand over it. The parts (standalone only) are a fourth column from a
+ * 900px hero, outside `minimal`; the forms leave them out.
  * *Affordance:* Tap is a real key, and the style's tempo, once a hidden double-click, is a visible
  * quiet "Style tempo" key beside it (the double-click still works). It says which tempo it goes
  * back to, so it is never mistaken for the transport's section reset; when the tempo already is
@@ -263,18 +300,22 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
  * `thickness`), never by overriding its CSS; the app's `tipAction` on every control, applied once
  * each (the primitives apply it to their own).
  *
- * **Tuning knobs.** `--yh-display-cap-*` (each readout's cap: section, tempo, chord; set per
- * density), `--yh-display-fit` (the row's fit step, from `data-fit`), `--yh-display-section`,
- * `--yh-display-tempo`, `--yh-display-chord` (the readouts' sizes, from the hero's width, cap and
- * fit; `DISPLAY_SIZES` hands them to the primitives), `--yh-display-beat-line` (the beat cells'
- * thickness, per density), `--yh-display-then-hue` (the "then" arrow's colour, the next role from
- * `hues.ts`), `--yh-display-part-hue` (a part's dot, its hue from `hues.ts`).
+ * **Tuning knobs.** `--yh-display-min-w`, `--yh-display-min-h` (the form's least, set inline
+ * from `DISPLAY_FORMS`), `--yh-display-room-w`, `--yh-display-room-h` (the room past it),
+ * `--yh-display-cap-*` (each readout's cap: section, tempo, chord; set per form),
+ * `--yh-display-fit` (the row's fit step, from `data-fit`), `--yh-display-section`,
+ * `--yh-display-tempo`, `--yh-display-chord` (the readouts' sizes, from the room, cap and fit;
+ * `DISPLAY_SIZES` hands them to the primitives), `--yh-display-chord-w` (the chord column's
+ * least), `--yh-display-beat-line` (the beat cells' thickness, per form), `--yh-display-then-hue`
+ * (the "then" arrow's colour, the next role from `hues.ts`), `--yh-display-part-hue` (a part's
+ * dot, its hue from `hues.ts`).
  */
 export function Display({
   style,
   nowPlaying,
   parts,
   art = false,
+  form: given,
   density = 'auto',
   tipAction,
   onPrev,
@@ -298,18 +339,53 @@ export function Display({
   const chord = nowPlaying.chord;
   /** Already at the style's tempo: the Style tempo key has nothing to do. */
   const atStyleTempo = nowPlaying.styleTempo !== undefined && nowPlaying.bpm === nowPlaying.styleTempo;
-  useFit(frame, [name, meta, queued, nowPlaying.playing, nowPlaying.bpm, chord.chord, chord.extension, hasParts, density]);
+  // The form: the `form` prop, then the assembled screen's choice, then `density`.
+  const root = useRef<HTMLDivElement>(null);
+  const fromScreen = useForm(DISPLAY_FORMS, given);
+  const chosen = useChosenForm();
+  const byDensity = given === undefined && chosen === null;
+  const auto = useAutoForm(root, byDensity && density === 'auto');
+  const form: DisplayForm = !byDensity ? fromScreen : density === 'auto' ? auto : density;
+  useFit(frame, [name, meta, queued, nowPlaying.playing, nowPlaying.bpm, chord.chord, chord.extension, hasParts, form]);
+
+  const tempoKeys = (
+    <Stack direction="row" gap={1} align="center" className="yh-display__tempo-keys" data-part="tempo-keys">
+      <Button
+        label="Tap"
+        size="md"
+        hold
+        name="Tap tempo"
+        tip="tempo.tap"
+        tipAction={tipAction}
+        onHold={(down) => down && onTap?.()}
+        onPress={onTap}
+      />
+      <Button
+        label="Style tempo"
+        size="md"
+        variant="quiet"
+        disabled={atStyleTempo}
+        name="Back to the style's tempo"
+        tip="tempo.reset"
+        tipAction={tipAction}
+        onPress={onStyleTempo}
+      />
+    </Stack>
+  );
 
   return (
     <Text
       as="div"
       size="inherit"
+      ref={root}
       className="yh-display"
       data-part="display"
       data-material="screen"
-      data-density={density}
+      data-form={form}
+      data-density={byDensity ? density : undefined}
       data-running={running || undefined}
       data-parts={hasParts || undefined}
+      style={LEAST_CSS[form]}
     >
       {art && (
         <div className="yh-display__art" data-part="art">
@@ -349,6 +425,7 @@ export function Display({
           <div className="yh-display__ots" data-part="one-touch">
             <OneTouchPicker applied={style.oneTouch ?? 0} count={style.oneTouchCount ?? 4} tipAction={tipAction} onApply={onOneTouch} />
           </div>
+          {form === 'minimal' && tempoKeys}
         </header>
 
         <div className="yh-display__readouts" data-part="readouts">
@@ -408,28 +485,7 @@ export function Display({
             <div className="yh-display__beat" data-part="beat">
               <BarBeat beat={running ? (nowPlaying.beat ?? 0) : 0} beats={nowPlaying.beats ?? 4} thickness={DISPLAY_SIZES.beat} />
             </div>
-            <Stack direction="row" gap={2} align="center" className="yh-display__tempo-keys" data-part="tempo-keys">
-              <Button
-                label="Tap"
-                size="md"
-                hold
-                name="Tap tempo"
-                tip="tempo.tap"
-                tipAction={tipAction}
-                onHold={(down) => down && onTap?.()}
-                onPress={onTap}
-              />
-              <Button
-                label="Style tempo"
-                size="md"
-                variant="quiet"
-                disabled={atStyleTempo}
-                name="Back to the style's tempo"
-                tip="tempo.reset"
-                tipAction={tipAction}
-                onPress={onStyleTempo}
-              />
-            </Stack>
+            {form !== 'minimal' && tempoKeys}
           </div>
 
           {hasParts && (
@@ -444,6 +500,9 @@ export function Display({
     </Text>
   );
 }
+
+/** The forms, for a region to add up (`Display.forms`). */
+Display.forms = DISPLAY_FORMS;
 
 export default Display;
 
