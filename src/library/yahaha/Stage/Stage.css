@@ -95,10 +95,10 @@
    a caps pack, plus the hairline's inset. 1.25 : 1 gives the hero about 760 px at 1440, where its
    readouts reach their caps (section 96, tempo 84, chord 72 on push).
 
-   The rows share the height in proportion, the hero 250, the strip 90 (its 72 and the hairline
-   over it), the band 380, and each never goes below what its region needs: a row that would is held
-   at its floor and the others share what is left, so the band keeps its fader travel and pad rows
-   on the short screen before the hero gives up any of its height. */
+   No dead bands: the top row is exactly as tall as the hero's content, and the transport and the
+   status line under it fill that height (taller keys, Start / Stop spanning both rows). Everything
+   below shares what is left: the strip and the band split it 72 : 380, each held at its region's
+   floor, so the band takes the height the top row doesn't need. */
 .yh-stage__screen[data-layout='stacked'] {
   --yh-stage-right-min: calc(var(--control-h) * 18 + var(--yh-stage-col-gap) + var(--border-width));
   /* The strip's floor: the steps at their least (SongForm: 1.25 control heights), the part
@@ -107,11 +107,17 @@
   grid-template-columns: minmax(var(--yh-stage-hero-min), 1.25fr) minmax(var(--yh-stage-right-min), 1fr);
   grid-template-rows:
     auto
-    minmax(min-content, 250fr)
-    minmax(var(--yh-stage-strip-min), 90fr)
+    /* min-content, not auto: the hero clips its overflow, so `auto` would let the row shrink under
+       it instead of overflowing the screen and refitting. */
+    min-content
+    minmax(var(--yh-stage-strip-min), 72fr)
     minmax(min-content, 380fr)
     auto;
   column-gap: var(--yh-stage-col-gap);
+}
+/* The short screen closes its gaps one more step: the hairlines still part the bands. */
+.yh-stage__screen[data-layout='stacked'][data-hero='compact'] {
+  --yh-stage-gap: var(--space-2);
 }
 .yh-stage__screen[data-layout='stacked'] > * {
   grid-column: 1 / -1;
@@ -121,9 +127,24 @@
   grid-template-columns: subgrid;
   min-height: 0;
 }
+/* The transport fills the hero's height, the status line at its foot. */
 .yh-stage__screen[data-layout='stacked'] .yh-stage__form {
-  justify-content: center;
+  justify-content: stretch;
+  gap: var(--yh-stage-gap);
   min-width: 0;
+}
+.yh-stage__screen[data-layout='stacked'] .yh-stage__form > :first-child {
+  flex: 1 1 0;
+  min-height: 0;
+}
+/* The one place the Stage reaches into a region: the transport's two key rows share the height
+   it is given instead of keeping one control height each, and each key fills its cell (SongForm
+   sizes them for its own story, where it has no height to fill). Start / Stop spans both rows. */
+.yh-stage__screen[data-layout='stacked'] .yh-songform__transport {
+  grid-template-rows: minmax(var(--control-h), 1fr) minmax(var(--control-h), 1fr);
+}
+.yh-stage__screen[data-layout='stacked'] .yh-songform__transport > * > * {
+  height: 100%;
 }
 .yh-stage__strip {
   display: flex;

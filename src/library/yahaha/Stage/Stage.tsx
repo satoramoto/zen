@@ -37,7 +37,7 @@ export interface StageProps {
   pads: Omit<PadBankProps, 'tipAction' | 'columns'>;
   /** The keyboard: range, split, held notes. Its width follows the screen. */
   keys: Omit<KeysProps, 'width' | 'tipAction'>;
-  /** The status line, at the foot of the knobs and pads. */
+  /** The status line: under the transport (stacked), or at the foot of the knobs and pads (split). */
   status: Omit<StatusLineProps, 'width'>;
   /** The app's tooltip action, passed to every region. */
   tipAction?: StageTipAction;
@@ -177,12 +177,14 @@ function useFit(layout: StageLayout) {
  * the mixer, then the knobs over the pads, the way the Launchkey lays them out, and the keys at
  * the foot.
  *
- * *One hierarchy* (`STAGE.md` 1): the hero is the largest region on screen, not the smallest. The
- * rows share the height in proportion (hero 250, form 72, band 380 at the board, each never below
- * what its region needs), and the hero's column is wide enough (about 760 px at 1440) for section,
- * tempo and chord to reach their full sizes, so now playing is the loudest thing a metre away.
- * The previous layout gave the hero its own height only (27% of the screen) and the controls band
- * the rest (52%).
+ * *One hierarchy* (`STAGE.md` 1): the hero's column is wide enough (760 px at 1440) for section,
+ * tempo and chord to reach their full sizes at the `full` density, so now playing is the loudest
+ * thing a metre away. *No dead bands*: the top row is exactly as tall as the hero (254 px at the
+ * board, 178 at 1217 × 752), and the transport fills that height beside it (its two key rows share
+ * it, Start / Stop spans both) with the status line at its foot, so the transport is a block of
+ * large keys rather than a short row under empty space. The strip and the band share the rest
+ * 72 : 380, each never below what its region needs, so what the top row doesn't use goes to the
+ * fader travel and the pad rows.
  *
  * *One column seam* (`references/layout.md`, alignment): the screen is one two-column grid; the top
  * row and the band are subgrids of it, so the hero and the mixer share the left track and the
@@ -196,9 +198,9 @@ function useFit(layout: StageLayout) {
  * AppBar, the part colours only on the parts (no hue legend on this screen: the mixer names each
  * part in its hue). The Display's parts column is not shown: the mixer already names each part's
  * sound under its fader, so a second list would be a second place for one fact. The status line
- * closes the knobs-and-pads column, level with the mixer's Functions line, rather than holding an
- * empty row over the keys. The pads are two rows of eight under the eight knobs, so each knob
- * stands over its two pads as on the hardware.
+ * sits under the transport, which it most often speaks about ("starts at the next Start"), rather
+ * than holding an empty row over the keys or taking pad height from the band. The pads are two
+ * rows of eight under the eight knobs, so each knob stands over its two pads as on the hardware.
  *
  * *Hierarchy at every size, then fit*: the screen is laid out at the frame's own size. Where it has
  * the height (1440 × 900) the hero is the Display's `full` density; where it is short (1217 × 752)
@@ -208,7 +210,7 @@ function useFit(layout: StageLayout) {
  *
  * **Kept.** The original's regions and every one of their callbacks, passed straight through,
  * so a region behaves the same here as in its own story; the 1440 × 900 board and the 1217 × 752
- * small screen; the status line in plain sight under the controls; the keys spanning the full
+ * small screen; the status line in plain sight; the keys spanning the full
  * width; the tap tempo rule (two or more taps in time, the last four count).
  */
 export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked' }: StageProps) {
@@ -227,6 +229,14 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
   if (width !== undefined) size.width = `${width}px`;
   if (height !== undefined) size.height = `${height}px`;
 
+  // Stacked: under the transport, which it most often speaks about ("starts at the next Start").
+  // Split: at the foot of the knobs and pads, level with the mixer's Functions line.
+  const statusLine = (
+    <div className="yh-stage__status">
+      <StatusLine {...status} />
+    </div>
+  );
+
   return (
     <div ref={frame} className="yh-stage" style={size} role="group" aria-label="Stage">
       <div ref={screen} className="yh-stage__screen" data-hero={heroDensity} data-layout={layout}>
@@ -239,6 +249,7 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
           </div>
           <div className="yh-stage__form">
             <SongForm {...songForm} part={layout === 'stacked' ? 'transport' : 'both'} tipAction={tipAction} />
+            {layout === 'stacked' && statusLine}
           </div>
         </div>
         {layout === 'stacked' && (
@@ -257,9 +268,7 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
             <div className="yh-stage__pads">
               <PadBank {...pads} columns={8} tipAction={tipAction} />
             </div>
-            <div className="yh-stage__status">
-              <StatusLine {...status} />
-            </div>
+            {layout === 'split' && statusLine}
           </div>
         </div>
         <div className="yh-stage__keys" ref={keysSlot}>
