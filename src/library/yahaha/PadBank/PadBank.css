@@ -13,8 +13,10 @@
 }
 
 .yh-padbank__pads {
-  /* The least a row may be: room for a two-line label at the density's size. */
-  --yh-padbank-row: calc(var(--control-h) * 1.5);
+  /* The least a row may be: two control heights, a key's height and more, with room for a
+     two-line label; rows share whatever height the region gives beyond that (the Stage's 2 × 64
+     or 2 × 56). */
+  --yh-padbank-row: calc(var(--control-h) * 2);
   flex: 1 1 auto;
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -50,15 +52,23 @@
   letter-spacing: min(var(--tracking), 0.02em);
 }
 
-/* Nothing assigned: the pad's full face in its place, a faint solid edge over a faint wash, with
-   no label and no hover or press give. A dark pad (a slot that exists but is empty) keeps its
-   dashed edge and label, so the two never read alike. */
+/* Nothing assigned: the pad's full footprint in its place as a faint wash, with no edge, no label
+   and no hover or press give (the banks' one empty-slot look). A dark pad (a slot that exists but
+   is empty) keeps its dashed edge and label, so the two never read alike. */
 .yh-padbank__empty {
   display: block;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: var(--border-width) solid color-mix(in oklab, var(--text-1) 12%, transparent);
   border-radius: var(--radius-control);
-  background: color-mix(in oklab, var(--text-1) 4%, transparent);
+  background: color-mix(in oklab, var(--text-1) 6%, transparent);
+}
+
+/* More than two pads armed at once: the warning rings say it; the chips would fill the row with
+   ARMED over the labels. The pad then gives the chip's row back to its label. */
+.yh-padbank[data-armed='many'] .yh-pad__tag {
+  display: none;
+}
+.yh-padbank[data-armed='many'] .yh-padbank__cell .yh-pad.yh-pad[data-tag='top'] {
+  padding-top: var(--space-1);
 }

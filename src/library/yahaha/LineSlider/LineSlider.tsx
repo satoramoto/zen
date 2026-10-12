@@ -20,7 +20,7 @@ export interface LineSliderProps {
   valueText?: string;
   /** The unit after the value, small ("ms", "s", "%"). */
   unit?: string;
-  /** The line's width in px. */
+  /** The line's width in px. Default 160. */
   width?: number;
   /** Shown, not movable. Stays focusable and is announced as disabled. */
   disabled?: boolean;
@@ -56,8 +56,13 @@ export function snap(v: number, min: number, max: number, step: number): number 
  * (craft-details.md, hit targets). *Colour meaning*: the fill and thumb are neutral ink because
  * the value belongs to no part; `--accent` appears only on the focus ring and on the thumb while
  * it is focused or dragged, never as decoration (color.md, 60/30/10 and "structure, not circus";
- * anti-ai-slop.md, token role drift). *Contrast*: disabled draws in `--text-4` with a
- * not-allowed cursor rather than a near-invisible tint.
+ * anti-ai-slop.md, token role drift). *Contrast*: disabled breaks the rail into dashes (the
+ * screen's one "shown, not usable" edge), the value in `--text-3`, with a not-allowed cursor
+ * rather than a near-invisible tint. *Proportion* (the 2026-10 review): the line is the control,
+ * so it gains weight and the numeral gives some back: a 160px default, a 4px rail and an
+ * `--space-2` thumb, and the value a step above the label size (`--size-label` × 1.25) instead of
+ * a heading numeral that dwarfed the line; heading numerals are kept for a region's headline
+ * (the Fader, the Knob).
  *
  * **Kept.** It is controlled (asks through `onchange`, moves when `value` does), clamps and snaps
  * to the step, and keeps the original's keys (arrows one step, Page Up / Page Down ten, Home and
@@ -72,7 +77,7 @@ export function LineSlider({
   name,
   valueText,
   unit = '',
-  width = 120,
+  width = 160,
   disabled = false,
   tip,
   tipAction,

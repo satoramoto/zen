@@ -2,8 +2,12 @@ import type { CSSProperties, ReactNode } from 'react';
 import './GroupHeader.css';
 
 export interface GroupHeaderProps {
-  /** The group's name, the heading's text ("Faders"). */
-  title: string;
+  /**
+   * The group's name, the heading's text ("Faders"). Optional: on the Stage a bank's tabs name
+   * themselves, so the row is only the tabs and the rule, and the region names itself with
+   * `aria-label`. Without a title there is no heading, and `detail`, `level` and `id` do nothing.
+   */
+  title?: string;
   /** A word that qualifies the title, drawn after it as " · {detail}" ("Faders · Reverb"). */
   detail?: string;
   /** The page counter at the right end ("Page 1/6"). */
@@ -43,7 +47,12 @@ export interface GroupHeaderProps {
  * keys them). One baseline, set by a strut, still runs
  * through the title, the tabs, the legend and the counter.
  *
- * **Kept**: a real heading at the given level and `id`; `children` straight after the title as
+ * The title is now optional (*clutter*, the 2026-10 Stage review: a word that names a run of tabs
+ * is deleted, the controls name themselves). Without one the row is just the tabs, the legend
+ * and the counter on the same baseline and rule, so a titled header and an untitled one stand
+ * the same height side by side.
+ *
+ * **Kept**: a real heading at the given level and `id` when there is a title; `children` straight after the title as
  * row items; `end` as the one place a legend goes, before the counter; "Page 1/6" as one text
  * run; the row's fixed height and its optional fixed width.
  */
@@ -51,17 +60,19 @@ export function GroupHeader({ title, detail, count, level = 2, id, width, childr
   const Heading = `h${level}` as 'h2' | 'h3' | 'h4';
   const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
   return (
-    <div className="yh-group-header" style={style}>
-      <Heading className="yh-group-header__title" id={id} title={detail ? `${title} · ${detail}` : undefined}>
-        <span className="yh-group-header__name">{title}</span>
-        {detail && (
-          <>
-            {' '}
-            <span className="yh-group-header__sep">·</span>{' '}
-            <span className="yh-group-header__detail">{detail}</span>
-          </>
-        )}
-      </Heading>
+    <div className="yh-group-header" style={style} data-untitled={title ? undefined : true}>
+      {title && (
+        <Heading className="yh-group-header__title" id={id} title={detail ? `${title} · ${detail}` : undefined}>
+          <span className="yh-group-header__name">{title}</span>
+          {detail && (
+            <>
+              {' '}
+              <span className="yh-group-header__sep">·</span>{' '}
+              <span className="yh-group-header__detail">{detail}</span>
+            </>
+          )}
+        </Heading>
+      )}
       {children !== undefined && children !== null && <div className="yh-group-header__body">{children}</div>}
       {end !== undefined && end !== null && <span className="yh-group-header__end">{end}</span>}
       {count && (

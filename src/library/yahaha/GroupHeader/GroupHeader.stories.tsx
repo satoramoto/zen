@@ -210,6 +210,14 @@ export const Level3: Story = {
   args: { title: 'Knobs', level: 3, content: 'none', count: { label: 'Page', value: '1/6' } },
 };
 
+/**
+ * No title, as the Stage's banks draw it: the tabs name themselves, so the row is the tabs and the
+ * rule, at the same height and baseline as a titled header.
+ */
+export const Untitled: Story = {
+  args: { title: '', width: 646, content: 'faders' },
+};
+
 /** Too narrow: the detail truncates first, the tabs give way next; the title and counter stay whole. */
 export const Narrow: Story = {
   args: { title: 'Faders', detail: 'Chorus send', width: 360, content: 'faders', layerChosen: 'chorus', count: { label: 'Page', value: '2/6' } },

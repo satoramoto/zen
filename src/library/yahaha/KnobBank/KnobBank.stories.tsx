@@ -6,7 +6,7 @@ import { KnobBank, type KnobItem } from './KnobBank';
 import { knobPages, knobsByPage, reverbKnobs, styleKnobs } from './KnobBank.fixtures';
 
 /**
- * The Stage's Knobs region: the knob page tabs after the title, and eight knobs across the
+ * The Stage's Knobs region: the knob page tabs (no title: the tabs name the region), and eight knobs across the
  * region. Compare each story with its namesake under "Yahaha baseline / Components / KnobBank":
  * same names, same sample data. A tab choice is a callback with the page's index; every knob change
  * carries the knob's position.
@@ -55,8 +55,11 @@ export const Board: Story = {
   },
 };
 
-/** The Reverb page chosen. */
-export const ReverbPage: Story = { args: { page: 3 } };
+/**
+ * The Reverb page chosen, with the Reverb page's knobs (the baseline drew the Style knobs under the
+ * Reverb tab, which no player would see: the tab and the knobs now agree).
+ */
+export const ReverbPage: Story = { args: { page: 3, knobs: knobsByPage[3] } };
 
 /** New: the Reverb page with its own knobs: the parts' sends on 1–4 wear their parts' hues. */
 export const ReverbSends: Story = { args: { page: 3, knobs: reverbKnobs } };

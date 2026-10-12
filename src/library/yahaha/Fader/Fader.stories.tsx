@@ -8,7 +8,7 @@ const NONE = 'none';
 
 /**
  * One strip's fader: the level as a numeral, a groove filled in the strip's part hue, an
- * overhanging cap at the set level and two neutral meters with a peak hold. When the hardware
+ * overhanging cap at the set level and one quiet neutral meter beside the groove. When the hardware
  * fader is away from the level, a dashed warning outline marks where it is and an arrow says which
  * way to move it. Controlled: a drag, a key or the wheel asks for a level through `onlevel`.
  */
@@ -108,7 +108,7 @@ export const Layered: Story = {
   args: { name: 'Right 1 · Stage Grand, Rev 40', value: 'Rev 40', level: 40, layered: true },
 };
 
-/** Added: a parked strip drawn as a dotted ghost in its faded part hue (`empty`). */
+/** Added: an empty hardware slot (`empty`): a faint solid groove, the banks' one empty-slot look. */
 export const Empty: Story = {
   args: { name: 'Left · no voice', value: '', level: 0, meter: 0, meter2: 0, peak: 0, kind: 'parked', hue: 'l', empty: true },
 };

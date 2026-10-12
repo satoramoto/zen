@@ -11,7 +11,7 @@ describe('SoundCell', () => {
     expect(screen.getByRole('button', { name: 'Right 1: open Channel' })).toHaveTextContent('R1');
     expect(
       screen.getByRole('button', { name: 'Right 1 sound: 1 Stage Grand. Opens the quick sound list' }),
-    ).toHaveTextContent('1Stage Grand');
+    ).toHaveTextContent('Stage Grand1');
   });
 
   it('leaves the number out of the spoken name when there is none, and takes an override', () => {
@@ -47,6 +47,11 @@ describe('SoundCell', () => {
     expect(part).toHaveAttribute('title', 'Right 1');
     expect(part).toHaveAttribute('data-tip', 'mixer.strip.select');
     expect(screen.getByRole('button', { name: /quick sound list/ })).toHaveAttribute('data-tip', 'x.sound');
+  });
+
+  it('draws the number after the name, so the name starts the line', () => {
+    render(<SoundCell {...board} number="41" sound="Warm Strings" />);
+    expect(screen.getByRole('button', { name: /quick sound list/ })).toHaveTextContent(/^Warm Strings41$/);
   });
 
   it('renders marks after the name', () => {

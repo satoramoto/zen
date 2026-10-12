@@ -36,8 +36,11 @@ const stripOf = (name: string) => screen.getByRole('slider', { name }).closest('
 
 describe('FaderBank a11y', () => {
   it('is a region named Faders with a page tablist, a layer tablist and every strip as a slider', () => {
-    setup();
-    expect(screen.getByRole('heading', { name: 'Faders' })).toBeInTheDocument();
+    const { bank } = setup();
+    // No title: the tabs name themselves, each run underlined.
+    expect(screen.queryByRole('heading')).toBeNull();
+    expect(bank).not.toHaveTextContent(/Layer/);
+    for (const run of bank.querySelectorAll('.yh-chosen-tabs')) expect(run).toHaveAttribute('data-look', 'underline');
     expect(screen.getByRole('tablist', { name: 'Fader page (master button)' })).toBeInTheDocument();
     expect(screen.getByRole('tablist', { name: 'Fader layer' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Panel' })).toHaveAttribute('aria-selected', 'true');
@@ -71,6 +74,8 @@ describe('FaderBank a11y', () => {
     expect(screen.getByRole('button', { name: /^Right 1 on\./ })).toHaveAttribute('aria-pressed', 'true');
     const functions = screen.getByRole('group', { name: 'Functions' });
     expect(within(functions).getAllByRole('button')).toHaveLength(4);
+    // No caption: the keys name themselves.
+    expect(functions.textContent).not.toMatch(/Functions/);
     expect(within(functions).getByRole('button', { name: /^Sound: hold/ })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'Fader page is Panel: click for Style' })).toBeInTheDocument();
   });
@@ -198,7 +203,7 @@ describe('FaderBank layout', () => {
     const { bank } = setup();
     const grid = bank.querySelector('.yh-faderbank__grid') as HTMLElement;
     expect(grid.querySelectorAll('.yh-faderbank__divider')).toHaveLength(2);
-    // 9 strips + 2 dividers; the parked slots take the narrow track.
+    // 9 strips + 2 dividers; the parked slots take a full strip's track, like the hardware.
     const tracks: string[] = [''];
     let depth = 0;
     for (const ch of grid.style.gridTemplateColumns) {
@@ -207,7 +212,15 @@ describe('FaderBank layout', () => {
       depth += ch === '(' ? 1 : ch === ')' ? -1 : 0;
     }
     expect(tracks).toHaveLength(11);
-    expect(tracks.filter((t) => t === 'var(--yh-faderbank-empty-w)')).toHaveLength(2);
+    expect(tracks.filter((t) => t === 'minmax(0, 1fr)')).toHaveLength(8);
+  });
+
+  it('every key in the bank is one height: part lamps, page button and function lamps are cell keys', () => {
+    const { bank } = setup();
+    const lamps = bank.querySelectorAll('.yh-lampbutton');
+    expect(lamps.length).toBe(partLamps.length + functionLamps.length);
+    for (const lamp of lamps) expect(lamp).toHaveClass('yh-lampbutton--cell');
+    expect(screen.getByRole('button', { name: /^Fader page/ })).toHaveAttribute('data-size', 'cell');
   });
 
   it('places each part lamp under its strip and the page button under Master', () => {
@@ -218,20 +231,21 @@ describe('FaderBank layout', () => {
     expect(bank.querySelector('.yh-faderbank__plate')).not.toBeNull();
   });
 
-  it('says a soft takeover in words, with the way to move, and outlines the strip', () => {
+  it('says a soft takeover in words to assistive tech, with the way to move, and outlines the strip', () => {
     const { rerender, props } = setup();
     const note = screen.getByRole('status');
-    expect(note).toHaveTextContent('Right 2 ↑ move up to 72');
+    expect(note).toHaveTextContent('Soft takeover Right 2 move up to 72');
+    expect(note).toHaveClass('yh-faderbank__visually-hidden');
     expect(stripOf(props.strips[1].faderName)).toHaveAttribute('data-away', 'up');
     rerender(<FaderBank {...props} strips={panelStrips.map((s) => (s.id === 'right2' ? { ...s, away: 110 } : s))} />);
-    expect(screen.getByRole('status')).toHaveTextContent('Right 2 ↓ move down to 72');
+    expect(screen.getByRole('status')).toHaveTextContent('Right 2 move down to 72');
     rerender(<FaderBank {...props} strips={panelStrips.map((s) => ({ ...s, away: undefined }))} />);
     expect(screen.queryByRole('status')).toBeNull();
   });
 
-  it('a non-Vol layer names itself after the title and gives only the part strips the layer look', () => {
+  it('a non-Vol layer shows as its chosen tab and gives only the part strips the layer look', () => {
     setup({ layer: 'reverb', strips: reverbStrips });
-    expect(screen.getByRole('heading')).toHaveTextContent('Faders · Reverb');
+    expect(screen.getByRole('tab', { name: 'Reverb send' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('slider', { name: 'Right 1 · Stage Grand, Reverb 40' })).toHaveAttribute('data-layered', 'true');
     expect(screen.getByRole('slider', { name: 'Master, level 100' })).not.toHaveAttribute('data-layered');
     expect(screen.queryByRole('status')).toBeNull();

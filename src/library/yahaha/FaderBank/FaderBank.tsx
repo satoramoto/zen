@@ -141,13 +141,8 @@ function layout(strips: FaderStrip[]) {
       tracks.push('var(--yh-faderbank-divider-w)');
       dividers.push(tracks.length);
     }
-    tracks.push(
-      cluster === 'empty'
-        ? 'var(--yh-faderbank-empty-w)'
-        : cluster === 'master'
-          ? 'minmax(0, var(--yh-faderbank-master-fr))'
-          : 'minmax(0, 1fr)',
-    );
+    // A parked fader takes a strip's full width, like the hardware fader it mirrors.
+    tracks.push(cluster === 'master' ? 'minmax(0, var(--yh-faderbank-master-fr))' : 'minmax(0, 1fr)');
     columns.push(tracks.length);
   });
   return { template: tracks.join(' '), columns, dividers };
@@ -222,9 +217,11 @@ function StripName({
  * (`craft-details.md`, proximity): the strips fall into clusters with a hairline between them,
  * parts | Style and Multi Pad | Master, instead of nine equal columns; Master is set apart on its
  * own raised plate, a little wider, as the last word on loudness; the plate fills its column, so
- * its edge lines up with the bank's, and Master sits inset on it. *Clutter*: the unused faders 7
- * and 8 shrink to narrow dotted slots with no name, so they hold their place (they are real
- * Launchkey faders) without taking a strip's width. *Numerals*: each level is the Fader's large
+ * its edge lines up with the bank's, and Master sits inset on it. *Mapping and one empty-slot
+ * vocabulary*: the unused faders 7 and 8 are full-width strips, one to one with the hardware as
+ * KnobBank's eight knobs and PadBank's sixteen pads are, each a faint solid groove (`--text-1` at
+ * 10%) with no cap, value, name or edge: the same "empty slot" look as an empty knob ring or pad,
+ * where the old 2px dotted threads read as rendering artefacts. *Numerals*: each level is the Fader's large
  * tabular numeral; under it the part's name in its hue and its sound in muted text, so a column
  * reads "72 · Right 2 · Silk Strings" top to bottom. The part's marks (edited, ⚠ missing, ✕
  * failed, "off") take their own line under the sound, so they never cut the sound's name; while
@@ -232,15 +229,23 @@ function StripName({
  * strip's height (`fillHeight`). *Off reads as off*: the name fades in its
  * own hue with the word "off", the fader and meters dim, and the lamp below says Off unlit; three
  * cues, none of them colour alone. *Soft takeover* is a state, so it is `--warning`: the Fader
- * draws where the hardware is and which way to move it, the strip is outlined, and the foot row
- * says it in words ("Soft takeover Right 2 ↑ 72"), so it never rests on the small arrow alone.
- * *Ranking* (hierarchy): the part On lamps are full-size keys under their parts; the page button
- * sits under Master like the Launchkey's master fader button; the four function lamps are a
- * smaller, captioned row of their own, since they are not mixer controls at all. Layer and page
- * are the header's two tab runs, and a non-Vol layer names itself after the title ("Faders ·
- * Reverb") and turns the part strips to the neutral layer look.
+ * draws a dashed ghost cap where the hardware is with an arrow saying which way to move it, and
+ * the strip is outlined, so the column itself says it twice in shape; the words ("Soft takeover
+ * Right 2 move up to 72") are a status for assistive tech only, since a fourth visible cue at the
+ * foot only repeated the column and was cut to "Soft take…" in narrow packs. *One key height*
+ * (rhythm): the part On lamps, the page button under Master (like the Launchkey's master fader
+ * button) and the four function lamps are all `cell` keys, so the region has one key height; the
+ * function lamps keep their own row under a hairline, since they are not mixer controls, but lose
+ * the "Functions" caption, which only named a row of keys that name themselves. Whether a lamp is
+ * on is the LampButton's own face (outline in its hue and a lit LED; solid fills are kept for
+ * what sounds or runs), so the fader fill stays the loudest "on" in the column. *Clutter*: the
+ * "Faders" title and the "Layer" word are gone: the page tabs (Panel, Style) and the layer tabs
+ * (Vol … Delay) name themselves, each chosen tab ink with a 2px underline rather than a solid
+ * fill, a separator between the two runs. A non-Vol layer shows as its chosen tab and turns the
+ * part strips to the neutral layer look, with the layer word over each number ("Rev 40").
  *
- * **Kept.** Holds no state: every change is a callback with the strip's or lamp's id. Each
+ * **Kept.** Holds no state: every change is a callback with the strip's or lamp's id. A region
+ * named "Faders" with the "Functions" group and the takeover status. Each
  * strip is a Fader (a vertical slider with keys, wheel and drag) over a name button that opens
  * the part's page; the parked faders stay disabled sliders named "Fader 7 unused". The part
  * lamps' long press (swap mode), the Sound and Looper holds, and the page button's tap to flip
@@ -269,7 +274,6 @@ export function FaderBank({
   onPageRelease,
 }: FaderBankProps) {
   const layered = layerTabs.length > 0 && layer !== layerTabs[0].id;
-  const layerWord = layered ? layerTabs.find((tab) => tab.id === layer)?.label : undefined;
   const pageLabel = pageTabs.find((tab) => tab.id === page)?.label ?? '';
   const otherLabel = pageTabs.find((tab) => tab.id !== page)?.label ?? '';
 
@@ -285,14 +289,14 @@ export function FaderBank({
     return columns[at >= 0 ? at : (partStrips[i] ?? i)] ?? i + 1;
   };
 
-  const lamp = (item: BankLamp, size: 'cell' | 'sm') => (
+  const lamp = (item: BankLamp) => (
     <LampButton
       label={item.label}
       on={item.on}
       hue={item.hue}
       rec={item.rec}
       waiting={item.waiting}
-      size={size}
+      size="cell"
       name={item.name}
       tip={item.tip}
       tipAction={tipAction}
@@ -302,22 +306,20 @@ export function FaderBank({
     />
   );
 
+  // Soft takeover in words, for assistive tech only: on screen the strip's dashed outline and the
+  // Fader's ghost cap and arrow already say it, in the column itself.
   const note =
     away.length > 0 ? (
-      <span className="yh-faderbank__takeover" role="status">
-        <span className="yh-faderbank__takeover-mark" aria-hidden="true" />
-        {away.length === 1 && <span className="yh-faderbank__caption">Soft takeover</span>}
-        <span className="yh-faderbank__takeover-items">
+      <span className="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+        {away.length === 1 && 'Soft takeover '}
+        <span>
           {away.map((strip, i) => {
             const way = takeoverWay(strip);
             return (
               <Fragment key={strip.id}>
                 {i > 0 && ', '}
-                {strip.tag} <span aria-hidden="true">{way === 'up' ? '↑' : way === 'down' ? '↓' : '·'}</span>
-                <span className="yh-faderbank__visually-hidden">
-                  {way === 'up' ? ' move up to' : way === 'down' ? ' move down to' : ' at'}
-                </span>{' '}
-                <span className="yh-faderbank__takeover-value">{strip.value}</span>
+                {strip.tag}
+                {way === 'up' ? ' move up to' : way === 'down' ? ' move down to' : ' at'} {strip.value}
               </Fragment>
             );
           })}
@@ -327,9 +329,10 @@ export function FaderBank({
 
   return (
     <section className="yh-faderbank" aria-label="Faders" data-layered={layered || undefined}>
-      <GroupHeader title="Faders" detail={layerWord}>
+      <GroupHeader>
         <ChosenTabs
           size="header"
+          look="underline"
           label="Fader page (master button)"
           tabs={pageTabs}
           chosen={page}
@@ -337,12 +340,15 @@ export function FaderBank({
           onChoose={onChoosePage}
         />
         <Separator />
-        <span className="yh-faderbank__layer">
-          <span className="yh-faderbank__layer-word" aria-hidden="true">
-            Layer
-          </span>
-          <ChosenTabs size="header" label="Fader layer" tabs={layerTabs} chosen={layer} tipAction={tipAction} onChoose={onChooseLayer} />
-        </span>
+        <ChosenTabs
+          size="header"
+          look="underline"
+          label="Fader layer"
+          tabs={layerTabs}
+          chosen={layer}
+          tipAction={tipAction}
+          onChoose={onChooseLayer}
+        />
       </GroupHeader>
 
       <div className="yh-faderbank__grid" style={{ gridTemplateColumns: template } as CSSProperties}>
@@ -395,7 +401,7 @@ export function FaderBank({
 
         {partLamps.map((item, i) => (
           <div key={item.id} className="yh-faderbank__lamp" style={{ gridColumn: lampColumn(item, i) }}>
-            {lamp(item, 'cell')}
+            {lamp(item)}
           </div>
         ))}
         <div className="yh-faderbank__lamp yh-faderbank__lamp--page" style={{ gridColumn: pageColumn }}>
@@ -412,21 +418,16 @@ export function FaderBank({
         </div>
       </div>
 
-      {(functionLamps.length > 0 || note) && (
+      {functionLamps.length > 0 && (
         <div className="yh-faderbank__foot">
-          {functionLamps.length > 0 && (
-            <div className="yh-faderbank__functions" role="group" aria-label="Functions">
-              <span className="yh-faderbank__caption" aria-hidden="true">
-                Functions
-              </span>
-              {functionLamps.map((item) => (
-                <Fragment key={item.id}>{lamp(item, 'sm')}</Fragment>
-              ))}
-            </div>
-          )}
-          {note}
+          <div className="yh-faderbank__functions" role="group" aria-label="Functions">
+            {functionLamps.map((item) => (
+              <Fragment key={item.id}>{lamp(item)}</Fragment>
+            ))}
+          </div>
         </div>
       )}
+      {note}
     </section>
   );
 }

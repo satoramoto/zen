@@ -63,12 +63,15 @@ const HUE_SLOT: Record<StepHue, string | undefined> = { t: undefined, r1: '1', r
  * tag's letters to a small swatch beside it, so hue marks identity only and the text keeps full
  * contrast on light palettes; the value is no longer painted in the accent, which is kept for focus
  * and the live drag (color.md: fewer colours, stricter purpose; at most two per component).
- * *Affordance:* a level (`ink="a"`) carries a hairline lamp under it showing where it sits in its
+ * *Affordance:* a level (`ink="a"`) carries a thin lamp under it showing where it sits in its
  * range, lit in the part's hue with the palette's bloom, so it looks like something with a range
  * that slides; the cell takes a hover fill and an ew-resize cursor, and a drag lights the lamp in
- * the accent. Dim and disabled use the text ladder (muted, faint) and an unlit lamp rather than
- * opacity, and disabled shows a not-allowed cursor. A 2px accent `:focus-visible` ring
- * (craft-details.md).
+ * the accent. Dim and disabled use the text ladder and an unlit lamp rather than opacity; disabled
+ * is the screen's one "shown, not usable" look, a dashed edge with its text in `--text-3`, and a
+ * not-allowed cursor. A 2px accent `:focus-visible` ring (craft-details.md). *One hue carrier*
+ * (the 2026-10 review): the swatch is an `--space-2` square at the control radius, the same mark
+ * as a lamp's LED, rather than a 6px pill, and the range lamp is a 3px line on the cell's bottom
+ * edge, so in a column it can't read as the next row's top rule.
  *
  * **Kept.** No bar or box at rest, so it fits a dense cell; every way to set it (drag, wheel, keys,
  * double-click to default) and its slider semantics (aria-valuenow/min/max, valuetext, disabled

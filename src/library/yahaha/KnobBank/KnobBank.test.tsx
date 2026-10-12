@@ -30,6 +30,12 @@ describe('KnobBank pages', () => {
     expect(within(list).getByRole('tab', { name: 'Reverb' })).toHaveAttribute('data-tip', 'knobs.page');
   });
 
+  it('has no title: the region is named Knobs, the page tabs are underlined', () => {
+    setup();
+    expect(screen.queryByRole('heading')).toBeNull();
+    expect(screen.getByRole('region', { name: 'Knobs' }).querySelector('.yh-chosen-tabs')).toHaveAttribute('data-look', 'underline');
+  });
+
   it('a tab click or an arrow key asks for that page by index', async () => {
     const { onPage } = setup();
     await userEvent.click(screen.getByRole('tab', { name: 'Reverb' }));
@@ -54,6 +60,14 @@ describe('KnobBank knobs', () => {
     expect(screen.getByRole('button', { name: 'Knob 2: Retrig rate (RtgRate) 1/8' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Knob 6: Swing (Swing) 0%' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Knob 8: Tempo (Tempo) 104' })).toHaveAttribute('data-tip', 'knobs.knob');
+  });
+
+  it('draws the plain name but not the Genos code, which stays in the spoken name', () => {
+    setup();
+    const dynamics = screen.getByRole('button', { name: 'Knob 1: Dynamics (DynCtrl) 127' });
+    expect(dynamics).toHaveTextContent('Dynamics');
+    expect(dynamics).not.toHaveTextContent('DynCtrl');
+    expect(dynamics.querySelector('.yh-knob__code')).toBeNull();
   });
 
   it('a press and a step carry the knob position', async () => {

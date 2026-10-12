@@ -11,9 +11,9 @@ describe('SendReadout', () => {
     expect(button).toHaveAttribute('type', 'button');
   });
 
-  it('uses the lead word in the name, and a given name over it', () => {
+  it('uses the lead word in the name but does not draw it, and a given name over it', () => {
     const { rerender } = render(<SendReadout reverb={1} chorus={2} delay={3} label="Song" />);
-    expect(screen.getByRole('button', { name: 'Song sends: reverb 1, chorus 2, delay 3. Opens Effects' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Song sends: reverb 1, chorus 2, delay 3. Opens Effects' })).not.toHaveTextContent('Song');
     rerender(<SendReadout reverb={1} chorus={2} delay={3} name="Effects" />);
     expect(screen.getByRole('button', { name: 'Effects' })).toBeInTheDocument();
   });
