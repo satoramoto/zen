@@ -8,10 +8,10 @@ Every visual and structural decision in a zen app belongs to exactly one tier. E
 |---|---|---|---|---|
 | **Tokens** | `src/library/themes/` | values: colour, type, scale, materials, layers | anything about a screen | — |
 | **Primitives** | `src/library/primitives/` | how a thing looks: a `Surface` (a layer, a material; `Opaque` makes the layers inside solid, `Hole` is a cut-out), `Text` in a role, an `Icon`, a `Stack` (a flex line with a gap step), a focus or press `Ring` | behaviour | tokens |
-| **Controls** | `src/library/components/core`, `components/music` | one interaction: state, keys, accessibility, its own size on the scale (`size`), its colour slot (`tone`, `hue`) | its outer margin or position; picking a colour by hand | primitives |
+| **Controls** | `src/library/components/core`, `components/music` | one interaction: state, keys, accessibility, its own size on the scale (`size`), its colour slot (`tone`, `hue`), its **forms** and what each needs in scale units ([`assembly.md`](assembly.md)) | its outer margin or position; picking a colour by hand | primitives |
 | **Groups** | `src/library/layout/Group` (a `Stack` plus a label) | arranging controls: direction, gap step, alignment, the label | painting anything | controls |
-| **Regions** | `src/library/layout/Region` | a block of a screen: plate, header, views | arranging controls inside it (that's a Group) | groups |
-| **Screens** | `src/library/layout/Screen`, an app's screens | which regions go where, breakpoints, fit and zoom | styling a region | regions |
+| **Regions** | `src/library/layout/Region` | a block of a screen: plate, header, views; its forms are its contents' needs added up | arranging controls inside it (that's a Group) | groups |
+| **Screens** | `src/library/layout/Screen`, an app's screens | intent: header, footer, rows of regions, priorities, pairs (a `spec`); `assemble()` decides forms, sizes and zoom from it and the pack's principles | styling a region; grid ratios or breakpoints by hand | regions |
 | **App** | an app's root | data, behaviour, which screen and system | CSS | screens |
 
 ## Where does this go?

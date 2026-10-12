@@ -72,3 +72,23 @@ Decisions made without asking, for the owner to veto. Newest last. Each says wha
 39. **visuals' control reset** `.vs-root :where(button, select, input, textarea) { font: inherit }` now skips `.lib-text`: it had class specificity and silently erased every Text button's role inside the visuals app. `.vs-root .vs-num` sets only the readout face and word spacing, and each `vs-num` element sets `tabular` itself.
 40. **Radio's root is a body Text** like Checkbox's, since they share `.lib-check`'s type knobs. Segmented and Select pass their hooks' ARIA `role` through `ariaRole`. The visuals view switch writes its words capitalised in code instead of `text-transform: capitalize` on Segmented's part.
 41. **Surface adoption only where it's the same paint:** the Slider track and thumbs, the Switch thumb, the Meter channel, Knob's well and cap, ChordReadout's screen, and CrashPrompt's report. Faces with a tint layer over the key material (Button, Toggle key, Select trigger, the Switch track, ActionButton) keep their own painting, because a Surface can't layer a tint yet (follow-up: a `--lib-surface-tint` slot).
+42. **Self-assembling layout** (`docs/assembly.md`, `layout/assembly/`). Needs are declared in scale units (`control`, `target`, `space`, `unit`, `lines`, `chars`, and hairline `px`), never measured. The solver resolves them from the facets: the scale for sizes and the materials' plate for inset, head and gap. It reads the materials' CSS lengths with a small parser that throws on anything it can't read. `ROLE_LEADING` copies Text.css's leadings, and a test holds the two together. `chars` uses an average glyph width of 0.6 em.
+43. **The solver's rules:**
+    - The lowest priority steps down first, strictly. Within that tier, a step that shrinks the body wins.
+    - Once the body fits, a take-back pass restores any step a later one made unnecessary, highest priority first.
+    - Zoom comes only when no step down helps any more. That is usually when everything is at its last form, but a region whose next form isn't smaller where the body overflows isn't stepped for nothing.
+    - Spare room goes first to each tier's ideal, then to the growers, highest priority first and in proportion to their ideals. Regions stretch across their row.
+    - The header and footer are each region's first form at its ideal height. They never step or zoom.
+44. **Density is the fit aim:** `dense` tests each form at its least, `balanced` halfway, `roomy` at its ideal. A roomy pack that runs out of steps retries as dense before zooming.
+45. **Ranks:** `now, next, controls, context, chrome` (`RANKS` in the contract), scored 100, 80, 60, 40, 20. A pack may reorder them. "What's playing never shrinks first" is `now` on top.
+46. **Every pack's `minTarget` is 24**, WCAG 2.2's target size minimum (`// added`: no source sets one). The zoom floor is `minTarget / control`: 0.857 at the compact scale, so the Stage's current 0.848 at 1217 × 752 would hit the floor once it is assembled. Yahaha is `dense`, visuals `roomy`, and the studio packs `balanced` (`// added`).
+47. **Pairs** are two regions in rows of one stack, both first or both last, that take one width. Any other pair throws.
+48. **`AssembledScreen` places each slot absolutely.** The rects go in as unitless custom properties (`--lib-at-x` … `-h`), and `Assembly.css` multiplies them by `1px`. The px come from the facets, so this is the screen tier using tokens, not a literal. The body zoom (`zoom`) sits on an inner box, so it never scales the zone's offset. The room is the one thing measured (the screen's own box); where nothing measures, it is 1440 × 900.
+49. **`useForm(forms, given?)`** returns the `form` prop if given, else the region's chosen form when it is one of the component's forms, else the first. A region passes the same form id to every declaring component inside it, so a per-part mapping is a follow-up.
+50. **`ThemeScope` takes `principles`** and puts its facets and principles in context (`useThemeScope`). The Storybook decorator passes the pack's. Outside a scope, the solver uses the first pack.
+51. **Thinner blocks:**
+    - `Layer` is a deprecated alias of `<Surface layer radius="card">`. It keeps the `lib-layer` class, because visuals' CSS names it.
+    - `Opaque` and `Hole` moved to `primitives/Surface`. Layer.css is gone.
+    - `Stack` is a primitive (this reverses 28). The layout index doesn't re-export it, because the library's `export *` of both folders would clash.
+    - `Group` is a column `Stack` holding the label and a body `Stack`.
+    - The story helper `.lib-stack` in library.css became `.lib-specimens`. It had the Stack component's class name and could outrank Stack's `:where()` gap rules.

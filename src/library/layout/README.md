@@ -6,7 +6,8 @@
 |---|---|---|
 | `Group` | Groups | a `Stack` (column, gap step 1) holding the label and a body `Stack`: direction, gap step (0–6), alignment, wrap |
 | `Region` | Regions | the plate, its header and views (`Region.View`), the body's `gap` between groups |
-| `Screen` | Screens | the header, footer and named grid of regions |
+| `Screen` | Screens | with a `spec`: assembles itself (`assembly/`, [`docs/assembly.md`](../../../docs/assembly.md)); without: the header, footer and named grid of regions |
+| `assembly/` | Screens | `assemble()` (pure: forms, specs, principles → placement), `useForm()`, `AssembledScreen`, units (`principlesFor`, `resolveLength`) |
 | `Tabs` | Controls | a switch between views (used in region headers) |
 | `Layer` | (deprecated) | an alias of `<Surface layer={level} radius="card">` that keeps the `lib-layer` class; `Layer.tsx` re-exports `Opaque` and `Hole` |
 
