@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import type { CSSProperties } from 'react';
 import { fraction, useAdjust } from './adjust';
+import type { HueSlot } from '../hue';
 import './StepValue.css';
 
-/** A part's hue, or `t` neutral (no part). */
-export type StepHue = 't' | 'r1' | 'r2' | 'r3' | 'l';
+/** A categorical hue slot (an app maps its own meaning, e.g. Yahaha's parts), or `t` neutral. */
+export type StepHue = 't' | HueSlot;
 
 /** The app's tooltip hook-up: called with the element and the tip key; may return an updater and a cleanup. */
 export type TipAction = (
@@ -21,9 +22,9 @@ export interface StepValueProps {
   defaultValue?: number;
   /** The value as shown ("16", "+4", "1k"). Default: the number. */
   display?: string;
-  /** A short tag before the value ("R2"), marked with its part's hue. */
+  /** A short tag before the value ("R2"), marked with its hue. */
   tag?: string;
-  /** The tag's hue: a part's, or `t` neutral. */
+  /** The tag's hue: a slot `1`–`4` (`--hue-1..4`), or `t` neutral. */
   hue?: StepHue;
   /** `a` a level (shows where it sits in its range), `t` a plain table cell. */
   ink?: 'a' | 't';
@@ -45,7 +46,6 @@ export interface StepValueProps {
   onchange?: (value: number) => void;
 }
 
-const HUE_SLOT: Record<StepHue, string | undefined> = { t: undefined, r1: '1', r2: '2', r3: '3', l: '4' };
 
 /**
  * A value set in place, in a small cell: a part's send, a Master EQ band's gain, a style insert's
@@ -59,12 +59,12 @@ const HUE_SLOT: Record<StepHue, string | undefined> = { t: undefined, r1: '1', r
  * **Changed.** *Hierarchy and numerals:* the value is now the loudest thing, set in the readout face
  * at numeral weight with tabular figures and a fixed minimum width, right-aligned, so a column of
  * cells reads like a table and digits don't jitter while dragging (typography.md). The tag drops to
- * a label (label case, tracking, secondary ink). *Colour meaning:* the part's hue moves from the
+ * a label (label case, tracking, secondary ink). *Colour meaning:* the owner's hue moves from the
  * tag's letters to a small swatch beside it, so hue marks identity only and the text keeps full
  * contrast on light palettes; the value is no longer painted in the accent, which is kept for focus
  * and the live drag (color.md: fewer colours, stricter purpose; at most two per component).
  * *Affordance:* a level (`ink="a"`) carries a thin lamp under it showing where it sits in its
- * range, lit in the part's hue with the palette's bloom, so it looks like something with a range
+ * range, lit in its hue slot with the palette's bloom, so it looks like something with a range
  * that slides; the cell takes a hover fill and an ew-resize cursor, and a drag lights the lamp in
  * the accent. Dim and disabled use the text ladder and an unlit lamp rather than opacity; disabled
  * is the screen's one "shown, not usable" look, a dashed edge with its text in `--text-3`, and a
@@ -125,7 +125,7 @@ export function StepValue({
       data-ink={ink}
       data-dim={dim ? 'true' : undefined}
       data-disabled={disabled ? 'true' : undefined}
-      data-hue={HUE_SLOT[hue]}
+      data-hue={hue === 't' ? undefined : hue}
       data-tip={tip}
       style={level}
       {...handlers}

@@ -4,7 +4,7 @@ import { Readout } from '../../components';
 import { DisplayArt } from './DisplayArt';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/DisplayArt',
+  title: 'Yahaha/Primitives/DisplayArt',
   component: DisplayArt,
   decorators: [
     withLibraryTheme,

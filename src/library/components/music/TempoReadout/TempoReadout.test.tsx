@@ -5,21 +5,21 @@ import { join } from 'node:path';
 import { TempoReadout } from './TempoReadout';
 
 // jsdom gives import.meta.url a non-file scheme and vitest skips CSS; tests run from the repo root.
-const css = readFileSync(join(process.cwd(), 'src/library/yahaha/TempoReadout/TempoReadout.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+const css = readFileSync(join(process.cwd(), 'src/library/components/music/TempoReadout/TempoReadout.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 const ruleOf = (selector: string) =>
   new RegExp(`(?:^|\\n)${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
 
-describe('TempoReadout transport hue', () => {
-  it('+ and − are neutral at rest; the transport hue, with its paired ink, only while pressed', () => {
+describe('TempoReadout role hue', () => {
+  it('+ and − are neutral at rest; the role-2 hue, with its paired ink, only while pressed', () => {
     expect(ruleOf('.yh-tempo-readout__steps')).toMatch(/border:[^;]*var\(--border-strong\)/);
     expect(ruleOf('.yh-tempo-readout__step')).toMatch(/color:\s*var\(--text-2\)/);
     expect(ruleOf('.yh-tempo-readout__step + .yh-tempo-readout__step')).toMatch(/border-top:[^;]*var\(--border-strong\)/);
-    expect(ruleOf('.yh-tempo-readout__step:hover:not(:disabled)')).not.toMatch(/--transport/);
+    expect(ruleOf('.yh-tempo-readout__step:hover:not(:disabled)')).not.toMatch(/--role-2/);
     const pressed = ruleOf('.yh-tempo-readout__step:active:not(:disabled)');
-    expect(pressed).toMatch(/background:\s*var\(--transport\)/);
-    expect(pressed).toMatch(/color:\s*var\(--transport-text\)/);
-    // --transport appears in the pressed rule and nowhere else.
-    expect(css.split('var(--transport)').length - 1).toBe(1);
+    expect(pressed).toMatch(/background:\s*var\(--role-2\)/);
+    expect(pressed).toMatch(/color:\s*var\(--role-2-text\)/);
+    // --role-2 appears in the pressed rule and nowhere else.
+    expect(css.split('var(--role-2)').length - 1).toBe(1);
   });
 
   it('+ and − are real keys: a control height square each, glyphs at heading size', () => {

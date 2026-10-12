@@ -12,7 +12,7 @@ export interface PartMarksProps {
   failed?: boolean;
   /** The part is off and silent: the word "off". Not drawn when `bass` is true. */
   off?: boolean;
-  /** The part plays the Style's bass under Manual Bass: the word "bass". */
+  /** The part plays the bass line (in Yahaha, the Style's bass under Manual Bass): the word "bass". */
   bass?: boolean;
   /** The gap between marks: `cell` (the sound cell) or `strip` (the tighter fader strip name). */
   size?: 'cell' | 'strip';
@@ -41,8 +41,8 @@ const TONE: Record<Mark, string> = {
  *
  * **Changed.** *Colour meaning*: the original drew "failed" in `--ending`, a section hue, so red
  * meant both "the Ending section" and "broken". Here the cross uses the contract's `--danger` and
- * the triangle `--warning`; no categorical hue appears, so the four part hues keep their one
- * meaning (colour.md › Semantic colours: semantics are their own roles). *Affordance without
+ * the triangle `--warning`; no categorical hue appears, so the app's hue slots (`--hue-1..4`)
+ * keep their one meaning (colour.md › Semantic colours: semantics are their own roles). *Affordance without
  * colour*: problems differ by shape (an outlined triangle with a bang versus a cross), so they
  * read in greyscale and to colour-blind players. *Legibility at small sizes*: every mark is sized
  * from the caption type (`1em` icons, the edited ring at 0.6em) instead of fixed 5px and 12px, so it

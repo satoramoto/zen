@@ -1,4 +1,4 @@
-import type { ChordReadoutProps } from '../ChordReadout/ChordReadout';
+import type { ChordReadoutProps } from '../../components/music/ChordReadout/ChordReadout';
 import type { DisplayPart, DisplayProps } from './Display';
 
 /** The display's data: its props without the callbacks. */

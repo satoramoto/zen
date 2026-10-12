@@ -1,7 +1,7 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react';
-import { LampButton, type TipAction } from '../LampButton/LampButton';
-import { LineSlider } from '../LineSlider/LineSlider';
-import { SettingsRow } from '../SettingsRow/SettingsRow';
+import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
+import { LineSlider } from '../../components/core/LineSlider/LineSlider';
+import { SettingsRow } from '../../components/core/SettingsRow/SettingsRow';
 import './MetronomePopover.css';
 
 export interface MetronomePopoverProps {

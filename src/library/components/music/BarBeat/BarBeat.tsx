@@ -10,7 +10,7 @@ export interface BarBeatProps {
   /** Beats in the bar: one segment each. */
   beats?: number;
   /**
-   * @deprecated Sections take no hue (`../hues`): the bar is neutral ink in every section. Accepted
+   * @deprecated Sections take no hue: the bar is neutral ink in every section. Accepted
    * and ignored, so code built on the old API still compiles.
    */
   hue?: BarBeatHue;

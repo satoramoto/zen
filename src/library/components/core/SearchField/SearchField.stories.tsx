@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { SearchField, type SearchFieldProps } from './SearchField';
 
 /** Plays the parent: typing moves `value`, and the story's action logs each edit. */
@@ -25,7 +25,7 @@ function Live(args: SearchFieldProps) {
  * key reaches `onKeyDown`, so a page can drive its list from the field.
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/SearchField',
+  title: 'Design OS/Components/Core/SearchField',
   component: SearchField,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

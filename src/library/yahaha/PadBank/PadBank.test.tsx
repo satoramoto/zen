@@ -191,16 +191,19 @@ describe('PadBank pads', () => {
     for (const pad of pads) expect(pad).toHaveAttribute('data-fill', 'true');
   });
 
-  it('gives each bank tab its tooltip key, and the hook once to each pad', () => {
+  it('gives each bank tab its tooltip key, and the hook once to each tab and each pad', () => {
     const tipAction = vi.fn();
     setup({ tipAction });
     const calls = tipAction.mock.calls as [HTMLElement, string][];
     const tabs = screen.getAllByRole('tab');
     expect(tabs).toHaveLength(4);
-    for (const tab of tabs) expect(tab.getAttribute('data-tip')).toBeTruthy();
+    for (const tab of tabs) {
+      expect(tab.getAttribute('data-tip')).toBeTruthy();
+      expect(tipAction).toHaveBeenCalledWith(tab, tab.getAttribute('data-tip'));
+    }
     const keyed = quickRackPads.filter((p) => !p.empty && p.tip !== undefined).length;
     expect(calls.filter(([node]) => node.matches('.yh-pad'))).toHaveLength(keyed);
-    expect(tipAction).toHaveBeenCalledTimes(keyed);
+    expect(tipAction).toHaveBeenCalledTimes(keyed + tabs.length);
   });
 
   it('a pad lit for a part wears that part’s tone; the banks’ own pads are neutral', () => {
@@ -276,7 +279,7 @@ describe('PadBank Sections bank', () => {
     setupSections();
     for (const name of ['Sync Start (pad 4)', 'Auto Fill (pad 8)', 'Tap (pad 14)', 'Sync Stop (pad 15)']) {
       const pad = screen.getByRole('button', { name });
-      expect(pad).toHaveAttribute('data-tone', 'transport');
+      expect(pad).toHaveAttribute('data-tone', 'role-2');
       expect(pad).toHaveAttribute('data-state', 'idle');
     }
     expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toHaveAttribute('data-tone', 'success');

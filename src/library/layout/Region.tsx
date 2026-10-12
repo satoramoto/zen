@@ -1,5 +1,5 @@
 import { Children, isValidElement, useId, useState, type CSSProperties, type ReactElement, type ReactNode } from 'react';
-import { Tabs } from './Tabs';
+import { Tabs, type TipAction } from './Tabs';
 import './Region.css';
 
 export interface RegionViewProps {
@@ -36,6 +36,8 @@ export interface RegionProps {
   onView?: (id: string) => void;
   /** The grid area this region fills in its screen. */
   area?: string;
+  /** The app's tooltip action, passed to the views' tabs (each tab with a `tip` gets it). */
+  tipAction?: TipAction;
   className?: string;
   style?: CSSProperties;
   /** Content, or `Region.View` children: then the header shows a tab per view and the body the chosen one. */
@@ -56,7 +58,7 @@ export interface RegionProps {
  * **Behaviour.** With `view` the choice is the caller's (a hardware button may change it too);
  * without, the region keeps it. The body is the tabs' `tabpanel`.
  */
-function RegionRoot({ name, label, aside, view, defaultView, onView, area, className, style, children }: RegionProps) {
+function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAction, className, style, children }: RegionProps) {
   const views = Children.toArray(children).filter(
     (c): c is ReactElement<RegionViewProps> => isValidElement(c) && c.type === RegionView,
   );
@@ -91,6 +93,7 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, class
               onChange={choose}
               panelId={`${uid}-panel`}
               tabId={tabId}
+              tipAction={tipAction}
             />
           )}
           {aside && <span className="lib-region__aside">{aside}</span>}

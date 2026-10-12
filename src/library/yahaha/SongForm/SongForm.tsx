@@ -1,6 +1,6 @@
-import { Button } from '../Button/Button';
-import { LampButton } from '../LampButton/LampButton';
-import { Pad, type PadState, type TipAction } from '../Pad/Pad';
+import { Button } from '../../components/core/Button/Button';
+import { LampButton } from '../../components/core/LampButton/LampButton';
+import { Pad, type PadState, type TipAction } from '../../components/music/Pad/Pad';
 import type { SectionState } from '../hues';
 import './SongForm.css';
 
@@ -64,12 +64,6 @@ export const FORM: readonly { part: Part; caption: string; steps: readonly Secti
 ];
 
 const BREAK: SectionDef = { id: 'break', step: 'Break', label: 'Break', tip: 'section.break' };
-
-const REGION_LABEL: Record<SongFormPart, string> = {
-  both: 'Song form and transport',
-  form: 'Song form',
-  transport: 'Transport',
-};
 
 /** Every section's full name, by id. */
 export const SECTION_LABEL: Record<SectionId, string> = Object.fromEntries(
@@ -287,7 +281,7 @@ export function SongForm({
   const fadeFace = fading ? (running ? { on: true } : { waiting: true }) : {};
 
   return (
-    <section className="yh-songform" data-part="root" data-half={part} aria-label={REGION_LABEL[part]}>
+    <div className="yh-songform" data-part="root" data-half={part}>
       <div className="yh-songform__inner" data-part="inner">
         {part !== 'transport' && (
           <div className="yh-songform__form" data-part="form" role="group" aria-label="Sections">
@@ -318,7 +312,7 @@ export function SongForm({
                 size="cell"
                 tall
                 variant={running ? 'secondary' : 'primary'}
-                hue={running ? 'ok' : 'transport'}
+                hue={running ? 'ok' : 'role-2'}
                 pressed={running}
                 name={running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped'}
                 tip="transport.start_stop"
@@ -331,7 +325,7 @@ export function SongForm({
               <Button
                 label="Sync Start"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={syncStart}
                 lit={lit}
                 pressed={syncStart}
@@ -345,7 +339,7 @@ export function SongForm({
               <Button
                 label="Sync Stop"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={syncStop}
                 pressed={syncStop}
                 tip="transport.sync_stop"
@@ -358,7 +352,7 @@ export function SongForm({
                 label="Fill"
                 symbol="up"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={fillPending === 'up'}
                 lit={lit}
                 name={`Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`}
@@ -372,7 +366,7 @@ export function SongForm({
                 label="Fill"
                 symbol="down"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={fillPending === 'down'}
                 lit={lit}
                 name={`Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`}
@@ -419,7 +413,7 @@ export function SongForm({
               <LampButton
                 label="Auto Fill"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 on={autoFill}
                 tip="transport.auto_fill"
                 tipAction={tipAction}
@@ -429,7 +423,7 @@ export function SongForm({
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }
 

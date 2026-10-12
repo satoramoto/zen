@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { StepValue } from './StepValue';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/StepValue',
+  title: 'Design OS/Components/Core/StepValue',
   component: StepValue,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
@@ -16,7 +16,7 @@ const meta = {
     max: 127,
     defaultValue: 0,
     tag: 'R2',
-    hue: 'r2',
+    hue: 2,
     name: 'Right 2 delay send',
     tip: 'fx.send_param',
     tipAction: fn(),
@@ -29,7 +29,7 @@ const meta = {
     defaultValue: { control: 'number' },
     display: { control: 'text' },
     tag: { control: 'text' },
-    hue: { control: 'select', options: ['t', 'r1', 'r2', 'r3', 'l'] },
+    hue: { control: 'select', options: ['t', 1, 2, 3, 4] },
     ink: { control: 'select', options: ['a', 't'] },
     dim: { control: 'boolean' },
     disabled: { control: 'boolean' },
@@ -59,7 +59,7 @@ export const Default: Story = {
 
 /** A part that doesn't sound: the tag and value faded, still settable. */
 export const Dim: Story = {
-  args: { tag: 'R3', hue: 'r3', value: 0, dim: true, name: 'Right 3 delay send' },
+  args: { tag: 'R3', hue: 3, value: 0, dim: true, name: 'Right 3 delay send' },
 };
 
 /** A table cell: plain text ink, no tag (a Master EQ band's gain). */
@@ -84,10 +84,10 @@ export const SendColumn: Story = {
   render: function SendColumn() {
     const parts = [
       { tag: 'T', hue: 't', name: 'Tutti delay send' },
-      { tag: 'R1', hue: 'r1', name: 'Right 1 delay send' },
-      { tag: 'R2', hue: 'r2', name: 'Right 2 delay send' },
-      { tag: 'R3', hue: 'r3', name: 'Right 3 delay send', dim: true },
-      { tag: 'L', hue: 'l', name: 'Left delay send' },
+      { tag: 'R1', hue: 1, name: 'Right 1 delay send' },
+      { tag: 'R2', hue: 2, name: 'Right 2 delay send' },
+      { tag: 'R3', hue: 3, name: 'Right 3 delay send', dim: true },
+      { tag: 'L', hue: 4, name: 'Left delay send' },
     ] as const;
     const [values, setValues] = useState<number[]>([0, 32, 16, 0, 101]);
     return (

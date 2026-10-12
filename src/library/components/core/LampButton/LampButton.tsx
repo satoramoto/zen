@@ -1,9 +1,10 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { useLongPress } from './useLongPress';
+import type { HueSlot } from '../hue';
 import './LampButton.css';
 
 /** The hues a lamp can wear. `m` is the original's deprecated alias of `t` and draws exactly as it. */
-export type LampHue = 't' | 'r1' | 'r2' | 'r3' | 'l' | 'ok' | 'lamp' | 'transport' | 'm';
+export type LampHue = 't' | HueSlot | 'ok' | 'lamp' | 'role-2' | 'm';
 
 /** The face as drawn. */
 export type LampFace = 'off' | 'on' | 'record' | 'waiting' | 'armed' | 'disabled';
@@ -19,7 +20,7 @@ export interface LampButtonProps {
   label: string;
   /** Lit or off. Controlled: a press asks for `!on` through `onToggle` and changes nothing itself. */
   on?: boolean;
-  /** Identity: `t` neutral (Accomp, function lamps), a part (`r1` `r2` `r3` `l`), `ok` running (Start / Stop), `lamp` the Looper looping, `transport` a key that moves time (Metronome, Auto Fill), neutral while off. On is an outline and a lit LED; only `ok`, `lamp` and record fill solid. */
+  /** Identity: `t` neutral (function lamps), `1`–`4` a categorical hue slot (`--hue-1..4`; an app maps its own meaning, e.g. Yahaha's parts), `ok` running, `lamp` playback (e.g. a looper looping), `role-2` the second role hue (`--role-2`; e.g. Yahaha's keys that move time), neutral while off. On is an outline and a lit LED; only `ok`, `lamp` and record fill solid. */
   hue?: LampHue;
   /** Small code after the label, e.g. `ACMP`. */
   code?: string;
@@ -41,7 +42,7 @@ export interface LampButtonProps {
   width?: number;
   /** Joined to a neighbour: `start` has one on its right, `end` on its left; the shared corners go square. */
   join?: 'start' | 'end';
-  /** The accessible name when the label alone isn't enough ("Right 1 on"). Default: label and code. */
+  /** The accessible name when the label alone isn't enough ("Channel 1 on"). Default: label and code. */
   name?: string;
   /** Tooltip key, rendered as `data-tip`. */
   tip?: string;
@@ -56,8 +57,8 @@ export interface LampButtonProps {
 }
 
 /**
- * **Job.** The on/off key the whole canvas uses: Accomp, Metronome, a part's On, Sound, Looper,
- * Start / Stop. At a glance a player must see which part or function it belongs to, whether it is
+ * **Job.** The on/off key the whole canvas uses (in Yahaha: Accomp, Metronome, a part's On, Sound,
+ * Looper, Start / Stop). At a glance a player must see which hue or function it belongs to, whether it is
  * lit, armed or off, and that it is a key they can press (hold or right-click for its second function).
  *
  * **Changed.** *Hierarchy and affordance:* the original drew off as a full-strength coloured
@@ -66,18 +67,18 @@ export interface LampButtonProps {
  * unlit LED in its hue, and on is the same key with a double-weight outline in the lamp's hue, a
  * lit LED (with `--bloom` where the palette glows) and its label in ink. *A solid fill means
  * sounding or running* (the Stage rule; color.md: restraint, colour by purpose): only Start / Stop
- * running (`ok`), the Looper looping (`lamp`, playback) and record fill solid, so a row of lit part
- * and function lamps no longer outshouts the one key that says the band is playing. The unlit LED
+ * running (`ok`), playback (`lamp`) and record fill solid, so a row of lit hued and function
+ * lamps no longer outshouts the one key that says the band is playing. The unlit LED
  * mixes 45% of its hue into the key on dark palettes and 65% on light ones (`--scheme-light`),
- * where a pale dot vanished. The key sinks 1px on press. *Colour meaning:* part hues
- * (`--hue-1..4`) only name the part; Start / Stop and the looping Looper use `--success`
- * (running), record uses `--danger`, neutral lamps light in `--text-1`, and focus is an `--accent`
- * ring (craft-details.md: `:focus-visible`). The keys that move time (the metronome, Auto Fill)
- * wear the contract's `transport` role hue, never a part's, and only while active (hues.ts): off,
- * their LED is neutral like any other lamp's; on, waiting or armed, the ring and LED take
- * `--transport`. The running and record fills take their own ink, `--success-text` and
- * `--danger-text` (the original drew every fill in `--on-hue`, which the contract only promises
- * against the part hues). *Waiting* (queued) is the ring over a faint 14% wash with a blinking LED,
+ * where a pale dot vanished. The key sinks 1px on press. *Colour meaning:* the hue slots
+ * (`--hue-1..4`) only name identity; running and playback use `--success`, record uses
+ * `--danger`, neutral lamps light in `--text-1`, and focus is an `--accent` ring
+ * (craft-details.md: `:focus-visible`). A `role-2` lamp (in Yahaha, the metronome and Auto Fill)
+ * wears the contract's second role hue, never a slot's, and only while active: off, its LED is
+ * neutral like any other lamp's; on, waiting or armed, the ring and LED take `--role-2`. The
+ * running and record fills take their own ink, `--success-text` and `--danger-text` (the
+ * original drew every fill in `--on-hue`, which the contract only promises against the
+ * categorical hues). *Waiting* (queued) is the ring over a faint 14% wash with a blinking LED,
  * the hardware convention for "at the cue", still on reduced motion as a steady LED; the ring is
  * `--yh-wait-ring`, the same weight and tint as Button's and Pad's. *Armed* (`armed` with `on`:
  * engaged, waiting for its cue) is the on face with the LED blinking: it reads as on, unlike merely

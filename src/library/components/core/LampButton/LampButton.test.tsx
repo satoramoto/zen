@@ -20,8 +20,8 @@ describe('LampButton', () => {
   });
 
   it('uses the name override', () => {
-    render(<LampButton label="On" hue="r1" name="Right 1 on" />);
-    expect(screen.getByRole('button', { name: 'Right 1 on' })).toBeInTheDocument();
+    render(<LampButton label="On" hue={1} name="Channel 1 on" />);
+    expect(screen.getByRole('button', { name: 'Channel 1 on' })).toBeInTheDocument();
   });
 
   it('is controlled: click, Space and Enter ask for !on and change nothing', async () => {
@@ -48,19 +48,26 @@ describe('LampButton', () => {
     expect(onToggle).toHaveBeenCalledWith(false);
   });
 
-  it('transport is its own hue, and each lit fill takes its own ink', () => {
-    render(<LampButton label="Metronome" hue="transport" on />);
-    expect(screen.getByRole('button')).toHaveAttribute('data-hue', 'transport');
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/LampButton/LampButton.css'), 'utf8');
+  it('a hue slot draws its --hue-n', () => {
+    render(<LampButton label="On" hue={3} on />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-hue', '3');
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/LampButton/LampButton.css'), 'utf8');
+    for (const slot of [1, 2, 3, 4]) expect(css).toContain(`.yh-lampbutton[data-hue='${slot}'] { --lamp-hue: var(--hue-${slot});`);
+  });
+
+  it('role-2 is its own hue, and each lit fill takes its own ink', () => {
+    render(<LampButton label="Metronome" hue="role-2" on />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-hue', 'role-2');
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/LampButton/LampButton.css'), 'utf8');
     const decls = (hue: string) => css.match(new RegExp(`\\[data-hue='${hue}'\\]\\s*\\{([^}]*)\\}`))?.[1] ?? '';
     expect(decls('lamp')).toContain('--lamp-ink: var(--success-text)');
     expect(decls('rec')).toContain('--lamp-ink: var(--danger-text)');
-    expect(decls('transport')).toContain('--lamp-hue: var(--transport)');
-    expect(decls('transport')).toContain('--lamp-ink: var(--transport-text)');
+    expect(decls('role-2')).toContain('--lamp-hue: var(--role-2)');
+    expect(decls('role-2')).toContain('--lamp-ink: var(--role-2-text)');
   });
 
-  it('on is an outline and a lit LED; only running, looping and record fill; transport is neutral off', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/LampButton/LampButton.css'), 'utf8');
+  it('on is an outline and a lit LED; only running, looping and record fill; role-2 is neutral off', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/LampButton/LampButton.css'), 'utf8');
     const rule = (selector: string) => {
       const at = css.indexOf(`${selector} {`);
       expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
@@ -72,8 +79,8 @@ describe('LampButton', () => {
     const solid = rule(".yh-lampbutton:is([data-hue='ok'], [data-hue='lamp'])[data-face='on'],\n.yh-lampbutton[data-face='record']");
     expect(solid).toContain('background: var(--lamp-hue)');
     // No other rule fills a face with the hue.
-    expect(css.match(/background: var\(--lamp-hue\)/g)?.length).toBe(3);
-    expect(rule(".yh-lampbutton[data-hue='transport']:is([data-face='off'], [data-face='disabled'])")).toContain('--lamp-hue: var(--text-1)');
+    expect(css.match(/background: var\(--lamp-hue\)/g)?.length).toBe(1);
+    expect(rule(".yh-lampbutton[data-hue='role-2']:is([data-face='off'], [data-face='disabled'])")).toContain('--lamp-hue: var(--text-1)');
     expect(rule(".yh-lampbutton[data-face='disabled'] .yh-lampbutton__code")).toContain('var(--text-3)');
     expect(css).not.toContain('--text-4');
     expect(css).not.toContain('ellipsis');

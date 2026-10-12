@@ -13,7 +13,7 @@ describe('Separator', () => {
   });
 
   it('the short line stands a step short of the control height', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Separator/Separator.css'), 'utf8');
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/Separator/Separator.css'), 'utf8');
     expect(css).toMatch(/\[data-length='short'\]\s*\{[^}]*height:\s*calc\(var\(--control-h\) - var\(--space-3\)\)/);
   });
 

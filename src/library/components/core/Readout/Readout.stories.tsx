@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { Readout, type ReadoutProps } from './Readout';
 import { splitUnit } from './adjust';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/Readout',
+  title: 'Design OS/Components/Core/Readout',
   component: Readout,
   decorators: [
     (Story) => (

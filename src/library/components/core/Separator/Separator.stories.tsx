@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { withLibraryTheme } from '../../storybook';
-import { Button } from '../../components';
+import { withLibraryTheme } from '../../../storybook';
+import { Button } from '../..';
 import { Separator } from './Separator';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/Separator',
+  title: 'Design OS/Components/Core/Separator',
   component: Separator,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },

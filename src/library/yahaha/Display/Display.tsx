@@ -1,15 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react';
 import type * as React from 'react';
 import { AccentBlock } from '../AccentBlock/AccentBlock';
-import { BarBeat } from '../BarBeat/BarBeat';
-import { Button, type TipAction } from '../Button/Button';
-import { ChordReadout, type ChordReadoutProps } from '../ChordReadout/ChordReadout';
+import { Button, type TipAction } from '../../components/core/Button/Button';
+import { BarBeat } from '../../components/music/BarBeat/BarBeat';
+import { ChordReadout, type ChordReadoutProps } from '../../components/music/ChordReadout/ChordReadout';
+import { PartMarks } from '../../components/music/PartMarks/PartMarks';
+import { marksText } from '../../components/music/PartMarks/marks';
+import { SectionName } from '../../components/music/SectionName/SectionName';
+import { TempoReadout } from '../../components/music/TempoReadout/TempoReadout';
 import { DisplayArt } from '../DisplayArt/DisplayArt';
 import { OneTouchPicker } from '../OneTouchPicker/OneTouchPicker';
-import { PartMarks } from '../PartMarks/PartMarks';
-import { marksText } from '../PartMarks/marks';
-import { SectionName } from '../SectionName/SectionName';
-import { TempoReadout } from '../TempoReadout/TempoReadout';
 import { WaitingChip } from '../WaitingChip/WaitingChip';
 import { PART_HUE, SECTION_STATE_COLOUR, type Part } from '../hues';
 import './Display.css';
@@ -292,11 +292,10 @@ export function Display({
   useFit(frame, [name, meta, queued, nowPlaying.playing, nowPlaying.bpm, chord.chord, chord.extension, hasParts, density]);
 
   return (
-    <section
+    <div
       className="yh-display"
       data-part="display"
       data-material="screen"
-      aria-label="Stage display"
       data-density={density}
       data-running={running || undefined}
       data-parts={hasParts || undefined}
@@ -422,7 +421,7 @@ export function Display({
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 

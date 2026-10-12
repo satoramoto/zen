@@ -1,7 +1,7 @@
 /** One mark PartMarks can draw after a part's sound name. */
 export type Mark = 'edited' | 'missing' | 'failed' | 'off' | 'bass'
 
-/** The facts a parent passes, from `keyboardParts[i]`. */
+/** The facts a parent passes about one part (in Yahaha, from `keyboardParts[i]`). */
 export type MarkFacts = {
   edited?: boolean
   missing?: boolean
@@ -33,7 +33,7 @@ const WORDS: Record<Mark, string> = {
   bass: 'bass',
 }
 
-/** Spoken order (Stage's `aria-label` template): edited, off, plugin missing or failed, bass. */
+/** Spoken order (the `aria-label` template; Yahaha's Stage set it): edited, off, plugin missing or failed, bass. */
 const SPOKEN: Mark[] = ['edited', 'off', 'missing', 'failed', 'bass']
 
 /** The words a parent appends to its `aria-label`, each after ", ": `{ edited: true }` → ", edited". */

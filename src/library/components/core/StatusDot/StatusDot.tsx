@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'react';
-import { SECTION_STATE_COLOUR } from '../hues';
 import './StatusDot.css';
+
+/** What a deprecated section value draws: the playing (selected) role, whichever section it is. */
+const SECTION_COLOUR = 'var(--selected)';
 
 /**
  * A song section, as older callers passed it to `hue`. Every section reads the playing role.
@@ -42,10 +44,9 @@ export interface StatusDotProps {
  *
  * **Changed:** *colour meaning*: `ok` reads `--success`, `d` (absent) the tertiary text role and `t`
  * the primary text role, so each pack keeps its own semantics instead of fixed greens (refero-design
- * `color.md` › Semantic colors). The four categorical hues belong to the four parts only
- * (`../hues`), so a section takes none: the section dot marks what is playing and reads
- * `--selected` (`SECTION_STATE_COLOUR.playing`) whichever section it is, the same role as
- * BarBeat; the word beside it names the section. *Never colour alone*: the face carries the
+ * `color.md` › Semantic colors). The categorical hue slots are an app's identity colours (Yahaha
+ * gives them to its parts), so a status takes none: the section dot marks what is playing and
+ * reads `--selected` whichever section it is; the word beside it names the section. *Never colour alone*: the face carries the
  * second channel, a filled lamp for "on" and a ring for "armed, not yet" or "not there", and the
  * ring is at least 1.5px so it stays a ring, not a smudge, under light palettes
  * (`craft-details.md`). Absent (`d`) is always that ring, in `--text-3`: a solid `--text-4` dot was
@@ -65,7 +66,7 @@ export function StatusDot({ hue = 'ok', hollow = false, glow = true, size = 'md'
   const glows = glow && !ring;
   const named = visible && name !== undefined;
   const style: CSSProperties = {};
-  if (SECTIONS.has(hue)) (style as Record<string, string>)['--yh-status-dot-hue'] = SECTION_STATE_COLOUR.playing;
+  if (SECTIONS.has(hue)) (style as Record<string, string>)['--yh-status-dot-hue'] = SECTION_COLOUR;
   if (!visible) style.visibility = 'hidden';
   return (
     <span

@@ -41,13 +41,13 @@
   color: var(--text-1);
 }
 
-/* Part identity: each part's hue, used only for its zone lamp and held keys. */
-.yh-keys [data-part='l'], .yh-keys [data-held='l'] { --yh-keys-hue: var(--hue-4); }
-.yh-keys [data-part='r1'], .yh-keys [data-held='r1'] { --yh-keys-hue: var(--hue-1); }
-.yh-keys [data-part='r2'], .yh-keys [data-held='r2'] { --yh-keys-hue: var(--hue-2); }
-.yh-keys [data-part='r3'], .yh-keys [data-held='r3'] { --yh-keys-hue: var(--hue-3); }
+/* Zone identity: each zone's hue slot (leftHue, rightHue), used only for its zone lamp and held keys. */
+.yh-keys [data-hue='1'] { --yh-keys-hue: var(--hue-1); }
+.yh-keys [data-hue='2'] { --yh-keys-hue: var(--hue-2); }
+.yh-keys [data-hue='3'] { --yh-keys-hue: var(--hue-3); }
+.yh-keys [data-hue='4'] { --yh-keys-hue: var(--hue-4); }
 
-/* ── The ruler: which part owns which keys, and what each holds. */
+/* ── The ruler: which zone owns which keys, and what each holds. */
 .yh-keys__ruler {
   position: relative;
   min-width: 0;
@@ -64,8 +64,8 @@
   padding: 0 var(--space-2);
   overflow: hidden;
   white-space: nowrap;
-  /* The zone's lamp: its underline, in the part's hue, lit while the part sounds. It ties the
-     part's name to its colour and to the keys under it. */
+  /* The zone's lamp: its underline, in the zone's hue, lit while the zone sounds. It ties the
+     zone's name to its colour and to the keys under it. */
   border-bottom: var(--yh-keys-lamp) solid color-mix(in oklab, var(--yh-keys-hue) 45%, transparent);
 }
 .yh-keys__zone[data-on='true'] {
@@ -86,7 +86,7 @@
 /* Leave room for the split flag where the zones meet. */
 .yh-keys__zone[data-split][data-side='left'] { padding-right: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
 .yh-keys__zone[data-split][data-side='right'] { padding-left: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
-/* Read mid-song from a metre: the part at label size, what it holds at body size and strong. */
+/* Read mid-song from a metre: the zone's name at label size, what it holds at body size and strong. */
 .yh-keys__part {
   flex: none;
   font-size: var(--size-label);
@@ -185,7 +185,7 @@
   background: var(--yh-keys-black);
   box-shadow: inset 0 0 0 1px var(--yh-keys-sharp-edge);
 }
-/* Held: lit in the part's hue, glowing by the material set's lamp glow. */
+/* Held: lit in the zone's hue, glowing by the material set's lamp glow. */
 .yh-keys__white[data-held],
 .yh-keys__black[data-held] {
   --lit: var(--yh-keys-hue);

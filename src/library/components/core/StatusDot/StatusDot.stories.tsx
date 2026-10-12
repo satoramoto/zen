@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { StatusDot, type StatusDotHue } from './StatusDot';
 
 const HUES: StatusDotHue[] = ['ok', 'd', 't', 'intro', 'main', 'ending', 'brk', 'fill'];
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/StatusDot',
+  title: 'Design OS/Components/Core/StatusDot',
   component: StatusDot,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

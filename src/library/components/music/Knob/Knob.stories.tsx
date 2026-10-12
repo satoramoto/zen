@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { Knob } from './Knob';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/Knob',
+  title: 'Design OS/Components/Music/Knob',
   component: Knob,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
@@ -55,8 +55,8 @@ export const Unused: Story = {
   args: { label: '---', code: '', value: '', fraction: 0, unused: true },
 };
 
-/** New: a knob owned by a part wears that part's hue on its arc, and only there. */
-export const PartHue: Story = {
+/** New: a knob with a hue slot (in Yahaha, the part that owns it) wears that hue on its arc, and only there. */
+export const Hue: Story = {
   args: { label: 'Retrig rate', code: 'RtgRate', value: '1/8', fraction: 0.4, hue: 2 },
 };
 

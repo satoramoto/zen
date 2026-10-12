@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { LampButton, type LampHue } from './LampButton';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/LampButton',
+  title: 'Design OS/Components/Core/LampButton',
   component: LampButton,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
@@ -20,7 +20,7 @@ const meta = {
     rec: { control: 'boolean' },
     waiting: { control: 'boolean' },
     size: { control: 'select', options: ['md', 'sm', 'cell'] },
-    hue: { control: 'select', options: ['t', 'r1', 'r2', 'r3', 'l', 'ok', 'lamp', 'transport'] },
+    hue: { control: 'select', options: ['t', 1, 2, 3, 4, 'ok', 'lamp', 'role-2'] },
     join: { control: 'select', options: ['none', 'start', 'end'], mapping: { none: undefined } },
     width: { control: 'number' },
   },
@@ -95,38 +95,38 @@ export const Off: Story = {
   args: { label: 'Metronome' },
 };
 
-/** A part lamp, lit: the outline and LED in the part's hue (Right 1 "On"). */
-export const PartOn: Story = {
-  args: { label: 'On', size: 'cell', on: true, hue: 'r1', name: 'Right 1 on' },
+/** A hued lamp, lit: the outline and LED in hue slot 1 (in Yahaha, a part's "On"). */
+export const HueOn: Story = {
+  args: { label: 'On', size: 'cell', on: true, hue: 1, name: 'Channel 1 on' },
   parameters: { layout: 'padded' },
 };
 
-/** A part lamp, lit, in Right 2's hue. */
-export const PartOnR2: Story = {
-  args: { label: 'On', size: 'cell', on: true, hue: 'r2', name: 'Right 2 on' },
+/** A hued lamp, lit, in hue slot 2. */
+export const HueOn2: Story = {
+  args: { label: 'On', size: 'cell', on: true, hue: 2, name: 'Channel 2 on' },
   parameters: { layout: 'padded' },
 };
 
-/** A part lamp, off: the key is neutral, the unlit LED keeps the part's hue (Right 3 "Off"). */
-export const PartOff: Story = {
-  args: { label: 'Off', size: 'cell', hue: 'r3', name: 'Right 3 off' },
+/** A hued lamp, off: the key is neutral, the unlit LED keeps its hue (slot 3). */
+export const HueOff: Story = {
+  args: { label: 'Off', size: 'cell', hue: 3, name: 'Channel 3 off' },
   parameters: { layout: 'padded' },
 };
 
-/** The Left part lamp, lit. */
-export const LeftOn: Story = {
-  args: { label: 'On', size: 'cell', on: true, hue: 'l', name: 'Left on' },
+/** A hued lamp in slot 4, lit. */
+export const HueOn4: Story = {
+  args: { label: 'On', size: 'cell', on: true, hue: 4, name: 'Channel 4 on' },
   parameters: { layout: 'padded' },
 };
 
-/** A part lamp, absent: dashed and unfilled, the hollow LED still in Right 1's hue. */
-export const PartDisabled: Story = {
-  args: { label: 'On', size: 'cell', hue: 'r1', disabled: true, name: 'Right 1 on (no sound loaded)' },
+/** A hued lamp, absent: dashed and unfilled, the hollow LED still in hue slot 1. */
+export const HueDisabled: Story = {
+  args: { label: 'On', size: 'cell', hue: 1, disabled: true, name: 'Channel 1 on (no sound loaded)' },
   parameters: { layout: 'padded' },
   play: async ({ canvasElement }) => {
-    const button = within(canvasElement).getByRole('button', { name: 'Right 1 on (no sound loaded)' });
+    const button = within(canvasElement).getByRole('button', { name: 'Channel 1 on (no sound loaded)' });
     await expect(button).toHaveAttribute('data-face', 'disabled');
-    await expect(button).toHaveAttribute('data-hue', 'r1');
+    await expect(button).toHaveAttribute('data-hue', '1');
     await expect(button).toHaveAttribute('data-contrast', 'dim');
   },
 };
@@ -148,24 +148,24 @@ export const Running: Story = {
   args: { label: 'Start / Stop', on: true, hue: 'ok' },
 };
 
-/** New: the metronome, a key that moves time, lit: the outline and LED in the `transport` role hue. */
-export const TransportOn: Story = {
-  args: { label: 'Metronome', on: true, hue: 'transport' },
+/** New: a `role-2` lamp lit (in Yahaha, the metronome): the outline and LED in the second role hue. */
+export const Role2On: Story = {
+  args: { label: 'Metronome', on: true, hue: 'role-2' },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Metronome' });
     await expect(button).toHaveAttribute('data-face', 'on');
-    await expect(button).toHaveAttribute('data-hue', 'transport');
+    await expect(button).toHaveAttribute('data-hue', 'role-2');
   },
 };
 
-/** New: the metronome off: a quiet key with a neutral unlit LED. A transport key wears its hue only while active (hues.ts). */
-export const TransportOff: Story = {
-  args: { label: 'Metronome', hue: 'transport' },
+/** New: a `role-2` lamp off: a quiet key with a neutral unlit LED. A role-2 key wears its hue only while active. */
+export const Role2Off: Story = {
+  args: { label: 'Metronome', hue: 'role-2' },
 };
 
-/** New: Auto Fill armed: the waiting ring and blinking LED in the transport hue. */
-export const TransportWaiting: Story = {
-  args: { label: 'Auto Fill', size: 'cell', waiting: true, hue: 'transport', name: 'Auto Fill, armed' },
+/** New: a `role-2` lamp armed: the waiting ring and blinking LED in the role hue. */
+export const Role2Waiting: Story = {
+  args: { label: 'Auto Fill', size: 'cell', waiting: true, hue: 'role-2', name: 'Auto Fill, armed' },
   parameters: { layout: 'padded' },
 };
 
@@ -261,7 +261,7 @@ export const JoinStart: Story = {
   ),
 };
 
-const HUES: LampHue[] = ['t', 'r1', 'r2', 'r3', 'l', 'ok', 'lamp', 'transport'];
+const HUES: LampHue[] = ['t', 1, 2, 3, 4, 'ok', 'lamp', 'role-2'];
 const FACES = [
   { face: 'Off', props: {} },
   { face: 'Armed', props: { waiting: true } },

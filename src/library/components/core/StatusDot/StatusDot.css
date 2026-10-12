@@ -1,5 +1,5 @@
-/* StatusDot: a lamp sized to the word it marks. Each hue maps to a palette role (a section's is
-   set inline from hues.ts: the playing role, never a part hue); the face (solid or hollow) is the
+/* StatusDot: a lamp sized to the word it marks. Each hue maps to a palette role (a deprecated section's
+   is set inline: the playing role, --selected, never a hue slot); the face (solid or hollow) is the
    second channel, so colour never carries the state alone. */
 .yh-status-dot {
   --yh-status-dot-hue: var(--success);
@@ -25,7 +25,7 @@
   min-height: 4px;
 }
 
-/* A lit part: the material set's glow in the dot's hue (nothing on flat sets). */
+/* A lit dot: the material set's glow in the dot's hue (nothing on flat sets). */
 .yh-status-dot[data-glow='true'] {
   --lit: var(--yh-status-dot-hue);
   box-shadow: var(--mat-lit-glow);

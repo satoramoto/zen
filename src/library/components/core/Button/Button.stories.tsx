@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { Button, type ButtonHue } from './Button';
 
 const NONE = 'none';
 const SIZES = ['icon', 'md', 'band', 'pair', 'cell', 'caret'];
 /** The hues that draw a distinct look (the deprecated `t2` and `m` draw as `t`, so they're left out). */
-const HUES: ButtonHue[] = ['t', 'a', 'lamp', 'rec', 'ok', 'transport', 'r1', 'r2', 'r3', 'l', 'intro', 'main', 'ending', 'brk', 'fill'];
+const HUES: ButtonHue[] = ['t', 'a', 'lamp', 'rec', 'ok', 'role-2', 1, 2, 3, 4, 'intro', 'main', 'ending', 'brk', 'fill'];
 const SYMBOLS = ['prev', 'next', 'up', 'down', 'plus', 'minus', 'caret'];
 /** A select whose first option is `none` (undefined), so the control can go back to "no value". */
 const optional = (options: string[]) => ({ control: 'select' as const, options: [NONE, ...options], mapping: { [NONE]: undefined } });
@@ -18,7 +18,7 @@ const threeWay = {
 };
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/Button',
+  title: 'Design OS/Components/Core/Button',
   component: Button,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
@@ -179,8 +179,8 @@ export const WaitingFlash: Story = {
     <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
       <Button {...args} label="Fade" size="pair" waiting lit name="Fade, armed, lit" />
       <Button {...args} label="Fade" size="pair" waiting lit={false} name="Fade, armed, unlit" />
-      <Button {...args} label="On" size="pair" hue="r1" waiting lit name="Right 1, armed, lit" />
-      <Button {...args} label="On" size="pair" hue="r1" waiting lit={false} name="Right 1, armed, unlit" />
+      <Button {...args} label="On" size="pair" hue={1} waiting lit name="Hue 1, armed, lit" />
+      <Button {...args} label="On" size="pair" hue={1} waiting lit={false} name="Hue 1, armed, unlit" />
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -191,32 +191,32 @@ export const WaitingFlash: Story = {
 };
 
 /**
- * New: the `transport` tone, the role hue of the keys that move time, worn only while active. Start
- * stopped is the primary key filled in `--transport` with `--transport-text`; Sync Start and Tempo +
- * at rest are neutral; Sync Start armed and a queued fill ring in it (the waiting ring still says
- * "armed" by shape); Tap on is a transport ring and dot; Stop running stays `ok`, solid, because
- * running is a state.
+ * New: the `role-2` tone, the second role hue (in Yahaha, the keys that move time), worn only while
+ * active. Start stopped is the primary key filled in `--role-2` with `--role-2-text`; Sync Start
+ * and Tempo + at rest are neutral; Sync Start armed and a queued fill ring in it (the waiting ring
+ * still says "armed" by shape); Tap on is a role-2 ring and dot; Stop running stays `ok`, solid,
+ * because running is a state.
  */
-export const Transport: Story = {
+export const Role2: Story = {
   render: (args) => (
     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' }}>
-      <Button {...args} label="Start" size="band" variant="primary" hue="transport" tall name="Start / Stop, stopped" />
-      <Button {...args} label="Stop" size="band" hue="transport" bar tall name="Start / Stop, running" />
-      <Button {...args} label="Sync Start" size="md" hue="transport" name="Sync Start" />
-      <Button {...args} label="Sync Start" size="md" hue="transport" waiting name="Sync Start, armed" />
-      <Button {...args} label="Fill" symbol="up" size="md" hue="transport" waiting lit={false} name="Fill up, queued, unlit" />
-      <Button {...args} label="Tap" size="pair" hue="transport" on name="Tap, on" />
-      <Button {...args} symbol="plus" size="icon" hue="transport" name="Tempo up" />
+      <Button {...args} label="Start" size="band" variant="primary" hue="role-2" tall name="Start / Stop, stopped" />
+      <Button {...args} label="Stop" size="band" hue="role-2" bar tall name="Start / Stop, running" />
+      <Button {...args} label="Sync Start" size="md" hue="role-2" name="Sync Start" />
+      <Button {...args} label="Sync Start" size="md" hue="role-2" waiting name="Sync Start, armed" />
+      <Button {...args} label="Fill" symbol="up" size="md" hue="role-2" waiting lit={false} name="Fill up, queued, unlit" />
+      <Button {...args} label="Tap" size="pair" hue="role-2" on name="Tap, on" />
+      <Button {...args} symbol="plus" size="icon" hue="role-2" name="Tempo up" />
     </div>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'transport');
+    await expect(canvas.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'role-2');
     await expect(canvas.getByRole('button', { name: 'Start / Stop, running' })).toHaveAttribute('data-hue', 'ok');
     await expect(canvas.getByRole('button', { name: 'Start / Stop, running' })).toHaveAttribute('data-solid');
     await expect(canvas.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('data-face', 'waiting');
     await expect(canvas.getByRole('button', { name: 'Tap, on' })).not.toHaveAttribute('data-solid');
-    // At rest a transport key is neutral: its outline is the rest line, not the role hue.
+    // At rest a role-2 key is neutral: its outline is the rest line, not the role hue.
     const rest = getComputedStyle(canvas.getByRole('button', { name: 'Sync Start' })).boxShadow;
     const armed = getComputedStyle(canvas.getByRole('button', { name: 'Sync Start, armed' })).boxShadow;
     await expect(rest).not.toBe(armed);
@@ -349,11 +349,11 @@ export const Faces: Story = {
     <div style={grid}>
       {HUES.filter((h) => h !== 'lamp').map((hue) => (
         <div key={hue} style={row}>
-          <Button {...args} hue={hue} label={hue} size="pair" />
-          <Button {...args} hue={hue} label={hue} size="pair" waiting />
-          <Button {...args} hue={hue} label={hue} size="pair" on />
-          <Button {...args} hue={hue} label={hue} size="pair" chosen />
-          <Button {...args} hue={hue} label={hue} size="pair" disabled />
+          <Button {...args} hue={hue} label={String(hue)} size="pair" />
+          <Button {...args} hue={hue} label={String(hue)} size="pair" waiting />
+          <Button {...args} hue={hue} label={String(hue)} size="pair" on />
+          <Button {...args} hue={hue} label={String(hue)} size="pair" chosen />
+          <Button {...args} hue={hue} label={String(hue)} size="pair" disabled />
         </div>
       ))}
     </div>

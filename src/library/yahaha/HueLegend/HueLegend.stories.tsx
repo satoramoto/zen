@@ -5,7 +5,7 @@ import { PART_HUE_INDEX } from '../hues';
 import { HueLegend, PART_LEGEND } from './HueLegend';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/HueLegend',
+  title: 'Yahaha/Primitives/HueLegend',
   component: HueLegend,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },

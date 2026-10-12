@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { FolderList, type FolderListProps } from './FolderList';
 import { soundCategories, styleFolders } from './FolderList.fixtures';
 
@@ -28,7 +28,7 @@ function Live(args: FolderListProps) {
  * End move along the rows and choose. The parent owns `chosen`.
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/FolderList',
+  title: 'Design OS/Components/Core/FolderList',
   component: FolderList,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

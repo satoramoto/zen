@@ -26,7 +26,7 @@ const inRegion =
  * callback carrying the strip's or lamp's id.
  */
 const meta = {
-  title: 'Library/Yahaha/Components/FaderBank',
+  title: 'Yahaha/Components/FaderBank',
   component: FaderBankRegion,
   decorators: [inRegion(BOARD), withLibraryTheme],
   tags: ['autodocs'],

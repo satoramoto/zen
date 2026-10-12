@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { PageList } from './PageList';
 import { settingsPages } from './PageList.fixtures';
 
@@ -10,7 +10,7 @@ import { settingsPages } from './PageList.fixtures';
  * parent moves `chosen`.
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/PageList',
+  title: 'Design OS/Components/Core/PageList',
   component: PageList,
   decorators: [
     (Story) => (

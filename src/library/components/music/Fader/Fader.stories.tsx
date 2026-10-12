@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { Fader } from './Fader';
 
 const NONE = 'none';
 
 /**
- * One strip's fader: the level as a numeral, a groove filled in the strip's part hue, an
+ * One strip's fader: the level as a numeral, a groove filled in the strip's hue slot, an
  * overhanging cap at the set level and one quiet neutral meter beside the groove. When the hardware
  * fader is away from the level, a dashed warning outline marks where it is and an arrow says which
  * way to move it. Controlled: a drag, a key or the wheel asks for a level through `onlevel`.
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/Fader',
+  title: 'Design OS/Components/Music/Fader',
   component: Fader,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
@@ -26,7 +26,7 @@ const meta = {
     meter2: 0.58,
     peak: 0.7,
     kind: 'part',
-    hue: 'r1',
+    hue: 1,
     layered: false,
     width: 66,
     tip: 'mixer.panel.right1',
@@ -46,7 +46,7 @@ const meta = {
       mapping: { [NONE]: undefined },
     },
     kind: { control: 'select', options: ['part', 'group', 'master', 'off', 'parked'] },
-    hue: { control: 'select', options: ['r1', 'r2', 'r3', 'l', 'a', 't2', 't'] },
+    hue: { control: 'select', options: [1, 2, 3, 4, 'a', 't2', 't'] },
     layered: { control: 'boolean' },
     width: { control: 'number' },
     fillHeight: { control: 'boolean' },
@@ -57,7 +57,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Right 1 on the board: level 90, the groove filled in its part hue, meters at 0.62. */
+/** Right 1 on the board (hue slot 1): level 90, the groove filled in its hue, meters at 0.62. */
 export const Board: Story = {};
 
 /** Right 2, its hardware fader away at 50: the warning outline there and an up arrow (soft takeover). */
@@ -69,7 +69,7 @@ export const Away: Story = {
     meter: 0.45,
     meter2: 0.42,
     peak: 0.55,
-    hue: 'r2',
+    hue: 2,
     away: 50,
   },
 };
@@ -84,11 +84,11 @@ export const Off: Story = {
     meter2: 0,
     peak: 0,
     kind: 'off',
-    hue: 'r3',
+    hue: 3,
   },
 };
 
-/** The Style volume: a group fader, neutral (not a part). */
+/** The Style volume: a group fader, neutral (`a`, no hue slot). */
 export const Group: Story = {
   args: { name: 'Style volume, level 100', value: '100', level: 100, meter: 0.7, meter2: 0.65, peak: 0.78, kind: 'group', hue: 'a' },
 };
@@ -110,7 +110,7 @@ export const Layered: Story = {
 
 /** Added: an empty hardware slot (`empty`): a faint solid groove, the banks' one empty-slot look. */
 export const Empty: Story = {
-  args: { name: 'Left · no voice', value: '', level: 0, meter: 0, meter2: 0, peak: 0, kind: 'parked', hue: 'l', empty: true },
+  args: { name: 'Left · no voice', value: '', level: 0, meter: 0, meter2: 0, peak: 0, kind: 'parked', hue: 4, empty: true },
 };
 
 /** Added: the hardware fader above the level, so the arrow points down. */
@@ -125,7 +125,7 @@ export const Strip: Story = {
       <Fader {...args} />
       <Fader {...args} {...Away.args} />
       <Fader {...args} {...Off.args} />
-      <Fader {...args} name="Left · Bass, level 80" value="80" level={80} hue="l" meter={0.5} meter2={0.48} peak={0.6} />
+      <Fader {...args} name="Left · Bass, level 80" value="80" level={80} hue={4} meter={0.5} meter2={0.48} peak={0.6} />
       <Fader {...args} {...Group.args} />
       <Fader {...args} {...Master.args} />
       <Fader {...args} {...Parked.args} />

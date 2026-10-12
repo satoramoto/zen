@@ -1,16 +1,14 @@
 import type { ReactNode } from 'react';
+import type { HueSlot } from '../../core/hue';
 import './SoundCell.css';
-
-/** The board's four parts; each maps onto one contract hue (see SoundCell.css). */
-export type PartHue = 'r1' | 'r2' | 'r3' | 'l';
 
 export interface SoundCellProps {
   /** The part's short name ("R1", "L"). */
   part: string;
   /** The part's full name, for the buttons' names and the short name's title ("Right 1"). */
   partName: string;
-  /** The part's hue. */
-  hue?: PartHue;
+  /** The part's categorical hue slot (`--hue-1` … `--hue-4`); an app maps its meaning (e.g. Yahaha's parts). Default 1. */
+  hue?: HueSlot;
   /** The sound's number in its list ("41"). Empty: not shown. */
   number?: string;
   /** The sound's name; a long one ends in an ellipsis. */
@@ -40,8 +38,8 @@ export interface SoundCellProps {
  * **Changed**: the side-by-side line becomes a caption over a name, the same shape as the
  * RackCell, so a row of cells shares one left edge and one baseline rhythm and scans like a
  * table (alignment, rhythm; `references/typography.md` on a small caption over the value). The
- * short name is set at `--size-label` in the pack's label case, and keeps the part's hue as the
- * cell's only colour: hue identifies the part, nothing else is tinted, and hue on text is never
+ * short name is set at `--size-label` in the pack's label case, and keeps the part's hue slot as
+ * the cell's only colour: hue identifies the part, nothing else is tinted, and hue on text is never
  * smaller than the label size, so the part is findable from the keyboard (colour meaning;
  * `references/color.md`; the 2026-10 review moved it up from caption size). The sound's number
  * follows the name, at caption size in the readout face with tabular numerals in muted text, so
@@ -58,7 +56,7 @@ export interface SoundCellProps {
 export function SoundCell({
   part,
   partName,
-  hue = 'r1',
+  hue = 1,
   number = '',
   sound,
   off = false,

@@ -67,7 +67,7 @@ describe('Readout', () => {
     const slider = screen.getByRole('slider', { name: 'Time' });
     expect(slider.querySelector('.yh-readout-unit')).not.toBeNull();
     expect(slider.querySelector('.yh-readout-unit')?.textContent).toBe('');
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Readout/Readout.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/Readout/Readout.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
     const rule = (sel: string) => new RegExp(`${sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} \\{([^}]*)\\}`).exec(css)![1];
     expect(rule('.yh-readout-unit')).toMatch(/width:\s*3\.5ch/);
     expect(rule('.yh-readout-label')).toMatch(/font-size:\s*var\(--size-caption\)/);

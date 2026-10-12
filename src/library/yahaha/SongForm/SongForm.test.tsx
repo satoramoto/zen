@@ -64,12 +64,13 @@ describe('Yahaha SongForm', () => {
 
   it('draws one half alone when asked', () => {
     const { unmount } = renderForm({ ...songFormBoard, part: 'form' });
-    expect(screen.getByRole('region', { name: 'Song form' })).toBeInTheDocument();
+    // The root is a plain element: the screen's Region names it.
+    expect(screen.queryByRole('region')).toBeNull();
     expect(screen.getByRole('group', { name: 'Sections' })).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Transport' })).toBeNull();
     unmount();
     renderForm({ ...songFormBoard, part: 'transport' });
-    expect(screen.getByRole('region', { name: 'Transport' })).toBeInTheDocument();
+    expect(screen.queryByRole('region')).toBeNull();
     expect(screen.getByRole('group', { name: 'Transport' })).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Sections' })).toBeNull();
   });
@@ -137,9 +138,9 @@ describe('Yahaha SongForm', () => {
 
   it('the keys that move time wear the transport tone; running stays success, the rest neutral', () => {
     const { container, rerender } = render(<SongForm {...songFormStopped} />);
-    expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'transport');
+    expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'role-2');
     const key = (k: string) => container.querySelector(`.yh-songform__key[data-key='${k}'] button`);
-    for (const k of ['sync-start', 'sync-stop', 'fill-up', 'fill-down', 'auto-fill']) expect(key(k), k).toHaveAttribute('data-hue', 'transport');
+    for (const k of ['sync-start', 'sync-stop', 'fill-up', 'fill-down', 'auto-fill']) expect(key(k), k).toHaveAttribute('data-hue', 'role-2');
     for (const k of ['accomp', 'fade', 'reset']) expect(key(k), k).toHaveAttribute('data-hue', 't');
     // One rank for every key but Start: Reset is an outlined key like Fade, not a quiet word.
     for (const k of ['sync-start', 'sync-stop', 'fill-up', 'fill-down', 'fade', 'reset']) expect(key(k), k).toHaveAttribute('data-variant', 'secondary');
@@ -268,7 +269,8 @@ describe('Yahaha SongForm', () => {
           <SongForm {...songFormBoard} />
         </ThemeScope>,
       );
-      expect(screen.getByRole('region', { name: 'Song form and transport' })).toBeInTheDocument();
+      expect(screen.getByRole('group', { name: 'Sections' })).toBeInTheDocument();
+      expect(screen.getByRole('group', { name: 'Transport' })).toBeInTheDocument();
       unmount();
     }
   });

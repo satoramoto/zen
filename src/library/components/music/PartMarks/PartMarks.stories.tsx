@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { PartMarks } from './PartMarks';
 import { marksText } from './marks';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/PartMarks',
+  title: 'Design OS/Components/Music/PartMarks',
   component: PartMarks,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
@@ -21,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Right 2's sound cell on the Stage board: the sound was edited, so the dot. */
+/** A part's sound cell (Right 2 on Yahaha's Stage board): the sound was edited, so the dot. */
 export const Board: Story = { args: { edited: true } };
 
 /** Right 3's plugin isn't installed: the warning triangle alone. */

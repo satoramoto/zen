@@ -230,7 +230,7 @@ describe('BarReadout', () => {
     const { container } = level();
     expect(container.querySelector('.yh-bar-readout__unit')).not.toBeNull();
     expect(container.querySelector('.yh-bar-readout__unit')).toHaveTextContent('');
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/BarReadout/BarReadout.css'), 'utf8');
+    const css = readFileSync(join(process.cwd(), 'src/library/components/music/BarReadout/BarReadout.css'), 'utf8');
     expect(/\.yh-bar-readout__unit \{([^}]*)\}/.exec(css)![1]).toMatch(/width:\s*3\.5ch/);
     // The one caption recipe, and muted (never faint) text when disabled.
     expect(/\.yh-bar-readout__label \{([^}]*)\}/.exec(css)![1]).toMatch(/color:\s*var\(--text-3\)/);

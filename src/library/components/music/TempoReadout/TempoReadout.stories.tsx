@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { TempoReadout } from './TempoReadout';
 
 /**
@@ -9,7 +9,7 @@ import { TempoReadout } from './TempoReadout';
  * framed + over − at its right, two control-height keys, neutral until pressed.
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/TempoReadout',
+  title: 'Design OS/Components/Music/TempoReadout',
   component: TempoReadout,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

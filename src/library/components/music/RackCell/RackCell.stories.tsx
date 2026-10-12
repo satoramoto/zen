@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { Lamp } from '../../components';
-import { withLibraryTheme } from '../../storybook';
+import { Lamp } from '../..';
+import { withLibraryTheme } from '../../../storybook';
 import { SoundCell } from '../SoundCell/SoundCell';
 import { RackCell } from './RackCell';
 
 /** The rack readout at the head of the sound row: "Rack · A1" over the rack's name; a click opens the Rack page. */
 const meta = {
-  title: 'Library/Yahaha/Primitives/RackCell',
+  title: 'Design OS/Components/Music/RackCell',
   component: RackCell,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
@@ -59,9 +59,9 @@ export const InRow: Story = {
   render: (args) => (
     <div className="lib-row" style={{ gap: 'var(--space-4)', alignItems: 'flex-start' }}>
       <RackCell {...args} />
-      <SoundCell part="R1" partName="Right 1" hue="r1" number="1" sound="Stage Grand" />
-      <SoundCell part="R2" partName="Right 2" hue="r2" number="41" sound="Warm Strings" />
-      <SoundCell part="L" partName="Left" hue="l" number="208" sound="Concert Grand Piano Bright Stereo" />
+      <SoundCell part="R1" partName="Right 1" hue={1} number="1" sound="Stage Grand" />
+      <SoundCell part="R2" partName="Right 2" hue={2} number="41" sound="Warm Strings" />
+      <SoundCell part="L" partName="Left" hue={4} number="208" sound="Concert Grand Piano Bright Stereo" />
     </div>
   ),
 };

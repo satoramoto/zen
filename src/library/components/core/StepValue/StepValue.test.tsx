@@ -5,7 +5,7 @@ import { StepValue } from './StepValue';
 import type { StepValueProps } from './StepValue';
 import { dragValue, stepOf } from './adjust';
 
-const base: StepValueProps = { value: 16, min: 0, max: 127, defaultValue: 0, tag: 'R2', hue: 'r2', name: 'Right 2 delay send', tip: 'fx.send_param' };
+const base: StepValueProps = { value: 16, min: 0, max: 127, defaultValue: 0, tag: 'R2', hue: 2, name: 'Right 2 delay send', tip: 'fx.send_param' };
 
 function setup(props: Partial<StepValueProps> = {}) {
   const onchange = vi.fn();
@@ -119,7 +119,7 @@ describe('StepValue', () => {
 
   it('dim is still settable', async () => {
     const user = userEvent.setup();
-    const { step, onchange } = setup({ dim: true, value: 0, tag: 'R3', hue: 'r3', name: 'Right 3 delay send' });
+    const { step, onchange } = setup({ dim: true, value: 0, tag: 'R3', hue: 3, name: 'Right 3 delay send' });
     expect(step).toHaveAttribute('data-dim', 'true');
     step.focus();
     await user.keyboard('{ArrowUp}');

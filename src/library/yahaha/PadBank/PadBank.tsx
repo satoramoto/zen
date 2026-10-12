@@ -1,8 +1,14 @@
 import { Region } from '../../layout/Region';
-import { Pad, type PadFamily, type PadOnFace, type PadState, type TipAction } from '../Pad/Pad';
+import { Pad, type PadFamily, type PadOnFace, type PadState, type TipAction } from '../../components/music/Pad/Pad';
+import { PART_HUE_INDEX, type Part } from '../hues';
 import './PadBank.css';
 
 export type { TipAction };
+
+/** A bank pad's family: the library Pad's families, or a Yahaha part the engine lights in its hue. */
+export type BankPadFamily = PadFamily | Part;
+
+const isPart = (family: BankPadFamily): family is Part => family === 'r1' || family === 'r2' || family === 'r3' || family === 'l';
 
 /** One of the sixteen band pads. */
 export interface PadItem {
@@ -17,8 +23,8 @@ export interface PadItem {
    * `start` (Start / Stop), or a part (`r1`, `r2`, `r3`, `l`) for a pad the engine lights in that
    * part's hue. A playing section is the solid fill (it is sounding); any other on pad is a ring.
    */
-  family: PadFamily;
-  /** A transport pad (Sync Start, Auto Fill, Tap, Sync Stop, Start / Stop): `--transport` while active, neutral at rest. */
+  family: BankPadFamily;
+  /** A transport pad (Sync Start, Auto Fill, Tap, Sync Stop, Start / Stop): `--transport` (the Pad's role 2) while active, neutral at rest. */
   transport?: boolean;
   /** The face: `playing` is on / loaded / chosen, `dark` is absent or an empty slot, `armed` / `next` wait. */
   state: PadState;
@@ -46,10 +52,10 @@ export const PAD_SLOTS = 16;
 export const ARMED_CHIPS = 2;
 
 /** The song-section families: on, they are sounding, so they keep the Pad's solid fill. */
-const SECTION_FAMILIES: ReadonlySet<PadFamily> = new Set<PadFamily>(['intro', 'main', 'ending', 'brk', 'fill']);
+const SECTION_FAMILIES: ReadonlySet<BankPadFamily> = new Set<BankPadFamily>(['intro', 'main', 'ending', 'brk', 'fill']);
 
 /** How a bank pad shows "on": a sounding section fills; everything else (a loaded rack, a chosen fingering, Auto Fill on) rings. */
-export function bankOnFace(family: PadFamily): PadOnFace {
+export function bankOnFace(family: BankPadFamily): PadOnFace {
   return SECTION_FAMILIES.has(family) ? 'fill' : 'ring';
 }
 
@@ -155,13 +161,14 @@ export function PadBank({
                 <Pad
                   label={pad.label}
                   index={String(i + 1)}
-                  family={pad.family}
+                  family={isPart(pad.family) ? 'util' : pad.family}
+                  hue={isPart(pad.family) ? PART_HUE_INDEX[pad.family] : undefined}
                   state={pad.state}
                   lit={lit}
                   name={pad.name}
                   tip={pad.tip}
                   tipAction={tipAction}
-                  transport={pad.transport}
+                  role={pad.transport ? 2 : undefined}
                   fillCell
                   onFace={bankOnFace(pad.family)}
                   onPress={() => onPress?.(i)}
@@ -193,7 +200,14 @@ export function PadBankRegion({ name = 'Pads', area, className, ...pads }: PadBa
   const names = banks.length > 0 ? banks : [bankName];
   const body = <PadBank {...pads} />;
   return (
-    <Region name={name} area={area} className={className} view={String(banks.length > 0 ? bank : 0)} onView={(id) => pads.onBank?.(Number(id))}>
+    <Region
+      name={name}
+      area={area}
+      className={className}
+      view={String(banks.length > 0 ? bank : 0)}
+      onView={(id) => pads.onBank?.(Number(id))}
+      tipAction={pads.tipAction}
+    >
       {names.map((label, i) => (
         <Region.View key={i} id={String(i)} label={label} tip={bankTips[i] ?? BANK_TIP[label]}>
           {body}

@@ -4,7 +4,7 @@ import { withLibraryTheme } from '../../storybook';
 import { AccentBlock } from './AccentBlock';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/AccentBlock',
+  title: 'Yahaha/Primitives/AccentBlock',
   component: AccentBlock,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },

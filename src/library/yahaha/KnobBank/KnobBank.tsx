@@ -1,6 +1,6 @@
 import { Region } from '../../layout/Region';
-import { Knob, type TipAction } from '../Knob/Knob';
-import { BOX, START, SWEEP, arc } from '../Knob/geometry';
+import { Knob, type TipAction } from '../../components/music/Knob/Knob';
+import { BOX, START, SWEEP, arc } from '../../components/music/Knob/geometry';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import './KnobBank.css';
 
@@ -165,7 +165,14 @@ export function KnobBankRegion({ name = 'Knobs', area, className, ...bank }: Kno
   const names = pages.length > 0 ? pages : [pageLabel];
   const body = <KnobBank {...bank} />;
   return (
-    <Region name={name} area={area} className={className} view={String(pages.length > 0 ? page : 0)} onView={(id) => bank.onPage?.(Number(id))}>
+    <Region
+      name={name}
+      area={area}
+      className={className}
+      view={String(pages.length > 0 ? page : 0)}
+      onView={(id) => bank.onPage?.(Number(id))}
+      tipAction={bank.tipAction}
+    >
       {names.map((label, i) => (
         <Region.View key={i} id={String(i)} label={label} tip="knobs.page">
           {body}

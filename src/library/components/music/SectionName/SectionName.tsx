@@ -1,6 +1,12 @@
 import type { CSSProperties } from 'react';
-import type { SectionState } from '../hues';
 import './SectionName.css';
+
+/**
+ * Where a section stands: playing now, queued next, stopped, or not in the song. The app's holder
+ * maps it to a contract colour (playing `--selected`, next `--accent`, idle `--text-2`, absent
+ * `--text-4` in Yahaha's case); the name itself stays neutral.
+ */
+export type SectionState = 'playing' | 'next' | 'idle' | 'absent';
 
 /** The five section kinds. Kept as a hook (`data-hue`); a section takes no colour from its kind. */
 export type SectionHue = 'intro' | 'main' | 'ending' | 'brk' | 'fill';
@@ -10,7 +16,7 @@ export interface SectionNameProps {
   label: string;
   /**
    * The section kind. Accepted for older callers and kept on `data-hue`, but it no longer picks a
-   * colour: sections take no hue (`../hues`).
+   * colour: sections take no hue.
    */
   hue?: SectionHue;
   /** Where the section stands, on `data-state` for the parent (the name itself stays neutral). Default `playing`. */
@@ -35,10 +41,10 @@ export interface SectionNameProps {
  * the variation ("B", "III") stays in the display face with tabular figures; it used to switch
  * to the readout face, which on mono packs set "Main **B**" in two faces and drew "III" as three
  * ticks, and the variations are letters, not digits. *Colour meaning, said once:* the name is
- * neutral and inherits its ink; whatever holds it says where it stands (the Display's
+ * neutral and inherits its ink; whatever holds it says where it stands (in Yahaha, the Display's
  * `--selected` block while playing, its "then" tab for next). The state colours and the playing
  * glow it used to carry were overridden by every parent, so playing and idle differed only by a
- * halo; they are gone (`../hues`: what plays is `--selected`, and that is the block's job).
+ * halo; they are gone (what plays is `--selected`, and that is the holder's job).
  * `state` and `idle` still land on `data-state` for the parent's CSS. *Sizing*: the size is one
  * custom property, `--yh-section-name-size` (default `--size-numeral`), which a parent sets on the
  * root or passes as `size`, so a display can make the name its hero without overriding this

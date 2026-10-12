@@ -1,7 +1,7 @@
 /** The keys' layout and accessible label, from MIDI note numbers (Yamaha octaves: C3 = 60). Ported from yahaha/src/ui/Keys/keys.ts. */
 
-/** A part hue a held key fills with. */
-export type KeyPart = 'r1' | 'r2' | 'r3' | 'l';
+/** The zone a held key belongs to: left of the split, or right (and everything without a split). */
+export type KeyPart = 'left' | 'right';
 
 /** A lowest and highest MIDI note, both included. */
 export type KeyRange = { low: number; high: number };
@@ -59,9 +59,6 @@ export const pitchName = (note: number) => NAMES[((note % 12) + 12) % 12];
 /** The note's name with its Yamaha octave, C3 = 60 ("F#2"). */
 export const noteName = (note: number) => `${pitchName(note)}${Math.floor(note / 12) - 2}`;
 
-/** A part's name as a player reads it. */
-export const PART_NAMES: Record<KeyPart, string> = { l: 'Left', r1: 'Right 1', r2: 'Right 2', r3: 'Right 3' };
-
 /** Where each key sits in a strip `inner` px wide. Held right notes draw over held left ones. */
 export function layout(
   range: KeyRange,
@@ -69,11 +66,10 @@ export function layout(
   split: number | null,
   heldLeft: number[],
   heldRight: number[],
-  rightPart: KeyPart,
 ): KeysLayout {
   const held = new Map<number, KeyPart>();
-  for (const note of heldLeft) held.set(note, 'l');
-  for (const note of heldRight) held.set(note, rightPart);
+  for (const note of heldLeft) held.set(note, 'left');
+  for (const note of heldRight) held.set(note, 'right');
   const isLeft = (note: number) => split !== null && note <= split;
 
   const whiteNotes: number[] = [];

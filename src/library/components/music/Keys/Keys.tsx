@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
+import type { HueSlot } from '../../core/hue';
 import {
   BLACK_HEIGHT_RATIO,
   BLACK_WIDTH_RATIO,
-  PART_NAMES,
   chordNames,
   heldNames,
   keysLabel,
@@ -22,12 +22,24 @@ export interface KeysProps {
   range?: KeyRange;
   /** The split note, the highest note of the left zone; null = no split (no left zone). */
   split?: number | null;
-  /** The held notes the left part plays: they fill in the Left part's hue. */
+  /** The held notes the left zone plays: they fill in `leftHue`. */
   heldLeft?: number[];
-  /** The held notes the right hand plays: they fill in `rightPart`'s hue. */
+  /** The held notes the right zone plays: they fill in `rightHue`. */
   heldRight?: number[];
-  /** The right-hand part whose hue the right's held keys take. */
-  rightPart?: Exclude<KeyPart, 'l'>;
+  /**
+   * The left zone's categorical hue slot (`--hue-n`), for its lamp and held keys; an app maps its
+   * meaning (e.g. Yahaha's Left part takes 4). Default 4.
+   */
+  leftHue?: HueSlot;
+  /** The left zone's name on the ruler. Default "Left". */
+  leftName?: string;
+  /**
+   * The right zone's categorical hue slot (`--hue-n`), for its lamp and held keys; an app maps
+   * its meaning (e.g. Yahaha's Right 1–3 parts take 1–3). Default 1.
+   */
+  rightHue?: HueSlot;
+  /** The right zone's name on the ruler. Default "Right". */
+  rightName?: string;
   /** The widget's width in px. */
   width?: number;
   /** The lowest and highest note the split may be set to (the engine's 24-96). */
@@ -50,25 +62,27 @@ const DRAG_SLOP = 3;
 const TIP = 'settings.split_strip';
 const px = (n: number) => `${n}px`;
 
-type Zone = { part: KeyPart; from: number; to: number; held: string[]; lit: boolean };
+type Zone = { side: KeyPart; name: string; hue: HueSlot; from: number; to: number; held: string[]; lit: boolean };
 
 /**
- * The keyboard strip: the keyboard's range, where the split sits, and what each part is holding.
+ * The keyboard strip: the keyboard's range, where the split sits, and what each zone (left and
+ * right of the split; in Yahaha, the parts) is holding.
  *
- * **Job.** At a glance a player needs three things: which part owns which keys, where the split
+ * **Job.** At a glance a player needs three things: which zone owns which keys, where the split
  * is (as a note name, not a guess from position), and which keys are sounding. With `onSplit` it
  * is also where the split is set: drag the split flag, step it with the arrows (PageUp/PageDown an
  * octave, Home/End the limits), or click it (Enter) to arm a pick and press the key that should
  * become the split. Esc disarms.
  *
- * **Changed.** *Hierarchy:* a zone ruler above the keys names each part ("Left", "Right 1") and
- * what it holds ("G A C E", "E4 A4"), so the picture's accessible label is also what a sighted
+ * **Changed.** *Hierarchy:* a zone ruler above the keys names each zone (`leftName`, `rightName`:
+ * "Left", "Right 1") and what it holds ("G A C E", "E4 A4"), so the picture's accessible label is also what a sighted
  * player reads; before, held notes were only colour on keys. The ruler is the line a player
  * wants mid-song, so it is a full `--control-h` tall and readable from a metre: what is held at
- * `--size-body` in the strong weight, the part's name at `--size-label` in `--text-2`. Held keys
+ * `--size-body` in the strong weight, the zone's name at `--size-label` in `--text-2`. Held keys
  * no longer carry their own small name: it said again, at caption size, what the ruler says.
- * *Colour meaning:* each zone's lamp is its underline on the ruler, in the part's hue, lit with
- * `--bloom` while the part sounds, so the part's name, its colour and its keys line up; as a 3px
+ * *Colour meaning:* each zone's lamp is its underline on the ruler, in the zone's hue slot
+ * (`leftHue`, `rightHue`), lit with `--bloom` while the zone sounds, so the zone's name, its
+ * colour and its keys line up; as a 3px
  * strip on the keys' top edge it was cut by every sharp and read as the frame. *Affordance:* the split is a labelled
  * flag reading the split note ("F#2") with a grip, sitting on the split line, instead of a 6px
  * grip lost in the keys; locked it turns dashed and loses its grip, armed it rings in `--accent`
@@ -79,7 +93,7 @@ type Zone = { part: KeyPart; from: number; to: number; held: string[]; lit: bool
  * sharp edges and C names are mixed between them, not derived from the ground; the C names sit at
  * a 45% mix so they read on the faces. The split line is one ink with the flag's foot,
  * `--text-1`, with a 1px halo in whichever key face lies farthest from it, so it can't be taken
- * for a key gap below the sharps in any scheme. Part hues (`--hue-N`) appear only for part
+ * for a key gap below the sharps in any scheme. Hue slots (`--hue-N`) appear only for zone
  * identity, in the zone underlines and the held keys; the left-zone tint is gone because the
  * underline and ruler already say who owns the range (color.md 60/30/10, anti-ai-slop.md token
  * role drift). *Numerals:* note names are set in `--font-readout` with tabular figures.
@@ -94,7 +108,10 @@ export function Keys({
   split = 54,
   heldLeft = [],
   heldRight = [],
-  rightPart = 'r1',
+  leftHue = 4,
+  leftName = 'Left',
+  rightHue = 1,
+  rightName = 'Right',
   width = 1392,
   splitMin = 24,
   splitMax = 96,
@@ -105,9 +122,10 @@ export function Keys({
   onPick,
 }: KeysProps) {
   const keys = useMemo(
-    () => layout(range, Math.max(0, width), split, heldLeft, heldRight, rightPart),
-    [range, width, split, heldLeft, heldRight, rightPart],
+    () => layout(range, Math.max(0, width), split, heldLeft, heldRight),
+    [range, width, split, heldLeft, heldRight],
   );
+  const hueOf = (side: KeyPart | null) => (side === 'left' ? leftHue : side === 'right' ? rightHue : undefined);
   const label = keysLabel(range, split, heldLeft, heldRight);
   const interactive = onSplit !== undefined && split !== null;
   const armed = interactive && picking && !splitLocked;
@@ -117,17 +135,27 @@ export function Keys({
 
   const zones: Zone[] = useMemo(() => {
     const right: Zone = {
-      part: rightPart,
+      side: 'right',
+      name: rightName,
+      hue: rightHue,
       from: topX ?? 0,
       to: width,
       held: heldNames(split === null ? [...heldLeft, ...heldRight] : heldRight),
       lit: heldRight.length > 0 || (split === null && heldLeft.length > 0),
     };
-    const left: Zone = { part: 'l', from: 0, to: topX ?? width, held: chordNames(heldLeft), lit: heldLeft.length > 0 };
+    const left: Zone = {
+      side: 'left',
+      name: leftName,
+      hue: leftHue,
+      from: 0,
+      to: topX ?? width,
+      held: chordNames(heldLeft),
+      lit: heldLeft.length > 0,
+    };
     if (topX !== null) return [left, right];
     if (split !== null && split >= range.high) return [left];
     return [right];
-  }, [topX, width, split, heldLeft, heldRight, rightPart, range.high]);
+  }, [topX, width, split, heldLeft, heldRight, leftName, leftHue, rightName, rightHue, range.high]);
 
   const strip = useRef<HTMLDivElement>(null);
   const handle = useRef<HTMLSpanElement>(null);
@@ -276,17 +304,17 @@ export function Keys({
       <div className="yh-keys__ruler" data-part="ruler" aria-hidden="true">
         {zones.map((zone) => (
           <div
-            key={zone.part}
+            key={zone.side}
             className="yh-keys__zone"
-            // A zone's data-part names its musical part (l, r1–r3), which the hue rules and tests read.
-            data-part={zone.part}
-            data-side={zone.part === 'l' ? 'left' : 'right'}
+            data-part="zone"
+            data-side={zone.side}
+            data-hue={zone.hue}
             data-split={topX !== null ? '' : undefined}
             data-on={zone.lit ? 'true' : 'false'}
             style={{ left: px(zone.from), width: px(Math.max(0, zone.to - zone.from)) }}
           >
-            <span className="yh-keys__part" data-part="part-name">{PART_NAMES[zone.part]}</span>
-            {armed && zone.part !== 'l' ? (
+            <span className="yh-keys__part" data-part="zone-name">{zone.name}</span>
+            {armed && zone.side !== 'left' ? (
               <span className="yh-keys__hint" data-part="hint">Press a key to set the split · Esc cancels</span>
             ) : (
               zone.held.length > 0 && <span className="yh-keys__held" data-part="held">{zone.held.join(' ')}</span>
@@ -308,6 +336,7 @@ export function Keys({
               className="yh-keys__white"
               data-part="white"
               data-held={key.held ?? undefined}
+              data-hue={hueOf(key.held)}
               data-c={key.label ? '' : undefined}
               style={{ left: px(key.x), width: px(keys.whiteWidth) }}
             >
@@ -320,6 +349,7 @@ export function Keys({
               className="yh-keys__black"
               data-part="black"
               data-held={key.held ?? undefined}
+              data-hue={hueOf(key.held)}
               style={{ left: px(key.x) }}
             />
           ))}

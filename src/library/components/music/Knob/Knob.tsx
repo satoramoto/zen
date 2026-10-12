@@ -1,3 +1,4 @@
+import type { HueSlot } from '../../core/hue';
 import { BOX, R, START, arc, point, sweepOf } from './geometry';
 import { useKnob, type TipAction } from './useKnob';
 import './Knob.css';
@@ -18,8 +19,8 @@ export interface KnobProps {
   fraction?: number;
   /** Nothing is mapped to this knob: dim name, an empty ring, no value. */
   unused?: boolean;
-  /** The part this knob belongs to (1–4): its arc wears that part's hue. Default: ink. */
-  hue?: 1 | 2 | 3 | 4;
+  /** A categorical hue slot (1–4, `--hue-n`) for what owns this knob; an app maps its meaning (e.g. Yahaha's parts). Its arc wears that hue. Default: ink. */
+  hue?: HueSlot;
   /** The accessible name. Default: "{label} ({code}) {value}{unit}", or "unused". */
   name?: string;
   /** The tooltip key, rendered as `data-tip`. */
@@ -42,14 +43,14 @@ export interface KnobProps {
  * **Changed.** *Headless* (the materials pass): behaviour lives in `useKnob`, and the markup is
  * named parts (`data-part`: root, label, dial, well, body, arc, pointer, value, unit, code) whose
  * look comes from the theme's Materials: the ring's groove is a `well`, a round cap inside it is
- * the `handle` the value sits on, and the value arc is lit (`--lit` is the part hue or ink, its
+ * the `handle` the value sits on, and the value arc is lit (`--lit` is the hue slot or ink, its
  * bloom `--mat-lit-glow`'s drop-shadow twin), so a design system can be tried on without touching
  * the knob. *Hierarchy and numerals:* the value moves into the ring's centre in the readout
  * face at numeral weight with tabular figures, so the number and the arc that measures it read as
  * one object, and the value no longer jumps width as it changes (`typography.md`, Tabular
  * Numbers). *Colour meaning:* the original painted value, arc and dot in the accent; here the
- * accent is kept for focus only and the arc is drawn in ink, or in the part's hue when `hue` says
- * which part owns the knob (`color.md`, the 60/30/10 rule and "maximum 2 colours per component").
+ * accent is kept for focus only and the arc is drawn in ink, or in a hue slot when `hue` says
+ * what owns the knob (`color.md`, the 60/30/10 rule and "maximum 2 colours per component").
  * *Affordance:* the tip dot becomes a pointer tick just outside the ring at the arc's end, like
  * the index mark beside a hardware knob, so it looks like something that turns; hovering lifts the
  * well and the cursor says drag up/down. *Contrast:* an unused knob keeps a fainter well and a dim

@@ -97,10 +97,10 @@ function useHold(report: ((down: boolean) => void) | undefined) {
  * between them, each a control-height square with its glyph at heading size (they were 30px wide
  * slivers with 18px glyphs), instead of bare glyphs that read as text; the draggable number shows
  * a faint well on hover and the `ns-resize` cursor (craft-details.md). *Colour meaning:* + and −
- * move time, but a transport key wears `--transport` only while active (`../hues`): at rest the
- * pair is neutral, the strong border and secondary glyphs, so Start / Stop stays the one
- * saturated key; hover raises the surface, and only a press fills it with `--transport` and
- * `--transport-text`. The number stays neutral text and no status colour appears; the accent
+ * move time, but they wear their role hue `--role-2` only while active (the app maps the role;
+ * in Yahaha it is transport): at rest the pair is neutral, the strong border and secondary glyphs,
+ * so the app's one saturated key (Yahaha's Start / Stop) stays alone; hover raises the surface,
+ * and only a press fills it with `--role-2` and `--role-2-text`. The number stays neutral text and no status colour appears; the accent
  * appears only as the focus ring (color.md). *Sizing:* the numeral's size is one
  * custom property, `--yh-tempo-readout-size` (default `--size-numeral`), which a parent sets on
  * the root or passes as `size`, so a display can make the tempo its hero without overriding this

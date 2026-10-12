@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, type MouseEvent, type PointerEvent } from 'react';
 import { useLongPress } from './useLongPress';
+import type { HueSlot } from '../hue';
 import './Button.css';
 
 export type ButtonGlyph = 'prev' | 'next' | 'up' | 'down' | 'plus' | 'minus' | 'caret';
@@ -11,21 +12,18 @@ export type ButtonHue =
   | 'lamp'
   | 'rec'
   | 'ok'
-  | 'r1'
-  | 'r2'
-  | 'r3'
-  | 'l'
+  | HueSlot
   | 'intro'
   | 'main'
   | 'ending'
-  | 'transport'
+  | 'role-2'
   | 'brk'
   | 'fill';
 export type ButtonSize = 'icon' | 'md' | 'band' | 'pair' | 'cell' | 'caret';
 export type ButtonVariant = 'primary' | 'secondary' | 'quiet';
 export type ButtonFace = 'off' | 'on' | 'chosen' | 'waiting' | 'disabled';
 
-/** The parent's tooltip action (yahaha's `use:tip`): called with the node and the key. */
+/** The parent's tooltip action (a Svelte-style `use:tip`): called with the node and the key. */
 export type TipAction = (node: HTMLElement, key: string) => { update?: (key: string) => void; destroy?: () => void } | void;
 
 export interface ButtonProps {
@@ -53,7 +51,7 @@ export interface ButtonProps {
   lit?: boolean;
   /** A tall key, two control rows and the gap between them, its label at heading size: the primary key of a transport (Start / Stop). Default `false`. Works with any `size`. */
   tall?: boolean;
-  /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `r1` `r2` `r3` `l` the four part hues; `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent; `transport` the role hue of the keys that move time (Start / Stop stopped, sync, fills, Tap, tempo), neutral at rest and in the hue only while waiting, on, or as the primary fill. */
+  /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `1`–`4` a categorical hue slot (`--hue-1..4`; an app maps its own meaning, e.g. Yahaha's parts); `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent; `role-2` the second role hue (`--role-2`; e.g. Yahaha's keys that move time), neutral at rest and in the hue only while waiting, on, or as the primary fill. */
   hue?: ButtonHue;
   /** Sets `aria-pressed` for a switch or a choice. Undefined: no `aria-pressed`. Never changes the look. */
   pressed?: boolean;
@@ -103,7 +101,7 @@ const SOLID = new Set<ButtonHue>(['ok', 'rec']);
 /**
  * **Job.** Does one thing when pressed (Panic, Stop, a page step, a One Touch) and shows, at a
  * glance, whether that thing is switched on, chosen, armed or unavailable. A player reading a
- * crowded transport needs the label first, then the state, then (for part buttons) whose it is.
+ * crowded transport needs the label first, then the state, then (for hued buttons) whose it is.
  *
  * **Changed.** *Hierarchy:* the original had one rank, so Panic, a page step and Start / Stop all
  * looked alike; a `variant` now ranks them — `primary` is the single `--action` fill, `secondary` a
@@ -111,21 +109,21 @@ const SOLID = new Set<ButtonHue>(['ok', 'rec']);
  * *Contrast:* the original drew the rest label in the hue itself, which fails on light palettes
  * (a pink on white); the label is now always `--text-1` and the hue moves to the outline, the fill
  * and the waiting ring (color.md §4, 4.5:1 for text). *Colour meaning:* hue only marks identity
- * (`r1`–`l` → `--hue-1..4`; sections stay neutral, their label names them, so no section passes
- * for a part), Start / Stop running is `--success` and record
+ * (slots `1`–`4` → `--hue-1..4`; sections stay neutral, their label names them, so no section passes
+ * for a hued key), Start / Stop running is `--success` and record
  * `--danger` (state), focus is `--accent`; a neutral switch that is on uses `--selected`. *A solid
  * fill means sounding or running* (the Stage rule): only Start / Stop running (`ok`), record
  * (`rec`) and the `primary` call to action fill. Every other key that is *on* draws a
  * double-weight ring and a lit dot in its colour, and a *chosen* key keeps its rest outline and
- * gains `--text-1` ink and a rule along the bottom, the same mark as ChosenTabs' underline; so
+ * gains `--text-1` ink and a rule along the bottom, the same mark as an underlined tab; so
  * on, chosen and waiting are three different shapes, not one fill for eleven things (colour
- * meaning; color.md, "state changes: structure, not circus"). The keys that move time take the
- * `transport` tone, the contract's `--transport` role hue (hues.ts), but only while active: at rest
- * a transport key is neutral (a `--border-strong` outline, a neutral hover), its hue appears on the
- * waiting ring, the on ring and the `primary` fill (Start), so Start is the one saturated key a
- * player finds without looking. Each solid face takes its own ink: `--on-hue` on a part or the
- * accent, `--success-text`, `--danger-text` and `--transport-text` on the rest (the original used
- * `--on-hue` everywhere, which the contract only promises against the part hues). Lit hued marks
+ * meaning; color.md, "state changes: structure, not circus"). A `role-2` key (in Yahaha, the keys
+ * that move time) takes the contract's `--role-2` role hue, but only while active: at rest it is
+ * neutral (a `--border-strong` outline, a neutral hover), its hue appears on the waiting ring, the
+ * on ring and the `primary` fill (Start), so Start is the one saturated key a player finds without
+ * looking. Each solid face takes its own ink: `--on-hue` on a hue slot or the accent,
+ * `--success-text`, `--danger-text` and `--role-2-text` on the rest (the original used `--on-hue`
+ * everywhere, which the contract only promises against the categorical hues). Lit hued marks
  * bloom by `--bloom`, so they glow on Push and stay flat on paper palettes. *Affordance:* a
  * disabled button reads as unavailable by structure: a dashed edge and a `--text-3` label (still
  * readable, never `--text-4`), and a not-allowed cursor; hover and press tint the face by its own

@@ -33,8 +33,8 @@ describe('Stage', () => {
     expect(within(header).getByRole('navigation', { name: 'Pages' })).toBeInTheDocument();
     expect(Array.from(grid.children).map((node) => [node.getAttribute('aria-label'), (node as HTMLElement).style.gridArea])).toEqual([
       ['Hero', 'hero'],
-      ['Transport keys', 'transport'],
-      ['Song form strip', 'form'],
+      ['Transport', 'transport'],
+      ['Song form', 'form'],
       ['Mixer', 'mixer'],
       ['Knobs', 'knobs'],
       ['Pads', 'pads'],
@@ -42,10 +42,12 @@ describe('Stage', () => {
     expect(grid.style.gridTemplateAreas).toBe('"hero transport" "form form" "mixer knobs" "mixer pads"');
     expect(within(footer).getByRole('region', { name: 'Keyboard' })).toBeInTheDocument();
     expect(footer.querySelector('.yh-status-line')).not.toBeNull();
-    expect(within(grid).getByRole('region', { name: 'Hero' })).toContainElement(screen.getByRole('region', { name: 'Stage display' }));
-    expect(within(grid).getByRole('region', { name: 'Transport keys' })).toContainElement(screen.getByRole('region', { name: 'Transport' }));
-    expect(within(grid).getByRole('region', { name: 'Song form strip' })).toContainElement(screen.getByRole('region', { name: 'Song form' }));
+    // The hero and the song form halves are plain elements: the Stage's Regions name them.
+    expect(within(grid).getByRole('region', { name: 'Hero' })).toContainElement(grid.querySelector<HTMLElement>('.yh-display'));
+    expect(within(grid).getByRole('region', { name: 'Transport' })).toContainElement(screen.getByRole('group', { name: 'Transport' }));
+    expect(within(grid).getByRole('region', { name: 'Song form' })).toContainElement(screen.getByRole('group', { name: 'Sections' }));
     expect(screen.queryByRole('region', { name: 'Song form and transport' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'Stage display' })).toBeNull();
   });
 
   it('folds each bank\'s tabs into its region: no region inside the Mixer, Knobs or Pads', () => {
@@ -73,7 +75,7 @@ describe('Stage', () => {
     setup();
     const stage = screen.getByRole('group', { name: 'Stage' });
     expect(within(stage).getAllByRole('navigation', { name: 'Pages' })).toHaveLength(1);
-    for (const name of ['Hero', 'Stage display', 'Song form', 'Transport', 'Mixer', 'Knobs', 'Pads', 'Keyboard']) {
+    for (const name of ['Hero', 'Song form', 'Transport', 'Mixer', 'Knobs', 'Pads', 'Keyboard']) {
       expect(within(stage).getAllByRole('region', { name })).toHaveLength(1);
     }
     expect(stage.querySelectorAll('.yh-keys')).toHaveLength(1);
@@ -84,9 +86,9 @@ describe('Stage', () => {
     setup();
     const nav = within(screen.getByRole('navigation', { name: 'Pages' }));
     for (const page of ['Stage', 'Channel', 'Effects', 'Quick Racks', 'Multi Pads', 'Looper', 'Harm/Arp', 'Library', 'Settings']) {
-      expect(nav.getAllByRole('button', { name: page })).toHaveLength(1);
+      expect(nav.getAllByRole('tab', { name: page })).toHaveLength(1);
     }
-    expect(nav.getByRole('button', { name: 'Stage' })).toHaveAttribute('aria-current', 'page');
+    expect(nav.getByRole('tab', { name: 'Stage' })).toHaveAttribute('aria-selected', 'true');
   });
 
   it('has the global switches once, only in the app bar', () => {
@@ -102,7 +104,7 @@ describe('Stage', () => {
 
   it('has the style, chord, section, tempo and beat once, in the hero', () => {
     setup();
-    const hero = region('Stage display');
+    const hero = region('Hero');
     for (const name of ['Previous style (Track left)', 'Next style (Track right)', 'Sunday Drive Pop: open the Browser']) {
       once(name);
       expect(hero.getByRole('button', { name })).toBeInTheDocument();
@@ -119,7 +121,7 @@ describe('Stage', () => {
 
   it('drops the hero parts column: the mixer names each sound', () => {
     setup();
-    expect(region('Stage display').queryByRole('list', { name: 'Sounds' })).toBeNull();
+    expect(region('Hero').queryByRole('list', { name: 'Sounds' })).toBeNull();
     const faders = region('Mixer');
     for (const name of ['Right 1, Stage Grand: open Channel', 'Right 2, Silk Strings, edited: open Channel', 'Left, Finger Bass: open Channel']) {
       expect(faders.getByRole('button', { name })).toBeInTheDocument();
@@ -149,9 +151,10 @@ describe('Stage', () => {
     expect(container.querySelector('.yh-stage__strip')).toBeNull();
     const grid = container.querySelector('[data-part="grid"]') as HTMLElement;
     expect(grid.style.gridTemplateAreas).toBe('"hero form" "mixer knobs" "mixer pads"');
-    const outer = screen.getByRole('region', { name: 'Form and transport' });
+    const outer = screen.getByRole('region', { name: 'Song form and transport' });
     expect(outer.style.gridArea).toBe('form');
-    const form = within(within(outer).getByRole('region', { name: 'Song form and transport' }));
+    expect(within(outer).queryAllByRole('region')).toHaveLength(0);
+    const form = within(outer);
     for (const name of [...SECTIONS, ...TRANSPORT]) {
       once(name);
       expect(form.getByRole('button', { name })).toBeInTheDocument();
@@ -250,7 +253,7 @@ describe('Stage', () => {
         expect(pads.getAllByRole('button', { name })).toHaveLength(1);
       }
       expect(pads.getAllByRole('button', { name: /^Tap tempo \(pad 14\)/ })).toHaveLength(1);
-      expect(region('Stage display').getAllByRole('button', { name: 'Tap tempo' })).toHaveLength(1);
+      expect(region('Hero').getAllByRole('button', { name: 'Tap tempo' })).toHaveLength(1);
     });
 
     it('sends a pad press where the same step or key in the strip and transport sends it, and Tap to the hero', async () => {
@@ -355,7 +358,7 @@ describe('Stage', () => {
     }
     const fit = () => ({
       zoom: (document.querySelector('.yh-stage') as HTMLElement).dataset.zoom,
-      hero: screen.getByRole('region', { name: 'Stage display' }).getAttribute('data-density'),
+      hero: (document.querySelector('.yh-display') as HTMLElement).getAttribute('data-density'),
     });
 
     it('tightens the hero before it zooms, at the 1217 × 752 screen', () => {
@@ -420,7 +423,7 @@ describe('Stage', () => {
 
   it('renders the stopped board', () => {
     setup(stageStopped);
-    expect(region('Stage display').getByRole('img', { name: 'Stopped on Main A' })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: 'Stopped on Main A' })).toBeInTheDocument();
     once('Start / Stop, stopped');
     expect(screen.getByRole('button', { name: /Style queued/ })).toBeInTheDocument();
   });
@@ -435,10 +438,10 @@ describe('StagePlayground', () => {
     const form = region('Song form');
     await user.click(form.getByRole('button', { name: 'Main D' }));
     expect(form.getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
-    expect(region('Stage display').getByText('Main D')).toBeInTheDocument();
+    expect(region('Hero').getByText('Main D')).toBeInTheDocument();
     await user.click(form.getByRole('button', { name: /^Main D, next/ }));
     expect(form.getByRole('button', { name: 'Main D, playing' })).toBeInTheDocument();
-    expect(region('Stage display').getByRole('img', { name: /^Playing Main\sD$/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: /^Playing Main\sD$/ })).toBeInTheDocument();
   });
 
   it('plays the song from the Sections pads exactly as from the strip', async () => {
@@ -471,12 +474,12 @@ describe('StagePlayground', () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /^Start \/ Stop, running/ }));
     expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toBeInTheDocument();
-    expect(region('Stage display').getByRole('img', { name: /^Stopped on Main\sB$/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: /^Stopped on Main\sB$/ })).toBeInTheDocument();
     // Stopped, a section press picks where the band starts.
     await user.click(screen.getByRole('button', { name: 'Main A' }));
     await user.click(screen.getByRole('button', { name: 'Start / Stop, stopped' }));
     expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toBeInTheDocument();
-    expect(region('Stage display').getByRole('img', { name: /^Playing Main\sA$/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: /^Playing Main\sA$/ })).toBeInTheDocument();
   });
 
   it('sets the tempo from taps, and the tempo keys step it', async () => {
@@ -513,10 +516,10 @@ describe('StagePlayground', () => {
     expect(ots(2)).toHaveAttribute('data-state', 'playing');
     expect(ots(1)).toHaveAttribute('data-state', 'idle');
     await user.click(ots(3));
-    expect(region('Stage display').getByRole('button', { name: /^One Touch 3, applied/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('button', { name: /^One Touch 3, applied/ })).toBeInTheDocument();
     expect(ots(3)).toHaveAttribute('data-state', 'playing');
     expect(ots(2)).toHaveAttribute('data-state', 'idle');
-    await user.click(region('Stage display').getByRole('button', { name: /^Apply One Touch 4/ }));
+    await user.click(region('Hero').getByRole('button', { name: /^Apply One Touch 4/ }));
     expect(ots(4)).toHaveAttribute('data-state', 'playing');
     // A new style has none applied.
     await user.click(screen.getByRole('button', { name: 'Next style (Track right)' }));
@@ -526,7 +529,7 @@ describe('StagePlayground', () => {
   it('steps styles around both ends of the list', async () => {
     play();
     const user = userEvent.setup();
-    const hero = region('Stage display');
+    const hero = region('Hero');
     const style = (name: string) => hero.getByRole('button', { name: `${name}: open the Browser` });
     await user.click(hero.getByRole('button', { name: 'Previous style (Track left)' }));
     expect(style('Waltz for Two')).toBeInTheDocument();
@@ -539,7 +542,7 @@ describe('StagePlayground', () => {
     const seed = { ...stageBoard, display: { ...stageBoard.display, style: { ...stageBoard.display.style, name: 'Midnight Swing', timeSignature: '6/8' } } };
     const user = userEvent.setup();
     const { unmount } = render(<StagePlayground {...seed} width={1440} height={900} tick={false} />);
-    const hero = () => region('Stage display');
+    const hero = () => region('Hero');
     expect(hero().getByRole('button', { name: 'Midnight Swing: open the Browser' })).toBeInTheDocument();
     await user.click(hero().getByRole('button', { name: 'Next style (Track right)' }));
     expect(hero().getByRole('button', { name: 'Sunday Drive Pop: open the Browser' })).toBeInTheDocument();

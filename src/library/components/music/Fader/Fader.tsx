@@ -1,8 +1,10 @@
 import type { CSSProperties } from 'react';
+import type { HueSlot } from '../../core/hue';
 import { FADER_MAX as MAX, useFader } from './useFader';
 import './Fader.css';
 
-export type FaderHue = 'r1' | 'r2' | 'r3' | 'l' | 'a' | 't2' | 't';
+/** A categorical hue slot (1–4), or one of the neutral strips: `a`, `t2`, `t`. */
+export type FaderHue = HueSlot | 'a' | 't2' | 't';
 export type FaderKind = 'part' | 'group' | 'master' | 'off' | 'parked';
 
 export interface FaderProps {
@@ -22,7 +24,11 @@ export interface FaderProps {
   away?: number;
   /** `part`, `group`, `master` live; `off` a part switched off; `parked` an unused fader. */
   kind?: FaderKind;
-  /** The strip's identity: a part (`r1`, `r2`, `r3`, `l`) takes its part hue; `a` (Style), `t2` (Multi Pad) and `t` (Master) are neutral. */
+  /**
+   * The strip's identity: a hue slot (1–4, `--hue-n`; an app maps its meaning, e.g. Yahaha's parts)
+   * fills the travel in that hue; `a`, `t2` and `t` are neutral strips (in Yahaha: Style, Multi Pad
+   * and Master).
+   */
   hue?: FaderHue;
   /** The non-Vol layer look (Pan, Reverb, Chorus, Delay): no meters, a neutral fill, the layer word as a label. */
   layered?: boolean;
@@ -44,7 +50,6 @@ export interface FaderProps {
 }
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
-const PART_HUE: Partial<Record<FaderHue, string>> = { r1: '1', r2: '2', r3: '3', l: '4' };
 
 /** "Rev 40" → a layer word and its number; "90" stays a number. */
 function splitValue(value: string): { word: string; num: string } {
@@ -64,8 +69,8 @@ function splitValue(value: string): { word: string; num: string } {
  * that overhangs the groove, so it reads as a thing to grab and drag; the 3px bracket and tick did
  * not. It is a `slider` (value 0–127, vertical) rather than a button, so assistive tech announces
  * the level and the keys it already obeyed. *Colour meaning* (`color.md` §3, `anti-ai-slop.md` #8
- * token role drift): the part hue fills the travel only, for part identity; Style and Master are
- * neutral instead of borrowing the focus accent; meters are neutral (they measure sound, they are
+ * token role drift): the hue slot fills the travel only, for identity; the neutral strips (Yahaha's
+ * Style and Master) are neutral instead of borrowing the focus accent; meters are neutral (they measure sound, they are
  * not identity); soft takeover is a state, so it is drawn in `--warning`, with an arrow that says
  * which way to move the hardware instead of a bare ↕. Bloom on the fill comes from `--bloom`, so
  * flat palettes stay flat. Focus is a visible `--accent` ring (`craft-details.md` §1). *Alignment*:
@@ -119,7 +124,7 @@ export function Fader({
   const { rootProps, railRef } = useFader({ name, value, level, parked, tip, tipAction, onlevel });
 
   const style = { '--yh-fader-level': frac, width: width === undefined ? undefined : `${width}px` } as CSSProperties;
-  const partHue = layered ? undefined : PART_HUE[hue];
+  const partHue = layered || typeof hue !== 'number' ? undefined : String(hue);
 
   return (
     <div

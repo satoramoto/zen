@@ -12,7 +12,7 @@ import { knobPages, knobsByPage, reverbKnobs, styleKnobs } from './KnobBank.fixt
  * carries the knob's position.
  */
 const meta = {
-  title: 'Library/Yahaha/Components/KnobBank',
+  title: 'Yahaha/Components/KnobBank',
   component: KnobBankRegion,
   decorators: [
     withLibraryTheme,

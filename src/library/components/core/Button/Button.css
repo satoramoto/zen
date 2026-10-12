@@ -1,14 +1,14 @@
-/* Yahaha Button, redesigned. Reads only contract variables and the local --yh-* ones declared
-   here; no literal colours or radii.
+/* Button (from Yahaha's, redesigned). Reads only contract variables and the local --yh-* ones
+   declared here; no literal colours or radii.
 
-   --yh-button-tone   what the button belongs to: text colour (neutral), a part hue, a state or a role
+   --yh-button-tone   what the button belongs to: text colour (neutral), a hue slot, a state or a role
    --yh-button-fill   the on ring and dot, the chosen underline, and the solid face of a running or
                       recording key
    --yh-button-ink    the label on that solid face
    --yh-button-line   the rest outline
-   --yh-button-rest   the rest hover and press tint (neutral on a transport key: it has no hue at rest)
+   --yh-button-rest   the rest hover and press tint (neutral on a role-2 key: it has no hue at rest)
    --yh-button-glow   lamp bloom when lit (0px for neutral, --bloom for coloured)
-   --yh-button-cta    the primary rest fill (--action; --transport on a transport key)
+   --yh-button-cta    the primary rest fill (--action; --role-2 on a role-2 key)
    --yh-button-cta-ink the label on it
    --yh-wait-ring     the waiting and on ring, the chosen underline: one weight across Button,
                       LampButton and Pad */
@@ -63,19 +63,19 @@
   transition: background-color 80ms ease-out, box-shadow 80ms ease-out, color 80ms ease-out;
 }
 
-/* Tones. Part hues are identity (r1–l); sections (intro, main, fill, brk, ending) stay neutral, as
-   on the Pad, because four hues can't name five sections without one passing for a part. ok/rec
-   are state, a is the accent, transport the role hue of the keys that move time (hues.ts). Any
-   coloured tone rings, underlines and dots in its hue when on or chosen, with lamp bloom; parts and
-   the accent take --on-hue ink, states and transport their own text token. */
-.yh-button[data-hue='r1'] { --yh-button-tone: var(--hue-1); }
-.yh-button[data-hue='r2'] { --yh-button-tone: var(--hue-2); }
-.yh-button[data-hue='r3'] { --yh-button-tone: var(--hue-3); }
-.yh-button[data-hue='l'] { --yh-button-tone: var(--hue-4); }
+/* Tones. Hue slots 1–4 are identity (an app maps its own meaning); sections (intro, main, fill,
+   brk, ending) stay neutral, because four hues can't name five sections without one passing for a
+   slot. ok/rec are state, a is the accent, role-2 the second role hue. Any coloured tone rings,
+   underlines and dots in its hue when on or chosen, with lamp bloom; slots and the accent take
+   --on-hue ink, states and role-2 their own text token. */
+.yh-button[data-hue='1'] { --yh-button-tone: var(--hue-1); }
+.yh-button[data-hue='2'] { --yh-button-tone: var(--hue-2); }
+.yh-button[data-hue='3'] { --yh-button-tone: var(--hue-3); }
+.yh-button[data-hue='4'] { --yh-button-tone: var(--hue-4); }
 .yh-button[data-hue='ok'] { --yh-button-tone: var(--success); }
 .yh-button[data-hue='rec'] { --yh-button-tone: var(--danger); }
 .yh-button[data-hue='a'] { --yh-button-tone: var(--accent); }
-.yh-button[data-hue='transport'] { --yh-button-tone: var(--transport); }
+.yh-button[data-hue='role-2'] { --yh-button-tone: var(--role-2); }
 .yh-button:not([data-hue='t']) {
   --yh-button-fill: var(--yh-button-tone);
   --yh-button-ink: var(--on-hue);
@@ -90,15 +90,15 @@
 }
 .yh-button[data-hue='ok'] { --yh-button-ink: var(--success-text); }
 .yh-button[data-hue='rec'] { --yh-button-ink: var(--danger-text); }
-.yh-button[data-hue='transport'] {
-  --yh-button-ink: var(--transport-text);
-  /* At rest a transport key is neutral (hues.ts): the hue appears only on the waiting and on
-     faces and on the primary fill, so Start is the one saturated key at rest. */
+.yh-button[data-hue='role-2'] {
+  --yh-button-ink: var(--role-2-text);
+  /* At rest a role-2 key is neutral: the hue appears only on the waiting and on faces and on the
+     primary fill, so a primary role-2 key is the one saturated key at rest. */
   --yh-button-line: var(--border-strong);
   --yh-button-rest: var(--text-1);
-  /* A primary transport key (Start while stopped) fills in its own role hue, not --action. */
-  --yh-button-cta: var(--transport);
-  --yh-button-cta-ink: var(--transport-text);
+  /* A primary role-2 key fills in its own role hue, not --action. */
+  --yh-button-cta: var(--role-2);
+  --yh-button-cta-ink: var(--role-2-text);
 }
 
 /* Sizes: all from the control height, so density packs scale every key together. Widths are
@@ -198,7 +198,7 @@
 }
 
 /* Chosen: the one picked from a set (the applied One Touch), latched down. Ink and a rule along the
-   bottom, the same mark as ChosenTabs' underline; the rest outline stays, so the set still reads as
+   bottom, the same mark as an underlined tab; the rest outline stays, so the set still reads as
    keys. */
 .yh-button[data-face='chosen'] {
   box-shadow:

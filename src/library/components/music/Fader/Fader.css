@@ -1,9 +1,9 @@
-/* Fader: a numeral over a travel; the travel is a groove with the part-hue fill, an overhanging
+/* Fader: a numeral over a travel; the travel is a groove with the hue-slot fill, an overhanging
    cap (the thing to grab) and two neutral meters. Contract variables plus the local --yh-fader-*.
    Materials: the groove and meter channel are `well`, the cap a `handle`, the fill is lit. */
 
 .yh-fader {
-  /* Part identity: the part hue when the strip has one, otherwise neutral ink. */
+  /* Identity: the hue slot when the strip has one, otherwise neutral ink. */
   --yh-fader-ink: var(--text-1);
   --yh-fader-cap-h: var(--space-2);
   --yh-fader-cap-r: min(var(--radius-control), 2px);

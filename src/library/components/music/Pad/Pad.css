@@ -1,4 +1,4 @@
-/* Yahaha Pad: one band pad drawn as a key. Reads only contract variables and the --yh-pad-*
+/* Pad: one bank pad drawn as a key. Reads only contract variables and the --yh-pad-*
    ones declared here. Tone (data-tone) picks the colour role; state (data-state) the structure. */
 
 .yh-pad {
@@ -65,13 +65,19 @@
   --yh-pad-ring-ink: var(--success-text);
   --yh-pad-edge: var(--success);
 }
-/* Transport: the role hue of the controls that move time (hues.ts), never a part's, and only while
-   active: the idle edge stays neutral, the hue appears on the playing, armed and next faces. */
-.yh-pad[data-tone='transport'] {
-  --yh-pad-fill: var(--transport);
-  --yh-pad-ink: var(--transport-text);
-  --yh-pad-ring: var(--transport);
-  --yh-pad-ring-ink: var(--transport-text);
+/* A role slot (role-1, role-2): a role hue, never a hue slot's, and only while active: the idle
+   edge stays neutral, the hue appears on the playing, armed and next faces. */
+.yh-pad[data-tone='role-1'] {
+  --yh-pad-fill: var(--role-1);
+  --yh-pad-ink: var(--role-1-text);
+  --yh-pad-ring: var(--role-1);
+  --yh-pad-ring-ink: var(--role-1-text);
+}
+.yh-pad[data-tone='role-2'] {
+  --yh-pad-fill: var(--role-2);
+  --yh-pad-ink: var(--role-2-text);
+  --yh-pad-ring: var(--role-2);
+  --yh-pad-ring-ink: var(--role-2-text);
 }
 
 /* Armed needs attention whatever the pad is: warning, not identity. */
@@ -80,7 +86,7 @@
   --yh-pad-ring-ink: var(--warning-text);
 }
 
-/* Next reads as --accent (hues.ts), whatever the pad's own colour (accentNext, on by default). */
+/* Next reads as --accent (the contract's "next" role), whatever the pad's own colour (accentNext, on by default). */
 .yh-pad[data-next='accent'][data-state='next'] {
   --yh-pad-ring: var(--accent);
   --yh-pad-ring-ink: var(--surface-0);

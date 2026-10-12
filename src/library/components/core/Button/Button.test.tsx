@@ -115,33 +115,43 @@ describe('Button faces and a11y', () => {
   });
 
   it('running but chosen keeps its own hue', () => {
-    const { button } = setup({ label: 'Go', size: 'band', bar: true, chosen: true, hue: 'r2' });
+    const { button } = setup({ label: 'Go', size: 'band', bar: true, chosen: true, hue: 2 });
     expect(button).toHaveAttribute('data-face', 'chosen');
-    expect(button).toHaveAttribute('data-hue', 'r2');
+    expect(button).toHaveAttribute('data-hue', '2');
   });
 
-  it('transport is its own tone; running Start / Stop still draws ok', () => {
-    const { button, rerender, props } = setup({ label: 'Sync Start', hue: 'transport' });
-    expect(button).toHaveAttribute('data-hue', 'transport');
+  it('a hue slot draws its --hue-n', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/Button/Button.css'), 'utf8');
+    for (const slot of [1, 2, 3, 4] as const) {
+      const { button, unmount } = setup({ label: 'X', hue: slot });
+      expect(button).toHaveAttribute('data-hue', String(slot));
+      expect(css).toContain(`.yh-button[data-hue='${slot}'] { --yh-button-tone: var(--hue-${slot}); }`);
+      unmount();
+    }
+  });
+
+  it('role-2 is its own tone; running Start / Stop still draws ok', () => {
+    const { button, rerender, props } = setup({ label: 'Sync Start', hue: 'role-2' });
+    expect(button).toHaveAttribute('data-hue', 'role-2');
     rerender(<Button {...props} label="Start / Stop" size="band" bar />);
     expect(button).toHaveAttribute('data-hue', 'ok');
   });
 
-  it('each solid tone takes its own ink, and a primary transport key fills in --transport', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
+  it('each solid tone takes its own ink, and a primary role-2 key fills in --role-2', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/Button/Button.css'), 'utf8');
     const decls = (hue: string) =>
       [...css.matchAll(new RegExp(`\\.yh-button\\[data-hue='${hue}'\\]\\s*\\{([^}]*)\\}`, 'g'))].map((m) => m[1]).join(';');
     expect(decls('ok')).toContain('--yh-button-ink: var(--success-text)');
     expect(decls('rec')).toContain('--yh-button-ink: var(--danger-text)');
-    expect(decls('transport')).toContain('--yh-button-tone: var(--transport)');
-    expect(decls('transport')).toContain('--yh-button-ink: var(--transport-text)');
-    expect(decls('transport')).toContain('--yh-button-cta: var(--transport)');
+    expect(decls('role-2')).toContain('--yh-button-tone: var(--role-2)');
+    expect(decls('role-2')).toContain('--yh-button-ink: var(--role-2-text)');
+    expect(decls('role-2')).toContain('--yh-button-cta: var(--role-2)');
     // The per-tone ink must come after the shared coloured-tone rule, which sets --on-hue.
     expect(css.indexOf("[data-hue='ok'] { --yh-button-ink")).toBeGreaterThan(css.indexOf(".yh-button:not([data-hue='t'])"));
   });
 
   it('a lit section key inks in --surface-0 on its --text-1 fill, after the --on-hue rule', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/Button/Button.css'), 'utf8');
     const match = css.match(/\.yh-button:is\(([^)]*)\)\s*\{([^}]*)\}/);
     expect(match).not.toBeNull();
     for (const hue of ['intro', 'main', 'ending', 'brk', 'fill']) expect(match![1]).toContain(`[data-hue='${hue}']`);
@@ -154,7 +164,7 @@ describe('Button faces and a11y', () => {
     expect(button).toHaveAttribute('data-solid');
     rerender(<Button {...props} label="Rec" size="md" bar={undefined} hue="rec" on />);
     expect(button).toHaveAttribute('data-solid');
-    for (const hue of ['t', 'r1', 'a', 'transport', 'main'] as const) {
+    for (const hue of ['t', 1, 'a', 'role-2', 'main'] as const) {
       rerender(<Button {...props} label="X" size="md" bar={undefined} hue={hue} on />);
       expect(button).toHaveAttribute('data-face', 'on');
       expect(button).not.toHaveAttribute('data-solid');
@@ -164,20 +174,21 @@ describe('Button faces and a11y', () => {
     rerender(<Button {...props} label="Rec" size="md" bar={undefined} hue="rec" on disabled />);
     expect(button).not.toHaveAttribute('data-solid');
 
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/Button/Button.css'), 'utf8');
     const rule = (selector: string) => {
       const at = css.indexOf(`${selector} {`);
       expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
       return css.slice(at, css.indexOf('}', at));
     };
-    expect(rule(".yh-button[data-face='on']")).toMatch(/background:\s*transparent/);
+    // On keeps the key material: a ring, never a fill.
+    expect(rule(".yh-button[data-face='on']")).not.toContain('background');
     expect(rule(".yh-button[data-face='on'][data-solid]")).toContain('background: var(--yh-button-fill)');
     expect(rule(".yh-button[data-face='chosen']")).toContain('inset 0 calc(-1 * var(--yh-wait-ring)) 0 var(--yh-button-fill)');
   });
 
-  it('a transport key is neutral at rest; disabled is a dashed edge and --text-3; no label ellipsis', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
-    const transport = [...css.matchAll(/\.yh-button\[data-hue='transport'\]\s*\{([^}]*)\}/g)].map((m) => m[1]).join(';');
+  it('a role-2 key is neutral at rest; disabled is a dashed edge and --text-3; no label ellipsis', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/components/core/Button/Button.css'), 'utf8');
+    const transport = [...css.matchAll(/\.yh-button\[data-hue='role-2'\]\s*\{([^}]*)\}/g)].map((m) => m[1]).join(';');
     expect(transport).toContain('--yh-button-line: var(--border-strong)');
     expect(transport).toContain('--yh-button-rest: var(--text-1)');
     expect(css).toMatch(/\.yh-button\[data-face='disabled'\]\s*\{[^}]*color:\s*var\(--text-3\)/);

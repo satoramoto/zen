@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { TipAction } from '../Pad/Pad';
-import { StatusDot } from '../StatusDot/StatusDot';
+import type { TipAction } from '../../components/music/Pad/Pad';
+import { StatusDot } from '../../components/core/StatusDot/StatusDot';
 import { health, type HealthTarget } from './health';
 import './HealthSlot.css';
 

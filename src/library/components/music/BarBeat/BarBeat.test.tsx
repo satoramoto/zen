@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 // jsdom gives import.meta.url a non-file scheme and vitest skips CSS; tests run from the repo root.
-const css = readFileSync(join(process.cwd(), 'src/library/yahaha/BarBeat/BarBeat.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+const css = readFileSync(join(process.cwd(), 'src/library/components/music/BarBeat/BarBeat.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 
 const states = (container: HTMLElement) =>
   Array.from(container.querySelectorAll('[data-state]')).map((s) => s.getAttribute('data-state'));

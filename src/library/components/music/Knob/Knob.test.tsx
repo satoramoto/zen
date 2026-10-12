@@ -163,7 +163,7 @@ describe('Knob names and display', () => {
     expect(container.querySelector('.yh-knob__lit')?.getAttribute('d')).toMatch(/^M /);
   });
 
-  it('wears a part hue only when given one', () => {
+  it('wears a hue slot only when given one', () => {
     const { rerender } = render(<Knob label="Swing" />);
     expect(screen.getByRole('button')).not.toHaveAttribute('data-hue');
     rerender(<Knob label="Swing" hue={3} />);

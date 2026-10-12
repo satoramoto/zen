@@ -41,7 +41,7 @@ const SETUP = 4;
  * index.
  */
 const meta = {
-  title: 'Library/Yahaha/Components/PadBank',
+  title: 'Yahaha/Components/PadBank',
   component: PadBankRegion,
   decorators: [
     withLibraryTheme,

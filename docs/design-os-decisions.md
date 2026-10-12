@@ -17,4 +17,15 @@ Decisions made without asking, for the owner to veto. Newest last. Each says wha
 11. **Storybook nests by title** (Field guide, Design OS, Yahaha, open[flow]); composing other repos' Storybooks with refs comes later (#29).
 12. **Distribution:** apps consume zen as an npm package, via a GitHub dependency until it's published.
 14. **Package `@satoramoto/zen`:** `npm run build:lib` (Vite library mode to `lib/index.js` and one `lib/zen.css`, plus declarations), run on `prepare` so a GitHub install builds it. React is a peer dependency (^19), so an app never gets a second copy. The contract's `Layer` type is exported as `LayerStyle`, because the layout `Layer` component takes the name.
+15. **Layer values:**
+    - Flat sets read depth as tone steps: `raised` is one surface step above `base`, so FaderBank's Master plate now shows. `overlay` and `top` are `surface-3` with a strong hairline and growing shadows.
+    - Hardware keeps its float drop, with bigger casts for `overlay` and `top`.
+    - Shadows are written for a light from above; they aren't computed from `light` with CSS trig.
+16. **The glass system (`visuals` pack):**
+    - The `frost` palette's stem and deck colours are pushed apart in chroma to meet the 0.12 distance rule. `--primary` is both accent and action, and signal green is success.
+    - The light mode is all `// added`.
+    - The `roomy` scale has a 4px unit and 30px controls; visuals' 40px rows can't be expressed in a scale.
+    - `instrument` faces use a system mono instead of loading Recursive. Components set tabular figures themselves.
+    - Region spacing is a literal 22px inset and 32px gap, so it holds under any scale.
+    - Storybook paints a stand-in desktop behind translucent grounds (`pack.desktop`).
 13. **visual[flow] is rebuilt in zen** (`src/library/visuals/`) on the glass system, checked against the original Storybook for drift; the app itself is then wired to zen on a branch in openflowfm/visuals, opened as a draft PR without auto-merge, because that repo is mid-1.0 with its own decision log (#105).

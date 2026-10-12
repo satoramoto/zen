@@ -5,7 +5,9 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Pad, padTone, tieLastWord } from './Pad';
 
-describe('Yahaha Pad', () => {
+const PAD_CSS = 'src/library/components/music/Pad/Pad.css';
+
+describe('Pad', () => {
   it('presses on a pointer click', async () => {
     const onPress = vi.fn();
     render(<Pad label="Main B" index="10" onPress={onPress} />);
@@ -66,7 +68,7 @@ describe('Yahaha Pad', () => {
     // jsdom lays nothing out, so check the rules that do it (the Pad story TagClearance measures
     // them in a browser): the top chip's row is reserved above the label, and the corner chip
     // sits mostly above the pad's top edge rather than over its centred label.
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Pad/Pad.css'), 'utf8');
+    const css = readFileSync(join(process.cwd(), PAD_CSS), 'utf8');
     const rule = (selector: string) => {
       const at = css.indexOf(`${selector} {`);
       expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
@@ -76,8 +78,8 @@ describe('Yahaha Pad', () => {
     expect(rule('.yh-pad__tag--corner')).toMatch(/top:\s*calc\(var\(--yh-pad-tag-h\) \* -0\.[5-9]\)/);
   });
 
-  it('inks state fills with their own text tokens and draws transport in its role hue', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Pad/Pad.css'), 'utf8');
+  it('inks state fills with their own text tokens and draws a role slot in its role hue', () => {
+    const css = readFileSync(join(process.cwd(), PAD_CSS), 'utf8');
     const rule = (selector: string) => {
       const at = css.indexOf(`${selector} {`);
       expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
@@ -87,12 +89,15 @@ describe('Yahaha Pad', () => {
     expect(success).toContain('--yh-pad-ink: var(--success-text)');
     expect(success).toContain('--yh-pad-ring-ink: var(--success-text)');
     expect(rule(".yh-pad[data-state='armed']")).toContain('--yh-pad-ring-ink: var(--warning-text)');
-    const transport = rule(".yh-pad[data-tone='transport']");
-    expect(transport).toContain('--yh-pad-fill: var(--transport)');
-    expect(transport).toContain('--yh-pad-ink: var(--transport-text)');
+    for (const n of [1, 2]) {
+      const role = rule(`.yh-pad[data-tone='role-${n}']`);
+      expect(role).toContain(`--yh-pad-fill: var(--role-${n})`);
+      expect(role).toContain(`--yh-pad-ink: var(--role-${n}-text)`);
+    }
     expect(css).not.toContain("data-tone='action'");
-    render(<Pad label="Sync Start" family="util" state="armed" transport />);
-    expect(screen.getByRole('button')).toHaveAttribute('data-tone', 'transport');
+    expect(css).not.toContain('--transport');
+    render(<Pad label="Sync Start" family="util" state="armed" role={2} />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-tone', 'role-2');
   });
 
   it('marks the flash phase only on waiting pads', () => {
@@ -103,20 +108,29 @@ describe('Yahaha Pad', () => {
   });
 
   it('maps families onto contract tones', () => {
-    expect(padTone('main', 'playing', false)).toBe('neutral');
-    expect(padTone('util', 'idle', false)).toBe('neutral');
-    expect(padTone('start', 'running', false)).toBe('success');
-    expect(padTone('start', 'idle', false)).toBe('neutral');
-    // Running is a state: it stays success on a transport pad too.
-    expect(padTone('start', 'running', true)).toBe('success');
-    expect(padTone('start', 'idle', true)).toBe('transport');
-    expect(padTone('util', 'armed', true)).toBe('transport');
-    expect(padTone('util', 'playing', true)).toBe('transport');
-    expect(padTone('main', 'idle', true)).toBe('neutral');
-    expect(padTone('r1', 'playing', false)).toBe('hue-1');
-    expect(padTone('r2', 'idle', false)).toBe('hue-2');
-    expect(padTone('r3', 'dark', false)).toBe('hue-3');
-    expect(padTone('l', 'idle', false)).toBe('hue-4');
+    expect(padTone('main', 'playing')).toBe('neutral');
+    expect(padTone('util', 'idle')).toBe('neutral');
+    expect(padTone('start', 'running')).toBe('success');
+    expect(padTone('start', 'idle')).toBe('neutral');
+    // Running is a state: it stays success on a pad with a role too.
+    expect(padTone('start', 'running', 2)).toBe('success');
+    expect(padTone('start', 'idle', 2)).toBe('role-2');
+    expect(padTone('util', 'armed', 2)).toBe('role-2');
+    expect(padTone('util', 'playing', 1)).toBe('role-1');
+    expect(padTone('main', 'idle', 2)).toBe('neutral');
+    // A hue slot wins over the family and the role.
+    expect(padTone('util', 'playing', undefined, 1)).toBe('hue-1');
+    expect(padTone('util', 'idle', undefined, 2)).toBe('hue-2');
+    expect(padTone('util', 'dark', 2, 3)).toBe('hue-3');
+    expect(padTone('start', 'running', undefined, 4)).toBe('hue-4');
+  });
+
+  it('renders the hue slot as data-hue and the hue tone', () => {
+    const { rerender } = render(<Pad label="QUICK 2" family="util" hue={2} />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-hue', '2');
+    expect(screen.getByRole('button')).toHaveAttribute('data-tone', 'hue-2');
+    rerender(<Pad label="Main B" />);
+    expect(screen.getByRole('button')).not.toHaveAttribute('data-hue');
   });
 
   it('disabled: stays focusable, is aria-disabled, and ignores click, Enter and Space', async () => {
@@ -157,18 +171,23 @@ describe('Yahaha Pad', () => {
     expect(screen.getByRole('button', { name: 'Main B (pad 10)' }).querySelector('.yh-pad__label')!.textContent).toBe('Main B');
   });
 
-  it('onFace="ring" draws on as a ring and a dot; transport is neutral at rest; disabled is dashed', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Pad/Pad.css'), 'utf8');
+  it('onFace="ring" draws on as a ring and a dot; a role is neutral at rest; disabled is dashed', () => {
+    const css = readFileSync(join(process.cwd(), PAD_CSS), 'utf8');
     const rule = (selector: string) => {
       const at = css.indexOf(`${selector} {`);
       expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
       return css.slice(at, css.indexOf('}', at));
     };
     const ring = rule(".yh-pad[data-on-face='ring'][data-state='playing']");
-    expect(ring).toContain('background: var(--surface-2)');
+    // The raised key face stays (the theme's key material), not the solid fill.
+    expect(ring).toContain('background: var(--mat-key-texture), var(--mat-key-fill)');
     expect(ring).toContain('border-color: var(--yh-pad-fill)');
-    expect(rule(".yh-pad[data-on-face='ring'][data-state='playing']::after")).toContain('background: var(--yh-pad-fill)');
-    expect(rule(".yh-pad[data-tone='transport']")).not.toContain('--yh-pad-edge');
+    // The lit dot is the pad's colour, through the material's lamp (`--lit`).
+    const dot = rule(".yh-pad[data-on-face='ring'][data-state='playing']::after");
+    expect(dot).toContain('--lit: var(--yh-pad-fill)');
+    expect(dot).toContain('background: var(--lit)');
+    expect(rule(".yh-pad[data-tone='role-1']")).not.toContain('--yh-pad-edge');
+    expect(rule(".yh-pad[data-tone='role-2']")).not.toContain('--yh-pad-edge');
     expect(rule(".yh-pad[aria-disabled='true']:not([data-state='playing'], [data-state='running'])")).toMatch(
       /border-style: dashed;[\s\S]*color: var\(--text-3\)/,
     );
@@ -188,7 +207,7 @@ describe('Yahaha Pad', () => {
   it('renders tip as data-tip and applies the tip action', () => {
     const destroy = vi.fn();
     const tipAction = vi.fn(() => ({ destroy }));
-    const { unmount } = render(<Pad label="QUICK 1" family="r1" tip="padpage.racks" tipAction={tipAction} />);
+    const { unmount } = render(<Pad label="QUICK 1" family="util" hue={1} tip="padpage.racks" tipAction={tipAction} />);
     const pad = screen.getByRole('button');
     expect(pad).toHaveAttribute('data-tip', 'padpage.racks');
     expect(pad).toHaveAttribute('data-tone', 'hue-1');

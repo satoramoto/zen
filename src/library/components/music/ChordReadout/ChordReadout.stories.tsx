@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { ChordReadout, type ChordReadoutProps } from './ChordReadout';
 
 // The original's fixtures (yahaha/src/ui/NowPlaying/NowPlaying.fixtures.ts), copied so the pairs compare one to one.
@@ -59,7 +59,7 @@ const chordLongFingering = {
 } satisfies ChordReadoutProps;
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/ChordReadout',
+  title: 'Design OS/Components/Music/ChordReadout',
   component: ChordReadout,
   decorators: [
     // A third of the display's content width, as the original sizes itself.

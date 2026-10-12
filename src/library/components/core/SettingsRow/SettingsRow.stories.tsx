@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { Button } from '../../components';
-import { withLibraryTheme } from '../../storybook';
+import { Button } from '../..';
+import { withLibraryTheme } from '../../../storybook';
 import { SettingsRow } from './SettingsRow';
 
 type Control = 'lamp' | 'tabs' | 'slider' | 'none';
@@ -106,7 +106,7 @@ function control(args: Args) {
  * `children`, picked by `control`; their args are grouped by control in the Controls panel.
  */
 const meta: Meta<Args> = {
-  title: 'Library/Yahaha/Primitives/SettingsRow',
+  title: 'Design OS/Components/Core/SettingsRow',
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   render: (args) => (

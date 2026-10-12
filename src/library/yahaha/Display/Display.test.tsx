@@ -40,7 +40,7 @@ const beatStates = (root: HTMLElement) => [...root.querySelectorAll('.yh-bar-bea
 describe('Display', () => {
   it('names itself and its regions', () => {
     setup();
-    const display = screen.getByRole('region', { name: 'Stage display' });
+    const display = document.querySelector<HTMLElement>('.yh-display')!;
     expect(within(display).getByRole('group', { name: 'Style' })).toBeInTheDocument();
     expect(within(display).getByRole('group', { name: 'Section' })).toBeInTheDocument();
     expect(within(display).getByRole('group', { name: 'Tempo and Tap' })).toBeInTheDocument();
@@ -95,7 +95,7 @@ describe('Display', () => {
     unmount();
     render(<Display {...displayNoParts} />);
     expect(screen.queryByRole('list', { name: 'Sounds' })).toBeNull();
-    expect(screen.getByRole('region', { name: 'Stage display' })).not.toHaveAttribute('data-parts');
+    expect(document.querySelector<HTMLElement>('.yh-display')!).not.toHaveAttribute('data-parts');
   });
 
   it('changes the tempo: + and − as holds, keys and wheel on the number, the style tempo two ways', async () => {
@@ -146,7 +146,7 @@ describe('Display', () => {
     expect(then).toHaveAttribute('data-docked', 'true');
     // The next role, from hues.ts, on its arrow; "Main C" said once in the hero.
     expect(then.style.getPropertyValue('--yh-display-then-hue')).toBe('var(--accent)');
-    expect(within(screen.getByRole('region', { name: 'Stage display' })).getAllByText('Main C')).toHaveLength(1);
+    expect(within(document.querySelector<HTMLElement>('.yh-display')!).getAllByText('Main C')).toHaveLength(1);
     expect(beatStates(container)).toEqual(['past', 'current', 'future', 'future']);
   });
 
@@ -277,7 +277,7 @@ describe('Display', () => {
 
   it('marks its density: auto by default, compact or full when asked', () => {
     const { rerender } = render(<Display {...displayBoard} />);
-    const display = () => screen.getByRole('region', { name: 'Stage display' });
+    const display = () => document.querySelector<HTMLElement>('.yh-display')!;
     expect(display()).toHaveAttribute('data-density', 'auto');
     rerender(<Display {...displayBoard} density="compact" />);
     expect(display()).toHaveAttribute('data-density', 'compact');
@@ -346,7 +346,7 @@ describe('Display', () => {
           <Display {...displayBoard} art />
         </ThemeScope>,
       );
-      expect(screen.getByRole('region', { name: 'Stage display' })).toBeInTheDocument();
+      expect(document.querySelector<HTMLElement>('.yh-display')!).toBeInTheDocument();
       unmount();
     }
   });

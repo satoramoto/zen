@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { BarBeat } from './BarBeat';
 
 /**
@@ -10,7 +10,7 @@ import { BarBeat } from './BarBeat';
  * container.
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/BarBeat',
+  title: 'Design OS/Components/Music/BarBeat',
   component: BarBeat,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

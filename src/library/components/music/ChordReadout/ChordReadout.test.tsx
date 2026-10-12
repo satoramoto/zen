@@ -10,7 +10,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ChordReadout } from './ChordReadout';
 
 // Tests run from the repo root.
-const css = readFileSync(join(process.cwd(), 'src/library/yahaha/ChordReadout/ChordReadout.css'), 'utf8');
+const css = readFileSync(join(process.cwd(), 'src/library/components/music/ChordReadout/ChordReadout.css'), 'utf8');
 
 const LONG = 'AI Full Keyboard · Keyboard transpose +2 · played Gm7 over the whole keyboard';
 const AM7 = [{ note: 'A' }, { note: 'C' }, { note: 'E' }, { note: 'G' }];

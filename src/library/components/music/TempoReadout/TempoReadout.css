@@ -68,9 +68,10 @@
 }
 
 /* + over −: one framed pair of real keys, each a control height square, a hairline between them,
-   each made of the theme's `key`. Neutral at rest (a transport key wears its hue only while
-   active, hues.ts): the strong border and secondary glyphs, a faint ink tint over the key on
-   hover, the transport fill with its paired ink and the pressed shadow only while pressed. */
+   each made of the theme's `key`. Neutral at rest (the keys wear the `--role-2` hue only while
+   active; an app maps the role, Yahaha's is transport): the strong border and secondary glyphs,
+   a faint ink tint over the key on hover, the role fill with its paired ink and the pressed shadow
+   only while pressed. */
 .yh-tempo-readout__steps {
   display: flex;
   flex-direction: column;
@@ -115,9 +116,9 @@
   color: var(--text-1);
 }
 .yh-tempo-readout__step:active:not(:disabled) {
-  background: var(--transport);
+  background: var(--role-2);
   box-shadow: var(--mat-key-pressed);
-  color: var(--transport-text);
+  color: var(--role-2-text);
 }
 .yh-tempo-readout__step:disabled {
   color: var(--text-3);

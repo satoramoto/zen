@@ -107,6 +107,9 @@ describe('FaderBank a11y', () => {
     setup({ tipAction });
     for (const tab of screen.getAllByRole('tab')) expect(tab.getAttribute('data-tip')).toBeTruthy();
     expect(screen.getByRole('tab', { name: 'Reverb send' })).toHaveAttribute('data-tip', 'mixer.layer');
+    // The page tabs (Region views) and the layer tabs (aside) both run the app's tooltip.
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('tab', { name: 'Panel' }), 'mixer.page');
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('tab', { name: 'Reverb send' }), 'mixer.layer');
     // No control gets the tooltip twice.
     const nodes = tipAction.mock.calls.map(([node]) => node);
     expect(new Set(nodes).size).toBe(nodes.length);

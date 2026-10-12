@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { BarReadout } from './BarReadout';
 import { HIGH_STEPS, LOW_STEPS } from './bar';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/BarReadout',
+  title: 'Design OS/Components/Music/BarReadout',
   component: BarReadout,
   decorators: [
     (Story) => (

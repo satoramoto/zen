@@ -1,7 +1,7 @@
 /* SoundCell: one part's cell on the sound row. Reads only contract variables and its own --yh-*. */
 
 .yh-sound-cell {
-  /* The part's hue; set per part below. */
+  /* The part's hue slot; set per slot below. */
   --yh-part-hue: var(--hue-1);
   /* The cell's width on the row; the row may override it. */
   --yh-sound-cell-width: 14em;
@@ -18,11 +18,11 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* The board's four parts onto the contract's four categorical hues. */
-.yh-sound-cell[data-hue='r1'] { --yh-part-hue: var(--hue-1); }
-.yh-sound-cell[data-hue='r2'] { --yh-part-hue: var(--hue-2); }
-.yh-sound-cell[data-hue='r3'] { --yh-part-hue: var(--hue-3); }
-.yh-sound-cell[data-hue='l'] { --yh-part-hue: var(--hue-4); }
+/* The hue slot (1–4) onto the contract's four categorical hues. */
+.yh-sound-cell[data-hue='1'] { --yh-part-hue: var(--hue-1); }
+.yh-sound-cell[data-hue='2'] { --yh-part-hue: var(--hue-2); }
+.yh-sound-cell[data-hue='3'] { --yh-part-hue: var(--hue-3); }
+.yh-sound-cell[data-hue='4'] { --yh-part-hue: var(--hue-4); }
 
 /* Both buttons: flat until touched, a quiet face on hover, a deeper one while pressed. */
 .yh-sound-cell__part,

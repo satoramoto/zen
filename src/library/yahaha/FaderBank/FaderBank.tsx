@@ -1,14 +1,13 @@
 import { Fragment, useEffect, useRef, type CSSProperties } from 'react';
 import { Group } from '../../layout/Group';
 import { Region } from '../../layout/Region';
-import { Tabs } from '../../layout/Tabs';
+import { Tabs, type TabItem } from '../../layout/Tabs';
 import { PART_HUE_INDEX, type Part } from '../hues';
-import { Button } from '../Button/Button';
-import type { TabItem } from '../ChosenTabs/ChosenTabs';
-import { Fader } from '../Fader/Fader';
-import { LampButton, type LampHue } from '../LampButton/LampButton';
-import { PartMarks } from '../PartMarks/PartMarks';
-import { visibleMarks } from '../PartMarks/marks';
+import { Button } from '../../components/core/Button/Button';
+import { Fader, type FaderHue } from '../../components/music/Fader/Fader';
+import { LampButton, type LampHue } from '../../components/core/LampButton/LampButton';
+import { PartMarks } from '../../components/music/PartMarks/PartMarks';
+import { visibleMarks } from '../../components/music/PartMarks/marks';
 import './FaderBank.css';
 
 /** The app's tooltip hook (the original's Svelte `use:tip`): called with the node and the key. */
@@ -61,8 +60,8 @@ export interface BankLamp {
   label: string;
   /** Lit. */
   on: boolean;
-  /** The part hue for a part lamp, `t` (neutral) for a function, `lamp` the Looper looping. */
-  hue?: LampHue;
+  /** The part for a part lamp (it wears that part's hue), `t` (neutral) for a function, `lamp` the Looper looping. */
+  hue?: Part | 't' | 'lamp';
   /** Record lamp: lit and waiting draw in the record colour. */
   rec?: boolean;
   /** The waiting (armed) face while not lit. */
@@ -125,7 +124,11 @@ const clusterOf = (strip: FaderStrip): Cluster =>
         ? 'master'
         : 'groups';
 
-const isPartHue = (hue: FaderStrip['hue']): hue is Part => hue === 'r1' || hue === 'r2' || hue === 'r3' || hue === 'l';
+const isPartHue = (hue: string | undefined): hue is Part => hue === 'r1' || hue === 'r2' || hue === 'r3' || hue === 'l';
+
+/** A Yahaha strip or lamp identity on the library's slots: a part becomes its hue slot (`hues.ts`). */
+const faderHue = (hue: FaderStrip['hue']): FaderHue => (isPartHue(hue) ? PART_HUE_INDEX[hue] : hue);
+const lampHue = (hue: BankLamp['hue']): LampHue | undefined => (isPartHue(hue) ? PART_HUE_INDEX[hue] : hue);
 
 /** Which way the hardware fader must travel to pick the level up. */
 const takeoverWay = (strip: FaderStrip) =>
@@ -294,8 +297,9 @@ export function FaderBank({
   onPageRelease,
 }: FaderBankProps) {
   const layered = layerTabs.length > 0 && layer !== layerTabs[0].id;
-  const pageLabel = pageTabs.find((tab) => tab.id === page)?.label ?? '';
-  const otherLabel = pageTabs.find((tab) => tab.id !== page)?.label ?? '';
+  const word = (tab: TabItem | undefined) => (typeof tab?.label === 'string' ? tab.label : (tab?.name ?? ''));
+  const pageLabel = word(pageTabs.find((tab) => tab.id === page));
+  const otherLabel = word(pageTabs.find((tab) => tab.id !== page));
 
   const { template, columns, dividers } = layout(strips);
   const partStrips = strips.flatMap((strip, i) => (clusterOf(strip) === 'parts' ? [i] : []));
@@ -313,7 +317,7 @@ export function FaderBank({
     <LampButton
       label={item.label}
       on={item.on}
-      hue={item.hue}
+      hue={lampHue(item.hue)}
       rec={item.rec}
       waiting={item.waiting}
       size="cell"
@@ -376,7 +380,7 @@ export function FaderBank({
                 peak={strip.peak}
                 away={strip.away}
                 kind={strip.kind}
-                hue={strip.hue}
+                hue={faderHue(strip.hue)}
                 layered={layered && part}
                 empty={parked}
                 fillHeight
@@ -448,10 +452,24 @@ export function FaderBankRegion({ name = 'Mixer', area, className, ...bank }: Fa
   const body = <FaderBank {...bank} />;
   const aside =
     bank.layerTabs.length > 0 ? (
-      <Tabs name="Fader layer" items={bank.layerTabs} value={bank.layer} onChange={(id) => bank.onChooseLayer?.(id)} />
+      <Tabs
+        name="Fader layer"
+        items={bank.layerTabs}
+        value={bank.layer}
+        onChange={(id) => bank.onChooseLayer?.(id)}
+        tipAction={bank.tipAction}
+      />
     ) : undefined;
   return (
-    <Region name={name} area={area} className={className} aside={aside} view={bank.page} onView={(id) => bank.onChoosePage?.(id)}>
+    <Region
+      name={name}
+      area={area}
+      className={className}
+      aside={aside}
+      view={bank.page}
+      onView={(id) => bank.onChoosePage?.(id)}
+      tipAction={bank.tipAction}
+    >
       {bank.pageTabs.length > 0
         ? bank.pageTabs.map((tab) => (
             <Region.View key={tab.id} id={tab.id} label={tab.label} name={tab.name} disabled={tab.disabled} tip={tab.tip}>

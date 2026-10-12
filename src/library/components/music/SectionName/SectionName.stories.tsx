@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { SectionName } from './SectionName';
 
 /**
@@ -9,7 +9,7 @@ import { SectionName } from './SectionName';
  * `--selected` block, its "then" tab) says where it stands. `state` lands on `data-state`.
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/SectionName',
+  title: 'Design OS/Components/Music/SectionName',
   component: SectionName,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },

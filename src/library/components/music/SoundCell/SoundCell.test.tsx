@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SoundCell } from './SoundCell';
 
-const board = { part: 'R1', partName: 'Right 1', hue: 'r1' as const, number: '1', sound: 'Stage Grand' };
+const board = { part: 'R1', partName: 'Right 1', hue: 1 as const, number: '1', sound: 'Stage Grand' };
 
 describe('SoundCell', () => {
   it('names both buttons for a listener', () => {
@@ -39,10 +39,10 @@ describe('SoundCell', () => {
   });
 
   it('marks the part off and its hue, keeps the title and tips', () => {
-    const { container } = render(<SoundCell {...board} hue="r3" off partTip="mixer.strip.select" soundTip="x.sound" />);
+    const { container } = render(<SoundCell {...board} hue={3} off partTip="mixer.strip.select" soundTip="x.sound" />);
     const cell = container.querySelector('.yh-sound-cell')!;
     expect(cell).toHaveAttribute('data-off', 'true');
-    expect(cell).toHaveAttribute('data-hue', 'r3');
+    expect(cell).toHaveAttribute('data-hue', '3');
     const part = screen.getByRole('button', { name: /open Channel/ });
     expect(part).toHaveAttribute('title', 'Right 1');
     expect(part).toHaveAttribute('data-tip', 'mixer.strip.select');

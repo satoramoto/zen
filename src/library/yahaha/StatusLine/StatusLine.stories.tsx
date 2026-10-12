@@ -4,7 +4,7 @@ import { withLibraryTheme } from '../../storybook';
 import { StatusLine } from './StatusLine';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/StatusLine',
+  title: 'Yahaha/Primitives/StatusLine',
   component: StatusLine,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

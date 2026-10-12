@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { SendReadout } from './SendReadout';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/SendReadout',
+  title: 'Design OS/Components/Music/SendReadout',
   component: SendReadout,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },

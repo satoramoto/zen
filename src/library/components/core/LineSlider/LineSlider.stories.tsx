@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { LineSlider } from './LineSlider';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/LineSlider',
+  title: 'Design OS/Components/Core/LineSlider',
   component: LineSlider,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],

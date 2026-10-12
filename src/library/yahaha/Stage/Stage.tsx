@@ -4,7 +4,7 @@ import { Screen } from '../../layout/Screen';
 import { AppBar, type AppBarProps } from '../AppBar/AppBar';
 import { Display, type DisplayDensity, type DisplayProps } from '../Display/Display';
 import { FaderBankRegion, type FaderBankProps } from '../FaderBank/FaderBank';
-import { Keys, type KeysProps } from '../Keys/Keys';
+import { Keys, type KeysProps } from '../../components/music/Keys/Keys';
 import { KnobBankRegion, type KnobBankProps } from '../KnobBank/KnobBank';
 import { PadBankRegion, type PadBankProps } from '../PadBank/PadBank';
 import { SongForm, type SongFormProps } from '../SongForm/SongForm';
@@ -308,19 +308,19 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
         </Region>
         {stacked ? (
           <>
-            <Region name="Transport keys" area="transport" className="yh-stage__region yh-stage__transport">
+            <Region name="Transport" area="transport" className="yh-stage__region yh-stage__transport">
               <div className="yh-stage__form" data-part="transport">
                 <SongForm {...songForm} part="transport" tipAction={tipAction} />
               </div>
             </Region>
-            <Region name="Song form strip" area="form" className="yh-stage__region yh-stage__strip">
+            <Region name="Song form" area="form" className="yh-stage__region yh-stage__strip">
               <div className="yh-stage__fill" data-part="strip">
                 <SongForm {...songForm} part="form" tipAction={tipAction} />
               </div>
             </Region>
           </>
         ) : (
-          <Region name="Form and transport" area="form" className="yh-stage__region yh-stage__form-region">
+          <Region name="Song form and transport" area="form" className="yh-stage__region yh-stage__form-region">
             <div className="yh-stage__form" data-part="transport">
               <SongForm {...songForm} part="both" tipAction={tipAction} />
             </div>

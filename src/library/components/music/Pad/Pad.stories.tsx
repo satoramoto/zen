@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme } from '../../../storybook';
 import { Pad, type PadProps } from './Pad';
 
 /**
- * One band pad, redesigned on the library contract. Compare each story with its namesake under
- * "Yahaha baseline / Primitives / Pad": same names, same sample data.
+ * One bank pad, a library music component (redesigned from Yahaha's band pad; compare each story
+ * with its namesake under "Yahaha baseline / Primitives / Pad": same names, same sample data).
  */
 const meta = {
-  title: 'Library/Yahaha/Primitives/Pad',
+  title: 'Design OS/Components/Music/Pad',
   component: Pad,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
@@ -26,11 +26,12 @@ const meta = {
   argTypes: {
     label: { control: 'text' },
     index: { control: 'text' },
-    family: { control: 'select', options: ['intro', 'main', 'ending', 'brk', 'fill', 'util', 'start', 'r1', 'r2', 'r3', 'l'] },
+    family: { control: 'select', options: ['intro', 'main', 'ending', 'brk', 'fill', 'util', 'start'] },
+    hue: { control: 'select', options: [undefined, 1, 2, 3, 4] },
     state: { control: 'select', options: ['idle', 'dark', 'playing', 'next', 'armed', 'running'] },
     lit: { control: 'boolean' },
     tagCorner: { control: 'boolean' },
-    transport: { control: 'boolean' },
+    role: { control: 'select', options: [undefined, 1, 2] },
     accentNext: { control: 'boolean' },
     disabled: { control: 'boolean' },
     fillCell: { control: 'boolean' },
@@ -168,14 +169,14 @@ export const Running: Story = {
   },
 };
 
-/** A transport pad running: still `--success`, because running is a state, not the transport's identity. */
-export const TransportRunning: Story = {
+/** A role pad running (Yahaha's transport: role 2): still `--success`, because running is a state, not the role's identity. */
+export const RoleRunning: Story = {
   args: {
     label: 'Start / Stop',
     index: '16',
     family: 'start',
     state: 'running',
-    transport: true,
+    role: 2,
     name: 'Start / Stop, running (pad 16)',
   },
   play: async ({ canvasElement }) => {
@@ -183,47 +184,47 @@ export const TransportRunning: Story = {
   },
 };
 
-/** A transport pad stopped: a neutral edge. A transport key wears `--transport` only while active (hues.ts). */
-export const TransportStopped: Story = {
-  args: { label: 'Start / Stop', index: '16', family: 'start', state: 'idle', transport: true, name: 'Start / Stop, stopped (pad 16)' },
+/** A role pad stopped: a neutral edge. A role key wears `--role-n` only while active. */
+export const RoleStopped: Story = {
+  args: { label: 'Start / Stop', index: '16', family: 'start', state: 'idle', role: 2, name: 'Start / Stop, stopped (pad 16)' },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'transport');
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'role-2');
   },
 };
 
-/** A lit transport pad (Auto Fill on): the solid `--transport` fill with `--transport-text`. */
-export const TransportOn: Story = {
-  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', transport: true, name: 'Auto Fill, on (pad 12)' },
+/** A lit role pad (Auto Fill on): the solid `--role-2` fill with `--role-2-text`. */
+export const RoleOn: Story = {
+  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', role: 2, name: 'Auto Fill, on (pad 12)' },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'transport');
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'role-2');
   },
 };
 
-/** Sync Start armed on a transport pad: the `--warning` armed ring and `--warning-text` chip. */
-export const TransportArmed: Story = {
-  args: { label: 'Sync Start', index: '4', family: 'util', state: 'armed', transport: true, name: 'Sync Start, armed' },
+/** Sync Start armed on a role pad: the `--warning` armed ring and `--warning-text` chip. */
+export const RoleArmed: Story = {
+  args: { label: 'Sync Start', index: '4', family: 'util', state: 'armed', role: 2, name: 'Sync Start, armed' },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'transport');
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'role-2');
   },
 };
 
-/** A pad the engine lights blue (a stored Quick Rack): `--hue-1`, solid when on. */
-export const PartHue: Story = {
-  args: { label: 'QUICK 1', index: '1', family: 'r1', state: 'playing', tip: 'padpage.racks' },
+/** A pad in hue slot 1 (in Yahaha, a stored Quick Rack lit in its part's hue): `--hue-1`, solid when on. */
+export const Hue: Story = {
+  args: { label: 'QUICK 1', index: '1', family: 'util', hue: 1, state: 'playing', tip: 'padpage.racks' },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'hue-1');
   },
 };
 
-/** A part-hue pad that isn't available: a dashed edge in its hue, muted label. */
-export const PartHueDark: Story = {
-  args: { label: 'BANK -', index: '13', family: 'r3', state: 'dark', tip: 'padpage.racks' },
+/** A hue-slot pad that isn't available: a dashed edge in its hue, muted label. */
+export const HueDark: Story = {
+  args: { label: 'BANK -', index: '13', family: 'util', hue: 3, state: 'dark', tip: 'padpage.racks' },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'hue-3');
   },
 };
 
-/** New: `accentNext`, queued in `--accent` (hues.ts) instead of the pad's own colour, as the song form shows it. Now the default. */
+/** New: `accentNext`, queued in `--accent` (the contract's "next" role) instead of the pad's own colour, as the song form shows it. Now the default. */
 export const NextAccent: Story = {
   args: { label: 'Main C', index: '11', state: 'next', accentNext: true, name: 'Main C, queued after bar 4' },
   play: async ({ canvasElement }) => {
@@ -259,7 +260,7 @@ const BANK: PadProps[] = [
   { label: 'Intro I', index: '1', family: 'intro', state: 'idle' },
   { label: 'Intro II', index: '2', family: 'intro', state: 'idle' },
   { label: 'Intro III', index: '3', family: 'intro', state: 'dark' },
-  { label: 'Sync Start', index: '4', family: 'util', state: 'armed', transport: true },
+  { label: 'Sync Start', index: '4', family: 'util', state: 'armed', role: 2 },
   { label: 'Ending I', index: '5', family: 'ending', state: 'idle' },
   { label: 'Ending II', index: '6', family: 'ending', state: 'idle' },
   { label: 'Fill', index: '7', family: 'fill', state: 'idle' },
@@ -267,11 +268,11 @@ const BANK: PadProps[] = [
   { label: 'Main A', index: '9', family: 'main', state: 'idle' },
   { label: 'Main B', index: '10', family: 'main', state: 'playing' },
   { label: 'Main C', index: '11', family: 'main', state: 'next', tagCorner: true },
-  { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', transport: true },
-  { label: 'QUICK 1', index: '13', family: 'r1', state: 'playing' },
-  { label: 'QUICK 2', index: '14', family: 'r2', state: 'idle' },
-  { label: 'BANK -', index: '15', family: 'r3', state: 'dark' },
-  { label: 'Start / Stop', index: '16', family: 'start', state: 'running', transport: true },
+  { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', role: 2 },
+  { label: 'QUICK 1', index: '13', family: 'util', hue: 1, state: 'playing' },
+  { label: 'QUICK 2', index: '14', family: 'util', hue: 2, state: 'idle' },
+  { label: 'BANK -', index: '15', family: 'util', hue: 3, state: 'dark' },
+  { label: 'Start / Stop', index: '16', family: 'start', state: 'running', role: 2 },
 ];
 
 /** New: a whole 4 × 4 bank, every face at once, to judge hierarchy under each theme pack. */
@@ -288,15 +289,15 @@ export const Bank: Story = {
 /**
  * New: `onFace="ring"`, on but not sounding: a bank's pads, Auto Fill on. The raised face stays, its
  * edge and a ring take the pad's colour, and a lit dot sits top-left; the solid fill is left to what
- * plays. Shown beside a transport pad, a part hue and the default fill.
+ * plays. Shown beside a role pad, a hue slot and the default fill.
  */
 export const OnRing: Story = {
   args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', onFace: 'ring', name: 'Auto Fill, on (ring)' },
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
       <Pad {...args} />
-      <Pad {...args} transport name="Auto Fill, on (ring, transport)" />
-      <Pad label="QUICK 1" index="13" family="r1" state="playing" onFace="ring" name="Quick 1, on (ring)" />
+      <Pad {...args} role={2} name="Auto Fill, on (ring, role 2)" />
+      <Pad label="QUICK 1" index="13" family="util" hue={1} state="playing" onFace="ring" name="Quick 1, on (ring)" />
       <Pad label="Main B" index="10" state="playing" name="Main B, playing (fill)" />
     </div>
   ),

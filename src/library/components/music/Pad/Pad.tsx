@@ -1,21 +1,27 @@
+import type { HueSlot, RoleSlot } from '../../core/hue';
 import { usePad, type TipAction } from './usePad';
 import './Pad.css';
 
 export type { TipAction };
 
-/** Section families, utilities, Start / Stop, and the four part hues the engine can light. */
-export type PadFamily = 'intro' | 'main' | 'ending' | 'brk' | 'fill' | 'util' | 'start' | 'r1' | 'r2' | 'r3' | 'l';
+/** Section families, utilities and Start / Stop. A categorical colour is `hue`, not a family. */
+export type PadFamily = 'intro' | 'main' | 'ending' | 'brk' | 'fill' | 'util' | 'start';
 export type PadState = 'idle' | 'dark' | 'playing' | 'next' | 'armed' | 'running';
-/** The colour role a pad draws in: neutral (`--selected`), a part hue, `--success` or `--transport`. */
-export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'success' | 'transport';
+/** The colour role a pad draws in: neutral (`--selected`), a hue slot, `--success` or a role hue. */
+export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'success' | 'role-1' | 'role-2';
 
 export interface PadProps {
   /** The label, centred in the pad ("Main B", "Sync Start"); wraps at word boundaries, but a short last word (a numeral, a letter) stays with the word before it. */
   label: string;
-  /** The pad's number on the Launchkey ("1" … "16"). Not drawn; it only goes into the default accessible name. */
+  /** The pad's number on the controller ("1" … "16"). Not drawn; it only goes into the default accessible name. */
   index?: string;
-  /** The family: a section, `util`, `start` (Start / Stop), or a part hue (`r1`, `r2`, `r3`, `l`). */
+  /** The family: a section, `util` or `start` (Start / Stop). */
   family?: PadFamily;
+  /**
+   * A categorical hue slot (`--hue-1` … `--hue-4`): the pad draws in it whatever its family. An
+   * app maps its meaning (e.g. Yahaha's parts). Default: none, the family's neutral or role tone.
+   */
+  hue?: HueSlot;
   /** The face. `dark` means the pad is absent from this style or unavailable. */
   state?: PadState;
   /** The flash phase of `next` and `armed`: false drops the fill and thins the ring. */
@@ -30,9 +36,13 @@ export interface PadProps {
   onPress?: () => void;
   /** Hang NEXT / ARMED on the top edge at the right, mostly outside the pad, instead of in a row above the label (the label stays centred). */
   tagCorner?: boolean;
-  /** A transport pad (Start / Stop, Sync Start, Sync Stop, Tap, Auto Fill): `util` and `start` draw in `--transport`; Start / Stop running stays `--success`. */
-  transport?: boolean;
-  /** Ring NEXT in `--accent` (what `hues.ts` says "next" is) instead of the pad's own colour. Default true: next is `--accent` everywhere; `false` is kept only for compatibility. */
+  /**
+   * A role hue slot for a `util` or `start` pad: it draws in `--role-n` / `--role-n-text` while
+   * active (an app maps its meaning, e.g. Yahaha's transport keys take role 2); Start / Stop
+   * running stays `--success`. Default: none, neutral.
+   */
+  role?: RoleSlot;
+  /** Ring NEXT in `--accent` (the contract's "next" role) instead of the pad's own colour. Default true: next is `--accent` everywhere; `false` is kept only for compatibility. */
   accentNext?: boolean;
   /** Unavailable: `aria-disabled="true"`, still focusable, and a press does nothing. Default false. */
   disabled?: boolean;
@@ -49,8 +59,6 @@ export interface PadProps {
 /** How an on pad shows it: see `PadProps.onFace`. */
 export type PadOnFace = 'fill' | 'ring';
 
-const PART_TONE: Partial<Record<PadFamily, PadTone>> = { r1: 'hue-1', r2: 'hue-2', r3: 'hue-3', l: 'hue-4' };
-
 /**
  * Ties a short last word (a numeral, a letter, a roman numeral, a sign: up to three characters) to
  * the word before it with a no-break space, so "Main B", "Intro III" or "Quick 1" never wraps the
@@ -61,19 +69,18 @@ export function tieLastWord(label: string): string {
   return label.replace(/ (\S{1,3})$/, ' $1').replace(/ ([^\w\s]) /g, ' $1 ');
 }
 
-/** Which colour role a pad wears, from its family, state and transport flag. */
-export function padTone(family: PadFamily, state: PadState, transport: boolean): PadTone {
-  const part = PART_TONE[family];
-  if (part) return part;
-  // Running is a state, not the transport's identity (hues.ts), so it wins over the role hue.
+/** Which colour role a pad wears, from its family, state, role slot and hue slot (a hue wins). */
+export function padTone(family: PadFamily, state: PadState, role?: RoleSlot, hue?: HueSlot): PadTone {
+  if (hue) return `hue-${hue}`;
+  // Running is a state, not the role's identity, so it wins over the role hue.
   if (family === 'start' && state === 'running') return 'success';
   const util = family === 'util' || family === 'start';
-  if (util && transport) return 'transport';
+  if (util && role) return `role-${role}`;
   return 'neutral';
 }
 
 /**
- * One pad of the Launchkey band, drawn as the key a player presses.
+ * One pad of a pad bank (the original: a Launchkey band), drawn as the key a player presses.
  *
  * **Job.** Say, at a glance across a 4 × 4 bank, which pad is sounding, which is queued or armed
  * for the next bar, which is not in this style, and what each one is called, and take a press by
@@ -84,14 +91,15 @@ export function padTone(family: PadFamily, state: PadState, transport: boolean):
  * (color.md 3, "state changes: structure, not circus"; anti-ai-slop.md 8, token role drift): the
  * original gave each of five section families its own hue, which the contract does not have and
  * which competed with state. Sections and utilities are now neutral: identity is the label, and the
- * only fill is "sounding" in `--selected` / `--selected-text`. Part hues (`r1` → `--hue-1`, `r2` →
- * `--hue-2`, `r3` → `--hue-3`, `l` → `--hue-4`) stay, because there the colour is the part.
- * Start / Stop running is `--success` with `--success-text` ink, transport pad or not: running is
- * a state, not the transport's identity. A transport pad (the original's "hue of time") wears the
- * contract's role hue, `--transport` / `--transport-text`, so it no longer borrows `--action`, the
- * screen's call to action, and stays clear of the part hues and the states; and it wears it only
- * while active (hues.ts): at rest its edge is the neutral `--border-strong`, so Start / Stop is the
- * one saturated key a player finds without looking. ARMED is a state that needs attention, so its
+ * only fill is "sounding" in `--selected` / `--selected-text`. A categorical hue slot (`hue`, 1–4 →
+ * `--hue-1` … `--hue-4`; an app maps its meaning, e.g. Yahaha's parts) stays, because there the
+ * colour is the thing the pad stands for. Start / Stop running is `--success` with
+ * `--success-text` ink, role or not: running is a state, not the role's identity. A `util` or
+ * `start` pad with a `role` slot (e.g. Yahaha's transport keys, the original's "hue of time",
+ * take role 2) wears the contract's role hue, `--role-n` / `--role-n-text`, so it no longer
+ * borrows `--action`, the screen's call to action, and stays clear of the hue slots and the
+ * states; and it wears it only while active: at rest its edge is the neutral `--border-strong`,
+ * so Start / Stop is the one saturated key a player finds without looking. ARMED is a state that needs attention, so its
  * ring and chip are `--warning` with `--warning-text` ink whatever the pad; NEXT rings in
  * `--accent` by default, the contract's "next" role, so queued reads the same on every pad
  * (`accentNext`, now on unless set false; before, a neutral pad's NEXT rang in `--text-1`, the same
@@ -123,7 +131,8 @@ export function padTone(family: PadFamily, state: PadState, transport: boolean):
  * **Kept.** The label centred and wrapping only at word boundaries; no pad number on the face (it
  * goes into the accessible name); NEXT / ARMED out of the label's flow;
  * the flash driven by the parent through `lit`; rings drawn without changing the pad's size; the
- * `tagCorner` and `transport` options of the golden Stage; the classes and `data-*` hooks.
+ * `tagCorner` option of the golden Stage and its transport option (now `role`); the classes and
+ * `data-*` hooks.
  */
 export function Pad({
   label,
@@ -135,15 +144,16 @@ export function Pad({
   tip,
   tipAction,
   onPress,
+  hue,
   tagCorner = false,
-  transport = false,
+  role,
   accentNext = true,
   disabled = false,
   fillCell = false,
   onFace = 'fill',
 }: PadProps) {
   const { ref, onClick } = usePad({ onPress, disabled, tip, tipAction });
-  const tone = padTone(family, state, transport);
+  const tone = padTone(family, state, role, hue);
   const tag = state === 'next' ? 'NEXT' : state === 'armed' ? 'ARMED' : '';
   const util = family === 'util' || family === 'start';
 
@@ -156,6 +166,7 @@ export function Pad({
       data-state={state}
       data-tone={tone}
       data-family={family}
+      data-hue={hue}
       data-util={util || undefined}
       data-lit={tag ? String(lit) : undefined}
       data-tag={tag ? (tagCorner ? 'corner' : 'top') : undefined}

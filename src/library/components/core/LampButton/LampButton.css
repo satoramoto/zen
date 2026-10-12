@@ -38,19 +38,19 @@
   transition: background-color 80ms ease-out, border-color 80ms ease-out, color 80ms ease-out, transform 60ms ease-out;
 }
 
-/* Identity. Part hues only for parts; running and looping read as success, record as danger;
-   the keys that move time (the metronome, Auto Fill) wear the transport role hue. The running and
-   record fills take their own ink: the state's text token. */
-.yh-lampbutton[data-hue='r1'] { --lamp-hue: var(--hue-1); --lamp-ink: var(--on-hue); }
-.yh-lampbutton[data-hue='r2'] { --lamp-hue: var(--hue-2); --lamp-ink: var(--on-hue); }
-.yh-lampbutton[data-hue='r3'] { --lamp-hue: var(--hue-3); --lamp-ink: var(--on-hue); }
-.yh-lampbutton[data-hue='l'] { --lamp-hue: var(--hue-4); --lamp-ink: var(--on-hue); }
+/* Identity. Hue slots 1–4 only for identity (an app maps its meaning); running and playback read
+   as success, record as danger; role-2 wears the second role hue. The running and record fills
+   take their own ink: the state's text token. */
+.yh-lampbutton[data-hue='1'] { --lamp-hue: var(--hue-1); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='2'] { --lamp-hue: var(--hue-2); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='3'] { --lamp-hue: var(--hue-3); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='4'] { --lamp-hue: var(--hue-4); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='ok'],
 .yh-lampbutton[data-hue='lamp'] { --lamp-hue: var(--success); --lamp-ink: var(--success-text); }
 .yh-lampbutton[data-hue='rec'] { --lamp-hue: var(--danger); --lamp-ink: var(--danger-text); }
-.yh-lampbutton[data-hue='transport'] { --lamp-hue: var(--transport); --lamp-ink: var(--transport-text); }
-/* A transport key wears its hue only while active (hues.ts): off or disabled, its LED is neutral. */
-.yh-lampbutton[data-hue='transport']:is([data-face='off'], [data-face='disabled']) { --lamp-hue: var(--text-1); }
+.yh-lampbutton[data-hue='role-2'] { --lamp-hue: var(--role-2); --lamp-ink: var(--role-2-text); }
+/* A role-2 key wears its hue only while active: off or disabled, its LED is neutral. */
+.yh-lampbutton[data-hue='role-2']:is([data-face='off'], [data-face='disabled']) { --lamp-hue: var(--text-1); }
 
 /* Sizes. A key never truncates its own name: `cell` fills its container but grows past it rather
    than clip. */
@@ -82,7 +82,7 @@
   width: var(--lamp-led);
   height: var(--lamp-led);
   border-radius: var(--radius-pill);
-  /* Unlit: the hue through a dark lens. Enough to name the part, clearly not on; a stronger share
+  /* Unlit: the hue through a dark lens. Enough to name the hue, clearly not on; a stronger share
      on light palettes, where 45% into a pale key all but vanished. */
   background: color-mix(in srgb, var(--lamp-hue) calc(45% + 20% * var(--scheme-light)), var(--surface-2));
 }

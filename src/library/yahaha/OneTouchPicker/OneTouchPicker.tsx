@@ -1,5 +1,5 @@
 import { useEffect, useState, type ButtonHTMLAttributes } from 'react';
-import type { TipAction } from '../Pad/Pad';
+import type { TipAction } from '../../components/music/Pad/Pad';
 import './OneTouchPicker.css';
 
 /** A number's button: renders `data-tip` and runs the tooltip action with its own key. */
@@ -48,7 +48,7 @@ export interface OneTouchPickerProps {
  * in one segmented strip of equal square cells, so the set reads as one choice. *Colour meaning:*
  * a solid fill on the Stage means "sounding or running" (the playing section's block), so the
  * applied number is chosen, not filled: primary ink with a 2px rule in the style's role hue
- * (`--style`) along the cell's foot, the same ink-plus-underline mark ChosenTabs uses, and the
+ * (`--style`) along the cell's foot, the same ink-plus-underline mark an underlined tab uses, and the
  * hero no longer shows two solid blocks side by side (`../hues`, `color.md`: colour has one
  * meaning). The others are quiet outlined cells that lift on hover. *State clarity:* numbers past
  * the style's count keep their cell with a dashed edge and the muted ink (`--text-3`), the Stage's

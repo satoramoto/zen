@@ -31,7 +31,7 @@ const atWidth: Decorator = (Story, context) => {
  * 1392, the 1440 × 900 board inside its padding; see `At1217` and `Narrow` for smaller Stages.
  */
 const meta = {
-  title: 'Library/Yahaha/Components/SongForm',
+  title: 'Yahaha/Components/SongForm',
   component: SongForm,
   decorators: [atWidth, withLibraryTheme],
   tags: ['autodocs'],
@@ -143,7 +143,7 @@ export const FormPart: Story = {
   parameters: { regionWidth: 1392, regionHeight: 72 },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('region', { name: 'Song form' })).toBeInTheDocument();
+    await expect(canvas.getByRole('group', { name: 'Sections' })).toBeInTheDocument();
     await expect(canvas.queryByRole('group', { name: 'Transport' })).toBeNull();
     const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
     await expect(Math.round(form.getBoundingClientRect().height)).toBe(72);
@@ -172,7 +172,7 @@ export const TransportPart: Story = {
   parameters: { regionWidth: 520 },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('region', { name: 'Transport' })).toBeInTheDocument();
+    await expect(canvas.getByRole('group', { name: 'Transport' })).toBeInTheDocument();
     await expect(canvas.queryByRole('group', { name: 'Sections' })).toBeNull();
     await expect(canvas.getByRole('button', { name: 'Auto Fill' })).toBeInTheDocument();
   },

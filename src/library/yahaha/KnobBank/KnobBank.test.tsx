@@ -144,12 +144,15 @@ describe('KnobBank knobs', () => {
     expect(tipAction).toHaveBeenCalledWith(expect.any(HTMLElement), 'knobs.knob');
   });
 
-  it('gives each page tab the knobs.page key, and the hook only to the knobs', () => {
+  it('gives each page tab the knobs.page key and runs the hook on it, once per node', () => {
     const tipAction = vi.fn();
     setup({ tipAction });
     const tabs = screen.getAllByRole('tab');
     expect(tabs).toHaveLength(knobPages.length);
-    for (const tab of tabs) expect(tab).toHaveAttribute('data-tip', 'knobs.page');
-    expect(tipAction).toHaveBeenCalledTimes(7);
+    for (const tab of tabs) {
+      expect(tab).toHaveAttribute('data-tip', 'knobs.page');
+      expect(tipAction).toHaveBeenCalledWith(tab, 'knobs.page');
+    }
+    expect(tipAction).toHaveBeenCalledTimes(7 + tabs.length);
   });
 });
