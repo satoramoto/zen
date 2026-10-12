@@ -44,7 +44,16 @@ export interface StageProps {
   /** The screen's size in px. Unset, it fills its container's width and the viewport's height. */
   width?: number;
   height?: number;
+  /**
+   * How the top of the screen is arranged. `split` (the default): the hero, and beside it the song
+   * form over the transport. `stacked`: the hero with the transport beside it, and the song form as
+   * one strip across the screen under them.
+   */
+  layout?: StageLayout;
 }
+
+/** The Stage's top arrangements: see `StageProps.layout`. */
+export type StageLayout = 'split' | 'stacked';
 
 /** The keys' width before the slot is measured (the 1440 board inside its margins). */
 const KEYS_FALLBACK = 1392;
@@ -90,7 +99,7 @@ export type StageHeroDensity = Extract<DisplayDensity, 'full' | 'compact'>;
  * set here, so its rows are observed too (a pack switch, a status message, the hero's density).
  * Nothing measures in jsdom: the screen stays at zoom 1 and the hero `full`.
  */
-function useFit() {
+function useFit(layout: StageLayout) {
   const frame = useRef<HTMLDivElement>(null);
   const screen = useRef<HTMLDivElement>(null);
   const [hero, setHero] = useState<StageHeroDensity>('full');
@@ -147,7 +156,7 @@ function useFit() {
     observer.observe(inner);
     for (const row of Array.from(inner.children)) observer.observe(row);
     return () => observer.disconnect();
-  }, [hero]);
+  }, [hero, layout]);
   return [frame, screen, hero] as const;
 }
 
@@ -194,9 +203,9 @@ function useFit() {
  * small screen, each in one layout; the status line in plain sight under the controls; the keys
  * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
  */
-export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height }: StageProps) {
+export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'split' }: StageProps) {
   const [keysSlot, keysWidth] = useSlotWidth(width === undefined ? KEYS_FALLBACK : Math.min(KEYS_FALLBACK, width - 48));
-  const [frame, screen, heroDensity] = useFit();
+  const [frame, screen, heroDensity] = useFit(layout);
   const taps = useRef<number[]>([]);
 
   const onTap = () => {
@@ -212,7 +221,7 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
 
   return (
     <div ref={frame} className="yh-stage" style={size} role="group" aria-label="Stage">
-      <div ref={screen} className="yh-stage__screen" data-hero={heroDensity}>
+      <div ref={screen} className="yh-stage__screen" data-hero={heroDensity} data-layout={layout}>
         <div className="yh-stage__bar">
           <AppBar {...appBar} tipAction={tipAction} />
         </div>
@@ -221,9 +230,14 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
             <Display {...display} parts={undefined} density={heroDensity} tipAction={tipAction} onTap={onTap} />
           </div>
           <div className="yh-stage__form">
-            <SongForm {...songForm} tipAction={tipAction} />
+            <SongForm {...songForm} part={layout === 'stacked' ? 'transport' : 'both'} tipAction={tipAction} />
           </div>
         </div>
+        {layout === 'stacked' && (
+          <div className="yh-stage__strip">
+            <SongForm {...songForm} part="form" tipAction={tipAction} />
+          </div>
+        )}
         <div className="yh-stage__band">
           <div className="yh-stage__faders">
             <FaderBank {...faders} tipAction={tipAction} />

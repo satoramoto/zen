@@ -66,6 +66,12 @@ export const FORM: readonly { part: Part; caption: string; steps: readonly Secti
 
 const BREAK: SectionDef = { id: 'break', step: 'Break', label: 'Break', tip: 'section.break' };
 
+const REGION_LABEL: Record<SongFormPart, string> = {
+  both: 'Song form and transport',
+  form: 'Song form',
+  transport: 'Transport',
+};
+
 /** Every section's full name, by id. */
 export const SECTION_LABEL: Record<SectionId, string> = Object.fromEntries(
   [...FORM.flatMap((p) => p.steps), BREAK].map((s) => [s.id, s.label]),
@@ -120,7 +126,15 @@ export interface SongFormProps {
   onFade?: () => void;
   /** Reset pressed: restart the section from its first bar (`onreset`). */
   onReset?: () => void;
+  /**
+   * Which half to draw: `both` (the default), or only the `form` or the `transport`, for a screen
+   * that places them apart (the Stage's stacked layout puts the transport beside the hero).
+   */
+  part?: SongFormPart;
 }
+
+/** Which half of the region a SongForm draws. */
+export type SongFormPart = 'both' | 'form' | 'transport';
 
 /**
  * SongForm: the Stage's song form and transport, one region for every control that moves the band
@@ -195,6 +209,7 @@ export function SongForm({
   onFillDown,
   onFade,
   onReset,
+  part = 'both',
 }: SongFormProps) {
   const missing = new Set(absent);
 
@@ -245,8 +260,9 @@ export function SongForm({
   const fadeFace = fading ? (running ? { on: true } : { waiting: true }) : {};
 
   return (
-    <section className="yh-songform" aria-label="Song form and transport">
+    <section className="yh-songform" data-part={part} aria-label={REGION_LABEL[part]}>
       <div className="yh-songform__inner">
+        {part !== 'transport' && (
         <div className="yh-songform__form" role="group" aria-label="Sections">
           <div className="yh-songform__head">
             <span className="yh-songform__title">Song form</span>
@@ -292,7 +308,9 @@ export function SongForm({
             </div>
           </div>
         </div>
+        )}
 
+        {part !== 'form' && (
         <div className="yh-songform__transport" role="group" aria-label="Transport">
           <div className="yh-songform__start">
             <Button
@@ -399,6 +417,7 @@ export function SongForm({
             />
           </div>
         </div>
+        )}
       </div>
     </section>
   );

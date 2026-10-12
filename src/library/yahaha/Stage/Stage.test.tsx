@@ -91,6 +91,16 @@ describe('Stage', () => {
     }
   });
 
+  it('stacked: the transport beside the hero, the song form a strip under them, each key once', () => {
+    const { container } = setup({ layout: 'stacked' });
+    expect(screen.queryByRole('region', { name: 'Song form and transport' })).toBeNull();
+    const top = container.querySelector('.yh-stage__top') as HTMLElement;
+    const strip = container.querySelector('.yh-stage__strip') as HTMLElement;
+    expect(within(top).getByRole('region', { name: 'Transport' })).toBeInTheDocument();
+    expect(within(strip).getByRole('region', { name: 'Song form' })).toBeInTheDocument();
+    for (const name of [/^Main B/, /^Break/, 'Auto Fill', /^Start \/ Stop/, /^Fill Up/, 'Accomp (ACMP)']) once(name);
+  });
+
   it('has the mixer, eight knobs, sixteen pads in two rows of eight', () => {
     const { container } = setup();
     expect(region('Faders').getAllByRole('slider')).toHaveLength(9);
