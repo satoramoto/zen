@@ -19,7 +19,7 @@ function StatusLine({ frame, effects, status, onTap }: { frame: link.Frame | nul
   const out = outputText(status);
   return (
     <div style={{ display: 'grid', gap: 'var(--space-4)', width: 360 }}>
-      <div className="vs-num" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', fontSize: 'var(--vs-text-label)' }}>
+      <div className="vs-num" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', fontSize: 'var(--vs-text-label)', fontVariantNumeric: 'tabular-nums' }}>
         <BeatDot frame={frame} className="story-beat" />
         <span>{bpmText(frame, effects) ?? '—'}</span>
         <span style={{ color: out.on ? 'var(--vs-playing)' : 'var(--text-3)' }}>{out.text}</span>

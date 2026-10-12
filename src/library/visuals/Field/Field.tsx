@@ -1,5 +1,6 @@
-import { useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent } from 'react';
+import { useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import { Layer } from '../../layout/Layer';
+import { Text, type TextProps } from '../../primitives/Text';
 import type { LibraryRow, Mine } from '../model/api';
 import { bandColour, bandPaths, dotOf, dotsOf, H, M, nearest, step, timesOf, tunedPath, tunedSays, W, xOf, yOf, type Direction, type Dot } from '../model/field';
 import { tileBy, tileName } from '../PresetTile/PresetTile';
@@ -45,7 +46,8 @@ const nameOf = (row: LibraryRow) => tileName(row.title, row.path);
  * hover's.
  *
  * **Changed.** The tip is a `Layer level="float"` (it floats over the field, so it takes the
- * float's glass, edge and cast instead of a raised tint and a hand-made shadow). The markings'
+ * float's glass, edge and cast instead of a raised tint and a hand-made shadow) whose element is a
+ * caption `Text`; the edges' words are `Text`s in capitals on a tight line. The markings'
  * hairline is the ink at a fifth rather than a literal white, so it follows the palette. Classes
  * are `vs-field-*`.
  *
@@ -109,9 +111,7 @@ export function Field({ library, mine, subject, playing, intensity, hue, descrip
 
   return (
     <figure className="vs-field">
-      <span className="vs-field-axis vs-field-axis-top" aria-hidden="true">
-        bright
-      </span>
+      <Axis className="vs-field-axis-top">bright</Axis>
       <div
         className="vs-field-plot"
         role="listbox"
@@ -158,7 +158,7 @@ export function Field({ library, mine, subject, playing, intensity, hue, descrip
         {tip && (
           <Layer
             level="float"
-            as="span"
+            as={TipText}
             className="vs-field-tip"
             aria-hidden="true"
             style={{ left: `${(tip.x / W) * 100}%`, top: `${(tip.y / H) * 100}%`, '--vs-field-at': tip.x / W } as CSSProperties}
@@ -177,15 +177,27 @@ export function Field({ library, mine, subject, playing, intensity, hue, descrip
       <span className="vs-field-sr" id={`${id}-says`}>
         {description}.{lit >= 0 && dots[lit].tuned ? ` ${tunedSays(dots[lit])}.` : ''} Arrow keys move among the presets; Enter shows one.
       </span>
-      <span className="vs-field-axis vs-field-axis-low" aria-hidden="true">
-        dark
-      </span>
-      <span className="vs-field-axis vs-field-axis-x" aria-hidden="true">
+      <Axis className="vs-field-axis-low">dark</Axis>
+      <Axis className="vs-field-axis-x">
         <span>slow</span>
         <span>fast</span>
-      </span>
+      </Axis>
     </figure>
   );
+}
+
+/** An edge's words, engraved: tiny capitals on a tight line (Field.css sets the size, weight and tracking). */
+function Axis({ className, children }: { className: string; children: ReactNode }) {
+  return (
+    <Text leading="tight" case="upper" className={`vs-field-axis ${className}`} aria-hidden="true">
+      {children}
+    </Text>
+  );
+}
+
+/** The tip's type: a caption, as the Layer's element (Field.css sets its weight). */
+function TipText(props: Omit<TextProps, 'role'>) {
+  return <Text {...props} as="span" role="caption" />;
 }
 
 /** "Spiral, by geiss, at 0.5× speed, playing": an option's name. */

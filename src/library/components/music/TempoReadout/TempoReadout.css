@@ -9,7 +9,6 @@
   align-items: stretch;
   gap: var(--space-3);
   font-family: var(--font-sans);
-  font-size: var(--yh-tempo-readout-size);
   color: var(--text-1);
   white-space: nowrap;
 }
@@ -31,20 +30,18 @@
 }
 
 /* The value: the pack's readout face, tabular, right-aligned in a box as wide as the widest
-   value so the unit and the keys never move as the number changes. */
+   value so the unit and the keys never move as the number changes. A numeral Text at the
+   readout's size, untracked, lining figures by feature. */
 .yh-tempo-readout__bpm {
+  --text-size: var(--yh-tempo-readout-size);
+  --text-tracking: 0;
   box-sizing: content-box;
   min-width: calc(var(--yh-tempo-readout-digits) * 1ch);
   padding-inline: var(--space-1);
   margin-inline: calc(-1 * var(--space-1));
   border-radius: var(--radius-control);
   font-family: var(--font-readout);
-  font-size: 1em;
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums lining-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
-  letter-spacing: 0;
-  line-height: 1;
   text-align: right;
   color: var(--text-1);
   cursor: ns-resize;
@@ -56,14 +53,10 @@
   background: color-mix(in srgb, var(--text-1) 6%, transparent);
 }
 
-/* The unit: a caption-sized label in the muted ink, on the number's baseline. */
+/* The unit: a caption-sized label Text at body weight, tight, in the muted ink, on the number's
+   baseline. */
 .yh-tempo-readout__unit {
   font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  line-height: 1;
   color: var(--text-3);
 }
 
@@ -96,10 +89,8 @@
   border: 0;
   background: var(--mat-key-texture), var(--mat-key-fill);
   box-shadow: var(--mat-key-shadow);
+  /* Type: a numeral Text at the heading size, proportional figures. */
   font-family: var(--font-readout);
-  font-size: var(--size-heading);
-  font-weight: var(--weight-numeral);
-  line-height: 1;
   color: var(--text-2);
   cursor: pointer;
   touch-action: manipulation;
@@ -156,24 +147,23 @@
   background: transparent;
   color: var(--text-1);
 }
+/* The steps are a numeral Text at the readout's size, so `cap` is the number's cap height. */
 .yh-tempo-readout--cells .yh-tempo-readout__steps {
   font-family: var(--font-readout);
-  font-size: var(--yh-tempo-readout-size);
+  --text-size: var(--yh-tempo-readout-size);
   align-self: auto;
   height: 1cap;
   width: calc(0.5cap);
   min-width: var(--space-5);
 }
 .yh-tempo-readout--cells .yh-tempo-readout__step {
-  font-size: max(var(--size-label), calc(var(--yh-tempo-readout-size) * 0.28));
+  --text-size: max(var(--size-label), calc(var(--yh-tempo-readout-size) * 0.28));
 }
 
-/* unitLarge: the unit at display size in the numeral's ink, a value word, not a label. */
+/* unitLarge: the unit at display size and weight (its size, weight and case props) and display
+   tracking, in the numeral's ink, a value word, not a label. */
 .yh-tempo-readout--unit-large .yh-tempo-readout__unit {
-  font-size: var(--size-display);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
-  text-transform: none;
+  --text-tracking: var(--tracking-display);
   color: var(--text-1);
 }
 

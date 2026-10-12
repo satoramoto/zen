@@ -73,11 +73,12 @@
   hyphens: auto;
 }
 /* Eight a row, pads are narrow: labels drop to caption size, with at most a little tracking and
-   a thin side inset, so a caps pack's words still fit whole. */
+   a thin side inset, so a caps pack's words still fit whole. (The Pad's face is a Text: these
+   are its knobs.) */
 .yh-padbank__pads[data-columns='8'] .yh-pad {
   padding-inline: 2px;
-  font-size: var(--size-caption);
-  letter-spacing: min(var(--tracking), 0.02em);
+  --text-size: var(--size-caption);
+  --text-tracking: min(var(--tracking), 0.02em);
 }
 
 /* Nothing assigned: the pad's full footprint in its place as a faint wash, with no edge, no label

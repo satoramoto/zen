@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { KeyboardEvent, PointerEvent } from 'react';
+import type { KeyboardEvent, PointerEvent, ReactNode } from 'react';
+import { Text, type TextProps } from '../../primitives/Text';
 import { createPortal } from 'react-dom';
 import { FILTERS_KEY, remember, remembered } from '../model/home';
 import { PackOffer } from '../PackOffer/PackOffer';
@@ -242,7 +243,10 @@ function rereadOnData(set: (d: LibraryData) => unknown): () => void {
  * (top-layer glass, the float Layer). ↓ from the search finds the grid by its `listbox` role,
  * not its class (the grid's classes are its own). The pack offer sits in a line of the library's
  * (`vs-library-offer`) rather than the library restyling PackOffer's button. Captions on the
- * filter's glass take the lighter step (`--vs-caption-raised`).
+ * filter's glass take the lighter step (`--vs-caption-raised`). Every word is a `Text`: titles
+ * in the display role, counts in the numeral role, notes and lines at caption size; a button's
+ * words are a Text inside it, and the inputs take their type from the caption Text around them
+ * (the app's `font: inherit` reset on controls outranks a Text on the control itself).
  *
  * **Kept.** Every export, prop and behaviour (following the grid, the resumed filter, the index
  * re-read, the save as a smart playlist, the dev start), every accessible name, title and string.
@@ -251,6 +255,50 @@ function rereadOnData(set: (d: LibraryData) => unknown): () => void {
  * `--vs-caption-raised` on a raised tint or the filter's glass) and `--vs-library-small` (library.css's
  * 11px counts and ✕, a hairline under the caption; the scale has no 11).
  */
+/** A note or summary line: a caption-size Text at the page's normal leading, a `p` unless told. */
+function Note({ as = 'p', className = 'vs-library-note', ...rest }: TextProps) {
+  return <Text as={as} size="caption" leading="normal" className={className} {...rest} />;
+}
+
+/** The round count of values picked, on "Filter": a bold numeral Text at the ramp's smallest size. */
+function FilterBadge({ n }: { n: number }) {
+  return (
+    <Text role="numeral" leading="normal" className="vs-library-filter-badge" aria-hidden="true">
+      {n}
+    </Text>
+  );
+}
+
+/** The empty states' parts: the glyph at the numeral size, the strong title, why, and Clear's word. */
+function EmptyGlyph({ children }: { children: string }) {
+  return (
+    <Text size="numeral" leading="tight" className="vs-library-empty-glyph" aria-hidden="true">
+      {children}
+    </Text>
+  );
+}
+function EmptyTitle({ children }: { children: ReactNode }) {
+  return (
+    <Text as="h2" weight="strong" leading="normal" className="vs-library-empty-title">
+      {children}
+    </Text>
+  );
+}
+function EmptyWhy({ children }: { children: ReactNode }) {
+  return (
+    <Text as="p" size="caption" leading="normal" className="vs-library-empty-why">
+      {children}
+    </Text>
+  );
+}
+function EmptyClearLabel({ children }: { children: ReactNode }) {
+  return (
+    <Text size="caption" leading="normal" className="vs-library-empty-clear-label">
+      {children}
+    </Text>
+  );
+}
+
 export function Library({ entries, loaded, search, onSearch, current, into, onLoad, onAdd, onPress, tileMin, home }: LibraryProps) {
   const { index, settled } = useIndex();
   const [data, setData] = useLibraryData();
@@ -533,24 +581,29 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
   );
   // On the home the search is type on the pane: a ⌕, the text, and a ✕ to clear it. In the inspector view's toolbar the ⌕
   // is a button: under 700 px the field folds to it (Library.css), and it opens the field again.
+  // The field is a caption-size Text: the input inherits its type (the app's button and input reset is `font: inherit`).
   const searchBox = home ? (
-    <div className="vs-library-search-field" data-text={search ? '' : undefined}>
+    <Text as="div" size="caption" leading="normal" className="vs-library-search-field" data-text={search ? '' : undefined}>
       {bare ? (
         <button type="button" className="vs-library-search-glyph" aria-label="search" title="Search (⌘F)" tabIndex={-1} onClick={() => searchInput.current?.focus()}>
-          <span aria-hidden="true">⌕</span>
+          <Text size="body" leading="normal" aria-hidden="true">
+            ⌕
+          </Text>
         </button>
       ) : (
-        <span className="vs-library-search-glyph" aria-hidden="true">
+        <Text size="body" leading="normal" className="vs-library-search-glyph" aria-hidden="true">
           ⌕
-        </span>
+        </Text>
       )}
       {searchInputBox}
       {search && (
         <button type="button" className="vs-library-search-clear" aria-label={say('clear search')} title={Say('clear search')} onClick={clearSearch}>
-          <span aria-hidden="true">✕</span>
+          <Text leading="normal" className="vs-library-search-x" aria-hidden="true">
+            ✕
+          </Text>
         </button>
       )}
-    </div>
+    </Text>
   ) : (
     searchInputBox
   );
@@ -558,10 +611,19 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
   const chipsShown = !empty && filters && !bare;
   const title = home && (
     <div className="vs-library-head">
-      <h1 className="vs-library-title-head">{home.title}</h1>
-      <span className="vs-library-count" title={filtered ? `${count(shown.length)} of ${count(paneTotal)} presets shown` : undefined}>
+      <Text as="h1" role="display" size="heading" className="vs-library-title-head">
+        {home.title}
+      </Text>
+      <Text
+        role="numeral"
+        size="caption"
+        weight="body"
+        leading="normal"
+        className="vs-library-count"
+        title={filtered ? `${count(shown.length)} of ${count(paneTotal)} presets shown` : undefined}
+      >
         {count(filtered ? shown.length : paneTotal)}
-      </span>
+      </Text>
       <span className="vs-library-fill" />
       {searchBox}
       <button
@@ -573,12 +635,10 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
         onClick={flipFilters}
         disabled={empty}
       >
-        {Say('facets')}
-        {pickedCount > 0 && (
-          <span className="vs-library-filter-badge" aria-hidden="true">
-            {pickedCount}
-          </span>
-        )}
+        <Text size="caption" leading="normal" className="vs-library-filter-label">
+          {Say('facets')}
+        </Text>
+        {pickedCount > 0 && <FilterBadge n={pickedCount} />}
       </button>
     </div>
   );
@@ -586,16 +646,14 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
   const noneTitle = search.trim() ? `“${search.trim()}”` : `“${picked.flatMap((g) => groups[g]!.map((v) => unstarred(valueLabel(g, v)))).join(', ')}”`;
   const emptyState = !home ? null : filtered ? (
     <div className="vs-library-empty">
-      <span className="vs-library-empty-glyph" aria-hidden="true">
-        ⌕
-      </span>
-      <h2 className="vs-library-empty-title">
+      <EmptyGlyph>⌕</EmptyGlyph>
+      <EmptyTitle>
         {say('no matches')} {noneTitle}
-      </h2>
-      <p className="vs-library-empty-why">{search.trim() ? say('no matches search why') : say('no matches filter why')}</p>
+      </EmptyTitle>
+      <EmptyWhy>{search.trim() ? say('no matches search why') : say('no matches filter why')}</EmptyWhy>
       {search.trim() ? (
         <button type="button" className="vs-library-empty-clear" onClick={clearSearch}>
-          {Say('clear search')}
+          <EmptyClearLabel>{Say('clear search')}</EmptyClearLabel>
         </button>
       ) : (
         <button
@@ -606,17 +664,15 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
             searchInput.current?.focus();
           }}
         >
-          {Say('clear filter')}
+          <EmptyClearLabel>{Say('clear filter')}</EmptyClearLabel>
         </button>
       )}
     </div>
   ) : (
     <div className="vs-library-empty">
-      <span className="vs-library-empty-glyph" aria-hidden="true">
-        ☆
-      </span>
-      <h2 className="vs-library-empty-title">{say('starred empty')}</h2>
-      <p className="vs-library-empty-why">{say('starred empty why')}</p>
+      <EmptyGlyph>☆</EmptyGlyph>
+      <EmptyTitle>{say('starred empty')}</EmptyTitle>
+      <EmptyWhy>{say('starred empty why')}</EmptyWhy>
     </div>
   );
 
@@ -641,11 +697,13 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
               setFind('');
             }}
           >
-            {home ? groupTitle(g) : GROUP_LABEL[g]}
+            <Text size="caption" leading="normal" className="vs-library-chip-label">
+              {home ? groupTitle(g) : GROUP_LABEL[g]}
+            </Text>
             {on > 0 && (
-              <span className="vs-library-chip-count" aria-hidden="true">
+              <Text leading="normal" tabular={home ? true : undefined} className="vs-library-chip-count" aria-hidden="true">
                 {on}
-              </span>
+              </Text>
             )}
           </button>
         );
@@ -657,7 +715,8 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
   );
   // On the home, a search alone that finds nothing has only the centred state: its line would say "0 presets" and offer to save nothing.
   const pickedLine = filtered && !(home && !picked.length && !shown.length) && (
-    <div className="vs-library-picked">
+    // A caption-size Text: Clear, Save and the name input inherit its type (the app's button and input reset).
+    <Text as="div" size="caption" leading="normal" className="vs-library-picked">
       {picked.flatMap((g) =>
         groups[g]!.map((v) => (
           <button
@@ -669,18 +728,20 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
             onClick={() => pickValue(g, v)}
           >
             {g === 'colour' && <span className="vs-library-swatch" aria-hidden="true" style={{ background: SWATCH[v as Colour] }} />}
-            {valueLabel(g, v)}{' '}
-            <span className="vs-library-x" aria-hidden="true">
+            <Text size="caption" leading="normal" className="vs-library-chip-label">
+              {valueLabel(g, v)}{' '}
+            </Text>
+            <Text size="caption" leading="normal" className="vs-library-x" aria-hidden="true">
               {home ? '✕' : '×'}
-            </span>
+            </Text>
           </button>
         )),
       )}
       {home && (
         <>
-          <span className="vs-library-picked-count" role="status">
+          <Text role="numeral" size="caption" weight="body" leading="normal" className="vs-library-picked-count" ariaRole="status">
             {summary}
-          </span>
+          </Text>
           <span className="vs-library-fill" />
         </>
       )}
@@ -708,7 +769,7 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
           onBlur={() => setNaming(null)}
         />
       )}
-    </div>
+    </Text>
   );
 
   // The inspector view's search and "Filter ▾", in the header's toolbar: the filter's groups, values, what is picked, Clear and Save in its popover (D4).
@@ -726,14 +787,10 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
               label={
                 <>
                   {Say('facets')}
-                  {pickedCount > 0 && (
-                    <span className="vs-library-filter-badge" aria-hidden="true">
-                      {pickedCount}
-                    </span>
-                  )}
-                  <span className="vs-library-filter-caret" aria-hidden="true">
+                  {pickedCount > 0 && <FilterBadge n={pickedCount} />}
+                  <Text leading="normal" className="vs-library-filter-caret" aria-hidden="true">
                     ▾
-                  </span>
+                  </Text>
                 </>
               }
             >
@@ -741,9 +798,9 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
                 {chips}
                 {values}
                 {pickedLine || (
-                  <p className="vs-library-picked-count vs-library-filter-none" role="status">
+                  <Text as="p" role="numeral" size="caption" weight="body" leading="normal" className="vs-library-picked-count vs-library-filter-none" ariaRole="status">
                     {count(shown.length)} preset{shown.length === 1 ? '' : 's'}
-                  </p>
+                  </Text>
                 )}
               </div>
             </Popover>
@@ -766,29 +823,27 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
       {home ? (
         <>
           {(saveNote || drop.note) && (
-            <div className="vs-library-summary" role="status" data-error={drop.note?.error ? '' : undefined}>
+            <Note as="div" ariaRole="status" className="vs-library-summary" data-error={drop.note?.error ? '' : undefined}>
               {[saveNote, drop.note?.text].filter(Boolean).join(' · ')}
-            </div>
+            </Note>
           )}
           {!empty && !starred && !bare && (
-            <div className="vs-library-offer">
+            <Text as="div" size="caption" leading="normal" className="vs-library-offer">
               <PackOffer />
-            </div>
+            </Text>
           )}
         </>
       ) : (
         (summary || saveNote) && (
-          <div className="vs-library-summary" role="status">
+          <Note as="div" ariaRole="status" className="vs-library-summary">
             {[summary, saveNote].filter(Boolean).join(' · ')}
-          </div>
+          </Note>
         )
       )}
       {!loaded && !index ? (
-        <p className="vs-library-note" role="status">
-          {home ? 'Loading presets…' : 'loading presets…'}
-        </p>
+        <Note ariaRole="status">{home ? 'Loading presets…' : 'loading presets…'}</Note>
       ) : empty ? (
-        <p className="vs-library-note vs-library-first-run">No presets yet. Drop .milk files or a folder of them here, or use Add a folder… {home ? 'in Settings (⌘,)' : 'below'}.</p>
+        <Note className="vs-library-note vs-library-first-run">No presets yet. Drop .milk files or a folder of them here, or use Add a folder… {home ? 'in Settings (⌘,)' : 'below'}.</Note>
       ) : home && !shown.length && (filtered || starred) ? (
         emptyState
       ) : (
@@ -865,8 +920,12 @@ export function Values({ group, values, selected, find, onFind, onPick, home }: 
         onClick={() => onPick(value)}
       >
         {group === 'colour' && <span className="vs-library-swatch" aria-hidden="true" style={{ background: SWATCH[value as Colour] }} />}
-        <span className="vs-library-value-name">{sub ? value.slice(value.indexOf('/') + 1) : valueLabel(group, value)}</span>
-        <span className="vs-library-value-count">{count(n)}</span>
+        <Text size="caption" leading="normal" className="vs-library-value-name">
+          {sub ? value.slice(value.indexOf('/') + 1) : valueLabel(group, value)}
+        </Text>
+        <Text size="caption" leading="normal" tabular className="vs-library-value-count">
+          {count(n)}
+        </Text>
       </button>
     );
   };
@@ -892,17 +951,18 @@ export function Values({ group, values, selected, find, onFind, onPick, home }: 
   }
   const more = levels ? allTops.length - tops.length : all.length - list.length;
   return (
-    <div className="vs-library-values" role="group" aria-label={`${groupSays(group)} values`}>
+    // A caption-size Text: the find box inherits its type (the app's input reset is `font: inherit`).
+    <Text as="div" size="caption" leading="normal" className="vs-library-values" ariaRole="group" aria-label={`${groupSays(group)} values`}>
       {values.length > FIND_FROM && (
         <input className="vs-library-values-find" type="search" aria-label={findSays(group)} placeholder={findSays(group)} value={find} onChange={(ev) => onFind(ev.target.value)} />
       )}
-      {all.length === 0 && <p className="vs-library-note">{group === 'tags' && !values.length ? 'No tags yet. Select a preset to tag it.' : 'none'}</p>}
+      {all.length === 0 && <Note>{group === 'tags' && !values.length ? 'No tags yet. Select a preset to tag it.' : 'none'}</Note>}
       {levels ? (
         <>
           <div className="vs-library-values-list">{tops.map(button)}</div>
           {[...subsOf].map(([parent, subs]) => (
             <div key={parent} className="vs-library-values-subs" role="group" aria-label={`in ${parent}`}>
-              <span className="vs-library-values-in">{`In ${parent}`}</span>
+              <Text size="caption" leading="normal" className="vs-library-values-in">{`In ${parent}`}</Text>
               {subs.map(button)}
             </div>
           ))}
@@ -916,7 +976,7 @@ export function Values({ group, values, selected, find, onFind, onPick, home }: 
           ])}
         </div>
       )}
-      {more > 0 && <p className="vs-library-note">{count(more)} more: type to find one</p>}
-    </div>
+      {more > 0 && <Note>{count(more)} more: type to find one</Note>}
+    </Text>
   );
 }

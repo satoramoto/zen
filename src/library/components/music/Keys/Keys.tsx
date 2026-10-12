@@ -12,6 +12,7 @@ import {
   type KeyPart,
   type KeyRange,
 } from './keyLayout';
+import { Text } from '../../../primitives/Text';
 import './Keys.css';
 
 /** The app's tooltip hook, applied to the split handle (the original's `use:tip` action). */
@@ -330,25 +331,47 @@ export function Keys({
             data-on={zone.lit ? 'true' : 'false'}
             style={{ left: px(zone.from), width: px(Math.max(0, zone.to - zone.from)) }}
           >
-            <span className="yh-keys__part" data-part="zone-name">{zone.name}</span>
+            <Text role="body" size="label" case="label" className="yh-keys__part" data-part="zone-name">
+              {zone.name}
+            </Text>
             {armed && zone.side !== 'left' ? (
-              <span className="yh-keys__hint" data-part="hint">Press a key to set the split · Esc cancels</span>
+              <Text role="body" size="label" className="yh-keys__hint" data-part="hint">
+                Press a key to set the split · Esc cancels
+              </Text>
             ) : (
-              zone.held.length > 0 && <span className="yh-keys__held" data-part="held">{zone.held.join(' ')}</span>
+              zone.held.length > 0 && (
+                <Text role="body" weight="strong" tabular className="yh-keys__held" data-part="held">
+                  {zone.held.join(' ')}
+                </Text>
+              )
             )}
           </div>
         ))}
         {!interactive && topX !== null && (
-          <span className="yh-keys__marker" data-part="marker" style={{ left: px(topX) }}>
+          <Text
+            role="body"
+            size="label"
+            weight="strong"
+            tabular
+            className="yh-keys__marker"
+            data-part="marker"
+            style={{ left: px(topX) }}
+          >
             {splitName}
-          </span>
+          </Text>
         )}
       </div>
 
       <div className="yh-keys__body" data-part="body">
         <div className="yh-keys__strip" data-part="strip" role="img" aria-label={label} ref={strip}>
           {keys.whites.map((key) => (
-            <div
+            <Text
+              as="div"
+              role="body"
+              size="caption"
+              leading="tight"
+              weight={key.held ? 'strong' : undefined}
+              tabular
               key={key.note}
               className="yh-keys__white"
               data-part="white"
@@ -358,7 +381,7 @@ export function Keys({
               style={{ left: px(key.x), width: px(keys.whiteWidth) }}
             >
               {key.label}
-            </div>
+            </Text>
           ))}
           {keys.blacks.map((key) => (
             <div
@@ -420,10 +443,10 @@ export function Keys({
           onPointerUp={handleUp}
           onPointerCancel={handleCancel}
         >
-          <span className="yh-keys__flag" data-part="flag">
+          <Text role="body" size="label" weight="strong" leading="tight" tabular className="yh-keys__flag" data-part="flag">
             <span className="yh-keys__grip" data-part="grip" aria-hidden="true" />
             {splitName}
-          </span>
+          </Text>
         </span>
       )}
     </div>

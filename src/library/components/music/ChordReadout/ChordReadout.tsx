@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import type { TipAction } from '../Pad/Pad';
+import { Surface } from '../../../primitives/Surface';
+import { Text } from '../../../primitives/Text';
 import './ChordReadout.css';
 
 export interface ChordNote {
@@ -145,16 +147,19 @@ export function ChordReadout({
   const style = size === undefined ? undefined : ({ '--yh-chord-readout-hero': size } as CSSProperties);
 
   return (
-    <div
+    <Surface
+      material="screen"
       className={classes.join(' ')}
       data-part="window"
-      data-material="screen"
       role="img"
       aria-label={spoken}
       data-held={held ? 'true' : 'false'}
       style={style}
     >
-      <div
+      <Text
+        as="div"
+        role="display"
+        leading="snug"
         ref={hero}
         className={`yh-chord-readout__chord${none ? ' yh-chord-readout__chord--none' : ''}`}
         data-part="chord"
@@ -162,27 +167,39 @@ export function ChordReadout({
         aria-hidden="true"
       >
         {none ? '—' : chord}
-        {raised && <span className="yh-chord-readout__ext" data-part="extension">{raised}</span>}
-        {bass && <span className="yh-chord-readout__bass" data-part="bass">{bass}</span>}
-      </div>
+        {raised && (
+          <Text role="display" leading="tight" className="yh-chord-readout__ext" data-part="extension">
+            {raised}
+          </Text>
+        )}
+        {bass && (
+          <Text role="display" leading="snug" className="yh-chord-readout__bass" data-part="bass">
+            {bass}
+          </Text>
+        )}
+      </Text>
       {/* Drawn only: the readout's spoken name already says it whole. */}
-      <p className="yh-chord-readout__line" data-part="line" aria-hidden="true">
+      <Text as="p" role="body" size="label" className="yh-chord-readout__line" data-part="line" aria-hidden="true">
         {notes.length > 0 && (
-          <span className="yh-chord-readout__tones" data-part="tones">
+          <Text role="body" size="inherit" weight="numeral" className="yh-chord-readout__tones" data-part="tones">
             {notes.map((n, i) => (
               <span key={i} className="yh-chord-readout__tone" data-part="tone">
                 {n.note}
               </span>
             ))}
-          </span>
+          </Text>
         )}
         {fingering && (
           <span ref={fingeringRef} className="yh-chord-readout__fingering" data-part="fingering" data-tip={tip} data-tip-text={tip ? fingering : undefined}>
             {fingering}
           </span>
         )}
-        {held && <span className="yh-chord-readout__held" data-part="held">held</span>}
-      </p>
-    </div>
+        {held && (
+          <Text role="body" size="caption" case="label" className="yh-chord-readout__held" data-part="held">
+            held
+          </Text>
+        )}
+      </Text>
+    </Surface>
   );
 }

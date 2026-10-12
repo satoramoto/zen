@@ -1,7 +1,8 @@
-import { useEffect, useRef, type ReactElement } from 'react';
+import { useEffect, useRef, type ReactElement, type ReactNode } from 'react';
 import { Layer, Opaque } from '../../layout/Layer';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import { isTopTrap, useFocusTrap } from '../../components/core/Modal/focusTrap';
+import { Text } from '../../primitives/Text';
 import { Icon } from '../Icon/Icon';
 import { Say, say } from '../model/words';
 import './HelpOverlay.css';
@@ -236,6 +237,15 @@ export function HelpOverlay({
   return open ? <HelpDialog onClose={onClose} list={list ?? liveHelp(stage)} /> : null;
 }
 
+/** A key as a small keycap: strong tabular readout figures at the smallest size (its face in HelpOverlay.css). */
+function Kbd({ children }: { children: ReactNode }) {
+  return (
+    <Text as="kbd" weight="strong" tabular>
+      {children}
+    </Text>
+  );
+}
+
 /** The overlay while it is open: mounted only then, so the focus trap takes focus on open and gives it back on close. */
 function HelpDialog({ onClose, list }: { onClose(): void; list: HelpList }) {
   const panel = useRef<HTMLDivElement>(null);
@@ -261,12 +271,14 @@ function HelpDialog({ onClose, list }: { onClose(): void; list: HelpList }) {
         }}
       >
         <div className="vs-help-dialog" ref={panel} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={list.id}>
-          <Layer level="top" className="vs-help-panel">
+          <Layer level="top" as={Text} className="vs-help-panel">
             <div className="vs-help-head">
-              <h2 id={list.id}>{list.title}</h2>
-              <span className="vs-help-hint" aria-hidden="true">
-                <kbd>?</kbd> or <kbd>Esc</kbd> closes
-              </span>
+              <Text as="h2" role="display" leading="normal" id={list.id}>
+                {list.title}
+              </Text>
+              <Text role="caption" leading="normal" className="vs-help-hint" aria-hidden="true">
+                <Kbd>?</Kbd> or <Kbd>Esc</Kbd> closes
+              </Text>
               <ButtonFace tone="quiet" size="medium" className="vs-help-close" aria-label={`Close ${list.title.toLowerCase()}`} title="Close (Esc or ?)" onClick={onClose}>
                 <Icon name="close" />
               </ButtonFace>
@@ -274,13 +286,19 @@ function HelpDialog({ onClose, list }: { onClose(): void; list: HelpList }) {
             <div className="vs-help-groups">
               {list.groups.map((g) => (
                 <section className="vs-help-group" key={g.heading}>
-                  <h3>{g.heading}</h3>
+                  <Text as="h3" weight="strong" leading="normal">
+                    {g.heading}
+                  </Text>
                   <dl>
                     {g.rows.map((c) => (
                       <div className="vs-help-row" key={c.name}>
-                        <dt>{c.name}</dt>
-                        <dd className="vs-help-keys">{c.keys ? <kbd>{c.keys}</kbd> : null}</dd>
-                        <dd className="vs-help-does">{c.does}</dd>
+                        <Text as="dt" weight="strong" leading="normal">
+                          {c.name}
+                        </Text>
+                        <dd className="vs-help-keys">{c.keys ? <Kbd>{c.keys}</Kbd> : null}</dd>
+                        <Text as="dd" role="caption" className="vs-help-does">
+                          {c.does}
+                        </Text>
                       </div>
                     ))}
                   </dl>

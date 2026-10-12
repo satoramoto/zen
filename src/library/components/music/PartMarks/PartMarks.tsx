@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { TipAction } from '../Pad/Pad';
+import { Text } from '../../../primitives/Text';
 import { visibleMarks, type Mark } from './marks';
 import './PartMarks.css';
 
@@ -78,7 +79,17 @@ export function PartMarks({
   }, [node, tip, tipAction]);
   if (marks.length === 0) return null;
   return (
-    <span ref={setNode} className="yh-partmarks" data-part="root" data-size={size} data-tip={tip} aria-hidden="true">
+    <Text
+      ref={setNode}
+      size="caption"
+      weight="strong"
+      leading="tight"
+      className="yh-partmarks"
+      data-part="root"
+      data-size={size}
+      data-tip={tip}
+      aria-hidden="true"
+    >
       {marks.map((mark) => {
         if (mark === 'edited') return <span key={mark} className="yh-partmarks__dot" data-part="dot" data-mark={mark} data-tone={TONE[mark]} />;
         if (mark === 'missing')
@@ -96,11 +107,20 @@ export function PartMarks({
             </svg>
           );
         return (
-          <span key={mark} className="yh-partmarks__word" data-part="word" data-mark={mark} data-tone={TONE[mark]}>
+          <Text
+            key={mark}
+            size="inherit"
+            leading="tight"
+            case="label"
+            className="yh-partmarks__word"
+            data-part="word"
+            data-mark={mark}
+            data-tone={TONE[mark]}
+          >
             {mark}
-          </span>
+          </Text>
         );
       })}
-    </span>
+    </Text>
   );
 }

@@ -22,7 +22,6 @@
   min-width: 0;
   color: var(--text-1);
   font-family: var(--font-sans);
-  font-size: var(--size-body);
 }
 
 /* Selected: a ring just outside the edge, the same width as the focus and press rings. */

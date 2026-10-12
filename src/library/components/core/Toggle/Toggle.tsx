@@ -1,6 +1,8 @@
 import type { CSSProperties, KeyboardEvent, ReactNode } from 'react';
 import { CONTROL_SIZES, useToggle, type ControlSize } from './useToggle';
 import { focusRing } from '../../../primitives/Ring';
+import { Surface } from '../../../primitives/Surface';
+import { Text } from '../../../primitives/Text';
 import './size.css';
 import './Toggle.css';
 
@@ -89,11 +91,15 @@ export function Toggle({
       style={style}
     >
       {name && (
-        <span className="lib-toggle__caption" data-part="caption">
+        <Text role="body" size={inside ? 'label' : 'caption'} case="label" className="lib-toggle__caption" data-part="caption">
           {name}
-        </span>
+        </Text>
       )}
-      <button
+      <Text
+        as="button"
+        role="label"
+        leading="tight"
+        tabular
         type="button"
         className={`lib-toggle__key ${focusRing}`}
         data-part="key"
@@ -110,11 +116,11 @@ export function Toggle({
         onClick={momentary ? undefined : () => press(!on)}
       >
         {inside ? null : children}
-      </button>
+      </Text>
       {inside && children !== undefined && (
-        <span className="lib-toggle__readout" data-part="readout">
+        <Text role="body" size="label" weight="strong" tabular className="lib-toggle__readout" data-part="readout">
           {children}
-        </span>
+        </Text>
       )}
     </div>
   );
@@ -176,12 +182,14 @@ export function Switch({
       title={labelled ? undefined : title}
       onClick={() => set(!on)}
     >
-      <span className="lib-switch__thumb" data-part="thumb" aria-hidden="true" />
+      <Surface as="span" material="handle" radius="pill" className="lib-switch__thumb" data-part="thumb" aria-hidden="true" />
     </button>
   );
   if (!labelled) return control;
   return (
-    <label
+    <Text
+      as="label"
+      role="body"
       className={`lib-switch-row${className ? ` ${className}` : ''}`}
       data-part="row"
       data-size={size}
@@ -192,7 +200,7 @@ export function Switch({
         {children}
       </span>
       {control}
-    </label>
+    </Text>
   );
 }
 

@@ -1,3 +1,4 @@
+import { Text } from '../../../primitives/Text';
 import './SendReadout.css';
 
 export interface SendReadoutProps {
@@ -52,8 +53,12 @@ export function SendReadout({ reverb, chorus, delay, label = 'Band', name, tip, 
     <button type="button" className="yh-send-readout" aria-label={spoken} data-tip={tip} onClick={() => onPress?.()}>
       {sends.map(([word, level]) => (
         <span key={word} className="yh-send-readout-send" data-off={level === 0 ? '' : undefined}>
-          <span className="yh-send-readout-name">{word}</span>
-          <span className="yh-send-readout-level">{level}</span>
+          <Text size="label" case="label" className="yh-send-readout-name">
+            {word}
+          </Text>
+          <Text role="numeral" size="label" className="yh-send-readout-level">
+            {level}
+          </Text>
         </span>
       ))}
     </button>

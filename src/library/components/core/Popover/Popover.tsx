@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { Layer } from '../../../layout/Layer';
+import { Text } from '../../../primitives/Text';
 import './Popover.css';
 
 /** How an open panel was asked to go away. Only `escape` has somewhere obvious to put focus back. */
@@ -142,7 +143,8 @@ export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'an
  * dismissal rather than `popover="auto"`'s light dismiss, which would close on the pointerdown
  * heading for the trigger and let the click behind it reopen the panel.
  *
- * **Parts.** `popover`: the positioned box in the top layer, carrying `--lib-popover-anchor`
+ * **Parts.** `popover`: the positioned box in the top layer, a body `Text` (its content inherits
+ * that type), carrying `--lib-popover-anchor`
  * (the anchor's width), `--lib-popover-room` (the height left) and `data-above` when flipped.
  * `panel`: the float `Layer` inside it, with the caller's `role`, `label`, `id` and `className`;
  * it scrolls when its content is taller than the room.
@@ -150,7 +152,7 @@ export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'an
 export function Popover({ anchor, onDismiss, within, role, label, id, className, children }: PopoverProps) {
   const box = usePopover({ anchor, onDismiss, within });
   return (
-    <div ref={box} className="lib-popover" popover="manual" data-part="popover">
+    <Text as="div" role="body" ref={box} className="lib-popover" popover="manual" data-part="popover">
       <Layer
         level="float"
         className={`lib-popover__panel${className ? ` ${className}` : ''}`}
@@ -161,7 +163,7 @@ export function Popover({ anchor, onDismiss, within, role, label, id, className,
       >
         {children}
       </Layer>
-    </div>
+    </Text>
   );
 }
 

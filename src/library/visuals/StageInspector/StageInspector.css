@@ -13,10 +13,6 @@
   overflow-x: hidden;
 }
 
-.vs-stage-inspector-problem > b {
-  font-weight: var(--weight-strong);
-}
-
 /* A code box: its name over the well. */
 .vs-stage-inspector-code {
   min-width: 0;
@@ -40,9 +36,7 @@
   border-radius: inherit;
   background: transparent;
   color: var(--text-1);
-  font-family: var(--font-mono);
-  font-size: var(--size-body);
-  line-height: 1.45;
+  --text-leading: 1.45;
   resize: vertical;
   white-space: pre;
   overflow: auto;
@@ -70,11 +64,6 @@
 .vs-stage-inspector-row[data-baked] > .vs-stage-inspector-name {
   text-decoration: line-through;
 }
-/* The file's own names are code, a step smaller as the original's label size. */
-.vs-stage-inspector-key {
-  font-size: var(--size-label);
-}
-
 /* The settings' widths, so a column of them lines up (two classes: over the control's own default). */
 .vs-stage-setting.vs-stage-setting-number {
   --lib-number-field-width: var(--vs-stage-inspector-number);

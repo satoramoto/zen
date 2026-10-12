@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Step } from '../primitives/step';
+import { Text } from '../primitives/Text';
 import { Stack, type StackAlign } from './Stack';
 import './Group.css';
 
@@ -45,7 +46,11 @@ export function Group({ name, label, aside, direction = 'row', wrap = false, gap
     >
       {(shown || aside) && (
         <div className="lib-group__head" data-part="head">
-          {shown && <span className="lib-group__label">{shown}</span>}
+          {shown && (
+            <Text size="caption" weight="strong" case="label" className="lib-group__label">
+              {shown}
+            </Text>
+          )}
           {aside && <span className="lib-group__aside">{aside}</span>}
         </div>
       )}

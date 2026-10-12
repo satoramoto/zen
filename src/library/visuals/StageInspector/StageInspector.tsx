@@ -1,3 +1,4 @@
+import type { ChangeEvent } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { NumberField } from '../../components/core/NumberField/NumberField';
 import { Stack } from '../../layout/Stack';
@@ -78,10 +79,10 @@ export function StageInspector({ preset, selected, problems, onChange, onSet }: 
       </Stack>
       {issues.map((p, i) => (
         <Text key={i} as="p" role="caption" tone="danger" className="vs-stage-inspector-problem">
-          <b>
+          <Text as="b" size="inherit" weight="strong">
             {p.stage}
             {p.line ? `:${p.line}` : ''}
-          </b>{' '}
+          </Text>{' '}
           {p.message}
         </Text>
       ))}
@@ -105,12 +106,14 @@ export function StageInspector({ preset, selected, problems, onChange, onSet }: 
                 </Text>
               </Text>
               <Surface material="well" radius="input" className="vs-stage-inspector-well">
-                <textarea
+                <Text
+                  as="textarea"
+                  role="code"
                   className={`vs-stage-inspector-text ${focusRing}`}
                   spellCheck={false}
                   value={text}
                   rows={rowsFor(text)}
-                  onChange={(e) => onChange(setField(preset, c.field, e.target.value))}
+                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onChange(setField(preset, c.field, e.target.value))}
                 />
               </Surface>
             </Stack>
@@ -155,7 +158,7 @@ export function StageInspector({ preset, selected, problems, onChange, onSet }: 
             <div className="vs-stage-inspector-values">
               {other.map(([key, v]) => (
                 <label key={key} title={key} className="vs-stage-inspector-row">
-                  <Text role="code" truncate className="vs-stage-inspector-name vs-stage-inspector-key">
+                  <Text role="code" size="label" truncate className="vs-stage-inspector-name vs-stage-inspector-key">
                     {key}
                   </Text>
                   <NumberField

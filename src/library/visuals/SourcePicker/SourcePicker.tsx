@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Popover } from '../Popover/Popover';
 import { Meter } from '../../components/music/Meter/Meter';
 import { Select } from '../../components/core/Select/Select';
+import { Text } from '../../primitives/Text';
 import * as api from '../model/api';
 import { audioStatus, chooseAudioLane, type AudioLane, type AudioLaneStatus, type AudioStatus } from '../model/audio-api';
 import { meterLevel } from '../model/shell';
@@ -256,9 +257,9 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
   };
   const mic = (
     <span className="vs-audio-lane" role="group" aria-label="Microphone">
-      <span className="vs-audio-lane-name">
+      <Text size="caption" className="vs-audio-lane-name">
         Microphone <span className="vs-audio-optional">optional</span>
-      </span>
+      </Text>
       {picker('mic')}
       {channelControls('mic')}
       {notices('mic')}
@@ -269,15 +270,15 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
       {where === 'shown' ? (
         <>
           <span className="vs-audio-lane" role="group" aria-label="Main source">
-            <span className="vs-audio-lane-name">Main source</span>
+            <Text size="caption" className="vs-audio-lane-name">Main source</Text>
             {picker('main')}
             {channelControls('main')}
             {notices('main')}
           </span>
           {mic}
-          <span className="vs-audio-mix-levels">
+          <Text size="caption" className="vs-audio-mix-levels">
             Combined level <Levels />
-          </span>
+          </Text>
         </>
       ) : (
         <>
@@ -285,7 +286,7 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
           {notices('main')}
           <Popover name="Audio mixer: main and microphone inputs" label={status.mic.enabled ? 'Mixer + mic' : 'Mixer'}>
             <span className="vs-audio-lane">
-              <span className="vs-audio-lane-name">Main channels</span>
+              <Text size="caption" className="vs-audio-lane-name">Main channels</Text>
               {channelControls('main')}
             </span>
             {mic}

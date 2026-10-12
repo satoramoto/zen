@@ -47,7 +47,9 @@
   padding: calc(var(--space-1) * 1.5);
   box-sizing: border-box;
   color: var(--text-3);
-  font-size: var(--vs-text-annot);
+  /* A caption Text at the annotation size. */
+  --text-size: var(--vs-text-annot);
+  line-height: inherit;
   text-align: center;
   overflow: hidden;
 }
@@ -92,17 +94,17 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+/* Caption Texts: the name at the label size (the caption's) and 500, the author at the annotation size. */
 .vs-tile-name {
-  font-size: var(--vs-text-label);
-  font-weight: 500;
+  --text-weight: 500;
   /* 16px: the 12px label and a step. */
-  line-height: calc(var(--vs-text-label) + var(--space-1));
+  --text-leading: calc(var(--vs-text-label) + var(--space-1));
 }
 .vs-tile-by {
   color: var(--vs-tile-ink-2);
-  font-size: var(--vs-text-annot);
+  --text-size: var(--vs-text-annot);
   /* 14px: the 10px annotation and a step. */
-  line-height: calc(var(--vs-text-annot) + var(--space-1));
+  --text-leading: calc(var(--vs-text-annot) + var(--space-1));
 }
 /* A chip at the bottom right (failed !, the strip's "next") keeps the name and author clear of it:
    28px (24 + 4) for the failed mark, 54px (4.5 of the 12px step) for "next". */
@@ -136,7 +138,7 @@
 
 /* Playing: green level bars before the name, which goes bold. */
 .vs-tile[data-playing] .vs-tile-name {
-  font-weight: var(--weight-display);
+  --text-weight: var(--weight-display);
 }
 .vs-tile-live {
   display: inline-flex;
@@ -171,7 +173,9 @@
   top: calc(var(--space-1) * 1.5);
   left: var(--space-2);
   color: var(--key-white);
-  font-size: var(--vs-text-annot);
+  /* A caption Text at the annotation size. */
+  --text-size: var(--vs-text-annot);
+  line-height: inherit;
   text-shadow: 0 1px 2px color-mix(in oklab, var(--key-black) 80%, transparent);
   pointer-events: none;
 }
@@ -186,9 +190,9 @@
   border-radius: var(--radius-pill);
   background: var(--warning);
   color: var(--warning-text);
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
-  line-height: calc(var(--space-2) + var(--space-1) * 1.5);
+  /* A strong Text (LibraryGrid renders it). */
+  --text-size: var(--vs-text-annot);
+  --text-leading: calc(var(--space-2) + var(--space-1) * 1.5);
   text-align: center;
   pointer-events: none;
 }
@@ -216,9 +220,8 @@
   border-radius: var(--radius-pill);
   color: var(--key-white);
   background: var(--vs-tile-chip);
-  font-size: var(--vs-text-label);
-  font-weight: var(--weight-strong);
-  line-height: 1;
+  /* A strong, tight Text (LibraryGrid renders it). */
+  --text-size: var(--vs-text-label);
   pointer-events: none;
 }
 
@@ -239,8 +242,8 @@
   color: var(--key-white);
   background: color-mix(in oklab, var(--key-black) 55%, transparent);
   font-family: var(--font-sans);
-  font-size: calc(var(--size-caption) + 2px);
-  line-height: 1;
+  /* A tight Text button (LibraryGrid renders it). */
+  --text-size: calc(var(--size-caption) + 2px);
   cursor: pointer;
 }
 .vs-tile-add:hover {
@@ -250,20 +253,8 @@
   display: grid;
 }
 
-/* A playlist's strip (Home), on the tile's own data attributes. "next": a quiet chip, bottom right. */
-.vs-tile-next {
-  position: absolute;
-  bottom: var(--space-2);
-  right: var(--space-2);
-  padding: 1px var(--space-2);
-  border-radius: var(--radius-pill);
-  color: var(--key-white);
-  background: color-mix(in oklab, var(--key-black) 55%, transparent);
-  font-size: var(--vs-text-annot);
-  font-weight: normal;
-  pointer-events: none;
-}
-/* ✕ takes it out: tools top right, on hover or focus. */
+/* A playlist's strip (Home), on the tile's own data attributes ("next" is Home's own chip,
+   .vs-home-tile-next). ✕ takes it out: tools top right, on hover or focus. */
 .vs-tile-tools {
   position: absolute;
   top: var(--space-2);
@@ -311,7 +302,6 @@
   max-width: calc(var(--control-h) * 8);
   padding: var(--space-1) calc(var(--space-1) * 2.5) var(--space-1) var(--space-1);
   color: var(--text-1);
-  font-size: var(--vs-text-label);
   border-radius: var(--radius-control);
   pointer-events: none;
   opacity: 0.7;
@@ -327,8 +317,10 @@
   --vs-tile-ghost-radius: calc(var(--radius-control) / 2);
   border-radius: var(--vs-tile-ghost-radius);
 }
-.vs-tile-ghost span {
+/* Its name: a caption Text (the label size). */
+.vs-tile-ghost-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: inherit;
 }

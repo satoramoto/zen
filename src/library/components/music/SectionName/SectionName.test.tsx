@@ -19,10 +19,13 @@ describe('SectionName', () => {
 
   it('sets the variation apart, in the same face as the word', () => {
     const { container } = render(<SectionName label="Intro II" hue="intro" />);
-    expect(container.querySelector('.yh-section-name__variant')).toHaveTextContent('II');
-    const variant = /\.yh-section-name__variant \{([^}]*)\}/.exec(css)![1];
-    expect(variant).not.toMatch(/font-family/);
-    expect(variant).toMatch(/tabular-nums/);
+    const variant = container.querySelector('.yh-section-name__variant');
+    expect(variant).toHaveTextContent('II');
+    // The same display face as the word (no face of its own), with tabular figures.
+    expect(nameOf(container)).toHaveAttribute('data-role', 'display');
+    expect(variant).toHaveAttribute('data-role', 'display');
+    expect(variant).toHaveAttribute('data-tabular', '');
+    expect(css).not.toMatch(/\.yh-section-name__variant\s*\{[^}]*font-family/);
   });
 
   it('marks the stopped band idle; idle wins over state', () => {

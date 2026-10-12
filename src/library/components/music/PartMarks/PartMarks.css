@@ -4,11 +4,7 @@
   flex: none;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  line-height: 1;
+  /* Type: the root is a Text, body face at the caption size, strong, tight leading. */
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -48,11 +44,8 @@
   color: var(--danger);
 }
 
-/* Words at body weight: never heavier than the sound name they follow. */
-.yh-partmarks__word {
-  font-weight: var(--weight-body);
-  text-transform: var(--label-case);
-}
+/* Words are Texts at body weight (never heavier than the sound name they follow), the marks' size,
+   in the label case. */
 .yh-partmarks__word[data-tone='muted'] {
   color: var(--text-2);
 }

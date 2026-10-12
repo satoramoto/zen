@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import type { Entry } from '../model/api';
 import { openUrl } from '../model/ipc';
+import { Text } from '../../primitives/Text';
 import { credits, PACK_PAGE, TAKEDOWN } from '../model/pack';
 import './Credits.css';
 
@@ -11,8 +12,8 @@ const count = (n: number) => n.toLocaleString('en-US');
  * **Job.** Where the presets come from, the terms they come under, and everyone the library's
  * file names credit, shown in place of the preset list (the library, or ⚙ Settings' Presets).
  *
- * **Changed.** Type on space alone, no rules (near borderless); the counts are tabular figures
- * in the readout face; "← Presets" is a quiet core `ActionButton`. Links open through the model's
+ * **Changed.** Type on space alone, no rules (near borderless): the title a display `Text`, the
+ * body a body `Text` on a 1.5 line; the counts are tabular figures in the readout face; "← Presets" is a quiet core `ActionButton`. Links open through the model's
  * bridge (`model/ipc` `openUrl`), as Tauri's opener plugin did.
  *
  * **Kept.** The copy, the links and their tooltips, the authors' list (`aria-label="authors"`)
@@ -23,12 +24,14 @@ export function Credits({ entries, onBack }: { entries: Entry[]; onBack(): void 
   return (
     <div className="vs-credits">
       <div className="vs-credits-head">
-        <h2>Credits</h2>
+        <Text as="h2" role="display" className="vs-credits-title">
+          Credits
+        </Text>
         <ActionButton tone="quiet" onPress={onBack} title="Back to the presets">
           ← Presets
         </ActionButton>
       </div>
-      <div className="vs-credits-body">
+      <Text as="div" className="vs-credits-body">
         <p>
           The presets come from projectM's{' '}
           <a
@@ -57,23 +60,25 @@ export function Credits({ entries, onBack }: { entries: Entry[]; onBack(): void 
           </a>
           .
         </p>
-        <h3>
+        <Text as="h3" weight="strong" className="vs-credits-authors">
           {authors.length ? `${count(authors.length)} authors` : 'Authors'}
-          <span className="vs-credits-sub"> in this library, by presets</span>
-        </h3>
+          <Text className="vs-credits-sub"> in this library, by presets</Text>
+        </Text>
         {authors.length ? (
           <ul className="vs-credits-list" aria-label="authors">
             {authors.map((c) => (
               <li key={c.author}>
                 <span className="vs-credits-name">{c.author}</span>
-                <span className="vs-credits-count">{count(c.count)}</span>
+                <Text tabular className="vs-credits-count">
+                  {count(c.count)}
+                </Text>
               </li>
             ))}
           </ul>
         ) : (
           <p className="vs-credits-none">No authors named in the presets' file names yet.</p>
         )}
-      </div>
+      </Text>
     </div>
   );
 }

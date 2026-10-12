@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type * as React from 'react';
 import type { BarKind } from './bar';
 import { fillBox, formatValue, fraction, step } from './bar';
+import { Text } from '../../../primitives/Text';
 import './BarReadout.css';
 
 export type { BarKind } from './bar';
@@ -261,14 +262,14 @@ export function BarReadout({
 
   return (
     <div className={classes.join(' ')}>
-      <span className="yh-bar-readout__label">
+      <Text role="body" size="caption" case="label" className="yh-bar-readout__label">
         <span className="yh-bar-readout__label-text">{label}</span>
         {waiting && (
-          <span className="yh-bar-readout__away" aria-hidden="true">
+          <Text role="body" size="inherit" weight="strong" className="yh-bar-readout__away" aria-hidden="true">
             ↕
-          </span>
+          </Text>
         )}
-      </span>
+      </Text>
       <span
         ref={barRef}
         className="yh-bar-readout__bar"
@@ -300,9 +301,13 @@ export function BarReadout({
         )}
       </span>
       <span className="yh-bar-readout__slot" aria-hidden="true">
-        <span className="yh-bar-readout__value">{text[0]}</span>
+        <Text role="numeral" size="body" className="yh-bar-readout__value">
+          {text[0]}
+        </Text>
         {/* Always drawn, empty when there's no unit, so every row's last digit lines up. */}
-        <span className="yh-bar-readout__unit">{text[1]}</span>
+        <Text role="body" size="caption" className="yh-bar-readout__unit">
+          {text[1]}
+        </Text>
       </span>
     </div>
   );

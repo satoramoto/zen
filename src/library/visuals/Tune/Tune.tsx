@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Group } from '../../layout/Group';
 import { Slider } from '../../components/core/Slider/Slider';
+import { Text } from '../../primitives/Text';
 import type { Param } from '../../components/core/Param/param';
 import type { PresetTune } from '../model/api';
 import { formatMultiplier } from '../model/controls';
@@ -94,12 +95,13 @@ export function TuneCard({ subject, onSet }: { subject: Prepared; onSet: Inspect
     <Group
       name={say('preset tune')}
       direction="column"
+      gap={2}
       className="vs-tune"
       aside={
         !asMade(shown) && (
-          <button type="button" className="vs-tune-reset" onClick={reset} title={`Play it ${say('preset tune reset')}: its own speed and ${say('preset sensitivity')}`}>
+          <Text as="button" type="button" className="vs-tune-reset" onClick={reset} title={`Play it ${say('preset tune reset')}: its own speed and ${say('preset sensitivity')}`}>
             {say('preset tune reset')}
-          </button>
+          </Text>
         )
       }
     >

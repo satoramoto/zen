@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { Text } from '../primitives/Text';
 import './Tabs.css';
 
 export interface TabItem {
@@ -54,11 +55,15 @@ function Tab({ item: t, domId, on, stop, panelId, tipAction, onChoose }: TabProp
     return () => handle?.destroy?.();
   }, [node, t.tip, tipAction]);
   return (
-    <button
+    <Text
+      as="button"
+      size="label"
+      weight="strong"
+      case="label"
       ref={setNode}
       id={domId}
       type="button"
-      role="tab"
+      ariaRole="tab"
       className="lib-tabs__tab"
       data-part="tab"
       aria-selected={on}
@@ -70,7 +75,7 @@ function Tab({ item: t, domId, on, stop, panelId, tipAction, onChoose }: TabProp
       onClick={() => !t.disabled && !on && onChoose()}
     >
       {t.label}
-    </button>
+    </Text>
   );
 }
 

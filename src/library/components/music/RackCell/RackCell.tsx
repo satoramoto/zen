@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './RackCell.css';
 
 export interface RackCellProps {
@@ -59,21 +60,25 @@ export function RackCell({ rack, slot = '', label = 'Rack', name, tip, mark, onP
         data-tip={tip}
         onClick={() => onPress?.()}
       >
-        <span className="yh-rack-cell__head">
+        <Text role="label" size="caption" tabular className="yh-rack-cell__head">
           <span className="yh-rack-cell__label">{label}</span>
           {slot && (
             <>
               <span className="yh-rack-cell__separator" aria-hidden>
                 ·
               </span>
-              <span className="yh-rack-cell__slot">{slot}</span>
+              <Text role="label" case="none" tabular className="yh-rack-cell__slot">
+                {slot}
+              </Text>
             </>
           )}
-        </span>
-        <span className="yh-rack-cell__name" data-empty={empty ? 'true' : undefined}>
-          <span className="yh-rack-cell__title">{shown}</span>
+        </Text>
+        <Text role="caption" size="body" tabular className="yh-rack-cell__name" data-empty={empty ? 'true' : undefined}>
+          <Text role="caption" size={empty ? 'caption' : 'body'} tabular className="yh-rack-cell__title">
+            {shown}
+          </Text>
           {mark != null && <span className="yh-rack-cell__mark">{mark}</span>}
-        </span>
+        </Text>
       </button>
     </div>
   );

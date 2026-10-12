@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { Text } from '../../primitives/Text';
 import './StatusLine.css';
 
 /** A control's tooltip, shown in the line's place while the control is hovered or focused. */
@@ -64,21 +65,31 @@ export interface StatusLineProps {
  */
 export function StatusLine({ hint = null, text = null, error = false, seq = 0, width, tip = 'display.status', onClear }: StatusLineProps) {
   return (
-    <p className="yh-status-line" data-part="root" role="status" aria-live="polite" style={width === undefined ? undefined : { width: `${width}px` }}>
+    <Text
+      as="p"
+      tabular
+      className="yh-status-line"
+      data-part="root"
+      ariaRole="status"
+      aria-live="polite"
+      style={width === undefined ? undefined : { width: `${width}px` }}
+    >
       {hint ? (
         <span className="yh-status-line-hint" data-part="hint" aria-hidden="true">
-          <span className="yh-status-line-hint-title" data-part="hint-title">{hint.title}</span>
+          <Text weight="strong" tabular className="yh-status-line-hint-title" data-part="hint-title">{hint.title}</Text>
           <span className="yh-status-line-hint-body" data-part="hint-body">{hint.body}</span>
           {hint.keys || hint.launchkey ? (
             <span className="yh-status-line-hint-meta" data-part="hint-meta">
               {hint.keys ? (
                 <span className="yh-status-line-hint-place" data-part="hint-place">
-                  <span className="yh-status-line-hint-label" data-part="hint-label">Key</span> <kbd className="yh-status-line-key" data-part="key">{hint.keys}</kbd>
+                  <Text role="caption" case="label" tabular className="yh-status-line-hint-label" data-part="hint-label">Key</Text>{' '}
+                  <Text as="kbd" role="caption" tabular className="yh-status-line-key" data-part="key">{hint.keys}</Text>
                 </span>
               ) : null}
               {hint.launchkey ? (
                 <span className="yh-status-line-hint-place" data-part="hint-place">
-                  <span className="yh-status-line-hint-label" data-part="hint-label">Launchkey</span> <kbd className="yh-status-line-key" data-part="key">{hint.launchkey}</kbd>
+                  <Text role="caption" case="label" tabular className="yh-status-line-hint-label" data-part="hint-label">Launchkey</Text>{' '}
+                  <Text as="kbd" role="caption" tabular className="yh-status-line-key" data-part="key">{hint.launchkey}</Text>
                 </span>
               ) : null}
             </span>
@@ -95,14 +106,14 @@ export function StatusLine({ hint = null, text = null, error = false, seq = 0, w
         >
           <Fragment key={seq}>
             {error ? (
-              <span className="yh-status-line-tag" data-part="tag" aria-hidden="true">
+              <Text role="label" leading="tight" tabular className="yh-status-line-tag" data-part="tag" aria-hidden="true">
                 <svg data-hue="warn" className="yh-status-line-mark" data-part="mark" width="12" height="12" viewBox="0 0 12 12">
                   <path d="M6 1.5 L11 10.5 H1 Z" />
                   <path d="M6 5 V7.4" />
                   <circle cx="6" cy="8.9" r="0.6" />
                 </svg>
                 Error
-              </span>
+              </Text>
             ) : null}
             {/* The space after "Error:" sits outside the hidden span: the accessible name trims each
                 element's text, so a space inside it would be lost ("Error:Can't"). */}
@@ -116,6 +127,6 @@ export function StatusLine({ hint = null, text = null, error = false, seq = 0, w
           </svg>
         </button>
       ) : null}
-    </p>
+    </Text>
   );
 }

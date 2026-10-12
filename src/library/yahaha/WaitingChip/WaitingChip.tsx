@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { Text } from '../../primitives/Text';
 import { SECTION_STATE_COLOUR } from '../hues';
 import './WaitingChip.css';
 
@@ -60,7 +61,10 @@ export function WaitingChip({ label, hue = 't', size = 'count' }: WaitingChipPro
   if (label.trim() === '') return null;
   const style = SECTIONS.has(hue) ? ({ '--yh-waiting-chip-hue': SECTION_STATE_COLOUR.next } as CSSProperties) : undefined;
   return (
-    <span
+    <Text
+      role={size === 'display' ? 'display' : 'body'}
+      size={size === 'display' ? undefined : 'label'}
+      tabular
       className={`yh-waiting-chip yh-waiting-chip--${size}`}
       data-part="chip"
       data-face="waiting"
@@ -70,6 +74,6 @@ export function WaitingChip({ label, hue = 't', size = 'count' }: WaitingChipPro
     >
       <span className="yh-waiting-chip__arrow" data-part="arrow" aria-hidden="true" />
       {label}
-    </span>
+    </Text>
   );
 }

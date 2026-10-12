@@ -18,9 +18,7 @@
   box-sizing: border-box;
   padding: var(--space-4);
   color: var(--text-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  font-weight: var(--weight-body);
+  /* Type: the root is a body Text. */
 }
 /* A non-modal sheet leaves the page usable beside it: only the dialog takes the pointer. */
 .lib-modal:not([data-modal]) { pointer-events: none; }
@@ -67,11 +65,8 @@
   margin: 0;
   min-width: 0;
   color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: var(--size-heading);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
-  line-height: 1.2;
+  /* A display Text at the heading size. */
+  --text-leading: 1.2;
 }
 .lib-modal__close {
   margin-inline-end: calc(var(--space-2) * -1);
@@ -85,7 +80,8 @@
   min-height: 0;
   overflow-y: auto;
   color: var(--text-2);
-  line-height: 1.45;
+  /* A body Text at the pane's size. */
+  --text-leading: 1.45;
 }
 
 .lib-modal__actions {

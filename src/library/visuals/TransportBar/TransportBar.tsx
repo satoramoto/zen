@@ -1,4 +1,5 @@
 import { Group } from '../../layout/Group';
+import { Text } from '../../primitives/Text';
 import { Numbers } from '../Numbers/Numbers';
 import { SourcePicker } from '../SourcePicker/SourcePicker';
 import { FrameRate } from '../Views/Views';
@@ -80,10 +81,12 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
   return (
     <div className="vs-transport" role="region" aria-label="transport">
       <Group name="keys" label={false} className="vs-transport-keys">
-        <button type="button" className="vs-transport-key vs-transport-prev" aria-label="previous preset" title={`Previous preset${stepIn} (←)`} onClick={() => onStep(-1)}>
+        <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-prev" aria-label="previous preset" title={`Previous preset${stepIn} (←)`} onClick={() => onStep(-1)}>
           <Icon name="previous" />
-        </button>
-        <button
+        </Text>
+        <Text
+          as="button"
+          weight="strong"
           type="button"
           className="vs-transport-key vs-transport-play"
           aria-label={playing ? 'pause' : 'play'}
@@ -91,38 +94,42 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
           onClick={onPlayPause}
         >
           <Icon name={playing ? 'pause' : 'play'} size={18} />
-        </button>
-        <button type="button" className="vs-transport-key" aria-label="next preset" title={`Next preset${stepIn} (→)`} onClick={() => onStep(1)}>
+        </Text>
+        <Text as="button" weight="strong" type="button" className="vs-transport-key" aria-label="next preset" title={`Next preset${stepIn} (→)`} onClick={() => onStep(1)}>
           <Icon name="next" />
-        </button>
-        <button type="button" className="vs-transport-key vs-transport-random" aria-label="random preset" title={`Random preset${stepIn} (R)`} onClick={() => onStep(0)}>
+        </Text>
+        <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-random" aria-label="random preset" title={`Random preset${stepIn} (R)`} onClick={() => onStep(0)}>
           R
-        </button>
+        </Text>
       </Group>
       <div className="vs-transport-mid">
         {now && (
-          <p className="vs-transport-now" title={now.from ? `${now.name} ${now.from}` : now.name}>
-            <span className="vs-transport-name">{now.name}</span>
+          <Text as="p" className="vs-transport-now" title={now.from ? `${now.name} ${now.from}` : now.name}>
+            <Text weight="strong" className="vs-transport-name">
+              {now.name}
+            </Text>
             {now.from && (
-              <span className="vs-transport-from">
+              <Text className="vs-transport-from">
                 <Numbers text={now.from} />
-              </span>
+              </Text>
             )}
-          </p>
+          </Text>
         )}
         <div className="vs-transport-time" data-off={position ? undefined : ''} data-open={open ? '' : undefined}>
           {open ? (
             <>
               {/* No end to count down to (or none left): the time on it, and a track with nothing to fill. */}
-              <span className="vs-transport-num" role="timer" aria-label={`time on this preset: ${clock(elapsed)}${endless ? ', until moved on' : ''}`}>
+              <Text tabular className="vs-transport-num" ariaRole="timer" aria-label={`time on this preset: ${clock(elapsed)}${endless ? ', until moved on' : ''}`}>
                 {clock(elapsed)}
-              </span>
+              </Text>
               <div className="vs-transport-track" aria-hidden="true" />
-              <span className="vs-transport-num" aria-hidden="true" />
+              <Text tabular className="vs-transport-num" aria-hidden="true" />
             </>
           ) : position ? (
             <>
-              <span className="vs-transport-num">{clock(elapsed)}</span>
+              <Text tabular className="vs-transport-num">
+                {clock(elapsed)}
+              </Text>
               <div
                 className="vs-transport-track"
                 role="progressbar"
@@ -134,22 +141,24 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
               >
                 <div className="vs-transport-fill" style={{ width: length ? `${(elapsed / length) * 100}%` : '0%' }} />
               </div>
-              <span className="vs-transport-num">−{clock(length - elapsed)}</span>
+              <Text tabular className="vs-transport-num">
+                −{clock(length - elapsed)}
+              </Text>
             </>
           ) : (
             <div className="vs-transport-track" aria-hidden="true" />
           )}
           {hint && (
-            <span className="vs-transport-hint" title={hint.title}>
+            <Text className="vs-transport-hint" title={hint.title}>
               {hint.text}
-            </span>
+            </Text>
           )}
         </div>
       </div>
-      <div className="vs-transport-right">
+      <Text as="div" className="vs-transport-right">
         <FrameRate slowOnly />
         <SourcePicker onError={onAudioError} channels="none" width={180} />
-      </div>
+      </Text>
     </div>
   );
 }

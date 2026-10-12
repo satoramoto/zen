@@ -3,6 +3,7 @@ import { Group } from '../../layout/Group';
 import { Region } from '../../layout/Region';
 import { Stack } from '../../layout/Stack';
 import { Tabs, type TabItem } from '../../layout/Tabs';
+import { Text } from '../../primitives/Text';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import { Button } from '../../components/core/Button/Button';
 import { Fader, type FaderHue } from '../../components/music/Fader/Fader';
@@ -187,7 +188,10 @@ function StripName({
   // No native `title`: the app's tooltip (tipAction with openTip) explains the button, and a
   // title would show a second, browser tooltip over it.
   return (
-    <button
+    <Text
+      as="button"
+      size="inherit"
+      leading="snug"
       ref={ref}
       type="button"
       className="yh-faderbank__name"
@@ -195,8 +199,8 @@ function StripName({
       data-tip={strip.openTip}
       onClick={() => onOpen?.(strip.id)}
     >
-      <span className="yh-faderbank__tag-text">{strip.tag}</span>
-      <span className="yh-faderbank__sound">{strip.sound ?? ' '}</span>
+      <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{strip.tag}</Text>
+      <Text size="caption" leading="snug" className="yh-faderbank__sound">{strip.sound ?? ' '}</Text>
       {/* The marks take their own line under the sound, so they never take its width. While any
           strip in the bank has marks, every strip keeps the line, so the faders above end level. */}
       {marksLine && (
@@ -204,7 +208,7 @@ function StripName({
           <PartMarks size="strip" edited={strip.edited} missing={strip.missing} failed={strip.failed} off={off} />
         </span>
       )}
-    </button>
+    </Text>
   );
 }
 
@@ -386,11 +390,11 @@ export function FaderBank({
                 onlevel={(level) => onLevel?.(strip.id, level)}
               />
               {parked ? (
-                <span className="yh-faderbank__name" aria-hidden="true">
-                  <span className="yh-faderbank__tag-text">{' '}</span>
-                  <span className="yh-faderbank__sound">{' '}</span>
+                <Text size="inherit" leading="snug" className="yh-faderbank__name" aria-hidden="true">
+                  <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{' '}</Text>
+                  <Text size="caption" leading="snug" className="yh-faderbank__sound">{' '}</Text>
                   {marksLine && <span className="yh-faderbank__marks" />}
-                </span>
+                </Text>
               ) : (
                 <StripName strip={strip} marksLine={marksLine} tipAction={tipAction} onOpen={onOpen} />
               )}

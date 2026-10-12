@@ -1,7 +1,13 @@
 /* The preset library's own rules (Library.tsx): its column, the search, the group chips, the
    open group's values, the values picked, its notes and empty states, the inspector view's
    toolbar and filter popover. The grid and its tiles are LibraryGrid's, the drawer
-   PresetDrawer's. Contract variables and visuals.css tokens only. */
+   PresetDrawer's. Contract variables and visuals.css tokens only.
+
+   Type is Text's. The app's `.vs-root` reset gives every button and input `font: inherit` (and
+   outranks a Text on the control itself), so a control's words are a Text inside it, and the
+   inputs and plain-type buttons take their type from a Text around them: the search field, the
+   values box and the picked line are caption-size Texts at the page's normal leading. Sizes
+   off the props are knobs on the Text's own class (`--vs-library-small`, the ramp's annot). */
 .vs-library {
   /* Small grey text: the caption, a step lighter where the library sits on glass (the filter's popover). */
   --vs-library-caption: var(--text-3);
@@ -28,13 +34,10 @@
   border-radius: var(--radius-input);
   min-width: 0;
 }
+/* The editor's search inherits the page's lead size from the column; the find box and the name
+   input take the caption size from the values box and the picked line around them. */
 .vs-library-search {
   margin: var(--space-2) var(--space-2) var(--space-1);
-  font-size: var(--vs-text-lead);
-}
-.vs-library-values-find,
-.vs-library-name-input {
-  font-size: var(--vs-text-label);
 }
 .vs-library-search::placeholder,
 .vs-library-values-find::placeholder {
@@ -52,14 +55,13 @@
   /* library.css 2px 10px 6px: two and a half steps at the sides, one and a half under. */
   padding: 2px calc(var(--space-1) * 2.5) calc(var(--space-1) * 1.5);
   color: var(--vs-library-caption);
-  font-size: var(--vs-text-label);
-  letter-spacing: var(--tracking);
 }
+/* A note at body size and 1.5 leading over the notes' caption Text. */
 .vs-library-first-run {
+  --text-size: var(--vs-text-body);
+  --text-leading: 1.5;
   padding-top: var(--space-2);
   color: var(--text-4);
-  font-size: var(--vs-text-body);
-  line-height: 1.5;
 }
 
 /* The group chips, the values of the open one, and the values picked. */
@@ -78,7 +80,6 @@
   /* library.css 1px 7px, rounded to the 8px step. */
   padding: 1px var(--space-2);
   font: inherit;
-  font-size: var(--vs-text-label);
   color: var(--text-2);
   background: transparent;
   border: var(--border-width) solid var(--border);
@@ -107,13 +108,13 @@
   outline-offset: 1px;
 }
 .vs-library-chip-count {
+  --text-size: var(--vs-text-annot);
   /* 14px wide at least (8 + 6); library.css 0 3px, rounded to the hairline. */
   min-width: calc(var(--space-2) + var(--space-1) * 1.5);
   padding: 0 2px;
   border-radius: var(--radius-pill);
   background: var(--warning);
   color: var(--on-hue);
-  font-size: var(--vs-text-annot);
   text-align: center;
 }
 .vs-library-chip-picked {
@@ -123,7 +124,6 @@
 .vs-library-link {
   padding: 1px 2px;
   font: inherit;
-  font-size: var(--vs-text-label);
   color: var(--vs-library-caption);
   background: none;
   border: none;
@@ -179,7 +179,6 @@
 }
 .vs-library-value-count {
   color: var(--vs-library-caption);
-  font-variant-numeric: tabular-nums;
 }
 
 /* library.css 9px, rounded to the 8px step. */
@@ -209,28 +208,25 @@
   padding: calc(var(--space-3) * 1.5) var(--mat-plate-inset) var(--space-3);
   min-width: 0;
 }
+/* A display Text at heading size, 1.2 leading. */
 .vs-library-home .vs-library-title-head {
+  --text-leading: 1.2;
   margin: 0;
   color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: var(--size-heading);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
-  line-height: 1.2;
   white-space: nowrap;
 }
+/* The counts: tabular Texts in the readout face (the head's and the picked line's are numeral
+   Texts at caption size). */
 .vs-library-home .vs-library-count,
 .vs-library-home .vs-library-picked-count,
 .vs-library-home .vs-library-value-count,
 .vs-library-home .vs-library-chip-count {
   color: var(--vs-library-caption);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .vs-library-home .vs-library-count {
   margin-top: var(--space-1);
-  font-size: var(--size-caption);
 }
 
 /* The search: a ⌕ and the text on the pane, no box; the field rings when focused. */
@@ -243,10 +239,10 @@
   min-width: calc(var(--control-h) * 4);
   height: var(--space-6);
 }
+/* ⌕ is a body-size Text (inside the toolbar's button, the button's span). */
 .vs-library-home .vs-library-search-glyph {
   flex: none;
   color: var(--text-4);
-  font-size: var(--vs-text-body);
 }
 .vs-library-home .vs-library-search {
   flex: 1;
@@ -260,7 +256,6 @@
   border: 0;
   border-radius: var(--radius-input);
   font-family: var(--font-sans);
-  font-size: var(--size-caption);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -268,11 +263,14 @@
   -webkit-appearance: none;
   appearance: none;
 }
+/* ✕ is a Text at the small size; the button lays it out as a grid item, so the button's own
+   (inherited) type adds no line. */
 .vs-library-home .vs-library-search-clear {
   flex: none;
+  display: grid;
+  place-items: center;
   padding: 2px var(--space-1);
   font: inherit;
-  font-size: var(--vs-library-small);
   color: var(--text-4);
   background: none;
   border: 0;
@@ -281,6 +279,9 @@
 }
 .vs-library-home .vs-library-search-clear:hover {
   color: var(--text-1);
+}
+.vs-library-home .vs-library-search-x {
+  --text-size: var(--vs-library-small);
 }
 
 /* "Filter": type, underlined while the panel is open; a round count only when values are picked. */
@@ -296,11 +297,12 @@
   background: none;
   border: 0;
   border-radius: var(--radius-control);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
+}
+/* Its word: a caption-size Text in a medium weight (a flex item, so the button adds no line). */
+.vs-library-home .vs-library-filter-label {
+  --text-weight: 500;
 }
 .vs-library-home .vs-library-filter:hover:not(:disabled) {
   color: var(--text-1);
@@ -326,11 +328,12 @@
   border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--on-hue);
-  font-family: var(--font-readout);
-  font-size: var(--vs-text-annot);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
   text-decoration: none;
+}
+/* The badge: a numeral Text at the ramp's smallest size, bold. */
+.vs-library-home .vs-library-filter-badge {
+  --text-size: var(--vs-text-annot);
+  --text-weight: 700;
 }
 
 /* The groups: a switch made of type, the open one underlined. */
@@ -348,8 +351,10 @@
   border: 0;
   border-radius: var(--radius-control);
   font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: 500;
+}
+/* A chip's and a value's words in a medium weight. */
+.vs-library-home :is(.vs-library-chip-label, .vs-library-value-name, .vs-library-chip-count, .vs-library-value-count, .vs-library-x) {
+  --text-weight: 500;
 }
 .vs-library-home .vs-library-chip:hover:not(:disabled) {
   color: var(--text-1);
@@ -373,7 +378,7 @@
   min-width: 0;
   padding: 0;
   background: none;
-  font-size: var(--vs-library-small);
+  --text-size: var(--vs-library-small);
 }
 
 /* The open group's values: text with a count, no box round them; picked is the ink and underlined. */
@@ -396,7 +401,6 @@
   height: auto;
   padding: 2px 0;
   color: var(--text-2);
-  font-weight: 500;
 }
 .vs-library-home .vs-library-value[aria-pressed='true'] {
   color: var(--text-1);
@@ -407,7 +411,7 @@
   text-underline-offset: var(--space-1);
 }
 .vs-library-home .vs-library-value-count {
-  font-size: var(--vs-library-small);
+  --text-size: var(--vs-library-small);
 }
 .vs-library-home .vs-library-values-subs {
   display: flex;
@@ -418,11 +422,13 @@
 .vs-library-home .vs-library-values-in {
   flex-basis: 100%;
   color: var(--vs-library-caption);
-  font-size: var(--vs-library-small);
+  --text-size: var(--vs-library-small);
 }
 .vs-library-home .vs-library-values-subs .vs-library-value {
   color: var(--text-4);
-  font-weight: 400;
+}
+.vs-library-home .vs-library-values-subs .vs-library-value :is(.vs-library-value-name, .vs-library-value-count) {
+  --text-weight: 400;
 }
 .vs-library-home .vs-library-values-subs .vs-library-value[aria-pressed='true'] {
   color: var(--text-1);
@@ -441,7 +447,6 @@
   border: 0;
   border-radius: var(--radius-input);
   font-family: var(--font-sans);
-  font-size: var(--size-caption);
 }
 .vs-library-home .vs-library-values .vs-library-note {
   padding: 0;
@@ -451,27 +456,22 @@
 .vs-library-home .vs-library-picked {
   gap: calc(var(--space-1) * 1.5) calc(var(--space-2) + var(--space-1) * 1.5);
   padding: 0 var(--mat-plate-inset) var(--space-3);
-  font-size: var(--size-caption);
 }
 .vs-library-home .vs-library-chip-picked {
   color: var(--text-1);
 }
 .vs-library-home .vs-library-chip-picked .vs-library-x {
+  --text-size: var(--vs-library-small);
   color: var(--text-4);
-  font-size: var(--vs-library-small);
 }
 .vs-library-home .vs-library-chip-picked:hover .vs-library-x {
   color: var(--text-1);
-}
-.vs-library-home .vs-library-picked-count {
-  font-size: var(--size-caption);
 }
 .vs-library-home .vs-library-link {
   padding: 2px 0;
   border-radius: var(--radius-control);
   color: var(--text-4);
   font-family: var(--font-sans);
-  font-size: var(--size-caption);
   text-decoration: none;
 }
 .vs-library-home .vs-library-link:hover {
@@ -487,15 +487,13 @@
   border: 0;
   border-radius: var(--radius-input);
   font-family: var(--font-sans);
-  font-size: var(--size-caption);
 }
 
-/* The notes: the save note, the loading note, the first run's. */
+/* The notes: the save note, the loading note, the first run's. Caption Texts, untracked here. */
 .vs-library-home .vs-library-summary,
 .vs-library-home .vs-library-note {
+  --text-tracking: normal;
   padding: 0 var(--mat-plate-inset) var(--space-3);
-  font-size: var(--size-caption);
-  letter-spacing: normal;
   word-spacing: var(--vs-sep-space);
 }
 .vs-library-home .vs-library-summary[data-error] {
@@ -503,13 +501,12 @@
 }
 .vs-library-home .vs-library-first-run {
   padding: var(--space-2) var(--mat-plate-inset);
-  font-size: var(--vs-text-body);
 }
 
-/* The starter pack's offer (PackOffer): one quiet line on the pane's padding. */
+/* The starter pack's offer (PackOffer): one quiet line on the pane's padding, a caption-size
+   Text that PackOffer's type inherits. */
 .vs-library-home .vs-library-offer {
   padding: 0 var(--mat-plate-inset) var(--space-3);
-  font-size: var(--size-caption);
 }
 /* PackOffer draws nothing while there is nothing to offer: its line goes too. */
 .vs-library-offer:empty {
@@ -527,37 +524,36 @@
   padding: 0 var(--mat-plate-inset) calc(var(--space-4) * 5);
   text-align: center;
 }
+/* 28px: a Text at the numeral size, tight. */
 .vs-library-home .vs-library-empty-glyph {
   color: var(--text-4);
-  /* 28px: the numeral size. */
-  font-size: var(--size-numeral);
-  line-height: 1;
 }
+/* A strong Text in the display face, 15px: the body and a hairline pair. */
 .vs-library-home .vs-library-empty-title {
+  --text-size: calc(var(--size-body) + 2px);
   margin: calc(var(--space-1) * 1.5) 0 0;
   color: var(--text-1);
   font-family: var(--font-display);
-  /* 15px: the body and a hairline pair. */
-  font-size: calc(var(--size-body) + 2px);
-  font-weight: var(--weight-strong);
   overflow-wrap: anywhere;
 }
 .vs-library-home .vs-library-empty-why {
   margin: 0;
   color: var(--vs-library-caption);
-  font-size: var(--size-caption);
 }
+/* Its word is a caption-size Text in a medium weight, laid out as a grid item so the button's
+   own (inherited) type adds no line. */
 .vs-library-home .vs-library-empty-clear {
+  display: grid;
   margin-top: calc(var(--space-1) * 1.5);
   padding: var(--space-1) 2px;
   color: var(--text-2);
   background: none;
   border: 0;
   border-radius: var(--radius-control);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: 500;
   cursor: pointer;
+}
+.vs-library-home .vs-library-empty-clear-label {
+  --text-weight: 500;
 }
 .vs-library-home .vs-library-empty-clear:hover {
   color: var(--text-1);
@@ -603,7 +599,6 @@
   place-items: center;
   padding: 0;
   font: inherit;
-  font-size: var(--vs-text-body);
   color: var(--text-4);
   background: none;
   border: 0;
@@ -617,8 +612,8 @@
   padding: 0 var(--space-1);
 }
 .vs-library-toolbar .vs-library-filter-caret {
+  --text-size: var(--vs-text-annot);
   color: var(--text-4);
-  font-size: var(--vs-text-annot);
 }
 
 /* The filter's popover: the groups, the open group's values, what is picked and the count, Clear
@@ -639,9 +634,9 @@
   margin: 0;
   max-height: 40vh;
 }
+/* A numeral Text at caption size, like the picked line's count. */
 .vs-library-toolbar .vs-library-filter-none {
   margin: 0;
-  font-size: var(--size-caption);
 }
 
 /* Under 700 px the search folds to its ⌕, a button that opens it; it stays open while focused or holding text (⌘F focuses it). */

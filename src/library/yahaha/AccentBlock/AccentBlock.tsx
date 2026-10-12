@@ -1,4 +1,5 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
+import { Text } from '../../primitives/Text';
 import './AccentBlock.css';
 
 /** The app's tooltip hook (a Svelte action): given the element and a tooltip key; may return a handle. */
@@ -79,7 +80,12 @@ export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', 
 
   if (as === 'button') {
     return (
-      <button
+      <Text
+        as="button"
+        role="label"
+        size="body"
+        leading="tight"
+        tabular
         ref={ref}
         type="button"
         className="yh-accentblock"
@@ -98,12 +104,12 @@ export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', 
             <path d="M4.5 2.5 8 6l-3.5 3.5" />
           </svg>
         )}
-      </button>
+      </Text>
     );
   }
   return (
-    <span className="yh-accentblock" style={style} data-part="block" data-face="accent" data-size={size}>
+    <Text role="label" size="body" leading="tight" tabular className="yh-accentblock" style={style} data-part="block" data-face="accent" data-size={size}>
       <span className="yh-accentblock__text" data-part="text">{shown}</span>
-    </span>
+    </Text>
   );
 }

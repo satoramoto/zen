@@ -4,7 +4,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
-import { RULE_IDS, TOP_FOLDERS, compare, countByFolder, scanLibrary, type Counts } from '../src/library/tiers';
+import { ADOPTION_TOPS, RULE_IDS, TOP_FOLDERS, adoption, compare, countByFolder, scanLibrary, type Counts } from '../src/library/tiers';
 
 const root = fileURLToPath(new URL('../src/library', import.meta.url));
 const baselinePath = join(root, 'tiers.baseline.json');
@@ -59,6 +59,15 @@ rows.forEach((r, i) => {
   console.log(`${fmt(r)}${marks[i] ? `  ${marks[i]}` : ''}`);
 });
 if (baseline) console.log('\n(n) after a count is its baseline where they differ.');
+
+// Adoption: how many components render the primitives (a folder counts once).
+const used = adoption(root);
+const per = (list: string[], t: string) => list.filter((f) => f.startsWith(`${t}/`)).length;
+const split = (list: string[]) => ADOPTION_TOPS.map((t) => `${t} ${per(list, t)}/${per(used.components, t)}`).join(', ');
+console.log(
+  `\nadoption: Text in ${used.text.length}/${used.components.length} components (${split(used.text)}); ` +
+    `Surface in ${used.surface.length}/${used.components.length} (${split(used.surface)})`,
+);
 
 if (write) {
   const sorted: Counts = {};

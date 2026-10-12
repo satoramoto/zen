@@ -6,6 +6,7 @@ import { Segmented } from '../../components/core/Segmented/Segmented';
 import { Switch } from '../../components/core/Toggle/Toggle';
 import { Group } from '../../layout/Group';
 import { Opaque } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import { Credits } from '../Credits/Credits';
 import { EffectSettings, useFx } from '../Effects/Effects';
 import { LinkSettings } from '../LinkPanel/LinkPanel';
@@ -74,12 +75,27 @@ export function Sheet({
   );
 }
 
+/** A quiet note under a setting: a caption `Text` paragraph (Settings.css sets its leading and ink). */
+function Line({ className, ariaRole, children }: { className?: string; ariaRole?: 'status'; children: ReactNode }) {
+  return (
+    <Text as="p" role="caption" ariaRole={ariaRole} className={className ? `vs-settings-line ${className}` : 'vs-settings-line'}>
+      {children}
+    </Text>
+  );
+}
+
+/** A switch's name, strong. */
+function SwitchName({ children }: { children: ReactNode }) {
+  return <Text weight="strong">{children}</Text>;
+}
+
 /** One of the settings' sections, named by its heading: a `Group`, its label a heading. */
 function Section({ name, children }: { name: string; children: ReactNode }) {
   return (
     <Group
       name={name}
       direction="column"
+      gap={2}
       className="vs-settings-section"
       label={
         <span role="heading" aria-level={3}>
@@ -138,9 +154,7 @@ export function QualitySettings() {
             onChange={(i) => show(api.qualitySet(QUALITY_LEVELS[i])).catch(fail(`Couldn't change the ${say('render quality')}.`))}
             title="How much detail the picture is drawn with: Auto picks for this Mac; Low is lightest on it"
           />
-          <p className="vs-settings-line" role="status">
-            {qualityLine(quality)}
-          </p>
+          <Line ariaRole="status">{qualityLine(quality)}</Line>
         </>
       )}
       <NoticeBanner notice={notice} onDismiss={dismiss} />
@@ -190,13 +204,13 @@ function KeptToggle({ read, write, name, title, note }: { read(): Promise<boolea
   return (
     <div className="vs-settings-switch">
       <Switch checked={on === true} onChange={change} disabled={on === null} title={title}>
-        {name}
+        <SwitchName>{name}</SwitchName>
       </Switch>
-      {note && <p className="vs-settings-line">{note}</p>}
+      {note && <Line>{note}</Line>}
       {problem && (
-        <p className="vs-settings-line vs-settings-problem" role="status">
+        <Line className="vs-settings-problem" ariaRole="status">
           {problem}
-        </p>
+        </Line>
       )}
     </div>
   );
@@ -228,20 +242,20 @@ export function MotionSwitch({
   return (
     <div className="vs-settings-switch">
       <Switch checked={shown} onChange={onChange} disabled={motion === null} title={REDUCE_WHAT}>
-        {name}
+        <SwitchName>{name}</SwitchName>
       </Switch>
       {motion &&
         (motion.system ? (
-          <p className="vs-settings-line vs-settings-follow">Following macOS's Reduce motion.</p>
+          <Line className="vs-settings-follow">Following macOS's Reduce motion.</Line>
         ) : (
           <ActionButton tone="quiet" className="vs-settings-follow" label="Follow macOS's Reduce motion" title="Let macOS's Reduce motion decide again" onPress={onFollow}>
             Follow macOS
           </ActionButton>
         ))}
       {problem && (
-        <p className="vs-settings-line vs-settings-problem" role="status">
+        <Line className="vs-settings-problem" ariaRole="status">
           {problem}
-        </p>
+        </Line>
       )}
     </div>
   );
@@ -279,9 +293,7 @@ function EffectsSection() {
         <EffectSettings state={state} set={set} />
       ) : (
         !notice && (
-          <p className="vs-settings-line" role="status">
-            Reading the effects…
-          </p>
+          <Line ariaRole="status">Reading the effects…</Line>
         )
       )}
       <NoticeBanner notice={notice} onDismiss={dismiss} />

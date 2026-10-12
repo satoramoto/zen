@@ -1,5 +1,6 @@
 import type { HueSlot as Hue } from '../../components/core/hue';
 import { Stack } from '../../layout/Stack';
+import { Text } from '../../primitives/Text';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import './HueLegend.css';
 
@@ -87,7 +88,9 @@ export function HueLegend({ items = PART_LEGEND, label = 'Part colours' }: HueLe
           data-hue={item.part ? PART_HUE_INDEX[item.part] : undefined}
         >
           <span className="yh-huelegend__chip" aria-hidden="true" />
-          {item.label}
+          <Text role="caption" case="label" leading="tight" className="yh-huelegend__word">
+            {item.label}
+          </Text>
         </Stack>
       ))}
     </Stack>

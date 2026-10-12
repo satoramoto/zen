@@ -59,16 +59,17 @@
   --vs-text-heading: calc((var(--size-body) + var(--size-heading)) / 2); /* --text-heading: a sheet's title */
   --vs-text-title: var(--size-heading); /* --text-title: a pane's title */
 
-  /* Base type (app.css body): one sans in the controls' ink, at the lead size. */
+  /* Base type (app.css body): one sans in the controls' ink, at the lead size. The root is a body
+     Text (App.tsx `Framed`), so the lead size is its knob; its weight, tracking and leading are
+     the body role's. Everything inside inherits it. */
+  --text-size: var(--vs-text-lead);
   font-family: var(--font-sans);
-  font-size: var(--vs-text-lead);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
   color: var(--text-2);
 }
 
-/* app.css: plain controls inherit the type rather than the browser's. */
-.vs-root :where(button, select, input, textarea) {
+/* app.css: plain controls inherit the type rather than the browser's. A control that is a Text
+   sets its own type (its rules have no specificity, so this reset would otherwise undo them). */
+.vs-root :where(button, select, input, textarea):not(.lib-text) {
   font: inherit;
   letter-spacing: inherit;
 }
@@ -78,9 +79,10 @@
   color: var(--text-3);
 }
 
-/* Readouts and counts: tabular figures, not a monospace (decision 69). */
+/* Readouts and counts: tabular figures, not a monospace (decision 69). The figures are the
+   element's: a `Text` with `tabular` (or the numeral role); this sets the readout face and the
+   widened " · " space. */
 .vs-root .vs-num {
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
   word-spacing: var(--vs-sep-space);
 }

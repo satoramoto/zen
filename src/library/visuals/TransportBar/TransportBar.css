@@ -44,9 +44,8 @@
   border-radius: var(--vs-lay-key-radius, var(--radius-control));
   background: none;
   color: var(--text-2);
-  font: inherit;
-  font-size: calc(var(--vs-text-body) + 1px);
-  font-weight: var(--weight-strong);
+  /* A strong body Text, a pixel over the body size. */
+  --text-size: calc(var(--vs-text-body) + 1px);
   cursor: pointer;
 }
 .vs-transport .vs-transport-key:hover {
@@ -82,16 +81,16 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: var(--vs-text-body);
+  /* A body Text; the name in it strong. */
+  --text-size: var(--vs-text-body);
 }
 .vs-transport-name {
   color: var(--text-1);
-  font-weight: var(--weight-strong);
 }
 .vs-transport-from {
+  --text-size: var(--vs-text-label);
   margin-left: calc(var(--space-1) * 2.5); /* 10px */
   color: var(--text-3);
-  font-size: var(--vs-text-label);
   word-spacing: var(--vs-sep-space);
 }
 
@@ -115,9 +114,9 @@
   flex: none;
   min-width: 3.2em;
   color: var(--text-3);
+  /* A tabular body Text in the readout face. */
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--vs-transport-small);
+  --text-size: var(--vs-transport-small);
 }
 .vs-transport-num:first-child {
   text-align: right;
@@ -147,7 +146,7 @@
   min-width: 0;
   overflow: hidden;
   color: var(--text-3);
-  font-size: var(--vs-transport-small);
+  --text-size: var(--vs-transport-small);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -162,16 +161,17 @@
   justify-content: flex-end;
   gap: var(--space-4);
   min-width: 0;
-  font-size: var(--vs-text-label);
+  /* A body Text, which the audio input inherits. */
+  --text-size: var(--vs-text-label);
   color: var(--text-4);
 }
 .vs-transport-right > * {
   min-width: 0;
 }
-/* The picture drawing slowly: the warning in the bar's small type, never wider than it needs. */
+/* The picture drawing slowly: the warning in the bar's small type (the frame rate's own
+   --vs-text-label), in the sans, never wider than it needs. */
 .vs-transport-right .vs-stats {
   flex: none;
   font-family: var(--font-sans);
-  font-size: var(--vs-text-label);
   white-space: nowrap;
 }

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { Text } from '../../../primitives/Text';
 import { Popover } from '../Popover/Popover';
 import { TYPING_WINDOW, useSelect, type UseSelectOptions } from './useSelect';
 import './Select.css';
@@ -45,6 +46,8 @@ export interface SelectProps {
 export function Select({ items, index, onChange, disabled = false, label, name, width, className, title, hint }: SelectProps) {
   const chars = Math.max(0, ...items.map((item) => item.length));
   const s = useSelect({ items, index, onChange, disabled });
+  // `role` is the ARIA role here; on a Text that prop is the type role.
+  const { role: triggerRole, ...trigger } = s.triggerProps;
 
   return (
     <div
@@ -61,23 +64,47 @@ export function Select({ items, index, onChange, disabled = false, label, name, 
       }
     >
       {name && (
-        <span className="lib-select__caption" data-part="caption">
+        <Text role="body" size="label" case="label" className="lib-select__caption" data-part="caption">
           {name}
-        </span>
+        </Text>
       )}
-      <button {...s.triggerProps} className="lib-select__trigger" data-part="trigger" aria-label={label ?? name} title={title}>
+      <Text
+        as="button"
+        role="body"
+        size="label"
+        weight="strong"
+        ariaRole={triggerRole}
+        {...trigger}
+        className="lib-select__trigger"
+        data-part="trigger"
+        aria-label={label ?? name}
+        title={title}
+      >
         <span className="lib-select__value" data-part="value">
           {items[s.at] ?? ''}
         </span>
         <span className="lib-select__caret" data-part="caret" aria-hidden="true" />
-      </button>
+      </Text>
       {s.open && (
         <Popover anchor={s.trigger} onDismiss={s.dismiss} id={s.menuId} className="lib-select__menu" role="listbox" label={label ?? name}>
-          {items.map((item, which) => (
-            <div key={`${item}-${which}`} {...s.optionProps(which)} className="lib-select__option" data-part="option">
-              <span className="lib-select__value">{item}</span>
-            </div>
-          ))}
+          {items.map((item, which) => {
+            // `role` is the ARIA role here; on a Text that prop is the type role.
+            const { role, ...option } = s.optionProps(which);
+            return (
+              <Text
+                as="div"
+                role="body"
+                size="label"
+                ariaRole={role}
+                key={`${item}-${which}`}
+                {...option}
+                className="lib-select__option"
+                data-part="option"
+              >
+                <span className="lib-select__value">{item}</span>
+              </Text>
+            );
+          })}
         </Popover>
       )}
     </div>

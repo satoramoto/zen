@@ -15,13 +15,9 @@
   gap: var(--space-2);
 }
 
-/* The Stage's one caption recipe. */
+/* The Stage's one caption recipe: a caption Text in label case. */
 .yh-onetouchpicker__label {
   color: var(--text-3);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
 }
 
 .yh-onetouchpicker__strip { display: inline-flex; }
@@ -45,11 +41,7 @@
   background: var(--mat-key-texture), var(--mat-key-fill);
   box-shadow: var(--mat-key-shadow);
   color: var(--ots-ink);
-  font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
+  /* Type: a numeral Text at label size (readout face, numeral weight, tabular, leading 1). */
   cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
 }

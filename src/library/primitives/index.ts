@@ -1,6 +1,21 @@
 // Primitives: how a thing looks. Text in a role, a Surface (a layer, a material), an Icon, the
 // focus and press rings, and the spacing steps groups name. They build only from the tokens.
-export { Text, TEXT_ROLES, TEXT_TONES, toneAttr, type TextProps, type TextRole, type TextTone } from './Text';
+export {
+  Text,
+  TEXT_ROLES,
+  TEXT_TONES,
+  TEXT_LEADINGS,
+  TEXT_WEIGHTS,
+  TEXT_CASES,
+  toneAttr,
+  type TextProps,
+  type TextRole,
+  type TextTone,
+  type TextLeading,
+  type TextWeight,
+  type TextCase,
+  type TextSize,
+} from './Text';
 export {
   Surface,
   MATERIAL_ROLES,

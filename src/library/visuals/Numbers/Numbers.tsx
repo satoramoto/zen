@@ -1,3 +1,4 @@
+import { Text } from '../../primitives/Text';
 import './Numbers.css';
 
 /**
@@ -5,7 +6,9 @@ import './Numbers.css';
  *
  * **Changed.** The class is `vs-numbers` (was `numbers`), on the contract's `--font-readout`
  * (was `--font-num` and its axes): the instrument faces' readout is Instrument Sans, so the
- * figures stay in the UI's face with tabular numerals (principles, Type).
+ * figures stay in the UI's face with tabular numerals (principles, Type). Each number is a body
+ * `Text` at its line's size (`size="inherit"`), so it sets the body weight and leading: it sits
+ * in body-weight lines (the hero's and the transport's "from").
  *
  * **Kept.** The split (a number, optionally "of" another), the export and its one prop.
  */
@@ -15,9 +18,9 @@ export function Numbers({ text }: { text: string }) {
     <>
       {parts.map((part, i) =>
         i % 2 ? (
-          <span key={i} className="vs-numbers">
+          <Text key={i} size="inherit" tabular className="vs-numbers">
             {part}
-          </span>
+          </Text>
         ) : (
           part
         ),

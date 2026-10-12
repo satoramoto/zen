@@ -16,12 +16,12 @@
   align-items: center;
   gap: var(--space-1);
 }
+/* A strong body Text. */
 .vs-drawer-title {
+  --text-size: var(--vs-text-body);
   flex: 1;
   min-width: 0;
   color: var(--text-1);
-  font-size: var(--vs-text-body);
-  font-weight: var(--weight-strong);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -57,7 +57,7 @@
   padding: var(--space-1);
   box-sizing: border-box;
   color: var(--text-3);
-  font-size: var(--vs-text-label);
+  --text-size: var(--vs-text-label);
   text-align: center;
   overflow: hidden;
 }
@@ -82,7 +82,8 @@
   grid-template-columns: auto minmax(0, 1fr);
   gap: 2px var(--space-2);
   margin: 0;
-  font-size: var(--vs-text-label);
+  /* A body Text: the facts inherit its size. */
+  --text-size: var(--vs-text-label);
 }
 .vs-drawer-facts dt {
   color: var(--text-3);
@@ -129,13 +130,14 @@
   border-radius: var(--radius-pill);
   background: var(--surface-3);
   color: var(--text-1);
-  font-size: var(--vs-text-label);
+  /* A body Text; its × inherits it. */
+  --text-size: var(--vs-text-label);
 }
 .vs-drawer-tag[data-some] {
   color: var(--text-3);
 }
 .vs-drawer-tag-count {
-  font-size: var(--vs-text-annot);
+  --text-size: var(--vs-text-annot);
   color: var(--text-3);
 }
 .vs-drawer-tag-x {
@@ -170,7 +172,7 @@
 .vs-drawer-note {
   margin: 0;
   color: var(--text-3);
-  font-size: var(--vs-text-label);
+  --text-size: var(--vs-text-label);
 }
 .vs-drawer-error {
   color: var(--danger);

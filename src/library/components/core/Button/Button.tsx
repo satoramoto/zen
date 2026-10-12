@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, type MouseEvent, type PointerEvent } fr
 import { useLongPress } from './useLongPress';
 import type { HueSlot } from '../hue';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './Button.css';
 
 export type ButtonGlyph = 'prev' | 'next' | 'up' | 'down' | 'plus' | 'minus' | 'caret';
@@ -248,7 +249,11 @@ export function Button({
   }
 
   return (
-    <button
+    <Text
+      as="button"
+      role="label"
+      leading="tight"
+      tabular
       ref={node}
       type="button"
       className={`yh-button ${focusRing}`}
@@ -283,10 +288,10 @@ export function Button({
         </span>
       )}
       {symbol && (
-        <span className="yh-button__glyph" data-part="glyph" data-glyph={symbol} aria-hidden="true">
+        <Text role="label" leading="tight" className="yh-button__glyph" data-part="glyph" data-glyph={symbol} aria-hidden="true">
           {GLYPHS[symbol]}
-        </span>
+        </Text>
       )}
-    </button>
+    </Text>
   );
 }

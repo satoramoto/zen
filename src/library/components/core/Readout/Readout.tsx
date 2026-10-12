@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Text } from '../../../primitives/Text';
 import { fraction, splitUnit, useAdjust } from './adjust';
 import './Readout.css';
 
@@ -97,13 +98,25 @@ export function Readout({
       aria-disabled={disabled ? 'true' : undefined}
       data-tip={tip}
     >
-      <span className="yh-readout-label">{label}</span>
+      <Text role="body" size="caption" case="label" className="yh-readout-label">
+        {label}
+      </Text>
       <span className="yh-readout-value">
-        <span className="yh-readout-number">{number}</span>
+        <Text role="numeral" size="body" className="yh-readout-number">
+          {number}
+        </Text>
         {/* Always drawn, empty when there's no unit, so every row's last digit lines up. */}
-        <span className="yh-readout-unit">{unit}</span>
+        <Text role="body" size="caption" className="yh-readout-unit">
+          {unit}
+        </Text>
       </span>
-      <span className="yh-readout-code">{code && <kbd>{code}</kbd>}</span>
+      <span className="yh-readout-code">
+        {code && (
+          <Text as="kbd" role="numeral" size="caption" weight="body">
+            {code}
+          </Text>
+        )}
+      </span>
       <span ref={bar} className="yh-readout-bar" data-part="bar" aria-hidden="true">
         <span className="yh-readout-fill" style={{ width: `${fill * 100}%` }} />
       </span>

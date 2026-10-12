@@ -11,30 +11,25 @@
   column-gap: var(--space-3);
   height: var(--control-h);
   font-family: var(--font-sans);
-  letter-spacing: var(--tracking);
 }
 
-/* Label: a quiet caption. */
+/* Label: a quiet caption (a body Text at caption size, in the label case). */
 .yh-bar-readout__label {
   display: flex;
   align-items: baseline;
   gap: var(--space-1);
   min-width: 0;
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
   color: var(--text-3);
-  text-transform: var(--label-case);
   white-space: nowrap;
 }
 .yh-bar-readout__label-text {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* Soft takeover: the hardware fader is away, the one warning in the row. */
+/* Soft takeover: the hardware fader is away, the one warning in the row (strong weight). */
 .yh-bar-readout__away {
   flex: none;
   color: var(--warning);
-  font-weight: var(--weight-strong);
 }
 
 /* The bar: the whole cell is the drag target, the line sits in its middle. */
@@ -105,18 +100,16 @@
   font-family: var(--font-readout);
   white-space: nowrap;
 }
+/* A numeral Text at body size, on the row's leading. */
 .yh-bar-readout__value {
-  font-size: var(--size-body);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
+  --text-leading: 1.4;
   color: var(--text-1);
 }
-/* The unit: a fixed column after the digits, drawn even when empty, so the last digits align. */
+/* The unit: a fixed column after the digits, drawn even when empty, so the last digits align.
+   A body Text at caption size. */
 .yh-bar-readout__unit {
   flex: none;
   width: 3.5ch;
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
   color: var(--text-3);
   text-align: left;
 }

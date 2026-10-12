@@ -14,7 +14,13 @@ describe('AccentBlock style hue', () => {
     expect(rule).toMatch(/border-left:[^;]*var\(--style\)/);
     expect(rule).not.toContain('--accent');
     expect(rule).toMatch(/border-left:\s*var\(--space-1\)\s+solid/);
-    expect(rule).toMatch(/font-size:\s*var\(--size-body\)/);
+  });
+
+  it('sets the name as a label-role Text at body size', () => {
+    render(<AccentBlock label="Sunday Drive Pop" as="button" />);
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('data-role', 'label');
+    expect(button).toHaveAttribute('data-text-size', 'body');
   });
 
   it('drops the chevron between step keys (chevron false), keeps it by default', () => {

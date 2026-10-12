@@ -15,11 +15,8 @@
   background: transparent;
   color: var(--text-2);
   font-family: var(--font-sans);
-  font-size: var(--size-label);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  font-variant-numeric: tabular-nums;
-  line-height: var(--control-h);
+  /* A body Text at label size, tabular, one control height of leading. */
+  --text-leading: var(--control-h);
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -49,11 +46,9 @@
 
 .yh-waiting-chip--display {
   height: auto;
+  /* A display Text (face, weight, size, tracking, 1.1 leading): the knob goes back to the role's. */
   font-family: var(--font-display);
-  font-size: var(--size-display);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
-  line-height: 1.1;
+  --text-leading: initial;
 }
 
 /* At display size the arrow keeps a cap height's presence, so it reads as "next", not a bullet. */

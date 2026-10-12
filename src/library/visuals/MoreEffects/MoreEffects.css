@@ -42,8 +42,6 @@
   gap: var(--space-3);
   min-width: 0;
   color: var(--text-2);
-  font-size: var(--size-body);
-  font-weight: var(--weight-strong);
 }
 
 /* Speed, Colour, Trails: the slider with its reading inside, filling the row beside its name. */
@@ -74,17 +72,17 @@
   min-height: calc(var(--space-1) * 23.5); /* effects.css 94px */
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-card);
-  font-size: var(--size-body);
-  font-weight: var(--weight-strong);
+  /* The face is a label Text (strong): its size knob. */
+  --text-size: var(--size-body);
 }
-.vs-more-fx-hits .vs-effects-hit small {
+.vs-more-fx-hits .vs-effects-hit-key {
+  --text-size: var(--size-caption);
   position: absolute;
   top: var(--space-3);
   right: var(--space-3);
   color: var(--vs-caption-raised);
-  font-size: var(--size-caption);
 }
-.vs-more-fx-hits .vs-effects-hit[data-on] small {
+.vs-more-fx-hits .vs-effects-hit[data-on] .vs-effects-hit-key {
   color: var(--text-1);
 }
 

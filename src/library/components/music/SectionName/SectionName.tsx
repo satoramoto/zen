@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { Text } from '../../../primitives/Text';
 import './SectionName.css';
 
 /**
@@ -66,7 +67,9 @@ export function SectionName({ label, hue = 'main', state, idle = false, size }: 
   const word = match ? match[1] : shown;
   const variant = match ? match[2] : '';
   return (
-    <span
+    <Text
+      role="display"
+      leading="tight"
       className="yh-section-name"
       data-part="name"
       data-hue={hue}
@@ -78,9 +81,11 @@ export function SectionName({ label, hue = 'main', state, idle = false, size }: 
       {variant && (
         <>
           {' '}
-          <span className="yh-section-name__variant" data-part="variant">{variant}</span>
+          <Text role="display" size="inherit" leading="tight" tabular className="yh-section-name__variant" data-part="variant">
+            {variant}
+          </Text>
         </>
       )}
-    </span>
+    </Text>
   );
 }

@@ -2,482 +2,578 @@
   "components/core": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/ActionButton": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Button": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Checkbox": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Disclosure": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/FolderList": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/LampButton": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/LineSlider": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Modal": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/NumberField": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/PageList": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Param": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Popover": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Radio": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Readout": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/SearchField": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Segmented": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Select": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Separator": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/SettingsRow": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Slider": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/StatusDot": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/StepValue": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/core/Toggle": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/BarBeat": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/BarReadout": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/ChordReadout": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/Fader": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/Keys": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/Knob": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/Meter": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/Pad": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/PartMarks": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/RackCell": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/SectionName": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/SendReadout": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/SoundCell": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "components/music/TempoReadout": {
     "knobs": 0,
     "margins": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "layout": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "primitives": {},
   "visuals": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/App": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/AudioInput": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/CrashPrompt": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Crate": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Credits": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Effects": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Field": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/HelpOverlay": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Hero": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Home": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/HomeLayout": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Icon": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/InsetSidebar": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Inspector": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Library": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/LibraryGrid": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/LinkPanel": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Live": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/MoreEffects": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Numbers": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Onboarding": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/OutputPanel": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Pack": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/PackOffer": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/PlaylistHead": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Popover": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/PresetDrawer": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/PresetTile": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Settings": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/SourcePicker": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/StageCrate": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/StageDock": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/StageHead": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/StageLayout": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Status": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/TagEditor": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/TransportBar": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Tune": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Update": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "visuals/Views": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/AccentBlock": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/AppBar": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/Display": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/DisplayArt": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/FaderBank": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/HealthSlot": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/HueLegend": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/KnobBank": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/OneTouchPicker": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/PadBank": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/SongForm": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/Stage": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/StatusLine": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   },
   "yahaha/WaitingChip": {
     "knobs": 0,
     "painting": 0,
-    "pixels": 0
+    "pixels": 0,
+    "type": 0
   }
 }

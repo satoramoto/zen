@@ -1,16 +1,17 @@
 import { useEffect, useState, type ButtonHTMLAttributes } from 'react';
 import type { TipAction } from '../../components/music/Pad/Pad';
+import { Text } from '../../primitives/Text';
 import './OneTouchPicker.css';
 
-/** A number's button: renders `data-tip` and runs the tooltip action with its own key. */
-function NumberButton({ tip, tipAction, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { tip: string; tipAction?: TipAction }) {
+/** A number's button: a `numeral` Text at label size; renders `data-tip` and runs the tooltip action with its own key. */
+function NumberButton({ tip, tipAction, role, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { tip: string; tipAction?: TipAction }) {
   const [node, setNode] = useState<HTMLButtonElement | null>(null);
   useEffect(() => {
     if (!node || !tipAction) return;
     const handle = tipAction(node, tip);
     return () => handle?.destroy?.();
   }, [node, tip, tipAction]);
-  return <button {...rest} ref={setNode} type="button" data-tip={tip} />;
+  return <Text {...rest} as="button" role="numeral" size="label" ariaRole={role} ref={setNode} type="button" data-tip={tip} />;
 }
 
 export interface OneTouchPickerProps {
@@ -113,7 +114,7 @@ export function OneTouchPicker({
   if (cells) {
     return (
       <>
-        <span className="yh-onetouchpicker__label yh-onetouchpicker__cell" data-part="label">{label}</span>
+        <Text role="caption" case="label" className="yh-onetouchpicker__label yh-onetouchpicker__cell" data-part="label">{label}</Text>
         {buttons}
       </>
     );
@@ -121,9 +122,9 @@ export function OneTouchPicker({
 
   return (
     <div className="yh-onetouchpicker" data-part="root" data-orientation={orientation} role="group" aria-label={spoken}>
-      <span className="yh-onetouchpicker__label" data-part="label" aria-hidden="true">
+      <Text role="caption" case="label" className="yh-onetouchpicker__label" data-part="label" aria-hidden="true">
         {label}
-      </span>
+      </Text>
       <span className="yh-onetouchpicker__strip" data-part="strip">{buttons}</span>
     </div>
   );

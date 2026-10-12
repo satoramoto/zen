@@ -24,11 +24,7 @@
   max-width: 100%;
   overflow: hidden;
   color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
+  /* Type: a body Text at caption size in the label case. */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -41,12 +37,8 @@
   grid-area: readout;
   min-width: 3ch;
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
-  line-height: 1;
+  /* Type: a numeral Text at label size, untracked. */
+  --text-tracking: 0;
   text-align: center;
   white-space: nowrap;
 }
@@ -67,9 +59,7 @@
 .lib-meter__channel {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: var(--mat-well-texture), var(--mat-well-fill);
-  box-shadow: var(--mat-well-shadow);
+  /* A Surface of `well`, pill corners. */
 }
 .lib-meter[data-orientation='horizontal'] .lib-meter__channel {
   width: var(--lib-meter-length);

@@ -9,14 +9,15 @@
   margin-top: var(--mat-plate-inset);
   gap: var(--space-2);
 }
-/* The heading and "as made": the original's 11px, on the label step (12). */
+/* The heading and "as made": the original's 11px, on the label step (12). Both are Texts (the
+   group's label, and the reset key) a touch under strong. */
+.vs-tune > .lib-group__head .lib-group__label,
+.vs-tune-reset {
+  --text-size: var(--vs-text-label);
+  --text-weight: 500;
+}
 .vs-tune > .lib-group__head .lib-group__label {
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
-  font-weight: 500;
-}
-.vs-tune > .lib-group__body {
-  gap: var(--space-2);
 }
 
 .vs-tune-reset {
@@ -26,8 +27,6 @@
   border-radius: var(--radius-control);
   background: none;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
-  font-weight: 500;
   cursor: pointer;
 }
 .vs-tune-reset:hover {
@@ -38,20 +37,20 @@
   outline-offset: 2px;
 }
 
-/* One slider row: the name in the controls' ink, the reading in the ink, tabular. */
+/* One slider row: the name in the controls' ink, the reading in the ink, tabular (the slider's
+   caption and readout are Texts: their knobs). */
 .vs-tune .vs-tune-slider[data-layout='inside'] {
   width: 100%;
   min-width: 0;
 }
 .vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__caption {
   color: var(--text-2);
-  font-size: var(--size-caption);
+  --text-size: var(--size-caption);
 }
 .vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__readout {
   color: var(--text-1);
-  font-size: var(--size-caption);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
+  --text-size: var(--size-caption);
+  --text-weight: 500;
 }
 /* The 1× detent: a tick through the well at its centre, under the reading. */
 .vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__track::after {

@@ -13,9 +13,6 @@
   border-radius: var(--radius-input);
   background: var(--input-fill);
   color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  letter-spacing: var(--tracking);
 }
 
 .yh-search-field:hover {
@@ -69,9 +66,7 @@
   background: transparent;
   color: var(--text-1);
   caret-color: var(--accent);
-  font: inherit;
-  font-weight: var(--weight-body);
-  letter-spacing: inherit;
+  /* Type: the input is a body Text. */
   text-overflow: ellipsis;
   outline: none;
   appearance: none;

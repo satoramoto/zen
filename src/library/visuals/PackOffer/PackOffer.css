@@ -1,5 +1,6 @@
 /* The library's pack offer (PackOffer.tsx), on the home: one quiet line on the main column's
-   inset, its button inline. Contract variables and visuals.css tokens only. */
+   inset, its button inline; a body Text in tabular figures. Contract variables and visuals.css
+   tokens only. */
 
 .vs-pack-offer {
   display: flex;
@@ -9,9 +10,7 @@
   margin: 0;
   padding: 0 var(--mat-plate-inset) var(--space-3);
   color: var(--text-3);
-  font-size: var(--vs-text-body);
-  font-variant-numeric: tabular-nums;
-  line-height: 1.4;
+  --text-size: var(--vs-text-body);
 }
 .vs-pack-offer .vs-pack-offer-error {
   color: var(--danger);

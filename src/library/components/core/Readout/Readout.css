@@ -23,15 +23,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* The label and the value share BarReadout's recipe: the one caption, then the value at body size. */
+/* The label and the value share BarReadout's recipe: the one caption, then the value at body size.
+   Type: the label is a body Text at caption size in label case. */
 .yh-readout-label {
   overflow: hidden;
   color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
   text-overflow: ellipsis;
 }
 
@@ -42,25 +38,19 @@
   gap: var(--space-1);
 }
 
+/* Type: a numeral Text at body size (readout face, tabular, leading 1). */
 .yh-readout-number {
   min-width: 4ch;
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-size: var(--size-body);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
   text-align: right;
 }
 
-/* The unit: a fixed column after the digits, drawn even when empty, so the last digits align. */
+/* The unit: a fixed column after the digits, drawn even when empty, so the last digits align.
+   Type: a body Text at caption size. */
 .yh-readout-unit {
   flex: none;
   width: 3.5ch;
   color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  letter-spacing: var(--tracking);
 }
 
 .yh-readout-code {
@@ -73,10 +63,8 @@
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-control);
   color: var(--text-3);
-  font-family: var(--font-readout);
-  font-size: var(--size-caption);
-  font-variant-numeric: tabular-nums;
-  line-height: 1.5;
+  /* Type: a numeral Text at caption size and body weight; the key cap's own leading. */
+  --text-leading: 1.5;
   text-align: center;
 }
 

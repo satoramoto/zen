@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { FocusEvent, KeyboardEvent, MouseEvent, PointerEvent } from 'react';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
+import { Text } from '../../primitives/Text';
 import { PresetTile, tileBy, tileName } from '../PresetTile/PresetTile';
 import { tileFor, type Prepared } from '../model/librarySearch';
 import { FAILED_SAYS, useFailedPresets } from '../model/survive';
@@ -489,18 +490,20 @@ export const Tile = memo(function Tile({
         marks={
           <>
             {failed && (
-              <span className="vs-tile-failed" aria-hidden="true">
+              <Text weight="strong" className="vs-tile-failed" aria-hidden="true">
                 !
-              </span>
+              </Text>
             )}
             {addedTo !== null && (
-              <span className="vs-tile-added" aria-hidden="true">
+              <Text weight="strong" leading="tight" className="vs-tile-added" aria-hidden="true">
                 ✓
-              </span>
+              </Text>
             )}
             {intoName !== null && (
               // Out of the tab order and what is read: the grid is one tab stop, and + on the grid adds the active tile.
-              <button
+              <Text
+                as="button"
+                leading="tight"
                 type="button"
                 className="vs-tile-add"
                 tabIndex={-1}
@@ -513,7 +516,13 @@ export const Tile = memo(function Tile({
                 }}
               >
                 +
-              </button>
+              </Text>
+            )}
+            {adding && addedTo === null && (
+              // The cue that a click adds, shown on hover over the + (a click on it is the tile's).
+              <Text leading="tight" className="vs-lib-cue" aria-hidden="true">
+                +
+              </Text>
             )}
           </>
         }
@@ -536,19 +545,32 @@ export const Tile = memo(function Tile({
       onPointerDown={onPress && ((ev) => onPress(index, ev))}
     >
       <div className="vs-lib-thumb">
-        {p.row.thumbnail ? <img src={p.row.thumbnail} alt="" loading="lazy" decoding="async" draggable={false} /> : <span className="vs-lib-thumb-none">{p.style}</span>}
+        {p.row.thumbnail ? (
+          <img src={p.row.thumbnail} alt="" loading="lazy" decoding="async" draggable={false} />
+        ) : (
+          <Text size="caption" leading="normal" className="vs-lib-thumb-none">
+            {p.style}
+          </Text>
+        )}
         {p.star && (
-          <span className="vs-lib-star" aria-hidden="true">
+          <Text size="caption" leading="normal" className="vs-lib-star" aria-hidden="true">
             ★
-          </span>
+          </Text>
         )}
         {failed && (
-          <span className="vs-lib-failed" aria-hidden="true">
+          <Text weight="strong" className="vs-lib-failed" aria-hidden="true">
             !
-          </span>
+          </Text>
+        )}
+        {playing && (
+          <Text leading="normal" className="vs-lib-playing" aria-hidden="true">
+            ▶
+          </Text>
         )}
       </div>
-      <span className="vs-lib-title">{p.title}</span>
+      <Text size="caption" leading="normal" className="vs-lib-title">
+        {p.title}
+      </Text>
       {intoName !== null && (
         // Out of the tab order: the grid is one tab stop, and + on the grid adds the active tile.
         <div className="vs-lib-add" aria-hidden="true">

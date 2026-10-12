@@ -2,6 +2,7 @@ import { CameraPanel, CameraProvider } from '../Camera/Camera';
 import type { CameraController } from '../model/camera';
 import { useCallback, useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import { ThemeScope, resolveTheme, type ModeChoice, type ThemeChoice } from '../../theme';
 import { HOME as HOME_VIEW, ViewList, useSheet, viewsFor, type View } from '../Views/Views';
 import { Home } from '../Home/Home';
@@ -148,13 +149,18 @@ export function VisualsApp({ theme, mode = 'system', frame = true, chrome = true
   );
 }
 
-/** The window: the theme scope, the ground layer (the desktop shows through glass packs) and `.vs-root`. */
+/**
+ * The window: the theme scope, the ground layer (the desktop shows through glass packs) and
+ * `.vs-root`, a body `Text` whose type (visuals.css: the lead size) the whole app inherits.
+ */
 function Framed({ theme, mode, children }: { theme?: ThemeChoice; mode: ModeChoice; children: ReactNode }) {
   const { facets } = resolveTheme({ theme: 'visuals', ...theme });
   return (
     <ThemeScope facets={facets} mode={mode}>
       <Layer level="ground" className="vs-app">
-        <div className="vs-root">{children}</div>
+        <Text as="div" className="vs-root">
+          {children}
+        </Text>
       </Layer>
     </ThemeScope>
   );

@@ -9,7 +9,6 @@
   padding-block: var(--space-2);
   border-top: var(--border-width) solid var(--border);
   font-family: var(--font-sans);
-  font-variant-numeric: tabular-nums;
 }
 
 /* One flat button, the same inset as SoundCell's, so its text starts on the same left edge. */
@@ -41,40 +40,32 @@
   background: var(--surface-3);
 }
 
-/* Caption line: "Rack · A1", the label muted, the slot in text so it reads as the value. */
+/* Caption line: "Rack · A1", the label muted, the slot in text so it reads as the value. A Text in
+   the label role at the caption size, tabular. */
 .yh-rack-cell__head {
   display: flex;
   align-items: baseline;
   gap: var(--space-1);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  line-height: 1.2;
   color: var(--text-3);
 }
 .yh-rack-cell__separator {
   color: var(--text-4);
 }
-/* The slot is the cell's value: label size, a step above its caption, never the smallest thing. */
+/* The slot is the cell's value: label size, a step above its caption, never the smallest thing.
+   A label Text with no case, tabular, in the readout face. */
 .yh-rack-cell__slot {
   flex: none;
-  font-size: var(--size-label);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  text-transform: none;
   color: var(--text-1);
 }
 
-/* Name line: the rack's name takes the room and the ellipsis; the mark stays whole after it. */
+/* Name line: the rack's name takes the room and the ellipsis; the mark stays whole after it. The
+   line and the title are caption Texts at the body size (leading 1.3, body weight), tabular. */
 .yh-rack-cell__name {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   min-inline-size: 0;
-  font-size: var(--size-body);
-  font-weight: var(--weight-body);
-  line-height: 1.3;
   color: var(--text-1);
 }
 .yh-rack-cell__title {
@@ -83,10 +74,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* No rack: a caption, so an empty slot doesn't take a name's room or weight. */
+/* No rack: a caption (the title's size prop), so an empty slot doesn't take a name's room or weight. */
 .yh-rack-cell__name[data-empty='true'] .yh-rack-cell__title {
   color: var(--text-3);
-  font-size: var(--size-caption);
 }
 .yh-rack-cell__mark {
   flex: none;

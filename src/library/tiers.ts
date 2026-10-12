@@ -36,11 +36,19 @@
  * doc comment of a TSX file in the same directory (or, for a CSS file with no sibling TSX, in that
  * CSS file's own comments). The list runs to the next `**Heading**` or the comment's end; a
  * trailing `*` (`--yh-fader-*`) lists a family by prefix. A name counts once per folder.
+ *
+ * **type** (`components`, `layout`, `yahaha`, `visuals`): type belongs to `Text`. CSS: each
+ * `font`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, `text-transform` or
+ * `font-variant-numeric` declaration, unless its value is only a CSS-wide keyword (`inherit`,
+ * `initial`, `unset`, `revert`: `button { font: inherit }` is a reset, not a decision). TS/TSX:
+ * each `font`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, `textTransform` or
+ * `fontVariantNumeric` key inside `style={{ … }}`. Setting a `Text` knob (`--text-size`) is not
+ * counted.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-export type RuleId = 'pixels' | 'margins' | 'painting' | 'knobs';
+export type RuleId = 'pixels' | 'margins' | 'painting' | 'knobs' | 'type';
 
 /** Each rule and what to do instead. */
 export const RULES: Record<RuleId, { fix: string }> = {
@@ -50,6 +58,9 @@ export const RULES: Record<RuleId, { fix: string }> = {
   margins: { fix: "spacing belongs to the Group (gap), not a control's outer margin" },
   painting: { fix: "painting belongs to primitives (Surface) or the Region's own plate" },
   knobs: { fix: "declare it under **Tuning knobs** in the component's doc comment" },
+  type: {
+    fix: 'type belongs to Text: render the text as <Text role=…> (leading, size, weight, case, tabular), or set its --text-* knobs on the Text element',
+  },
 };
 export const RULE_IDS = Object.keys(RULES) as RuleId[];
 
@@ -62,6 +73,7 @@ export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
   margins: ['components'],
   painting: ['layout', 'yahaha', 'visuals'],
   knobs: ['components', 'layout', 'yahaha', 'visuals'],
+  type: ['components', 'layout', 'yahaha', 'visuals'],
 };
 
 /**
@@ -385,6 +397,11 @@ function pxLengths(s: string): { at: number; text: string }[] {
 const MARGIN = /^margin(?:-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)?$/;
 const PAINT = /^(?:background(?:-[\w-]+)?|box-shadow|backdrop-filter|border(?:-(?:top|right|bottom|left|inline|block)(?:-[\w-]+)?)?|border-(?:color|style|width|image(?:-[\w-]+)?))$/;
 const PAINT_NONE = new Set(['none', '0', 'transparent', 'inherit', 'initial', 'unset']);
+const TYPE_PROP = /^(?:font|font-size|font-weight|line-height|letter-spacing|text-transform|font-variant-numeric)$/;
+const CSS_WIDE = new Set(['inherit', 'initial', 'unset', 'revert', 'revert-layer']);
+/** A type declaration the `type` rule counts. */
+export const isTypeDecl = (prop: string, value: string) =>
+  TYPE_PROP.test(prop) && !CSS_WIDE.has(unimportant(value).toLowerCase());
 const unimportant = (v: string) => v.replace(/!\s*important\s*$/i, '').trim();
 
 export const isPainting = (prop: string, value: string) =>
@@ -487,6 +504,9 @@ export function scanCss(path: string, source: string, options: CssOptions = {}):
       if (applies('painting', path) && isPainting(d.prop, d.value) && paintingCounts(tier, rule)) {
         out.push({ file: path, line: line(d.offset), rule: 'painting', snippet: short(`${rule.selectors.join(', ')} { ${snippet} }`) });
       }
+      if (applies('type', path) && isTypeDecl(d.prop, d.value)) {
+        out.push({ file: path, line: line(d.offset), rule: 'type', snippet: short(`${rule.selectors.join(', ')} { ${snippet} }`) });
+      }
       if (applies('knobs', path) && KNOB.test(d.prop) && !listed(d.prop, knobs)) {
         out.push({ file: path, line: line(d.offset), rule: 'knobs', snippet: d.prop });
       }
@@ -498,17 +518,21 @@ export function scanCss(path: string, source: string, options: CssOptions = {}):
 const STYLE_LENGTH =
   /(?<![\w$.'"])(width|height|(?:min|max)(?:Width|Height)|padding\w*|margin\w*|gap|rowGap|columnGap|top|right|bottom|left|inset\w*|fontSize|borderRadius|flexBasis)\s*:\s*(-?\d+(?:\.\d+)?)(?![\w.])(?=\s*[,}])/g;
 
+const STYLE_TYPE = /(?<![\w$.'"-])(font|fontSize|fontWeight|lineHeight|letterSpacing|textTransform|fontVariantNumeric)\s*:/g;
+
 /** Findings in one TS/TSX file, `path` relative to `src/library`. */
 export function scanTsx(path: string, source: string): Finding[] {
-  if (!applies('pixels', path)) return [];
+  const px = applies('pixels', path);
+  const type = applies('type', path);
+  if (!px && !type) return [];
   const src = stripTsComments(source);
   const line = lineAt(src);
   const lines = source.split('\n');
-  const at = (offset: number): Finding => {
+  const at = (offset: number, rule: RuleId = 'pixels'): Finding => {
     const n = line(offset);
-    return { file: path, line: n, rule: 'pixels', snippet: short(lines[n - 1] ?? '') };
+    return { file: path, line: n, rule, snippet: short(lines[n - 1] ?? '') };
   };
-  const out: Finding[] = pxLengths(src).map((px) => at(px.at));
+  const out: Finding[] = px ? pxLengths(src).map((p) => at(p.at)) : [];
   for (const m of src.matchAll(/style=\{\{/g)) {
     const begin = (m.index ?? 0) + m[0].length;
     let depth = 2;
@@ -519,9 +543,12 @@ export function scanTsx(path: string, source: string): Finding[] {
       j++;
     }
     const body = src.slice(begin, j);
-    for (const s of body.matchAll(STYLE_LENGTH)) {
-      if (!allowed(Math.abs(parseFloat(s[2])))) out.push(at(begin + (s.index ?? 0)));
+    if (px) {
+      for (const s of body.matchAll(STYLE_LENGTH)) {
+        if (!allowed(Math.abs(parseFloat(s[2])))) out.push(at(begin + (s.index ?? 0)));
+      }
     }
+    if (type) for (const s of body.matchAll(STYLE_TYPE)) out.push(at(begin + (s.index ?? 0), 'type'));
   }
   return out.sort((a, b) => a.line - b.line);
 }
@@ -618,4 +645,40 @@ export function compare(counts: Counts, baseline: Counts, findings: Finding[] = 
     }
   }
   return failures;
+}
+
+/* ---------- adoption ---------- */
+
+/** The top folders whose widget folders are counted for adoption. */
+export const ADOPTION_TOPS = ['components', 'yahaha', 'visuals'] as const;
+
+export interface Adoption {
+  /** Widget folders (`components/core/<Name>`, `yahaha/<Name>`, `visuals/<Name>`) with a TSX file. */
+  components: string[];
+  /** Of those, the ones whose TSX renders `<Text` / `<Surface`. */
+  text: string[];
+  surface: string[];
+}
+
+/** How many components render the primitives: a folder counts when any scanned TSX in it does. */
+export function adoption(root: string): Adoption {
+  const components = new Set<string>();
+  const text = new Set<string>();
+  const surface = new Set<string>();
+  for (const t of ADOPTION_TOPS) {
+    const base = join(root, t);
+    if (!existsSync(base)) continue;
+    for (const f of readdirSync(base, { recursive: true, encoding: 'utf8' })) {
+      const rel = `${t}/${f.split('\\').join('/')}`;
+      if (!rel.endsWith('.tsx') || excluded(rel)) continue;
+      const folder = folderOf(rel);
+      if (folder === t || folder === 'components/core' || folder === 'components/music') continue;
+      components.add(folder);
+      const src = stripTsComments(readFileSync(join(root, rel), 'utf8'));
+      if (/<Text\b/.test(src)) text.add(folder);
+      if (/<Surface\b/.test(src)) surface.add(folder);
+    }
+  }
+  const sorted = (s: Set<string>) => [...s].sort();
+  return { components: sorted(components), text: sorted(text), surface: sorted(surface) };
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { DashMark, type CheckProps } from '../Checkbox/Checkbox';
+import { Text } from '../../../primitives/Text';
 import '../Toggle/size.css';
 import '../Checkbox/Checkbox.css';
 import './Radio.css';
@@ -35,7 +36,9 @@ export function Radio({
   const [ownMixed, setOwnMixed] = useState(defaultChecked === 'mixed');
   const mixed = controlled ? checked === 'mixed' : ownMixed;
   return (
-    <label
+    <Text
+      as="label"
+      role="body"
       className="lib-check lib-radio lib-sized"
       data-part="root"
       data-size={size}
@@ -66,7 +69,7 @@ export function Radio({
           {children}
         </span>
       )}
-    </label>
+    </Text>
   );
 }
 

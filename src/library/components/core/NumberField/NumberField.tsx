@@ -1,8 +1,9 @@
-import { useCallback, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { useCallback, useState, type ChangeEvent, type CSSProperties, type FocusEvent, type KeyboardEvent } from 'react';
 import { defaultOrigin, fillFrom, hintAttribute, useReserved, type FillOrigin } from '../Param/fill';
 import { clamp, quantize, type Param } from '../Param/param';
 import { useParamGesture } from '../Param/useParamGesture';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './NumberField.css';
 
 export type { FillOrigin } from '../Param/fill';
@@ -49,6 +50,9 @@ const OPENS_EDITOR = /^[-+.0-9]$/;
  * sign, point or Enter opens a text editor: Enter or blur commits (clamped and quantized), Escape
  * cancels. The box reserves its longest reading so it never resizes as it counts. `role="slider"`
  * named by `label`, else the caption.
+ *
+ * **Type.** The caption is a `caption` `Text` in the label case; the body and the input are
+ * `numeral` `Text`s at the label size, untracked.
  *
  * **Parts** (`data-part`). `caption` the name; `body` the value window, a `screen`; `fill` the
  * value as a lit bar from `origin` (`--lit`, `--mat-lit-glow`); `text` the reading, in the readout
@@ -110,6 +114,9 @@ export function NumberField({
     gesture.props.onKeyDown(e);
   };
 
+  // `role` is Text's type role, so the gesture's ARIA role goes in `ariaRole`.
+  const { role: ariaRole, ...surface } = gesture.props;
+
   const style = {
     ...reserved,
     ...fillFrom(param, origin, gesture.fraction),
@@ -124,16 +131,20 @@ export function NumberField({
       style={style}
     >
       {name && (
-        <span className="lib-number-field__caption" data-part="caption">
+        <Text role="caption" case="label" className="lib-number-field__caption" data-part="caption">
           {name}
-        </span>
+        </Text>
       )}
       {draft === null ? (
-        <div
+        <Text
+          as="div"
+          role="numeral"
+          size="label"
+          ariaRole={ariaRole}
           className={`lib-number-field__body ${focusRing}`}
           data-part="body"
           title={title}
-          {...gesture.props}
+          {...surface}
           onKeyDown={onKeyDown}
         >
           {showFill && <span className="lib-number-field__fill" data-part="fill" aria-hidden="true" />}
@@ -145,20 +156,23 @@ export function NumberField({
               {gesture.text}
             </span>
           )}
-        </div>
+        </Text>
       ) : (
-        <input
+        <Text
+          as="input"
+          role="numeral"
+          size="label"
           className="lib-number-field__body lib-number-field__input"
           data-part="input"
-          ref={(node) => {
+          ref={(node: HTMLInputElement | null) => {
             node?.focus();
           }}
           value={draft}
           aria-label={label ?? name}
           inputMode="decimal"
-          onChange={(e) => setDraft(e.currentTarget.value)}
-          onBlur={(e) => commit(e.currentTarget.value)}
-          onKeyDown={(e) => {
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setDraft(e.currentTarget.value)}
+          onBlur={(e: FocusEvent<HTMLInputElement>) => commit(e.currentTarget.value)}
+          onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') commit(e.currentTarget.value);
             else if (e.key === 'Escape') setDraft(null);
             else return;

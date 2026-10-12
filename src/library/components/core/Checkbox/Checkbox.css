@@ -13,17 +13,15 @@
   gap: var(--space-2);
   min-height: var(--lib-size-h);
   color: var(--text-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  letter-spacing: var(--tracking);
-  line-height: 1.2;
+  /* Type: the root is a body Text; these knobs reach it because it carries this class. */
+  --text-leading: 1.2;
   vertical-align: middle;
   cursor: pointer;
   user-select: none;
 }
 .lib-check[data-size='mini'],
 .lib-check[data-size='small'] {
-  font-size: var(--size-caption);
+  --text-size: var(--size-caption);
 }
 .lib-check[data-disabled] {
   cursor: not-allowed;

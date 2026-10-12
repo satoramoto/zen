@@ -60,7 +60,7 @@ describe('VisualsApp with the lab editor', () => {
     const { container } = lab();
     const editor = await screen.findByRole('group', { name: 'editor' });
     const views = within(editor).getByRole('radiogroup', { name: 'view' });
-    expect(within(views).getAllByRole('radio').map((r) => r.textContent)).toEqual(['home', 'editor', 'live']);
+    expect(within(views).getAllByRole('radio').map((r) => r.textContent)).toEqual(['Home', 'Editor', 'Live']);
     await userEvent.click(within(views).getByRole('radio', { name: 'home' }));
     await waitFor(() => expect(container.querySelector(`#${SIDEBAR_ID}`)).not.toBeNull());
   });

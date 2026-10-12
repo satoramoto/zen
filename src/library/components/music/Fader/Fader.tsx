@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import type { HueSlot } from '../../core/hue';
 import { focusRing } from '../../../primitives/Ring';
 import { Surface } from '../../../primitives/Surface';
+import { Text } from '../../../primitives/Text';
 import { FADER_MAX as MAX, useFader } from './useFader';
 import './Fader.css';
 
@@ -147,8 +148,15 @@ export function Fader({
       style={style}
     >
       <span className="yh-fader__head" data-part="head" aria-hidden="true">
-        {word && <span className="yh-fader__word">{word}</span>}
-        <span className="yh-fader__value" data-part="value">{num}</span>
+        {word && (
+          <Text role="label" size="caption" leading="tight" className="yh-fader__word">
+            {word}
+          </Text>
+        )}
+        {/* Off, the number steps down a size as well as a shade, so it never competes with a live level. */}
+        <Text role="numeral" size={off ? 'label' : 'heading'} className="yh-fader__value" data-part="value">
+          {num}
+        </Text>
       </span>
       <span className="yh-fader__travel" data-part="travel" aria-hidden="true">
         <span className="yh-fader__rail" ref={railRef}>

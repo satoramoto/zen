@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Modal } from '../../components/core/Modal/Modal';
 import { Opaque } from '../../layout/Layer';
+import { Surface } from '../../primitives/Surface';
+import { Text, type TextProps } from '../../primitives/Text';
 import * as api from '../model/api';
 import { say } from '../model/words';
 import './CrashPrompt.css';
@@ -97,6 +99,12 @@ export function writeSeen(seen: Seen, store?: Pick<Storage, 'setItem'>) {
   }
 }
 
+/** The report's text: a `pre` in the code role (the mono face, proportional figures as before),
+ *  rendered by the screen Surface around it so one element is both. */
+function ReportText(props: TextProps) {
+  return <Text as="pre" role="code" tabular={false} {...props} />;
+}
+
 /**
  * **Job.** The crash prompt on launch: the newest unoffered crash, as it would be sent, with
  * Send report and Don't send.
@@ -167,8 +175,12 @@ export function CrashPrompt() {
         }
       >
         <p className="vs-crash-p">{said.intro}</p>
-        <p className="vs-crash-p vs-crash-check">{said.check}</p>
-        <pre className="vs-crash-text">{shown(report)}</pre>
+        <Text as="p" weight="strong" className="vs-crash-p vs-crash-check">
+          {said.check}
+        </Text>
+        <Surface as={ReportText} material="screen" radius="input" className="vs-crash-text">
+          {shown(report)}
+        </Surface>
         {said.earlier && <p className="vs-crash-p">{said.earlier}</p>}
         {error && (
           <p className="vs-crash-p vs-crash-error" role="alert">

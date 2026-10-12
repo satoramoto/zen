@@ -1,5 +1,6 @@
 import { useEffect, useState, type JSX } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
+import { Text } from '../../primitives/Text';
 import * as pack from '../model/pack';
 import { say } from '../model/words';
 import { PackProgress, useListen } from '../Pack/Pack';
@@ -54,7 +55,7 @@ export function PackOffer(): JSX.Element | null {
   };
 
   return (
-    <div className="vs-pack-offer" role="status">
+    <Text as="div" tabular className="vs-pack-offer" ariaRole="status">
       {action.state === 'downloading' ? (
         <PackProgress action={action} />
       ) : (
@@ -73,6 +74,6 @@ export function PackOffer(): JSX.Element | null {
           </ActionButton>
         </>
       )}
-    </div>
+    </Text>
   );
 }

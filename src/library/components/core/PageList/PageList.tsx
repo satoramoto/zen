@@ -1,4 +1,5 @@
 import { useRef, type KeyboardEvent } from 'react';
+import { Text } from '../../../primitives/Text';
 import './PageList.css';
 
 /** One page in a PageList. */
@@ -47,6 +48,7 @@ const KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'] as const;
  * (`references/typography.md`, truncation). Focus is a `:focus-visible` accent ring drawn inset so
  * a scrolling parent never clips it (`references/craft-details.md`, focus states). Names keep their
  * own case rather than `--label-case`: they are nouns read as a list, not short control labels.
+ * Each row is a body `Text` at the strong weight with tabular figures, line height 1.25.
  *
  * **Kept**: names only, no summaries. Page navigation: a `nav` of buttons with
  * `aria-current="page"`; ↑ ↓ wrap, Home and End jump, each move focusing the row and calling
@@ -55,7 +57,7 @@ const KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'] as const;
 export function PageList({ pages, chosen = null, label = 'Pages', onChoose }: PageListProps) {
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
 
-  function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+  function onKeyDown(event: KeyboardEvent<HTMLElement>, index: number) {
     const key = event.key as (typeof KEYS)[number];
     if (!KEYS.includes(key) || pages.length === 0) return;
     event.preventDefault();
@@ -68,7 +70,11 @@ export function PageList({ pages, chosen = null, label = 'Pages', onChoose }: Pa
   return (
     <nav className="yh-page-list" aria-label={label}>
       {pages.map((page, i) => (
-        <button
+        <Text
+          as="button"
+          role="body"
+          weight="strong"
+          tabular
           key={page.id}
           ref={(node) => {
             buttons.current[i] = node;
@@ -81,7 +87,7 @@ export function PageList({ pages, chosen = null, label = 'Pages', onChoose }: Pa
           onKeyDown={(event) => onKeyDown(event, i)}
         >
           <span className="yh-page-list__name">{page.label}</span>
-        </button>
+        </Text>
       ))}
     </nav>
   );
