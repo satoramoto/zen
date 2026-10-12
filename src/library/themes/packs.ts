@@ -1,8 +1,9 @@
-import type { Faces, Facets, Materials, Palette, Scale } from '../contract';
+import type { Faces, Facets, Materials, PackPrinciples, Palette, Scale } from '../contract';
 import { palettes } from './palettes';
 import { faces } from './faces';
 import { scales } from './scales';
 import { materials } from './materials';
+import * as principles from './principles';
 
 export interface ThemePack {
   id: string;
@@ -12,6 +13,8 @@ export interface ThemePack {
   /** Rules from the source that the facets must keep. */
   keep: string[];
   facets: Facets;
+  /** How the system assembles a screen: the solver's principles (`themes/principles/`, `docs/assembly.md`). */
+  principles: PackPrinciples;
   /** What stands behind a translucent ground in Storybook, in place of the real desktop the app
    *  composites over (a CSS background per mode). Omit for an opaque ground. */
   desktop?: { light: string; dark: string };
@@ -45,6 +48,7 @@ export const packs: ThemePack[] = [
       'Part hues are categorical: one per part, never decoration.',
     ],
     facets: facets('push', 'elektron', 'compact', 'elektron'),
+    principles: principles.yahaha,
   },
   {
     id: 'yahaha-classic',
@@ -58,6 +62,7 @@ export const packs: ThemePack[] = [
       'Depth from bevels and recessed wells, not flat fills.',
     ],
     facets: facets('classic', 'classic', 'compact', 'hardware'),
+    principles: principles.yahaha,
   },
   {
     id: 'yahaha-push',
@@ -66,6 +71,7 @@ export const packs: ThemePack[] = [
     northStar: 'Push: black ground, no boxes, hairline headers, lit lamps.',
     keep: ['Selection is a solid block with dark text.', 'Lamps are 2px bars with bloom.', 'Inputs are an underline with a caret.'],
     facets: facets('push', 'push', 'compact', 'push'),
+    principles: principles.yahaha,
   },
   {
     id: 'visuals',
@@ -87,6 +93,7 @@ export const packs: ThemePack[] = [
       'Instrument Sans everywhere, numbers in tabular figures; captions at 4.5:1 or better.',
     ],
     facets: facets('frost', 'instrument', 'roomy', 'frost'),
+    principles: principles.visuals,
   },
   {
     id: 'elektron',
@@ -95,6 +102,7 @@ export const packs: ThemePack[] = [
     northStar: 'Digital console in midnight.',
     keep: ['Amber is an indicator only.', 'Off-white fill for the primary action.'],
     facets: facets('elektron', 'elektron', 'compact', 'elektron'),
+    principles: principles.studio,
   },
   {
     id: 'ableton',
@@ -103,6 +111,7 @@ export const packs: ThemePack[] = [
     northStar: 'High-contrast digital studio, illuminated by electric blue.',
     keep: ['Electric blue only for interactive elements.', 'Red and teal only for category tags.', '0px radius everywhere.'],
     facets: facets('ableton', 'ableton', 'regular', 'ableton'),
+    principles: principles.studio,
   },
   {
     id: 'linear',
@@ -111,5 +120,6 @@ export const packs: ThemePack[] = [
     northStar: 'Midnight command center: layered dark surfaces, one lime accent.',
     keep: ['Lime only for the primary action.', 'Depth from surface layers, not big shadows.', '6px radius on controls and cards.'],
     facets: facets('linear', 'linear', 'compact', 'linear'),
+    principles: principles.studio,
   },
 ];

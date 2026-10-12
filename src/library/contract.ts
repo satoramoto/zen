@@ -191,7 +191,40 @@ export interface Facets {
  *  `toCssVars`, because they read a variable each element sets for itself (`--lit`). */
 export const SCOPE_VARS = ['--mat-lit-glow'] as const;
 
-const SPACE_STEPS = [1, 2, 3, 4, 6, 8] as const;
+/** Each spacing step's multiple of the scale unit: `--space-N` is `SPACE_STEPS[N - 1] * unit`. */
+export const SPACE_STEPS = [1, 2, 3, 4, 6, 8] as const;
+
+/**
+ * How much a screen matters, part by part, highest first. A screen's regions name one of these as
+ * their `priority`; the solver steps the lowest down first, so `now` (what's playing) never
+ * shrinks first. `chrome` is page furniture.
+ */
+export const RANKS = ['now', 'next', 'controls', 'context', 'chrome'] as const;
+export type Rank = (typeof RANKS)[number];
+
+/**
+ * How a pack prefers to spend room when a screen is short of it (`docs/assembly.md`).
+ * - `roomy`: keep regions at their ideal size; step a form down sooner (fewer, roomier things).
+ * - `balanced`: halfway between a form's least and its ideal before stepping down.
+ * - `dense`: keep the richest form that fits at its least (more things, tighter).
+ */
+export type Density = 'roomy' | 'balanced' | 'dense';
+
+/**
+ * A system's layout principles: data the assembly solver (`layout/assembly`) reads, beside the
+ * facets it resolves sizes from. Each theme pack carries one.
+ */
+export interface PackPrinciples {
+  /** The least a target may be on screen, in CSS px: the solver never zooms a control below it. */
+  minTarget: number;
+  density: Density;
+  /** Spacing steps: `body` between the groups in a region's body, `group` between the controls in a group. */
+  gaps: { body: 0 | 1 | 2 | 3 | 4 | 5 | 6; group: 0 | 1 | 2 | 3 | 4 | 5 | 6 };
+  /** The rank ladder, highest first; default `RANKS`. A pack may reorder it, never drop a rank. */
+  ranks?: readonly Rank[];
+  /** The source rules these encode, in plain words (`principles/*.md`, `STAGE.md`). */
+  notes: string[];
+}
 const MATERIAL_ROLES = ['well', 'screen', 'key', 'handle'] as const;
 
 export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets, mode: Mode): Record<string, string> {
