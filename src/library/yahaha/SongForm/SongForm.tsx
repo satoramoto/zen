@@ -129,7 +129,9 @@ export interface SongFormProps {
    * Which half to draw: `both` (the default), or only the `form` or the `transport`, for a screen
    * that places them apart (the Stage's stacked layout puts the transport beside the hero). The
    * form's steps fill the height of the region's container when it has one (the Stage's strip),
-   * and are two control heights tall otherwise.
+   * and are two control heights tall otherwise; alone, they read at numeral size. The transport
+   * alone fills the height its container gives it (never less than its two key rows), and its
+   * labels grow with its keys once it is five control heights tall.
    */
   part?: SongFormPart;
 }
@@ -170,7 +172,14 @@ export type SongFormPart = 'both' | 'form' | 'transport';
  * action it will take: stopped, the `primary` fill in `--transport`; running, an outline in
  * `--success` (a state, not the transport's identity), so mid-song the hero's section and chord
  * outrank it. Every other key is one cell at one rank, `secondary` (Reset included), Accomp a mode
- * in one cell rather than a key ranked like Start; one gap between all of them (*rhythm*). *Waiting
+ * in one cell rather than a key ranked like Start; one gap between all of them (*rhythm*). *Room to
+ * breathe* (layout.md, spacing on one scale; proximity): steps inside a part sit close, the parts
+ * and Break's seam well apart, the captions a clear step above their steps, and the keys one step
+ * apart, all on the `--space-*` scale, with no text made smaller to buy the room. *Scale with the
+ * reading distance*: the form alone (the Stage's strip) sets its letters and numerals at numeral
+ * size, read from a metre; and the transport alone fills the height it is given, its labels
+ * growing with its keys once it is five control heights tall (body size, Start / Stop at display),
+ * so a big key never carries a small word and the screen needn't reach in to size them. *Waiting
  * is one face*: Sync Start armed, a queued fill and a fade-in waiting for Start use the waiting
  * ring, flashing with the queued section on the parent's `lit`. The width breakpoints are counted
  * in control heights (the region's `em` is `--control-h`), so a denser or airier pack changes
@@ -181,7 +190,8 @@ export type SongFormPart = 'both' | 'form' | 'transport';
  * Sync Start, Sync Stop, Auto Fill, Fill ▲ / ▼, Fade, Reset and Accomp; fully controlled (a press
  * only calls back); the tooltip keys; spoken names that say the state ("Main B, playing", "Main C,
  * next, after bar 4", "Main A, starts here", "Intro III, not in this style"); the spoken cue; the
- * parent-driven flash (`lit`).
+ * parent-driven flash (`lit`); the keyboard order and every spoken name, unchanged by the new
+ * sizes and spacing.
  */
 export function SongForm({
   running = false,

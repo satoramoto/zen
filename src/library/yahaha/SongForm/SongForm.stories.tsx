@@ -127,7 +127,7 @@ export const MissingSections: Story = {
 /** A fade-out under way while running: Fade rings in the ink colour, not a fill (a fill means sounding). */
 export const Fading: Story = { args: { fading: true } };
 
-/** The 1217 × 752 Stage: the region 1169 wide, under 48 control heights, so the transport sits under the form. */
+/** The 1217 × 752 Stage: the region 1169 wide, under 50 control heights, so the transport sits under the form. */
 export const At1217: Story = { parameters: { regionWidth: 1169 } };
 
 /** A narrow column (720): the transport under the form, in two rows sharing its width; the step numerals one size down so the form stays one row. */
@@ -150,13 +150,16 @@ export const FormPart: Story = {
   },
 };
 
-/** The form alone in the 1217 × 752 Stage's strip: 56 tall, the steps shorter, still one row. */
+/**
+ * The form alone in the 1217 × 752 Stage's strip at its floor: 62 tall in the compact packs (the
+ * steps one numeral and their inset, the captions over them), still one row.
+ */
 export const FormPartSmall: Story = {
   args: { part: 'form' },
-  parameters: { regionWidth: 1169, regionHeight: 56 },
+  parameters: { regionWidth: 1169, regionHeight: 62 },
   play: async ({ canvasElement }) => {
     const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
-    await expect(Math.round(form.getBoundingClientRect().height)).toBe(56);
+    await expect(Math.round(form.getBoundingClientRect().height)).toBe(62);
   },
 };
 
@@ -173,6 +176,15 @@ export const TransportPart: Story = {
     await expect(canvas.queryByRole('group', { name: 'Sections' })).toBeNull();
     await expect(canvas.getByRole('button', { name: 'Auto Fill' })).toBeInTheDocument();
   },
+};
+
+/**
+ * The transport alone given a height, as beside the 1440 × 900 hero: the key rows share it, and
+ * past five control heights the labels grow with the keys (body size, Start / Stop at display).
+ */
+export const TransportPartTall: Story = {
+  args: { part: 'transport' },
+  parameters: { regionWidth: 560, regionHeight: 210 },
 };
 
 /** The transport alone while stopped with Sync Start armed: Start the one fill, Sync Start the one transport-hue ring. */

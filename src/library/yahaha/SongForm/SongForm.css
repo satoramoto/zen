@@ -4,17 +4,21 @@
 .yh-songform {
   /* The steps' height when the region's container gives it none; with one, they fill it. */
   --yh-sf-step-h: calc(var(--control-h) * 2);
-  /* The least a step may shrink to inside a short container: room for its numeral. */
-  --yh-sf-step-min: calc(var(--control-h) * 1.25);
-  /* Every step at least as wide as the widest numeral ("III", three readout glyphs at heading
-     size) and its inset, so the steps are one width across the parts. */
+  /* The steps' letters and numerals: heading size beside the transport, numeral size in the form
+     alone (below), stepping down in a narrow region. The steps read it where they are, so a
+     container query only has to change this one value. */
   --yh-sf-step-font: var(--size-heading);
-  --yh-sf-step-w: calc(var(--yh-sf-step-font) * 1.8 + var(--space-2) * 2);
-  --yh-sf-part-gap: var(--space-5);
+  /* Breathing room, on the space scale: steps inside a part close, the parts (and Break's seam)
+     well apart, the captions clear of their steps, and the keys of the cluster one step apart. */
+  --yh-sf-step-gap: var(--space-2);
+  --yh-sf-part-gap: var(--space-6);
+  --yh-sf-caption-gap: var(--space-2);
+  --yh-sf-key-gap: var(--space-3);
   --yh-sf-key-w: calc(var(--control-h) * 3);
   /* The strip's top padding, where the part captions sit. */
-  --yh-sf-caption-h: calc(var(--size-caption) * 1.3 + var(--space-1));
+  --yh-sf-caption-h: calc(var(--size-caption) * 1.3 + var(--yh-sf-caption-gap));
 
+  container-name: yh-songform;
   container-type: inline-size;
   display: flex;
   flex-direction: column;
@@ -45,6 +49,22 @@
 /* One half alone (the `part` prop) takes the whole region. */
 .yh-songform:not([data-part='both']) .yh-songform__inner {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* The form alone is the Stage's strip, read from a metre away: its letters and numerals at
+   numeral size. */
+.yh-songform[data-part='form'] {
+  --yh-sf-step-font: var(--size-numeral);
+}
+
+/* The transport alone fills the height it is given (beside the hero on the Stage): the region is a
+   size container, never shorter than its two key rows, so the keys can grow with it (below). */
+.yh-songform[data-part='transport'] {
+  container-type: size;
+  min-height: calc(var(--control-h) * 2 + var(--yh-sf-key-gap));
+}
+.yh-songform[data-part='transport'] .yh-songform__transport {
+  align-self: stretch;
 }
 
 /* The cue is spoken, not drawn: "next" is drawn in the hero and on the step's NEXT tag. */
@@ -98,7 +118,7 @@
   position: absolute;
   bottom: 100%;
   left: 0;
-  padding-bottom: var(--space-1);
+  padding-bottom: var(--yh-sf-caption-gap);
   color: var(--text-3);
   font-size: var(--size-caption);
   font-weight: var(--weight-body);
@@ -137,29 +157,35 @@
   grid-template-rows: minmax(0, 1fr);
   /* The default height is the basis; a container with a height grows or shrinks it. */
   flex: 1 1 var(--yh-sf-step-h);
-  gap: var(--space-1);
+  gap: var(--yh-sf-step-gap);
   min-width: 0;
-  min-height: var(--yh-sf-step-min);
+  /* The least a step may shrink to inside a short container: 1.25 control heights, or its
+     letter or numeral (one line of it) and its block inset, whichever is more. */
+  min-height: max(calc(var(--control-h) * 1.25), calc(var(--yh-sf-step-font) + var(--space-1) * 2));
 }
 
 .yh-songform__step {
   position: relative;
   display: flex;
 }
-.yh-songform__step .yh-pad { min-width: var(--yh-sf-step-w); }
+/* Every step at least as wide as the widest numeral ("III", three readout glyphs at the steps'
+   size) and its inset, so the steps are one width across the parts. */
+.yh-songform__step .yh-pad { min-width: calc(var(--yh-sf-step-font) * 1.8 + var(--space-2) * 2); }
 /* Break is a word, not a step: as wide as its word needs, never truncated, never stretched. */
 .yh-songform__mods .yh-songform__steps { grid-auto-columns: max-content; }
 .yh-songform__mods .yh-songform__step .yh-pad {
   min-width: calc(var(--control-h) * 2.5);
 }
 
-/* A step is a Pad filling its cell (`fillCell`); its letter or numeral reads at heading size in
-   the readout face. Break is the same primitive at the same size. */
+/* A step is a Pad filling its cell (`fillCell`); its letter or numeral reads in the readout face
+   at the steps' size. Break is the same primitive at the same size. */
 .yh-songform__step .yh-pad {
-  /* A thin block inset, so a short strip (the small Stage) still holds the numeral. */
+  /* A thin block inset and one line of glyph, so a short strip (the small Stage) still holds the
+     numeral. */
   padding-block: var(--space-1);
   font-family: var(--font-readout);
   font-size: var(--yh-sf-step-font);
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 .yh-songform__step[data-section='break'] .yh-pad {
@@ -190,11 +216,12 @@
   grid-template-columns:
     minmax(calc(var(--yh-sf-key-w) + var(--control-h) * 0.5), max-content)
     repeat(4, minmax(var(--yh-sf-key-w), max-content));
-  grid-template-rows: var(--control-h) var(--control-h);
+  /* One control height each, or a share of the height the region is given (the transport alone). */
+  grid-template-rows: minmax(var(--control-h), 1fr) minmax(var(--control-h), 1fr);
   grid-template-areas:
     'start sync-start fill-up fade accomp'
     'start sync-stop fill-down reset auto-fill';
-  gap: var(--space-2);
+  gap: var(--yh-sf-key-gap);
 }
 .yh-songform__start { grid-area: start; }
 .yh-songform__key { display: flex; min-width: 0; }
@@ -207,22 +234,37 @@
 .yh-songform__key[data-key='accomp'] { grid-area: accomp; }
 .yh-songform__key[data-key='auto-fill'] { grid-area: auto-fill; }
 
-/* Start / Stop is Button's `tall` cell: two rows and their gap, exactly the start area. The lamps
-   take their one cell. */
-.yh-songform__key .yh-lampbutton {
+/* Every key fills its cell: Start / Stop (Button's `tall` cell) the two rows and their gap, the
+   others one row each, however tall the rows are. */
+.yh-songform__key > :is(.yh-button, .yh-lampbutton),
+.yh-songform__start .yh-button[data-tall] {
   height: 100%;
 }
 
+/* A tall transport (the transport alone, given five control heights or more; this region's em is
+   --control-h) scales its labels with its keys, so a big key never carries a small word: the
+   cell keys' labels at body size, Start / Stop's at display size. Only where the region is a size
+   container (`part="transport"`); otherwise the labels keep their primitives' sizes. */
+@container yh-songform (min-height: 5em) {
+  .yh-songform__key .yh-button,
+  .yh-songform__key .yh-lampbutton {
+    font-size: var(--size-body);
+  }
+  .yh-songform__start .yh-button[data-tall] {
+    font-size: var(--size-display);
+  }
+}
+
 /* The breakpoints are in control heights (this region's em is --control-h; see .yh-songform).
-   Side by side the region needs about 47 of them: the form's ten steps (each as wide as "III" at
-   heading size) and Break with their gaps (about 29 where headings are 24px), the transport's
-   Start / Stop and four key columns with theirs (about 18 in a caps pack), and the gap between.
-   Under 48 (1344px at the regular density) the form goes across the whole region and the
+   Side by side the region needs about 50 of them: the form's ten steps (each as wide as "III" at
+   heading size) and Break with their gaps (about 31 where headings are 24px), the transport's
+   Start / Stop and four key columns with theirs (about 17 in a caps pack), and the gap between.
+   Under 50 (1400px at the compact density) the form goes across the whole region and the
    transport sits under it, in the same two rows, its keys sharing the width. */
-@container (max-width: 48em) {
+@container (max-width: 50em) {
   .yh-songform__inner {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-3);
+    gap: var(--space-4);
   }
   /* A taller region grows the form, not the gap under the transport. */
   .yh-songform[data-part='both'] .yh-songform__inner {
@@ -234,19 +276,28 @@
   }
 }
 
+/* The form alone at numeral size needs about 36 control heights at the compact density (ten
+   steps as wide as "III" at 32px, Break, and their gaps); under 37 its steps go to heading size,
+   as they are beside the transport. */
+@container (max-width: 37em) {
+  .yh-songform[data-part='form'] .yh-songform__inner {
+    --yh-sf-step-font: var(--size-heading);
+  }
+}
+
 /* Under 27 control heights (756px at regular) the steps step down one size rather than clip or
    wrap: numerals at body size, each step as wide as "III" at that size. */
 @container (max-width: 27em) {
-  .yh-songform__inner {
+  .yh-songform .yh-songform__inner,
+  .yh-songform[data-part='form'] .yh-songform__inner {
     --yh-sf-step-font: var(--size-body);
-    --yh-sf-step-w: calc(var(--yh-sf-step-font) * 1.8 + var(--space-2) * 2);
   }
 }
 
 /* Under 21 control heights (588px at regular) the three parts alone fill the line: Break moves
    under them. */
 @container (max-width: 21em) {
-  .yh-songform__form { flex-wrap: wrap; row-gap: var(--space-3); }
+  .yh-songform__form { flex-wrap: wrap; row-gap: var(--space-4); }
   .yh-songform__parts { flex-basis: 100%; }
   .yh-songform__mods { flex-basis: 100%; padding-left: 0; border-left: 0; }
 }
