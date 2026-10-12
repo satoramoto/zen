@@ -5,10 +5,17 @@ import { boardKeys } from '../Keys/Keys.fixtures';
 import { chorusKnobs, delayKnobs, knobPages, panKnobs, rackKnobs, reverbKnobs, styleKnobs } from '../KnobBank/KnobBank.fixtures';
 import { padBanks, padsByBank, quickRackPads } from '../PadBank/PadBank.fixtures';
 import { songFormBoard, songFormStopped } from '../SongForm/SongForm.fixtures';
-import type { StageProps } from './Stage';
+import type { KnobItem } from '../KnobBank/KnobBank';
+import { TEMPO_MAX, TEMPO_MIN, type StageProps } from './Stage';
 
 // Composed from the regions' own fixtures, as the original's Stage.fixtures.ts composes its
-// regions'. Each region's board is the Stage board's; nothing here restates a region's data.
+// regions'. Each region's board is the Stage board's; nothing here restates a region's data,
+// except the Tempo knob, which always reads the hero's tempo.
+
+/** A knob page with its Tempo knob set to `bpm`, so the knob and the hero agree. */
+export function withTempo(knobs: KnobItem[], bpm: number): KnobItem[] {
+  return knobs.map((k) => (k.label === 'Tempo' ? { ...k, value: `${bpm}`, fraction: (bpm - TEMPO_MIN) / (TEMPO_MAX - TEMPO_MIN) } : k));
+}
 
 const { width: _barWidth, ...appBar } = boardAppBar;
 const { width: _keysWidth, ...keys } = boardKeys;
@@ -34,7 +41,7 @@ export const stageBoard = {
     partLamps,
     functionLamps,
   },
-  knobs: { knobs: styleKnobs, pages: knobPages, page: 0 },
+  knobs: { knobs: withTempo(styleKnobs, display.nowPlaying.bpm), pages: knobPages, page: 0 },
   pads: { pads: quickRackPads, banks: padBanks, bank: 0, lit: true },
   keys,
   status: { text: null },
@@ -46,6 +53,7 @@ export const stageStopped = {
   display: stoppedDisplay,
   songForm: songFormStopped,
   faders: { ...stageBoard.faders, layer: 'reverb', strips: reverbStrips },
+  knobs: { ...stageBoard.knobs, knobs: withTempo(styleKnobs, stoppedDisplay.nowPlaying.bpm) },
   status: { text: 'Style queued: it starts at the next Start', seq: 1 },
   keys: { ...keys, heldLeft: [], heldRight: [] },
 } satisfies StageProps;

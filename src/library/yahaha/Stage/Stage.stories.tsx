@@ -34,33 +34,38 @@ const meta = {
     status: { control: 'object', table: { category: 'StatusLine' } },
     width: { control: { type: 'number', min: 0, step: 1 }, table: { category: 'Layout' } },
     height: { control: { type: 'number', min: 0, step: 1 }, table: { category: 'Layout' } },
+    layout: { control: 'inline-radio', options: ['stacked', 'split'], table: { category: 'Layout' } },
   },
 } satisfies Meta<typeof Stage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The board at 1440 × 900: Am7 in Main B, Main C next after bar 4, running at 104; split F#2 with the left hand's Am7 held. */
+/**
+ * The board at 1440 × 900: Am7 in Main B, Main C next after bar 4, running at 104; split F#2 with
+ * the left hand's Am7 held. The hero with the transport beside it, the song form one strip under
+ * them, then the mixer and the knobs over the pads on the same column seam.
+ */
 export const Board: Story = {};
 
-/** Stopped on Main A with Coastal Highway queued, the faders on the Reverb layer, a message on the status line. */
+/** Stopped on Main A at 92 with Coastal Highway queued, the faders on the Reverb layer, a message on the status line. */
 export const Stopped: Story = {
   args: { ...stageStopped },
 };
 
-/** The smallest screen, 1217 × 752: laid out at 100%, the hero compact in a narrower column, nothing cut off. */
+/** The smallest screen, 1217 × 752: laid out at 100%, the hero compact, nothing cut off. */
 export const Small: Story = {
   args: { width: 1217, height: 752 },
 };
 
-/** The stacked layout on the board: the hero with the transport beside it, the song form one strip under them. */
-export const StackedBoard: Story = {
-  args: { layout: 'stacked' },
+/** The alternative `split` layout on the board: the hero, and beside it the song form over the transport. */
+export const SplitBoard: Story = {
+  args: { layout: 'split' },
 };
 
-/** The stacked layout on the smallest screen, 1217 × 752. */
-export const StackedSmall: Story = {
-  args: { layout: 'stacked', width: 1217, height: 752 },
+/** The `split` layout on the smallest screen, 1217 × 752. */
+export const SplitSmall: Story = {
+  args: { layout: 'split', width: 1217, height: 752 },
 };
 
 /**

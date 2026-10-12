@@ -5,7 +5,7 @@ import type { KnobItem } from '../KnobBank/KnobBank';
 import type { PadItem } from '../PadBank/PadBank';
 import { SECTION_LABEL, type SectionId } from '../SongForm/SongForm';
 import { Stage, TEMPO_MAX, TEMPO_MIN, type StageProps } from './Stage';
-import { stageKnobPages, stagePadBanks, stageStyles, stageStyleTempo } from './Stage.fixtures';
+import { stageKnobPages, stagePadBanks, stageStyles, stageStyleTempo, withTempo } from './Stage.fixtures';
 
 export interface StagePlaygroundProps extends StageProps {
   /** Every press, logged with its arguments (the story's Actions panel). */
@@ -215,9 +215,7 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
   // ---- Knobs
   const [knobPage, setKnobPage] = useState(seed.knobs.page ?? 0);
   const [knobPages, setKnobPages] = useState<KnobItem[][]>(() => stageKnobPages.map((page) => page.map((k) => ({ ...k }))));
-  const knobs = (knobPages[knobPage] ?? seed.knobs.knobs).map((k) =>
-    k.label === 'Tempo' ? { ...k, value: `${bpm}`, fraction: (bpm - TEMPO_MIN) / (TEMPO_MAX - TEMPO_MIN) } : k,
-  );
+  const knobs = withTempo(knobPages[knobPage] ?? seed.knobs.knobs, bpm);
   const onStep = (index: number, delta: number) => {
     say('knobs.onStep', index, delta);
     const knob = knobs[index];
