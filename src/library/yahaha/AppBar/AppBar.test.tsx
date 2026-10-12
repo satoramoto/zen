@@ -47,6 +47,13 @@ describe('AppBar navigation', () => {
     expect(within(nav).getByRole('button', { name: 'Settings' })).not.toHaveAttribute('aria-current');
   });
 
+  it('marks the chosen page with ink and an underline, never the solid fill', () => {
+    const { container } = setup();
+    const runs = container.querySelectorAll('.yh-appbar__nav .yh-chosen-tabs');
+    expect(runs).toHaveLength(2);
+    runs.forEach((run) => expect(run).toHaveAttribute('data-look', 'underline'));
+  });
+
   it('shows the style and tempo off the Stage only', () => {
     const { rerender } = setup();
     expect(screen.queryByLabelText(/^Style /)).toBeNull();
@@ -155,9 +162,11 @@ describe('AppBar switches', () => {
     expect(onPanic).toHaveBeenCalledTimes(1);
   });
 
-  it('the metronome wears the transport hue; Unison and the ▾ stay neutral', () => {
-    setup({ metronome: true });
+  it('the metronome wears the transport hue only while on; Unison and the ▾ stay neutral', () => {
+    const { rerender } = setup({ metronome: false });
     const switches = screen.getByRole('group', { name: 'Global switches' });
+    expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 't');
+    rerender(<AppBar {...boardAppBar} metronome />);
     expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'transport');
     expect(within(switches).getByRole('button', { name: 'Unison' })).toHaveAttribute('data-hue', 't');
     expect(within(switches).getByRole('button', { name: CARET })).toHaveAttribute('data-hue', 't');

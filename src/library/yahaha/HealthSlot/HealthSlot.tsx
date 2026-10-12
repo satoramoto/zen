@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { TipAction } from '../Pad/Pad';
+import { StatusDot } from '../StatusDot/StatusDot';
 import { health, type HealthTarget } from './health';
 import './HealthSlot.css';
 
@@ -26,11 +27,14 @@ export interface HealthSlotProps {
   onOpen?: (target: HealthTarget) => void;
 }
 
-/** Splits "CPU 74%" into words and numerals, so the numerals can wear the readout face. */
+/**
+ * Splits "CPU 74%" into words and numerals, so the counts can wear the readout face. A digit
+ * inside a name ("R3 failed") is part of the name and stays in its face.
+ */
 function Words({ text }: { text: string }) {
   return (
     <>
-      {text.split(/(\d+%?)/).map((part, i) =>
+      {text.split(/(?<![\p{L}\d])(\d+%?)/u).map((part, i) =>
         i % 2 ? (
           <span key={i} className="yh-health-slot__num">
             {part}
@@ -44,6 +48,27 @@ function Words({ text }: { text: string }) {
 }
 
 /**
+ * The state's shape. Calm and off are the app bar's status lamp, the same `StatusDot` the
+ * Launchkey wears (filled `ok` when fine, a hollow faint ring when there is no audio); trouble is
+ * the danger chip's triangle, drawn as StatusLine's error mark.
+ */
+function Mark({ state }: { state: 'calm' | 'off' | 'trouble' }) {
+  return (
+    <span className="yh-health-slot__mark" data-state={state} aria-hidden="true">
+      {state === 'trouble' ? (
+        <svg className="yh-health-slot__triangle" width="12" height="12" viewBox="0 0 12 12">
+          <path d="M6 1.5 L11 10.5 H1 Z" />
+          <path d="M6 5 V7.4" />
+          <circle cx="6" cy="8.9" r="0.6" />
+        </svg>
+      ) : (
+        <StatusDot hue={state === 'calm' ? 'ok' : 'd'} hollow={state === 'off'} />
+      )}
+    </span>
+  );
+}
+
+/**
  * HealthSlot: the app bar's audio health.
  *
  * **Job.** Say "Audio" quietly while the sound is fine, and name the one trouble that matters
@@ -51,14 +76,19 @@ function Words({ text }: { text: string }) {
  * player glances at it between songs: calm must fade into the bar, trouble must be found at once.
  *
  * **Changed.** *Colour meaning, never colour alone:* every state now has a shape as well as a
- * colour: a small filled dot when calm, a hollow ring when the audio is off, a warning triangle in
- * the danger role for trouble (color.md, "Semantic Colors": semantics work through pairs). Trouble
- * also gets a faint danger tint behind the text while its words stay in primary text, so the
- * message keeps full contrast under every pack, light or dark (color.md, "Contrast and
- * Readability"). *Hierarchy:* calm "Audio" is a quiet label in faint text and the pack's label case;
- * trouble is the loudest thing in the slot, in the strong weight. *Numerals:* the counts and the CPU
- * percentage are drawn in the readout face with tabular figures, so "CPU 74%" doesn't jitter as it
- * changes (typography.md, "Tabular Numbers"). *Affordance:* a trouble row is a framed, tinted
+ * colour (color.md, "Semantic Colors": semantics work through pairs). Calm and off wear the same
+ * `StatusDot` as the Launchkey beside it, filled `ok` when fine and a hollow faint ring when the
+ * audio is off, so the bar's two connections say "fine" with one mark, not a round dot and a
+ * square one; trouble is the danger chip with its triangle. The chip is the same recipe as
+ * StatusLine's error (12% `--danger` tint inside a 35% edge, the triangle, strong `--text-1`, one
+ * space step shorter than a control), so the Stage has one look for "something is wrong", and its
+ * words stay in primary text so they keep full contrast under every pack (color.md, "Contrast and
+ * Readability"). *Hierarchy:* every state is at label size and in sentence case: calm "Audio" is
+ * quiet by colour (faint text), not by a smaller size and a different case, so the slot has one
+ * type treatment; trouble is the loudest thing in it, in the strong weight. *Numerals:* the counts
+ * and the CPU percentage are drawn in the readout face with tabular figures, so "CPU 74%" doesn't
+ * jitter as it changes (typography.md, "Tabular Numbers"); a digit in a part's name ("R3 failed")
+ * stays in the name's face, so the name isn't set in two. *Affordance:* a trouble row is a framed, tinted
  * button and every clickable row takes a hover tint and a pointer, so it reads as something to
  * press; the original was bare text with no hover. Focus is a `:focus-visible` ring in the accent
  * (craft-details.md, "Focus States"). `tipAction` runs the app's tooltip action, in Pad's handle
@@ -111,13 +141,14 @@ export function HealthSlot({
           data-tip={dataTip}
           onClick={() => onOpen?.(target)}
         >
-          <span className="yh-health-slot__mark" aria-hidden="true" />
+          <Mark state={state} />
           <span className="yh-health-slot__text">
             <Words text={shown.text} />
-          </span>        </button>
+          </span>
+        </button>
       ) : (
         <span className="yh-health-slot__calm">
-          <span className="yh-health-slot__mark" aria-hidden="true" />
+          <Mark state={state} />
           <span ref={setNode} className="yh-health-slot__text" aria-hidden="true" data-tip={dataTip}>
             {shown.text}
           </span>

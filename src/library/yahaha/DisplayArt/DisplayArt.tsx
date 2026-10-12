@@ -17,13 +17,16 @@ export interface DisplayArtProps {
  * hills are the ground and surface steps tinted with `--accent`, the sun is the accent itself, and
  * no categorical hue appears, so the four part hues keep their one meaning and the art follows
  * every palette, light ones included (color.md › tinted neutrals; fewer colours, stricter
- * purpose). *Contrast*: the sun sits in the top-right, away from the readouts' middle band, and
- * is mixed down into the sky so the brightest thing on the display stays the chord. *Theme
+ * purpose). *Contrast*: the sun sits low in the bottom-right quarter, setting behind the far hill,
+ * since the Display's tempo stands top right and the sun used to sit right behind its number; it
+ * is mixed down into the sky so the brightest thing on the display stays the readouts, and the
+ * fade from the ground now runs to 85% of the width, under the tempo too. *Theme
  * honesty*: the glow is the palette's `--bloom`; in flat palettes (bloom 0) the sun is a crisp
  * flat disc and the hills are hard-edged shapes, as those sources ask, while Push keeps its glow.
  * *Scheme*: the mixes switch on `--scheme-light`, so a light palette paints a day (pale sky,
  * hills deepening towards the viewer, a near-white sun) instead of the night's silhouettes, which
- * on a light ground left the near hill paler than the sky; dark palettes are unchanged.
+ * on a light ground left the near hill paler than the sky; the near hill's accent stops at 24%
+ * (it was 48%, the loudest colour on a light screen); dark palettes are unchanged.
  * The picture fills its box at the original's 528 × 300 proportion instead of fixed pixels.
  *
  * **Kept.** Purely decorative and hidden from assistive tech; the two hills and the sun; the fade

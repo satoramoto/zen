@@ -112,4 +112,27 @@ describe('HealthSlot', () => {
     expect(state()).toBe('trouble');
     expect(container.querySelector('.yh-health-slot__mark')).toHaveAttribute('aria-hidden', 'true');
   });
+
+  it('calm and off wear the Launchkey StatusDot; trouble the triangle', () => {
+    const { container, rerender } = render(<HealthSlot />);
+    const dot = () => container.querySelector('.yh-health-slot__mark .yh-status-dot');
+    expect(dot()).toHaveAttribute('data-hue', 'ok');
+    expect(dot()).toHaveAttribute('data-face', 'solid');
+    rerender(<HealthSlot synthOn={false} />);
+    expect(dot()).toHaveAttribute('data-hue', 'd');
+    expect(dot()).toHaveAttribute('data-face', 'hollow');
+    rerender(<HealthSlot cpu={0.9} />);
+    expect(dot()).toBeNull();
+    expect(container.querySelector('.yh-health-slot__mark .yh-health-slot__triangle')).toBeInTheDocument();
+  });
+
+  it('only counts wear the readout face, never a digit in a part name', () => {
+    const { container, rerender } = render(<HealthSlot failedPart={2} />);
+    const nums = () => [...container.querySelectorAll('.yh-health-slot__num')].map((n) => n.textContent);
+    expect(nums()).toEqual([]);
+    rerender(<HealthSlot cpu={0.74} />);
+    expect(nums()).toEqual(['74%']);
+    rerender(<HealthSlot dropouts={3} bufferFrames={128} />);
+    expect(nums()).toEqual(['3', '256']);
+  });
 });

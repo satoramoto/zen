@@ -47,6 +47,11 @@ export const Empty: Story = {
   args: { label: '', as: 'button', empty: 'No style' },
 };
 
+/** New: between ‹ and › step keys, as the Display's header draws it: no chevron, so the line has two arrows, not three. */
+export const BetweenSteps: Story = {
+  args: { as: 'button', name: 'Sunday Drive Pop: open the Browser', chevron: false },
+};
+
 /** The knob page's name over the knobs: the plain label at the knob size, not a control. */
 export const KnobPage: Story = {
   args: { label: 'Style', size: 'knob', tip: 'browser.open' },

@@ -27,14 +27,16 @@ export interface RackCellProps {
  * **Changed**: the caption drops to caption size in the pack's label case and muted text, and
  * the name rises to body size, so the line that changes reads first (hierarchy;
  * `references/typography.md` on a small caption over the value). The slot is lifted out of the
- * caption in the readout face and full text colour: it is a value, not part of the label
- * (contrast, numerals). Only the name truncates, and the mark sits after the ellipsis rather
+ * caption in the readout face, full text colour and label size (a step above the caption since
+ * the 2026-10 review, so the cell's one value is never its smallest thing): it is a value, not
+ * part of the label (contrast, numerals). Only the name truncates, and the mark sits after the ellipsis rather
  * than being clipped with it. The cell shares SoundCell's caption-over-name shape and its
  * text inset, so the rack and the parts start on one left edge across the row (alignment,
  * rhythm). No colour: the rack isn't a part, so it takes no hue (`references/color.md`). The
  * faceless button gains a quiet face on hover, a deeper one when pressed, and the accent ring
  * on keyboard focus (affordance; `references/craft-details.md` on `:focus-visible`). "No rack"
- * shows in muted text, so an empty slot doesn't read as a rack called that.
+ * shows as a muted caption, so an empty slot doesn't read as a rack called that or take a
+ * name's room.
  *
  * **Kept**: one flat button with its spoken name ("Rack: Sunday drive, on Quick Rack A1. Opens
  * the Rack page"), the "No rack" fallback, no slot shown when there is none, the mark after the

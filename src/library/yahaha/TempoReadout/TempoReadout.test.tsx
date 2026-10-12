@@ -10,13 +10,27 @@ const ruleOf = (selector: string) =>
   new RegExp(`(?:^|\\n)${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
 
 describe('TempoReadout transport hue', () => {
-  it('wears the transport role hue on + and −, with its paired ink on the pressed fill', () => {
-    expect(ruleOf('.yh-tempo-readout__steps')).toMatch(/border:[^;]*var\(--transport\)/);
-    expect(ruleOf('.yh-tempo-readout__step')).toMatch(/color:\s*var\(--transport\)/);
-    expect(ruleOf('.yh-tempo-readout__step + .yh-tempo-readout__step')).toMatch(/border-top:[^;]*var\(--transport\)/);
+  it('+ and − are neutral at rest; the transport hue, with its paired ink, only while pressed', () => {
+    expect(ruleOf('.yh-tempo-readout__steps')).toMatch(/border:[^;]*var\(--border-strong\)/);
+    expect(ruleOf('.yh-tempo-readout__step')).toMatch(/color:\s*var\(--text-2\)/);
+    expect(ruleOf('.yh-tempo-readout__step + .yh-tempo-readout__step')).toMatch(/border-top:[^;]*var\(--border-strong\)/);
+    expect(ruleOf('.yh-tempo-readout__step:hover:not(:disabled)')).not.toMatch(/--transport/);
     const pressed = ruleOf('.yh-tempo-readout__step:active:not(:disabled)');
     expect(pressed).toMatch(/background:\s*var\(--transport\)/);
     expect(pressed).toMatch(/color:\s*var\(--transport-text\)/);
+    // --transport appears in the pressed rule and nowhere else.
+    expect(css.split('var(--transport)').length - 1).toBe(1);
+  });
+
+  it('+ and − are real keys: a control height square each, glyphs at heading size', () => {
+    const steps = ruleOf('.yh-tempo-readout__steps');
+    expect(steps).toMatch(/width:\s*var\(--control-h\)/);
+    expect(steps).toMatch(/height:\s*calc\(var\(--control-h\) \* 2\)/);
+    expect(ruleOf('.yh-tempo-readout__step')).toMatch(/font-size:\s*var\(--size-heading\)/);
+  });
+
+  it('sets the unit as the one caption recipe, at body weight', () => {
+    expect(ruleOf('.yh-tempo-readout__unit')).toMatch(/font-weight:\s*var\(--weight-body\)/);
   });
 });
 

@@ -136,14 +136,74 @@ describe('Display', () => {
     expect(screen.getAllByRole('button', { name: /tap/i })).toHaveLength(1);
   });
 
-  it('running: the section live, what is next and when, the beat lit', () => {
+  it('running: the section live, one "then" tab docked under it with what is next and when, the beat lit', () => {
     const { container } = setup();
     expect(container.querySelector('.yh-display__now')).toHaveAttribute('data-live', 'true');
-    const next = container.querySelector('.yh-display__next') as HTMLElement;
-    expect(next.textContent).toBe('Main Cfill after bar 4');
-    expect(within(next).getByText('Main C')).toHaveAttribute('data-face', 'waiting');
-    expect(within(next).getByText('Main C')).toHaveAttribute('data-hue', 't');
+    const tabs = container.querySelectorAll('.yh-display__then');
+    expect(tabs).toHaveLength(1);
+    const then = tabs[0] as HTMLElement;
+    expect(then.textContent).toBe('then Main Cfill after bar 4');
+    expect(then).toHaveAttribute('data-docked', 'true');
+    // The next role, from hues.ts, on its arrow; "Main C" said once in the hero.
+    expect(then.style.getPropertyValue('--yh-display-then-hue')).toBe('var(--accent)');
+    expect(within(screen.getByRole('region', { name: 'Stage display' })).getAllByText('Main C')).toHaveLength(1);
     expect(beatStates(container)).toEqual(['past', 'current', 'future', 'future']);
+  });
+
+  it('draws no captions: the readouts name themselves', () => {
+    const { container } = setup();
+    expect(container.querySelector('.yh-display__caption')).toBeNull();
+    expect(container.querySelector('.yh-chord-readout__label')).toBeNull();
+    for (const word of ['Section', 'Tempo']) expect(screen.queryByText(word)).toBeNull();
+  });
+
+  it('puts the beat cells under the tempo, with Tap and Reset', () => {
+    setup();
+    const tempo = screen.getByRole('group', { name: 'Tempo and Tap' });
+    expect(within(tempo).getByRole('img', { name: 'Beat 2 of 4' })).toBeInTheDocument();
+    expect(within(tempo).getByRole('button', { name: "Back to the style's tempo" })).toHaveTextContent('Reset');
+    expect(screen.queryByText('Style tempo')).toBeNull();
+  });
+
+  it('steps the readouts down together until a long section fits, and drops the genre · metre before the name is cut', () => {
+    // Pretend the readouts need 120px more than they have at full size, 70px at 0.9, and fit at 0.8;
+    // and that the style's name is cut while the metre is shown.
+    const scroll = vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      if (this.classList.contains('yh-display__readouts')) {
+        const fit = (this.closest('.yh-display__frame') as HTMLElement).dataset.fit;
+        return 500 + (fit === '1' ? 120 : fit === '0.9' ? 70 : 0);
+      }
+      if (this.classList.contains('yh-accentblock__text')) {
+        const style = this.closest('.yh-display__style') as HTMLElement;
+        return style.dataset.meta === 'dropped' ? 100 : 160;
+      }
+      return 0;
+    });
+    const client = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      if (this.classList.contains('yh-display__readouts')) return 500;
+      if (this.classList.contains('yh-accentblock__text')) return 120;
+      return 0;
+    });
+    try {
+      const { container } = render(<Display {...displayBoard} nowPlaying={{ ...displayBoard.nowPlaying, playing: 'Ending III' }} />);
+      expect(container.querySelector('.yh-display__frame')).toHaveAttribute('data-fit', '0.8');
+      expect(container.querySelector('.yh-display__style')).toHaveAttribute('data-meta', 'dropped');
+    } finally {
+      scroll.mockRestore();
+      client.mockRestore();
+    }
+  });
+
+  it('keeps the genre · metre and the full section size when they fit', () => {
+    const { container } = render(<Display {...displayBoard} />);
+    expect(container.querySelector('.yh-display__frame')).toHaveAttribute('data-fit', '1');
+    expect(container.querySelector('.yh-display__style')).not.toHaveAttribute('data-meta');
+    expect(screen.getByText('Pop & Rock · 4/4')).toBeInTheDocument();
+  });
+
+  it('header: the style name without a chevron between ‹ and ›', () => {
+    const { container } = setup();
+    expect(container.querySelector('.yh-display__style .yh-accentblock__chevron')).toBeNull();
   });
 
   it('gives sections no hue', () => {
@@ -154,9 +214,10 @@ describe('Display', () => {
     }
   });
 
-  it('looping with nothing queued: where the section is', () => {
+  it('looping with nothing queued: no tab and no "bar 2 of 8" (the beat cells say where the bar is)', () => {
     const { container } = render(<Display {...displayLooping} />);
-    expect((container.querySelector('.yh-display__next') as HTMLElement).textContent).toBe('bar 2 of 8');
+    expect(container.querySelector('.yh-display__next')).toBeNull();
+    expect(screen.queryByText(/bar 2 of 8/)).toBeNull();
   });
 
   it('stopped: "Stopped", the queued style, no live block, the beat at rest', () => {
@@ -177,7 +238,8 @@ describe('Display', () => {
 
   it('Sync Start armed, then what starts', () => {
     const { container } = render(<Display {...displaySyncStart} />);
-    expect((container.querySelector('.yh-display__next') as HTMLElement).textContent).toBe('Sync Start armedIntro II');
+    expect((container.querySelector('.yh-display__next') as HTMLElement).textContent).toBe('Sync Start armedthen Intro II');
+    expect(container.querySelector('.yh-display__then')).not.toHaveAttribute('data-docked');
   });
 
   it('a waltz: three beats, on the third; the metre in the header', () => {
@@ -215,14 +277,24 @@ describe('Display', () => {
     expect(style('.yh-bar-beat').getPropertyValue('--yh-bar-beat-line')).toBe('var(--yh-display-beat-line)');
   });
 
-  it('defines the sizes in container units, capped per density, with auto compact below 1200px', () => {
+  it('defines the sizes in container units, each readout with its own cap per density, ranked section > tempo > chord', () => {
     const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'Display.css'), 'utf8');
     expect(css).toMatch(/container:\s*yh-display\s*\/\s*inline-size/);
-    expect(css).toMatch(/--yh-display-section:\s*clamp\(var\(--size-numeral\),\s*\d+(\.\d+)?cqi,\s*var\(--yh-display-cap\)\)/);
-    expect(css).toMatch(/--yh-display-tempo:\s*clamp\(var\(--size-numeral\),\s*\d+(\.\d+)?cqi,\s*var\(--yh-display-cap\)\)/);
-    expect(css).toMatch(/--yh-display-chord:\s*clamp\(var\(--size-numeral\),\s*\d+(\.\d+)?cqi,\s*var\(--yh-display-cap\)\)/);
-    expect(css).toMatch(/\.yh-display\[data-density='compact'\] \.yh-display__frame \{[^}]*--yh-display-cap:/);
-    expect(css).toMatch(/@container yh-display \(max-width: 1199px\) \{\s*\.yh-display\[data-density='auto'\] \.yh-display__frame \{[^}]*--yh-display-cap:/);
+    const cqi = (name: string) => {
+      const m = new RegExp(`--yh-display-${name}:\\s*(?:calc\\()?clamp\\(var\\(--size-numeral\\),\\s*(\\d+(?:\\.\\d+)?)cqi,\\s*var\\(--yh-display-cap-${name}\\)\\)`).exec(css);
+      expect(m, name).not.toBeNull();
+      return Number(m![1]);
+    };
+    expect(cqi('section')).toBeGreaterThan(cqi('tempo'));
+    expect(cqi('tempo')).toBeGreaterThan(cqi('chord'));
+    // Full caps 96 / 84 / 72 from display 40; compact 60 / 52 / 44 from numeral 32 (push's numbers).
+    const caps = (block: string) =>
+      ['section', 'tempo', 'chord'].map((n) => Number(new RegExp(`--yh-display-cap-${n}:\\s*calc\\(var\\(--size-[a-z]+\\) \\* ([\\d.]+)\\)`).exec(block)![1]));
+    const full = /\.yh-display__frame \{([^}]*)\}/.exec(css)![1];
+    const compact = /\.yh-display\[data-density='compact'\] \.yh-display__frame \{([^}]*)\}/.exec(css)![1];
+    expect(caps(full).map((k) => k * 40)).toEqual([96, 84, 72]);
+    expect(caps(compact).map((k) => k * 32)).toEqual([60, 52, 44]);
+    expect(css).toMatch(/@container yh-display \(max-width: 1199px\) \{\s*\.yh-display\[data-density='auto'\] \.yh-display__frame \{[^}]*--yh-display-cap-section:/);
     // The primitives' own size variables are set only through their options, never overridden here.
     expect(css).not.toMatch(/--yh-(chord-readout-hero|tempo-readout-size|section-name-size|bar-beat-line|bar-beat-lit)\s*:/);
   });
@@ -230,12 +302,16 @@ describe('Display', () => {
   it('lays out narrow heroes without overlap: parts wrap below 900px and drop below 600px, cells never ride over the header', () => {
     const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'Display.css'), 'utf8');
     expect(css).toMatch(/\.yh-display__readouts \{[^}]*align-content:\s*safe center/);
-    // The section is never cut; the chord takes what is left and steps itself down.
-    expect(css).toMatch(/grid-template-columns:\s*max-content minmax\(0, 1fr\) max-content;/);
+    // The section is never cut (it steps down instead); the chord keeps a cell and steps itself down.
+    expect(css).toMatch(/grid-template-columns:\s*max-content minmax\(calc\(var\(--yh-display-chord\) \* 1\.5\), 1fr\) max-content;/);
     expect(css).toMatch(/@container yh-display \(min-width: 900px\) \{\s*\.yh-display\[data-parts\] \.yh-display__readouts \{[^}]*minmax\(calc\(var\(--control-h\) \* 6\), 0\.8fr\)/);
     expect(css).toMatch(/@container yh-display \(max-width: 899px\) \{\s*\.yh-display \.yh-display__parts \{[^}]*grid-column:\s*1 \/ -1;[^}]*flex-direction:\s*row/);
     expect(css).toMatch(/@container yh-display \(max-width: 599px\) \{\s*\.yh-display \.yh-display__parts \{\s*display:\s*none/);
     expect(css).toMatch(/\.yh-chord-readout__fingering \{[^}]*white-space:\s*nowrap;[^}]*text-overflow:\s*ellipsis/);
+    // Narrow: the notes drop rather than clip.
+    expect(css).toMatch(/@container yh-display \(max-width: 599px\) \{[^@]*\.yh-chord-readout__tones \{\s*display:\s*none/);
+    // No faint text, no mono, no literal sizes for the readouts.
+    expect(css).not.toMatch(/--text-4|--font-mono/);
   });
 
   it('hands the tooltip action to the primitives, each control\'s key applied once', () => {

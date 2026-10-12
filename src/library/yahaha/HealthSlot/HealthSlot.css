@@ -3,7 +3,6 @@
 .yh-health-slot {
   /* The state's colour role: faint when calm, secondary when off, danger for trouble. */
   --yh-health-slot-hue: var(--text-3);
-  --yh-health-slot-mark: 0.5em;
 
   position: relative;
   box-sizing: border-box;
@@ -55,15 +54,11 @@
   max-width: 100%;
 }
 
-/* Calm: a quiet label in the pack's label case. */
-.yh-health-slot__calm {
-  text-transform: var(--label-case);
-  font-size: var(--size-caption);
-}
+/* Calm is quiet by colour alone: the same size and case as every other state. */
 
 .yh-health-slot__button {
   box-sizing: border-box;
-  min-height: calc(var(--control-h) - var(--space-2));
+  min-height: calc(var(--control-h) - var(--space-1));
   margin: 0;
   padding: 0 var(--space-1);
   border: var(--border-width) solid transparent;
@@ -76,7 +71,10 @@
   transition: background-color 120ms ease-out, border-color 120ms ease-out;
 }
 
+/* The danger chip, the same recipe as StatusLine's error tag: 12% tint, 35% edge, triangle,
+   strong --text-1, one space step shorter than a control. */
 .yh-health-slot[data-state='trouble'] .yh-health-slot__button {
+  padding: 0 var(--space-2);
   font-weight: var(--weight-strong);
   background: color-mix(in srgb, var(--danger) 12%, transparent);
   border-color: color-mix(in srgb, var(--danger) 35%, transparent);
@@ -112,28 +110,28 @@
   font-weight: var(--weight-strong);
 }
 
-/* The state's shape, so colour is never the only cue. */
+/* The state's shape, so colour is never the only cue: the StatusDot (calm, off) or the triangle. */
 .yh-health-slot__mark {
   flex: none;
-  box-sizing: border-box;
-  width: var(--yh-health-slot-mark);
-  height: var(--yh-health-slot-mark);
-  border-radius: var(--yh-health-slot-mark-radius, var(--radius-pill));
-  background: var(--yh-health-slot-hue);
+  display: inline-flex;
+  align-items: center;
 }
 
-/* Off: a hollow ring (no sound). */
-.yh-health-slot[data-state='off'] .yh-health-slot__mark {
-  background: transparent;
-  border: max(var(--border-width), 1.5px) solid var(--yh-health-slot-hue);
+/* Trouble: the warning triangle, drawn as StatusLine's error mark. */
+.yh-health-slot__triangle {
+  flex: none;
+  width: 1.3em;
+  height: 1.3em;
+  fill: none;
+  stroke: var(--danger);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
-/* Trouble: a warning triangle. */
-.yh-health-slot[data-state='trouble'] .yh-health-slot__mark {
-  --yh-health-slot-mark-radius: 0px;
-  width: 0.8em;
-  height: 0.7em;
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+.yh-health-slot__triangle circle {
+  fill: var(--danger);
+  stroke: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

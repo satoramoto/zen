@@ -1,4 +1,4 @@
-/* SendReadout: a flat inline button; lead caption, then name + level per send. Only contract
+/* SendReadout: a flat inline button; name + level per send. Only contract
    variables and the --yh-send-readout-* one declared here. */
 
 .yh-send-readout {
@@ -34,15 +34,6 @@
   outline: none;
 }
 
-.yh-send-readout-lead {
-  color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-}
-
 .yh-send-readout-send {
   display: inline-flex;
   align-items: baseline;
@@ -61,15 +52,15 @@
   min-width: 3ch;
   color: var(--text-1);
   font-family: var(--font-readout);
-  font-size: var(--size-heading);
+  font-size: var(--size-label);
   font-weight: var(--weight-numeral);
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
-/* Colour meaning: a send at 0 is off, so its level drops to the faint role. */
+/* Colour meaning: a send at 0 is off, so its level steps back to muted text (still readable). */
 .yh-send-readout-send[data-off] .yh-send-readout-level {
-  color: var(--text-4);
+  color: var(--text-3);
 }
 
 @media (prefers-reduced-motion: reduce) {

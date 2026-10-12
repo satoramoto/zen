@@ -29,7 +29,7 @@ export interface OneTouchPickerProps {
    * each filling its parent's cell; the parent supplies the group role and name.
    */
   cells?: boolean;
-  /** Cells: the numbers' ink, `neutral` or `a` (the style's own colour: a One Touch is a setting of the style). */
+  /** Cells: the outlines' and the applied mark's colour, `neutral` or `a` (the style's own colour: a One Touch is a setting of the style). */
   hue?: 'neutral' | 'a';
   /** The group's accessible name. Default: says which is applied and the Launchkey's Shift + pads 9 to 12. */
   name?: string;
@@ -45,15 +45,19 @@ export interface OneTouchPickerProps {
  *
  * **Changed.** The original drew bare digits with an underline for the applied one, so the numbers
  * barely read as buttons and "applied" was a thin line (affordance, contrast). Here the numbers sit
- * in one segmented strip of equal square cells, so the set reads as one choice; the applied number is
- * a solid `--selected` block (the selection role, not a part hue: `color.md`, colour has one meaning),
- * the others quiet outlined cells that fill on hover. Numbers past the style's count keep their cell
- * but drop to the faint ink with a struck-through face, so a missing setting reads as absent rather
- * than merely dim. Digits use the readout face with tabular numerals so 1-4 sit on one rhythm
- * (`typography.md`), and the label is a caption in the label case above or beside the strip
- * (hierarchy: the label names, the numbers act). The `a` hue maps to the contract's `--style` role
- * hue, with `--style-text` on the applied number's solid fill, so the style's One Touch numbers
- * wear the style's colour and never the `--accent` focus/highlight role (`../hues`). `tipAction` runs the app's tooltip
+ * in one segmented strip of equal square cells, so the set reads as one choice. *Colour meaning:*
+ * a solid fill on the Stage means "sounding or running" (the playing section's block), so the
+ * applied number is chosen, not filled: primary ink with a 2px rule in the style's role hue
+ * (`--style`) along the cell's foot, the same ink-plus-underline mark ChosenTabs uses, and the
+ * hero no longer shows two solid blocks side by side (`../hues`, `color.md`: colour has one
+ * meaning). The others are quiet outlined cells that lift on hover. *State clarity:* numbers past
+ * the style's count keep their cell with a dashed edge and the muted ink (`--text-3`), the Stage's
+ * one disabled face: absent, not "wrong" as the struck-through face read. Digits use the readout
+ * face with tabular numerals so 1-4 sit on one rhythm (`typography.md`), and the label is the
+ * Stage's one caption (caption size, body weight, `--text-3`, label case) above or beside the
+ * strip (hierarchy: the label names, the numbers act). In cells, the `a` hue draws the outlines
+ * and the mark in `--style`, so the style's One Touch numbers wear the style's colour and never
+ * the `--accent` focus/highlight role. `tipAction` runs the app's tooltip
  * action, in Pad's handle shape, on each number with that number's own key, since each number is
  * its own control with its own tooltip; the label and group have none.
  *

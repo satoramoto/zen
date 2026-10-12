@@ -139,6 +139,22 @@ describe('Knob names and display', () => {
     expect(knob).toHaveTextContent('RtgRate');
   });
 
+  it('draws no code line without a code', () => {
+    const { container } = render(<Knob label="Dynamics" value="127" />);
+    expect(container.querySelector('.yh-knob__code')).toBeNull();
+  });
+
+  it('marks "0" and "Off" as at rest, so they step back; other values not', () => {
+    const { rerender } = render(<Knob label="Swing" value="0" />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-rest', 'true');
+    rerender(<Knob label="Retrig" value="Off" />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-rest', 'true');
+    rerender(<Knob label="Dynamics" value="127" />);
+    expect(screen.getByRole('button')).not.toHaveAttribute('data-rest');
+    rerender(<Knob label="Swing" value="0" unused />);
+    expect(screen.getByRole('button')).not.toHaveAttribute('data-rest');
+  });
+
   it('draws the lit arc only when it has turned; the track always', () => {
     const { container, rerender } = render(<Knob label="Swing" fraction={0} />);
     expect(container.querySelector('.yh-knob__track')).not.toBeNull();

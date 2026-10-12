@@ -3,9 +3,14 @@
  * tooltip as `data-tip` (no native title) with the whole text as `data-tip-text`, the whole text in
  * the accessible name, and the hero stepping down until it fits.
  */
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ChordReadout } from './ChordReadout';
+
+// Tests run from the repo root.
+const css = readFileSync(join(process.cwd(), 'src/library/yahaha/ChordReadout/ChordReadout.css'), 'utf8');
 
 const LONG = 'AI Full Keyboard · Keyboard transpose +2 · played Gm7 over the whole keyboard';
 const AM7 = [{ note: 'A' }, { note: 'C' }, { note: 'E' }, { note: 'G' }];
@@ -46,13 +51,25 @@ describe('ChordReadout', () => {
     const readout = screen.getByRole('img', { name: 'Chord Am7: A C E G, Fingered On Bass' });
     expect(readout).toHaveAttribute('data-held', 'false');
     expect(readout).toHaveTextContent('Am7');
+    // The label is spoken, not drawn: the chord symbol names itself.
+    expect(readout).not.toHaveTextContent('Chord');
+    expect(readout.querySelector('.yh-chord-readout__label')).toBeNull();
   });
 
-  it('held mutes the chord and says so', () => {
+  it('held keeps the chord readable, a dashed rule under it, and says so', () => {
     const { container } = render(<ChordReadout chord="C" extension="maj7" notes={AM7} fingering="Fingered" held />);
     const readout = screen.getByRole('img', { name: 'Chord Cmaj7, held: A C E G, Fingered' });
     expect(readout).toHaveAttribute('data-held', 'true');
     expect(container.querySelector('.yh-chord-readout__held')).toHaveTextContent('held');
+    const held = /\.yh-chord-readout--held \.yh-chord-readout__chord \{([^}]*)\}/.exec(css)![1];
+    expect(held).toMatch(/text-decoration-style:\s*dashed/);
+    expect(held).toMatch(/var\(--border-strong\)/);
+    expect(held).not.toMatch(/color:\s*var\(--text-3\)/);
+  });
+
+  it('draws the slash bass in the chord\'s ink, and no faint text', () => {
+    expect(/\.yh-chord-readout__bass \{([^}]*)\}/.exec(css)![1]).toMatch(/color:\s*var\(--text-1\)/);
+    expect(css).not.toMatch(/--text-4/);
   });
 
   it('no chord draws a dash and says none', () => {

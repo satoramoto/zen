@@ -5,7 +5,8 @@
 .yh-displayart {
   --yh-displayart-sky: color-mix(in oklab, var(--accent) calc(10% + 8% * var(--scheme-light)), var(--surface-1));
   --yh-displayart-far: color-mix(in oklab, var(--accent) calc(22% + 10% * var(--scheme-light)), var(--surface-2));
-  --yh-displayart-near: color-mix(in oklab, var(--accent) calc(8% + 40% * var(--scheme-light)), var(--surface-0));
+  /* Light caps at 24% accent: any more and the near hill is the loudest colour on the screen. */
+  --yh-displayart-near: color-mix(in oklab, var(--accent) calc(8% + 16% * var(--scheme-light)), var(--surface-0));
   --yh-displayart-sun: color-mix(in oklab, var(--accent) calc(45% - 40% * var(--scheme-light)), var(--surface-1));
   position: relative;
   overflow: hidden;
@@ -14,11 +15,12 @@
   background: var(--yh-displayart-sky);
 }
 
-/* The sun: top right, clear of the readouts' middle band. The wrapper's shadow is the palette's bloom. */
+/* The sun: low in the bottom-right quarter, setting behind the far hill, clear of the readouts
+   (the tempo sits top right). The wrapper's shadow is the palette's bloom. */
 .yh-displayart__sun {
   position: absolute;
-  right: 14%;
-  top: 16%;
+  right: 10%;
+  top: 52%;
   width: 18%;
   aspect-ratio: 1;
   filter: drop-shadow(0 0 calc(var(--bloom) * 6) var(--yh-displayart-sun));
@@ -50,9 +52,10 @@
   background: var(--yh-displayart-near);
 }
 
-/* The fade from the ground on the left: readouts over the art keep the ground's contrast. */
+/* The fade from the ground on the left: readouts over the art keep the ground's contrast, all the
+   way under the tempo. */
 .yh-displayart__fade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, var(--surface-0) 0%, color-mix(in oklab, var(--surface-0) 60%, transparent) 25%, transparent 65%);
+  background: linear-gradient(90deg, var(--surface-0) 0%, color-mix(in oklab, var(--surface-0) 60%, transparent) 40%, transparent 85%);
 }

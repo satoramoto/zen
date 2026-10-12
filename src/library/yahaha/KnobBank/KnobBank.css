@@ -33,21 +33,33 @@
   container-type: inline-size;
 }
 .yh-knobbank__slot > * {
-  --yh-knobbank-ring: min(calc(var(--control-h) * 2.25), calc(100cqi - 2 * var(--space-1)));
+  --yh-knobbank-ring: min(calc(var(--control-h) * 2.75), calc(100cqi - 2 * var(--space-1)));
 }
 .yh-knobbank__slot .yh-knob {
   --yh-knob-ring: var(--yh-knobbank-ring);
   width: 100%;
   padding: var(--space-1);
 }
-/* The value scales with the ring, a little larger than the knob's own default, so it reads first. */
-.yh-knobbank__slot .yh-knob__value {
-  font-size: min(var(--size-heading), calc(var(--yh-knob-ring) * 0.32));
+/* The name takes the slot's whole width, and a slot too narrow for its longest word ("Retrigger"
+   in caps, eight across a 552px region) steps the name down a little rather than breaking the
+   word or cutting it: a name is never "Dynami…" or "DYNAMI / CS". */
+.yh-knobbank__slot .yh-knob__label {
+  max-width: calc(100% + 2 * var(--space-1));
+  margin-inline: calc(-1 * var(--space-1));
+  font-size: min(var(--size-caption), 17cqi);
+  letter-spacing: min(var(--tracking), 0em);
+  overflow-wrap: normal;
+  hyphens: manual;
 }
 
-/* An unmapped slot: a knob's footprint (an empty name line, the full ring, an empty code line, on
-   the knob's spacing) holding only a faint track, fainter than an idle knob's, with no arc,
-   pointer or value: the slot is there, nothing is in it, nothing to press. */
+/* The value scales with the ring, larger than the knob's own default, so it reads first. */
+.yh-knobbank__slot .yh-knob__value {
+  font-size: min(var(--size-heading), calc(var(--yh-knob-ring) * 0.36));
+}
+
+/* An unmapped slot: a knob's footprint (an empty two-line name, the full ring, on the knob's
+   spacing) holding only a faint track, fainter than an idle knob's, with no arc, pointer or
+   value: the slot is there, nothing is in it, nothing to press. */
 .yh-knobbank__empty {
   display: grid;
   justify-items: center;
@@ -57,8 +69,9 @@
   width: 100%;
   padding: var(--space-1);
 }
+/* The knob's name block: two caption lines (Knob.css). */
 .yh-knobbank__line {
-  height: calc(var(--size-caption) * 1.3);
+  height: calc(var(--size-caption) * 2.6);
 }
 .yh-knobbank__ring {
   display: block;

@@ -50,13 +50,19 @@ const KEY_STEP: Record<string, number> = { ArrowUp: 1, ArrowRight: 1, ArrowDown:
  * Numbers). *Colour meaning:* the original painted value, arc and dot in the accent; here the
  * accent is kept for focus only and the arc is drawn in ink, or in the part's hue when `hue` says
  * which part owns the knob (`color.md`, the 60/30/10 rule and "maximum 2 colours per component").
- * *Affordance:* the tip dot becomes a pointer notch across the arc's end, like the line on a
- * hardware knob cap, so it looks like something that turns; hovering lifts the track and
+ * *Affordance:* the tip dot becomes a pointer tick just outside the ring at the arc's end, like
+ * the index mark beside a hardware knob, so it looks like something that turns; outside the
+ * stroke it never merges into a neutral knob's lit arc of the same ink; hovering lifts the track and
  * the cursor says drag up/down. *Contrast:* the track is a mix of ink into the ground, so it
  * stays visible on light palettes where the original's fixed grey vanished; an unused knob keeps
  * a fainter track and a dim name. *Rhythm:* name, ring and code sit on the library's spacing and
  * scale with `--control-h`, labels follow the pack's `--label-case` and tracking, and a visible
- * `:focus-visible` ring uses the accent (`craft-details.md`, Focus States).
+ * `:focus-visible` ring uses the accent (`craft-details.md`, Focus States). *Hierarchy at rest*:
+ * a value of "0" or "Off" steps down to `--text-3`, so a knob that does nothing reads quieter
+ * than one at 127 (the rule SendReadout uses for a send at 0). *Legibility*: the name wraps to
+ * two balanced lines instead of an ellipsis, and every knob keeps two lines' room, so rings line
+ * up across a bank; the Genos code is optional, drawn only when given, in the readout face (no
+ * mono on the Stage).
  *
  * **Kept.** Fully controlled, and the same input: a drag turns it relative to where it is (a
  * step every 4px up or right, 16px with Shift) and never jumps to the pointer; ↑ → / ↓ ← and the
@@ -162,10 +168,13 @@ export function Knob({
   const deg = unused ? 0 : sweepOf(fraction);
   const track = arc(START, START + SWEEP);
   const lit = arc(START, START + deg);
-  // The pointer: a short notch across the arc's end, clear of the value in the centre.
-  const tipOuter = point(START + deg, R + 2.5);
-  const tipInner = point(START + deg, R - 5);
+  // The pointer: a short tick just outside the ring at the arc's end, so it never merges into the
+  // lit arc (same ink on a neutral knob) and stays clear of the value in the centre.
+  const tipOuter = point(START + deg, R + 7);
+  const tipInner = point(START + deg, R + 3);
   const spoken = name ?? (unused ? 'unused' : `${label}${code ? ` (${code})` : ''} ${value}${unit}`);
+  // "0" and "Off" say "nothing here" and step back, as a send at 0 does (SendReadout).
+  const rest = !unused && /^(0|off)$/i.test(value.trim());
 
   return (
     <button
@@ -173,6 +182,7 @@ export function Knob({
       type="button"
       className="yh-knob"
       data-unused={unused || undefined}
+      data-rest={rest || undefined}
       data-hue={hue}
       data-tip={tip}
       aria-label={spoken}
@@ -206,7 +216,7 @@ export function Knob({
           </span>
         )}
       </span>
-      <span className="yh-knob__code">{code}</span>
+      {code && <span className="yh-knob__code">{code}</span>}
     </button>
   );
 }

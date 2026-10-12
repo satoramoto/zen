@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react';
-import { SECTION_STATE_COLOUR } from '../hues';
 import './BarBeat.css';
 
 /** The playing section. Kept for older callers; it no longer changes the colour. */
@@ -11,7 +10,7 @@ export interface BarBeatProps {
   /** Beats in the bar: one segment each. */
   beats?: number;
   /**
-   * @deprecated Sections take no hue (`../hues`): the bar always wears the playing role. Accepted
+   * @deprecated Sections take no hue (`../hues`): the bar is neutral ink in every section. Accepted
    * and ignored, so code built on the old API still compiles.
    */
   hue?: BarBeatHue;
@@ -32,26 +31,25 @@ export function beatState(n: number, beat: number): BeatState {
 }
 
 /**
- * BarBeat: the display's beat bar, a segment per beat of the bar in the playing role.
+ * BarBeat: the display's beat cells, one per beat of the bar.
  *
  * **Job.** Tell a player where they are in the bar without reading anything: past beats filled,
- * the current beat lit, beats to come at rest; stopped, every segment at rest. The parent passes
+ * the current beat lit, beats to come at rest; stopped, every cell at rest. The parent passes
  * the moment; nothing here moves on its own. A readout, not a control: one spoken name
- * ("Beat 2 of 4" or "Stopped"), the segments hidden.
+ * ("Beat 2 of 4" or "Stopped"), the cells hidden.
  *
- * **Changed.** *Colour meaning:* the four categorical hues belong to the four parts (`../hues`),
- * so the bar no longer wears a section's hue; what it shows is what is playing, so it takes the
- * `--selected` role in every section (`SECTION_STATE_COLOUR.playing`), and the section is named
- * by the SectionName beside it, not by colour. The resting segments are a faint tint of the text on
- * the ground (16% of `--text-1` in `--surface-0`) instead of a fixed dark grey or the strong border,
- * which on some packs is as dark as the text and made beats to come read as lit (color.md). An
- * optional `thickness` sets the resting line (the lit beat stays three times it) for regions read
- * from across a room. *Contrast and
- * hierarchy:* the current beat differs by height as well as by glow, so it still stands out on
- * flat packs with no bloom and for readers who can't tell the colour (color.md). *Rhythm:*
- * segments are evenly spaced on the density's step and capped with the pack's pill radius; the
- * bar keeps the lit segment's height at every moment, so the line under it never jumps
- * (craft-details.md). It fills its container's width rather than a stage-specific measure.
+ * **Changed.** *Colour meaning:* a solid `--selected` fill means "sounding" and belongs to the
+ * playing section's block, so the beat no longer wears it: the lit beat is primary ink
+ * (`--text-1`), past beats the muted ink (`--text-3`, history, not "playing"), beats to come a
+ * faint tint of the text on the ground (16% of `--text-1` in `--surface-0`), never the strong
+ * border, which on some packs is as dark as the text (color.md). This is what the Display draws,
+ * so the hero no longer overrides it. No section hue, no glow. *Hierarchy:* the current beat
+ * differs by height (three times the line) as well as by ink, so it reads on flat packs and for
+ * readers who can't tell the ink apart; beat 1 rests at twice the line, so the bar shows where it
+ * starts. *Rhythm:* the cells sit `--space-3` apart, wide enough to count as four from a distance,
+ * capped with the pack's pill radius; the bar keeps the lit height at every moment, so the line
+ * under it never jumps (craft-details.md). An optional `thickness` sets the resting line for
+ * regions read from across a room. It fills its container's width.
  *
  * **Kept.** The segment states and their order, the 1-based beat with 0 for stopped, at least
  * one segment, and the single `img` with its spoken name.
@@ -69,14 +67,21 @@ export function BarBeat({ beat = 0, beats = 4, thickness }: BarBeatProps) {
       style={
         {
           '--yh-bar-beat-count': count,
-          '--yh-bar-beat-tone': SECTION_STATE_COLOUR.playing,
           ...(thickness !== undefined && { '--yh-bar-beat-line': thickness }),
         } as CSSProperties
       }
     >
       {Array.from({ length: count }, (_, i) => {
         const state = beatState(i + 1, beat);
-        return <span key={i} className={`yh-bar-beat__segment yh-bar-beat__segment--${state}`} data-state={state} aria-hidden="true" />;
+        return (
+          <span
+            key={i}
+            className={`yh-bar-beat__segment yh-bar-beat__segment--${state}`}
+            data-state={state}
+            data-downbeat={i === 0 || undefined}
+            aria-hidden="true"
+          />
+        );
       })}
     </div>
   );

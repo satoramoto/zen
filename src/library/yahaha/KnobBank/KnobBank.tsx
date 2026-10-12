@@ -1,4 +1,3 @@
-import { useId } from 'react';
 import { ChosenTabs, type TabItem } from '../ChosenTabs/ChosenTabs';
 import { GroupHeader } from '../GroupHeader/GroupHeader';
 import { Knob, type TipAction } from '../Knob/Knob';
@@ -61,17 +60,22 @@ export function knobName(knob: KnobItem, index: number): string {
 }
 
 /**
- * KnobBank: the Stage's Knobs region. A "Knobs" header with the knob page tabs, and the eight
- * Launchkey knobs across the region, each in the slot of the hardware knob it mirrors.
+ * KnobBank: the Stage's Knobs region. The knob page tabs, and the eight Launchkey knobs across
+ * the region, each in the slot of the hardware knob it mirrors.
  *
  * **Job.** Say what the eight knobs do on this page and where each one is, mid-song, from a metre
  * away: the page first (which of six maps the hardware is on), then each value, then each name.
  * A turn or a press on a knob is a callback with the knob's position.
  *
  * **Changed.** *Hierarchy*: the value sits inside each ring at numeral weight with tabular
- * figures, scaled with the ring, so "127", "1/8" and "Off" are the first thing read and keep their
- * width as they change (`typography.md`, tabular numbers); the page is the one `--selected` tab
- * in the header, so there is a single loud "where am I" mark and no counter to cross-check.
+ * figures, scaled with the ring (2.75 control heights, the value up to `--size-heading`), so
+ * "127", "1/8" and "Off" are the first thing read and keep their width as they change
+ * (`typography.md`, tabular numbers). The chosen page is ink with a 2px underline, not a solid
+ * fill: on the Stage a solid fill means "sounding or running" only (the 2026-10 Stage review), and
+ * there is no counter to cross-check. *Clutter*: the "Knobs" title is gone, since the page tabs
+ * name the region themselves (the region keeps "Knobs" as its accessible name), and so is the
+ * Genos code under each ring: the plain name a player needs gets two balanced lines instead of an
+ * ellipsis ("Dynami…"), and the code stays only in the spoken name.
  * *Colour meaning* (`hues.ts`, `color.md` on colour by purpose): a knob that sets one part's value
  * (the parts' volumes on Rack, their pan, their sends on the effect pages) wears that part's hue on
  * its arc, so it agrees with the mixer strip and keyboard zone of the same part; every other knob
@@ -79,33 +83,36 @@ export function knobName(knob: KnobItem, index: number): string {
  * "part" and nothing else. *Mapping*: the Launchkey always has eight knobs, so the bank always
  * draws eight slots, whatever `knobs` holds (missing ones are unused, extras ignored), and each
  * screen position maps one to one to a hardware knob. An unmapped slot is drawn at a real knob's
- * size and place, as its full ring in a faint track with no arc, pointer, value or name, so the
- * slot is plainly there but holds nothing; it is not a control (out of the tab order, not
- * pressable) and keeps its spoken name, and being quieter than an "Off" knob's track it never
- * competes with the mapped ones (`color.md`, state changes: structure, not circus). *Fit*: each slot is
+ * size and place, as its full ring in a faint track (`--text-1` at 10%) with no arc, pointer,
+ * value or name, so the slot is plainly there but holds nothing; it is not a control (out of the
+ * tab order, not pressable) and keeps its spoken name, and being quieter than an "Off" knob's
+ * track it never competes with the mapped ones (`color.md`, state changes: structure, not circus).
+ * It is the bank's share of one empty-slot rule across the three banks: the control's full
+ * footprint, no edge, no label, in that one faint wash (FaderBank's parked faders, PadBank's
+ * empty pads). *Fit*: each slot is
  * a size container and the ring takes the slot's width up to the density's size, so eight knobs
  * fit the region of a 1217 × 752 Stage as well as a 1440 × 900 one without clipping, and the value
  * shrinks with the ring rather than overflowing it. *Alignment*: the bank fills its region instead
  * of a fixed band width, and the slots are an even eight-column grid on the library's spacing.
  *
  * **Kept.** Holds no state: the page comes in `page`, a tab choice goes out by index, and every
- * knob change carries the knob's position. The header's one tab style (ChosenTabs, a tablist with
- * arrow keys), the `pageLabel` fallback tab, the tooltip keys (`knobs.page`, `knobs.knob`), each
+ * knob change carries the knob's position. A region named "Knobs"; the header's one tab style
+ * (ChosenTabs, a tablist with arrow keys), the `pageLabel` fallback tab, the tooltip keys (`knobs.page`, `knobs.knob`), each
  * knob's drag, wheel, keys and press, and the spoken names ("Knob 1: Dynamics (DynCtrl) 127",
  * "Knob 7: unused").
  */
 export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipAction, onPage, onPress, onStep }: KnobBankProps) {
-  const headingId = useId();
   const names = pages.length > 0 ? pages : [pageLabel];
   const tabs: TabItem[] = names.map((label, i) => ({ id: String(i), label, tip: 'knobs.page' }));
   const chosen = String(pages.length > 0 ? page : 0);
   const slots = Array.from({ length: KNOB_SLOTS }, (_, i) => knobs[i] ?? UNUSED);
 
   return (
-    <section className="yh-knobbank" aria-labelledby={headingId}>
-      <GroupHeader title="Knobs" id={headingId}>
+    <section className="yh-knobbank" aria-label="Knobs" lang="en">
+      <GroupHeader>
         <ChosenTabs
           size="header"
+          look="underline"
           label="Knob page"
           tabs={tabs}
           chosen={chosen}
@@ -122,12 +129,12 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
                 <svg className="yh-knobbank__ring" viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true">
                   <path d={TRACK} />
                 </svg>
-                <span className="yh-knobbank__line" aria-hidden="true" />
               </span>
             ) : (
               <Knob
                 label={knob.label}
-                code={knob.code}
+                // The Genos code stays in the spoken name (knobName) but is not drawn on the Stage.
+                code=""
                 value={knob.value}
                 unit={knob.unit}
                 fraction={knob.fraction}

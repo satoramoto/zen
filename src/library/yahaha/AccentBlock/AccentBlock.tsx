@@ -26,6 +26,11 @@ export interface AccentBlockProps {
   tipAction?: TipAction;
   /** Called on a click, Space or Enter (`button` only). */
   onPress?: () => void;
+  /**
+   * The button's trailing chevron. Default `true`; `false` where the block already sits between
+   * step keys (‹ name ›), so the line doesn't carry three arrows. Ignored for `span`.
+   */
+  chevron?: boolean;
 }
 
 /**
@@ -43,11 +48,14 @@ export interface AccentBlockProps {
  * palettes. Here the colour is a bar on the block's leading edge in the contract's `--style` role
  * hue (the style's own colour, as its name is the style's; `--accent` stays the focus ring) and
  * the name is primary text on the raised `--surface-2`, so it passes in every palette
- * and never looks pressed (color.md › semantics; one meaning per colour). *Hierarchy*: the name is
- * strong weight at label size in the theme's label case, the loudest text on the line without a
- * louder colour. *Affordance*: the button form carries a trailing chevron and lifts to
- * `--surface-3` on hover, so "this opens something" reads before it is clicked; the plain label
- * has neither. *Rhythm*: heights come from `--control-h` (line) and three quarters of it (knob),
+ * and never looks pressed (color.md › semantics; one meaning per colour). The bar is `--space-1`
+ * wide, so the style's hue reads as a mark rather than a hairline. *Hierarchy*: the name is
+ * strong weight at body size in the theme's label case, the loudest text on the line (it was the
+ * smallest, at label size beside the metre) without a louder colour. *Affordance*: the button
+ * form lifts to `--surface-3` on hover and carries a trailing chevron, so "this opens something"
+ * reads before it is clicked; where it sits between ‹ and › step keys (`chevron={false}`) the
+ * chevron goes, so the line doesn't show three arrows in a row. The plain label has neither.
+ * *Rhythm*: heights come from `--control-h` (line) and three quarters of it (knob),
  * so the block sits flush with the density's controls beside it.
  *
  * **Kept.** One line, ellipsized at its width with the whole name in the button's accessible
@@ -55,7 +63,7 @@ export interface AccentBlockProps {
  * tooltip key and hook on the button only; Space and Enter press it (a native button); focus
  * ring only on keyboard focus.
  */
-export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', width, name, tip, tipAction, onPress }: AccentBlockProps) {
+export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', width, name, tip, tipAction, onPress, chevron = true }: AccentBlockProps) {
   const shown = label.trim() === '' ? empty : label;
   const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
   const ref = useRef<HTMLButtonElement>(null);
@@ -80,9 +88,11 @@ export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', 
         onClick={() => onPress?.()}
       >
         <span className="yh-accentblock__text">{shown}</span>
-        <svg className="yh-accentblock__chevron" viewBox="0 0 12 12" aria-hidden="true">
-          <path d="M4.5 2.5 8 6l-3.5 3.5" />
-        </svg>
+        {chevron && (
+          <svg className="yh-accentblock__chevron" viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M4.5 2.5 8 6l-3.5 3.5" />
+          </svg>
+        )}
       </button>
     );
   }

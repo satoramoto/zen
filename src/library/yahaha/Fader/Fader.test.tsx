@@ -34,6 +34,14 @@ describe('Fader a11y', () => {
     expect(fader).not.toHaveTextContent('12');
   });
 
+  it('draws one meter, the louder side, and no peak line', () => {
+    const { fader } = setup(90, { meter: 0.3, meter2: 0.6, peak: 0.8 });
+    const meters = fader.querySelectorAll('.yh-fader__meter');
+    expect(meters).toHaveLength(1);
+    expect((meters[0] as HTMLElement).style.getPropertyValue('--yh-fader-m')).toBe('0.6');
+    expect(fader.querySelector('.yh-fader__peak')).toBeNull();
+  });
+
   it('splits a layer word from its number and marks soft takeover with its direction', () => {
     const { fader, rerender } = setup(72, { value: 'Rev 40', away: 50 });
     expect(fader.querySelector('.yh-fader__word')).toHaveTextContent('Rev');

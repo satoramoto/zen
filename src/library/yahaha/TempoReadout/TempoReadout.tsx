@@ -91,17 +91,20 @@ function useHold(report: ((down: boolean) => void) | undefined) {
  * **Changed.** *Numerals:* the number is set in the pack's readout face at its numeral weight with
  * tabular figures, right-aligned in a box as wide as the widest value (`max`'s digit count in ch),
  * so 99 → 100 → 104 never shifts the unit or the buttons (typography.md, "Tabular Numbers").
- * *Hierarchy:* the unit drops to a caption-sized label in the muted ink and the pack's label case,
- * so the eye lands on the value first (typography.md). *Affordance:* + and − are real keys, a
- * framed pair on the raised surface with one hairline between them, instead of bare glyphs that
- * read as text; the draggable number shows a faint well on hover and the `ns-resize` cursor
- * (craft-details.md). *Colour meaning:* + and − move time, so, as the original drew them, the pair
- * wears the contract's `--transport` role hue: frame, hairline and glyphs at rest, a tint of it on
- * hover, a solid fill with `--transport-text` while pressed (`../hues`). The number stays neutral
- * text and no status colour appears; the accent appears only as the focus ring (color.md). *Sizing:* the numeral's size is one
+ * *Hierarchy:* the unit drops to a caption in the muted ink at body weight and the pack's label
+ * case, the one caption recipe of the Stage, so the eye lands on the value first (typography.md).
+ * *Affordance:* + and − are real keys, a framed pair on the raised surface with one hairline
+ * between them, each a control-height square with its glyph at heading size (they were 30px wide
+ * slivers with 18px glyphs), instead of bare glyphs that read as text; the draggable number shows
+ * a faint well on hover and the `ns-resize` cursor (craft-details.md). *Colour meaning:* + and −
+ * move time, but a transport key wears `--transport` only while active (`../hues`): at rest the
+ * pair is neutral, the strong border and secondary glyphs, so Start / Stop stays the one
+ * saturated key; hover raises the surface, and only a press fills it with `--transport` and
+ * `--transport-text`. The number stays neutral text and no status colour appears; the accent
+ * appears only as the focus ring (color.md). *Sizing:* the numeral's size is one
  * custom property, `--yh-tempo-readout-size` (default `--size-numeral`), which a parent sets on
- * the root or passes as `size`; + and − scale from it, so a display can make the tempo its hero
- * without overriding this widget's CSS.
+ * the root or passes as `size`, so a display can make the tempo its hero without overriding this
+ * widget's CSS; + and − keep the control size at any numeral size.
  *
  * **Kept.** The spinbutton with its spoken value ("104 BPM"), the drag, wheel, key and
  * double-click gestures, the hold reporting with a single press from the keyboard, the button

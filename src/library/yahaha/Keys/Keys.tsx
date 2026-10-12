@@ -63,18 +63,26 @@ type Zone = { part: KeyPart; from: number; to: number; held: string[]; lit: bool
  *
  * **Changed.** *Hierarchy:* a zone ruler above the keys names each part ("Left", "Right 1") and
  * what it holds ("G A C E", "E4 A4"), so the picture's accessible label is also what a sighted
- * player reads; before, held notes were only colour on keys. *Affordance:* the split is a labelled
+ * player reads; before, held notes were only colour on keys. The ruler is the line a player
+ * wants mid-song, so it is a full `--control-h` tall and readable from a metre: what is held at
+ * `--size-body` in the strong weight, the part's name at `--size-label` in `--text-2`. Held keys
+ * no longer carry their own small name: it said again, at caption size, what the ruler says.
+ * *Colour meaning:* each zone's lamp is its underline on the ruler, in the part's hue, lit with
+ * `--bloom` while the part sounds, so the part's name, its colour and its keys line up; as a 3px
+ * strip on the keys' top edge it was cut by every sharp and read as the frame. *Affordance:* the split is a labelled
  * flag reading the split note ("F#2") with a grip, sitting on the split line, instead of a 6px
  * grip lost in the keys; locked it turns dashed and loses its grip, armed it rings in `--accent`
  * with a "press a key" hint, so each state looks like what it does (craft-details.md, focus and
  * keyboard handlers). *Contrast:* the keys are drawn as keys, light faces and dark sharps in either
  * scheme, in a real keyboard's proportions, rather than near-black on black (color.md, light and
  * dark themes); the faces are the contract's `--key-white` and `--key-black`, and the gaps,
- * sharp edges and C names are mixed between them, not derived from the ground. *Colour meaning:* part hues (`--hue-N`) appear only for part identity: each zone's
- * lamp along the top edge, lit with `--bloom` while that part sounds, and the held keys themselves;
- * the left-zone tint is gone because the lamp and ruler already say who owns the range
- * (color.md 60/30/10, anti-ai-slop.md token role drift). *Numerals:* note names are set in
- * `--font-readout` with tabular figures, and held white keys carry their own name.
+ * sharp edges and C names are mixed between them, not derived from the ground; the C names sit at
+ * a 45% mix so they read on the faces. The split line is one ink with the flag's foot,
+ * `--text-1`, with a 1px halo in whichever key face lies farthest from it, so it can't be taken
+ * for a key gap below the sharps in any scheme. Part hues (`--hue-N`) appear only for part
+ * identity, in the zone underlines and the held keys; the left-zone tint is gone because the
+ * underline and ruler already say who owns the range (color.md 60/30/10, anti-ai-slop.md token
+ * role drift). *Numerals:* note names are set in `--font-readout` with tabular figures.
  *
  * **Kept.** MIDI numbers with C3 = 60 and a name on every C; the split line that steps round a
  * black key the way the keys' own edges do; held right notes drawing over held left ones; the
@@ -272,6 +280,7 @@ export function Keys({
             data-part={zone.part}
             data-side={zone.part === 'l' ? 'left' : 'right'}
             data-split={topX !== null ? '' : undefined}
+            data-on={zone.lit ? 'true' : 'false'}
             style={{ left: px(zone.from), width: px(Math.max(0, zone.to - zone.from)) }}
           >
             <span className="yh-keys__part">{PART_NAMES[zone.part]}</span>
@@ -299,7 +308,7 @@ export function Keys({
               data-c={key.label ? '' : undefined}
               style={{ left: px(key.x), width: px(keys.whiteWidth) }}
             >
-              {key.held ? noteName(key.note) : key.label}
+              {key.label}
             </div>
           ))}
           {keys.blacks.map((key) => (
@@ -308,15 +317,6 @@ export function Keys({
               className="yh-keys__black"
               data-held={key.held ?? undefined}
               style={{ left: px(key.x) }}
-            />
-          ))}
-          {zones.map((zone) => (
-            <span
-              key={zone.part}
-              className="yh-keys__lamp"
-              data-part={zone.part}
-              data-on={zone.lit ? 'true' : 'false'}
-              style={{ left: px(zone.from), width: px(Math.max(0, zone.to - zone.from)) }}
             />
           ))}
           {keys.splitX !== null && (

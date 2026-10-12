@@ -1,7 +1,7 @@
 /* AccentBlock: contract variables only. The style's hue is a leading bar; the name is primary text on a raised surface. */
 .yh-accentblock {
   --yh-accentblock-h: var(--control-h);
-  --yh-accentblock-bar: max(2px, calc(var(--border-width) * 3));
+  --yh-accentblock-bar: var(--space-1);
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -19,7 +19,7 @@
   background: var(--surface-2);
   color: var(--text-1);
   font-family: var(--font-sans);
-  font-size: var(--size-label);
+  font-size: var(--size-body);
   font-weight: var(--weight-strong);
   letter-spacing: var(--tracking);
   text-transform: var(--label-case);

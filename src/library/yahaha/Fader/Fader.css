@@ -7,7 +7,7 @@
   --yh-fader-cap-h: var(--space-2);
   --yh-fader-cap-r: min(var(--radius-control), 2px);
   --yh-fader-groove-w: var(--space-1);
-  --yh-fader-meter-w: 3px;
+  --yh-fader-meter-w: 2px;
   --yh-fader-line: max(1px, var(--border-width));
   /* Positions, 0–1 of the travel; the component sets them inline. */
   --yh-fader-level: 0;
@@ -70,16 +70,23 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
 }
-.yh-fader[data-kind='off'] .yh-fader__value { color: var(--text-3); }
+/* Off: the number steps down a size as well as a shade, so it never competes with a live level. */
+.yh-fader[data-kind='off'] .yh-fader__value {
+  color: var(--text-3);
+  font-size: var(--size-label);
+}
 
-/* The travel: the rail takes the width; the meters sit in a narrow column to its right. Both are
-   inset by half a cap so the cap stays inside at 0 and 127. */
+/* The travel: the groove centred on the strip, the one meter hard against its right edge. Both
+   are inset by half a cap so the cap stays inside at 0 and 127. */
 .yh-fader__travel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-1);
   min-height: 0;
+}
+/* Above the meter, so the overhanging cap covers it rather than the other way round. */
+.yh-fader__rail {
+  z-index: 1;
+  grid-area: 1 / 1;
 }
 .yh-fader__rail,
 .yh-fader__meters {
@@ -116,8 +123,9 @@
   width: min(100%, calc(var(--space-6) - var(--space-1)));
   height: var(--yh-fader-cap-h);
   transform: translate(-50%, -50%);
-  background: var(--text-1);
+  background: var(--surface-3);
   border-radius: var(--yh-fader-cap-r);
+  box-shadow: inset 0 0 0 var(--yh-fader-line) var(--border-strong);
 }
 .yh-fader__cap::after {
   content: '';
@@ -125,12 +133,12 @@
   top: 50%;
   right: 20%;
   left: 20%;
-  height: 1px;
+  height: 2px;
   transform: translateY(-50%);
-  background: var(--surface-0);
+  background: var(--text-1);
 }
 .yh-fader[data-kind='off'] .yh-fader__fill { opacity: 0.35; }
-.yh-fader[data-kind='off'] .yh-fader__cap { background: var(--text-3); }
+.yh-fader[data-kind='off'] .yh-fader__cap::after { background: var(--text-3); }
 
 /* Soft takeover: where the hardware fader is, outlined in the warning state colour. */
 .yh-fader__ghost {
@@ -152,10 +160,13 @@
   fill: var(--warning);
 }
 
-/* Meters: neutral, they measure sound; the peak hold is a hairline across both. */
+/* The meter: neutral and quiet, it measures sound; one 2px line 2px right of the groove. */
 .yh-fader__meters {
   display: flex;
-  gap: 2px;
+  grid-area: 1 / 1;
+  justify-self: center;
+  translate: calc(var(--yh-fader-groove-w) / 2 + 2px + var(--yh-fader-meter-w) / 2) 0;
+  pointer-events: none;
 }
 .yh-fader__meter {
   position: relative;
@@ -169,18 +180,11 @@
   bottom: 0;
   left: 0;
   height: calc(var(--yh-fader-m) * 100%);
-  background: var(--text-3);
-}
-.yh-fader__peak {
-  position: absolute;
-  right: 0;
-  bottom: calc(var(--yh-fader-p) * 100%);
-  left: 0;
-  height: 1px;
-  background: var(--text-1);
+  background: var(--text-4);
 }
 
-/* Parked: a dashed groove and nothing else. Empty: dotted, in the strip's faded hue. */
+/* Parked: a dashed groove and nothing else (shown, not usable). Empty: the banks' empty-slot
+   look, the groove's full footprint as a faint solid wash, no edge. */
 .yh-fader[data-kind='parked'] .yh-fader__groove {
   background: repeating-linear-gradient(
     to bottom,
@@ -189,10 +193,5 @@
   );
 }
 .yh-fader[data-kind='parked'][data-empty] .yh-fader__groove {
-  width: 2px;
-  background: repeating-linear-gradient(
-    to bottom,
-    color-mix(in oklab, var(--yh-fader-ink) 45%, transparent) 0 2px,
-    transparent 2px var(--space-2)
-  );
+  background: color-mix(in oklab, var(--text-1) 10%, transparent);
 }
