@@ -16,7 +16,7 @@
   min-width: 0;
   min-height: var(--control-h);
   margin: 0;
-  padding: var(--space-1) var(--yh-page-list-pad);
+  padding: var(--space-2) var(--yh-page-list-pad);
   border: 0;
   border-radius: var(--radius-control);
   background: transparent;
@@ -34,11 +34,16 @@
     background-color 120ms ease;
 }
 
+/* A long name wraps to a second line before it gives way, so its distinguishing end stays. */
 .yh-page-list__name {
+  display: -webkit-box;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .yh-page-list__row:not([aria-current='page']):hover {
@@ -46,9 +51,12 @@
   background: var(--surface-2);
 }
 
+/* The open page: ink and a 2px bar on the row's left edge, the list's form of the bar's underline.
+   The solid fill is kept for what plays. The bar is an inset shadow, so nothing reflows. */
 .yh-page-list__row[aria-current='page'] {
-  color: var(--selected-text);
-  background: var(--selected);
+  color: var(--text-1);
+  background: var(--surface-2);
+  box-shadow: inset 2px 0 0 var(--text-1);
 }
 
 .yh-page-list__row:focus-visible {

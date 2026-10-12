@@ -10,12 +10,12 @@
   --yh-keys-split-x: 0px;
   --yh-keys-split-step: 0;
   /* Sizes, all from density. */
-  --yh-keys-ruler-h: calc(var(--control-h) * 0.8);
+  --yh-keys-ruler-h: var(--control-h);
   --yh-keys-strip-h: calc(var(--control-h) * 1.75);
   --yh-keys-black-h: calc(var(--yh-keys-strip-h) * 0.6);
   --yh-keys-flag-w: calc(var(--control-h) * 1.9);
   --yh-keys-line: 2px;
-  --yh-keys-lamp: 3px;
+  --yh-keys-lamp: 2px;
   --yh-keys-key-radius: calc(var(--radius-control) / 2);
   /* Key faces are the contract's `--key-white` and `--key-black`: soft grey faces on a dark
      palette, near-paper on a light one, dark sharps either way, so the keys read as keys whatever
@@ -25,9 +25,12 @@
   --yh-keys-black: var(--key-black);
   --yh-keys-gap: color-mix(in oklab, var(--key-white) calc(35% + 12% * var(--scheme-light)), var(--key-black));
   --yh-keys-sharp-edge: color-mix(in oklab, var(--key-white) 25%, var(--key-black));
-  --yh-keys-label: color-mix(in oklab, var(--key-white) 25%, var(--key-black));
-  /* The split line, drawn on the faces: dark, like the sharps' ink. */
-  --yh-keys-split-ink: var(--yh-keys-black);
+  --yh-keys-label: color-mix(in oklab, var(--key-white) 45%, var(--key-black));
+  /* The split: one ink with the flag's foot, primary text, so it can't be taken for a key gap.
+     A 1px halo in the key face farthest from that ink (white keys' face under dark text in a light
+     scheme, the sharps' under light text in a dark one) keeps it apart from the faces either way. */
+  --yh-keys-split-ink: var(--text-1);
+  --yh-keys-split-halo: color-mix(in oklab, var(--key-white) calc(100% * var(--scheme-light)), var(--key-black));
 
   position: relative;
   flex: none;
@@ -56,28 +59,37 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  box-sizing: border-box;
   min-width: 0;
   padding: 0 var(--space-2);
   overflow: hidden;
   white-space: nowrap;
+  /* The zone's lamp: its underline, in the part's hue, lit while the part sounds. It ties the
+     part's name to its colour and to the keys under it. */
+  border-bottom: var(--yh-keys-lamp) solid color-mix(in oklab, var(--yh-keys-hue) 45%, transparent);
+}
+.yh-keys__zone[data-on='true'] {
+  border-bottom-color: var(--yh-keys-hue);
+  box-shadow: 0 calc(var(--yh-keys-lamp) / 2) var(--bloom) calc(-1 * var(--yh-keys-lamp) / 2) var(--yh-keys-hue);
 }
 /* Leave room for the split flag where the zones meet. */
 .yh-keys__zone[data-split][data-side='left'] { padding-right: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
 .yh-keys__zone[data-split][data-side='right'] { padding-left: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
+/* Read mid-song from a metre: the part at label size, what it holds at body size and strong. */
 .yh-keys__part {
   flex: none;
-  font-size: var(--size-caption);
+  font-size: var(--size-label);
   font-weight: var(--weight-strong);
   letter-spacing: var(--tracking);
   text-transform: var(--label-case);
-  color: var(--text-3);
+  color: var(--text-2);
 }
 .yh-keys__held {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: var(--font-readout);
-  font-size: var(--size-label);
+  font-size: var(--size-body);
   font-weight: var(--weight-strong);
   font-variant-numeric: tabular-nums;
   color: var(--text-1);
@@ -86,7 +98,7 @@
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: var(--size-caption);
+  font-size: var(--size-label);
   color: var(--accent);
 }
 
@@ -169,19 +181,6 @@
 .yh-keys__white[data-held] { z-index: 0; font-weight: var(--weight-strong); }
 .yh-keys__black[data-held] { z-index: 2; }
 
-/* A zone lamp along the top edge: the part's hue, lit while it sounds. */
-.yh-keys__lamp {
-  position: absolute;
-  top: 0;
-  z-index: 3;
-  height: var(--yh-keys-lamp);
-  background: color-mix(in oklab, var(--yh-keys-hue) 45%, transparent);
-}
-.yh-keys__lamp[data-on='true'] {
-  background: var(--yh-keys-hue);
-  box-shadow: 0 0 var(--bloom) var(--yh-keys-hue);
-}
-
 /* The split line: beside the black keys it runs along the split key's edge, below them along the
    white keys' edge, joined across when the two differ. */
 .yh-keys__split {
@@ -193,6 +192,7 @@
 .yh-keys__split > span {
   position: absolute;
   background: var(--yh-keys-split-ink);
+  box-shadow: 0 0 0 1px var(--yh-keys-split-halo);
 }
 .yh-keys__split-top {
   top: 0;
@@ -253,7 +253,7 @@
   padding: 0 var(--space-2);
   background: var(--surface-2);
   border: var(--border-width) solid var(--border-strong);
-  border-bottom: var(--yh-keys-line) solid var(--text-1);
+  border-bottom: var(--yh-keys-line) solid var(--yh-keys-split-ink);
   border-radius: var(--radius-control);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;

@@ -89,8 +89,17 @@ describe('StatusLine', () => {
     render(<StatusLine hint={{ title: 'Sync Start', body: 'Arms the band.', keys: 'Y', launchkey: 'Shift + Play' }} />);
     const hint = document.querySelector('.yh-status-line-hint')!;
     expect(hint.textContent).toContain('Key Y');
-    expect(hint.textContent).toContain('Launchkey: Shift + Play');
+    // One form for both places: no colon after either label.
+    expect(hint.textContent).toContain('Launchkey Shift + Play');
+    expect(hint.textContent).not.toContain(':');
     expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('draws the dismiss mark on every message, not only on hover', () => {
+    const { container } = render(<StatusLine text={NOTICE} />);
+    const clear = container.querySelector('.yh-status-line .yh-status-line-clear');
+    expect(clear).toBeInTheDocument();
+    expect(clear).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('drops data-tip when tip is null', () => {

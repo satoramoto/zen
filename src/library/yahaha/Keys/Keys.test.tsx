@@ -79,15 +79,27 @@ describe('keys helpers', () => {
 
 describe('Keys', () => {
   it('names the picture and shows each part with what it holds', () => {
-    setup();
+    const { container } = setup();
     expect(screen.getByRole('img', { name: 'Keys: split F#2, left hand G A C E, right hand E4 A4, 61 keys' })).toBeInTheDocument();
     expect(screen.getByText('Left')).toBeInTheDocument();
     expect(screen.getByText('G A C E')).toBeInTheDocument();
     expect(screen.getByText('Right 1')).toBeInTheDocument();
     expect(screen.getByText('E4 A4')).toBeInTheDocument();
-    // Held white keys carry their own name, in their part's hue.
-    expect(screen.getByText('E4', { selector: '.yh-keys__white' })).toHaveAttribute('data-held', 'r1');
-    expect(screen.getByText('G1', { selector: '.yh-keys__white' })).toHaveAttribute('data-held', 'l');
+    // Held keys fill in their part's hue; their names live once, in the ruler, not on the keys.
+    const held = [...container.querySelectorAll<HTMLElement>('.yh-keys .yh-keys__white[data-held]')];
+    expect(held.map((el) => el.getAttribute('data-held'))).toContain('r1');
+    expect(held.map((el) => el.getAttribute('data-held'))).toContain('l');
+    expect(screen.queryByText('E4', { selector: '.yh-keys__white' })).toBeNull();
+    expect(screen.queryByText('G1', { selector: '.yh-keys__white' })).toBeNull();
+  });
+
+  it("draws each zone's lamp as its underline on the ruler, lit while the part sounds", () => {
+    const { container, unmount } = render(<Keys {...boardKeys} heldLeft={[43]} heldRight={[]} />);
+    const zone = (part: string) => container.querySelector(`.yh-keys .yh-keys__ruler .yh-keys__zone[data-part='${part}']`);
+    expect(zone('l')).toHaveAttribute('data-on', 'true');
+    expect(zone('r1')).toHaveAttribute('data-on', 'false');
+    expect(container.querySelector('.yh-keys .yh-keys__lamp')).toBeNull();
+    unmount();
   });
 
   it('gives the split handle slider semantics and the tooltip', () => {

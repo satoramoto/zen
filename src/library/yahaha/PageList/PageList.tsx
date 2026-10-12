@@ -32,15 +32,19 @@ const KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'] as const;
  * click or one arrow key.
  *
  * **Changed**: the hairline under every row is gone; rows are separated by a small even gap and
- * their own padding, so the only line-like thing in the column is the open page's block (rhythm,
- * hierarchy: one strong mark per column). The open page is a `--selected` block on
- * `--radius-control`, the rest plain `--text-2` names that lift to `--text-1` on a faint
- * `--surface-2` on hover: each state changes one thing (`references/color.md`, "State changes:
- * structure, not circus"), and no hue appears, because a page's place in the list is not a
- * category (colour meaning). Names stay one weight in every state so opening a page never reflows
- * the column, and they left-align on one edge for scanning (alignment). A long name truncates at
- * its end with an ellipsis, keeping its first, distinguishing words (`references/typography.md`,
- * truncation needs `min-width: 0` in flex). Focus is a `:focus-visible` accent ring drawn inset so
+ * their own padding (`--space-2` top and bottom, so a row reads as a key, not a line of text), and
+ * the only line-like thing in the column is the open page's bar (rhythm, hierarchy: one strong
+ * mark per column). *Colour meaning:* the open page is no longer a solid `--selected` block, since
+ * the solid fill now means only "sounding or running" (the playing section, Start, record);
+ * chosen-in-navigation is ink plus a 2px bar everywhere, an underline in the app bar's tabs and a
+ * bar on the row's left edge here, over a faint `--surface-2`. The rest are plain `--text-2` names
+ * that lift to `--text-1` on `--surface-2` on hover: each state changes one thing
+ * (`references/color.md`, "State changes: structure, not circus"), and no hue appears, because a
+ * page's place in the list is not a category. Names stay one weight in every state so opening a
+ * page never reflows the column, and they left-align on one edge for scanning (alignment). A long
+ * name wraps to a second line before it gives way, since the column has height to spare and a
+ * name's end is often what tells it apart ("MIDI Input & Output"); only a third line ellipsises
+ * (`references/typography.md`, truncation). Focus is a `:focus-visible` accent ring drawn inset so
  * a scrolling parent never clips it (`references/craft-details.md`, focus states). Names keep their
  * own case rather than `--label-case`: they are nouns read as a list, not short control labels.
  *

@@ -4,7 +4,8 @@
 .yh-appbar {
   /* The gap between the bar's groups, and inside a group. */
   --yh-appbar-gap: var(--space-4);
-  --yh-appbar-inner: var(--space-2);
+  /* A step wider than the 0 join inside Metronome▾, so the switches read as three keys, not four. */
+  --yh-appbar-inner: var(--space-3);
   container-type: inline-size;
   container-name: yh-appbar;
   box-sizing: border-box;
@@ -125,6 +126,38 @@
   display: flex;
 }
 
+/* The ▾ as a drawn chevron on a full control-width key: the font's ▾ came out smaller than the
+   LED beside it. The glyph's character is hidden; its box draws the chevron. */
+.yh-appbar__caret .yh-button[data-size='caret'] {
+  width: var(--control-h);
+}
+
+.yh-appbar__caret .yh-button__glyph[data-glyph='caret'] {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  font-size: 0;
+  opacity: 1;
+}
+
+.yh-appbar__caret .yh-button__glyph[data-glyph='caret']::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  box-sizing: border-box;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translate(-50%, -75%) rotate(45deg);
+}
+
+.yh-appbar__caret .yh-button[data-face='off'] .yh-button__glyph[data-glyph='caret'] {
+  color: var(--text-2);
+}
+
 .yh-appbar__popover {
   position: absolute;
   top: calc(100% + var(--space-2));
@@ -173,7 +206,7 @@
   }
 }
 
-@container yh-appbar (max-width: 1400px) {
+@container yh-appbar (max-width: 1300px) {
   .yh-appbar__launchkey-word {
     display: none;
   }
@@ -182,7 +215,7 @@
 @container yh-appbar (max-width: 1320px) {
   .yh-appbar__row {
     --yh-appbar-gap: var(--space-2);
-    --yh-appbar-inner: var(--space-1);
+    --yh-appbar-inner: var(--space-2);
     padding-inline: var(--space-2);
   }
   .yh-appbar__health {
