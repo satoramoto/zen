@@ -1,0 +1,73 @@
+/* The effects (Effects.tsx): a hit (More effects' Punch, a pad) and the effects' settings rows
+   in ⚙ Settings. Rows are type, not boxes: a setting's name first, its control in the controls'
+   column at the row's end, on space alone (near borderless). Contract variables and visuals.css
+   tokens only, plus the local ones declared here:
+
+   --vs-effects-control  the controls' column: every row's control ends at the panel's right and
+                         starts here (settings.css's --set-control, 236px) */
+
+/* A hit: a pad, held while pressed, so it takes no text selection and no touch scrolling. */
+.vs-effects-hit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  user-select: none;
+  touch-action: none;
+}
+.vs-effects-hit small {
+  font-family: var(--font-readout);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-body);
+  letter-spacing: normal;
+}
+
+/* The settings' rows. */
+.vs-effects-rows {
+  --vs-effects-control: 236px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.vs-effects-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--vs-effects-control));
+  align-items: center;
+  column-gap: var(--space-4);
+  row-gap: var(--space-1);
+  min-width: 0;
+}
+.vs-effects-row-name {
+  min-width: 0;
+  color: var(--text-1);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+}
+.vs-effects-row-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.vs-effects-row-control > .lib-segmented,
+.vs-effects-row-control > .lib-slider {
+  flex: 1;
+  min-width: 0;
+}
+/* A step down or up: a quiet glyph, a finger's width. */
+.vs-effects-row-control > .vs-effects-step {
+  flex: none;
+  min-width: var(--control-h);
+}
+.vs-effects-step .lib-action-button-face {
+  min-width: var(--control-h);
+  color: var(--text-2);
+  font-size: var(--size-body);
+}
+
+/* Narrow: the controls' column narrows with the panel. */
+@media (max-width: 480px) {
+  .vs-effects-rows {
+    --vs-effects-control: 200px;
+  }
+}

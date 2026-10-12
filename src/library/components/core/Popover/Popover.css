@@ -1,0 +1,30 @@
+/* Popover: a top-layer box placed against its anchor, holding a float Layer.
+   Reads only contract variables and the --lib-popover-* ones declared here (usePopover sets
+   them inline on every placement).
+
+   --lib-popover-anchor  the anchor's width, for a panel at least as wide as its field
+   --lib-popover-room    the height left on the side it landed on */
+
+.lib-popover {
+  --lib-popover-anchor: 0px;
+  --lib-popover-room: none;
+  /* The top layer's own box: no UA border, padding or Canvas fill; the Layer inside draws. */
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-1);
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  max-height: var(--lib-popover-room);
+}
+.lib-popover__panel {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+}

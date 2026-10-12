@@ -1,0 +1,84 @@
+/* Segmented: a track of radios, drawn by the materials' tabs exactly as layout Tabs is, so a
+   system can make them underlines, a segmented control or a hardware selector.
+   Reads only contract variables. */
+
+.lib-segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  vertical-align: middle;
+  font-family: var(--font-sans);
+}
+.lib-segmented[data-orientation='vertical'] {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.lib-segmented__caption {
+  color: var(--text-2);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  white-space: nowrap;
+}
+
+.lib-segmented__track {
+  display: inline-flex;
+  align-items: stretch;
+  gap: var(--mat-tabs-gap);
+  min-width: 0;
+  height: calc(var(--control-h) * 0.9);
+  padding: var(--mat-tabs-pad);
+  box-sizing: border-box;
+  border-radius: var(--radius-control);
+  background: var(--mat-tabs-track-texture), var(--mat-tabs-track-fill);
+  box-shadow: var(--mat-tabs-track-shadow);
+}
+.lib-segmented[data-orientation='vertical'] .lib-segmented__track {
+  flex-direction: column;
+  height: auto;
+}
+.lib-segmented[data-orientation='vertical'] .lib-segmented__segment {
+  min-height: calc(var(--control-h) * 0.9 - var(--space-1));
+  text-align: left;
+}
+
+.lib-segmented__segment {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: var(--mat-tabs-tab-pad);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--mat-tabs-tab-texture), var(--mat-tabs-tab-fill);
+  box-shadow: var(--mat-tabs-tab-shadow);
+  color: var(--mat-tabs-ink);
+  font: inherit;
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.lib-segmented__segment:hover:not(:disabled) { color: var(--text-1); }
+.lib-segmented__segment[aria-checked='true'] {
+  background: var(--mat-tabs-chosen-texture), var(--mat-tabs-chosen-fill);
+  box-shadow: var(--mat-tabs-chosen-shadow);
+  color: var(--mat-tabs-chosen-ink);
+  cursor: default;
+}
+.lib-segmented__segment:disabled {
+  color: var(--text-4);
+  cursor: not-allowed;
+}
+.lib-segmented__segment[aria-checked='true']:disabled {
+  opacity: 0.6;
+}
+.lib-segmented__segment:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

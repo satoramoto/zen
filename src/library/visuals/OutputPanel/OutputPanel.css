@@ -1,0 +1,69 @@
+/* The output (OutputPanel.tsx), from live/stage-head.css's `.live-output` (the Stage's popover)
+   and settings.css's `.output-settings`. No panel of its own: it sits in a float layer (the
+   popover) or a sheet, so it paints nothing and draws no lines (decision 68). */
+
+.vs-output,
+.vs-output-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+  font-size: var(--vs-text-body);
+  color: var(--text-2);
+}
+
+/* The heading: a sentence-case caption, a step lighter on glass. */
+.vs-output-head {
+  margin: 0;
+  color: var(--vs-caption-raised);
+  font-size: var(--vs-text-annot);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: none;
+}
+
+/* Showing or not: green only while it is (the signal), a caption otherwise. */
+.vs-output-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  color: var(--text-4);
+}
+.vs-output-status[data-on] {
+  color: var(--vs-playing);
+}
+
+.vs-output .vs-output-display {
+  display: flex;
+}
+.vs-output .vs-output-display .lib-select__trigger {
+  width: 100%;
+}
+
+.vs-output-note {
+  max-width: 360px;
+  margin: 0;
+  color: var(--vs-caption-raised);
+  font-size: var(--vs-text-label);
+  line-height: 1.45;
+}
+.vs-output-settings .vs-output-note {
+  color: var(--text-3);
+}
+.vs-output-fit b {
+  color: var(--text-2);
+  font-weight: var(--weight-strong);
+}
+
+/* Caution: an amber wash, no border. */
+.vs-output-warn {
+  max-width: 360px;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--warning) 12%, transparent);
+  color: var(--warning);
+  font-size: var(--vs-text-label);
+  line-height: 1.45;
+}

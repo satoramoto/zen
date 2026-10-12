@@ -1,0 +1,164 @@
+/* The library grid (LibraryGrid.tsx), from the original's library.css and tile.css: only the rows
+   in view are drawn, inside a box as tall as all of them. On the home its tiles are PresetTile's;
+   outside the app's root, the lab editor's 4:3 column below. Near borderless: the only lines are
+   the selection ring, the focus ring and the playing mark. */
+
+.vs-lib-grid {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  overscroll-behavior: contain;
+}
+/* With no tile highlighted the grid rings itself, inside: it scrolls, and would clip a ring drawn outside. */
+.vs-lib-grid:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
+/* Pointing at its active tile, it rings that tile instead, not itself. */
+.vs-lib-grid[aria-activedescendant]:focus-visible {
+  outline: none;
+}
+.vs-lib-grid-space {
+  position: relative;
+}
+.vs-lib-grid-window {
+  display: grid;
+  will-change: transform;
+}
+
+/* The home's tiles, while the grid has focus: the keyboard's tile shows the focus ring (over a
+   selection's) and its +. */
+.vs-lib-grid:focus-visible .vs-tile[data-active] .vs-tile-pic {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 2px;
+}
+.vs-lib-grid:focus-visible .vs-tile[data-active] .vs-tile-add {
+  display: grid;
+}
+/* While adding, a tile not yet in the playlist offers + on hover, as a cue that a click adds. */
+.vs-lib-grid[data-adding] .vs-tile:not([data-added]):hover .vs-tile-pic::after {
+  content: '+';
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-pill);
+  color: var(--key-white);
+  background: color-mix(in oklab, var(--key-black) 45%, transparent);
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* The lab editor's tile: a 4:3 picture and a title line under it. */
+.vs-lib-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  cursor: pointer;
+  color: var(--text-2);
+  border-radius: var(--radius-control);
+}
+.vs-lib-thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-control);
+  background: var(--vs-thumb);
+}
+.vs-lib-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vs-lib-thumb-none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  color: var(--text-3);
+  font-size: var(--vs-text-label);
+  text-align: center;
+  overflow: hidden;
+}
+.vs-lib-title {
+  padding: 2px 1px 0;
+  font-size: var(--vs-text-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vs-lib-star {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  color: var(--key-white);
+  font-size: var(--vs-text-label);
+  text-shadow: 0 0 2px var(--key-black);
+}
+/* A preset that failed to open or draw this run: live mode skips it. Bottom corner: the star has
+   the top left, + the top right. */
+.vs-lib-failed {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--warning);
+  color: var(--warning-text);
+  font-size: 10px;
+  font-weight: var(--weight-strong);
+  line-height: 14px;
+  text-align: center;
+  pointer-events: none;
+}
+.vs-lib-tile[data-failed] .vs-lib-thumb img {
+  opacity: 0.55;
+}
+.vs-lib-tile[aria-selected='true'] .vs-lib-thumb {
+  outline: 2px solid var(--text-1);
+  outline-offset: -2px;
+}
+.vs-lib-tile[data-playing] .vs-lib-title {
+  color: var(--text-1);
+  font-weight: var(--weight-strong);
+}
+/* Playing: the playing mark, green. */
+.vs-lib-tile[data-playing] .vs-lib-thumb::after {
+  content: '▶';
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  color: var(--vs-playing);
+  font-size: var(--vs-text-annot);
+  text-shadow: 0 0 3px var(--key-black);
+}
+.vs-lib-tile[data-hidden] .vs-lib-thumb img,
+.vs-lib-tile[data-hidden] .vs-lib-title {
+  opacity: 0.4;
+}
+/* The highlighted tile's ring replaces a selection's, so it has one ring, not two. */
+.vs-lib-grid:focus-visible .vs-lib-tile[data-active] .vs-lib-thumb {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
+.vs-lib-add {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  display: none;
+}
+.vs-lib-tile:hover .vs-lib-add,
+.vs-lib-tile[data-active] .vs-lib-add {
+  display: block;
+}

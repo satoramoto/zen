@@ -1,0 +1,104 @@
+/* A button with a small panel under it (Popover.tsx). Since decision 68 the button is type with no
+   box, shown open (or pressed) in the ink and underlined in the accent; the panel is the core
+   popover's float Layer (glass under the visuals pack: fill, blur, edge and lift are the layer's),
+   with the float's soft corners and no border. Contract variables and visuals.css tokens only. */
+.vs-popover {
+  position: relative;
+  display: inline-flex;
+}
+.vs-popover-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  /* popover.css 28px: a header control. */
+  height: 28px;
+  padding: 0 var(--space-1);
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--vs-text-body);
+  font-weight: 500;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.vs-popover-button:hover {
+  color: var(--text-1);
+}
+.vs-popover-button[aria-expanded='true'],
+.vs-popover-button[aria-pressed='true'] {
+  color: var(--text-1);
+  text-decoration: underline 2px var(--vs-line-active);
+  text-underline-offset: 6px;
+}
+.vs-popover-button:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 0;
+}
+.vs-popover-dots {
+  display: block;
+}
+
+/* The panel: sized to its contents, not the button (a short button made "move on by itself
+   every" wrap a word a line); Popover.tsx flips it to hang from the right when it would run past
+   the window. */
+.vs-popover-box:not([data-across]) {
+  width: max-content;
+  max-width: min(420px, calc(100vw - 24px));
+}
+.vs-popover-box {
+  /* 6px under the button, as popover.css hung it. */
+  margin-top: 6px;
+}
+.vs-popover-box[data-above] {
+  margin-top: calc(-1 * 6px);
+}
+.vs-popover-panel {
+  min-width: 160px;
+  /* The core box keeps it inside the room left; this is popover.css's own cap. */
+  max-height: 60vh;
+  padding: 6px;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--vs-text-body);
+  font-weight: normal;
+}
+
+/* A menu's items: whole-width rows, type until hovered. */
+.vs-popover-panel[role='menu'] {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.vs-popover-panel [role='menuitem'] {
+  display: block;
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  text-align: left;
+  color: var(--text-2);
+  font: inherit;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+  /* popover.css 6px: a row inside the float's 10px corners. */
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.vs-popover-panel [role='menuitem']:hover:not(:disabled),
+.vs-popover-panel [role='menuitem']:focus-visible {
+  color: var(--text-1);
+  background: var(--surface-3);
+}
+.vs-popover-panel [role='menuitem']:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
+.vs-popover-panel [role='menuitem'][data-danger] {
+  color: var(--danger);
+}
+.vs-popover-panel [role='menuitem']:disabled {
+  color: var(--text-3);
+  cursor: default;
+}

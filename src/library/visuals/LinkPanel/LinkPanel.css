@@ -1,0 +1,138 @@
+/* The Link panel (LinkPanel.tsx), from link.css as live/stage-head.css restyles it in the Stage's
+   popover: tempo and peers, the bar from the one with a light per beat, the one's keys and the
+   change interval. No panel, background or rule of its own; the float layer it sits in is the
+   surface (decision 68). */
+
+.vs-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: var(--vs-text-body);
+  color: var(--text-2);
+}
+
+.vs-link-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+/* The heading: a sentence-case caption, a step lighter on glass. */
+.vs-link-title {
+  margin: 0;
+  color: var(--vs-caption-raised);
+  font-size: var(--vs-text-annot);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: none;
+}
+.vs-link-toggle {
+  width: 96px;
+}
+
+/* The session: a caption, green only while someone else is in it (the signal). */
+.vs-link-status {
+  margin: 0;
+  color: var(--text-4);
+  word-spacing: var(--vs-sep-space);
+}
+.vs-link-status[data-on] {
+  color: var(--vs-playing);
+}
+.vs-link-status b {
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--vs-text-heading);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+}
+
+.vs-link-beat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.vs-link-bar {
+  min-width: 3ch;
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--vs-text-title);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.vs-link-lights {
+  display: flex;
+  gap: var(--space-3);
+}
+/* Soft dots, no ring: the lit beat in the ink, the one lit in the signal's green. */
+.vs-link-light {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+}
+.vs-link-light[data-lit] {
+  background: var(--text-1);
+}
+.vs-link-light[data-one][data-lit] {
+  background: var(--vs-playing);
+}
+
+.vs-link-one {
+  display: flex;
+  gap: var(--space-1);
+}
+.vs-link-one .lib-action-button-face:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 1px;
+}
+
+.vs-link-every {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.vs-link-next {
+  font-variant-numeric: tabular-nums;
+}
+.vs-link-quiet {
+  margin: 0;
+  color: var(--vs-caption-raised);
+}
+.vs-link-whose {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* An error: a `NoticeBanner`, laid out by .vs-notice. */
+.vs-link-problem {
+  gap: var(--space-2);
+}
+
+/* Link in ⚙ Settings (LinkSettings): on or off, the session, and the bar start's keys, wide
+   enough for a finger. */
+.vs-link-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  color: var(--text-1);
+  font-size: var(--vs-text-body);
+}
+.vs-link-settings .vs-link-quiet {
+  color: var(--text-3);
+}
+.vs-link-settings .vs-link-one {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.vs-link-settings .vs-link-one-name {
+  flex: 1 0 100%;
+  color: var(--text-3);
+}
+.vs-link-settings .vs-link-one .lib-action-button-face {
+  min-width: 52px;
+}

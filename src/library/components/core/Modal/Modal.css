@@ -1,0 +1,117 @@
+/* Modal and Sheet: a dialog whose pane is a Layer at `overlay`, over a scrim. The layer decides how
+   the pane is drawn and composited (tone step, bevel, frosted glass); this file only places it.
+   Contract variables only, plus the local ones declared here:
+
+   --lib-modal-z      the stacking order over the page
+   --lib-modal-scrim  the scrim's colour: the always-dark key colour, part see-through
+   --lib-modal-width  the dialog's width (the `width` prop sets it inline) */
+
+.lib-modal {
+  --lib-modal-z: 100;
+  --lib-modal-scrim: color-mix(in oklab, var(--key-black) 55%, transparent);
+  position: fixed;
+  inset: 0;
+  z-index: var(--lib-modal-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: var(--space-4);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  font-weight: var(--weight-body);
+}
+/* A non-modal sheet leaves the page usable beside it: only the dialog takes the pointer. */
+.lib-modal:not([data-modal]) { pointer-events: none; }
+
+.lib-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--lib-modal-scrim);
+}
+
+.lib-modal__dialog {
+  --lib-modal-width: 440px; /* added */
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  width: var(--lib-modal-width);
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  pointer-events: auto;
+}
+.lib-modal__dialog:focus { outline: none; }
+
+.lib-modal__pane {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  overflow: hidden;
+}
+
+.lib-modal__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.lib-modal__title {
+  margin: 0;
+  min-width: 0;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: var(--size-heading);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.2;
+}
+.lib-modal__close {
+  margin-inline-end: calc(var(--space-2) * -1);
+}
+
+.lib-modal__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  overflow-y: auto;
+  color: var(--text-2);
+  line-height: 1.45;
+}
+
+.lib-modal__actions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+/* Sheets: anchored to an edge, a step in from the window's edges. */
+.lib-modal[data-kind='sheet'] { padding: var(--space-2); }
+.lib-modal[data-kind='sheet'] .lib-modal__body { color: var(--text-1); }
+
+/* Right: the window's height less its inset, the head in view while the body scrolls. */
+.lib-modal[data-side='right'] {
+  align-items: stretch;
+  justify-content: flex-end;
+}
+.lib-modal[data-side='right'] > .lib-modal__dialog { height: 100%; }
+
+/* Bottom: a drawer along the bottom, centred. */
+.lib-modal[data-side='bottom'] {
+  align-items: flex-end;
+  justify-content: center;
+}
+.lib-modal[data-side='bottom'] > .lib-modal__dialog {
+  --lib-modal-width: 600px; /* added */
+}

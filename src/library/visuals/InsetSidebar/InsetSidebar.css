@@ -1,0 +1,379 @@
+/* The inset sidebar's content (InsetSidebar.tsx), from the original's inset-sidebar.css, inside
+   HomeLayout's panel (the raised layer, so captions take the raised step). The app's source
+   list: quiet sentence-case headings that fold with a chevron, rows of --vs-lay-row, the row
+   picked a soft pill of --vs-lay-row-radius in the ink, heavier, the playlist playing its green
+   dot. No lines: areas told apart by space and tone (decision 68). Nothing animates. */
+
+/* A column as tall as the panel's body: the mark, the sections, which scroll inside themselves,
+   then the foot, which stays at the bottom. The panel's body never scrolls, so nothing is painted
+   over the rows to hide them (the panel's tone is a tint over glass: a second coat would show as
+   a box). */
+.vs-isb {
+  --vs-isb-caption: var(--vs-caption-raised);
+  --vs-isb-small: calc(var(--size-caption) - 1px);
+  --vs-isb-gutter: 10px;
+  --vs-isb-hover: color-mix(in oklab, var(--text-1) 4%, transparent);
+  --vs-isb-tool-hover: color-mix(in oklab, var(--text-1) 6%, transparent);
+  --vs-isb-picked: color-mix(in oklab, var(--text-1) 9%, transparent);
+  --vs-isb-key-radius: var(--vs-lay-key-radius, var(--radius-control));
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 0 var(--vs-isb-gutter);
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--vs-text-body);
+}
+/* The scrollbar at the panel's edge, as when the body scrolled. */
+.vs-isb-sections {
+  flex: 1;
+  min-height: 0;
+  margin: 0 calc(-1 * var(--vs-isb-gutter));
+  padding: 0 var(--vs-isb-gutter) var(--space-3);
+  overflow-y: auto;
+}
+
+/* The mark, the sidebar's first item, at the panel's top. Its text starts where the headings'
+   titles do (the mark's own padding plus 6). */
+.vs-isb-mark {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  flex: none;
+  margin: var(--space-3) 0 var(--vs-isb-gutter);
+  padding: 0 6px;
+  user-select: none;
+}
+
+/* The foot: a quiet Settings row at the panel's bottom, under the rows that scroll; no line
+   between. */
+.vs-isb-foot {
+  flex: none;
+  padding: var(--space-1) 0 var(--vs-isb-gutter);
+}
+.vs-isb-settings {
+  display: flex;
+  align-items: center;
+  gap: var(--vs-isb-gutter);
+  width: 100%;
+  height: 32px;
+  padding: 0 var(--vs-isb-gutter);
+  border: 0;
+  border-radius: var(--vs-lay-row-radius, var(--radius-control));
+  background: none;
+  color: var(--vs-isb-caption);
+  font: inherit;
+  font-size: var(--vs-text-label);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+}
+.vs-isb-settings:hover {
+  color: var(--text-1);
+  background: var(--vs-isb-hover);
+}
+/* The gear, where the rows' 16 px icons sit. */
+.vs-isb-gear {
+  flex: none;
+}
+.vs-isb-section + .vs-isb-section {
+  margin-top: 14px;
+}
+
+/* A section's heading: its title in the caption's grey, the chevron after it, faint until the
+   heading is hovered or focused. The whole heading folds it. */
+.vs-isb-head {
+  margin: 0;
+  font: inherit;
+}
+.vs-isb-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  height: 28px;
+  padding: 0 var(--vs-isb-gutter);
+  border: 0;
+  border-radius: var(--vs-lay-row-radius, var(--radius-control));
+  background: none;
+  color: var(--vs-isb-caption);
+  font: inherit;
+  font-size: var(--vs-isb-small);
+  font-weight: var(--weight-strong);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+}
+.vs-isb-toggle:hover {
+  color: var(--text-1);
+  background: none;
+}
+.vs-isb-chevron {
+  flex: none;
+  opacity: 0.55;
+}
+.vs-isb-toggle:hover .vs-isb-chevron,
+.vs-isb-toggle:focus-visible .vs-isb-chevron {
+  opacity: 1;
+}
+
+.vs-isb-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.vs-isb-row {
+  display: flex;
+  align-items: center;
+  gap: var(--vs-isb-gutter);
+  width: 100%;
+  height: var(--vs-lay-row, 40px);
+  padding: 0 var(--vs-isb-gutter);
+  border: 0;
+  border-radius: var(--vs-lay-row-radius, var(--radius-control));
+  background: none;
+  color: var(--text-2);
+  font: inherit;
+  font-weight: var(--weight-body);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+}
+.vs-isb-icon {
+  flex: none;
+  color: var(--text-4);
+}
+/* Hover: the name and icon lift to the ink over the faintest tint. */
+.vs-isb-row:hover {
+  color: var(--text-1);
+  background: var(--vs-isb-hover);
+}
+.vs-isb-row:hover .vs-isb-icon {
+  color: var(--text-1);
+}
+/* The row picked: a soft pill, its name in the ink and heavier. */
+.vs-isb-row[aria-current='true'] {
+  color: var(--text-1);
+  font-weight: var(--weight-strong);
+  background: var(--vs-isb-picked);
+}
+.vs-isb-row[aria-current='true'] .vs-isb-icon {
+  color: var(--text-1);
+}
+/* The focus ring goes inside: the panel scrolls, and would clip one drawn outside. */
+.vs-isb :is(.vs-isb-row, .vs-isb-toggle, .vs-isb-settings):focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
+
+.vs-isb-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* The playlist playing: a small green dot after its name. */
+.vs-isb-dot {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  margin-left: -4px;
+  border-radius: var(--radius-pill);
+  background: var(--vs-playing);
+}
+/* The count, right-aligned: a number, so in the readout face's tabular figures. */
+.vs-isb-count {
+  flex: none;
+  margin-left: auto;
+  padding-left: 6px;
+  color: var(--vs-isb-caption);
+  font-family: var(--font-readout);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vs-isb-small);
+  font-style: normal;
+  font-weight: var(--weight-body);
+}
+.vs-isb-empty {
+  padding: var(--space-1) var(--vs-isb-gutter);
+  color: var(--vs-isb-caption);
+  font-size: var(--vs-isb-small);
+}
+
+/* The playlists' heading: + and ⤓ after it, faint until the heading's line is hovered. */
+.vs-isb-headrow {
+  display: flex;
+  align-items: center;
+}
+.vs-isb-headrow .vs-isb-head {
+  flex: 1;
+  min-width: 0;
+}
+.vs-isb-tools {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  padding-right: var(--space-1);
+  opacity: 0.6;
+}
+.vs-isb-headrow:hover .vs-isb-tools,
+.vs-isb-tools:focus-within {
+  opacity: 1;
+}
+.vs-isb-tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vs-isb-key-radius);
+  background: none;
+  color: var(--vs-isb-caption);
+  font: inherit;
+  cursor: pointer;
+}
+.vs-isb-tool:hover {
+  color: var(--text-1);
+  background: var(--vs-isb-tool-hover);
+}
+.vs-isb-tool:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
+
+/* A playlist's row: the play button over its icon and the "…" over its count, on hover. */
+.vs-isb-item {
+  position: relative;
+}
+.vs-isb-play,
+.vs-isb-more {
+  position: absolute;
+  top: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vs-isb-key-radius);
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+/* Centred where the row's 16 px icon sits (the row's 10 px padding). */
+.vs-isb-play {
+  left: 7px;
+}
+.vs-isb-more {
+  right: 6px;
+}
+.vs-isb-play:hover:not(:disabled),
+.vs-isb-more:hover,
+.vs-isb-more[aria-expanded='true'] {
+  color: var(--text-1);
+}
+.vs-isb-play:disabled {
+  color: var(--vs-isb-caption);
+  cursor: default;
+}
+.vs-isb-item[data-live]:hover :is(.vs-isb-play, .vs-isb-more),
+.vs-isb-item[data-menu] .vs-isb-more {
+  display: flex;
+}
+.vs-isb-item[data-live]:hover .vs-isb-row:not([data-renaming]) .vs-isb-icon,
+.vs-isb-item[data-live]:is(:hover, [data-menu]) .vs-isb-count {
+  visibility: hidden;
+}
+/* The row whose menu is open keeps its hover tint. */
+.vs-isb-item[data-menu] .vs-isb-row {
+  color: var(--text-1);
+  background: var(--vs-isb-hover);
+}
+
+/* While a preset is dragged: the playlist it would land on lights up with a tint, and smart
+   ones, which take none, fade. */
+.vs-isb-item[data-over] .vs-isb-row {
+  color: var(--text-1);
+  background: color-mix(in oklab, var(--warning) 18%, transparent);
+}
+.vs-isb-item[data-refuses] {
+  opacity: 0.45;
+}
+
+/* A name being edited in its row: type on the faint field tone, no box. */
+.vs-isb-row[data-renaming] {
+  cursor: text;
+}
+.vs-isb .vs-isb-rename {
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  margin: 0 -6px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: var(--vs-isb-key-radius);
+  background: var(--surface-3);
+  color: var(--text-1);
+  font: inherit;
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
+
+/* A row's menu: the float layer's glass, at the point it opened (InsetSidebar sets left and top). */
+.vs-isb-menu {
+  position: fixed;
+  z-index: 60;
+  min-width: 180px;
+}
+.vs-isb-menu > .vs-isb-menu-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: max-content;
+  min-width: 100%;
+  max-width: min(420px, calc(100vw - 24px));
+  max-height: 60vh;
+  overflow: auto;
+  padding: 6px;
+  box-sizing: border-box;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--vs-text-body);
+  font-weight: var(--weight-body);
+}
+/* A menu's items: whole-width rows, type until hovered. */
+.vs-isb-menu [role='menuitem'] {
+  display: block;
+  width: 100%;
+  height: 30px;
+  padding: 0 var(--vs-isb-gutter, 10px);
+  text-align: left;
+  color: var(--text-2);
+  font: inherit;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+  border-radius: var(--vs-isb-key-radius, var(--radius-control));
+  cursor: pointer;
+}
+.vs-isb-menu [role='menuitem']:hover:not(:disabled),
+.vs-isb-menu [role='menuitem']:focus-visible {
+  color: var(--text-1);
+  background: var(--surface-3);
+}
+.vs-isb-menu [role='menuitem']:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
+.vs-isb-menu [role='menuitem'][data-danger] {
+  color: var(--danger);
+}
+.vs-isb-menu [role='menuitem']:disabled {
+  color: var(--vs-caption-raised);
+  cursor: default;
+}

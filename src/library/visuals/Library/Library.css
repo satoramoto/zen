@@ -1,0 +1,664 @@
+/* The preset library's own rules (Library.tsx): its column, the search, the group chips, the
+   open group's values, the values picked, its notes and empty states, the inspector view's
+   toolbar and filter popover. The grid and its tiles are LibraryGrid's, the drawer
+   PresetDrawer's. Contract variables and visuals.css tokens only. */
+.vs-library {
+  /* Small grey text: the caption, a step lighter where the library sits on glass (the filter's popover). */
+  --vs-library-caption: var(--text-3);
+  --vs-library-small: calc(var(--size-caption) - 1px); /* library.css 11px: counts, a ✕ */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+/* Files dragged over the window: the library takes them (credits.css's rule, on the library's root). */
+.vs-library[data-drop] {
+  box-shadow: inset 0 0 0 2px var(--accent);
+  background: var(--selected);
+}
+
+.vs-library-search,
+.vs-library-values-find,
+.vs-library-name-input {
+  padding: var(--space-1) 6px;
+  font: inherit;
+  color: var(--text-1);
+  background: var(--input-fill);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-input);
+  min-width: 0;
+}
+.vs-library-search {
+  margin: var(--space-2) var(--space-2) var(--space-1);
+  font-size: var(--vs-text-lead);
+}
+.vs-library-values-find,
+.vs-library-name-input {
+  font-size: var(--vs-text-label);
+}
+.vs-library-search::placeholder,
+.vs-library-values-find::placeholder {
+  color: var(--vs-library-caption);
+}
+.vs-library-search:focus-visible,
+.vs-library-values-find:focus-visible,
+.vs-library-name-input:focus-visible {
+  border-color: var(--vs-focus-ring);
+}
+
+.vs-library-summary,
+.vs-library-note {
+  margin: 0;
+  padding: 2px 10px 6px;
+  color: var(--vs-library-caption);
+  font-size: var(--vs-text-label);
+  letter-spacing: var(--tracking);
+}
+.vs-library-first-run {
+  padding-top: var(--space-2);
+  color: var(--text-4);
+  font-size: var(--vs-text-body);
+  line-height: 1.5;
+}
+
+/* The group chips, the values of the open one, and the values picked. */
+.vs-library-chips,
+.vs-library-picked {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2) var(--space-1);
+}
+.vs-library-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 1px 7px;
+  font: inherit;
+  font-size: var(--vs-text-label);
+  color: var(--text-2);
+  background: transparent;
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.vs-library-chip:hover {
+  background: var(--selected);
+}
+.vs-library-chip[aria-expanded='true'] {
+  border-color: var(--text-1);
+  color: var(--text-1);
+}
+.vs-library-chip[aria-pressed='true'] {
+  border-color: var(--warning);
+  background: var(--selected);
+  color: var(--text-1);
+}
+.vs-library-chip[data-on] {
+  border-color: var(--warning);
+  color: var(--text-1);
+}
+.vs-library-chip:focus-visible,
+.vs-library-link:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 1px;
+}
+.vs-library-chip-count {
+  min-width: 14px;
+  padding: 0 3px;
+  border-radius: var(--radius-pill);
+  background: var(--warning);
+  color: var(--on-hue);
+  font-size: var(--vs-text-annot);
+  text-align: center;
+}
+.vs-library-chip-picked {
+  border-color: var(--warning);
+  color: var(--text-1);
+}
+.vs-library-link {
+  padding: 1px 2px;
+  font: inherit;
+  font-size: var(--vs-text-label);
+  color: var(--vs-library-caption);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.vs-library-link:hover {
+  color: var(--text-1);
+}
+.vs-library-name-input {
+  flex: 1 1 100%;
+}
+
+.vs-library-values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0 var(--space-2) var(--space-1);
+  padding: 6px;
+  max-height: 40%;
+  min-height: 0;
+  background: var(--input-fill);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-input);
+}
+.vs-library-values-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  overflow: auto;
+  min-height: 0;
+}
+.vs-library-values .vs-library-note {
+  padding: 2px 2px 0;
+}
+.vs-library-value {
+  max-width: 100%;
+  border-radius: var(--radius-input);
+}
+.vs-library-break {
+  flex-basis: 100%;
+  height: 0;
+}
+.vs-library-value[data-sub] .vs-library-value-name::before {
+  content: '› ';
+  color: var(--vs-library-caption);
+}
+.vs-library-value-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vs-library-value-count {
+  color: var(--vs-library-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.vs-library-swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-pill);
+  flex: none;
+}
+
+.vs-library-fill {
+  flex: 1;
+}
+
+/* The library as the home's main pane (decisions 67 and 68), near borderless: a head with the
+   title, its count, the search as type and "Filter"; the groups as a switch made of type, the
+   open one underlined, and its values as text with counts; the values picked on a quiet line
+   with the count, "Clear" and "Save as smart playlist"; centred empty states. No boxes and no
+   rules: the only lines are the active underline and the focus ring. Everything sits on the
+   pane's one padding (--mat-plate-inset), so its left edge is the grid's. */
+.vs-library-home {
+  --vs-library-pad: var(--mat-plate-inset);
+}
+.vs-library-home .vs-library-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 18px var(--vs-library-pad) var(--space-3);
+  min-width: 0;
+}
+.vs-library-home .vs-library-title-head {
+  margin: 0;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: var(--size-heading);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.vs-library-home .vs-library-count,
+.vs-library-home .vs-library-picked-count,
+.vs-library-home .vs-library-value-count,
+.vs-library-home .vs-library-chip-count {
+  color: var(--vs-library-caption);
+  font-family: var(--font-readout);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.vs-library-home .vs-library-count {
+  margin-top: var(--space-1);
+  font-size: var(--size-caption);
+}
+
+/* The search: a ⌕ and the text on the pane, no box; the field rings when focused. */
+.vs-library-home .vs-library-search-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 1 260px;
+  min-width: 120px;
+  height: 32px;
+}
+.vs-library-home .vs-library-search-glyph {
+  flex: none;
+  color: var(--text-4);
+  font-size: var(--vs-text-body);
+}
+.vs-library-home .vs-library-search {
+  flex: 1;
+  min-width: 0;
+  height: 26px;
+  margin: 0;
+  padding: 0 var(--space-1);
+  color: var(--text-1);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-input);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.vs-library-home .vs-library-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.vs-library-home .vs-library-search-clear {
+  flex: none;
+  padding: 2px var(--space-1);
+  font: inherit;
+  font-size: var(--vs-library-small);
+  color: var(--text-4);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.vs-library-home .vs-library-search-clear:hover {
+  color: var(--text-1);
+}
+
+/* "Filter": type, underlined while the panel is open; a round count only when values are picked. */
+.vs-library-home .vs-library-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  height: 32px;
+  padding: 0 2px;
+  color: var(--text-2);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-control);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.vs-library-home .vs-library-filter:hover:not(:disabled) {
+  color: var(--text-1);
+}
+.vs-library-home .vs-library-filter[aria-expanded='true'] {
+  color: var(--text-1);
+  text-decoration: underline;
+  text-decoration-color: var(--vs-line-active);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+.vs-library-home .vs-library-filter:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.vs-library-home .vs-library-filter-badge {
+  display: grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-hue);
+  font-family: var(--font-readout);
+  font-size: var(--vs-text-annot);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+
+/* The groups: a switch made of type, the open one underlined. */
+.vs-library-home .vs-library-chips {
+  gap: var(--space-1) var(--mat-plate-inset);
+  padding: 2px var(--vs-library-pad) var(--space-3);
+}
+.vs-library-home .vs-library-chip {
+  gap: 6px;
+  height: auto;
+  padding: 3px 0;
+  color: var(--text-4);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-control);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: 500;
+}
+.vs-library-home .vs-library-chip:hover:not(:disabled) {
+  color: var(--text-1);
+  background: none;
+}
+.vs-library-home .vs-library-chip:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.vs-library-home .vs-library-chip[data-on] {
+  color: var(--text-2);
+}
+.vs-library-home .vs-library-chip[aria-expanded='true'] {
+  color: var(--text-1);
+  text-decoration: underline;
+  text-decoration-color: var(--vs-line-active);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+.vs-library-home .vs-library-chip-count {
+  min-width: 0;
+  padding: 0;
+  background: none;
+  font-size: var(--vs-library-small);
+}
+
+/* The open group's values: text with a count, no box round them; picked is the ink and underlined. */
+.vs-library-home .vs-library-values {
+  gap: 10px;
+  margin: 0 var(--vs-library-pad) 14px;
+  padding: 0 0 var(--space-1);
+  overflow: auto;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-input);
+}
+.vs-library-home .vs-library-values-list {
+  gap: 6px 14px;
+  overflow: visible;
+}
+.vs-library-home .vs-library-value {
+  align-items: baseline;
+  height: auto;
+  padding: 2px 0;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.vs-library-home .vs-library-value[aria-pressed='true'] {
+  color: var(--text-1);
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: var(--vs-line-active);
+  text-decoration-thickness: 2px;
+  text-underline-offset: var(--space-1);
+}
+.vs-library-home .vs-library-value-count {
+  font-size: var(--vs-library-small);
+}
+.vs-library-home .vs-library-values-subs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) 14px;
+}
+.vs-library-home .vs-library-values-in {
+  flex-basis: 100%;
+  color: var(--vs-library-caption);
+  font-size: var(--vs-library-small);
+}
+.vs-library-home .vs-library-values-subs .vs-library-value {
+  color: var(--text-4);
+  font-weight: 400;
+}
+.vs-library-home .vs-library-values-subs .vs-library-value[aria-pressed='true'] {
+  color: var(--text-1);
+}
+.vs-library-home .vs-library-value[data-sub] .vs-library-value-name::before {
+  content: none;
+}
+.vs-library-home .vs-library-values-find {
+  align-self: flex-start;
+  width: 220px;
+  max-width: 100%;
+  padding: 3px 0;
+  color: var(--text-1);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-input);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+.vs-library-home .vs-library-values .vs-library-note {
+  padding: 0;
+}
+
+/* The values picked: type with a ✕, the count, then "Clear" and "Save as smart playlist" at the right. */
+.vs-library-home .vs-library-picked {
+  gap: 6px 14px;
+  padding: 0 var(--vs-library-pad) var(--space-3);
+  font-size: var(--size-caption);
+}
+.vs-library-home .vs-library-chip-picked {
+  color: var(--text-1);
+}
+.vs-library-home .vs-library-chip-picked .vs-library-x {
+  color: var(--text-4);
+  font-size: var(--vs-library-small);
+}
+.vs-library-home .vs-library-chip-picked:hover .vs-library-x {
+  color: var(--text-1);
+}
+.vs-library-home .vs-library-picked-count {
+  font-size: var(--size-caption);
+}
+.vs-library-home .vs-library-link {
+  padding: 2px 0;
+  border-radius: var(--radius-control);
+  color: var(--text-4);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  text-decoration: none;
+}
+.vs-library-home .vs-library-link:hover {
+  color: var(--text-1);
+}
+.vs-library-home .vs-library-name-input {
+  /* A raised tint: the caption a step lighter on it. */
+  --vs-library-caption: var(--vs-caption-raised);
+  flex: 0 1 260px;
+  padding: var(--space-1) var(--space-2);
+  color: var(--text-1);
+  background: var(--surface-3);
+  border: 0;
+  border-radius: var(--radius-input);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+
+/* The notes: the save note, the loading note, the first run's. */
+.vs-library-home .vs-library-summary,
+.vs-library-home .vs-library-note {
+  padding: 0 var(--vs-library-pad) var(--space-3);
+  font-size: var(--size-caption);
+  letter-spacing: normal;
+  word-spacing: var(--vs-sep-space);
+}
+.vs-library-home .vs-library-summary[data-error] {
+  color: var(--danger);
+}
+.vs-library-home .vs-library-first-run {
+  padding: var(--space-2) var(--vs-library-pad);
+  font-size: var(--vs-text-body);
+}
+
+/* The starter pack's offer (PackOffer): one quiet line on the pane's padding. */
+.vs-library-home .vs-library-offer {
+  padding: 0 var(--vs-library-pad) var(--space-3);
+  font-size: var(--size-caption);
+}
+/* PackOffer draws nothing while there is nothing to offer: its line goes too. */
+.vs-library-offer:empty {
+  display: none;
+}
+
+/* Nothing to show: centred in the pane, what didn't match, why, and the way back. */
+.vs-library-home .vs-library-empty {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--vs-library-pad) 80px;
+  text-align: center;
+}
+.vs-library-home .vs-library-empty-glyph {
+  color: var(--text-4);
+  font-size: 28px;
+  line-height: 1;
+}
+.vs-library-home .vs-library-empty-title {
+  margin: 6px 0 0;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--weight-strong);
+  overflow-wrap: anywhere;
+}
+.vs-library-home .vs-library-empty-why {
+  margin: 0;
+  color: var(--vs-library-caption);
+  font-size: var(--size-caption);
+}
+.vs-library-home .vs-library-empty-clear {
+  margin-top: 6px;
+  padding: var(--space-1) 2px;
+  color: var(--text-2);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-control);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: 500;
+  cursor: pointer;
+}
+.vs-library-home .vs-library-empty-clear:hover {
+  color: var(--text-1);
+}
+
+/* Keep focus visible on everything focusable here: no fill or edge to fall back on. */
+.vs-library-home
+  :is(
+    .vs-library-search,
+    .vs-library-search-clear,
+    button.vs-library-search-glyph,
+    .vs-library-filter,
+    .vs-library-chip,
+    .vs-library-link,
+    .vs-library-values-find,
+    .vs-library-empty-clear,
+    .vs-library-name-input
+  ):focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 2px;
+}
+
+/* The inspector view (decision 70): the pane is only the grid, its notes and its empty states. */
+.vs-library-bare {
+  min-height: 0;
+}
+
+/* Its search and "Filter ▾" in the header's toolbar (portalled there; the wrapper is also
+   .vs-library-home, so the rules above reach it). */
+.vs-library-toolbar {
+  --vs-library-pad: var(--mat-plate-inset);
+  --vs-library-caption: var(--text-3);
+  --vs-library-small: calc(var(--size-caption) - 1px);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.vs-library-toolbar .vs-library-search-field {
+  flex: 0 1 220px;
+}
+.vs-library-toolbar button.vs-library-search-glyph {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font: inherit;
+  font-size: var(--vs-text-body);
+  color: var(--text-4);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-control);
+  cursor: text;
+}
+.vs-library-toolbar .vs-library-filter-badge {
+  min-width: 15px;
+  height: 15px;
+  padding: 0 var(--space-1);
+}
+.vs-library-toolbar .vs-library-filter-caret {
+  color: var(--text-4);
+  font-size: var(--vs-text-annot);
+}
+
+/* The filter's popover: the groups, the open group's values, what is picked and the count, Clear
+   and Save. It is glass: its captions take the lighter step. */
+.vs-library-toolbar .vs-library-filter-panel {
+  --vs-library-caption: var(--vs-caption-raised);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(400px, calc(100vw - 48px));
+  padding: var(--space-1);
+}
+.vs-library-toolbar .vs-library-filter-panel :is(.vs-library-chips, .vs-library-picked) {
+  padding: 0;
+}
+.vs-library-toolbar .vs-library-filter-panel .vs-library-values {
+  margin: 0;
+  max-height: 40vh;
+}
+.vs-library-toolbar .vs-library-filter-none {
+  margin: 0;
+  font-size: var(--size-caption);
+}
+
+/* Under 700 px the search folds to its ⌕, a button that opens it; it stays open while focused or holding text (⌘F focuses it). */
+@media (max-width: 699px) {
+  /* .vs-library-home.vs-library-toolbar: above the 899 px rule below, which lets the search grow. */
+  .vs-library-home.vs-library-toolbar .vs-library-search-field {
+    flex: none;
+    min-width: 0;
+    gap: 0;
+  }
+  .vs-library-toolbar .vs-library-search-field:not(:focus-within):not([data-text]) .vs-library-search {
+    flex: 0 0 0;
+    width: 0;
+    padding: 0;
+  }
+  .vs-library-toolbar .vs-library-search-field:not(:focus-within):not([data-text]) button.vs-library-search-glyph {
+    cursor: pointer;
+  }
+  .vs-library-home.vs-library-toolbar .vs-library-search-field:is(:focus-within, [data-text]) {
+    flex: 1 1 180px;
+    min-width: 120px;
+    gap: var(--space-2);
+  }
+}
+
+/* A narrow window: the menu takes the title's place, and the search takes the room left. */
+@media (max-width: 899px) {
+  .vs-library-home .vs-library-title-head {
+    display: none;
+  }
+  .vs-library-home .vs-library-search-field {
+    flex: 1 1 auto;
+  }
+}

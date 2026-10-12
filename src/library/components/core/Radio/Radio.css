@@ -1,0 +1,36 @@
+/* Radio: Checkbox's box (.lib-check, Checkbox.css) made round, with a dot. Reads only contract
+   variables and the --lib-* ones declared here and in Checkbox.css; no literal colours or radii.
+
+   --lib-radio-round  always a circle, whatever the theme's radii: round is what tells a radio from
+                      a checkbox, so it is the control's meaning, not the theme's shape. */
+
+.lib-radio {
+  --lib-radio-round: 50%;
+  /* The dot: 4.8 of 16 at regular. */
+  --lib-radio-dot: calc(var(--lib-check-box) * 0.3);
+}
+.lib-radio .lib-check__face {
+  border-radius: var(--lib-radio-round);
+}
+/* Mixed is drawn, not checked: the face lights as if chosen until the radio is picked. */
+.lib-radio[data-mixed] .lib-check__input:not(:checked) ~ .lib-check__face {
+  --lib-check-on: var(--lit);
+  box-shadow: inset 0 0 0 var(--border-width) var(--lit), var(--mat-well-shadow), var(--mat-lit-glow);
+}
+
+.lib-radio__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: none;
+  width: var(--lib-radio-dot);
+  height: var(--lib-radio-dot);
+  border-radius: var(--lib-radio-round);
+  background: var(--selected-text);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.lib-radio .lib-check__input:checked ~ .lib-radio__dot,
+.lib-radio[data-mixed] .lib-check__input:not(:checked) ~ .lib-check__dash {
+  display: block;
+}

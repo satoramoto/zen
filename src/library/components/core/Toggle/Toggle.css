@@ -1,0 +1,219 @@
+/* Toggle (a latching key) and Switch. Reads only contract variables and the --lib-* ones declared
+   here and in size.css; no literal colours or radii.
+
+   --lib-toggle-ink    what it lights in (the `ink` prop); default --selected
+   --lib-toggle-width  the key's width (the `width` prop); default four characters */
+
+/* ---- Toggle ---- */
+
+.lib-toggle {
+  --lib-toggle-ink: var(--selected);
+  --lib-toggle-width: calc(4ch + var(--space-4));
+  --lit: var(--lib-toggle-ink);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  letter-spacing: var(--tracking);
+}
+
+.lib-toggle__caption {
+  color: var(--text-2);
+  font-size: var(--size-caption);
+  text-transform: var(--label-case);
+  white-space: nowrap;
+}
+
+/* The key: the theme's `key`, pressed and lit when on. */
+.lib-toggle__key {
+  box-sizing: border-box;
+  width: var(--lib-toggle-width);
+  height: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  --lib-toggle-tint: transparent;
+  background: linear-gradient(var(--lib-toggle-tint), var(--lib-toggle-tint)), var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-shadow);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  text-transform: var(--label-case);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  appearance: none;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out, color 80ms ease-out;
+}
+.lib-toggle__key:hover:not(:disabled) {
+  --lib-toggle-tint: color-mix(in oklab, var(--text-1) 8%, transparent);
+}
+.lib-toggle__key:active:not(:disabled) {
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-pressed);
+}
+.lib-toggle__key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lib-toggle__key[data-on] {
+  --lib-toggle-tint: var(--lit);
+  box-shadow: inset 0 0 0 var(--border-width) var(--lit), var(--mat-key-pressed), var(--mat-lit-glow);
+  color: var(--selected-text);
+}
+.lib-toggle__key:disabled {
+  cursor: not-allowed;
+  color: var(--text-3);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border), var(--mat-key-shadow);
+}
+.lib-toggle__key[data-on]:disabled {
+  --lib-toggle-tint: color-mix(in oklab, var(--lit) 45%, transparent);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border), var(--mat-key-pressed);
+}
+
+/* Inside: one line. The key spans the row behind the caption (left) and the reading (right);
+   on, the key stays unlit and the reading lights instead. */
+.lib-toggle[data-layout='inside'] {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+}
+.lib-toggle[data-layout='inside'] > .lib-toggle__key {
+  grid-row: 1;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+.lib-toggle[data-layout='inside'] > .lib-toggle__key[data-on] {
+  --lib-toggle-tint: transparent;
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-pressed);
+}
+.lib-toggle[data-layout='inside'] > .lib-toggle__caption,
+.lib-toggle[data-layout='inside'] > .lib-toggle__readout {
+  z-index: 1;
+  grid-row: 1;
+  min-width: 0;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.lib-toggle[data-layout='inside'] > .lib-toggle__caption {
+  grid-column: 1;
+  padding-left: var(--space-2);
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: var(--size-label);
+  text-overflow: ellipsis;
+}
+.lib-toggle__readout {
+  grid-column: 2;
+  padding: 0 var(--space-2);
+  color: var(--text-2);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+}
+.lib-toggle[data-layout='inside'][data-on] > .lib-toggle__readout {
+  color: var(--lit);
+}
+.lib-toggle[data-disabled] > .lib-toggle__caption,
+.lib-toggle[data-disabled] > .lib-toggle__readout {
+  color: var(--text-3);
+}
+
+/* ---- Switch ---- */
+
+/* The track is a `well`, filled --selected and lit when on; the thumb a `handle`. Sizes come from
+   size.css: the track is --lib-size-h tall and 2.25 times as wide, the thumb a capsule. */
+.lib-switch {
+  --lit: var(--selected);
+  --lib-switch-pad: calc(var(--lib-size-h) / 12);
+  --lib-switch-w: calc(var(--lib-size-h) * 2.25);
+  --lib-switch-thumb-h: calc(var(--lib-size-h) - var(--lib-switch-pad) * 2);
+  --lib-switch-thumb-w: calc(var(--lib-size-h) * 4 / 3);
+  --lib-switch-travel: calc(var(--lib-switch-w) - var(--lib-switch-thumb-w) - var(--lib-switch-pad) * 2);
+  --lib-switch-on: transparent;
+  position: relative;
+  display: inline-block;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--lib-switch-w);
+  height: var(--lib-size-h);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(var(--lib-switch-on), var(--lib-switch-on)), var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: var(--mat-well-shadow);
+  cursor: pointer;
+  appearance: none;
+  vertical-align: middle;
+  transition: background-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+.lib-switch[aria-checked='true'] {
+  --lib-switch-on: var(--lit);
+  box-shadow: var(--mat-well-shadow), var(--mat-lit-glow);
+}
+.lib-switch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lib-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.lib-switch[aria-checked='true']:disabled {
+  box-shadow: var(--mat-well-shadow);
+}
+
+.lib-switch__thumb {
+  position: absolute;
+  top: var(--lib-switch-pad);
+  left: var(--lib-switch-pad);
+  width: var(--lib-switch-thumb-w);
+  height: var(--lib-switch-thumb-h);
+  border-radius: var(--radius-pill);
+  background: var(--mat-handle-texture), var(--mat-handle-fill);
+  box-shadow: var(--mat-handle-shadow);
+  transition: transform 150ms ease-out;
+}
+.lib-switch[aria-checked='true'] > .lib-switch__thumb {
+  transform: translateX(var(--lib-switch-travel));
+}
+.lib-switch:active:not(:disabled) > .lib-switch__thumb {
+  background: linear-gradient(color-mix(in oklab, var(--text-1) 10%, transparent), color-mix(in oklab, var(--text-1) 10%, transparent)), var(--mat-handle-texture), var(--mat-handle-fill);
+}
+
+/* Labelled: the name at the start of the line, the switch at the end. */
+.lib-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--control-h);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  letter-spacing: var(--tracking);
+  cursor: default;
+}
+.lib-switch-row__name {
+  min-width: 0;
+}
+.lib-switch-row[data-disabled] .lib-switch-row__name {
+  color: var(--text-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-switch,
+  .lib-switch__thumb,
+  .lib-toggle__key {
+    transition: none;
+  }
+}

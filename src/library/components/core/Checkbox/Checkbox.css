@@ -1,0 +1,105 @@
+/* Checkbox, and the box Radio shares (.lib-check). Reads only contract variables and the --lib-*
+   ones declared here and in Toggle/size.css; no literal colours or radii.
+
+   The face is a `well`; checked or mixed it fills --selected and lights, the mark drawn in
+   --selected-text. The box is two thirds of the size's height (16 of 24 at regular). */
+
+.lib-check {
+  --lit: var(--selected);
+  --lib-check-box: calc(var(--lib-size-h) * 2 / 3);
+  --lib-check-radius: min(var(--radius-input), calc(var(--lib-check-box) / 4));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--lib-size-h);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  letter-spacing: var(--tracking);
+  line-height: 1.2;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+}
+.lib-check[data-size='mini'],
+.lib-check[data-size='small'] {
+  font-size: var(--size-caption);
+}
+.lib-check[data-disabled] {
+  cursor: not-allowed;
+}
+
+.lib-check__box {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: var(--lib-check-box);
+  height: var(--lib-check-box);
+}
+
+/* The real input, invisible, over the box: it takes the clicks and the focus. */
+.lib-check__input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.lib-check__face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--lib-check-radius);
+  --lib-check-on: transparent;
+  background: linear-gradient(var(--lib-check-on), var(--lib-check-on)), var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-well-shadow);
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out;
+}
+.lib-check__input:checked ~ .lib-check__face,
+.lib-check__input:indeterminate ~ .lib-check__face {
+  --lib-check-on: var(--lit);
+  box-shadow: inset 0 0 0 var(--border-width) var(--lit), var(--mat-well-shadow), var(--mat-lit-glow);
+}
+.lib-check__input:active:not(:disabled) ~ .lib-check__face {
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-well-shadow),
+    inset 0 0 0 var(--lib-check-box) color-mix(in oklab, var(--text-1) 10%, transparent);
+}
+.lib-check__input:focus-visible ~ .lib-check__face {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lib-check__input:disabled ~ .lib-check__face {
+  opacity: 0.5;
+}
+.lib-check__input:disabled:checked ~ .lib-check__face,
+.lib-check__input:disabled:indeterminate ~ .lib-check__face {
+  box-shadow: inset 0 0 0 var(--border-width) var(--lit), var(--mat-well-shadow);
+}
+
+.lib-check__mark {
+  position: absolute;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  color: var(--selected-text);
+  pointer-events: none;
+}
+.lib-checkbox .lib-check__input:checked:not(:indeterminate) ~ .lib-check__check,
+.lib-checkbox .lib-check__input:indeterminate ~ .lib-check__dash {
+  display: block;
+}
+
+.lib-check__label {
+  min-width: 0;
+}
+.lib-check[data-disabled] .lib-check__label {
+  color: var(--text-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-check__face { transition: none; }
+}

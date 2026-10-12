@@ -1,0 +1,78 @@
+/* The credits view (Credits.tsx): shown in place of the preset list, in the library or in
+   ⚙ Settings' Presets. Type on space alone; contract variables and visuals.css tokens only. */
+
+.vs-credits {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.vs-credits-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.vs-credits h2 {
+  margin: 0;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: var(--vs-text-lead);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+}
+.vs-credits-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  color: var(--text-3);
+  font-size: var(--vs-text-body);
+  line-height: 1.5;
+}
+.vs-credits-body p {
+  margin: 0 0 var(--space-2);
+}
+.vs-credits-body a {
+  color: var(--text-2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.vs-credits-body a:hover {
+  color: var(--text-1);
+}
+.vs-credits h3 {
+  margin: var(--space-3) 0 var(--space-1);
+  color: var(--text-2);
+  font-size: var(--vs-text-body);
+  font-weight: var(--weight-strong);
+}
+.vs-credits-sub {
+  color: var(--text-3);
+  font-weight: var(--weight-body);
+}
+.vs-credits-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.vs-credits-list li {
+  display: flex;
+  gap: var(--space-2);
+  padding: 1px 0;
+}
+.vs-credits-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vs-credits-count {
+  color: var(--text-3);
+  font-family: var(--font-readout);
+  font-variant-numeric: tabular-nums;
+}
+.vs-credits-none {
+  color: var(--text-3);
+}
