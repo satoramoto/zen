@@ -1,11 +1,18 @@
-// PadBank: four banks without Sections, tabs choose by index with tips by name, a press carries
-// the pad's index, an empty pad is quiet and inert, and the layout and flash pass through.
+// PadBank: five banks with Sections first, tabs choose by index with tips by name, a press carries
+// the pad's index, an empty pad is quiet and inert, a playing section fills while other on pads
+// ring, every pad is square, and the layout and flash pass through.
 
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PadBank, type PadBankProps } from './PadBank';
-import { chordPads, padBanks, quickRackPads, quickRackStorePads } from './PadBank.fixtures';
+import { PadBank, bankOnFace, type PadBankProps } from './PadBank';
+import { allPadBanks, allPadsByBank, chordPads, padBanks, quickRackPads, quickRackStorePads, sectionPads } from './PadBank.fixtures';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+// jsdom lays nothing out, so squareness is checked on the stylesheet (and in the stories' play
+// functions, which measure in a browser). Tests run from the repo root.
+const padBankCss = readFileSync(join(process.cwd(), 'src/library/yahaha/PadBank/PadBank.css'), 'utf8');
 
 afterEach(() => cleanup());
 
@@ -20,17 +27,17 @@ function setup(props: Partial<PadBankProps> = {}) {
 }
 
 describe('PadBank banks', () => {
-  it('is a region named by its heading, with the four banks as tabs and no Sections', () => {
-    setup({ bank: 2 });
+  it('is a region named Pads, with the five banks as tabs, Sections first', () => {
+    setup({ banks: allPadBanks, bank: 3 });
     const region = screen.getByRole('region', { name: 'Pads' });
     const list = within(region).getByRole('tablist', { name: 'Pad bank' });
     expect(within(list).getAllByRole('tab').map((t) => t.textContent)).toEqual([
+      'Sections',
       'Quick Racks',
       'Chord',
       'Multi Pads',
       'Setup',
     ]);
-    expect(within(list).queryByRole('tab', { name: 'Sections' })).toBeNull();
     expect(within(list).getByRole('tab', { name: 'Multi Pads' })).toHaveAttribute('aria-selected', 'true');
   });
 
@@ -197,5 +204,114 @@ describe('PadBank pads', () => {
     setup({ pads: quickRackPads.map((p, i) => (i === 0 ? { ...p, family: 'l' } : p)) });
     expect(screen.getByRole('button', { name: `Rack${NB}1 (pad 1)` })).toHaveAttribute('data-tone', 'hue-4');
     expect(screen.getByRole('button', { name: `Rack${NB}2 (pad 2)` })).toHaveAttribute('data-tone', 'neutral');
+  });
+});
+
+describe('PadBank Sections bank', () => {
+  const setupSections = () => setup({ pads: sectionPads, banks: allPadBanks, bank: 0 });
+
+  it('is the first bank, with its tooltip key', () => {
+    expect(allPadBanks[0]).toBe('Sections');
+    expect(allPadsByBank[0]).toBe(sectionPads);
+    setupSections();
+    const tab = screen.getByRole('tab', { name: 'Sections' });
+    expect(tab).toHaveAttribute('aria-selected', 'true');
+    expect(tab).toHaveAttribute('data-tip', 'padpage.sections');
+  });
+
+  it('has the Launchkey’s sixteen pads in order, named, with what plays and runs pressed', () => {
+    setupSections();
+    const pads = screen.getAllByRole('button');
+    expect(pads.map((pad) => pad.querySelector('.yh-pad__label')?.textContent?.replace(/\s/g, ' '))).toEqual([
+      'Intro I',
+      'Intro II',
+      'Intro III',
+      'Sync Start',
+      'Ending I',
+      'Ending II',
+      'Ending III',
+      'Auto Fill',
+      'Main A',
+      'Main B',
+      'Main C',
+      'Main D',
+      'Break',
+      'Tap',
+      'Sync Stop',
+      'Start / Stop',
+    ]);
+    const pressed = pads.filter((pad) => pad.getAttribute('aria-pressed') === 'true').map((pad) => pad.getAttribute('aria-label'));
+    expect(pressed).toEqual(['Main B, playing', 'Start / Stop, running (pad 16; the transport Start / Stop is the same control)']);
+    expect(screen.getByRole('button', { name: `Intro${NB}I (pad 1)` })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('button', { name: 'Tap (pad 14)' })).toHaveAttribute('data-tip', 'tempo.tap');
+  });
+
+  it('absent sections are dark and spoken “not in this style”; next is the accent ring', () => {
+    setupSections();
+    for (const name of ['Intro III (not in this style)', 'Ending III (not in this style)']) {
+      expect(screen.getByRole('button', { name })).toHaveAttribute('data-state', 'dark');
+    }
+    const next = screen.getByRole('button', { name: 'Main C, queued after bar 4 (flashing)' });
+    expect(next).toHaveAttribute('data-state', 'next');
+    expect(next).toHaveAttribute('data-next', 'accent');
+  });
+
+  it('a playing section fills (it is sounding); every other family rings', () => {
+    setupSections();
+    expect(screen.getByRole('button', { name: 'Main B, playing' })).toHaveAttribute('data-on-face', 'fill');
+    for (const name of [`Intro${NB}I (pad 1)`, 'Break (pad 13)', `Ending${NB}II (pad 6)`]) {
+      expect(screen.getByRole('button', { name })).toHaveAttribute('data-on-face', 'fill');
+    }
+    for (const name of ['Sync Start (pad 4)', 'Auto Fill (pad 8)', 'Tap (pad 14)', 'Sync Stop (pad 15)']) {
+      expect(screen.getByRole('button', { name })).toHaveAttribute('data-on-face', 'ring');
+    }
+    expect(['intro', 'main', 'ending', 'brk', 'fill'].map((f) => bankOnFace(f as never))).toEqual(Array(5).fill('fill'));
+    expect(['util', 'start', 'r1', 'r2', 'r3', 'l'].map((f) => bankOnFace(f as never))).toEqual(Array(6).fill('ring'));
+  });
+
+  it('transport pads are neutral at rest; Start / Stop running is success', () => {
+    setupSections();
+    for (const name of ['Sync Start (pad 4)', 'Auto Fill (pad 8)', 'Tap (pad 14)', 'Sync Stop (pad 15)']) {
+      const pad = screen.getByRole('button', { name });
+      expect(pad).toHaveAttribute('data-tone', 'transport');
+      expect(pad).toHaveAttribute('data-state', 'idle');
+    }
+    expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toHaveAttribute('data-tone', 'success');
+    expect(screen.getByRole('button', { name: 'Main B, playing' })).toHaveAttribute('data-tone', 'neutral');
+  });
+});
+
+describe('PadBank shape', () => {
+  /** The declarations of the first rule whose selector is exactly `selector`. */
+  const rule = (selector: string) => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const match = padBankCss.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`));
+    if (!match) throw new Error(`no rule for ${selector}`);
+    return match[1].replace(/\s+/g, ' ');
+  };
+
+  it('sizes columns and rows by one cell side, so every pad is a square', () => {
+    const pads = rule('.yh-padbank__pads');
+    expect(pads).toContain('grid-template-columns: repeat(var(--yh-padbank-cols), var(--yh-padbank-cell));');
+    expect(pads).toContain('grid-auto-rows: var(--yh-padbank-cell);');
+    // The side is the tighter of the room's width over the columns and its height over the rows.
+    expect(pads).toMatch(/--yh-padbank-cell: max\( 0px, min\( \(100cqw - .*\) \/ var\(--yh-padbank-cols\), \(100cqh - .*\) \/ var\(--yh-padbank-rows\) \) \);/);
+    expect(rule('.yh-padbank__cell')).toContain('aspect-ratio: 1;');
+  });
+
+  it('measures a sized room and hangs the grid under the tabs, centred across', () => {
+    const room = rule('.yh-padbank__room');
+    expect(room).toContain('container-type: size;');
+    expect(room).toContain('place-content: start center;');
+  });
+
+  it('keeps at least --space-2 between pads', () => {
+    expect(rule('.yh-padbank__pads')).toContain('--yh-padbank-gap: clamp(var(--space-2),');
+  });
+
+  it('the room and the grid carry the column count', () => {
+    const { container } = setup({ columns: 4 });
+    expect(container.querySelector('.yh-padbank__room')).toHaveAttribute('data-columns', '4');
+    expect(container.querySelector('.yh-padbank__room > .yh-padbank__pads')).toHaveAttribute('data-columns', '4');
   });
 });
