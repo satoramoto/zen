@@ -4,7 +4,11 @@ import { Numbers } from '../Numbers/Numbers';
 import { SourcePicker } from '../SourcePicker/SourcePicker';
 import { FrameRate } from '../Views/Views';
 import { Icon } from '../Icon/Icon';
+import type { Forms } from '../../layout/assembly';
 import './TransportBar.css';
+
+/** The bar's one form (docs/assembly.md): ten controls across at least, growing; `--vs-transport-h` (two `--space-6`, 64px) high. */
+export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 10 }, h: { space: [6, 6] } }, ideal: { w: { control: 10 }, h: { space: [6, 6] } }, grow: { w: true } }];
 
 /**
  * **Job.** The bar along the bottom of the home's main column (HomeLayout's `bar` slot): the
@@ -162,3 +166,4 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
     </div>
   );
 }
+TransportBar.forms = TRANSPORT_FORMS;

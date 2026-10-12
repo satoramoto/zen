@@ -12,7 +12,6 @@
   /* The soft accent wash of the Hold pill. */
   --vs-stagedock-on: color-mix(in oklab, var(--accent) 24%, transparent);
   position: relative;
-  container: vs-stagedock / inline-size;
   min-width: 0;
   padding-bottom: calc(var(--space-1) * 1.5); /* 6px */
   box-sizing: border-box;
@@ -242,29 +241,27 @@
   outline-offset: 0;
 }
 
-/* A narrower dock: the keys keep their glyph and key letter, the fader its value, and Next gets its own line when the effects need the width. */
-@container vs-stagedock (max-width: 940px) {
-  .vs-stagedock-key-name,
-  .vs-stagedock-fader-name {
-    display: none;
-  }
-  .vs-stagedock-fader {
-    flex-basis: calc(var(--control-h) * 5); /* 150px */
-  }
-  .vs-stagedock-row {
-    column-gap: var(--space-3);
-  }
+/* The compact form (and the stacked one, which is narrower still; STAGE_DOCK_FORMS): the keys keep
+   their glyph and key letter, the fader its value, and Next gets its own line when the effects
+   need the width. */
+.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-key-name,
+.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-fader-name {
+  display: none;
 }
-/* Narrower still: Next on a line of its own, the effects under it across the width. */
-@container vs-stagedock (max-width: 700px) {
-  .vs-stagedock-next {
-    flex-basis: 100%;
-  }
-  .vs-stagedock-fx {
-    flex: 1 1 100%;
-    margin-left: 0;
-  }
-  .vs-stagedock-fader {
-    flex: 1 1 calc(var(--control-h) * 4); /* 120px */
-  }
+.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-fader {
+  flex-basis: calc(var(--control-h) * 5); /* 150px */
+}
+.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-row {
+  column-gap: var(--space-3);
+}
+/* The stacked form: Next on a line of its own, the effects under it across the width. */
+.vs-stagedock[data-form='stacked'] .vs-stagedock-next {
+  flex-basis: 100%;
+}
+.vs-stagedock[data-form='stacked'] .vs-stagedock-fx {
+  flex: 1 1 100%;
+  margin-left: 0;
+}
+.vs-stagedock[data-form='stacked'] .vs-stagedock-fader {
+  flex: 1 1 calc(var(--control-h) * 4); /* 120px */
 }

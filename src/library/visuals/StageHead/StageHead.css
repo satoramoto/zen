@@ -141,14 +141,12 @@
   width: 100%;
 }
 
-/* A narrow window: the words shorten so both capsules keep to one line. */
-@media (max-width: 900px) {
-  .vs-stagehead-light-text {
-    max-width: calc(var(--control-h) * 3 + var(--space-4) + var(--space-1)); /* 110px */
-  }
-  .vs-stagehead-skipped {
-    max-width: calc(var(--control-h) * 4); /* 120px */
-  }
+/* The short form (STAGE_HEAD_FORMS, a narrow window): the words shorten so both capsules keep to one line. */
+.vs-stagehead[data-form='short'] .vs-stagehead-light-text {
+  max-width: calc(var(--control-h) * 3 + var(--space-4) + var(--space-1)); /* 110px */
+}
+.vs-stagehead[data-form='short'] .vs-stagehead-skipped {
+  max-width: calc(var(--control-h) * 4); /* 120px */
 }
 
 /* "Go full screen on…": a capsule over the picture while it plays in the window; the shell places it. */

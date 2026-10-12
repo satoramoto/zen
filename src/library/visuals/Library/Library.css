@@ -639,28 +639,28 @@
   margin: 0;
 }
 
-/* Under 700 px the search folds to its ⌕, a button that opens it; it stays open while focused or holding text (⌘F focuses it). */
-@media (max-width: 699px) {
-  /* .vs-library-home.vs-library-toolbar: above the 899 px rule below, which lets the search grow. */
-  .vs-library-home.vs-library-toolbar .vs-library-search-field {
-    flex: none;
-    min-width: 0;
-    gap: 0;
-  }
-  .vs-library-toolbar .vs-library-search-field:not(:focus-within):not([data-text]) .vs-library-search {
-    flex: 0 0 0;
-    width: 0;
-    padding: 0;
-  }
-  .vs-library-toolbar .vs-library-search-field:not(:focus-within):not([data-text]) button.vs-library-search-glyph {
-    cursor: pointer;
-  }
-  .vs-library-home.vs-library-toolbar .vs-library-search-field:is(:focus-within, [data-text]) {
-    /* 180px to start (six control heights), at least 120px (four). */
-    flex: 1 1 calc(var(--control-h) * 6);
-    min-width: calc(var(--control-h) * 4);
-    gap: var(--space-2);
-  }
+/* In the narrow header (Header's `narrow` form, which the assembled screen picks where the full
+   row doesn't fit; the original did this under a 700 px window) the search folds to its ⌕, a
+   button that opens it; it stays open while focused or holding text (⌘F focuses it). */
+/* .vs-library-home.vs-library-toolbar: above the 899 px rule below, which lets the search grow. */
+.vs-header[data-form='narrow'] .vs-library-home.vs-library-toolbar .vs-library-search-field {
+  flex: none;
+  min-width: 0;
+  gap: 0;
+}
+.vs-header[data-form='narrow'] .vs-library-toolbar .vs-library-search-field:not(:focus-within):not([data-text]) .vs-library-search {
+  flex: 0 0 0;
+  width: 0;
+  padding: 0;
+}
+.vs-header[data-form='narrow'] .vs-library-toolbar .vs-library-search-field:not(:focus-within):not([data-text]) button.vs-library-search-glyph {
+  cursor: pointer;
+}
+.vs-header[data-form='narrow'] .vs-library-home.vs-library-toolbar .vs-library-search-field:is(:focus-within, [data-text]) {
+  /* 180px to start (six control heights), at least 120px (four). */
+  flex: 1 1 calc(var(--control-h) * 6);
+  min-width: calc(var(--control-h) * 4);
+  gap: var(--space-2);
 }
 
 /* A narrow window: the menu takes the title's place, and the search takes the room left. */

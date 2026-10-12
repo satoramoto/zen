@@ -15,6 +15,12 @@
   white-space: nowrap;
   color: var(--text-2);
 }
+/* The narrow form (HEADER_FORMS): the same parts closed up, chosen by the assembled screen when
+   the full row doesn't fit (the original's under-700px rule in home.css). */
+.vs-header[data-form='narrow'] {
+  gap: var(--space-3);
+  padding: 0 var(--space-2) 0 var(--space-3);
+}
 .vs-header > * {
   flex: none;
 }

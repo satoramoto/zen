@@ -2,8 +2,11 @@
    window, Home's inset panels over it. Home's sizes (8px in, 18px corners, the 52px title bar);
    areas told apart by space and tone, no lines.
 
+   Where each part sits and how big it is is the solver's (stageSpec in StageLayout.tsx): nothing
+   here sizes the screen, and no query decides it.
+
    Who paints what: the picture is the native preview under the page (Views' Preview, a Hole) and
-   spans the whole Screen grid, so the root and every cell paint nothing. Everything sits in one
+   fills the window under the assembled Screen, so the root and every slot paint nothing. Everything sits in one
    Opaque scope: each layer over the picture draws its solid and blurs nothing (a blur never
    reaches the native view). Nothing animates but Esc's hold to leave (its ring).
 
@@ -28,18 +31,21 @@
   overflow: hidden;
   background: none;
 }
-.vs-stagelayout-opaque,
-.vs-stagelayout-screen {
+.vs-stagelayout-opaque {
+  position: relative;
   height: 100%;
 }
-.vs-stagelayout-screen > .lib-screen__grid {
-  position: relative;
+/* The assembled screen over the picture, the window's size. */
+.vs-stagelayout .vs-stagelayout-screen {
+  position: absolute;
+  inset: 0;
 }
 
-/* The picture: every cell of the grid, whatever shows over it; square (macOS rounds the window). */
-.vs-stagelayout-picture,
-.vs-stagelayout-dark {
-  grid-area: 1 / 1 / -1 / -1;
+/* The picture: the whole window under the screen, whatever shows over it; square (macOS rounds the window). */
+.vs-stagelayout .vs-stagelayout-picture,
+.vs-stagelayout .vs-stagelayout-dark {
+  position: absolute;
+  inset: 0;
   z-index: 0;
   --vs-hole-radius: 0px;
 }
@@ -67,22 +73,25 @@
   border-radius: var(--vs-stagelayout-radius);
 }
 
-/* The crate: Home's inset sidebar, opaque, over the picture's left edge. Docked, the header and
-   the dock keep clear of it; laid over (a narrow window), it covers them. The cell paints nothing
-   and lets presses through around its panel. */
+/* The crate: Home's inset sidebar, opaque, over the picture's left edge. Docked, it fills its slot
+   (its need is the panel and its 8px inset from the window; the seam beside it is the screen's
+   gap), and the header and the dock keep clear of it; laid over (a narrow window), it takes no
+   room and covers them. The cell paints nothing and lets presses through around its panel. */
 .vs-stagelayout-crate-cell {
-  grid-area: crate;
   z-index: var(--vs-stagelayout-z-panel);
   display: flex;
   min-height: 0;
-  padding: var(--space-2);
+  padding: var(--space-2) 0 var(--space-2) var(--space-2);
   box-sizing: border-box;
   pointer-events: none;
 }
 .vs-stagelayout-crate-cell[data-mode='overlay'] {
-  grid-area: 1 / 1 / -1 / 2;
-  justify-self: start;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
   width: var(--vs-stagelayout-crate);
+  padding: var(--space-2);
   z-index: var(--vs-stagelayout-z-overlay);
 }
 .vs-stagelayout-crate {
@@ -126,7 +135,6 @@
    title bar, and drags the window. It leaves the window buttons room, or starts beside a docked
    crate (whose band holds them). */
 .vs-stagelayout-head {
-  grid-area: head;
   z-index: var(--vs-stagelayout-z-head);
   /* A row Stack: its gap (space 2) between the capsules, centred on the line. */
   min-width: 0;
@@ -141,7 +149,6 @@
 /* Over the picture's middle: "Go full screen on…" just under the header, or the warning centred
    where the picture would be (above the dock). Only what it holds takes presses. */
 .vs-stagelayout-centre {
-  grid-area: centre;
   z-index: var(--vs-stagelayout-z-centre);
   display: flex;
   align-items: flex-start;
@@ -158,15 +165,16 @@
   align-items: center;
   padding-top: 0;
 }
-.vs-stagelayout[data-panels='hidden'] .vs-stagelayout-centre[data-for='warning'] {
-  grid-area: 1 / 1 / -1 / -1;
-}
 
-/* The dock: an inset panel along the bottom (its content is StageDock's). */
+/* The dock: an inset panel along the bottom of its slot (its content is StageDock's), 8px in
+   from the window's edges (part of its declared need). */
 .vs-stagelayout-dock-cell {
-  grid-area: dock;
   z-index: var(--vs-stagelayout-z-panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   min-width: 0;
+  min-height: 0;
   padding: 0 var(--space-2) var(--space-2);
 }
 .vs-stagelayout .lib-region.vs-stagelayout-dock {
@@ -185,12 +193,11 @@
 /* Panels hidden: only the picture, and along the bottom a strip that paints nothing until the
    pointer nears it, then a quiet capsule: \ for controls. It shows at once (nothing animates). */
 .vs-stagelayout-peek {
-  grid-area: dock;
   z-index: var(--vs-stagelayout-z-panel);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: calc(var(--space-6) * 3); /* 96px */
+  /* Its 96px is its declared need (StageLayout.tsx's PEEK). */
   padding-bottom: var(--space-4);
   box-sizing: border-box;
 }

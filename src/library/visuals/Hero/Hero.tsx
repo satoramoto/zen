@@ -5,10 +5,21 @@ import { Numbers } from '../Numbers/Numbers';
 import { tileBy, tileName } from '../PresetTile/PresetTile';
 import { Icon } from '../Icon/Icon';
 import { Text } from '../../primitives/Text';
+import type { Forms } from '../../layout/assembly';
 import './Hero.css';
 
 /** The class the picture's box wears: the app passes `<Preview className={HERO_PIC} />`. */
 export const HERO_PIC = 'vs-hero-pic';
+
+/** The hero's forms: `full` (the picture up to its cap), then `compact` (a shorter picture). */
+export type HeroForm = 'full' | 'compact';
+
+export const HERO_FORMS: Forms<HeroForm> = [
+  // full: the picture up to the original's 440px cap; it wants the main column the original kept beside a docked sidebar (588px: 600px of content less the screen's wider seams), so the side panels go before it narrows
+  { id: 'full', min: { w: { control: 10 }, h: { unit: 72 } }, ideal: { w: { unit: 147 }, h: { unit: 110 } }, grow: { w: true }, max: { h: { unit: 110 } } },
+  // compact: a shorter picture, for a short window
+  { id: 'compact', min: { w: { control: 8 }, h: { unit: 40 } }, ideal: { w: { control: 10 }, h: { unit: 72 } }, grow: { w: true, h: true }, max: { h: { unit: 80 } } },
+];
 
 /**
  * **Job.** The Now Playing card at the top of the main column (HomeLayout's `hero` slot, inside
@@ -24,16 +35,21 @@ export const HERO_PIC = 'vs-hero-pic';
  * **Kept.** Props, copy, accessible names and titles; the picture as one box with nothing laid
  * over it (in the app the native preview's hole), its spread shadow painting the main column
  * around it, its 16:9 shape and cap; the words beside it in a card of 680px and up, under it
- * narrower; the picture alone (`preset` left out) centred and never taller than half the column.
+ * narrower (the card's own container query, not the screen's); the picture alone (`preset` left
+ * out) centred.
  *
  * From the original: with `preset` left out (round 2, Ryan's call: the playing preset's name and
  * where it plays from are in the transport bar) the hero is the picture alone, marked
- * `data-only`: centred in the main column, as wide as the column at 16:9, and never taller than
- * half the column (HomeLayout measures it), where it narrows and stays centred.
+ * `data-only`: centred, as wide as its room at 16:9, and never taller than the room the
+ * assembled screen gave the hero's slot, where it narrows and stays centred. The original capped
+ * it at half the measured column; now the screen decides the hero's height from its forms
+ * (`HERO_FORMS`, `Hero.forms`: `full` up to the original's 440px cap, `compact` shorter), and the
+ * slot (`.vs-lay-hero`, a size container) is the cap.
  *
  * **Tuning knobs** (Hero.css, on `.vs-hero`):
  * - `--vs-hero-cap`: the picture's tallest, about two fifths of the window, clamped to 160–440px
- *   on the scale; half the measured column (`--vs-lay-col-h`) for the picture alone.
+ *   on the scale; for the picture alone, the hero slot's height (`100cqh`: outside a size
+ *   container, the viewport's).
  * - `--vs-hero-name-size` (24px): the name, a fifth over the heading size.
  * - `--vs-hole-radius`: Views' `Preview`'s corner knob, set here to the hero's
  *   `--vs-lay-hero-radius`.
@@ -143,3 +159,4 @@ export function Hero({ preset, picture, playing = false, from = '', starred = fa
     </div>
   );
 }
+Hero.forms = HERO_FORMS;

@@ -364,8 +364,8 @@ export interface Prefs {
 
 /**
  * The choices the home starts with (decision 70): `wide` is what the viewer kept
- * for a window where the pane docks (the sidebar from 900 px, the inspector from
- * 1200), and `narrow` what this run chose where it is laid over (never kept: a
+ * for a window where the pane docks (where its needs fit beside the main column:
+ * the sidebar from 900 px, the inspector from about 1200), and `narrow` what this run chose where it is laid over (never kept: a
  * pane laid over the grid starts closed). A dev run's `VITE_HOME_PANEL` and
  * `VITE_HOME_SIDEBAR` ('1' or '0') set both, for captures, without keeping them.
  */
@@ -379,9 +379,13 @@ export function startPrefs(kept: Prefs, dev: { panel?: string; sidebar?: string 
   };
 }
 
-/** The choices that count in a window `width` px wide: the kept ones where a pane docks, this run's where it is laid over. */
-export function prefsAt(width: number, at: { sidebar: number; inspector: number }, wide: Prefs, narrow: Prefs): Prefs {
-  return { sidebar: width >= at.sidebar ? wide.sidebar : narrow.sidebar, inspector: width >= at.inspector ? wide.inspector : narrow.inspector };
+/**
+ * The choices that count: the kept ones for a pane that docks in this window, this run's for one
+ * laid over. Whether each docks is the assembled home's answer (HomeLayout's `homeDocks`: the
+ * panes' needs against the room), no longer a width.
+ */
+export function prefsAt(docks: { sidebar: boolean; inspector: boolean }, wide: Prefs, narrow: Prefs): Prefs {
+  return { sidebar: docks.sidebar ? wide.sidebar : narrow.sidebar, inspector: docks.inspector ? wide.inspector : narrow.inspector };
 }
 
 /**

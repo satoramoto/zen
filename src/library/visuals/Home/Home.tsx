@@ -39,7 +39,7 @@ import {
   type StripTile,
   type TilePick,
 } from '../model/home';
-import { HomeLayout, INSPECTOR_ID, SIDEBAR_ID } from '../HomeLayout/HomeLayout';
+import { HomeLayout, homeDocks, INSPECTOR_ID, PaneTile, SIDEBAR_ID, useLayoutPrinciples } from '../HomeLayout/HomeLayout';
 import { HelpOverlay, HOME_HELP } from '../HelpOverlay/HelpOverlay';
 import { modalOpen } from '../model/liveKeys';
 import { Hero, HERO_PIC } from '../Hero/Hero';
@@ -47,7 +47,7 @@ import { TransportBar } from '../TransportBar/TransportBar';
 import { InsetSidebar, sidebarSections } from '../InsetSidebar/InsetSidebar';
 import { Inspector } from '../Inspector/Inspector';
 import { Icon } from '../Icon/Icon';
-import { INSPECTOR_AT, INSPECTOR_KEY, modesFor, offersQuickAdd, paneName, SIDEBAR_AT, SIDEBAR_KEY, type QuickAdd, type Selection, type SidebarActions } from '../model/home-model';
+import { INSPECTOR_KEY, modesFor, offersQuickAdd, paneName, SIDEBAR_KEY, type QuickAdd, type Selection, type SidebarActions } from '../model/home-model';
 import { Header, NoticeBanner, openSheet, Preview, type View } from '../Views/Views';
 import { problemKey, useSettingsProblems } from '../model/survive';
 import { say, Say } from '../model/words';
@@ -58,22 +58,17 @@ import './Home.css';
 
 export type { Pane } from '../model/home';
 
-/**
- * The narrowest a library tile gets on the home: `small` in a window under
- * `under` px, where the main column narrows between the sidebar and the inspector.
- */
-export const HOME_TILE = { wide: 150, small: 124, under: 1100 };
-
-/** The window's width, followed as it is resized. */
-function useWidth(): number {
-  const [width, setWidth] = useState(() => window.innerWidth);
+/** The window's size, followed as it is resized: the room the home assembles in. */
+function useWindowRoom(): { w: number; h: number } {
+  const read = () => ({ w: window.innerWidth, h: window.innerHeight });
+  const [room, setRoom] = useState(read);
   useEffect(() => {
-    const resize = () => setWidth(window.innerWidth);
+    const resize = () => setRoom((r) => (r.w === window.innerWidth && r.h === window.innerHeight ? r : read()));
     resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
   }, []);
-  return width;
+  return room;
 }
 
 /** No presets picked. */
@@ -113,13 +108,15 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  * about within a playlist's grid. `library` opens it on the library
  * (`VISUALS_VIEW=library`), as it opens anyway unless a playlist plays.
  *
- * **Changed.** The frame is `HomeLayout`'s (a `Screen` of `Region`s, the panes laid over
- * the grid as `Opaque` panels); the hero's picture is Views' `Preview`, a measured `Hole`,
+ * **Changed.** The frame is `HomeLayout`'s (an assembled `Screen`, the panes laid over
+ * the grid as `Opaque` panels); where the panes dock is `homeDocks`, the solver's answer
+ * from their needs at the window's size, not 900 / 1200 px, and the tiles' size is the
+ * pane's form (`PaneTile`), not a width; the hero's picture is Views' `Preview`, a measured `Hole`,
  * which rounds its own corners, so home.css's corner painting is gone from here. The
  * dragged preset is a `Layer level="float"` (the theme's glass) instead of home.css's
  * hand-rolled fill, blur and lift. Notes over the grid are tints of the contract's
  * `--danger` / `--warning` over `--surface-0`; the column's one padding is
- * `--mat-plate-inset`, tightened to `--space-4` under 1100 px. ✕ glyphs are the icon set's
+ * `--mat-plate-inset`, tightened to `--space-4` in the pane's small form. ✕ glyphs are the icon set's
  * `close` (as Views' NoticeBanner). ⌘F finds the search inside the header's toolbar slot
  * (any input the library portals there), not by the library's class names; ← → R leave
  * the sidebar alone by its id (`SIDEBAR_ID`), not its class.
@@ -131,9 +128,9 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  *
  * **Tuning knobs** (Home.css):
  * - `--vs-home-pad`: the grid pane's side padding, `--mat-plate-inset` (home.css --pad 22px),
- *   `--space-4` under 1100 px.
- * - `--vs-home-tile-min`: a playlist grid's narrowest tile, 150px (124px under 1100 px), on the
- *   scale.
+ *   `--space-4` in the pane's small form (HomeLayout's `PANE_FORMS`).
+ * - `--vs-home-tile-min`: a playlist grid's narrowest tile, 150px (124px in the small form), on
+ *   the scale.
  */
 export function Home({ start, onMode, library: startOnLibrary = false }: { start: string | null; onMode(view: View, path: string | null): void; library?: boolean }) {
   const [current, setCurrent] = useState<Entry | null>(null);
@@ -269,21 +266,22 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
     setSel((s) => (keys.length === 0 ? (s.kind === 'source' ? s : SOURCE) : keysOf(s).join('\n') === keys.join('\n') ? s : { kind: 'presets', keys }));
   }, []);
 
-  // The panes either side (D5): docked or laid over by the window's width, shown or hidden as the viewer chose.
-  const width = useWidth();
+  // The panes either side (D5): docked where their needs fit beside the column (the assembled home's answer), shown or hidden as the viewer chose.
+  const room = useWindowRoom();
+  const principles = useLayoutPrinciples();
+  const docks = useMemo(() => homeDocks(room, principles), [room, principles]);
   const [choices, setChoices] = useState(() =>
     startPrefs(
       { sidebar: rememberedChoice(SIDEBAR_KEY), inspector: rememberedChoice(INSPECTOR_KEY) },
       import.meta.env.DEV ? { panel: String(import.meta.env.VITE_HOME_PANEL ?? ''), sidebar: String(import.meta.env.VITE_HOME_SIDEBAR ?? '') } : {},
     ),
   );
-  const at = { sidebar: SIDEBAR_AT, inspector: INSPECTOR_AT };
-  const modes = modesFor(width, prefsAt(width, at, choices.wide, choices.narrow));
+  const modes = modesFor(docks, prefsAt(docks, choices.wide, choices.narrow));
   const choose = (pane: keyof Prefs, show: boolean) => {
-    const docks = width >= at[pane];
+    const docked = docks[pane];
     // Kept for next time only where the pane docks; laid over the grid, it starts closed again.
-    if (docks) remember(pane === 'sidebar' ? SIDEBAR_KEY : INSPECTOR_KEY, show);
-    setChoices((c) => (docks ? { ...c, wide: { ...c.wide, [pane]: show } } : { ...c, narrow: { ...c.narrow, [pane]: show } }));
+    if (docked) remember(pane === 'sidebar' ? SIDEBAR_KEY : INSPECTOR_KEY, show);
+    setChoices((c) => (docked ?{ ...c, wide: { ...c.wide, [pane]: show } } : { ...c, narrow: { ...c.narrow, [pane]: show } }));
   };
   const toggleSidebar = () => choose('sidebar', modes.sidebar === 'hidden');
   const toggleInspector = () => choose('inspector', modes.inspector === null);
@@ -787,6 +785,8 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
               <>
                 {adding && <QuickAddStrip name={adding.name} count={adding.items.length} onDone={endQuickAdd} />}
                 <div className="vs-home-library">
+                <PaneTile>
+                {(tileMin) => (
                 <Library
                   key={shown.kind}
                   entries={library}
@@ -803,7 +803,8 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
                   }}
                   onAdd={(e) => into && run(pl.add(into.id, e.path), `add ${e.name} to ${into.name}`)}
                   onPress={(e, thumbnail, ev) => beginDrag(ev, { kind: 'preset', path: e.path, name: e.name, thumbnail }, dropping)}
-                  tileMin={width < HOME_TILE.under ? HOME_TILE.small : HOME_TILE.wide}
+                  // The tiles' size is the pane's form (PANE_FORMS): small where the column can't hold five wide ones.
+                  tileMin={tileMin}
                   home={{
                     scope: shown.kind,
                     title: sourceName,
@@ -815,6 +816,8 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
                     adding: adding && { name: adding.name, has: addingPaths, onToggle: toggleAdded },
                   }}
                 />
+                )}
+                </PaneTile>
                 </div>
               </>
             ) : list && lists ? (

@@ -6,11 +6,12 @@ import { withLibraryTheme } from '../../storybook';
 import { FX, FX_BUSY, LISTS, MOOD_DECK, WARM_UP } from '../fixtures/fixtures';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import { useLive } from '../model/useLive';
-import { StageDock } from './StageDock';
+import { StageDock, type StageDockForm } from './StageDock';
 
-/** The window's width the dock is drawn in. */
+/** The window's width the dock is drawn in, and the form it draws (outside an assembled screen, the first unless given). */
 interface Args {
   width: number;
+  form?: StageDockForm;
 }
 
 /**
@@ -19,7 +20,7 @@ interface Args {
  * frame's still standing in for the native preview, on the stories' fake app
  * through `useLive`, so the keys and the fader really act.
  */
-function Window({ width }: Args) {
+function Window({ width, form }: Args) {
   const live = useLive({ start: null });
   return (
     <Opaque>
@@ -28,7 +29,7 @@ function Window({ width }: Args) {
           <Region name="Live controls" style={{ borderRadius: 18 }}>
             {/* The shell takes the region's plate inset away (StageLayout.css); here the dock undoes it. */}
             <div style={{ margin: 'calc(-1 * var(--mat-plate-inset))' }}>
-              <StageDock live={live} />
+              <StageDock live={live} form={form} />
             </div>
           </Region>
         </div>
@@ -43,8 +44,9 @@ function Window({ width }: Args) {
  * where from; the time on it; the audio input. Under it the deck's Next (and
  * when), HOLD, the star and rating; Strobe and Freeze (held while pressed,
  * Shift latches) and Blackout (a toggle) as keys with their letters;
- * Intensity; More effects…. Under about 940px of dock the keys drop their
- * names; under 700, Next takes a line of its own.
+ * Intensity; More effects…. In the compact form (the original's dock under
+ * about 940px) the keys drop their names; in the stacked form (under 700),
+ * Next takes a line of its own.
  */
 const meta = {
   title: 'open[flow]/visuals/Live/Stage/Dock',
@@ -88,18 +90,18 @@ export const Playing: Story = {
   },
 };
 
-/** At 800 wide: the keys keep their glyph and letter, everything on the row and none over another. */
+/** At 800 wide, compact: the keys keep their glyph and letter, everything on the row and none over another. */
 export const Narrow: Story = {
-  args: { width: 800 },
+  args: { width: 800, form: 'compact' },
   play: async ({ canvas, canvasElement }) => {
     await expect(await canvas.findByRole('button', { name: /^Freeze/ })).toBeVisible();
     await nothingOverlaps(canvasElement);
   },
 };
 
-/** Narrower still (a 600px window): Next on a line of its own over the effects. */
+/** Narrower still (a 600px window), stacked: Next on a line of its own over the effects. */
 export const Narrower: Story = {
-  args: { width: 600 },
+  args: { width: 600, form: 'stacked' },
   play: async ({ canvas, canvasElement }) => {
     await expect(await canvas.findByRole('button', { name: /^Freeze/ })).toBeVisible();
     await nothingOverlaps(canvasElement);

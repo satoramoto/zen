@@ -1,9 +1,110 @@
-import { useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
+import { useEffect, useMemo, useRef, type ReactNode, type RefObject } from 'react';
 import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
+import { assemble, principlesFor, resolveLength, useForm, type Form, type Forms, type Principles, type RegionSpec, type ScreenSpec, type Units } from '../../layout/assembly';
+import { useThemeScope } from '../../theme';
+import { packs } from '../../themes/packs';
 import { say } from '../model/words';
-import type { InspectorMode, SidebarMode } from '../model/home-model';
+import type { Docks, InspectorMode, SidebarMode } from '../model/home-model';
+import { HEADER_FORMS } from '../Views/Views';
+import { HERO_FORMS } from '../Hero/Hero';
+import { TRANSPORT_FORMS } from '../TransportBar/TransportBar';
 import './HomeLayout.css';
+
+/* ---------- the home's parts, declared (docs/assembly.md) ---------- */
+
+/** The title bar's 52px: the header row's height (`--vs-lay-titlebar`). */
+export const TITLEBAR: Units = { space: [6, 4, 1] };
+
+/** The side panels' forms. Docked: the panel and its 8px window inset (the seam beside it is the screen's gap). Overlaid: nothing in the row; laid over the column when open. */
+export type PanelForm = 'docked' | 'overlaid';
+
+/** The inset sidebar: 240px (eight controls, `--vs-lay-side`) and its 8px inset from the window. */
+export const SIDEBAR_FORMS: Forms<PanelForm> = [
+  { id: 'docked', min: { w: { control: 8, space: 2 }, h: { control: 8 } }, ideal: { w: { control: 8, space: 2 }, h: { control: 8 } } },
+  { id: 'overlaid', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } },
+];
+
+/** The inspector: 288px (`--vs-lay-insp`, 72 units) and its 8px inset from the window. */
+export const INSPECTOR_FORMS: Forms<PanelForm> = [
+  { id: 'docked', min: { w: { unit: 72, space: 2 }, h: { control: 8 } }, ideal: { w: { unit: 72, space: 2 }, h: { control: 8 } } },
+  { id: 'overlaid', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } },
+];
+
+/** The tiles' size in each of the grid's forms: 150px wide (five controls), 124px small (31 units): the original's HOME_TILE. */
+export const PANE_TILE: Record<PaneForm, Units> = { wide: { control: 5 }, small: { unit: 31 } };
+export type PaneForm = 'wide' | 'small';
+
+/**
+ * The grid under the hero (the pane): its tiles' size is its form. Wide wants five 150px tiles
+ * and their 12px gaps (798px); narrower than that its tiles go small (three of 124px at least).
+ * It grows both ways and scrolls; it ranks lowest, so the tiles shrink before a panel undocks.
+ */
+export const PANE_FORMS: Forms<PaneForm> = [
+  { id: 'wide', min: { w: { control: 25, space: [3, 3, 3, 3] }, h: { control: 4 } }, ideal: { w: { control: 25, space: [3, 3, 3, 3] }, h: { control: 4 } }, grow: { w: true, h: true } },
+  { id: 'small', min: { w: { unit: 93, space: [3, 3] }, h: { unit: 26 } }, ideal: { w: { unit: 93, space: [3, 3] }, h: { unit: 26 } }, grow: { w: true, h: true } },
+];
+
+/** The header's forms at the title bar's height. */
+const HEAD_FORMS = HEADER_FORMS.map((f): Form => ({ ...f, min: { w: f.min.w, h: TITLEBAR }, ideal: { w: f.ideal.w, h: TITLEBAR } })) as unknown as Forms;
+
+/** Which forms a side panel may take: either (the solver decides), or one, as its mode says. */
+export type PanelChoice = PanelForm | 'either';
+
+/**
+ * Home's screen: what it holds and what matters, never a grid. One row: the sidebar, the main
+ * column (the header, the hero, the pane, the bar, top to bottom) and the inspector. What is
+ * playing (the hero) is `now`; the header and the bar are `controls`; the panels `context`, so
+ * they go before the column narrows past the hero's ideal (that is where the original's 900 and
+ * 1200 come from); the pane's tile size is `chrome`, the first to give. Every region is plateless:
+ * the frost paints no plates, and the screen's 32px gap is the column's side room.
+ */
+export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true, bar = true }: { sidebar?: PanelChoice; inspector?: PanelChoice; hero?: boolean; bar?: boolean } = {}): ScreenSpec {
+  const pick = (forms: Forms<PanelForm>, c: PanelChoice): Forms => (c === 'either' ? forms : [forms.find((f) => f.id === c)!]);
+  const region = (id: string, forms: Forms, priority: RegionSpec['priority']): RegionSpec => ({ id, forms, priority, plate: false });
+  return {
+    rows: [
+      [
+        region('sidebar', pick(SIDEBAR_FORMS, sidebar), 'context'),
+        {
+          id: 'column',
+          rows: [
+            [region('header', HEAD_FORMS, 'controls')],
+            ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
+            [region('pane', PANE_FORMS, 'chrome')],
+            ...(bar ? [[region('bar', TRANSPORT_FORMS, 'controls')]] : []),
+          ],
+        },
+        region('inspector', pick(INSPECTOR_FORMS, inspector), 'context'),
+      ],
+    ],
+  };
+}
+
+/** Whether each side panel docks in a room (px): the home assembled with both free to choose. */
+export function homeDocks(room: { w: number; h: number }, principles: Principles): Docks {
+  const placed = assemble(homeSpec(), room, principles).regions;
+  return { sidebar: placed.sidebar.form === 'docked', inspector: placed.inspector.form === 'docked' };
+}
+
+/**
+ * The tile size the pane's form says, in px, for what draws the grid (`Library`'s `tileMin`):
+ * rendered inside the pane, it reads the form the screen chose for it.
+ */
+export function PaneTile({ children }: { children: (tile: number) => ReactNode }) {
+  const form = useForm(PANE_FORMS);
+  const p = useLayoutPrinciples();
+  return <>{children(resolveLength(PANE_TILE[form], p))}</>;
+}
+
+/** The visual[flow] pack: the principles where no theme scope says otherwise. */
+const VISUALS_PACK = packs.find((p) => p.id === 'visuals') ?? packs[0];
+
+/** The nearest theme scope's principles resolved (the visuals pack's outside one), as the assembled screen reads them. */
+export function useLayoutPrinciples(): Principles {
+  const scope = useThemeScope();
+  return useMemo(() => principlesFor(scope?.facets ?? VISUALS_PACK.facets, scope?.principles ?? VISUALS_PACK.principles), [scope]);
+}
 
 /**
  * **Job.** Home as an inspector view (Finder's, Photos'): the inset sidebar down the left, the
@@ -14,30 +115,32 @@ import './HomeLayout.css';
  * and who paints what; each slot's content is its own component: `InsetSidebar`, `Hero`, the
  * grid, `TransportBar`, `Inspector`.
  *
- * **Changed.** It is a library `Screen` whose grid holds three `Region`s, the sidebar's cell, the
- * main column and the inspector's cell, in named areas (`side col insp`). As in the original, the
- * sidebar runs the window's full height with a band at its top for the window buttons, and the
- * header row is the main column's first row, beside it (so it is not the Screen's fixed header,
- * which would span the window). A panel laid over the column is in the `Opaque` scope (its class on the cell
- * itself, so the panel is not remounted when the window narrows and it turns from docked to laid
- * over), which draws every layer solid: the native preview under it would show through anything
- * less. Panels are the `raised` layer with the glass edge; laid over, the `overlay` layer's cast.
- * The main column's region paints nothing while there is a hero (the picture's spread shadow
- * paints it, as before); with none it is the plain `base` plate. Nothing animates.
+ * **Changed.** It is an assembled library `Screen` (`homeSpec`, docs/assembly.md): six plateless
+ * regions, the sidebar, then the main column's header, hero, pane and bar, then the inspector,
+ * each declaring its forms in scale units. The solver places them: no grid, no breakpoint, no
+ * measured column. Where the side panels dock (the original's 900 and 1200 px) is `homeDocks`,
+ * the same spec with both panels free to choose; the caller turns that and the viewer's choices
+ * into modes (`modesFor`), and this draws the modes it is given, each panel pinned to its form.
+ * The header goes narrow, the hero compact and the tiles small by their forms (`HEADER_FORMS`,
+ * `HERO_FORMS`, `PANE_FORMS`). As in the original, the sidebar runs the window's full height with
+ * a band at its top for the window buttons, and the header row is the column's first row beside
+ * it. A panel laid over the column takes no room in the row (its `overlaid` form) and is drawn
+ * from its slot at the window's edge, in the `Opaque` scope (its class on the cell itself, so
+ * the panel is not remounted when it turns from docked to laid over), which draws every layer
+ * solid: the native preview under it would show through anything less. Panels are the `raised`
+ * layer with the glass edge; laid over, the `overlay` layer's cast. Nothing animates.
  *
  * **Kept.** Every export, prop and default; the landmarks (`nav` "sources", `main`, the "now
- * playing" region, the `aside`); the 900 / 1200 px behaviour is the caller's (`modesFor`), this
- * draws the modes it is given; focus moving into a panel laid over the column and back when it
+ * playing" region, the `aside`); focus moving into a panel laid over the column and back when it
  * goes; Escape or a press outside dismissing it, a press on a control naming the panel in
- * `aria-controls` counting as inside; the hero never scrolling; the column's height measured
- * for the hero's cap (now `--vs-lay-col-h`).
+ * `aria-controls` counting as inside; the hero never scrolling.
  *
  * From the original: the hero's picture is the native preview's hole (`Preview`, placed under
  * the page each frame), and a scroll container can't clip that view, so the hero never scrolls:
- * only the grid or pane under it does. Nothing paints under the hole: the root paints nothing,
- * each docked side panel's cell paints the window's surface around its panel, and the main column
- * is painted by the picture's own spread shadow (Hero.css), the grid and bar sitting above it with
- * no background of their own.
+ * only the pane under it does. Nothing paints under the hole: the root paints nothing, and the
+ * picture's own spread shadow (Hero.css) paints the window's tint everywhere else, the panels,
+ * header, pane and bar sitting above it with no background of their own. With no hero the
+ * docked panels' cells are the plain `base` plate.
  *
  * **Tuning knobs** (HomeLayout.css, on `.vs-lay` and `.vs-lay-panel`; Hero, InsetSidebar and
  * TransportBar read them, never set them). Each is a scale expression equal to the original's
@@ -51,10 +154,10 @@ import './HomeLayout.css';
  * - `--vs-lay-key-radius` (6px): a small key's corners.
  * - `--vs-lay-hero-radius` (18px): the hero's corners.
  * - `--vs-lay-insp` (288px): the inspector's width.
- * - `--vs-lay-col-radius` (0): the main column's corners.
  * - `--vs-lay-z-over-hole`, `--vs-lay-z-overlay`: what stacks over the hero's shadow, and the
  *   panels laid over the column.
- * - `--vs-lay-col-h`: the main column's height, measured (`useColumnHeight`).
+ * The docked panels' widths and the title bar's height are also declared needs
+ * (`SIDEBAR_FORMS`, `INSPECTOR_FORMS`, `TITLEBAR`), which the solver places by.
  * Also `--lay-tile` (200px) and `--lay-tile-gap` (`--space-4`), the stories' grid.
  */
 export interface HomeLayoutProps {
@@ -202,31 +305,7 @@ function useDismiss(side: RefObject<HTMLElement | null>, insp: RefObject<HTMLEle
   }, [on, key, side, insp]);
 }
 
-/**
- * The main column's height, kept in its `--vs-lay-col-h` (px) for the hero's cap
- * (Hero.css: the picture alone is never taller than half the column). Measured
- * rather than a size container: containment would make the column the
- * containing block of what is fixed inside it (the dragged preset's ghost).
- */
-function useColumnHeight(col: RefObject<HTMLElement | null>) {
-  useLayoutEffect(() => {
-    const el = col.current;
-    if (!el) return;
-    // Nothing laid out yet (0): the declared fallback, the window's height, stands until it is.
-    const set = (h: number) => h > 0 && el.style.setProperty('--vs-lay-col-h', `${Math.round(h)}px`);
-    set(el.getBoundingClientRect().height);
-    if (typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver((entries) => set(entries[0]?.contentRect.height ?? el.getBoundingClientRect().height));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [col]);
-}
-
-/** The sidebar's column docked, and the inspector's (the panel's left inset is the column's own padding). */
-const SIDE_COLUMN = 'calc(var(--vs-lay-side) + 2 * var(--space-2))';
-const INSP_COLUMN = 'calc(var(--vs-lay-insp) + var(--space-2))';
-
-/** The window: the sidebar, the main column and the inspector, each shown as its mode says. */
+/** The window: the sidebar, the main column and the inspector, each shown as its mode says, assembled. */
 export function HomeLayout({
   sidebar,
   sidebarLabel = 'sources',
@@ -244,8 +323,7 @@ export function HomeLayout({
 }: HomeLayoutProps) {
   const side = useRef<HTMLElement | null>(null);
   const insp = useRef<HTMLElement | null>(null);
-  const col = useRef<HTMLDivElement | null>(null);
-  useColumnHeight(col);
+  const principles = useLayoutPrinciples();
   const inspMode = inspector ? inspectorMode : null;
   const sideOver = sidebarMode === 'overlay';
   const inspOver = inspMode === 'overlay';
@@ -253,11 +331,12 @@ export function HomeLayout({
   useOverlayFocus(insp, inspMode);
   useDismiss(side, insp, [...(sideOver ? [SIDEBAR_ID] : []), ...(inspOver ? [INSPECTOR_ID] : [])], onDismiss);
 
-  // The grid's one row: a docked panel takes a column of its own; one laid over the column takes none.
-  const sideDocked = sidebarMode === 'docked';
-  const inspDocked = inspMode === 'docked';
-  const areas = [[sideDocked && 'side', 'col', inspDocked && 'insp'].filter(Boolean).join(' ')];
-  const columns = [sideDocked && SIDE_COLUMN, 'minmax(0, 1fr)', inspDocked && INSP_COLUMN].filter(Boolean).join(' ');
+  // Each panel pinned to the form its mode is: docked takes its room in the row, laid over or put away takes none.
+  const sideForm: PanelForm = sidebarMode === 'docked' ? 'docked' : 'overlaid';
+  const inspForm: PanelForm = inspMode === 'docked' ? 'docked' : 'overlaid';
+  const hasHero = !!hero;
+  const hasBar = !!bar;
+  const spec = useMemo(() => homeSpec({ sidebar: sideForm, inspector: inspForm, hero: hasHero, bar: hasBar }), [sideForm, inspForm, hasHero, hasBar]);
   const cell = (mode: 'docked' | 'overlay', which: 'side' | 'insp') => `vs-lay-cell vs-lay-${which}-cell vs-lay-cell--${mode}${mode === 'overlay' ? ' lib-opaque' : ''}`;
 
   return (
@@ -265,41 +344,42 @@ export function HomeLayout({
       <Screen
         name="home"
         className="vs-lay-screen"
-        areas={areas}
-        columns={columns}
-        rows="minmax(0, 1fr)"
-      >
-        {sidebarMode !== 'hidden' && (
-          <Region name="sidebar" area={sideDocked ? 'side' : undefined} className={cell(sidebarMode, 'side')}>
-            <SidebarPanel label={sidebarLabel} id={SIDEBAR_ID} panelRef={side}>
-              {sidebar}
-            </SidebarPanel>
-          </Region>
-        )}
-        <Region name="main column" area="col" className="vs-lay-col-cell">
-          <div className="vs-lay-col" ref={col}>
+        spec={spec}
+        principles={principles}
+        regions={{
+          sidebar:
+            sidebarMode === 'hidden' ? null : (
+              <Region name="sidebar" className={cell(sidebarMode, 'side')}>
+                <SidebarPanel label={sidebarLabel} id={SIDEBAR_ID} panelRef={side}>
+                  {sidebar}
+                </SidebarPanel>
+              </Region>
+            ),
+          header: (
             <div className="vs-lay-head" data-tauri-drag-region>
               {header}
             </div>
-            {hero && (
-              <section className="vs-lay-hero" aria-label={say('stage')}>
-                {hero}
-              </section>
-            )}
+          ),
+          hero: (
+            <section className="vs-lay-hero" aria-label={say('stage')}>
+              {hero}
+            </section>
+          ),
+          pane: (
             <main className="vs-lay-main" data-pane={pane ? '' : undefined}>
               {pane ?? children}
             </main>
-            {bar && <div className="vs-lay-bar">{bar}</div>}
-          </div>
-        </Region>
-        {inspMode && (
-          <Region name="inspector" area={inspDocked ? 'insp' : undefined} className={cell(inspMode, 'insp')}>
-            <InspectorPanel label={inspectorLabel} id={INSPECTOR_ID} panelRef={insp}>
-              {inspector}
-            </InspectorPanel>
-          </Region>
-        )}
-      </Screen>
+          ),
+          bar: <div className="vs-lay-bar">{bar}</div>,
+          inspector: inspMode ? (
+            <Region name="inspector" className={cell(inspMode, 'insp')}>
+              <InspectorPanel label={inspectorLabel} id={INSPECTOR_ID} panelRef={insp}>
+                {inspector}
+              </InspectorPanel>
+            </Region>
+          ) : null,
+        }}
+      />
       {lights && <Lights />}
     </div>
   );

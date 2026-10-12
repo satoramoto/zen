@@ -58,26 +58,26 @@ export interface LayoutPrefs {
   inspector: boolean | null;
 }
 
-/** The narrowest window the sidebar docks in, and the inspector. */
-export const SIDEBAR_AT = 900;
-export const INSPECTOR_AT = 1200;
-
 /** The browser storage keys for the sidebar shown or hidden, and the inspector open or closed. */
 export const SIDEBAR_KEY = 'visuals.home.sidebar';
 export const INSPECTOR_KEY = 'visuals.home.inspector';
 
+/** Whether each side pane docks in this window: the assembled home's answer (HomeLayout's `homeDocks`), from the panes' needs, not a width. */
+export interface Docks {
+  sidebar: boolean;
+  inspector: boolean;
+}
+
 /**
- * Which panes show in a window `width` px wide: the sidebar docks from
- * `SIDEBAR_AT` unless the viewer hid it, and under it is hidden unless they
- * opened it (laid over the main column then); the inspector, when open, docks
- * from `INSPECTOR_AT` and is laid over below it, and is open by default only
- * where it docks.
+ * Which panes show, given where they dock (`docks`, from the needs: the original's 900 and
+ * 1200 px come out of them): the sidebar docks unless the viewer hid it, and where it can't it
+ * is hidden unless they opened it (laid over the main column then); the inspector, when open,
+ * docks where it can and is laid over elsewhere, and is open by default only where it docks.
  */
-export function modesFor(width: number, prefs: LayoutPrefs): { sidebar: SidebarMode; inspector: InspectorMode } {
-  const sidebar: SidebarMode = width >= SIDEBAR_AT ? (prefs.sidebar === false ? 'hidden' : 'docked') : prefs.sidebar === true ? 'overlay' : 'hidden';
-  const wide = width >= INSPECTOR_AT;
-  const open = prefs.inspector ?? wide;
-  return { sidebar, inspector: open ? (wide ? 'docked' : 'overlay') : null };
+export function modesFor(docks: Docks, prefs: LayoutPrefs): { sidebar: SidebarMode; inspector: InspectorMode } {
+  const sidebar: SidebarMode = docks.sidebar ? (prefs.sidebar === false ? 'hidden' : 'docked') : prefs.sidebar === true ? 'overlay' : 'hidden';
+  const open = prefs.inspector ?? docks.inspector;
+  return { sidebar, inspector: open ? (docks.inspector ? 'docked' : 'overlay') : null };
 }
 
 /** What a playlist's row says to a screen reader: its name, what kind it is, how many presets (a manual one), and whether it plays. */
