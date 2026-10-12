@@ -142,7 +142,7 @@ function layout(strips: FaderStrip[]) {
       dividers.push(tracks.length);
     }
     // A parked fader keeps a real strip's place and full height, like the hardware fader it
-    // mirrors, at a share of a strip's width, so live names ("Multi Pad") and keys keep theirs.
+    // mirrors, at three quarters of a strip's width, so live names ("Multi Pad") and keys keep theirs.
     tracks.push(
       cluster === 'master'
         ? 'minmax(0, var(--yh-faderbank-master-fr))'
@@ -226,11 +226,16 @@ function StripName({
  * own raised plate, a little wider, as the last word on loudness; the plate fills its column, so
  * its edge lines up with the bank's, and Master sits inset on it. *Mapping and one empty-slot
  * vocabulary*: the unused faders 7 and 8 are real strips in their hardware places, one to one as
- * KnobBank's eight knobs and PadBank's sixteen pads are, each a full-height faint solid groove
- * (`--text-1` at 10%) with no cap, value, name or edge: the same "empty slot" look as an empty
- * knob ring or pad, where the old 2px dotted threads read as rendering artefacts. They take half
- * a live strip's width, so at a 1217 × 752 Stage the live names and keys ("Multi Pad", "Off")
- * keep the room they need whole. *Numerals*: each level is the Fader's large
+ * KnobBank's eight knobs and PadBank's sixteen pads are, each the banks' one empty-slot face: a
+ * faint wash (`--text-1` at 6%, `--radius-control`) over the strip's whole footprint, with no
+ * groove, cap, value, name or edge and no hover or press give, exactly as an empty pad. A thin
+ * groove there read as a stray hairline between Multi Pad and Master; a strip-wide wash reads as
+ * a slot. They take three quarters of a live strip's width, so at a 1217 × 752 Stage the live
+ * names and keys ("Multi Pad", "Off") keep the room they need whole. *Room to breathe*
+ * (`craft-details.md`, proximity): a full step of air between the tab row and the strips, between
+ * strips, around Master on its plate and above the Functions rule, so the clusters read as groups
+ * by space as much as by hairline; no text got smaller for it. In a 1217 × 752 Stage's narrower
+ * mixer the strips step back to the tighter gap, so "Multi Pad" keeps its name whole. *Numerals*: each level is the Fader's large
  * tabular numeral; under it the part's name in its hue and its sound in muted text, so a column
  * reads "72 · Right 2 · Silk Strings" top to bottom. The part's marks (edited, ⚠ missing, ✕
  * failed, "off") take their own line under the sound, so they never cut the sound's name; while

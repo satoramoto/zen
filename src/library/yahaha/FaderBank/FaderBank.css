@@ -8,12 +8,13 @@
   /* Grid tracks the component names inline. */
   --yh-faderbank-divider-w: var(--space-1);
   --yh-faderbank-master-fr: 1.25fr;
-  --yh-faderbank-empty-fr: 0.5fr;
+  --yh-faderbank-empty-fr: 0.75fr;
 
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  /* Air between the tab row and the strips, and between the strips and the Functions rule. */
+  gap: var(--space-4);
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -42,9 +43,16 @@
   display: grid;
   flex: 1 1 auto;
   grid-template-rows: minmax(0, 1fr) auto;
-  column-gap: var(--space-2);
-  row-gap: var(--space-2);
+  column-gap: var(--space-3);
+  row-gap: var(--space-3);
   min-height: 0;
+}
+/* A 1217 × 752 Stage's mixer (about 640 px): a step less between strips, so live names
+   ("Multi Pad", "Stage Grand") keep their width whole; the clusters keep their air. */
+@container yh-faderbank (width < 700px) {
+  .yh-faderbank__grid {
+    column-gap: var(--space-2);
+  }
 }
 
 /* Cluster dividers: a full-height hairline between parts, groups and Master. */
@@ -76,10 +84,20 @@
   border-radius: var(--radius-control);
 }
 .yh-faderbank__strip[data-kind='master'] {
-  margin: var(--space-1) var(--space-1) 0;
+  margin: var(--space-2) var(--space-2) 0;
 }
 .yh-faderbank__lamp--page {
-  margin: 0 var(--space-1) var(--space-1);
+  margin: 0 var(--space-2) var(--space-2);
+}
+
+/* An unused hardware fader: the banks' one empty-slot face (PadBank's empty pad, KnobBank's empty
+   knob), a faint wash over the strip's whole footprint with no edge, no groove, no name and no
+   hover or press give. The Fader inside stays a disabled slider, so its name is still spoken. */
+.yh-faderbank__strip[data-kind='parked'] {
+  background: color-mix(in oklab, var(--text-1) 6%, transparent);
+}
+.yh-faderbank .yh-faderbank__strip[data-kind='parked'] .yh-fader .yh-fader__groove {
+  background: none;
 }
 .yh-faderbank__strip[data-hue='1'] { --yh-faderbank-ink: var(--hue-1); }
 .yh-faderbank__strip[data-hue='2'] { --yh-faderbank-ink: var(--hue-2); }
@@ -193,13 +211,13 @@ span.yh-faderbank__name {
   display: flex;
   flex: none;
   min-width: 0;
-  padding-top: var(--space-2);
+  padding-top: var(--space-3);
   border-top: max(1px, var(--border-width)) solid var(--border);
 }
 .yh-faderbank__functions {
   display: flex;
   flex: 1 1 auto;
-  gap: var(--space-2);
+  gap: var(--space-3);
   min-width: 0;
 }
 .yh-faderbank__functions > .yh-lampbutton {
