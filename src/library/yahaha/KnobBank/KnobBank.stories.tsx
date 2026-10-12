@@ -55,11 +55,8 @@ export const Board: Story = {
   },
 };
 
-/**
- * The Reverb page chosen, with the Reverb page's knobs (the baseline drew the Style knobs under the
- * Reverb tab, which no player would see: the tab and the knobs now agree).
- */
-export const ReverbPage: Story = { args: { page: 3, knobs: knobsByPage[3] } };
+/** The Reverb page chosen. */
+export const ReverbPage: Story = { args: { page: 3 } };
 
 /** New: the Reverb page with its own knobs: the parts' sends on 1–4 wear their parts' hues. */
 export const ReverbSends: Story = { args: { page: 3, knobs: reverbKnobs } };
