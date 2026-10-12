@@ -26,6 +26,7 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The field guide app. |
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
+| `npm run build:lib` | Anything exported from the library (`src/library/index.ts` and what it reaches), `vite.lib.config.ts`, `tsconfig.lib.json`. |
 
 Builds and unit tests are not browser evidence: look at layout and perceptual effects in a browser (the invisible-keyboard bug passed every test).
 
@@ -39,6 +40,8 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 - Review conceptual fidelity separately from interaction and layout checks.
 
 ## Library rules
+
+- Apps consume zen from GitHub: `"@satoramoto/zen": "github:satoramoto/zen#<sha>"`; npm runs `prepare` (`build:lib`) on install, then `import { ThemeScope } from '@satoramoto/zen'` and `import '@satoramoto/zen/zen.css'`. The public surface is `src/library/index.ts`.
 
 - Components in `src/library/components`, `src/library/screens` and `src/library/yahaha` read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.
 - Colour, type, shape and spacing values live only in `src/library/themes/` (one file per facet). Mark any value the source style doesn't define with `// added`.
