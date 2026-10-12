@@ -143,7 +143,8 @@
   min-width: 0;
 }
 
-/* A story frame: cancels the library scope's padding so the screen sits at the window's corner. */
+/* A story frame: the screen sits at the window's corner. Full-screen stories bleed (ThemeScope
+   `bleed`), so the frame needs no margin of its own. */
 .yh-stage-frame {
-  margin: calc(-1 * var(--space-6));
+  margin: 0;
 }
