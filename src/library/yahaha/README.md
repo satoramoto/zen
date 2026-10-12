@@ -1,5 +1,7 @@
 # Yahaha redesigns
 
+**Where does this go?** This is the app tier and its screens and regions: data, behaviour, which regions go where. A look is a primitive, an interaction a control in `components/`, spacing a Group's `gap`; a widget folder here arranges them. See [`docs/tiers.md`](../../../docs/tiers.md); `src/library/tiers.test.ts` counts breaches per widget folder against `../tiers.baseline.json`, and a widget's `--yh-*` properties are listed under **Tuning knobs** in its doc comment.
+
 Each Yahaha widget, redesigned from first principles on the library's token contract. The original stays in `yahaha/src/ui/<Name>/` (Svelte), shown in Storybook under "Yahaha baseline"; the redesign is React and sits under "Yahaha".
 
 ## What lives here, and what doesn't

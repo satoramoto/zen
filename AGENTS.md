@@ -23,6 +23,7 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 |---|---|
 | `npm run typecheck` | Any TS/TSX change. Fast compile check. |
 | `npx vitest run src/library` | Library tokens, themes, layout, components, or anything under `src/library/yahaha/` or `src/library/visuals/`. |
+| `npx vitest run src/library/tiers.test.ts` | Any CSS or TSX under `src/library/{components,layout,yahaha,visuals,primitives}`: the tier rules hold their baseline (`npm run tiers` prints the table; `npm run tiers -- --write` records a lower one). |
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The field guide app. |
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
@@ -44,6 +45,7 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 
 - Apps consume zen from GitHub: `"@satoramoto/zen": "github:satoramoto/zen#<sha>"`; npm runs `prepare` (`build:lib`) on install, then `import { ThemeScope } from '@satoramoto/zen'` and `import '@satoramoto/zen/zen.css'`. The public surface is `src/library/index.ts`.
 
+- Every decision belongs to one tier (tokens, primitives, controls, groups, regions, screens, app): `docs/tiers.md` says which, and `src/library/tiers.test.ts` holds its four rules to `tiers.baseline.json` (counts only go down).
 - Components in `src/library/components`, `src/library/layout`, `src/library/yahaha` and `src/library/visuals` (except `visuals/model`) read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.
 - Generic components live in `src/library/components/core/<Name>/` (controls) and `src/library/components/music/<Name>/` (instrument parts), each exported from that folder's `index.ts`, stories titled `Design OS/Components/Core|Music/<Name>`. They carry no app meaning: colour is a slot (`hue` 1–4, `role-1`/`role-2`; `components/core/hue.ts`), and an app maps its meanings onto it (Yahaha in `yahaha/hues.ts`). Never import `yahaha/` from them.
 - Colour, type, shape and spacing values live only in `src/library/themes/` (one file per facet). Mark any value the source style doesn't define with `// added`.

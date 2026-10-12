@@ -44,3 +44,19 @@ Decisions made without asking, for the owner to veto. Newest last. Each says wha
 23. **The old generic demo is gone** (`components/index.tsx`, `ArrangerStage`). The Theme inspector moved to `src/library/inspector/` with a local panel and `Group`s; stories that used the demo now use core `Button`, `LampButton`, `StatusDot`, layout `Tabs` and music readouts.
 24. **Contract tests run per mode:** every rule (distance, AA, keys, hues, every variable filled) runs over both modes of every palette and pack. The no-literal-radius rule allows `0`/`0px` and `inherit` (BarBeat, TempoReadout and ChordReadout drop their window on a screen; Display inherits), since neither is a radius a theme chooses.
 25. **CI builds the package** (`npm run build:lib` in `checks`).
+26. **Tiers** (`docs/tiers.md`): every decision belongs to one tier: tokens, primitives, controls, groups, regions, screens, app. Each tier builds only from the one below.
+27. **Primitives** (`src/library/primitives/`):
+    - `Text`'s `role` is the type role and replaces the ARIA `role` attribute. `code` is the mono face at `--size-body`, since the scale has no code size. Numerals and code are tabular.
+    - The tone colours live on one shared `.lib-tone` class, which `Icon` uses too. `on-solid` reads `--action-text`.
+    - `Surface` paints one box-shadow list from five slots: border, material shadow, glow, edge, cast. With both a `layer` and a `material`, the material paints the face and the layer adds its backdrop, edge and cast. The default `radius` is `card` for a layer alone, otherwise `control`.
+    - The rings are classes (`focusRing`, `pressRing`). The press ring is an inset outline, so it never fights a Surface's shadow.
+    - `Step` is 0–6, where N is `var(--space-N)`.
+28. **`Stack` lives in `layout/`**, beside `Group`: `tiers.md` puts it in the Groups tier, even though the brief listed it with the primitives.
+    - `Group`'s body is a `Stack` with a default gap of 2, as before. `Region` takes a body `gap`, which defaults to none.
+    - Stack's step rules are wrapped in `:where()`, so the existing `.x > .lib-group__body { gap }` overrides still win.
+29. **The tier checks** (`src/library/tiers.ts`, `tiers.test.ts`, `npm run tiers`) count breaches per widget folder (`components/core/<Name>`, `yahaha/<Name>`, `visuals/<Name>`, `layout`, `primitives`):
+    - Pixels: `0`, `1px` and `2px` are allowed, and so are media and container query preludes (variables can't go there). TSX counts px strings and bare numbers on length keys in `style={{}}`.
+    - Margins: only on a control's root block (one compound selector, no `__`). Resets to zero pass.
+    - Painting: `layout/Group|Stack|Screen.css` count in full. In `Region.css`, only rules other than the plate (`.lib-region`, `.lib-region__head`) count. `Layer.css` (a primitive) and `Tabs.css` (a control) are exempt. App CSS counts only in rules that name a layout primitive's class or `data-part`.
+    - Knobs: `--yh-*`/`--vs-*` names declared in CSS and missing from a sibling TSX's **Tuning knobs** list (a trailing `*` lists a family). A CSS file with no TSX beside it may list its knobs in its own comments.
+    - A count below its baseline passes: the baseline is a shared file, and forcing every lane to rewrite it would make them conflict. Lower it with `npm run tiers -- --write`. A folder that isn't in the baseline is held to zero.
