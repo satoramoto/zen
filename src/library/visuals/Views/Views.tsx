@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Segmented } from '../../components/core/Segmented/Segmented';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Hole } from '../../layout/Layer';
@@ -38,6 +38,13 @@ export const VIEWS: View[] = viewsFor(LAB);
 
 /** The view the app starts in, and live mode goes back to. */
 export const HOME: View = homeFor(LAB);
+
+/**
+ * The views every header's switch offers: `VIEWS` unless a provider says otherwise.
+ * zen's built package can't read the app's `VITE_LAB`, so `VisualsApp` given a `lab`
+ * editor provides `viewsFor(true)` here.
+ */
+export const ViewList = createContext<View[]>(VIEWS);
 
 const VIEW_HINTS: Record<View, string> = {
   home: 'home: the library and your playlists, with the preset playing',
@@ -98,15 +105,16 @@ export function Preview({ className }: { className: string }) {
  * **Kept.** Its items' names, label and hint.
  */
 export function ViewSwitch({ view, onChange }: { view: View; onChange(next: View): void }) {
+  const views = useContext(ViewList);
   return (
     <Segmented
       className="vs-viewswitch"
-      items={VIEWS.map(capitalised)}
-      itemLabels={VIEWS}
-      index={VIEWS.indexOf(view)}
-      onChange={(i) => VIEWS[i] !== view && onChange(VIEWS[i])}
+      items={views.map(capitalised)}
+      itemLabels={views}
+      index={views.indexOf(view)}
+      onChange={(i) => views[i] !== view && onChange(views[i])}
       label="view"
-      hint={VIEWS.map((v) => VIEW_HINTS[v]).join(' · ')}
+      hint={views.map((v) => VIEW_HINTS[v]).join(' · ')}
     />
   );
 }

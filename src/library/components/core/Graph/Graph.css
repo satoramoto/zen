@@ -1,0 +1,126 @@
+/* Graph, GraphNode, Port: a panned, zoomed canvas of host-placed nodes and the cords between
+   their ports. Reads only contract variables and the --lib-cord* / --lib-graph-* knobs declared
+   here (listed under Tuning knobs in Graph.tsx). --lib-graph-zoom, -x and -y are published inline
+   by Graph; --lib-cord-ink is set inline per cord. */
+
+:where(.lib-graph) {
+  --lib-cord: var(--text-3);
+  --lib-cord-ink: var(--lib-cord);
+  --lib-graph-cord-width: 2px;
+  --lib-graph-grid: calc(var(--space-4) * 1.5);
+  --lib-graph-dot: var(--border);
+  --lib-graph-port-size: calc(var(--space-2) + var(--space-1));
+  --lib-graph-port-ink: var(--text-2);
+  --lib-graph-zoom: 1;
+  --lib-graph-x: 0px;
+  --lib-graph-y: 0px;
+}
+
+/* The viewport: the clip, the pan cursor and the dotted grid, which moves with the content
+   (position at the pan, size in zoomed pixels) without being part of it. */
+.lib-graph {
+  position: relative;
+  overflow: hidden;
+  inline-size: 100%;
+  block-size: 100%;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  background-image: radial-gradient(circle at center, var(--lib-graph-dot) 1px, transparent 2px);
+  background-position: var(--lib-graph-x) var(--lib-graph-y);
+  background-size: calc(var(--lib-graph-grid) * var(--lib-graph-zoom)) calc(var(--lib-graph-grid) * var(--lib-graph-zoom));
+}
+.lib-graph[data-panning] {
+  cursor: grabbing;
+}
+
+/* A 0x0 origin: its bounding rect is graph (0, 0) on screen. */
+.lib-graph__content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  inline-size: 0;
+  block-size: 0;
+  transform-origin: 0 0;
+}
+
+.lib-graph__cords {
+  position: absolute;
+  left: 0;
+  top: 0;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* CSS zoom scales strokes too, so the width is divided by it to stay the same on screen. */
+.lib-graph__cord {
+  fill: none;
+  stroke: var(--lib-cord-ink);
+  stroke-width: calc(var(--lib-graph-cord-width) / var(--lib-graph-zoom));
+  stroke-linecap: round;
+}
+.lib-graph__cord[data-pending] {
+  stroke: var(--lib-cord);
+  stroke-dasharray:
+    calc(var(--lib-graph-cord-width) * 2 / var(--lib-graph-zoom))
+    calc(var(--lib-graph-cord-width) * 1.5 / var(--lib-graph-zoom));
+}
+
+.lib-graph__node {
+  position: absolute;
+  cursor: default;
+}
+
+/* Port: the dot and its caption; an outlet's caption leads. */
+.lib-graph__port-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+.lib-graph__port-slot[data-side='out'] {
+  flex-direction: row-reverse;
+}
+.lib-graph__port-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lib-graph__port {
+  flex: none;
+  inline-size: var(--lib-graph-port-size);
+  block-size: var(--lib-graph-port-size);
+  padding: 0;
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface-1);
+  cursor: crosshair;
+  transition: opacity 120ms ease;
+}
+/* A connected port takes its device's accent (`--lib-device-accent`, set per node by the host). */
+.lib-graph__port[data-connected] {
+  border-color: var(--lib-device-accent, var(--lib-graph-port-ink));
+  background: var(--lib-device-accent, var(--lib-graph-port-ink));
+}
+.lib-graph__port:hover:not(:disabled):not([data-reach='shut']),
+.lib-graph__port[data-over]:not([data-reach='shut']),
+.lib-graph__port[data-reach='open'] {
+  border-color: var(--accent);
+}
+.lib-graph__port[data-reach='open'][data-over],
+.lib-graph__port[data-pending] {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.lib-graph__port[data-reach='shut'] {
+  opacity: 0.35;
+}
+.lib-graph__port:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
