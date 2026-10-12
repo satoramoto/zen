@@ -1,5 +1,6 @@
-// The public entry of @satoramoto/zen: what apps import. `vite.lib.config.ts` builds it to `lib/`
-// (JS, plus every imported stylesheet in `lib/zen.css`), `tsconfig.lib.json` its types.
+// The public entry of @satoramoto/zen: what apps import. `vite.lib.config.ts` builds it to
+// `lib/index.js` (plus every stylesheet it imports in `lib/zen.css`), `tsconfig.lib.json` its types.
+// visual[flow]'s app is the second entry, `@satoramoto/zen/visuals` (`visuals/index.ts`).
 
 // The token contract.
 export {
@@ -31,4 +32,8 @@ export { materials } from './themes/materials';
 // Layout primitives.
 export * from './layout';
 
-// Components: export `./components/core` and `./components/music` here once those folders land.
+// Components: core controls any app builds with, and the music ones an instrument shows.
+// Renamed in core: ActionButton's `ButtonFace` is `ActionButtonFace` (Button's face type keeps
+// `ButtonFace`), and Param's `format` is `formatParam`.
+export * from './components/core';
+export * from './components/music';

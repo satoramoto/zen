@@ -22,10 +22,11 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | Command | When |
 |---|---|
 | `npm run typecheck` | Any TS/TSX change. Fast compile check. |
-| `npx vitest run src/library` | Library tokens, themes, components, screens, or anything under `src/library/yahaha/`. |
+| `npx vitest run src/library` | Library tokens, themes, layout, components, or anything under `src/library/yahaha/` or `src/library/visuals/`. |
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The field guide app. |
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
+| `npm run build:lib` | The package: `src/library/index.ts`, `src/library/visuals/index.ts`, `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
 | `npm run build:lib` | Anything exported from the library (`src/library/index.ts` and what it reaches), `vite.lib.config.ts`, `tsconfig.lib.json`. |
 
 Builds and unit tests are not browser evidence: look at layout and perceptual effects in a browser (the invisible-keyboard bug passed every test).
@@ -43,11 +44,11 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 
 - Apps consume zen from GitHub: `"@satoramoto/zen": "github:satoramoto/zen#<sha>"`; npm runs `prepare` (`build:lib`) on install, then `import { ThemeScope } from '@satoramoto/zen'` and `import '@satoramoto/zen/zen.css'`. The public surface is `src/library/index.ts`.
 
-- Components in `src/library/components`, `src/library/screens` and `src/library/yahaha` read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.
+- Components in `src/library/components`, `src/library/layout`, `src/library/yahaha` and `src/library/visuals` (except `visuals/model`) read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.
 - Generic components live in `src/library/components/core/<Name>/` (controls) and `src/library/components/music/<Name>/` (instrument parts), each exported from that folder's `index.ts`, stories titled `Design OS/Components/Core|Music/<Name>`. They carry no app meaning: colour is a slot (`hue` 1–4, `role-1`/`role-2`; `components/core/hue.ts`), and an app maps its meanings onto it (Yahaha in `yahaha/hues.ts`). Never import `yahaha/` from them.
 - Colour, type, shape and spacing values live only in `src/library/themes/` (one file per facet). Mark any value the source style doesn't define with `// added`.
 - A theme pack (`themes/packs.ts`) names its Refero style id and the source rules it keeps.
-- Shared files: `contract.ts`, `themes/`, `storybook.tsx`, `.storybook/`, `library.test.tsx`, `components/index.tsx`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.
+- Shared files: `contract.ts`, `themes/`, `storybook.tsx`, `.storybook/`, `library.test.tsx`, `index.ts`, `visuals/index.ts`, `components/core/index.ts`, `components/music/index.ts`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.
 
 ## Yahaha redesigns
 

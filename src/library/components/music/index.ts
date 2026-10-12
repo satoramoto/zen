@@ -13,3 +13,4 @@ export { SectionName, type SectionNameProps, type SectionState } from './Section
 export { PartMarks, type PartMarksProps } from './PartMarks/PartMarks';
 export { SoundCell, type SoundCellProps } from './SoundCell/SoundCell';
 export { RackCell, type RackCellProps } from './RackCell/RackCell';
+export { Meter, type MeterProps, type MeterLayout, type MeterSide } from './Meter/Meter';

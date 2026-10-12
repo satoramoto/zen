@@ -8,7 +8,12 @@
       "types": "./lib/index.d.ts",
       "import": "./lib/index.js"
     },
-    "./zen.css": "./lib/zen.css"
+    "./zen.css": "./lib/zen.css",
+    "./visuals": {
+      "types": "./lib/visuals/index.d.ts",
+      "import": "./lib/visuals.js"
+    },
+    "./visuals.css": "./lib/visuals.css"
   },
   "types": "./lib/index.d.ts",
   "files": [

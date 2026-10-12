@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { Lamp } from '../..';
+import { StatusDot } from '../../core/StatusDot/StatusDot';
 import { withLibraryTheme } from '../../../storybook';
 import { SoundCell } from './SoundCell';
 
@@ -66,7 +66,7 @@ export const WithMarks: Story = {
     hue: 2,
     number: '41',
     sound: 'Warm Strings',
-    marks: <Lamp on hue={2} label="Held" />,
+    marks: <StatusDot hue="ok" size="sm" name="Held" />,
   },
 };
 

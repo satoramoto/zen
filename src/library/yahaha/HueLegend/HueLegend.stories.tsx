@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../../storybook';
-import { Pad, SectionHead } from '../../components';
+import { Pad } from '../../components/music';
+import { Group } from '../../layout';
 import { PART_HUE_INDEX } from '../hues';
 import { HueLegend, PART_LEGEND } from './HueLegend';
 
@@ -24,17 +25,18 @@ export const Board: Story = {};
 /** In place: the legend in a header over a row of part pads, so the key and the parts can be read together. */
 export const OverPads: Story = {
   render: (args) => (
-    <div className="lib-stack" style={{ maxWidth: 560 }}>
-      <SectionHead aside={<HueLegend {...args} />}>Parts</SectionHead>
-      <div className="lib-row" style={{ flexWrap: 'nowrap' }}>
+    <div style={{ maxWidth: 560 }}>
+      <Group name="Parts" aside={<HueLegend {...args} />}>
         {(args.items ?? PART_LEGEND).map((item, i) => (
-          <div key={item.label} style={{ flex: 1, display: 'grid' }}>
-            <Pad hue={item.part ? PART_HUE_INDEX[item.part] : undefined} state={i === 0 ? 'playing' : 'idle'}>
-              {item.label}
-            </Pad>
-          </div>
+          <Pad
+            key={item.label}
+            label={item.label}
+            family="util"
+            hue={item.part ? PART_HUE_INDEX[item.part] : undefined}
+            state={i === 0 ? 'playing' : 'idle'}
+          />
         ))}
-      </div>
+      </Group>
     </div>
   ),
 };

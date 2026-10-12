@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../../../storybook';
-import { Button } from '../..';
+import { Button } from '../Button/Button';
 import { Separator } from './Separator';
 
 const meta = {
@@ -40,15 +40,13 @@ export const Full: Story = {
 export const InAppBar: Story = {
   render: () => (
     <div className="lib-row" style={{ flexWrap: 'nowrap' }}>
-      <Button variant="ghost">Stage</Button>
-      <Button variant="ghost" aria-pressed="true">
-        Harm/Arp
-      </Button>
+      <Button variant="quiet" label="Stage" />
+      <Button variant="quiet" label="Harm/Arp" chosen />
       <Separator />
-      <Button variant="ghost">Library</Button>
-      <Button variant="ghost">Mixer</Button>
+      <Button variant="quiet" label="Library" />
+      <Button variant="quiet" label="Mixer" />
       <Separator />
-      <Button variant="ghost">Settings</Button>
+      <Button variant="quiet" label="Settings" />
     </div>
   ),
 };

@@ -8,6 +8,6 @@
     "outDir": "lib",
     "types": ["vite/client"]
   },
-  "include": ["src/library/index.ts"],
+  "include": ["src/library/index.ts", "src/library/visuals/index.ts"],
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx"]
 }

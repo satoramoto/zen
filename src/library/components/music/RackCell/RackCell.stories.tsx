@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { Lamp } from '../..';
+import { StatusDot } from '../../core/StatusDot/StatusDot';
 import { withLibraryTheme } from '../../../storybook';
 import { SoundCell } from '../SoundCell/SoundCell';
 import { RackCell } from './RackCell';
@@ -36,7 +36,7 @@ export const NoSlot: Story = {
 
 /** Modified: the mark (a lamp stands in for the modified dot) stays whole after the name. */
 export const Modified: Story = {
-  args: { rack: 'Sunday drive', slot: 'A1', mark: <Lamp on hue={1} label="Modified" /> },
+  args: { rack: 'Sunday drive', slot: 'A1', mark: <StatusDot hue="t" size="sm" name="Modified" /> },
 };
 
 /** A long name ends in an ellipsis; the slot and the mark stay whole. */
@@ -44,7 +44,7 @@ export const LongName: Story = {
   args: {
     rack: 'Saturday wedding set, second half with horns',
     slot: 'B4',
-    mark: <Lamp on hue={1} label="Modified" />,
+    mark: <StatusDot hue="t" size="sm" name="Modified" />,
   },
 };
 

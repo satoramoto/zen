@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { Button } from '../..';
+import { LampButton } from '../LampButton/LampButton';
+import { Tabs as LayoutTabs } from '../../../layout';
 import { withLibraryTheme } from '../../../storybook';
 import { SettingsRow } from './SettingsRow';
 
@@ -35,40 +36,23 @@ const MAIN_TIMING: Tab[] = [
   { id: 'nextBar', label: 'Next bar', tip: 'settings.section_timing' },
 ];
 
-/** Stand-in for a lamp: a library Button that reports pressed, named by the row's label. */
+/** The lamp: a core LampButton, named by the row's label. */
 function StandInLamp({ args }: { args: Args }) {
   return (
-    <Button
-      aria-label={args.label}
-      aria-pressed={args.lampOn}
-      aria-disabled={args.lampDisabled || undefined}
-      data-tip={args.lampTip}
-      style={{ minWidth: 64, opacity: args.lampDisabled ? 0.5 : undefined }}
-      onClick={() => !args.lampDisabled && args.ontoggle(!args.lampOn)}
-    >
-      {args.lampLabel}
-    </Button>
+    <LampButton
+      label={args.lampLabel}
+      name={args.label}
+      on={args.lampOn}
+      disabled={args.lampDisabled}
+      tip={args.lampTip}
+      onToggle={(on) => args.ontoggle(on)}
+    />
   );
 }
 
-/** Stand-in for a run of tabs: library Buttons in a tablist. */
+/** The run of tabs: layout Tabs. */
 function StandInTabs({ args }: { args: Args }) {
-  return (
-    <span role="tablist" aria-label={args.tabsLabel} className="lib-row" style={{ gap: 'var(--space-1)' }}>
-      {args.tabs.map((tab) => (
-        <Button
-          key={tab.id}
-          role="tab"
-          aria-selected={tab.id === args.tabsChosen}
-          aria-pressed={tab.id === args.tabsChosen}
-          data-tip={tab.tip}
-          onClick={() => args.onchoose(tab.id)}
-        >
-          {tab.label}
-        </Button>
-      ))}
-    </span>
-  );
+  return <LayoutTabs name={args.tabsLabel} items={args.tabs} value={args.tabsChosen} onChange={(id) => args.onchoose(id)} />;
 }
 
 /** Stand-in for a slider: a native range named by the row's label, with its value beside it. */

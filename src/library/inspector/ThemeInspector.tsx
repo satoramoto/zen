@@ -1,12 +1,22 @@
+import type { ReactNode } from 'react';
 import type { Facets, Mode } from '../contract';
 import { toCssVars } from '../contract';
 import type { ThemePack } from '../themes/packs';
-import { Card, SectionHead } from '../components';
-import './screens.css';
-import './inspector.css';
+import { Group } from '../layout';
+import './ThemeInspector.css';
 
 // Shows the composed theme: where it came from, the rules it keeps, and
-// every contract variable with its current value.
+// every contract variable with its current value in the given mode.
+
+function Panel({ eyebrow, title, children }: { eyebrow?: ReactNode; title?: ReactNode; children?: ReactNode }) {
+  return (
+    <section className="inspector__panel">
+      {eyebrow && <div className="inspector__eyebrow">{eyebrow}</div>}
+      {title && <h3 className="inspector__panel-title">{title}</h3>}
+      {children}
+    </section>
+  );
+}
 
 export function ThemeInspector({ pack, facets, mode = 'dark' }: { pack: ThemePack; facets: Facets; mode?: Mode }) {
   const vars = Object.entries(toCssVars(facets, mode));
@@ -15,38 +25,36 @@ export function ThemeInspector({ pack, facets, mode = 'dark' }: { pack: ThemePac
   const swapped = (Object.keys(facets) as (keyof Facets)[]).filter((k) => facets[k].id !== pack.facets[k].id);
 
   return (
-    <div className="lib-stack inspector">
+    <div className="inspector" data-mode={mode}>
       <div className="inspector__head">
         <div>
-          <div className="stage__eyebrow">Theme pack</div>
-          <div className="stage__title">{pack.label}</div>
-          <p className="lib-card__body">{pack.northStar}</p>
+          <div className="inspector__eyebrow">Theme pack · {mode}</div>
+          <div className="inspector__title">{pack.label}</div>
+          <p className="inspector__body">{pack.northStar}</p>
         </div>
-        <Card eyebrow="Source" title={pack.source.name}>
+        <Panel eyebrow="Source" title={pack.source.name}>
           <a className="inspector__link" href={pack.source.url} target="_blank" rel="noreferrer">
             {pack.source.url}
           </a>
           {pack.source.referoId && <code className="inspector__code">Refero style {pack.source.referoId}</code>}
-        </Card>
+        </Panel>
       </div>
 
       <div className="inspector__facets">
         {(Object.keys(facets) as (keyof Facets)[]).map((k) => (
-          <Card key={k} eyebrow={swapped.includes(k) ? `${k} · swapped` : k} title={facets[k].label} />
+          <Panel key={k} eyebrow={swapped.includes(k) ? `${k} · swapped` : k} title={facets[k].label} />
         ))}
       </div>
 
-      <section>
-        <SectionHead>Rules this pack keeps</SectionHead>
+      <Group name="Rules this pack keeps" direction="column">
         <ul className="inspector__rules">
           {pack.keep.map((rule) => (
             <li key={rule}>{rule}</li>
           ))}
         </ul>
-      </section>
+      </Group>
 
-      <section>
-        <SectionHead aside={`${colours.length} roles`}>Colour</SectionHead>
+      <Group name="Colour" aside={`${colours.length} roles`} direction="column">
         <div className="inspector__swatches">
           {colours.map(([name, value]) => (
             <div key={name} className="inspector__swatch">
@@ -56,10 +64,9 @@ export function ThemeInspector({ pack, facets, mode = 'dark' }: { pack: ThemePac
             </div>
           ))}
         </div>
-      </section>
+      </Group>
 
-      <section>
-        <SectionHead aside={`${rest.length} tokens`}>Faces, scale, materials</SectionHead>
+      <Group name="Faces, scale, materials" aside={`${rest.length} tokens`} direction="column">
         <dl className="inspector__table">
           {rest.map(([name, value]) => (
             <div key={name}>
@@ -68,7 +75,7 @@ export function ThemeInspector({ pack, facets, mode = 'dark' }: { pack: ThemePac
             </div>
           ))}
         </dl>
-      </section>
+      </Group>
     </div>
   );
 }
