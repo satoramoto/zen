@@ -41,7 +41,7 @@ export const Board: Story = {
   },
 };
 
-/** Lit: the solid neutral fill, the label, LED and code in the fill's ink. */
+/** Lit: a double-weight outline in ink and a lit LED; the key stays raised, no fill (it isn't sounding). */
 export const On: Story = {
   args: { label: 'Accomp', code: 'ACMP', on: true },
   play: async ({ canvasElement }) => {
@@ -95,7 +95,7 @@ export const Off: Story = {
   args: { label: 'Metronome' },
 };
 
-/** A part lamp, lit: the solid fill in the part's hue (Right 1 "On"). */
+/** A part lamp, lit: the outline and LED in the part's hue (Right 1 "On"). */
 export const PartOn: Story = {
   args: { label: 'On', size: 'cell', on: true, hue: 'r1', name: 'Right 1 on' },
   parameters: { layout: 'padded' },
@@ -137,18 +137,18 @@ export const FunctionOff: Story = {
   parameters: { layout: 'padded' },
 };
 
-/** A function lamp, latched: the solid neutral fill (Sound). */
+/** A function lamp, latched: the neutral outline and a lit LED (Sound). */
 export const FunctionOn: Story = {
   args: { label: 'Sound', size: 'cell', on: true },
   parameters: { layout: 'padded' },
 };
 
-/** The running lamp: the solid success fill (Start / Stop). */
+/** The running lamp: the solid success fill (Start / Stop), one of the few faces that fill, because the band is running. */
 export const Running: Story = {
   args: { label: 'Start / Stop', on: true, hue: 'ok' },
 };
 
-/** New: the metronome, a key that moves time, lit in the `transport` role hue with `--transport-text`. */
+/** New: the metronome, a key that moves time, lit: the outline and LED in the `transport` role hue. */
 export const TransportOn: Story = {
   args: { label: 'Metronome', on: true, hue: 'transport' },
   play: async ({ canvasElement }) => {
@@ -158,7 +158,7 @@ export const TransportOn: Story = {
   },
 };
 
-/** New: the metronome off: a quiet key whose unlit LED keeps the transport hue. */
+/** New: the metronome off: a quiet key with a neutral unlit LED. A transport key wears its hue only while active (hues.ts). */
 export const TransportOff: Story = {
   args: { label: 'Metronome', hue: 'transport' },
 };
@@ -220,7 +220,7 @@ export const Armed: Story = {
   },
 };
 
-/** Added: armed and pressed, Sync Start engaged and waiting for the first chord: the ring, sunk, LED blinking. */
+/** Added: armed and pressed, Sync Start engaged and waiting for the first chord: the on outline with its LED blinking. */
 export const ArmedPressed: Story = {
   args: { label: 'Sync Start', on: true, armed: true, name: 'Sync Start, waiting for a chord' },
   play: async ({ canvasElement }) => {
@@ -261,7 +261,7 @@ export const JoinStart: Story = {
   ),
 };
 
-const HUES: LampHue[] = ['t', 'r1', 'r2', 'r3', 'l', 'ok', 'lamp'];
+const HUES: LampHue[] = ['t', 'r1', 'r2', 'r3', 'l', 'ok', 'lamp', 'transport'];
 const FACES = [
   { face: 'Off', props: {} },
   { face: 'Armed', props: { waiting: true } },
@@ -278,10 +278,10 @@ export const AllFaces: Story = {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: `auto repeat(${HUES.length + 1}, minmax(0, 1fr))`,
+        gridTemplateColumns: `auto repeat(${HUES.length + 1}, minmax(max-content, 1fr))`,
         gap: 'var(--space-2)',
         alignItems: 'center',
-        maxWidth: 760,
+        justifyContent: 'start',
       }}
     >
       <span />

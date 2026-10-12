@@ -35,8 +35,9 @@
   border: var(--yh-status-dot-ring) solid var(--yh-status-dot-hue);
 }
 
+/* Absent: always the ring (the component sets data-face='hollow'), in --text-3 so it still reads. */
 .yh-status-dot[data-hue='d'] {
-  --yh-status-dot-hue: var(--text-4);
+  --yh-status-dot-hue: var(--text-3);
 }
 .yh-status-dot[data-hue='t'] {
   --yh-status-dot-hue: var(--text-1);

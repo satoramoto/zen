@@ -48,6 +48,12 @@ describe('StatusDot', () => {
     }
   });
 
+  it('absent (d) is always the hollow ring and never glows', () => {
+    const { container } = render(<StatusDot hue="d" />);
+    expect(dotOf(container)).toHaveAttribute('data-face', 'hollow');
+    expect(dotOf(container)).toHaveAttribute('data-glow', 'false');
+  });
+
   it('a name makes it an image, solid or hollow', () => {
     const { rerender } = render(<StatusDot hue="ok" name="Running" />);
     const dot = screen.getByRole('img', { name: 'Running' });

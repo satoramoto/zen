@@ -70,7 +70,7 @@ export const Stopped: Story = {
   },
 };
 
-/** The Launchkey not connected: a faint ring, empty inside, no bloom. */
+/** The Launchkey not connected: a `--text-3` ring, empty inside, no bloom (absent is always the ring). */
 export const Disconnected: Story = {
   args: { hue: 'd', hollow: true },
   play: async ({ canvasElement }) => {

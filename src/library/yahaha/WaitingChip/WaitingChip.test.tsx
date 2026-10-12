@@ -26,6 +26,13 @@ describe('WaitingChip', () => {
     expect(container.querySelector('a[href], button, input, select, textarea, [tabindex]')).toBeNull();
   });
 
+  it('draws the default arrow in --accent (next) and scales the line cap with the density', () => {
+    const root = css.match(/\.yh-waiting-chip\s*\{([^}]*)\}/)![1];
+    expect(root).toMatch(/--yh-waiting-chip-hue:\s*var\(--accent\)/);
+    expect(root).toMatch(/--yh-waiting-chip-max:\s*calc\(var\(--control-h\) \* 6\)/);
+    expect(css).not.toMatch(/\d+px/);
+  });
+
   it('defaults to neutral at the count size', () => {
     render(<WaitingChip label="Main C" />);
     const chip = screen.getByText('Main C');

@@ -149,6 +149,44 @@ describe('Button faces and a11y', () => {
     expect(css.indexOf(match![0])).toBeGreaterThan(css.indexOf(".yh-button:not([data-hue='t'])"));
   });
 
+  it('a solid face only for running and recording; on is a ring, chosen an underline', () => {
+    const { button, rerender, props } = setup({ label: 'Start / Stop', size: 'band', bar: true });
+    expect(button).toHaveAttribute('data-solid');
+    rerender(<Button {...props} label="Rec" size="md" bar={undefined} hue="rec" on />);
+    expect(button).toHaveAttribute('data-solid');
+    for (const hue of ['t', 'r1', 'a', 'transport', 'main'] as const) {
+      rerender(<Button {...props} label="X" size="md" bar={undefined} hue={hue} on />);
+      expect(button).toHaveAttribute('data-face', 'on');
+      expect(button).not.toHaveAttribute('data-solid');
+    }
+    rerender(<Button {...props} label="Rec" size="md" bar={undefined} hue="rec" chosen />);
+    expect(button).not.toHaveAttribute('data-solid');
+    rerender(<Button {...props} label="Rec" size="md" bar={undefined} hue="rec" on disabled />);
+    expect(button).not.toHaveAttribute('data-solid');
+
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
+    const rule = (selector: string) => {
+      const at = css.indexOf(`${selector} {`);
+      expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf('}', at));
+    };
+    expect(rule(".yh-button[data-face='on']")).toMatch(/background:\s*transparent/);
+    expect(rule(".yh-button[data-face='on'][data-solid]")).toContain('background: var(--yh-button-fill)');
+    expect(rule(".yh-button[data-face='chosen']")).toContain('inset 0 calc(-1 * var(--yh-wait-ring)) 0 var(--yh-button-fill)');
+  });
+
+  it('a transport key is neutral at rest; disabled is a dashed edge and --text-3; no label ellipsis', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
+    const transport = [...css.matchAll(/\.yh-button\[data-hue='transport'\]\s*\{([^}]*)\}/g)].map((m) => m[1]).join(';');
+    expect(transport).toContain('--yh-button-line: var(--border-strong)');
+    expect(transport).toContain('--yh-button-rest: var(--text-1)');
+    expect(css).toMatch(/\.yh-button\[data-face='disabled'\]\s*\{[^}]*color:\s*var\(--text-3\)/);
+    expect(css).toMatch(/\.yh-button\[data-face='disabled'\]::before\s*\{[^}]*dashed/);
+    expect(css).not.toContain('text-overflow: ellipsis');
+    expect(css).toMatch(/\.yh-button\s*\{[^}]*min-width:\s*max-content/);
+    expect(css).toMatch(/--yh-wait-ring:\s*calc\(var\(--border-width\) \* 2\)/);
+  });
+
   it('deprecated t2 and m, and lamp, draw as the neutral t', () => {
     for (const hue of ['t2', 'm', 'lamp'] as const) {
       const { button, unmount } = setup({ label: 'X', hue });

@@ -93,12 +93,12 @@ export const Icon: Story = {
   },
 };
 
-/** A band button switched on: Fade while fading, the solid selected face. */
+/** A band button switched on: Fade while fading, a ring and a lit dot in `--selected` (no fill: fading isn't sounding). */
 export const BandOn: Story = {
   args: { label: 'Fade', size: 'band', on: true, pressed: true },
 };
 
-/** The on face: help mode switched on, the solid selected face. */
+/** The on face: help mode switched on, a ring and a lit dot in `--selected`. */
 export const On: Story = {
   args: { label: '?', size: 'icon', on: true, pressed: true, name: 'Help mode' },
   play: async ({ canvasElement }) => {
@@ -108,7 +108,7 @@ export const On: Story = {
   },
 };
 
-/** The chosen face: the applied One Touch, a solid selected face. */
+/** The chosen face: the applied One Touch, ink and a `--selected` rule along the bottom on the rest outline. */
 export const Chosen: Story = {
   args: { label: '2', size: 'icon', chosen: true, pressed: true, name: 'One Touch 2, applied' },
   play: async ({ canvasElement }) => {
@@ -191,9 +191,11 @@ export const WaitingFlash: Story = {
 };
 
 /**
- * New: the `transport` tone, the role hue of the keys that move time. Start stopped is the primary
- * key filled in `--transport` with `--transport-text`; Sync Start armed and a queued fill ring in it
- * (the waiting ring still says "armed" by shape); Stop running stays `ok`, because running is a state.
+ * New: the `transport` tone, the role hue of the keys that move time, worn only while active. Start
+ * stopped is the primary key filled in `--transport` with `--transport-text`; Sync Start and Tempo +
+ * at rest are neutral; Sync Start armed and a queued fill ring in it (the waiting ring still says
+ * "armed" by shape); Tap on is a transport ring and dot; Stop running stays `ok`, solid, because
+ * running is a state.
  */
 export const Transport: Story = {
   render: (args) => (
@@ -211,7 +213,17 @@ export const Transport: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'transport');
     await expect(canvas.getByRole('button', { name: 'Start / Stop, running' })).toHaveAttribute('data-hue', 'ok');
+    await expect(canvas.getByRole('button', { name: 'Start / Stop, running' })).toHaveAttribute('data-solid');
     await expect(canvas.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('data-face', 'waiting');
+    await expect(canvas.getByRole('button', { name: 'Tap, on' })).not.toHaveAttribute('data-solid');
+    // At rest a transport key is neutral: its outline is the rest line, not the role hue.
+    const rest = getComputedStyle(canvas.getByRole('button', { name: 'Sync Start' })).boxShadow;
+    const armed = getComputedStyle(canvas.getByRole('button', { name: 'Sync Start, armed' })).boxShadow;
+    await expect(rest).not.toBe(armed);
+    // A key never truncates its name: the tall Start holds its whole label.
+    const start = canvas.getByRole('button', { name: 'Start / Stop, stopped' });
+    const label = start.querySelector('.yh-button__label') as HTMLElement;
+    await expect(label.getBoundingClientRect().right).toBeLessThanOrEqual(start.getBoundingClientRect().right);
   },
 };
 
@@ -224,7 +236,7 @@ export const Tall: Story = {
   },
 };
 
-/** Shown, not pressable: faded outline and label, a not-allowed cursor. No press, hold or long press. */
+/** Shown, not pressable: a dashed edge and a `--text-3` label, a not-allowed cursor. No press, hold or long press. */
 export const Disabled: Story = {
   args: { label: 'Audition', size: 'md', compact: true, disabled: true, name: 'Audition (stop the band first)' },
   play: async ({ canvasElement, args }) => {
@@ -244,7 +256,7 @@ export const Disabled: Story = {
   },
 };
 
-/** A hued button, absent: its hue outline fades with the label; still recognisably the Fill key. */
+/** A section button, absent: the same dashed edge and `--text-3` label as every disabled key; the label still names the Fill key. */
 export const DisabledHue: Story = {
   args: { label: 'Fill', symbol: 'up', size: 'pair', hue: 'fill', disabled: true, name: 'Fill up (none in this style)' },
   play: async ({ canvasElement }) => {

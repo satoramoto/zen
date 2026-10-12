@@ -34,6 +34,7 @@ const meta = {
     accentNext: { control: 'boolean' },
     disabled: { control: 'boolean' },
     fillCell: { control: 'boolean' },
+    onFace: { control: 'inline-radio', options: ['fill', 'ring'] },
     name: { control: 'text' },
     tip: { control: 'text' },
   },
@@ -70,7 +71,7 @@ export const DarkUtility: Story = {
   args: { label: 'Auto Fill', index: '12', family: 'util', state: 'dark', name: 'Auto Fill (unavailable)' },
 };
 
-/** Queued: Main C, a heavier ring and faint wash, a NEXT chip above the centred label. */
+/** Queued: Main C, the wait ring and a faint wash in `--accent` (next, by default), a NEXT chip above the centred label. */
 export const Next: Story = {
   args: { label: 'Main C', index: '11', state: 'next', name: 'Main C, queued after bar 4 (flashing)' },
   play: async ({ canvasElement }) => {
@@ -156,7 +157,7 @@ export const Utility: Story = {
   },
 };
 
-/** A lit utility pad: Auto Fill on, the `--selected` fill. */
+/** A lit utility pad: Auto Fill on, the `--selected` fill (the default `onFace`; see `OnRing` for a bank's quieter on). */
 export const UtilityOn: Story = { args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing' } };
 
 /** Start / Stop running: a solid `--success` fill. */
@@ -182,7 +183,7 @@ export const TransportRunning: Story = {
   },
 };
 
-/** A transport pad stopped: the `--transport` edge, the role hue of the keys that move time. */
+/** A transport pad stopped: a neutral edge. A transport key wears `--transport` only while active (hues.ts). */
 export const TransportStopped: Story = {
   args: { label: 'Start / Stop', index: '16', family: 'start', state: 'idle', transport: true, name: 'Start / Stop, stopped (pad 16)' },
   play: async ({ canvasElement }) => {
@@ -198,7 +199,7 @@ export const TransportOn: Story = {
   },
 };
 
-/** Sync Start armed on a transport pad: the `--transport` edge with the `--warning` armed ring and `--warning-text` chip. */
+/** Sync Start armed on a transport pad: the `--warning` armed ring and `--warning-text` chip. */
 export const TransportArmed: Story = {
   args: { label: 'Sync Start', index: '4', family: 'util', state: 'armed', transport: true, name: 'Sync Start, armed' },
   play: async ({ canvasElement }) => {
@@ -222,7 +223,7 @@ export const PartHueDark: Story = {
   },
 };
 
-/** New: `accentNext`, queued in `--accent` (hues.ts) instead of the pad's own colour, as the song form shows it. */
+/** New: `accentNext`, queued in `--accent` (hues.ts) instead of the pad's own colour, as the song form shows it. Now the default. */
 export const NextAccent: Story = {
   args: { label: 'Main C', index: '11', state: 'next', accentNext: true, name: 'Main C, queued after bar 4' },
   play: async ({ canvasElement }) => {
@@ -230,7 +231,7 @@ export const NextAccent: Story = {
   },
 };
 
-/** New: `disabled`, still focusable but marked unavailable; a press does nothing. */
+/** New: `disabled`, still focusable but marked unavailable (a dashed edge, a `--text-3` label); a press does nothing. */
 export const Disabled: Story = {
   args: { label: 'Auto Fill', index: '12', family: 'util', state: 'idle', disabled: true, onPress: fn() },
   play: async ({ canvasElement, args }) => {
@@ -279,6 +280,42 @@ export const Bank: Story = {
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, max-content)', gap: 'var(--space-2)' }}>
       {BANK.map((p) => (
         <Pad key={p.index} {...p} />
+      ))}
+    </div>
+  ),
+};
+
+/**
+ * New: `onFace="ring"`, on but not sounding: a bank's pads, Auto Fill on. The raised face stays, its
+ * edge and a ring take the pad's colour, and a lit dot sits top-left; the solid fill is left to what
+ * plays. Shown beside a transport pad, a part hue and the default fill.
+ */
+export const OnRing: Story = {
+  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', onFace: 'ring', name: 'Auto Fill, on (ring)' },
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+      <Pad {...args} />
+      <Pad {...args} transport name="Auto Fill, on (ring, transport)" />
+      <Pad label="QUICK 1" index="13" family="r1" state="playing" onFace="ring" name="Quick 1, on (ring)" />
+      <Pad label="Main B" index="10" state="playing" name="Main B, playing (fill)" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ring = canvas.getByRole('button', { name: 'Auto Fill, on (ring)' });
+    const fill = canvas.getByRole('button', { name: 'Main B, playing (fill)' });
+    await expect(ring).toHaveAttribute('data-on-face', 'ring');
+    await expect(ring).toHaveAttribute('aria-pressed', 'true');
+    await expect(getComputedStyle(ring).backgroundColor).not.toBe(getComputedStyle(fill).backgroundColor);
+  },
+};
+
+/** New: the Bank's sixteen pads with every pad but the sections on `onFace="ring"`: the playing section and Start / Stop are the only fills. */
+export const BankRing: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, max-content)', gap: 'var(--space-2)' }}>
+      {BANK.map((p) => (
+        <Pad key={p.index} {...p} onFace={p.family === 'main' ? 'fill' : 'ring'} />
       ))}
     </div>
   ),

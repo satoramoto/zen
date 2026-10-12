@@ -12,8 +12,9 @@ export interface WaitingChipProps {
   label: string;
   /**
    * Which thing is waiting: a section (`intro`, `main`, `ending`, `brk`, `fill`), `a` a queued
-   * style, `t` neutral. It tints the "next" arrow, not the words. A section takes no hue of its
-   * own: every section reads the "next" role (`--accent`); a queued style (`a`) reads `--style`.
+   * style, `t` (default) anything else. It tints the "next" arrow, not the words. Next is
+   * `--accent` everywhere, so every value but `a` draws the arrow in it (a section takes no hue of
+   * its own); a queued style (`a`) reads `--style`.
    */
   hue?: WaitingHue;
   /** `count` control-height label text; `line` the same, capped and ellipsized (style line); `display` the display size. */
@@ -33,12 +34,17 @@ export interface WaitingChipProps {
  * (`../hues`), so a waiting section no longer wears one: what is queued next reads `--accent`
  * (`SECTION_STATE_COLOUR.next`) whichever section it is, and the words name the section. A queued
  * style's arrow wears the contract's `--style` role hue, the colour of the style and what belongs
- * to it, so a waiting style reads as the style's and never as the section "next" role. The words sit in secondary text so they pass contrast in every pack
+ * to it, so a waiting style reads as the style's and never as the section "next" role. The default
+ * (`t`) arrow is `--accent` too: next is `--accent` everywhere, by default, so a caller that
+ * forgets to pass a section still says "next" (it used to fall back to a grey `--text-3` arrow).
+ * The words sit in secondary text so they pass contrast in every pack
  * (color.md, "Semantic Colors" and "Contrast and Readability"). *Hierarchy:* secondary text keeps
  * the chip a step below what plays; the `display` size uses the display face and weight so the
- * next section reads from across the room (typography.md, "Type Scale"). *Rhythm:* heights come
- * from the density's control height and the arrow's gap from the spacing scale, so the chip sits
- * on the same line as the controls beside it.
+ * next section reads from across the room (typography.md, "Type Scale"), and its arrow is 0.45 ×
+ * 0.6 em, as large in proportion as at label size, so beside display words it reads as an arrow,
+ * not a bullet. *Rhythm:* heights come from the density's control height, the style line's cap
+ * from it too (six control heights, where the original fixed 200px), and the arrow's gap from the
+ * spacing scale, so the chip sits on the same line as the controls beside it.
  *
  * **Kept.** An empty or whitespace-only label renders nothing at all; the label is drawn untrimmed;
  * only `line` caps its width and ends in "…" (and shrinks in a flex row); tabular figures; the

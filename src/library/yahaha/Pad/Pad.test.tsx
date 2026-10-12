@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Pad, padTone } from './Pad';
+import { Pad, padTone, tieLastWord } from './Pad';
 
 describe('Yahaha Pad', () => {
   it('presses on a pointer click', async () => {
@@ -138,12 +138,43 @@ describe('Yahaha Pad', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('accentNext marks the pad to ring NEXT in the accent; off by default', () => {
+  it('rings NEXT in the accent by default; accentNext={false} opts out', () => {
     const { container, rerender } = render(<Pad label="Main C" state="next" />);
     const pad = within(container).getByRole('button');
-    expect(pad).not.toHaveAttribute('data-next');
-    rerender(<Pad label="Main C" state="next" accentNext />);
     expect(pad).toHaveAttribute('data-next', 'accent');
+    rerender(<Pad label="Main C" state="next" accentNext={false} />);
+    expect(pad).not.toHaveAttribute('data-next');
+  });
+
+  it('ties a short last word to its word, so a numeral never wraps alone', () => {
+    expect(tieLastWord('Main B')).toBe('Main B');
+    expect(tieLastWord('Intro III')).toBe('Intro III');
+    expect(tieLastWord('QUICK 1')).toBe('QUICK 1');
+    expect(tieLastWord('Sync Start')).toBe('Sync Start');
+    expect(tieLastWord('Start / Stop')).toBe('Start / Stop');
+    expect(tieLastWord('Fill')).toBe('Fill');
+    render(<Pad label="Main B" index="10" />);
+    expect(screen.getByRole('button', { name: 'Main B (pad 10)' }).querySelector('.yh-pad__label')!.textContent).toBe('Main B');
+  });
+
+  it('onFace="ring" draws on as a ring and a dot; transport is neutral at rest; disabled is dashed', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Pad/Pad.css'), 'utf8');
+    const rule = (selector: string) => {
+      const at = css.indexOf(`${selector} {`);
+      expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf('}', at));
+    };
+    const ring = rule(".yh-pad[data-on-face='ring'][data-state='playing']");
+    expect(ring).toContain('background: var(--surface-2)');
+    expect(ring).toContain('border-color: var(--yh-pad-fill)');
+    expect(rule(".yh-pad[data-on-face='ring'][data-state='playing']::after")).toContain('background: var(--yh-pad-fill)');
+    expect(rule(".yh-pad[data-tone='transport']")).not.toContain('--yh-pad-edge');
+    expect(rule(".yh-pad[aria-disabled='true']:not([data-state='playing'], [data-state='running'])")).toMatch(
+      /border-style: dashed;[\s\S]*color: var\(--text-3\)/,
+    );
+    expect(css).toMatch(/--yh-wait-ring:\s*calc\(var\(--border-width\) \* 2\)/);
+    render(<Pad label="Auto Fill" family="util" state="playing" onFace="ring" />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-on-face', 'ring');
   });
 
   it('fillCell marks the pad to fill its cell; off by default', () => {
