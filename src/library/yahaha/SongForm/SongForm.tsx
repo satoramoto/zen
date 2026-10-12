@@ -1,7 +1,6 @@
 import { Button } from '../Button/Button';
 import { LampButton } from '../LampButton/LampButton';
 import { Pad, type PadState, type TipAction } from '../Pad/Pad';
-import { WaitingChip } from '../WaitingChip/WaitingChip';
 import type { SectionState } from '../hues';
 import './SongForm.css';
 
@@ -30,7 +29,7 @@ interface SectionDef {
   tip: string;
 }
 
-const NB = ' ';
+const NB = ' ';
 
 /** The song's form: its three parts in order, each its steps in order. */
 export const FORM: readonly { part: Part; caption: string; steps: readonly SectionDef[] }[] = [
@@ -80,15 +79,15 @@ export const SECTION_LABEL: Record<SectionId, string> = Object.fromEntries(
 export interface SongFormProps {
   /** The style is running: Start / Stop shows Stop on the running face, and is pressed. */
   running?: boolean;
-  /** What plays now; while stopped, the section the band will start from. */
+  /** What plays now; while stopped, the section the band will start from (underlined, not filled). */
   playing?: SectionId;
   /** What is queued to play next (marked NEXT on the form). */
   next?: SectionId;
-  /** When the queued change lands, shown after it in the cue ("after bar 4"). */
+  /** When the queued change lands ("after bar 4"): spoken with the next section and in the cue. */
   nextAt?: string;
   /** Sections this style doesn't have: drawn as absent, and a press does nothing. */
   absent?: readonly SectionId[];
-  /** A fill is queued by Fill ▲ or Fill ▼: that key waits, and the cue says "Fill, then …". */
+  /** A fill is queued by Fill ▲ or Fill ▼: that key waits, and the spoken cue says "Fill, then …". */
   fillPending?: 'up' | 'down';
   /** Accompaniment (ACMP) on. */
   accomp?: boolean;
@@ -128,7 +127,9 @@ export interface SongFormProps {
   onReset?: () => void;
   /**
    * Which half to draw: `both` (the default), or only the `form` or the `transport`, for a screen
-   * that places them apart (the Stage's stacked layout puts the transport beside the hero).
+   * that places them apart (the Stage's stacked layout puts the transport beside the hero). The
+   * form's steps fill the height of the region's container when it has one (the Stage's strip),
+   * and are two control heights tall otherwise.
    */
   part?: SongFormPart;
 }
@@ -140,49 +141,47 @@ export type SongFormPart = 'both' | 'form' | 'transport';
  * SongForm: the Stage's song form and transport, one region for every control that moves the band
  * through the song.
  *
- * **Job.** Show the song as it runs, Intro → Main A–D → Ending, with what plays now filled and
+ * **Job.** Show the song as it runs, Intro → Main A–D → Ending, with what sounds now filled and
  * what comes next marked on it, so a player sees where they are in the form and where they are
- * heading from a metre away; and hold every transport key in one cluster beside it, with Start /
- * Stop the one thing to find without looking.
+ * heading from a metre away; and hold every transport key in one cluster, with Start / Stop the one
+ * thing to find without looking.
  *
  * **Changed.** *One place per job* (STAGE.md 3): the original spread transport over three places
  * (SectionRow's top row, TransportColumn's icon column, pad 16 on the Sections bank) and sections
- * over a 4 × 4 grid mixed with Sync Start, Tap and Start / Stop. Here the form holds only
- * sections, the cluster only transport, and Tap goes to the Display. *Sections read as the song's
- * form* (STAGE.md 4; layout.md, grouping by proximity): three captioned parts run left to right
- * on one line with arrows between them, each step named by its letter or numeral under the part's
- * caption, so order and grouping carry meaning a grid can't. Break and Auto Fill sit apart as
- * modifiers of the form, not steps in it. *Colour meaning* (`hues.ts`; color.md, "state changes:
- * structure, not circus"): no section takes a hue; what plays is the `--selected` fill, what's
- * next rings in `--accent` with a NEXT tag (Pad's `accentNext`; shape as well as colour), absent
- * sections a dashed empty edge, announced unavailable (`aria-disabled`, still focusable so the
- * player hears they are missing) and deaf to presses (*affordance*). *Hierarchy*: Start / Stop is
- * the transport's one `tall` key, two rows high with a heading-size label, its word the action it
- * will take. Stopped, it is the screen's call to action, the `primary` fill, drawn in the
- * contract's `transport` role hue (`--transport` / `--transport-text`, hues.ts) rather than the
- * generic `--action`: nothing plays, so starting is the thing to do, and it wears the hue of every
- * key that moves time. Running, it is an outlined key in `--success`, not a
- * filled one: mid-song the player reads the hero's section and chord first (STAGE.md 1), and a
- * tall solid green key was the largest saturated area on screen, louder than the section name.
- * Its size and place still make it the key to find without looking, and the outline in the
- * running colour plus the word Stop say the band is going (color.md, restraint; one filled call
- * to action at a time); running is a state, so it keeps `--success`, not the transport hue. The
- * rest are equal cells in two rows, grouped by job (sync, fills and fade, accompaniment, reset).
- * The keys that move time (Sync Start, Sync Stop, Fill ▲ / ▼, and Auto Fill among the modifiers)
- * wear the Button and LampButton `transport` tone, so the cluster reads as one family apart from
- * the part hues and the states; Fade (level, not time), Accomp and Reset stay neutral. Colour
- * never carries a state alone: armed and queued still show by the waiting ring and the words. *Waiting is one face*: Sync Start armed, a queued fill, a fade-in
- * waiting for Start all use the waiting ring, flashing with the queued section on the parent's
- * `lit`, and the cue line above the form says in words what's coming ("Fill, then Main C after
- * bar 4"). *Rhythm*: the width breakpoints are counted in control heights (the region's `em` is
- * `--control-h`), so a denser or airier pack changes layout where its keys stop fitting, not at a
- * fixed pixel width.
+ * over a 4 × 4 grid mixed with Sync Start, Tap and Start / Stop. Here the form holds only sections
+ * and Break, the cluster every key that moves time (Auto Fill included: it is a time key, hues.ts),
+ * and Tap goes to the Display. "Next" is said once on screen, in the hero: the form has no title
+ * and no cue line of its own (*hierarchy*); the cue is still spoken, as visually hidden status
+ * text. *Sections read as the song's form* (STAGE.md 4; layout.md, grouping by proximity): one
+ * strip of one primitive at one height, three captioned parts left to right with arrows between
+ * them, each step named by its letter or numeral in the readout face, then Break behind a seam. The
+ * steps fill the height of the region's container (the Stage's strip sets it), so the screen sizes
+ * the form without reaching into it (*alignment*). The part captions sit in the strip's top
+ * padding, quiet (one caption recipe), with no rules under them: the arrows carry the order.
+ * *Colour meaning* (`hues.ts`; color.md, "state changes: structure, not circus"): a solid fill
+ * means sounding or running, nothing else. The playing section is the `--selected` fill and the
+ * only one; stopped, the section the band will start from is underlined, not filled. Next rings in
+ * `--accent` with a NEXT tag (shape as well as colour); absent sections are a dashed empty edge,
+ * announced unavailable (`aria-disabled`, still focusable) and deaf to presses (*affordance*). In
+ * the cluster, the transport hue appears only on an active key (armed, queued, on) and on Start's
+ * fill; at rest every other key is neutral, so an armed Sync Start is the only ring of its colour.
+ * Accomp, Auto Fill and a running Fade show "on" as an outline (and the lamp's lit LED), never a
+ * fill. *Hierarchy*: Start / Stop is the cluster's one `tall` key and its widest, its word the
+ * action it will take: stopped, the `primary` fill in `--transport`; running, an outline in
+ * `--success` (a state, not the transport's identity), so mid-song the hero's section and chord
+ * outrank it. Every other key is one cell at one rank, `secondary` (Reset included), Accomp a mode
+ * in one cell rather than a key ranked like Start; one gap between all of them (*rhythm*). *Waiting
+ * is one face*: Sync Start armed, a queued fill and a fade-in waiting for Start use the waiting
+ * ring, flashing with the queued section on the parent's `lit`. The width breakpoints are counted
+ * in control heights (the region's `em` is `--control-h`), so a denser or airier pack changes
+ * layout where its keys stop fitting.
  *
  * **Kept.** Every control the originals had for these jobs and its callback (renamed React-style):
  * the ten sections and Break, Start / Stop (with hold-to-fade-stop from TransportColumn's Stop),
  * Sync Start, Sync Stop, Auto Fill, Fill ▲ / ▼, Fade, Reset and Accomp; fully controlled (a press
  * only calls back); the tooltip keys; spoken names that say the state ("Main B, playing", "Main C,
- * next, after bar 4", "Intro III, not in this style"); the parent-driven flash (`lit`).
+ * next, after bar 4", "Main A, starts here", "Intro III, not in this style"); the spoken cue; the
+ * parent-driven flash (`lit`).
  */
 export function SongForm({
   running = false,
@@ -216,7 +215,14 @@ export function SongForm({
   const stateOf = (id: SectionId): SectionState =>
     missing.has(id) ? 'absent' : id === playing ? 'playing' : id === next ? 'next' : 'idle';
 
-  const PAD_STATE: Record<SectionState, PadState> = { playing: 'playing', next: 'next', idle: 'idle', absent: 'dark' };
+  // Only a sounding section fills: stopped, the section the band starts from is an idle pad,
+  // underlined (data-start) and named "starts here".
+  const padState = (id: SectionId): PadState => {
+    const state = stateOf(id);
+    if (state === 'absent') return 'dark';
+    if (state === 'playing') return running ? 'playing' : 'idle';
+    return state;
+  };
 
   const nameOf = (s: SectionDef): string => {
     const label = s.label.replace(NB, ' ');
@@ -232,30 +238,40 @@ export function SongForm({
     }
   };
 
-  const section = (s: SectionDef, face = s.step) => (
-    <div key={s.id} className="yh-songform__step" data-section={s.id} data-state={stateOf(s.id)}>
-      <Pad
-        label={face}
-        state={PAD_STATE[stateOf(s.id)]}
-        lit={lit}
-        tagCorner
-        accentNext
-        fillCell
-        disabled={missing.has(s.id)}
-        name={nameOf(s)}
-        tip={s.tip}
-        tipAction={tipAction}
-        onPress={() => onSection?.(s.id)}
-      />
-    </div>
-  );
+  const section = (s: SectionDef) => {
+    const state = stateOf(s.id);
+    return (
+      <div
+        key={s.id}
+        className="yh-songform__step"
+        data-section={s.id}
+        data-state={state}
+        data-start={(state === 'playing' && !running) || undefined}
+      >
+        <Pad
+          label={s.step}
+          state={padState(s.id)}
+          lit={lit}
+          tagCorner
+          accentNext
+          fillCell
+          disabled={missing.has(s.id)}
+          name={nameOf(s)}
+          tip={s.tip}
+          tipAction={tipAction}
+          onPress={() => onSection?.(s.id)}
+        />
+      </div>
+    );
+  };
 
-  // The cue: what is coming, in words, quieter than the form.
-  const nextLabel = next && !missing.has(next) ? SECTION_LABEL[next] : '';
-  let cue = '';
-  if (fillPending) cue = nextLabel ? `Fill, then ${nextLabel}` : 'Fill';
-  else if (nextLabel) cue = nextLabel;
-  const waitingFor = !running && syncStart ? 'Starts with the first chord' : '';
+  // The cue: spoken only. "Next" is drawn once on screen, in the hero, and on the form's NEXT tag.
+  const nextLabel = next && !missing.has(next) ? SECTION_LABEL[next].replace(NB, ' ') : '';
+  const when = nextAt ? `, ${nextAt}` : '';
+  const cues: string[] = [];
+  if (fillPending) cues.push(nextLabel ? `Fill, then ${nextLabel}${when}` : 'Fill');
+  else if (nextLabel) cues.push(`Next: ${nextLabel}${when}`);
+  if (!running && syncStart) cues.push('Starts with the first chord');
 
   const fadeFace = fading ? (running ? { on: true } : { waiting: true }) : {};
 
@@ -263,20 +279,10 @@ export function SongForm({
     <section className="yh-songform" data-part={part} aria-label={REGION_LABEL[part]}>
       <div className="yh-songform__inner">
         {part !== 'transport' && (
-        <div className="yh-songform__form" role="group" aria-label="Sections">
-          <div className="yh-songform__head">
-            <span className="yh-songform__title">Song form</span>
+          <div className="yh-songform__form" role="group" aria-label="Sections">
             <span className="yh-songform__cue" role="status">
-              {cue && (
-                <>
-                  <WaitingChip label={cue} hue="t" />
-                  {nextAt && <span className="yh-songform__when">{nextAt}</span>}
-                </>
-              )}
-              {waitingFor && <span className="yh-songform__when">{waitingFor}</span>}
+              {cues.join('. ')}
             </span>
-          </div>
-          <div className="yh-songform__line">
             <ol className="yh-songform__parts">
               {FORM.map(({ part, caption, steps }) => (
                 <li key={part} className="yh-songform__part" data-part={part}>
@@ -287,136 +293,129 @@ export function SongForm({
                 </li>
               ))}
             </ol>
-            <div className="yh-songform__mods" role="group" aria-label="Modifiers">
-              <span className="yh-songform__caption" aria-hidden="true">
-                Insert
-              </span>
-              <div className="yh-songform__steps">
-                {section(BREAK)}
-                <div className="yh-songform__step yh-songform__step--lamp">
-                  <LampButton
-                    label="Auto Fill"
-                    size="cell"
-                    hue="transport"
-                    on={autoFill}
-                    tip="transport.auto_fill"
-                    tipAction={tipAction}
-                    onToggle={onAutoFill}
-                  />
-                </div>
-              </div>
+            <div className="yh-songform__mods" role="group" aria-label="Insert">
+              <div className="yh-songform__steps">{section(BREAK)}</div>
             </div>
           </div>
-        </div>
         )}
 
         {part !== 'form' && (
-        <div className="yh-songform__transport" role="group" aria-label="Transport">
-          <div className="yh-songform__start">
-            <Button
-              label={running ? 'Stop' : 'Start'}
-              size="cell"
-              tall
-              variant={running ? 'secondary' : 'primary'}
-              hue={running ? 'ok' : 'transport'}
-              pressed={running}
-              name={running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped'}
-              tip="transport.start_stop"
-              tipAction={tipAction}
-              onPress={onStartStop}
-              onLongPress={running ? onStopWithFade : undefined}
-            />
+          <div className="yh-songform__transport" role="group" aria-label="Transport">
+            <div className="yh-songform__start">
+              <Button
+                label={running ? 'Stop' : 'Start'}
+                size="cell"
+                tall
+                variant={running ? 'secondary' : 'primary'}
+                hue={running ? 'ok' : 'transport'}
+                pressed={running}
+                name={running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped'}
+                tip="transport.start_stop"
+                tipAction={tipAction}
+                onPress={onStartStop}
+                onLongPress={running ? onStopWithFade : undefined}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="sync-start">
+              <Button
+                label="Sync Start"
+                size="cell"
+                hue="transport"
+                waiting={syncStart}
+                lit={lit}
+                pressed={syncStart}
+                name={syncStart ? 'Sync Start, armed' : 'Sync Start'}
+                tip="transport.sync_start"
+                tipAction={tipAction}
+                onPress={() => onSyncStart?.(!syncStart)}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="sync-stop">
+              <Button
+                label="Sync Stop"
+                size="cell"
+                hue="transport"
+                waiting={syncStop}
+                pressed={syncStop}
+                tip="transport.sync_stop"
+                tipAction={tipAction}
+                onPress={() => onSyncStop?.(!syncStop)}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="fill-up">
+              <Button
+                label="Fill"
+                symbol="up"
+                size="cell"
+                hue="transport"
+                waiting={fillPending === 'up'}
+                lit={lit}
+                name={`Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`}
+                tip="transport.fill_up"
+                tipAction={tipAction}
+                onPress={onFillUp}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="fill-down">
+              <Button
+                label="Fill"
+                symbol="down"
+                size="cell"
+                hue="transport"
+                waiting={fillPending === 'down'}
+                lit={lit}
+                name={`Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`}
+                tip="transport.fill_down"
+                tipAction={tipAction}
+                onPress={onFillDown}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="fade">
+              <Button
+                label="Fade"
+                size="cell"
+                {...fadeFace}
+                lit={lit}
+                pressed={fading}
+                name={fading ? (running ? 'Fade, fading' : 'Fade in, waiting for Start') : running ? 'Fade out' : 'Fade in'}
+                tip="transport.fade"
+                tipAction={tipAction}
+                onPress={onFade}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="reset">
+              <Button
+                label="Reset"
+                size="cell"
+                name="Section reset: restart the section from its first bar"
+                tip="transport.section_reset"
+                tipAction={tipAction}
+                onPress={onReset}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="accomp">
+              <LampButton
+                label="Accomp"
+                name="Accomp (ACMP)"
+                size="cell"
+                on={accomp}
+                tip="transport.acmp"
+                tipAction={tipAction}
+                onToggle={onAccomp}
+              />
+            </div>
+            <div className="yh-songform__key" data-key="auto-fill">
+              <LampButton
+                label="Auto Fill"
+                size="cell"
+                hue="transport"
+                on={autoFill}
+                tip="transport.auto_fill"
+                tipAction={tipAction}
+                onToggle={onAutoFill}
+              />
+            </div>
           </div>
-          <div className="yh-songform__key" data-key="sync-start">
-            <Button
-              label="Sync Start"
-              size="cell"
-              hue="transport"
-              waiting={syncStart}
-              lit={lit}
-              pressed={syncStart}
-              name={syncStart ? 'Sync Start, armed' : 'Sync Start'}
-              tip="transport.sync_start"
-              tipAction={tipAction}
-              onPress={() => onSyncStart?.(!syncStart)}
-            />
-          </div>
-          <div className="yh-songform__key" data-key="sync-stop">
-            <Button
-              label="Sync Stop"
-              size="cell"
-              hue="transport"
-              waiting={syncStop}
-              pressed={syncStop}
-              tip="transport.sync_stop"
-              tipAction={tipAction}
-              onPress={() => onSyncStop?.(!syncStop)}
-            />
-          </div>
-          <div className="yh-songform__key" data-key="accomp">
-            <LampButton
-              label="Accomp"
-              name="Accomp (ACMP)"
-              size="cell"
-              on={accomp}
-              tip="transport.acmp"
-              tipAction={tipAction}
-              onToggle={onAccomp}
-            />
-          </div>
-          <div className="yh-songform__key" data-key="fill-up">
-            <Button
-              label="Fill"
-              symbol="up"
-              size="cell"
-              hue="transport"
-              waiting={fillPending === 'up'}
-              lit={lit}
-              name={`Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`}
-              tip="transport.fill_up"
-              tipAction={tipAction}
-              onPress={onFillUp}
-            />
-          </div>
-          <div className="yh-songform__key" data-key="fill-down">
-            <Button
-              label="Fill"
-              symbol="down"
-              size="cell"
-              hue="transport"
-              waiting={fillPending === 'down'}
-              lit={lit}
-              name={`Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`}
-              tip="transport.fill_down"
-              tipAction={tipAction}
-              onPress={onFillDown}
-            />
-          </div>
-          <div className="yh-songform__key" data-key="fade">
-            <Button
-              label="Fade"
-              size="cell"
-              {...fadeFace}
-              lit={lit}
-              pressed={fading}
-              name={fading ? (running ? 'Fade, fading' : 'Fade in, waiting for Start') : running ? 'Fade out' : 'Fade in'}
-              tip="transport.fade"
-              tipAction={tipAction}
-              onPress={onFade}
-            />
-          </div>
-          <div className="yh-songform__key" data-key="reset">
-            <Button
-              label="Reset"
-              size="cell"
-              variant="quiet"
-              name="Section reset: restart the section from its first bar"
-              tip="transport.section_reset"
-              tipAction={tipAction}
-              onPress={onReset}
-            />
-          </div>
-        </div>
         )}
       </div>
     </section>
