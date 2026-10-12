@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { expect, userEvent, within, waitFor } from 'storybook/test';
+import { expect, userEvent, within, waitFor, fireEvent } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import { CameraPanel, CameraProvider } from './Camera';
@@ -28,8 +28,7 @@ export const Off: Story = {
     const canvas = within(canvasElement);
     for (const name of ['Source', 'Appearance', 'Motion']) await expect(canvas.getByRole('group', { name })).toBeVisible();
     const camera = canvas.getByRole('slider', { name: 'Camera opacity' });
-    camera.focus();
-    await userEvent.keyboard('{End}');
+    fireEvent.keyDown(camera, { key: 'End' });
     await waitFor(() => expect(camera).toHaveAttribute('aria-valuenow', '100'));
     await expect(canvas.getByRole('slider', { name: 'Outline opacity' })).toHaveAttribute('aria-valuenow', '65');
     await userEvent.click(canvas.getByRole('switch', { name: 'Enable camera' }));
