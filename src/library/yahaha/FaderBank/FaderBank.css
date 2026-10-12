@@ -8,6 +8,7 @@
   /* Grid tracks the component names inline. */
   --yh-faderbank-divider-w: var(--space-1);
   --yh-faderbank-master-fr: 1.25fr;
+  --yh-faderbank-empty-fr: 0.5fr;
 
   position: relative;
   display: flex;
@@ -178,6 +179,11 @@ span.yh-faderbank__name {
 .yh-faderbank__lamp > * {
   flex: 1 1 auto;
   min-width: 0;
+}
+/* A strip-wide key has a strip's width only: a tighter side inset keeps "Off" and "Panel" whole
+   at a 1217 × 752 Stage instead of cutting them to "O…". */
+.yh-faderbank .yh-faderbank__lamp > :is(.yh-lampbutton, .yh-button) {
+  padding-inline: var(--space-1);
 }
 
 /* The function row: the Launchkey's fader buttons 5–8, under a hairline since they are not mixer

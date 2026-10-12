@@ -203,7 +203,7 @@ describe('FaderBank layout', () => {
     const { bank } = setup();
     const grid = bank.querySelector('.yh-faderbank__grid') as HTMLElement;
     expect(grid.querySelectorAll('.yh-faderbank__divider')).toHaveLength(2);
-    // 9 strips + 2 dividers; the parked slots take a full strip's track, like the hardware.
+    // 9 strips + 2 dividers; the parked slots keep their own tracks, like the hardware, at half a strip.
     const tracks: string[] = [''];
     let depth = 0;
     for (const ch of grid.style.gridTemplateColumns) {
@@ -212,7 +212,8 @@ describe('FaderBank layout', () => {
       depth += ch === '(' ? 1 : ch === ')' ? -1 : 0;
     }
     expect(tracks).toHaveLength(11);
-    expect(tracks.filter((t) => t === 'minmax(0, 1fr)')).toHaveLength(8);
+    expect(tracks.filter((t) => t === 'minmax(0, 1fr)')).toHaveLength(6);
+    expect(tracks.filter((t) => t === 'minmax(0, var(--yh-faderbank-empty-fr))')).toHaveLength(2);
   });
 
   it('every key in the bank is one height: part lamps, page button and function lamps are cell keys', () => {

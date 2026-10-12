@@ -40,6 +40,18 @@
   width: 100%;
   padding: var(--space-1);
 }
+/* The name takes the slot's whole width, and a slot too narrow for its longest word ("Retrigger"
+   in caps, eight across a 552px region) steps the name down a little rather than breaking the
+   word or cutting it: a name is never "Dynami…" or "DYNAMI / CS". */
+.yh-knobbank__slot .yh-knob__label {
+  max-width: calc(100% + 2 * var(--space-1));
+  margin-inline: calc(-1 * var(--space-1));
+  font-size: min(var(--size-caption), 17cqi);
+  letter-spacing: min(var(--tracking), 0em);
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
 /* The value scales with the ring, larger than the knob's own default, so it reads first. */
 .yh-knobbank__slot .yh-knob__value {
   font-size: min(var(--size-heading), calc(var(--yh-knob-ring) * 0.36));

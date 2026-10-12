@@ -108,7 +108,7 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
   const slots = Array.from({ length: KNOB_SLOTS }, (_, i) => knobs[i] ?? UNUSED);
 
   return (
-    <section className="yh-knobbank" aria-label="Knobs">
+    <section className="yh-knobbank" aria-label="Knobs" lang="en">
       <GroupHeader>
         <ChosenTabs
           size="header"
