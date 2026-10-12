@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Readout } from './Readout';
@@ -58,6 +60,21 @@ describe('Readout', () => {
     expect(slider.querySelector('.yh-readout-number')?.textContent).toBe('38');
     expect(slider.querySelector('.yh-readout-unit')?.textContent).toBe('%');
     expect(slider.querySelector('kbd')?.textContent).toBe('K6');
+  });
+
+  it('always draws the unit column, empty without a unit, so digits align; BarReadout\'s type recipe', () => {
+    render(<Readout label="Time" value={8} display="1/8" />);
+    const slider = screen.getByRole('slider', { name: 'Time' });
+    expect(slider.querySelector('.yh-readout-unit')).not.toBeNull();
+    expect(slider.querySelector('.yh-readout-unit')?.textContent).toBe('');
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Readout/Readout.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const rule = (sel: string) => new RegExp(`${sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} \\{([^}]*)\\}`).exec(css)![1];
+    expect(rule('.yh-readout-unit')).toMatch(/width:\s*3\.5ch/);
+    expect(rule('.yh-readout-label')).toMatch(/font-size:\s*var\(--size-caption\)/);
+    expect(rule('.yh-readout-label')).toMatch(/color:\s*var\(--text-3\)/);
+    expect(rule('.yh-readout-number')).toMatch(/font-size:\s*var\(--size-body\)/);
+    // The number never wears the accent; key names in the readout face; no faint text.
+    expect(css).not.toMatch(/\[data-dragging\] \.yh-readout-number|--font-mono|--text-4/);
   });
 
   it('drags sideways: half the bar adds half the range, reported once on release', () => {

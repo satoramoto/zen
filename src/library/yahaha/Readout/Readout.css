@@ -26,11 +26,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The label and the value share BarReadout's recipe: the one caption, then the value at body size. */
 .yh-readout-label {
   overflow: hidden;
-  color: var(--text-2);
+  color: var(--text-3);
   font-family: var(--font-sans);
-  font-size: var(--size-label);
+  font-size: var(--size-caption);
   font-weight: var(--weight-body);
   letter-spacing: var(--tracking);
   text-transform: var(--label-case);
@@ -48,15 +49,17 @@
   min-width: 4ch;
   color: var(--text-1);
   font-family: var(--font-readout);
-  font-size: var(--size-heading);
+  font-size: var(--size-body);
   font-weight: var(--weight-numeral);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   text-align: right;
 }
 
+/* The unit: a fixed column after the digits, drawn even when empty, so the last digits align. */
 .yh-readout-unit {
-  min-width: 3ch;
+  flex: none;
+  width: 3.5ch;
   color: var(--text-3);
   font-family: var(--font-sans);
   font-size: var(--size-caption);
@@ -73,7 +76,7 @@
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-control);
   color: var(--text-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-readout);
   font-size: var(--size-caption);
   font-variant-numeric: tabular-nums;
   line-height: 1.5;
@@ -103,9 +106,6 @@
 .yh-readout[data-dragging] .yh-readout-bar {
   transform: scaleY(1.67);
 }
-.yh-readout[data-dragging] .yh-readout-number {
-  color: var(--accent);
-}
 
 .yh-readout:focus-visible {
   outline: var(--border-width) solid var(--accent);
@@ -126,7 +126,15 @@
 .yh-readout--disabled .yh-readout-number,
 .yh-readout--disabled .yh-readout-unit,
 .yh-readout--disabled .yh-readout-code kbd {
-  color: var(--text-4);
+  color: var(--text-3);
+}
+/* Not there: the bar is a dashed line, the Stage's one disabled edge. */
+.yh-readout--disabled .yh-readout-bar {
+  background: none;
+  border-top: var(--border-width) dashed var(--border);
+}
+.yh-readout--disabled .yh-readout-code kbd {
+  border-style: dashed;
 }
 
 @media (prefers-reduced-motion: reduce) {

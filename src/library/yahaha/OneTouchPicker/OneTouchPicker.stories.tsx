@@ -36,7 +36,7 @@ const grid: Decorator = (Story) => (
   </div>
 );
 
-/** The board: One Touch 2 applied, a solid selection block in the strip. */
+/** The board: One Touch 2 applied, in primary ink with the style's 2px rule along its foot. */
 export const Board: Story = {
   args: { applied: 2 },
   play: async ({ canvasElement }) => {
@@ -75,7 +75,7 @@ export const Cells: Story = {
   },
 };
 
-/** Cells in the style's own colour (`hue` a): outlined in it, the applied one solid. */
+/** Cells in the style's own colour (`hue` a): outlined in it, the applied one marked by its rule, not filled. */
 export const CellsViolet: Story = {
   args: { applied: 2, count: 4, cells: true, hue: 'a' },
   decorators: [grid],

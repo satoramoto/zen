@@ -6,7 +6,7 @@ import { TempoReadout } from './TempoReadout';
 /**
  * The display's tempo block: the number in the readout face (drag it, scroll on it, or use the
  * arrow keys; double-click for the style's tempo), "BPM" as a small label on its baseline, and a
- * framed + over − at its right, as tall as the number.
+ * framed + over − at its right, two control-height keys, neutral until pressed.
  */
 const meta = {
   title: 'Library/Yahaha/Primitives/TempoReadout',

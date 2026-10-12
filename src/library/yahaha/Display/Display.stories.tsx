@@ -41,10 +41,11 @@ const inRegion: Decorator = (Story, { parameters }) => {
 };
 
 /**
- * The Stage's hero: one hierarchy instead of three competing thirds. The section on the one
- * `--selected` block, the chord and the tempo in neutral ink at the hero size, what's next right
- * under the section; the style header and One Touch on one quiet line above; a thick beat bar
- * below. Tempo's Tap lives here and nowhere else on the Stage.
+ * The Stage's hero: one hierarchy instead of three competing thirds. The section largest, on the
+ * one `--selected` block, the tempo next, the chord a step behind, in neutral ink and no captions;
+ * what's next said once, in a "then" tab hanging from the section block; the style header and One
+ * Touch on one quiet line above; four beat cells under the tempo. Tempo's Tap (and Reset) lives
+ * here and nowhere else on the Stage.
  */
 const meta = {
   title: 'Library/Yahaha/Components/Display',
@@ -79,7 +80,7 @@ type Story = StoryObj<typeof meta>;
 /** The board: Am7 in Main B, Main C next with the fill after bar 4, 104 BPM on beat 2, One Touch 2. */
 export const Board: Story = {};
 
-/** Stopped with the last chord held, Coastal Highway queued, a clean rack: "Stopped", the beat bar at rest. */
+/** Stopped with the last chord held, Coastal Highway queued, a clean rack: "Stopped", the beat cells at rest. */
 export const Stopped: Story = { args: { ...displayStopped } };
 
 /** Sync Start armed, Intro II armed: the band starts on the first chord. */
@@ -88,7 +89,7 @@ export const SyncStartArmed: Story = { args: { ...displaySyncStart } };
 /** A long chord name: the hero size steps down until it fits its column. */
 export const LongChord: Story = { args: { ...displayLongChord } };
 
-/** A long style name: it ends in an ellipsis (the full name in its title), the metre keeps its place. */
+/** A long style name: the genre · metre drops first, then the name ends in an ellipsis (the full name in its title). */
 export const LongStyleName: Story = { args: { ...displayLongStyle } };
 
 /** A long fingering: the small line wraps to a second line, nothing is cut off. */
@@ -97,10 +98,10 @@ export const LongFingering: Story = { args: { ...displayLongFingering } };
 /** Right 1 and Right 3 off: their dots hollow, "· off" after the part's name (just "off" in the one-row strip of a narrow hero). */
 export const PartOff: Story = { args: { ...displayPartOff } };
 
-/** A waltz in 3/4: three beat segments, on beat 3. */
+/** A waltz in 3/4: three beat cells, on beat 3. */
 export const ThreeFour: Story = { args: { ...displayThreeFour } };
 
-/** Main D looping, nothing queued: "bar 2 of 8" in place of what's next. */
+/** Main D looping, nothing queued: no "then" tab; the beat cells say where the bar is. */
 export const Looping: Story = { args: { ...displayLooping } };
 
 /** A fill with Ending II waiting. */
@@ -110,28 +111,28 @@ export const FillToEnding: Story = { args: { ...displayFillToEnding } };
 export const NoParts: Story = { args: { ...displayNoParts } };
 
 /**
- * The Stage's hero column at 1440×900, 660 × 250: auto is compact there, the readouts at 9% of the
- * width (59px), about 199px tall; below a 900px hero the parts wrap to one row under the readouts
- * (their dots name the parts), about 235px.
+ * The Stage's hero column at 1440×900, 660 × 250: auto is compact there, so the readouts stop at
+ * their compact caps (60 / 52 / 44); below a 900px hero the parts wrap to one row under the
+ * readouts (their dots name the parts).
  */
 export const StageColumn: Story = { parameters: { region: 'column' } };
 
 /**
- * The column a 1217×752 Stage has unzoomed, 436 × 200: the same proportions at 39px, about 176px
- * tall, with tighter gaps and keys. Below a 600px hero the parts drop (the Stage never shows them).
+ * The column a 1217×752 Stage has unzoomed, 436 × 200: the same ranks, scaled with the width,
+ * tighter gaps and keys, no chord notes. Below a 600px hero the parts drop (the Stage never shows them).
  */
 export const StageColumnSmall: Story = { parameters: { region: 'columnSmall' } };
 
-/** The narrow column with the longest section name, "Ending III", and the long fingering: each readout keeps its cell, the fingering ends in an ellipsis. */
+/** The narrow column with the longest section name, "Ending III", and the long fingering: the three readouts step down together so each keeps its cell and the ranking holds, the fingering ends in an ellipsis. */
 export const StageColumnSmallLong: Story = {
   args: { ...displayLongFingering, nowPlaying: { ...displayLongFingering.nowPlaying, playing: 'Ending III' } },
   parameters: { region: 'columnSmall' },
 };
 
-/** Compact in a short, wide region (1169 × 200): the readouts stop at 60px, so the hero fits in 200px. */
+/** Compact in a short, wide region (1169 × 200): the readouts stop at 60 / 52 / 44px, so the hero fits in 200px. */
 export const Compact: Story = { args: { density: 'compact' }, parameters: { region: 'short' } };
 
-/** Full in the Stage's column (660 × 250), without parts as the Stage draws it: the roomy chrome, about 237px tall, when the region has the height. */
+/** Full in the Stage's column (660 × 250), without parts as the Stage draws it: the roomy chrome, when the region has the height. */
 export const FullInColumn: Story = { args: { ...displayNoParts, density: 'full' }, parameters: { region: 'column' } };
 
 /** The board in a 1217×752 Stage's region: every size scales with the width (auto: compact below 1200px wide). */

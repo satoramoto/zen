@@ -4,9 +4,10 @@ import { withLibraryTheme } from '../../storybook';
 import { BarBeat } from './BarBeat';
 
 /**
- * The display's beat bar: a segment per beat of the bar in the playing role (`--selected`): past
- * beats filled, the current beat lit and taller, the rest at rest; stopped, every segment at rest.
- * Sections take no hue, so it looks the same in every section. As wide as its container.
+ * The display's beat cells, one per beat, in neutral ink: past beats in `--text-3`, the current
+ * beat lit in `--text-1` and taller, the rest at rest, beat 1 marked twice the line; stopped,
+ * every cell at rest. Sections take no hue, so it looks the same in every section. As wide as its
+ * container.
  */
 const meta = {
   title: 'Library/Yahaha/Primitives/BarBeat',
@@ -33,11 +34,11 @@ export const Board: Story = {
   args: { beat: 2, beats: 4 },
   play: async ({ canvasElement }) => {
     const bar = within(canvasElement).getByRole('img', { name: 'Beat 2 of 4' });
-    await expect(bar.style.getPropertyValue('--yh-bar-beat-tone')).toBe('var(--selected)');
+    await expect(bar.querySelector('[data-state="current"]')).toBeTruthy();
   },
 };
 
-/** Counting in on an intro, beat 1: the same playing role as any section. */
+/** Counting in on an intro, beat 1: the same ink as any section. */
 export const Intro: Story = { args: { beat: 1, beats: 4 } };
 
 /** Stopped: every segment at rest. */
@@ -53,7 +54,7 @@ export const ThreeFour: Story = { args: { beat: 3, beats: 3 } };
 
 /**
  * Every section side by side, on beat 3 of 4, passing the old section `hue`: it is accepted and
- * ignored, so all five bars wear the same playing role.
+ * ignored, so all five bars look the same.
  */
 export const Sections: Story = {
   render: () => (
@@ -64,10 +65,7 @@ export const Sections: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const tones = within(canvasElement)
-      .getAllByRole('img')
-      .map((bar) => bar.style.getPropertyValue('--yh-bar-beat-tone'));
-    await expect(new Set(tones)).toEqual(new Set(['var(--selected)']));
+    for (const bar of within(canvasElement).getAllByRole('img')) await expect(bar).not.toHaveAttribute('data-hue');
   },
 };
 

@@ -34,17 +34,22 @@ export interface ReadoutProps {
  * ends, a double-click back to its default. Controlled: it asks for a new value through `onChange`.
  *
  * **Changed.** *Hierarchy:* the value is now the loudest thing in the row, drawn in primary text at
- * the readout face and numeral weight, the label a quiet caption beside it; the original drew the
- * value in the accent at the same size as the label. *Colour meaning:* the accent is kept for the
- * one thing that shows amount, the bar's fill, so a page of readouts reads as a column of levels
- * rather than a column of coloured numbers (color.md, 60/30/10 and "Component Color Limit").
- * *Numerals:* tabular figures and a fixed `ch` width, right-aligned, so "9%" → "10%" never shifts
- * the row, even under packs whose readout face is proportional (typography.md, "Tabular Numbers").
- * *Affordance:* the bar runs the full width under label and value, so the drag span is as wide as
- * the row, grows a little on hover and while dragging, and the knob code is a small framed key cap
- * rather than loose text. *Contrast:* the track is a tint of the text colour, so it shows on light
- * and dark palettes alike; focus is a `:focus-visible` ring in the accent (craft-details.md, "Focus
- * States").
+ * body size in the readout face and numeral weight, the label the Stage's one caption (caption
+ * size, body weight, `--text-3`, label case) beside it: the same type recipe as BarReadout, so the
+ * two label-bar-value rows read as one family; the original drew the value in the accent at the
+ * same size as the label. *Colour meaning:* the accent is kept for the one thing that shows amount,
+ * the bar's fill, so a page of readouts reads as a column of levels rather than a column of
+ * coloured numbers; the number no longer turns accent while dragged, since numbers never wear it
+ * elsewhere (color.md, 60/30/10 and "Component Color Limit"). *Numerals:* tabular figures in a
+ * fixed `ch` width, right-aligned, and the unit in a fixed column drawn even when empty, so "9%"
+ * → "10%" never shifts the row and "38%", "1/8" and "5.0 kHz" align on their last digit, even
+ * under packs whose readout face is proportional (typography.md, "Tabular Numbers"); the knob code
+ * is in the readout face too, never mono. *Affordance:* the bar runs the full width under label
+ * and value, so the drag span is as wide as the row, grows a little on hover and while dragging,
+ * and the knob code is a small framed key cap rather than loose text. *State clarity:* disabled
+ * draws the bar and key cap dashed and its text in `--text-3`, never the faint `--text-4`.
+ * *Contrast:* the track is a tint of the text colour, so it shows on light and dark palettes alike;
+ * focus is a `:focus-visible` ring in the accent (craft-details.md, "Focus States").
  *
  * **Kept.** One compact hairline row per parameter with an empty code column when no knob moves it,
  * so rows line up; the unit split off the number and drawn smaller; every input and the slider's
@@ -95,7 +100,8 @@ export function Readout({
       <span className="yh-readout-label">{label}</span>
       <span className="yh-readout-value">
         <span className="yh-readout-number">{number}</span>
-        {unit && <span className="yh-readout-unit">{unit}</span>}
+        {/* Always drawn, empty when there's no unit, so every row's last digit lines up. */}
+        <span className="yh-readout-unit">{unit}</span>
       </span>
       <span className="yh-readout-code">{code && <kbd>{code}</kbd>}</span>
       <span ref={bar} className="yh-readout-bar" data-part="bar" aria-hidden="true">

@@ -95,7 +95,7 @@ export const Board: Story = {
   },
 };
 
-/** Held: detection is unsure, so the last chord stays, muted, with a "held" tag on the small line. */
+/** Held: detection is unsure, so the last chord stays, a dashed rule under it, with a "held" tag on the small line. */
 export const Held: Story = {
   args: { ...chordStopped },
   play: async ({ canvasElement }) => {

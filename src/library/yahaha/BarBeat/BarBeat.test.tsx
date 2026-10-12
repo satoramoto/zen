@@ -20,14 +20,24 @@ describe('BarBeat', () => {
     expect(states(container)).toEqual(['past', 'current', 'future', 'future']);
   });
 
-  it('wears the playing role, never a section hue, whatever section is passed', () => {
+  it('neutral ink, never a section hue or the playing fill, whatever section is passed', () => {
     for (const hue of ['intro', 'main', 'ending', 'brk', 'fill'] as const) {
       const { unmount } = render(<BarBeat beat={1} hue={hue} />);
       const bar = screen.getByRole('img');
-      expect(tone(bar)).toBe('var(--selected)');
+      expect(tone(bar)).toBe('');
       expect(bar).not.toHaveAttribute('data-hue');
       unmount();
     }
+    expect(/\.yh-bar-beat__segment--current[^{]*\{([^}]*)\}/.exec(css)?.[1]).toContain('background: var(--text-1)');
+    expect(/\.yh-bar-beat__segment--past\s*\{([^}]*)\}/.exec(css)?.[1]).toContain('background: var(--text-3)');
+    expect(css).not.toMatch(/--selected|--bloom/);
+  });
+
+  it('marks beat 1, and only beat 1', () => {
+    const { container } = render(<BarBeat beat={3} beats={4} />);
+    const marked = [...container.querySelectorAll('[data-state]')].map((s) => s.hasAttribute('data-downbeat'));
+    expect(marked).toEqual([true, false, false, false]);
+    expect(css).toMatch(/\.yh-bar-beat\s*\{[^}]*gap:\s*var\(--space-3\)/);
   });
 
   it('stopped: every segment at rest', () => {
@@ -47,9 +57,9 @@ describe('BarBeat', () => {
     expect(states(container)).toHaveLength(1);
   });
 
-  it('defaults to a stopped 4-beat bar in the playing role', () => {
+  it('defaults to a stopped 4-beat bar', () => {
     const { container } = render(<BarBeat />);
-    expect(tone(screen.getByRole('img', { name: 'Stopped' }))).toBe('var(--selected)');
+    expect(screen.getByRole('img', { name: 'Stopped' })).toBeInTheDocument();
     expect(states(container)).toHaveLength(4);
   });
 

@@ -28,5 +28,9 @@ describe('DisplayArt', () => {
         new RegExp(`--yh-displayart-${part}:\\s*color-mix\\(in oklab, var\\(--accent\\) calc\\([^)]*var\\(--scheme-light\\)\\)`),
       );
     }
+    // On light the near hill stops at 24% accent; the sun sits low, clear of the tempo; the fade runs to 85%.
+    expect(css).toMatch(/--yh-displayart-near:\s*color-mix\(in oklab, var\(--accent\) calc\(8% \+ 16% \* var\(--scheme-light\)\)/);
+    expect(/\.yh-displayart__sun \{([^}]*)\}/.exec(css)![1]).toMatch(/top:\s*5\d%/);
+    expect(/\.yh-displayart__fade \{([^}]*)\}/.exec(css)![1]).toMatch(/transparent 85%\)/);
   });
 });
