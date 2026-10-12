@@ -77,7 +77,10 @@ export type StageHeroDensity = Extract<DisplayDensity, 'full' | 'compact'>;
  *
  * 1. The screen is laid out at the frame's own size, at zoom 1, with the hero at `full` density.
  * 2. If that overflows, the hero goes `compact` (its tight chrome) and the screen refits. The frame
- *    size where `full` overflowed is kept; a larger frame tries `full` again.
+ *    size where `full` overflowed is kept, with the compact screen's content size at that frame.
+ *    A larger frame tries `full` again, and so does smaller content at the same frame (a pack
+ *    switch to a denser pack, a shorter status): one retry each time, and if `full` still
+ *    overflows the hero settles back on `compact` with the new content size remembered.
  * 3. If the compact screen still overflows (a frame below the smallest screen, or a large-density
  *    pack), the whole screen is zoomed down by the one factor that makes it fit, so no region is
  *    squeezed out of shape and nothing is cut off. A zoomed screen is laid out wider than the
@@ -92,7 +95,7 @@ function useFit() {
   const screen = useRef<HTMLDivElement>(null);
   const [hero, setHero] = useState<StageHeroDensity>('full');
   /** The frame size at which the `full` hero last overflowed. */
-  const tight = useRef<{ w: number; h: number } | null>(null);
+  const tight = useRef<{ w: number; h: number; content?: { w: number; h: number } } | null>(null);
   useLayoutEffect(() => {
     const outer = frame.current;
     const inner = screen.current;
@@ -114,6 +117,18 @@ function useFit() {
         inner.style.zoom = String(zoom);
         inner.style.width = `${w / zoom}px`;
         inner.style.height = `${h / zoom}px`;
+        if (pass === 0 && hero === 'compact' && tight.current) {
+          // The compact content at zoom 1; if it shrank since `full` overflowed here, retry `full`.
+          const content = { w: inner.scrollWidth, h: inner.scrollHeight };
+          const was = tight.current.content;
+          if (was && content.w <= was.w && content.h <= was.h && (content.w < was.w || content.h < was.h)) {
+            tight.current = null;
+            settled = true;
+            setHero('full');
+            return;
+          }
+          tight.current.content = content;
+        }
         const room = Math.min(inner.clientHeight / inner.scrollHeight, inner.clientWidth / inner.scrollWidth);
         if (room >= 0.999) break;
         if (pass === 0 && hero === 'full') {

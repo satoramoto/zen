@@ -184,6 +184,23 @@ describe('Stage', () => {
       refit();
       expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
     });
+
+    it('retries the full hero once when the content shrinks in the same frame', () => {
+      const need = { full: 800, compact: 740 };
+      const { refit } = measure({ w: 1217, h: 752 }, need);
+      render(<Stage {...stageBoard} />);
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
+      // A denser pack: the rows shrink, but full still overflows, so the hero settles compact.
+      Object.assign(need, { full: 780, compact: 720 });
+      refit();
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
+      refit();
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
+      // Denser still: now full fits.
+      Object.assign(need, { full: 740, compact: 690 });
+      refit();
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
+    });
   });
 
   it('puts the status line at the foot of the knobs and pads, not in a row of its own', () => {
