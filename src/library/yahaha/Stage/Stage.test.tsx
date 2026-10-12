@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stage, type StageProps } from './Stage';
 import { stageBoard, stageStopped } from './Stage.fixtures';
@@ -116,6 +116,100 @@ describe('Stage', () => {
     expect(onTempo).toHaveBeenLastCalledWith(120);
   });
 
+  describe('fitting the frame', () => {
+    afterEach(() => vi.unstubAllGlobals());
+
+    /** A frame of `frame` px and a screen whose content needs `need` px of height per hero density. */
+    function measure(frame: { w: number; h: number }, need: { full: number; compact: number }) {
+      const observers: { fit: () => void; nodes: Element[] }[] = [];
+      vi.stubGlobal(
+        'ResizeObserver',
+        class {
+          nodes: Element[] = [];
+          constructor(fit: () => void) {
+            observers.push({ fit, nodes: this.nodes });
+          }
+          observe(node: Element) {
+            this.nodes.push(node);
+          }
+          disconnect() {}
+        },
+      );
+      const is = (node: Element, name: string) => node.classList.contains(name);
+      const px = (node: Element, side: 'width' | 'height') => parseFloat((node as HTMLElement).style[side]) || 0;
+      vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+        return is(this, 'yh-stage') ? frame.w : is(this, 'yh-stage__screen') ? px(this, 'width') : 0;
+      });
+      vi.spyOn(Element.prototype, 'clientHeight', 'get').mockImplementation(function (this: Element) {
+        return is(this, 'yh-stage') ? frame.h : is(this, 'yh-stage__screen') ? px(this, 'height') : 0;
+      });
+      vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+        return is(this, 'yh-stage__screen') ? px(this, 'width') : 0;
+      });
+      vi.spyOn(Element.prototype, 'scrollHeight', 'get').mockImplementation(function (this: Element) {
+        if (!is(this, 'yh-stage__screen')) return 0;
+        return (this as HTMLElement).dataset.hero === 'compact' ? need.compact : need.full;
+      });
+      return { refit: () => act(() => observers.forEach((o) => o.fit())), observed: () => observers.flatMap((o) => o.nodes) };
+    }
+    const fit = () => ({
+      zoom: screen.getByRole('group', { name: 'Stage' }).dataset.zoom,
+      hero: screen.getByRole('region', { name: 'Stage display' }).getAttribute('data-density'),
+    });
+
+    it('tightens the hero before it zooms, at the 1217 × 752 screen', () => {
+      measure({ w: 1217, h: 752 }, { full: 800, compact: 740 });
+      render(<Stage {...stageBoard} />);
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
+    });
+
+    it('keeps the full hero where the screen has the height', () => {
+      measure({ w: 1440, h: 900 }, { full: 860, compact: 800 });
+      render(<Stage {...stageBoard} />);
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
+    });
+
+    it('refits when the content grows, and gives the hero back its room when the frame does', () => {
+      const frame = { w: 1217, h: 752 };
+      const need = { full: 800, compact: 740 };
+      const { refit, observed } = measure(frame, need);
+      const { container } = render(<Stage {...stageBoard} />);
+      // The screen's rows are watched, not only the frame: the fit sets the screen's own box.
+      expect(observed()).toContain(container.querySelector('.yh-stage__top'));
+      expect(observed()).toContain(container.querySelector('.yh-stage__band'));
+      need.compact = 940;
+      refit();
+      expect(fit()).toEqual({ zoom: '0.800', hero: 'compact' });
+      Object.assign(frame, { w: 1440, h: 900 });
+      refit();
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
+    });
+
+    it('retries the full hero once when the content shrinks in the same frame', () => {
+      const need = { full: 800, compact: 740 };
+      const { refit } = measure({ w: 1217, h: 752 }, need);
+      render(<Stage {...stageBoard} />);
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
+      // A denser pack: the rows shrink, but full still overflows, so the hero settles compact.
+      Object.assign(need, { full: 780, compact: 720 });
+      refit();
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
+      refit();
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
+      // Denser still: now full fits.
+      Object.assign(need, { full: 740, compact: 690 });
+      refit();
+      expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
+    });
+  });
+
+  it('puts the status line at the foot of the knobs and pads, not in a row of its own', () => {
+    const { container } = setup(stageStopped);
+    const status = container.querySelector('.yh-status-line');
+    expect(status?.closest('.yh-stage__controls')).not.toBeNull();
+    expect(status).toHaveTextContent('Style queued');
+  });
+
   it('renders the stopped board', () => {
     setup(stageStopped);
     expect(region('Stage display').getByRole('img', { name: 'Stopped on Main A' })).toBeInTheDocument();
@@ -175,6 +269,51 @@ describe('StagePlayground', () => {
     expect(screen.queryByRole('dialog', { name: 'Metronome settings' })).toBeNull();
     await user.click(screen.getByRole('button', { name: /^Apply One Touch 3/ }));
     expect(screen.getByRole('button', { name: /^One Touch 3, applied/ })).toBeInTheDocument();
+  });
+
+  it('applies One Touch from the OTS pads, and the pads follow the hero', async () => {
+    play();
+    const user = userEvent.setup();
+    const pads = region('Pads');
+    const ots = (n: number) => pads.getByRole('button', { name: new RegExp(`^OTS\\s${n}\\b`) });
+    // The seed's One Touch 2 lights OTS 2, not the bank's own lit OTS 1.
+    expect(ots(2)).toHaveAttribute('data-state', 'playing');
+    expect(ots(1)).toHaveAttribute('data-state', 'idle');
+    await user.click(ots(3));
+    expect(region('Stage display').getByRole('button', { name: /^One Touch 3, applied/ })).toBeInTheDocument();
+    expect(ots(3)).toHaveAttribute('data-state', 'playing');
+    expect(ots(2)).toHaveAttribute('data-state', 'idle');
+    await user.click(region('Stage display').getByRole('button', { name: /^Apply One Touch 4/ }));
+    expect(ots(4)).toHaveAttribute('data-state', 'playing');
+    // A new style has none applied.
+    await user.click(screen.getByRole('button', { name: 'Next style (Track right)' }));
+    for (const n of [1, 2, 3, 4]) expect(ots(n)).toHaveAttribute('data-state', 'idle');
+  });
+
+  it('steps styles around both ends of the list', async () => {
+    play();
+    const user = userEvent.setup();
+    const hero = region('Stage display');
+    const style = (name: string) => hero.getByRole('button', { name: `${name}: open the Browser` });
+    await user.click(hero.getByRole('button', { name: 'Previous style (Track left)' }));
+    expect(style('Waltz for Two')).toBeInTheDocument();
+    expect(hero.getByText(/3\/4/)).toBeInTheDocument();
+    await user.click(hero.getByRole('button', { name: 'Next style (Track right)' }));
+    expect(style('Sunday Drive Pop')).toBeInTheDocument();
+  });
+
+  it("shows a seed style the list doesn't hold, and steps from it to either end", async () => {
+    const seed = { ...stageBoard, display: { ...stageBoard.display, style: { ...stageBoard.display.style, name: 'Midnight Swing', timeSignature: '6/8' } } };
+    const user = userEvent.setup();
+    const { unmount } = render(<StagePlayground {...seed} width={1440} height={900} tick={false} />);
+    const hero = () => region('Stage display');
+    expect(hero().getByRole('button', { name: 'Midnight Swing: open the Browser' })).toBeInTheDocument();
+    await user.click(hero().getByRole('button', { name: 'Next style (Track right)' }));
+    expect(hero().getByRole('button', { name: 'Sunday Drive Pop: open the Browser' })).toBeInTheDocument();
+    unmount();
+    render(<StagePlayground {...seed} width={1440} height={900} tick={false} />);
+    await user.click(hero().getByRole('button', { name: 'Previous style (Track left)' }));
+    expect(hero().getByRole('button', { name: 'Waltz for Two: open the Browser' })).toBeInTheDocument();
   });
 
   it('moves a fader and switches the layer', async () => {

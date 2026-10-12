@@ -2,7 +2,8 @@
    declared here. It lays the regions out and never reaches into one: each region fills the box
    it is given. */
 
-/* The frame: the screen's size on the page. The screen inside it is zoomed to fit (Stage.tsx). */
+/* The frame: the screen's size on the page. Stage.tsx lays the screen out at the frame's size,
+   tightens the hero, and zooms only when the regions still need more room than the frame has. */
 .yh-stage {
   box-sizing: border-box;
   width: 100%;
@@ -17,20 +18,22 @@
   /* Between the regions of one row: wide enough that each reads as its own plane. */
   --yh-stage-col-gap: calc(var(--yh-stage-gap) * 1.5);
   /* The song form's width: inside its two-row-transport range (641–760 px), so the form and its
-     transport sit beside the hero at their shortest without the hero losing its width; a larger
-     density's keys need a little more of that range. */
+     transport stay two rows tall beside the hero; a larger density's keys need a little more of
+     that range. */
   --yh-stage-form-w: max(660px, calc(var(--control-h) * 20.2));
-  /* The least the hero takes: its three readouts side by side at the pack's display size. Where
-     the frame is narrower, the screen zooms down rather than squeezing the hero. */
-  --yh-stage-hero-min: calc(var(--control-h) * 22.5);
+  /* The least the hero takes: 15.5 control heights (434 px compact). There the Display keeps the
+     section, the chord and the tempo each in its own cell on one line (Display.css, a 436 px
+     column), so the 1217 px screen fits at zoom 1; a narrower frame zooms instead. */
+  --yh-stage-hero-min: calc(var(--control-h) * 15.5);
   /* The least the mixer takes: enough fader travel to read a level by its position. */
   --yh-stage-faders-min: calc(var(--control-h) * 9);
 
   box-sizing: border-box;
   display: grid;
-  /* bar | now (hero and song form) | band (mixer, knobs over pads) | status | keys. The band takes
-     the rest, and never less than it needs: then the screen is zoomed to fit instead. */
-  grid-template-rows: auto auto 1fr auto auto;
+  /* bar | now (hero and song form) | band (mixer; knobs over pads over the status line) | keys.
+     The band takes the rest, and never less than it needs: the hero tightens first, then the
+     screen zooms. */
+  grid-template-rows: auto auto 1fr auto;
   row-gap: var(--yh-stage-gap);
   width: 100%;
   height: 100%;
@@ -40,9 +43,14 @@
   color: var(--text-1);
   font-family: var(--font-sans);
 }
+/* A short screen (the hero compact, Stage.tsx) also closes its own gaps a step, so 1217 × 752
+   fits at zoom 1 with the mixer's travel intact. */
+.yh-stage__screen[data-hero='compact'] {
+  --yh-stage-gap: var(--space-3);
+}
 
 /* Every row may shrink to the screen, except the top row: its hero and form never go below their
-   least widths, so a narrow frame widens the screen's one column and the screen zooms to fit. */
+   least widths, so a narrower frame overflows and the screen zooms to fit. */
 .yh-stage__screen > :not(.yh-stage__top) {
   min-width: 0;
 }
@@ -61,6 +69,7 @@
 }
 .yh-stage__display {
   display: flex;
+  min-width: 0;
 }
 .yh-stage__display > * {
   flex: 1 1 auto;
@@ -110,6 +119,12 @@
 }
 .yh-stage__pads > * {
   flex: 1 1 auto;
+}
+/* The status line closes the right column, on the mixer's Functions line, rather than holding an
+   empty row over the keys while there is nothing to say. */
+.yh-stage__status {
+  flex: none;
+  min-width: 0;
 }
 
 .yh-stage__keys {

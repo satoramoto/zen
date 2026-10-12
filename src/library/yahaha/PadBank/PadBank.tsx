@@ -84,7 +84,8 @@ export interface PadBankProps {
  * **Kept.** Holds no state: the bank comes in `bank` and the flash phase in `lit`; a tab choice
  * and a press go out by index. The header's one tab style (ChosenTabs, a tablist with arrow keys),
  * the `bankName` fallback tab, `bankTips`, the 8 / 4 `columns`, each pad's face from the Pad
- * primitive, and the spoken names ("Rack 1 (pad 1)").
+ * primitive (a waiting pad's ARMED / NEXT chip and the room it keeps above the label are the Pad's
+ * own; the bank sets only the inset), and the spoken names ("Rack 1 (pad 1)").
  */
 export function PadBank({
   pads,

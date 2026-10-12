@@ -48,7 +48,7 @@ export const Stopped: Story = {
   args: { ...stageStopped },
 };
 
-/** The smallest screen, 1217 × 752: the board's layout, scaled to fit (0.845), so nothing reflows or is cut off. */
+/** The smallest screen, 1217 × 752: laid out at 100%, the hero compact in a narrower column, nothing cut off. */
 export const Small: Story = {
   args: { width: 1217, height: 752 },
 };
@@ -58,10 +58,11 @@ export const Small: Story = {
  * layers, fader pages, knob pages and pad banks choose; sections queue as next and land at the end
  * of the phrase (or on a second press); Start / Stop runs the band and the beat moves; − + and
  * Tap change the tempo; faders move; the metronome's ▾ opens and closes its popover; One Touch
- * applies. Every press logs in the Actions panel.
+ * applies, from the hero or the OTS pads. It fills the window, so resize the window to see the
+ * fit. Every press logs in the Actions panel.
  */
 export const Playground: Story = {
-  args: { tipAction: undefined },
+  args: { tipAction: undefined, width: undefined, height: undefined },
   render: (args) => <StagePlayground {...args} log={fn().mockName('stage')} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

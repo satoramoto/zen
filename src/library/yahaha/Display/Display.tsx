@@ -179,7 +179,8 @@ function nextLine(n: DisplayNowPlaying): { status: string; next: string; when: s
  * hero (every Stage column) and full above it. *Narrow* (container queries on the width): the
  * parts are a fourth column only from a 900px hero, one row under the readouts below that (the
  * dots name the parts) and gone below 600px; at a 436px column the gaps and tempo keys tighten so
- * the section, chord and tempo each keep their own cell, the fingering on one line with an ellipsis.
+ * the section, chord and tempo each keep their own cell, the fingering on one line with an ellipsis,
+ * and in the header the genre and metre give way before the style's name.
  * *Affordance:* the beat bar is drawn thick, the lit beat twice as tall, visible from across the
  * room; Tap is a real key, and the style tempo, once a hidden double-click, is a visible quiet key
  * beside it (the double-click still works).

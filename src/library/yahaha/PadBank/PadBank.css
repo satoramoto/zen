@@ -49,11 +49,6 @@
   font-size: var(--size-caption);
   letter-spacing: min(var(--tracking), 0.02em);
 }
-/* A waiting pad keeps its ARMED / NEXT chip clear of the label by moving the label below it. */
-.yh-padbank__cell .yh-pad[data-state='armed'],
-.yh-padbank__cell .yh-pad[data-state='next'] {
-  padding-top: calc(var(--size-caption) * 1.4 + var(--space-1) * 2);
-}
 
 /* Nothing assigned: a quiet dot where the key would be, nothing to read or press. */
 .yh-padbank__empty {
