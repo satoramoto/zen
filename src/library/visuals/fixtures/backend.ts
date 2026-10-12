@@ -59,6 +59,10 @@ export interface World {
   fail: Record<string, string>;
   /** Seeds what the app would make up (a random pick, the meter's wobble), so a story draws the same every run. */
   seed: number;
+  /** The lab: what `open` reads at each path (`fixtures/presets.ts`); a path not here opens as the original's, with no preset. */
+  presets?: Record<string, api.Preset>;
+  /** The lab: what `open` and `apply` say failed to compile; nothing when left out. */
+  report?: api.Report;
 }
 
 export const world = (over: Partial<World> = {}): World => ({
@@ -314,7 +318,7 @@ export function handler(w: World) {
         return w.recent;
       case 'open':
         live({ ...w.lists.deck, current: args.path as string });
-        return { preset: null, report: { equations: [], shaders: [] } };
+        return { preset: w.presets?.[args.path as string] ?? null, report: w.report ?? { equations: [], shaders: [] } };
       case 'resume_state':
         return w.resume;
 
@@ -445,6 +449,16 @@ export function handler(w: World) {
         return ++hoverTicket;
       case 'hover_frame':
         return new ArrayBuffer(0);
+
+      // The lab (not in the original's fake app): edits land, a setting goes live, "write my own" gets a default shader.
+      case 'apply':
+        return w.report ?? { equations: [], shaders: [] };
+      case 'set_value':
+        return true;
+      case 'default_shader':
+        return args.which === 'warp'
+          ? 'shader_body\n{\n  ret = tex2D(sampler_main, uv).xyz * 0.98;\n}'
+          : 'shader_body\n{\n  ret = tex2D(sampler_main, uv).xyz;\n  ret = pow(ret, 1.0);\n}';
       case 'audio_sources':
         return w.sources;
       case 'listening':
