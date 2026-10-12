@@ -1,4 +1,4 @@
-/* PadBank: the Pads header with its bank tabs, and sixteen pad cells. Reads only contract
+/* PadBank: the Pads header with its bank tabs, and sixteen square pad cells. Reads only contract
    variables and the --yh-padbank-* / --yh-pad-* ones declared here. */
 
 .yh-padbank {
@@ -12,27 +12,54 @@
   font-family: var(--font-sans);
 }
 
-.yh-padbank__pads {
-  /* The least a row may be: two control heights, a key's height and more, with room for a
-     two-line label; rows share whatever height the region gives beyond that (the Stage's 2 × 64
-     or 2 × 56). */
-  --yh-padbank-row: calc(var(--control-h) * 2);
+/* The room the pads get: whatever the region leaves under the tabs. A size container, so the pads
+   can be sized from its width and its height, whichever is tighter. With no height given (a bank
+   on its own), its height follows its width (eight a row: a quarter of it; 4 × 4: square), so the
+   width decides; in a region with a height, it grows or shrinks to that height. */
+.yh-padbank__room {
   flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 4;
+  container-type: size;
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  grid-auto-rows: minmax(var(--yh-padbank-row), 1fr);
-  gap: var(--space-1);
+  /* The grid hangs under the tabs and centres across: spare height goes below the pads. */
+  place-content: start center;
   margin-top: var(--space-2);
 }
+.yh-padbank__room[data-columns='4'] {
+  aspect-ratio: 1;
+}
+
+.yh-padbank__pads {
+  /* Room to breathe: at least --space-2 between pads, up to --space-3 when the room is wide. */
+  --yh-padbank-gap: clamp(var(--space-2), 2cqw, var(--space-3));
+  /* Every pad is a square, its side the tighter of the room's width over eight columns and its
+     height over two rows (gaps taken out). */
+  --yh-padbank-cols: 8;
+  --yh-padbank-rows: 2;
+  --yh-padbank-cell: max(
+    0px,
+    min(
+      (100cqw - var(--yh-padbank-gap) * (var(--yh-padbank-cols) - 1)) / var(--yh-padbank-cols),
+      (100cqh - var(--yh-padbank-gap) * (var(--yh-padbank-rows) - 1)) / var(--yh-padbank-rows)
+    )
+  );
+  display: grid;
+  grid-template-columns: repeat(var(--yh-padbank-cols), var(--yh-padbank-cell));
+  grid-auto-rows: var(--yh-padbank-cell);
+  gap: var(--yh-padbank-gap);
+}
 .yh-padbank__pads[data-columns='4'] {
-  --yh-padbank-row: calc(var(--control-h) * 1.25);
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  --yh-padbank-cols: 4;
+  --yh-padbank-rows: 4;
 }
 
 .yh-padbank__cell {
   display: flex;
   min-width: 0;
   min-height: 0;
+  aspect-ratio: 1;
 }
 /* Each pad fills its cell through the Pad's fillCell; the bank sets only its inset. */
 .yh-padbank__cell .yh-pad {

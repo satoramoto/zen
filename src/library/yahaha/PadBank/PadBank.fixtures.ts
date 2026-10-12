@@ -1,15 +1,53 @@
 import type { PadItem } from './PadBank';
 
-// Ported from the baseline Stage Playground's `stagePadBanks` (yahaha/src/ui/Stage/Stage.fixtures.ts),
-// minus Sections, which moved to the SongForm region. The baseline's "—" pads (nothing assigned)
-// are `empty` here; its dark pads (an empty Quick Rack, absent from this bank) stay `dark`.
+// Ported from the baseline's `sectionPads` (yahaha/src/ui/PadBank/PadBank.fixtures.ts) and the
+// Stage Playground's `stagePadBanks` (yahaha/src/ui/Stage/Stage.fixtures.ts). The baseline's "—"
+// pads (nothing assigned) are `empty` here; its dark pads (an empty Quick Rack, a section absent
+// from this style) stay `dark`.
 
 const NB = ' ';
 const util = (label: string, state: PadItem['state'] = 'idle'): PadItem => ({ label, family: 'util', state });
 const empty = (): PadItem => ({ label: '', family: 'util', state: 'idle', empty: true });
 
-/** The pad banks, one header tab each. Sections is gone: it is the SongForm region's. */
+/**
+ * The board's Sections bank, as the Launchkey lays it out: Main B playing, Main C next, Start /
+ * Stop running; Intro III and Ending III absent from this style. Sync Start, Auto Fill, Tap, Sync
+ * Stop and Start / Stop are transport pads.
+ */
+export const sectionPads: PadItem[] = [
+  { label: `Intro${NB}I`, family: 'intro', state: 'idle', tip: 'section.intro1' },
+  { label: `Intro${NB}II`, family: 'intro', state: 'idle', tip: 'section.intro2' },
+  { label: `Intro${NB}III`, family: 'intro', state: 'dark', tip: 'section.intro3', name: 'Intro III (not in this style)' },
+  { label: 'Sync Start', family: 'util', state: 'idle', tip: 'transport.sync_start', transport: true },
+  { label: `Ending${NB}I`, family: 'ending', state: 'idle', tip: 'section.ending1' },
+  { label: `Ending${NB}II`, family: 'ending', state: 'idle', tip: 'section.ending2' },
+  { label: `Ending${NB}III`, family: 'ending', state: 'dark', tip: 'section.ending3', name: 'Ending III (not in this style)' },
+  { label: 'Auto Fill', family: 'util', state: 'idle', tip: 'transport.auto_fill', transport: true },
+  { label: `Main${NB}A`, family: 'main', state: 'idle', tip: 'section.main_a' },
+  { label: `Main${NB}B`, family: 'main', state: 'playing', tip: 'section.main_b', name: 'Main B, playing' },
+  { label: `Main${NB}C`, family: 'main', state: 'next', tip: 'section.main_c', name: 'Main C, queued after bar 4 (flashing)' },
+  { label: `Main${NB}D`, family: 'main', state: 'idle', tip: 'section.main_d' },
+  { label: 'Break', family: 'brk', state: 'idle', tip: 'section.break' },
+  { label: 'Tap', family: 'util', state: 'idle', tip: 'tempo.tap', transport: true },
+  { label: 'Sync Stop', family: 'util', state: 'idle', tip: 'transport.sync_stop', transport: true },
+  {
+    label: 'Start / Stop',
+    family: 'start',
+    state: 'running',
+    name: 'Start / Stop, running (pad 16; the transport Start / Stop is the same control)',
+    tip: 'transport.start_stop',
+    transport: true,
+  },
+];
+
+/**
+ * The four banks after Sections: what the Stage passes today (its fixtures index these), kept so
+ * adding Sections can't shift the Stage's banks. `allPadBanks` is the whole list.
+ */
 export const padBanks = ['Quick Racks', 'Chord', 'Multi Pads', 'Setup'];
+
+/** Every pad bank, one header tab each, as the Launchkey pages them: Sections first. */
+export const allPadBanks = ['Sections', ...padBanks];
 
 /** Quick Racks: racks 1–8 of the bank on view (1 loaded, 2–5 stored, 6–8 empty slots), then OTS 1–4, Bank −/+ and Store. */
 export const quickRackPads: PadItem[] = [
@@ -87,6 +125,9 @@ export const setupPads: PadItem[] = [
 
 /** Every bank's sixteen pads, in `padBanks` order. */
 export const padsByBank: PadItem[][] = [quickRackPads, chordPads, multiPadPads, setupPads];
+
+/** Every bank's sixteen pads, in `allPadBanks` order (Sections first). */
+export const allPadsByBank: PadItem[][] = [sectionPads, ...padsByBank];
 
 /** The board's bank name and its old counter (PadBank no longer draws the counter). */
 export const quickRackBank = { name: 'Quick Racks', count: '1/4' };
