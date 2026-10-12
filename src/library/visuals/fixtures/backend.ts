@@ -1,3 +1,5 @@
+import type { AudioStatus, AudioLane } from '../model/audio-api';
+import { sameSource } from '../SourcePicker/SourcePicker';
 /**
  * The app behind the page, faked for Storybook and the tests: every command the
  * page sends answered from the fixtures (`fixtures.ts`), with the events it
@@ -46,6 +48,7 @@ export interface World {
   update: api.Update | null;
   sources: api.AudioSources;
   heard: api.Heard;
+  audio?: AudioStatus;
   levels: [number, number];
   stats: api.Stats;
   firstRun: boolean;
@@ -447,6 +450,72 @@ export function handler(w: World) {
         return new ArrayBuffer(0);
       case 'audio_sources':
         return w.sources;
+      case 'audio_status': {
+        if (!w.audio) {
+          const source = w.sources.sources.find((s) => s.name === w.heard.choice?.name)?.id ?? null;
+          w.audio = {
+            main: {
+              ...w.heard,
+              source,
+              selected: source,
+              enabled: !!source,
+              unavailable: false,
+            },
+            mic: {
+              choice: null,
+              channels: 0,
+              source: null,
+              selected: null,
+              enabled: false,
+              unavailable: false,
+            },
+          };
+        }
+        return w.audio;
+      }
+      case 'choose_audio_lane': {
+        if (!w.audio) {
+          const source = w.sources.sources.find((s) => s.name === w.heard.choice?.name)?.id ?? null;
+          w.audio = {
+            main: {
+              ...w.heard,
+              source,
+              selected: source,
+              enabled: !!source,
+              unavailable: false,
+            },
+            mic: {
+              choice: null,
+              channels: 0,
+              source: null,
+              selected: null,
+              enabled: false,
+              unavailable: false,
+            },
+          };
+        }
+        const lane = args.lane as AudioLane;
+        const id = args.source as api.SourceId | null;
+        const source = w.sources.sources.find((s) => sameSource(s.id, id));
+        if (id && (!source || (lane === 'mic' && id.kind !== 'device'))) throw new Error('Input unavailable');
+        w.audio[lane] = {
+          choice: source
+            ? {
+                name: source.name,
+                size: source.channels,
+                left: Number(args.left),
+                right: Number(args.right),
+              }
+            : null,
+          channels: source?.channels ?? 0,
+          source: id,
+          selected: id,
+          enabled: !!id,
+          unavailable: false,
+        };
+        w.heard = w.audio.main;
+        return w.audio;
+      }
       case 'listening':
         return w.heard;
       case 'inputs':

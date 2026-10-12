@@ -1,3 +1,4 @@
+import { CameraAction } from '../Camera/Camera';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import { Layer } from '../../layout/Layer';
 import { titleOf } from '../HelpOverlay/HelpOverlay';
@@ -118,6 +119,7 @@ export function StageHead({ live, crateOpen, onCrate, help, onHelp, onView }: St
         <Fps className="vs-stagehead-fps" />
         <BeatLight live={live} />
         <OutputLight live={live} />
+        <CameraAction />
         <ButtonFace tone="quiet" className="vs-stagehead-tool" aria-label="Help" aria-haspopup="dialog" aria-expanded={help} aria-keyshortcuts="?" title={titleOf('help')} onClick={onHelp}>
           <Icon name="help" />
         </ButtonFace>

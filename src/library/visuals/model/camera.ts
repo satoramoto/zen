@@ -36,11 +36,13 @@ export interface CameraState {
 }
 /** Host-owned capture adapter: UI never imports MediaPipe or opens hardware itself. */
 export interface CameraController {
- snapshot(): CameraState;
- subscribe(listener: () => void): () => void;
- watchDevices(): () => void;
- start(): Promise<void>;
- stop(): void;
- configure(settings: Partial<CameraSettings>): void;
- selectDevice(deviceId: string): void;
+  /** License accompanying the host's local segmentation model. */
+  modelLicenseUrl?: string;
+  snapshot(): CameraState;
+  subscribe(listener: () => void): () => void;
+  watchDevices(): () => void;
+  start(): Promise<void>;
+  stop(): void;
+  configure(settings: Partial<CameraSettings>): void;
+  selectDevice(deviceId: string): void;
 }
