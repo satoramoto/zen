@@ -17,7 +17,7 @@ It starts the app, the main Storybook (field guide and library) and the Yahaha S
 
 ## Checks
 
-Each must exit 0. Run the narrowest one that covers your change; run all of them before a handoff.
+Each must exit 0. Run the narrowest one that covers your change. CI on the PR runs the rest, so don't run the whole set locally.
 
 | Command | When |
 |---|---|
@@ -52,4 +52,4 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 
 ## Ownership
 
-Work on a branch in your own worktree; `main` takes merges once their checks pass. Don't push or create a PR without the owner's say-so.
+Work on a branch in your own worktree. Changes reach `main` only through a PR. `main` is protected: the `checks` job in `.github/workflows/checks.yml` must pass first. It runs every command in the table above except `npx vitest run src/library`, which `npm test` already covers. Lane leads push their branch but don't open the PR. The orchestrator opens it after review and turns on auto-merge.
