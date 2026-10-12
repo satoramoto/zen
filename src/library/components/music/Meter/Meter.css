@@ -1,0 +1,143 @@
+/* Meter: a caption, a channel and an optional reading. The channel is a `well`, the level lit, the
+   hold a line in ink. Contract variables plus the local --lib-meter-*. */
+
+.lib-meter {
+  /* Set inline by the component, 0–1. */
+  --lib-meter-fill: 0;
+  --lib-meter-peak: 0;
+  /* Sizes. */
+  --lib-meter-length: calc(var(--control-h) * 3);
+  --lib-meter-thickness: var(--space-1);
+  --lib-meter-hold: 2px;
+  --lib-meter-ink: var(--accent);
+
+  display: inline-grid;
+  grid-template-areas: 'caption' 'frame' 'readout';
+  justify-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  color: var(--text-1);
+}
+
+.lib-meter__caption {
+  grid-area: caption;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lib-meter__frame {
+  grid-area: frame;
+  display: flex;
+  min-width: 0;
+}
+.lib-meter__readout {
+  grid-area: readout;
+  min-width: 3ch;
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Inline: the caption over the reading, beside the bar on `side`. */
+.lib-meter[data-layout='inline'] {
+  grid-template-areas: 'caption frame' 'readout frame';
+  grid-template-columns: auto auto;
+  justify-items: start;
+  align-items: center;
+  column-gap: var(--space-2);
+  row-gap: 0;
+}
+.lib-meter[data-layout='inline'][data-side='right'] {
+  grid-template-areas: 'frame caption' 'frame readout';
+}
+
+.lib-meter__channel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: var(--mat-well-shadow);
+}
+.lib-meter[data-orientation='horizontal'] .lib-meter__channel {
+  width: var(--lib-meter-length);
+  height: var(--lib-meter-thickness);
+}
+.lib-meter[data-orientation='vertical'] .lib-meter__channel {
+  width: var(--lib-meter-thickness);
+  height: var(--lib-meter-length);
+}
+
+.lib-meter__level,
+.lib-meter__hold {
+  position: absolute;
+  pointer-events: none;
+}
+.lib-meter__level {
+  --lit: var(--lib-meter-ink);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+}
+.lib-meter[data-orientation='horizontal'] .lib-meter__level {
+  inset: 0 auto 0 0;
+  width: calc(var(--lib-meter-fill) * 100%);
+}
+.lib-meter[data-orientation='vertical'] .lib-meter__level {
+  inset: auto 0 0 0;
+  height: calc(var(--lib-meter-fill) * 100%);
+}
+.lib-meter__hold {
+  background: var(--text-1);
+}
+.lib-meter[data-orientation='horizontal'] .lib-meter__hold {
+  inset: 0 auto 0 calc(var(--lib-meter-peak) * (100% - var(--lib-meter-hold)));
+  width: var(--lib-meter-hold);
+}
+.lib-meter[data-orientation='vertical'] .lib-meter__hold {
+  inset: auto 0 calc(var(--lib-meter-peak) * (100% - var(--lib-meter-hold))) 0;
+  height: var(--lib-meter-hold);
+}
+
+/* Inside: a row. The bar spans the line; caption and reading sit over it. */
+.lib-meter[data-layout='inside'] {
+  display: grid;
+  grid-template-areas: 'frame';
+  width: 100%;
+  justify-items: stretch;
+}
+.lib-meter[data-layout='inside'][data-orientation='horizontal'] .lib-meter__channel {
+  width: 100%;
+  height: calc(var(--control-h) * 0.75);
+  border-radius: var(--radius-input);
+}
+.lib-meter[data-layout='inside'] .lib-meter__level {
+  background: color-mix(in oklab, var(--lit) 35%, transparent);
+  box-shadow: none;
+}
+.lib-meter[data-layout='inside'] .lib-meter__caption,
+.lib-meter[data-layout='inside'] .lib-meter__readout {
+  position: relative;
+  z-index: 1;
+  grid-area: frame;
+  align-self: center;
+  padding-inline: var(--space-2);
+}
+.lib-meter[data-layout='inside'] .lib-meter__caption {
+  justify-self: start;
+  color: var(--text-2);
+}
+.lib-meter[data-layout='inside'] .lib-meter__readout {
+  justify-self: end;
+}

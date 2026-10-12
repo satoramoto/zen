@@ -1,0 +1,118 @@
+/* Select: a key-faced field showing one member, and a float menu of the rest.
+   Reads only contract variables and the --lib-select-* ones declared here.
+
+   --lib-select-chars  the longest member, in characters (set inline)
+   --lib-select-width  the field's width: room for the longest member and the caret, unless
+                       `width` sets it inline
+   --lib-select-wash   hover and highlight tint over a face */
+
+.lib-select {
+  --lib-select-chars: 0;
+  --lib-select-caret: var(--space-2);
+  --lib-select-width: calc(var(--lib-select-chars) * 1ch + var(--lib-select-caret) + var(--space-3) * 3);
+  --lib-select-wash: color-mix(in oklab, var(--text-1) 10%, transparent);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  vertical-align: middle;
+  font-family: var(--font-sans);
+}
+
+.lib-select__caption {
+  color: var(--text-2);
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  white-space: nowrap;
+}
+
+/* The closed field: a pressable `key` face. */
+.lib-select__trigger {
+  --lib-select-tint: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  width: var(--lib-select-width);
+  max-width: 100%;
+  height: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: linear-gradient(var(--lib-select-tint), var(--lib-select-tint)), var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border), var(--mat-key-shadow);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-align: left;
+  cursor: pointer;
+}
+.lib-select__trigger:hover:not(:disabled) { --lib-select-tint: var(--lib-select-wash); }
+.lib-select[data-open] .lib-select__trigger {
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-pressed);
+}
+.lib-select__trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.lib-select__trigger:disabled {
+  color: var(--text-4);
+  cursor: not-allowed;
+}
+
+.lib-select__value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A drawn triangle in the current ink; flips while open. */
+.lib-select__caret {
+  flex: none;
+  width: var(--lib-select-caret);
+  height: calc(var(--lib-select-caret) * 0.6);
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  opacity: 0.7;
+  transition: transform 120ms ease-out;
+}
+.lib-select[data-open] .lib-select__caret { transform: rotate(180deg); }
+
+/* The menu: the Popover's float Layer, at least the field's width. */
+.lib-select__menu {
+  box-sizing: border-box;
+  min-width: var(--lib-popover-anchor);
+  padding: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+}
+.lib-select__option {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--control-h) * 0.85);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  cursor: pointer;
+  user-select: none;
+}
+.lib-select__option[data-active] {
+  background: var(--lib-select-wash);
+}
+.lib-select__option[data-chosen] {
+  background: var(--selected);
+  color: var(--selected-text);
+}
+.lib-select__option[data-chosen][data-active] {
+  box-shadow: inset 0 0 0 var(--border-width) var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-select__caret { transition: none; }
+}

@@ -1,0 +1,250 @@
+/* Button (from Yahaha's, redesigned). Reads only contract variables and the local --yh-* ones
+   declared here; no literal colours or radii.
+
+   --yh-button-tone   what the button belongs to: text colour (neutral), a hue slot, a state or a role
+   --yh-button-fill   the on ring and dot, the chosen underline, and the solid face of a running or
+                      recording key
+   --yh-button-ink    the label on that solid face
+   --yh-button-line   the rest outline
+   --yh-button-rest   the rest hover and press tint (neutral on a role-2 key: it has no hue at rest)
+   --yh-button-glow   lamp bloom when lit (0px for neutral, --bloom for coloured)
+   --yh-button-cta    the primary rest fill (--action; --role-2 on a role-2 key)
+   --yh-button-cta-ink the label on it
+   --yh-wait-ring     the waiting and on ring, the chosen underline: one weight across Button,
+                      LampButton and Pad */
+
+.yh-button {
+  --yh-button-tone: var(--text-1);
+  --yh-button-fill: var(--selected);
+  --yh-button-ink: var(--selected-text);
+  --yh-button-line: var(--border-strong);
+  --yh-button-rest: var(--yh-button-tone);
+  --yh-button-glow: 0px;
+  --yh-button-cta: var(--action);
+  --yh-button-cta-ink: var(--action-text);
+  --yh-wait-ring: calc(var(--border-width) * 2);
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  height: var(--control-h);
+  /* A key never truncates its own name: it grows to hold it. */
+  min-width: max-content;
+  margin: 0;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-control);
+  /* The face is a key: the theme's key material, under a tint layer that hover, press and waiting
+     set (a fill may be a gradient, so they wash over it rather than color-mix it). */
+  --yh-button-tint: transparent;
+  background:
+    linear-gradient(var(--yh-button-tint), var(--yh-button-tint)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+  /* The outline is an inset shadow, so no face ever changes the box; the material's shadow under it. */
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-line), var(--mat-key-shadow);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out, color 80ms ease-out;
+}
+
+/* Tones. Hue slots 1–4 are identity (an app maps its own meaning); sections (intro, main, fill,
+   brk, ending) stay neutral, because four hues can't name five sections without one passing for a
+   slot. ok/rec are state, a is the accent, role-2 the second role hue. Any coloured tone rings,
+   underlines and dots in its hue when on or chosen, with lamp bloom; slots and the accent take
+   --on-hue ink, states and role-2 their own text token. */
+.yh-button[data-hue='1'] { --yh-button-tone: var(--hue-1); }
+.yh-button[data-hue='2'] { --yh-button-tone: var(--hue-2); }
+.yh-button[data-hue='3'] { --yh-button-tone: var(--hue-3); }
+.yh-button[data-hue='4'] { --yh-button-tone: var(--hue-4); }
+.yh-button[data-hue='ok'] { --yh-button-tone: var(--success); }
+.yh-button[data-hue='rec'] { --yh-button-tone: var(--danger); }
+.yh-button[data-hue='a'] { --yh-button-tone: var(--accent); }
+.yh-button[data-hue='role-2'] { --yh-button-tone: var(--role-2); }
+.yh-button:not([data-hue='t']) {
+  --yh-button-fill: var(--yh-button-tone);
+  --yh-button-ink: var(--on-hue);
+  --yh-button-line: var(--yh-button-tone);
+  --yh-button-glow: var(--bloom);
+}
+/* After the rule above, at its specificity, so the per-tone ink wins. Sections draw in --text-1, so
+   their ink is the ground (--surface-0): the base text pair inverted, which contrasts in every pack
+   (--on-hue can equal --text-1, as on ableton, black on black). */
+.yh-button:is([data-hue='intro'], [data-hue='main'], [data-hue='ending'], [data-hue='brk'], [data-hue='fill']) {
+  --yh-button-ink: var(--surface-0);
+}
+.yh-button[data-hue='ok'] { --yh-button-ink: var(--success-text); }
+.yh-button[data-hue='rec'] { --yh-button-ink: var(--danger-text); }
+.yh-button[data-hue='role-2'] {
+  --yh-button-ink: var(--role-2-text);
+  /* At rest a role-2 key is neutral: the hue appears only on the waiting and on faces and on the
+     primary fill, so a primary role-2 key is the one saturated key at rest. */
+  --yh-button-line: var(--border-strong);
+  --yh-button-rest: var(--text-1);
+  /* A primary role-2 key fills in its own role hue, not --action. */
+  --yh-button-cta: var(--role-2);
+  --yh-button-cta-ink: var(--role-2-text);
+}
+
+/* Sizes: all from the control height, so density packs scale every key together. Widths are
+   floors: min-width: max-content lets a longer name (a larger type facet, a wider case) grow the key. */
+.yh-button[data-size='icon'] { width: var(--control-h); padding: 0; }
+.yh-button[data-size='band'] {
+  width: calc(var(--control-h) * 2.75);
+  justify-content: flex-start;
+  padding: 0 var(--space-3);
+}
+.yh-button[data-size='pair'] { width: calc(var(--control-h) * 1.6); padding: 0 var(--space-1); }
+.yh-button[data-size='cell'] { flex: 1 1 auto; width: 100%; padding: 0 var(--space-2); }
+.yh-button[data-size='caret'] { width: calc(var(--control-h) * 0.625); padding: 0; }
+
+/* Tall: the primary key of a transport, two control rows and their gap, the label at heading size. */
+.yh-button[data-tall] {
+  height: calc(var(--control-h) * 2 + var(--space-2));
+  font-size: var(--size-heading);
+}
+
+/* Joined keys square their shared corners. */
+.yh-button[data-join='start'] { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.yh-button[data-join='end'] { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+/* The label is never clipped: the key's min-width holds it whole. */
+.yh-button__label { flex: none; }
+.yh-button__glyph { flex: none; font-size: 0.75em; line-height: 1; }
+.yh-button__glyph[data-glyph='prev'], .yh-button__glyph[data-glyph='next'] { font-size: 0.9em; }
+.yh-button__glyph[data-glyph='plus'], .yh-button__glyph[data-glyph='minus'] { font-size: 1.15em; }
+/* Next to a label, the glyph is secondary; alone it is the label. */
+.yh-button:not([data-alone]) .yh-button__glyph { opacity: 0.72; }
+
+/* Rank at rest. */
+.yh-button[data-face='off'][data-variant='primary'] {
+  background: var(--yh-button-cta);
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-cta), var(--mat-key-shadow);
+  color: var(--yh-button-cta-ink);
+}
+/* Quiet: no key at all, only the tint layer. */
+.yh-button[data-face='off'][data-variant='quiet'] {
+  background: linear-gradient(var(--yh-button-tint), var(--yh-button-tint));
+  box-shadow: none;
+  color: var(--text-2);
+}
+
+/* Hover and press tint the face: at rest by its rest tone, on and chosen by their mark's colour.
+   Held, a key presses in: the material's pressed shadow under its outline. */
+@media (hover: hover) {
+  .yh-button[data-face='off']:hover { --yh-button-tint: color-mix(in oklab, var(--yh-button-rest) 10%, transparent); }
+  .yh-button[data-face='off'][data-variant='quiet']:hover { color: var(--text-1); }
+  .yh-button[data-face='off'][data-variant='primary']:hover { background: color-mix(in oklab, var(--yh-button-cta) 86%, var(--surface-0)); }
+  .yh-button[data-face='on']:hover,
+  .yh-button[data-face='chosen']:hover { --yh-button-tint: color-mix(in oklab, var(--yh-button-fill) 10%, transparent); }
+  .yh-button[data-face='on'][data-solid]:hover { background: color-mix(in oklab, var(--yh-button-fill) 88%, var(--surface-0)); }
+}
+.yh-button[data-face='off']:active {
+  --yh-button-tint: color-mix(in oklab, var(--yh-button-rest) 18%, transparent);
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-line), var(--mat-key-pressed);
+}
+.yh-button[data-face='off'][data-variant='quiet']:active { box-shadow: none; }
+.yh-button[data-face='off'][data-variant='primary']:active {
+  background: color-mix(in oklab, var(--yh-button-cta) 76%, var(--surface-0));
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-cta), var(--mat-key-pressed);
+}
+
+/* On: switched on (help mode, Fade while fading, an open popover). The key pressed in, a ring in
+   the fill colour and a lit dot, no fill: a solid face means sounding or running, and this key is
+   neither. */
+.yh-button[data-face='on'] {
+  box-shadow: inset 0 0 0 var(--yh-wait-ring) var(--yh-button-fill), var(--mat-key-pressed);
+  color: var(--text-1);
+}
+/* The dot sits centred just under the top ring, above the label's cap height, so even a `pair` or
+   `icon` key whose label fills its width keeps the dot clear of the words. */
+.yh-button[data-face='on']:not([data-solid])::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--yh-wait-ring) + var(--border-width));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--space-1) * 1.25);
+  height: calc(var(--space-1) * 1.25);
+  border-radius: var(--radius-pill);
+  --lit: var(--yh-button-fill);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+  pointer-events: none;
+}
+/* Running (Start / Stop) and recording: the one solid face (state wins over material), pressed in, lit. */
+.yh-button[data-face='on'][data-solid] {
+  background: var(--yh-button-fill);
+  box-shadow:
+    inset 0 0 0 var(--border-width) var(--yh-button-fill),
+    var(--mat-key-pressed),
+    0 0 var(--yh-button-glow) var(--yh-button-fill);
+  color: var(--yh-button-ink);
+}
+
+/* Chosen: the one picked from a set (the applied One Touch), latched down. Ink and a rule along the
+   bottom, the same mark as an underlined tab; the rest outline stays, so the set still reads as
+   keys. */
+.yh-button[data-face='chosen'] {
+  box-shadow:
+    inset 0 0 0 var(--border-width) var(--yh-button-line),
+    inset 0 calc(-1 * var(--yh-wait-ring)) 0 var(--yh-button-fill),
+    var(--mat-key-pressed);
+  color: var(--text-1);
+}
+.yh-button[data-face='chosen'][data-variant='quiet'] {
+  background: linear-gradient(var(--yh-button-tint), var(--yh-button-tint));
+  box-shadow: inset 0 calc(-1 * var(--yh-wait-ring)) 0 var(--yh-button-fill);
+}
+
+/* Waiting: queued or armed, the double-weight ring over a faint tint of the key; the label stays legible. */
+.yh-button[data-face='waiting'] {
+  --yh-button-tint: color-mix(in oklab, var(--yh-button-tone) 14%, transparent);
+  box-shadow: inset 0 0 0 var(--yh-wait-ring) var(--yh-button-tone), var(--mat-key-shadow);
+  color: var(--text-1);
+}
+/* The flash's off phase (the parent drives `lit`): no tint, the ring at rest weight in the tone. */
+.yh-button[data-face='waiting'][data-lit='false'] {
+  --yh-button-tint: transparent;
+  box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-tone), var(--mat-key-shadow);
+}
+
+/* Disabled: shown, not pressable, whatever the face. A dashed edge (drawn on ::before, since an inset
+   shadow can't dash) and the label in --text-3: unavailable by structure, still readable. */
+.yh-button[data-face='disabled'] {
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+.yh-button[data-face='disabled']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: var(--border-width) dashed var(--border-strong);
+  border-radius: var(--radius-control);
+  pointer-events: none;
+}
+.yh-button[data-join='start']::before { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.yh-button[data-join='end']::before { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+.yh-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-button { transition: none; }
+}

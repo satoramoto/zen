@@ -2,9 +2,8 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { displayPageTabs, fullPageTabs } from '../ChosenTabs/ChosenTabs.fixtures';
 import { AppBar, type AppBarProps } from './AppBar';
-import { boardAppBar, boardMetronome } from './AppBar.fixtures';
+import { boardAppBar, boardMetronome, displayPageTabs, fullPageTabs } from './AppBar.fixtures';
 
 const PAGE_IDS = [...displayPageTabs, ...fullPageTabs].map((tab) => tab.id);
 
@@ -14,7 +13,7 @@ const PAGE_IDS = [...displayPageTabs, ...fullPageTabs].map((tab) => tab.id);
  * the audio health. The parent owns `chosen` and every switch; a press only calls back.
  */
 const meta = {
-  title: 'Library/Yahaha/Components/AppBar',
+  title: 'Yahaha/Components/AppBar',
   component: AppBar,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
@@ -36,9 +35,9 @@ const meta = {
   },
   argTypes: {
     width: { control: { type: 'number', min: 0, step: 1 } },
-    chosen: { control: 'select', options: [null, ...PAGE_IDS], table: { category: 'ChosenTabs' } },
-    displayTabs: { control: 'object', table: { category: 'ChosenTabs' } },
-    fullTabs: { control: 'object', table: { category: 'ChosenTabs' } },
+    chosen: { control: 'select', options: [null, ...PAGE_IDS], table: { category: 'Tabs' } },
+    displayTabs: { control: 'object', table: { category: 'Tabs' } },
+    fullTabs: { control: 'object', table: { category: 'Tabs' } },
     launchkey: { control: 'boolean', table: { category: 'StatusDot' } },
     failedPart: { control: 'select', options: [null, 0, 1, 2, 3], table: { category: 'HealthSlot' } },
     synthOn: { control: 'boolean', table: { category: 'HealthSlot' } },
@@ -65,8 +64,8 @@ export const Board: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const nav = canvas.getByRole('navigation', { name: 'Pages' });
-    await expect(within(nav).getByRole('button', { name: 'Stage' })).toHaveAttribute('aria-current', 'page');
-    await userEvent.click(within(nav).getByRole('button', { name: 'Looper' }));
+    await expect(within(nav).getByRole('tab', { name: 'Stage' })).toHaveAttribute('aria-selected', 'true');
+    await userEvent.click(within(nav).getByRole('tab', { name: 'Looper' }));
     await expect(args.onChoose).toHaveBeenLastCalledWith('looper');
     await userEvent.click(canvas.getByRole('button', { name: 'Panic: all notes off' }));
     await expect(args.onPanic).toHaveBeenCalledTimes(1);
@@ -98,7 +97,7 @@ export const Helpers: Story = {
   args: { metronome: true },
   play: async ({ canvasElement }) => {
     const switches = within(canvasElement).getByRole('group', { name: 'Global switches' });
-    await expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'transport');
+    await expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'role-2');
   },
 };
 

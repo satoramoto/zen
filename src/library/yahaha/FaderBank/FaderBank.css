@@ -1,6 +1,6 @@
 /* FaderBank: the Stage's mixer. Reads only contract variables and its own --yh-faderbank-* ones.
-   It fills its region: the header, then the strip grid (strips over their lamps), then the
-   function row. */
+   It fills its region's body (the page and layer tabs are the Region's): the strip grid (strips
+   over their lamps), then the function row. */
 
 .yh-faderbank {
   /* A part's hue on its strip; set from data-hue below, neutral otherwise. */
@@ -12,8 +12,9 @@
 
   position: relative;
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
-  /* Air between the tab row and the strips, and between the strips and the Functions rule. */
+  /* Air between the strips and the Functions rule. */
   gap: var(--space-4);
   box-sizing: border-box;
   width: 100%;
@@ -69,8 +70,8 @@
 .yh-faderbank__plate {
   grid-row: 1 / 3;
   border-radius: var(--radius-card);
-  background: var(--surface-1);
-  box-shadow: inset 0 0 0 max(1px, var(--border-width)) var(--border);
+  background: var(--layer-raised-texture), var(--layer-raised-fill);
+  box-shadow: var(--layer-raised-edge), var(--layer-raised-cast);
 }
 
 .yh-faderbank__strip {
@@ -215,12 +216,12 @@ span.yh-faderbank__name {
   border-top: max(1px, var(--border-width)) solid var(--border);
 }
 .yh-faderbank__functions {
-  display: flex;
   flex: 1 1 auto;
-  gap: var(--space-3);
-  min-width: 0;
 }
-.yh-faderbank__functions > .yh-lampbutton {
+.yh-faderbank__functions > .lib-group__body {
+  gap: var(--space-3);
+}
+.yh-faderbank__functions > .lib-group__body > .yh-lampbutton {
   flex: 1 0 0;
   width: auto;
   min-width: max-content;

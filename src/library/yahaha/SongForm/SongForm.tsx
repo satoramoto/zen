@@ -1,6 +1,6 @@
-import { Button } from '../Button/Button';
-import { LampButton } from '../LampButton/LampButton';
-import { Pad, type PadState, type TipAction } from '../Pad/Pad';
+import { Button } from '../../components/core/Button/Button';
+import { LampButton } from '../../components/core/LampButton/LampButton';
+import { Pad, type PadState, type TipAction } from '../../components/music/Pad/Pad';
 import type { SectionState } from '../hues';
 import './SongForm.css';
 
@@ -64,12 +64,6 @@ export const FORM: readonly { part: Part; caption: string; steps: readonly Secti
 ];
 
 const BREAK: SectionDef = { id: 'break', step: 'Break', label: 'Break', tip: 'section.break' };
-
-const REGION_LABEL: Record<SongFormPart, string> = {
-  both: 'Song form and transport',
-  form: 'Song form',
-  transport: 'Transport',
-};
 
 /** Every section's full name, by id. */
 export const SECTION_LABEL: Record<SectionId, string> = Object.fromEntries(
@@ -254,6 +248,7 @@ export function SongForm({
       <div
         key={s.id}
         className="yh-songform__step"
+        data-part="step"
         data-section={s.id}
         data-state={state}
         data-start={(state === 'playing' && !running) || undefined}
@@ -286,38 +281,38 @@ export function SongForm({
   const fadeFace = fading ? (running ? { on: true } : { waiting: true }) : {};
 
   return (
-    <section className="yh-songform" data-part={part} aria-label={REGION_LABEL[part]}>
-      <div className="yh-songform__inner">
+    <div className="yh-songform" data-part="root" data-half={part}>
+      <div className="yh-songform__inner" data-part="inner">
         {part !== 'transport' && (
-          <div className="yh-songform__form" role="group" aria-label="Sections">
-            <span className="yh-songform__cue" role="status">
+          <div className="yh-songform__form" data-part="form" role="group" aria-label="Sections">
+            <span className="yh-songform__cue" data-part="cue" role="status">
               {cues.join('. ')}
             </span>
-            <ol className="yh-songform__parts">
+            <ol className="yh-songform__parts" data-part="groups">
               {FORM.map(({ part, caption, steps }) => (
-                <li key={part} className="yh-songform__part" data-part={part}>
-                  <span className="yh-songform__caption" aria-hidden="true">
+                <li key={part} className="yh-songform__part" data-part="group" data-group={part}>
+                  <span className="yh-songform__caption" data-part="caption" aria-hidden="true">
                     {caption}
                   </span>
-                  <div className="yh-songform__steps">{steps.map((s) => section(s))}</div>
+                  <div className="yh-songform__steps" data-part="steps">{steps.map((s) => section(s))}</div>
                 </li>
               ))}
             </ol>
-            <div className="yh-songform__mods" role="group" aria-label="Insert">
-              <div className="yh-songform__steps">{section(BREAK)}</div>
+            <div className="yh-songform__mods" data-part="mods" role="group" aria-label="Insert">
+              <div className="yh-songform__steps" data-part="steps">{section(BREAK)}</div>
             </div>
           </div>
         )}
 
         {part !== 'form' && (
-          <div className="yh-songform__transport" role="group" aria-label="Transport">
-            <div className="yh-songform__start">
+          <div className="yh-songform__transport" data-part="transport" role="group" aria-label="Transport">
+            <div className="yh-songform__start" data-part="start">
               <Button
                 label={running ? 'Stop' : 'Start'}
                 size="cell"
                 tall
                 variant={running ? 'secondary' : 'primary'}
-                hue={running ? 'ok' : 'transport'}
+                hue={running ? 'ok' : 'role-2'}
                 pressed={running}
                 name={running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped'}
                 tip="transport.start_stop"
@@ -326,11 +321,11 @@ export function SongForm({
                 onLongPress={running ? onStopWithFade : undefined}
               />
             </div>
-            <div className="yh-songform__key" data-key="sync-start">
+            <div className="yh-songform__key" data-part="key" data-key="sync-start">
               <Button
                 label="Sync Start"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={syncStart}
                 lit={lit}
                 pressed={syncStart}
@@ -340,11 +335,11 @@ export function SongForm({
                 onPress={() => onSyncStart?.(!syncStart)}
               />
             </div>
-            <div className="yh-songform__key" data-key="sync-stop">
+            <div className="yh-songform__key" data-part="key" data-key="sync-stop">
               <Button
                 label="Sync Stop"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={syncStop}
                 pressed={syncStop}
                 tip="transport.sync_stop"
@@ -352,12 +347,12 @@ export function SongForm({
                 onPress={() => onSyncStop?.(!syncStop)}
               />
             </div>
-            <div className="yh-songform__key" data-key="fill-up">
+            <div className="yh-songform__key" data-part="key" data-key="fill-up">
               <Button
                 label="Fill"
                 symbol="up"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={fillPending === 'up'}
                 lit={lit}
                 name={`Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`}
@@ -366,12 +361,12 @@ export function SongForm({
                 onPress={onFillUp}
               />
             </div>
-            <div className="yh-songform__key" data-key="fill-down">
+            <div className="yh-songform__key" data-part="key" data-key="fill-down">
               <Button
                 label="Fill"
                 symbol="down"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 waiting={fillPending === 'down'}
                 lit={lit}
                 name={`Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`}
@@ -380,7 +375,7 @@ export function SongForm({
                 onPress={onFillDown}
               />
             </div>
-            <div className="yh-songform__key" data-key="fade">
+            <div className="yh-songform__key" data-part="key" data-key="fade">
               <Button
                 label="Fade"
                 size="cell"
@@ -393,7 +388,7 @@ export function SongForm({
                 onPress={onFade}
               />
             </div>
-            <div className="yh-songform__key" data-key="reset">
+            <div className="yh-songform__key" data-part="key" data-key="reset">
               <Button
                 label="Reset"
                 size="cell"
@@ -403,7 +398,7 @@ export function SongForm({
                 onPress={onReset}
               />
             </div>
-            <div className="yh-songform__key" data-key="accomp">
+            <div className="yh-songform__key" data-part="key" data-key="accomp">
               <LampButton
                 label="Accomp"
                 name="Accomp (ACMP)"
@@ -414,11 +409,11 @@ export function SongForm({
                 onToggle={onAccomp}
               />
             </div>
-            <div className="yh-songform__key" data-key="auto-fill">
+            <div className="yh-songform__key" data-part="key" data-key="auto-fill">
               <LampButton
                 label="Auto Fill"
                 size="cell"
-                hue="transport"
+                hue="role-2"
                 on={autoFill}
                 tip="transport.auto_fill"
                 tipAction={tipAction}
@@ -428,7 +423,7 @@ export function SongForm({
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }
 

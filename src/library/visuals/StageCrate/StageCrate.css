@@ -1,0 +1,37 @@
+/* The Stage's crate (StageCrate.tsx), from live/stage-crate.css: what fills the shell's inset
+   panel (StageLayout's nav). The mark under the band, then the crate, whose sections scroll inside
+   it (the Crate's own rules). */
+
+.vs-stagecrate {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 10px;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+}
+/* The crate takes what is left under the mark, and scrolls in it. */
+.vs-stagecrate > :last-child {
+  flex: 1;
+  min-height: 0;
+}
+/* The mark, the crate's first item under the band, its text where the headings' titles start. */
+.vs-stagecrate-mark {
+  display: flex;
+  flex: none;
+  align-items: center;
+  height: 32px;
+  margin-bottom: 10px;
+  padding: 0 6px;
+  user-select: none;
+}
+.vs-stagecrate-note {
+  margin: 0;
+  padding: var(--space-1) 10px;
+  color: var(--text-3);
+  font-size: var(--vs-text-annot);
+  line-height: 1.45;
+}

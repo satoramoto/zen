@@ -1,4 +1,5 @@
-/* AccentBlock: contract variables only. The style's hue is a leading bar; the name is primary text on a raised surface. */
+/* AccentBlock: contract variables only. The style's hue is a leading bar; the name is primary
+   text on a raised surface (the label) or on the theme's key material (the button). */
 .yh-accentblock {
   --yh-accentblock-h: var(--control-h);
   --yh-accentblock-bar: var(--space-1);
@@ -53,11 +54,21 @@
   stroke-linejoin: round;
 }
 
+/* The button form is a key: the theme's key material, a faint ink tint over it on hover, the
+   pressed shadow while held. */
 button.yh-accentblock {
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
   cursor: pointer;
 }
 button.yh-accentblock:hover {
-  background: var(--surface-3);
+  background:
+    linear-gradient(color-mix(in srgb, var(--text-1) 8%, transparent), color-mix(in srgb, var(--text-1) 8%, transparent)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+}
+button.yh-accentblock:active {
+  box-shadow: var(--mat-key-pressed);
 }
 button.yh-accentblock:hover .yh-accentblock__chevron {
   stroke: var(--text-1);

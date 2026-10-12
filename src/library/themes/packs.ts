@@ -1,8 +1,8 @@
-import type { Facets } from '../contract';
-import { ableton, elektron, linear, pushDark, pushLight } from './palettes';
-import { abletonType, elektronType, linearType, pushType } from './types';
-import { abletonChrome, elektronChrome, linearChrome, pushChrome } from './chromes';
-import { compact, regular } from './densities';
+import type { Faces, Facets, Materials, Palette, Scale } from '../contract';
+import { palettes } from './palettes';
+import { faces } from './faces';
+import { scales } from './scales';
+import { materials } from './materials';
 
 export interface ThemePack {
   id: string;
@@ -12,6 +12,24 @@ export interface ThemePack {
   /** Rules from the source that the facets must keep. */
   keep: string[];
   facets: Facets;
+  /** What stands behind a translucent ground in Storybook, in place of the real desktop the app
+   *  composites over (a CSS background per mode). Omit for an opaque ground. */
+  desktop?: { light: string; dark: string };
+}
+
+function byId<T extends { id: string }>(list: readonly T[], id: string, kind: string): T {
+  const found = list.find((x) => x.id === id);
+  if (!found) throw new Error(`No ${kind} with id '${id}'`);
+  return found;
+}
+
+function facets(palette: string, face: string, scale: string, material: string): Facets {
+  return {
+    palette: byId<Palette>(palettes, palette, 'palette'),
+    faces: byId<Faces>(faces, face, 'faces'),
+    scale: byId<Scale>(scales, scale, 'scale'),
+    materials: byId<Materials>(materials, material, 'materials'),
+  };
 }
 
 export const packs: ThemePack[] = [
@@ -26,15 +44,20 @@ export const packs: ThemePack[] = [
       'Readout face for numerals only.',
       'Part hues are categorical: one per part, never decoration.',
     ],
-    facets: { palette: pushDark, type: elektronType, chrome: elektronChrome, density: compact },
+    facets: facets('push', 'elektron', 'compact', 'elektron'),
   },
   {
-    id: 'yahaha-ableton-light',
-    label: 'yahaha × Ableton (light)',
-    source: { name: 'Ableton', url: 'https://ableton.com', referoId: '20bc0e09-9534-402e-8287-db5fafaf3c55' },
-    northStar: 'High-contrast studio paper; ink, rules and part colours.',
-    keep: ['Flat, square, ruled; no shadows.', 'No bloom in light: lamps are solid bars.'],
-    facets: { palette: pushLight, type: elektronType, chrome: abletonChrome, density: compact },
+    id: 'yahaha-classic',
+    label: 'yahaha classic',
+    source: { name: 'Yahaha pre-minimalism UI', url: 'https://github.com/ryangavin/yahaha/tree/0dd53b6' },
+    northStar: 'An anodised instrument: chassis, wells, raised keys and a glowing display glass.',
+    keep: [
+      'Barlow for body, Barlow Condensed for display and readouts.',
+      'Engraved panel print: small, spaced capitals.',
+      'Amber means selected, waiting for you, or focus.',
+      'Depth from bevels and recessed wells, not flat fills.',
+    ],
+    facets: facets('classic', 'classic', 'compact', 'hardware'),
   },
   {
     id: 'yahaha-push',
@@ -42,7 +65,28 @@ export const packs: ThemePack[] = [
     source: { name: 'yahaha Push boards', url: 'https://github.com/satoramoto/yahaha/tree/main/docs/design/push' },
     northStar: 'Push: black ground, no boxes, hairline headers, lit lamps.',
     keep: ['Selection is a solid block with dark text.', 'Lamps are 2px bars with bloom.', 'Inputs are an underline with a caret.'],
-    facets: { palette: pushDark, type: pushType, chrome: pushChrome, density: compact },
+    facets: facets('push', 'push', 'compact', 'push'),
+  },
+  {
+    id: 'visuals',
+    label: 'visual[flow] (glass)',
+    source: { name: 'openflowfm/visuals 1.0', url: 'https://github.com/openflowfm/visuals' },
+    northStar: 'An instrument under frosted glass: the desktop blurred through, areas parted by space and tone, controls set as type.',
+    // added: a stand-in for macOS HUD frost over a wallpaper, so the glass has something to blur
+    desktop: {
+      dark: 'radial-gradient(120% 90% at 15% 10%, #3a3f4a 0%, transparent 55%), radial-gradient(90% 80% at 85% 90%, #2c2a33 0%, transparent 60%), #262628',
+      light: 'radial-gradient(120% 90% at 15% 10%, #e8ebf2 0%, transparent 55%), radial-gradient(90% 80% at 85% 90%, #ece6ef 0%, transparent 60%), #dedede',
+    },
+    keep: [
+      'Native HUD frost behind a transparent window; the page paints only faint tints over it (decision 69).',
+      'Glass (blur 28px, saturate 1.6, a lit top edge, a lift shadow) only on what floats.',
+      'Near borderless: areas told apart by space and tone; the only lines are the selection ring, the focus ring and the playing mark (decision 68).',
+      'Controls are type; the active one is underlined in the primary.',
+      'Never translucency over the native preview: panels there are opaque (stage.css).',
+      'Nothing animates: a panel shows or goes at once.',
+      'Instrument Sans everywhere, numbers in tabular figures; captions at 4.5:1 or better.',
+    ],
+    facets: facets('frost', 'instrument', 'roomy', 'frost'),
   },
   {
     id: 'elektron',
@@ -50,7 +94,7 @@ export const packs: ThemePack[] = [
     source: { name: 'Elektron', url: 'https://elektron.se', referoId: '362d9644-ce48-40af-8c2a-35753ec54b5e' },
     northStar: 'Digital console in midnight.',
     keep: ['Amber is an indicator only.', 'Off-white fill for the primary action.'],
-    facets: { palette: elektron, type: elektronType, chrome: elektronChrome, density: compact },
+    facets: facets('elektron', 'elektron', 'compact', 'elektron'),
   },
   {
     id: 'ableton',
@@ -58,7 +102,7 @@ export const packs: ThemePack[] = [
     source: { name: 'Ableton', url: 'https://ableton.com', referoId: '20bc0e09-9534-402e-8287-db5fafaf3c55' },
     northStar: 'High-contrast digital studio, illuminated by electric blue.',
     keep: ['Electric blue only for interactive elements.', 'Red and teal only for category tags.', '0px radius everywhere.'],
-    facets: { palette: ableton, type: abletonType, chrome: abletonChrome, density: regular },
+    facets: facets('ableton', 'ableton', 'regular', 'ableton'),
   },
   {
     id: 'linear',
@@ -66,6 +110,6 @@ export const packs: ThemePack[] = [
     source: { name: 'Linear', url: 'https://linear.app', referoId: '554b801c-3b31-4086-a7e5-ae613cdd618b' },
     northStar: 'Midnight command center: layered dark surfaces, one lime accent.',
     keep: ['Lime only for the primary action.', 'Depth from surface layers, not big shadows.', '6px radius on controls and cards.'],
-    facets: { palette: linear, type: linearType, chrome: linearChrome, density: compact },
+    facets: facets('linear', 'linear', 'compact', 'linear'),
   },
 ];

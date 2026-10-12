@@ -1,20 +1,24 @@
-import type { CSSProperties, ReactNode } from 'react';
-import { toCssVars, type Facets } from './contract';
+import { useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
+import { toCssVars, type Facets, type Mode } from './contract';
 import { packs, type ThemePack } from './themes/packs';
 import { palettes } from './themes/palettes';
-import { types } from './themes/types';
-import { chromes } from './themes/chromes';
-import { densities } from './themes/densities';
+import { faces } from './themes/faces';
+import { scales } from './themes/scales';
+import { materials } from './themes/materials';
 import './library.css';
+import './yahaha/tokens.css';
 
 export const FROM_THEME = 'theme';
+
+/** `system` follows the operating system's light/dark preference. */
+export type ModeChoice = Mode | 'system';
 
 export interface ThemeChoice {
   theme?: string;
   palette?: string;
-  type?: string;
-  chrome?: string;
-  density?: string;
+  faces?: string;
+  scale?: string;
+  materials?: string;
 }
 
 function pick<T extends { id: string }>(list: T[], id: string | undefined, fallback: T): T {
@@ -30,16 +34,33 @@ export function resolveTheme(choice: ThemeChoice): { pack: ThemePack; facets: Fa
     pack,
     facets: {
       palette: pick(palettes, choice.palette, base.palette),
-      type: pick(types, choice.type, base.type),
-      chrome: pick(chromes, choice.chrome, base.chrome),
-      density: pick(densities, choice.density, base.density),
+      faces: pick(faces, choice.faces, base.faces),
+      scale: pick(scales, choice.scale, base.scale),
+      materials: pick(materials, choice.materials, base.materials),
     },
   };
 }
 
-export function ThemeScope({ facets, children }: { facets: Facets; children: ReactNode }) {
+const DARK_QUERY = '(prefers-color-scheme: dark)';
+const media = () => (typeof window === 'undefined' || !window.matchMedia ? null : window.matchMedia(DARK_QUERY));
+function subscribe(onChange: () => void) {
+  const list = media();
+  list?.addEventListener('change', onChange);
+  return () => list?.removeEventListener('change', onChange);
+}
+const systemMode = (): Mode => (media()?.matches ? 'dark' : 'light');
+
+/** The operating system's light/dark preference, kept current. */
+export function useSystemMode(): Mode {
+  return useSyncExternalStore(subscribe, systemMode, () => 'dark');
+}
+
+/** `bleed`: the scope is a whole screen (an app's window), so it runs to the edges with no padding. */
+export function ThemeScope({ facets, mode = 'system', bleed = false, children }: { facets: Facets; mode?: ModeChoice; bleed?: boolean; children: ReactNode }) {
+  const system = useSystemMode();
+  const resolved = mode === 'system' ? system : mode;
   return (
-    <div className="lib-scope" style={toCssVars(facets) as CSSProperties}>
+    <div className="lib-scope" data-mode={resolved} data-bleed={bleed || undefined} style={toCssVars(facets, resolved) as CSSProperties}>
       {children}
     </div>
   );

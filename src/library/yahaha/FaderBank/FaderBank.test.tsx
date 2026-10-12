@@ -4,7 +4,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { FaderBank, type FaderBankProps } from './FaderBank';
+import { FaderBank, FaderBankRegion, type FaderBankProps } from './FaderBank';
 import { faderPageTabs, functionLamps, layerTabs, panelStrips, partLamps, reverbStrips, styleStrips } from './FaderBank.fixtures';
 
 function setup(extra: Partial<FaderBankProps> = {}) {
@@ -28,20 +28,21 @@ function setup(extra: Partial<FaderBankProps> = {}) {
     onPageRelease: vi.fn(),
     ...extra,
   };
-  const r = render(<FaderBank {...props} />);
-  return { props, ...r, bank: screen.getByRole('region', { name: 'Faders' }) };
+  const r = render(<FaderBankRegion {...props} />);
+  return { props, ...r, bank: screen.getByRole('region', { name: 'Mixer' }) };
 }
 
 const stripOf = (name: string) => screen.getByRole('slider', { name }).closest('.yh-faderbank__strip') as HTMLElement;
 
 describe('FaderBank a11y', () => {
-  it('is a region named Faders with a page tablist, a layer tablist and every strip as a slider', () => {
+  it('is one region named Mixer: the pages are its views, the layers its aside, every strip a slider', () => {
     const { bank } = setup();
-    // No title: the tabs name themselves, each run underlined.
+    // No title: the tabs name themselves. The bank itself is no second region inside the Mixer.
     expect(screen.queryByRole('heading')).toBeNull();
     expect(bank).not.toHaveTextContent(/Layer/);
-    for (const run of bank.querySelectorAll('.yh-chosen-tabs')) expect(run).toHaveAttribute('data-look', 'underline');
-    expect(screen.getByRole('tablist', { name: 'Fader page (master button)' })).toBeInTheDocument();
+    expect(screen.getAllByRole('region')).toHaveLength(1);
+    expect(screen.getByRole('tabpanel')).toContainElement(screen.getByRole('slider', { name: 'Master, level 100' }));
+    expect(screen.getByRole('tablist', { name: 'Mixer' })).toBeInTheDocument();
     expect(screen.getByRole('tablist', { name: 'Fader layer' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Panel' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('tab', { name: 'Volume' })).toHaveAttribute('aria-selected', 'true');
@@ -101,14 +102,14 @@ describe('FaderBank a11y', () => {
     expect(tipAction).toHaveBeenCalledWith(screen.getByRole('button', { name: /^Fader page is/ }), 'mixer.page');
   });
 
-  it('applies tipAction once to each tab, through ChosenTabs, with its own key', () => {
+  it('gives each tab its own tooltip key, and no control the tooltip twice', () => {
     const tipAction = vi.fn();
     setup({ tipAction });
-    for (const tab of screen.getAllByRole('tab')) {
-      const calls = tipAction.mock.calls.filter(([node]) => node === tab);
-      expect(calls).toEqual([[tab, tab.getAttribute('data-tip')]]);
-    }
+    for (const tab of screen.getAllByRole('tab')) expect(tab.getAttribute('data-tip')).toBeTruthy();
     expect(screen.getByRole('tab', { name: 'Reverb send' })).toHaveAttribute('data-tip', 'mixer.layer');
+    // The page tabs (Region views) and the layer tabs (aside) both run the app's tooltip.
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('tab', { name: 'Panel' }), 'mixer.page');
+    expect(tipAction).toHaveBeenCalledWith(screen.getByRole('tab', { name: 'Reverb send' }), 'mixer.layer');
     // No control gets the tooltip twice.
     const nodes = tipAction.mock.calls.map(([node]) => node);
     expect(new Set(nodes).size).toBe(nodes.length);
@@ -166,6 +167,15 @@ describe('FaderBank callbacks', () => {
   });
 });
 
+describe('FaderBank body', () => {
+  it('renders the chosen page body alone: no tabs, no region of its own', () => {
+    render(<FaderBank strips={panelStrips} pageTabs={faderPageTabs} page="panel" layerTabs={layerTabs} layer="volume" partLamps={partLamps} functionLamps={functionLamps} />);
+    expect(screen.queryByRole('region')).toBeNull();
+    expect(screen.queryByRole('tab')).toBeNull();
+    expect(screen.getAllByRole('slider')).toHaveLength(9);
+  });
+});
+
 describe('FaderBank layout', () => {
   it('only the parts wear a hue; groups, empty slots and Master stay neutral', () => {
     setup();
@@ -199,7 +209,7 @@ describe('FaderBank layout', () => {
     const { rerender, props, bank } = setup();
     expect(bank.querySelectorAll('.yh-faderbank__strip .yh-faderbank__marks')).toHaveLength(9);
     const plain = panelStrips.map((s) => ({ ...s, kind: s.kind === 'off' ? ('part' as const) : s.kind, edited: false, missing: false, failed: false }));
-    rerender(<FaderBank {...props} strips={plain} />);
+    rerender(<FaderBankRegion {...props} strips={plain} />);
     expect(bank.querySelectorAll('.yh-faderbank__marks')).toHaveLength(0);
   });
 
@@ -249,9 +259,9 @@ describe('FaderBank layout', () => {
     expect(note).toHaveTextContent('Soft takeover Right 2 move up to 72');
     expect(note).toHaveClass('yh-faderbank__visually-hidden');
     expect(stripOf(props.strips[1].faderName)).toHaveAttribute('data-away', 'up');
-    rerender(<FaderBank {...props} strips={panelStrips.map((s) => (s.id === 'right2' ? { ...s, away: 110 } : s))} />);
+    rerender(<FaderBankRegion {...props} strips={panelStrips.map((s) => (s.id === 'right2' ? { ...s, away: 110 } : s))} />);
     expect(screen.getByRole('status')).toHaveTextContent('Right 2 move down to 72');
-    rerender(<FaderBank {...props} strips={panelStrips.map((s) => ({ ...s, away: undefined }))} />);
+    rerender(<FaderBankRegion {...props} strips={panelStrips.map((s) => ({ ...s, away: undefined }))} />);
     expect(screen.queryByRole('status')).toBeNull();
   });
 

@@ -1,0 +1,48 @@
+/* Region: a block of a screen on the theme's plate material, with optional tabbed views. The
+   header strip has its own inset and rule (--mat-plate-head-*), so a system can pull its tabs to
+   the plate's edge. Contract variables only. */
+
+.lib-region {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  border-radius: var(--radius-card);
+  /* A region is the base layer: the theme says how it is drawn and composited. */
+  background: var(--layer-base-texture), var(--layer-base-fill);
+  backdrop-filter: var(--layer-base-backdrop);
+  box-shadow: var(--layer-base-edge), var(--layer-base-cast);
+}
+.lib-region:not(:has(> .lib-region__head)) { grid-template-rows: minmax(0, 1fr); }
+
+.lib-region__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--mat-plate-head-inset);
+  box-shadow: var(--mat-plate-head-rule);
+}
+.lib-region__label {
+  color: var(--text-3);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  white-space: nowrap;
+}
+.lib-region__aside {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  min-width: 0;
+}
+
+.lib-region__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--mat-plate-inset);
+}

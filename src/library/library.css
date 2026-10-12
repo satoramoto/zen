@@ -1,5 +1,5 @@
-/* Library components. Only contract variables (see contract.ts) and the
-   local --hue/--pad-* variables declared here; no literal colours or radii. */
+/* The library scope and the shared helpers stories lay specimens out with. Only contract
+   variables (see contract.ts) and the local --hue variable declared here; no literal colours or radii. */
 
 .lib-scope {
   min-height: 100vh;
@@ -13,6 +13,8 @@
   letter-spacing: var(--tracking);
   line-height: 1.4;
 }
+/* A whole screen (a full-screen story, an app's window) runs to the frame's edges. */
+.lib-scope[data-bleed] { padding: 0; }
 .lib-scope *, .lib-scope *::before, .lib-scope *::after { box-sizing: border-box; }
 
 [data-hue='1'] { --hue: var(--hue-1); }
@@ -23,152 +25,5 @@
 .lib-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .lib-stack { display: grid; gap: var(--space-4); }
 
-/* Button */
-.lib-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  height: var(--control-h);
-  padding: 0 var(--space-4);
-  border: var(--border-width) solid transparent;
-  border-radius: var(--radius-control);
-  font: inherit;
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  white-space: nowrap;
-  cursor: pointer;
-}
-.lib-button--primary { background: var(--action); color: var(--action-text); }
-.lib-button--secondary { background: transparent; color: var(--text-1); border-color: var(--border-strong); }
-.lib-button--ghost { background: transparent; color: var(--text-2); }
-.lib-button--ghost:hover { color: var(--text-1); }
-.lib-button[aria-pressed='true'] { background: var(--selected); color: var(--selected-text); border-color: var(--selected); }
-.lib-button:focus-visible, .lib-input:focus-visible, .lib-pad:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.lib-button:disabled { color: var(--text-4); border-color: var(--border); cursor: not-allowed; }
-
-/* Field */
-.lib-field { display: grid; gap: var(--space-1); }
+/* A small caption over a specimen in a story. */
 .lib-field__label { font-size: var(--size-caption); color: var(--text-3); }
-.lib-input {
-  height: var(--control-h);
-  padding: 0 var(--space-3);
-  background: var(--input-fill);
-  color: var(--text-1);
-  border-style: solid;
-  border-color: var(--border-strong);
-  border-width: 0 var(--input-border-sides) var(--input-border-bottom);
-  border-top-width: var(--input-border-sides);
-  border-radius: var(--radius-input);
-  font: inherit;
-  caret-color: var(--accent);
-}
-.lib-input::placeholder { color: var(--text-3); }
-.lib-field[data-invalid='true'] .lib-input { border-color: var(--danger); }
-.lib-field__error { font-size: var(--size-caption); color: var(--danger); }
-
-/* Card */
-.lib-card {
-  display: grid;
-  align-content: start;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  background: var(--card-fill);
-  border-style: solid;
-  border-color: var(--border);
-  border-width: var(--card-border-top) var(--card-border-sides) var(--card-border-sides);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-}
-.lib-card__eyebrow { font-size: var(--size-caption); color: var(--text-3); text-transform: var(--label-case); }
-.lib-card__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--size-heading);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
-  line-height: 1.15;
-}
-.lib-card__body { margin: 0; color: var(--text-2); }
-
-/* Badge */
-.lib-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  height: calc(var(--control-h) * 0.7);
-  padding: 0 var(--space-2);
-  background: var(--surface-2);
-  color: var(--text-2);
-  border-radius: var(--radius-pill);
-  font-size: var(--size-caption);
-  white-space: nowrap;
-}
-.lib-badge__dot { width: 6px; height: 6px; border-radius: var(--radius-pill); background: var(--hue, var(--text-3)); }
-.lib-badge--solid { background: var(--hue, var(--selected)); color: var(--on-hue); }
-
-/* Lamp: a 2px bar, lit with bloom when the palette has one. */
-.lib-lamp { display: inline-block; width: var(--space-4); height: 2px; background: var(--surface-3); }
-.lib-lamp[data-on='true'] {
-  background: var(--hue, var(--text-1));
-  box-shadow: 0 0 var(--bloom) var(--hue, var(--text-1));
-}
-
-/* Pad: solid = playing, outline = queued, grey = idle. */
-.lib-pad {
-  --pad-hue: var(--hue, var(--selected));
-  --pad-ink: var(--on-hue);
-  /* Without a hue, queued draws in text colour: some palettes' selected is a dark fill. */
-  --pad-outline: var(--hue, var(--text-1));
-  display: grid;
-  align-content: end;
-  gap: var(--space-1);
-  min-height: calc(var(--control-h) * 2.2);
-  padding: var(--space-2);
-  background: var(--surface-2);
-  color: var(--text-3);
-  border: var(--border-width) solid transparent;
-  border-radius: var(--radius-control);
-  font: inherit;
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  text-align: left;
-  text-transform: var(--label-case);
-  cursor: pointer;
-}
-.lib-pad:not([data-hue]) { --pad-ink: var(--selected-text); }
-.lib-pad[data-state='playing'] {
-  background: var(--pad-hue);
-  color: var(--pad-ink);
-  box-shadow: 0 0 calc(var(--bloom) * 2) var(--pad-hue);
-}
-.lib-pad[data-state='queued'] { background: transparent; color: var(--pad-outline); border-color: var(--pad-outline); }
-.lib-pad__flag { font-size: var(--size-caption); font-weight: var(--weight-body); opacity: 0.8; }
-
-/* Readout: numerals with a small unit. */
-.lib-readout {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--space-1);
-  font-family: var(--font-readout);
-  font-size: var(--size-numeral);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-.lib-readout__unit { font-family: var(--font-sans); font-size: var(--size-caption); color: var(--text-3); }
-.lib-readout--small { font-size: var(--size-heading); }
-
-/* Section header: a hairline with a small label. */
-.lib-section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding-top: var(--space-2);
-  border-top: var(--border-width) solid var(--border);
-  font-size: var(--size-caption);
-  color: var(--text-3);
-  text-transform: var(--label-case);
-}

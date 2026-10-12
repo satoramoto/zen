@@ -5,7 +5,7 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PadBank, bankOnFace, type PadBankProps } from './PadBank';
+import { PadBank, PadBankRegion, bankOnFace, type PadBankProps } from './PadBank';
 import { allPadBanks, allPadsByBank, chordPads, padBanks, quickRackPads, quickRackStorePads, sectionPads } from './PadBank.fixtures';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -22,7 +22,7 @@ const NB = ' ';
 function setup(props: Partial<PadBankProps> = {}) {
   const onBank = vi.fn<(index: number) => void>();
   const onPress = vi.fn<(index: number) => void>();
-  const view = render(<PadBank pads={quickRackPads} banks={padBanks} bank={0} onBank={onBank} onPress={onPress} {...props} />);
+  const view = render(<PadBankRegion pads={quickRackPads} banks={padBanks} bank={0} onBank={onBank} onPress={onPress} {...props} />);
   return { onBank, onPress, container: view.container };
 }
 
@@ -30,7 +30,7 @@ describe('PadBank banks', () => {
   it('is a region named Pads, with the five banks as tabs, Sections first', () => {
     setup({ banks: allPadBanks, bank: 3 });
     const region = screen.getByRole('region', { name: 'Pads' });
-    const list = within(region).getByRole('tablist', { name: 'Pad bank' });
+    const list = within(region).getByRole('tablist', { name: 'Pads' });
     expect(within(list).getAllByRole('tab').map((t) => t.textContent)).toEqual([
       'Sections',
       'Quick Racks',
@@ -41,10 +41,17 @@ describe('PadBank banks', () => {
     expect(within(list).getByRole('tab', { name: 'Multi Pads' })).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('has no title: the region is named Pads, the bank tabs are underlined', () => {
+  it('has no title and no region inside the region: the bank is the tab panel', () => {
     setup();
     expect(screen.queryByRole('heading')).toBeNull();
-    expect(screen.getByRole('region', { name: 'Pads' }).querySelector('.yh-chosen-tabs')).toHaveAttribute('data-look', 'underline');
+    expect(screen.getAllByRole('region')).toHaveLength(1);
+    expect(screen.getByRole('tabpanel')).toContainElement(screen.getByRole('button', { name: 'Store (pad 15)' }));
+  });
+
+  it('the bank alone draws the pads and no tabs', () => {
+    render(<PadBank pads={quickRackPads} banks={padBanks} bank={0} />);
+    expect(screen.queryByRole('tab')).toBeNull();
+    expect(screen.queryByRole('region')).toBeNull();
   });
 
   it('an on pad takes the ring face, not the solid fill', () => {
@@ -184,20 +191,19 @@ describe('PadBank pads', () => {
     for (const pad of pads) expect(pad).toHaveAttribute('data-fill', 'true');
   });
 
-  it('applies the tooltip hook once to each bank tab and each pad, with its key', () => {
+  it('gives each bank tab its tooltip key, and the hook once to each tab and each pad', () => {
     const tipAction = vi.fn();
     setup({ tipAction });
     const calls = tipAction.mock.calls as [HTMLElement, string][];
     const tabs = screen.getAllByRole('tab');
     expect(tabs).toHaveLength(4);
     for (const tab of tabs) {
-      const onTab = calls.filter(([node]) => node === tab);
-      expect(onTab).toHaveLength(1);
-      expect(onTab[0][1]).toBe(tab.getAttribute('data-tip'));
+      expect(tab.getAttribute('data-tip')).toBeTruthy();
+      expect(tipAction).toHaveBeenCalledWith(tab, tab.getAttribute('data-tip'));
     }
     const keyed = quickRackPads.filter((p) => !p.empty && p.tip !== undefined).length;
     expect(calls.filter(([node]) => node.matches('.yh-pad'))).toHaveLength(keyed);
-    expect(tipAction).toHaveBeenCalledTimes(tabs.length + keyed);
+    expect(tipAction).toHaveBeenCalledTimes(keyed + tabs.length);
   });
 
   it('a pad lit for a part wears that part’s tone; the banks’ own pads are neutral', () => {
@@ -273,7 +279,7 @@ describe('PadBank Sections bank', () => {
     setupSections();
     for (const name of ['Sync Start (pad 4)', 'Auto Fill (pad 8)', 'Tap (pad 14)', 'Sync Stop (pad 15)']) {
       const pad = screen.getByRole('button', { name });
-      expect(pad).toHaveAttribute('data-tone', 'transport');
+      expect(pad).toHaveAttribute('data-tone', 'role-2');
       expect(pad).toHaveAttribute('data-state', 'idle');
     }
     expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toHaveAttribute('data-tone', 'success');

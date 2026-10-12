@@ -4,7 +4,7 @@ import { withLibraryTheme } from '../../storybook';
 import { HealthSlot } from './HealthSlot';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/HealthSlot',
+  title: 'Yahaha/Primitives/HealthSlot',
   component: HealthSlot,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

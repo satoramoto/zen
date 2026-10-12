@@ -1,9 +1,22 @@
 // Ported from yahaha/src/ui/FaderBank/FaderBank.fixtures.ts. Added: each live strip's `sound`.
 // Changed: Left plays Finger Bass, as the board shows (the original's fixture repeated Silk Strings).
+import type { TabItem } from '../../layout/Tabs'
 import type { BankLamp, FaderStrip } from './FaderBank'
 
-/** The band header's tabs: the fader page (Panel, Style) and the layer (Vol … Delay). */
-export { faderPageTabs, layerTabs } from '../ChosenTabs/ChosenTabs.fixtures'
+/** The band header's fader page tabs (the master button). */
+export const faderPageTabs: TabItem[] = [
+  { id: 'panel', label: 'Panel', tip: 'mixer.page' },
+  { id: 'style', label: 'Style', tip: 'mixer.page' },
+]
+
+/** The band header's fader layer tabs. */
+export const layerTabs: TabItem[] = [
+  { id: 'volume', label: 'Vol', name: 'Volume', tip: 'mixer.layer' },
+  { id: 'pan', label: 'Pan', tip: 'mixer.layer' },
+  { id: 'reverb', label: 'Reverb', name: 'Reverb send', tip: 'mixer.layer' },
+  { id: 'chorus', label: 'Chorus', name: 'Chorus send', tip: 'mixer.layer' },
+  { id: 'delay', label: 'Delay', name: 'Delay send', tip: 'mixer.layer' },
+]
 
 /** The board's nine strips on the Panel page, Vol layer (Stage-Dark.dc.html). */
 export const panelStrips: FaderStrip[] = [

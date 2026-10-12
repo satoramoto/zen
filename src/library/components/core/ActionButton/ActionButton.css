@@ -1,0 +1,138 @@
+/* ActionButton and ButtonFace: a pressable face in the theme's key material. Contract variables
+   only, plus the local ones declared here:
+
+   --lib-action-button-width  the face's width (the `width` prop sets it inline; auto otherwise)
+   --lib-face-tint            a wash over the key for hover and press (a fill may be a gradient)
+   --lit                      the colour the lit glow reads (the accent) */
+
+.lib-action-button {
+  --lib-action-button-width: auto;
+  display: inline-grid;
+  justify-items: stretch;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.lib-action-button__caption {
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.lib-action-button > .lib-action-button-face {
+  width: var(--lib-action-button-width);
+}
+
+.lib-action-button-face {
+  --lib-face-tint: transparent;
+  --lit: var(--accent);
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  height: var(--control-h);
+  min-width: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background:
+    linear-gradient(var(--lib-face-tint), var(--lib-face-tint)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+  /* The outline is an inset shadow, so no state changes the box; the material's shadow under it. */
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-shadow);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out, color 80ms ease-out;
+}
+.lib-action-button-face svg { flex: none; }
+
+.lib-action-button-face[data-size='medium'] {
+  height: calc(var(--control-h) * 0.85);
+  min-width: calc(var(--control-h) * 0.85);
+  padding: 0 var(--space-2);
+}
+.lib-action-button-face[data-size='small'] {
+  height: calc(var(--control-h) * 0.7);
+  min-width: calc(var(--control-h) * 0.7);
+  padding: 0 var(--space-1);
+  font-size: var(--size-caption);
+}
+
+/* Quiet: furniture. No key until pointed at or focused. */
+.lib-action-button-face[data-tone='quiet'] {
+  background: linear-gradient(var(--lib-face-tint), var(--lib-face-tint));
+  box-shadow: none;
+  color: var(--text-2);
+}
+
+@media (hover: hover) {
+  .lib-action-button-face:hover:not(:disabled) {
+    --lib-face-tint: color-mix(in oklab, var(--text-1) 8%, transparent);
+  }
+  .lib-action-button-face[data-tone='quiet']:hover:not(:disabled) {
+    background:
+      linear-gradient(var(--lib-face-tint), var(--lib-face-tint)),
+      var(--mat-key-texture),
+      var(--mat-key-fill);
+    box-shadow: var(--mat-key-shadow);
+    color: var(--text-1);
+  }
+  /* Danger: ordinary until hover, then it says so. */
+  .lib-action-button-face[data-tone='danger']:hover:not(:disabled) {
+    --lib-face-tint: color-mix(in oklab, var(--danger) 14%, transparent);
+    box-shadow: inset 0 0 0 var(--border-width) var(--danger), var(--mat-key-shadow);
+    color: var(--danger);
+  }
+}
+.lib-action-button-face[data-tone='quiet']:focus-visible {
+  color: var(--text-1);
+}
+
+/* Held, a key presses in. */
+.lib-action-button-face:active:not(:disabled) {
+  --lib-face-tint: color-mix(in oklab, var(--text-1) 12%, transparent);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-pressed);
+}
+.lib-action-button-face[data-tone='danger']:active:not(:disabled) {
+  box-shadow: inset 0 0 0 var(--border-width) var(--danger), var(--mat-key-pressed);
+  color: var(--danger);
+}
+
+/* On (a toggle that is lit or pressed): pressed in, lit in the accent. */
+.lib-action-button-face[data-on] {
+  --lib-face-tint: color-mix(in oklab, var(--lit) 16%, transparent);
+  background:
+    linear-gradient(var(--lib-face-tint), var(--lib-face-tint)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+  box-shadow: inset 0 0 0 var(--border-width) var(--lit), var(--mat-key-pressed), var(--mat-lit-glow);
+  color: var(--lit);
+}
+
+.lib-action-button-face:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lib-action-button-face:disabled {
+  cursor: default;
+  opacity: 0.45;
+}

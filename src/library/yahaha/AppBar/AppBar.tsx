@@ -1,15 +1,15 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
-import { Button } from '../Button/Button';
-import { ChosenTabs, type TabItem } from '../ChosenTabs/ChosenTabs';
+import { Button } from '../../components/core/Button/Button';
+import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
+import { Separator } from '../../components/core/Separator/Separator';
+import { StatusDot } from '../../components/core/StatusDot/StatusDot';
+import { Tabs, type TabItem } from '../../layout/Tabs';
 import { HealthSlot, type HealthTarget } from '../HealthSlot/HealthSlot';
-import { LampButton, type TipAction } from '../LampButton/LampButton';
-import { Separator } from '../Separator/Separator';
-import { StatusDot } from '../StatusDot/StatusDot';
 import { MetronomePopover } from './MetronomePopover';
 import './AppBar.css';
 
 export type { HealthTarget } from '../HealthSlot/HealthSlot';
-export type { TabItem } from '../ChosenTabs/ChosenTabs';
+export type { TabItem } from '../../layout/Tabs';
 
 export interface AppBarProps {
   /** The display pages, left of the hairline (Stage … Harm/Arp). */
@@ -99,8 +99,8 @@ export interface AppBarProps {
  * time, wears the contract's `transport` role hue only while it is on, like every transport key
  * (`hues.ts`): at rest it is a neutral lamp, so the bar holds no saturated colour while nothing is
  * running. Its ▾ stays neutral because it only opens settings. A solid fill means "sounding or
- * running" on the Stage, so the bar holds none: the chosen page is ink plus a 2px underline
- * (`ChosenTabs look="underline"`), the same mark a chosen tab wears everywhere, and the lamps' on
+ * running" on the Stage, so the bar holds none: the chosen page is drawn by the layout `Tabs`, the
+ * same mark (from the theme's materials) a chosen tab wears everywhere, and the lamps' on
  * face is the lamp's own (outline and lit LED). Launchkey uses `--success` only when connected,
  * and the health slot's calm mark is the same `StatusDot`, so the two connections say "fine" with
  * one mark; only Panic and trouble in the health slot wear `--danger`. *Affordance:* the ▾ is a
@@ -119,8 +119,8 @@ export interface AppBarProps {
  * stay); no control or label is ever dropped.
  *
  * **Kept.** Controlled throughout: `chosen` names the page and a click only calls `onChoose`;
- * every switch only asks for its next state. The two tab runs split by a hairline, page tabs as
- * buttons with `aria-current` inside a "Pages" nav, the Launchkey status with its spoken name,
+ * every switch only asks for its next state. The two tab runs split by a hairline inside a "Pages"
+ * nav (now two tablists, "Display pages" and "Full pages", with arrow keys), the Launchkey status with its spoken name,
  * the health slot and where it sends you, the metronome's ▾ with `aria-haspopup`,
  * `aria-expanded` and `aria-controls`, the popover's Esc and press-outside, every tooltip key,
  * `nowPlaying` off the Stage, the fixed `width` and the `end` slot.
@@ -173,48 +173,48 @@ export function AppBar({
   const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
 
   return (
-    <header className="yh-appbar" style={style}>
-      <div className="yh-appbar__row">
-        <span className="yh-appbar__name">yahaha</span>
+    <header className="yh-appbar" data-part="root" style={style}>
+      <div className="yh-appbar__row" data-part="row">
+        <span className="yh-appbar__name" data-part="name">yahaha</span>
 
-        <nav className="yh-appbar__nav" aria-label="Pages">
-          <ChosenTabs tabs={displayTabs} chosen={chosen} size="page" look="underline" onChoose={onChoose} tipAction={tipAction} />
-          <span className="yh-appbar__runs-gap">
+        <nav className="yh-appbar__nav" data-part="nav" aria-label="Pages">
+          <Tabs name="Display pages" items={displayTabs} value={chosen} onChange={(id) => onChoose?.(id)} tipAction={tipAction} />
+          <span className="yh-appbar__runs-gap" data-part="runs-gap">
             <Separator />
           </span>
-          <ChosenTabs tabs={fullTabs} chosen={chosen} size="page" look="underline" onChoose={onChoose} tipAction={tipAction} />
+          <Tabs name="Full pages" items={fullTabs} value={chosen} onChange={(id) => onChoose?.(id)} tipAction={tipAction} />
         </nav>
 
-        <span className="yh-appbar__middle">
+        <span className="yh-appbar__middle" data-part="middle">
           {nowPlaying && (
-            <span className="yh-appbar__playing" aria-label={`Style ${nowPlaying.style}, ${nowPlaying.tempo} BPM`}>
-              <span className="yh-appbar__style">{nowPlaying.style}</span>
-              <span className="yh-appbar__tempo">{nowPlaying.tempo}</span>
-              <span className="yh-appbar__unit">BPM</span>
+            <span className="yh-appbar__playing" data-part="playing" aria-label={`Style ${nowPlaying.style}, ${nowPlaying.tempo} BPM`}>
+              <span className="yh-appbar__style" data-part="style">{nowPlaying.style}</span>
+              <span className="yh-appbar__tempo" data-part="tempo">{nowPlaying.tempo}</span>
+              <span className="yh-appbar__unit" data-part="unit">BPM</span>
             </span>
           )}
         </span>
 
         {end !== undefined && (
-          <span className="yh-appbar__end">
+          <span className="yh-appbar__end" data-part="end">
             <Separator />
             {end}
           </span>
         )}
 
-        <span className="yh-appbar__switches" role="group" aria-label="Global switches">
-          <span className="yh-appbar__metronome" role="group" aria-label="Metronome">
+        <span className="yh-appbar__switches" data-part="switches" role="group" aria-label="Global switches">
+          <span className="yh-appbar__metronome" data-part="metronome" role="group" aria-label="Metronome">
             <LampButton
               label="Metronome"
               on={metronome}
-              hue={metronome ? 'transport' : 't'}
+              hue={metronome ? 'role-2' : 't'}
               join="start"
               name="Metronome"
               tip="metronome.on"
               tipAction={tipAction}
               onToggle={(next) => onMetronome?.(next)}
             />
-            <span ref={caretBox} className="yh-appbar__caret">
+            <span ref={caretBox} className="yh-appbar__caret" data-part="caret">
               <Button
                 symbol="caret"
                 size="caret"
@@ -229,7 +229,7 @@ export function AppBar({
               />
             </span>
             {metronomeOpen && (
-              <span className="yh-appbar__popover">
+              <span className="yh-appbar__popover" data-part="popover">
                 <MetronomePopover
                   id={metronomeId}
                   on={metronome}
@@ -265,19 +265,20 @@ export function AppBar({
           />
         </span>
 
-        <span className="yh-appbar__status" role="group" aria-label="Connections">
+        <span className="yh-appbar__status" data-part="status" role="group" aria-label="Connections">
           <Separator />
           <span
             className="yh-appbar__launchkey"
+            data-part="launchkey"
             role="status"
             title={launchkey ? 'Launchkey connected' : 'Launchkey not connected'}
             data-connected={launchkey ? 'true' : 'false'}
             aria-label={launchkey ? 'Launchkey connected' : 'Launchkey not connected'}
           >
             <StatusDot hue={launchkey ? 'ok' : 'd'} hollow={!launchkey} />
-            <span className="yh-appbar__launchkey-word">Launchkey</span>
+            <span className="yh-appbar__launchkey-word" data-part="launchkey-word">Launchkey</span>
           </span>
-          <span className="yh-appbar__health">
+          <span className="yh-appbar__health" data-part="health">
             <HealthSlot
               failedPart={failedPart}
               synthOn={synthOn}
@@ -290,7 +291,7 @@ export function AppBar({
           </span>
         </span>
 
-        <span className="yh-appbar__panic">
+        <span className="yh-appbar__panic" data-part="panic">
           <Separator />
           <Button
             label="Panic"

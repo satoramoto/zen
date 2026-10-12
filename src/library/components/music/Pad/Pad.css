@@ -1,0 +1,247 @@
+/* Pad: one bank pad drawn as a key. Reads only contract variables and the --yh-pad-*
+   ones declared here. Tone (data-tone) picks the colour role; state (data-state) the structure. */
+
+.yh-pad {
+  /* Size: square by default; a layout may override width and height on this class. */
+  /* 2.5 control heights: wide enough for "Ending II" on one line once its numeral is tied to it. */
+  --yh-pad-size: calc(var(--control-h) * 2.5);
+  --yh-pad-width: var(--yh-pad-size);
+  --yh-pad-height: var(--yh-pad-size);
+  /* Tone: the solid fill, the text on it, the ring colour and the text on a solid ring chip. */
+  --yh-pad-fill: var(--selected);
+  --yh-pad-ink: var(--selected-text);
+  --yh-pad-ring: var(--text-1);
+  --yh-pad-ring-ink: var(--surface-0);
+  /* The idle edge: neutral pads take the strong border, coloured ones their own colour. */
+  --yh-pad-edge: var(--border-strong);
+  --yh-pad-label: var(--text-1);
+  /* The waiting and on ring's weight, border included: one weight across Button, LampButton and Pad. */
+  --yh-wait-ring: calc(var(--border-width) * 2);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--yh-pad-width);
+  min-width: 0;
+  height: var(--yh-pad-height);
+  margin: 0;
+  padding: var(--space-2) var(--space-1);
+  border: var(--border-width) solid var(--yh-pad-edge);
+  border-radius: var(--radius-control);
+  /* The face is a key: the theme's key material at rest. */
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
+  color: var(--yh-pad-label);
+  font-family: var(--font-sans);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out;
+}
+
+.yh-pad[data-util] { --yh-pad-label: var(--text-2); }
+
+.yh-pad[data-tone='hue-1'] { --yh-pad-fill: var(--hue-1); }
+.yh-pad[data-tone='hue-2'] { --yh-pad-fill: var(--hue-2); }
+.yh-pad[data-tone='hue-3'] { --yh-pad-fill: var(--hue-3); }
+.yh-pad[data-tone='hue-4'] { --yh-pad-fill: var(--hue-4); }
+.yh-pad[data-tone^='hue-'] {
+  --yh-pad-ink: var(--on-hue);
+  --yh-pad-ring: var(--yh-pad-fill);
+  --yh-pad-ring-ink: var(--on-hue);
+  --yh-pad-edge: var(--yh-pad-fill);
+}
+.yh-pad[data-tone='success'] {
+  --yh-pad-fill: var(--success);
+  --yh-pad-ink: var(--success-text);
+  --yh-pad-ring: var(--success);
+  --yh-pad-ring-ink: var(--success-text);
+  --yh-pad-edge: var(--success);
+}
+/* A role slot (role-1, role-2): a role hue, never a hue slot's, and only while active: the idle
+   edge stays neutral, the hue appears on the playing, armed and next faces. */
+.yh-pad[data-tone='role-1'] {
+  --yh-pad-fill: var(--role-1);
+  --yh-pad-ink: var(--role-1-text);
+  --yh-pad-ring: var(--role-1);
+  --yh-pad-ring-ink: var(--role-1-text);
+}
+.yh-pad[data-tone='role-2'] {
+  --yh-pad-fill: var(--role-2);
+  --yh-pad-ink: var(--role-2-text);
+  --yh-pad-ring: var(--role-2);
+  --yh-pad-ring-ink: var(--role-2-text);
+}
+
+/* Armed needs attention whatever the pad is: warning, not identity. */
+.yh-pad[data-state='armed'] {
+  --yh-pad-ring: var(--warning);
+  --yh-pad-ring-ink: var(--warning-text);
+}
+
+/* Next reads as --accent (the contract's "next" role), whatever the pad's own colour (accentNext, on by default). */
+.yh-pad[data-next='accent'][data-state='next'] {
+  --yh-pad-ring: var(--accent);
+  --yh-pad-ring-ink: var(--surface-0);
+}
+
+/* fillCell: the pad takes its cell instead of the fixed square. */
+.yh-pad[data-fill] {
+  --yh-pad-width: 100%;
+  --yh-pad-height: 100%;
+  box-sizing: border-box;
+}
+
+/* :where keeps these at the specificity they had, so state faces still win over hover. */
+/* Hover lays an 8% ink wash over the key material (a fill may be a gradient, so no color-mix on it).
+   Held, the key presses in: the material's pressed shadow. */
+.yh-pad:hover:where(:not([aria-disabled='true'])) {
+  background:
+    linear-gradient(color-mix(in srgb, var(--text-1) 8%, transparent), color-mix(in srgb, var(--text-1) 8%, transparent)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+}
+.yh-pad:active:where(:not([aria-disabled='true'])) {
+  transform: translateY(1px);
+  box-shadow: var(--mat-key-pressed);
+}
+
+.yh-pad:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The label: centred lines, wrapping only at word boundaries. */
+.yh-pad__label {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: normal;
+  word-break: normal;
+  text-wrap: balance;
+}
+
+/* Sounding: the solid fill (state wins over material), the label on it, the key pressed in, and a
+   bloom on palettes that glow. */
+.yh-pad[data-state='playing'],
+.yh-pad[data-state='running'] {
+  border-color: var(--yh-pad-fill);
+  background: var(--yh-pad-fill);
+  color: var(--yh-pad-ink);
+  box-shadow:
+    var(--mat-key-pressed),
+    0 0 calc(var(--bloom) * 2) color-mix(in srgb, var(--yh-pad-fill) 60%, transparent);
+}
+
+/* onFace="ring": on, not sounding (a bank's pads, Auto Fill on). The key face stays, pressed in;
+   the edge and a ring take the fill colour, and a lit dot sits top-left. The solid fill stays with
+   what plays. */
+.yh-pad[data-on-face='ring'][data-state='playing'] {
+  border-color: var(--yh-pad-fill);
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  color: var(--text-1);
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-fill),
+    var(--mat-key-pressed);
+}
+.yh-pad[data-on-face='ring'][data-state='playing']::after {
+  content: '';
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-1);
+  width: calc(var(--space-1) * 1.5);
+  height: calc(var(--space-1) * 1.5);
+  border-radius: var(--radius-pill);
+  --lit: var(--yh-pad-fill);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+  pointer-events: none;
+}
+
+/* Waiting (next, armed): the wait ring and a faint wash of it; the label stays primary text. */
+.yh-pad[data-state='next'],
+.yh-pad[data-state='armed'] {
+  border-color: var(--yh-pad-ring);
+  background: color-mix(in srgb, var(--yh-pad-ring) 14%, var(--surface-1));
+  color: var(--text-1);
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-ring),
+    var(--mat-key-shadow);
+}
+.yh-pad[data-state='armed'] {
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-ring),
+    0 0 var(--bloom) color-mix(in srgb, var(--yh-pad-ring) 60%, transparent),
+    var(--mat-key-shadow);
+}
+/* The flash's off phase: the resting key with the ring's colour at rest weight; the words stay. */
+.yh-pad[data-lit='false'] {
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
+}
+
+/* Absent: no face, a dashed edge, a muted label. Structure says "not here", not a dimmer colour. */
+.yh-pad[data-state='dark'] {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--yh-pad-edge) 60%, transparent);
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-3);
+}
+.yh-pad[data-state='dark']:hover:where(:not([aria-disabled='true'])) { background: color-mix(in srgb, var(--text-1) 4%, transparent); }
+
+/* Disabled: still focusable, but a dashed edge, a --text-3 label, the not-allowed cursor and no press
+   give, so it doesn't read as something to press (the rule every key follows). */
+.yh-pad[aria-disabled='true'] { cursor: not-allowed; }
+.yh-pad[aria-disabled='true']:not([data-state='playing'], [data-state='running']) {
+  border-style: dashed;
+  color: var(--text-3);
+}
+
+/* NEXT / ARMED: a small solid chip out of the label's flow, never over the label.
+   --yh-pad-tag-h is the chip's height (its caption line). */
+.yh-pad { --yh-pad-tag-h: calc(var(--size-caption) * 1.4); }
+/* A chip at the top: the pad keeps the chip's row clear above the label, so the label centres in
+   what is left, at any pad size. Doubled class: a bank that resets the pad's padding (`.cell .yh-pad`) must not undo this. */
+.yh-pad.yh-pad[data-tag='top'] { padding-top: calc(var(--yh-pad-tag-h) + var(--space-1) * 2); }
+.yh-pad__tag {
+  position: absolute;
+  z-index: 1;
+  top: var(--space-1);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-control);
+  background: var(--yh-pad-ring);
+  color: var(--yh-pad-ring-ink);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  letter-spacing: max(var(--tracking), 0.06em);
+  text-transform: uppercase;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+/* tagCorner: the chip hangs on the pad's top edge at the right, mostly above it, so the label
+   stays centred, in line with its neighbours, and clear of the chip even on a pad one letter
+   high (the song form's steps). A tighter line keeps it short: its lower 40% reaches into the
+   pad's top padding, and its upper 60% fits in a bank's gap. */
+.yh-pad__tag--corner {
+  --yh-pad-tag-h: calc(var(--size-caption) * 1.2);
+  top: calc(var(--yh-pad-tag-h) * -0.6);
+  right: var(--space-1);
+  left: auto;
+  transform: none;
+  line-height: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-pad { transition: none; }
+  .yh-pad:active { transform: none; }
+}

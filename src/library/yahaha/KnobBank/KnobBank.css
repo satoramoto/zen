@@ -1,4 +1,4 @@
-/* KnobBank: the Knobs header with its page tabs, and eight knob slots across the region. Reads only
+/* KnobBank: eight knob slots across the Knobs region's body (the page tabs are the Region's). Reads only
    contract variables and the --yh-knobbank-* / --yh-knob-ring ones declared here. */
 
 .yh-knobbank {
@@ -7,22 +7,15 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
+  /* No panel of its own: the bank sits inside a Region, which wears the theme's `plate`. */
   font-family: var(--font-sans);
   container: yh-knobbank / inline-size;
-}
-
-/* A narrow region (a 1217 × 752 Stage) tightens the six page tabs so the whole run stays in view. */
-@container yh-knobbank (max-width: 560px) {
-  .yh-knobbank .yh-chosen-tabs {
-    --yh-chosen-tabs-pad: var(--space-2);
-  }
 }
 
 .yh-knobbank__knobs {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   column-gap: var(--space-1);
-  margin-top: var(--space-2);
 }
 
 /* Each slot is a size container: the knob's ring takes the slot's width, up to the density's size. */

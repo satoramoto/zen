@@ -10,7 +10,7 @@ import { boardMetronome } from './AppBar.fixtures';
  * says when the click can't sound. Esc or a press outside it asks to close it.
  */
 const meta = {
-  title: 'Library/Yahaha/Components/MetronomePopover',
+  title: 'Yahaha/Components/MetronomePopover',
   component: MetronomePopover,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

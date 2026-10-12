@@ -1,0 +1,38 @@
+/* The crash prompt on launch (CrashPrompt.tsx): the report as it would be sent. Contract variables
+   only. The Opaque scope is only a scope: it lays nothing out. */
+
+.vs-crash {
+  display: contents;
+}
+
+.vs-crash-p {
+  margin: 0;
+}
+
+/* The reminder to read the report before submitting it. */
+.vs-crash-check {
+  color: var(--text-1);
+  font-weight: var(--weight-strong);
+}
+
+/* The report: a readout window (the theme's screen material), not a ruled box. */
+.vs-crash-text {
+  margin: 0;
+  max-height: 40vh;
+  overflow: auto;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--mat-screen-texture), var(--mat-screen-fill);
+  box-shadow: var(--mat-screen-shadow);
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: var(--vs-text-annot);
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.vs-crash-error {
+  color: var(--danger);
+}

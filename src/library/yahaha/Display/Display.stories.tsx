@@ -53,7 +53,7 @@ const inRegion: Decorator = (Story, { parameters }) => {
  * here and nowhere else on the Stage.
  */
 const meta = {
-  title: 'Library/Yahaha/Components/Display',
+  title: 'Yahaha/Components/Display',
   component: Display,
   decorators: [inRegion, withLibraryTheme],
   parameters: { layout: 'fullscreen' },

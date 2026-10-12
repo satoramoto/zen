@@ -1,0 +1,53 @@
+/* Disclosure: a square key with a chevron. Reads only contract variables and the --lib-* ones
+   declared here and in Toggle/size.css; no literal colours or radii. */
+
+.lib-disclosure {
+  --lib-disclosure-tint: transparent;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--lib-size-h);
+  height: var(--lib-size-h);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: linear-gradient(var(--lib-disclosure-tint), var(--lib-disclosure-tint)), var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-shadow);
+  color: var(--text-2);
+  cursor: pointer;
+  appearance: none;
+  vertical-align: middle;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out;
+}
+.lib-disclosure:hover:not(:disabled) {
+  --lib-disclosure-tint: color-mix(in oklab, var(--text-1) 8%, transparent);
+  color: var(--text-1);
+}
+.lib-disclosure:active:not(:disabled) {
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-pressed);
+}
+.lib-disclosure:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lib-disclosure:disabled {
+  cursor: not-allowed;
+  color: var(--text-4);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border), var(--mat-key-shadow);
+}
+
+.lib-disclosure__chevron {
+  width: 50%;
+  height: 50%;
+  transition: transform 150ms ease-out;
+}
+.lib-disclosure[aria-expanded='true'] > .lib-disclosure__chevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-disclosure,
+  .lib-disclosure__chevron { transition: none; }
+}

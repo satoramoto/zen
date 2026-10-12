@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../../storybook';
-import { Readout } from '../../components';
+import { ChordReadout, TempoReadout } from '../../components/music';
 import { DisplayArt } from './DisplayArt';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/DisplayArt',
+  title: 'Yahaha/Primitives/DisplayArt',
   component: DisplayArt,
   decorators: [
     withLibraryTheme,
@@ -34,8 +34,8 @@ export const UnderReadouts: Story = {
     <div style={{ position: 'relative' }}>
       <DisplayArt {...args} />
       <div className="lib-stack" style={{ position: 'absolute', inset: 0, alignContent: 'center', padding: 'var(--space-6)' }}>
-        <Readout value="Cmaj7" />
-        <Readout value="120" unit="BPM" small />
+        <ChordReadout chord="C" extension="maj7" />
+        <TempoReadout bpm={120} />
       </div>
     </div>
   ),

@@ -1,13 +1,13 @@
 import { Fragment, useEffect, useRef, type CSSProperties } from 'react';
+import { Group } from '../../layout/Group';
+import { Region } from '../../layout/Region';
+import { Tabs, type TabItem } from '../../layout/Tabs';
 import { PART_HUE_INDEX, type Part } from '../hues';
-import { Button } from '../Button/Button';
-import { ChosenTabs, type TabItem } from '../ChosenTabs/ChosenTabs';
-import { Fader } from '../Fader/Fader';
-import { GroupHeader } from '../GroupHeader/GroupHeader';
-import { LampButton, type LampHue } from '../LampButton/LampButton';
-import { PartMarks } from '../PartMarks/PartMarks';
-import { visibleMarks } from '../PartMarks/marks';
-import { Separator } from '../Separator/Separator';
+import { Button } from '../../components/core/Button/Button';
+import { Fader, type FaderHue } from '../../components/music/Fader/Fader';
+import { LampButton, type LampHue } from '../../components/core/LampButton/LampButton';
+import { PartMarks } from '../../components/music/PartMarks/PartMarks';
+import { visibleMarks } from '../../components/music/PartMarks/marks';
 import './FaderBank.css';
 
 /** The app's tooltip hook (the original's Svelte `use:tip`): called with the node and the key. */
@@ -60,8 +60,8 @@ export interface BankLamp {
   label: string;
   /** Lit. */
   on: boolean;
-  /** The part hue for a part lamp, `t` (neutral) for a function, `lamp` the Looper looping. */
-  hue?: LampHue;
+  /** The part for a part lamp (it wears that part's hue), `t` (neutral) for a function, `lamp` the Looper looping. */
+  hue?: Part | 't' | 'lamp';
   /** Record lamp: lit and waiting draw in the record colour. */
   rec?: boolean;
   /** The waiting (armed) face while not lit. */
@@ -77,11 +77,11 @@ export interface BankLamp {
 export interface FaderBankProps {
   /** The strips, left to right (the board's nine). */
   strips: FaderStrip[];
-  /** The fader page tabs (Panel, Style). */
+  /** The fader pages (Panel, Style): the views of the mixer's Region (`FaderBankRegion`). */
   pageTabs: TabItem[];
-  /** The chosen page's id. */
+  /** The chosen page's id; `strips` are that page's. */
   page: string;
-  /** The fader layer tabs (Vol, Pan, Reverb, Chorus, Delay). */
+  /** The fader layers (Vol, Pan, Reverb, Chorus, Delay): the switch in the Region's `aside`. */
   layerTabs: TabItem[];
   /** The chosen layer's id; any but the first gives the part strips the layer look and the header its word. */
   layer: string;
@@ -124,7 +124,11 @@ const clusterOf = (strip: FaderStrip): Cluster =>
         ? 'master'
         : 'groups';
 
-const isPartHue = (hue: FaderStrip['hue']): hue is Part => hue === 'r1' || hue === 'r2' || hue === 'r3' || hue === 'l';
+const isPartHue = (hue: string | undefined): hue is Part => hue === 'r1' || hue === 'r2' || hue === 'r3' || hue === 'l';
+
+/** A Yahaha strip or lamp identity on the library's slots: a part becomes its hue slot (`hues.ts`). */
+const faderHue = (hue: FaderStrip['hue']): FaderHue => (isPartHue(hue) ? PART_HUE_INDEX[hue] : hue);
+const lampHue = (hue: BankLamp['hue']): LampHue | undefined => (isPartHue(hue) ? PART_HUE_INDEX[hue] : hue);
 
 /** Which way the hardware fader must travel to pick the level up. */
 const takeoverWay = (strip: FaderStrip) =>
@@ -254,18 +258,25 @@ function StripName({
  * on is the LampButton's own face (outline in its hue and a lit LED; solid fills are kept for
  * what sounds or runs), so the fader fill stays the loudest "on" in the column. *Clutter*: the
  * "Faders" title and the "Layer" word are gone: the page tabs (Panel, Style) and the layer tabs
- * (Vol … Delay) name themselves, each chosen tab ink with a 2px underline rather than a solid
- * fill, a separator between the two runs. A non-Vol layer shows as its chosen tab and turns the
+ * (Vol … Delay) name themselves. A non-Vol layer shows as its chosen tab and turns the
  * part strips to the neutral layer look, with the layer word over each number ("Rev 40").
+ * *Tabs in the region* (2026-10, layout primitives): the bank draws no tab row of its own. Its
+ * pages are the views of the screen's mixer `Region` and its layers the `Tabs` in that region's
+ * `aside` (`FaderBankRegion` builds both); the bank renders the chosen page's strips.
  *
- * **Kept.** Holds no state: every change is a callback with the strip's or lamp's id. A region
- * named "Faders" with the "Functions" group and the takeover status. Each
+ * **Kept.** Holds no state: every change is a callback with the strip's or lamp's id. The
+ * "Functions" group (a library `Group`) and the takeover status. Each
  * strip is a Fader (a vertical slider with keys, wheel and drag) over a name button that opens
  * the part's page; the parked faders stay disabled sliders named "Fader 7 unused". The part
  * lamps' long press (swap mode), the Sound and Looper holds, and the page button's tap to flip
  * and hold for the fader picker. Every accessible name and tooltip key of the original; tooltips
- * come only from `tipAction` (each control applies it once, the tabs through ChosenTabs), never
- * a native `title`, so no control shows two.
+ * come only from `tipAction` (each control applies it once; the region's tabs carry their keys as
+ * `data-tip`), never a native `title`, so no control shows two.
+ *
+ * **Headless** (2026-10): the bank paints no panel of its own (it sits inside a screen's
+ * `Region`, on the theme's `plate` material); Master's plate (`data-part="plate"`) is that
+ * material again, raised inside it, and each strip's look comes from the Fader's own materials, so a material set restyles the
+ * mixer without touching it.
  */
 export function FaderBank({
   strips,
@@ -276,8 +287,6 @@ export function FaderBank({
   partLamps,
   functionLamps,
   tipAction,
-  onChoosePage,
-  onChooseLayer,
   onLevel,
   onOpen,
   onLamp,
@@ -288,8 +297,9 @@ export function FaderBank({
   onPageRelease,
 }: FaderBankProps) {
   const layered = layerTabs.length > 0 && layer !== layerTabs[0].id;
-  const pageLabel = pageTabs.find((tab) => tab.id === page)?.label ?? '';
-  const otherLabel = pageTabs.find((tab) => tab.id !== page)?.label ?? '';
+  const word = (tab: TabItem | undefined) => (typeof tab?.label === 'string' ? tab.label : (tab?.name ?? ''));
+  const pageLabel = word(pageTabs.find((tab) => tab.id === page));
+  const otherLabel = word(pageTabs.find((tab) => tab.id !== page));
 
   const { template, columns, dividers } = layout(strips);
   const partStrips = strips.flatMap((strip, i) => (clusterOf(strip) === 'parts' ? [i] : []));
@@ -307,7 +317,7 @@ export function FaderBank({
     <LampButton
       label={item.label}
       on={item.on}
-      hue={item.hue}
+      hue={lampHue(item.hue)}
       rec={item.rec}
       waiting={item.waiting}
       size="cell"
@@ -342,34 +352,12 @@ export function FaderBank({
     ) : undefined;
 
   return (
-    <section className="yh-faderbank" aria-label="Faders" data-layered={layered || undefined}>
-      <GroupHeader>
-        <ChosenTabs
-          size="header"
-          look="underline"
-          label="Fader page (master button)"
-          tabs={pageTabs}
-          chosen={page}
-          tipAction={tipAction}
-          onChoose={onChoosePage}
-        />
-        <Separator />
-        <ChosenTabs
-          size="header"
-          look="underline"
-          label="Fader layer"
-          tabs={layerTabs}
-          chosen={layer}
-          tipAction={tipAction}
-          onChoose={onChooseLayer}
-        />
-      </GroupHeader>
-
+    <div className="yh-faderbank" data-part="root" data-layered={layered || undefined}>
       <div className="yh-faderbank__grid" style={{ gridTemplateColumns: template } as CSSProperties}>
         {dividers.map((column) => (
           <span key={`divider-${column}`} className="yh-faderbank__divider" style={{ gridColumn: column }} aria-hidden="true" />
         ))}
-        {masterAt >= 0 && <span className="yh-faderbank__plate" style={{ gridColumn: columns[masterAt] }} aria-hidden="true" />}
+        {masterAt >= 0 && <span className="yh-faderbank__plate" data-part="plate" style={{ gridColumn: columns[masterAt] }} aria-hidden="true" />}
 
         {strips.map((strip, i) => {
           const parked = strip.kind === 'parked';
@@ -392,7 +380,7 @@ export function FaderBank({
                 peak={strip.peak}
                 away={strip.away}
                 kind={strip.kind}
-                hue={strip.hue}
+                hue={faderHue(strip.hue)}
                 layered={layered && part}
                 empty={parked}
                 fillHeight
@@ -434,15 +422,62 @@ export function FaderBank({
 
       {functionLamps.length > 0 && (
         <div className="yh-faderbank__foot">
-          <div className="yh-faderbank__functions" role="group" aria-label="Functions">
+          <Group name="Functions" label={false} className="yh-faderbank__functions">
             {functionLamps.map((item) => (
               <Fragment key={item.id}>{lamp(item)}</Fragment>
             ))}
-          </div>
+          </Group>
         </div>
       )}
       {note}
-    </section>
+    </div>
+  );
+}
+
+export interface FaderBankRegionProps extends FaderBankProps {
+  /** The region's name. Default "Mixer". */
+  name?: string;
+  /** The grid area the region fills in its screen. */
+  area?: string;
+  className?: string;
+}
+
+/**
+ * The mixer as a screen region: a library `Region` whose views are the fader pages (Panel,
+ * Style), with the layer `Tabs` (Vol … Delay) in its `aside`, and the FaderBank for the chosen
+ * page as its body. The page and layer stay the caller's (`page`, `onChoosePage`, `layer`,
+ * `onChooseLayer`), so the master fader button can flip the page too.
+ */
+export function FaderBankRegion({ name = 'Mixer', area, className, ...bank }: FaderBankRegionProps) {
+  const body = <FaderBank {...bank} />;
+  const aside =
+    bank.layerTabs.length > 0 ? (
+      <Tabs
+        name="Fader layer"
+        items={bank.layerTabs}
+        value={bank.layer}
+        onChange={(id) => bank.onChooseLayer?.(id)}
+        tipAction={bank.tipAction}
+      />
+    ) : undefined;
+  return (
+    <Region
+      name={name}
+      area={area}
+      className={className}
+      aside={aside}
+      view={bank.page}
+      onView={(id) => bank.onChoosePage?.(id)}
+      tipAction={bank.tipAction}
+    >
+      {bank.pageTabs.length > 0
+        ? bank.pageTabs.map((tab) => (
+            <Region.View key={tab.id} id={tab.id} label={tab.label} name={tab.name} disabled={tab.disabled} tip={tab.tip}>
+              {body}
+            </Region.View>
+          ))
+        : body}
+    </Region>
   );
 }
 

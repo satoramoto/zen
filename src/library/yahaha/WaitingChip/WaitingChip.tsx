@@ -44,7 +44,8 @@ export interface WaitingChipProps {
  * 0.6 em, as large in proportion as at label size, so beside display words it reads as an arrow,
  * not a bullet. *Rhythm:* heights come from the density's control height, the style line's cap
  * from it too (six control heights, where the original fixed 200px), and the arrow's gap from the
- * spacing scale, so the chip sits on the same line as the controls beside it.
+ * spacing scale, so the chip sits on the same line as the controls beside it. *Materials:* named
+ * parts (`data-part`: chip, arrow); words and an arrow on whatever holds it, so no material.
  *
  * **Kept.** An empty or whitespace-only label renders nothing at all; the label is drawn untrimmed;
  * only `line` caps its width and ends in "…" (and shrinks in a flex row); tabular figures; the
@@ -55,8 +56,15 @@ export function WaitingChip({ label, hue = 't', size = 'count' }: WaitingChipPro
   if (label.trim() === '') return null;
   const style = SECTIONS.has(hue) ? ({ '--yh-waiting-chip-hue': SECTION_STATE_COLOUR.next } as CSSProperties) : undefined;
   return (
-    <span className={`yh-waiting-chip yh-waiting-chip--${size}`} data-face="waiting" data-hue={hue} data-size={size} style={style}>
-      <span className="yh-waiting-chip__arrow" aria-hidden="true" />
+    <span
+      className={`yh-waiting-chip yh-waiting-chip--${size}`}
+      data-part="chip"
+      data-face="waiting"
+      data-hue={hue}
+      data-size={size}
+      style={style}
+    >
+      <span className="yh-waiting-chip__arrow" data-part="arrow" aria-hidden="true" />
       {label}
     </span>
   );

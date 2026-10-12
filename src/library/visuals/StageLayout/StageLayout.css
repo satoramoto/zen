@@ -1,0 +1,289 @@
+/* Live's Stage (StageLayout.tsx), from live/stage.css: the picture full-bleed across the main
+   window, Home's inset panels over it. Home's sizes (8px in, 18px corners, the 52px title bar);
+   areas told apart by space and tone, no lines.
+
+   Who paints what: the picture is the native preview under the page (Views' Preview, a Hole) and
+   spans the whole Screen grid, so the root and every cell paint nothing. Everything sits in one
+   Opaque scope: each layer over the picture draws its solid and blurs nothing (a blur never
+   reaches the native view). Nothing animates but Esc's hold to leave (its ring).
+
+   Local variables:
+     --vs-stagelayout-crate      the crate's column: the 240px inset sidebar and 8px either side
+     --vs-stagelayout-titlebar   the title bar's 52px (layout.css --lay-titlebar)
+     --vs-stagelayout-lights     the window buttons' room: x 24, 12px each, 8px apart
+     --vs-stagelayout-radius     the inset panels' 18px corners (layout.css --lay-side-radius)
+     --vs-stagelayout-z-*        the cells' stacking over the picture
+     --vs-stagelayout-hold       Esc's hold (LEAVE_HOLD_MS), set inline on the progress */
+
+.vs-stagelayout {
+  --vs-stagelayout-crate: calc(240px + 2 * var(--space-2));
+  --vs-stagelayout-titlebar: 52px;
+  --vs-stagelayout-lights: 84px;
+  --vs-stagelayout-radius: 18px;
+  --vs-stagelayout-z-panel: 1;
+  --vs-stagelayout-z-centre: 2;
+  /* Above the centre: the header's popovers open over "Go full screen on…". */
+  --vs-stagelayout-z-head: 3;
+  --vs-stagelayout-z-overlay: 10;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: none;
+}
+.vs-stagelayout-opaque,
+.vs-stagelayout-screen {
+  height: 100%;
+}
+.vs-stagelayout-screen > .lib-screen__grid {
+  position: relative;
+}
+
+/* The picture: every cell of the grid, whatever shows over it; square (macOS rounds the window). */
+.vs-stagelayout-picture,
+.vs-stagelayout-dark {
+  grid-area: 1 / 1 / -1 / -1;
+  z-index: 0;
+  --vs-hole-radius: 0px;
+}
+.vs-stagelayout-picture > .vs-preview-hole::before {
+  content: none;
+}
+/* Until it draws, a plain opaque surface saying so. */
+.vs-stagelayout-picture[data-loading] {
+  background: var(--layer-base-solid);
+}
+/* The warning owed: nothing plays, a dark window (the panels' solid half way to black), opaque over whatever the native view last showed. */
+.vs-stagelayout-dark {
+  background: color-mix(in oklab, var(--layer-base-solid), var(--key-black));
+}
+
+/* The panels' look over the picture: the base layer's solid, its edge and the lift shadow (stage.css's 0 18px 48px). */
+.vs-stagelayout .lib-layer.vs-stagelayout-crate,
+.vs-stagelayout .lib-region.vs-stagelayout-dock {
+  border-radius: var(--vs-stagelayout-radius);
+  box-shadow: var(--layer-base-edge), var(--vs-lift);
+}
+
+/* The crate: Home's inset sidebar, opaque, over the picture's left edge. Docked, the header and
+   the dock keep clear of it; laid over (a narrow window), it covers them. The cell paints nothing
+   and lets presses through around its panel. */
+.vs-stagelayout-crate-cell {
+  grid-area: crate;
+  z-index: var(--vs-stagelayout-z-panel);
+  display: flex;
+  min-height: 0;
+  padding: var(--space-2);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.vs-stagelayout-crate-cell[data-mode='overlay'] {
+  grid-area: 1 / 1 / -1 / 2;
+  justify-self: start;
+  width: var(--vs-stagelayout-crate);
+  z-index: var(--vs-stagelayout-z-overlay);
+}
+.vs-stagelayout-crate {
+  /* A raised panel's captions take the lighter step, so they stay at 4.5:1 (layout.css .lay-side). */
+  --text-3: var(--vs-caption-raised);
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  pointer-events: auto;
+}
+.vs-stagelayout-crate-panel {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding-top: var(--vs-stagelayout-titlebar);
+  outline: none;
+}
+/* Its top band is the title bar there: the window buttons sit in it, and a drag on it moves the window. */
+.vs-stagelayout-band {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--vs-stagelayout-titlebar);
+}
+.vs-stagelayout-crate-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The header row: the title bar's 52px, the capsules (StageHead) centred on the window buttons'
+   line (y 28). The row paints nothing; the empty line between and around the capsules is the
+   title bar, and drags the window. It leaves the window buttons room, or starts beside a docked
+   crate (whose band holds them). */
+.vs-stagelayout-head {
+  grid-area: head;
+  z-index: var(--vs-stagelayout-z-head);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  height: var(--vs-stagelayout-titlebar);
+  padding: 0 var(--space-2) 0 var(--vs-stagelayout-lights);
+  box-sizing: border-box;
+}
+.vs-stagelayout[data-crate='docked'] .vs-stagelayout-head {
+  padding-left: 0;
+}
+
+/* Over the picture's middle: "Go full screen on…" just under the header, or the warning centred
+   where the picture would be (above the dock). Only what it holds takes presses. */
+.vs-stagelayout-centre {
+  grid-area: centre;
+  z-index: var(--vs-stagelayout-z-centre);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-3) var(--space-4) 0;
+  pointer-events: none;
+}
+.vs-stagelayout-centre > * {
+  pointer-events: auto;
+}
+.vs-stagelayout-centre[data-for='warning'] {
+  align-items: center;
+  padding-top: 0;
+}
+.vs-stagelayout[data-panels='hidden'] .vs-stagelayout-centre[data-for='warning'] {
+  grid-area: 1 / 1 / -1 / -1;
+}
+
+/* The dock: an inset panel along the bottom (its content is StageDock's). */
+.vs-stagelayout-dock-cell {
+  grid-area: dock;
+  z-index: var(--vs-stagelayout-z-panel);
+  min-width: 0;
+  padding: 0 var(--space-2) var(--space-2);
+}
+.vs-stagelayout .lib-region.vs-stagelayout-dock {
+  min-width: 0;
+}
+/* StageDock keeps its own padding: the region's inset is the plate's. */
+.vs-stagelayout-dock > .lib-region__body {
+  padding: 0;
+}
+/* The warning owed: the controls wait for "I understand". */
+.vs-stagelayout[data-warning] .vs-stagelayout-dock-cell,
+.vs-stagelayout[data-warning] .vs-stagelayout-crate-cell {
+  opacity: 0.4;
+}
+
+/* Panels hidden: only the picture, and along the bottom a strip that paints nothing until the
+   pointer nears it, then a quiet capsule: \ for controls. It shows at once (nothing animates). */
+.vs-stagelayout-peek {
+  grid-area: dock;
+  z-index: var(--vs-stagelayout-z-panel);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 96px;
+  padding-bottom: var(--space-4);
+  box-sizing: border-box;
+}
+.vs-stagelayout .lib-layer.vs-stagelayout-hint-face {
+  border-radius: var(--radius-pill);
+  opacity: 0;
+}
+.vs-stagelayout-peek:hover .vs-stagelayout-hint-face,
+.vs-stagelayout-hint-face:has(:focus-visible) {
+  opacity: 1;
+}
+.vs-stagelayout-hint {
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--vs-caption-raised);
+  font-size: var(--size-caption);
+  cursor: pointer;
+  user-select: none;
+}
+.vs-stagelayout-hint kbd {
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-strong);
+}
+.vs-stagelayout-hint:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 0;
+}
+
+/* Esc held to leave live: over everything in this window (never the output), an opaque card in
+   the picture's middle with a ring filling over the hold and the line to keep holding. It shows
+   after a beat (no fade), so a short Esc (showing the panels) flashes nothing; the ring fills from
+   the press all the same. Presses go through to what's under it. */
+.vs-stagelayout-leaving {
+  --vs-stagelayout-hold: 3s; /* set inline: LEAVE_HOLD_MS */
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--vs-stagelayout-z-overlay) + 2);
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: vs-stagelayout-after-a-beat 0s linear 0.2s both;
+}
+.vs-stagelayout .lib-layer.vs-stagelayout-leaving-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: var(--space-4) 28px var(--space-4) 18px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--layer-base-edge), var(--vs-lift);
+}
+.vs-stagelayout-leaving-card p {
+  margin: 0;
+  color: var(--text-1);
+  font-size: var(--vs-text-heading);
+  font-weight: var(--weight-strong);
+  white-space: nowrap;
+}
+.vs-stagelayout-ring {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  transform: rotate(-90deg);
+}
+.vs-stagelayout-ring circle {
+  fill: none;
+  stroke-width: 4;
+}
+.vs-stagelayout-ring-track {
+  stroke: var(--text-3);
+  opacity: 0.35;
+}
+/* The ring is the hold's progress, not decoration: it fills under Reduce motion too. */
+.vs-stagelayout-ring-fill {
+  stroke: var(--text-1);
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: vs-stagelayout-fill var(--vs-stagelayout-hold, 3s) linear forwards;
+}
+@keyframes vs-stagelayout-after-a-beat {
+  from {
+    visibility: hidden;
+  }
+  to {
+    visibility: visible;
+  }
+}
+@keyframes vs-stagelayout-fill {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

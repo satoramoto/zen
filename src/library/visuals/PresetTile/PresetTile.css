@@ -1,0 +1,323 @@
+/* One tile (PresetTile.tsx) for the home's library grid and a playlist's strip (decision 68),
+   from the original's tile.css: a 16:9 picture, cover-cropped, with 6px corners and no edge; its
+   name and author on the picture's foot, over a soft scrim that fades up into the picture (no box,
+   no line). States differ by kind, not by more lines: hover lifts the picture, the selection is a
+   ring with a gap, playing is green (level bars before the name), and the keyboard's tile shows
+   the focus ring. Nothing sits under the picture, which LibraryGrid's `homeLook` counts on
+   (label 0). Nothing animates. */
+
+.vs-tile {
+  /* The picture's corners: 6px, a step under a row's 8px pill. */
+  --vs-tile-radius: calc(var(--radius-control) - 2px);
+  /* Ink on the picture and the scrim under it: light over dark in every mode, as the picture is. */
+  --vs-tile-ink: var(--key-white);
+  --vs-tile-ink-2: color-mix(in oklab, var(--key-white) 72%, transparent);
+  --vs-tile-shade: color-mix(in oklab, var(--key-black) 50%, transparent);
+  --vs-tile-chip: color-mix(in oklab, var(--key-black) 60%, transparent);
+  /* Nothing under the picture: the name and author are on it. */
+  --vs-tile-label: 0px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--text-2);
+  cursor: pointer;
+  user-select: none;
+}
+.vs-tile-pic {
+  position: relative;
+  flex: none;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--vs-tile-radius);
+  background: var(--vs-thumb);
+}
+.vs-tile-pic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vs-tile-none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  color: var(--text-3);
+  font-size: var(--vs-text-annot);
+  text-align: center;
+  overflow: hidden;
+}
+/* The hovered preset moving (LibraryGrid's TileMotion): over the thumbnail, under the name, shown
+   with its first picture (at once: nothing fades). */
+.vs-tile-motion {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+}
+.vs-tile-motion[data-drawn] {
+  opacity: 1;
+}
+
+/* The name and author on the picture's foot, over a scrim darkest at the edge and gone by the
+   middle, so a bright picture or a dark one reads the same and the picture above stays whole. */
+.vs-tile-caption {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 9px 7px;
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--key-black) 66%, transparent),
+    color-mix(in oklab, var(--key-black) 38%, transparent) 45%,
+    transparent
+  );
+  color: var(--vs-tile-ink);
+  text-shadow: 0 1px 2px var(--vs-tile-shade);
+  pointer-events: none;
+}
+.vs-tile-name,
+.vs-tile-by {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.vs-tile-name {
+  font-size: var(--vs-text-label);
+  font-weight: 500;
+  line-height: 16px;
+}
+.vs-tile-by {
+  color: var(--vs-tile-ink-2);
+  font-size: var(--vs-text-annot);
+  line-height: 14px;
+}
+/* A chip at the bottom right (failed !, the strip's "next") keeps the name and author clear of it. */
+.vs-tile[data-failed] .vs-tile-caption {
+  padding-right: 28px;
+}
+.vs-tile[data-next] .vs-tile-caption {
+  padding-right: 54px;
+}
+
+/* Hover: the picture lifts, no line. */
+.vs-tile:hover .vs-tile-pic {
+  transform: translateY(-2px);
+  box-shadow: var(--vs-lift);
+}
+/* Selected (a grid's option, or a strip's pick): a ring in the ink, a gap off the picture. An
+   outline, so the gap shows the translucent pane behind it rather than a painted band. */
+.vs-tile[aria-selected='true'] .vs-tile-pic,
+.vs-tile[data-picked] .vs-tile-pic {
+  outline: 2px solid var(--text-1);
+  outline-offset: 2px;
+}
+/* A focused tile (a strip's place) rings its picture, not itself as well: one ring. */
+.vs-tile:focus-visible {
+  outline: none;
+}
+.vs-tile:focus-visible .vs-tile-pic {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Playing: green level bars before the name, which goes bold. */
+.vs-tile[data-playing] .vs-tile-name {
+  font-weight: var(--weight-display);
+}
+.vs-tile-live {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+.vs-tile-live i {
+  width: 2px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--vs-playing);
+  box-shadow: 0 0 2px var(--vs-tile-shade);
+}
+.vs-tile-live i:nth-child(2) {
+  height: 10px;
+}
+.vs-tile-live i:nth-child(3) {
+  height: 3px;
+}
+.vs-tile-live i:nth-child(4) {
+  height: 7px;
+}
+
+/* Starred: a light star, top left. */
+.vs-tile-star {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  color: var(--vs-tile-ink);
+  font-size: var(--vs-text-annot);
+  text-shadow: 0 1px 3px color-mix(in oklab, var(--key-black) 80%, transparent);
+  pointer-events: none;
+}
+/* A preset that failed to open or draw: live mode skips it. Caution, not decoration. */
+.vs-tile-failed {
+  position: absolute;
+  bottom: 7px;
+  right: 7px;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--warning);
+  color: var(--warning-text);
+  font-size: 10px;
+  font-weight: var(--weight-strong);
+  line-height: 14px;
+  text-align: center;
+  pointer-events: none;
+}
+.vs-tile[data-failed] .vs-tile-pic img {
+  opacity: 0.55;
+}
+/* Never played: quieter. */
+.vs-tile[data-hidden] .vs-tile-pic img {
+  opacity: 0.4;
+}
+.vs-tile[data-hidden] .vs-tile-caption {
+  opacity: 0.6;
+}
+
+/* Quick add: ✓ on a preset already in the playlist being filled, top right where + would be. */
+.vs-tile-added {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-pill);
+  color: var(--vs-tile-ink);
+  background: var(--vs-tile-chip);
+  font-size: var(--vs-text-label);
+  font-weight: var(--weight-strong);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* +: a small round dark button, top right, on hover (LibraryGrid also shows it on the keyboard's tile). */
+.vs-tile-add {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--vs-tile-ink);
+  background: color-mix(in oklab, var(--key-black) 55%, transparent);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+.vs-tile-add:hover {
+  background: color-mix(in oklab, var(--key-black) 75%, transparent);
+}
+.vs-tile:hover .vs-tile-add {
+  display: grid;
+}
+
+/* A playlist's strip (Home), on the tile's own data attributes. "next": a quiet chip, bottom right. */
+.vs-tile-next {
+  position: absolute;
+  bottom: 7px;
+  right: 7px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--vs-tile-ink);
+  background: color-mix(in oklab, var(--key-black) 55%, transparent);
+  font-size: var(--vs-text-annot);
+  font-weight: normal;
+  pointer-events: none;
+}
+/* ✕ takes it out: tools top right, on hover or focus. */
+.vs-tile-tools {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: none;
+}
+.vs-tile:hover .vs-tile-tools,
+.vs-tile:focus-within .vs-tile-tools {
+  display: block;
+}
+.vs-tile[data-missing] .vs-tile-pic {
+  opacity: 0.4;
+}
+.vs-tile[data-dragged] {
+  opacity: 0.35;
+}
+/* Where a dragged preset would land: a bar before or after the tile it is over, in the gap, the picture's height. */
+.vs-tile[data-over]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: var(--vs-tile-label);
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+.vs-tile[data-over='before']::before {
+  left: -7.5px;
+}
+.vs-tile[data-over='after']::before {
+  right: -7.5px;
+}
+
+/* The preset being dragged (TileGhost): a lifted card on the float layer, no outline; brighter
+   over a place it can land. */
+.vs-tile-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 240px;
+  padding: 4px 10px 4px 4px;
+  color: var(--text-1);
+  font-size: var(--vs-text-label);
+  border-radius: var(--radius-control);
+  pointer-events: none;
+  opacity: 0.7;
+}
+.vs-tile-ghost[data-ok] {
+  opacity: 1;
+}
+.vs-tile-ghost img {
+  width: 56px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  /* 4px: half a row's pill. */
+  --vs-tile-ghost-radius: calc(var(--radius-control) / 2);
+  border-radius: var(--vs-tile-ghost-radius);
+}
+.vs-tile-ghost span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

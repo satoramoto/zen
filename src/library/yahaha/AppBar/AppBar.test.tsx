@@ -28,7 +28,7 @@ describe('AppBar navigation', () => {
   it('marks the chosen page and calls onChoose with a page id, never moving it itself', async () => {
     const { onChoose } = setup();
     const nav = screen.getByRole('navigation', { name: 'Pages' });
-    const pages = within(nav).getAllByRole('button').map((b) => b.textContent);
+    const pages = within(nav).getAllByRole('tab').map((b) => b.textContent);
     expect(pages).toEqual([
       'Stage',
       'Channel',
@@ -40,18 +40,27 @@ describe('AppBar navigation', () => {
       'Library',
       'Settings',
     ]);
-    expect(within(nav).getByRole('button', { name: 'Stage' })).toHaveAttribute('aria-current', 'page');
-    await userEvent.click(within(nav).getByRole('button', { name: 'Settings' }));
+    expect(within(nav).getByRole('tab', { name: 'Stage' })).toHaveAttribute('aria-selected', 'true');
+    await userEvent.click(within(nav).getByRole('tab', { name: 'Settings' }));
     expect(onChoose).toHaveBeenLastCalledWith('settings');
-    expect(within(nav).getByRole('button', { name: 'Stage' })).toHaveAttribute('aria-current', 'page');
-    expect(within(nav).getByRole('button', { name: 'Settings' })).not.toHaveAttribute('aria-current');
+    expect(within(nav).getByRole('tab', { name: 'Stage' })).toHaveAttribute('aria-selected', 'true');
+    expect(within(nav).getByRole('tab', { name: 'Settings' })).toHaveAttribute('aria-selected', 'false');
   });
 
-  it('marks the chosen page with ink and an underline, never the solid fill', () => {
-    const { container } = setup();
-    const runs = container.querySelectorAll('.yh-appbar__nav .yh-chosen-tabs');
-    expect(runs).toHaveLength(2);
-    runs.forEach((run) => expect(run).toHaveAttribute('data-look', 'underline'));
+  it('draws the pages as two runs of the layout Tabs, each with one tab stop', () => {
+    setup();
+    const nav = screen.getByRole('navigation', { name: 'Pages' });
+    const runs = within(nav).getAllByRole('tablist');
+    expect(runs.map((r) => r.getAttribute('aria-label'))).toEqual(['Display pages', 'Full pages']);
+    // Nothing chosen in the full pages: its first tab still takes the tab stop.
+    runs.forEach((run) => expect(within(run).getAllByRole('tab').filter((t) => t.tabIndex === 0)).toHaveLength(1));
+  });
+
+  it('moves between pages with the arrow keys', async () => {
+    const { onChoose } = setup();
+    within(screen.getByRole('tablist', { name: 'Display pages' })).getByRole('tab', { name: 'Stage' }).focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(onChoose).toHaveBeenLastCalledWith('channel');
   });
 
   it('shows the style and tempo off the Stage only', () => {
@@ -167,7 +176,7 @@ describe('AppBar switches', () => {
     const switches = screen.getByRole('group', { name: 'Global switches' });
     expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 't');
     rerender(<AppBar {...boardAppBar} metronome />);
-    expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'transport');
+    expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'role-2');
     expect(within(switches).getByRole('button', { name: 'Unison' })).toHaveAttribute('data-hue', 't');
     expect(within(switches).getByRole('button', { name: CARET })).toHaveAttribute('data-hue', 't');
   });
@@ -316,7 +325,8 @@ describe('AppBar layout', () => {
     const { container } = setup({ width: 1217, end: <button type="button">Extra</button> });
     const header = container.querySelector('header');
     expect(header).toHaveStyle({ width: '1217px' });
-    const buttons = within(header as HTMLElement).getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? b.textContent);
+    const buttons = [...(header as HTMLElement).querySelectorAll('button')].map((b) => b.getAttribute('aria-label') ?? b.textContent);
+    expect(buttons).toContain('Settings');
     expect(buttons.indexOf('Extra')).toBeGreaterThan(buttons.indexOf('Settings'));
     expect(buttons.indexOf('Extra')).toBeLessThan(buttons.indexOf('Metronome'));
   });

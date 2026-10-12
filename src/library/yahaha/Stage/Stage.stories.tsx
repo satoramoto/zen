@@ -11,7 +11,7 @@ import { StagePlayground } from './StagePlayground';
  * one object; its callbacks pass straight through.
  */
 const meta = {
-  title: 'Library/Yahaha/Screens/Stage',
+  title: 'Yahaha/Screens/Stage',
   component: Stage,
   decorators: [
     (Story) => (

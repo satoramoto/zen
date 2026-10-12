@@ -1,0 +1,173 @@
+/* The transport along the bottom of the home's main column (TransportBar.tsx), from the
+   original's transport-bar.css: ◀ play/pause ▶ R, the preset playing and the time on it, the slow
+   warning, the audio input. It paints no background: the main column is already painted the
+   window's tint (by the hero's spread shadow, HomeLayout.css), and painting it again would make a
+   darker strip, or cover the preview were it under. No rule over it (decision 68); the keys are
+   glyphs and type with no boxes, the track a faint raised line with the time in the readout face.
+   The audio input is quiet text. */
+
+.vs-transport {
+  --vs-transport-h: 64px;
+  --vs-transport-small: calc(var(--size-caption) - 1px);
+  display: grid;
+  /* The right column never shrinks under what it holds (its input shrinks itself first), so in a
+     narrow bar the time gives way rather than running under the audio input. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(12px, 3%, 28px);
+  height: var(--vs-transport-h);
+  padding: 0 var(--vs-lay-pad, var(--mat-plate-inset));
+  box-sizing: border-box;
+  min-width: 0;
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+}
+
+.vs-transport .vs-transport-keys {
+  margin-left: -6px;
+}
+.vs-transport .vs-transport-keys > .lib-group__body {
+  align-items: center;
+  gap: 10px;
+}
+.vs-transport .vs-transport-key {
+  display: grid;
+  place-items: center;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: var(--vs-lay-key-radius, var(--radius-control));
+  background: none;
+  color: var(--text-2);
+  font: inherit;
+  font-size: calc(var(--vs-text-body) + 1px);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.vs-transport .vs-transport-key:hover {
+  color: var(--text-1);
+}
+.vs-transport .vs-transport-key:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 0;
+}
+/* Play and pause lead: brighter, and the glyph a step larger. */
+.vs-transport .vs-transport-play {
+  min-width: 36px;
+  color: var(--text-1);
+}
+
+/* The middle: the preset playing, then the time; centred, and never over its neighbours however
+   narrow the bar (the keys and the audio input keep their room, layout above). */
+.vs-transport-mid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-width: 0;
+  overflow: hidden;
+}
+/* The preset playing on one line, the name brighter and where it plays from quieter after it; at
+   most about half the middle, ellipsised. */
+.vs-transport-now {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 50%;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--vs-text-body);
+}
+.vs-transport-name {
+  color: var(--text-1);
+  font-weight: var(--weight-strong);
+}
+.vs-transport-from {
+  margin-left: 10px;
+  color: var(--text-3);
+  font-size: var(--vs-text-label);
+  word-spacing: var(--vs-sep-space);
+}
+
+/* The time: elapsed, the track, what is left. */
+.vs-transport-time {
+  display: flex;
+  flex: 1 1 200px;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  max-width: 560px;
+  /* Never over its neighbours, however narrow the bar. */
+  overflow: hidden;
+}
+/* Staying until moved on: no end, so a quiet track with nothing to fill. */
+.vs-transport-time[data-open] .vs-transport-track,
+.vs-transport-time[data-off] .vs-transport-track {
+  opacity: 0.5;
+}
+.vs-transport-num {
+  flex: none;
+  min-width: 3.2em;
+  color: var(--text-3);
+  font-family: var(--font-readout);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vs-transport-small);
+}
+.vs-transport-num:first-child {
+  text-align: right;
+}
+.vs-transport-track {
+  --vs-transport-track-radius: 2px;
+  flex: 1;
+  min-width: 40px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: var(--vs-transport-track-radius);
+  background: var(--layer-raised-fill);
+}
+.vs-transport-fill {
+  height: 100%;
+  border-radius: var(--vs-transport-track-radius);
+  background: var(--text-2);
+}
+
+/* After the time, what it does: "moves on by itself · H to stay". The quietest thing in the bar,
+   and the first to give way when the bar narrows. */
+.vs-transport-hint {
+  /* Shrinks long before the track does (the track's basis below gives it a share to shrink from
+     at all), so a narrow bar keeps the time readable. */
+  flex: 0 1000 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-3);
+  font-size: var(--vs-transport-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.vs-transport-time:has(.vs-transport-hint) .vs-transport-track {
+  flex-basis: 120px;
+}
+
+/* The audio input: quiet text and its meter, no box at rest. */
+.vs-transport-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  min-width: 0;
+  font-size: var(--vs-text-label);
+  color: var(--text-4);
+}
+.vs-transport-right > * {
+  min-width: 0;
+}
+/* The picture drawing slowly: the warning in the bar's small type, never wider than it needs. */
+.vs-transport-right .vs-stats {
+  flex: none;
+  font-family: var(--font-sans);
+  font-size: var(--vs-text-label);
+  white-space: nowrap;
+}

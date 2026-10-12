@@ -1,0 +1,68 @@
+/* "For this preset" (Tune.tsx): its own speed and how much it reacts, a Group of two library
+   Slider rows. The group's label is the heading ("for this preset"), "as made" a quiet word as
+   its aside, as the panel's back is. Each slider is the `inside` row: its name and reading over a
+   full-width well, lit from 1× to the value in the signal colour, with the 1× detent a tick at
+   the well's centre. Contract variables and visuals.css tokens only. */
+
+.vs-tune {
+  margin-top: 22px;
+  gap: var(--space-2);
+}
+.vs-tune > .lib-group__head .lib-group__label {
+  color: var(--vs-caption-raised);
+  font-size: 11px;
+  font-weight: 500;
+}
+.vs-tune > .lib-group__body {
+  gap: var(--space-2);
+}
+
+.vs-tune-reset {
+  flex: none;
+  padding: 0 2px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--vs-caption-raised);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.vs-tune-reset:hover {
+  color: var(--text-1);
+}
+.vs-tune-reset:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 2px;
+}
+
+/* One slider row: the name in the controls' ink, the reading in the ink, tabular. */
+.vs-tune .vs-tune-slider[data-layout='inside'] {
+  width: 100%;
+  min-width: 0;
+}
+.vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__caption {
+  color: var(--text-2);
+  font-size: var(--size-caption);
+}
+.vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__readout {
+  color: var(--text-1);
+  font-size: var(--size-caption);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+/* The 1× detent: a tick through the well at its centre, under the reading. */
+.vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__track::after {
+  position: absolute;
+  top: 25%;
+  bottom: 25%;
+  left: 50%;
+  width: 1px;
+  background: var(--text-3);
+  pointer-events: none;
+  content: '';
+}
+.vs-tune .vs-tune-slider .lib-slider__track:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 2px;
+}

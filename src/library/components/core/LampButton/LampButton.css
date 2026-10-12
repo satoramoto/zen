@@ -1,0 +1,194 @@
+/* LampButton: a raised key with an LED. Only contract variables and the local ones below.
+   --lamp-hue       the identity colour (LED, on ring, armed ring, the running and record fill)
+   --lamp-ink       text drawn on the running and record fill
+   --lit            a lit LED's colour, read by the material's --mat-lit-glow
+   --yh-wait-ring   the on and waiting ring's weight: one weight across Button, LampButton and Pad */
+
+.yh-lampbutton {
+  --lamp-hue: var(--text-1);
+  --lamp-ink: var(--surface-0);
+  --lamp-led: var(--space-2);
+  --yh-wait-ring: calc(var(--border-width) * 2);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  height: var(--control-h);
+  min-width: 0;
+  margin: 0;
+  padding: 0 var(--space-4);
+  /* Off: a quiet key of the theme's key material. The lamp is unlit; only its LED keeps the
+     identity colour. */
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  color: var(--text-2);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-control);
+  box-shadow: var(--mat-key-shadow);
+  font: inherit;
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 80ms ease-out, border-color 80ms ease-out, color 80ms ease-out, transform 60ms ease-out;
+}
+
+/* Identity. Hue slots 1–4 only for identity (an app maps its meaning); running and playback read
+   as success, record as danger; role-2 wears the second role hue. The running and record fills
+   take their own ink: the state's text token. */
+.yh-lampbutton[data-hue='1'] { --lamp-hue: var(--hue-1); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='2'] { --lamp-hue: var(--hue-2); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='3'] { --lamp-hue: var(--hue-3); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='4'] { --lamp-hue: var(--hue-4); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='ok'],
+.yh-lampbutton[data-hue='lamp'] { --lamp-hue: var(--success); --lamp-ink: var(--success-text); }
+.yh-lampbutton[data-hue='rec'] { --lamp-hue: var(--danger); --lamp-ink: var(--danger-text); }
+.yh-lampbutton[data-hue='role-2'] { --lamp-hue: var(--role-2); --lamp-ink: var(--role-2-text); }
+/* A role-2 key wears its hue only while active: off or disabled, its LED is neutral. */
+.yh-lampbutton[data-hue='role-2']:is([data-face='off'], [data-face='disabled']) { --lamp-hue: var(--text-1); }
+
+/* Sizes. A key never truncates its own name: `cell` fills its container but grows past it rather
+   than clip. */
+.yh-lampbutton--sm {
+  height: calc(var(--control-h) - var(--space-1));
+  padding: 0 var(--space-3);
+}
+.yh-lampbutton--cell {
+  width: 100%;
+  min-width: max-content;
+  padding: 0 var(--space-2);
+}
+.yh-lampbutton--fixed {
+  padding: 0 var(--space-1);
+}
+.yh-lampbutton--join-start {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.yh-lampbutton--join-end {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  margin-inline-start: calc(var(--border-width) * -1);
+}
+
+/* Parts of the face */
+.yh-lampbutton__led {
+  flex: none;
+  width: var(--lamp-led);
+  height: var(--lamp-led);
+  border-radius: var(--radius-pill);
+  /* Unlit: the hue through a dark lens. Enough to name the hue, clearly not on; a stronger share
+     on light palettes, where 45% into a pale key all but vanished. */
+  background: color-mix(in srgb, var(--lamp-hue) calc(45% + 20% * var(--scheme-light)), var(--surface-2));
+}
+.yh-lampbutton__label {
+  flex: none;
+  text-transform: var(--label-case);
+}
+.yh-lampbutton__code {
+  flex: none;
+  font-family: var(--font-readout);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}
+
+/* Interaction: the key gives under the finger. */
+.yh-lampbutton:hover:not([data-face='disabled']) { border-color: var(--text-3); }
+.yh-lampbutton:active:not([data-face='disabled']) {
+  transform: translateY(1px);
+  box-shadow: var(--mat-key-pressed);
+}
+.yh-lampbutton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* On: an outline in the lamp's hue and a lit LED; the key latches down (the material's pressed
+   shadow), its label in ink. A solid fill means sounding or running, so it is kept for those alone
+   (below). */
+.yh-lampbutton:is([data-face='on'], [data-face='armed']) {
+  border-color: var(--lamp-hue);
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--lamp-hue),
+    var(--mat-key-pressed);
+  color: var(--text-1);
+}
+.yh-lampbutton:is([data-face='on'], [data-face='armed'], [data-face='waiting']):hover { border-color: var(--lamp-hue); }
+/* A lit LED: its colour in --lit, the material's glow. */
+.yh-lampbutton:is([data-face='on'], [data-face='armed'], [data-face='waiting']) .yh-lampbutton__led {
+  --lit: var(--lamp-hue);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+}
+
+/* Running and recording: Start / Stop (`ok`), the Looper looping (`lamp`) and record fill solid,
+   the one face that does. The fill carries "on" without glow; --bloom adds one where the palette has it. */
+.yh-lampbutton:is([data-hue='ok'], [data-hue='lamp'])[data-face='on'],
+.yh-lampbutton[data-face='record'] {
+  background: var(--lamp-hue);
+  border-color: var(--lamp-hue);
+  color: var(--lamp-ink);
+  box-shadow:
+    var(--mat-key-pressed),
+    0 0 var(--bloom) color-mix(in srgb, var(--lamp-hue) 70%, transparent);
+}
+.yh-lampbutton[data-face='record']:hover { border-color: var(--lamp-hue); }
+.yh-lampbutton:is([data-hue='ok'], [data-hue='lamp'])[data-face='on'] .yh-lampbutton__led,
+.yh-lampbutton[data-face='record'] .yh-lampbutton__led {
+  background: var(--lamp-ink);
+  box-shadow: none;
+}
+.yh-lampbutton:is([data-hue='ok'], [data-hue='lamp'])[data-face='on'] .yh-lampbutton__code,
+.yh-lampbutton[data-face='record'] .yh-lampbutton__code {
+  color: color-mix(in srgb, var(--lamp-ink) 75%, var(--lamp-hue));
+}
+
+/* Waiting (queued, not on): the same ring over a faint wash of the hue on the resting key, the LED
+   lit (above) and blinking. */
+.yh-lampbutton[data-face='waiting'] {
+  background:
+    linear-gradient(color-mix(in srgb, var(--lamp-hue) 14%, transparent), color-mix(in srgb, var(--lamp-hue) 14%, transparent)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+  border-color: var(--lamp-hue);
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--lamp-hue),
+    var(--mat-key-shadow);
+  color: var(--text-1);
+}
+/* Blinking says "at the cue": waiting (queued) and armed (on, waiting for its cue). Armed is the on
+   face with this blink and no wash, so it reads as engaged; waiting keeps the wash. */
+.yh-lampbutton:is([data-face='waiting'], [data-face='armed']) .yh-lampbutton__led {
+  animation: yh-lampbutton-blink 1s steps(2, jump-none) infinite;
+}
+@keyframes yh-lampbutton-blink {
+  from { opacity: 1; }
+  to { opacity: 0.25; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yh-lampbutton { transition: none; }
+  .yh-lampbutton:is([data-face='waiting'], [data-face='armed']) .yh-lampbutton__led { animation: none; }
+}
+
+/* Disabled: shown, not pressable. No fill, a dashed edge, a hollow LED in the hue, --text-3. */
+.yh-lampbutton[data-face='disabled'] {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  box-shadow: none;
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+.yh-lampbutton[data-face='disabled'] .yh-lampbutton__led {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lamp-hue) 60%, transparent);
+}
+.yh-lampbutton[data-face='disabled'] .yh-lampbutton__code { color: var(--text-3); }

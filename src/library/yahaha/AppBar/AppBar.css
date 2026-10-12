@@ -39,20 +39,18 @@
   white-space: nowrap;
 }
 
-/* The page nav: two runs split by a hairline, standing on the bar's rule. */
+/* The page nav: two runs of the layout's Tabs, split by a hairline. */
 .yh-appbar__nav {
   display: flex;
   flex: none;
-  align-items: stretch;
+  align-items: center;
   align-self: stretch;
-  margin-bottom: calc(-1 * var(--border-width));
 }
 
 .yh-appbar__runs-gap {
   display: flex;
   align-items: center;
   padding: 0 var(--space-2);
-  border-bottom: var(--border-width) solid var(--border);
 }
 
 /* The flexible middle: what plays, off the Stage; the first thing to give way. */
@@ -195,9 +193,6 @@
     --yh-appbar-gap: var(--space-3);
     padding-inline: var(--space-3);
   }
-  .yh-appbar__nav .yh-chosen-tabs {
-    --yh-chosen-tabs-pad: var(--space-2);
-  }
 }
 
 @container yh-appbar (max-width: 1460px) {
@@ -224,9 +219,6 @@
 }
 
 @container yh-appbar (max-width: 1260px) {
-  .yh-appbar__nav .yh-chosen-tabs {
-    --yh-chosen-tabs-pad: var(--space-1);
-  }
   .yh-appbar__runs-gap {
     padding: 0 var(--space-1);
   }

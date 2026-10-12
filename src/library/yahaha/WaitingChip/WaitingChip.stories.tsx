@@ -4,7 +4,7 @@ import { withLibraryTheme } from '../../storybook';
 import { WaitingChip, type WaitingHue } from './WaitingChip';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/WaitingChip',
+  title: 'Yahaha/Primitives/WaitingChip',
   component: WaitingChip,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },

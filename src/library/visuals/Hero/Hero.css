@@ -1,0 +1,174 @@
+/* The Now Playing card (Hero.tsx), pinned at the top of the main column, from the original's
+   hero.css. The picture is one 16:9 box with nothing over it: in the app the native preview's
+   hole (Views' `Preview`), so nothing behind it paints. Its spread shadow paints the main column
+   instead, the window's tint (--surface-0) out to the column's edges (HomeLayout clips it there,
+   and the grid and the bar sit above it), which also rounds its corners: the corners are
+   --vs-lay-hero-radius (the preview's --vs-hole-radius, for its opaque painted corners). Its
+   height is capped at --vs-hero-cap, so its width is too and it keeps its shape. In a card of
+   680px and up the words and actions sit beside it, along its foot; narrower, under it. Near
+   borderless (decision 68): the card is space, not a panel; the actions are type with a glyph,
+   the pressed one brighter. A still or thumbnail (stories) has the thumb backing behind it, so the
+   card takes the raised caption. */
+
+.vs-hero {
+  --vs-hero-caption: var(--vs-caption-raised);
+  /* The picture's tallest: about two fifths of the window's height, never under 160px or over 440px, so the grid under it keeps its room. */
+  --vs-hero-cap: clamp(160px, 38vh, 440px);
+  --vs-hero-name-size: 24px;
+  container: vs-hero / inline-size;
+  font-family: var(--font-sans);
+}
+.vs-hero > * {
+  /* The container is the card; its one child lays the two parts out. */
+  min-width: 0;
+}
+
+/* The picture's box: the story's still, or the app's Preview placed straight in the row. */
+.vs-hero .vs-hero-pic,
+.vs-hero .vs-hero-row > .vs-preview {
+  --vs-hole-radius: var(--vs-lay-hero-radius);
+  position: relative;
+  width: min(100%, calc(var(--vs-hero-cap) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--vs-hole-radius);
+  box-shadow: 0 0 0 100vmax var(--surface-0);
+}
+/* A still or thumbnail (and the empty box) has the dark backing behind it; the preview's hole
+   paints nothing once it draws (Views.css backs it while loading). */
+.vs-hero .vs-hero-pic:not(.vs-preview) {
+  background: var(--vs-thumb);
+}
+/* The picture alone (round 2: the name is in the transport bar): centred in the column, as wide
+   as it at 16:9, and never taller than half the main column, which HomeLayout measures into
+   --vs-lay-col-h; capped by height it narrows and stays centred. */
+.vs-hero[data-only] {
+  --vs-hero-cap: calc(var(--vs-lay-col-h) / 2);
+}
+.vs-hero[data-only] .vs-hero-pic,
+.vs-hero[data-only] .vs-hero-row > .vs-preview {
+  margin-inline: auto;
+}
+.vs-hero .vs-hero-pic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vs-hero .vs-hero-pic-none {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--vs-hero-caption);
+  font-size: var(--vs-text-label);
+  user-select: none;
+}
+
+/* After the picture, so above its spread shadow. */
+.vs-hero .vs-hero-info {
+  position: relative;
+  min-width: 0;
+  padding-top: var(--space-4);
+}
+.vs-hero .vs-hero-label {
+  margin: 0 0 6px;
+  color: var(--text-4);
+  font-size: calc(var(--size-caption) - 1px);
+  font-weight: var(--weight-body);
+}
+.vs-hero .vs-hero-name {
+  margin: 0;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: var(--vs-hero-name-size);
+  font-weight: var(--weight-strong);
+  line-height: 1.2;
+  /* A long name takes two lines, then an ellipsis. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.vs-hero .vs-hero-name[data-none] {
+  color: var(--vs-hero-caption);
+  font-weight: var(--weight-body);
+}
+.vs-hero .vs-hero-by,
+.vs-hero .vs-hero-from {
+  margin: var(--space-1) 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--vs-hero-caption);
+  font-size: var(--vs-text-body);
+}
+.vs-hero .vs-hero-by {
+  color: var(--text-2);
+}
+.vs-hero .vs-hero-from {
+  font-size: var(--vs-text-label);
+  word-spacing: var(--vs-sep-space);
+}
+
+/* The actions: type keys with a glyph, no boxes. */
+.vs-hero .vs-hero-actions {
+  margin: 14px 0 0 -6px;
+}
+.vs-hero .vs-hero-actions > .lib-group__body {
+  gap: var(--space-1) 18px;
+}
+.vs-hero .vs-hero-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: var(--vs-lay-key-radius);
+  background: none;
+  color: var(--text-2);
+  font: inherit;
+  font-size: var(--vs-text-body);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.vs-hero .vs-hero-act:hover:not(:disabled),
+.vs-hero .vs-hero-act[aria-pressed='true'] {
+  color: var(--text-1);
+}
+.vs-hero .vs-hero-act[aria-pressed='true'] .vs-icon {
+  fill: currentColor;
+}
+.vs-hero .vs-hero-act:disabled {
+  color: var(--vs-hero-caption);
+  cursor: default;
+  opacity: 0.6;
+}
+.vs-hero .vs-hero-act:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 0;
+}
+/* Play and pause lead, a step larger. */
+.vs-hero .vs-hero-play {
+  font-size: calc(var(--vs-text-body) + 1px);
+}
+
+/* A wide card: the picture on the left up to its cap, the words beside it, along its foot. From
+   680px, so the pinned hero stays short beside a docked inspector too. */
+@container vs-hero (min-width: 680px) {
+  .vs-hero:not([data-only]) .vs-hero-row {
+    display: grid;
+    grid-template-columns: minmax(0, calc(var(--vs-hero-cap) * 16 / 9)) minmax(240px, 1fr);
+    align-items: end;
+    column-gap: var(--space-6);
+  }
+  .vs-hero:not([data-only]) .vs-hero-row > :is(.vs-hero-pic, .vs-preview) {
+    width: 100%;
+  }
+  .vs-hero .vs-hero-row .vs-hero-info {
+    padding: 0 0 var(--space-1);
+  }
+}

@@ -24,22 +24,45 @@ function setup(props: Partial<StageProps> = {}) {
 }
 
 describe('Stage', () => {
-  it('is stacked by default: the hero and transport, the song form strip, the band, the keys', () => {
+  it('is a Screen: the app bar fixed on top, the regions in a named grid, the keys and status fixed at the foot', () => {
     const { container } = setup();
-    const screenNode = container.querySelector('.yh-stage__screen') as HTMLElement;
-    expect(screenNode).toHaveAttribute('data-layout', 'stacked');
-    expect(Array.from(screenNode.children).map((node) => node.className)).toEqual([
-      'yh-stage__bar',
-      'yh-stage__top',
-      'yh-stage__strip',
-      'yh-stage__band',
-      'yh-stage__keys',
+    expect(container.querySelector('.yh-stage')).toHaveAttribute('data-layout', 'stacked');
+    const screenNode = screen.getByRole('group', { name: 'Stage' });
+    const [header, grid, footer] = Array.from(screenNode.children) as HTMLElement[];
+    expect([header, grid, footer].map((node) => node.dataset.part)).toEqual(['header', 'grid', 'footer']);
+    expect(within(header).getByRole('navigation', { name: 'Pages' })).toBeInTheDocument();
+    expect(Array.from(grid.children).map((node) => [node.getAttribute('aria-label'), (node as HTMLElement).style.gridArea])).toEqual([
+      ['Hero', 'hero'],
+      ['Transport', 'transport'],
+      ['Song form', 'form'],
+      ['Mixer', 'mixer'],
+      ['Knobs', 'knobs'],
+      ['Pads', 'pads'],
     ]);
-    const top = container.querySelector('.yh-stage__top') as HTMLElement;
-    expect(within(top).getByRole('region', { name: 'Stage display' })).toBeInTheDocument();
-    expect(within(top).getByRole('region', { name: 'Transport' })).toBeInTheDocument();
-    expect(within(container.querySelector('.yh-stage__strip') as HTMLElement).getByRole('region', { name: 'Song form' })).toBeInTheDocument();
+    expect(grid.style.gridTemplateAreas).toBe('"hero transport" "form form" "mixer knobs" "mixer pads"');
+    expect(within(footer).getByRole('region', { name: 'Keyboard' })).toBeInTheDocument();
+    expect(footer.querySelector('.yh-status-line')).not.toBeNull();
+    // The hero and the song form halves are plain elements: the Stage's Regions name them.
+    expect(within(grid).getByRole('region', { name: 'Hero' })).toContainElement(grid.querySelector<HTMLElement>('.yh-display'));
+    expect(within(grid).getByRole('region', { name: 'Transport' })).toContainElement(screen.getByRole('group', { name: 'Transport' }));
+    expect(within(grid).getByRole('region', { name: 'Song form' })).toContainElement(screen.getByRole('group', { name: 'Sections' }));
     expect(screen.queryByRole('region', { name: 'Song form and transport' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'Stage display' })).toBeNull();
+  });
+
+  it('folds each bank\'s tabs into its region: no region inside the Mixer, Knobs or Pads', () => {
+    setup();
+    for (const [name, tabs] of [
+      ['Mixer', ['Panel', 'Style']],
+      ['Knobs', ['Style', 'Rack', 'Pan', 'Reverb', 'Chorus', 'Delay']],
+      ['Pads', ['Sections', 'Quick Racks', 'Chord', 'Multi Pads', 'Setup']],
+    ] as const) {
+      const node = screen.getByRole('region', { name });
+      expect(within(node).queryAllByRole('region')).toHaveLength(0);
+      expect(within(within(node).getByRole('tablist', { name })).getAllByRole('tab').map((tab) => tab.textContent)).toEqual(tabs);
+      expect(within(node).getByRole('tabpanel')).toBeInTheDocument();
+    }
+    expect(within(screen.getByRole('region', { name: 'Mixer' })).getByRole('tablist', { name: 'Fader layer' })).toBeInTheDocument();
   });
 
   it('has no hue legend: the mixer names each part in its hue', () => {
@@ -52,7 +75,7 @@ describe('Stage', () => {
     setup();
     const stage = screen.getByRole('group', { name: 'Stage' });
     expect(within(stage).getAllByRole('navigation', { name: 'Pages' })).toHaveLength(1);
-    for (const name of ['Stage display', 'Song form', 'Transport', 'Faders', 'Knobs', 'Pads']) {
+    for (const name of ['Hero', 'Song form', 'Transport', 'Mixer', 'Knobs', 'Pads', 'Keyboard']) {
       expect(within(stage).getAllByRole('region', { name })).toHaveLength(1);
     }
     expect(stage.querySelectorAll('.yh-keys')).toHaveLength(1);
@@ -63,9 +86,9 @@ describe('Stage', () => {
     setup();
     const nav = within(screen.getByRole('navigation', { name: 'Pages' }));
     for (const page of ['Stage', 'Channel', 'Effects', 'Quick Racks', 'Multi Pads', 'Looper', 'Harm/Arp', 'Library', 'Settings']) {
-      expect(nav.getAllByRole('button', { name: page })).toHaveLength(1);
+      expect(nav.getAllByRole('tab', { name: page })).toHaveLength(1);
     }
-    expect(nav.getByRole('button', { name: 'Stage' })).toHaveAttribute('aria-current', 'page');
+    expect(nav.getByRole('tab', { name: 'Stage' })).toHaveAttribute('aria-selected', 'true');
   });
 
   it('has the global switches once, only in the app bar', () => {
@@ -81,7 +104,7 @@ describe('Stage', () => {
 
   it('has the style, chord, section, tempo and beat once, in the hero', () => {
     setup();
-    const hero = region('Stage display');
+    const hero = region('Hero');
     for (const name of ['Previous style (Track left)', 'Next style (Track right)', 'Sunday Drive Pop: open the Browser']) {
       once(name);
       expect(hero.getByRole('button', { name })).toBeInTheDocument();
@@ -98,8 +121,8 @@ describe('Stage', () => {
 
   it('drops the hero parts column: the mixer names each sound', () => {
     setup();
-    expect(region('Stage display').queryByRole('list', { name: 'Sounds' })).toBeNull();
-    const faders = region('Faders');
+    expect(region('Hero').queryByRole('list', { name: 'Sounds' })).toBeNull();
+    const faders = region('Mixer');
     for (const name of ['Right 1, Stage Grand: open Channel', 'Right 2, Silk Strings, edited: open Channel', 'Left, Finger Bass: open Channel']) {
       expect(faders.getByRole('button', { name })).toBeInTheDocument();
     }
@@ -124,10 +147,14 @@ describe('Stage', () => {
 
   it('split: the song form over the transport beside the hero, each key once', () => {
     const { container } = setup({ layout: 'split' });
-    expect(container.querySelector('.yh-stage__screen')).toHaveAttribute('data-layout', 'split');
+    expect(container.querySelector('.yh-stage')).toHaveAttribute('data-layout', 'split');
     expect(container.querySelector('.yh-stage__strip')).toBeNull();
-    const top = container.querySelector('.yh-stage__top') as HTMLElement;
-    const form = within(within(top).getByRole('region', { name: 'Song form and transport' }));
+    const grid = container.querySelector('[data-part="grid"]') as HTMLElement;
+    expect(grid.style.gridTemplateAreas).toBe('"hero form" "mixer knobs" "mixer pads"');
+    const outer = screen.getByRole('region', { name: 'Song form and transport' });
+    expect(outer.style.gridArea).toBe('form');
+    expect(within(outer).queryAllByRole('region')).toHaveLength(0);
+    const form = within(outer);
     for (const name of [...SECTIONS, ...TRANSPORT]) {
       once(name);
       expect(form.getByRole('button', { name })).toBeInTheDocument();
@@ -146,7 +173,7 @@ describe('Stage', () => {
 
   it('has the mixer, eight knobs, sixteen pads in two rows of eight', () => {
     const { container } = setup();
-    expect(region('Faders').getAllByRole('slider')).toHaveLength(9);
+    expect(region('Mixer').getAllByRole('slider')).toHaveLength(9);
     for (const name of ['Style volume, level 100', 'Multi Pad volume, level 90', 'Master, level 100']) once(name, 'slider');
     expect(region('Knobs').getAllByRole('button', { name: /^Knob [1-8]:/ }).length + container.querySelectorAll('.yh-knobbank__empty').length).toBe(8);
     expect(container.querySelectorAll('.yh-padbank__cell')).toHaveLength(16);
@@ -226,7 +253,7 @@ describe('Stage', () => {
         expect(pads.getAllByRole('button', { name })).toHaveLength(1);
       }
       expect(pads.getAllByRole('button', { name: /^Tap tempo \(pad 14\)/ })).toHaveLength(1);
-      expect(region('Stage display').getAllByRole('button', { name: 'Tap tempo' })).toHaveLength(1);
+      expect(region('Hero').getAllByRole('button', { name: 'Tap tempo' })).toHaveLength(1);
     });
 
     it('sends a pad press where the same step or key in the strip and transport sends it, and Tap to the hero', async () => {
@@ -310,26 +337,28 @@ describe('Stage', () => {
           disconnect() {}
         },
       );
-      const is = (node: Element, name: string) => node.classList.contains(name);
+      // The grid's room is `frame` (what the header and footer leave); a cleared grid fills it.
+      const isGrid = (node: Element) => node.classList.contains('lib-screen__grid');
       const px = (node: Element, side: 'width' | 'height') => parseFloat((node as HTMLElement).style[side]) || 0;
+      const box = (node: Element, side: 'width' | 'height') => px(node, side) || (side === 'width' ? frame.w : frame.h);
       vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
-        return is(this, 'yh-stage') ? frame.w : is(this, 'yh-stage__screen') ? px(this, 'width') : 0;
+        return isGrid(this) ? box(this, 'width') : 0;
       });
       vi.spyOn(Element.prototype, 'clientHeight', 'get').mockImplementation(function (this: Element) {
-        return is(this, 'yh-stage') ? frame.h : is(this, 'yh-stage__screen') ? px(this, 'height') : 0;
+        return isGrid(this) ? box(this, 'height') : 0;
       });
       vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
-        return is(this, 'yh-stage__screen') ? px(this, 'width') : 0;
+        return isGrid(this) ? box(this, 'width') : 0;
       });
       vi.spyOn(Element.prototype, 'scrollHeight', 'get').mockImplementation(function (this: Element) {
-        if (!is(this, 'yh-stage__screen')) return 0;
-        return (this as HTMLElement).dataset.hero === 'compact' ? need.compact : need.full;
+        if (!isGrid(this)) return 0;
+        return (this.closest('.yh-stage') as HTMLElement).dataset.hero === 'compact' ? need.compact : need.full;
       });
       return { refit: () => act(() => observers.forEach((o) => o.fit())), observed: () => observers.flatMap((o) => o.nodes) };
     }
     const fit = () => ({
-      zoom: screen.getByRole('group', { name: 'Stage' }).dataset.zoom,
-      hero: screen.getByRole('region', { name: 'Stage display' }).getAttribute('data-density'),
+      zoom: (document.querySelector('.yh-stage') as HTMLElement).dataset.zoom,
+      hero: (document.querySelector('.yh-display') as HTMLElement).getAttribute('data-density'),
     });
 
     it('tightens the hero before it zooms, at the 1217 × 752 screen', () => {
@@ -349,9 +378,11 @@ describe('Stage', () => {
       const need = { full: 800, compact: 740 };
       const { refit, observed } = measure(frame, need);
       const { container } = render(<Stage {...stageBoard} />);
-      // The screen's rows are watched, not only the frame: the fit sets the screen's own box.
-      expect(observed()).toContain(container.querySelector('.yh-stage__top'));
-      expect(observed()).toContain(container.querySelector('.yh-stage__band'));
+      // The header, the footer and each region are watched, not only the frame: the fit sets the grid's own box.
+      expect(observed()).toContain(container.querySelector('[data-part="header"]'));
+      expect(observed()).toContain(container.querySelector('[data-part="footer"]'));
+      expect(observed()).toContain(screen.getByRole('region', { name: 'Hero' }));
+      expect(observed()).toContain(screen.getByRole('region', { name: 'Pads' }));
       need.compact = 940;
       refit();
       expect(fit()).toEqual({ zoom: '0.800', hero: 'compact' });
@@ -378,25 +409,21 @@ describe('Stage', () => {
     });
   });
 
-  it('puts the status line under the transport, not in a row of its own', () => {
-    const { container } = setup(stageStopped);
-    const status = container.querySelectorAll('.yh-status-line');
-    expect(status).toHaveLength(1);
-    expect(status[0].closest('.yh-stage__form')).not.toBeNull();
-    expect(status[0].closest('.yh-stage__band')).toBeNull();
-    expect(status[0]).toHaveTextContent('Style queued');
-  });
-
-  it('split: puts the status line at the foot of the knobs and pads', () => {
-    const { container } = setup({ ...stageStopped, layout: 'split' });
-    const status = container.querySelectorAll('.yh-status-line');
-    expect(status).toHaveLength(1);
-    expect(status[0].closest('.yh-stage__controls')).not.toBeNull();
+  it('puts the status line in the fixed footer under the keys, in both layouts', () => {
+    for (const layout of ['stacked', 'split'] as const) {
+      const { container, unmount } = setup({ ...stageStopped, layout });
+      const status = container.querySelectorAll('.yh-status-line');
+      expect(status).toHaveLength(1);
+      expect(status[0].closest('[data-part="footer"]')).not.toBeNull();
+      expect(status[0].closest('[data-part="grid"]')).toBeNull();
+      expect(status[0]).toHaveTextContent('Style queued');
+      unmount();
+    }
   });
 
   it('renders the stopped board', () => {
     setup(stageStopped);
-    expect(region('Stage display').getByRole('img', { name: 'Stopped on Main A' })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: 'Stopped on Main A' })).toBeInTheDocument();
     once('Start / Stop, stopped');
     expect(screen.getByRole('button', { name: /Style queued/ })).toBeInTheDocument();
   });
@@ -411,10 +438,10 @@ describe('StagePlayground', () => {
     const form = region('Song form');
     await user.click(form.getByRole('button', { name: 'Main D' }));
     expect(form.getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
-    expect(region('Stage display').getByText('Main D')).toBeInTheDocument();
+    expect(region('Hero').getByText('Main D')).toBeInTheDocument();
     await user.click(form.getByRole('button', { name: /^Main D, next/ }));
     expect(form.getByRole('button', { name: 'Main D, playing' })).toBeInTheDocument();
-    expect(region('Stage display').getByRole('img', { name: /^Playing Main\sD$/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: /^Playing Main\sD$/ })).toBeInTheDocument();
   });
 
   it('plays the song from the Sections pads exactly as from the strip', async () => {
@@ -447,12 +474,12 @@ describe('StagePlayground', () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /^Start \/ Stop, running/ }));
     expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toBeInTheDocument();
-    expect(region('Stage display').getByRole('img', { name: /^Stopped on Main\sB$/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: /^Stopped on Main\sB$/ })).toBeInTheDocument();
     // Stopped, a section press picks where the band starts.
     await user.click(screen.getByRole('button', { name: 'Main A' }));
     await user.click(screen.getByRole('button', { name: 'Start / Stop, stopped' }));
     expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toBeInTheDocument();
-    expect(region('Stage display').getByRole('img', { name: /^Playing Main\sA$/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('img', { name: /^Playing Main\sA$/ })).toBeInTheDocument();
   });
 
   it('sets the tempo from taps, and the tempo keys step it', async () => {
@@ -489,10 +516,10 @@ describe('StagePlayground', () => {
     expect(ots(2)).toHaveAttribute('data-state', 'playing');
     expect(ots(1)).toHaveAttribute('data-state', 'idle');
     await user.click(ots(3));
-    expect(region('Stage display').getByRole('button', { name: /^One Touch 3, applied/ })).toBeInTheDocument();
+    expect(region('Hero').getByRole('button', { name: /^One Touch 3, applied/ })).toBeInTheDocument();
     expect(ots(3)).toHaveAttribute('data-state', 'playing');
     expect(ots(2)).toHaveAttribute('data-state', 'idle');
-    await user.click(region('Stage display').getByRole('button', { name: /^Apply One Touch 4/ }));
+    await user.click(region('Hero').getByRole('button', { name: /^Apply One Touch 4/ }));
     expect(ots(4)).toHaveAttribute('data-state', 'playing');
     // A new style has none applied.
     await user.click(screen.getByRole('button', { name: 'Next style (Track right)' }));
@@ -502,7 +529,7 @@ describe('StagePlayground', () => {
   it('steps styles around both ends of the list', async () => {
     play();
     const user = userEvent.setup();
-    const hero = region('Stage display');
+    const hero = region('Hero');
     const style = (name: string) => hero.getByRole('button', { name: `${name}: open the Browser` });
     await user.click(hero.getByRole('button', { name: 'Previous style (Track left)' }));
     expect(style('Waltz for Two')).toBeInTheDocument();
@@ -515,7 +542,7 @@ describe('StagePlayground', () => {
     const seed = { ...stageBoard, display: { ...stageBoard.display, style: { ...stageBoard.display.style, name: 'Midnight Swing', timeSignature: '6/8' } } };
     const user = userEvent.setup();
     const { unmount } = render(<StagePlayground {...seed} width={1440} height={900} tick={false} />);
-    const hero = () => region('Stage display');
+    const hero = () => region('Hero');
     expect(hero().getByRole('button', { name: 'Midnight Swing: open the Browser' })).toBeInTheDocument();
     await user.click(hero().getByRole('button', { name: 'Next style (Track right)' }));
     expect(hero().getByRole('button', { name: 'Sunday Drive Pop: open the Browser' })).toBeInTheDocument();
@@ -532,7 +559,7 @@ describe('StagePlayground', () => {
     master.focus();
     await user.keyboard('{ArrowDown}');
     expect(screen.getByRole('slider', { name: 'Master, level 99' })).toBeInTheDocument();
-    await user.click(region('Faders').getByRole('tab', { name: 'Reverb send' }));
+    await user.click(region('Mixer').getByRole('tab', { name: 'Reverb send' }));
     expect(screen.getByRole('slider', { name: 'Right 1 · Stage Grand, Reverb 40' })).toBeInTheDocument();
   });
 });

@@ -4,7 +4,7 @@ import { withLibraryTheme } from '../../storybook';
 import { OneTouchPicker } from './OneTouchPicker';
 
 const meta = {
-  title: 'Library/Yahaha/Primitives/OneTouchPicker',
+  title: 'Yahaha/Primitives/OneTouchPicker',
   component: OneTouchPicker,
   decorators: [withLibraryTheme],
   tags: ['autodocs'],

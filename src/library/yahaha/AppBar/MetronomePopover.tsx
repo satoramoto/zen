@@ -1,7 +1,7 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react';
-import { LampButton, type TipAction } from '../LampButton/LampButton';
-import { LineSlider } from '../LineSlider/LineSlider';
-import { SettingsRow } from '../SettingsRow/SettingsRow';
+import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
+import { LineSlider } from '../../components/core/LineSlider/LineSlider';
+import { SettingsRow } from '../../components/core/SettingsRow/SettingsRow';
 import './MetronomePopover.css';
 
 export interface MetronomePopoverProps {
@@ -37,8 +37,8 @@ const OWN_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Pa
  * **Job.** Set the click once, before or between songs: on or off, how loud, and whether the
  * first beat rings a bell. A player wants the three answers at a glance and nothing else.
  *
- * **Changed.** *Hierarchy:* the box is a raised card (`--surface-1`, a `--border-strong` hairline
- * and the pack's `--shadow-card`) instead of a ground-coloured box with an inset line, so it reads
+ * **Changed.** *Hierarchy:* the box is a raised plate (the materials' `plate`, under a
+ * `--border-strong` hairline) instead of a ground-coloured box with an inset line, so it reads
  * as lifted above the Stage rather than printed on it (`references/craft-details.md`, layered
  * surfaces). The title is the one strong line; rows share one label column, so the three values
  * start on one vertical (alignment). *Colour meaning:* every control is neutral; the metronome
@@ -97,13 +97,14 @@ export function MetronomePopover({
     <div
       ref={box}
       className="yh-metronome-popover"
+      data-part="root"
       id={id}
       role="dialog"
       tabIndex={-1}
       aria-label="Metronome settings"
       onKeyDown={ownKeys}
     >
-      <span className="yh-metronome-popover__title">Metronome</span>
+      <span className="yh-metronome-popover__title" data-part="title">Metronome</span>
       <SettingsRow label="On/off" labelWidth={104}>
         <LampButton
           label={on ? 'On' : 'Off'}
@@ -138,7 +139,7 @@ export function MetronomePopover({
           onToggle={(next) => onBell?.(next)}
         />
       </SettingsRow>
-      {!audible && <p className="yh-metronome-popover__note">The built-in synth isn't running: the click can't sound.</p>}
+      {!audible && <p className="yh-metronome-popover__note" data-part="note">The built-in synth isn't running: the click can't sound.</p>}
     </div>
   );
 }

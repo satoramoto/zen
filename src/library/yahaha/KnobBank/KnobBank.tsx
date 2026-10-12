@@ -1,7 +1,6 @@
-import { ChosenTabs, type TabItem } from '../ChosenTabs/ChosenTabs';
-import { GroupHeader } from '../GroupHeader/GroupHeader';
-import { Knob, type TipAction } from '../Knob/Knob';
-import { BOX, START, SWEEP, arc } from '../Knob/geometry';
+import { Region } from '../../layout/Region';
+import { Knob, type TipAction } from '../../components/music/Knob/Knob';
+import { BOX, START, SWEEP, arc } from '../../components/music/Knob/geometry';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import './KnobBank.css';
 
@@ -37,13 +36,13 @@ const TRACK = arc(START, START + SWEEP);
 export interface KnobBankProps {
   /** The eight knobs, left to right. Fewer: the rest are unused slots; more: those past eight are ignored. */
   knobs: KnobItem[];
-  /** The knob page names, one tab each ("Style", "Rack", "Pan", "Reverb", "Chorus", "Delay"). */
+  /** The knob page names, one view of the Knobs region each ("Style", "Rack", "Pan", "Reverb", "Chorus", "Delay"). */
   pages?: string[];
   /** The chosen page's index in `pages`. */
   page?: number;
   /** The knob page's name ("Style", "Swap R1"): the one tab shown when `pages` is missing or empty. */
   pageLabel?: string;
-  /** The app's tooltip hook, passed to every knob and to the page tabs. */
+  /** The app's tooltip hook, passed to every knob. */
   tipAction?: TipAction;
   /** A page tab was chosen (its index in `pages`), by click or arrow key. */
   onPage?: (index: number) => void;
@@ -60,8 +59,9 @@ export function knobName(knob: KnobItem, index: number): string {
 }
 
 /**
- * KnobBank: the Stage's Knobs region. The knob page tabs, and the eight Launchkey knobs across
- * the region, each in the slot of the hardware knob it mirrors.
+ * KnobBank: the body of the Stage's Knobs region: the eight Launchkey knobs of the chosen page
+ * across the region, each in the slot of the hardware knob it mirrors. The pages are the
+ * region's views (`KnobBankRegion`), so the bank draws no tab row of its own.
  *
  * **Job.** Say what the eight knobs do on this page and where each one is, mid-song, from a metre
  * away: the page first (which of six maps the hardware is on), then each value, then each name.
@@ -94,37 +94,31 @@ export function knobName(knob: KnobItem, index: number): string {
  * fit the region of a 1217 × 752 Stage as well as a 1440 × 900 one without clipping, and the value
  * shrinks with the ring rather than overflowing it. *Alignment*: the bank fills its region instead
  * of a fixed band width, and the slots are an even eight-column grid on the library's spacing.
+ * *Materials*: the bank paints no panel of its own; it sits inside a screen's `Region`, which the
+ * theme's `plate` material draws, and each knob wears its own materials (Knob); parts are named with `data-part` (root, knobs, slot, empty).
  *
  * **Kept.** Holds no state: the page comes in `page`, a tab choice goes out by index, and every
- * knob change carries the knob's position. A region named "Knobs"; the header's one tab style
- * (ChosenTabs, a tablist with arrow keys), the `pageLabel` fallback tab, the tooltip keys (`knobs.page`, `knobs.knob`), each
+ * knob change carries the knob's position. A region named "Knobs" (now the screen's `Region`,
+ * whose tabs are the library `Tabs`), the `pageLabel` fallback tab, the tooltip keys (`knobs.page`, `knobs.knob`), each
  * knob's drag, wheel, keys and press, and the spoken names ("Knob 1: Dynamics (DynCtrl) 127",
  * "Knob 7: unused").
  */
-export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipAction, onPage, onPress, onStep }: KnobBankProps) {
-  const names = pages.length > 0 ? pages : [pageLabel];
-  const tabs: TabItem[] = names.map((label, i) => ({ id: String(i), label, tip: 'knobs.page' }));
-  const chosen = String(pages.length > 0 ? page : 0);
+export function KnobBank({ knobs, tipAction, onPress, onStep }: KnobBankProps) {
   const slots = Array.from({ length: KNOB_SLOTS }, (_, i) => knobs[i] ?? UNUSED);
 
   return (
-    <section className="yh-knobbank" aria-label="Knobs" lang="en">
-      <GroupHeader>
-        <ChosenTabs
-          size="header"
-          look="underline"
-          label="Knob page"
-          tabs={tabs}
-          chosen={chosen}
-          tipAction={tipAction}
-          onChoose={(id) => onPage?.(Number(id))}
-        />
-      </GroupHeader>
-      <div className="yh-knobbank__knobs">
+    <div className="yh-knobbank" data-part="root" lang="en">
+      <div className="yh-knobbank__knobs" data-part="knobs">
         {slots.map((knob, i) => (
-          <div key={i} className="yh-knobbank__slot" data-unused={knob.unused || undefined}>
+          <div key={i} className="yh-knobbank__slot" data-part="slot" data-unused={knob.unused || undefined}>
             {knob.unused ? (
-              <span className="yh-knobbank__empty" role="img" aria-label={knobName(knob, i)} data-tip="knobs.knob">
+              <span
+                className="yh-knobbank__empty"
+                data-part="empty"
+                role="img"
+                aria-label={knobName(knob, i)}
+                data-tip="knobs.knob"
+              >
                 <span className="yh-knobbank__line" aria-hidden="true" />
                 <svg className="yh-knobbank__ring" viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true">
                   <path d={TRACK} />
@@ -149,7 +143,42 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
           </div>
         ))}
       </div>
-    </section>
+    </div>
+  );
+}
+
+export interface KnobBankRegionProps extends KnobBankProps {
+  /** The region's name. Default "Knobs". */
+  name?: string;
+  /** The grid area the region fills in its screen. */
+  area?: string;
+  className?: string;
+}
+
+/**
+ * The knobs as a screen region: a library `Region` whose views are the knob pages (or the one
+ * `pageLabel` view), and the KnobBank for the chosen page as its body. The page stays the
+ * caller's (`page`, `onPage`, by index).
+ */
+export function KnobBankRegion({ name = 'Knobs', area, className, ...bank }: KnobBankRegionProps) {
+  const { pages = [], page = 0, pageLabel = '' } = bank;
+  const names = pages.length > 0 ? pages : [pageLabel];
+  const body = <KnobBank {...bank} />;
+  return (
+    <Region
+      name={name}
+      area={area}
+      className={className}
+      view={String(pages.length > 0 ? page : 0)}
+      onView={(id) => bank.onPage?.(Number(id))}
+      tipAction={bank.tipAction}
+    >
+      {names.map((label, i) => (
+        <Region.View key={i} id={String(i)} label={label} tip="knobs.page">
+          {body}
+        </Region.View>
+      ))}
+    </Region>
   );
 }
 

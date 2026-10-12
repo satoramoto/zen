@@ -1,0 +1,276 @@
+/* The inspector (Inspector.tsx), "Scope", near borderless (decision 68). The header row: back at
+   the left, the actions as bare glyphs at the right (the pressed one brighter, the star filled),
+   then ✕. Under it what it is: the name large, the authors. Then its facts (a Group): the style,
+   the measures read out as one line ("slow · dark · calm"), the colours as dots, my tags. Then
+   the map (Field), the tune (Tune) and the playlists holding it as a quiet line. Areas are told
+   apart by space alone. The panel is a raised tint, so the caption here is the raised one
+   (visuals.css --vs-caption-raised). Contract variables and visuals.css tokens only. */
+
+.vs-inspector {
+  --vs-inspector-pad: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px var(--vs-inspector-pad) 24px;
+  color: var(--text-2);
+  font-size: var(--size-body);
+}
+
+/* The header row: back to now playing at the left; the actions, then close (laid over), at the right. */
+.vs-inspector-top {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 28px;
+  margin: -4px -6px 10px -6px;
+}
+.vs-inspector-keys + .vs-inspector-close {
+  margin-left: var(--space-1);
+}
+.vs-inspector-close {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--vs-caption-raised);
+  cursor: pointer;
+}
+.vs-inspector-close:hover {
+  color: var(--text-1);
+}
+
+/* Something that failed: one line under the rest, in the caution colour, no box. */
+.vs-inspector-error {
+  margin: 16px 0 0;
+  color: var(--warning);
+  font-size: var(--size-caption);
+  line-height: 1.45;
+}
+
+/* Several picked: their first pictures, three across, the count of the rest over the last; in the map's place, under the facts. */
+.vs-inspector-pictures {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 22px;
+  border-radius: var(--radius-control);
+  overflow: hidden;
+}
+.vs-inspector-pictures > div {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--vs-thumb);
+}
+.vs-inspector-pictures img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vs-inspector-pictures-more {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  padding: 1px 6px;
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--key-black) 60%, transparent);
+  color: var(--key-white);
+  font-size: 11px;
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.vs-inspector-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 26px;
+  padding: 0 6px 0 2px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--vs-caption-raised);
+  font-size: var(--size-caption);
+  font-weight: 500;
+  cursor: pointer;
+}
+.vs-inspector-back:hover {
+  color: var(--text-1);
+}
+/* The back glyph: the chevron, turned to point back. */
+.vs-inspector-back-glyph {
+  transform: rotate(180deg);
+}
+
+/* Nothing playing: the words say so in the name's place, and the field under them draws the library alone. */
+.vs-inspector-none-title {
+  margin: 0 0 6px;
+  color: var(--text-1);
+  font-size: 17px;
+  font-weight: var(--weight-strong);
+}
+.vs-inspector-quiet {
+  margin: 0;
+  color: var(--vs-caption-raised);
+  font-size: var(--size-caption);
+  line-height: 1.45;
+}
+
+/* First, the name and who made it. */
+.vs-inspector-head {
+  margin-top: var(--space-1);
+}
+.vs-inspector-top + .vs-inspector-head {
+  margin-top: 0;
+}
+.vs-inspector-sep {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin: 0 8px;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+  opacity: 0.6;
+  vertical-align: middle;
+}
+.vs-inspector-name {
+  margin: 0;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+.vs-inspector-by {
+  margin: var(--space-1) 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--size-body);
+}
+
+/* The facts: the style, the readout (the measures as words, the colours as dots) and my tags. */
+.vs-inspector-meta {
+  margin-top: 18px;
+}
+.vs-inspector-meta > .lib-group__body {
+  gap: 0;
+}
+.vs-inspector-style {
+  margin: 0 0 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--vs-caption-raised);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.vs-inspector-words {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  color: var(--text-1);
+  font-size: 15px;
+  font-weight: 500;
+}
+.vs-inspector-words > span {
+  display: inline-flex;
+  align-items: center;
+}
+.vs-inspector-words .vs-inspector-sep {
+  margin: 0 9px;
+}
+.vs-inspector-hues {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 0;
+  color: var(--vs-caption-raised);
+  font-size: var(--size-caption);
+}
+.vs-inspector-swatches {
+  display: inline-flex;
+  gap: 5px;
+}
+.vs-inspector-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-pill);
+}
+.vs-inspector-swatch[data-grey] {
+  background: var(--vs-caption-raised);
+  opacity: 0.6;
+}
+
+/* The keys, in the header row: bare glyphs, no boxes, their names in their tooltips; pressed is
+   brighter, the star filled. The add key is a Popover: its button is .vs-popover-button. */
+.vs-inspector-keys {
+  margin-left: auto;
+}
+.vs-inspector-keys > .lib-group__body {
+  align-items: center;
+  gap: 2px;
+}
+.vs-inspector-keys button.vs-inspector-key,
+.vs-inspector-keys .vs-inspector-key > .vs-popover-button {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--vs-caption-raised);
+  cursor: pointer;
+}
+.vs-inspector-keys button.vs-inspector-key:hover,
+.vs-inspector-keys button.vs-inspector-key[aria-pressed='true'],
+.vs-inspector-keys .vs-inspector-key > .vs-popover-button:hover,
+.vs-inspector-keys .vs-inspector-key > .vs-popover-button[aria-expanded='true'] {
+  color: var(--text-1);
+  text-decoration: none;
+}
+/* On some of several: brighter than off, short of on. */
+.vs-inspector-keys button.vs-inspector-key[aria-pressed='mixed'] {
+  color: var(--text-1);
+  opacity: 0.75;
+}
+/* Only the star fills; never play stays a line and reads as on by its colour. */
+.vs-inspector-key[aria-pressed='true'] .vs-icon[data-icon='star'] {
+  fill: currentColor;
+}
+.vs-inspector-keys button.vs-inspector-key:focus-visible,
+.vs-inspector-keys .vs-inspector-key > .vs-popover-button:focus-visible,
+.vs-inspector-back:focus-visible,
+.vs-inspector-close:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 0;
+}
+
+/* My tags (TagEditor), the last of the facts. */
+.vs-inspector-mine {
+  margin-top: 14px;
+}
+.vs-inspector-meta > .lib-group__body > .vs-inspector-mine:first-child {
+  margin-top: 0;
+}
+/* The playlists holding it: a quiet line, last. */
+.vs-inspector-in {
+  margin-top: 20px;
+}

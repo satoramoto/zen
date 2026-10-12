@@ -6,3 +6,4 @@ coverage/
 .DS_Store
 .shots/
 .claude/worktrees/
+lib/

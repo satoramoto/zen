@@ -1,0 +1,191 @@
+/* The shared views (Views.tsx), from app.css's .vf-* rules and home.css's header, on the
+   contract. Near borderless (decision 68): the header and the hint strip paint nothing of their
+   own; the screen's layers are behind them. */
+
+/* Every view's header: the mark, the view switch, the view's own; one row of type. */
+.vs-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: calc(var(--control-h) + var(--space-4));
+  padding: 0 var(--space-3) 0 var(--space-4);
+  background: none;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: var(--vs-text-control);
+  color: var(--text-2);
+}
+.vs-header > * {
+  flex: none;
+}
+/* A spacer that takes a flex row's free room, pushing what follows to the end. */
+.vs-header > .vs-fill,
+.vs-fill {
+  flex: 1;
+}
+
+/* The view switch's words read "Home", "Live" (home.css's and stage-head.css's capitalize); the
+   items stay the views' ids. */
+.vs-viewswitch .lib-segmented__segment {
+  text-transform: capitalize;
+}
+
+/* The wordmark:the name, its bracketed half in the accent, a touch heavier and tighter. */
+.vs-mark {
+  display: inline-flex;
+  align-items: center;
+  height: var(--control-h);
+  padding: 0 var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--vs-text-heading);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);
+}
+.vs-mark span {
+  color: var(--accent);
+}
+
+/* The preset playing: the folder as a caption, then the name. */
+.vs-now {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  height: var(--control-h);
+  line-height: var(--control-h);
+  overflow: hidden;
+}
+.vs-header > .vs-now {
+  flex: 0 1 auto;
+}
+.vs-now > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vs-now i {
+  flex: 0 2 auto;
+  font-style: normal;
+  color: var(--text-3);
+  font-size: var(--vs-text-label);
+}
+.vs-now span {
+  flex: 0 1 auto;
+  color: var(--text-1);
+  font-size: var(--vs-text-lead);
+}
+.vs-now.vs-quiet {
+  color: var(--text-3);
+}
+
+/* A failure in a few plain words, dismissible; the app's own words are its tooltip. */
+.vs-notice {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--danger);
+}
+.vs-notice-text {
+  flex: 1;
+  min-width: 0;
+}
+/* In the header: a small outlined chip on one line (an alarm keeps its line). */
+.vs-header > .vs-notice {
+  flex: 0 1 auto;
+  display: inline-flex;
+  height: var(--control-h);
+  padding-left: var(--space-2);
+  border: var(--border-width) solid color-mix(in oklab, var(--danger) 40%, transparent);
+  border-radius: var(--radius-control);
+}
+.vs-header > .vs-notice > .vs-notice-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vs-notice button {
+  color: inherit;
+}
+
+/* The frame rate: numbers in a dev build, a warning in a release when it drops. */
+.vs-stats {
+  color: var(--text-3);
+  font-family: var(--font-readout);
+  font-variant-numeric: tabular-nums;
+  word-spacing: var(--vs-sep-space);
+  font-size: var(--vs-text-label);
+  min-width: 120px;
+  text-align: right;
+}
+.vs-stats[data-slow] {
+  color: var(--warning);
+}
+
+/* The hint strip, across the bottom of the window. */
+.vs-footer {
+  display: flex;
+  min-width: 0;
+}
+.vs-hint {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--space-6) - var(--space-2));
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--vs-text-label);
+  color: var(--text-2);
+}
+.vs-hint[data-resting] {
+  color: var(--text-3);
+}
+.vs-hint-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The preview's box. Nothing here paints behind the hole once the bench draws; until then the
+   box is the page's own surface, saying so. */
+.vs-preview {
+  --vs-hole-radius: 0px;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  border-radius: var(--vs-hole-radius);
+}
+.vs-preview > .vs-preview-hole {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--vs-hole-radius);
+}
+.vs-preview[data-loading] {
+  background: var(--vs-thumb);
+}
+.vs-preview-loading {
+  color: var(--text-3);
+  font-size: var(--vs-text-body);
+  user-select: none;
+}
+/* The rounded corners (decision 69): the native view under the hole is square, so the page paints
+   the four corners over it in an opaque tone. */
+.vs-preview:not([data-loading]) > .vs-preview-hole::before {
+  content: '';
+  grid-area: 1 / 1;
+  align-self: stretch;
+  justify-self: stretch;
+  --vs-r: var(--vs-hole-radius);
+  --vs-corner-stop: transparent var(--vs-r), var(--vs-corner) calc(var(--vs-r) + 0.5px);
+  background:
+    radial-gradient(circle at 100% 100%, var(--vs-corner-stop)) top left / var(--vs-r) var(--vs-r) no-repeat,
+    radial-gradient(circle at 0 100%, var(--vs-corner-stop)) top right / var(--vs-r) var(--vs-r) no-repeat,
+    radial-gradient(circle at 100% 0, var(--vs-corner-stop)) bottom left / var(--vs-r) var(--vs-r) no-repeat,
+    radial-gradient(circle at 0 0, var(--vs-corner-stop)) bottom right / var(--vs-r) var(--vs-r) no-repeat;
+}

@@ -1,0 +1,78 @@
+/* The source picker (SourcePicker.tsx), from app.css's `.audio-input`, `.vf-meters` and
+   `.vf-warning`, and audio.css: the picker, the levels, and Advanced holding the channel pickers. */
+
+.vs-audio-input {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* The levels, left above right: two thin bars lit in the signal's green. */
+.vs-meters {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  margin-left: 2px;
+}
+
+/* Caution, in a control's size: nothing to hear, a source gone, a refusal. */
+.vs-audio-input .vs-warning {
+  color: var(--warning);
+  font-size: var(--vs-text-control);
+}
+.vs-audio-note {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Advanced: type, not a box; open, the channel pickers float under it. */
+.vs-audio-advanced {
+  position: relative;
+  display: inline-block;
+}
+.vs-audio-advanced > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 2px var(--space-1);
+  color: var(--text-3);
+  font-size: var(--vs-text-label);
+}
+.vs-audio-advanced > summary::-webkit-details-marker {
+  display: none;
+}
+.vs-audio-advanced > summary:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: 1px;
+  border-radius: var(--radius-control);
+}
+.vs-audio-advanced[open] > summary {
+  color: var(--text-1);
+}
+.vs-audio-advanced-body {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 20;
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-card);
+}
+
+/* Shown under the picker (Settings): a caption, then the two pickers. */
+.vs-audio-channels {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.vs-audio-channels-name {
+  color: var(--text-3);
+  font-size: var(--vs-text-label);
+}
+.vs-audio-channels-name::first-letter {
+  text-transform: uppercase;
+}

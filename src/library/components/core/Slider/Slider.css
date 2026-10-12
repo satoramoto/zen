@@ -1,0 +1,245 @@
+/* Slider: a caption, a track and a reading. The track is a `well`, the fill lit, the thumb a
+   `handle`; a row (`inside`) lays the caption and reading over a full-width track and marks the
+   value with a thin lit line. Contract variables plus the local --lib-slider-* and the
+   --lib-param-* the component sets inline. */
+
+.lib-slider {
+  /* Set inline by the component, 0–1. */
+  --lib-param-fraction: 0;
+  --lib-param-fill-start: 0;
+  --lib-param-fill-size: 0;
+  --lib-param-chars: 6;
+  --lib-slider-span-at: 0;
+  --lib-slider-span-size: 0;
+  --lib-slider-span-reach: 0;
+  --lib-slider-live: 0;
+  /* Sizes. */
+  --lib-slider-length: 27px;
+  --lib-slider-thickness: var(--space-2);
+  --lib-slider-thumb: var(--space-2);
+  --lib-slider-mark: 2px;
+  --lib-slider-ink: var(--accent);
+
+  display: inline-grid;
+  grid-template-areas: 'caption' 'frame' 'readout';
+  justify-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  color: var(--text-1);
+}
+
+.lib-slider__caption {
+  grid-area: caption;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lib-slider__frame {
+  grid-area: frame;
+  display: flex;
+  min-width: 0;
+}
+.lib-slider__readout {
+  grid-area: readout;
+  min-width: calc(var(--lib-param-chars) * 1ch);
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Inline: the caption over the reading, beside the track on `side`. */
+.lib-slider[data-layout='inline'] {
+  grid-template-areas: 'caption frame' 'readout frame';
+  grid-template-columns: auto auto;
+  justify-items: start;
+  align-items: center;
+  column-gap: var(--space-2);
+  row-gap: 0;
+}
+.lib-slider[data-layout='inline'][data-side='right'] {
+  grid-template-areas: 'frame caption' 'frame readout';
+}
+.lib-slider[data-layout='inline'] .lib-slider__readout {
+  text-align: start;
+}
+
+/* The track: the channel, and the element the gesture lives on. */
+.lib-slider__track {
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: var(--mat-well-shadow);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.lib-slider__track:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lib-slider[data-orientation='vertical'] .lib-slider__track {
+  width: var(--lib-slider-thickness);
+  height: var(--lib-slider-length);
+  cursor: ns-resize;
+}
+.lib-slider[data-orientation='horizontal'] .lib-slider__track {
+  width: var(--lib-slider-length);
+  height: var(--lib-slider-thickness);
+  cursor: ew-resize;
+}
+/* `auto`: fill the space the slider is given along its axis. */
+.lib-slider[data-length='auto'] {
+  align-self: stretch;
+}
+.lib-slider[data-length='auto'][data-orientation='horizontal'] {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: stretch;
+}
+.lib-slider[data-length='auto'][data-orientation='horizontal'] .lib-slider__track {
+  width: 100%;
+}
+.lib-slider[data-length='auto'][data-orientation='vertical'] {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.lib-slider[data-length='auto'][data-orientation='vertical'] .lib-slider__frame,
+.lib-slider[data-length='auto'][data-orientation='vertical'] .lib-slider__track {
+  height: 100%;
+}
+
+/* The value as a lit length from its origin. */
+.lib-slider__fill {
+  --lit: var(--lib-slider-ink);
+  position: absolute;
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+  pointer-events: none;
+}
+.lib-slider[data-orientation='vertical'] .lib-slider__fill {
+  inset: auto 0 calc(var(--lib-param-fill-start) * 100%) 0;
+  height: calc(var(--lib-param-fill-size) * 100%);
+}
+.lib-slider[data-orientation='horizontal'] .lib-slider__fill {
+  inset: 0 auto 0 calc(var(--lib-param-fill-start) * 100%);
+  width: calc(var(--lib-param-fill-size) * 100%);
+}
+
+/* The depth range: a quiet wash from the value to its reach, a line at the far end. */
+.lib-slider__span,
+.lib-slider__reach,
+.lib-slider__live {
+  position: absolute;
+  pointer-events: none;
+}
+.lib-slider__span {
+  background: color-mix(in oklab, var(--lib-slider-ink) 30%, transparent);
+}
+.lib-slider__reach,
+.lib-slider__live {
+  --lit: var(--lib-slider-ink);
+  background: var(--lit);
+}
+.lib-slider__live {
+  box-shadow: var(--mat-lit-glow);
+}
+.lib-slider[data-orientation='vertical'] .lib-slider__span {
+  inset: auto 0 calc(var(--lib-slider-span-at) * 100%) 0;
+  height: calc(var(--lib-slider-span-size) * 100%);
+}
+.lib-slider[data-orientation='horizontal'] .lib-slider__span {
+  inset: 0 auto 0 calc(var(--lib-slider-span-at) * 100%);
+  width: calc(var(--lib-slider-span-size) * 100%);
+}
+.lib-slider[data-orientation='vertical'] .lib-slider__reach {
+  inset: auto 0 calc(var(--lib-slider-span-reach) * (100% - var(--lib-slider-mark))) 0;
+  height: var(--lib-slider-mark);
+}
+.lib-slider[data-orientation='horizontal'] .lib-slider__reach {
+  inset: 0 auto 0 calc(var(--lib-slider-span-reach) * (100% - var(--lib-slider-mark)));
+  width: var(--lib-slider-mark);
+}
+.lib-slider[data-orientation='vertical'] .lib-slider__live {
+  inset: auto 0 calc(var(--lib-slider-live) * (100% - var(--lib-slider-mark))) 0;
+  height: var(--lib-slider-mark);
+}
+.lib-slider[data-orientation='horizontal'] .lib-slider__live {
+  inset: 0 auto 0 calc(var(--lib-slider-live) * (100% - var(--lib-slider-mark)));
+  width: var(--lib-slider-mark);
+}
+
+/* The thumb: a handle across the track at the value. */
+.lib-slider__thumb {
+  position: absolute;
+  background: var(--mat-handle-texture), var(--mat-handle-fill);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--mat-handle-shadow);
+  pointer-events: none;
+}
+.lib-slider[data-orientation='vertical'] .lib-slider__thumb {
+  inset: auto 0 calc(var(--lib-param-fraction) * (100% - var(--lib-slider-thumb))) 0;
+  height: var(--lib-slider-thumb);
+}
+.lib-slider[data-orientation='horizontal'] .lib-slider__thumb {
+  inset: 0 auto 0 calc(var(--lib-param-fraction) * (100% - var(--lib-slider-thumb)));
+  width: var(--lib-slider-thumb);
+}
+
+/* Inside: a row. The track spans the line at control height; caption and reading sit over it. */
+.lib-slider[data-layout='inside'] {
+  position: relative;
+  display: grid;
+  grid-template-areas: 'frame';
+  width: 100%;
+  justify-items: stretch;
+}
+.lib-slider[data-layout='inside'] .lib-slider__track {
+  width: 100%;
+  height: calc(var(--control-h) * 0.75);
+  border-radius: var(--radius-input);
+}
+.lib-slider[data-layout='inside'] .lib-slider__caption,
+.lib-slider[data-layout='inside'] .lib-slider__readout {
+  position: relative;
+  z-index: 1;
+  grid-area: frame;
+  align-self: center;
+  padding-inline: var(--space-2);
+  pointer-events: none;
+}
+.lib-slider[data-layout='inside'] .lib-slider__caption {
+  justify-self: start;
+  color: var(--text-2);
+}
+.lib-slider[data-layout='inside'] .lib-slider__readout {
+  justify-self: end;
+}
+.lib-slider[data-layout='inside'] .lib-slider__thumb {
+  --lit: var(--lib-slider-ink);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+  --lib-slider-thumb: var(--lib-slider-mark);
+}
+.lib-slider[data-layout='inside'] .lib-slider__fill {
+  background: color-mix(in oklab, var(--lit) 35%, transparent);
+  box-shadow: none;
+}
+
+.lib-slider[data-disabled] .lib-slider__track {
+  cursor: default;
+  opacity: 0.45;
+}

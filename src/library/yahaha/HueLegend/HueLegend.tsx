@@ -1,4 +1,4 @@
-import type { Hue } from '../../components';
+import type { HueSlot as Hue } from '../../components/core/hue';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import './HueLegend.css';
 

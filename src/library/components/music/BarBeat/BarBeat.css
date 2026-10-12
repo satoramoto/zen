@@ -1,0 +1,55 @@
+/* BarBeat: one cell per beat. Local variables: --yh-bar-beat-count (cells, set inline),
+   --yh-bar-beat-line and --yh-bar-beat-lit (rest and lit heights; the `thickness` prop sets the
+   line inline). Neutral ink only: the lit beat is --text-1, past beats --text-3. The bar is a
+   `screen` window; the lit beat sets --lit and wears --mat-lit-glow. */
+.yh-bar-beat {
+  --yh-bar-beat-count: 4;
+  --yh-bar-beat-line: max(2px, calc(var(--space-1) * 0.75));
+  --yh-bar-beat-lit: calc(var(--yh-bar-beat-line) * 3);
+  display: grid;
+  grid-template-columns: repeat(var(--yh-bar-beat-count), minmax(0, 1fr));
+  gap: var(--space-3);
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: calc(var(--yh-bar-beat-count) * var(--space-6));
+  max-width: 100%;
+  height: var(--yh-bar-beat-lit);
+  /* A readout window, made of the theme's `screen`; on a screen already (the Display), none of
+     its own. */
+  border-radius: var(--radius-control);
+  background: var(--mat-screen-texture), var(--mat-screen-fill);
+  box-shadow: var(--mat-screen-shadow);
+}
+[data-material='screen'] .yh-bar-beat {
+  border-radius: 0px;
+  background: none;
+  box-shadow: none;
+}
+
+.yh-bar-beat__segment {
+  height: var(--yh-bar-beat-line);
+  border-radius: var(--radius-pill);
+  /* At rest: a faint tint of the text on the ground. Not --border-strong, which on some packs is
+     as dark as the text and would read as lit. */
+  background: color-mix(in srgb, var(--text-1) 16%, var(--surface-0));
+}
+
+/* Beat 1, the downbeat: twice the resting line, so the bar shows where it starts. */
+.yh-bar-beat__segment[data-downbeat] {
+  height: calc(var(--yh-bar-beat-line) * 2);
+}
+
+/* Past beats: history, the muted ink. */
+.yh-bar-beat__segment--past {
+  background: var(--text-3);
+}
+
+/* The current beat: lit in primary ink, three times the line, with the theme's lit glow. */
+.yh-bar-beat__segment--current,
+.yh-bar-beat__segment--current[data-downbeat] {
+  --lit: var(--text-1);
+  height: var(--yh-bar-beat-lit);
+  background: var(--text-1);
+  box-shadow: var(--mat-lit-glow);
+}

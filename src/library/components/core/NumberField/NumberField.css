@@ -1,0 +1,114 @@
+/* NumberField: a caption over a value window. The window is a `screen`; the fill is lit; the
+   reading is in the readout face with tabular figures. Contract variables plus the local
+   --lib-number-field-* and the --lib-param-* the component sets inline. */
+
+.lib-number-field {
+  /* Set inline by the component: where the value sits and its fill, all 0–1, and the longest reading. */
+  --lib-param-fraction: 0;
+  --lib-param-fill-start: 0;
+  --lib-param-fill-size: 0;
+  --lib-param-chars: 6;
+  --lib-number-field-width: max(calc(var(--space-6) + var(--space-3)), calc(var(--lib-param-chars) * 1ch + var(--space-4)));
+  --lib-number-field-ink: var(--accent);
+
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  font-family: var(--font-readout);
+}
+
+.lib-number-field__caption {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lib-number-field__body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--lib-number-field-width);
+  height: calc(var(--control-h) * 0.75);
+  margin: 0;
+  padding: 0 var(--space-1);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-input);
+  background: var(--mat-screen-texture), var(--mat-screen-fill);
+  box-shadow: var(--mat-screen-shadow);
+  color: var(--text-1);
+  font-family: var(--font-readout);
+  font-size: var(--size-label);
+  font-weight: var(--weight-numeral);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.lib-number-field__body:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lib-number-field__body[data-dragging] {
+  cursor: grabbing;
+}
+
+/* The value as a lit bar from its origin. */
+.lib-number-field__fill {
+  --lit: var(--lib-number-field-ink);
+  position: absolute;
+  inset: 0 auto 0 calc(var(--lib-param-fill-start) * 100%);
+  width: calc(var(--lib-param-fill-size) * 100%);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+  pointer-events: none;
+}
+
+.lib-number-field__text {
+  position: relative;
+  pointer-events: none;
+}
+
+/* The same reading in the ink that reads on the fill, clipped to the fill's extent. */
+.lib-number-field__ink {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--on-hue);
+  clip-path: inset(
+    0 calc(100% - (var(--lib-param-fill-start) + var(--lib-param-fill-size)) * 100%) 0
+      calc(var(--lib-param-fill-start) * 100%)
+  );
+  pointer-events: none;
+}
+
+.lib-number-field__input {
+  cursor: text;
+  text-align: center;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.lib-number-field[data-disabled] .lib-number-field__body {
+  cursor: default;
+  opacity: 0.45;
+}

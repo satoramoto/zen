@@ -1,5 +1,5 @@
 import { useEffect, useState, type ButtonHTMLAttributes } from 'react';
-import type { TipAction } from '../Pad/Pad';
+import type { TipAction } from '../../components/music/Pad/Pad';
 import './OneTouchPicker.css';
 
 /** A number's button: renders `data-tip` and runs the tooltip action with its own key. */
@@ -48,7 +48,7 @@ export interface OneTouchPickerProps {
  * in one segmented strip of equal square cells, so the set reads as one choice. *Colour meaning:*
  * a solid fill on the Stage means "sounding or running" (the playing section's block), so the
  * applied number is chosen, not filled: primary ink with a 2px rule in the style's role hue
- * (`--style`) along the cell's foot, the same ink-plus-underline mark ChosenTabs uses, and the
+ * (`--style`) along the cell's foot, the same ink-plus-underline mark an underlined tab uses, and the
  * hero no longer shows two solid blocks side by side (`../hues`, `color.md`: colour has one
  * meaning). The others are quiet outlined cells that lift on hover. *State clarity:* numbers past
  * the style's count keep their cell with a dashed edge and the muted ink (`--text-3`), the Stage's
@@ -59,7 +59,9 @@ export interface OneTouchPickerProps {
  * and the mark in `--style`, so the style's One Touch numbers wear the style's colour and never
  * the `--accent` focus/highlight role. `tipAction` runs the app's tooltip
  * action, in Pad's handle shape, on each number with that number's own key, since each number is
- * its own control with its own tooltip; the label and group have none.
+ * its own control with its own tooltip; the label and group have none. *Materials:* named parts
+ * (`data-part`: root, label, strip, number); each number is a `key` of the theme's key material,
+ * the applied one pressed (`--mat-key-pressed`) under its mark, the missing ones bare slots.
  *
  * **Kept.** A press asks for that One Touch through `onApply` and changes nothing itself; each number
  * is its own button with `aria-pressed` and a spoken name naming its Launchkey pad (Shift + pad 9-12);
@@ -92,6 +94,8 @@ export function OneTouchPicker({
       <NumberButton
         key={n}
         className={`yh-onetouchpicker__number${cells ? ' yh-onetouchpicker__cell' : ''}`}
+        data-part="number"
+        data-material="key"
         disabled={disabled}
         aria-pressed={on}
         aria-label={on ? `One Touch ${n}, applied (Shift + pad ${n + 8})` : `Apply One Touch ${n} (Shift + pad ${n + 8})`}
@@ -109,18 +113,18 @@ export function OneTouchPicker({
   if (cells) {
     return (
       <>
-        <span className="yh-onetouchpicker__label yh-onetouchpicker__cell">{label}</span>
+        <span className="yh-onetouchpicker__label yh-onetouchpicker__cell" data-part="label">{label}</span>
         {buttons}
       </>
     );
   }
 
   return (
-    <div className="yh-onetouchpicker" data-orientation={orientation} role="group" aria-label={spoken}>
-      <span className="yh-onetouchpicker__label" aria-hidden="true">
+    <div className="yh-onetouchpicker" data-part="root" data-orientation={orientation} role="group" aria-label={spoken}>
+      <span className="yh-onetouchpicker__label" data-part="label" aria-hidden="true">
         {label}
       </span>
-      <span className="yh-onetouchpicker__strip">{buttons}</span>
+      <span className="yh-onetouchpicker__strip" data-part="strip">{buttons}</span>
     </div>
   );
 }

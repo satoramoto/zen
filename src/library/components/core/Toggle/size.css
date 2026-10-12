@@ -1,0 +1,13 @@
+/* The five control sizes, as fractions of the scale's control height, so every size grows with the
+   theme's scale. At a 32px control they land on macOS's kit heights (16, 20, 24, 28, 36).
+   Read by Switch, Checkbox, Radio and Disclosure through --lib-size-h. */
+
+.lib-sized {
+  --lib-size-k: 0.75;
+  --lib-size-h: calc(var(--control-h) * var(--lib-size-k));
+}
+.lib-sized[data-size='mini'] { --lib-size-k: 0.5; }
+.lib-sized[data-size='small'] { --lib-size-k: 0.625; }
+.lib-sized[data-size='regular'] { --lib-size-k: 0.75; }
+.lib-sized[data-size='large'] { --lib-size-k: 0.875; }
+.lib-sized[data-size='xlarge'] { --lib-size-k: 1.125; }
