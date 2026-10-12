@@ -26,6 +26,11 @@
   gap: var(--space-6);
 }
 
+/* One half alone (the `part` prop) takes the whole region. */
+.yh-songform:not([data-part='both']) .yh-songform__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 /* The form ---------------------------------------------------------------------------------- */
 
 .yh-songform__form {

@@ -53,6 +53,16 @@ export const Small: Story = {
   args: { width: 1217, height: 752 },
 };
 
+/** The stacked layout on the board: the hero with the transport beside it, the song form one strip under them. */
+export const StackedBoard: Story = {
+  args: { layout: 'stacked' },
+};
+
+/** The stacked layout on the smallest screen, 1217 × 752. */
+export const StackedSmall: Story = {
+  args: { layout: 'stacked', width: 1217, height: 752 },
+};
+
 /**
  * Play with the screen: a story-only wrapper (`StagePlayground`) keeps what you change. Pages,
  * layers, fader pages, knob pages and pad banks choose; sections queue as next and land at the end

@@ -32,6 +32,18 @@ describe('Yahaha SongForm', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Main Cafter bar 4');
   });
 
+  it('draws one half alone when asked', () => {
+    const { unmount } = renderForm({ ...songFormBoard, part: 'form' });
+    expect(screen.getByRole('region', { name: 'Song form' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Sections' })).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Transport' })).toBeNull();
+    unmount();
+    renderForm({ ...songFormBoard, part: 'transport' });
+    expect(screen.getByRole('region', { name: 'Transport' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Transport' })).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Sections' })).toBeNull();
+  });
+
   it('says the stopped band’s section is where it starts', () => {
     renderForm(songFormStopped);
     expect(screen.getByRole('button', { name: 'Main A, starts here' })).toHaveAttribute('aria-pressed', 'true');
