@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -167,6 +169,39 @@ describe('ChosenTabs', () => {
     expect(run()).toHaveAttribute('data-density', 'dense');
     rerender(<ChosenTabs tabs={displayPageTabs} chosen="stage" size="page" dense />);
     expect(run()).toHaveAttribute('data-density', 'dense');
+  });
+
+  it('marks the chosen tab with an underline by default at every size; block is kept', () => {
+    const { container, rerender } = render(<ChosenTabs tabs={layerTabs} chosen="volume" label="Fader layer" />);
+    const run = () => container.querySelector('.yh-chosen-tabs');
+    expect(run()).toHaveAttribute('data-look', 'underline');
+    rerender(<ChosenTabs tabs={displayPageTabs} chosen="stage" size="page" />);
+    expect(run()).toHaveAttribute('data-look', 'underline');
+    rerender(<ChosenTabs tabs={layerTabs} chosen="volume" size="compact" />);
+    expect(run()).toHaveAttribute('data-look', 'underline');
+    rerender(<ChosenTabs tabs={layerTabs} chosen="volume" look="block" />);
+    expect(run()).toHaveAttribute('data-look', 'block');
+
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/ChosenTabs/ChosenTabs.css'), 'utf8');
+    const rule = (selector: string) => {
+      const at = css.indexOf(`${selector} {`);
+      expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf('}', at));
+    };
+    const underline = rule(".yh-chosen-tabs[data-look='underline'] .yh-chosen-tabs__tab[data-face='chosen']");
+    expect(underline).toContain('background: transparent');
+    expect(underline).toContain('var(--selected)');
+    expect(rule(".yh-chosen-tabs[data-look='block'] .yh-chosen-tabs__tab[data-face='chosen']")).toContain('background: var(--selected)');
+    expect(rule(".yh-chosen-tabs__tab[data-face='disabled']")).toContain('color: var(--text-3)');
+    expect(css).not.toContain('--text-4');
+  });
+
+  it('reserves the strong label width without changing the name or the text', () => {
+    render(<ChosenTabs tabs={layerTabs} chosen="volume" label="Fader layer" />);
+    const tab = screen.getByRole('tab', { name: 'Volume' });
+    const words = tab.querySelector('.yh-chosen-tabs__label');
+    expect(words).toHaveAttribute('data-label', 'Vol');
+    expect(tab).toHaveTextContent(/^Vol$/);
   });
 
   it('gives the first enabled tab the tab stop when nothing is chosen', () => {

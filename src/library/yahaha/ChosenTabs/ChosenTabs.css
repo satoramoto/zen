@@ -40,22 +40,57 @@
   cursor: pointer;
   transition:
     color 120ms ease,
-    background-color 120ms ease;
+    background-color 120ms ease,
+    box-shadow 120ms ease;
 }
 
-.yh-chosen-tabs__tab[data-face='off']:hover {
+/* The label reserves the width of its strong face (a hidden copy under it, out of the accessible
+   name), so the chosen tab's heavier weight never shifts the run. */
+.yh-chosen-tabs__label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.yh-chosen-tabs__label::after {
+  content: attr(data-label);
+  content: attr(data-label) / '';
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: var(--weight-strong);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Underline (the default): the chosen tab is ink, strong, and a rule on the run's hairline. No
+   fill, because a solid fill means sounding or running. */
+.yh-chosen-tabs[data-look='underline'] {
+  --yh-chosen-tabs-rule: calc(var(--border-width) * 2);
+}
+.yh-chosen-tabs[data-look='underline'] .yh-chosen-tabs__tab[data-face='off']:hover {
+  color: var(--text-1);
+}
+.yh-chosen-tabs[data-look='underline'] .yh-chosen-tabs__tab[data-face='chosen'] {
+  color: var(--text-1);
+  background: transparent;
+  font-weight: var(--weight-strong);
+  box-shadow: inset 0 calc(-1 * var(--yh-chosen-tabs-rule)) 0 var(--selected);
+}
+
+/* Block: the chosen tab is a full-height --selected block standing on the hairline. */
+.yh-chosen-tabs[data-look='block'] .yh-chosen-tabs__tab[data-face='off']:hover {
   color: var(--text-1);
   background: var(--surface-2);
 }
-
-.yh-chosen-tabs__tab[data-face='chosen'] {
+.yh-chosen-tabs[data-look='block'] .yh-chosen-tabs__tab[data-face='chosen'] {
   color: var(--selected-text);
   background: var(--selected);
 }
 
+/* Disabled: still information, so readable (--text-3, never fainter), but not choosable. */
 .yh-chosen-tabs__tab[data-face='disabled'] {
-  color: var(--text-4);
-  cursor: default;
+  color: var(--text-3);
+  cursor: not-allowed;
 }
 
 .yh-chosen-tabs__tab:focus-visible {

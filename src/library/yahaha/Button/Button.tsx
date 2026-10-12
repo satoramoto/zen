@@ -41,11 +41,11 @@ export interface ButtonProps {
   compact?: boolean;
   /** Kept for compatibility; changes nothing. */
   strong?: boolean;
-  /** Start / Stop running, `band` only. `true`: the on face in `--success`, marked `data-bar`. */
+  /** Start / Stop running, `band` only. `true`: the on face in `--success`, solid, marked `data-bar`. */
   bar?: boolean;
-  /** The on face: switched on (help mode's ?, Fade while fading). */
+  /** The on face: switched on (help mode's ?, Fade while fading). A ring and a lit dot; solid only in `ok` (running) and `rec` (recording). */
   on?: boolean;
-  /** The chosen face: the one picked from a set (the applied One Touch). */
+  /** The chosen face: the one picked from a set (the applied One Touch). Ink and a rule along the bottom. */
   chosen?: boolean;
   /** The waiting face: queued or armed, a double-weight ring over a faint tint. */
   waiting?: boolean;
@@ -53,7 +53,7 @@ export interface ButtonProps {
   lit?: boolean;
   /** A tall key, two control rows and the gap between them, its label at heading size: the primary key of a transport (Start / Stop). Default `false`. Works with any `size`. */
   tall?: boolean;
-  /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `r1` `r2` `r3` `l` the four part hues; `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent; `transport` the role hue of the keys that move time (Start / Stop stopped, sync, fills, Tap, tempo). */
+  /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `r1` `r2` `r3` `l` the four part hues; `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent; `transport` the role hue of the keys that move time (Start / Stop stopped, sync, fills, Tap, tempo), neutral at rest and in the hue only while waiting, on, or as the primary fill. */
   hue?: ButtonHue;
   /** Sets `aria-pressed` for a switch or a choice. Undefined: no `aria-pressed`. Never changes the look. */
   pressed?: boolean;
@@ -97,6 +97,8 @@ const WORDS: Record<ButtonGlyph, string> = {
 };
 /** Deprecated greys and the lamp line all draw as the neutral `t`. */
 const NEUTRAL = new Set<ButtonHue>(['t', 't2', 'm', 'lamp']);
+/** The tones whose on face is solid: running (Start / Stop) and recording. A solid fill means sounding or running. */
+const SOLID = new Set<ButtonHue>(['ok', 'rec']);
 
 /**
  * **Job.** Does one thing when pressed (Panic, Stop, a page step, a One Touch) and shows, at a
@@ -111,24 +113,33 @@ const NEUTRAL = new Set<ButtonHue>(['t', 't2', 'm', 'lamp']);
  * and the waiting ring (color.md §4, 4.5:1 for text). *Colour meaning:* hue only marks identity
  * (`r1`–`l` → `--hue-1..4`; sections stay neutral, their label names them, so no section passes
  * for a part), Start / Stop running is `--success` and record
- * `--danger` (state), focus is `--accent`; a neutral switch that is on uses `--selected`. The keys
- * that move time take the `transport` tone, the contract's `--transport` role hue (hues.ts): never
- * a part's hue and never a state, so a sync key armed or a fill queued rings in it and still says
- * so by its waiting ring; a `primary` transport key fills in `--transport` instead of `--action`.
- * Each solid face takes its own ink: `--on-hue` on a part or the accent, `--success-text`,
- * `--danger-text` and `--transport-text` on the rest (the original used `--on-hue` everywhere,
- * which the contract only promises against the part hues); a lit section key fills in `--text-1`
- * and takes `--surface-0` ink, since `--on-hue` can match `--text-1` (black on black on ableton). Lit
- * hued faces bloom by `--bloom`, so they glow on Push and stay flat on paper palettes. *Affordance:*
- * a disabled button now reads as unavailable (faded outline, faded label, not-allowed cursor)
- * instead of merely "a dimmer hue"; hover and press tint the face by its own tone; a visible
- * `:focus-visible` ring sits outside the face (craft-details.md §1). *Rhythm:* sizes derive from
- * `--control-h` and `--space-*`, so density packs scale every key together; labels follow
- * `--label-case` and `--tracking` and use tabular numerals (typography.md). A `tall` key spans two
- * control rows with a heading-size label, so the transport's primary key (Start / Stop) leads by
- * size as well as fill (hierarchy). The waiting face can flash: the parent drives `lit`, as on the
- * Pad, and its off phase keeps the label and a hairline ring in the tone, so a queued key blinks
- * without the row jumping (affordance; craft-details.md).
+ * `--danger` (state), focus is `--accent`; a neutral switch that is on uses `--selected`. *A solid
+ * fill means sounding or running* (the Stage rule): only Start / Stop running (`ok`), record
+ * (`rec`) and the `primary` call to action fill. Every other key that is *on* draws a
+ * double-weight ring and a lit dot in its colour, and a *chosen* key keeps its rest outline and
+ * gains `--text-1` ink and a rule along the bottom, the same mark as ChosenTabs' underline; so
+ * on, chosen and waiting are three different shapes, not one fill for eleven things (colour
+ * meaning; color.md, "state changes: structure, not circus"). The keys that move time take the
+ * `transport` tone, the contract's `--transport` role hue (hues.ts), but only while active: at rest
+ * a transport key is neutral (a `--border-strong` outline, a neutral hover), its hue appears on the
+ * waiting ring, the on ring and the `primary` fill (Start), so Start is the one saturated key a
+ * player finds without looking. Each solid face takes its own ink: `--on-hue` on a part or the
+ * accent, `--success-text`, `--danger-text` and `--transport-text` on the rest (the original used
+ * `--on-hue` everywhere, which the contract only promises against the part hues). Lit hued marks
+ * bloom by `--bloom`, so they glow on Push and stay flat on paper palettes. *Affordance:* a
+ * disabled button reads as unavailable by structure: a dashed edge and a `--text-3` label (still
+ * readable, never `--text-4`), and a not-allowed cursor; hover and press tint the face by its own
+ * tone; a visible `:focus-visible` ring sits outside the face (craft-details.md §1). One ring
+ * weight, `--yh-wait-ring` (twice `--border-width`), and one 14% tint serve the waiting face here,
+ * on LampButton and on Pad. *Rhythm:* sizes derive from `--control-h` and `--space-*`, so density
+ * packs scale every key together; labels follow `--label-case` and `--tracking` and use tabular
+ * numerals (typography.md). Every width is a floor: a key never truncates its own name, it grows
+ * to hold it (`pair` is now 1.6 control heights, enough for four capitals and a glyph). A `tall`
+ * key spans two control rows with a heading-size label, so the transport's primary key (Start /
+ * Stop) leads by size as well as fill (hierarchy), and grows rather than reading "ST…". The waiting
+ * face can flash: the parent drives `lit`, as on the Pad, and its off phase keeps the label and a
+ * hairline ring in the tone, so a queued key blinks without the row jumping (affordance;
+ * craft-details.md).
  *
  * **Kept.** Every face comes from props, in the same precedence (disabled, chosen, on, waiting,
  * off); the outline is an inset shadow so faces never change size; the same glyphs, accessible
@@ -240,6 +251,7 @@ export function Button({
       data-lit={!disabled && face === 'waiting' && !lit ? 'false' : undefined}
       data-alone={label === '' ? '' : undefined}
       data-bar={running ? '' : undefined}
+      data-solid={!disabled && face === 'on' && SOLID.has(drawn) ? '' : undefined}
       data-contrast={disabled ? 'dim' : undefined}
       data-tip={tip}
       aria-label={accessibleName}

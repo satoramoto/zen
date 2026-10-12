@@ -3,7 +3,8 @@
 
 .yh-pad {
   /* Size: square by default; a layout may override width and height on this class. */
-  --yh-pad-size: calc(var(--control-h) * 2.25);
+  /* 2.5 control heights: wide enough for "Ending II" on one line once its numeral is tied to it. */
+  --yh-pad-size: calc(var(--control-h) * 2.5);
   --yh-pad-width: var(--yh-pad-size);
   --yh-pad-height: var(--yh-pad-size);
   /* Tone: the solid fill, the text on it, the ring colour and the text on a solid ring chip. */
@@ -14,7 +15,8 @@
   /* The idle edge: neutral pads take the strong border, coloured ones their own colour. */
   --yh-pad-edge: var(--border-strong);
   --yh-pad-label: var(--text-1);
-  --yh-pad-wait-ring: 2px;
+  /* The waiting and on ring's weight, border included: one weight across Button, LampButton and Pad. */
+  --yh-wait-ring: calc(var(--border-width) * 2);
 
   position: relative;
   display: flex;
@@ -24,7 +26,7 @@
   min-width: 0;
   height: var(--yh-pad-height);
   margin: 0;
-  padding: var(--space-2);
+  padding: var(--space-2) var(--space-1);
   border: var(--border-width) solid var(--yh-pad-edge);
   border-radius: var(--radius-control);
   background: var(--surface-2);
@@ -61,13 +63,13 @@
   --yh-pad-ring-ink: var(--success-text);
   --yh-pad-edge: var(--success);
 }
-/* Transport: the role hue of the controls that move time (hues.ts), never a part's. */
+/* Transport: the role hue of the controls that move time (hues.ts), never a part's, and only while
+   active: the idle edge stays neutral, the hue appears on the playing, armed and next faces. */
 .yh-pad[data-tone='transport'] {
   --yh-pad-fill: var(--transport);
   --yh-pad-ink: var(--transport-text);
   --yh-pad-ring: var(--transport);
   --yh-pad-ring-ink: var(--transport-text);
-  --yh-pad-edge: var(--transport);
 }
 
 /* Armed needs attention whatever the pad is: warning, not identity. */
@@ -76,7 +78,7 @@
   --yh-pad-ring-ink: var(--warning-text);
 }
 
-/* accentNext: queued reads as --accent (hues.ts), whatever the pad's own colour. */
+/* Next reads as --accent (hues.ts), whatever the pad's own colour (accentNext, on by default). */
 .yh-pad[data-next='accent'][data-state='next'] {
   --yh-pad-ring: var(--accent);
   --yh-pad-ring-ink: var(--surface-0);
@@ -117,17 +119,38 @@
   box-shadow: 0 0 calc(var(--bloom) * 2) color-mix(in srgb, var(--yh-pad-fill) 60%, transparent);
 }
 
-/* Waiting (next, armed): a heavier ring and a faint wash of it; the label stays primary text. */
+/* onFace="ring": on, not sounding (a bank's pads, Auto Fill on). The raised face stays; the edge
+   and a ring take the fill colour, and a lit dot sits top-left. The solid fill stays with what plays. */
+.yh-pad[data-on-face='ring'][data-state='playing'] {
+  border-color: var(--yh-pad-fill);
+  background: var(--surface-2);
+  color: var(--text-1);
+  box-shadow: inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-fill);
+}
+.yh-pad[data-on-face='ring'][data-state='playing']::after {
+  content: '';
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-1);
+  width: calc(var(--space-1) * 1.5);
+  height: calc(var(--space-1) * 1.5);
+  border-radius: var(--radius-pill);
+  background: var(--yh-pad-fill);
+  box-shadow: 0 0 var(--bloom) var(--yh-pad-fill);
+  pointer-events: none;
+}
+
+/* Waiting (next, armed): the wait ring and a faint wash of it; the label stays primary text. */
 .yh-pad[data-state='next'],
 .yh-pad[data-state='armed'] {
   border-color: var(--yh-pad-ring);
   background: color-mix(in srgb, var(--yh-pad-ring) 14%, var(--surface-1));
   color: var(--text-1);
-  box-shadow: inset 0 0 0 var(--yh-pad-wait-ring) var(--yh-pad-ring);
+  box-shadow: inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-ring);
 }
 .yh-pad[data-state='armed'] {
   box-shadow:
-    inset 0 0 0 var(--yh-pad-wait-ring) var(--yh-pad-ring),
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-ring),
     0 0 var(--bloom) color-mix(in srgb, var(--yh-pad-ring) 60%, transparent);
 }
 /* The flash's off phase: the idle face with the ring's colour at rest weight; the words stay. */
@@ -145,10 +168,13 @@
 }
 .yh-pad[data-state='dark']:hover:where(:not([aria-disabled='true'])) { background: color-mix(in srgb, var(--text-1) 4%, transparent); }
 
-/* Disabled: still focusable, but a muted label, the not-allowed cursor and no press give, so it
-   doesn't read as something to press. */
+/* Disabled: still focusable, but a dashed edge, a --text-3 label, the not-allowed cursor and no press
+   give, so it doesn't read as something to press (the rule every key follows). */
 .yh-pad[aria-disabled='true'] { cursor: not-allowed; }
-.yh-pad[aria-disabled='true']:not([data-state='playing'], [data-state='running']) { color: var(--text-3); }
+.yh-pad[aria-disabled='true']:not([data-state='playing'], [data-state='running']) {
+  border-style: dashed;
+  color: var(--text-3);
+}
 
 /* NEXT / ARMED: a small solid chip out of the label's flow, never over the label.
    --yh-pad-tag-h is the chip's height (its caption line). */

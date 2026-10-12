@@ -32,7 +32,7 @@ export const Board: Story = {
   },
 };
 
-/** The next section on the display, neutral (`t`), in the display face. */
+/** The next section on the display (`t`), in the display face, its arrow in `--accent` (next, by default). */
 export const Display: Story = {
   args: { label: 'Main C', hue: 't', size: 'display' },
 };

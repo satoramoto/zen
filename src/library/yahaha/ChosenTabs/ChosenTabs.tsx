@@ -36,9 +36,9 @@ export interface ChosenTabsProps {
   /** The app's tooltip action, applied to each tab that has a `tip`, with that tab's key. */
   tipAction?: TipAction;
   /**
-   * How the chosen tab is marked: `block`, the solid `--selected` fill (the default), or
-   * `underline`, ink and a rule under it, for a region's quiet header where the solid fill is
-   * kept for what plays.
+   * How the chosen tab is marked: `underline` (the default, every size), ink at the strong weight
+   * and a 2px `--selected` rule on the run's hairline, so the solid fill is kept for what plays; or
+   * `block`, the solid `--selected` block, kept for compatibility.
    */
   look?: ChosenTabsLook;
 }
@@ -69,6 +69,15 @@ function TabButton({ tip, tipAction, ...rest }: TabButtonProps) {
   return <button {...rest} ref={setNode} type="button" data-tip={tip} />;
 }
 
+/** A tab's words; `data-label` lets CSS reserve the width of the chosen (strong) face. */
+function TabLabel({ label }: { label: string }) {
+  return (
+    <span className="yh-chosen-tabs__label" data-label={label}>
+      {label}
+    </span>
+  );
+}
+
 function face(tab: TabItem, chosen: string | null): Face {
   if (tab.disabled) return 'disabled';
   return tab.id === chosen ? 'chosen' : 'off';
@@ -81,14 +90,19 @@ function face(tab: TabItem, chosen: string | null): Face {
  * **Job**: show a short run of choices side by side, make the picked one unmistakable at a glance,
  * and pick another with one click or one arrow key.
  *
- * **Changed**: the chosen tab is now a full-height `--selected` block with its top corners on
- * `--radius-control`, standing on the run's own hairline, so it reads as a tab attached to what it
- * shows rather than a floating short bar (affordance). Every state changes one thing only
- * (`references/color.md`, "State changes: structure, not circus"): rest is `--text-2`, hover lifts
- * the label to `--text-1` on a faint `--surface-2`, chosen is the fill, disabled drops to
- * `--text-4`; no hue appears, because a tab's position carries no category (colour meaning). The
- * weight never changes between states, so choosing never shifts the run's widths, and labels use
- * tabular figures (`references/typography.md`, tabular numbers). Labels follow the pack's
+ * **Changed**: the chosen tab is marked by ink and a rule, not a fill (`look="underline"`, the
+ * default at every size, the app bar included): the label goes to `--text-1` at the strong weight
+ * and a 2px `--selected` rule lies on the run's own hairline under it, so it reads as a tab attached
+ * to what it shows. The solid `--selected` fill was the loudest mark on the Stage, spent on every
+ * header; a solid fill now means sounding or running only (colour meaning, hierarchy). `block`, the
+ * full-height `--selected` block with top corners on `--radius-control`, stays as an option. Every
+ * state changes one thing only (`references/color.md`, "State changes: structure, not circus"):
+ * rest is `--text-2`, hover lifts the label to `--text-1`, chosen adds the rule and weight, and
+ * disabled drops to `--text-3` (still readable: a disabled page is information; `--text-4` all but
+ * vanished on black); no hue appears, because a tab's position carries no category (colour
+ * meaning). Each label reserves the width of its strong face (a hidden copy, kept out of the
+ * accessible name), so choosing never shifts the run's widths, and labels use tabular figures
+ * (`references/typography.md`, tabular numbers). Labels follow the pack's
  * `--label-case`, and the height follows `--control-h`, so the run sits on the same rhythm as the
  * pack's other controls (rhythm). Focus is a `:focus-visible` accent ring only for keyboard users
  * (`references/craft-details.md`, focus states). `dense` tightens each tab's side padding from
@@ -110,7 +124,7 @@ export function ChosenTabs({
   onChoose,
   dense = false,
   tipAction,
-  look = 'block',
+  look = 'underline',
 }: ChosenTabsProps) {
   const isList = size !== 'page';
   const root = useRef<HTMLDivElement>(null);
@@ -171,7 +185,7 @@ export function ChosenTabs({
             tipAction={tipAction}
             onClick={() => choose(tab)}
           >
-            {tab.label}
+            <TabLabel label={tab.label} />
           </TabButton>
         ))}
       </div>
@@ -206,7 +220,7 @@ export function ChosenTabs({
           onFocus={() => setActive(tab.id)}
           onKeyDown={(event) => onKeyDown(event, i)}
         >
-          {tab.label}
+          <TabLabel label={tab.label} />
         </TabButton>
       ))}
     </div>

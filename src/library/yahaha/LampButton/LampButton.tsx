@@ -19,7 +19,7 @@ export interface LampButtonProps {
   label: string;
   /** Lit or off. Controlled: a press asks for `!on` through `onToggle` and changes nothing itself. */
   on?: boolean;
-  /** Identity: `t` neutral (Accomp, function lamps), a part (`r1` `r2` `r3` `l`), `ok` running (Start / Stop), `lamp` the Looper looping, `transport` a key that moves time (Metronome, Auto Fill). */
+  /** Identity: `t` neutral (Accomp, function lamps), a part (`r1` `r2` `r3` `l`), `ok` running (Start / Stop), `lamp` the Looper looping, `transport` a key that moves time (Metronome, Auto Fill), neutral while off. On is an outline and a lit LED; only `ok`, `lamp` and record fill solid. */
   hue?: LampHue;
   /** Small code after the label, e.g. `ACMP`. */
   code?: string;
@@ -31,8 +31,8 @@ export interface LampButtonProps {
   waiting?: boolean;
   /**
    * Armed and pressed: engaged but waiting for its cue (Sync Start on, waiting for the first chord).
-   * With `on`, draws the `armed` face (the waiting ring, sunk like a held key, LED blinking) instead
-   * of the lit one; `aria-pressed` stays true. Without `on` it changes nothing. Default false.
+   * With `on`, draws the `armed` face (the on outline with its LED blinking) instead of the steady
+   * lit one; `aria-pressed` stays true. Without `on` it changes nothing. Default false.
    */
   armed?: boolean;
   /** `md` a section-row key, `sm` a settings-row key, `cell` fills its container (the band's lamp row). */
@@ -63,26 +63,33 @@ export interface LampButtonProps {
  * **Changed.** *Hierarchy and affordance:* the original drew off as a full-strength coloured
  * outline and label, so every lamp in a row shouted equally and off differed from on only by fill.
  * Now off is a quiet raised key (surface fill, hairline border, secondary label) carrying a small
- * unlit LED in its hue, and on is the only face with a solid fill, so lit and unlit separate by
- * value, not just hue; that reads under every palette, including light and bloom-free ones, where
- * the fill alone carries "lit" and `--bloom` only adds a glow where the palette has one
- * (color.md: restraint, colour by purpose). The key sinks 1px on press. *Colour meaning:* part
- * hues (`--hue-1..4`) only name the part; Start / Stop and the looping Looper use `--success`
- * (running), record uses `--danger`, neutral lamps light in `--text-1`, and focus is an
- * `--accent` ring (craft-details.md: `:focus-visible`). The keys that move time (the metronome,
- * Auto Fill) wear the contract's `transport` role hue, never a part's (hues.ts); lit, they fill in
- * `--transport` with `--transport-text`. Each lit fill takes its own ink: `--on-hue` on a part,
- * `--success-text` and `--danger-text` on the state fills (the original drew all three in
- * `--on-hue`, which the contract only promises against the part hues). *Armed* is a 2px ring with a blinking LED,
- * the hardware convention for "waiting", still on reduced motion as a steady LED. *Disabled* is a
- * dashed, unfilled key with a hollow LED and `not-allowed` cursor, so it can't be mistaken for off.
- * *Armed and pressed* (`armed` with `on`) is the waiting ring on a key that sits sunk, as if held,
- * over a stronger wash, so "engaged, waiting for its cue" differs from both lit and merely armed
- * (affordance). *Rhythm:* `width` is now a minimum, not a fixed width, so a label at a larger
- * density, in a wider case or with more tracking grows the key instead of clipping (craft-details.md).
- * *Type:* labels follow `--label-case` and `--tracking` at one weight in every face, so a lit key
- * is as wide as an off one; the code is set in the mono face, smaller and quieter (typography.md:
- * one family, hierarchy by size and colour). Corners follow `--radius-control`, heights `--control-h`.
+ * unlit LED in its hue, and on is the same key with a double-weight outline in the lamp's hue, a
+ * lit LED (with `--bloom` where the palette glows) and its label in ink. *A solid fill means
+ * sounding or running* (the Stage rule; color.md: restraint, colour by purpose): only Start / Stop
+ * running (`ok`), the Looper looping (`lamp`, playback) and record fill solid, so a row of lit part
+ * and function lamps no longer outshouts the one key that says the band is playing. The unlit LED
+ * mixes 45% of its hue into the key on dark palettes and 65% on light ones (`--scheme-light`),
+ * where a pale dot vanished. The key sinks 1px on press. *Colour meaning:* part hues
+ * (`--hue-1..4`) only name the part; Start / Stop and the looping Looper use `--success`
+ * (running), record uses `--danger`, neutral lamps light in `--text-1`, and focus is an `--accent`
+ * ring (craft-details.md: `:focus-visible`). The keys that move time (the metronome, Auto Fill)
+ * wear the contract's `transport` role hue, never a part's, and only while active (hues.ts): off,
+ * their LED is neutral like any other lamp's; on, waiting or armed, the ring and LED take
+ * `--transport`. The running and record fills take their own ink, `--success-text` and
+ * `--danger-text` (the original drew every fill in `--on-hue`, which the contract only promises
+ * against the part hues). *Waiting* (queued) is the ring over a faint 14% wash with a blinking LED,
+ * the hardware convention for "at the cue", still on reduced motion as a steady LED; the ring is
+ * `--yh-wait-ring`, the same weight and tint as Button's and Pad's. *Armed* (`armed` with `on`:
+ * engaged, waiting for its cue) is the on face with the LED blinking: it reads as on, unlike merely
+ * queued, and as pending, unlike plain on (the old version told armed from waiting only by a
+ * stronger wash and a 1px sink nobody could see from a metre). *Disabled* is a dashed, unfilled
+ * key with a hollow LED, a `--text-3` label and code, and a `not-allowed` cursor, so it can't be
+ * mistaken for off. *Rhythm:* `width` is a minimum, not a fixed width, and `cell` grows past its
+ * container rather than clip, so a key never truncates its own name (craft-details.md). *Type:*
+ * labels follow `--label-case` and `--tracking` at one weight in every face, so a lit key is as
+ * wide as an off one; the code is set in the readout face with tabular figures, smaller and quieter
+ * (typography.md: hierarchy by size and colour; no mono on the Stage). Corners follow
+ * `--radius-control`, heights `--control-h`.
  *
  * **Kept.** Fully controlled (the face and `aria-pressed` follow `on` alone; a press only asks for
  * `!on`), long press and right-click that never toggle, disabled that stays focusable with

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { ChosenTabs } from './ChosenTabs';
 import { displayPageTabs, faderPageTabs, fullPageTabs, layerTabs } from './ChosenTabs.fixtures';
@@ -9,7 +9,8 @@ const ALL_IDS = [...new Set([displayPageTabs, fullPageTabs, faderPageTabs, layer
 
 /**
  * The one tab style for every one-of-many choice in a header: a run of labels on a hairline, the
- * chosen one a `--selected` block standing on it. Every `size` draws the same; it sets only the
+ * chosen one in ink with a `--selected` rule under it (`look="underline"`, the default), or a
+ * `--selected` block standing on it (`look="block"`). Every `size` draws the same; it sets only the
  * kind (page navigation or a tablist). The parent owns `chosen`; a click only calls `onChoose`.
  */
 const meta = {
@@ -24,6 +25,7 @@ const meta = {
     size: { control: 'inline-radio', options: ['page', 'header', 'compact'] },
     label: { control: 'text' },
     dense: { control: 'boolean' },
+    look: { control: 'inline-radio', options: ['underline', 'block'] },
   },
 } satisfies Meta<typeof ChosenTabs>;
 
@@ -50,7 +52,7 @@ export const Arrows: Story = {
   args: { tabs: layerTabs, chosen: 'volume', label: 'Fader layer' },
 };
 
-/** A disabled tab: "Style" muted, skipped by clicks and arrows. */
+/** A disabled tab: "Style" in `--text-3`, still readable, skipped by clicks and arrows. */
 export const Disabled: Story = {
   args: {
     tabs: [faderPageTabs[0], { ...faderPageTabs[1], disabled: true }],
@@ -71,6 +73,37 @@ export const Dense: Story = {
     <div style={{ display: 'grid', gap: 'var(--space-4)', justifyItems: 'start' }}>
       <ChosenTabs {...args} label="Fader layer (default)" dense={false} />
       <ChosenTabs {...args} />
+    </div>
+  ),
+};
+
+/**
+ * New: `look="underline"`, the default. The chosen tab is ink at the strong weight with a 2px
+ * `--selected` rule on the hairline; its width was reserved, so the run doesn't shift as the choice moves.
+ */
+export const Underline: Story = {
+  args: { tabs: layerTabs, chosen: 'volume', label: 'Fader layer', look: 'underline' },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const run = canvasElement.querySelector('.yh-chosen-tabs')!;
+    await expect(run).toHaveAttribute('data-look', 'underline');
+    const chosen = canvas.getByRole('tab', { selected: true });
+    await expect(getComputedStyle(chosen).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    const pan = canvas.getByRole('tab', { name: 'Pan' });
+    const before = pan.getBoundingClientRect().width;
+    await userEvent.click(pan);
+    await expect(args.onChoose).toHaveBeenCalledWith('pan');
+    await expect(pan.getBoundingClientRect().width).toBe(before);
+  },
+};
+
+/** New: `look="block"`, the solid `--selected` block, kept as an option, above the default underline for comparison. */
+export const Block: Story = {
+  args: { tabs: layerTabs, chosen: 'volume', label: 'Fader layer', look: 'block' },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: 'var(--space-4)', justifyItems: 'start' }}>
+      <ChosenTabs {...args} />
+      <ChosenTabs {...args} label="Fader layer (underline)" look="underline" />
     </div>
   ),
 };

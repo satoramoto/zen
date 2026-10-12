@@ -59,6 +59,28 @@ describe('LampButton', () => {
     expect(decls('transport')).toContain('--lamp-ink: var(--transport-text)');
   });
 
+  it('on is an outline and a lit LED; only running, looping and record fill; transport is neutral off', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/LampButton/LampButton.css'), 'utf8');
+    const rule = (selector: string) => {
+      const at = css.indexOf(`${selector} {`);
+      expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf('}', at));
+    };
+    const on = rule(".yh-lampbutton:is([data-face='on'], [data-face='armed'])");
+    expect(on).toContain('border-color: var(--lamp-hue)');
+    expect(on).not.toContain('background');
+    const solid = rule(".yh-lampbutton:is([data-hue='ok'], [data-hue='lamp'])[data-face='on'],\n.yh-lampbutton[data-face='record']");
+    expect(solid).toContain('background: var(--lamp-hue)');
+    // No other rule fills a face with the hue.
+    expect(css.match(/background: var\(--lamp-hue\)/g)?.length).toBe(3);
+    expect(rule(".yh-lampbutton[data-hue='transport']:is([data-face='off'], [data-face='disabled'])")).toContain('--lamp-hue: var(--text-1)');
+    expect(rule(".yh-lampbutton[data-face='disabled'] .yh-lampbutton__code")).toContain('var(--text-3)');
+    expect(css).not.toContain('--text-4');
+    expect(css).not.toContain('ellipsis');
+    expect(css).not.toContain('--font-mono');
+    expect(css).toMatch(/--yh-wait-ring:\s*calc\(var\(--border-width\) \* 2\)/);
+  });
+
   it('draws the faces and hues: record, waiting, rec waiting, m as t', () => {
     const { rerender } = render(<LampButton label="Looper" on rec />);
     const button = screen.getByRole('button');
