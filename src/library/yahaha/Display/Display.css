@@ -207,6 +207,10 @@
   .yh-display .yh-display__header {
     gap: var(--space-3);
   }
+  /* The genre and metre give way before the style's name: the name is what a player looks for. */
+  .yh-display .yh-display__meta {
+    flex-shrink: 100;
+  }
   .yh-display .yh-display__tempo-keys {
     gap: var(--space-1);
   }

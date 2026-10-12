@@ -34,6 +34,8 @@ const BARS = 4;
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 const panText = (v: number) => (v === 64 ? 'C' : v < 64 ? `L${64 - v}` : `R${v - 64}`);
 const lampsOn = (lamps: BankLamp[]) => Object.fromEntries(lamps.map((lamp) => [lamp.id, lamp.on]));
+/** The One Touch an "OTS 1"–"OTS 4" pad applies; 0 for any other pad. */
+const otsNumber = (pad: PadItem | undefined) => Number(pad?.label.match(/^OTS\s(\d)$/)?.[1] ?? 0);
 
 /**
  * StagePlayground: a story-only wrapper that keeps what the controls change, so the whole screen is
@@ -46,7 +48,9 @@ const lampsOn = (lamps: BankLamp[]) => Object.fromEntries(lamps.map((lamp) => [l
  * - Start / Stop runs and stops; while running the beat moves at the tempo.
  * - Tempo − + step it, a drag or wheel on the number sets it, Style tempo goes back to 104, and Tap
  *   (timed by the Stage) sets it from two or more taps; the Tempo knob follows.
- * - One Touch applies; ‹ › step through a few styles (a 3/4 waltz among them).
+ * - One Touch applies, from the hero or from the OTS 1–4 pads (the hardware mirror), and both show
+ *   the one applied; ‹ › step through a few styles (a 3/4 waltz among them), wrapping at either end.
+ *   A seed style the list doesn't hold shows as given, and › from it goes to the first, ‹ to the last.
  * - Faders move on every layer (each keeps its own values), Panel / Style pages and the page button
  *   switch, part lamps turn a part off (its strip dims), knob and pad pages switch, knobs turn, pads toggle.
  */
@@ -65,9 +69,11 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
   const message = (text: string) => setStatus((s) => ({ ...s, text, error: false, seq: (s.seq ?? 0) + 1 }));
 
   // ---- Style and tempo
-  const seedStyle = Math.max(0, stageStyles.findIndex((s) => s.name === seed.display.style.name));
-  const [styleAt, setStyleAt] = useState(seedStyle);
+  // -1: the seed's own style, one the list doesn't hold; it shows as given until ‹ › step away.
+  const [styleAt, setStyleAt] = useState(() => stageStyles.findIndex((s) => s.name === seed.display.style.name));
+  const listed = stageStyles[styleAt];
   const [oneTouch, setOneTouch] = useState(seed.display.style.oneTouch ?? 0);
+  const oneTouchCount = seed.display.style.oneTouchCount ?? 4;
   const [bpm, setBpm] = useState(seed.display.nowPlaying.bpm);
   const setTempo = (n: number) => setBpm(clamp(Math.round(n), TEMPO_MIN, TEMPO_MAX));
 
@@ -85,7 +91,7 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
   const absent = useMemo(() => new Set(sf.absent ?? []), [sf.absent]);
   // Where the band is: the bar of the phrase and the beat; `rolled` when the phrase just began again.
   const [pos, setPos] = useState({ bar: seed.display.nowPlaying.bar ?? 1, beat: seed.display.nowPlaying.beat ?? 1, rolled: false });
-  const beats = stageStyles[styleAt]?.beats ?? seed.display.nowPlaying.beats ?? 4;
+  const beats = listed?.beats ?? seed.display.nowPlaying.beats ?? 4;
   const restart = () => setPos({ bar: 1, beat: 1, rolled: false });
 
   const stop = () => {
@@ -226,8 +232,19 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
   // ---- Pads
   const [padBank, setPadBank] = useState(seed.pads.bank ?? 0);
   const [padBanks, setPadBanks] = useState<PadItem[][]>(() => stagePadBanks.map((bank) => bank.map((p) => ({ ...p }))));
+  const shownPads = (padBanks[padBank] ?? seed.pads.pads).map((pad) => {
+    const n = otsNumber(pad);
+    if (!n) return pad;
+    return { ...pad, state: n > oneTouchCount ? 'dark' : n === oneTouch ? 'playing' : 'idle' } satisfies PadItem;
+  });
   const onPad = (index: number) => {
     say('pads.onPress', index);
+    // OTS 1–4 apply One Touch, as the Launchkey's pads 9–12 do: the same setting the hero shows.
+    const ots = otsNumber(shownPads[index]);
+    if (ots) {
+      if (ots <= oneTouchCount) setOneTouch(ots);
+      return;
+    }
     setPadBanks((banks) =>
       banks.map((bank, b) =>
         b !== padBank ? bank : bank.map((p, i) => (i === index && p.state !== 'dark' ? { ...p, state: p.state === 'playing' ? 'idle' : 'playing' } : p)),
@@ -236,10 +253,11 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
   };
 
   // ---- The screen
-  const style = stageStyles[styleAt] ?? stageStyles[0];
   const nextAt = next ? `after bar ${BARS}` : undefined;
+  /** ‹ › wrap around the list; from the seed's own style, › goes to the first and ‹ to the last. */
   const stepStyle = (way: 1 | -1) => {
-    const at = (styleAt + way + stageStyles.length) % stageStyles.length;
+    const from = styleAt >= 0 ? styleAt : way === 1 ? -1 : 0;
+    const at = (from + way + stageStyles.length) % stageStyles.length;
     setStyleAt(at);
     setOneTouch(0);
     setPos((p) => ({ ...p, beat: Math.min(p.beat, stageStyles[at].beats) }));
@@ -269,7 +287,11 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
         onHealth: (target) => (say('appBar.onHealth', target), message(`Opens ${target}`)),
       }}
       display={{
-        style: { ...seed.display.style, name: style.name, category: style.category, timeSignature: style.timeSignature, oneTouch },
+        style: {
+          ...seed.display.style,
+          ...(listed && { name: listed.name, category: listed.category, timeSignature: listed.timeSignature }),
+          oneTouch,
+        },
         nowPlaying: {
           ...seed.display.nowPlaying,
           playing: playing ? SECTION_LABEL[playing] : '',
@@ -347,7 +369,7 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
       }}
       pads={{
         ...seed.pads,
-        pads: padBanks[padBank] ?? seed.pads.pads,
+        pads: shownPads,
         bank: padBank,
         onBank: (i) => (say('pads.onBank', i), setPadBank(i)),
         onPress: onPad,
