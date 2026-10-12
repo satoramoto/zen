@@ -144,14 +144,20 @@ export interface SongFormProps {
  * sections a dashed empty edge, announced unavailable (`aria-disabled`, still focusable so the
  * player hears they are missing) and deaf to presses (*affordance*). *Hierarchy*: Start / Stop is
  * the transport's one `tall` key, two rows high with a heading-size label, its word the action it
- * will take. Stopped, it is the screen's call to action, the `primary` fill in `--action`: nothing
- * plays, so starting is the thing to do. Running, it is an outlined key in `--success`, not a
+ * will take. Stopped, it is the screen's call to action, the `primary` fill, drawn in the
+ * contract's `transport` role hue (`--transport` / `--transport-text`, hues.ts) rather than the
+ * generic `--action`: nothing plays, so starting is the thing to do, and it wears the hue of every
+ * key that moves time. Running, it is an outlined key in `--success`, not a
  * filled one: mid-song the player reads the hero's section and chord first (STAGE.md 1), and a
  * tall solid green key was the largest saturated area on screen, louder than the section name.
  * Its size and place still make it the key to find without looking, and the outline in the
  * running colour plus the word Stop say the band is going (color.md, restraint; one filled call
- * to action at a time). The rest are equal cells in two rows, grouped by job (sync, fills and
- * fade, accompaniment, reset). *Waiting is one face*: Sync Start armed, a queued fill, a fade-in
+ * to action at a time); running is a state, so it keeps `--success`, not the transport hue. The
+ * rest are equal cells in two rows, grouped by job (sync, fills and fade, accompaniment, reset).
+ * The keys that move time (Sync Start, Sync Stop, Fill ▲ / ▼, and Auto Fill among the modifiers)
+ * wear the Button and LampButton `transport` tone, so the cluster reads as one family apart from
+ * the part hues and the states; Fade (level, not time), Accomp and Reset stay neutral. Colour
+ * never carries a state alone: armed and queued still show by the waiting ring and the words. *Waiting is one face*: Sync Start armed, a queued fill, a fade-in
  * waiting for Start all use the waiting ring, flashing with the queued section on the parent's
  * `lit`, and the cue line above the form says in words what's coming ("Fill, then Main C after
  * bar 4"). *Rhythm*: the width breakpoints are counted in control heights (the region's `em` is
@@ -275,6 +281,7 @@ export function SongForm({
                   <LampButton
                     label="Auto Fill"
                     size="cell"
+                    hue="transport"
                     on={autoFill}
                     tip="transport.auto_fill"
                     tipAction={tipAction}
@@ -293,7 +300,7 @@ export function SongForm({
               size="cell"
               tall
               variant={running ? 'secondary' : 'primary'}
-              hue={running ? 'ok' : 't'}
+              hue={running ? 'ok' : 'transport'}
               pressed={running}
               name={running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped'}
               tip="transport.start_stop"
@@ -306,6 +313,7 @@ export function SongForm({
             <Button
               label="Sync Start"
               size="cell"
+              hue="transport"
               waiting={syncStart}
               lit={lit}
               pressed={syncStart}
@@ -319,6 +327,7 @@ export function SongForm({
             <Button
               label="Sync Stop"
               size="cell"
+              hue="transport"
               waiting={syncStop}
               pressed={syncStop}
               tip="transport.sync_stop"
@@ -342,6 +351,7 @@ export function SongForm({
               label="Fill"
               symbol="up"
               size="cell"
+              hue="transport"
               waiting={fillPending === 'up'}
               lit={lit}
               name={`Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`}
@@ -355,6 +365,7 @@ export function SongForm({
               label="Fill"
               symbol="down"
               size="cell"
+              hue="transport"
               waiting={fillPending === 'down'}
               lit={lit}
               name={`Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`}

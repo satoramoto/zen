@@ -93,9 +93,13 @@ export const Trouble: Story = {
   args: { failedPart: 2 },
 };
 
-/** The switches as on the section row's Helpers story: Metronome on. */
+/** The switches as on the section row's Helpers story: Metronome on, lit in the `transport` hue. */
 export const Helpers: Story = {
   args: { metronome: true },
+  play: async ({ canvasElement }) => {
+    const switches = within(canvasElement).getByRole('group', { name: 'Global switches' });
+    await expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'transport');
+  },
 };
 
 /** The section row's AllOn: Metronome on with its settings open, Unison and help on. */

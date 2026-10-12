@@ -94,8 +94,11 @@ export interface AppBarProps {
  * page nav starts right after the name and keeps its x on every page; the style and tempo shown
  * off the Stage sit in the flexible middle and give way (ellipsis) before anything else does, so
  * the tabs never jump. The bar reads left to right as where you are → what you can switch → how
- * things are → the emergency stop. *Colour has one meaning* (`hues.ts`): the switches are neutral
- * lamps (the metronome and Unison belong to no part), the chosen page is the bar's one
+ * things are → the emergency stop. *Colour has one meaning* (`hues.ts`): the switches belong to no
+ * part, so none wears a part hue; Unison is a neutral lamp, and the metronome, a control that moves
+ * time, wears the contract's `transport` role hue (its unlit LED in it, lit as a solid `--transport`
+ * fill with `--transport-text`), the same hue as the Stage's transport keys, while its ▾ stays a
+ * neutral key because it only opens settings. The chosen page is the bar's one
  * `--selected` block, Launchkey uses `--success` only when connected, and only Panic and trouble
  * in the health slot wear `--danger`. *Affordance without noise:* Panic takes the far right
  * corner, the one place a hand finds without looking, set apart by a hairline; at rest it is an
@@ -198,6 +201,7 @@ export function AppBar({
             <LampButton
               label="Metronome"
               on={metronome}
+              hue="transport"
               join="start"
               name="Metronome"
               tip="metronome.on"
