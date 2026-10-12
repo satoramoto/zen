@@ -26,6 +26,14 @@ export { paneKey, samePane, sidebarSections, type SidebarRow, type SidebarSectio
  * there is no window buttons' band to clear. Sizes and tones read the contract and the layout's
  * `--vs-lay-*`. Nothing fades (the chevron's and the tools' opacity steps show at once).
  *
+ * **Tuning knobs** (InsetSidebar.css, on `.vs-isb`):
+ * - `--vs-isb-small`: the headings', counts' and empty notes' type, a pixel under the caption.
+ * - `--vs-isb-gutter` (10px): a row's side padding and the space between its parts.
+ * - `--vs-isb-key` (22px): a row's hover keys (play, "…").
+ * - `--vs-isb-key-radius`: small keys' corners, the layout's `--vs-lay-key-radius`.
+ * - `--vs-isb-hover`, `--vs-isb-tool-hover`, `--vs-isb-picked`: the ink's 4%, 6% and 9% tints
+ *   for a hovered row, a hovered tool and the row picked.
+ *
  * **Kept.** Props, exports, copy, titles and accessible names; the one tab stop and its keyboard
  * walk (arrows, Home, End, ← folds, → unfolds, Enter or Space); a playlist's row playing on
  * double-click and from its hover button, taking drops (a smart one refusing, faded), its menu

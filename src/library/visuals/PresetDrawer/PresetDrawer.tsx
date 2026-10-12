@@ -74,6 +74,9 @@ export interface PresetDrawerProps {
  *
  * **Kept.** Every export, the props, the copy, the labels and titles, `aria-pressed` (incl.
  * `mixed`), the tag box's keys (Enter adds, Esc clears, blur adds), and what each control sets.
+ *
+ * **Tuning knobs.** `--vs-drawer-strip-radius` (the strip's thumbnails: 2px, a quarter of
+ * `--radius-control`; the scale has no thumbnail radius).
  */
 export function PresetDrawer({ chosen, hiddenByFilter, playlists, current, onSet, onLoad, onClose, error }: PresetDrawerProps) {
   const [typing, setTyping] = useState('');

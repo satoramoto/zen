@@ -246,6 +246,10 @@ function rereadOnData(set: (d: LibraryData) => unknown): () => void {
  *
  * **Kept.** Every export, prop and behaviour (following the grid, the resumed filter, the index
  * re-read, the save as a smart playlist, the dev start), every accessible name, title and string.
+ *
+ * **Tuning knobs.** `--vs-library-caption` (its small grey text: `--text-3`, the lighter
+ * `--vs-caption-raised` on a raised tint or the filter's glass) and `--vs-library-small` (library.css's
+ * 11px counts and ✕, a hairline under the caption; the scale has no 11).
  */
 export function Library({ entries, loaded, search, onSearch, current, into, onLoad, onAdd, onPress, tileMin, home }: LibraryProps) {
   const { index, settled } = useIndex();

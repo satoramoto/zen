@@ -126,6 +126,12 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  * the click's claim, the keys (⌃⌘S, ⌘I, ⌘F, Esc's order, ?, ← → R H with the isTyping and
  * arrow-owner guards), quick add's queue, drag and drop, the help overlay, the notices and
  * every word.
+ *
+ * **Tuning knobs** (Home.css):
+ * - `--vs-home-pad`: the grid pane's side padding, `--mat-plate-inset` (home.css --pad 22px),
+ *   `--space-4` under 1100 px.
+ * - `--vs-home-tile-min`: a playlist grid's narrowest tile, 150px (124px under 1100 px), on the
+ *   scale.
  */
 export function Home({ start, onMode, library: startOnLibrary = false }: { start: string | null; onMode(view: View, path: string | null): void; library?: boolean }) {
   const [current, setCurrent] = useState<Entry | null>(null);

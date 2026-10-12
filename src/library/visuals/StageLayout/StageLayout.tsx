@@ -154,6 +154,15 @@ const OPEN_AREAS = ['head', 'centre', 'dock'];
  *
  * **Kept.** Every export, the data attributes on the root, the crate's focus and
  * dismissal, the drag regions, the warning's dark window, the copy.
+ *
+ * **Tuning knobs** (StageLayout.css), sizes the scale has no step for:
+ * - `--vs-stagelayout-crate`: the crate's column, the 240px inset sidebar and 8px either side.
+ * - `--vs-stagelayout-titlebar`: the title bar's 52px (layout.css `--lay-titlebar`).
+ * - `--vs-stagelayout-lights`: the window buttons' room, 84px.
+ * - `--vs-stagelayout-radius`: the inset panels' 18px corners (layout.css `--lay-side-radius`).
+ * - `--vs-stagelayout-z-*`: the cells' stacking over the picture.
+ * - `--vs-stagelayout-hold`: Esc's hold (`LEAVE_HOLD_MS`), set inline on the progress.
+ * - `--vs-hole-radius`: Views' `Preview` knob, set to 0 here (the picture is square; macOS rounds the window).
  */
 export function StageLayout({ width, panels, warning = false, inWindow, leaving = false, crate, head, dock, centre, children, onCrateAway, onPanels }: StageLayoutProps) {
   const shown = panels.shown;

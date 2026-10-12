@@ -15,13 +15,22 @@
      --bd, --bd3          → --border         (near borderless: rarely drawn)
      --surface-0..3 (home.css) → --surface-0..3, or the base / raised layers
      --surface-float, --glass, --glass-edge → Layer level="float" (its fill, backdrop, edge)
-     --surface-corner     → --layer-base-solid (the frost's opaque tone)
+     --surface-corner     → --layer-base-solid (the frost's opaque tone, round the preview's corners)
+     --lift               → --layer-float-cast (the shadow a hovered tile lifts on)
      --pad                → --mat-plate-inset; --lay-section-gap → --mat-plate-gap
      --ctl-h              → --control-h
      --sans, --font-ui, --font-display, --font-num → --font-sans, --font-display, --font-readout
      --weight-strong      → --weight-strong; the wordmark's 650 → --weight-display
 
-   Below are only what the contract has no name for. */
+   Below are only what the contract has no name for.
+
+   **Tuning knobs**
+     --vs-playing, --vs-line-active, --vs-focus-ring   one meaning each (the signal, the active
+                                                       underline, the focus ring) on a palette slot
+     --vs-caption-raised                               the caption a step lighter on raised tints
+     --vs-thumb                                        the dark backing behind a tile's picture
+     --vs-sep-space                                    the widened space on " · " lines
+     --vs-text-*                                       the widgets' type ramp on the contract sizes */
 
 .vs-root {
   /* home.css --playing (the green): the playing mark. One meaning, the signal. */
@@ -36,11 +45,6 @@
   /* home.css --surface-thumb (rgba(0, 0, 0, 0.4)): the dark backing behind a tile's picture. The
      black key is dark in every mode, as the backing must be. */
   --vs-thumb: color-mix(in oklab, var(--key-black) 40%, transparent);
-  /* home.css --surface-corner (#18181a): the opaque tone that rounds the preview's corners over
-     the square native view. The frost's base solid is that tone. */
-  --vs-corner: var(--layer-base-solid);
-  /* home.css --lift: the shadow a hovered tile lifts on, the float layer's cast. */
-  --vs-lift: var(--layer-float-cast);
   /* app.css --sep-space (0.1em): Instrument Sans's narrow space widened on lines joined with " · ". */
   --vs-sep-space: 0.1em;
 

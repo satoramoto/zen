@@ -7,16 +7,18 @@
    The audio input is quiet text. */
 
 .vs-transport {
-  --vs-transport-h: 64px;
+  /* The bar's height: 64px. */
+  --vs-transport-h: calc(var(--space-6) * 2);
   --vs-transport-small: calc(var(--size-caption) - 1px);
   display: grid;
   /* The right column never shrinks under what it holds (its input shrinks itself first), so in a
-     narrow bar the time gives way rather than running under the audio input. */
+     narrow bar the time gives way rather than running under the audio input. Columns 12–28px
+     apart. */
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(12px, 3%, 28px);
+  gap: clamp(var(--space-3), 3%, calc(var(--space-6) - var(--space-1)));
   height: var(--vs-transport-h);
-  padding: 0 var(--vs-lay-pad, var(--mat-plate-inset));
+  padding: 0 var(--mat-plate-inset);
   box-sizing: border-box;
   min-width: 0;
   background: none;
@@ -24,19 +26,20 @@
   font-family: var(--font-sans);
 }
 
+/* The keys: 6px out to the left (their own padding), 10px apart, each 32px. */
 .vs-transport .vs-transport-keys {
-  margin-left: -6px;
+  margin-left: calc(var(--space-1) * -1.5);
 }
 .vs-transport .vs-transport-keys > .lib-group__body {
   align-items: center;
-  gap: 10px;
+  gap: calc(var(--space-1) * 2.5);
 }
 .vs-transport .vs-transport-key {
   display: grid;
   place-items: center;
-  height: 32px;
-  min-width: 32px;
-  padding: 0 6px;
+  height: var(--space-6);
+  min-width: var(--space-6);
+  padding: 0 calc(var(--space-1) * 1.5);
   border: 0;
   border-radius: var(--vs-lay-key-radius, var(--radius-control));
   background: none;
@@ -55,7 +58,7 @@
 }
 /* Play and pause lead: brighter, and the glyph a step larger. */
 .vs-transport .vs-transport-play {
-  min-width: 36px;
+  min-width: calc(var(--space-6) + var(--space-1)); /* 36px */
   color: var(--text-1);
 }
 
@@ -65,7 +68,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: calc(var(--space-4) + var(--space-1)); /* 20px */
   min-width: 0;
   overflow: hidden;
 }
@@ -86,20 +89,20 @@
   font-weight: var(--weight-strong);
 }
 .vs-transport-from {
-  margin-left: 10px;
+  margin-left: calc(var(--space-1) * 2.5); /* 10px */
   color: var(--text-3);
   font-size: var(--vs-text-label);
   word-spacing: var(--vs-sep-space);
 }
 
-/* The time: elapsed, the track, what is left. */
+/* The time: elapsed, the track, what is left; from 200px, at most 560px. */
 .vs-transport-time {
   display: flex;
-  flex: 1 1 200px;
+  flex: 1 1 calc(var(--space-6) * 6 + var(--space-2));
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
-  max-width: 560px;
+  max-width: calc(var(--space-6) * 17.5);
   /* Never over its neighbours, however narrow the bar. */
   overflow: hidden;
 }
@@ -119,11 +122,12 @@
 .vs-transport-num:first-child {
   text-align: right;
 }
+/* The track: at least 40px, 4px tall (3px before). */
 .vs-transport-track {
   --vs-transport-track-radius: 2px;
   flex: 1;
-  min-width: 40px;
-  height: 3px;
+  min-width: calc(var(--space-6) + var(--space-2));
+  height: var(--space-1);
   overflow: hidden;
   border-radius: var(--vs-transport-track-radius);
   background: var(--layer-raised-fill);
@@ -148,7 +152,7 @@
   text-overflow: ellipsis;
 }
 .vs-transport-time:has(.vs-transport-hint) .vs-transport-track {
-  flex-basis: 120px;
+  flex-basis: calc(var(--control-h) * 4); /* 120px */
 }
 
 /* The audio input: quiet text and its meter, no box at rest. */

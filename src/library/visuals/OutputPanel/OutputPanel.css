@@ -41,8 +41,10 @@
   width: 100%;
 }
 
+/* The notes' measure: the original's 360px, fifteen of the scale's 24px steps (spaces, not
+   --control-h: inside the Settings sheet that is 44px). */
 .vs-output-note {
-  max-width: 360px;
+  max-width: calc(var(--space-5) * 15);
   margin: 0;
   color: var(--vs-caption-raised);
   font-size: var(--vs-text-label);
@@ -58,7 +60,7 @@
 
 /* Caution: an amber wash, no border. */
 .vs-output-warn {
-  max-width: 360px;
+  max-width: calc(var(--space-5) * 15);
   margin: 0;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-control);

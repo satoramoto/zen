@@ -215,6 +215,10 @@ export const HOME_HELP: HelpList = {
  * `titleOf`, `padKey`, `HomeControl`, `HelpList`, `liveHelp`, `HOME_HELP`, `HelpOverlay`), all
  * copy, the dialog's name (`aria-labelledby` its heading), the ✕'s name and title, the keys, the
  * columns wide and one column narrow.
+ *
+ * **Tuning knobs.** `--vs-help-z`: the stacking order, over a Modal's or Sheet's (100);
+ * `--vs-help-scrim`: the scrim, the always-dark key colour part see-through; `--vs-help-width`:
+ * the panel's widest (`calc(var(--space-4) * 55)`, help.css's 880px).
  */
 export function HelpOverlay({
   open,

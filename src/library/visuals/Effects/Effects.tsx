@@ -179,6 +179,10 @@ function Fine({ name, slider, down, up }: { name: string; slider: ReactNode; dow
  * settings.css did that by hand). Steps are quiet `ActionButton`s.
  *
  * **Kept.** Every control, name, label, tooltip and the actions they send.
+ *
+ * **Tuning knobs.** `--vs-effects-control`: the controls' column every row's control starts at
+ * (settings.css's --set-control: `calc(var(--space-6) * 7 + var(--space-3))`, 236px; narrow,
+ * `calc(var(--space-2) * 25)`, 200px).
  */
 export function EffectSettings({ state, set }: Pick<FxControl, 'set'> & { state: fx.Fx }) {
   const brightness = (v: number) => set({ kind: 'brightness', value: v }, { brightness: v });

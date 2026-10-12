@@ -55,14 +55,17 @@ const LOADING = 'Loading the display…';
  *
  * **Changed.** The box is a layout `Hole` (it paints nothing and is named as a
  * picture), inside the measured element that carries `className`, `data-hole` and
- * `data-loading`. Its corners are rounded by painting them in `--vs-corner` (the
- * frost's opaque tone) over the square native view; a screen sets the radius with
- * `--vs-hole-radius` (home.css's `--hole-radius`). Anything a screen lays over the
- * preview goes in an `Opaque` scope, so no layer over it is translucent or blurs.
+ * `data-loading`. Its corners are rounded by painting them in `--layer-base-solid`
+ * (the frost's opaque tone) over the square native view; a screen sets the radius
+ * with `--vs-hole-radius` (home.css's `--hole-radius`). Anything a screen lays over
+ * the preview goes in an `Opaque` scope, so no layer over it is translucent or blurs.
  * In stories the frame paints the starter still into the hole (story.tsx).
  *
  * **Kept.** A picture's (`role="img"`) contents are presentational, so the loading
  * text goes in its name and the text on screen is hidden from screen readers.
+ *
+ * **Tuning knobs** (Views.css):
+ * - `--vs-hole-radius`: the preview's corner radius, 0 by default; a screen sets it.
  */
 export function Preview({ className }: { className: string }) {
   const ref = useRef<HTMLDivElement>(null);

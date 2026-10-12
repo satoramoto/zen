@@ -10,8 +10,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  /* popover.css 28px: a header control. */
-  height: 28px;
+  /* popover.css 28px: a header control, the widest space step less the smallest. */
+  height: calc(var(--space-6) - var(--space-1));
   padding: 0 var(--space-1);
   color: var(--text-2);
   font-family: var(--font-sans);
@@ -30,7 +30,7 @@
 .vs-popover-button[aria-pressed='true'] {
   color: var(--text-1);
   text-decoration: underline 2px var(--vs-line-active);
-  text-underline-offset: 6px;
+  text-underline-offset: calc(var(--space-1) * 1.5); /* popover.css 6px */
 }
 .vs-popover-button:focus-visible {
   outline: 2px solid var(--vs-focus-ring);
@@ -45,20 +45,21 @@
    the window. */
 .vs-popover-box:not([data-across]) {
   width: max-content;
-  max-width: min(420px, calc(100vw - 24px));
+  /* popover.css min(420px, 100vw - 24px). */
+  max-width: min(calc(var(--control-h) * 14), calc(100vw - var(--space-5)));
 }
 .vs-popover-box {
   /* 6px under the button, as popover.css hung it. */
-  margin-top: 6px;
+  margin-top: calc(var(--space-1) * 1.5);
 }
 .vs-popover-box[data-above] {
-  margin-top: calc(-1 * 6px);
+  margin-top: calc(var(--space-1) * -1.5);
 }
 .vs-popover-panel {
-  min-width: 160px;
+  min-width: calc(var(--space-6) * 5); /* popover.css 160px */
   /* The core box keeps it inside the room left; this is popover.css's own cap. */
   max-height: 60vh;
-  padding: 6px;
+  padding: calc(var(--space-1) * 1.5); /* popover.css 6px */
   color: var(--text-2);
   font-family: var(--font-sans);
   font-size: var(--vs-text-body);
@@ -74,8 +75,8 @@
 .vs-popover-panel [role='menuitem'] {
   display: block;
   width: 100%;
-  height: 30px;
-  padding: 0 10px;
+  height: var(--control-h); /* popover.css 30px */
+  padding: 0 calc(var(--space-1) * 2.5); /* popover.css 10px */
   text-align: left;
   color: var(--text-2);
   font: inherit;

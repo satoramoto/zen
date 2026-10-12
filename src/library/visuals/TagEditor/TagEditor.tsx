@@ -25,6 +25,8 @@ export interface TagEditorProps {
  *
  * **Kept.** Tags as type ("#tag", no pill), ✕ on hover or focus, a tag on only some fainter with
  * its count, the props, the keys, the copy, the labels and titles.
+ *
+ * **Tuning knobs.** `--vs-tag-x-radius` (the ✕'s 4px corners, half of `--radius-control`).
  */
 export function TagEditor({ chosen, onSet, remove = '×' }: TagEditorProps) {
   const [adding, setAdding] = useState(false);

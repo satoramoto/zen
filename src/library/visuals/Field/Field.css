@@ -15,9 +15,12 @@
   --vs-field-at: 0.5;
   /* model/field.ts's bandColour names the grey band `var(--caption)`: the raised caption here. */
   --caption: var(--vs-caption-raised);
+  /* The tip's widest (field.css's 200px), a measure the scale has no step for. */
+  --vs-field-tip-width: calc(var(--space-2) * 25);
   position: relative;
-  margin: 6px 0 0;
-  padding: 16px 0 18px;
+  /* field.css: 6px above, 16px over the plot and 18px under it for the axis words. */
+  margin: calc(var(--space-1) * 1.5) 0 0;
+  padding: var(--space-4) 0 calc(var(--space-3) * 1.5);
 }
 .vs-field-plot {
   position: relative;
@@ -26,7 +29,7 @@
 }
 .vs-field-plot:focus-visible {
   outline: 2px solid var(--vs-focus-ring);
-  outline-offset: 4px;
+  outline-offset: var(--space-1);
 }
 .vs-field-scope {
   display: block;
@@ -41,7 +44,7 @@
   position: absolute;
   left: 0;
   color: var(--vs-caption-raised);
-  font-size: 10px;
+  font-size: var(--vs-text-annot);
   font-weight: 500;
   letter-spacing: 0.06em;
   line-height: 1;
@@ -54,8 +57,9 @@
   top: 2px;
 }
 .vs-field-axis-low {
-  bottom: 30px;
-  left: 10px;
+  /* field.css: 30px up and 10px in, at the plot's low corner. */
+  bottom: calc(var(--space-3) * 2.5);
+  left: calc(var(--space-1) * 2.5);
   opacity: 0.8;
 }
 .vs-field-axis-x {
@@ -150,17 +154,18 @@
 .vs-field-tip.lib-layer {
   position: absolute;
   z-index: 1;
-  max-width: 200px;
-  padding: 3px 7px;
+  max-width: var(--vs-field-tip-width);
+  /* field.css's 3px 7px, on the nearest steps. */
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-control);
   color: var(--text-1);
-  font-size: 11px;
+  font-size: var(--vs-text-label);
   font-weight: 500;
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transform: translate(calc(var(--vs-field-at) * -100%), calc(-100% - 8px));
+  transform: translate(calc(var(--vs-field-at) * -100%), calc(-100% - var(--space-2)));
   pointer-events: none;
 }
 .vs-field-tip-note {

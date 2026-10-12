@@ -17,7 +17,7 @@ const meta = {
   args: { lists: LISTS, data: DATA, current: LISTS.deck.current, act: fn(), onLists: fn(), onError: fn() },
   decorators: [
     (Story) => (
-      <div style={{ display: 'flex', flexDirection: 'column', width: 240, height: 640, padding: '12px 10px 0', background: 'var(--vs-corner)', borderRadius: 18 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: 240, height: 640, padding: '12px 10px 0', background: 'var(--layer-base-solid)', borderRadius: 18 }}>
         <Story />
       </div>
     ),

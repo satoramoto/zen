@@ -58,6 +58,12 @@ export interface PresetTileProps extends HTMLAttributes<HTMLElement> {
  *
  * **Kept.** The props, the element (`div` or `li`), the DOM order (picture, then tools), the
  * caption on the picture, the level bars, the star, `tileName` and `tileBy`.
+ *
+ * **Tuning knobs.** `--vs-tile-*`, on `.vs-tile`: `--vs-tile-radius` (the picture's 6px corners,
+ * a hairline pair under `--radius-control`; the scale has no thumbnail radius), `--vs-tile-ink-2`
+ * (the author's ink on the picture), `--vs-tile-shade` (the text's shadow), `--vs-tile-chip` (the ✓
+ * chip's fill), `--vs-tile-ghost-radius` (the dragged tile's 4px picture corners) and `--vs-tile-label` (the line under the picture: 0, which LibraryGrid's
+ * `homeLook` counts on).
  */
 export function PresetTile({ as = 'div', thumbnail, empty = '', name, by, playing = false, star = false, marks, tools, motion, className, ...rest }: PresetTileProps) {
   return createElement(

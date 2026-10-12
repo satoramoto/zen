@@ -235,6 +235,10 @@ function IntensityFader({ live }: { live: LiveState }) {
  *
  * **Kept.** The props, `EffectKey`, every name, tooltip and screen-reader line,
  * the narrow-dock steps (container queries at 940 and 700 px).
+ *
+ * **Tuning knobs** (StageDock.css):
+ * - `--vs-stagedock-on`: the soft accent wash of the Hold pill.
+ * - `--vs-stagedock-fill`: Intensity's position along its track, set inline from the gesture.
  */
 export function StageDock({ live }: StageDockProps) {
   const transport = useTransport(live);

@@ -19,6 +19,9 @@ import './MoreEffects.css';
  *
  * **Kept.** The grid (sliders across the top, the switches down the left, Punch beside them,
  * Reset under both; one column when narrow), every name, label, tooltip and action.
+ *
+ * **Tuning knobs.** `--vs-more-fx-punch`: the column Punch takes beside the switches
+ * (`calc(var(--space-5) * 7)`, the original's 168px).
  */
 export function MoreFx({ state, set, send }: Pick<FxControl, 'set' | 'send'> & { state: fx.Fx }) {
   return (

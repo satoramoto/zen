@@ -14,8 +14,13 @@ import './TransportBar.css';
  *
  * **Changed.** The keys are a library `Group` (unlabelled: the bar names them). Sizes and tones
  * read the contract (the track is the raised layer's tint, the time in the readout face with
- * tabular figures); the side padding is the layout's `--vs-lay-pad`. The audio input is the
- * library port of `SourcePicker`, quiet type at the bar's end.
+ * tabular figures); the side padding is the main column's `--mat-plate-inset`. The audio input
+ * is the library port of `SourcePicker`, quiet type at the bar's end.
+ *
+ * **Tuning knobs** (TransportBar.css):
+ * - `--vs-transport-h` (64px): the bar's height.
+ * - `--vs-transport-small`: the time's and the hint's type, a pixel under the caption.
+ * - `--vs-transport-track-radius` (2px): the track's and its fill's corners.
  *
  * **Kept.** Props, `clock`, `timeHint`, copy, titles, roles (the "transport" region, the
  * progressbar, the timer) and how the time reads; the middle never running under its neighbours.

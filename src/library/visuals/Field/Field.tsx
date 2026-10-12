@@ -51,6 +51,11 @@ const nameOf = (row: LibraryRow) => tileName(row.title, row.path);
  *
  * **Kept.** Its props, the drawing (box, ticks, dots, ring, cursor, playing mark), the pointer
  * and keyboard behaviour, the roles, names and words.
+ *
+ * **Tuning knobs**
+ * - `--vs-field-hair`: the markings' hairline colour.
+ * - `--vs-field-at`: the tip's place across, 0–1 (set inline from the dot).
+ * - `--vs-field-tip-width`: the tip's widest.
  */
 export function Field({ library, mine, subject, playing, intensity, hue, description, onPick }: FieldProps) {
   const dots = useMemo(() => dotsOf(library, mine), [library, mine]);

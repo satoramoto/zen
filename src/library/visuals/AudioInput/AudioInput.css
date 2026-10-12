@@ -8,9 +8,10 @@
 }
 
 @media (max-width: 759px) {
+  /* app.css: from 180px down to 72px. */
   .vs-audio-header .lib-select.vs-audio-source {
-    flex: 0 1 180px;
-    min-width: 72px;
+    flex: 0 1 calc(var(--control-h) * 6);
+    min-width: calc(var(--space-5) * 3);
   }
   .vs-audio-header .vs-audio-source .lib-select__trigger {
     width: 100%;

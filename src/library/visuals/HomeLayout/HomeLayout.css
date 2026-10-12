@@ -13,40 +13,40 @@
    Opaque scope: every layer in it draws solid.
 
    The sizes below are the contract the parts lay themselves out by (InsetSidebar.css, Hero.css,
-   TransportBar.css): a part reads them, never sets them. Nothing here animates: a panel shows or
-   goes at once. */
+   TransportBar.css): a part reads them, never sets them. Each is a step of the scale, equal to the
+   original's px under the roomy scale; the inset is --space-2 (layout.css --lay-inset 8), a row's
+   pill --radius-control (--lay-row-radius 8), the column's padding --mat-plate-inset (--pad 22)
+   and the space between sections --mat-plate-gap (--lay-section-gap 32). Nothing here animates:
+   a panel shows or goes at once. */
 
 .vs-lay,
 .vs-lay-panel {
-  /* The window's corners (stories only: macOS rounds the real one) and the inset sidebar. */
-  --vs-lay-window-radius: 26px;
-  --vs-lay-inset: var(--space-2);
-  --vs-lay-side: 240px;
-  --vs-lay-side-radius: 18px;
-  /* The header row's height: the title bar. */
-  --vs-lay-titlebar: 52px;
+  /* The window's corners (stories only: macOS rounds the real one): 26px. */
+  --vs-lay-window-radius: calc(var(--space-5) + var(--space-1) / 2);
+  /* The inset sidebar: 240px wide, 18px corners. */
+  --vs-lay-side: calc(var(--control-h) * 8);
+  --vs-lay-side-radius: calc(var(--space-3) * 1.5);
+  /* The header row's height: the title bar, 52px. */
+  --vs-lay-titlebar: calc(var(--space-6) + var(--space-4) + var(--space-1));
   /* The band at the sidebar's top for the window buttons (a margin in full screen, below). */
   --vs-lay-band: var(--vs-lay-titlebar);
-  /* Where the window buttons' stand-in sits, and the room a header leaves them when no sidebar is docked (chrome.css --chrome-lights). */
-  --vs-lay-lights-room: 98px;
-  /* A sidebar row, and the selected row's pill. */
-  --vs-lay-row: 40px;
-  --vs-lay-row-radius: var(--radius-control);
-  /* A small key's corners (a glyph button's hover, a rename box). */
-  --vs-lay-key-radius: 6px;
-  /* The main column: its side padding, the hero's corners, the space between sections. */
-  --vs-lay-pad: var(--mat-plate-inset);
-  --vs-lay-hero-radius: 18px;
-  --vs-lay-section-gap: var(--mat-plate-gap);
-  /* The inspector's width: between the sidebar's 240 and the hero's words beside a picture. */
-  --vs-lay-insp: 288px;
+  /* Where the window buttons' stand-in sits, and the room a header leaves them when no sidebar is docked (chrome.css --chrome-lights 98px). */
+  --vs-lay-lights-room: calc(var(--space-6) * 3 + var(--space-1) / 2);
+  /* A sidebar row: 40px. */
+  --vs-lay-row: calc(var(--space-6) + var(--space-2));
+  /* A small key's corners (a glyph button's hover, a rename box): 6px. */
+  --vs-lay-key-radius: calc(var(--space-1) * 1.5);
+  /* The hero's corners: 18px. */
+  --vs-lay-hero-radius: calc(var(--space-3) * 1.5);
+  /* The inspector's width, 288px: between the sidebar's 240 and the hero's words beside a picture. */
+  --vs-lay-insp: calc(var(--space-6) * 9);
   /* The main column is square: macOS rounds the window. */
   --vs-lay-col-radius: 0px;
   /* What stacks above the hero's spread shadow, and the panels laid over the column above that. */
   --vs-lay-z-over-hole: 1;
   --vs-lay-z-overlay: 10;
-  /* A tile of the grid and the space between tiles (fixtures/StoryGrid.tsx reads them). */
-  --lay-tile: 200px;
+  /* A tile of the grid, 200px, and the space between tiles (fixtures/StoryGrid.tsx reads them). */
+  --lay-tile: calc(var(--space-6) * 6 + var(--space-2));
   --lay-tile-gap: var(--space-4);
 }
 
@@ -108,7 +108,7 @@
   border-radius: var(--vs-lay-col-radius);
 }
 .vs-lay .vs-lay-cell > .lib-region__body {
-  padding: var(--vs-lay-inset);
+  padding: var(--space-2);
 }
 .vs-lay .vs-lay-insp-cell.vs-lay-cell--docked > .lib-region__body {
   /* Beside the main column the panel's left inset would double the gap the column's own padding leaves. */
@@ -129,11 +129,11 @@
 }
 .vs-lay .vs-lay-side-cell.vs-lay-cell--overlay {
   left: 0;
-  width: calc(var(--vs-lay-side) + 2 * var(--vs-lay-inset));
+  width: calc(var(--vs-lay-side) + 2 * var(--space-2));
 }
 .vs-lay .vs-lay-insp-cell.vs-lay-cell--overlay {
   right: 0;
-  width: calc(var(--vs-lay-insp) + 2 * var(--vs-lay-inset));
+  width: calc(var(--vs-lay-insp) + 2 * var(--space-2));
 }
 
 /* The inset panels: a raised layer over the window's tint, a hint of glass at the top edge (the
@@ -156,7 +156,7 @@
 }
 /* On its own in a story, with no cell around it: in from the frame's edges, at its width. */
 .vs-lay-panel:not(.vs-lay .vs-lay-panel) {
-  margin: var(--vs-lay-inset);
+  margin: var(--space-2);
   box-sizing: border-box;
 }
 .vs-lay-insp:not(.vs-lay .vs-lay-insp) {
@@ -191,25 +191,26 @@
   overflow-x: hidden;
 }
 
-/* The native window buttons' stand-in (stories only): three 12px dots, 8px apart, where the app
-   puts the real ones (x 24, centred on y 28, over the window whatever shows there). */
+/* The native window buttons' stand-in (stories only): three 12px dots (--space-3), 8px apart,
+   where the app puts the real ones (x 24, centred on y 28: top 22px, over the window whatever
+   shows there). */
 .vs-lay-lights {
   position: absolute;
-  top: 22px;
+  top: calc(var(--space-5) - var(--space-1) / 2);
   left: var(--space-5);
   z-index: calc(var(--vs-lay-z-overlay) + 1);
   display: flex;
   gap: var(--space-2);
   pointer-events: none;
 }
-/* In the sidebar story's own panel, at the panel's corner. */
+/* In the sidebar story's own panel, at the panel's corner (top 18px). */
 .vs-lay-side > .vs-lay-lights {
-  top: 18px;
+  top: calc(var(--space-3) * 1.5);
   left: var(--space-4);
 }
 .vs-lay-lights i {
-  width: 12px;
-  height: 12px;
+  width: var(--space-3);
+  height: var(--space-3);
   border-radius: var(--radius-pill);
   background: color-mix(in oklab, var(--text-1) 18%, transparent);
 }
@@ -249,7 +250,7 @@
 .vs-lay .vs-lay-hero {
   grid-area: hero;
   min-width: 0;
-  padding: var(--space-1) var(--vs-lay-pad) 0;
+  padding: var(--space-1) var(--mat-plate-inset) 0;
 }
 /* What is in it (a story's sections) is spaced apart, no lines, and scrolls here; a column of
    blocks keeps a long section title from widening the column. */
@@ -257,11 +258,11 @@
   grid-area: main;
   display: flex;
   flex-direction: column;
-  gap: var(--vs-lay-section-gap);
+  gap: var(--mat-plate-gap);
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  padding: var(--vs-lay-section-gap) var(--vs-lay-pad);
+  padding: var(--mat-plate-gap) var(--mat-plate-inset);
 }
 .vs-lay .vs-lay-main > * {
   flex: none;

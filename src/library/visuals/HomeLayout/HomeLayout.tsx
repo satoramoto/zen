@@ -38,6 +38,24 @@ import './HomeLayout.css';
  * each docked side panel's cell paints the window's surface around its panel, and the main column
  * is painted by the picture's own spread shadow (Hero.css), the grid and bar sitting above it with
  * no background of their own.
+ *
+ * **Tuning knobs** (HomeLayout.css, on `.vs-lay` and `.vs-lay-panel`; Hero, InsetSidebar and
+ * TransportBar read them, never set them). Each is a scale expression equal to the original's
+ * px under the roomy scale: `--vs-lay-*`:
+ * - `--vs-lay-window-radius` (26px): the window's corners, stories only.
+ * - `--vs-lay-side` (240px), `--vs-lay-side-radius` (18px): the inset sidebar's width and corners.
+ * - `--vs-lay-titlebar` (52px): the header row; `--vs-lay-band` the sidebar's top band (the
+ *   title bar's height, a margin in full screen).
+ * - `--vs-lay-lights-room` (98px): the room a header leaves the window buttons.
+ * - `--vs-lay-row` (40px): a sidebar row.
+ * - `--vs-lay-key-radius` (6px): a small key's corners.
+ * - `--vs-lay-hero-radius` (18px): the hero's corners.
+ * - `--vs-lay-insp` (288px): the inspector's width.
+ * - `--vs-lay-col-radius` (0): the main column's corners.
+ * - `--vs-lay-z-over-hole`, `--vs-lay-z-overlay`: what stacks over the hero's shadow, and the
+ *   panels laid over the column.
+ * - `--vs-lay-col-h`: the main column's height, measured (`useColumnHeight`).
+ * Also `--lay-tile` (200px) and `--lay-tile-gap` (`--space-4`), the stories' grid.
  */
 export interface HomeLayoutProps {
   /** The sidebar's content (`InsetSidebar`), inside the inset panel, a `nav`. */
@@ -205,8 +223,8 @@ function useColumnHeight(col: RefObject<HTMLElement | null>) {
 }
 
 /** The sidebar's column docked, and the inspector's (the panel's left inset is the column's own padding). */
-const SIDE_COLUMN = 'calc(var(--vs-lay-side) + 2 * var(--vs-lay-inset))';
-const INSP_COLUMN = 'calc(var(--vs-lay-insp) + var(--vs-lay-inset))';
+const SIDE_COLUMN = 'calc(var(--vs-lay-side) + 2 * var(--space-2))';
+const INSP_COLUMN = 'calc(var(--vs-lay-insp) + var(--space-2))';
 
 /** The window: the sidebar, the main column and the inspector, each shown as its mode says. */
 export function HomeLayout({

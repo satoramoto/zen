@@ -6,11 +6,11 @@
    apart by space alone. The panel is a raised tint, so the caption here is the raised one
    (visuals.css --vs-caption-raised). Contract variables and visuals.css tokens only. */
 
+/* The original's 14px 20px 24px. */
 .vs-inspector {
-  --vs-inspector-pad: 20px;
   display: flex;
   flex-direction: column;
-  padding: 14px var(--vs-inspector-pad) 24px;
+  padding: calc(var(--space-1) * 3.5) calc(var(--space-2) * 2.5) var(--space-5);
   color: var(--text-2);
   font-size: var(--size-body);
 }
@@ -20,8 +20,9 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  min-height: 28px;
-  margin: -4px -6px 10px -6px;
+  /* The original's 28px row, pulled out 4px up and 6px either side, 10px over the name. */
+  min-height: calc(var(--space-1) * 7);
+  margin: calc(var(--space-1) * -1) calc(var(--space-1) * -1.5) calc(var(--space-1) * 2.5);
 }
 .vs-inspector-keys + .vs-inspector-close {
   margin-left: var(--space-1);
@@ -29,8 +30,9 @@
 .vs-inspector-close {
   display: inline-grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  /* The original's 26px. */
+  width: calc(var(--space-1) * 6.5);
+  height: calc(var(--space-1) * 6.5);
   margin-left: auto;
   padding: 0;
   border: 0;
@@ -45,7 +47,7 @@
 
 /* Something that failed: one line under the rest, in the caution colour, no box. */
 .vs-inspector-error {
-  margin: 16px 0 0;
+  margin: var(--space-4) 0 0;
   color: var(--warning);
   font-size: var(--size-caption);
   line-height: 1.45;
@@ -57,7 +59,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
-  margin-top: 22px;
+  /* The original's 22px, as the field's: the plate's inset. */
+  margin-top: var(--mat-plate-inset);
   border-radius: var(--radius-control);
   overflow: hidden;
 }
@@ -74,13 +77,14 @@
 }
 .vs-inspector-pictures-more {
   position: absolute;
-  right: 6px;
-  bottom: 4px;
-  padding: 1px 6px;
+  /* The original's 6px in, 4px up, 1px 6px padding; its 11px on the label step (12). */
+  right: calc(var(--space-1) * 1.5);
+  bottom: var(--space-1);
+  padding: 1px calc(var(--space-1) * 1.5);
   border-radius: var(--radius-control);
   background: color-mix(in oklab, var(--key-black) 60%, transparent);
   color: var(--key-white);
-  font-size: 11px;
+  font-size: var(--vs-text-label);
   font-weight: var(--weight-strong);
   font-variant-numeric: tabular-nums;
 }
@@ -89,8 +93,9 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  height: 26px;
-  padding: 0 6px 0 2px;
+  /* The original's 26px, padded 6px after and 2px before. */
+  height: calc(var(--space-1) * 6.5);
+  padding: 0 calc(var(--space-1) * 1.5) 0 2px;
   border: 0;
   border-radius: var(--radius-control);
   background: none;
@@ -108,10 +113,11 @@
 }
 
 /* Nothing playing: the words say so in the name's place, and the field under them draws the library alone. */
+/* The original's 17px, on the sheet-title step (16.5). */
 .vs-inspector-none-title {
-  margin: 0 0 6px;
+  margin: 0 0 calc(var(--space-1) * 1.5);
   color: var(--text-1);
-  font-size: 17px;
+  font-size: var(--vs-text-heading);
   font-weight: var(--weight-strong);
 }
 .vs-inspector-quiet {
@@ -128,11 +134,12 @@
 .vs-inspector-top + .vs-inspector-head {
   margin-top: 0;
 }
+/* The original's 3px dot, on the nearest step (4). */
 .vs-inspector-sep {
   display: inline-block;
-  width: 3px;
-  height: 3px;
-  margin: 0 8px;
+  width: var(--space-1);
+  height: var(--space-1);
+  margin: 0 var(--space-2);
   border-radius: var(--radius-pill);
   background: currentColor;
   opacity: 0.6;
@@ -142,7 +149,8 @@
   margin: 0;
   color: var(--text-1);
   font-family: var(--font-display);
-  font-size: 22px;
+  /* The original's 22px: the heading step and a tenth. */
+  font-size: calc(var(--size-heading) * 1.1);
   font-weight: var(--weight-strong);
   letter-spacing: var(--tracking-display);
   line-height: 1.2;
@@ -163,19 +171,21 @@
 }
 
 /* The facts: the style, the readout (the measures as words, the colours as dots) and my tags. */
+/* The original's 18px. */
 .vs-inspector-meta {
-  margin-top: 18px;
+  margin-top: calc(var(--space-3) * 1.5);
 }
 .vs-inspector-meta > .lib-group__body {
   gap: 0;
 }
+/* The original's 6px under it; its 11px on the label step (12). */
 .vs-inspector-style {
-  margin: 0 0 6px;
+  margin: 0 0 calc(var(--space-1) * 1.5);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--vs-caption-raised);
-  font-size: 11px;
+  font-size: var(--vs-text-label);
   font-weight: 500;
   letter-spacing: 0.02em;
 }
@@ -185,31 +195,35 @@
   align-items: center;
   margin: 0;
   color: var(--text-1);
-  font-size: 15px;
+  /* The original's 15px: three quarters of the heading step. */
+  font-size: calc(var(--size-heading) * 0.75);
   font-weight: 500;
 }
 .vs-inspector-words > span {
   display: inline-flex;
   align-items: center;
 }
+/* The original's 9px either side of the words' dots, on the nearest step (10). */
 .vs-inspector-words .vs-inspector-sep {
-  margin: 0 9px;
+  margin: 0 calc(var(--space-1) * 2.5);
 }
+/* The original's 10px gap, 8px above. */
 .vs-inspector-hues {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 8px 0 0;
+  gap: calc(var(--space-1) * 2.5);
+  margin: var(--space-2) 0 0;
   color: var(--vs-caption-raised);
   font-size: var(--size-caption);
 }
+/* The original's 9px dots 5px apart, on the nearest steps (10 and 4: the same 14px pitch). */
 .vs-inspector-swatches {
   display: inline-flex;
-  gap: 5px;
+  gap: var(--space-1);
 }
 .vs-inspector-swatch {
-  width: 9px;
-  height: 9px;
+  width: calc(var(--space-1) * 2.5);
+  height: calc(var(--space-1) * 2.5);
   border-radius: var(--radius-pill);
 }
 .vs-inspector-swatch[data-grey] {
@@ -230,8 +244,9 @@
 .vs-inspector-keys .vs-inspector-key > .vs-popover-button {
   display: inline-grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  /* The original's 28px keys. */
+  width: calc(var(--space-1) * 7);
+  height: calc(var(--space-1) * 7);
   padding: 0;
   border: 0;
   border-radius: var(--radius-control);
@@ -264,13 +279,15 @@
 }
 
 /* My tags (TagEditor), the last of the facts. */
+/* The original's 14px. */
 .vs-inspector-mine {
-  margin-top: 14px;
+  margin-top: calc(var(--space-1) * 3.5);
 }
 .vs-inspector-meta > .lib-group__body > .vs-inspector-mine:first-child {
   margin-top: 0;
 }
 /* The playlists holding it: a quiet line, last. */
+/* The original's 20px. */
 .vs-inspector-in {
-  margin-top: 20px;
+  margin-top: calc(var(--space-2) * 2.5);
 }

@@ -11,10 +11,10 @@
    card takes the raised caption. */
 
 .vs-hero {
-  --vs-hero-caption: var(--vs-caption-raised);
   /* The picture's tallest: about two fifths of the window's height, never under 160px or over 440px, so the grid under it keeps its room. */
-  --vs-hero-cap: clamp(160px, 38vh, 440px);
-  --vs-hero-name-size: 24px;
+  --vs-hero-cap: clamp(calc(var(--space-6) * 5), 38vh, calc(var(--space-6) * 14 - var(--space-2)));
+  /* The name: 24px, a fifth over the heading. */
+  --vs-hero-name-size: calc(var(--size-heading) * 1.2);
   container: vs-hero / inline-size;
   font-family: var(--font-sans);
 }
@@ -60,7 +60,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  color: var(--vs-hero-caption);
+  color: var(--vs-caption-raised);
   font-size: var(--vs-text-label);
   user-select: none;
 }
@@ -72,7 +72,7 @@
   padding-top: var(--space-4);
 }
 .vs-hero .vs-hero-label {
-  margin: 0 0 6px;
+  margin: 0 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--text-4);
   font-size: calc(var(--size-caption) - 1px);
   font-weight: var(--weight-body);
@@ -93,7 +93,7 @@
   overflow-wrap: anywhere;
 }
 .vs-hero .vs-hero-name[data-none] {
-  color: var(--vs-hero-caption);
+  color: var(--vs-caption-raised);
   font-weight: var(--weight-body);
 }
 .vs-hero .vs-hero-by,
@@ -102,7 +102,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: var(--vs-hero-caption);
+  color: var(--vs-caption-raised);
   font-size: var(--vs-text-body);
 }
 .vs-hero .vs-hero-by {
@@ -113,19 +113,20 @@
   word-spacing: var(--vs-sep-space);
 }
 
-/* The actions: type keys with a glyph, no boxes. */
+/* The actions: type keys with a glyph, no boxes. 14px above, 6px out to the left (the keys' own
+   padding), 18px between keys; a key 32px tall, its glyph 8px from its word (7px before). */
 .vs-hero .vs-hero-actions {
-  margin: 14px 0 0 -6px;
+  margin: calc(var(--space-3) + var(--space-1) / 2) 0 0 calc(var(--space-1) * -1.5);
 }
 .vs-hero .vs-hero-actions > .lib-group__body {
-  gap: var(--space-1) 18px;
+  gap: var(--space-1) calc(var(--space-3) * 1.5);
 }
 .vs-hero .vs-hero-act {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  height: 32px;
-  padding: 0 6px;
+  gap: var(--space-2);
+  height: var(--space-6);
+  padding: 0 calc(var(--space-1) * 1.5);
   border: 0;
   border-radius: var(--vs-lay-key-radius);
   background: none;
@@ -143,7 +144,7 @@
   fill: currentColor;
 }
 .vs-hero .vs-hero-act:disabled {
-  color: var(--vs-hero-caption);
+  color: var(--vs-caption-raised);
   cursor: default;
   opacity: 0.6;
 }
@@ -156,12 +157,12 @@
   font-size: calc(var(--vs-text-body) + 1px);
 }
 
-/* A wide card: the picture on the left up to its cap, the words beside it, along its foot. From
-   680px, so the pinned hero stays short beside a docked inspector too. */
+/* A wide card: the picture on the left up to its cap, the words beside it (at least 240px), along
+   its foot. From 680px, so the pinned hero stays short beside a docked inspector too. */
 @container vs-hero (min-width: 680px) {
   .vs-hero:not([data-only]) .vs-hero-row {
     display: grid;
-    grid-template-columns: minmax(0, calc(var(--vs-hero-cap) * 16 / 9)) minmax(240px, 1fr);
+    grid-template-columns: minmax(0, calc(var(--vs-hero-cap) * 16 / 9)) minmax(calc(var(--control-h) * 8), 1fr);
     align-items: end;
     column-gap: var(--space-6);
   }

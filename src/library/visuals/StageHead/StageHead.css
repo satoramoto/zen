@@ -4,15 +4,15 @@
    (the picture is a native view a blur never reaches). The space between the capsules is the
    picture's and the title bar's: a drag there moves the window.
 
-   Local variables:
-     --vs-stagehead-cap-h       the capsules' 36px, centred on the window buttons' line (y 28)
-     --vs-stagehead-cap-radius  their 12px corners
-     --vs-stagehead-offer-radius  the offer's 18px corners */
+   The tuning knobs (--vs-stagehead-*) are listed in StageHead.tsx. */
 
 .vs-stagehead {
-  --vs-stagehead-cap-h: 36px;
-  --vs-stagehead-cap-radius: 12px;
-  --vs-stagehead-offer-radius: 18px;
+  /* The capsules' 36px, centred on the window buttons' line (y 28). */
+  --vs-stagehead-cap-h: calc(var(--space-6) + var(--space-1));
+  /* Their 12px corners. */
+  --vs-stagehead-cap-radius: var(--space-3);
+  /* The offer's 18px corners (the inset panels'). */
+  --vs-stagehead-offer-radius: calc(var(--space-3) * 1.5);
   display: flex;
   flex: 1;
   align-items: flex-start;
@@ -20,9 +20,10 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 52px;
-  /* The capsules, 36px tall, centred on y 28; the shell's row already keeps 8px at the right. */
-  padding: 10px var(--space-1) 0 var(--space-3);
+  /* The title bar's 52px. */
+  height: calc(var(--space-5) * 2 + var(--space-1));
+  /* The capsules, 36px tall, centred on y 28 (10px down); the shell's row already keeps 8px at the right. */
+  padding: calc(var(--space-2) + var(--space-1) / 2) var(--space-1) 0 var(--space-3);
   font-family: var(--font-sans);
   color: var(--text-2);
   user-select: none;
@@ -42,10 +43,10 @@
   gap: var(--space-1);
   min-width: 0;
   height: var(--vs-stagehead-cap-h);
-  padding: 0 6px;
+  padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   box-sizing: border-box;
   border-radius: var(--vs-stagehead-cap-radius);
-  box-shadow: var(--layer-base-edge), var(--vs-lift);
+  box-shadow: var(--layer-base-edge), var(--layer-float-cast);
 }
 .vs-stagehead .lib-layer.vs-stagehead-cap-trail {
   flex: 0 1 auto;
@@ -79,19 +80,20 @@
 .vs-stagehead-light-sub {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: var(--space-1); /* 3px, rounded to the step */
   color: var(--text-3);
 }
 .vs-stagehead-light-text {
-  max-width: 180px;
+  max-width: calc(var(--control-h) * 6); /* 180px */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .vs-stagehead-beat-dot {
   flex: none;
-  width: 7px;
-  height: 7px;
+  /* 7px, rounded to the step */
+  width: var(--space-2);
+  height: var(--space-2);
   border-radius: var(--radius-pill);
   background: var(--surface-3);
 }
@@ -102,16 +104,16 @@
 /* The frame rate, only while it is low, and the skipped note, quiet; one line, cut short, its
    tooltip whole. Fading, the note goes at once (nothing animates). */
 .vs-stagehead-fps {
-  padding: 0 6px;
+  padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--warning);
   font-size: var(--size-caption);
   white-space: nowrap;
 }
 .vs-stagehead-skipped {
   min-width: 0;
-  max-width: 260px;
+  max-width: calc(var(--space-6) * 8 + var(--space-1)); /* 260px */
   overflow: hidden;
-  padding: 0 6px;
+  padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--text-4);
   font-size: var(--size-caption);
   white-space: nowrap;
@@ -130,7 +132,7 @@
   --text-3: var(--vs-caption-raised);
   display: grid;
   gap: var(--space-3);
-  min-width: 280px;
+  min-width: calc(var(--space-6) * 8 + var(--space-5)); /* 280px */
   padding: var(--space-2);
   font-size: var(--size-body);
 }
@@ -142,35 +144,35 @@
 /* A narrow window: the words shorten so both capsules keep to one line. */
 @media (max-width: 900px) {
   .vs-stagehead-light-text {
-    max-width: 110px;
+    max-width: calc(var(--control-h) * 3 + var(--space-4) + var(--space-1)); /* 110px */
   }
   .vs-stagehead-skipped {
-    max-width: 120px;
+    max-width: calc(var(--control-h) * 4); /* 120px */
   }
 }
 
 /* "Go full screen on…": a capsule over the picture while it plays in the window; the shell places it. */
 .vs-stagehead-offer {
   display: flex;
-  max-width: 560px;
+  max-width: calc(var(--space-6) * 18 - var(--space-4)); /* 560px */
   min-width: 0;
 }
 .vs-stagehead-offer .lib-layer.vs-stagehead-offer-face {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2) 14px;
+  gap: var(--space-2) calc((var(--space-3) + var(--space-4)) / 2); /* 8px 14px */
   min-width: 0;
   padding: var(--space-2);
   box-sizing: border-box;
   border-radius: var(--vs-stagehead-offer-radius);
-  box-shadow: var(--layer-base-edge), var(--vs-lift);
+  box-shadow: var(--layer-base-edge), var(--layer-float-cast);
   font-family: var(--font-sans);
   color: var(--text-2);
 }
 .vs-stagehead-offer .vs-stagehead-offer-go {
   gap: var(--space-2);
-  padding: 0 14px;
+  padding: 0 calc((var(--space-3) + var(--space-4)) / 2); /* 14px */
   border-radius: var(--radius-pill);
   color: var(--text-2);
   font-weight: var(--weight-body);

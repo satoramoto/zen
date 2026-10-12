@@ -9,7 +9,8 @@
   justify-content: space-between;
   gap: var(--space-4);
   width: 100%;
-  min-height: 48px;
+  /* stage-head.css's 48px line. */
+  min-height: calc(var(--space-5) * 2);
   height: auto;
   padding: var(--space-3) var(--space-4);
   border: 0;
@@ -42,7 +43,8 @@
   font-weight: var(--weight-body);
 }
 .vs-status-tap b {
-  margin-inline-end: 3px;
+  /* stage-head.css's 3px, on the nearest step. */
+  margin-inline-end: var(--space-1);
   color: var(--text-1);
   font-family: var(--font-readout);
   font-size: var(--size-heading);
@@ -52,8 +54,9 @@
 .vs-status-tap kbd {
   display: inline-grid;
   place-items: center;
-  min-width: 20px;
-  height: 20px;
+  /* stage-head.css's 20px key. */
+  min-width: calc(var(--space-2) * 2.5);
+  height: calc(var(--space-2) * 2.5);
   padding: 0 var(--space-1);
   border-radius: var(--radius-control);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--text-1) 24%, transparent);
@@ -67,8 +70,8 @@
 .vs-status-beat {
   display: inline-block;
   flex: none;
-  width: 8px;
-  height: 8px;
+  width: var(--space-2);
+  height: var(--space-2);
   border-radius: var(--radius-pill);
   background: var(--text-4);
 }

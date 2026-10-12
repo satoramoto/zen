@@ -290,6 +290,13 @@ interface Props {
  *
  * **Kept.** Every export, the behaviour, the keyboard walk, the drag, the folds kept in
  * `visuals.live.crate.folds`, every accessible name and all copy.
+ *
+ * **Tuning knobs** (Crate.css):
+ * - `--vs-crate-row`: a row's 40px (layout.css `--lay-row`).
+ * - `--vs-crate-inset`: the rows' and headings' 10px side inset.
+ * - `--vs-crate-small`: the 11px of headings, notes and counts.
+ * - `--vs-crate-hover`, `--vs-crate-cued`, `--vs-crate-on`, `--vs-crate-key`, `--vs-crate-key-hover`:
+ *   the pills, the ink mixed thin over the panel (4, 6, 9, 12 and 18%).
  */
 export function Crate({ lists, data, act, onLists, onError, current }: Props) {
   const { playlists, deck } = lists;
