@@ -1,5 +1,6 @@
 import type { Decorator } from '@storybook/react-vite';
-import { FROM_THEME, ThemeScope, resolveTheme, type ModeChoice } from './theme';
+import type { ReactNode } from 'react';
+import { FROM_THEME, ThemeScope, resolveTheme, useSystemMode, type ModeChoice } from './theme';
 import { packs } from './themes/packs';
 import { palettes } from './themes/palettes';
 import { faces } from './themes/faces';
@@ -50,11 +51,24 @@ export const libraryInitialGlobals = {
   materials: FROM_THEME,
 };
 
+/** A translucent ground needs something behind it: the pack's stand-in desktop, per mode. */
+function Desktop({ desktop, mode, children }: { desktop?: { light: string; dark: string }; mode: ModeChoice; children: ReactNode }) {
+  const system = useSystemMode();
+  if (!desktop) return <>{children}</>;
+  const resolved = mode === 'system' ? system : mode;
+  return <div style={{ background: desktop[resolved], minHeight: '100vh' }}>{children}</div>;
+}
+
 export const withLibraryTheme: Decorator = (Story, context) => {
-  const { facets } = resolveTheme(context.globals);
+  const { pack, facets } = resolveTheme(context.globals);
+  const mode = (context.globals.mode as ModeChoice) ?? 'system';
+  // A palette swapped in from another pack keeps this pack's desktop only if the pack's own palette is worn.
+  const desktop = facets.palette === pack.facets.palette ? pack.desktop : undefined;
   return (
-    <ThemeScope facets={facets} mode={(context.globals.mode as ModeChoice) ?? 'system'}>
-      <Story />
-    </ThemeScope>
+    <Desktop desktop={desktop} mode={mode}>
+      <ThemeScope facets={facets} mode={mode}>
+        <Story />
+      </ThemeScope>
+    </Desktop>
   );
 };

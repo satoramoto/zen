@@ -85,4 +85,24 @@ const linear: Faces = {
   labelCase: 'none',
 };
 
-export const faces: Faces[] = [push, classic, elektron, ableton, linear];
+// visual[flow] 1.0 (openflowfm/visuals app/src/app.css, decision 69): one humane sans for UI,
+// titles and numbers, Instrument Sans (wdth 75–100, wght 400–700). Numbers take tabular figures
+// (`font-variant-numeric: tabular-nums`) rather than a monospace; the mono is only for code.
+const instrument: Faces = {
+  id: 'instrument',
+  label: 'visual[flow] (Instrument Sans)',
+  sans: "'Instrument Sans', system-ui, -apple-system, sans-serif", // app.css --sans
+  display: "'Instrument Sans', system-ui, -apple-system, sans-serif", // home.css --font-display
+  // app.css --code is Recursive (MONO 1); added: a system mono here, so no second webfont loads
+  mono: "ui-monospace, 'SF Mono', Menlo, monospace",
+  readout: "'Instrument Sans', system-ui, -apple-system, sans-serif", // home.css --font-num, tabular-nums
+  weightBody: 400,
+  weightStrong: 600, // home.css: titles and the chosen row
+  weightDisplay: 650, // app.css .vf-mark
+  weightNumeral: 400, // added: counts sit in the text's weight
+  tracking: '0em',
+  trackingDisplay: '-0.015em', // app.css .vf-mark
+  labelCase: 'none', // decision 68: labels in sentence case ("Now playing")
+};
+
+export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument];

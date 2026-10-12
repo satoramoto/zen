@@ -337,4 +337,78 @@ export const classic: Palette = {
   },
 };
 
-export const palettes: Palette[] = [push, elektron, ableton, linear, classic];
+// Frost: visual[flow] 1.0 (openflowfm/visuals). The window is transparent over macOS's HUD frost,
+// so the surfaces are home.css's faint tints over it, not colours; the ink and roles come from
+// the widgets' palette (@openflow/widgets palette.css, theme.ts "Current favorite"). Its stem
+// pastels sit too close to one another and to the neutral primary for the 0.12 rule, so each is
+// pushed in chroma along its own hue; the comments say which.
+export const frost: Palette = {
+  id: 'frost',
+  label: 'visual[flow] Frost',
+  dark: {
+    // home.css: the window, the now playing panel (a faint step), raised, a field or pressed key
+    surface: ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.04)', 'rgba(255, 255, 255, 0.035)', 'rgba(255, 255, 255, 0.05)'],
+    // --fg, --ui, home.css --caption (4.5:1 over the lightest HUD, contrast.test.ts), --caption (palette.css)
+    text: ['#ececed', '#b7b7be', '#a4a4ac', '#5e5e66'],
+    border: 'rgba(255, 255, 255, 0.07)', // home.css --glass-edge: near borderless, a hint not a line
+    borderStrong: '#4a4a52', // --focus
+    action: '#b3b6bc', // --primary: theme.ts "Current favorite" hsl(220 6% 72%)
+    actionText: '#000000', // --on-primary (primary l ≥ 55)
+    selected: '#ececed', // added: --fg, the chosen row's ink, as a solid block
+    selectedText: '#0a0a0b', // --bg
+    accent: '#b3b6bc', // --primary: home.css --line-active, the active control's underline
+    success: '#51cd85', // --signal hsl(145 55% 56%): measured output stays green (home.css --playing is green)
+    warning: '#f0b23c', // --caution
+    danger: '#e0483f', // added: --danger #d4544f, reddened off Left's rose
+    successText: '#000000', // added
+    warningText: '#000000', // added
+    dangerText: '#000000', // added: 5.2:1
+    // Stems drums, bass, other, vocals (theme.ts), each more saturated along its hue, off the
+    // neutral primary and off each other: #61b9d6, #888fdd, #bc83d8, #da7ca3.
+    hues: ['#36b8ec', '#7c86ff', '#c86ef0', '#f2659f'],
+    onHue: '#000000', // added
+    roles: [
+      '#c6e34a', // the left decks' green hsl(123 51% 62%), yellowed off the signal green
+      '#3ff4ff', // the right decks' cyan hsl(192 87% 62%), brightened off Right 1 (drums)
+    ],
+    roleText: ['#000000', '#000000'], // added
+    bloom: '0px', // nothing glows: lines are the selection, focus and playing marks only
+    keys: {
+      white: '#d9d9dc', // added
+      black: '#111113', // --panel
+    },
+  },
+  // Added: visual[flow] is dark only (the HUD material is dark). Its tints turned to white over a
+  // light frost, its inks turned over, each role deepened along its hue for white ink.
+  light: {
+    surface: ['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.28)', 'rgba(255, 255, 255, 0.45)', 'rgba(255, 255, 255, 0.6)'], // added
+    text: ['#141416', '#3a3a41', '#56565e', '#8b8b93'], // added: --bg-ish ink; caption 5.8:1 over a #e6e6e6 frost; --detail faint
+    border: 'rgba(0, 0, 0, 0.08)', // added
+    borderStrong: '#a4a4ac', // added
+    action: '#55595f', // added: --primary deepened
+    actionText: '#ffffff', // added
+    selected: '#141416', // added
+    selectedText: '#f4f4f5', // added
+    accent: '#55595f', // added: --primary deepened
+    success: '#0b7a3a', // added: --signal deepened
+    warning: '#a86400', // added: --caution deepened for white ink
+    danger: '#c42a22', // added: --danger deepened
+    successText: '#ffffff', // added
+    warningText: '#ffffff', // added: 4.7:1
+    dangerText: '#ffffff', // added
+    hues: ['#0080d0', '#5a48f0', '#a43fd0', '#d0187f'], // added: the dark stems deepened
+    onHue: '#ffffff', // added
+    roles: [
+      '#6f9a00', // added: the left decks' green deepened
+      '#00a6b8', // added: the right decks' cyan deepened
+    ],
+    roleText: ['#000000', '#000000'], // added: 6.3:1 and 7.2:1
+    bloom: '0px',
+    keys: {
+      white: '#fbfbfc', // added
+      black: '#18181a', // stage.css --surface-corner
+    },
+  },
+};
+
+export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost];

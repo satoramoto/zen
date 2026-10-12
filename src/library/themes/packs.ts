@@ -12,6 +12,9 @@ export interface ThemePack {
   /** Rules from the source that the facets must keep. */
   keep: string[];
   facets: Facets;
+  /** What stands behind a translucent ground in Storybook, in place of the real desktop the app
+   *  composites over (a CSS background per mode). Omit for an opaque ground. */
+  desktop?: { light: string; dark: string };
 }
 
 function byId<T extends { id: string }>(list: readonly T[], id: string, kind: string): T {
@@ -63,6 +66,27 @@ export const packs: ThemePack[] = [
     northStar: 'Push: black ground, no boxes, hairline headers, lit lamps.',
     keep: ['Selection is a solid block with dark text.', 'Lamps are 2px bars with bloom.', 'Inputs are an underline with a caret.'],
     facets: facets('push', 'push', 'compact', 'push'),
+  },
+  {
+    id: 'visuals',
+    label: 'visual[flow] (glass)',
+    source: { name: 'openflowfm/visuals 1.0', url: 'https://github.com/openflowfm/visuals' },
+    northStar: 'An instrument under frosted glass: the desktop blurred through, areas parted by space and tone, controls set as type.',
+    // added: a stand-in for macOS HUD frost over a wallpaper, so the glass has something to blur
+    desktop: {
+      dark: 'radial-gradient(120% 90% at 15% 10%, #3a3f4a 0%, transparent 55%), radial-gradient(90% 80% at 85% 90%, #2c2a33 0%, transparent 60%), #262628',
+      light: 'radial-gradient(120% 90% at 15% 10%, #e8ebf2 0%, transparent 55%), radial-gradient(90% 80% at 85% 90%, #ece6ef 0%, transparent 60%), #dedede',
+    },
+    keep: [
+      'Native HUD frost behind a transparent window; the page paints only faint tints over it (decision 69).',
+      'Glass (blur 28px, saturate 1.6, a lit top edge, a lift shadow) only on what floats.',
+      'Near borderless: areas told apart by space and tone; the only lines are the selection ring, the focus ring and the playing mark (decision 68).',
+      'Controls are type; the active one is underlined in the primary.',
+      'Never translucency over the native preview: panels there are opaque (stage.css).',
+      'Nothing animates: a panel shows or goes at once.',
+      'Instrument Sans everywhere, numbers in tabular figures; captions at 4.5:1 or better.',
+    ],
+    facets: facets('frost', 'instrument', 'roomy', 'frost'),
   },
   {
     id: 'elektron',
