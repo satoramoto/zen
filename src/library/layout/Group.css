@@ -24,11 +24,4 @@
   text-transform: var(--label-case);
   white-space: nowrap;
 }
-.lib-group__body {
-  display: flex;
-  gap: var(--space-2);
-  min-width: 0;
-  min-height: 0;
-}
-.lib-group__body[data-direction='column'] { flex-direction: column; }
-.lib-group__body[data-wrap] { flex-wrap: wrap; }
+/* The body is a Stack (Stack.css): its flow, gap step, alignment and min sizes live there. */
