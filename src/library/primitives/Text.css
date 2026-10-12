@@ -5,7 +5,8 @@
    element (`.yh-x__label { --text-size: … }`, or any font property) wins without !important.
 
    Two kinds of variable:
-   - --lib-text-* are the role's values, set by data-role / data-leading / data-weight / data-size.
+   - --lib-text-* are the role's values, set by data-role and data-text-leading / -size / -weight /
+     -case (namespaced, so a control root's own data-size never collides).
    - --text-* are the component's knobs. Each is reset to `initial` on every Text, so a knob set on
      an ancestor never leaks into a nested Text: set it on the Text element itself (its class).
      A knob that is set wins over the role; unset, the role value is used. */
@@ -67,32 +68,32 @@
 }
 
 /* Leading: the line height, over the role's. */
-:where(.lib-text[data-leading='tight']) { --lib-text-leading: 1; }
-:where(.lib-text[data-leading='snug']) { --lib-text-leading: 1.15; }
-:where(.lib-text[data-leading='normal']) { --lib-text-leading: normal; }
-:where(.lib-text[data-leading='none']) { --lib-text-leading: 0; }
+:where(.lib-text[data-text-leading='tight']) { --lib-text-leading: 1; }
+:where(.lib-text[data-text-leading='snug']) { --lib-text-leading: 1.15; }
+:where(.lib-text[data-text-leading='normal']) { --lib-text-leading: normal; }
+:where(.lib-text[data-text-leading='none']) { --lib-text-leading: 0; }
 
 /* Size: another role's size on this role's face. */
-:where(.lib-text[data-size='display']) { --lib-text-size: var(--size-display); }
-:where(.lib-text[data-size='numeral']) { --lib-text-size: var(--size-numeral); }
-:where(.lib-text[data-size='heading']) { --lib-text-size: var(--size-heading); }
-:where(.lib-text[data-size='body']),
-:where(.lib-text[data-size='code']) { --lib-text-size: var(--size-body); }
-:where(.lib-text[data-size='label']) { --lib-text-size: var(--size-label); }
-:where(.lib-text[data-size='caption']) { --lib-text-size: var(--size-caption); }
+:where(.lib-text[data-text-size='display']) { --lib-text-size: var(--size-display); }
+:where(.lib-text[data-text-size='numeral']) { --lib-text-size: var(--size-numeral); }
+:where(.lib-text[data-text-size='heading']) { --lib-text-size: var(--size-heading); }
+:where(.lib-text[data-text-size='body']),
+:where(.lib-text[data-text-size='code']) { --lib-text-size: var(--size-body); }
+:where(.lib-text[data-text-size='label']) { --lib-text-size: var(--size-label); }
+:where(.lib-text[data-text-size='caption']) { --lib-text-size: var(--size-caption); }
 /* `inherit`: the parent's size (an inline run inside other text). */
-:where(.lib-text[data-size='inherit']) { --lib-text-size: 1em; }
+:where(.lib-text[data-text-size='inherit']) { --lib-text-size: 1em; }
 
 /* Weight: one of the contract's four. */
-:where(.lib-text[data-weight='body']) { --lib-text-weight: var(--weight-body); }
-:where(.lib-text[data-weight='strong']) { --lib-text-weight: var(--weight-strong); }
-:where(.lib-text[data-weight='display']) { --lib-text-weight: var(--weight-display); }
-:where(.lib-text[data-weight='numeral']) { --lib-text-weight: var(--weight-numeral); }
+:where(.lib-text[data-text-weight='body']) { --lib-text-weight: var(--weight-body); }
+:where(.lib-text[data-text-weight='strong']) { --lib-text-weight: var(--weight-strong); }
+:where(.lib-text[data-text-weight='display']) { --lib-text-weight: var(--weight-display); }
+:where(.lib-text[data-text-weight='numeral']) { --lib-text-weight: var(--weight-numeral); }
 
 /* Case. */
-:where(.lib-text[data-case='upper']) { text-transform: uppercase; }
-:where(.lib-text[data-case='label']) { text-transform: var(--label-case); }
-:where(.lib-text[data-case='none']) { text-transform: none; }
+:where(.lib-text[data-text-case='upper']) { text-transform: uppercase; }
+:where(.lib-text[data-text-case='label']) { text-transform: var(--label-case); }
+:where(.lib-text[data-text-case='none']) { text-transform: none; }
 
 :where(.lib-text[data-tabular]) { font-variant-numeric: tabular-nums; }
 :where(.lib-text[data-tabular='false']) { font-variant-numeric: normal; }

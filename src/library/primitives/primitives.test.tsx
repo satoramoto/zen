@@ -64,10 +64,10 @@ describe('Text', () => {
     expect(el.tagName).toBe('BUTTON');
     expect(el).toHaveAttribute('type', 'button');
     expect(el).toHaveAttribute('data-role', 'label');
-    expect(el).toHaveAttribute('data-leading', 'tight');
-    expect(el).toHaveAttribute('data-size', 'caption');
-    expect(el).toHaveAttribute('data-weight', 'body');
-    expect(el).toHaveAttribute('data-case', 'none');
+    expect(el).toHaveAttribute('data-text-leading', 'tight');
+    expect(el).toHaveAttribute('data-text-size', 'caption');
+    expect(el).toHaveAttribute('data-text-weight', 'body');
+    expect(el).toHaveAttribute('data-text-case', 'none');
     expect(el).toHaveAttribute('data-tabular', 'false');
   });
 
@@ -82,8 +82,8 @@ describe('Text', () => {
       expect(text).toMatch(new RegExp(`${prop}:\\s*var\\(${knob},\\s*var\\(--lib-text-`));
       expect(text).toMatch(new RegExp(`${knob}:\\s*initial`));
     }
-    expect(text).toMatch(/data-leading='tight'\]\)\s*\{\s*--lib-text-leading:\s*1;/);
-    expect(text).toMatch(/data-leading='snug'\]\)\s*\{\s*--lib-text-leading:\s*1\.15;/);
+    expect(text).toMatch(/data-text-leading='tight'\]\)\s*\{\s*--lib-text-leading:\s*1;/);
+    expect(text).toMatch(/data-text-leading='snug'\]\)\s*\{\s*--lib-text-leading:\s*1\.15;/);
   });
 });
 

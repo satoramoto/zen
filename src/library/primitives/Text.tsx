@@ -131,10 +131,10 @@ export function Text({
       data-tone={toneAttr(tone)}
       data-tabular={tabular === undefined ? undefined : tabular ? '' : 'false'}
       data-truncate={truncate ? '' : undefined}
-      data-leading={leading}
-      data-size={size}
-      data-weight={weight}
-      data-case={textCase}
+      data-text-leading={leading}
+      data-text-size={size}
+      data-text-weight={weight}
+      data-text-case={textCase}
       {...rest}
     >
       {children}

@@ -49,13 +49,7 @@
   /* The outline is an inset shadow, so no face ever changes the box; the material's shadow under it. */
   box-shadow: inset 0 0 0 var(--border-width) var(--yh-button-line), var(--mat-key-shadow);
   color: var(--text-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
+  /* Type: the face is a Text in the label role, tight leading, tabular figures. */
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
@@ -117,7 +111,7 @@
 /* Tall: the primary key of a transport, two control rows and their gap, the label at heading size. */
 .yh-button[data-tall] {
   height: calc(var(--control-h) * 2 + var(--space-2));
-  font-size: var(--size-heading);
+  --text-size: var(--size-heading);
 }
 
 /* Joined keys square their shared corners. */
@@ -126,9 +120,10 @@
 
 /* The label is never clipped: the key's min-width holds it whole. */
 .yh-button__label { flex: none; }
-.yh-button__glyph { flex: none; font-size: 0.75em; line-height: 1; }
-.yh-button__glyph[data-glyph='prev'], .yh-button__glyph[data-glyph='next'] { font-size: 0.9em; }
-.yh-button__glyph[data-glyph='plus'], .yh-button__glyph[data-glyph='minus'] { font-size: 1.15em; }
+/* The glyph is a label Text sized against the face (em). */
+.yh-button__glyph { flex: none; --text-size: 0.75em; }
+.yh-button__glyph[data-glyph='prev'], .yh-button__glyph[data-glyph='next'] { --text-size: 0.9em; }
+.yh-button__glyph[data-glyph='plus'], .yh-button__glyph[data-glyph='minus'] { --text-size: 1.15em; }
 /* Next to a label, the glyph is secondary; alone it is the label. */
 .yh-button:not([data-alone]) .yh-button__glyph { opacity: 0.72; }
 
