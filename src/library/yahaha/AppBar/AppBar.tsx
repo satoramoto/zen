@@ -96,11 +96,17 @@ export interface AppBarProps {
  * the tabs never jump. The bar reads left to right as where you are → what you can switch → how
  * things are → the emergency stop. *Colour has one meaning* (`hues.ts`): the switches belong to no
  * part, so none wears a part hue; Unison is a neutral lamp, and the metronome, a control that moves
- * time, wears the contract's `transport` role hue (its unlit LED in it, lit as a solid `--transport`
- * fill with `--transport-text`), the same hue as the Stage's transport keys, while its ▾ stays a
- * neutral key because it only opens settings. The chosen page is the bar's one
- * `--selected` block, Launchkey uses `--success` only when connected, and only Panic and trouble
- * in the health slot wear `--danger`. *Affordance without noise:* Panic takes the far right
+ * time, wears the contract's `transport` role hue only while it is on, like every transport key
+ * (`hues.ts`): at rest it is a neutral lamp, so the bar holds no saturated colour while nothing is
+ * running. Its ▾ stays neutral because it only opens settings. A solid fill means "sounding or
+ * running" on the Stage, so the bar holds none: the chosen page is ink plus a 2px underline
+ * (`ChosenTabs look="underline"`), the same mark a chosen tab wears everywhere, and the lamps' on
+ * face is the lamp's own (outline and lit LED). Launchkey uses `--success` only when connected,
+ * and the health slot's calm mark is the same `StatusDot`, so the two connections say "fine" with
+ * one mark; only Panic and trouble in the health slot wear `--danger`. *Affordance:* the ▾ is a
+ * drawn chevron in `--text-2` on a `--control-h`-wide key, not a glyph smaller than the LED beside
+ * it. *Rhythm:* the switches sit a `--space-3` apart while Metronome and its ▾ stay joined, so
+ * the bar reads Metronome▾ | Unison | ?, not one run of four. *Affordance without noise:* Panic takes the far right
  * corner, the one place a hand finds without looking, set apart by a hairline; at rest it is an
  * outlined key with the danger outline and its label in primary text, and only a hover or press
  * fills it, so it is found at once and never shouts while nothing is wrong
@@ -172,11 +178,11 @@ export function AppBar({
         <span className="yh-appbar__name">yahaha</span>
 
         <nav className="yh-appbar__nav" aria-label="Pages">
-          <ChosenTabs tabs={displayTabs} chosen={chosen} size="page" onChoose={onChoose} tipAction={tipAction} />
+          <ChosenTabs tabs={displayTabs} chosen={chosen} size="page" look="underline" onChoose={onChoose} tipAction={tipAction} />
           <span className="yh-appbar__runs-gap">
             <Separator />
           </span>
-          <ChosenTabs tabs={fullTabs} chosen={chosen} size="page" onChoose={onChoose} tipAction={tipAction} />
+          <ChosenTabs tabs={fullTabs} chosen={chosen} size="page" look="underline" onChoose={onChoose} tipAction={tipAction} />
         </nav>
 
         <span className="yh-appbar__middle">
@@ -201,7 +207,7 @@ export function AppBar({
             <LampButton
               label="Metronome"
               on={metronome}
-              hue="transport"
+              hue={metronome ? 'transport' : 't'}
               join="start"
               name="Metronome"
               tip="metronome.on"

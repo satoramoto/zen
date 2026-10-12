@@ -38,16 +38,22 @@ export interface StatusLineProps {
  * show that control's tooltip in the same place. Empty, the row keeps its height so nothing below
  * it moves.
  *
- * **Changed:** *colour meaning, never colour alone*: an error leads with a small chip, the warning
- * triangle plus the word "Error" on a faint `--danger` tint, so shape, word and colour all say it,
- * while the message itself stays in `--text-1` to read as plain words, not alarm (refero-design
- * `color.md` › Semantic colors work through pairs). *Hierarchy*: in a hint the title is
- * `--weight-strong` in `--text-1`, the body steps down to `--text-2`, and the key and Launchkey
- * place sit right-aligned as small `--label-case` captions in `--text-3` with the keys drawn as
- * keycaps, so the eye lands on the name, then what it does, then how to reach it
- * (`typography.md` › weight creates hierarchy). *Affordance*: hover or keyboard focus shows a
- * small clear mark at the line's end, so "click to dismiss" is visible without any coaching
- * words; focus uses a `:focus-visible` ring in `--accent` (`craft-details.md` › Focus states).
+ * **Changed:** *colour meaning, never colour alone*: an error leads with a chip, the warning
+ * triangle plus the word "Error" on a faint `--danger` tint inside a `--danger` edge, so shape,
+ * word and colour all say it, while the message itself stays in `--text-1` to read as plain words,
+ * not alarm (refero-design `color.md` › Semantic colors work through pairs). The chip is the same
+ * recipe as the app bar's health trouble (12% tint, 35% edge, triangle, strong `--text-1`, one
+ * space step shorter than a control), so "something is wrong" looks one way on the Stage.
+ * *Hierarchy*: the chip is at `--size-label`, not caption, because it is read mid-song from a
+ * metre; in a hint the title is `--weight-strong` in `--text-1`, the body steps down to
+ * `--text-2`, and the key and Launchkey place sit right-aligned as captions ("Key", "Launchkey",
+ * one form, no colons) in `--text-3` with the keys drawn as keycaps, so the eye lands on the name,
+ * then what it does, then how to reach it (`typography.md` › weight creates hierarchy).
+ * *Numerals*: keycaps are in `--font-readout` with tabular figures like every other key name on
+ * the Stage, not a mono face, and share the row's line height. *Affordance*: a small clear mark
+ * sits at the line's end on every message, quiet in `--text-3` and stepping up to `--text-1` on
+ * hover or focus, so a notice can be dismissed on a touch or Launchkey rig where nothing hovers;
+ * focus uses a `:focus-visible` ring in `--accent` (`craft-details.md` › Focus states).
  * *Rhythm*: the row is `--control-h` tall and spaced on `--space-*`, so it sits on the same grid
  * as the controls around it under every density.
  *
@@ -72,7 +78,7 @@ export function StatusLine({ hint = null, text = null, error = false, seq = 0, w
               ) : null}
               {hint.launchkey ? (
                 <span className="yh-status-line-hint-place">
-                  <span className="yh-status-line-hint-label">Launchkey:</span> <kbd className="yh-status-line-key">{hint.launchkey}</kbd>
+                  <span className="yh-status-line-hint-label">Launchkey</span> <kbd className="yh-status-line-key">{hint.launchkey}</kbd>
                 </span>
               ) : null}
             </span>
