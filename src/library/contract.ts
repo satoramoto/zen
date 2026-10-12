@@ -27,10 +27,33 @@ export interface Palette {
   success: string;
   warning: string;
   danger: string;
+  /** Text drawn on a solid success, warning or danger fill: a running Start, an ARMED tag, a
+   *  lit record lamp. Each meets WCAG AA (4.5:1) against its own fill. */
+  successText: string;
+  warningText: string;
+  dangerText: string;
   /** Categorical hues: parts, tags, groups. */
   hues: Four;
   /** Text drawn on a solid hue. */
   onHue: string;
+  /**
+   * Two role hues, each naming exactly one thing; neither is categorical. `style` marks the
+   * current style and what belongs to it (its name, its One Touch numbers, a queued style, the
+   * Style fader group). `transport` marks the controls that move time (Start / Stop, sync, fills,
+   * Tap, tempo up and down, the metronome, and their pad twins). They never stand for a part, a
+   * section or a state, never index a list, and stay perceptually clear of the four `hues`, of
+   * success, warning and danger, and of each other (`library.test.tsx` holds the distance).
+   */
+  style: string;
+  /** Text drawn on a solid `style` fill; AA against it. */
+  styleText: string;
+  transport: string;
+  /** Text drawn on a solid `transport` fill; AA against it. */
+  transportText: string;
+  /** A drawn keyboard's faces: white keys and black keys. In every scheme the white keys are
+   *  light and the black keys dark, so the keyboard reads as one. */
+  keyWhite: string;
+  keyBlack: string;
   /** Lamp bloom radius; 0px for flat palettes. */
   bloom: string;
 }
@@ -88,6 +111,10 @@ const SPACE_STEPS = [1, 2, 3, 4, 6, 8] as const;
 export function toCssVars({ palette: p, type: t, chrome: c, density: d }: Facets): Record<string, string> {
   const vars: Record<string, string> = {
     '--scheme': p.scheme,
+    // The scheme as a number CSS can compute with: 1 in a light palette, 0 in a dark one.
+    // Multiply it in calc() to switch a value by scheme (never light-dark(): the build rewrites
+    // it into variables only a literal color-scheme sets).
+    '--scheme-light': p.scheme === 'light' ? '1' : '0',
     '--border': p.border,
     '--border-strong': p.borderStrong,
     '--action': p.action,
@@ -98,7 +125,16 @@ export function toCssVars({ palette: p, type: t, chrome: c, density: d }: Facets
     '--success': p.success,
     '--warning': p.warning,
     '--danger': p.danger,
+    '--success-text': p.successText,
+    '--warning-text': p.warningText,
+    '--danger-text': p.dangerText,
     '--on-hue': p.onHue,
+    '--style': p.style,
+    '--style-text': p.styleText,
+    '--transport': p.transport,
+    '--transport-text': p.transportText,
+    '--key-white': p.keyWhite,
+    '--key-black': p.keyBlack,
     '--bloom': p.bloom,
 
     '--font-sans': t.sans,

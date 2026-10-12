@@ -23,7 +23,7 @@ Behaviour, keyboard handling and accessibility names carry over from the origina
 
 The rules that came out of it:
 - **One hierarchy.** What's playing now (section, chord) and the tempo are the loudest things on screen, ranked by size and weight in neutral text. Only the live element is highlighted (`--selected`).
-- **Colour has one meaning** (`src/library/yahaha/hues.ts`). The four categorical hues are the four keyboard parts (Right 1, Right 2, Right 3, Left), everywhere: fader, keyboard zone, sound name, part knob. Nothing else takes a hue. Song sections are playing (`--selected`), next (`--accent`) or plain.
+- **Colour has one meaning** (`src/library/yahaha/hues.ts`). The four categorical hues are the four keyboard parts (Right 1, Right 2, Right 3, Left), everywhere: fader, keyboard zone, sound name, part knob. Nothing else takes a categorical hue. Two role hues each name one thing: `--style` (the current style) and `--transport` (the controls that move time); the contract test keeps them clear of the part hues, the states and each other. Song sections are playing (`--selected`), next (`--accent`) or plain.
 - **One place per job.** Transport lives only in the song form, Tap only in the hero, and global switches only in the top bar. Hardware mirrors are the one exception, for example OTS 1–4 on the Quick Racks pads, because Yahaha's rule is that every hardware function has an app control.
 - **Sections read as the song's form**: Intro → Main A–D → Ending, with now and next marked, not a grid of coloured pads.
 - **Meaning never rests on colour alone.** Off, absent, armed and trouble states also show by shape, words or a dashed outline.
@@ -53,7 +53,7 @@ Checks: `npm run typecheck`, `npm test` and `npx vitest run src/library` pass; `
    - drop the 84.5% fit-zoom at 1217×752: let the hero column shrink to about 436px and use Display's `density`;
    - fold in the review notes: OTS pads in the Playground should apply One Touch; `useFit` should also observe the inner frame; the stale comment in `Stage.css`; the Playground style-step edge case;
    - send fresh screenshots under all six packs to the owner.
-3. **Token additions**, held back: key faces, ink on solid success/warning/danger fills, a style hue, a transport hue, a scheme flag that CSS can read (DisplayArt's light-pack hills), and maybe a fifth hue. Each widget derives a local stand-in for now. Batch them into one contract change that also fills every pack.
+3. **Token additions: contract landed (`yh-tokens`), widget migration next.** The contract now has `--key-white` / `--key-black`; `--success-text`, `--warning-text`, `--danger-text` (ink on those solid fills, AA-checked per pack); `--style` / `--style-text` and `--transport` / `--transport-text` (role hues, one job each, kept clear of the part hues by test); and `--scheme-light` (1 light, 0 dark, for `calc()`; DisplayArt's light-pack hills). Every pack fills them. No fifth hue. Widgets still carry their local stand-ins (Keys, Pad, LampButton, Button, OneTouchPicker, WaitingChip, AccentBlock, SongForm, TempoReadout, AppBar's metronome, DisplayArt); migration lanes by folder replace them.
 4. **Then**: the remaining 36 components and 9 screens (Channel, Effects, Library, Settings, Looper, and the rest) on the same pattern: contract first, lanes by folder, review, integrate.
 
 Smaller follow-ups:
