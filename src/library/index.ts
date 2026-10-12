@@ -17,10 +17,15 @@ export {
   // Renamed: `Layer` is the layout primitive below.
   type Layer as LayerStyle,
   type Facets,
+  RANKS,
+  SPACE_STEPS,
+  type Rank,
+  type Density,
+  type PackPrinciples,
 } from './contract';
 
 // The theme: resolving a choice of facets and scoping its variables.
-export { ThemeScope, resolveTheme, useSystemMode, FROM_THEME, type ModeChoice, type ThemeChoice } from './theme';
+export { ThemeScope, useThemeScope, resolveTheme, useSystemMode, FROM_THEME, type ModeChoice, type ThemeChoice } from './theme';
 
 // The facet lists.
 export { packs, type ThemePack } from './themes/packs';

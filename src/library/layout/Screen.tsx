@@ -1,4 +1,6 @@
 import type { CSSProperties, ReactNode, Ref } from 'react';
+import { AssembledScreen, type RegionContent } from './assembly/AssembledScreen';
+import type { Placement, Principles, ScreenSpec } from './assembly/types';
 import './Screen.css';
 
 export interface ScreenProps {
@@ -21,6 +23,20 @@ export interface ScreenProps {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
+  /**
+   * An assembled screen (docs/assembly.md): what it holds and what matters. With a `spec` the
+   * screen places itself: `regions` fills it, and `areas`, `columns`, `rows`, `header`, `footer`
+   * and `children` are not used.
+   */
+  spec?: ScreenSpec;
+  /** With `spec`: what goes in each region, by id (content, or a function of the chosen form). */
+  regions?: Record<string, RegionContent>;
+  /** With `spec`: the room in px; unset, the screen measures its own box. */
+  room?: { w: number; h: number };
+  /** With `spec`: the solver's principles; unset, the nearest ThemeScope's. */
+  principles?: Principles;
+  /** With `spec`: called with each new placement. */
+  onPlacement?: (placement: Placement) => void;
 }
 
 /**
@@ -28,8 +44,15 @@ export interface ScreenProps {
  * decides what goes where; the theme decides how far apart regions sit (`--mat-plate-gap`).
  * Regions place themselves with `area`. Only the grid fills the room left between header and
  * footer, so a screen that fits or zooms itself does it to the grid alone.
+ *
+ * **Assembled.** Given a `spec` instead, the screen assembles itself (`AssembledScreen`,
+ * docs/assembly.md): no grid, no ratios, each region in the form the solver chose.
  */
-export function Screen({ name, header, footer, areas, columns, rows, gridRef, gridStyle, className, style, children }: ScreenProps) {
+export function Screen({ name, header, footer, areas, columns, rows, gridRef, gridStyle, className, style, children, spec, regions, room, principles, onPlacement }: ScreenProps) {
+  if (spec)
+    return (
+      <AssembledScreen name={name} spec={spec} regions={regions ?? {}} room={room} principles={principles} onPlacement={onPlacement} className={className} style={style} />
+    );
   const grid: CSSProperties = {};
   if (areas) {
     grid.gridTemplateAreas = areas.map((row) => `"${row}"`).join(' ');
