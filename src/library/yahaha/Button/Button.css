@@ -70,7 +70,12 @@
   --yh-button-line: var(--yh-button-tone);
   --yh-button-glow: var(--bloom);
 }
-/* After the rule above, at its specificity, so the per-tone ink wins. */
+/* After the rule above, at its specificity, so the per-tone ink wins. Sections fill in --text-1, so
+   their ink is the ground (--surface-0): the base text pair inverted, which contrasts in every pack
+   (--on-hue can equal --text-1, as on ableton, black on black). */
+.yh-button:is([data-hue='intro'], [data-hue='main'], [data-hue='ending'], [data-hue='brk'], [data-hue='fill']) {
+  --yh-button-ink: var(--surface-0);
+}
 .yh-button[data-hue='ok'] { --yh-button-ink: var(--success-text); }
 .yh-button[data-hue='rec'] { --yh-button-ink: var(--danger-text); }
 .yh-button[data-hue='transport'] {

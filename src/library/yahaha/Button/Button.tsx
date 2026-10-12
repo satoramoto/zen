@@ -117,7 +117,8 @@ const NEUTRAL = new Set<ButtonHue>(['t', 't2', 'm', 'lamp']);
  * so by its waiting ring; a `primary` transport key fills in `--transport` instead of `--action`.
  * Each solid face takes its own ink: `--on-hue` on a part or the accent, `--success-text`,
  * `--danger-text` and `--transport-text` on the rest (the original used `--on-hue` everywhere,
- * which the contract only promises against the part hues). Lit
+ * which the contract only promises against the part hues); a lit section key fills in `--text-1`
+ * and takes `--surface-0` ink, since `--on-hue` can match `--text-1` (black on black on ableton). Lit
  * hued faces bloom by `--bloom`, so they glow on Push and stay flat on paper palettes. *Affordance:*
  * a disabled button now reads as unavailable (faded outline, faded label, not-allowed cursor)
  * instead of merely "a dimmer hue"; hover and press tint the face by its own tone; a visible

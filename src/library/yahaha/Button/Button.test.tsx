@@ -140,6 +140,15 @@ describe('Button faces and a11y', () => {
     expect(css.indexOf("[data-hue='ok'] { --yh-button-ink")).toBeGreaterThan(css.indexOf(".yh-button:not([data-hue='t'])"));
   });
 
+  it('a lit section key inks in --surface-0 on its --text-1 fill, after the --on-hue rule', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
+    const match = css.match(/\.yh-button:is\(([^)]*)\)\s*\{([^}]*)\}/);
+    expect(match).not.toBeNull();
+    for (const hue of ['intro', 'main', 'ending', 'brk', 'fill']) expect(match![1]).toContain(`[data-hue='${hue}']`);
+    expect(match![2]).toContain('--yh-button-ink: var(--surface-0)');
+    expect(css.indexOf(match![0])).toBeGreaterThan(css.indexOf(".yh-button:not([data-hue='t'])"));
+  });
+
   it('deprecated t2 and m, and lamp, draw as the neutral t', () => {
     for (const hue of ['t2', 'm', 'lamp'] as const) {
       const { button, unmount } = setup({ label: 'X', hue });
