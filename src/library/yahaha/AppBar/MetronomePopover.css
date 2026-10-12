@@ -9,9 +9,10 @@
   padding: var(--space-3) var(--space-4) var(--space-4);
   border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-card);
-  /* A raised plate: the material set says what it is made of. */
-  background: var(--mat-plate-texture), var(--mat-plate-fill);
-  box-shadow: var(--mat-plate-shadow);
+  /* It floats: the float layer says how it is drawn and composited. */
+  background: var(--layer-float-texture), var(--layer-float-fill);
+  backdrop-filter: var(--layer-float-backdrop);
+  box-shadow: var(--layer-float-edge), var(--layer-float-cast);
   color: var(--text-1);
   font-family: var(--font-sans);
   font-size: var(--size-body);

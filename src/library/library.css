@@ -75,9 +75,10 @@
   align-content: start;
   gap: var(--space-3);
   padding: var(--space-4);
-  background: var(--mat-plate-texture), var(--mat-plate-fill);
+  background: var(--layer-base-texture), var(--layer-base-fill);
+  backdrop-filter: var(--layer-base-backdrop);
   border-radius: var(--radius-card);
-  box-shadow: var(--mat-plate-shadow);
+  box-shadow: var(--layer-base-edge), var(--layer-base-cast);
 }
 .lib-card__eyebrow { font-size: var(--size-caption); color: var(--text-3); text-transform: var(--label-case); }
 .lib-card__title {

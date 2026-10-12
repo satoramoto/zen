@@ -139,7 +139,7 @@
   border-radius: var(--radius-control);
   /* The keybed sits in the plate: the material's edges and drop, drawn outside the keys so they
      take no width (inset layers fall under the keys). */
-  box-shadow: var(--mat-plate-shadow);
+  box-shadow: var(--layer-base-edge), var(--layer-base-cast);
 }
 /* The frame, drawn over the keys so it takes no width from them. */
 .yh-keys__strip::after {

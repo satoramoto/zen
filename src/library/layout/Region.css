@@ -8,8 +8,10 @@
   min-width: 0;
   min-height: 0;
   border-radius: var(--radius-card);
-  background: var(--mat-plate-texture), var(--mat-plate-fill);
-  box-shadow: var(--mat-plate-shadow);
+  /* A region is the base layer: the theme says how it is drawn and composited. */
+  background: var(--layer-base-texture), var(--layer-base-fill);
+  backdrop-filter: var(--layer-base-backdrop);
+  box-shadow: var(--layer-base-edge), var(--layer-base-cast);
 }
 .lib-region:not(:has(> .lib-region__head)) { grid-template-rows: minmax(0, 1fr); }
 

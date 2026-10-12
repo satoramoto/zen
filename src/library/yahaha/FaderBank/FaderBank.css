@@ -70,8 +70,8 @@
 .yh-faderbank__plate {
   grid-row: 1 / 3;
   border-radius: var(--radius-card);
-  background: var(--mat-plate-texture), var(--mat-plate-fill);
-  box-shadow: var(--mat-plate-shadow);
+  background: var(--layer-raised-texture), var(--layer-raised-fill);
+  box-shadow: var(--layer-raised-edge), var(--layer-raised-cast);
 }
 
 .yh-faderbank__strip {

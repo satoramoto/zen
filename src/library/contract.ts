@@ -114,11 +114,19 @@ export interface Materials {
   borderWidth: string;
   /** How fields are drawn. */
   input: 'filled' | 'box' | 'underline';
-  /** Panels and cards: what a region sits on. `inset` is the padding around a region's body and
-   *  `gap` the space between regions, as CSS lengths that may read the scale (`var(--space-3)`).
-   *  `head` is the region header strip: its own padding (`inset`) and the rule under it (a
-   *  box-shadow, or no shadow). */
-  plate: Material & { inset: string; gap: string; head: { inset: string; rule: string } };
+  /**
+   * The depth stack: how each layer of the screen is drawn and composited over the one behind it.
+   * Flat systems read depth as tone steps, hardware as bevels and cast shadows, glass as frosted
+   * panes that blur what's beneath. Regions sit on `base`, popovers on `float`, sheets on
+   * `overlay`. See `Layer`.
+   */
+  layers: Record<LayerName, Layer>;
+  /** The one light source every edge and cast shadow agrees on, as a CSS angle (`180deg`: from above). */
+  light: string;
+  /** Region spacing: `inset` is the padding around a region's body and `gap` the space between
+   *  regions, as CSS lengths that may read the scale (`var(--space-3)`). `head` is the region
+   *  header strip: its own padding (`inset`) and the rule under it (a box-shadow, or no shadow). */
+  plate: { inset: string; gap: string; head: { inset: string; rule: string } };
   /** Switches in a region header (and anywhere `Tabs` is used). `track` is what the tabs sit in,
    *  `tab` a resting tab, `chosen` the chosen one; `ink`/`chosenInk` their text colours; `pad` the
    *  track's padding, `gap` the space between tabs, `tabPad` a tab's own padding. */
@@ -142,9 +150,31 @@ export interface Materials {
   handle: Material;
   /** Lit indicators. `glow` is a box-shadow that reads `var(--lit)`. */
   lit: { glow: string };
-  /** Things that float over the screen: popovers, menus, a dragged item. `backdrop` is a
-   *  backdrop-filter (`none` for opaque floats, `blur(28px) saturate(1.6)` for glass). */
-  float: Material & { backdrop: string };
+}
+
+/**
+ * The layers of a screen, back to front: `ground` the window or desktop behind everything (native
+ * frost in a glass app), `base` regions and plates, `raised` controls standing on a plate, `float`
+ * popovers, menus and a dragged item, `overlay` sheets and modals, `top` toasts and hints.
+ */
+export const LAYERS = ['ground', 'base', 'raised', 'float', 'overlay', 'top'] as const;
+export type LayerName = (typeof LAYERS)[number];
+
+/** How one layer is drawn and composited. Values are CSS and may read palette variables. */
+export interface Layer {
+  /** Its fill; translucent where the layer behind should show through. */
+  fill: string;
+  /** The opaque fill used instead wherever translucency can't composite (over a native view: an
+   *  `Opaque` scope). Equal to `fill` when the layer is already opaque. */
+  solid: string;
+  /** A background layer over the fill (grain, brushing), or `none`. */
+  texture: string;
+  /** The backdrop-filter applied to what's behind it (`blur(28px) saturate(1.6)`), or `none`. */
+  backdrop: string;
+  /** The shadow it casts onto the layer behind (a box-shadow; never `none`, use `0 0 0 0 transparent`). */
+  cast: string;
+  /** Its edge: hairlines and the specular highlight on its lit side (a box-shadow, inset). */
+  edge: string;
 }
 
 export interface Facets {
@@ -155,7 +185,7 @@ export interface Facets {
 }
 
 const SPACE_STEPS = [1, 2, 3, 4, 6, 8] as const;
-const MATERIAL_ROLES = ['plate', 'well', 'screen', 'key', 'handle', 'float'] as const;
+const MATERIAL_ROLES = ['well', 'screen', 'key', 'handle'] as const;
 
 export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets, mode: Mode): Record<string, string> {
   const p = palette[mode];
@@ -218,7 +248,7 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--mat-tabs-tab-pad': m.tabs.tabPad,
     '--mat-key-pressed': m.key.pressed,
     '--mat-lit-glow': m.lit.glow,
-    '--mat-float-backdrop': m.float.backdrop,
+    '--light-angle': m.light,
 
     '--control-h': `${s.control}px`,
   };
@@ -226,6 +256,15 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     vars[`--mat-${role}-fill`] = m[role].fill;
     vars[`--mat-${role}-shadow`] = m[role].shadow;
     vars[`--mat-${role}-texture`] = m[role].texture;
+  }
+  for (const name of LAYERS) {
+    const l = m.layers[name];
+    vars[`--layer-${name}-fill`] = l.fill;
+    vars[`--layer-${name}-solid`] = l.solid;
+    vars[`--layer-${name}-texture`] = l.texture;
+    vars[`--layer-${name}-backdrop`] = l.backdrop;
+    vars[`--layer-${name}-cast`] = l.cast;
+    vars[`--layer-${name}-edge`] = l.edge;
   }
   for (const part of ['track', 'tab', 'chosen'] as const) {
     vars[`--mat-tabs-${part}-fill`] = m.tabs[part].fill;
