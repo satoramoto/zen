@@ -12,13 +12,6 @@
   letter-spacing: var(--tracking);
 }
 
-.yh-chord-readout__label {
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  color: var(--text-3);
-  text-transform: var(--label-case);
-}
-
 .yh-chord-readout__chord {
   overflow: hidden;
   /* A fixed line box at the full size, so stepping down never moves the line below. */
@@ -45,19 +38,23 @@
   line-height: 1;
   letter-spacing: var(--tracking);
 }
-/* A slash bass sits back on the line, a step quieter than the chord. */
+/* A slash bass sits back on the line, smaller but in the chord's ink: the left hand needs it. */
 .yh-chord-readout__bass {
   margin-left: 0.06em;
   font-size: 0.72em;
-  color: var(--text-2);
+  color: var(--text-1);
 }
 
 .yh-chord-readout__chord--none {
-  color: var(--text-4);
-}
-.yh-chord-readout--held .yh-chord-readout__chord,
-.yh-chord-readout--held .yh-chord-readout__bass {
   color: var(--text-3);
+}
+/* Held: the chord stays readable, a dashed rule under it says "not live". */
+.yh-chord-readout--held .yh-chord-readout__chord {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: var(--border-strong);
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.12em;
 }
 
 /* One small line; a long fingering wraps to a second line rather than clip. */
@@ -81,7 +78,7 @@
 .yh-chord-readout__tone + .yh-chord-readout__tone::before {
   content: '·';
   padding: 0 0.4em;
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .yh-chord-readout__fingering {
   min-width: 0;

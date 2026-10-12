@@ -20,7 +20,7 @@ export interface ChordReadoutProps {
   fingering?: string;
   /** Detection is unsure and the last chord is held: muted, with a "held" tag. */
   held?: boolean;
-  /** The readout's name, drawn as its caption and spoken before the chord ("Chord"). */
+  /** The readout's name, spoken before the chord ("Chord"). Not drawn: a chord symbol names itself. */
   label?: string;
   /** The fingering's tooltip key ("fingering.select"), set as `data-tip`, with the whole fingering as `data-tip-text`. */
   tip?: string;
@@ -51,15 +51,18 @@ function splitBass(extension: string): [string, string] {
  * the last chord) must read as "not live" without hiding the chord. A readout, not a control: its
  * spoken name (`role="img"`) says everything drawn, the whole fingering included.
  *
- * **Changed.** *Hierarchy:* a small caption names the readout, the chord is the one display-size
- * line, and the notes and fingering sit well below it in size and ink (`--text-2`, `--text-3`), so
- * the eye lands on the chord first (typography.md, "Type Scale", "Text Color System"). *Rhythm:* the
+ * **Changed.** *Hierarchy:* the chord is the one display-size line, and the notes and fingering
+ * sit well below it in size and ink (`--text-2`, `--text-3`), so the eye lands on the chord first
+ * (typography.md, "Type Scale", "Text Color System"). The "Chord" caption above it is no longer
+ * drawn (a chord symbol names itself; the row goes to the chord), only spoken. *Rhythm:* the
  * extension is set the way chord symbols are printed, raised and smaller after the root and quality
- * ("Am⁷"), with a slash bass back on the line ("C♯m maj9(♯11) /G♯"), so a long symbol keeps its
- * shape and fits at a larger size. *Contrast:* the chord is primary text rather than the accent,
- * which reads on every pack, light ones included, and leaves the accent to focus and selection
- * (color.md, "Primary Accent", 60/30/10). *Colour meaning:* held dims the chord to `--text-3` and
- * adds an outlined "held" tag, a state word rather than a colour, since unsure isn't an error.
+ * ("Am⁷"), with a slash bass back on the line ("C♯m maj9(♯11) /G♯") in the chord's own ink, since
+ * the left hand needs the bass more than the extension. *Contrast:* the chord is primary text
+ * rather than the accent, which reads on every pack, light ones included, and leaves the accent to
+ * focus and selection (color.md, "Primary Accent", 60/30/10). *State clarity:* held keeps the chord
+ * in primary ink and draws a dashed `--border-strong` rule under it, plus an outlined "held" tag:
+ * from a metre a dimmed chord just looked faint, a dashed underline reads as "not live", and
+ * unsure isn't an error. No chord is "—" in `--text-3`, never the faint `--text-4`.
  * *Numerals:* the notes use the readout face so their spacing stays even as they change.
  * *Sizing:* the hero's full size is one custom property, `--yh-chord-readout-hero` (default
  * `--size-display`), which a parent sets on the root or passes as `size`, so a display can scale
@@ -136,9 +139,6 @@ export function ChordReadout({
 
   return (
     <div className={classes.join(' ')} role="img" aria-label={spoken} data-held={held ? 'true' : 'false'} style={style}>
-      <div className="yh-chord-readout__label" aria-hidden="true">
-        {label}
-      </div>
       <div
         ref={hero}
         className={`yh-chord-readout__chord${none ? ' yh-chord-readout__chord--none' : ''}`}

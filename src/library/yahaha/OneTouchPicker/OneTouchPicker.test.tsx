@@ -9,13 +9,26 @@ import { OneTouchPicker } from './OneTouchPicker';
 const css = readFileSync(join(process.cwd(), 'src/library/yahaha/OneTouchPicker/OneTouchPicker.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 
 describe('OneTouchPicker style hue', () => {
-  it("draws the `a` ink in the style's role hue with its paired ink on the applied fill", () => {
+  it("draws the `a` cells' outline and mark in the style's role hue, never the accent", () => {
     const rule = /\[data-ink='a'\]\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
-    expect(rule).toMatch(/--ots-ink:\s*var\(--style\)/);
     expect(rule).toMatch(/--ots-line:\s*var\(--style\)/);
-    expect(rule).toMatch(/--ots-on:\s*var\(--style\)/);
-    expect(rule).toMatch(/--ots-on-text:\s*var\(--style-text\)/);
+    expect(rule).toMatch(/--ots-mark:\s*var\(--style\)/);
     expect(rule).not.toContain('--accent');
+  });
+
+  it('marks the applied number with ink and a 2px style rule, never a fill', () => {
+    const chosen = /\[data-face='chosen'\]\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(chosen).toMatch(/--ots-ink:\s*var\(--text-1\)/);
+    expect(chosen).toMatch(/box-shadow:\s*inset 0 calc\(-1 \* var\(--ots-mark-w\)\) 0 var\(--ots-mark\)/);
+    expect(css).toMatch(/--ots-mark:\s*var\(--style\)/);
+    expect(css).toMatch(/--ots-mark-w:\s*calc\(var\(--border-width\) \* 2\)/);
+    expect(css).not.toMatch(/--selected|background:\s*var\(--style\)|line-through|--text-4|--weight-strong/);
+  });
+
+  it('draws a disabled number with a dashed edge in the muted ink', () => {
+    const disabled = /\.yh-onetouchpicker__number:disabled\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(disabled).toMatch(/--ots-ink:\s*var\(--text-3\)/);
+    expect(disabled).toMatch(/border-style:\s*dashed/);
   });
 });
 

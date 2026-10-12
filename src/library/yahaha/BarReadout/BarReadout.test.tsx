@@ -2,6 +2,8 @@
  * BarReadout as a control, ported from yahaha/src/ui/BarReadout/BarReadout.test.ts: drags over fake
  * animation frames, the wheel, keys, the reset and the local value.
  */
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BarReadout, type BarReadoutProps } from './BarReadout';
@@ -220,7 +222,19 @@ describe('BarReadout', () => {
     expect(container.querySelector('.yh-bar-readout__unit')).toHaveTextContent('Hz');
     fireEvent.keyDown(slider, { key: 'ArrowRight' });
     expect(valueOf(container)).toHaveTextContent('65');
-    expect(container.querySelector('.yh-bar-readout__unit')).toBeNull();
+    // The unit column stays, empty, so the last digits keep their place.
+    expect(container.querySelector('.yh-bar-readout__unit')).toHaveTextContent('');
+  });
+
+  it('always draws the unit column, so rows with and without a unit align on their last digit', () => {
+    const { container } = level();
+    expect(container.querySelector('.yh-bar-readout__unit')).not.toBeNull();
+    expect(container.querySelector('.yh-bar-readout__unit')).toHaveTextContent('');
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/BarReadout/BarReadout.css'), 'utf8');
+    expect(/\.yh-bar-readout__unit \{([^}]*)\}/.exec(css)![1]).toMatch(/width:\s*3\.5ch/);
+    // The one caption recipe, and muted (never faint) text when disabled.
+    expect(/\.yh-bar-readout__label \{([^}]*)\}/.exec(css)![1]).toMatch(/color:\s*var\(--text-3\)/);
+    expect(css).not.toMatch(/--text-4/);
   });
 
   it('marks the centre of a bipolar row', () => {

@@ -4,8 +4,9 @@ import { withLibraryTheme } from '../../storybook';
 import { SectionName } from './SectionName';
 
 /**
- * The playing section's name on the display. Sections take no hue: playing is `--selected` with
- * the palette's bloom, next `--accent`, idle secondary text, absent faint text.
+ * The playing section's name on the display. Sections take no hue, and the name takes no state
+ * colour either: it is neutral and inherits its ink, and whatever holds it (the Display's
+ * `--selected` block, its "then" tab) says where it stands. `state` lands on `data-state`.
  */
 const meta = {
   title: 'Library/Yahaha/Primitives/SectionName',
@@ -24,34 +25,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const tone = (canvasElement: HTMLElement) =>
-  canvasElement.querySelector<HTMLElement>('.yh-section-name')!.style.getPropertyValue('--yh-section-tone');
+const stateOf = (canvasElement: HTMLElement) => canvasElement.querySelector<HTMLElement>('.yh-section-name')!.dataset.state;
 
-/** The board: "Main B", playing, in `--selected` with its bloom. */
+/** The board: "Main B", playing, in the ink it inherits. */
 export const Board: Story = {
   args: { label: 'Main B', hue: 'main' },
   play: async ({ canvasElement }) => {
-    await expect(tone(canvasElement)).toBe('var(--selected)');
+    await expect(stateOf(canvasElement)).toBe('playing');
   },
 };
 
-/** Stopped: the picked Main in the idle role, no bloom. */
+/** Stopped: the picked Main, marked idle for its holder. */
 export const Idle: Story = {
   args: { label: 'Main A', hue: 'main', idle: true },
   play: async ({ canvasElement }) => {
-    await expect(tone(canvasElement)).toBe('var(--text-2)');
+    await expect(stateOf(canvasElement)).toBe('idle');
   },
 };
 
-/** An intro playing: the same `--selected` as a Main, since the word names the section. */
+/** An intro playing: the same face as a Main, since the word names the section. */
 export const Intro: Story = {
   args: { label: 'Intro II', hue: 'intro' },
   play: async ({ canvasElement }) => {
-    await expect(tone(canvasElement)).toBe('var(--selected)');
+    await expect(stateOf(canvasElement)).toBe('playing');
   },
 };
 
-/** Every section kind side by side, playing: one colour, told apart by name; then a next, an idle and an absent one. */
+/** Every section kind side by side, playing: one face, told apart by name; then a next, an idle and an absent one. */
 export const AllKinds: Story = {
   args: { label: 'Main A' },
   render: () => (
@@ -73,11 +73,11 @@ export const Empty: Story = {
   args: { label: '', hue: 'main' },
 };
 
-/** New: the section queued next, in `--accent`, no bloom. */
+/** New: the section queued next, marked `data-state="next"` for its holder (the Display's "then" tab). */
 export const Next: Story = {
   args: { label: 'Main C', hue: 'main', state: 'next' },
   play: async ({ canvasElement }) => {
-    await expect(tone(canvasElement)).toBe('var(--accent)');
+    await expect(stateOf(canvasElement)).toBe('next');
   },
 };
 

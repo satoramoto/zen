@@ -24,7 +24,7 @@
   min-width: 0;
   font-size: var(--size-caption);
   font-weight: var(--weight-body);
-  color: var(--text-2);
+  color: var(--text-3);
   text-transform: var(--label-case);
   white-space: nowrap;
 }
@@ -112,16 +112,20 @@
   font-variant-numeric: tabular-nums;
   color: var(--text-1);
 }
+/* The unit: a fixed column after the digits, drawn even when empty, so the last digits align. */
 .yh-bar-readout__unit {
+  flex: none;
+  width: 3.5ch;
   font-family: var(--font-sans);
   font-size: var(--size-caption);
   color: var(--text-3);
+  text-align: left;
 }
 
-/* Not there: faint text, a dashed track, no drag cursor. */
+/* Not there: muted text, a dashed track, no drag cursor. */
 .yh-bar-readout--disabled .yh-bar-readout__label,
 .yh-bar-readout--disabled .yh-bar-readout__value {
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .yh-bar-readout--disabled .yh-bar-readout__bar {
   cursor: default;

@@ -50,22 +50,26 @@
 .yh-tempo-readout__unit {
   font-family: var(--font-sans);
   font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
+  font-weight: var(--weight-body);
   letter-spacing: var(--tracking);
   text-transform: var(--label-case);
   line-height: 1;
   color: var(--text-3);
 }
 
-/* + over −: one framed pair, as tall as the number's line, a hairline between the halves. Both
-   wear the transport role hue (they move time): frame, hairline and glyphs at rest, a tint on
-   hover, a solid fill with its paired ink while pressed. */
+/* + over −: one framed pair of real keys, each a control height square, a hairline between them.
+   Neutral at rest (a transport key wears its hue only while active, hues.ts): the strong border
+   and secondary glyphs, the raised surface on hover, the transport fill with its paired ink only
+   while pressed. */
 .yh-tempo-readout__steps {
   display: flex;
   flex-direction: column;
   flex: none;
-  width: max(calc(var(--yh-tempo-readout-size) * 0.5), calc(var(--control-h) * 0.75));
-  border: var(--border-width) solid var(--transport);
+  align-self: center;
+  box-sizing: border-box;
+  width: var(--control-h);
+  height: calc(var(--control-h) * 2);
+  border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-control);
   background: var(--surface-1);
   overflow: hidden;
@@ -82,19 +86,19 @@
   border: 0;
   background: transparent;
   font-family: var(--font-readout);
-  font-size: max(var(--size-label), calc(var(--yh-tempo-readout-size) * 0.3));
+  font-size: var(--size-heading);
   font-weight: var(--weight-numeral);
   line-height: 1;
-  color: var(--transport);
+  color: var(--text-2);
   cursor: pointer;
   touch-action: manipulation;
   transition: background-color 120ms ease-out, color 120ms ease-out;
 }
 .yh-tempo-readout__step + .yh-tempo-readout__step {
-  border-top: var(--border-width) solid var(--transport);
+  border-top: var(--border-width) solid var(--border-strong);
 }
 .yh-tempo-readout__step:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--transport) 16%, transparent);
+  background: var(--surface-2);
   color: var(--text-1);
 }
 .yh-tempo-readout__step:active:not(:disabled) {
@@ -102,7 +106,7 @@
   color: var(--transport-text);
 }
 .yh-tempo-readout__step:disabled {
-  color: var(--text-4);
+  color: var(--text-3);
   cursor: default;
 }
 
@@ -143,6 +147,7 @@
 .yh-tempo-readout--cells .yh-tempo-readout__steps {
   font-family: var(--font-readout);
   font-size: var(--yh-tempo-readout-size);
+  align-self: auto;
   height: 1cap;
   width: calc(0.5cap);
   min-width: var(--space-5);

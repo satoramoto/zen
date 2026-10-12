@@ -1,8 +1,7 @@
-/* SectionName: the playing section's name. Reads only contract variables and --yh-section-tone,
-   set inline from hues.ts by where the section stands (sections take no hue). */
+/* SectionName: the playing section's name. Reads only contract variables and its own size. Its ink
+   is inherited: the parent's block or tab says where the section stands (sections take no hue). */
 
 .yh-section-name {
-  --yh-section-tone: var(--selected);
   /* The name's size. Set by a parent on this element or inline by `size`. */
   --yh-section-name-size: var(--size-numeral);
   flex: none;
@@ -13,16 +12,10 @@
   letter-spacing: var(--tracking-display);
   line-height: 1;
   white-space: nowrap;
-  color: var(--yh-section-tone);
+  color: inherit;
 }
 
-/* Only what plays glows: the palette's bloom, 0px on flat packs. */
-.yh-section-name[data-state='playing'] {
-  text-shadow: 0 0 var(--bloom) var(--yh-section-tone);
-}
-
+/* The variation ("B", "III") stays in the display face: letters, not digits. */
 .yh-section-name__variant {
-  font-family: var(--font-readout);
-  font-weight: var(--weight-numeral);
   font-variant-numeric: tabular-nums;
 }

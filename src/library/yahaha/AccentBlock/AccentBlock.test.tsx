@@ -13,6 +13,16 @@ describe('AccentBlock style hue', () => {
     const rule = /\.yh-accentblock\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
     expect(rule).toMatch(/border-left:[^;]*var\(--style\)/);
     expect(rule).not.toContain('--accent');
+    expect(rule).toMatch(/--yh-accentblock-bar:\s*var\(--space-1\)/);
+    expect(rule).toMatch(/font-size:\s*var\(--size-body\)/);
+  });
+
+  it('drops the chevron between step keys (chevron false), keeps it by default', () => {
+    const { container, rerender } = render(<AccentBlock label="Sunday Drive Pop" as="button" />);
+    expect(container.querySelector('.yh-accentblock__chevron')).not.toBeNull();
+    rerender(<AccentBlock label="Sunday Drive Pop" as="button" chevron={false} />);
+    expect(container.querySelector('.yh-accentblock__chevron')).toBeNull();
+    expect(screen.getByRole('button')).toHaveTextContent('Sunday Drive Pop');
   });
 });
 
