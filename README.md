@@ -9,10 +9,10 @@ Interface design from first principles. Two parts:
 
 Use Node.js 22.12+ and npm. Run `npm install`, then `npm run dev`.
 
-The unified launcher starts the app on http://127.0.0.1:4191, the main Storybook (field guide and library) on http://127.0.0.1:6021, and the Yahaha Storybook (the redesigned widgets, regions and Stage) on http://127.0.0.1:6022. Ctrl-C stops all three. To use other ports:
+The unified launcher starts the app on http://127.0.0.1:4191 and Storybook on http://127.0.0.1:6022: one Storybook holding the field guide, the library and the Yahaha redesigns (widgets, regions and Stage). Ctrl-C stops both. To use other ports:
 
 ```sh
-PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6021 YAHAHA_STORYBOOK_PORT=6022 npm run dev
+PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6022 npm run dev
 ```
 
 Do not start independent child servers. If a preview fails, stop its entire owned group and restart the launcher. It refuses occupied ports and never stops unrelated processes.
@@ -23,7 +23,7 @@ Do not start independent child servers. If a preview fails, stop its entire owne
 
 ## Checks
 
-`npm run typecheck`, `npm test`, `npm run build`, `npm run build:storybook`, `npm run build:storybook:yahaha`. `AGENTS.md` says when to run each.
+`npm run typecheck`, `npm test`, `npm run build`, `npm run build:storybook`. `AGENTS.md` says when to run each.
 
 ## Reference boundary
 

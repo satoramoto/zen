@@ -10,10 +10,10 @@ Zen: React + TypeScript (TSX), Vite, Vitest, Storybook. Two things live here:
 Use only the unified launcher:
 
 ```sh
-PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6021 YAHAHA_STORYBOOK_PORT=6022 npm run dev
+PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6022 npm run dev
 ```
 
-It starts the app, the main Storybook (field guide and library) and the Yahaha Storybook (`.storybook-yahaha/`, only `src/library/yahaha/`), and stops them together. If one child fails, stop and restart the whole launcher group; don't start a replacement child on its own. Never stop unrelated processes or use occupied ports. Give each isolated worktree its own ports.
+It starts the app and the one Storybook (`.storybook/`: the field guide, the library and the Yahaha redesigns), and stops them together. If one child fails, stop and restart the whole launcher group; don't start a replacement child on its own. Never stop unrelated processes or use occupied ports. Give each isolated worktree its own ports.
 
 ## Checks
 
@@ -25,8 +25,7 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npx vitest run src/library` | Library tokens, themes, components, screens, or anything under `src/library/yahaha/`. |
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The field guide app. |
-| `npm run build:storybook` | Field guide or library stories, `.storybook/`. |
-| `npm run build:storybook:yahaha` | Yahaha stories, `.storybook-yahaha/`. |
+| `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
 
 Builds and unit tests are not browser evidence: look at layout and perceptual effects in a browser (the invisible-keyboard bug passed every test).
 
@@ -44,7 +43,7 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 - Components in `src/library/components`, `src/library/screens` and `src/library/yahaha` read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.
 - Colour, type, shape and spacing values live only in `src/library/themes/` (one file per facet). Mark any value the source style doesn't define with `// added`.
 - A theme pack (`themes/packs.ts`) names its Refero style id and the source rules it keeps.
-- Shared files: `contract.ts`, `themes/`, `storybook.tsx`, `.storybook/`, `.storybook-yahaha/`, `library.test.tsx`, `components/index.tsx`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.
+- Shared files: `contract.ts`, `themes/`, `storybook.tsx`, `.storybook/`, `library.test.tsx`, `components/index.tsx`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.
 
 ## Yahaha redesigns
 
