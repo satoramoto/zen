@@ -14,9 +14,9 @@
   height: calc(var(--space-6) - var(--space-1));
   padding: 0 var(--space-1);
   color: var(--text-2);
-  font-family: var(--font-sans);
-  font-size: var(--vs-text-body);
-  font-weight: 500;
+  /* A body Text: the sans at --vs-text-body, a touch heavier (popover.css 500). */
+  --text-size: var(--vs-text-body);
+  --text-weight: 500;
   white-space: nowrap;
   background: none;
   border: 0;
@@ -61,9 +61,8 @@
   max-height: 60vh;
   padding: calc(var(--space-1) * 1.5); /* popover.css 6px */
   color: var(--text-2);
-  font-family: var(--font-sans);
-  font-size: var(--vs-text-body);
-  font-weight: normal;
+  /* A body Text: the sans at --vs-text-body, in the body weight. */
+  --text-size: var(--vs-text-body);
 }
 
 /* A menu's items: whole-width rows, type until hovered. */
@@ -79,13 +78,16 @@
   padding: 0 calc(var(--space-1) * 2.5); /* popover.css 10px */
   text-align: left;
   color: var(--text-2);
-  font: inherit;
   white-space: nowrap;
   background: none;
   border: 0;
   /* popover.css 6px: a row inside the float's 10px corners. */
   border-radius: var(--radius-control);
   cursor: pointer;
+}
+/* An item takes the panel's type, unless it is a Text with its own. */
+.vs-popover-panel [role='menuitem']:not(.lib-text) {
+  font: inherit;
 }
 .vs-popover-panel [role='menuitem']:hover:not(:disabled),
 .vs-popover-panel [role='menuitem']:focus-visible {

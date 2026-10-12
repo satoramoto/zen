@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Segmented } from '../../components/core/Segmented/Segmented';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Hole } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import { Icon } from '../Icon/Icon';
 import * as api from '../model/api';
 import { usePreview } from '../model/preview';
@@ -75,9 +76,9 @@ export function Preview({ className }: { className: string }) {
     <div className={`vs-preview ${className}`} ref={ref} data-hole="" data-loading={drawing ? undefined : ''}>
       <Hole className="vs-preview-hole" name={drawing ? name : `${name}: ${LOADING}`}>
         {!drawing && (
-          <span className="vs-preview-loading" aria-hidden="true">
+          <Text className="vs-preview-loading" aria-hidden="true">
             {LOADING}
-          </span>
+          </Text>
         )}
       </Hole>
     </div>
@@ -91,25 +92,41 @@ export function Preview({ className }: { className: string }) {
  * tabs material draws it: under the visuals pack, words with the chosen one
  * underlined in the accent, as home.css drew them.
  *
- * **Kept.** Its items, label and hint.
+ * The words read "Home", "Live" (home.css's and stage-head.css's capitalize): the items are
+ * written capitalised, each named by its view's id.
+ *
+ * **Kept.** Its items' names, label and hint.
  */
 export function ViewSwitch({ view, onChange }: { view: View; onChange(next: View): void }) {
-  return <Segmented className="vs-viewswitch" items={VIEWS} index={VIEWS.indexOf(view)} onChange={(i) => VIEWS[i] !== view && onChange(VIEWS[i])} label="view" hint={VIEWS.map((v) => VIEW_HINTS[v]).join(' · ')} />;
+  return (
+    <Segmented
+      className="vs-viewswitch"
+      items={VIEWS.map(capitalised)}
+      itemLabels={VIEWS}
+      index={VIEWS.indexOf(view)}
+      onChange={(i) => VIEWS[i] !== view && onChange(VIEWS[i])}
+      label="view"
+      hint={VIEWS.map((v) => VIEW_HINTS[v]).join(' · ')}
+    />
+  );
 }
+
+/** A view's id as the switch prints it: "home" → "Home". */
+const capitalised = (v: View) => v.charAt(0).toUpperCase() + v.slice(1);
 
 /**
  * **Job.** The suite's wordmark, spelled the way mix[flow] spells its own.
  *
- * **Changed.** Its weight and tracking are the faces' display ones and its bracketed
- * half the accent (the original's `--primary`).
+ * **Changed.** A display `Text` (the faces' display face, weight and tracking) at
+ * `--vs-text-heading`; its bracketed half the accent (the original's `--primary`).
  *
  * **Kept.** The shape: the name, then `[flow]` in the primary tone.
  */
 export function Mark() {
   return (
-    <span className="vs-mark">
+    <Text role="display" className="vs-mark">
       visual<span>[flow]</span>
-    </span>
+    </Text>
   );
 }
 
@@ -127,12 +144,12 @@ export function Mark() {
  */
 export function Header({ view, onChange, lead, mark = true, children }: { view: View; onChange(next: View): void; lead?: ReactNode; mark?: boolean; children?: ReactNode }) {
   return (
-    <header className="vs-header" data-tauri-drag-region>
+    <Text as="header" className="vs-header" data-tauri-drag-region>
       {lead}
       {mark && <Mark />}
       <ViewSwitch view={view} onChange={onChange} />
       {children}
-    </header>
+    </Text>
   );
 }
 
@@ -144,13 +161,22 @@ export function Header({ view, onChange, lead, mark = true, children }: { view: 
  * **Kept.** The full path as its tooltip, and the quiet empty state.
  */
 export function NowPlaying({ group, name, empty = 'no preset' }: { group?: string; name?: string; empty?: string }) {
-  if (!name) return <span className="vs-now vs-quiet">{empty}</span>;
+  if (!name)
+    return (
+      <Text size="inherit" className="vs-now vs-quiet">
+        {empty}
+      </Text>
+    );
   const full = group ? `${group} / ${name}` : name;
   return (
-    <span className="vs-now" title={full}>
-      {group && <i>{group}</i>}
-      <span>{name}</span>
-    </span>
+    <Text size="inherit" className="vs-now" title={full}>
+      {group && (
+        <Text as="i" className="vs-now-group">
+          {group}
+        </Text>
+      )}
+      <Text className="vs-now-name">{name}</Text>
+    </Text>
   );
 }
 
@@ -209,21 +235,22 @@ export function FrameRate({ always = false, slowOnly = false }: { always?: boole
     // Live mode reads 0 fps until the first second's reading arrives.
     const now = frameReadout(history.length ? history : [{ fps: 0, cpu_ms: 0 }], true)!;
     return (
-      <span className="vs-stats" title="Frames drawn each second, and the time the engine spends on each">
+      <Text tabular className="vs-stats" title="Frames drawn each second, and the time the engine spends on each">
         {now.text}
-      </span>
+      </Text>
     );
   }
   const shown = frameReadout(history, import.meta.env.DEV && !slowOnly);
   if (!shown || (slowOnly && !shown.slow)) return null;
   return (
-    <span
+    <Text
+      tabular
       className="vs-stats"
       data-slow={shown.slow ? '' : undefined}
       title={shown.slow ? 'the picture is drawing fewer frames than the display shows: try a simpler preset or close other apps' : 'frames a second the preview draws, and the CPU time each takes'}
     >
       {shown.text}
-    </span>
+    </Text>
   );
 }
 
@@ -310,9 +337,9 @@ function HintFooter({ resting = '' }: { resting?: string }) {
   }, []);
   const says = pointed ?? focused ?? resting;
   return (
-    <footer className="vs-hint" {...(pointed ?? focused ? {} : { 'data-resting': '' })}>
+    <Text as="footer" className="vs-hint" {...(pointed ?? focused ? {} : { 'data-resting': '' })}>
       <span className="vs-hint-text">{says}</span>
-    </footer>
+    </Text>
   );
 }
 

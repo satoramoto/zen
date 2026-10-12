@@ -9,6 +9,7 @@ import { marksText } from '../../components/music/PartMarks/marks';
 import { SectionName } from '../../components/music/SectionName/SectionName';
 import { TempoReadout } from '../../components/music/TempoReadout/TempoReadout';
 import { Stack } from '../../layout/Stack';
+import { Text } from '../../primitives/Text';
 import { DisplayArt } from '../DisplayArt/DisplayArt';
 import { OneTouchPicker } from '../OneTouchPicker/OneTouchPicker';
 import { WaitingChip } from '../WaitingChip/WaitingChip';
@@ -300,7 +301,9 @@ export function Display({
   useFit(frame, [name, meta, queued, nowPlaying.playing, nowPlaying.bpm, chord.chord, chord.extension, hasParts, density]);
 
   return (
-    <div
+    <Text
+      as="div"
+      size="inherit"
       className="yh-display"
       data-part="display"
       data-material="screen"
@@ -337,9 +340,9 @@ export function Display({
               </span>
             ) : (
               meta && (
-                <span className="yh-display__meta" data-part="meta" title={meta}>
+                <Text size="label" tabular className="yh-display__meta" data-part="meta" title={meta}>
                   {meta}
-                </span>
+                </Text>
               )
             )}
           </Stack>
@@ -360,10 +363,15 @@ export function Display({
               <SectionName label={nowPlaying.playing} idle={!running} size={DISPLAY_SIZES.section} />
             </div>
             {(line.status || line.next || line.when) && (
-              <p className="yh-display__next" data-part="next">
-                {line.status && <span className="yh-display__status" data-part="status">{line.status}</span>}
+              <Text as="p" size="label" className="yh-display__next" data-part="next">
+                {line.status && (
+                  <Text size="label" className="yh-display__status" data-part="status">
+                    {line.status}
+                  </Text>
+                )}
                 {(line.next || line.when) && (
-                  <span
+                  <Text
+                    size="label"
                     className="yh-display__then"
                     data-part="then"
                     data-docked={running || undefined}
@@ -371,11 +379,15 @@ export function Display({
                   >
                     <span className="yh-display__then-arrow" data-part="then-arrow" aria-hidden="true" />
                     <span className="yh-display__then-word" data-part="then-word">then </span>
-                    {line.next && <span className="yh-display__then-name" data-part="then-name">{line.next}</span>}
+                    {line.next && (
+                      <Text weight="strong" leading="tight" className="yh-display__then-name" data-part="then-name">
+                        {line.next}
+                      </Text>
+                    )}
                     {line.when && <span className="yh-display__when" data-part="when">{line.when}</span>}
-                  </span>
+                  </Text>
                 )}
-              </p>
+              </Text>
             )}
           </div>
 
@@ -429,7 +441,7 @@ export function Display({
           )}
         </div>
       </div>
-    </div>
+    </Text>
   );
 }
 
@@ -447,7 +459,10 @@ function PartRow({ part: p, tipAction, onSound }: { part: DisplayPart; tipAction
   const tail = p.bass ? 'bass' : p.off ? 'off' : '';
   return (
     <li>
-      <button
+      <Text
+        as="button"
+        size="label"
+        leading="normal"
         ref={ref}
         type="button"
         className="yh-display__part"
@@ -463,11 +478,11 @@ function PartRow({ part: p, tipAction, onSound }: { part: DisplayPart; tipAction
           <span className="yh-display__part-name" data-part="part-name">{p.sound}</span>
           <PartMarks edited={p.edited} missing={p.missing} failed={p.failed} />
         </Stack>
-        <span className="yh-display__part-part" data-part="part-part" aria-hidden="true">
+        <Text size="caption" leading="normal" case="label" className="yh-display__part-part" data-part="part-part" aria-hidden="true">
           <span className="yh-display__part-label" data-part="part-label">{p.name}</span>
           {tail && <span className="yh-display__part-tail" data-part="part-tail">{tail}</span>}
-        </span>
-      </button>
+        </Text>
+      </Text>
     </li>
   );
 }

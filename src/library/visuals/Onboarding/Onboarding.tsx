@@ -5,6 +5,7 @@ import { Select } from '../../components/core/Select/Select';
 import { Switch } from '../../components/core/Toggle/Toggle';
 import { Layer, Opaque } from '../../layout/Layer';
 import { Screen } from '../../layout/Screen';
+import { Text } from '../../primitives/Text';
 import { REDUCE_WHAT, setMotion, useMotion } from '../model/access';
 import * as api from '../model/api';
 import { plural } from '../model/controls';
@@ -270,7 +271,7 @@ export function Onboarding({ onDone: done, start, store = kept }: { onDone(endin
       name="Setup"
       className="vs-onboarding"
       header={
-        <header className="vs-onboarding-head" data-tauri-drag-region>
+        <Text as="header" className="vs-onboarding-head" data-tauri-drag-region>
           <Mark />
           <ol className="vs-onboarding-dots" aria-label="setup steps">
             {shown.map((s) => (
@@ -285,7 +286,7 @@ export function Onboarding({ onDone: done, start, store = kept }: { onDone(endin
               Skip setup
             </ActionButton>
           )}
-        </header>
+        </Text>
       }
       footer={
         back ? (
@@ -318,6 +319,33 @@ const TITLES: Record<Step, string> = {
   vibe: 'vibe',
 };
 
+/** A step's title: the display face, half again the pane title's size. */
+function Title({ children }: { children: ReactNode }) {
+  return (
+    <Text as="h1" role="display" className="vs-onboarding-title">
+      {children}
+    </Text>
+  );
+}
+
+/** A step's lead: what it is for, at the pane title's size. */
+function Lead({ children }: { children: ReactNode }) {
+  return (
+    <Text as="p" className="vs-onboarding-lead">
+      {children}
+    </Text>
+  );
+}
+
+/** A note under the lead, in the caption grey; `num` sets its figures in the readout face. */
+function Note({ num, children }: { num?: boolean; children: ReactNode }) {
+  return (
+    <Text as="p" tabular={num || undefined} className={num ? 'vs-onboarding-note vs-num' : 'vs-onboarding-note'}>
+      {children}
+    </Text>
+  );
+}
+
 /** The step's main button: the one thing to do next. */
 function Main({ onPress, children, disabled }: { onPress(): void; children: string; disabled?: boolean }) {
   return (
@@ -330,10 +358,10 @@ function Main({ onPress, children, disabled }: { onPress(): void; children: stri
 function Welcome({ onStart, onSkip }: { onStart(): void; onSkip(): void }) {
   return (
     <section className="vs-onboarding-step vs-onboarding-welcome">
-      <h1>
+      <Title>
         Welcome to <Mark />
-      </h1>
-      <p className="vs-onboarding-lead">Visuals that move with your music. Three things to set up first: sound, sync, presets — about a minute.</p>
+      </Title>
+      <Lead>Visuals that move with your music. Three things to set up first: sound, sync, presets — about a minute.</Lead>
       <div className="vs-onboarding-actions">
         <Main onPress={onStart}>Start</Main>
         <ActionButton tone="quiet" onPress={onSkip} title="Go straight to the library; the setup is in the menu if you want it later">
@@ -418,14 +446,16 @@ function Listen({ onNext }: { onNext(): void }) {
     <section className="vs-onboarding-step vs-onboarding-listen">
       <Opaque className="vs-onboarding-text-scope">
         <Layer level="base" className="vs-onboarding-text">
-          <h1>{Say('audio input')}</h1>
-          <p className="vs-onboarding-lead">Choose what the visuals hear: your DAW, everything this Mac plays, or a microphone or interface.</p>
-          <div className="vs-onboarding-picker" inert={testing} data-off={testing ? '' : undefined}>
+          <Title>{Say('audio input')}</Title>
+          <Lead>Choose what the visuals hear: your DAW, everything this Mac plays, or a microphone or interface.</Lead>
+          <Text as="div" className="vs-onboarding-picker" inert={testing} data-off={testing ? '' : undefined}>
             <SourcePicker key={picker} onError={(e) => setProblem(notice("Couldn't read what there is to listen to.", e))} />
-          </div>
-          {testing && <p className="vs-onboarding-note">Stop the test sound to choose what to {say('audio input')}.</p>}
-          <p className="vs-onboarding-note">If macOS asks whether visual[flow] may hear audio, allow it — nothing is recorded or sent anywhere.</p>
-          <p className="vs-onboarding-cue">Play something — watch it move.</p>
+          </Text>
+          {testing && <Note>Stop the test sound to choose what to {say('audio input')}.</Note>}
+          <Note>If macOS asks whether visual[flow] may hear audio, allow it — nothing is recorded or sent anywhere.</Note>
+          <Text as="p" weight="strong" className="vs-onboarding-cue">
+            Play something — watch it move.
+          </Text>
           <div className="vs-onboarding-actions">
             <Main onPress={onNext}>Continue</Main>
             <ActionButton onPress={() => test(!testing)} title="Play a test beat straight into the visuals, without sound, to see them move" hint="a test beat straight into the visuals: no sound comes out">
@@ -461,11 +491,11 @@ function KeepTime({ onNext }: { onNext(): void }) {
 
   return (
     <section className="vs-onboarding-step">
-      <h1>{Say('Ableton Link')}</h1>
-      <p className="vs-onboarding-lead">
+      <Title>{Say('Ableton Link')}</Title>
+      <Lead>
         {frame ? `Ableton is on the network: ${plural(frame.peers, 'app')} at ${frame.tempo.toFixed(0)} bpm.` : 'Ableton is on the network.'} The visuals follow its tempo; they never change it.
-      </p>
-      <div className="vs-onboarding-row">
+      </Lead>
+      <Text as="div" className="vs-onboarding-row">
         <span>Change the preset</span>
         <Select
           items={choices.slice(1).map((c) => c.name)}
@@ -474,7 +504,7 @@ function KeepTime({ onNext }: { onNext(): void }) {
           label="change the preset"
           width={140}
         />
-      </div>
+      </Text>
       <div className="vs-onboarding-actions">
         <Main onPress={keep}>Keep in time</Main>
         <ActionButton tone="quiet" onPress={onNext}>
@@ -511,9 +541,9 @@ function FullLibrary({ onNext }: { onNext(): void }) {
   const done = status ? haveAll(status) : false;
   return (
     <section className="vs-onboarding-step">
-      <h1>Get the {say('pack')}</h1>
-      <p className="vs-onboarding-lead">{status ? libraryLine(status) : `Thousands more presets, downloaded once.`}</p>
-      {status && downloadText(status) && <p className="vs-onboarding-note vs-num">{downloadText(status)}</p>}
+      <Title>Get the {say('pack')}</Title>
+      <Lead>{status ? libraryLine(status) : `Thousands more presets, downloaded once.`}</Lead>
+      {status && downloadText(status) && <Note num>{downloadText(status)}</Note>}
       <div className="vs-onboarding-actions">
         {going || done ? (
           <Main onPress={onNext}>Continue</Main>
@@ -553,7 +583,9 @@ export function ReduceFlashing({ motion, onChange }: { motion: api.Motion | null
   const name = Say('reduced motion');
   return (
     <Switch className="vs-onboarding-reduce" aria-label={name} checked={motion?.reduced === true} onChange={onChange} disabled={!motion} title={REDUCE_HINT}>
-      {name}
+      <Text size="inherit" weight="strong" className="vs-onboarding-reduce-name">
+        {name}
+      </Text>
     </Switch>
   );
 }
@@ -569,7 +601,7 @@ function ReduceFlashingSetting() {
   return (
     <div className="vs-onboarding-reduce-setting">
       <ReduceFlashing motion={motion} onChange={change} />
-      <p className="vs-onboarding-note">{REDUCE_HINT}</p>
+      <Note>{REDUCE_HINT}</Note>
       <NoticeBanner className="vs-onboarding-problem" notice={problem} onDismiss={() => setProblem(null)} />
     </div>
   );
@@ -578,8 +610,8 @@ function ReduceFlashingSetting() {
 function Warning({ onNext }: { onNext(): void }) {
   return (
     <section className="vs-onboarding-step vs-onboarding-warning">
-      <h1>Flashing lights</h1>
-      <p className="vs-onboarding-lead">{WARNING_TEXT}</p>
+      <Title>Flashing lights</Title>
+      <Lead>{WARNING_TEXT}</Lead>
       <ReduceFlashingSetting />
       <div className="vs-onboarding-actions">
         <Main onPress={onNext}>I understand</Main>
@@ -713,7 +745,7 @@ export function FlashWarningDialog({ onClose, onUnderstood, required = false }: 
         className={`vs-onboarding-dialog vs-onboarding-warning${required ? ' vs-onboarding-dialog--required' : ''}`}
         actions={<Main onPress={onUnderstood ?? onClose}>I understand</Main>}
       >
-        <p className="vs-onboarding-lead">{WARNING_TEXT}</p>
+        <Lead>{WARNING_TEXT}</Lead>
         <ReduceFlashingSetting />
       </Modal>
     </Opaque>
@@ -805,21 +837,25 @@ function PickVibe({ onPicked }: { onPicked(): void }) {
 
   return (
     <section className="vs-onboarding-step">
-      <h1>Pick a vibe</h1>
-      <p className="vs-onboarding-lead">Something to start on. It plays on Home; go live from there to send it to a screen of its own.</p>
+      <Title>Pick a vibe</Title>
+      <Lead>Something to start on. It plays on Home; go live from there to send it to a screen of its own.</Lead>
       <ul className="vs-onboarding-vibes">
         {offered.map((v) => (
           <li key={v.index}>
             <button type="button" className="vs-onboarding-vibe" disabled={busy} onClick={() => pick({ kind: 'load', playlist: v.index, index: null }, v.name)}>
-              <b>{v.name}</b>
-              <span className="vs-num">{plural(v.size, 'preset')}</span>
+              <Text as="b" weight="strong" className="vs-onboarding-vibe-name">
+                {v.name}
+              </Text>
+              <Text tabular className="vs-onboarding-vibe-says vs-num">{plural(v.size, 'preset')}</Text>
             </button>
           </li>
         ))}
         <li>
           <button type="button" className="vs-onboarding-vibe" disabled={busy || !lists} onClick={() => pick({ kind: 'random' }, 'a random preset')}>
-            <b>Surprise me</b>
-            <span>anything, at random</span>
+            <Text as="b" weight="strong" className="vs-onboarding-vibe-name">
+              Surprise me
+            </Text>
+            <Text className="vs-onboarding-vibe-says">anything, at random</Text>
           </button>
         </li>
       </ul>

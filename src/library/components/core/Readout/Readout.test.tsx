@@ -70,9 +70,13 @@ describe('Readout', () => {
     const css = readFileSync(join(process.cwd(), 'src/library/components/core/Readout/Readout.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
     const rule = (sel: string) => new RegExp(`${sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} \\{([^}]*)\\}`).exec(css)![1];
     expect(rule('.yh-readout-unit')).toMatch(/width:\s*3\.5ch/);
-    expect(rule('.yh-readout-label')).toMatch(/font-size:\s*var\(--size-caption\)/);
+    // The label is a caption-sized Text, the number a numeral Text at body size.
+    const label = slider.querySelector('.yh-readout-label')!;
+    expect(label.getAttribute('data-text-size')).toBe('caption');
     expect(rule('.yh-readout-label')).toMatch(/color:\s*var\(--text-3\)/);
-    expect(rule('.yh-readout-number')).toMatch(/font-size:\s*var\(--size-body\)/);
+    const number = slider.querySelector('.yh-readout-number')!;
+    expect(number.getAttribute('data-role')).toBe('numeral');
+    expect(number.getAttribute('data-text-size')).toBe('body');
     // The number never wears the accent; key names in the readout face; no faint text.
     expect(css).not.toMatch(/\[data-dragging\] \.yh-readout-number|--font-mono|--text-4/);
   });

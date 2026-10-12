@@ -1,5 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent as ReactMouseEvent } from 'react';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import type { Pane } from '../model/home';
 import type { Lists, Playlist } from '../model/playlists';
 import { plural } from '../model/controls';
@@ -229,7 +230,9 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
 
   return (
     // The webview's own menu (Reload, Inspect…) never opens over the sidebar: a row's is the page's.
-    <div
+    <Text
+      as="div"
+      leading="normal"
       className="vs-isb"
       onKeyDown={onKeyDown}
       onContextMenu={(e) => {
@@ -258,7 +261,9 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
                     onClick={() => onToggle(s.id)}
                     {...bind(headKey(s.id))}
                   >
-                    <span className="vs-isb-title">{s.title}</span>
+                    <Text weight="strong" leading="normal" className="vs-isb-title">
+                      {s.title}
+                    </Text>
                     <Icon className="vs-isb-chevron" name={open ? 'chevron-down' : 'chevron-right'} size={12} />
                   </button>
                 </h2>
@@ -341,13 +346,15 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
                           {...bind(key)}
                         >
                           <Icon className="vs-isb-icon" name={r.icon} />
-                          <span className="vs-isb-name">{r.name}</span>
+                          <Text leading="normal" className="vs-isb-name">
+                            {r.name}
+                          </Text>
                           {/* The playlist playing: a small green dot after its name. */}
                           {playing && <span className="vs-isb-dot" aria-hidden="true" />}
                           {count !== null && count !== undefined && (
-                            <i className="vs-isb-count" aria-hidden="true">
+                            <Text as="i" leading="normal" tabular className="vs-isb-count" aria-hidden="true">
                               {count.toLocaleString('en-US')}
-                            </i>
+                            </Text>
                           )}
                         </button>
                       )}
@@ -387,7 +394,11 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
                     </li>
                   );
                 })}
-                {!s.rows.length && <li className="vs-isb-empty">{emptySays(s.id)}</li>}
+                {!s.rows.length && (
+                  <Text as="li" leading="normal" className="vs-isb-empty">
+                    {emptySays(s.id)}
+                  </Text>
+                )}
               </ul>
             </div>
           );
@@ -398,12 +409,14 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
         <div className="vs-isb-foot">
           <button type="button" className="vs-isb-settings" title="Settings (⌘,)" onClick={() => actions.onSettings?.()}>
             <Icon className="vs-isb-gear" name="gear" />
-            <span className="vs-isb-name">Settings</span>
+            <Text role="caption" leading="normal" className="vs-isb-name">
+              Settings
+            </Text>
           </button>
         </div>
       )}
       {menu && <RowMenu name={menu.list.name} items={rowMenu(menu.list, playingNow(menu), lists, { info: !!actions?.onInfo })} at={menu} onChoose={choose} onClose={closeMenu} />}
-    </div>
+    </Text>
   );
 }
 
@@ -501,7 +514,7 @@ function RowMenu({ name, items, at, onChoose, onClose }: { name: string; items: 
 
   return (
     <div ref={panel} className="vs-isb-menu" role="menu" aria-label={name} style={{ left: place.x, top: place.y }} onKeyDown={onKeyDown} onContextMenu={(e) => e.preventDefault()}>
-      <Layer level="float" className="vs-isb-menu-panel">
+      <Layer level="float" as={Text} className="vs-isb-menu-panel">
         {shown.map((it) => (
           <button
             key={`${asking}-${it.action}`}

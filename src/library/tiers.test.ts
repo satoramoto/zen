@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
+  adoption,
   compare,
   countByFolder,
   folderOf,
@@ -104,13 +105,31 @@ export const X = () => <div style={{ width: 560, height: 2, padding: 0, opacity:
     expect(rules(scanCss('yahaha/tokens.css', lonely), 'knobs').map((f) => f.snippet)).toEqual(['--yh-c']);
   });
 
+  it('counts type declarations outside Text, except CSS-wide resets and Text knobs', () => {
+    const css = `.yh-a { font-size: var(--size-label); font-weight: 600; line-height: 1; }
+.yh-b { letter-spacing: 0.02em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.yh-c { font: inherit; line-height: inherit !important; font-size: unset; }
+.yh-d { --text-size: calc(var(--size-label) * 0.9); --text-leading: 1; font-family: var(--font-mono); }
+.yh-e { font: 600 12px var(--font-sans); }`;
+    const t = rules(scanCss('components/core/X/X.css', css), 'type');
+    expect(t.map((f) => f.line)).toEqual([1, 1, 1, 2, 2, 2, 5]);
+    expect(rules(scanCss('primitives/Text.css', css), 'type')).toEqual([]);
+
+    const tsx = `// fontSize: 12 in a comment
+const s = { fontSize: 12 };
+export const X = () => <div style={{ fontWeight: 600, lineHeight: 1, color: 'red' }} />;
+export const Y = () => <div style={{ '--text-size': '1em' } as React.CSSProperties} />;`;
+    expect(rules(scanTsx('yahaha/X/X.tsx', tsx), 'type').map((f) => f.line)).toEqual([3, 3]);
+    expect(scanTsx('primitives/Text.tsx', tsx)).toEqual([]);
+  });
+
   it('compares counts against the baseline', () => {
     const findings: Finding[] = [{ file: 'yahaha/A/A.css', line: 3, rule: 'pixels', snippet: 'width: 48px' }];
     const counts = countByFolder(Object.assign(findings, { folders: ['yahaha/A', 'primitives', 'components/core/B'] }));
     expect(counts).toEqual({
-      'yahaha/A': { pixels: 1, painting: 0, knobs: 0 },
+      'yahaha/A': { pixels: 1, painting: 0, knobs: 0, type: 0 },
       primitives: {},
-      'components/core/B': { pixels: 0, margins: 0, knobs: 0 },
+      'components/core/B': { pixels: 0, margins: 0, knobs: 0, type: 0 },
     });
     expect(compare(counts, { 'yahaha/A': { pixels: 1 } })).toEqual([]);
     expect(compare(counts, { 'yahaha/A': { pixels: 2 } })).toEqual([]);
@@ -119,6 +138,19 @@ export const X = () => <div style={{ width: 560, height: 2, padding: 0, opacity:
     expect(zero).toContain('yahaha/A/A.css:3 width: 48px');
     const more = countByFolder([...findings, ...findings]);
     expect(compare(more, { 'yahaha/A': { pixels: 1 } })[0]).toMatch(/^yahaha\/A pixels: 2 > baseline 1 — /);
+  });
+});
+
+describe('tiers adoption', () => {
+  it('counts the widget folders that render Text and Surface', () => {
+    const a = adoption(join(process.cwd(), 'src/library'));
+    expect(a.components).toContain('components/core/Button');
+    expect(a.components).toContain('yahaha/Stage');
+    expect(a.components.some((f) => f === 'components/core' || f === 'yahaha' || f === 'visuals')).toBe(false);
+    expect(a.components.some((f) => f.startsWith('visuals/model') || f.startsWith('visuals/fixtures'))).toBe(false);
+    expect(a.text).toContain('yahaha/SongForm');
+    expect(a.surface).toContain('components/music/Fader');
+    for (const f of [...a.text, ...a.surface]) expect(a.components).toContain(f);
   });
 });
 

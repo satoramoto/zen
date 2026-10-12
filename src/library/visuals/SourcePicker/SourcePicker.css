@@ -17,10 +17,10 @@
   margin-left: 2px;
 }
 
-/* Caution, in a control's size: nothing to hear, a source gone, a refusal. */
+/* Caution, in a control's size (a Text at the label size, --vs-text-control): nothing to hear, a
+   source gone, a refusal. */
 .vs-audio-input .vs-warning {
   color: var(--warning);
-  font-size: var(--vs-text-control);
 }
 /* app.css's 280px: a note's widest, a measure the scale has no step for. */
 .vs-audio-note {
@@ -31,7 +31,8 @@
   white-space: nowrap;
 }
 
-/* Advanced: type, not a box; open, the channel pickers float under it. */
+/* Advanced: type, not a box (a caption Text, --vs-text-label); open, the channel pickers float
+   under it. */
 .vs-audio-advanced {
   position: relative;
   display: inline-block;
@@ -41,7 +42,6 @@
   list-style: none;
   padding: 2px var(--space-1);
   color: var(--text-3);
-  font-size: var(--vs-text-label);
 }
 .vs-audio-advanced > summary::-webkit-details-marker {
   display: none;
@@ -65,7 +65,8 @@
   border-radius: var(--radius-card);
 }
 
-/* Shown under the picker (Settings): a caption, then the two pickers. */
+/* Shown under the picker (Settings): a caption (a caption Text, capitalised in code), then the
+   two pickers. */
 .vs-audio-channels {
   display: inline-flex;
   align-items: center;
@@ -73,10 +74,6 @@
 }
 .vs-audio-channels-name {
   color: var(--text-3);
-  font-size: var(--vs-text-label);
-}
-.vs-audio-channels-name::first-letter {
-  text-transform: uppercase;
 }
 
 .vs-audio-lane {
@@ -85,9 +82,9 @@
   gap: var(--space-2);
   min-width: 0;
 }
+/* Lane names and the combined level are caption Text (SourcePicker.tsx); only their ink is here. */
 .vs-audio-lane-name,
 .vs-audio-mix-levels {
-  font-size: var(--vs-text-label);
   color: var(--text-2);
 }
 .vs-audio-optional {

@@ -128,9 +128,7 @@
 .vs-stagelayout-head {
   grid-area: head;
   z-index: var(--vs-stagelayout-z-head);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  /* A row Stack: its gap (space 2) between the capsules, centred on the line. */
   min-width: 0;
   height: var(--vs-stagelayout-titlebar);
   padding: 0 var(--space-2) 0 var(--vs-stagelayout-lights);
@@ -211,15 +209,13 @@
   border-radius: var(--radius-pill);
   background: none;
   color: var(--vs-caption-raised);
-  font-size: var(--size-caption);
   cursor: pointer;
   user-select: none;
 }
-.vs-stagelayout-hint kbd {
+/* The key: a strong, tabular Text in the readout face at the hint's size. */
+.vs-stagelayout-hint-key {
   color: var(--text-1);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  font-weight: var(--weight-strong);
 }
 .vs-stagelayout-hint:focus-visible {
   outline: 2px solid var(--vs-focus-ring);
@@ -249,11 +245,9 @@
   border-radius: var(--radius-pill);
   box-shadow: var(--layer-base-edge), var(--layer-float-cast);
 }
-.vs-stagelayout-leaving-card p {
-  margin: 0;
+.vs-stagelayout-leaving-line {
+  --text-size: var(--vs-text-heading);
   color: var(--text-1);
-  font-size: var(--vs-text-heading);
-  font-weight: var(--weight-strong);
   white-space: nowrap;
 }
 .vs-stagelayout-ring {

@@ -47,28 +47,20 @@
   align-items: center;
   justify-content: flex-end;
   min-width: 0;
-  line-height: 1;
   white-space: nowrap;
 }
+/* A label Text at caption size, tight leading. */
 .yh-fader__word {
   margin-bottom: var(--space-1);
   color: var(--text-3);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
 }
+/* A numeral Text at heading size (label size when off), untracked. */
 .yh-fader__value {
-  font-family: var(--font-readout);
-  font-size: var(--size-heading);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
+  --text-tracking: 0;
 }
 /* Off: the number steps down a size as well as a shade, so it never competes with a live level. */
 .yh-fader[data-kind='off'] .yh-fader__value {
   color: var(--text-3);
-  font-size: var(--size-label);
 }
 
 /* The travel: the groove centred on the strip, the one meter hard against its right edge. Both

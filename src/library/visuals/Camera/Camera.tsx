@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useSyncExternalStore, type ReactN
 import { ActionButton as Button, ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import { Switch } from '../../components/core/Toggle/Toggle';
 import { Group } from '../../layout/Group';
+import { Text } from '../../primitives/Text';
 import { Select } from '../../components/core/Select/Select';
 import { Slider } from '../../components/core/Slider/Slider';
 import { range } from '../model/controls';
@@ -140,9 +141,9 @@ export function CameraPanel({ open, onClose }: { open: boolean; onClose(): void 
       <div className="vs-camera-body">
         <div className="vs-camera-power">
           <CameraSwitch name="Enable camera" on={on} onChange={(enabled) => (enabled ? void controller?.start() : controller?.stop())} disabled={!controller} />
-          <p role={status === 'failed' ? 'alert' : 'status'} className="vs-camera-status">
+          <Text as="p" size="caption" ariaRole={status === 'failed' ? 'alert' : 'status'} className="vs-camera-status">
             {message}
-          </p>
+          </Text>
         </div>
         <Group direction="column" className="vs-camera-group" name="Source">
           <Select
@@ -152,7 +153,11 @@ export function CameraPanel({ open, onClose }: { open: boolean; onClose(): void 
             onChange={(index) => controller?.selectDevice(choices[index].deviceId)}
             disabled={!controller}
           />
-          {deviceMessage && <p className="vs-camera-note">{deviceMessage}</p>}
+          {deviceMessage && (
+            <Text as="p" size="caption" className="vs-camera-note">
+              {deviceMessage}
+            </Text>
+          )}
           <div className="vs-camera-switches">
             <CameraSwitch name="Person only" on={settings.personOnly} onChange={(personOnly) => controller?.configure({ personOnly })} title="Remove the room; waits for a fresh local person mask" />
             <CameraSwitch name="Mirror camera" on={settings.mirror} onChange={(mirror) => controller?.configure({ mirror })} />
@@ -168,12 +173,12 @@ export function CameraPanel({ open, onClose }: { open: boolean; onClose(): void 
         <Group direction="column" className="vs-camera-group" name="Motion">
           {sliders(['feedMix', 'steadiness', 'smoothing'])}
         </Group>
-        <footer className="vs-camera-note">
+        <Text as="footer" size="caption" className="vs-camera-note">
           <p>Video stays on this device. Closing this panel keeps it running. Your music input stays unchanged.</p>
           <a href={controller?.modelLicenseUrl ?? "https://github.com/google-ai-edge/mediapipe/blob/master/LICENSE"} target="_blank" rel="noreferrer">
             Local person model · Apache 2.0
           </a>
-        </footer>
+        </Text>
       </div>
     </Sheet>
   );

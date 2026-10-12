@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { HueSlot } from '../../core/hue';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './SoundCell.css';
 
 export interface SoundCellProps {
@@ -76,7 +77,10 @@ export function SoundCell({
     soundName ?? `${partName} sound: ${[number, sound].filter(Boolean).join(' ')}. Opens the quick sound list`;
   return (
     <div className="yh-sound-cell" data-hue={hue} data-off={off ? 'true' : undefined}>
-      <button
+      <Text
+        as="button"
+        role="label"
+        tabular
         type="button"
         className={`yh-sound-cell__part ${focusRing}`}
         title={partName}
@@ -85,8 +89,12 @@ export function SoundCell({
         onClick={() => onPart?.()}
       >
         {part}
-      </button>
-      <button
+      </Text>
+      <Text
+        as="button"
+        role="caption"
+        size="body"
+        tabular
         type="button"
         className={`yh-sound-cell__sound ${focusRing}`}
         aria-label={spoken}
@@ -94,9 +102,13 @@ export function SoundCell({
         onClick={() => onSound?.()}
       >
         <span className="yh-sound-cell__title">{sound}</span>
-        {number && <span className="yh-sound-cell__number">{number}</span>}
+        {number && (
+          <Text role="caption" tabular className="yh-sound-cell__number">
+            {number}
+          </Text>
+        )}
         {marks != null && <span className="yh-sound-cell__marks">{marks}</span>}
-      </button>
+      </Text>
     </div>
   );
 }

@@ -10,8 +10,6 @@
   min-height: 0;
   padding: 0 calc(var(--space-2) + var(--space-1) / 2); /* 10px */
   color: var(--text-2);
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
 }
 /* The crate takes what is left under the mark, and scrolls in it. */
 .vs-stagecrate > :last-child {
@@ -32,6 +30,6 @@
   margin: 0;
   padding: var(--space-1) calc(var(--space-2) + var(--space-1) / 2); /* 4px 10px */
   color: var(--text-3);
-  font-size: var(--vs-text-annot);
-  line-height: 1.45;
+  --text-size: var(--vs-text-annot);
+  --text-leading: 1.45;
 }

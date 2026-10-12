@@ -21,13 +21,9 @@
   max-height: 40vh;
   overflow-y: auto;
 }
+/* Bold is a strong Text, code a code Text at the label size (--vs-text-label). */
 .vs-update-notes strong {
   color: var(--text-1);
-  font-weight: var(--weight-strong);
-}
-.vs-update-notes code {
-  font-family: var(--font-mono);
-  font-size: var(--vs-text-label);
 }
 .vs-update-notes a {
   color: var(--accent);

@@ -34,11 +34,7 @@
   max-width: 100%;
   overflow: hidden;
   color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
+  /* Type: a body Text at caption size in label case. */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -51,12 +47,8 @@
   grid-area: readout;
   min-width: calc(var(--lib-param-chars) * 1ch);
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
-  line-height: 1;
+  /* Type: a numeral Text at label size, set solid. */
+  --text-tracking: 0;
   text-align: center;
   white-space: nowrap;
 }
@@ -77,14 +69,11 @@
   text-align: start;
 }
 
-/* The track: the channel, and the element the gesture lives on. */
+/* The track: the channel, and the element the gesture lives on; a pill `well` Surface. */
 .lib-slider__track {
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: var(--mat-well-texture), var(--mat-well-fill);
-  box-shadow: var(--mat-well-shadow);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -180,12 +169,9 @@
   width: var(--lib-slider-mark);
 }
 
-/* The thumb: a handle across the track at the value. */
+/* The thumb: a handle across the track at the value; a pill `handle` Surface. */
 .lib-slider__thumb {
   position: absolute;
-  background: var(--mat-handle-texture), var(--mat-handle-fill);
-  border-radius: var(--radius-pill);
-  box-shadow: var(--mat-handle-shadow);
   pointer-events: none;
 }
 .lib-slider[data-orientation='vertical'] .lib-slider__thumb {

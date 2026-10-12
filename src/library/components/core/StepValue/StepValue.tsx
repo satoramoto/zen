@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { fraction, useAdjust } from './adjust';
 import type { HueSlot } from '../hue';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './StepValue.css';
 
 /** A categorical hue slot (an app maps its own meaning, e.g. Yahaha's parts), or `t` neutral. */
@@ -135,12 +136,15 @@ export function StepValue({
       {...handlers}
     >
       {tag && (
-        <span className="yh-stepvalue__tag">
+        <Text role="body" size="caption" weight="strong" case="label" className="yh-stepvalue__tag">
           <span className="yh-stepvalue__swatch" aria-hidden="true" />
           {tag}
-        </span>
+        </Text>
       )}
-      <span className="yh-stepvalue__value">{shown}</span>
+      {/* A table cell (`ink` 't') reads in plain body weight, quieter than a level. */}
+      <Text role="numeral" size="label" weight={ink === 't' ? 'body' : undefined} className="yh-stepvalue__value">
+        {shown}
+      </Text>
       {ink === 'a' && <span className="yh-stepvalue__lamp" aria-hidden="true" />}
     </span>
   );

@@ -14,10 +14,6 @@
   border-bottom: var(--border-width) solid var(--border);
   background: var(--surface-0);
   color: var(--text-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-label);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
 }
 
 /* The row, nav and groups are Stacks (direction, align, gap step); these rules add only what a
@@ -30,12 +26,10 @@
   padding: var(--space-2) var(--space-4) 0;
 }
 
-/* The name: identity, not a control, so the quietest strong word on the bar. */
+/* The name: identity, not a control, so the quietest strong word on the bar (a strong Text). */
 .yh-appbar__name {
   flex: none;
   color: var(--text-2);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
   white-space: nowrap;
 }
 
@@ -65,23 +59,22 @@
   align-items: baseline;
   min-width: 0;
   white-space: nowrap;
-  font-variant-numeric: tabular-nums;
 }
 
+/* The style is a strong Text with tabular figures; the tempo a numeral Text at label size, on the
+   bar's 1.4 line. */
 .yh-appbar__style {
   min-width: 0;
   margin-right: var(--space-2);
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--text-1);
-  font-weight: var(--weight-strong);
 }
 
 .yh-appbar__tempo {
   flex: none;
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-weight: var(--weight-numeral);
+  --text-leading: 1.4;
 }
 
 .yh-appbar__unit {
@@ -119,7 +112,8 @@
 }
 
 /* The ▾ as a drawn chevron on a full control-width key: the font's ▾ came out smaller than the
-   LED beside it. The glyph's character is hidden; its box draws the chevron. Its lengths are
+   LED beside it. The glyph (a Text) sets its character at size 0, so only its box shows, and the
+   box draws the chevron. Its lengths are
    fractions of --control-h (10, 6 and 1.5 px at the compact 28 px), so it scales with the key. */
 .yh-appbar__caret .yh-button[data-size='caret'] {
   width: var(--control-h);
@@ -130,7 +124,7 @@
   display: inline-block;
   width: calc(var(--control-h) * 5 / 14);
   height: calc(var(--control-h) * 5 / 14);
-  font-size: 0;
+  --text-size: 0;
   opacity: 1;
 }
 
@@ -158,10 +152,10 @@
   z-index: 10;
 }
 
-/* The connections: words in secondary text, the dot carries the state. */
+/* The connections: words in secondary text (the word a Text in the label case), the dot carries
+   the state. */
 .yh-appbar__launchkey {
   color: var(--text-2);
-  text-transform: var(--label-case);
   white-space: nowrap;
 }
 

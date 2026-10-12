@@ -1,6 +1,8 @@
 import type { HueSlot } from '../../core/hue';
 import { BOX, R, START, arc, point, sweepOf } from './geometry';
 import { focusRing } from '../../../primitives/Ring';
+import { Surface } from '../../../primitives/Surface';
+import { Text } from '../../../primitives/Text';
 import { useKnob, type TipAction } from './useKnob';
 // The well and the cap are Surfaces through the class and data attributes, without
 // `data-radius`: they are discs (`--yh-knob-round`), which no Surface radius gives. Before
@@ -116,14 +118,14 @@ export function Knob({
       data-hue={hue}
       data-tip={tip}
     >
-      <span className="yh-knob__label" data-part="label">
+      <Text role="caption" weight={unused ? 'body' : 'strong'} case="label" className="yh-knob__label" data-part="label">
         {label}
-      </span>
+      </Text>
       <span className="yh-knob__dial" data-part="dial">
         {/* The groove: the full 270° sweep, cut from a disc so it can wear any material. */}
-        <span className="yh-knob__track lib-surface" data-material="well" data-part="well" aria-hidden="true" />
+        <Surface as="span" material="well" radius="circle" className="yh-knob__track" data-part="well" aria-hidden="true" />
         {/* The cap the arc sits around. */}
-        <span className="yh-knob__body lib-surface" data-material="handle" data-part="body" aria-hidden="true" />
+        <Surface as="span" material="handle" radius="circle" className="yh-knob__body" data-part="body" aria-hidden="true" />
         <svg className="yh-knob__ring" viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true">
           {!unused && lit && <path className="yh-knob__lit" data-part="arc" d={lit} />}
           {!unused && (
@@ -138,20 +140,20 @@ export function Knob({
           )}
         </svg>
         {!unused && (
-          <span className="yh-knob__value" data-part="value">
+          <Text role="numeral" className="yh-knob__value" data-part="value">
             {value}
             {unit && (
-              <span className="yh-knob__unit" data-part="unit">
+              <Text role="body" size="caption" leading="tight" className="yh-knob__unit" data-part="unit">
                 {unit}
-              </span>
+              </Text>
             )}
-          </span>
+          </Text>
         )}
       </span>
       {code && (
-        <span className="yh-knob__code" data-part="code">
+        <Text role="caption" className="yh-knob__code" data-part="code">
           {code}
-        </span>
+        </Text>
       )}
     </button>
   );

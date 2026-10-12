@@ -21,7 +21,8 @@
   height: auto;
   min-height: var(--control-h);
   white-space: normal;
-  line-height: 1.3;
+  /* The face is a Text: its leading knob. */
+  --text-leading: 1.3;
 }
 
 /* The progress: a tone step, filled in the accent. It fills at once (nothing animates). */
@@ -44,9 +45,9 @@
   overflow: hidden;
   padding: 0 var(--space-3);
   color: var(--text-1);
-  font-size: var(--vs-text-control);
-  font-variant-numeric: tabular-nums;
-  line-height: var(--control-h);
+  /* A tabular body Text on the control's line. */
+  --text-size: var(--vs-text-control);
+  --text-leading: var(--control-h);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -54,8 +55,8 @@
 .vs-pack-note {
   margin: 0;
   color: var(--text-3);
-  font-size: var(--vs-text-label);
-  line-height: 1.45;
+  /* A caption Text (--vs-text-label) on a roomier line. */
+  --text-leading: 1.45;
   overflow-wrap: anywhere;
 }
 .vs-pack-note[data-error] {
@@ -71,8 +72,7 @@
   flex: 1;
   min-width: 0;
   color: var(--text-1);
-  font-size: var(--vs-text-body);
-  font-variant-numeric: tabular-nums;
-  font-weight: var(--weight-strong);
+  /* A strong, tabular body Text. */
+  --text-size: var(--vs-text-body);
   white-space: nowrap;
 }

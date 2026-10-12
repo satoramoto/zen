@@ -4,6 +4,7 @@ import type { LibraryRow } from '../model/api';
 import { Numbers } from '../Numbers/Numbers';
 import { tileBy, tileName } from '../PresetTile/PresetTile';
 import { Icon } from '../Icon/Icon';
+import { Text } from '../../primitives/Text';
 import './Hero.css';
 
 /** The class the picture's box wears: the app passes `<Preview className={HERO_PIC} />`. */
@@ -55,6 +56,15 @@ export interface HeroProps {
   onAdd?(): void;
 }
 
+/** An action's word: strong, at the body size (a step larger on play and pause, Hero.css); its button carries the name. */
+function ActWord({ children }: { children: string }) {
+  return (
+    <Text weight="strong" leading="normal" className="vs-hero-act-word" aria-hidden="true">
+      {children}
+    </Text>
+  );
+}
+
 /** The card. */
 export function Hero({ preset, picture, playing = false, from = '', starred = false, onPlayPause, onNext, onStar, onAdd }: HeroProps) {
   const info = preset !== undefined;
@@ -71,36 +81,44 @@ export function Hero({ preset, picture, playing = false, from = '', starred = fa
             {typeof picture === 'string' && picture ? (
               <img src={picture} alt={name ? `preview of ${name}` : 'preview'} draggable={false} />
             ) : (
-              <span className="vs-hero-pic-none">{preset ? 'Drawing…' : 'Nothing playing yet'}</span>
+              <Text role="caption" leading="normal" className="vs-hero-pic-none">
+                {preset ? 'Drawing…' : 'Nothing playing yet'}
+              </Text>
             )}
           </div>
         )}
         {info && (
           <div className="vs-hero-info">
-            <p className="vs-hero-label">Now playing</p>
+            <Text as="p" leading="normal" className="vs-hero-label">
+              Now playing
+            </Text>
             {name ? (
-              <h2 className="vs-hero-name" title={name}>
+              <Text as="h2" weight="strong" className="vs-hero-name" title={name}>
                 {name}
-              </h2>
+              </Text>
             ) : (
-              <h2 className="vs-hero-name" data-none="">
+              <Text as="h2" weight="strong" className="vs-hero-name" data-none="">
                 Nothing playing
-              </h2>
+              </Text>
             )}
-            {by && <p className="vs-hero-by">{by}</p>}
+            {by && (
+              <Text as="p" leading="normal" className="vs-hero-by">
+                {by}
+              </Text>
+            )}
             {from && (
-              <p className="vs-hero-from">
+              <Text as="p" role="caption" leading="normal" className="vs-hero-from">
                 <Numbers text={from} />
-              </p>
+              </Text>
             )}
             <Group name="actions" label={false} className="vs-hero-actions" wrap>
               <button type="button" className="vs-hero-act vs-hero-play" aria-label={playing ? 'pause' : 'play'} title={playing ? 'Hold on this preset' : 'Move on by itself again'} onClick={onPlayPause}>
                 <Icon name={playing ? 'pause' : 'play'} />
-                <span aria-hidden="true">{playing ? 'Pause' : 'Play'}</span>
+                <ActWord>{playing ? 'Pause' : 'Play'}</ActWord>
               </button>
               <button type="button" className="vs-hero-act" aria-label="next preset" title="Next preset (→)" onClick={onNext}>
                 <Icon name="next" />
-                <span aria-hidden="true">Next</span>
+                <ActWord>Next</ActWord>
               </button>
               <button
                 type="button"
@@ -112,11 +130,11 @@ export function Hero({ preset, picture, playing = false, from = '', starred = fa
                 onClick={onStar}
               >
                 <Icon name="star" />
-                <span aria-hidden="true">{starred ? 'Starred' : 'Star'}</span>
+                <ActWord>{starred ? 'Starred' : 'Star'}</ActWord>
               </button>
               <button type="button" className="vs-hero-act" aria-label="add to a playlist" title="Add it to a playlist" disabled={!preset} onClick={onAdd}>
                 <Icon name="plus" />
-                <span aria-hidden="true">Playlist</span>
+                <ActWord>Playlist</ActWord>
               </button>
             </Group>
           </div>

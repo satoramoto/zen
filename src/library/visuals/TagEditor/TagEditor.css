@@ -1,19 +1,24 @@
 /* My tags (TagEditor.tsx), from the original's tag-editor.css, as the inspector shows them: each a
    "#tag" in type, no pill, with its ✕ on hover or focus; a tag on only some of several picked
-   fainter, with its count; then "+ Tag", and the box it becomes. */
+   fainter, with its count; then "+ Tag", and the box it becomes. The editor is a body Text at
+   --vs-text-label (the box inherits it); a tag, its count and "+ Tag" are Texts a touch heavier. */
 .vs-tag-editor {
+  --text-size: var(--vs-text-label);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1) var(--space-3);
 }
+.vs-tag-editor .vs-tag-chip,
+.vs-tag-editor .vs-tag-chip-count {
+  --text-weight: 500;
+}
 .vs-tag-editor .vs-tag-chip {
+  --text-size: var(--vs-text-label);
   display: inline-flex;
   align-items: center;
   gap: 2px;
   color: var(--text-1);
-  font-size: var(--vs-text-label);
-  font-weight: 500;
 }
 .vs-tag-editor .vs-tag-chip::before {
   content: '#';
@@ -26,8 +31,7 @@
 .vs-tag-editor .vs-tag-chip-count {
   margin-left: 2px;
   color: var(--text-3);
-  font-size: var(--vs-text-annot);
-  font-variant-numeric: tabular-nums;
+  --text-size: var(--vs-text-annot);
 }
 .vs-tag-editor .vs-tag-chip-x {
   display: inline-grid;
@@ -63,9 +67,6 @@
   border: 0;
   background: none;
   color: var(--text-3);
-  font: inherit;
-  font-size: var(--vs-text-label);
-  font-weight: 500;
   cursor: pointer;
 }
 .vs-tag-editor .vs-tag-chip-add:hover {
@@ -81,8 +82,8 @@
   border-radius: var(--radius-input);
   background: var(--surface-3);
   color: var(--text-1);
+  /* The editor's type (--vs-text-label, the body weight). */
   font: inherit;
-  font-size: var(--vs-text-label);
   outline: none;
 }
 .vs-tag-editor .vs-tag-chip-input::placeholder {

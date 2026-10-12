@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
+import { Text } from '../../primitives/Text';
 import { getCurrentWebview, type UnlistenFn } from '../model/ipc';
 import * as pack from '../model/pack';
 import './Pack.css';
@@ -82,7 +83,9 @@ export function PackProgress({ action }: { action: pack.PackAction }) {
   return (
     <span className="vs-pack-progress" role="progressbar" aria-label={action.label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
       <span className="vs-pack-progress-fill" style={{ width: `${(action.progress ?? 0) * 100}%` }} />
-      <span className="vs-pack-progress-label">{action.label}</span>
+      <Text tabular className="vs-pack-progress-label">
+        {action.label}
+      </Text>
     </span>
   );
 }
@@ -165,21 +168,27 @@ export function PackBar({ presets, dropped, credits, onCredits }: PackBarProps) 
               {action.label}
             </ActionButton>
           )}
-          {action.note && !action.error && <p className="vs-pack-note">{action.note}</p>}
+          {action.note && !action.error && (
+            <Text as="p" role="caption" className="vs-pack-note">
+              {action.note}
+            </Text>
+          )}
           {action.error && (
-            <p className="vs-pack-note" data-error="" role="alert">
+            <Text as="p" role="caption" className="vs-pack-note" data-error="" ariaRole="alert">
               {action.error}
-            </p>
+            </Text>
           )}
         </div>
       )}
       {note && (
-        <p className="vs-pack-note" data-error={note.error ? '' : undefined} role="status">
+        <Text as="p" role="caption" className="vs-pack-note" data-error={note.error ? '' : undefined} ariaRole="status">
           {note.text}
-        </p>
+        </Text>
       )}
       <div className="vs-pack-row">
-        <span className="vs-pack-count">{count(presets)} presets</span>
+        <Text weight="strong" tabular className="vs-pack-count">
+          {count(presets)} presets
+        </Text>
         <ActionButton tone="quiet" onPress={() => picker.current?.click()} title="Copy a folder of .milk presets into the library">
           Add a folder…
         </ActionButton>

@@ -4,7 +4,13 @@
    the measures read out as one line ("slow · dark · calm"), the colours as dots, my tags. Then
    the map (Field), the tune (Tune) and the playlists holding it as a quiet line. Areas are told
    apart by space alone. The panel is a raised tint, so the caption here is the raised one
-   (visuals.css --vs-caption-raised). Contract variables and visuals.css tokens only. */
+   (visuals.css --vs-caption-raised). Contract variables and visuals.css tokens only.
+
+   Type is Text's: each line of words is a `Text` in a role (the name `display` at strong weight,
+   the captions `caption`, the empty state's title `heading`), refined by the knobs on its own
+   class. Lines that had no leading of their own keep the one they inherit (`line-height:
+   inherit`, a reset), so they stand as tall as before. The panel itself sets no type: it reads
+   the app's body size from .vs-root. */
 
 /* The original's 14px 20px 24px. */
 .vs-inspector {
@@ -12,7 +18,6 @@
   flex-direction: column;
   padding: calc(var(--space-1) * 3.5) calc(var(--space-2) * 2.5) var(--space-5);
   color: var(--text-2);
-  font-size: var(--size-body);
 }
 
 /* The header row: back to now playing at the left; the actions, then close (laid over), at the right. */
@@ -49,8 +54,7 @@
 .vs-inspector-error {
   margin: var(--space-4) 0 0;
   color: var(--warning);
-  font-size: var(--size-caption);
-  line-height: 1.45;
+  --text-leading: 1.45;
 }
 
 /* Several picked: their first pictures, three across, the count of the rest over the last; in the map's place, under the facts. */
@@ -84,9 +88,8 @@
   border-radius: var(--radius-control);
   background: color-mix(in oklab, var(--key-black) 60%, transparent);
   color: var(--key-white);
-  font-size: var(--vs-text-label);
-  font-weight: var(--weight-strong);
-  font-variant-numeric: tabular-nums;
+  /* A caption (--vs-text-label is the caption size), strong, tabular: the Text's props. */
+  line-height: inherit;
 }
 
 .vs-inspector-back {
@@ -100,9 +103,11 @@
   border-radius: var(--radius-control);
   background: none;
   color: var(--vs-caption-raised);
-  font-size: var(--size-caption);
-  font-weight: 500;
   cursor: pointer;
+}
+/* Its word: a caption at the original's 500. */
+.vs-inspector-back-label {
+  --text-weight: 500;
 }
 .vs-inspector-back:hover {
   color: var(--text-1);
@@ -117,14 +122,13 @@
 .vs-inspector-none-title {
   margin: 0 0 calc(var(--space-1) * 1.5);
   color: var(--text-1);
-  font-size: var(--vs-text-heading);
-  font-weight: var(--weight-strong);
+  --text-size: var(--vs-text-heading);
+  line-height: inherit;
 }
 .vs-inspector-quiet {
   margin: 0;
   color: var(--vs-caption-raised);
-  font-size: var(--size-caption);
-  line-height: 1.45;
+  --text-leading: 1.45;
 }
 
 /* First, the name and who made it. */
@@ -148,12 +152,10 @@
 .vs-inspector-name {
   margin: 0;
   color: var(--text-1);
-  font-family: var(--font-display);
-  /* The original's 22px: the heading step and a tenth. */
-  font-size: calc(var(--size-heading) * 1.1);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking-display);
-  line-height: 1.2;
+  /* The display face and tracking at strong weight (the Text's role and weight); the original's
+     22px, the heading step and a tenth, at 1.2. */
+  --text-size: calc(var(--size-heading) * 1.1);
+  --text-leading: 1.2;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
@@ -167,27 +169,24 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: var(--size-body);
 }
 
-/* The facts: the style, the readout (the measures as words, the colours as dots) and my tags. */
+/* The facts: the style, the readout (the measures as words, the colours as dots) and my tags.
+   The Group sets no space between them (gap 0): each keeps its own. */
 /* The original's 18px. */
 .vs-inspector-meta {
   margin-top: calc(var(--space-3) * 1.5);
 }
-.vs-inspector-meta > .lib-group__body {
-  gap: 0;
-}
-/* The original's 6px under it; its 11px on the label step (12). */
+/* The original's 6px under it; its 11px on the label step (12): a caption, at 500, a little open. */
 .vs-inspector-style {
   margin: 0 0 calc(var(--space-1) * 1.5);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  --text-weight: 500;
+  --text-tracking: 0.02em;
+  line-height: inherit;
 }
 .vs-inspector-words {
   display: flex;
@@ -196,8 +195,9 @@
   margin: 0;
   color: var(--text-1);
   /* The original's 15px: three quarters of the heading step. */
-  font-size: calc(var(--size-heading) * 0.75);
-  font-weight: 500;
+  --text-size: calc(var(--size-heading) * 0.75);
+  --text-weight: 500;
+  line-height: inherit;
 }
 .vs-inspector-words > span {
   display: inline-flex;
@@ -214,7 +214,7 @@
   gap: calc(var(--space-1) * 2.5);
   margin: var(--space-2) 0 0;
   color: var(--vs-caption-raised);
-  font-size: var(--size-caption);
+  line-height: inherit;
 }
 /* The original's 9px dots 5px apart, on the nearest steps (10 and 4: the same 14px pitch). */
 .vs-inspector-swatches {

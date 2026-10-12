@@ -22,11 +22,7 @@
   background: var(--mat-tabs-tab-texture), var(--mat-tabs-tab-fill);
   box-shadow: var(--mat-tabs-tab-shadow);
   color: var(--mat-tabs-ink);
-  font: inherit;
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
+  /* Type: the tab is a Text, body face and leading at the label size, strong, in the label case. */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

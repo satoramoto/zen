@@ -3,6 +3,8 @@ import { defaultOrigin, fillFrom, hintAttribute, useReserved, type FillOrigin } 
 import type { Param } from '../Param/param';
 import { useParamGesture } from '../Param/useParamGesture';
 import { focusRing } from '../../../primitives/Ring';
+import { Surface } from '../../../primitives/Surface';
+import { Text } from '../../../primitives/Text';
 import './Slider.css';
 
 /** Caption above the control, beside it, or laid over a horizontal track. */
@@ -139,23 +141,23 @@ export function Slider({
       style={style}
     >
       {name && (
-        <span className="lib-slider__caption" data-part="caption">
+        <Text role="body" size="caption" case="label" className="lib-slider__caption" data-part="caption">
           {name}
-        </span>
+        </Text>
       )}
       <div className="lib-slider__frame" title={title}>
-        <div className={`lib-slider__track ${focusRing}`} data-part="track" {...gesture.props}>
+        <Surface material="well" radius="pill" className={`lib-slider__track ${focusRing}`} data-part="track" {...gesture.props}>
           {filled && <span className="lib-slider__fill" data-part="fill" aria-hidden="true" />}
           {span !== null && <span className="lib-slider__span" data-part="span" aria-hidden="true" />}
           {span !== null && <span className="lib-slider__reach" data-part="reach" aria-hidden="true" />}
           {span !== null && live !== undefined && <span className="lib-slider__live" data-part="live" aria-hidden="true" />}
-          <span className="lib-slider__thumb" data-part="thumb" aria-hidden="true" />
-        </div>
+          <Surface as="span" material="handle" radius="pill" className="lib-slider__thumb" data-part="thumb" aria-hidden="true" />
+        </Surface>
       </div>
       {showValue && (
-        <span className="lib-slider__readout" data-part="readout">
+        <Text role="numeral" size="label" className="lib-slider__readout" data-part="readout">
           {gesture.text}
-        </span>
+        </Text>
       )}
     </div>
   );

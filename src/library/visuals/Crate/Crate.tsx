@@ -3,6 +3,7 @@ import type { LibraryData } from '../model/api';
 import * as pl from '../model/playlists';
 import { plural } from '../model/controls';
 import { Icon } from '../Icon/Icon';
+import { Text } from '../../primitives/Text';
 import { nameOf } from '../model/shell';
 import { say } from '../model/words';
 import './Crate.css';
@@ -476,7 +477,9 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
           onClick={() => fold(s)}
           {...bind(headKey(s))}
         >
-          <span className="vs-crate-title">{title}</span>
+          <Text weight="strong" leading="normal" className="vs-crate-title">
+            {title}
+          </Text>
           <Icon className="vs-crate-chevron" name={open ? 'chevron-down' : 'chevron-right'} size={12} />
         </button>
       </h2>
@@ -486,12 +489,14 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
   const rowsId = `${uid}-next-rows`;
 
   return (
-    <div className="vs-crate" onKeyDown={walk}>
+    <Text as="div" leading="normal" className="vs-crate" onKeyDown={walk}>
       <div className="vs-crate-section">
         {head('playlists', 'Playlists')}
         <div id={`${uid}-playlists`} className="vs-crate-body" hidden={folded.includes('playlists')}>
           {playlists.length === 0 ? (
-            <p className="vs-crate-note">No playlists yet: make one in the library, then tap it here to cue it and Play to play it.</p>
+            <Text as="p" className="vs-crate-note">
+              No playlists yet: make one in the library, then tap it here to cue it and Play to play it.
+            </Text>
           ) : (
             <ul className="vs-crate-rows">
               {playlists.map((p, i) => {
@@ -529,7 +534,9 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
                       {...bind(listKey(p.id))}
                     >
                       <Icon className="vs-crate-icon" name={smart ? 'smart-playlist' : 'playlist'} />
-                      <span className="vs-crate-name">{p.name}</span>
+                      <Text leading="normal" className="vs-crate-name">
+                        {p.name}
+                      </Text>
                       {/* The playlist playing: the green dot after its name, as Home's sidebar marks it. */}
                       {on && <span className="vs-crate-dot" aria-hidden="true" />}
                     </button>
@@ -537,7 +544,9 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
                     {isCued && (
                       <button type="button" className="vs-crate-play" tabIndex={-1} aria-label={`Play ${p.name}`} title={`Switch the set to ${p.name}`} onClick={() => playList(p.id, i)}>
                         <Icon name="play" size={10} />
-                        <span aria-hidden="true">Play</span>
+                        <Text weight="strong" leading="normal" className="vs-crate-play-label" aria-hidden="true">
+                          Play
+                        </Text>
                       </button>
                     )}
                   </li>
@@ -567,11 +576,13 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
                       {...bind(moodKey(tag))}
                     >
                       <Icon className="vs-crate-icon" name="mood" />
-                      <span className="vs-crate-name">{tag}</span>
+                      <Text leading="normal" className="vs-crate-name">
+                        {tag}
+                      </Text>
                       {on && <span className="vs-crate-dot" aria-hidden="true" />}
-                      <i className="vs-crate-count" aria-hidden="true">
+                      <Text as="i" leading="normal" tabular className="vs-crate-count" aria-hidden="true">
                         {count.toLocaleString('en-US')}
-                      </i>
+                      </Text>
                     </button>
                   </li>
                 );
@@ -584,7 +595,11 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
       <div className="vs-crate-section">
         {head('next', 'Up next')}
         <div id={`${uid}-next`} className="vs-crate-body" hidden={folded.includes('next')}>
-          {note !== null && <p className="vs-crate-note">{note}</p>}
+          {note !== null && (
+            <Text as="p" className="vs-crate-note">
+              {note}
+            </Text>
+          )}
           {list && (
             <span className="vs-crate-sr" id={noteId}>
               {MOVE_NOTE}
@@ -595,7 +610,10 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
               {rows.map((r, i) => {
                 const b = list ? bind(nextKey(r, i)) : null;
                 return (
-                  <li
+                  <Text
+                    as="li"
+                    role="caption"
+                    leading="normal"
                     // A row that can be dragged is keyed by its playlist index, so it stays the same element (and keeps the pointer) when the rows shift mid-drag.
                     key={nextKey(r, i)}
                     ref={(el) => {
@@ -617,7 +635,8 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
                     {marker(i)}
                     <span className="vs-crate-name">{r.missing ? <s>{r.name}</s> : r.name}</span>
                     {list && (
-                      <span
+                      <Text
+                        leading="normal"
                         className="vs-crate-handle"
                         aria-hidden="true"
                         title="Drag to change when it plays (or Alt+↑ ↓)"
@@ -627,21 +646,23 @@ export function Crate({ lists, data, act, onLists, onError, current }: Props) {
                         onPointerCancel={() => setDrag(null)}
                       >
                         ≡
-                      </span>
+                      </Text>
                     )}
-                  </li>
+                  </Text>
                 );
               })}
             </ol>
           )}
           {more && (
             <button type="button" className="vs-crate-more" aria-expanded={expanded} aria-controls={rowsId} onClick={toggle} {...bind(MORE)}>
-              {expanded ? 'Show fewer' : 'Show all'}
+              <Text leading="normal" className="vs-crate-more-label">
+                {expanded ? 'Show fewer' : 'Show all'}
+              </Text>
             </button>
           )}
         </div>
       </div>
-    </div>
+    </Text>
   );
 }
 

@@ -16,12 +16,9 @@
   gap: var(--space-2);
   min-width: 0;
 }
+/* The label is a Text: body face and leading at the caption size, strong, in the label case. */
 .lib-group__label {
   color: var(--text-3);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
   white-space: nowrap;
 }
 /* The body is a Stack (Stack.css): its flow, gap step, alignment and min sizes live there. */

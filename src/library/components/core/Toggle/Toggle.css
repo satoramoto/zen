@@ -15,17 +15,15 @@
   align-items: center;
   gap: var(--space-1);
   font-family: var(--font-sans);
-  letter-spacing: var(--tracking);
 }
 
+/* Type: a body Text in label case, at caption size (label size inside a row). */
 .lib-toggle__caption {
   color: var(--text-2);
-  font-size: var(--size-caption);
-  text-transform: var(--label-case);
   white-space: nowrap;
 }
 
-/* The key: the theme's `key`, pressed and lit when on. */
+/* The key: the theme's `key`, pressed and lit when on. Type: a label Text, tight, tabular. */
 .lib-toggle__key {
   box-sizing: border-box;
   width: var(--lib-toggle-width);
@@ -38,12 +36,6 @@
   background: linear-gradient(var(--lib-toggle-tint), var(--lib-toggle-tint)), var(--mat-key-texture), var(--mat-key-fill);
   box-shadow: inset 0 0 0 var(--border-width) var(--border-strong), var(--mat-key-shadow);
   color: var(--text-1);
-  font: inherit;
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  text-transform: var(--label-case);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
@@ -104,16 +96,13 @@
   padding-left: var(--space-2);
   overflow: hidden;
   color: var(--text-1);
-  font-size: var(--size-label);
   text-overflow: ellipsis;
 }
+/* Type: a body Text at label size, strong weight, tabular figures. */
 .lib-toggle__readout {
   grid-column: 2;
   padding: 0 var(--space-2);
   color: var(--text-2);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  font-variant-numeric: tabular-nums;
 }
 .lib-toggle[data-layout='inside'][data-on] > .lib-toggle__readout {
   color: var(--lit);
@@ -170,9 +159,7 @@
   left: var(--lib-switch-pad);
   width: var(--lib-switch-thumb-w);
   height: var(--lib-switch-thumb-h);
-  border-radius: var(--radius-pill);
-  background: var(--mat-handle-texture), var(--mat-handle-fill);
-  box-shadow: var(--mat-handle-shadow);
+  /* A pill `handle` Surface. */
   transition: transform 150ms ease-out;
 }
 .lib-switch[aria-checked='true'] > .lib-switch__thumb {
@@ -190,9 +177,7 @@
   gap: var(--space-3);
   min-height: var(--control-h);
   color: var(--text-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  letter-spacing: var(--tracking);
+  /* Type: the line is a body Text. */
   cursor: default;
 }
 .lib-switch-row__name {

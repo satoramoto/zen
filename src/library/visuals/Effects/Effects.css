@@ -14,11 +14,10 @@
   user-select: none;
   touch-action: none;
 }
-.vs-effects-hit small {
-  font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  font-weight: var(--weight-body);
-  letter-spacing: normal;
+/* The key letter: a numeral Text in the body weight, a step smaller than the face (as `small`). */
+.vs-effects-hit-key {
+  --text-size: smaller;
+  --text-tracking: normal;
 }
 
 /* The settings' rows. */
@@ -39,8 +38,6 @@
 .vs-effects-row-name {
   min-width: 0;
   color: var(--text-1);
-  font-size: var(--size-body);
-  font-weight: var(--weight-strong);
 }
 .vs-effects-row-control {
   display: flex;
@@ -62,7 +59,7 @@
 .vs-effects-step .lib-action-button-face {
   min-width: var(--control-h);
   color: var(--text-2);
-  font-size: var(--size-body);
+  --text-size: var(--size-body); /* the face is a Text: its knob */
 }
 
 /* Narrow: the controls' column narrows with the panel. */

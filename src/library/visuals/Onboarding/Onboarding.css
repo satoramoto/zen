@@ -7,7 +7,12 @@
 
    --vs-onboarding-main-min    the main button's least width (the original's 120px)
    --vs-onboarding-step-width  a step's widest (the original's 560px)
-   --vs-onboarding-text-width  the listen step's words' column at its widest (the original's 460px) */
+   --vs-onboarding-text-width  the listen step's words' column at its widest (the original's 460px)
+
+   Type is Text's: the header, a step's title (`display`), lead, notes and cue, the row and the
+   picker that set a size for what they hold, and a vibe's name and line are `Text`s, refined by
+   the knobs on their own classes. Where the original set no leading, the Text keeps the one it
+   inherits (`line-height: inherit`, a reset), so every line stands as tall as before. */
 
 /* The Screen: header, step, footer, with no gap between them (the plate gap is for regions). */
 .vs-onboarding {
@@ -22,8 +27,9 @@
   gap: var(--space-4);
   min-height: calc(var(--control-h) + var(--space-4));
   padding: 0 var(--space-3) 0 var(--space-4);
-  font-family: var(--font-sans);
-  font-size: var(--vs-text-control);
+  /* A body Text at a control's size, for everything in the row. */
+  --text-size: var(--vs-text-control);
+  line-height: inherit;
   white-space: nowrap;
 }
 .vs-onboarding-head > * {
@@ -87,18 +93,17 @@
   width: min(var(--vs-onboarding-step-width), 100%);
   padding: var(--space-6);
 }
-.vs-onboarding-step h1 {
+/* A display Text (its face, weight and tracking) at half again the pane title's size. */
+.vs-onboarding-title {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin: 0;
   color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: calc(var(--vs-text-title) * 1.6);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
+  --text-size: calc(var(--vs-text-title) * 1.6);
+  line-height: inherit;
 }
-.vs-onboarding-step h1 .vs-mark {
+.vs-onboarding-title .vs-mark {
   height: auto;
   padding: 0;
   font-size: inherit;
@@ -106,20 +111,21 @@
 .vs-onboarding-lead {
   margin: 0;
   color: var(--text-2);
-  font-size: var(--vs-text-title);
-  line-height: 1.45;
+  --text-size: var(--vs-text-title);
+  --text-leading: 1.45;
 }
+/* A body Text (the body step) at 1.45. */
 .vs-onboarding-note {
   margin: 0;
   color: var(--text-3);
-  font-size: var(--vs-text-body);
-  line-height: 1.45;
+  --text-leading: 1.45;
 }
+/* A strong body Text at the pane title's size. */
 .vs-onboarding-cue {
   margin: 0;
   color: var(--text-1);
-  font-size: var(--vs-text-title);
-  font-weight: var(--weight-strong);
+  --text-size: var(--vs-text-title);
+  line-height: inherit;
 }
 
 .vs-onboarding-actions {
@@ -140,7 +146,8 @@
   background: var(--action);
   box-shadow: var(--mat-key-shadow);
   color: var(--action-text);
-  font-size: var(--vs-text-body);
+  /* The face is a label Text: the body step's size on it. */
+  --text-size: var(--vs-text-body);
 }
 .vs-onboarding-main > .lib-action-button-face:disabled {
   opacity: 0.5;
@@ -150,12 +157,13 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-size: var(--vs-text-body);
+  /* A body Text (the body step) for its words and the select. */
+  line-height: inherit;
 }
 
+/* At the body step it inherits from the step (and the Modal's body Text). */
 .vs-onboarding-problem {
   gap: var(--space-2);
-  font-size: var(--vs-text-body);
 }
 
 /* Listen to: the words on the left, on an opaque base layer; the preview's hole on the right. */
@@ -188,7 +196,9 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--vs-text-control);
+  /* A body Text at a control's size, for the picker in it. */
+  --text-size: var(--vs-text-control);
+  line-height: inherit;
 }
 .vs-onboarding-picker[data-off] {
   opacity: 0.45;
@@ -214,14 +224,14 @@
 /* The flashing-lights warning, as the flow's step and as the dialog over any view: a heading in
    the text's own colour marked by one small caution-coloured dot, the reduce-flashing switch on a
    raised row of its own, its name before it; no lines. */
-.vs-onboarding-warning h1,
+.vs-onboarding-warning .vs-onboarding-title,
 .vs-onboarding-warning [data-part='title'] {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   color: var(--text-1);
 }
-.vs-onboarding-warning h1::before,
+.vs-onboarding-warning .vs-onboarding-title::before,
 .vs-onboarding-warning [data-part='title']::before {
   content: '';
   flex: none;
@@ -243,12 +253,15 @@
   background: var(--layer-raised-fill);
   box-shadow: var(--layer-raised-edge);
   color: var(--text-1);
-  font-weight: var(--weight-strong);
+}
+/* Its name: a strong Text at the row's size. */
+.vs-onboarding-reduce-name {
+  line-height: inherit;
 }
 .vs-onboarding-reduce-setting .vs-onboarding-note {
   padding: 0 var(--space-4);
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
+  --text-size: var(--vs-text-label);
 }
 
 /* The warning again, from the menu, or owed: a core Modal; only I understand answers an owed one,
@@ -259,8 +272,8 @@
 }
 .vs-onboarding-dialog .vs-onboarding-lead {
   color: var(--text-2);
-  font-size: var(--vs-text-heading);
-  line-height: 1.5;
+  --text-size: var(--vs-text-heading);
+  --text-leading: 1.5;
 }
 .vs-onboarding-dialog--required [data-part='close'] {
   display: none;
@@ -292,14 +305,15 @@
   text-align: left;
   cursor: pointer;
 }
-.vs-onboarding-vibe b {
+/* Its name, a strong Text at the pane title's size; its line, a body Text. */
+.vs-onboarding-vibe-name {
   color: var(--text-1);
-  font-size: var(--vs-text-title);
-  font-weight: var(--weight-strong);
+  --text-size: var(--vs-text-title);
+  line-height: inherit;
 }
-.vs-onboarding-vibe span {
+.vs-onboarding-vibe-says {
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-body);
+  line-height: inherit;
 }
 .vs-onboarding-vibe:hover:not(:disabled) {
   background: var(--surface-3);
@@ -327,6 +341,6 @@
   box-sizing: border-box;
   max-width: calc(100vw - 2 * var(--space-4));
   padding: var(--space-2) var(--space-3);
+  /* The body step, inherited from the app's base type. */
   color: var(--text-2);
-  font-size: var(--vs-text-body);
 }

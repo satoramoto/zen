@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { TipAction } from '../../components/music/Pad/Pad';
 import { StatusDot } from '../../components/core/StatusDot/StatusDot';
+import { Text } from '../../primitives/Text';
 import { health, type HealthTarget } from './health';
 import './HealthSlot.css';
 
@@ -36,9 +37,9 @@ function Words({ text }: { text: string }) {
     <>
       {text.split(/(?<![\p{L}\d])(\d+%?)/u).map((part, i) =>
         i % 2 ? (
-          <span key={i} className="yh-health-slot__num" data-part="num">
+          <Text key={i} role="numeral" size="inherit" className="yh-health-slot__num" data-part="num">
             {part}
-          </span>
+          </Text>
         ) : (
           part
         ),
@@ -124,7 +125,11 @@ export function HealthSlot({
   }, [node, dataTip, tipAction]);
 
   return (
-    <span
+    <Text
+      role="label"
+      weight="body"
+      case="none"
+      tabular
       className={`yh-health-slot${width === undefined ? ' yh-health-slot--fill' : ''}`}
       data-part="root"
       data-hue={shown.hue}
@@ -135,7 +140,12 @@ export function HealthSlot({
         {shown.label}
       </span>
       {target ? (
-        <button
+        <Text
+          as="button"
+          role="label"
+          weight="body"
+          case="none"
+          tabular
           ref={setNode}
           type="button"
           className="yh-health-slot__button"
@@ -147,7 +157,7 @@ export function HealthSlot({
           <span className="yh-health-slot__text" data-part="text">
             <Words text={shown.text} />
           </span>
-        </button>
+        </Text>
       ) : (
         <span className="yh-health-slot__calm" data-part="calm">
           <Mark state={state} />
@@ -156,6 +166,6 @@ export function HealthSlot({
           </span>
         </span>
       )}
-    </span>
+    </Text>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import type { ControlSize } from '../Toggle/useToggle';
+import { Text } from '../../../primitives/Text';
 import '../Toggle/size.css';
 import './Checkbox.css';
 
@@ -54,6 +55,9 @@ export function DashMark() {
  * or its own from `defaultChecked`; `onChange` hears true or false. What is drawn follows the input
  * (`:checked`, `:indeterminate`), never a copy of it.
  *
+ * **Type.** The root label is a body `Text` at line height 1.2, caption-sized at `mini` and
+ * `small` (knobs on `.lib-check`, shared with Radio).
+ *
  * **Parts** (`data-part`): `root` (the label), `box`, `input`, `face` (the theme's `well`; filled
  * `--selected` and lit when checked or mixed), `check` and `dash` (in `--selected-text`), `label`.
  */
@@ -79,7 +83,7 @@ export function Checkbox({
     if (input.current && !controlled) input.current.indeterminate = defaultChecked === 'mixed';
   }, []);
   return (
-    <label className="lib-check lib-checkbox lib-sized" data-part="root" data-size={size} data-disabled={disabled ? '' : undefined}>
+    <Text as="label" role="body" className="lib-check lib-checkbox lib-sized" data-part="root" data-size={size} data-disabled={disabled ? '' : undefined}>
       <span className="lib-check__box" data-part="box">
         <input
           ref={input}
@@ -102,7 +106,7 @@ export function Checkbox({
           {children}
         </span>
       )}
-    </label>
+    </Text>
   );
 }
 

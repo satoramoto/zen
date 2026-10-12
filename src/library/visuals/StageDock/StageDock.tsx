@@ -3,6 +3,7 @@ import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import { useParamGesture } from '../../components/core/Param/useParamGesture';
 import { Group } from '../../layout/Group';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import { padKey, titleOf, type ControlId } from '../HelpOverlay/HelpOverlay';
 import { Icon, type IconName } from '../Icon/Icon';
 import { range } from '../model/controls';
@@ -58,10 +59,10 @@ function NextWhen({ deck }: { deck: LiveState['deck'] }) {
   const when = nextWhenText(useLinkFrame(), deck, Date.now());
   // Set apart from the name by a dot (and a comma for screen readers), and named in its tooltip: "every 30 s" is when it changes.
   return when ? (
-    <em className="vs-stagedock-when" title={`When the next preset comes: ${when}`}>
+    <Text as="em" role="caption" leading="normal" tabular className="vs-stagedock-when" title={`When the next preset comes: ${when}`}>
       <span className="vs-stagedock-sr">, changes </span>
       {when}
-    </em>
+    </Text>
   ) : null;
 }
 
@@ -73,9 +74,14 @@ function NextLine({ live }: { live: LiveState }) {
   return (
     <div className="vs-stagedock-next">
       {live.held && (
-        <span className="vs-stagedock-held" title={`${Say('hold')}: this preset stays — ${say('auto-advance')} and Link's changes wait until you let go (H)`}>
+        <Text
+          weight="strong"
+          leading="normal"
+          className="vs-stagedock-held"
+          title={`${Say('hold')}: this preset stays — ${say('auto-advance')} and Link's changes wait until you let go (H)`}
+        >
           Hold
-        </span>
+        </Text>
       )}
       {live.star && (
         <span className="vs-stagedock-star" title="A favourite (L takes the star off)" role="img" aria-label="favourite">
@@ -83,12 +89,20 @@ function NextLine({ live }: { live: LiveState }) {
         </span>
       )}
       {live.rating !== null && (
-        <span className="vs-stagedock-rating" title={`Rated ${live.rating} of 5 (press ${live.rating} again to take it off)`} role="img" aria-label={`rated ${live.rating} of 5`}>
+        <Text
+          leading="normal"
+          className="vs-stagedock-rating"
+          title={`Rated ${live.rating} of 5 (press ${live.rating} again to take it off)`}
+          ariaRole="img"
+          aria-label={`rated ${live.rating} of 5`}
+        >
           {starsText(live.rating)}
-        </span>
+        </Text>
       )}
-      <p className="vs-stagedock-next-line" title={`${titleOf('next')}. ${whereText(live.up, live.deck)}`}>
-        <span className="vs-stagedock-next-label">Next</span>
+      <Text as="p" leading="normal" className="vs-stagedock-next-line" title={`${titleOf('next')}. ${whereText(live.up, live.deck)}`}>
+        <Text weight="strong" leading="normal" className="vs-stagedock-next-label">
+          Next
+        </Text>
         <span className="vs-stagedock-sr">: </span>
         {item ? (
           <span className="vs-stagedock-next-name" data-missing={item.missing ? '' : undefined} title={item.missing ? `Not in the library any more: ${item.path}` : item.path}>
@@ -100,7 +114,7 @@ function NextLine({ live }: { live: LiveState }) {
         )}
         {saysWhere(says, live.up, live.deck) && <span className="vs-stagedock-sr">{whereSr(live.up, live.deck)}</span>}
         {says.kind !== 'held' && live.deck && <NextWhen deck={live.deck} />}
-      </p>
+      </Text>
     </div>
   );
 }
@@ -174,11 +188,13 @@ export function EffectKey({
       }
     >
       <Icon name={glyph} />
-      <span className="vs-stagedock-key-name">{name}</span>
+      <Text size="label" leading="tight" className="vs-stagedock-key-name">
+        {name}
+      </Text>
       {key && (
-        <small className="vs-stagedock-key-letter" aria-hidden="true">
+        <Text as="small" size="label" leading="tight" className="vs-stagedock-key-letter" aria-hidden="true">
           {key}
-        </small>
+        </Text>
       )}
     </ButtonFace>
   );
@@ -203,17 +219,23 @@ function IntensityFader({ live }: { live: LiveState }) {
     display: `${pct}%`,
   });
   return (
-    <div className="vs-stagedock-fader" title={titleOf('intensity')} style={{ '--vs-stagedock-fill': `${gesture.fraction * 100}%` } as CSSProperties}>
+    <Text
+      as="div"
+      leading="normal"
+      className="vs-stagedock-fader"
+      title={titleOf('intensity')}
+      style={{ '--vs-stagedock-fill': `${gesture.fraction * 100}%` } as CSSProperties}
+    >
       <span className="vs-stagedock-fader-name" aria-hidden="true">
         Intensity
       </span>
       <div className="vs-stagedock-fader-track" {...gesture.props}>
         <span className="vs-stagedock-fader-thumb" aria-hidden="true" />
       </div>
-      <span className="vs-stagedock-fader-value vs-num" aria-hidden="true">
+      <Text role="caption" leading="normal" tabular className="vs-stagedock-fader-value vs-num" aria-hidden="true">
         {pct}%
-      </span>
-    </div>
+      </Text>
+    </Text>
   );
 }
 
@@ -248,22 +270,22 @@ export function StageDock({ live }: StageDockProps) {
       <div className="vs-stagedock-banners">
         <SilenceBanner />
         {live.error && (
-          <Layer level="top" className="vs-stagedock-banner">
+          <Layer level="top" as={Text} className="vs-stagedock-banner">
             <NoticeBanner className="vs-stagedock-notice" notice={live.error} onDismiss={live.dismiss} />
           </Layer>
         )}
         {/* A state, not a failure (Hold keeping the preset, leaving asking for a second press): quiet, polite, no dismiss. */}
         <Layer level="top" className="vs-stagedock-hint-face" data-hidden={live.hint ? undefined : ''}>
-          <p className="vs-stagedock-hint" role="status" hidden={!live.hint}>
+          <Text as="p" role="caption" leading="normal" className="vs-stagedock-hint" ariaRole="status" hidden={!live.hint}>
             {live.hint}
-          </p>
+          </Text>
         </Layer>
       </div>
       <TransportBar {...transport} />
       <div className="vs-stagedock-row">
         <NextLine live={live} />
         <div className="vs-stagedock-fx">
-          <Group className="vs-stagedock-keys" name="Effects" label={false}>
+          <Group className="vs-stagedock-keys" name="Effects" label={false} gap={1}>
             <EffectKey id="strobe" glyph="strobe" name="Strobe" on={e?.strobe === true} hold={{ kind: 'strobe', send: live.actFx }} />
             <EffectKey id="blackout" glyph="blackout" name="Blackout" on={e?.blackout === true} onPress={() => live.actFx({ kind: 'blackout', on: null })} />
             <EffectKey id="freeze" glyph="freeze" name="Freeze" on={e?.freeze === true} hold={{ kind: 'freeze', send: live.actFx }} />
@@ -271,7 +293,9 @@ export function StageDock({ live }: StageDockProps) {
           <IntensityFader live={live} />
           <ButtonFace tone="quiet" className="vs-stagedock-more" onClick={openEffects} title={titleOf('more')}>
             <Icon name="effects" size={14} />
-            More effects…
+            <Text size="label" leading="tight">
+              More effects…
+            </Text>
           </ButtonFace>
         </div>
       </div>

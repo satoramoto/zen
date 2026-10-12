@@ -11,14 +11,14 @@
   --vs-sheet-target: calc(var(--space-6) + var(--space-3));
   --control-h: var(--vs-sheet-target);
 }
+/* The pane takes the Modal's body type (the sans at --size-body, which --vs-text-body is). */
 .vs-sheet .lib-modal__pane {
   border-radius: var(--radius-card);
   color: var(--text-2);
-  font-family: var(--font-sans);
-  font-size: var(--vs-text-body);
 }
+/* The title is the Modal's display Text: its size knob. */
 .vs-sheet .lib-modal__title {
-  font-size: var(--vs-text-heading);
+  --text-size: var(--vs-text-heading);
 }
 .vs-sheet .lib-modal__close {
   min-width: var(--control-h);
@@ -30,17 +30,14 @@
   gap: var(--mat-plate-gap);
   scroll-padding-top: var(--space-6);
 }
-.vs-settings-section .lib-group__body {
-  gap: var(--space-2);
-}
 
 /* A quiet note: what a setting decides, who decides it, or why a change failed. Captions on the
-   overlay take the raised step, so they stay at 4.5:1 there. */
+   overlay take the raised step, so they stay at 4.5:1 there. A caption Text (--vs-text-label) on
+   a roomier line. */
 .vs-sheet .vs-settings-line {
   margin: 0;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
-  line-height: 1.45;
+  --text-leading: 1.45;
 }
 .vs-sheet .vs-settings-problem {
   color: var(--danger);
@@ -54,18 +51,18 @@
   align-items: stretch;
   gap: var(--space-1);
 }
+/* The row is the Switch's (the sans at --size-body); its name a strong Text (Settings.tsx). */
 .vs-settings-switch > .lib-switch-row {
   min-height: var(--control-h);
   color: var(--text-1);
-  font-size: var(--size-body);
-  font-weight: var(--weight-strong);
 }
 .vs-settings-switch > .vs-settings-follow {
   align-self: flex-start;
 }
+/* The button's face is a Text: its size knob. */
 .vs-settings-follow .lib-action-button-face {
   color: var(--text-2);
-  font-size: var(--vs-text-label);
+  --text-size: var(--vs-text-label);
 }
 
 /* Quality: the four levels across the panel, the line under them. */

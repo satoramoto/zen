@@ -3,6 +3,7 @@ import { ActionButton, ButtonFace } from '../../components/core/ActionButton/Act
 import { Segmented } from '../../components/core/Segmented/Segmented';
 import { Slider } from '../../components/core/Slider/Slider';
 import type { Param } from '../../components/core/Param/param';
+import { Text } from '../../primitives/Text';
 import { formatMultiplier, multiplierToPosition, POSITION_MAX, POSITION_MIN, positionToMultiplier, range } from '../model/controls';
 import * as fx from '../model/fx';
 import { useNotice, useTauriEvent } from '../model/hooks';
@@ -91,7 +92,9 @@ export function Hit({ kind, on, hold, label, keyName, send }: { kind: fx.Hit; on
       }}
     >
       {label}
-      <small aria-hidden="true">{keyName}</small>
+      <Text as="small" role="numeral" weight="body" className="vs-effects-hit-key" aria-hidden="true">
+        {keyName}
+      </Text>
     </ButtonFace>
   );
 }
@@ -147,7 +150,9 @@ export const hueText = (hue: number) => `${Math.round(hue * 360)}°`;
 function Row({ name, children }: { name: string; children: ReactNode }) {
   return (
     <div className="vs-effects-row">
-      <span className="vs-effects-row-name">{name}</span>
+      <Text weight="strong" className="vs-effects-row-name">
+        {name}
+      </Text>
       <span className="vs-effects-row-control">{children}</span>
     </div>
   );

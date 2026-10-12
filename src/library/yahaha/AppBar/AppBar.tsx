@@ -5,6 +5,7 @@ import { Separator } from '../../components/core/Separator/Separator';
 import { StatusDot } from '../../components/core/StatusDot/StatusDot';
 import { Stack } from '../../layout/Stack';
 import { Tabs, type TabItem } from '../../layout/Tabs';
+import { Text } from '../../primitives/Text';
 import { HealthSlot, type HealthTarget } from '../HealthSlot/HealthSlot';
 import { MetronomePopover } from './MetronomePopover';
 import './AppBar.css';
@@ -179,9 +180,9 @@ export function AppBar({
   const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
 
   return (
-    <header className="yh-appbar" data-part="root" style={style}>
+    <Text as="header" size="label" className="yh-appbar" data-part="root" style={style}>
       <Stack direction="row" align="center" className="yh-appbar__row" data-part="row">
-        <span className="yh-appbar__name" data-part="name">yahaha</span>
+        <Text size="label" weight="strong" className="yh-appbar__name" data-part="name">yahaha</Text>
 
         <Stack as="nav" direction="row" gap={0} align="center" className="yh-appbar__nav" data-part="nav" aria-label="Pages">
           <Tabs name="Display pages" items={displayTabs} value={chosen} onChange={(id) => onChoose?.(id)} tipAction={tipAction} />
@@ -194,8 +195,8 @@ export function AppBar({
         <span className="yh-appbar__middle" data-part="middle">
           {nowPlaying && (
             <span className="yh-appbar__playing" data-part="playing" aria-label={`Style ${nowPlaying.style}, ${nowPlaying.tempo} BPM`}>
-              <span className="yh-appbar__style" data-part="style">{nowPlaying.style}</span>
-              <span className="yh-appbar__tempo" data-part="tempo">{nowPlaying.tempo}</span>
+              <Text size="label" weight="strong" tabular className="yh-appbar__style" data-part="style">{nowPlaying.style}</Text>
+              <Text role="numeral" size="label" className="yh-appbar__tempo" data-part="tempo">{nowPlaying.tempo}</Text>
               <span className="yh-appbar__unit" data-part="unit">BPM</span>
             </span>
           )}
@@ -286,7 +287,7 @@ export function AppBar({
             aria-label={launchkey ? 'Launchkey connected' : 'Launchkey not connected'}
           >
             <StatusDot hue={launchkey ? 'ok' : 'd'} hollow={!launchkey} />
-            <span className="yh-appbar__launchkey-word" data-part="launchkey-word">Launchkey</span>
+            <Text size="label" case="label" className="yh-appbar__launchkey-word" data-part="launchkey-word">Launchkey</Text>
           </Stack>
           <span className="yh-appbar__health" data-part="health">
             <HealthSlot
@@ -313,7 +314,7 @@ export function AppBar({
           />
         </Stack>
       </Stack>
-    </header>
+    </Text>
   );
 }
 

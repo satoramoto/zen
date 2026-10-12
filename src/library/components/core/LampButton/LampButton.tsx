@@ -2,6 +2,7 @@ import { useEffect, useRef, type CSSProperties } from 'react';
 import { useLongPress } from './useLongPress';
 import type { HueSlot } from '../hue';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './LampButton.css';
 
 /** The hues a lamp can wear. `m` is the original's deprecated alias of `t` and draws exactly as it. */
@@ -90,7 +91,8 @@ export interface LampButtonProps {
  * container rather than clip, so a key never truncates its own name (craft-details.md). *Type:*
  * labels follow `--label-case` and `--tracking` at one weight in every face, so a lit key is as
  * wide as an off one; the code is set in the readout face with tabular figures, smaller and quieter
- * (typography.md: hierarchy by size and colour; no mono on the Stage). Corners follow
+ * (typography.md: hierarchy by size and colour; no mono on the Stage). The face is a label `Text`
+ * (tight, tabular); the code a caption-sized `numeral` `Text` at the body weight, untracked. Corners follow
  * `--radius-control`, heights `--control-h`. *Headless:* named parts (`face`, `lamp`, `label`,
  * `code`); the face is made of the theme's `key` material, `--mat-key-pressed` while on, armed or
  * held, and a lit LED sets `--lit` and wears `--mat-lit-glow`, so a material set restyles the lamp
@@ -144,7 +146,11 @@ export function LampButton({
   if (join) classes.push(`yh-lampbutton--join-${join}`);
 
   return (
-    <button
+    <Text
+      as="button"
+      role="label"
+      leading="tight"
+      tabular
       ref={ref}
       type="button"
       className={classes.join(' ')}
@@ -166,11 +172,11 @@ export function LampButton({
         {label}
       </span>
       {code && (
-        <span className="yh-lampbutton__code" data-part="code">
+        <Text role="numeral" size="caption" weight="body" case="none" className="yh-lampbutton__code" data-part="code">
           {code}
-        </span>
+        </Text>
       )}
-    </button>
+    </Text>
   );
 }
 

@@ -1,5 +1,6 @@
 import type { ComponentPropsWithRef, CSSProperties, MouseEvent, ReactNode } from 'react';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './ActionButton.css';
 
 export type ActionTone = 'normal' | 'quiet' | 'danger';
@@ -27,11 +28,18 @@ export type ButtonFaceProps = ComponentPropsWithRef<'button'> & {
  *
  * **Parts.** `face` (the button; a caller may rename it with its own `data-part`; `data-tone`, `data-size`, `data-on`, `data-kind` button|toggle).
  */
-export function ButtonFace({ lit, size, tone = 'normal', className = '', children, 'aria-pressed': pressed, ...props }: ButtonFaceProps) {
+export function ButtonFace({ lit, size, tone = 'normal', className = '', children, role, 'aria-pressed': pressed, ...props }: ButtonFaceProps) {
   const toggle = lit !== undefined || pressed !== undefined;
   const on = lit ?? (pressed === true || pressed === 'true');
+  // The face is a label Text (tight leading, no case, as a button's own type had); `data-tone`
+  // here is the action tone, which replaces Text's ink tone (none is set, the class sets the ink).
   return (
-    <button
+    <Text
+      as="button"
+      role="label"
+      leading="tight"
+      case="none"
+      ariaRole={role}
       data-part="face"
       {...props}
       type={props.type ?? 'button'}
@@ -43,7 +51,7 @@ export function ButtonFace({ lit, size, tone = 'normal', className = '', childre
       data-on={on ? '' : undefined}
     >
       {children}
-    </button>
+    </Text>
   );
 }
 
@@ -85,9 +93,9 @@ export function ActionButton({ onPress, disabled = false, label, name, tone = 'n
       style={(width === undefined ? {} : { '--lib-action-button-width': `${width}px` }) as CSSProperties}
     >
       {name && (
-        <span className="lib-action-button__caption" data-part="caption">
+        <Text role="caption" leading="tight" case="label" className="lib-action-button__caption" data-part="caption">
           {name}
-        </span>
+        </Text>
       )}
       <ButtonFace type="button" tone={tone} aria-label={label ?? name} disabled={disabled} title={title} onClick={onPress}>
         {children}

@@ -1,6 +1,7 @@
 import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { Layer } from '../../../layout/Layer';
 import { ButtonFace } from '../ActionButton/ActionButton';
+import { Text } from '../../../primitives/Text';
 import { useModal } from './useModal';
 import './Modal.css';
 
@@ -49,7 +50,7 @@ function Frame({ kind, side, modal, closeLabel, closeTitle, title, onClose, widt
   const ref = useRef<HTMLDivElement>(null);
   useModal(ref, onClose);
   return (
-    <div className="lib-modal" data-kind={kind} data-side={side} data-modal={modal ? '' : undefined}>
+    <Text as="div" role="body" className="lib-modal" data-kind={kind} data-side={side} data-modal={modal ? '' : undefined}>
       {modal && <div className="lib-modal__scrim" data-part="scrim" aria-hidden="true" onClick={onClose} />}
       <div
         ref={ref}
@@ -63,16 +64,17 @@ function Frame({ kind, side, modal, closeLabel, closeTitle, title, onClose, widt
       >
         <Layer level="overlay" className="lib-modal__pane" data-part="pane">
           <div className="lib-modal__head" data-part="head">
-            <h2 className="lib-modal__title" data-part="title">
+            <Text as="h2" role="display" size="heading" className="lib-modal__title" data-part="title">
               {title}
-            </h2>
+            </Text>
             <ButtonFace tone="quiet" size="medium" className="lib-modal__close" data-part="close" aria-label={closeLabel} title={closeTitle} onClick={onClose}>
               <Cross />
             </ButtonFace>
           </div>
-          <div className="lib-modal__body" data-part="body">
+          {/* The pane's own size (a caller may set one on it) carries through: `inherit`. */}
+          <Text as="div" role="body" size="inherit" className="lib-modal__body" data-part="body">
             {children}
-          </div>
+          </Text>
           {actions && (
             <div className="lib-modal__actions" data-part="actions">
               {actions}
@@ -80,7 +82,7 @@ function Frame({ kind, side, modal, closeLabel, closeTitle, title, onClose, widt
           )}
         </Layer>
       </div>
-    </div>
+    </Text>
   );
 }
 
@@ -96,6 +98,9 @@ function Frame({ kind, side, modal, closeLabel, closeTitle, title, onClose, widt
  * The × is always there, since Esc and the scrim are both invisible; `actions` is for what the
  * modal is for, and the row is left out when none are passed. Only the topmost of stacked dialogs
  * hears Tab and Esc.
+ *
+ * **Type.** The root is a body `Text`; the title a `display` `Text` at the heading size; the body
+ * a body `Text` at the pane's size (`inherit`), line height 1.45.
  *
  * **Parts.** `scrim`, `dialog` (the focus root, `--lib-modal-width`), `pane` (a `Layer` at
  * `overlay`), `head`, `title`, `close`, `body`, `actions`.

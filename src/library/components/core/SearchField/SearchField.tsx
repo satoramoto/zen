@@ -1,4 +1,5 @@
-import { useRef, type KeyboardEvent } from 'react';
+import { useRef, type ChangeEvent, type KeyboardEvent } from 'react';
+import { Text } from '../../../primitives/Text';
 import './SearchField.css';
 
 export interface SearchFieldProps {
@@ -67,7 +68,9 @@ export function SearchField({ value = '', label, placeholder, width, tip, onInpu
           <line x1="9.4" y1="9.4" x2="13" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
         <span className="yh-search-field__name">{label}</span>
-        <input
+        <Text
+          as="input"
+          role="body"
           ref={input}
           type="search"
           className="yh-search-field__input"
@@ -76,7 +79,7 @@ export function SearchField({ value = '', label, placeholder, width, tip, onInpu
           autoComplete="off"
           spellCheck={false}
           data-tip={tip}
-          onChange={(event) => onInput?.(event.currentTarget.value)}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => onInput?.(event.currentTarget.value)}
           onKeyDown={keyDown}
         />
       </label>

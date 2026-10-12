@@ -1,4 +1,5 @@
 import { useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { Text } from '../../primitives/Text';
 import type { LibraryChange } from '../model/api';
 import { parseTags, type Prepared } from '../model/librarySearch';
 import { tagCounts } from '../PresetDrawer/PresetDrawer';
@@ -60,11 +61,15 @@ export function TagEditor({ chosen, onSet, remove = '×' }: TagEditorProps) {
   };
 
   return (
-    <div className="vs-tag-editor" role="group" aria-label={say('user tags')}>
+    <Text as="div" className="vs-tag-editor" ariaRole="group" aria-label={say('user tags')}>
       {tags.map(({ tag, count }) => (
-        <span key={tag} className="vs-tag-chip" data-some={count < n ? '' : undefined} title={count < n ? `on ${count} of ${n}` : undefined}>
+        <Text key={tag} className="vs-tag-chip" data-some={count < n ? '' : undefined} title={count < n ? `on ${count} of ${n}` : undefined}>
           {tag}
-          {count < n && <span className="vs-tag-chip-count">{count}</span>}
+          {count < n && (
+            <Text tabular className="vs-tag-chip-count">
+              {count}
+            </Text>
+          )}
           <button
             type="button"
             className="vs-tag-chip-x"
@@ -74,7 +79,7 @@ export function TagEditor({ chosen, onSet, remove = '×' }: TagEditorProps) {
           >
             {remove}
           </button>
-        </span>
+        </Text>
       ))}
       {adding ? (
         <input
@@ -90,7 +95,8 @@ export function TagEditor({ chosen, onSet, remove = '×' }: TagEditorProps) {
           onBlur={commit}
         />
       ) : (
-        <button
+        <Text
+          as="button"
           type="button"
           className="vs-tag-chip vs-tag-chip-add"
           title={`Add a tag${n > 1 ? ' to all of them' : ''}`}
@@ -100,8 +106,8 @@ export function TagEditor({ chosen, onSet, remove = '×' }: TagEditorProps) {
           }}
         >
           + Tag
-        </button>
+        </Text>
       )}
-    </div>
+    </Text>
   );
 }

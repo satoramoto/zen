@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import type { LibraryChange } from '../model/api';
 import type { Playlist } from '../model/playlists';
 import { SWATCH, parseTags, valueLabel, type Colour, type Prepared } from '../model/librarySearch';
@@ -107,9 +108,9 @@ export function PresetDrawer({ chosen, hiddenByFilter, playlists, current, onSet
   return (
     <Layer level="raised" as="section" className="vs-drawer" aria-label={one ? `preset ${one.title}` : `${chosen.length} presets`}>
       <header className="vs-drawer-head">
-        <span className="vs-drawer-title" title={one ? one.row.key : undefined}>
+        <Text weight="strong" className="vs-drawer-title" title={one ? one.row.key : undefined}>
           {one && !hiddenByFilter ? one.title : selectedSays(chosen.length, hiddenByFilter)}
-        </span>
+        </Text>
         <ButtonFace tone="quiet" size="small" aria-label="close, let go of the selection" title="Let go of the selection (Esc)" onClick={onClose}>
           ×
         </ButtonFace>
@@ -123,11 +124,11 @@ export function PresetDrawer({ chosen, hiddenByFilter, playlists, current, onSet
           title={one.row.path === current ? 'playing' : 'load it'}
           onClick={() => onLoad(one)}
         >
-          {one.row.thumbnail ? <img src={one.row.thumbnail} alt="" /> : <span className="vs-drawer-none">{one.style}</span>}
+          {one.row.thumbnail ? <img src={one.row.thumbnail} alt="" /> : <Text className="vs-drawer-none">{one.style}</Text>}
         </button>
       ) : (
         <div className="vs-drawer-strip" aria-hidden="true">
-          {chosen.slice(0, 8).map((p) => (p.row.thumbnail ? <img key={p.row.key} src={p.row.thumbnail} alt="" /> : <span key={p.row.key} className="vs-drawer-none" />))}
+          {chosen.slice(0, 8).map((p) => (p.row.thumbnail ? <img key={p.row.key} src={p.row.thumbnail} alt="" /> : <Text key={p.row.key} className="vs-drawer-none" />))}
         </div>
       )}
 
@@ -158,9 +159,9 @@ export function PresetDrawer({ chosen, hiddenByFilter, playlists, current, onSet
 
       <div className="vs-drawer-tags" role="group" aria-label="tags">
         {tags.map(({ tag, count }) => (
-          <span key={tag} className="vs-drawer-tag" data-some={count < chosen.length ? '' : undefined} title={count < chosen.length ? `on ${count} of ${chosen.length}` : undefined}>
+          <Text key={tag} className="vs-drawer-tag" data-some={count < chosen.length ? '' : undefined} title={count < chosen.length ? `on ${count} of ${chosen.length}` : undefined}>
             {tag}
-            {count < chosen.length && <span className="vs-drawer-tag-count vs-num">{count}</span>}
+            {count < chosen.length && <Text tabular className="vs-drawer-tag-count vs-num">{count}</Text>}
             <button
               type="button"
               className="vs-drawer-tag-x"
@@ -170,7 +171,7 @@ export function PresetDrawer({ chosen, hiddenByFilter, playlists, current, onSet
             >
               ×
             </button>
-          </span>
+          </Text>
         ))}
         <input
           className="vs-drawer-tag-input"
@@ -185,11 +186,15 @@ export function PresetDrawer({ chosen, hiddenByFilter, playlists, current, onSet
         />
       </div>
 
-      {one && <p className="vs-drawer-note">{inPlaylistsSays(playlists && playlistsWith(one.row.path, playlists))}</p>}
+      {one && (
+        <Text as="p" className="vs-drawer-note">
+          {inPlaylistsSays(playlists && playlistsWith(one.row.path, playlists))}
+        </Text>
+      )}
       {error && (
-        <p className="vs-drawer-note vs-drawer-error" role="alert">
+        <Text as="p" className="vs-drawer-note vs-drawer-error" ariaRole="alert">
           {error}
-        </p>
+        </Text>
       )}
     </Layer>
   );
@@ -206,7 +211,7 @@ const Fact = ({ name, children }: { name: string; children: ReactNode }) => (
 function Groups({ p }: { p: Prepared }) {
   const v = p.values;
   return (
-    <dl className="vs-drawer-facts">
+    <Text as="dl" className="vs-drawer-facts">
       <Fact name="style">{p.subStyle ? `${p.style} › ${p.subStyle}` : p.style}</Fact>
       {p.authors.length > 0 && <Fact name="author">{p.authors.join(' & ')}</Fact>}
       {v.colour.length > 0 && (
@@ -222,6 +227,6 @@ function Groups({ p }: { p: Prepared }) {
       {v.speed.length > 0 && <Fact name="speed">{valueLabel('speed', v.speed[0])}</Fact>}
       {v.intensity.length > 0 && <Fact name="intensity">{valueLabel('intensity', v.intensity[0])}</Fact>}
       {!p.row.look && <Fact name="look">not drawn yet</Fact>}
-    </dl>
+    </Text>
   );
 }

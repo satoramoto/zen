@@ -85,13 +85,10 @@
 /* Leave room for the split flag where the zones meet. */
 .yh-keys__zone[data-split][data-side='left'] { padding-right: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
 .yh-keys__zone[data-split][data-side='right'] { padding-left: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
-/* Read mid-song from a metre: the zone's name at label size, what it holds at body size and strong. */
+/* Read mid-song from a metre: the zone's name at label size (a body Text in the label case), what
+   it holds at body size and strong, tabular, in the readout face. */
 .yh-keys__part {
   flex: none;
-  font-size: var(--size-label);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
   color: var(--text-2);
 }
 .yh-keys__held {
@@ -99,28 +96,21 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: var(--font-readout);
-  font-size: var(--size-body);
-  font-weight: var(--weight-strong);
-  font-variant-numeric: tabular-nums;
   color: var(--text-1);
 }
 .yh-keys__hint {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: var(--size-label);
   color: var(--accent);
 }
 
-/* The split's name when the keys are only a picture. */
+/* The split's name when the keys are only a picture: label size, strong, tabular, readout face. */
 .yh-keys__marker {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  font-variant-numeric: tabular-nums;
   color: var(--text-2);
   white-space: nowrap;
 }
@@ -164,10 +154,8 @@
   border-top-right-radius: 0;
   background: var(--yh-keys-white);
   color: var(--yh-keys-label);
+  /* The C names: caption size, tight, tabular, in the readout face (strong while held). */
   font-family: var(--font-readout);
-  font-size: var(--size-caption);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -192,7 +180,7 @@
   box-shadow: var(--mat-lit-glow);
   color: var(--on-hue);
 }
-.yh-keys__white[data-held] { z-index: 0; font-weight: var(--weight-strong); }
+.yh-keys__white[data-held] { z-index: 0; }
 .yh-keys__black[data-held] { z-index: 2; }
 
 /* The split line: beside the black keys it runs along the split key's edge, below them along the
@@ -272,11 +260,8 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   color: var(--text-1);
+  /* Label size, strong, tight, tabular, in the readout face. */
   font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
   white-space: nowrap;
 }
 /* The grip: two short rules saying "this slides". */

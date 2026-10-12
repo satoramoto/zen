@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { useId } from 'react';
+import { Text } from '../../../primitives/Text';
 import './SettingsRow.css';
 
 export interface SettingsRowProps {
@@ -48,10 +49,13 @@ export function SettingsRow({ label, hint = '', labelWidth = 120, children }: Se
   const hintId = `${id}-hint`;
   const style = { '--yh-settings-label-w': `${labelWidth}px` } as CSSProperties;
   return (
-    <div
+    <Text
+      as="div"
+      role="body"
+      tabular
       className="yh-settings-row"
       data-part="root"
-      role="group"
+      ariaRole="group"
       aria-labelledby={labelId}
       aria-describedby={hint ? hintId : undefined}
       style={style}
@@ -65,6 +69,6 @@ export function SettingsRow({ label, hint = '', labelWidth = 120, children }: Se
           {hint}
         </span>
       )}
-    </div>
+    </Text>
   );
 }

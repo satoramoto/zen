@@ -1,5 +1,6 @@
 import { createElement, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import './PresetTile.css';
 
 /**
@@ -55,6 +56,8 @@ export interface PresetTileProps extends HTMLAttributes<HTMLElement> {
  * passes them. Only three lines: the selection ring (`--text-1`), the focus ring
  * (`--vs-focus-ring`) and the playing mark (`--vs-playing`); the drop bar is in `--accent` (the
  * primary is selection and the active mark) where the original used amber, which is caution only.
+ * The words on the picture (name, author, the empty picture's words, the star) are caption
+ * `Text`s at the original's sizes and leadings, set in their knobs.
  *
  * **Kept.** The props, the element (`div` or `li`), the DOM order (picture, then tools), the
  * caption on the picture, the level bars, the star, `tileName` and `tileBy`.
@@ -70,19 +73,29 @@ export function PresetTile({ as = 'div', thumbnail, empty = '', name, by, playin
     as,
     { ...rest, className: className ? `vs-tile ${className}` : 'vs-tile', 'data-playing': playing ? '' : undefined },
     <div className="vs-tile-pic">
-      {thumbnail ? <img src={thumbnail} alt="" loading="lazy" decoding="async" draggable={false} /> : empty ? <span className="vs-tile-none">{empty}</span> : null}
+      {thumbnail ? (
+        <img src={thumbnail} alt="" loading="lazy" decoding="async" draggable={false} />
+      ) : empty ? (
+        <Text role="caption" className="vs-tile-none">
+          {empty}
+        </Text>
+      ) : null}
       {motion}
       <span className="vs-tile-caption">
-        <span className="vs-tile-name">
+        <Text role="caption" className="vs-tile-name">
           {playing && <LevelMark />}
           {name}
-        </span>
-        {by && <span className="vs-tile-by">{by}</span>}
+        </Text>
+        {by && (
+          <Text role="caption" className="vs-tile-by">
+            {by}
+          </Text>
+        )}
       </span>
       {star && (
-        <span className="vs-tile-star" aria-hidden="true">
+        <Text role="caption" className="vs-tile-star" aria-hidden="true">
           ★
-        </span>
+        </Text>
       )}
       {marks}
     </div>,
@@ -127,7 +140,9 @@ export function TileGhost({ x, y, thumbnail, name, ok = false }: TileGhostProps)
   return (
     <Layer level="float" className="vs-tile-ghost" data-ok={ok ? '' : undefined} aria-hidden="true" style={{ transform: `translate(${x + 12}px, ${y + 12}px)` } as CSSProperties}>
       {thumbnail ? <img src={thumbnail} alt="" draggable={false} /> : null}
-      <span>{name}</span>
+      <Text role="caption" className="vs-tile-ghost-name">
+        {name}
+      </Text>
     </Layer>
   );
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Modal } from '../../components/core/Modal/Modal';
 import { Opaque } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import * as api from '../model/api';
 import { useTauriEvent } from '../model/hooks';
 import { listen, openUrl, type UnlistenFn } from '../model/ipc';
@@ -46,18 +47,25 @@ const check = (): Promise<CheckResult> =>
     (e: unknown) => ({ error: String(e) }),
   );
 
-/** One run of the notes, drawn as React elements, so every bit of text is escaped. */
-function Run({ run }: { run: Inline }): ReactNode {
+/**
+ * One run of the notes, drawn as React elements, so every bit of text is escaped. Bold and code
+ * are Text (`bold`: inside a bold run, so code keeps the strong weight it would inherit).
+ */
+function Run({ run, bold }: { run: Inline; bold?: boolean }): ReactNode {
   switch (run.kind) {
     case 'text':
       return run.text;
     case 'code':
-      return <code>{run.text}</code>;
+      return (
+        <Text as="code" role="code" size="caption" weight={bold ? 'strong' : undefined}>
+          {run.text}
+        </Text>
+      );
     case 'bold':
       return (
-        <strong>
-          <Runs runs={run.children} />
-        </strong>
+        <Text as="strong" size="inherit" weight="strong">
+          <Runs runs={run.children} bold />
+        </Text>
       );
     case 'link':
       // In the system browser, never inside the app's own window.
@@ -76,7 +84,7 @@ function Run({ run }: { run: Inline }): ReactNode {
   }
 }
 
-const Runs = ({ runs }: { runs: Inline[] }) => runs.map((run, i) => <Run key={i} run={run} />);
+const Runs = ({ runs, bold }: { runs: Inline[]; bold?: boolean }) => runs.map((run, i) => <Run key={i} run={run} bold={bold} />);
 
 /** The release notes, with their paragraphs, lists, bold, code and links. */
 export function Notes({ notes }: { notes: string }) {
@@ -92,9 +100,9 @@ export function Notes({ notes }: { notes: string }) {
       case 'heading':
         return (
           <p key={i}>
-            <strong>
-              <Runs runs={block.children} />
-            </strong>
+            <Text as="strong" size="inherit" weight="strong">
+              <Runs runs={block.children} bold />
+            </Text>
           </p>
         );
       case 'list':
