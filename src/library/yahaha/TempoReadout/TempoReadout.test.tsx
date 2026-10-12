@@ -1,6 +1,24 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { TempoReadout } from './TempoReadout';
+
+// jsdom gives import.meta.url a non-file scheme and vitest skips CSS; tests run from the repo root.
+const css = readFileSync(join(process.cwd(), 'src/library/yahaha/TempoReadout/TempoReadout.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+const ruleOf = (selector: string) =>
+  new RegExp(`(?:^|\\n)${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+
+describe('TempoReadout transport hue', () => {
+  it('wears the transport role hue on + and −, with its paired ink on the pressed fill', () => {
+    expect(ruleOf('.yh-tempo-readout__steps')).toMatch(/border:[^;]*var\(--transport\)/);
+    expect(ruleOf('.yh-tempo-readout__step')).toMatch(/color:\s*var\(--transport\)/);
+    expect(ruleOf('.yh-tempo-readout__step + .yh-tempo-readout__step')).toMatch(/border-top:[^;]*var\(--transport\)/);
+    const pressed = ruleOf('.yh-tempo-readout__step:active:not(:disabled)');
+    expect(pressed).toMatch(/background:\s*var\(--transport\)/);
+    expect(pressed).toMatch(/color:\s*var\(--transport-text\)/);
+  });
+});
 
 function setup(props: Partial<Parameters<typeof TempoReadout>[0]> = {}) {
   const handlers = { onTempo: vi.fn(), onPlus: vi.fn(), onMinus: vi.fn(), onReset: vi.fn() };

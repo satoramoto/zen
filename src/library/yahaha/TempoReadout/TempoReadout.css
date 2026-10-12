@@ -57,13 +57,15 @@
   color: var(--text-3);
 }
 
-/* + over −: one framed pair, as tall as the number's line, a hairline between the halves. */
+/* + over −: one framed pair, as tall as the number's line, a hairline between the halves. Both
+   wear the transport role hue (they move time): frame, hairline and glyphs at rest, a tint on
+   hover, a solid fill with its paired ink while pressed. */
 .yh-tempo-readout__steps {
   display: flex;
   flex-direction: column;
   flex: none;
   width: max(calc(var(--yh-tempo-readout-size) * 0.5), calc(var(--control-h) * 0.75));
-  border: var(--border-width) solid var(--border);
+  border: var(--border-width) solid var(--transport);
   border-radius: var(--radius-control);
   background: var(--surface-1);
   overflow: hidden;
@@ -83,21 +85,25 @@
   font-size: max(var(--size-label), calc(var(--yh-tempo-readout-size) * 0.3));
   font-weight: var(--weight-numeral);
   line-height: 1;
-  color: var(--text-2);
+  color: var(--transport);
   cursor: pointer;
   touch-action: manipulation;
   transition: background-color 120ms ease-out, color 120ms ease-out;
 }
 .yh-tempo-readout__step + .yh-tempo-readout__step {
-  border-top: var(--border-width) solid var(--border);
+  border-top: var(--border-width) solid var(--transport);
 }
-.yh-tempo-readout__step:hover {
-  background: var(--surface-2);
+.yh-tempo-readout__step:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--transport) 16%, transparent);
   color: var(--text-1);
 }
-.yh-tempo-readout__step:active {
-  background: var(--surface-3);
-  color: var(--text-1);
+.yh-tempo-readout__step:active:not(:disabled) {
+  background: var(--transport);
+  color: var(--transport-text);
+}
+.yh-tempo-readout__step:disabled {
+  color: var(--text-4);
+  cursor: default;
 }
 
 .yh-tempo-readout__bpm:focus-visible,

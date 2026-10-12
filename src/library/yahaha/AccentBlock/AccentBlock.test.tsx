@@ -1,7 +1,20 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { AccentBlock } from './AccentBlock';
+
+// jsdom gives import.meta.url a non-file scheme and vitest skips CSS; tests run from the repo root.
+const css = readFileSync(join(process.cwd(), 'src/library/yahaha/AccentBlock/AccentBlock.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+
+describe('AccentBlock style hue', () => {
+  it("draws the leading bar in the style's role hue, not the accent", () => {
+    const rule = /\.yh-accentblock\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(rule).toMatch(/border-left:[^;]*var\(--style\)/);
+    expect(rule).not.toContain('--accent');
+  });
+});
 
 describe('AccentBlock', () => {
   it('is a named button that presses on click, Enter and Space (Board)', async () => {

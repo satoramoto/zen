@@ -51,8 +51,9 @@ export interface OneTouchPickerProps {
  * but drop to the faint ink with a struck-through face, so a missing setting reads as absent rather
  * than merely dim. Digits use the readout face with tabular numerals so 1-4 sit on one rhythm
  * (`typography.md`), and the label is a caption in the label case above or beside the strip
- * (hierarchy: the label names, the numbers act). The `a` hue maps to `--accent`, the palette's
- * small-highlight colour, until the contract has a style hue. `tipAction` runs the app's tooltip
+ * (hierarchy: the label names, the numbers act). The `a` hue maps to the contract's `--style` role
+ * hue, with `--style-text` on the applied number's solid fill, so the style's One Touch numbers
+ * wear the style's colour and never the `--accent` focus/highlight role (`../hues`). `tipAction` runs the app's tooltip
  * action, in Pad's handle shape, on each number with that number's own key, since each number is
  * its own control with its own tooltip; the label and group have none.
  *

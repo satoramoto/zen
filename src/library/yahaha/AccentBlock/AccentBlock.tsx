@@ -29,7 +29,7 @@ export interface AccentBlockProps {
 }
 
 /**
- * AccentBlock: "the device", named in an accent-marked block.
+ * AccentBlock: "the device", named in a block marked with the style's hue.
  *
  * **Job.** Name what the player is driving: the loaded style on the style line (a button that
  * opens the Browser) and the knob page over the knobs (a plain label). It is the anchor a player
@@ -40,8 +40,9 @@ export interface AccentBlockProps {
  * the name in the ground colour. On the contract that collides twice: a solid fill is how
  * `--selected` and `--action` speak, and `--accent` is the role for focus rings and small
  * highlights with no ink paired to it, so a name on a full accent fill falls under 4.5:1 in some
- * palettes. Here the accent is a bar on the block's leading edge (a small highlight, its contract
- * role) and the name is primary text on the raised `--surface-2`, so it passes in every palette
+ * palettes. Here the colour is a bar on the block's leading edge in the contract's `--style` role
+ * hue (the style's own colour, as its name is the style's; `--accent` stays the focus ring) and
+ * the name is primary text on the raised `--surface-2`, so it passes in every palette
  * and never looks pressed (color.md › semantics; one meaning per colour). *Hierarchy*: the name is
  * strong weight at label size in the theme's label case, the loudest text on the line without a
  * louder colour. *Affordance*: the button form carries a trailing chevron and lifts to

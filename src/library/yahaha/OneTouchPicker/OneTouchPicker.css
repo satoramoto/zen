@@ -83,7 +83,7 @@
 }
 
 /* Cells: each element fills its parent's cell; numbers are outlined faces in their ink, the applied
-   one solid. `a` takes the accent until the contract names a style hue. */
+   one solid. `a` is the style's own hue (`--style`): a One Touch is a setting of the style. */
 .yh-onetouchpicker__cell {
   display: flex;
   align-items: center;
@@ -104,10 +104,10 @@
   box-shadow: inset 0 0 0 var(--border-width) var(--ots-line);
 }
 .yh-onetouchpicker__number.yh-onetouchpicker__cell[data-ink='a'] {
-  --ots-ink: var(--accent);
-  --ots-line: var(--accent);
-  --ots-on: var(--accent);
-  --ots-on-text: var(--surface-0);
+  --ots-ink: var(--style);
+  --ots-line: var(--style);
+  --ots-on: var(--style);
+  --ots-on-text: var(--style-text);
 }
 .yh-onetouchpicker__number.yh-onetouchpicker__cell[data-face='on'] {
   background: var(--ots-on);

@@ -1,6 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { WaitingChip } from './WaitingChip';
+
+// jsdom gives import.meta.url a non-file scheme and vitest skips CSS; tests run from the repo root.
+const css = readFileSync(join(process.cwd(), 'src/library/yahaha/WaitingChip/WaitingChip.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+
+describe('WaitingChip style hue', () => {
+  it("tints a queued style's arrow in the style's role hue", () => {
+    const rule = /\.yh-waiting-chip\[data-hue='a'\]\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(rule).toMatch(/--yh-waiting-chip-hue:\s*var\(--style\)/);
+  });
+});
 
 describe('WaitingChip', () => {
   it('draws the label with its hooks and nothing focusable', () => {
