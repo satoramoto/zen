@@ -1,9 +1,12 @@
-/* DisplayArt: contract variables only. Every colour is the ground, a surface or the accent, mixed. */
+/* DisplayArt: contract variables only. Every colour is the ground, a surface or the accent, mixed.
+   The mixes switch with `--scheme-light` (0 dark, 1 light). Dark: a night, the near hill a
+   silhouette darker than the sky and the sun the brightest thing. Light: a day, the sky pale, the
+   hills deepening towards the viewer, and the sun a near-white disc lighter than the sky. */
 .yh-displayart {
-  --yh-displayart-sky: color-mix(in oklab, var(--accent) 10%, var(--surface-1));
-  --yh-displayart-far: color-mix(in oklab, var(--accent) 22%, var(--surface-2));
-  --yh-displayart-near: color-mix(in oklab, var(--accent) 8%, var(--surface-0));
-  --yh-displayart-sun: color-mix(in oklab, var(--accent) 45%, var(--surface-1));
+  --yh-displayart-sky: color-mix(in oklab, var(--accent) calc(10% + 8% * var(--scheme-light)), var(--surface-1));
+  --yh-displayart-far: color-mix(in oklab, var(--accent) calc(22% + 10% * var(--scheme-light)), var(--surface-2));
+  --yh-displayart-near: color-mix(in oklab, var(--accent) calc(8% + 40% * var(--scheme-light)), var(--surface-0));
+  --yh-displayart-sun: color-mix(in oklab, var(--accent) calc(45% - 40% * var(--scheme-light)), var(--surface-1));
   position: relative;
   overflow: hidden;
   width: 100%;

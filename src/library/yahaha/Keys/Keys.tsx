@@ -69,7 +69,8 @@ type Zone = { part: KeyPart; from: number; to: number; held: string[]; lit: bool
  * with a "press a key" hint, so each state looks like what it does (craft-details.md, focus and
  * keyboard handlers). *Contrast:* the keys are drawn as keys, light faces and dark sharps in either
  * scheme, in a real keyboard's proportions, rather than near-black on black (color.md, light and
- * dark themes). *Colour meaning:* part hues (`--hue-N`) appear only for part identity: each zone's
+ * dark themes); the faces are the contract's `--key-white` and `--key-black`, and the gaps,
+ * sharp edges and C names are mixed between them, not derived from the ground. *Colour meaning:* part hues (`--hue-N`) appear only for part identity: each zone's
  * lamp along the top edge, lit with `--bloom` while that part sounds, and the held keys themselves;
  * the left-zone tint is gone because the lamp and ruler already say who owns the range
  * (color.md 60/30/10, anti-ai-slop.md token role drift). *Numerals:* note names are set in
