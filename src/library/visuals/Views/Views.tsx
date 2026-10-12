@@ -228,7 +228,7 @@ export function FrameRate({ always = false, slowOnly = false }: { always?: boole
 }
 
 /** The sheets that open over any view: Settings and the More effects drawer. They are drawn on `Layer level="overlay"` by whoever mounts them. */
-export type Sheet = 'settings' | 'effects';
+export type Sheet = 'settings' | 'effects' | 'camera';
 
 /** The page's event that opens a sheet; its `detail` is the `Sheet`. Kept as the original's name, so a page mixing both still hears it. */
 export const SHEET_EVENT = 'vf-sheet';
@@ -239,7 +239,7 @@ export const openSheet = (sheet: Sheet) => window.dispatchEvent(new CustomEvent<
 /** The sheet a `SHEET_EVENT` asks for; null for anything else. */
 export function sheetOf(e: Event): Sheet | null {
   const detail = (e as CustomEvent<unknown>).detail;
-  return detail === 'settings' || detail === 'effects' ? detail : null;
+  return detail === 'settings' || detail === 'effects' || detail === 'camera' ? detail : null;
 }
 
 /** The sheet showing, opened by `openSheet`, for `App` to mount; `close` puts it away. While `enabled` is false (onboarding up, say), the menu's Settings… is ignored. */
