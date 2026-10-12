@@ -8,18 +8,16 @@
   flex-direction: column;
   align-items: stretch;
   gap: var(--space-3);
-  font-size: var(--vs-text-body);
+  /* A body Text, which the controls inside inherit. */
+  --text-size: var(--vs-text-body);
   color: var(--text-2);
 }
 
-/* The heading: a sentence-case caption, a step lighter on glass. */
+/* The heading: a sentence-case caption, a step lighter on glass (a strong body Text, no case). */
 .vs-output-head {
   margin: 0;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: none;
+  --text-size: var(--vs-text-annot);
 }
 
 /* Showing or not: green only while it is (the signal), a caption otherwise. */
@@ -42,20 +40,23 @@
 }
 
 /* The notes' measure: the original's 360px, fifteen of the scale's 24px steps (spaces, not
-   --control-h: inside the Settings sheet that is 44px). */
+   --control-h: inside the Settings sheet that is 44px). Caption Texts (--vs-text-label) on a
+   roomier line. */
+.vs-output-note,
+.vs-output-fit-lead,
+.vs-output-warn {
+  --text-leading: 1.45;
+}
 .vs-output-note {
   max-width: calc(var(--space-5) * 15);
   margin: 0;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
-  line-height: 1.45;
 }
 .vs-output-settings .vs-output-note {
   color: var(--text-3);
 }
-.vs-output-fit b {
+.vs-output-fit-lead {
   color: var(--text-2);
-  font-weight: var(--weight-strong);
 }
 
 /* Caution: an amber wash, no border. */
@@ -66,6 +67,4 @@
   border-radius: var(--radius-control);
   background: color-mix(in oklab, var(--warning) 12%, transparent);
   color: var(--warning);
-  font-size: var(--vs-text-label);
-  line-height: 1.45;
 }

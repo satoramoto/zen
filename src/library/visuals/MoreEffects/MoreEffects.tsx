@@ -2,6 +2,7 @@ import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Segmented } from '../../components/core/Segmented/Segmented';
 import { Toggle } from '../../components/core/Toggle/Toggle';
 import { Hit, HUE, hueText, MIRROR_LABELS, MIRROR_NAMES, MIRRORS, slide, SPEED, taperSlide, TRAILS, useFx, type FxControl } from '../Effects/Effects';
+import { Text } from '../../primitives/Text';
 import type * as fx from '../model/fx';
 import { Sheet } from '../Settings/Settings';
 import { NoticeBanner } from '../Views/Views';
@@ -26,19 +27,19 @@ import './MoreEffects.css';
 export function MoreFx({ state, set, send }: Pick<FxControl, 'set' | 'send'> & { state: fx.Fx }) {
   return (
     <div className="vs-more-fx-body">
-      <div className="vs-more-fx-row vs-more-fx-speed">
+      <Text as="div" weight="strong" className="vs-more-fx-row vs-more-fx-speed">
         <span>Speed</span>
         {taperSlide(SPEED, state.speed, (v) => set({ kind: 'speed', speed: v }, { speed: v }), 'How fast the preset runs, ¼× to 4×')}
-      </div>
-      <div className="vs-more-fx-row vs-more-fx-hue">
+      </Text>
+      <Text as="div" weight="strong" className="vs-more-fx-row vs-more-fx-hue">
         <span>Colour</span>
         {slide(HUE, state.hue, (v) => set({ kind: 'hue', value: v }, { hue: v }), hueText(state.hue), 'Turn the colours round the wheel')}
-      </div>
-      <div className="vs-more-fx-row vs-more-fx-trails">
+      </Text>
+      <Text as="div" weight="strong" className="vs-more-fx-row vs-more-fx-trails">
         <span>Trails</span>
         {slide(TRAILS, state.trails, (v) => set({ kind: 'trails', value: v }, { trails: v }), state.trails.toFixed(2), 'Trails: how much of the last frames stays')}
-      </div>
-      <div className="vs-more-fx-row vs-more-fx-mirror">
+      </Text>
+      <Text as="div" weight="strong" className="vs-more-fx-row vs-more-fx-mirror">
         <span>Mirror</span>
         <Segmented
           label="mirror"
@@ -48,13 +49,13 @@ export function MoreFx({ state, set, send }: Pick<FxControl, 'set' | 'send'> & {
           onChange={(i) => set({ kind: 'mirror', mode: MIRRORS[i] }, { mirror: MIRRORS[i] })}
           title="Mirror the picture side to side, top to bottom, or both (M steps through)"
         />
-      </div>
-      <div className="vs-more-fx-row vs-more-fx-invert">
+      </Text>
+      <Text as="div" weight="strong" className="vs-more-fx-row vs-more-fx-invert">
         <span>Invert</span>
         <Toggle on={state.invert} onChange={(on) => set({ kind: 'invert', on }, { invert: on })} layout="inside" label="invert" title="Flip the colours (I)">
           {state.invert ? 'on' : 'off'}
         </Toggle>
-      </div>
+      </Text>
       <div className="vs-more-fx-hits">
         <Hit kind="punch" on={state.punch} hold label="Punch" keyName="P" send={send} />
       </div>

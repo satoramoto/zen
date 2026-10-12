@@ -1,4 +1,6 @@
 import type { CSSProperties } from 'react';
+import { Surface } from '../../../primitives/Surface';
+import { Text } from '../../../primitives/Text';
 import './Meter.css';
 
 /** Caption above the meter, beside it, or laid over a horizontal bar. */
@@ -88,12 +90,14 @@ export function Meter({
       style={style}
     >
       {name && (
-        <span className="lib-meter__caption" data-part="caption">
+        <Text role="body" size="caption" case="label" className="lib-meter__caption" data-part="caption">
           {name}
-        </span>
+        </Text>
       )}
       <div className="lib-meter__frame" title={title}>
-        <div
+        <Surface
+          material="well"
+          radius="pill"
           className="lib-meter__channel"
           data-part="channel"
           role="meter"
@@ -104,12 +108,12 @@ export function Meter({
         >
           <i className="lib-meter__level" data-part="level" />
           {held !== undefined && <i className="lib-meter__hold" data-part="hold" />}
-        </div>
+        </Surface>
       </div>
       {showValue && (
-        <span className="lib-meter__readout" data-part="readout">
+        <Text role="numeral" size="label" className="lib-meter__readout" data-part="readout">
           {display ?? String(Math.round(level * 100))}
-        </span>
+        </Text>
       )}
     </div>
   );

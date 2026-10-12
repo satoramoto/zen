@@ -6,16 +6,11 @@
   --yh-section-name-size: var(--size-numeral);
   flex: none;
   display: inline-block;
-  font-family: var(--font-display);
-  font-size: var(--yh-section-name-size);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
-  line-height: 1;
+  /* Type: a Text in the display role, tight leading, at the name's size. */
+  --text-size: var(--yh-section-name-size);
   white-space: nowrap;
   color: inherit;
 }
 
-/* The variation ("B", "III") stays in the display face: letters, not digits. */
-.yh-section-name__variant {
-  font-variant-numeric: tabular-nums;
-}
+/* The variation ("B", "III") is a Text in the same display face at the name's size (letters, not
+   digits), with tabular figures. */

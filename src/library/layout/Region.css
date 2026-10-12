@@ -32,12 +32,9 @@
   padding: var(--mat-plate-head-inset);
   box-shadow: var(--mat-plate-head-rule);
 }
+/* The label is a Text: body face and leading at the caption size, strong, in the label case. */
 .lib-region__label {
   color: var(--text-3);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
   white-space: nowrap;
 }
 .lib-region__aside {

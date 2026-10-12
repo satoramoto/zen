@@ -32,8 +32,6 @@
      recessed window's inner shadow is not hidden behind the picture. */
   background: var(--mat-screen-texture), var(--mat-screen-fill);
   color: var(--text-1);
-  font-family: var(--font-sans);
-  letter-spacing: var(--tracking);
 }
 .yh-display::after {
   content: '';
@@ -159,8 +157,6 @@
   margin-left: var(--space-3);
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: var(--size-label);
-  font-variant-numeric: tabular-nums;
   color: var(--text-3);
 }
 /* Drops whole, never as a stub, before the name is cut. */
@@ -267,7 +263,8 @@
 
 /* The section: the one live element. Running, its name sits on the --selected block in the
    block's ink; stopped, no block and the secondary ink. SectionName takes its ink from here (it
-   inherits), so the primitive's CSS is never overridden. Sections never take a hue (hues.ts). */
+   inherits) and its size from its `size` option, so the primitive's CSS is never overridden.
+   Sections never take a hue (hues.ts). */
 .yh-display__now {
   display: flex;
   align-items: center;
@@ -275,11 +272,11 @@
   max-width: 100%;
   height: calc(var(--yh-display-section) * 1.15);
   overflow: hidden;
-  font-size: var(--yh-display-section);
   color: var(--text-2);
 }
+/* The block's side padding is a fifth of the section's size. */
 .yh-display__now[data-live] {
-  padding: 0 0.2em;
+  padding: 0 calc(var(--yh-display-section) * 0.2);
   border-radius: var(--radius-control);
   background: var(--selected);
   color: var(--selected-text);
@@ -293,7 +290,6 @@
   align-items: center;
   column-gap: var(--space-3);
   margin: 0;
-  font-size: var(--size-label);
   color: var(--text-2);
 }
 .yh-display__now[data-live]:has(+ .yh-display__next .yh-display__then) {
@@ -303,7 +299,7 @@
   min-width: 0;
 }
 .yh-display__status {
-  line-height: var(--control-h);
+  --text-leading: var(--control-h);
   color: var(--text-2);
 }
 
@@ -322,7 +318,6 @@
   border-bottom-right-radius: var(--radius-control);
   background: var(--surface-2);
   color: var(--text-1);
-  font-size: var(--size-label);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -346,12 +341,11 @@
   white-space: nowrap;
 }
 /* The next section's name, a third of the section's size (never below heading size): about 34px
-   under a 96px block at 1440, 24px at 1217. "fill after bar 4" stays label size. */
+   under a 96px block at 1440, 24px at 1217. "fill after bar 4" stays label size. A strong, tight
+   Text; its size is the knob. */
 .yh-display__then-name {
   flex: none;
-  font-size: max(var(--size-heading), calc(var(--yh-display-section) * 0.35));
-  line-height: 1;
-  font-weight: var(--weight-strong);
+  --text-size: max(var(--size-heading), calc(var(--yh-display-section) * 0.35));
 }
 .yh-display__when {
   min-width: 0;
@@ -406,9 +400,6 @@
   border: 0;
   border-radius: var(--radius-control);
   background: transparent;
-  font-family: var(--font-sans);
-  font-size: var(--size-label);
-  letter-spacing: var(--tracking);
   text-align: left;
   white-space: nowrap;
   color: var(--text-2);
@@ -448,9 +439,7 @@
 }
 .yh-display__part-part {
   flex: none;
-  font-size: var(--size-caption);
   color: var(--text-3);
-  text-transform: var(--label-case);
 }
 .yh-display__part-tail::before {
   content: ' · ';

@@ -23,11 +23,8 @@
   max-width: 100%;
   overflow: hidden;
   color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
+  /* A caption Text in the label case, at the scope's body leading it used to inherit. */
+  --text-leading: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -48,12 +45,8 @@
   background: var(--mat-screen-texture), var(--mat-screen-fill);
   box-shadow: var(--mat-screen-shadow);
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
-  line-height: 1;
+  /* A numeral Text at the label size (readout face, numeral weight, tabular, leading 1), untracked. */
+  --text-tracking: 0;
   white-space: nowrap;
   cursor: ew-resize;
   touch-action: none;

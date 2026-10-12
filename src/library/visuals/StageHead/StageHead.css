@@ -73,9 +73,10 @@
   margin-left: var(--space-1);
 }
 
-/* The lights: a dot or a glyph and a few words. */
-.vs-stagehead-light {
-  font-size: var(--size-caption);
+/* The lights: a dot or a glyph and a few words, in the Popover button's own type (a body Text at
+   --vs-text-body, weight 500); the figures are Texts at its size and weight, tabular. */
+.vs-stagehead-num {
+  --text-weight: 500;
 }
 .vs-stagehead-light-sub {
   display: inline-flex;
@@ -102,11 +103,11 @@
 }
 
 /* The frame rate, only while it is low, and the skipped note, quiet; one line, cut short, its
-   tooltip whole. Fading, the note goes at once (nothing animates). */
+   tooltip whole. Both keep Status's own type (--vs-text-label, the caption size). Fading, the
+   note goes at once (nothing animates). */
 .vs-stagehead-fps {
   padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--warning);
-  font-size: var(--size-caption);
   white-space: nowrap;
 }
 .vs-stagehead-skipped {
@@ -115,7 +116,6 @@
   overflow: hidden;
   padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--text-4);
-  font-size: var(--size-caption);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -127,14 +127,14 @@
 }
 
 /* The lights' panels' contents: the popover's float layer is opaque in the Stage's scope, so its
-   captions take the raised step. */
+   captions take the raised step. They take the panel's type (a body Text at --vs-text-body, the
+   body size). */
 .vs-stagehead-pop {
   --text-3: var(--vs-caption-raised);
   display: grid;
   gap: var(--space-3);
   min-width: calc(var(--space-6) * 8 + var(--space-5)); /* 280px */
   padding: var(--space-2);
-  font-size: var(--size-body);
 }
 /* Tap tempo, at the top of the Beat panel, fills the line. */
 .vs-stagehead-pop[data-pop='beat'] > :first-child {
@@ -175,11 +175,11 @@
   padding: 0 calc((var(--space-3) + var(--space-4)) / 2); /* 14px */
   border-radius: var(--radius-pill);
   color: var(--text-2);
-  font-weight: var(--weight-body);
+  /* The face is a Text: in the body weight; the display's name a strong Text on its line. */
+  --text-weight: var(--weight-body);
 }
-.vs-stagehead-offer .vs-stagehead-offer-go b {
+.vs-stagehead-offer .vs-stagehead-offer-name {
   color: var(--text-1);
-  font-weight: var(--weight-strong);
 }
 .vs-stagehead-offer .vs-stagehead-offer-go:hover {
   color: var(--text-1);
@@ -192,5 +192,4 @@
   margin: 0;
   padding-right: var(--space-2);
   color: var(--text-3);
-  font-size: var(--size-caption);
 }

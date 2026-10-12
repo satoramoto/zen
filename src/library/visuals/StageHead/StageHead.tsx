@@ -1,5 +1,7 @@
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
+import type { ReactNode } from 'react';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import { titleOf } from '../HelpOverlay/HelpOverlay';
 import { Icon } from '../Icon/Icon';
 import { LinkPanel } from '../LinkPanel/LinkPanel';
@@ -19,6 +21,15 @@ export const crateTitle = (open: boolean): string => `${open ? 'Hide' : 'Show'} 
 /** What the Output light shows beside its glyph: the display the picture is on, or "In this window" (in the header's normal ink) while it is on none. */
 export const outputWords = (live: Pick<LiveState, 'status'>): string => live.status.display?.name ?? 'In this window';
 
+/** Figures in a light's label: tabular, at the label's size (StageHead.css matches its weight). */
+function LightNum({ className, children, ...rest }: { className: string; children: ReactNode; 'aria-hidden'?: 'true' }) {
+  return (
+    <Text size="inherit" tabular className={`vs-stagehead-num ${className}`} {...rest}>
+      {children}
+    </Text>
+  );
+}
+
 /**
  * The Beat light: the dot flashing on each beat, the tempo, and with a Link
  * session the peers keeping it; its popover is tap tempo and Ableton Link.
@@ -37,12 +48,12 @@ function BeatLight({ live }: { live: LiveState }) {
       label={
         <>
           <BeatDot frame={frame} className="vs-stagehead-beat-dot" />
-          <span className="vs-num">{bpm ?? '— BPM'}</span>
+          <LightNum className="vs-num">{bpm ?? '— BPM'}</LightNum>
           {peers !== null && (
-            <span className="vs-stagehead-light-sub vs-num" aria-hidden="true">
+            <LightNum className="vs-stagehead-light-sub vs-num" aria-hidden="true">
               <Icon name="link" size={12} />
               {peers}
-            </span>
+            </LightNum>
           )}
         </>
       }
@@ -150,11 +161,18 @@ export function FullScreenOffer({ live }: FullScreenOfferProps) {
           <ButtonFace key={d.id} className="vs-stagehead-offer-go" onClick={() => live.show(d.id)} aria-label={`Go full screen on ${d.name}`}>
             <Icon name="fullscreen" />
             <span>
-              Full screen on <b>{d.name}</b>
+              Full screen on{' '}
+              <Text as="b" size="inherit" weight="strong" leading="tight" className="vs-stagehead-offer-name">
+                {d.name}
+              </Text>
             </span>
           </ButtonFace>
         ))}
-        {live.displays.length === 1 && <p className="vs-stagehead-offer-note">One display: the picture will cover this window. ✕ or ⌘⇧L comes back.</p>}
+        {live.displays.length === 1 && (
+          <Text as="p" size="caption" className="vs-stagehead-offer-note">
+            One display: the picture will cover this window. ✕ or ⌘⇧L comes back.
+          </Text>
+        )}
       </Layer>
     </div>
   );

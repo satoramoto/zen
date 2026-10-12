@@ -23,17 +23,17 @@
   color: var(--text-1);
   font-family: var(--font-sans);
   /* The query container's em is one control height: container queries can't read var(), but they
-     resolve em against this element, so the breakpoints below are counted in keys and follow the
-     pack's density. Nothing inside inherits it (the inner grid resets the size). */
-  font-size: var(--control-h);
+     resolve em against this element (a Text, sized by its knob), so the breakpoints below are
+     counted in keys and follow the pack's density. Nothing inside inherits it (the inner grid is a
+     body Text). */
+  --text-size: var(--control-h);
 }
 
 /* Wide: the form and the transport side by side, on one foot line. The grid's one row stretches
-   to the region's height, and the form with it. */
+   to the region's height, and the form with it. A body Text: the type inside starts from body. */
 .yh-songform__inner {
   flex: 1 1 auto;
   min-height: 0;
-  font-size: var(--size-body);
   display: grid;
   grid-template-columns: minmax(max-content, 1fr) max-content;
   align-items: stretch;
@@ -100,27 +100,22 @@
 .yh-songform__part[data-group='ending'] { flex: 3 1 0; }
 .yh-songform__part[data-group='main'] { flex: 5 1 0; }
 
-/* The one caption recipe (Text role caption, tone muted), in the strip's top padding above its
-   part, in the theme's label case. */
+/* The one caption recipe (Text role caption, tone muted, label case), in the strip's top padding
+   above its part. */
 .yh-songform__caption {
   position: absolute;
   bottom: 100%;
   left: 0;
   padding-bottom: var(--space-2);
-  text-transform: var(--label-case);
   white-space: nowrap;
 }
 
-/* The arrow between parts: the song runs left to right. */
-.yh-songform__part + .yh-songform__part::before {
-  content: '→';
+/* The arrow between parts (a body Text, muted, leading tight): the song runs left to right. */
+.yh-songform__arrow {
   position: absolute;
   top: 50%;
   left: calc(var(--space-6) / -2);
   transform: translate(-50%, -50%);
-  color: var(--text-3);
-  font-size: var(--size-body);
-  line-height: 1;
   pointer-events: none;
 }
 
@@ -161,15 +156,15 @@
 }
 
 /* A step is a Pad filling its cell (`fillCell`); its letter or numeral reads in the readout face
-   at the steps' size. Break is the same primitive at the same size. */
+   at the steps' size, through the Pad face's Text knobs. Break is the same primitive at the same
+   size. (Its glyphs are letters and roman numerals, so it needs no tabular figures.) */
 .yh-songform__step .yh-pad {
   /* A thin block inset and one line of glyph, so a short strip (the small Stage) still holds the
      numeral. */
   padding-block: var(--space-1);
   font-family: var(--font-readout);
-  font-size: var(--yh-sf-step-font);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+  --text-size: var(--yh-sf-step-font);
+  --text-leading: 1;
 }
 .yh-songform__step[data-section='break'] .yh-pad {
   padding-inline: var(--space-3);
@@ -229,12 +224,13 @@
    cell keys' labels at body size, Start / Stop's at display size. Only where the region is a size
    container (`part="transport"`); otherwise the labels keep their primitives' sizes. */
 @container yh-songform (min-height: 5em) {
+  /* The keys' roots are Texts: their size knob. */
   .yh-songform__key .yh-button,
   .yh-songform__key .yh-lampbutton {
-    font-size: var(--size-body);
+    --text-size: var(--size-body);
   }
   .yh-songform__start .yh-button[data-tall] {
-    font-size: var(--size-display);
+    --text-size: var(--size-display);
   }
 }
 

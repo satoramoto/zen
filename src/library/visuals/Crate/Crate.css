@@ -23,7 +23,6 @@
   overscroll-behavior: contain;
   color: var(--text-2);
   font-family: var(--font-sans);
-  font-size: var(--vs-text-body);
 }
 .vs-crate-section + .vs-crate-section {
   margin-top: calc((var(--space-3) + var(--space-4)) / 2); /* 14px */
@@ -46,11 +45,13 @@
   background: none;
   color: var(--text-3);
   font: inherit;
-  font-size: var(--vs-crate-small);
-  font-weight: var(--weight-strong);
   text-align: left;
   cursor: pointer;
   user-select: none;
+}
+/* The heading's title: a strong Text (Crate.tsx) at the crate's small size. */
+.vs-crate-title {
+  --text-size: var(--vs-crate-small);
 }
 .vs-crate-toggle:hover {
   color: var(--text-1);
@@ -85,7 +86,6 @@
   background: none;
   color: var(--text-2);
   font: inherit;
-  font-weight: normal;
   text-align: left;
   user-select: none;
 }
@@ -106,8 +106,10 @@
 /* The playlist playing, and the moods playing: the soft pill, the name in the ink and heavier. A cued playlist's aria-pressed isn't playing. */
 .vs-crate-row:is([aria-current='true'], [aria-pressed='true']:not([data-cued])) {
   color: var(--text-1);
-  font-weight: var(--weight-strong);
   background: var(--vs-crate-on);
+}
+.vs-crate-row:is([aria-current='true'], [aria-pressed='true']:not([data-cued])) .vs-crate-name {
+  --text-weight: var(--weight-strong);
 }
 .vs-crate-row:is([aria-current='true'], [aria-pressed='true']:not([data-cued])) .vs-crate-icon {
   color: var(--text-1);
@@ -141,11 +143,13 @@
   background: var(--vs-crate-key);
   color: var(--text-1);
   font: inherit;
-  font-size: var(--vs-crate-small);
-  font-weight: var(--weight-strong);
   cursor: pointer;
   transform: translateY(-50%);
   user-select: none;
+}
+/* Its word: a strong Text (Crate.tsx) at the crate's small size. */
+.vs-crate-play-label {
+  --text-size: var(--vs-crate-small);
 }
 .vs-crate-play:hover {
   background: var(--vs-crate-key-hover);
@@ -175,24 +179,21 @@
   padding-left: calc(var(--space-1) * 1.5); /* 6px */
   color: var(--text-3);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--vs-crate-small);
   font-style: normal;
-  font-weight: normal;
+  --text-size: var(--vs-crate-small);
 }
 .vs-crate-note {
   margin: 0;
   padding: var(--space-1) var(--vs-crate-inset);
   color: var(--text-3);
-  font-size: var(--vs-crate-small);
-  line-height: 1.45;
+  --text-size: var(--vs-crate-small);
+  --text-leading: 1.45;
 }
 
 /* Up next: rows of the same height, quieter; one that moves shows its ≡ on hover or focus. */
 .vs-crate-next {
   height: var(--space-6); /* 32px */
   color: var(--text-4);
-  font-size: var(--size-caption);
 }
 .vs-crate-next[data-moves] {
   cursor: default;
@@ -221,7 +222,6 @@
   margin-right: calc(var(--space-1) * -1.5);
   border-radius: var(--radius-control);
   color: var(--text-3);
-  font-size: var(--vs-text-body);
   cursor: grab;
   touch-action: none;
 }
@@ -262,8 +262,10 @@
   background: none;
   color: var(--text-3);
   font: inherit;
-  font-size: var(--vs-crate-small);
   cursor: pointer;
+}
+.vs-crate-more-label {
+  --text-size: var(--vs-crate-small);
 }
 .vs-crate-more:hover {
   color: var(--text-1);

@@ -45,7 +45,8 @@
   overflow-y: auto;
   padding: var(--space-4) var(--space-5) var(--space-5);
   color: var(--text-2);
-  font-size: var(--vs-text-body);
+  /* A body Text (HelpOverlay.tsx) at the line height it inherited. */
+  --text-leading: normal;
 }
 
 /* The title, a quiet reminder of the keys that close it, and ✕. */
@@ -58,15 +59,12 @@
 .vs-help-head h2 {
   margin: 0;
   color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: var(--vs-text-heading);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
+  /* A display Text (HelpOverlay.tsx) at the sheet title's size. */
+  --text-size: var(--vs-text-heading);
 }
 .vs-help-hint {
   margin-left: auto;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
   white-space: nowrap;
 }
 .vs-help-close {
@@ -89,8 +87,7 @@
 .vs-help-group h3 {
   margin: 0 0 var(--space-1);
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
+  --text-size: var(--vs-text-annot);
 }
 .vs-help-group dl {
   display: flex;
@@ -114,7 +111,6 @@
   grid-area: name;
   min-width: 0;
   color: var(--text-1);
-  font-weight: var(--weight-strong);
 }
 .vs-help-row dd {
   margin: 0;
@@ -126,8 +122,7 @@
 .vs-help-row .vs-help-does {
   grid-area: does;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
-  line-height: 1.45;
+  --text-leading: 1.45;
 }
 .vs-help kbd {
   display: inline-block;
@@ -138,10 +133,9 @@
   box-shadow: var(--mat-key-shadow);
   color: var(--text-1);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
-  line-height: var(--space-4); /* help.css 16px */
+  /* A strong tabular Text (HelpOverlay.tsx's Kbd), on a 16px line (help.css). */
+  --text-size: var(--vs-text-annot);
+  --text-leading: var(--space-4);
   white-space: nowrap;
 }
 .vs-help-hint kbd {

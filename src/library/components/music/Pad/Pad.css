@@ -28,12 +28,8 @@
   padding: var(--space-2) var(--space-1);
   border: var(--border-width) solid var(--yh-pad-edge);
   color: var(--text-1);
+  /* Type: the face is a Text in the label role, snug leading; banks restyle it on .yh-pad. */
   font-family: var(--font-sans);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  line-height: 1.15;
   text-align: center;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -211,11 +207,10 @@
   border-radius: var(--radius-control);
   background: var(--yh-pad-ring);
   color: var(--yh-pad-ring-ink);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: max(var(--tracking), 0.06em);
-  text-transform: uppercase;
-  line-height: 1.4;
+  /* Type: a Text, caption size, strong, upper case, body leading (1.4); the face's family (a bank
+     may set the readout face on .yh-pad), with tracking at least 0.06em. */
+  font-family: inherit;
+  --text-tracking: max(var(--tracking), 0.06em);
   white-space: nowrap;
 }
 /* tagCorner: the chip hangs on the pad's top edge at the right, mostly above it, so the label
@@ -228,7 +223,7 @@
   right: var(--space-1);
   left: auto;
   transform: none;
-  line-height: 1.2;
+  --text-leading: 1.2;
 }
 
 @media (prefers-reduced-motion: reduce) {

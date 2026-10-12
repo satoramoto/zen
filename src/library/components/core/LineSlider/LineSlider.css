@@ -104,26 +104,20 @@
   align-items: baseline;
   gap: var(--space-1);
   white-space: nowrap;
-  line-height: 1;
 }
+/* A numeral Text: the readout face, numeral weight, tabular, leading 1. */
 .yh-lineslider__value {
   display: inline-block;
   text-align: right;
   color: var(--text-1);
-  font-family: var(--font-readout);
   /* A step above the label: an inline readout, not a headline, so the line keeps its weight. */
-  font-size: calc(var(--size-label) * 1.25);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
+  --text-size: calc(var(--size-label) * 1.25);
+  --text-tracking: 0;
 }
 .yh-lineslider[data-disabled] .yh-lineslider__value { color: var(--text-3); }
-/* Units keep their case: "ms" is not "MS". */
+/* Units keep their case: "ms" is not "MS". A caption Text, tight leading. */
 .yh-lineslider__unit {
   color: var(--text-3);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  letter-spacing: var(--tracking);
 }
 
 @media (prefers-reduced-motion: reduce) {

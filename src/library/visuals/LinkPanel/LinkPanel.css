@@ -7,7 +7,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  font-size: var(--vs-text-body);
   color: var(--text-2);
 }
 
@@ -21,10 +20,7 @@
 .vs-link-title {
   margin: 0;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: none;
+  --text-size: var(--vs-text-annot);
 }
 /* link.css's 96px. */
 .vs-link-toggle {
@@ -40,12 +36,10 @@
 .vs-link-status[data-on] {
   color: var(--vs-playing);
 }
-.vs-link-status b {
+/* The tempo: a numeral Text (LinkPanel.tsx) at the sheet title's size. */
+.vs-link-tempo {
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-size: var(--vs-text-heading);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
+  --text-size: var(--vs-text-heading);
 }
 
 .vs-link-beat {
@@ -56,10 +50,8 @@
 .vs-link-bar {
   min-width: 3ch;
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-size: var(--vs-text-title);
-  font-weight: var(--weight-strong);
-  font-variant-numeric: tabular-nums;
+  /* A strong numeral Text (LinkPanel.tsx) at a pane title's size. */
+  --text-size: var(--vs-text-title);
   text-align: right;
 }
 .vs-link-lights {
@@ -94,9 +86,6 @@
   align-items: center;
   gap: var(--space-3);
 }
-.vs-link-next {
-  font-variant-numeric: tabular-nums;
-}
 .vs-link-quiet {
   margin: 0;
   color: var(--vs-caption-raised);
@@ -120,7 +109,6 @@
   flex-direction: column;
   gap: var(--space-3);
   color: var(--text-1);
-  font-size: var(--vs-text-body);
 }
 .vs-link-settings .vs-link-quiet {
   color: var(--text-3);

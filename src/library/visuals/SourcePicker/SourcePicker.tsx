@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Select } from '../../components/core/Select/Select';
 import { Meter } from '../../components/music/Meter/Meter';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import * as api from '../model/api';
 import { meterLevel } from '../model/shell';
 import { say, Say } from '../model/words';
@@ -106,7 +107,9 @@ function Levels() {
  *
  * **Changed.** The pickers are the core `Select`, the levels core `Meter`s lit in the signal's
  * green (`--vs-playing`). Advanced's channel pickers hang in a float `Layer` (glass: it floats),
- * not a bordered box. Notes are caution (`--warning`) captions.
+ * not a bordered box. Notes are caution (`--warning`) Text at the label size (the original's
+ * control size); Advanced and the channels' name are caption Text, the name capitalised in code
+ * (was `::first-letter`).
  *
  * **Kept.** The polling, the gone note, the kept channels, the native `<details>` for Advanced
  * (its summary's name and tooltip), the empty state, every label, title and word.
@@ -196,9 +199,9 @@ export function SourcePicker({
   if (sources && sources.length === 0) {
     return (
       <span className="vs-audio-input">
-        <span className="vs-warning" title="The presets react to sound. Connect a microphone or an audio interface, or allow microphone access in System Settings › Privacy & Security.">
+        <Text size="label" className="vs-warning" title="The presets react to sound. Connect a microphone or an audio interface, or allow microphone access in System Settings › Privacy & Security.">
           nothing to listen to: connect a microphone or interface
-        </span>
+        </Text>
       </span>
     );
   }
@@ -248,9 +251,9 @@ export function SourcePicker({
       />
       {where === 'advanced' && (
         <details className="vs-audio-advanced">
-          <summary aria-label="Advanced: the left and right channels" title="which two of the source's channels are left and right">
+          <Text as="summary" size="caption" aria-label="Advanced: the left and right channels" title="which two of the source's channels are left and right">
             Advanced
-          </summary>
+          </Text>
           <Layer level="float" as="span" className="vs-audio-advanced-body">
             {channel('left')}
             {channel('right')}
@@ -260,27 +263,27 @@ export function SourcePicker({
       <Levels />
       {where === 'shown' && (
         <span className="vs-audio-channels" role="group" aria-label={say('audio channels')} title="which two of the source's channels are left and right">
-          <span className="vs-audio-channels-name" aria-hidden="true">
-            {say('audio channels')}
-          </span>
+          <Text size="caption" className="vs-audio-channels-name" aria-hidden="true">
+            {Say('audio channels')}
+          </Text>
           {channel('left')}
           {channel('right')}
         </span>
       )}
       {denied && (
-        <span className="vs-warning vs-audio-note" title={denied}>
+        <Text size="label" className="vs-warning vs-audio-note" title={denied}>
           {denied}
-        </span>
+        </Text>
       )}
       {note && (
-        <span className="vs-warning vs-audio-note" role="status" title={note}>
+        <Text size="label" className="vs-warning vs-audio-note" ariaRole="status" title={note}>
           {note}
-        </span>
+        </Text>
       )}
       {problem && (
-        <span className="vs-warning vs-audio-note" role="status" title={problem}>
+        <Text size="label" className="vs-warning vs-audio-note" ariaRole="status" title={problem}>
           {problem}
-        </span>
+        </Text>
       )}
     </span>
   );

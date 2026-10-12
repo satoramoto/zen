@@ -39,21 +39,22 @@
 }
 /* While adding, a tile not yet in the playlist offers + on hover, as a cue that a click adds: a
    22px chip (16 + 6) where PresetTile's ✓ sits, 8px in, its + at 14px (the 12px caption and a
-   hairline). */
-.vs-lib-grid[data-adding] .vs-tile:not([data-added]):hover .vs-tile-pic::after {
-  content: '+';
+   hairline). A Text the tile renders last over its picture only while adding and not added. */
+.vs-lib-cue {
+  --text-size: calc(var(--size-caption) + 2px);
   position: absolute;
   top: var(--space-2);
   right: var(--space-2);
-  display: grid;
+  display: none;
   place-items: center;
   width: calc(var(--space-4) + var(--space-1) * 1.5);
   height: calc(var(--space-4) + var(--space-1) * 1.5);
   border-radius: var(--radius-pill);
   color: var(--key-white);
   background: color-mix(in oklab, var(--key-black) 45%, transparent);
-  font-size: calc(var(--size-caption) + 2px);
-  line-height: 1;
+}
+.vs-tile:hover .vs-lib-cue {
+  display: grid;
 }
 
 /* The lab editor's tile: a 4:3 picture and a title line under it. */
@@ -88,13 +89,12 @@
   padding: var(--space-1);
   box-sizing: border-box;
   color: var(--text-3);
-  font-size: var(--vs-text-label);
   text-align: center;
   overflow: hidden;
 }
+/* The title, the style stand-in and the star are caption-size Texts at the page's normal leading. */
 .vs-lib-title {
   padding: 2px 1px 0;
-  font-size: var(--vs-text-label);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -104,12 +104,14 @@
   top: 2px;
   left: var(--space-1);
   color: var(--key-white);
-  font-size: var(--vs-text-label);
   text-shadow: 0 0 2px var(--key-black);
 }
 /* A preset that failed to open or draw this run: live mode skips it. Bottom corner: the star has
-   the top left, + the top right. A 14px dot (8 + 6), 4px in (library.css: 3px). */
+   the top left, + the top right. A 14px dot (8 + 6), 4px in (library.css: 3px); a strong Text,
+   its line the dot's height. */
 .vs-lib-failed {
+  --text-size: var(--vs-text-annot);
+  --text-leading: calc(var(--space-2) + var(--space-1) * 1.5);
   position: absolute;
   bottom: var(--space-1);
   right: var(--space-1);
@@ -118,9 +120,6 @@
   border-radius: var(--radius-pill);
   background: var(--warning);
   color: var(--warning-text);
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
-  line-height: calc(var(--space-2) + var(--space-1) * 1.5);
   text-align: center;
   pointer-events: none;
 }
@@ -132,17 +131,16 @@
   outline-offset: -2px;
 }
 .vs-lib-tile[data-playing] .vs-lib-title {
+  --text-weight: var(--weight-strong);
   color: var(--text-1);
-  font-weight: var(--weight-strong);
 }
-/* Playing: the playing mark, green. */
-.vs-lib-tile[data-playing] .vs-lib-thumb::after {
-  content: '▶';
+/* Playing: the playing mark, green; a Text the tile renders last over its picture while playing. */
+.vs-lib-playing {
+  --text-size: var(--vs-text-annot);
   position: absolute;
   right: var(--space-1);
   bottom: 2px;
   color: var(--vs-playing);
-  font-size: var(--vs-text-annot);
   text-shadow: 0 0 2px var(--key-black);
 }
 .vs-lib-tile[data-hidden] .vs-lib-thumb img,

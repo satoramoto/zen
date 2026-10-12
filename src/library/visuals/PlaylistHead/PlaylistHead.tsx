@@ -3,6 +3,7 @@ import { NumberField } from '../../components/core/NumberField/NumberField';
 import { Segmented } from '../../components/core/Segmented/Segmented';
 import type { Param } from '../../components/core/Param/param';
 import { Group } from '../../layout/Group';
+import { Text } from '../../primitives/Text';
 import { plural } from '../model/controls';
 import { changeUnit, movesOn, NameEdit, playsLike, saveFile, withSetting, type StripTile } from '../model/home';
 import { offersQuickAdd } from '../model/home-model';
@@ -44,7 +45,10 @@ export interface PlaylistHeadProps {
  * `Segmented` (the widgets' ones, on the contract's materials), in a `Group` named "how it
  * plays". The popovers are the visuals `Popover`, so they float in the top layer as glass; in
  * the inspector, how it plays opens across the actions' width through its `across` (the original
- * did it by making its wrapper static). Type, sizes and colours are the contract's.
+ * did it by making its wrapper static). Type, sizes and colours are the contract's: the words
+ * are `Text`s (the name `display` at the heading size, the caps and the summary `caption`, each
+ * action's word a body Text inside its button), and the rename box takes the name's type from a
+ * `Text` around it, since visuals.css resets a form control's font to its parent's.
  *
  * **Kept.** The props, the behaviour (rename with Esc that stops at the box, delete that asks
  * first, put back), every accessible name and title, all copy, and the look: on the window's
@@ -100,42 +104,55 @@ export function PlaylistHead({ list, lists, tiles, total, onLists, onDeleted, on
         ))}
       </div>
       <div className="vs-playlisthead-text">
-        <div className="vs-playlisthead-caps">{manual ? 'Playlist' : 'Smart playlist'}</div>
+        <Text as="div" role="caption" className="vs-playlisthead-caps">
+          {manual ? 'Playlist' : 'Smart playlist'}
+        </Text>
         {naming !== null ? (
-          <input
-            className="vs-playlisthead-name-input"
-            aria-label="playlist name"
-            autoFocus
-            value={naming}
-            onChange={(e) => setNaming(e.target.value)}
-            onBlur={commitName}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') commitName();
-              else if (e.key === 'Escape') {
-                // Esc ends the rename only, not the inspector it may sit in.
-                e.preventDefault();
-                e.stopPropagation();
-                nameEdit.cancel();
-                setNaming(null);
-              }
-            }}
-          />
+          // The box takes its type from this Text: visuals.css resets a form control's font to its parent's.
+          <Text role="display" size="heading" className="vs-playlisthead-name-type">
+            <input
+              className="vs-playlisthead-name-input"
+              aria-label="playlist name"
+              autoFocus
+              value={naming}
+              onChange={(e) => setNaming(e.target.value)}
+              onBlur={commitName}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') commitName();
+                else if (e.key === 'Escape') {
+                  // Esc ends the rename only, not the inspector it may sit in.
+                  e.preventDefault();
+                  e.stopPropagation();
+                  nameEdit.cancel();
+                  setNaming(null);
+                }
+              }}
+            />
+          </Text>
         ) : (
-          <Name className="vs-playlisthead-name" title="Double-click to rename" onDoubleClick={startNaming}>
+          <Text
+            as={Name}
+            role="display"
+            size="heading"
+            weight={inspector ? 'strong' : undefined}
+            className="vs-playlisthead-name"
+            title="Double-click to rename"
+            onDoubleClick={startNaming}
+          >
             {list.name}
-          </Name>
+          </Text>
         )}
-        <div className="vs-playlisthead-summary" title={summary}>
+        <Text as="div" role="caption" tabular className="vs-playlisthead-summary" title={summary}>
           {summary}
-        </div>
+        </Text>
         <div className="vs-playlisthead-acts" ref={acts}>
           {inspector ? null : active ? (
             <button type="button" className="vs-playlisthead-btn" data-on="" onClick={stop} title="Stop: ← → step through the library again">
-              ■ Stop
+              <Word>■ Stop</Word>
             </button>
           ) : (
             <button type="button" className="vs-playlisthead-btn" data-on="" onClick={play} disabled={empty} title={empty ? 'Add presets to play it' : `Play ${list.name}`}>
-              ▶ Play
+              <Word>▶ Play</Word>
             </button>
           )}
           {!inspector && (
@@ -146,23 +163,23 @@ export function PlaylistHead({ list, lists, tiles, total, onLists, onDeleted, on
               onClick={() => set(withSetting(list.settings, 'order', shuffled ? 'in_order' : 'shuffle'))}
               title="Play this playlist shuffled (it keeps this)"
             >
-              Shuffle
+              <Word>Shuffle</Word>
             </button>
           )}
           {changedLive && (
             <button type="button" className="vs-playlisthead-btn" onClick={putBack} title={`Back to ${list.name}’s own timing: it ${own}`}>
-              Put back
+              <Word>Put back</Word>
             </button>
           )}
           {onQuickAdd && offersQuickAdd(list) && (
             <button type="button" className="vs-playlisthead-btn" onClick={onQuickAdd} title={`Pick presets to add to ${list.name}`}>
-              {Say('quickadd button')}
+              <Word>{Say('quickadd button')}</Word>
             </button>
           )}
           <Popover
             className="vs-playlisthead-pop"
             name={say('playlist settings')}
-            label={`${Say('playlist settings')} ▾`}
+            label={<Word>{`${Say('playlist settings')} ▾`}</Word>}
             title="How often it moves on, in what order, the crossfade and the look it sets"
             across={inspector ? acts : undefined}
           >
@@ -190,10 +207,10 @@ export function PlaylistHead({ list, lists, tiles, total, onLists, onDeleted, on
                 }}
                 title={`Delete ${list.name} for good`}
               >
-                Delete {list.name}?
+                <Word>Delete {list.name}?</Word>
               </button>
               <button type="button" className="vs-playlisthead-btn" onClick={() => setDeleting(false)} title="Keep the playlist">
-                Keep
+                <Word>Keep</Word>
               </button>
             </span>
           ) : (
@@ -263,7 +280,15 @@ export function SettingsBar({ settings, differs, onChange }: { settings: Playlis
   return (
     <Group name="how it plays" label={false} wrap className="vs-playlisthead-settings">
       {/* Each control names itself (a `<label>` can't label the sliders and radio groups); the words beside them are for the eye. */}
-      <div className="vs-playlisthead-setting" role="group" aria-label={say('auto-advance')} data-tweaked={tweaked('change') ? '' : undefined} title={tweaked('change')}>
+      <Text
+        as="div"
+        role="caption"
+        className="vs-playlisthead-setting"
+        ariaRole="group"
+        aria-label={say('auto-advance')}
+        data-tweaked={tweaked('change') ? '' : undefined}
+        title={tweaked('change')}
+      >
         <span aria-hidden="true">{say('auto-advance')} every</span>
         <NumberField
           label={`${say('auto-advance')} every, in ${change.unit === 'bars' ? 'bars' : 'seconds'}`}
@@ -281,8 +306,8 @@ export function SettingsBar({ settings, differs, onChange }: { settings: Playlis
           label="seconds, bars or off"
           hint={`seconds, bars of the beat when you keep in time with Ableton, or ${say('auto-advance off')}`}
         />
-      </div>
-      <div className="vs-playlisthead-setting" data-tweaked={tweaked('order') ? '' : undefined}>
+      </Text>
+      <Text as="div" role="caption" className="vs-playlisthead-setting" data-tweaked={tweaked('order') ? '' : undefined}>
         <Segmented
           items={['in order', 'shuffle']}
           index={settings.order === 'shuffle' ? 1 : 0}
@@ -290,7 +315,7 @@ export function SettingsBar({ settings, differs, onChange }: { settings: Playlis
           label="order"
           hint="play in the order listed, or shuffled"
         />
-      </div>
+      </Text>
       <Setting name="crossfade" tweak={tweaked('transition')}>
         <NumberField
           label="crossfade"
@@ -337,9 +362,14 @@ export function SettingsBar({ settings, differs, onChange }: { settings: Playlis
 
 function Setting({ name, tweak, children }: { name: string; tweak?: string; children: ReactNode }) {
   return (
-    <div className="vs-playlisthead-setting" data-tweaked={tweak ? '' : undefined} title={tweak}>
+    <Text as="div" role="caption" className="vs-playlisthead-setting" data-tweaked={tweak ? '' : undefined} title={tweak}>
       <span aria-hidden="true">{name}</span>
       {children}
-    </div>
+    </Text>
   );
+}
+
+/** An action's word (or glyph and word): a body Text at the original's 500, strong on the one on. */
+function Word({ children }: { children: ReactNode }) {
+  return <Text className="vs-playlisthead-word">{children}</Text>;
 }

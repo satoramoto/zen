@@ -1,4 +1,6 @@
-/* HealthSlot: the app bar's audio health. Reads contract variables only. */
+/* HealthSlot: the app bar's audio health. Reads contract variables only. The root and the button
+   are Texts in the label role at body weight, no case, tabular figures; the numerals numeral Texts
+   at the line's size. */
 
 .yh-health-slot {
   position: relative;
@@ -9,12 +11,6 @@
   min-width: 0;
   min-height: var(--control-h);
   padding-left: var(--space-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-label);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
   color: var(--text-3);
 }
 
@@ -60,8 +56,6 @@
   border-radius: var(--radius-control);
   background: transparent;
   color: inherit;
-  font: inherit;
-  letter-spacing: inherit;
   cursor: pointer;
   transition: background-color 120ms ease-out, border-color 120ms ease-out;
 }
@@ -70,7 +64,7 @@
    strong --text-1, one space step shorter than a control. */
 .yh-health-slot[data-state='trouble'] .yh-health-slot__button {
   padding: 0 var(--space-2);
-  font-weight: var(--weight-strong);
+  --text-weight: var(--weight-strong);
   background: color-mix(in srgb, var(--danger) 12%, transparent);
   border-color: color-mix(in srgb, var(--danger) 35%, transparent);
 }
@@ -95,15 +89,14 @@
   white-space: nowrap;
 }
 
-/* Numerals in the readout face; inline so the button's name stays one run of text. */
+/* Numerals in the readout face (numeral Texts); inline so the button's name stays one run of
+   text, on the line's 1.2 leading. */
 .yh-health-slot__num {
-  font-family: var(--font-readout);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
+  --text-leading: 1.2;
 }
 
 .yh-health-slot[data-state='trouble'] .yh-health-slot__num {
-  font-weight: var(--weight-strong);
+  --text-weight: var(--weight-strong);
 }
 
 /* The state's shape, so colour is never the only cue: the StatusDot (calm, off) or the triangle. */

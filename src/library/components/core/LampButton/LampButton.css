@@ -28,12 +28,7 @@
   border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-control);
   box-shadow: var(--mat-key-shadow);
-  font: inherit;
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+  /* Type: the face is a label Text, tight leading, tabular; its label takes the label case. */
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -93,15 +88,11 @@
 }
 .yh-lampbutton__label {
   flex: none;
-  text-transform: var(--label-case);
 }
+/* A caption-sized numeral Text in the readout face at the body weight, untracked. */
 .yh-lampbutton__code {
   flex: none;
-  font-family: var(--font-readout);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: 0;
-  font-variant-numeric: tabular-nums;
+  --text-tracking: 0;
   color: var(--text-3);
 }
 

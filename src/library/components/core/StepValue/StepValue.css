@@ -33,11 +33,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
+  /* Type: a body Text at caption size, strong weight, label case. */
   color: var(--text-2);
 }
 /* The hue carrier: an --space-2 square at the control radius, the same mark as a lamp's LED. */
@@ -53,16 +49,12 @@
   box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
 }
 
-/* Value: the loudest thing; fixed-width figures, right-aligned so a column lines up. */
+/* Value: the loudest thing; fixed-width figures, right-aligned so a column lines up. A numeral
+   Text at label size (body weight in a table cell, `ink` 't'). */
 .yh-stepvalue__value {
   min-width: 3ch;
   margin-left: auto;
   text-align: end;
-  font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
   color: var(--text-1);
 }
 
@@ -88,11 +80,6 @@
 }
 .yh-stepvalue[data-dragging] {
   --lit: var(--accent);
-}
-
-/* A table cell: plain body ink, quieter than a level. */
-.yh-stepvalue[data-ink='t'] .yh-stepvalue__value {
-  font-weight: var(--weight-body);
 }
 
 /* Dim: a part that doesn't sound. Lower on the text ladder, lamp unlit. Still settable. */

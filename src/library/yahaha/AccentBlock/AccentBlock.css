@@ -1,5 +1,6 @@
 /* AccentBlock: contract variables only. The style's hue is a leading bar; the name is primary
-   text on a raised surface (the label) or on the theme's key material (the button). */
+   text on a raised surface (the label) or on the theme's key material (the button). The block is
+   a Text (label role at body size, tight, tabular); the knob size sets its --text-size. */
 .yh-accentblock {
   display: inline-flex;
   align-items: center;
@@ -17,13 +18,6 @@
   appearance: none;
   background: var(--surface-2);
   color: var(--text-1);
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
   text-align: left;
   white-space: nowrap;
   cursor: default;
@@ -31,7 +25,7 @@
 .yh-accentblock[data-size='knob'] {
   height: calc(var(--control-h) * 0.75);
   padding: 0 var(--space-2);
-  font-size: var(--size-caption);
+  --text-size: var(--size-caption);
 }
 
 .yh-accentblock__text {

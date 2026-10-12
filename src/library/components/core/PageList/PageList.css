@@ -20,12 +20,8 @@
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--text-2);
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  font-variant-numeric: tabular-nums;
-  line-height: 1.25;
+  /* Type: a body Text, strong, tabular, at this line height. */
+  --text-leading: 1.25;
   text-align: left;
   cursor: pointer;
   transition:

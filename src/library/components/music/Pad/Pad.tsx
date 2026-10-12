@@ -1,8 +1,9 @@
 import type { HueSlot, RoleSlot } from '../../core/hue';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import { usePad, type TipAction } from './usePad';
-// The face is a Surface (material key) through its class and data attributes: a `<button>` that
-// needs a ref and `type`, which `Surface`'s props don't carry. Before Pad.css, so the states win.
+// The face is a Text (the label type) and a Surface (material key) through its class and data
+// attributes, since one element can't render both. Before Pad.css, so the states win.
 import '../../../primitives/Surface.css';
 import './Pad.css';
 
@@ -138,9 +139,10 @@ export function padTone(family: PadFamily, state: PadState, role?: RoleSlot, hue
  * `tagCorner` option of the golden Stage and its transport option (now `role`); the classes and
  * `data-*` hooks.
  *
- * **Built from.** The face is a `Surface` at rest (`lib-surface`, `data-material="key"`), focus is
- * `focusRing`. The label and chip stay plain spans, not `Text`: they inherit the face's type, which
- * banks (PadBank, SongForm) restyle on `.yh-pad`, and `.lib-text` would reset it.
+ * **Built from.** The face is a `Text` in the label role with snug leading, so the label span
+ * inherits its type, which banks (PadBank, SongForm) restyle on `.yh-pad`; and it is a `Surface`
+ * at rest (`lib-surface`, `data-material="key"`) through its class. The NEXT / ARMED chip is its
+ * own caption-size `Text` in the face's family. Focus is `focusRing`.
  *
  * **Tuning knobs.**
  * - `--yh-pad-size`: the square's side (default 2.5 control heights); `fillCell` takes the cell instead.
@@ -173,7 +175,10 @@ export function Pad({
   const util = family === 'util' || family === 'start';
 
   return (
-    <button
+    <Text
+      as="button"
+      role="label"
+      leading="snug"
       ref={ref}
       type="button"
       className={`yh-pad lib-surface ${focusRing}`}
@@ -197,14 +202,21 @@ export function Pad({
       onClick={onClick}
     >
       {tag && (
-        <span className={`yh-pad__tag${tagCorner ? ' yh-pad__tag--corner' : ''}`} data-part="chip" aria-hidden="true">
+        <Text
+          size="caption"
+          weight="strong"
+          case="upper"
+          className={`yh-pad__tag${tagCorner ? ' yh-pad__tag--corner' : ''}`}
+          data-part="chip"
+          aria-hidden="true"
+        >
           {tag}
-        </span>
+        </Text>
       )}
       <span className="yh-pad__label" data-part="label">
         {tieLastWord(label)}
       </span>
-    </button>
+    </Text>
   );
 }
 

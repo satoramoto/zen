@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Select } from '../../components/core/Select/Select';
+import { Text } from '../../primitives/Text';
 import * as fx from '../model/fx';
 import { useNotice, useTauriEvent } from '../model/hooks';
 import * as output from '../model/output';
@@ -25,6 +26,27 @@ export function fitLine(status: output.Status): string {
   if (!size || (size[0] === shown.width && size[1] === shown.height)) return `Fills ${shown.name}.`;
   const bars = size[0] < shown.width ? 'at the sides' : 'above and below';
   return `The whole picture, ${size[0]}×${size[1]} on ${shown.name}, with black bars ${bars}.`;
+}
+
+/** A note: a caption paragraph (OutputPanel.css sets its leading). */
+function Note({ ariaRole, className, children }: { ariaRole?: 'status'; className?: string; children: ReactNode }) {
+  return (
+    <Text as="p" role="caption" ariaRole={ariaRole} className={className ? `vs-output-note ${className}` : 'vs-output-note'}>
+      {children}
+    </Text>
+  );
+}
+
+/** How the picture fits, its lead in the strong weight. */
+function FitNote({ status }: { status: output.Status }) {
+  return (
+    <Note className="vs-output-fit">
+      <Text as="b" role="caption" weight="strong" className="vs-output-fit-lead">
+        {Say('output fit')}:
+      </Text>{' '}
+      {fitLine(status)}
+    </Note>
+  );
 }
 
 /**
@@ -57,7 +79,7 @@ export function OutputSettings() {
   const shown = status.display;
   const pick = displays.findIndex((d) => d.id === shown?.id);
   return (
-    <div className="vs-output-settings">
+    <Text as="div" className="vs-output-settings">
       {displays.length > 0 ? (
         <Select
           className="vs-output-display"
@@ -70,16 +92,12 @@ export function OutputSettings() {
           width={260}
         />
       ) : (
-        <p className="vs-output-note">No displays found.</p>
+        <Note>No displays found.</Note>
       )}
-      <p className="vs-output-note" role="status">
-        {shown ? `Showing on ${shown.name}.` : 'Not showing: live mode opens it on the display picked last.'}
-      </p>
-      <p className="vs-output-note vs-output-fit">
-        <b>{Say('output fit')}:</b> {fitLine(status)}
-      </p>
+      <Note ariaRole="status">{shown ? `Showing on ${shown.name}.` : 'Not showing: live mode opens it on the display picked last.'}</Note>
+      <FitNote status={status} />
       <NoticeBanner notice={notice} onDismiss={dismiss} />
-    </div>
+    </Text>
   );
 }
 
@@ -125,8 +143,10 @@ export function OutputPanel({ status, show }: { status: output.Status; show: (id
   const alone = displays.length === 1 && displays[0].main;
 
   return (
-    <div className="vs-output">
-      <h2 className="vs-output-head">Output</h2>
+    <Text as="div" className="vs-output">
+      <Text as="h2" weight="strong" case="none" className="vs-output-head">
+        Output
+      </Text>
       {shown ? (
         <p className="vs-output-status" data-on="" title={status.size ? `The picture is ${status.size[0]}×${status.size[1]} on the display` : undefined}>
           Showing on {shown.name}
@@ -149,22 +169,20 @@ export function OutputPanel({ status, show }: { status: output.Status; show: (id
           title="The display the output fills; remembered for next time"
         />
       ) : (
-        <p className="vs-output-note">No displays found.</p>
+        <Note>No displays found.</Note>
       )}
-      <p className="vs-output-note vs-output-fit">
-        <b>{Say('output fit')}:</b> {fitLine(status)}
-      </p>
+      <FitNote status={status} />
       {alone ? (
-        <p className="vs-output-warn" role="note">
+        <Text as="p" role="caption" ariaRole="note" className="vs-output-warn">
           Only one display is connected, so the output covers this one — the menu bar and this window too. Connect a projector or a second display and pick it here; Esc or ⌘⇧L closes the output.
-        </p>
+        </Text>
       ) : (
         shown?.main && (
-          <p className="vs-output-warn" role="note">
+          <Text as="p" role="caption" ariaRole="note" className="vs-output-warn">
             The output is covering the display with the menu bar. Pick another display above.
-          </p>
+          </Text>
         )
       )}
-    </div>
+    </Text>
   );
 }

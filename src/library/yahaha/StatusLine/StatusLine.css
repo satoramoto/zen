@@ -1,5 +1,7 @@
 /* StatusLine: one row on the control grid. The message reads as plain words in --text-1; an
-   error leads with a chip (mark + word on a faint danger tint), so colour never says it alone. */
+   error leads with a chip (mark + word on a faint danger tint), so colour never says it alone.
+   The row is a body Text with tabular figures at the row's 1.25 leading; the chip, hint title,
+   place labels and keycaps are Texts of their own, each on that leading. */
 .yh-status-line {
   box-sizing: border-box;
   display: flex;
@@ -12,11 +14,7 @@
   background: transparent;
   color: var(--text-1);
   font-family: var(--font-sans);
-  font-size: var(--size-body);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  line-height: 1.25;
-  font-variant-numeric: tabular-nums;
+  --text-leading: 1.25;
 }
 
 .yh-status-line-button {
@@ -58,10 +56,7 @@
   border-radius: var(--radius-control);
   background: color-mix(in srgb, var(--danger) 12%, transparent);
   color: var(--text-1);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  line-height: 1;
-  text-transform: var(--label-case);
+  /* Type: a label Text, leading tight. */
 }
 
 .yh-status-line-mark {
@@ -124,7 +119,8 @@
 .yh-status-line-hint-title {
   flex: none;
   color: var(--text-1);
-  font-weight: var(--weight-strong);
+  /* A strong body Text on the row's leading. */
+  --text-leading: 1.25;
 }
 
 .yh-status-line-hint-body {
@@ -154,10 +150,11 @@
 
 .yh-status-line-hint-label {
   color: var(--text-3);
-  font-size: var(--size-caption);
-  text-transform: var(--label-case);
+  /* A caption Text in label case, on the row's leading. */
+  --text-leading: 1.25;
 }
 
+/* A keycap: a tabular caption Text in the readout face, on the row's leading. */
 .yh-status-line-key {
   padding: 0 var(--space-1);
   border: var(--border-width) solid var(--border);
@@ -165,9 +162,7 @@
   background: var(--surface-1);
   color: var(--text-1);
   font-family: var(--font-readout);
-  font-size: var(--size-caption);
-  font-variant-numeric: tabular-nums;
-  line-height: 1.25;
+  --text-leading: 1.25;
 }
 
 /* Under a hint the message keeps its place in the live region but isn't drawn; the hidden word

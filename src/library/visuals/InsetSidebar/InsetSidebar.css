@@ -25,7 +25,6 @@
   padding: 0 var(--vs-isb-gutter);
   color: var(--text-2);
   font-family: var(--font-sans);
-  font-size: var(--vs-text-body);
 }
 /* The scrollbar at the panel's edge, as when the body scrolled. */
 .vs-isb-sections {
@@ -66,7 +65,6 @@
   background: none;
   color: var(--vs-caption-raised);
   font: inherit;
-  font-size: var(--vs-text-label);
   text-align: left;
   cursor: pointer;
   user-select: none;
@@ -101,11 +99,13 @@
   background: none;
   color: var(--vs-caption-raised);
   font: inherit;
-  font-size: var(--vs-isb-small);
-  font-weight: var(--weight-strong);
   text-align: left;
   cursor: pointer;
   user-select: none;
+}
+/* The heading's title: a strong Text (InsetSidebar.tsx) at the sidebar's small size. */
+.vs-isb-title {
+  --text-size: var(--vs-isb-small);
 }
 .vs-isb-toggle:hover {
   color: var(--text-1);
@@ -137,7 +137,6 @@
   background: none;
   color: var(--text-2);
   font: inherit;
-  font-weight: var(--weight-body);
   text-align: left;
   cursor: pointer;
   user-select: none;
@@ -157,8 +156,10 @@
 /* The row picked: a soft pill, its name in the ink and heavier. */
 .vs-isb-row[aria-current='true'] {
   color: var(--text-1);
-  font-weight: var(--weight-strong);
   background: var(--vs-isb-picked);
+}
+.vs-isb-row[aria-current='true'] .vs-isb-name {
+  --text-weight: var(--weight-strong);
 }
 .vs-isb-row[aria-current='true'] .vs-isb-icon {
   color: var(--text-1);
@@ -192,15 +193,13 @@
   padding-left: calc(var(--space-1) * 1.5); /* 6px */
   color: var(--vs-caption-raised);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--vs-isb-small);
   font-style: normal;
-  font-weight: var(--weight-body);
+  --text-size: var(--vs-isb-small);
 }
 .vs-isb-empty {
   padding: var(--space-1) var(--vs-isb-gutter);
   color: var(--vs-caption-raised);
-  font-size: var(--vs-isb-small);
+  --text-size: var(--vs-isb-small);
 }
 
 /* The playlists' heading: + and ⤓ after it, faint until the heading's line is hovered. */
@@ -346,8 +345,8 @@
   box-sizing: border-box;
   color: var(--text-2);
   font-family: var(--font-sans);
-  font-size: var(--vs-text-body);
-  font-weight: var(--weight-body);
+  /* A body Text (InsetSidebar.tsx) at the line height it inherited. */
+  --text-leading: normal;
 }
 /* A menu's items: whole-width rows, type until hovered. */
 .vs-isb-menu [role='menuitem'] {

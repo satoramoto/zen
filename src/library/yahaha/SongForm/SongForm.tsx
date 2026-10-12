@@ -286,8 +286,10 @@ export function SongForm({
   const fadeFace = fading ? (running ? { on: true } : { waiting: true }) : {};
 
   return (
-    <div className="yh-songform" data-part="root" data-half={part}>
-      <div className="yh-songform__inner" data-part="inner">
+    // The root is a Text only for its size (one control height, the container queries' em); the
+    // inner body Text sets the real type back to the body recipe.
+    <Text as="div" className="yh-songform" data-part="root" data-half={part}>
+      <Text as="div" className="yh-songform__inner" data-part="inner">
         {part !== 'transport' && (
           <Stack
             direction="row"
@@ -302,9 +304,15 @@ export function SongForm({
               {cues.join('. ')}
             </span>
             <Stack as="ol" direction="row" gap={6} align="stretch" className="yh-songform__parts" data-part="groups">
-              {FORM.map(({ part, caption, steps }) => (
+              {FORM.map(({ part, caption, steps }, i) => (
                 <Stack as="li" key={part} direction="column" gap={0} className="yh-songform__part" data-part="group" data-group={part}>
-                  <Text role="caption" tone="muted" className="yh-songform__caption" data-part="caption" aria-hidden="true">
+                  {i > 0 && (
+                    // The arrow between parts: the song runs left to right.
+                    <Text tone="muted" leading="tight" className="yh-songform__arrow" data-part="arrow" aria-hidden="true">
+                      →
+                    </Text>
+                  )}
+                  <Text role="caption" tone="muted" case="label" className="yh-songform__caption" data-part="caption" aria-hidden="true">
                     {caption}
                   </Text>
                   <div className="yh-songform__steps" data-part="steps">{steps.map((s) => section(s))}</div>
@@ -435,8 +443,8 @@ export function SongForm({
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </Text>
+    </Text>
   );
 }
 

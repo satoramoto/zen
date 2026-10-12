@@ -16,12 +16,8 @@
   align-items: center;
   column-gap: var(--space-4);
   min-height: calc(var(--control-h) + var(--space-2));
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  line-height: 1.3;
-  font-variant-numeric: tabular-nums;
+  /* Type: the row is a body Text with tabular figures, at the row's own leading. */
+  --text-leading: 1.3;
 }
 
 /* The hover band: behind the row, reaching a step past each side, so the text stays on the

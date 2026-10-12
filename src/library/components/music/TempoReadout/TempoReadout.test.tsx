@@ -26,11 +26,20 @@ describe('TempoReadout role hue', () => {
     const steps = ruleOf('.yh-tempo-readout__steps');
     expect(steps).toMatch(/width:\s*var\(--control-h\)/);
     expect(steps).toMatch(/height:\s*calc\(var\(--control-h\) \* 2\)/);
-    expect(ruleOf('.yh-tempo-readout__step')).toMatch(/font-size:\s*var\(--size-heading\)/);
+    // Each key is a numeral Text at the heading size.
+    render(<TempoReadout bpm={104} />);
+    for (const key of [screen.getByRole('button', { name: /Tempo up/ }), screen.getByRole('button', { name: /Tempo down/ })]) {
+      expect(key).toHaveAttribute('data-role', 'numeral');
+      expect(key).toHaveAttribute('data-text-size', 'heading');
+    }
   });
 
   it('sets the unit as the one caption recipe, at body weight', () => {
-    expect(ruleOf('.yh-tempo-readout__unit')).toMatch(/font-weight:\s*var\(--weight-body\)/);
+    const { container } = render(<TempoReadout bpm={104} />);
+    const unit = container.querySelector('[data-part="unit"]');
+    expect(unit).toHaveAttribute('data-role', 'label');
+    expect(unit).toHaveAttribute('data-text-size', 'caption');
+    expect(unit).toHaveAttribute('data-text-weight', 'body');
   });
 });
 

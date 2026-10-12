@@ -1,6 +1,7 @@
 import { useEffect, useRef, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent, type RefObject } from 'react';
 import type { TipAction } from '../Pad/Pad';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './TempoReadout.css';
 
 export interface TempoReadoutProps {
@@ -200,6 +201,8 @@ export function TempoReadout({
   const plus = useHold(onPlus);
   const minus = useHold(onMinus);
 
+  /** unitLarge only applies with `cells`. */
+  const large = cells && unitLarge;
   const digits = Math.max(String(Math.round(max)).length, String(Math.round(bpm)).length);
   const classes = ['yh-tempo-readout', cells && 'yh-tempo-readout--cells', cells && unitLarge && 'yh-tempo-readout--unit-large']
     .filter(Boolean)
@@ -214,11 +217,12 @@ export function TempoReadout({
       }
     >
       <span className="yh-tempo-readout__reading" data-part="window" data-material="screen">
-        <span
+        <Text
+          role="numeral"
           ref={number}
           className={`yh-tempo-readout__bpm ${focusRing}`}
           data-part="value"
-          role="spinbutton"
+          ariaRole="spinbutton"
           tabIndex={0}
           aria-label={`Tempo, ${unit}. Drag, scroll or use the arrow keys; double-click for the style's tempo`}
           aria-valuenow={bpm}
@@ -234,19 +238,28 @@ export function TempoReadout({
           onDoubleClick={() => onReset?.()}
         >
           {bpm}
-        </span>
-        <span className="yh-tempo-readout__unit" data-part="unit" aria-hidden="true">
+        </Text>
+        <Text
+          role="label"
+          size={large ? 'display' : 'caption'}
+          weight={large ? 'display' : 'body'}
+          case={large ? 'none' : undefined}
+          leading="tight"
+          className="yh-tempo-readout__unit"
+          data-part="unit"
+          aria-hidden="true"
+        >
           {unit}
-        </span>
+        </Text>
       </span>
-      <span className="yh-tempo-readout__steps" data-part="steps" role="group" aria-label="Tempo">
-        <button ref={upButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo up (Scene Launch)" data-tip="tempo.up" {...plus}>
+      <Text role="numeral" className="yh-tempo-readout__steps" data-part="steps" ariaRole="group" aria-label="Tempo">
+        <Text as="button" role="numeral" size="heading" tabular={false} ref={upButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo up (Scene Launch)" data-tip="tempo.up" {...plus}>
           <span aria-hidden="true">+</span>
-        </button>
-        <button ref={downButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo down (Function)" data-tip="tempo.down" {...minus}>
+        </Text>
+        <Text as="button" role="numeral" size="heading" tabular={false} ref={downButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo down (Function)" data-tip="tempo.down" {...minus}>
           <span aria-hidden="true">−</span>
-        </button>
-      </span>
+        </Text>
+      </Text>
     </div>
   );
 }

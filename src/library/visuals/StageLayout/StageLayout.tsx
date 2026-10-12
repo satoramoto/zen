@@ -2,6 +2,8 @@ import { useEffect, useRef, type CSSProperties, type RefObject } from 'react';
 import { Layer, Opaque } from '../../layout/Layer';
 import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
+import { Stack } from '../../layout/Stack';
+import { Text } from '../../primitives/Text';
 import { LEAVE_HOLD_MS } from '../model/liveKeys';
 import { isTyping } from '../model/shell';
 import { crateModeFor, STAGE_CRATE_ID, type CrateMode, type StageLayoutProps } from '../model/stage-model';
@@ -46,7 +48,9 @@ function Leaving() {
           <circle className="vs-stagelayout-ring-track" cx="20" cy="20" r="17" />
           <circle className="vs-stagelayout-ring-fill" cx="20" cy="20" r="17" pathLength={1} />
         </svg>
-        <p>{LEAVING_TEXT}</p>
+        <Text as="p" weight="strong" className="vs-stagelayout-leaving-line">
+          {LEAVING_TEXT}
+        </Text>
       </Layer>
     </div>
   );
@@ -196,9 +200,9 @@ export function StageLayout({ width, panels, warning = false, inWindow, leaving 
             </div>
           )}
 
-          <div className="vs-stagelayout-head" data-tauri-drag-region>
+          <Stack direction="row" gap={2} align="center" className="vs-stagelayout-head" data-tauri-drag-region>
             {shown && head}
-          </div>
+          </Stack>
 
           {showCentre && (
             <div className="vs-stagelayout-centre" data-for={warning ? 'warning' : 'offer'}>
@@ -215,9 +219,12 @@ export function StageLayout({ width, panels, warning = false, inWindow, leaving 
           ) : (
             <div className="vs-stagelayout-peek">
               <Layer level="top" className="vs-stagelayout-hint-face">
-                <button type="button" className="vs-stagelayout-hint" aria-label={PANELS_HINT_LABEL} onClick={onPanels}>
-                  <kbd>\</kbd> {PANELS_HINT}
-                </button>
+                <Text as="button" size="caption" type="button" className="vs-stagelayout-hint" aria-label={PANELS_HINT_LABEL} onClick={onPanels}>
+                  <Text as="kbd" size="inherit" weight="strong" tabular className="vs-stagelayout-hint-key">
+                    \
+                  </Text>{' '}
+                  {PANELS_HINT}
+                </Text>
               </Layer>
             </div>
           )}

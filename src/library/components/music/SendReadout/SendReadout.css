@@ -14,7 +14,6 @@
   background: transparent;
   color: var(--text-1);
   font: inherit;
-  line-height: var(--control-h);
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -37,21 +36,18 @@
   gap: var(--space-1);
 }
 
+/* Name and level are Texts at the label size, each one control high (its line is the button's
+   height, so the words sit centred on it): the name in the body face in the label case, the level
+   a tabular numeral. */
 .yh-send-readout-name {
+  --text-leading: var(--control-h);
   color: var(--text-2);
-  font-family: var(--font-sans);
-  font-size: var(--size-label);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
 }
 
 .yh-send-readout-level {
+  --text-leading: var(--control-h);
   min-width: 3ch;
   color: var(--text-1);
-  font-family: var(--font-readout);
-  font-size: var(--size-label);
-  font-weight: var(--weight-numeral);
-  font-variant-numeric: tabular-nums;
   text-align: right;
 }
 

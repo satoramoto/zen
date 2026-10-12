@@ -95,7 +95,9 @@
   pointer-events: none;
 }
 
-/* The name: the part's name in its hue, over its sound in muted text. The whole block opens the part. */
+/* The name: the part's name in its hue, over its sound in muted text. The whole block opens the
+   part. The block and its two lines are Texts on the snug (1.15) leading: the name strong at label
+   size, the sound at caption size. */
 .yh-faderbank__name {
   display: flex;
   flex: none;
@@ -111,8 +113,6 @@
   border-radius: var(--radius-control);
   background: none;
   color: inherit;
-  font: inherit;
-  line-height: 1.15;
   text-align: center;
   cursor: pointer;
   transition: background-color 120ms ease-out;
@@ -145,9 +145,6 @@ span.yh-faderbank__name {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--text-1);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
 }
 .yh-faderbank__sound {
   flex: 0 1 auto;
@@ -157,8 +154,6 @@ span.yh-faderbank__name {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--text-2);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
 }
 
 /* A part's name wears its hue (data-hue on the strip); the others stay neutral. */

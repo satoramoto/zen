@@ -8,12 +8,7 @@
   gap: var(--space-1);
   width: 100%;
   min-width: 0;
-  font-family: var(--font-sans);
-  letter-spacing: var(--tracking);
-  /* A readout window, made of the theme's `screen`. */
-  border-radius: var(--radius-control);
-  background: var(--mat-screen-texture), var(--mat-screen-fill);
-  box-shadow: var(--mat-screen-shadow);
+  /* A readout window: a Surface of the theme's `screen`. */
 }
 /* On a screen already (the Display), no window of its own: it is the screen. */
 [data-material='screen'] .yh-chord-readout {
@@ -26,32 +21,29 @@
   overflow: hidden;
   /* A fixed line box at the full size, so stepping down never moves the line below. */
   height: calc(var(--yh-chord-readout-hero) * 1.15);
-  font-family: var(--font-display);
-  font-size: var(--yh-chord-readout-hero);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
-  line-height: 1.15;
+  /* A display Text, snug leading, at the hero size. */
+  --text-size: var(--yh-chord-readout-hero);
   color: var(--text-1);
   white-space: nowrap;
   text-overflow: clip;
 }
-.yh-chord-readout__chord[data-fit='4'] { font-size: calc(var(--yh-chord-readout-hero) * 0.82); }
-.yh-chord-readout__chord[data-fit='5'] { font-size: calc(var(--yh-chord-readout-hero) * 0.7); }
-.yh-chord-readout__chord[data-fit='6'] { font-size: calc(var(--yh-chord-readout-hero) * 0.6); }
-.yh-chord-readout__chord[data-fit='8'] { font-size: calc(var(--yh-chord-readout-hero) * 0.5); }
+.yh-chord-readout__chord[data-fit='4'] { --text-size: calc(var(--yh-chord-readout-hero) * 0.82); }
+.yh-chord-readout__chord[data-fit='5'] { --text-size: calc(var(--yh-chord-readout-hero) * 0.7); }
+.yh-chord-readout__chord[data-fit='6'] { --text-size: calc(var(--yh-chord-readout-hero) * 0.6); }
+.yh-chord-readout__chord[data-fit='8'] { --text-size: calc(var(--yh-chord-readout-hero) * 0.5); }
 
-/* The extension, printed as chord symbols are: raised and smaller. */
+/* The extension, printed as chord symbols are: raised and smaller (a display Text, tight leading,
+   at the body tracking). */
 .yh-chord-readout__ext {
   margin-left: 0.04em;
-  font-size: 0.56em;
+  --text-size: 0.56em;
+  --text-tracking: var(--tracking);
   vertical-align: 0.62em;
-  line-height: 1;
-  letter-spacing: var(--tracking);
 }
 /* A slash bass sits back on the line, smaller but in the chord's ink: the left hand needs it. */
 .yh-chord-readout__bass {
   margin-left: 0.06em;
-  font-size: 0.72em;
+  --text-size: 0.72em;
   color: var(--text-1);
 }
 
@@ -75,14 +67,13 @@
   column-gap: var(--space-3);
   row-gap: var(--space-1);
   margin: var(--space-1) 0 0;
-  font-size: var(--size-label);
   color: var(--text-3);
 }
+/* The notes: in the readout face at numeral weight. */
 .yh-chord-readout__tones {
   display: inline-flex;
   white-space: nowrap;
   font-family: var(--font-readout);
-  font-weight: var(--weight-numeral);
   color: var(--text-2);
 }
 .yh-chord-readout__tone + .yh-chord-readout__tone::before {
@@ -98,7 +89,5 @@
   padding: 0 var(--space-1);
   border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-pill);
-  font-size: var(--size-caption);
   color: var(--text-2);
-  text-transform: var(--label-case);
 }

@@ -1,4 +1,5 @@
 import { useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
+import { Text } from '../../../primitives/Text';
 import './FolderList.css';
 
 /** One row of a FolderList: a style folder or a sound category. */
@@ -78,7 +79,7 @@ export function FolderList({ items, chosen = null, label, width, height, onChoos
   const activeIndex = items.findIndex((item) => item.id === active);
   const stop = activeIndex >= 0 && !items[activeIndex].disabled ? activeIndex : (enabled[0] ?? -1);
 
-  function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+  function onKeyDown(event: KeyboardEvent<HTMLElement>, index: number) {
     const { key } = event;
     if (key !== 'ArrowUp' && key !== 'ArrowDown' && key !== 'Home' && key !== 'End') return;
     event.preventDefault();
@@ -113,7 +114,10 @@ export function FolderList({ items, chosen = null, label, width, height, onChoos
         const isChosen = item.id === chosen;
         const [head, tail] = splitLabel(item.label);
         return (
-          <button
+          <Text
+            as="button"
+            role="body"
+            weight={isChosen ? 'strong' : undefined}
             key={item.id}
             type="button"
             className="yh-folder-list__row"
@@ -137,10 +141,12 @@ export function FolderList({ items, chosen = null, label, width, height, onChoos
             {item.count !== undefined && (
               <>
                 {' '}
-                <span className="yh-folder-list__count">{item.count}</span>
+                <Text role="caption" tabular className="yh-folder-list__count">
+                  {item.count}
+                </Text>
               </>
             )}
-          </button>
+          </Text>
         );
       })}
     </nav>

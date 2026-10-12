@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Layer } from '../../layout/Layer';
+import { Text } from '../../primitives/Text';
 import * as api from '../model/api';
 import type { Entry, LibraryChange, LibraryData, LibraryRow } from '../model/api';
 import { Library } from '../Library/Library';
@@ -776,7 +777,9 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
         // The grid scrolls itself under the pinned hero, on the column's padding (`--vs-home-pad`).
         pane={
           <div className="vs-home-grid-pane">
-            <NoticeBanner className="vs-home-notice" notice={banner} onDismiss={dismiss} />
+            <Text as="div" size="caption" leading="normal" className="vs-home-notice-type">
+              <NoticeBanner className="vs-home-notice" notice={banner} onDismiss={dismiss} />
+            </Text>
             <SettingsNotes />
             {shown && shown.kind !== 'list' ? (
               <>
@@ -852,10 +855,20 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
 export function SourceCard({ name, count, offer }: { name: string; count: number | null; offer: boolean }) {
   return (
     <div className="vs-home-source">
-      <p className="vs-home-source-kicker">Showing</p>
-      <h2 className="vs-home-source-name">{name}</h2>
-      {count !== null && <p className="vs-home-source-count">{plural(count, 'preset')}</p>}
-      <p className="vs-home-source-hint">Click a preset, or press Enter, to play it; ⌘-click to see it here.</p>
+      <Text as="p" leading="normal" className="vs-home-source-kicker">
+        Showing
+      </Text>
+      <Text as="h2" role="display" size="heading" weight="strong" leading="normal" className="vs-home-source-name">
+        {name}
+      </Text>
+      {count !== null && (
+        <Text as="p" role="numeral" size="body" weight="body" leading="normal" className="vs-home-source-count">
+          {plural(count, 'preset')}
+        </Text>
+      )}
+      <Text as="p" size="caption" className="vs-home-source-hint">
+        Click a preset, or press Enter, to play it; ⌘-click to see it here.
+      </Text>
       {offer && <PackOffer />}
     </div>
   );
@@ -869,18 +882,24 @@ export function SourceCard({ name, count, offer }: { name: string; count: number
  */
 export function QuickAddStrip({ name, count, onDone }: { name: string; count: number; onDone(): void }) {
   return (
-    <div className="vs-home-quickadd" role="region" aria-label={say('quickadd')}>
+    <Text as="div" size="caption" leading="normal" className="vs-home-quickadd" ariaRole="region" aria-label={say('quickadd')}>
       <p className="vs-home-quickadd-text" role="status">
-        {Say('quickadd strip')} <b>“{name}”</b>
+        {Say('quickadd strip')}{' '}
+        <Text as="b" size="inherit" weight="strong" leading="normal" className="vs-home-quickadd-name">
+          “{name}”
+        </Text>
         <span className="vs-home-quickadd-sep" aria-hidden="true">
           ·
         </span>
         {plural(count, 'preset')}
       </p>
       <button type="button" className="vs-home-quickadd-done" onClick={onDone} title={`${Say('quickadd done')}: back to ${name} (Esc)`}>
-        {Say('quickadd done')}
+        {/* The word is the Text: the app's `.vs-root` button reset (`font: inherit`) outranks a Text on the button itself. */}
+        <Text size="inherit" weight="strong" leading="normal">
+          {Say('quickadd done')}
+        </Text>
       </button>
-    </div>
+    </Text>
   );
 }
 
@@ -912,15 +931,15 @@ function SettingsNotes() {
   return (
     <div className="vs-home-problems" role="status" aria-label="settings problems">
       {problems.map((p) => (
-        <p key={problemKey(p)} className="vs-home-problem" data-file={p.file}>
-          <span className="vs-home-problem-mark" aria-hidden="true">
+        <Text as="p" size="caption" key={problemKey(p)} className="vs-home-problem" data-file={p.file}>
+          <Text size="inherit" className="vs-home-problem-mark" aria-hidden="true">
             !
-          </span>
+          </Text>
           <span className="vs-home-problem-text">{p.message}</span>
           <ActionButton tone="quiet" onPress={() => dismiss(p)} label={`Dismiss the note about ${p.file}`} title="Dismiss: hide this note until the app starts again">
             <Icon name="close" size={12} />
           </ActionButton>
-        </p>
+        </Text>
       ))}
     </div>
   );
@@ -1053,7 +1072,7 @@ export function PlaylistPane({ list, lists, tiles, total, rows, dropping, picked
     return (
       <>
         {head}
-        <p className="vs-home-note vs-home-grid-empty">
+        <Text as="p" className="vs-home-note vs-home-grid-empty">
           {manual ? (
             <>
               {list.name} is empty. Open the{' '}
@@ -1067,7 +1086,7 @@ export function PlaylistPane({ list, lists, tiles, total, rows, dropping, picked
           ) : (
             'Nothing in the library matches this yet.'
           )}
-        </p>
+        </Text>
       </>
     );
 
@@ -1093,7 +1112,13 @@ export function PlaylistPane({ list, lists, tiles, total, rows, dropping, picked
             name={tileName(known?.title ?? t.name, t.path)}
             by={known ? tileBy(known.authors, known.style) : ''}
             playing={currentAt(t)}
-            marks={nextAt(t) && <span className="vs-home-tile-next">next</span>}
+            marks={
+              nextAt(t) && (
+                <Text leading="normal" className="vs-home-tile-next">
+                  next
+                </Text>
+              )
+            }
             tools={
               manual &&
               t.index !== null && (
@@ -1152,7 +1177,11 @@ export function PlaylistPane({ list, lists, tiles, total, rows, dropping, picked
           />
         );
       })}
-      {total > tiles.length && <li className="vs-home-more">and {plural(total - tiles.length, 'more')}</li>}
+      {total > tiles.length && (
+        <Text as="li" size="caption" leading="normal" className="vs-home-more">
+          and {plural(total - tiles.length, 'more')}
+        </Text>
+      )}
     </ol>
   );
 }
@@ -1168,7 +1197,9 @@ function DragGhost() {
   return (
     <Layer level="float" className="vs-home-ghost" data-ok={target ? '' : undefined} style={{ transform: `translate(${x + 12}px, ${y + 12}px)` }} aria-hidden="true">
       {payload.thumbnail ? <img src={payload.thumbnail} alt="" draggable={false} /> : null}
-      <span>{payload.name}</span>
+      <Text size="caption" leading="normal">
+        {payload.name}
+      </Text>
     </Layer>
   );
 }

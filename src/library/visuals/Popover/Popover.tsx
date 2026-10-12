@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { usePopover, type Dismissal } from '../../components/core/Popover/Popover';
 import { Layer } from '../../layout/Layer';
+import { Text, type TextProps } from '../../primitives/Text';
 import './Popover.css';
+
+/** The panel's element: a body Text (its type, for what's inside), the Layer's `role` its ARIA role. */
+function PanelText({ role, ...props }: Omit<TextProps, 'role' | 'ariaRole'> & { role?: TextProps['ariaRole'] }) {
+  return <Text {...props} ariaRole={role} />;
+}
 
 /** Three dots for a "more" button: the "···" glyph reads as a dash in Instrument Sans. */
 export function MoreDots() {
@@ -74,7 +80,8 @@ export function Popover({ label, title, name, className, role = 'dialog', align 
   }, []);
   return (
     <span className={className ? `vs-popover ${className}` : 'vs-popover'}>
-      <button
+      <Text
+        as="button"
         ref={button}
         type="button"
         className="vs-popover-button"
@@ -87,7 +94,7 @@ export function Popover({ label, title, name, className, role = 'dialog', align 
         onClick={() => setOpen((o) => !o)}
       >
         {label}
-      </button>
+      </Text>
       {open && (
         <Panel id={id} role={role} name={name} align={align} anchor={button} across={across} onClose={() => setOpen(false)} onEscape={close}>
           {typeof children === 'function' ? children(close) : children}
@@ -151,7 +158,7 @@ function Panel({
   }, [hang]);
   return (
     <div ref={box} className="lib-popover vs-popover-box" popover="manual" data-part="popover" data-across={across ? '' : undefined}>
-      <Layer level="float" className="lib-popover__panel vs-popover-panel" data-part="panel" data-align={side} role={role} aria-label={name} id={id}>
+      <Layer level="float" as={PanelText} className="lib-popover__panel vs-popover-panel" data-part="panel" data-align={side} role={role} aria-label={name} id={id}>
         {children}
       </Layer>
     </div>

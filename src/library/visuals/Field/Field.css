@@ -44,12 +44,11 @@
   position: absolute;
   left: 0;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-annot);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  /* An engraved scale's words: the one place the source sets type in capitals. */
-  text-transform: uppercase;
+  /* A body Text on a tight line, in capitals (Field.tsx's Axis): an engraved scale's words, the
+     one place the source sets type in capitals. */
+  --text-size: var(--vs-text-annot);
+  --text-weight: 500;
+  --text-tracking: 0.06em;
   pointer-events: none;
   user-select: none;
 }
@@ -159,9 +158,8 @@
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-control);
   color: var(--text-1);
-  font-size: var(--vs-text-label);
-  font-weight: 500;
-  line-height: 1.3;
+  /* A caption Text (--vs-text-label, 1.3), a touch heavier. */
+  --text-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -2,8 +2,10 @@
    contract. Near borderless (decision 68): the header and the hint strip paint nothing of their
    own; the screen's layers are behind them. */
 
-/* Every view's header: the mark, the view switch, the view's own; one row of type. */
+/* Every view's header: the mark, the view switch, the view's own; one row of type. A body Text at
+   the controls' size, which what it holds inherits. */
 .vs-header {
+  --text-size: var(--vs-text-control);
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -11,8 +13,6 @@
   padding: 0 var(--space-3) 0 var(--space-4);
   background: none;
   white-space: nowrap;
-  font-family: var(--font-sans);
-  font-size: var(--vs-text-control);
   color: var(--text-2);
 }
 .vs-header > * {
@@ -24,29 +24,30 @@
   flex: 1;
 }
 
-/* The view switch's words read "Home", "Live" (home.css's and stage-head.css's capitalize); the
-   items stay the views' ids. */
-.vs-viewswitch .lib-segmented__segment {
-  text-transform: capitalize;
-}
+/* The view switch's words read "Home", "Live" (home.css's and stage-head.css's capitalize): the
+   items are written so (Views.tsx), each named by its view's id. */
 
-/* The wordmark:the name, its bracketed half in the accent, a touch heavier and tighter. */
+/* The wordmark: the name, its bracketed half in the accent, a touch heavier and tighter (a
+   display Text: the display face, weight and tracking). */
 .vs-mark {
+  --text-size: var(--vs-text-heading);
   display: inline-flex;
   align-items: center;
   height: var(--control-h);
   padding: 0 var(--space-1);
-  font-family: var(--font-display);
-  font-size: var(--vs-text-heading);
-  font-weight: var(--weight-display);
-  letter-spacing: var(--tracking-display);
   color: var(--text-1);
 }
 .vs-mark span {
   color: var(--accent);
 }
 
-/* The preset playing: the folder as a caption, then the name. */
+/* The preset playing: the folder as a caption, then the name. Each is a Text on the control's
+   line; the whole keeps the size it sits in. */
+.vs-now,
+.vs-now-group,
+.vs-now-name {
+  --text-leading: var(--control-h);
+}
 .vs-now {
   flex: 0 1 auto;
   min-width: 0;
@@ -54,7 +55,6 @@
   align-items: baseline;
   gap: var(--space-2);
   height: var(--control-h);
-  line-height: var(--control-h);
   overflow: hidden;
 }
 .vs-header > .vs-now {
@@ -65,16 +65,16 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.vs-now i {
+.vs-now-group {
+  --text-size: var(--vs-text-label);
   flex: 0 2 auto;
   font-style: normal;
   color: var(--text-3);
-  font-size: var(--vs-text-label);
 }
-.vs-now span {
+.vs-now-name {
+  --text-size: var(--vs-text-lead);
   flex: 0 1 auto;
   color: var(--text-1);
-  font-size: var(--vs-text-lead);
 }
 .vs-now.vs-quiet {
   color: var(--text-3);
@@ -110,13 +110,13 @@
   color: inherit;
 }
 
-/* The frame rate: numbers in a dev build, a warning in a release when it drops. */
+/* The frame rate: numbers in a dev build, a warning in a release when it drops. A body Text with
+   tabular figures, in the readout face. */
 .vs-stats {
+  --text-size: var(--vs-text-label);
   color: var(--text-3);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
   word-spacing: var(--vs-sep-space);
-  font-size: var(--vs-text-label);
   min-width: calc(var(--control-h) * 4); /* 120px */
   text-align: right;
 }
@@ -136,8 +136,7 @@
   align-items: center;
   min-height: calc(var(--space-6) - var(--space-2));
   padding: var(--space-1) var(--space-3);
-  font-family: var(--font-sans);
-  font-size: var(--vs-text-label);
+  --text-size: var(--vs-text-label);
   color: var(--text-2);
 }
 .vs-hint[data-resting] {
@@ -171,7 +170,7 @@
 }
 .vs-preview-loading {
   color: var(--text-3);
-  font-size: var(--vs-text-body);
+  --text-size: var(--vs-text-body);
   user-select: none;
 }
 /* The rounded corners (decision 69): the native view under the hole is square, so the page paints

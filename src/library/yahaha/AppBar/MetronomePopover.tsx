@@ -95,12 +95,13 @@ export function MetronomePopover({
   };
 
   return (
-    <div
+    <Text
+      as="div"
       ref={box}
       className="yh-metronome-popover"
       data-part="root"
       id={id}
-      role="dialog"
+      ariaRole="dialog"
       tabIndex={-1}
       aria-label="Metronome settings"
       onKeyDown={ownKeys}
@@ -142,8 +143,12 @@ export function MetronomePopover({
           onToggle={(next) => onBell?.(next)}
         />
       </SettingsRow>
-      {!audible && <p className="yh-metronome-popover__note" data-part="note">The built-in synth isn't running: the click can't sound.</p>}
-    </div>
+      {!audible && (
+        <Text as="p" size="caption" className="yh-metronome-popover__note" data-part="note">
+          The built-in synth isn't running: the click can't sound.
+        </Text>
+      )}
+    </Text>
   );
 }
 

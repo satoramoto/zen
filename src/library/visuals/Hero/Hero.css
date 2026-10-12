@@ -61,7 +61,6 @@
   display: grid;
   place-items: center;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-label);
   user-select: none;
 }
 
@@ -74,16 +73,15 @@
 .vs-hero .vs-hero-label {
   margin: 0 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--text-4);
-  font-size: calc(var(--size-caption) - 1px);
-  font-weight: var(--weight-body);
+  --text-size: calc(var(--size-caption) - 1px);
 }
+/* A strong Text (Hero.tsx) in the display face, at the name's size. */
 .vs-hero .vs-hero-name {
   margin: 0;
   color: var(--text-1);
   font-family: var(--font-display);
-  font-size: var(--vs-hero-name-size);
-  font-weight: var(--weight-strong);
-  line-height: 1.2;
+  --text-size: var(--vs-hero-name-size);
+  --text-leading: 1.2;
   /* A long name takes two lines, then an ellipsis. */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -94,7 +92,7 @@
 }
 .vs-hero .vs-hero-name[data-none] {
   color: var(--vs-caption-raised);
-  font-weight: var(--weight-body);
+  --text-weight: var(--weight-body);
 }
 .vs-hero .vs-hero-by,
 .vs-hero .vs-hero-from {
@@ -103,13 +101,11 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--vs-caption-raised);
-  font-size: var(--vs-text-body);
 }
 .vs-hero .vs-hero-by {
   color: var(--text-2);
 }
 .vs-hero .vs-hero-from {
-  font-size: var(--vs-text-label);
   word-spacing: var(--vs-sep-space);
 }
 
@@ -132,8 +128,6 @@
   background: none;
   color: var(--text-2);
   font: inherit;
-  font-size: var(--vs-text-body);
-  font-weight: var(--weight-strong);
   cursor: pointer;
 }
 .vs-hero .vs-hero-act:hover:not(:disabled),
@@ -153,8 +147,8 @@
   outline-offset: 0;
 }
 /* Play and pause lead, a step larger. */
-.vs-hero .vs-hero-play {
-  font-size: calc(var(--vs-text-body) + 1px);
+.vs-hero .vs-hero-play .vs-hero-act-word {
+  --text-size: calc(var(--vs-text-body) + 1px);
 }
 
 /* A wide card: the picture on the left up to its cap, the words beside it (at least 240px), along

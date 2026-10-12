@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
+import { Text } from '../../primitives/Text';
 import * as api from '../model/api';
 import { plural } from '../model/controls';
 import type * as fx from '../model/fx';
@@ -72,9 +73,18 @@ export function TapButton({ effects, onTap }: { effects: fx.Fx | null; onTap(): 
   const bpm = effects?.bpm ?? null;
   return (
     <ButtonFace className="vs-status-tap" lit={linked} aria-label={tempoLabel(linked, bpm)} title={`${control('tempo').does} (${control('tempo').keys})`} onClick={onTap}>
-      <span className="vs-status-tap-what">{tapWords(linked)}</span>
-      <span className="vs-status-tap-bpm">{bpm !== null && bpm > 0 ? <b>{Math.round(bpm)}</b> : <b>—</b>} BPM</span>
-      <kbd aria-hidden="true">{control('tempo').keys}</kbd>
+      <Text leading="tight" className="vs-status-tap-what">
+        {tapWords(linked)}
+      </Text>
+      <Text leading="tight" className="vs-status-tap-bpm">
+        <Text as="b" role="numeral" size="heading" className="vs-status-tap-num">
+          {bpm !== null && bpm > 0 ? Math.round(bpm) : '—'}
+        </Text>{' '}
+        BPM
+      </Text>
+      <Text as="kbd" weight="strong" leading="tight" className="vs-status-tap-key" aria-hidden="true">
+        {control('tempo').keys}
+      </Text>
     </ButtonFace>
   );
 }
@@ -130,9 +140,15 @@ export function Fps({ className }: { className: string }) {
   const shown = fpsShown(fps);
   if (!shown) return null;
   return (
-    <span className={cls('vs-status-fps', className)} title="the picture is drawing fewer frames a second than usual: try a simpler preset or close other apps">
+    <Text
+      role="caption"
+      leading="normal"
+      tabular
+      className={cls('vs-status-fps', className)}
+      title="the picture is drawing fewer frames a second than usual: try a simpler preset or close other apps"
+    >
       {shown}
-    </span>
+    </Text>
   );
 }
 
@@ -212,9 +228,18 @@ export function SkipNote({ className }: { className: string }) {
   const phase = skipPhase(note, now);
   const text = note && phase !== 'gone' ? noteText(note) : '';
   return (
-    <span className={cls('vs-status-skip', className)} role="status" aria-live="polite" title={text || undefined} data-fading={phase === 'fading' ? '' : undefined}>
+    <Text
+      role="caption"
+      leading="normal"
+      tabular
+      className={cls('vs-status-skip', className)}
+      ariaRole="status"
+      aria-live="polite"
+      title={text || undefined}
+      data-fading={phase === 'fading' ? '' : undefined}
+    >
       {text}
-    </span>
+    </Text>
   );
 }
 

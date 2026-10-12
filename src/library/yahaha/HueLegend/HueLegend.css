@@ -6,18 +6,15 @@
   padding: 0;
   list-style: none;
   font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  line-height: 1;
   white-space: nowrap;
   color: var(--text-2);
 }
+/* Each word is a caption Text in label case, leading tight. */
 .yh-huelegend__chip {
   flex: none;
-  width: 1.1em;
-  height: 0.8em;
+  /* Sized from the caption the word is set in. */
+  width: calc(var(--size-caption) * 1.1);
+  height: calc(var(--size-caption) * 0.8);
   /* A pad in miniature: its corners scaled down with it, so a 6px control radius doesn't make a pill. */
   --yh-huelegend-radius: calc(var(--radius-control) / 3);
   border-radius: var(--yh-huelegend-radius);

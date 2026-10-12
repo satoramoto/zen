@@ -1,5 +1,6 @@
 import { snap, useLineSlider, type TipAction } from './useLineSlider';
 import { focusRing } from '../../../primitives/Ring';
+import { Text } from '../../../primitives/Text';
 import './LineSlider.css';
 
 export type { TipAction };
@@ -34,7 +35,8 @@ export interface LineSliderProps {
  * A horizontal value on a Settings page: a line you drag, then the value as a numeral.
  *
  * **Job.** Set one number inside a range (a settle window, a fade time) and read it back at a
- * glance from across the room: the number is what a player looks at, the line says roughly
+ * glance from across the room (the value a `numeral` `Text`, the unit a `caption` one): the
+ * number is what a player looks at, the line says roughly
  * where in the range it sits and that it can be dragged.
  *
  * **Changed.** *Headless* (the materials pass): behaviour lives in `useLineSlider`, and the
@@ -112,13 +114,13 @@ export function LineSlider({
         </span>
       </span>
       <span className="yh-lineslider__readout" data-part="readout" aria-hidden="true">
-        <span className="yh-lineslider__value" data-part="value" style={{ minWidth: `${digits}ch` }}>
+        <Text role="numeral" className="yh-lineslider__value" data-part="value" style={{ minWidth: `${digits}ch` }}>
           {shown}
-        </span>
+        </Text>
         {unit && (
-          <span className="yh-lineslider__unit" data-part="unit">
+          <Text role="caption" leading="tight" className="yh-lineslider__unit" data-part="unit">
             {unit}
-          </span>
+          </Text>
         )}
       </span>
     </span>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react';
+import { Text } from '../../../primitives/Text';
 import './Segmented.css';
 
 export interface SegmentedProps {
@@ -107,9 +108,9 @@ export function Segmented({
       data-hint={hint}
     >
       {name && (
-        <span className="lib-segmented__caption" data-part="caption">
+        <Text role="body" size="label" case="label" className="lib-segmented__caption" data-part="caption">
           {name}
-        </span>
+        </Text>
       )}
       <div
         ref={group}
@@ -122,17 +123,27 @@ export function Segmented({
         title={title}
         onKeyDown={onKeyDown}
       >
-        {items.map((item, at) => (
-          <button
-            key={`${item}-${at}`}
-            {...radioProps(at)}
-            className="lib-segmented__segment"
-            data-part="segment"
-            aria-label={itemLabels?.[at] || undefined}
-          >
-            {item}
-          </button>
-        ))}
+        {items.map((item, at) => {
+          // `role` is the ARIA role here; on a Text that prop is the type role.
+          const { role, ...radio } = radioProps(at);
+          return (
+            <Text
+              as="button"
+              role="body"
+              size="label"
+              weight="strong"
+              case="label"
+              ariaRole={role}
+              key={`${item}-${at}`}
+              {...radio}
+              className="lib-segmented__segment"
+              data-part="segment"
+              aria-label={itemLabels?.[at] || undefined}
+            >
+              {item}
+            </Text>
+          );
+        })}
       </div>
     </div>
   );

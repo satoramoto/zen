@@ -50,7 +50,8 @@
 .vs-stagedock .lib-layer.vs-stagedock-banner {
   padding: var(--space-2) var(--space-2) var(--space-2) calc((var(--space-3) + var(--space-4)) / 2); /* 8px 8px 8px 14px */
   border-radius: var(--radius-card);
-  font-size: var(--size-body);
+  /* A body Text (StageDock.tsx), at the line height it inherited. */
+  --text-leading: normal;
 }
 .vs-stagedock-notice {
   gap: var(--space-2);
@@ -66,7 +67,6 @@
   margin: 0;
   padding: calc(var(--space-1) * 1.5) calc((var(--space-3) + var(--space-4)) / 2); /* 6px 14px */
   color: var(--text-2);
-  font-size: var(--size-caption);
 }
 
 /* The row under the transport: Next takes what's left, the effects keep their size. */
@@ -95,8 +95,7 @@
   border-radius: var(--radius-pill);
   background: var(--vs-stagedock-on);
   color: var(--text-1);
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
+  --text-size: var(--vs-text-annot);
 }
 .vs-stagedock-star {
   display: inline-grid;
@@ -109,8 +108,8 @@
 .vs-stagedock-rating {
   flex: none;
   color: var(--text-3);
-  font-size: var(--vs-text-annot);
-  letter-spacing: 0.08em;
+  --text-size: var(--vs-text-annot);
+  --text-tracking: 0.08em;
 }
 .vs-stagedock-next-line {
   display: flex;
@@ -119,14 +118,12 @@
   gap: calc(var(--space-2) + var(--space-1) / 2); /* 10px */
   min-width: 0;
   margin: 0;
-  font-size: var(--size-body);
   white-space: nowrap;
 }
 .vs-stagedock-next-label {
   flex: none;
   color: var(--text-3);
-  font-size: var(--vs-text-annot);
-  font-weight: var(--weight-strong);
+  --text-size: var(--vs-text-annot);
 }
 .vs-stagedock-next-name,
 .vs-stagedock-quiet {
@@ -145,8 +142,6 @@
   flex: none;
   color: var(--text-3);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--size-caption);
   font-style: normal;
 }
 /* A dot sets the when apart from the name before it. */
@@ -168,14 +163,11 @@
 .vs-stagedock-keys {
   flex: none;
 }
-.vs-stagedock-keys > .lib-group__body {
-  gap: var(--space-1);
-}
+/* The key's name and letter are body-weight Texts (StageDock.tsx) on the face's label size. */
 .vs-stagedock .lib-action-button-face.vs-stagedock-key {
   gap: calc(var(--space-1) * 1.5); /* 6px */
   padding: 0 var(--space-2);
   color: var(--text-2);
-  font-weight: var(--weight-body);
   touch-action: none;
 }
 .vs-stagedock .lib-action-button-face.vs-stagedock-key[data-on] {
@@ -187,7 +179,7 @@
 .vs-stagedock-key-letter {
   color: var(--text-3);
   font-family: var(--font-readout);
-  font-size: var(--vs-text-annot);
+  --text-size: var(--vs-text-annot);
 }
 
 /* Intensity: the transport's thin track, a round cap, the value after it. */
@@ -198,7 +190,6 @@
   align-items: center;
   gap: var(--space-3);
   min-width: calc(var(--control-h) * 4); /* 120px */
-  font-size: var(--size-body);
 }
 .vs-stagedock-fader-name {
   flex: none;
@@ -237,7 +228,6 @@
   flex: none;
   min-width: 2.6em;
   color: var(--text-3);
-  font-size: var(--size-caption);
   text-align: right;
 }
 
@@ -246,7 +236,6 @@
   gap: calc(var(--space-1) * 1.5); /* 6px */
   padding: 0 calc(var(--space-1) * 1.5);
   color: var(--text-2);
-  font-weight: var(--weight-body);
 }
 .vs-stagedock .lib-action-button-face:is(.vs-stagedock-key, .vs-stagedock-more):focus-visible {
   outline: 2px solid var(--vs-focus-ring);

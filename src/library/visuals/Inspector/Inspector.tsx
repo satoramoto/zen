@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Group } from '../../layout/Group';
+import { Text } from '../../primitives/Text';
 import type { LibraryRow } from '../model/api';
+import { Say } from '../model/words';
 import type { Prepared } from '../model/librarySearch';
 import { characterOf, colourNames, fieldSays, listed, type InspectorProps } from '../model/inspector-model';
 import { TagEditor } from '../TagEditor/TagEditor';
@@ -49,7 +51,13 @@ export function Inspector(props: InspectorProps) {
     <div className="vs-inspector" data-none={many || p || source ? undefined : ''}>
       {(picked || onClose || on) && (
         <div className="vs-inspector-top">
-          {picked && <BackAction className="vs-inspector-back" onBack={onBack} />}
+          {picked && (
+            <BackAction className="vs-inspector-back" onBack={onBack}>
+              <Text role="caption" className="vs-inspector-back-label" aria-hidden="true">
+                {Say('stage')}
+              </Text>
+            </BackAction>
+          )}
           {on && (
             <Group name={many ? 'on these presets' : 'on this preset'} label={false} className="vs-inspector-keys">
               {picked && <PlayAction className="vs-inspector-key" onPlay={onPlay} children="" />}
@@ -64,9 +72,9 @@ export function Inspector(props: InspectorProps) {
       )}
       {many ? <Selected {...props} chosen={many} /> : !p && source ? <div className="vs-inspector-source">{source}</div> : <Scope {...props} picked={picked} />}
       {error && (
-        <p className="vs-inspector-error" role="alert">
+        <Text as="p" role="caption" className="vs-inspector-error" ariaRole="alert">
           {error}
-        </p>
+        </Text>
       )}
     </div>
   );
@@ -116,8 +124,12 @@ function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, o
     return (
       <>
         <div className="vs-inspector-head vs-inspector-none">
-          <p className="vs-inspector-none-title">Nothing playing yet</p>
-          <p className="vs-inspector-quiet">Each dot is a preset, by how fast it moves and how bright it is. Pick one to see it here, or play one and it lights up.</p>
+          <Text as="p" role="heading" className="vs-inspector-none-title">
+            Nothing playing yet
+          </Text>
+          <Text as="p" role="caption" className="vs-inspector-quiet">
+            Each dot is a preset, by how fast it moves and how bright it is. Pick one to see it here, or play one and it lights up.
+          </Text>
         </div>
         {field}
       </>
@@ -125,29 +137,35 @@ function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, o
   return (
     <>
       <div className="vs-inspector-head">
-        <h2 className="vs-inspector-name" title={c.name}>
+        <Text as="h2" role="display" weight="strong" className="vs-inspector-name" title={c.name}>
           {c.name}
-        </h2>
+        </Text>
         {c.by && <p className="vs-inspector-by">{c.by}</p>}
       </div>
 
-      <Group name="about this preset" label={false} direction="column" className="vs-inspector-meta">
-        {c.style && <p className="vs-inspector-style">{c.subStyle ? `${c.style}, ${c.subStyle}` : c.style}</p>}
+      <Group name="about this preset" label={false} direction="column" gap={0} className="vs-inspector-meta">
+        {c.style && (
+          <Text as="p" role="caption" className="vs-inspector-style">
+            {c.subStyle ? `${c.style}, ${c.subStyle}` : c.style}
+          </Text>
+        )}
         <div className="vs-inspector-read">
           {c.unmeasured ? (
-            <p className="vs-inspector-quiet">Not drawn yet</p>
+            <Text as="p" role="caption" className="vs-inspector-quiet">
+              Not drawn yet
+            </Text>
           ) : (
-            <p className="vs-inspector-words">
+            <Text as="p" className="vs-inspector-words">
               {readout.map((w, i) => (
                 <span key={w + i}>
                   {i > 0 && <span className="vs-inspector-sep" aria-hidden="true" />}
                   {w}
                 </span>
               ))}
-            </p>
+            </Text>
           )}
           {(c.hues.length > 0 || c.grey) && (
-            <p className="vs-inspector-hues">
+            <Text as="p" role="caption" className="vs-inspector-hues">
               <span className="vs-inspector-swatches" aria-hidden="true">
                 {c.hues.length ? (
                   c.hues.map((h, i) => <span key={i} className="vs-inspector-swatch" style={{ background: h.css }} />)
@@ -156,7 +174,7 @@ function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, o
                 )}
               </span>
               <span>{colours.length ? listed(colours) : 'grey'}</span>
-            </p>
+            </Text>
           )}
         </div>
         <div className="vs-inspector-mine">
@@ -168,7 +186,11 @@ function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, o
 
       <TuneCard key={p.row.key} subject={p} onSet={onSet} />
 
-      {inLists && <p className="vs-inspector-quiet vs-inspector-in">{inLists.length ? `In ${listed(inLists)}` : 'In no playlist yet'}</p>}
+      {inLists && (
+        <Text as="p" role="caption" className="vs-inspector-quiet vs-inspector-in">
+          {inLists.length ? `In ${listed(inLists)}` : 'In no playlist yet'}
+        </Text>
+      )}
     </>
   );
 }
@@ -192,10 +214,14 @@ function Selected({ chosen, onSet }: InspectorProps & { chosen: Prepared[] }) {
   return (
     <>
       <div className="vs-inspector-head">
-        <h2 className="vs-inspector-name">{`${n.toLocaleString('en-US')} selected`}</h2>
+        <Text as="h2" role="display" weight="strong" className="vs-inspector-name">{`${n.toLocaleString('en-US')} selected`}</Text>
       </div>
-      <Group name="about these presets" label={false} direction="column" className="vs-inspector-meta">
-        {styles && <p className="vs-inspector-style">{styles}</p>}
+      <Group name="about these presets" label={false} direction="column" gap={0} className="vs-inspector-meta">
+        {styles && (
+          <Text as="p" role="caption" className="vs-inspector-style">
+            {styles}
+          </Text>
+        )}
         <div className="vs-inspector-mine">
           <TagEditor key={chosen.map((p) => p.row.key).join('\n')} chosen={chosen} onSet={onSet} remove={<Icon name="close" size={10} />} />
         </div>
@@ -204,7 +230,11 @@ function Selected({ chosen, onSet }: InspectorProps & { chosen: Prepared[] }) {
         {chosen.slice(0, PICTURES).map((p) => (
           <div key={p.row.key}>{p.row.thumbnail && <img src={p.row.thumbnail} alt="" decoding="async" draggable={false} />}</div>
         ))}
-        {more > 0 && <span className="vs-inspector-pictures-more">+{more.toLocaleString('en-US')}</span>}
+        {more > 0 && (
+          <Text role="caption" weight="strong" tabular className="vs-inspector-pictures-more">
+            +{more.toLocaleString('en-US')}
+          </Text>
+        )}
       </div>
     </>
   );

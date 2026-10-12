@@ -15,11 +15,9 @@
   align-items: stretch;
 }
 
+/* Type: a body Text at label size in label case. */
 .lib-segmented__caption {
   color: var(--text-2);
-  font-size: var(--size-label);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
   white-space: nowrap;
 }
 
@@ -54,11 +52,7 @@
   background: var(--mat-tabs-tab-texture), var(--mat-tabs-tab-fill);
   box-shadow: var(--mat-tabs-tab-shadow);
   color: var(--mat-tabs-ink);
-  font: inherit;
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
+  /* Type: a body Text at label size, strong weight, label case. */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

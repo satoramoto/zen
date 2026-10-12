@@ -25,6 +25,5 @@
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
+  /* Type: the box around it is a body Text, so the panel's content inherits it. */
 }

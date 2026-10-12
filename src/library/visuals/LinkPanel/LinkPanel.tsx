@@ -8,10 +8,29 @@ import * as link from '../model/link';
 import * as pl from '../model/playlists';
 import { say, Say } from '../model/words';
 import { NoticeBanner } from '../Views/Views';
+import { Text } from '../../primitives/Text';
 import './LinkPanel.css';
 
 // A port of visual[flow]'s `app/src/LinkPanel.tsx` (and link.css): the same exports
 // (`LinkSettings`, `LinkPanel`), behaviour and words.
+
+/** The session's tempo: a tabular numeral in the readout face, at the sheet title's size (LinkPanel.css). */
+function Tempo({ bpm }: { bpm: number }) {
+  return (
+    <Text as="b" role="numeral" leading="normal" className="vs-link-tempo">
+      {bpm.toFixed(1)}
+    </Text>
+  );
+}
+
+/** The panel's heading: a strong sentence-case caption (LinkPanel.css sets its size). */
+function Title() {
+  return (
+    <Text as="h2" weight="strong" leading="normal" case="none" className="vs-link-title">
+      Link
+    </Text>
+  );
+}
 
 /**
  * Link's state for a panel or a sheet: read once, then followed (`link.onFrame`).
@@ -65,17 +84,17 @@ export function LinkSettings() {
   const { frame, run, trouble } = useLink();
   if (!frame)
     return (
-      <div className="vs-link-settings">
+      <Text as="div" leading="normal" className="vs-link-settings">
         {trouble ?? (
           <p className="vs-link-quiet" role="status">
             Starting…
           </p>
         )}
-      </div>
+      </Text>
     );
   const start = say('the one');
   return (
-    <div className="vs-link-settings">
+    <Text as="div" leading="normal" className="vs-link-settings">
       <Switch
         checked={frame.enabled}
         onChange={(on) => run(link.enable(on), on ? 'join the Link session' : 'leave the Link session')}
@@ -84,7 +103,7 @@ export function LinkSettings() {
         {Say('Ableton Link')}
       </Switch>
       <p className="vs-link-status" data-on={frame.enabled && frame.peers > 0 ? '' : undefined}>
-        <b>{frame.tempo.toFixed(1)}</b> bpm · {link.statusText(frame)}
+        <Tempo bpm={frame.tempo} /> bpm · {link.statusText(frame)}
       </p>
       <div className="vs-link-one" role="group" aria-label={Say('the one')}>
         <span className="vs-link-one-name">{Say('the one')}</span>
@@ -102,7 +121,7 @@ export function LinkSettings() {
         </ActionButton>
       </div>
       {trouble}
-    </div>
+    </Text>
   );
 }
 
@@ -140,10 +159,10 @@ export function LinkPanel() {
 
   if (!frame) {
     return (
-      <section className="vs-link" aria-label="Ableton Link">
-        <h2 className="vs-link-title">Link</h2>
+      <Text as="section" leading="normal" className="vs-link" aria-label="Ableton Link">
+        <Title />
         {trouble ?? <p className="vs-link-quiet">Starting…</p>}
-      </section>
+      </Text>
     );
   }
 
@@ -155,9 +174,9 @@ export function LinkPanel() {
   const whose = link.timingSays(lists);
 
   return (
-    <section className="vs-link" aria-label="Ableton Link">
+    <Text as="section" leading="normal" className="vs-link" aria-label="Ableton Link">
       <div className="vs-link-head">
-        <h2 className="vs-link-title">Link</h2>
+        <Title />
         <Toggle
           className="vs-link-toggle"
           on={frame.enabled}
@@ -171,12 +190,12 @@ export function LinkPanel() {
         </Toggle>
       </div>
       <p className="vs-link-status" data-on={frame.enabled && frame.peers > 0 ? '' : undefined}>
-        <b>{frame.tempo.toFixed(1)}</b> bpm · {link.statusText(frame)}
+        <Tempo bpm={frame.tempo} /> bpm · {link.statusText(frame)}
       </p>
       <div className="vs-link-beat" aria-label={`bar ${bar}, beat ${lit + 1} of ${frame.quantum}`} role="img">
-        <span className="vs-link-bar" title="The bar, counted from the one">
+        <Text role="numeral" weight="strong" leading="normal" className="vs-link-bar" title="The bar, counted from the one">
           {bar}
-        </span>
+        </Text>
         <span className="vs-link-lights" aria-hidden="true">
           {Array.from({ length: frame.quantum }, (_, i) => (
             <span key={i} className="vs-link-light" data-lit={i === lit ? '' : undefined} data-one={i === 0 ? '' : undefined} />
@@ -211,7 +230,11 @@ export function LinkPanel() {
               : `Change the preset on the beat: a live change of ${whose.name}, until another playlist plays`
           }
         />
-        {toNext !== null && <span className="vs-link-quiet vs-link-next">in {Math.max(0, Math.ceil(toNext))} beats</span>}
+        {toNext !== null && (
+          <Text leading="normal" tabular className="vs-link-quiet vs-link-next">
+            in {Math.max(0, Math.ceil(toNext))} beats
+          </Text>
+        )}
       </div>
       <p className="vs-link-quiet vs-link-whose" role="status">
         {whose.kind === 'outside' ? (
@@ -228,6 +251,6 @@ export function LinkPanel() {
         )}
       </p>
       {trouble}
-    </section>
+    </Text>
   );
 }

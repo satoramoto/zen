@@ -15,7 +15,6 @@
   padding-block: var(--space-2);
   border-top: var(--border-width) solid var(--border);
   font-family: var(--font-sans);
-  font-variant-numeric: tabular-nums;
 }
 
 /* The hue slot (1–4) onto the contract's four categorical hues. */
@@ -39,7 +38,7 @@
   border-radius: var(--radius-control);
   background: none;
   color: inherit;
-  font: inherit;
+  font-family: inherit;
   text-align: left;
   white-space: nowrap;
   cursor: pointer;
@@ -54,29 +53,21 @@
   background: var(--surface-3);
 }
 
-/* Caption line: the part's short name, the one coloured thing in the cell. */
+/* Caption line: the part's short name, the one coloured thing in the cell. A label Text, tabular. */
 .yh-sound-cell__part {
   align-self: flex-start;
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  line-height: 1.2;
   color: var(--yh-part-hue);
 }
 
-/* Name line: the name, taking the room and the ellipsis, then its number, small and muted. */
+/* Name line: the name, taking the room and the ellipsis, then its number, small and muted. A
+   caption Text at the body size (leading 1.3, body weight), tabular; the number a tabular caption
+   Text in the readout face. */
 .yh-sound-cell__sound {
   gap: var(--space-2);
-  font-size: var(--size-body);
-  font-weight: var(--weight-body);
-  line-height: 1.3;
 }
 .yh-sound-cell__number {
   flex: none;
-  font-size: var(--size-caption);
   font-family: var(--font-readout);
-  font-variant-numeric: tabular-nums;
   color: var(--text-3);
 }
 .yh-sound-cell__title {

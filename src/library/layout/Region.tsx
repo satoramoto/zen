@@ -1,5 +1,6 @@
 import { Children, isValidElement, useId, useState, type CSSProperties, type ReactElement, type ReactNode } from 'react';
 import type { Step } from '../primitives/step';
+import { Text } from '../primitives/Text';
 import { Tabs, type TipAction } from './Tabs';
 import './Region.css';
 
@@ -97,7 +98,11 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAc
     >
       {(label || aside || tabbed) && (
         <header className="lib-region__head" data-part="head">
-          {label && <span className="lib-region__label">{label}</span>}
+          {label && (
+            <Text size="caption" weight="strong" case="label" className="lib-region__label">
+              {label}
+            </Text>
+          )}
           {tabbed && chosen && (
             <Tabs
               name={name}
