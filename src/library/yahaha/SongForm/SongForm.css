@@ -288,7 +288,8 @@
 /* Under 27 control heights (756px at regular) the steps step down one size rather than clip or
    wrap: numerals at body size, each step as wide as "III" at that size. */
 @container (max-width: 27em) {
-  .yh-songform .yh-songform__inner {
+  .yh-songform .yh-songform__inner,
+  .yh-songform[data-part='form'] .yh-songform__inner {
     --yh-sf-step-font: var(--size-body);
   }
 }
