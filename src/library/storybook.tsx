@@ -66,7 +66,7 @@ export const withLibraryTheme: Decorator = (Story, context) => {
   const desktop = facets.palette === pack.facets.palette ? pack.desktop : undefined;
   return (
     <Desktop desktop={desktop} mode={mode}>
-      <ThemeScope facets={facets} mode={mode}>
+      <ThemeScope facets={facets} mode={mode} bleed={context.parameters.layout === 'fullscreen'}>
         <Story />
       </ThemeScope>
     </Desktop>

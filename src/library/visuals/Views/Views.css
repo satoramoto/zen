@@ -24,7 +24,13 @@
   flex: 1;
 }
 
-/* The wordmark: the name, its bracketed half in the accent, a touch heavier and tighter. */
+/* The view switch's words read "Home", "Live" (home.css's and stage-head.css's capitalize); the
+   items stay the views' ids. */
+.vs-viewswitch .lib-segmented__segment {
+  text-transform: capitalize;
+}
+
+/* The wordmark:the name, its bracketed half in the accent, a touch heavier and tighter. */
 .vs-mark {
   display: inline-flex;
   align-items: center;

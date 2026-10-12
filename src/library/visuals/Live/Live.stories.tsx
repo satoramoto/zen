@@ -14,14 +14,23 @@ import { Live } from './Live';
  * panels and shows them again; ? lists every control. The parts have stories of
  * their own (Live/Stage…); the pads are the dock's.
  */
+/**
+ * The original's 1440×900 window, which these stories open in (its `globals.viewport`): the crate
+ * docks from 1100 px, so a canvas narrower than that would start with it put away. Zen's
+ * Storybook has no viewports of its own, so it comes with these stories (as Home's do).
+ */
+const VIEWPORTS = {
+  home1440: { name: 'Home at 1440 px', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
+};
+
 const meta = {
   title: 'open[flow]/visuals/Live/Live',
   component: Live,
   decorators: [withVisualsFrame, withLibraryTheme],
-  globals: VISUALS_GLOBALS,
+  globals: { ...VISUALS_GLOBALS, viewport: { value: 'home1440', isRotated: false } },
   beforeEach: visualsBeforeEach,
   args: { start: null, onMode: () => {} },
-  parameters: { scope: 'bare', layout: 'fullscreen' },
+  parameters: { scope: 'bare', layout: 'fullscreen', viewport: { options: VIEWPORTS } },
 } satisfies Meta<typeof Live>;
 export default meta;
 type Story = StoryObj<typeof meta>;

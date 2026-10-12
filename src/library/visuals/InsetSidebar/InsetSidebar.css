@@ -34,14 +34,14 @@
   overflow-y: auto;
 }
 
-/* The mark, the sidebar's first item, at the panel's top. Its text starts where the headings'
-   titles do (the mark's own padding plus 6). */
+/* The mark, the sidebar's first item, under the window buttons' band (HomeLayout's panel). Its
+   text starts where the headings' titles do (the mark's own padding plus 6). */
 .vs-isb-mark {
   display: flex;
   align-items: center;
   height: 32px;
   flex: none;
-  margin: var(--space-3) 0 var(--vs-isb-gutter);
+  margin: 0 0 var(--vs-isb-gutter);
   padding: 0 6px;
   user-select: none;
 }

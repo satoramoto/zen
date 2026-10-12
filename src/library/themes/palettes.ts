@@ -374,7 +374,7 @@ export const frost: Palette = {
     roleText: ['#000000', '#000000'], // added
     bloom: '0px', // nothing glows: lines are the selection, focus and playing marks only
     keys: {
-      white: '#d9d9dc', // added
+      white: '#ffffff', // tile.css: titles over a preview are pure white
       black: '#111113', // --panel
     },
   },

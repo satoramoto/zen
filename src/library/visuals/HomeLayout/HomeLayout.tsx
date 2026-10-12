@@ -14,13 +14,11 @@ import './HomeLayout.css';
  * and who paints what; each slot's content is its own component: `InsetSidebar`, `Hero`, the
  * grid, `TransportBar`, `Inspector`.
  *
- * **Changed.** It is a library `Screen`: the header row is the screen's fixed header (type only,
- * no background of its own; the window's tint runs behind it as behind the docked cells), and its
- * grid holds three `Region`s, the sidebar's cell, the main column and the inspector's cell, in
- * named areas (`side col insp`). The sidebar no longer runs up beside the header with a band for
- * the window buttons: the header row is the title bar across the window, and while the sidebar is
- * docked the header's content starts past the sidebar's column, so the window buttons sit in the
- * room it leaves. A panel laid over the column is in the `Opaque` scope (its class on the cell
+ * **Changed.** It is a library `Screen` whose grid holds three `Region`s, the sidebar's cell, the
+ * main column and the inspector's cell, in named areas (`side col insp`). As in the original, the
+ * sidebar runs the window's full height with a band at its top for the window buttons, and the
+ * header row is the main column's first row, beside it (so it is not the Screen's fixed header,
+ * which would span the window). A panel laid over the column is in the `Opaque` scope (its class on the cell
  * itself, so the panel is not remounted when the window narrows and it turns from docked to laid
  * over), which draws every layer solid: the native preview under it would show through anything
  * less. Panels are the `raised` layer with the glass edge; laid over, the `overlay` layer's cast.
@@ -46,7 +44,7 @@ export interface HomeLayoutProps {
   sidebar: ReactNode;
   /** What the sidebar is called to a screen reader; "sources", as today's. */
   sidebarLabel?: string;
-  /** The header row at the top of the window (`Header`): the screen's fixed header. */
+  /** The header row at the top of the main column (`Header`). */
   header: ReactNode;
   /** The Now Playing card pinned at the top of the main column (`Hero`), in a region named "now playing"; it never scrolls. */
   hero?: ReactNode;
@@ -103,6 +101,7 @@ export function SidebarPanel({ label = 'sources', id, children, panelRef, lights
   return (
     <nav className="vs-lay-panel vs-lay-side" id={id} aria-label={label} ref={panelRef} tabIndex={-1} data-lights={lights ? '' : undefined}>
       {lights && <Lights />}
+      <div className="vs-lay-side-band" data-tauri-drag-region />
       <div className="vs-lay-side-body">{children}</div>
     </nav>
   );
@@ -248,13 +247,6 @@ export function HomeLayout({
       <Screen
         name="home"
         className="vs-lay-screen"
-        header={
-          header ? (
-            <div className="vs-lay-head" data-tauri-drag-region>
-              {header}
-            </div>
-          ) : undefined
-        }
         areas={areas}
         columns={columns}
         rows="minmax(0, 1fr)"
@@ -268,6 +260,9 @@ export function HomeLayout({
         )}
         <Region name="main column" area="col" className="vs-lay-col-cell">
           <div className="vs-lay-col" ref={col}>
+            <div className="vs-lay-head" data-tauri-drag-region>
+              {header}
+            </div>
             {hero && (
               <section className="vs-lay-hero" aria-label={say('stage')}>
                 {hero}

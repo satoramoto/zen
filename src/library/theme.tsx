@@ -55,11 +55,12 @@ export function useSystemMode(): Mode {
   return useSyncExternalStore(subscribe, systemMode, () => 'dark');
 }
 
-export function ThemeScope({ facets, mode = 'system', children }: { facets: Facets; mode?: ModeChoice; children: ReactNode }) {
+/** `bleed`: the scope is a whole screen (an app's window), so it runs to the edges with no padding. */
+export function ThemeScope({ facets, mode = 'system', bleed = false, children }: { facets: Facets; mode?: ModeChoice; bleed?: boolean; children: ReactNode }) {
   const system = useSystemMode();
   const resolved = mode === 'system' ? system : mode;
   return (
-    <div className="lib-scope" data-mode={resolved} style={toCssVars(facets, resolved) as CSSProperties}>
+    <div className="lib-scope" data-mode={resolved} data-bleed={bleed || undefined} style={toCssVars(facets, resolved) as CSSProperties}>
       {children}
     </div>
   );

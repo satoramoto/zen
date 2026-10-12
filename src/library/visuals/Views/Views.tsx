@@ -91,7 +91,7 @@ export function Preview({ className }: { className: string }) {
  * **Kept.** Its items, label and hint.
  */
 export function ViewSwitch({ view, onChange }: { view: View; onChange(next: View): void }) {
-  return <Segmented items={VIEWS} index={VIEWS.indexOf(view)} onChange={(i) => VIEWS[i] !== view && onChange(VIEWS[i])} label="view" hint={VIEWS.map((v) => VIEW_HINTS[v]).join(' · ')} />;
+  return <Segmented className="vs-viewswitch" items={VIEWS} index={VIEWS.indexOf(view)} onChange={(i) => VIEWS[i] !== view && onChange(VIEWS[i])} label="view" hint={VIEWS.map((v) => VIEW_HINTS[v]).join(' · ')} />;
 }
 
 /**

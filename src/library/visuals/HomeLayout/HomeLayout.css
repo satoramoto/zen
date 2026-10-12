@@ -25,6 +25,8 @@
   --vs-lay-side-radius: 18px;
   /* The header row's height: the title bar. */
   --vs-lay-titlebar: 52px;
+  /* The band at the sidebar's top for the window buttons (a margin in full screen, below). */
+  --vs-lay-band: var(--vs-lay-titlebar);
   /* Where the window buttons' stand-in sits, and the room a header leaves them when no sidebar is docked (chrome.css --chrome-lights). */
   --vs-lay-lights-room: 98px;
   /* A sidebar row, and the selected row's pill. */
@@ -59,6 +61,9 @@
 .vs-lay[data-lights] {
   border-radius: var(--vs-lay-window-radius);
 }
+:root[data-fullscreen] :is(.vs-lay, .vs-lay-panel) {
+  --vs-lay-band: var(--space-3);
+}
 
 /* The screen: its header, then one row of cells, nothing between them (the cells' own insets
    space them). */
@@ -72,29 +77,25 @@
   overflow: hidden;
 }
 
-/* The header row: type only, in the title bar's height. It has no background of its own; the
-   window's tint runs behind it as behind the docked cells (so the window is one tone around the
-   picture). Its empty space drags the window. */
-.vs-lay > .vs-lay-screen > .lib-screen__header {
-  background: var(--layer-base-texture), var(--layer-base-fill);
-}
+/* The header row: the main column's first row, beside the sidebar (which runs up past it to the
+   window's top). Type only, in the title bar's height, above the hero's shadow and painting
+   nothing. Its empty space drags the window. */
 .vs-lay .vs-lay-head {
+  position: relative;
+  z-index: var(--vs-lay-z-over-hole);
+  grid-area: head;
   display: flex;
   align-items: center;
   height: var(--vs-lay-titlebar);
   min-width: 0;
+  background: none;
 }
 .vs-lay .vs-lay-head > * {
   flex: 1;
   min-width: 0;
 }
-/* A docked sidebar's column is clear under the header too: the header's content lines up with the
-   main column, and the window buttons sit in the room before it. */
-.vs-lay[data-sidebar='docked'] .vs-lay-head {
-  padding-left: calc(var(--vs-lay-side) + 2 * var(--vs-lay-inset));
-}
-/* No sidebar docked: the header leaves the window buttons their room (stories' stand-in, or the
-   app's own buttons, chrome.css). */
+/* No sidebar docked: the window buttons are over the header, so it leaves them their room
+   (stories' stand-in, or the app's own buttons, chrome.css). */
 .vs-lay[data-lights]:not([data-sidebar='docked']) .vs-lay-head,
 :root[data-chrome='overlay']:not([data-fullscreen]) .vs-lay:not([data-sidebar='docked']) .vs-lay-head {
   padding-left: var(--vs-lay-lights-room);
@@ -162,9 +163,17 @@
   flex: none;
   width: var(--vs-lay-insp);
 }
-/* The sidebar on its own with the window buttons' stand-in: the buttons' room at its top. */
-.vs-lay-side[data-lights] {
-  padding-top: var(--vs-lay-titlebar);
+/* The sidebar's top band is the title bar there: the window buttons sit in it, and a drag on it
+   moves the window. Full screen (macOS hides the buttons) shrinks it to a margin. */
+.vs-lay-side {
+  padding-top: var(--vs-lay-band);
+}
+.vs-lay-side-band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--vs-lay-band);
 }
 /* The sidebar's content fills it and scrolls its own sections (InsetSidebar, between its mark
    and its pinned foot), so the body doesn't. */
@@ -223,8 +232,8 @@
   --vs-lay-col-h: 100vh;
   display: grid;
   flex: 1;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  grid-template-areas: 'hero' 'main' 'bar';
+  grid-template-rows: var(--vs-lay-titlebar) auto minmax(0, 1fr) auto;
+  grid-template-areas: 'head' 'hero' 'main' 'bar';
   min-width: 0;
   min-height: 0;
   overflow: hidden;
