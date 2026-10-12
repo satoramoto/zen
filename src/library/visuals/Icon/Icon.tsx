@@ -44,6 +44,7 @@ export const ICON_NAMES = [
   'never',
   'edit',
   'gear',
+  'camera',
   'import',
   // Live's (the Stage): its pads, lights and header tools.
   'random',
@@ -206,6 +207,13 @@ const GLYPHS: Record<IconName, ReactNode> = {
     </>
   ),
   // A gear: settings, everywhere (Home's Settings row, the Stage's header). A ring for the hub and eight short teeth around it.
+  camera: (
+    <>
+      <rect x="1.75" y="4.25" width="8.5" height="7.5" rx="2" />
+      <path d="M10.25 6.25 14.25 4.25V11.75L10.25 9.75" />
+    </>
+  ),
+
   gear: (
     <>
       <circle cx="8" cy="8" r="3.75" />

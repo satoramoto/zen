@@ -1,3 +1,5 @@
+import { CameraPanel, CameraProvider } from '../Camera/Camera';
+import type { CameraController } from '../model/camera';
 import { useCallback, useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import { Layer } from '../../layout/Layer';
 import { ThemeScope, resolveTheme, type ModeChoice, type ThemeChoice } from '../../theme';
@@ -68,6 +70,7 @@ function Shell({ lab }: { lab?: LabEditor }) {
     <FlashWarning warning={warning} live={mode.view === 'live'}>
       <Page mode={mode} onMode={onMode} lab={lab} />
       <Settings open={sheet === 'settings'} onClose={close} />
+      <CameraPanel open={sheet === 'camera'} onClose={close} />
       <MoreEffects open={sheet === 'effects'} onClose={close} />
       <CrashPrompt />
     </FlashWarning>
@@ -91,6 +94,8 @@ export interface VisualsAppProps {
    * and the app starts in it.
    */
   lab?: LabEditor;
+  /** Host-owned persistent camera runtime; omitted hosts show disabled capture. */
+  cameraController?: CameraController;
   /** The theme pack and any facet swapped in; the `visuals` pack by default. */
   theme?: ThemeChoice;
   /** Light, dark, or the system's; the system's by default. */
@@ -113,7 +118,7 @@ export interface VisualsAppProps {
  * app) and renders this in its own root (StrictMode, createRoot are the host's). With
  * no bridge installed it says so, as the original's page outside the app did.
  */
-export function VisualsApp({ theme, mode = 'system', frame = true, chrome = true, lab }: VisualsAppProps) {
+export function VisualsApp({ theme, mode = 'system', frame = true, chrome = true, lab, cameraController }: VisualsAppProps) {
   const inApp = currentBridge() !== defaultBridge;
   useEffect(() => {
     if (!chrome || currentBridge().currentWindow().label !== MAIN_WINDOW) return;
@@ -121,20 +126,26 @@ export function VisualsApp({ theme, mode = 'system', frame = true, chrome = true
   }, [chrome]);
   const body = inApp ? (
     <>
-      {lab ? (
-        <ViewList.Provider value={LAB_VIEWS}>
-          <Shell lab={lab} />
-        </ViewList.Provider>
-      ) : (
-        <Shell />
-      )}
+      <CameraProvider controller={cameraController}>
+        {lab ? (
+          <ViewList.Provider value={LAB_VIEWS}>
+            <Shell lab={lab} />
+          </ViewList.Provider>
+        ) : (
+          <Shell />
+        )}
+      </CameraProvider>
       <Update />
     </>
   ) : (
     <p className="vs-app-outside vs-quiet">This is visual[flow]’s page without the app behind it: no backend is installed (setBridge).</p>
   );
   if (!frame) return body;
-  return <Framed theme={theme} mode={mode}>{body}</Framed>;
+  return (
+    <Framed theme={theme} mode={mode}>
+      {body}
+    </Framed>
+  );
 }
 
 /** The window: the theme scope, the ground layer (the desktop shows through glass packs) and `.vs-root`. */

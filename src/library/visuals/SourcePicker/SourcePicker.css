@@ -78,3 +78,29 @@
 .vs-audio-channels-name::first-letter {
   text-transform: uppercase;
 }
+
+.vs-audio-lane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.vs-audio-lane-name,
+.vs-audio-mix-levels {
+  font-size: var(--vs-text-label);
+  color: var(--text-2);
+}
+.vs-audio-optional {
+  color: var(--text-3);
+}
+.vs-audio-mixer-shown {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.vs-audio-mix-levels {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}

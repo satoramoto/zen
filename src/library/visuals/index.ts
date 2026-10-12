@@ -18,3 +18,5 @@ export {
   type BridgeWindow,
   type BridgeWebview,
 } from './model/ipc';
+
+export type { CameraController, CameraSettings, CameraState } from './model/camera';
