@@ -200,9 +200,9 @@ export const Transport: Story = {
     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' }}>
       <Button {...args} label="Start" size="band" variant="primary" hue="transport" tall name="Start / Stop, stopped" />
       <Button {...args} label="Stop" size="band" hue="transport" bar tall name="Start / Stop, running" />
-      <Button {...args} label="Sync Start" size="pair" hue="transport" name="Sync Start" />
-      <Button {...args} label="Sync Start" size="pair" hue="transport" waiting name="Sync Start, armed" />
-      <Button {...args} label="Fill" symbol="up" size="pair" hue="transport" waiting lit={false} name="Fill up, queued, unlit" />
+      <Button {...args} label="Sync Start" size="md" hue="transport" name="Sync Start" />
+      <Button {...args} label="Sync Start" size="md" hue="transport" waiting name="Sync Start, armed" />
+      <Button {...args} label="Fill" symbol="up" size="md" hue="transport" waiting lit={false} name="Fill up, queued, unlit" />
       <Button {...args} label="Tap" size="pair" hue="transport" on name="Tap, on" />
       <Button {...args} symbol="plus" size="icon" hue="transport" name="Tempo up" />
     </div>
