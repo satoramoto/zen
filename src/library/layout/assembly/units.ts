@@ -86,8 +86,8 @@ function tokens(css: string): string[] {
 }
 
 /**
- * One CSS length from a facet, in px: `0`, a px length, `var(--space-N)`, `var(--control-h)`,
- * `var(--size-<role>)`, or `calc(<one of those> * n)` / `calc(n * …)`. Anything else throws,
+ * One CSS length from a facet, in px: `0`, a px length, a spacing step, the control height or a
+ * type size variable, or `calc(<one of those> * n)` / `calc(n * …)`. Anything else throws,
  * so a material the solver can't read is caught by the tests, not guessed.
  */
 export function cssPx(token: string, scale: Facets['scale']): number {

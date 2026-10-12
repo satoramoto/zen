@@ -16,6 +16,12 @@
 .lib-assembled__zone,
 .lib-assembled__body,
 .lib-assembled__slot {
+  /* Defaults; the placement sets each inline. */
+  --lib-at-x: 0;
+  --lib-at-y: 0;
+  --lib-at-w: 0;
+  --lib-at-h: 0;
+  --lib-zoom: 1;
   position: absolute;
   left: calc(var(--lib-at-x) * 1px);
   top: calc(var(--lib-at-y) * 1px);
@@ -24,7 +30,7 @@
   min-width: 0;
   min-height: 0;
 }
-.lib-assembled__body { zoom: var(--lib-zoom, 1); }
+.lib-assembled__body { zoom: var(--lib-zoom); }
 
 /* A slot's content fills it: a Region stretches to the box the solver gave it. */
 .lib-assembled__slot {
