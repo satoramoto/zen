@@ -20,7 +20,7 @@ const meta = {
     rec: { control: 'boolean' },
     waiting: { control: 'boolean' },
     size: { control: 'select', options: ['md', 'sm', 'cell'] },
-    hue: { control: 'select', options: ['t', 'r1', 'r2', 'r3', 'l', 'ok', 'lamp'] },
+    hue: { control: 'select', options: ['t', 'r1', 'r2', 'r3', 'l', 'ok', 'lamp', 'transport'] },
     join: { control: 'select', options: ['none', 'start', 'end'], mapping: { none: undefined } },
     width: { control: 'number' },
   },
@@ -146,6 +146,27 @@ export const FunctionOn: Story = {
 /** The running lamp: the solid success fill (Start / Stop). */
 export const Running: Story = {
   args: { label: 'Start / Stop', on: true, hue: 'ok' },
+};
+
+/** New: the metronome, a key that moves time, lit in the `transport` role hue with `--transport-text`. */
+export const TransportOn: Story = {
+  args: { label: 'Metronome', on: true, hue: 'transport' },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Metronome' });
+    await expect(button).toHaveAttribute('data-face', 'on');
+    await expect(button).toHaveAttribute('data-hue', 'transport');
+  },
+};
+
+/** New: the metronome off: a quiet key whose unlit LED keeps the transport hue. */
+export const TransportOff: Story = {
+  args: { label: 'Metronome', hue: 'transport' },
+};
+
+/** New: Auto Fill armed: the waiting ring and blinking LED in the transport hue. */
+export const TransportWaiting: Story = {
+  args: { label: 'Auto Fill', size: 'cell', waiting: true, hue: 'transport', name: 'Auto Fill, armed' },
+  parameters: { layout: 'padded' },
 };
 
 /** The record lamp, lit: the solid danger fill. */

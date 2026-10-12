@@ -4,8 +4,8 @@ import './Pad.css';
 /** Section families, utilities, Start / Stop, and the four part hues the engine can light. */
 export type PadFamily = 'intro' | 'main' | 'ending' | 'brk' | 'fill' | 'util' | 'start' | 'r1' | 'r2' | 'r3' | 'l';
 export type PadState = 'idle' | 'dark' | 'playing' | 'next' | 'armed' | 'running';
-/** The colour role a pad draws in: neutral (`--selected`), a part hue, `--success` or `--action`. */
-export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'success' | 'action';
+/** The colour role a pad draws in: neutral (`--selected`), a part hue, `--success` or `--transport`. */
+export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'success' | 'transport';
 
 /** A tooltip action in the shape of the app's `use:tip`: called with the node and the key. */
 export type TipAction = (
@@ -34,7 +34,7 @@ export interface PadProps {
   onPress?: () => void;
   /** Hang NEXT / ARMED on the top edge at the right, mostly outside the pad, instead of in a row above the label (the label stays centred). */
   tagCorner?: boolean;
-  /** A transport pad (Start / Stop, Sync Start, Sync Stop, Tap, Auto Fill): `util` and `start` draw in `--action`. */
+  /** A transport pad (Start / Stop, Sync Start, Sync Stop, Tap, Auto Fill): `util` and `start` draw in `--transport`; Start / Stop running stays `--success`. */
   transport?: boolean;
   /** Ring NEXT in `--accent` (what `hues.ts` says "queued" is) instead of the pad's own colour. Default false. */
   accentNext?: boolean;
@@ -50,9 +50,10 @@ const PART_TONE: Partial<Record<PadFamily, PadTone>> = { r1: 'hue-1', r2: 'hue-2
 export function padTone(family: PadFamily, state: PadState, transport: boolean): PadTone {
   const part = PART_TONE[family];
   if (part) return part;
-  const util = family === 'util' || family === 'start';
-  if (util && transport) return 'action';
+  // Running is a state, not the transport's identity (hues.ts), so it wins over the role hue.
   if (family === 'start' && state === 'running') return 'success';
+  const util = family === 'util' || family === 'start';
+  if (util && transport) return 'transport';
   return 'neutral';
 }
 
@@ -70,10 +71,13 @@ export function padTone(family: PadFamily, state: PadState, transport: boolean):
  * which competed with state. Sections and utilities are now neutral: identity is the label, and the
  * only fill is "sounding" in `--selected` / `--selected-text`. Part hues (`r1` → `--hue-1`, `r2` →
  * `--hue-2`, `r3` → `--hue-3`, `l` → `--hue-4`) stay, because there the colour is the part.
- * Start / Stop running is `--success`; a transport pad is the bank's one call to action,
- * `--action` / `--action-text` (the original's "hue of time"). ARMED is a state that needs
- * attention, so its ring and chip are `--warning` whatever the pad; NEXT rings in the pad's own
- * colour. *Hierarchy*: an absent pad is a dashed edge on no face with a muted label, so absence
+ * Start / Stop running is `--success` with `--success-text` ink, transport pad or not: running is
+ * a state, not the transport's identity. A transport pad (the original's "hue of time") wears the
+ * contract's role hue, `--transport` / `--transport-text`, so it no longer borrows `--action`, the
+ * screen's call to action, and stays clear of the part hues and the states. ARMED is a state that
+ * needs attention, so its ring and chip are `--warning` with `--warning-text` ink whatever the
+ * pad; NEXT rings in the pad's own colour. Ink on a state fill is the state's own text token, not
+ * `--surface-0`, so it holds contrast on light palettes too. *Hierarchy*: an absent pad is a dashed edge on no face with a muted label, so absence
  * reads as structure, not as a fainter colour. *Typography* (typography.md 8): labels use
  * `--label-case` and `--tracking` at `--size-label`, the NEXT / ARMED tag at caption size with
  * tracking. Glow uses `--bloom`, so flat palettes stay flat. Focus is a 2px `--accent` ring

@@ -56,22 +56,24 @@
 }
 .yh-pad[data-tone='success'] {
   --yh-pad-fill: var(--success);
-  --yh-pad-ink: var(--surface-0);
+  --yh-pad-ink: var(--success-text);
   --yh-pad-ring: var(--success);
+  --yh-pad-ring-ink: var(--success-text);
   --yh-pad-edge: var(--success);
 }
-.yh-pad[data-tone='action'] {
-  --yh-pad-fill: var(--action);
-  --yh-pad-ink: var(--action-text);
-  --yh-pad-ring: var(--action);
-  --yh-pad-ring-ink: var(--action-text);
-  --yh-pad-edge: var(--action);
+/* Transport: the role hue of the controls that move time (hues.ts), never a part's. */
+.yh-pad[data-tone='transport'] {
+  --yh-pad-fill: var(--transport);
+  --yh-pad-ink: var(--transport-text);
+  --yh-pad-ring: var(--transport);
+  --yh-pad-ring-ink: var(--transport-text);
+  --yh-pad-edge: var(--transport);
 }
 
 /* Armed needs attention whatever the pad is: warning, not identity. */
 .yh-pad[data-state='armed'] {
   --yh-pad-ring: var(--warning);
-  --yh-pad-ring-ink: var(--surface-0);
+  --yh-pad-ring-ink: var(--warning-text);
 }
 
 /* accentNext: queued reads as --accent (hues.ts), whatever the pad's own colour. */

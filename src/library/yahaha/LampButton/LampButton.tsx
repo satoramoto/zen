@@ -3,7 +3,7 @@ import { useLongPress } from './useLongPress';
 import './LampButton.css';
 
 /** The hues a lamp can wear. `m` is the original's deprecated alias of `t` and draws exactly as it. */
-export type LampHue = 't' | 'r1' | 'r2' | 'r3' | 'l' | 'ok' | 'lamp' | 'm';
+export type LampHue = 't' | 'r1' | 'r2' | 'r3' | 'l' | 'ok' | 'lamp' | 'transport' | 'm';
 
 /** The face as drawn. */
 export type LampFace = 'off' | 'on' | 'record' | 'waiting' | 'armed' | 'disabled';
@@ -19,7 +19,7 @@ export interface LampButtonProps {
   label: string;
   /** Lit or off. Controlled: a press asks for `!on` through `onToggle` and changes nothing itself. */
   on?: boolean;
-  /** Identity: `t` neutral (Accomp, Metronome, function lamps), a part (`r1` `r2` `r3` `l`), `ok` running (Start / Stop), `lamp` the Looper looping. */
+  /** Identity: `t` neutral (Accomp, function lamps), a part (`r1` `r2` `r3` `l`), `ok` running (Start / Stop), `lamp` the Looper looping, `transport` a key that moves time (Metronome, Auto Fill). */
   hue?: LampHue;
   /** Small code after the label, e.g. `ACMP`. */
   code?: string;
@@ -69,7 +69,11 @@ export interface LampButtonProps {
  * (color.md: restraint, colour by purpose). The key sinks 1px on press. *Colour meaning:* part
  * hues (`--hue-1..4`) only name the part; Start / Stop and the looping Looper use `--success`
  * (running), record uses `--danger`, neutral lamps light in `--text-1`, and focus is an
- * `--accent` ring (craft-details.md: `:focus-visible`). *Armed* is a 2px ring with a blinking LED,
+ * `--accent` ring (craft-details.md: `:focus-visible`). The keys that move time (the metronome,
+ * Auto Fill) wear the contract's `transport` role hue, never a part's (hues.ts); lit, they fill in
+ * `--transport` with `--transport-text`. Each lit fill takes its own ink: `--on-hue` on a part,
+ * `--success-text` and `--danger-text` on the state fills (the original drew all three in
+ * `--on-hue`, which the contract only promises against the part hues). *Armed* is a 2px ring with a blinking LED,
  * the hardware convention for "waiting", still on reduced motion as a steady LED. *Disabled* is a
  * dashed, unfilled key with a hollow LED and `not-allowed` cursor, so it can't be mistaken for off.
  * *Armed and pressed* (`armed` with `on`) is the waiting ring on a key that sits sunk, as if held,

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -116,6 +118,26 @@ describe('Button faces and a11y', () => {
     const { button } = setup({ label: 'Go', size: 'band', bar: true, chosen: true, hue: 'r2' });
     expect(button).toHaveAttribute('data-face', 'chosen');
     expect(button).toHaveAttribute('data-hue', 'r2');
+  });
+
+  it('transport is its own tone; running Start / Stop still draws ok', () => {
+    const { button, rerender, props } = setup({ label: 'Sync Start', hue: 'transport' });
+    expect(button).toHaveAttribute('data-hue', 'transport');
+    rerender(<Button {...props} label="Start / Stop" size="band" bar />);
+    expect(button).toHaveAttribute('data-hue', 'ok');
+  });
+
+  it('each solid tone takes its own ink, and a primary transport key fills in --transport', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Button/Button.css'), 'utf8');
+    const decls = (hue: string) =>
+      [...css.matchAll(new RegExp(`\\.yh-button\\[data-hue='${hue}'\\]\\s*\\{([^}]*)\\}`, 'g'))].map((m) => m[1]).join(';');
+    expect(decls('ok')).toContain('--yh-button-ink: var(--success-text)');
+    expect(decls('rec')).toContain('--yh-button-ink: var(--danger-text)');
+    expect(decls('transport')).toContain('--yh-button-tone: var(--transport)');
+    expect(decls('transport')).toContain('--yh-button-ink: var(--transport-text)');
+    expect(decls('transport')).toContain('--yh-button-cta: var(--transport)');
+    // The per-tone ink must come after the shared coloured-tone rule, which sets --on-hue.
+    expect(css.indexOf("[data-hue='ok'] { --yh-button-ink")).toBeGreaterThan(css.indexOf(".yh-button:not([data-hue='t'])"));
   });
 
   it('deprecated t2 and m, and lamp, draw as the neutral t', () => {

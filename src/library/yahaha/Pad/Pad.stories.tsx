@@ -167,7 +167,7 @@ export const Running: Story = {
   },
 };
 
-/** A transport pad running: the bank's one call to action, `--action`. */
+/** A transport pad running: still `--success`, because running is a state, not the transport's identity. */
 export const TransportRunning: Story = {
   args: {
     label: 'Start / Stop',
@@ -178,15 +178,31 @@ export const TransportRunning: Story = {
     name: 'Start / Stop, running (pad 16)',
   },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'action');
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'success');
   },
 };
 
-/** Sync Start armed on a transport pad: the `--action` edge with the `--warning` armed ring. */
+/** A transport pad stopped: the `--transport` edge, the role hue of the keys that move time. */
+export const TransportStopped: Story = {
+  args: { label: 'Start / Stop', index: '16', family: 'start', state: 'idle', transport: true, name: 'Start / Stop, stopped (pad 16)' },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'transport');
+  },
+};
+
+/** A lit transport pad (Auto Fill on): the solid `--transport` fill with `--transport-text`. */
+export const TransportOn: Story = {
+  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', transport: true, name: 'Auto Fill, on (pad 12)' },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'transport');
+  },
+};
+
+/** Sync Start armed on a transport pad: the `--transport` edge with the `--warning` armed ring and `--warning-text` chip. */
 export const TransportArmed: Story = {
   args: { label: 'Sync Start', index: '4', family: 'util', state: 'armed', transport: true, name: 'Sync Start, armed' },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'action');
+    await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'transport');
   },
 };
 
@@ -250,7 +266,7 @@ const BANK: PadProps[] = [
   { label: 'Main A', index: '9', family: 'main', state: 'idle' },
   { label: 'Main B', index: '10', family: 'main', state: 'playing' },
   { label: 'Main C', index: '11', family: 'main', state: 'next', tagCorner: true },
-  { label: 'Auto Fill', index: '12', family: 'util', state: 'playing' },
+  { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', transport: true },
   { label: 'QUICK 1', index: '13', family: 'r1', state: 'playing' },
   { label: 'QUICK 2', index: '14', family: 'r2', state: 'idle' },
   { label: 'BANK -', index: '15', family: 'r3', state: 'dark' },

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -44,6 +46,17 @@ describe('LampButton', () => {
     render(<LampButton label="Sound" on onToggle={onToggle} />);
     await userEvent.click(screen.getByRole('button', { name: 'Sound' }));
     expect(onToggle).toHaveBeenCalledWith(false);
+  });
+
+  it('transport is its own hue, and each lit fill takes its own ink', () => {
+    render(<LampButton label="Metronome" hue="transport" on />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-hue', 'transport');
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/LampButton/LampButton.css'), 'utf8');
+    const decls = (hue: string) => css.match(new RegExp(`\\[data-hue='${hue}'\\]\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+    expect(decls('lamp')).toContain('--lamp-ink: var(--success-text)');
+    expect(decls('rec')).toContain('--lamp-ink: var(--danger-text)');
+    expect(decls('transport')).toContain('--lamp-hue: var(--transport)');
+    expect(decls('transport')).toContain('--lamp-ink: var(--transport-text)');
   });
 
   it('draws the faces and hues: record, waiting, rec waiting, m as t', () => {

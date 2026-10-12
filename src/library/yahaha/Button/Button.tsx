@@ -18,6 +18,7 @@ export type ButtonHue =
   | 'intro'
   | 'main'
   | 'ending'
+  | 'transport'
   | 'brk'
   | 'fill';
 export type ButtonSize = 'icon' | 'md' | 'band' | 'pair' | 'cell' | 'caret';
@@ -52,7 +53,7 @@ export interface ButtonProps {
   lit?: boolean;
   /** A tall key, two control rows and the gap between them, its label at heading size: the primary key of a transport (Start / Stop). Default `false`. Works with any `size`. */
   tall?: boolean;
-  /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `r1` `r2` `r3` `l` the four part hues; `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent. */
+  /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `r1` `r2` `r3` `l` the four part hues; `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent; `transport` the role hue of the keys that move time (Start / Stop stopped, sync, fills, Tap, tempo). */
   hue?: ButtonHue;
   /** Sets `aria-pressed` for a switch or a choice. Undefined: no `aria-pressed`. Never changes the look. */
   pressed?: boolean;
@@ -110,7 +111,13 @@ const NEUTRAL = new Set<ButtonHue>(['t', 't2', 'm', 'lamp']);
  * and the waiting ring (color.md §4, 4.5:1 for text). *Colour meaning:* hue only marks identity
  * (`r1`–`l` → `--hue-1..4`; sections stay neutral, their label names them, so no section passes
  * for a part), Start / Stop running is `--success` and record
- * `--danger` (state), focus is `--accent`; a neutral switch that is on uses `--selected`. Lit
+ * `--danger` (state), focus is `--accent`; a neutral switch that is on uses `--selected`. The keys
+ * that move time take the `transport` tone, the contract's `--transport` role hue (hues.ts): never
+ * a part's hue and never a state, so a sync key armed or a fill queued rings in it and still says
+ * so by its waiting ring; a `primary` transport key fills in `--transport` instead of `--action`.
+ * Each solid face takes its own ink: `--on-hue` on a part or the accent, `--success-text`,
+ * `--danger-text` and `--transport-text` on the rest (the original used `--on-hue` everywhere,
+ * which the contract only promises against the part hues). Lit
  * hued faces bloom by `--bloom`, so they glow on Push and stay flat on paper palettes. *Affordance:*
  * a disabled button now reads as unavailable (faded outline, faded label, not-allowed cursor)
  * instead of merely "a dimmer hue"; hover and press tint the face by its own tone; a visible
