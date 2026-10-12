@@ -10,11 +10,15 @@ import {
   songFormSyncArmed,
 } from './SongForm.fixtures';
 
-/** The region's width on the Stage; `width` in a story's parameters sets it. */
+/**
+ * The region's box on the Stage: `regionWidth` in a story's parameters sets its width, and
+ * `regionHeight` gives it a height, as the Stage's strip does (the steps then fill it).
+ */
 const atWidth: Decorator = (Story, context) => {
   const width = (context.parameters.regionWidth as number | undefined) ?? 1392;
+  const height = context.parameters.regionHeight as number | undefined;
   return (
-    <div style={{ width, maxWidth: '100%' }}>
+    <div style={{ width, maxWidth: '100%', height }}>
       <Story />
     </div>
   );
@@ -59,14 +63,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Stopped (SectionRow's board): Main A chosen to start, Start on the `--transport` fill, Accomp lit; sync and fill keys outlined in the transport hue. */
+/** Stopped (SectionRow's board): Main A chosen to start, underlined rather than filled (nothing sounds); Start on the `--transport` fill, the one saturated key; Accomp on as an outline with its LED lit; the sync and fill keys neutral until armed or queued. */
 export const Stopped: Story = {
   args: { ...songFormStopped, next: undefined, nextAt: undefined },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     const start = canvas.getByRole('button', { name: 'Start / Stop, stopped' });
     await expect(start).toHaveAttribute('aria-pressed', 'false');
-    await expect(canvas.getByRole('button', { name: 'Main A, starts here' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(canvas.getByRole('button', { name: 'Main A, starts here' })).toHaveAttribute('data-state', 'idle');
     await userEvent.click(start);
     await expect(args.onStartStop).toHaveBeenCalledTimes(1);
   },
@@ -87,19 +91,19 @@ export const Board: Story = {
 /** The flash's off phase: Main C keeps its NEXT tag; its accent wash goes. */
 export const FlashOff: Story = { args: { lit: false } };
 
-/** Fill ▲ queued: the key waits, and the cue reads "Fill, then Main C · after bar 4". */
+/** Fill ▲ queued: the key waits, and the spoken cue says "Fill, then Main C, after bar 4". */
 export const FillPending: Story = {
   args: songFormFillPending,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText('Fill, then Main C')).toBeInTheDocument();
+    await expect(canvas.getByRole('status')).toHaveTextContent('Fill, then Main C, after bar 4');
     await expect(
       canvas.getByRole('button', { name: 'Fill Up: a fill, then the next Main up, queued' }),
     ).toHaveAttribute('data-face', 'waiting');
   },
 };
 
-/** Sync Start armed on Intro I: its key waits, and the cue says the band starts with the first chord. */
+/** Sync Start armed on Intro I: its key waits, the only transport-hue ring in the cluster, and the spoken cue says the band starts with the first chord. */
 export const SyncStartArmed: Story = {
   args: { ...songFormSyncArmed, next: undefined, nextAt: undefined },
   play: async ({ canvasElement }) => {
@@ -120,11 +124,59 @@ export const MissingSections: Story = {
   },
 };
 
-/** A fade-out under way while running. */
+/** A fade-out under way while running: Fade rings in the ink colour, not a fill (a fill means sounding). */
 export const Fading: Story = { args: { fading: true } };
 
-/** The 1217 × 752 Stage: the region 1169 wide, under 37.5 control heights, so the transport sits under the form. */
+/** The 1217 × 752 Stage: the region 1169 wide, under 48 control heights, so the transport sits under the form. */
 export const At1217: Story = { parameters: { regionWidth: 1169 } };
 
-/** A narrow column (720): the transport under the form, in two rows sharing its width. */
+/** A narrow column (720): the transport under the form, in two rows sharing its width; the step numerals one size down so the form stays one row. */
 export const Narrow: Story = { parameters: { regionWidth: 720 } };
+
+/**
+ * The form alone (`part="form"`), as the stacked Stage's strip on the 1440 × 900 board: the
+ * container is 72 tall and the steps fill it, captions in its top padding; nothing sets SongForm's
+ * own variables.
+ */
+export const FormPart: Story = {
+  args: { part: 'form' },
+  parameters: { regionWidth: 1392, regionHeight: 72 },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('region', { name: 'Song form' })).toBeInTheDocument();
+    await expect(canvas.queryByRole('group', { name: 'Transport' })).toBeNull();
+    const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
+    await expect(Math.round(form.getBoundingClientRect().height)).toBe(72);
+  },
+};
+
+/** The form alone in the 1217 × 752 Stage's strip: 56 tall, the steps shorter, still one row. */
+export const FormPartSmall: Story = {
+  args: { part: 'form' },
+  parameters: { regionWidth: 1169, regionHeight: 56 },
+  play: async ({ canvasElement }) => {
+    const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
+    await expect(Math.round(form.getBoundingClientRect().height)).toBe(56);
+  },
+};
+
+/** The form alone with no height given: the steps take their default, two control heights. */
+export const FormPartAuto: Story = { args: { part: 'form' } };
+
+/** The transport alone (`part="transport"`), as the stacked Stage sets it beside the hero; running. */
+export const TransportPart: Story = {
+  args: { part: 'transport' },
+  parameters: { regionWidth: 520 },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('region', { name: 'Transport' })).toBeInTheDocument();
+    await expect(canvas.queryByRole('group', { name: 'Sections' })).toBeNull();
+    await expect(canvas.getByRole('button', { name: 'Auto Fill' })).toBeInTheDocument();
+  },
+};
+
+/** The transport alone while stopped with Sync Start armed: Start the one fill, Sync Start the one transport-hue ring. */
+export const TransportPartStopped: Story = {
+  args: { ...songFormSyncArmed, part: 'transport', next: undefined, nextAt: undefined },
+  parameters: { regionWidth: 520 },
+};

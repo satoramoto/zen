@@ -3,22 +3,31 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeScope, resolveTheme } from '../../theme';
 import { packs } from '../../themes/packs';
-import { SongForm, type SongFormProps } from './SongForm';
+import { SECTION_LABEL, SongForm, type SongFormProps } from './SongForm';
+
+describe('SongForm labels', () => {
+  it('joins a section name with a non-breaking space, so "Main C" never wraps', () => {
+    expect(SECTION_LABEL.mainC).toContain(' ');
+    expect(SECTION_LABEL.mainC).not.toContain(' ');
+  });
+});
 import { songFormBoard, songFormFillPending, songFormSparse, songFormStopped, songFormSyncArmed } from './SongForm.fixtures';
 
 const renderForm = (props: SongFormProps = songFormBoard) => render(<SongForm {...props} />);
 
 describe('Yahaha SongForm', () => {
-  it('lays the sections out in the song’s order, Break and Auto Fill apart', () => {
+  it('lays the sections out in the song’s order, Break apart, Auto Fill in the transport', () => {
     renderForm();
     const form = screen.getByRole('group', { name: 'Sections' });
     const order = Array.from(form.querySelectorAll('[data-section]')).map((n) => n.getAttribute('data-section'));
     expect(order).toEqual([
       'intro1', 'intro2', 'intro3', 'mainA', 'mainB', 'mainC', 'mainD', 'ending1', 'ending2', 'ending3', 'break',
     ]);
-    const mods = screen.getByRole('group', { name: 'Modifiers' });
-    expect(within(mods).getByRole('button', { name: 'Break' })).toBeInTheDocument();
-    expect(within(mods).getByRole('button', { name: 'Auto Fill' })).toBeInTheDocument();
+    const insert = within(form).getByRole('group', { name: 'Insert' });
+    expect(within(insert).getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual(['Break']);
+    // The strip is one primitive: every control in the form is a step Pad.
+    expect(within(form).getAllByRole('button').every((b) => b.classList.contains('yh-pad'))).toBe(true);
+    expect(within(screen.getByRole('group', { name: 'Transport' })).getByRole('button', { name: 'Auto Fill' })).toBeInTheDocument();
     // No Tap and no tempo here: they live in the Display.
     expect(screen.queryByRole('button', { name: /tap/i })).toBeNull();
   });
@@ -29,7 +38,28 @@ describe('Yahaha SongForm', () => {
     const next = screen.getByRole('button', { name: 'Main C, next, after bar 4' });
     expect(next).toHaveAttribute('aria-pressed', 'false');
     expect(next.closest('[data-section]')).toHaveAttribute('data-state', 'next');
-    expect(screen.getByRole('status')).toHaveTextContent('Main Cafter bar 4');
+  });
+
+  it('says next once on screen: no title or cue line, the cue only spoken', () => {
+    const { container } = renderForm();
+    expect(screen.getByRole('status')).toHaveTextContent('Next: Main C, after bar 4');
+    expect(container.querySelector('.yh-songform__head, .yh-songform__title, .yh-waitingchip')).toBeNull();
+    // Only the part captions are drawn; Break has none.
+    expect(Array.from(container.querySelectorAll('.yh-songform__caption')).map((c) => c.textContent)).toEqual([
+      'Intro',
+      'Main',
+      'Ending',
+    ]);
+  });
+
+  it('fills only the sounding section: one fill while running, none while stopped', () => {
+    const fills = (c: HTMLElement) => c.querySelectorAll(".yh-songform__form .yh-pad[data-state='playing']").length;
+    const { container, rerender } = render(<SongForm {...songFormBoard} />);
+    expect(fills(container)).toBe(1);
+    expect(container.querySelector('[data-start]')).toBeNull();
+    rerender(<SongForm {...songFormStopped} />);
+    expect(fills(container)).toBe(0);
+    expect(container.querySelector('[data-start]')).toHaveAttribute('data-section', 'mainA');
   });
 
   it('draws one half alone when asked', () => {
@@ -44,9 +74,12 @@ describe('Yahaha SongForm', () => {
     expect(screen.queryByRole('group', { name: 'Sections' })).toBeNull();
   });
 
-  it('says the stopped band’s section is where it starts', () => {
+  it('says the stopped band’s section is where it starts, underlined rather than filled', () => {
     renderForm(songFormStopped);
-    expect(screen.getByRole('button', { name: 'Main A, starts here' })).toHaveAttribute('aria-pressed', 'true');
+    const start = screen.getByRole('button', { name: 'Main A, starts here' });
+    expect(start).toHaveAttribute('data-state', 'idle');
+    expect(start).toHaveAttribute('aria-pressed', 'false');
+    expect(start.closest('[data-section]')).toHaveAttribute('data-start');
   });
 
   it('queues a pressed section, and ignores an absent one', async () => {
@@ -106,9 +139,10 @@ describe('Yahaha SongForm', () => {
     const { container, rerender } = render(<SongForm {...songFormStopped} />);
     expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'transport');
     const key = (k: string) => container.querySelector(`.yh-songform__key[data-key='${k}'] button`);
-    for (const k of ['sync-start', 'sync-stop', 'fill-up', 'fill-down']) expect(key(k), k).toHaveAttribute('data-hue', 'transport');
+    for (const k of ['sync-start', 'sync-stop', 'fill-up', 'fill-down', 'auto-fill']) expect(key(k), k).toHaveAttribute('data-hue', 'transport');
     for (const k of ['accomp', 'fade', 'reset']) expect(key(k), k).toHaveAttribute('data-hue', 't');
-    expect(screen.getByRole('button', { name: 'Auto Fill' })).toHaveAttribute('data-hue', 'transport');
+    // One rank for every key but Start: Reset is an outlined key like Fade, not a quiet word.
+    for (const k of ['sync-start', 'sync-stop', 'fill-up', 'fill-down', 'fade', 'reset']) expect(key(k), k).toHaveAttribute('data-variant', 'secondary');
     rerender(<SongForm {...songFormBoard} />);
     expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toHaveAttribute('data-hue', 'ok');
   });
@@ -176,15 +210,16 @@ describe('Yahaha SongForm', () => {
       'section:ending2',
       // Ending III is absent.
       'section:break',
-      'autoFill:true',
+      // The transport, a column at a time.
       'startStop',
       'syncStart:true',
       'syncStop:true',
-      'accomp:false',
       'fillUp',
       'fillDown',
       'fade',
       'reset',
+      'accomp:false',
+      'autoFill:true',
     ]);
   });
 
@@ -198,7 +233,7 @@ describe('Yahaha SongForm', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Starts with the first chord');
   });
 
-  it('a queued fill waits on its key and reads in the cue', () => {
+  it('a queued fill waits on its key and is spoken in the cue', () => {
     renderForm(songFormFillPending);
     expect(screen.getByRole('button', { name: 'Fill Up: a fill, then the next Main up, queued' })).toHaveAttribute(
       'data-face',
@@ -208,7 +243,7 @@ describe('Yahaha SongForm', () => {
       'data-face',
       'off',
     );
-    expect(screen.getByRole('status')).toHaveTextContent('Fill, then Main C');
+    expect(screen.getByRole('status')).toHaveTextContent('Fill, then Main C, after bar 4');
   });
 
   it('Fade is on while fading out, and waits while a fade-in waits for Start', () => {
