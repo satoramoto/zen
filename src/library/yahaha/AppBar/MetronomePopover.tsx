@@ -2,6 +2,7 @@ import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
 import { LineSlider } from '../../components/core/LineSlider/LineSlider';
 import { SettingsRow } from '../../components/core/SettingsRow/SettingsRow';
+import { Text } from '../../primitives/Text';
 import './MetronomePopover.css';
 
 export interface MetronomePopoverProps {
@@ -104,7 +105,9 @@ export function MetronomePopover({
       aria-label="Metronome settings"
       onKeyDown={ownKeys}
     >
-      <span className="yh-metronome-popover__title" data-part="title">Metronome</span>
+      <Text role="label" tone="primary" className="yh-metronome-popover__title" data-part="title">
+        Metronome
+      </Text>
       <SettingsRow label="On/off" labelWidth={104}>
         <LampButton
           label={on ? 'On' : 'Off'}

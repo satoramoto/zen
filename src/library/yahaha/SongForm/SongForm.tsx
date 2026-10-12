@@ -1,6 +1,8 @@
 import { Button } from '../../components/core/Button/Button';
 import { LampButton } from '../../components/core/LampButton/LampButton';
 import { Pad, type PadState, type TipAction } from '../../components/music/Pad/Pad';
+import { Stack } from '../../layout/Stack';
+import { Text } from '../../primitives/Text';
 import type { SectionState } from '../hues';
 import './SongForm.css';
 
@@ -186,6 +188,9 @@ export type SongFormPart = 'both' | 'form' | 'transport';
  * next, after bar 4", "Main A, starts here", "Intro III, not in this style"); the spoken cue; the
  * parent-driven flash (`lit`); the keyboard order and every spoken name, unchanged by the new
  * sizes and spacing.
+ *
+ * **Tuning knobs.** `--yh-sf-step-font` (the steps' letter and numeral size: heading beside the
+ * transport, numeral in the form alone, switched down by the width container queries).
  */
 export function SongForm({
   running = false,
@@ -284,24 +289,32 @@ export function SongForm({
     <div className="yh-songform" data-part="root" data-half={part}>
       <div className="yh-songform__inner" data-part="inner">
         {part !== 'transport' && (
-          <div className="yh-songform__form" data-part="form" role="group" aria-label="Sections">
+          <Stack
+            direction="row"
+            gap={6}
+            align="stretch"
+            className="yh-songform__form"
+            data-part="form"
+            role="group"
+            aria-label="Sections"
+          >
             <span className="yh-songform__cue" data-part="cue" role="status">
               {cues.join('. ')}
             </span>
-            <ol className="yh-songform__parts" data-part="groups">
+            <Stack as="ol" direction="row" gap={6} align="stretch" className="yh-songform__parts" data-part="groups">
               {FORM.map(({ part, caption, steps }) => (
-                <li key={part} className="yh-songform__part" data-part="group" data-group={part}>
-                  <span className="yh-songform__caption" data-part="caption" aria-hidden="true">
+                <Stack as="li" key={part} direction="column" gap={0} className="yh-songform__part" data-part="group" data-group={part}>
+                  <Text role="caption" tone="muted" className="yh-songform__caption" data-part="caption" aria-hidden="true">
                     {caption}
-                  </span>
+                  </Text>
                   <div className="yh-songform__steps" data-part="steps">{steps.map((s) => section(s))}</div>
-                </li>
+                </Stack>
               ))}
-            </ol>
-            <div className="yh-songform__mods" data-part="mods" role="group" aria-label="Insert">
+            </Stack>
+            <Stack direction="column" gap={0} className="yh-songform__mods" data-part="mods" role="group" aria-label="Insert">
               <div className="yh-songform__steps" data-part="steps">{section(BREAK)}</div>
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         )}
 
         {part !== 'form' && (

@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, type CSSProperties } from 'react';
 import { Group } from '../../layout/Group';
 import { Region } from '../../layout/Region';
+import { Stack } from '../../layout/Stack';
 import { Tabs, type TabItem } from '../../layout/Tabs';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import { Button } from '../../components/core/Button/Button';
@@ -142,18 +143,13 @@ function layout(strips: FaderStrip[]) {
   strips.forEach((strip, i) => {
     const cluster = clusterOf(strip);
     if (i > 0 && cluster !== 'empty' && cluster !== clusterOf(strips[i - 1])) {
-      tracks.push('var(--yh-faderbank-divider-w)');
+      tracks.push('var(--space-1)');
       dividers.push(tracks.length);
     }
-    // A parked fader keeps a real strip's place and full height, like the hardware fader it
-    // mirrors, at three quarters of a strip's width, so live names ("Multi Pad") and keys keep theirs.
-    tracks.push(
-      cluster === 'master'
-        ? 'minmax(0, var(--yh-faderbank-master-fr))'
-        : cluster === 'empty'
-          ? 'minmax(0, var(--yh-faderbank-empty-fr))'
-          : 'minmax(0, 1fr)',
-    );
+    // Master is a little wider. A parked fader keeps a real strip's place and full height, like the
+    // hardware fader it mirrors, at three quarters of a strip's width, so live names ("Multi Pad")
+    // and keys keep theirs.
+    tracks.push(cluster === 'master' ? 'minmax(0, 1.25fr)' : cluster === 'empty' ? 'minmax(0, 0.75fr)' : 'minmax(0, 1fr)');
     columns.push(tracks.length);
   });
   return { template: tracks.join(' '), columns, dividers };
@@ -352,7 +348,7 @@ export function FaderBank({
     ) : undefined;
 
   return (
-    <div className="yh-faderbank" data-part="root" data-layered={layered || undefined}>
+    <Stack gap={4} className="yh-faderbank" data-part="root" data-layered={layered || undefined}>
       <div className="yh-faderbank__grid" style={{ gridTemplateColumns: template } as CSSProperties}>
         {dividers.map((column) => (
           <span key={`divider-${column}`} className="yh-faderbank__divider" style={{ gridColumn: column }} aria-hidden="true" />
@@ -363,8 +359,9 @@ export function FaderBank({
           const parked = strip.kind === 'parked';
           const part = clusterOf(strip) === 'parts';
           return (
-            <div
+            <Stack
               key={strip.id}
+              gap={1}
               className="yh-faderbank__strip"
               style={{ gridColumn: columns[i] }}
               data-kind={strip.kind}
@@ -397,7 +394,7 @@ export function FaderBank({
               ) : (
                 <StripName strip={strip} marksLine={marksLine} tipAction={tipAction} onOpen={onOpen} />
               )}
-            </div>
+            </Stack>
           );
         })}
 
@@ -422,7 +419,7 @@ export function FaderBank({
 
       {functionLamps.length > 0 && (
         <div className="yh-faderbank__foot">
-          <Group name="Functions" label={false} className="yh-faderbank__functions">
+          <Group name="Functions" label={false} gap={3} className="yh-faderbank__functions">
             {functionLamps.map((item) => (
               <Fragment key={item.id}>{lamp(item)}</Fragment>
             ))}
@@ -430,7 +427,7 @@ export function FaderBank({
         </div>
       )}
       {note}
-    </div>
+    </Stack>
   );
 }
 

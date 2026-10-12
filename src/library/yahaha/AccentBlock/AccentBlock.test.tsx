@@ -13,7 +13,7 @@ describe('AccentBlock style hue', () => {
     const rule = /\.yh-accentblock\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
     expect(rule).toMatch(/border-left:[^;]*var\(--style\)/);
     expect(rule).not.toContain('--accent');
-    expect(rule).toMatch(/--yh-accentblock-bar:\s*var\(--space-1\)/);
+    expect(rule).toMatch(/border-left:\s*var\(--space-1\)\s+solid/);
     expect(rule).toMatch(/font-size:\s*var\(--size-body\)/);
   });
 

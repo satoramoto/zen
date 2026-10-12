@@ -234,7 +234,7 @@ describe('FaderBank layout', () => {
     }
     expect(tracks).toHaveLength(11);
     expect(tracks.filter((t) => t === 'minmax(0, 1fr)')).toHaveLength(6);
-    expect(tracks.filter((t) => t === 'minmax(0, var(--yh-faderbank-empty-fr))')).toHaveLength(2);
+    expect(tracks.filter((t) => t === 'minmax(0, 0.75fr)')).toHaveLength(2);
   });
 
   it('every key in the bank is one height: part lamps, page button and function lamps are cell keys', () => {

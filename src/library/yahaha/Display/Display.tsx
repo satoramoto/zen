@@ -8,6 +8,7 @@ import { PartMarks } from '../../components/music/PartMarks/PartMarks';
 import { marksText } from '../../components/music/PartMarks/marks';
 import { SectionName } from '../../components/music/SectionName/SectionName';
 import { TempoReadout } from '../../components/music/TempoReadout/TempoReadout';
+import { Stack } from '../../layout/Stack';
 import { DisplayArt } from '../DisplayArt/DisplayArt';
 import { OneTouchPicker } from '../OneTouchPicker/OneTouchPicker';
 import { WaitingChip } from '../WaitingChip/WaitingChip';
@@ -260,6 +261,13 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
  * to fit; the sizes reaching each primitive through its own `size` option (and BarBeat's
  * `thickness`), never by overriding its CSS; the app's `tipAction` on every control, applied once
  * each (the primitives apply it to their own).
+ *
+ * **Tuning knobs.** `--yh-display-cap-*` (each readout's cap: section, tempo, chord; set per
+ * density), `--yh-display-fit` (the row's fit step, from `data-fit`), `--yh-display-section`,
+ * `--yh-display-tempo`, `--yh-display-chord` (the readouts' sizes, from the hero's width, cap and
+ * fit; `DISPLAY_SIZES` hands them to the primitives), `--yh-display-beat-line` (the beat cells'
+ * thickness, per density), `--yh-display-then-hue` (the "then" arrow's colour, the next role from
+ * `hues.ts`), `--yh-display-part-hue` (a part's dot, its hue from `hues.ts`).
  */
 export function Display({
   style,
@@ -309,7 +317,7 @@ export function Display({
       {/* The frame holds the sizes: a container query styles only what is inside the container. */}
       <div ref={frame} className="yh-display__frame" data-part="frame" data-fit="1">
         <header className="yh-display__header" data-part="header">
-          <div className="yh-display__style" data-part="style" role="group" aria-label="Style">
+          <Stack direction="row" gap={1} align="center" className="yh-display__style" data-part="style" role="group" aria-label="Style">
             <Button symbol="prev" size="icon" variant="quiet" name="Previous style (Track left)" tip="style.prev" tipAction={tipAction} onPress={onPrev} />
             <span className="yh-display__style-name" data-part="style-name" title={name}>
               <AccentBlock
@@ -334,7 +342,7 @@ export function Display({
                 </span>
               )
             )}
-          </div>
+          </Stack>
           <div className="yh-display__ots" data-part="one-touch">
             <OneTouchPicker applied={style.oneTouch ?? 0} count={style.oneTouchCount ?? 4} tipAction={tipAction} onApply={onOneTouch} />
           </div>
@@ -388,7 +396,7 @@ export function Display({
             <div className="yh-display__beat" data-part="beat">
               <BarBeat beat={running ? (nowPlaying.beat ?? 0) : 0} beats={nowPlaying.beats ?? 4} thickness={DISPLAY_SIZES.beat} />
             </div>
-            <div className="yh-display__tempo-keys" data-part="tempo-keys">
+            <Stack direction="row" gap={2} align="center" className="yh-display__tempo-keys" data-part="tempo-keys">
               <Button
                 label="Tap"
                 size="md"
@@ -409,15 +417,15 @@ export function Display({
                 tipAction={tipAction}
                 onPress={onStyleTempo}
               />
-            </div>
+            </Stack>
           </div>
 
           {hasParts && (
-            <ul className="yh-display__parts" data-part="parts" aria-label="Sounds">
+            <Stack as="ul" gap={0} className="yh-display__parts" data-part="parts" aria-label="Sounds">
               {parts!.map((p) => (
                 <PartRow key={p.id} part={p} tipAction={tipAction} onSound={onSound} />
               ))}
-            </ul>
+            </Stack>
           )}
         </div>
       </div>
@@ -451,10 +459,10 @@ function PartRow({ part: p, tipAction, onSound }: { part: DisplayPart; tipAction
         onClick={() => onSound?.(p.id)}
       >
         <span className="yh-display__part-dot" data-part="part-dot" data-lit={!(p.off && !p.bass) || undefined} aria-hidden="true" />
-        <span className="yh-display__part-sound" data-part="part-sound" aria-hidden="true">
+        <Stack as="span" direction="row" gap={2} align="center" className="yh-display__part-sound" data-part="part-sound" aria-hidden="true">
           <span className="yh-display__part-name" data-part="part-name">{p.sound}</span>
           <PartMarks edited={p.edited} missing={p.missing} failed={p.failed} />
-        </span>
+        </Stack>
         <span className="yh-display__part-part" data-part="part-part" aria-hidden="true">
           <span className="yh-display__part-label" data-part="part-label">{p.name}</span>
           {tail && <span className="yh-display__part-tail" data-part="part-tail">{tail}</span>}

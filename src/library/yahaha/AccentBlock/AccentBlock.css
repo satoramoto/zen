@@ -1,8 +1,6 @@
 /* AccentBlock: contract variables only. The style's hue is a leading bar; the name is primary
    text on a raised surface (the label) or on the theme's key material (the button). */
 .yh-accentblock {
-  --yh-accentblock-h: var(--control-h);
-  --yh-accentblock-bar: var(--space-1);
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -10,11 +8,11 @@
   flex: 0 1 auto;
   min-width: 0;
   max-width: 100%;
-  height: var(--yh-accentblock-h);
+  height: var(--control-h);
   margin: 0;
   padding: 0 var(--space-3);
   border: 0;
-  border-left: var(--yh-accentblock-bar) solid var(--style);
+  border-left: var(--space-1) solid var(--style);
   border-radius: var(--radius-control);
   appearance: none;
   background: var(--surface-2);
@@ -31,7 +29,7 @@
   cursor: default;
 }
 .yh-accentblock[data-size='knob'] {
-  --yh-accentblock-h: calc(var(--control-h) * 0.75);
+  height: calc(var(--control-h) * 0.75);
   padding: 0 var(--space-2);
   font-size: var(--size-caption);
 }

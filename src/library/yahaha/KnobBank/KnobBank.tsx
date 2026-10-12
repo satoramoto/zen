@@ -102,6 +102,9 @@ export function knobName(knob: KnobItem, index: number): string {
  * whose tabs are the library `Tabs`), the `pageLabel` fallback tab, the tooltip keys (`knobs.page`, `knobs.knob`), each
  * knob's drag, wheel, keys and press, and the spoken names ("Knob 1: Dynamics (DynCtrl) 127",
  * "Knob 7: unused").
+ *
+ * **Tuning knobs.** `--yh-knob-ring` (the Knob's ring side, which the bank sets per slot, 2.75
+ * control heights at most, and which an empty slot's ring follows too).
  */
 export function KnobBank({ knobs, tipAction, onPress, onStep }: KnobBankProps) {
   const slots = Array.from({ length: KNOB_SLOTS }, (_, i) => knobs[i] ?? UNUSED);

@@ -1,22 +1,16 @@
 /* Yahaha SongForm: the song's form and the transport cluster. Reads only contract variables and
-   the --yh-sf-* ones declared here. */
+   the one knob declared here, --yh-sf-step-font.
+
+   Breathing room, on the space scale: steps inside a part --space-2 apart, the parts (and Break's
+   seam) --space-6 (the form and parts are Stacks at gap 6), the captions --space-2 clear of their
+   steps, and the keys of the cluster --space-3 apart. A transport key is at least three control
+   heights wide. */
 
 .yh-songform {
-  /* The steps' height when the region's container gives it none; with one, they fill it. */
-  --yh-sf-step-h: calc(var(--control-h) * 2);
   /* The steps' letters and numerals: heading size beside the transport, numeral size in the form
      alone (below), stepping down in a narrow region. The steps read it where they are, so a
      container query only has to change this one value. */
   --yh-sf-step-font: var(--size-heading);
-  /* Breathing room, on the space scale: steps inside a part close, the parts (and Break's seam)
-     well apart, the captions clear of their steps, and the keys of the cluster one step apart. */
-  --yh-sf-step-gap: var(--space-2);
-  --yh-sf-part-gap: var(--space-6);
-  --yh-sf-caption-gap: var(--space-2);
-  --yh-sf-key-gap: var(--space-3);
-  --yh-sf-key-w: calc(var(--control-h) * 3);
-  /* The strip's top padding, where the part captions sit. */
-  --yh-sf-caption-h: calc(var(--size-caption) * 1.3 + var(--yh-sf-caption-gap));
 
   container-name: yh-songform;
   container-type: inline-size;
@@ -61,7 +55,7 @@
    size container, never shorter than its two key rows, so the keys can grow with it (below). */
 .yh-songform[data-half='transport'] {
   container-type: size;
-  min-height: calc(var(--control-h) * 2 + var(--yh-sf-key-gap));
+  min-height: calc(var(--control-h) * 2 + var(--space-3));
 }
 .yh-songform[data-half='transport'] .yh-songform__transport {
   align-self: stretch;
@@ -77,35 +71,28 @@
   white-space: nowrap;
 }
 
-/* The form: one strip, the parts and Break side by side, every step one height. The captions sit
-   in its top padding, not in a row of their own. */
+/* The form: one strip (a row Stack at gap 6), the parts and Break side by side, every step one
+   height. The captions sit in its top padding (one caption line and its gap), not in a row of
+   their own. */
 .yh-songform__form {
   position: relative;
-  display: flex;
-  align-items: stretch;
-  gap: var(--yh-sf-part-gap);
   box-sizing: border-box;
-  min-width: 0;
-  min-height: 0;
-  padding-top: var(--yh-sf-caption-h);
+  padding-top: calc(var(--size-caption) * 1.3 + var(--space-2));
 }
 
+/* The parts: a row Stack at gap 6, as an ordered list. */
 .yh-songform__parts {
-  display: flex;
   flex: 10 1 0;
-  align-items: stretch;
-  gap: var(--yh-sf-part-gap);
-  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.yh-songform__part,
-.yh-songform__mods {
+/* A part and Break: column Stacks at gap 0. Weighed two classes so the floor beats Stack's
+   min-width: 0. */
+.yh-songform .yh-songform__part,
+.yh-songform .yh-songform__mods {
   position: relative;
-  display: flex;
-  flex-direction: column;
   /* Never narrower than its steps, so the arrows between parts keep their room. */
   min-width: max-content;
 }
@@ -113,18 +100,14 @@
 .yh-songform__part[data-group='ending'] { flex: 3 1 0; }
 .yh-songform__part[data-group='main'] { flex: 5 1 0; }
 
-/* The one caption recipe, in the strip's top padding above its part. */
+/* The one caption recipe (Text role caption, tone muted), in the strip's top padding above its
+   part, in the theme's label case. */
 .yh-songform__caption {
   position: absolute;
   bottom: 100%;
   left: 0;
-  padding-bottom: var(--yh-sf-caption-gap);
-  color: var(--text-3);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-body);
-  letter-spacing: var(--tracking);
+  padding-bottom: var(--space-2);
   text-transform: var(--label-case);
-  line-height: 1.3;
   white-space: nowrap;
 }
 
@@ -133,7 +116,7 @@
   content: '→';
   position: absolute;
   top: 50%;
-  left: calc(var(--yh-sf-part-gap) / -2);
+  left: calc(var(--space-6) / -2);
   transform: translate(-50%, -50%);
   color: var(--text-3);
   font-size: var(--size-body);
@@ -144,7 +127,7 @@
 /* Break: an insert, not a step of the form, set apart by a seam. */
 .yh-songform__mods {
   flex: 0 0 auto;
-  padding-left: var(--yh-sf-part-gap);
+  padding-left: var(--space-6);
   border-left: var(--border-width) solid var(--border);
 }
 
@@ -155,9 +138,9 @@
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   grid-template-rows: minmax(0, 1fr);
-  /* The default height is the basis; a container with a height grows or shrinks it. */
-  flex: 1 1 var(--yh-sf-step-h);
-  gap: var(--yh-sf-step-gap);
+  /* Two control heights are the basis; a container with a height grows or shrinks it. */
+  flex: 1 1 calc(var(--control-h) * 2);
+  gap: var(--space-2);
   min-width: 0;
   /* The least a step may shrink to inside a short container: 1.25 control heights, or its
      letter or numeral (one line of it) and its block inset, whichever is more. */
@@ -214,14 +197,14 @@
   align-self: end;
   /* At least the key width, wider when a pack's case and tracking need it, never truncated. */
   grid-template-columns:
-    minmax(calc(var(--yh-sf-key-w) + var(--control-h) * 0.5), max-content)
-    repeat(4, minmax(var(--yh-sf-key-w), max-content));
+    minmax(calc(var(--control-h) * 3.5), max-content)
+    repeat(4, minmax(calc(var(--control-h) * 3), max-content));
   /* One control height each, or a share of the height the region is given (the transport alone). */
   grid-template-rows: minmax(var(--control-h), 1fr) minmax(var(--control-h), 1fr);
   grid-template-areas:
     'start sync-start fill-up fade accomp'
     'start sync-stop fill-down reset auto-fill';
-  gap: var(--yh-sf-key-gap);
+  gap: var(--space-3);
 }
 .yh-songform__start { grid-area: start; }
 .yh-songform__key { display: flex; min-width: 0; }
@@ -297,7 +280,8 @@
 /* Under 21 control heights (588px at regular) the three parts alone fill the line: Break moves
    under them. */
 @container (max-width: 21em) {
-  .yh-songform__form { flex-wrap: wrap; row-gap: var(--space-4); }
+  /* Two classes, so the wrap and row gap beat the Stack's gap step whatever the load order. */
+  .yh-songform .yh-songform__form { flex-wrap: wrap; row-gap: var(--space-4); }
   .yh-songform__parts { flex-basis: 100%; }
-  .yh-songform__mods { flex-basis: 100%; padding-left: 0; border-left: 0; }
+  .yh-songform .yh-songform__mods { flex-basis: 100%; padding-left: 0; border-left: 0; }
 }

@@ -3,6 +3,7 @@ import { Button } from '../../components/core/Button/Button';
 import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
 import { Separator } from '../../components/core/Separator/Separator';
 import { StatusDot } from '../../components/core/StatusDot/StatusDot';
+import { Stack } from '../../layout/Stack';
 import { Tabs, type TabItem } from '../../layout/Tabs';
 import { HealthSlot, type HealthTarget } from '../HealthSlot/HealthSlot';
 import { MetronomePopover } from './MetronomePopover';
@@ -124,6 +125,11 @@ export interface AppBarProps {
  * the health slot and where it sends you, the metronome's ▾ with `aria-haspopup`,
  * `aria-expanded` and `aria-controls`, the popover's Esc and press-outside, every tooltip key,
  * `nowPlaying` off the Stage, the fixed `width` and the `end` slot.
+ *
+ * **Tuning knobs.** `--yh-appbar-gap` (the gap between the bar's groups, and inside the end,
+ * connections and Panic groups; the bar's container queries tighten it), `--yh-appbar-inner` (the
+ * gap between the global switches, a step wider than Metronome▾'s 0 join; tightened at the
+ * narrowest widths).
  */
 export function AppBar({
   displayTabs,
@@ -174,16 +180,16 @@ export function AppBar({
 
   return (
     <header className="yh-appbar" data-part="root" style={style}>
-      <div className="yh-appbar__row" data-part="row">
+      <Stack direction="row" align="center" className="yh-appbar__row" data-part="row">
         <span className="yh-appbar__name" data-part="name">yahaha</span>
 
-        <nav className="yh-appbar__nav" data-part="nav" aria-label="Pages">
+        <Stack as="nav" direction="row" gap={0} align="center" className="yh-appbar__nav" data-part="nav" aria-label="Pages">
           <Tabs name="Display pages" items={displayTabs} value={chosen} onChange={(id) => onChoose?.(id)} tipAction={tipAction} />
           <span className="yh-appbar__runs-gap" data-part="runs-gap">
             <Separator />
           </span>
           <Tabs name="Full pages" items={fullTabs} value={chosen} onChange={(id) => onChoose?.(id)} tipAction={tipAction} />
-        </nav>
+        </Stack>
 
         <span className="yh-appbar__middle" data-part="middle">
           {nowPlaying && (
@@ -196,14 +202,14 @@ export function AppBar({
         </span>
 
         {end !== undefined && (
-          <span className="yh-appbar__end" data-part="end">
+          <Stack as="span" direction="row" align="center" className="yh-appbar__end" data-part="end">
             <Separator />
             {end}
-          </span>
+          </Stack>
         )}
 
-        <span className="yh-appbar__switches" data-part="switches" role="group" aria-label="Global switches">
-          <span className="yh-appbar__metronome" data-part="metronome" role="group" aria-label="Metronome">
+        <Stack as="span" direction="row" align="center" className="yh-appbar__switches" data-part="switches" role="group" aria-label="Global switches">
+          <Stack as="span" direction="row" gap={0} align="center" className="yh-appbar__metronome" data-part="metronome" role="group" aria-label="Metronome">
             <LampButton
               label="Metronome"
               on={metronome}
@@ -244,7 +250,7 @@ export function AppBar({
                 />
               </span>
             )}
-          </span>
+          </Stack>
           <LampButton
             label="Unison"
             on={unison}
@@ -263,11 +269,15 @@ export function AppBar({
             tipAction={tipAction}
             onPress={() => onHelp?.(!help)}
           />
-        </span>
+        </Stack>
 
-        <span className="yh-appbar__status" data-part="status" role="group" aria-label="Connections">
+        <Stack as="span" direction="row" align="center" className="yh-appbar__status" data-part="status" role="group" aria-label="Connections">
           <Separator />
-          <span
+          <Stack
+            as="span"
+            direction="row"
+            gap={2}
+            align="center"
             className="yh-appbar__launchkey"
             data-part="launchkey"
             role="status"
@@ -277,7 +287,7 @@ export function AppBar({
           >
             <StatusDot hue={launchkey ? 'ok' : 'd'} hollow={!launchkey} />
             <span className="yh-appbar__launchkey-word" data-part="launchkey-word">Launchkey</span>
-          </span>
+          </Stack>
           <span className="yh-appbar__health" data-part="health">
             <HealthSlot
               failedPart={failedPart}
@@ -289,9 +299,9 @@ export function AppBar({
               onOpen={onHealth}
             />
           </span>
-        </span>
+        </Stack>
 
-        <span className="yh-appbar__panic" data-part="panic">
+        <Stack as="span" direction="row" align="center" className="yh-appbar__panic" data-part="panic">
           <Separator />
           <Button
             label="Panic"
@@ -301,8 +311,8 @@ export function AppBar({
             tipAction={tipAction}
             onPress={() => onPanic?.()}
           />
-        </span>
-      </div>
+        </Stack>
+      </Stack>
     </header>
   );
 }

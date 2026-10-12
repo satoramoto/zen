@@ -1,9 +1,6 @@
-/* HealthSlot: the app bar's audio health. Reads contract variables only, plus the local ones below. */
+/* HealthSlot: the app bar's audio health. Reads contract variables only. */
 
 .yh-health-slot {
-  /* The state's colour role: faint when calm, secondary when off, danger for trouble. */
-  --yh-health-slot-hue: var(--text-3);
-
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -26,12 +23,10 @@
 }
 
 .yh-health-slot[data-state='off'] {
-  --yh-health-slot-hue: var(--text-2);
   color: var(--text-2);
 }
 
 .yh-health-slot[data-state='trouble'] {
-  --yh-health-slot-hue: var(--danger);
   color: var(--text-1);
 }
 
@@ -80,8 +75,9 @@
   border-color: color-mix(in srgb, var(--danger) 35%, transparent);
 }
 
+/* Only off and trouble draw a button (calm is text); off tints in its own --text-2, trouble below. */
 .yh-health-slot__button:hover {
-  background: color-mix(in srgb, var(--yh-health-slot-hue) 14%, transparent);
+  background: color-mix(in srgb, var(--text-2) 14%, transparent);
 }
 
 .yh-health-slot[data-state='trouble'] .yh-health-slot__button:hover {
