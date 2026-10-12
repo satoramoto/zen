@@ -1,11 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { Region } from '../../layout/Region';
+import { Screen } from '../../layout/Screen';
 import { AppBar, type AppBarProps } from '../AppBar/AppBar';
 import { Display, type DisplayDensity, type DisplayProps } from '../Display/Display';
-import { FaderBank, type FaderBankProps } from '../FaderBank/FaderBank';
+import { FaderBankRegion, type FaderBankProps } from '../FaderBank/FaderBank';
 import { Keys, type KeysProps } from '../Keys/Keys';
-import { KnobBank, type KnobBankProps } from '../KnobBank/KnobBank';
-import { PadBank, type PadBankProps } from '../PadBank/PadBank';
+import { KnobBankRegion, type KnobBankProps } from '../KnobBank/KnobBank';
+import { PadBankRegion, type PadBankProps } from '../PadBank/PadBank';
 import { SongForm, type SongFormProps } from '../SongForm/SongForm';
 import { StatusLine, type StatusLineProps } from '../StatusLine/StatusLine';
 import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
@@ -43,7 +44,7 @@ export interface StageProps {
   pads: Omit<PadBankProps, 'tipAction' | 'columns'>;
   /** The keyboard: range, split, held notes. Its width follows the screen. */
   keys: Omit<KeysProps, 'width' | 'tipAction'>;
-  /** The status line: under the transport (stacked), or at the foot of the knobs and pads (split). */
+  /** The status line: in the screen's fixed footer, under the keys, in every layout. */
   status: Omit<StatusLineProps, 'width'>;
   /** The app's tooltip action, passed to every region. */
   tipAction?: StageTipAction;
@@ -87,39 +88,44 @@ function useSlotWidth(fallback: number) {
 export type StageHeroDensity = Extract<DisplayDensity, 'full' | 'compact'>;
 
 /**
- * Fits the screen to its frame, in three steps, each only when the one before still leaves the
- * regions more room than the frame gives:
+ * Fits the screen's grid (the regions between the fixed app bar and the fixed keys and status
+ * line) to the room the screen leaves it, in three steps, each only when the one before still
+ * leaves the regions more room than that gives:
  *
- * 1. The screen is laid out at the frame's own size, at zoom 1, with the hero at `full` density.
- * 2. If that overflows, the hero goes `compact` (its tight chrome) and the screen refits. The frame
- *    size where `full` overflowed is kept, with the compact screen's content size at that frame.
- *    A larger frame tries `full` again, and so does smaller content at the same frame (a pack
- *    switch to a denser pack, a shorter status): one retry each time, and if `full` still
- *    overflows the hero settles back on `compact` with the new content size remembered.
- * 3. If the compact screen still overflows (a frame below the smallest screen, or a large-density
- *    pack), the whole screen is zoomed down by the one factor that makes it fit, so no region is
- *    squeezed out of shape and nothing is cut off. A zoomed screen is laid out wider than the
- *    frame, so it may refit a little taller; a few passes settle it.
+ * 1. The grid is laid out at its room's own size, at zoom 1, with the hero at `full` density.
+ * 2. If that overflows, the hero goes `compact` (its tight chrome) and the grid refits. The room
+ *    where `full` overflowed is kept, with the compact grid's content size at that room. A larger
+ *    room tries `full` again, and so does smaller content in the same room (a pack switch to a
+ *    denser pack): one retry each time, and if `full` still overflows the hero settles back on
+ *    `compact` with the new content size remembered.
+ * 3. If the compact grid still overflows (a frame below the smallest screen, or a large-density
+ *    pack), the grid alone is zoomed down by the one factor that makes it fit, so no region is
+ *    squeezed out of shape and nothing is cut off; the header and footer never zoom. A zoomed grid
+ *    is laid out wider than its room, so it may refit a little taller; a few passes settle it.
  *
- * It refits when the frame resizes and when the screen's content does: the screen's own box is
- * set here, so its rows are observed too (a pack switch, a status message, the hero's density).
- * Nothing measures in jsdom: the screen stays at zoom 1 and the hero `full`.
+ * The room is the grid's own track: each fit first clears the grid's box and reads it. It refits
+ * when the frame resizes, when the header or footer does (a status message, the keys), and when a
+ * region's content does (a pack switch, the hero's density). Nothing measures in jsdom: the grid
+ * stays at zoom 1 and the hero `full`.
  */
 function useFit(layout: StageLayout) {
   const frame = useRef<HTMLDivElement>(null);
-  const screen = useRef<HTMLDivElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
   const [hero, setHero] = useState<StageHeroDensity>('full');
-  /** The frame size at which the `full` hero last overflowed. */
+  /** The room at which the `full` hero last overflowed. */
   const tight = useRef<{ w: number; h: number; content?: { w: number; h: number } } | null>(null);
   useLayoutEffect(() => {
     const outer = frame.current;
-    const inner = screen.current;
+    const inner = grid.current;
     if (!outer || !inner || typeof ResizeObserver === 'undefined') return;
     let settled = false;
     const fit = () => {
       if (settled) return;
-      const w = outer.clientWidth;
-      const h = outer.clientHeight;
+      inner.style.zoom = '';
+      inner.style.width = '';
+      inner.style.height = '';
+      const w = inner.clientWidth;
+      const h = inner.clientHeight;
       if (w <= 0 || h <= 0) return;
       if (hero === 'compact' && tight.current && (w > tight.current.w || h > tight.current.h)) {
         tight.current = null;
@@ -159,11 +165,12 @@ function useFit(layout: StageLayout) {
     fit();
     const observer = new ResizeObserver(fit);
     observer.observe(outer);
-    observer.observe(inner);
-    for (const row of Array.from(inner.children)) observer.observe(row);
+    // The header and footer (their height is the grid's room), and each region of the grid.
+    for (const part of Array.from(inner.parentElement?.children ?? [])) if (part !== inner) observer.observe(part);
+    for (const region of Array.from(inner.children)) observer.observe(region);
     return () => observer.disconnect();
   }, [hero, layout]);
-  return [frame, screen, hero] as const;
+  return [frame, grid, hero] as const;
 }
 
 /**
@@ -187,18 +194,20 @@ function useFit(layout: StageLayout) {
  * tempo and chord to reach their full sizes at the `full` density, so now playing is the loudest
  * thing a metre away. *No dead bands*: the top row is exactly as tall as the hero (282 px at the
  * board, 190 at 1217 × 752), and the transport fills that height beside it (SongForm sizes its
- * own two key rows and their labels to the height; the Stage never reaches in) with the status
- * line at its foot, so the transport is a block of large keys rather than a short row under empty
- * space. The strip and the band share the rest 72 : 380, each never below its floor. The pads are
+ * own two key rows and their labels to the height; the Stage never reaches in), so the
+ * transport is a block of large keys rather than a short row under empty space. The strip and the band share the rest 72 : 380, each never below its floor. The pads are
  * squares (PadBank), so a tall band only left empty height under them; the band's floor now counts
  * only the mixer's and the pads' least, and that height went to the full hero.
  *
- * *Regions on the plate* (`references/layout.md`, spacing on one scale): every region (the hero,
- * the transport column, the song form strip, the mixer, the knobs, the pads, the keys) is a
- * library `Region`, drawn by the theme's `plate` material, so the material decides how a region
- * looks (a hairline with room under it, a filled card, a brushed panel), the room inside it
- * (`--mat-plate-inset`) and the space between regions (`--mat-plate-gap`, between every row and
- * at the column seam). No region paints its own panel inside one, and no text is made smaller to
+ * *A screen of regions that stay put* (`src/library/layout/`): the Stage is a library `Screen`.
+ * Its header (the AppBar) and footer (the Keyboard region and the status line) are fixed; between
+ * them a named grid (`areas`) holds the regions Hero, Transport, Song form, Mixer, Knobs and Pads.
+ * Each is a library `Region` on the theme's `plate` material, so the material decides how a
+ * region looks, the room inside it (`--mat-plate-inset`) and the space between regions
+ * (`--mat-plate-gap`). Tabs live in the region: the pad banks are the Pads region's views, the
+ * knob pages the Knobs region's, the fader pages the Mixer's with its layer `Tabs` in the aside
+ * (`PadBankRegion`, `KnobBankRegion`, `FaderBankRegion`), so a tab swaps the content inside a
+ * frame that never moves. No region sits inside another's plate, and no text is made smaller to
  * buy the room.
  *
  * *Mapping* (the Launchkey's pads play the sections): the pad tabs are Sections, Quick Racks,
@@ -209,9 +218,8 @@ function useFit(layout: StageLayout) {
  * A pad press calls exactly what that step or key calls (`onSection`, `onSyncStart`,
  * `onAutoFill`, `onSyncStop`, `onStartStop`), and Tap is the hero's Tap, timed the same way.
  *
- * *One column seam* (`references/layout.md`, alignment): the screen is one two-column grid; the top
- * row and the band are subgrids of it, so the hero and the mixer share the left track and the
- * transport and the knobs and pads the right one (1.25 : 1, the right never narrower than the
+ * *One column seam* (`references/layout.md`, alignment): the grid has two columns, so the hero
+ * and the mixer share the left track and the transport and the knobs and pads the right one (1.25 : 1, the right never narrower than the
  * transport's 18 control heights). One vertical seam runs from the bar to the keys, the one plate
  * gap beside the hero and beside the mixer. The old screen had two seams 34 px
  * apart (731 and 765 px), which read as a mistake.
@@ -221,17 +229,16 @@ function useFit(layout: StageLayout) {
  * AppBar, the part colours only on the parts (no hue legend on this screen: the mixer names each
  * part in its hue). The Display's parts column is not shown: the mixer already names each part's
  * sound under its fader, so a second list would be a second place for one fact. The status line
- * sits under the transport, which it most often speaks about ("starts at the next Start"), rather
- * than holding an empty row over the keys or taking pad height from the band. The pads are two
+ * sits in the fixed footer under the keys, so a message never moves a region. The pads are two
  * rows of eight under the eight knobs, so each knob stands over its two pads as on the hardware.
  * The one deliberate second place: on the Sections bank the pads mirror the hardware's pads, so
  * each section and the five transport pads appear there as well as in the strip and transport;
  * they are the same controls (one state, one callback), not a second set.
  *
- * *Hierarchy at every size, then fit*: the screen is laid out at the frame's own size. Where it has
- * the height (1440 × 900) the hero is the Display's `full` density; where it is short (1217 × 752)
- * the hero goes `compact`; only if the regions still need
- * more room than the frame has is the whole screen zoomed down, so nothing is cut off. The
+ * *Hierarchy at every size, then fit*: the grid is laid out at the room the header and footer
+ * leave it. Where the screen has the height (1440 × 900) the hero is the Display's `full`
+ * density; where it is short (1217 × 752) the hero goes `compact`; only if the regions still need
+ * more room than that is the grid (never the bar or the keys) zoomed down, so nothing is cut off. The
  * previous `split` layout (the song form over the transport beside the hero) stays as `layout`.
  *
  * **Kept.** The original's regions and every one of their callbacks, passed straight through,
@@ -241,7 +248,7 @@ function useFit(layout: StageLayout) {
  */
 export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked' }: StageProps) {
   const [keysSlot, keysWidth] = useSlotWidth(width === undefined ? KEYS_FALLBACK : Math.min(KEYS_FALLBACK, width - 48));
-  const [frame, screen, heroDensity] = useFit(layout);
+  const [frame, grid, heroDensity] = useFit(layout);
   const taps = useRef<number[]>([]);
 
   const onTap = () => {
@@ -262,74 +269,90 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
   if (width !== undefined) size.width = `${width}px`;
   if (height !== undefined) size.height = `${height}px`;
 
-  // Stacked: under the transport, which it most often speaks about ("starts at the next Start").
-  // Split: its own region at the foot of the knobs and pads, level with the mixer's Functions line.
-  const statusLine = (
-    <div className="yh-stage__status" data-part="status">
-      <StatusLine {...status} />
-    </div>
-  );
+  const stacked = layout === 'stacked';
+  const plan = GRID[layout];
 
-  // Every region is a Region on the theme's plate material; the slot inside it keeps the region's
-  // `data-part` and is what the region's content fills (the keys measure theirs).
+  // A Screen: the app bar fixed on top, the keys and the status line fixed at the foot, and between
+  // them the grid of regions that stay put; each region's own tabs swap what is inside it.
   return (
-    <div ref={frame} className="yh-stage" data-part="root" style={size} role="group" aria-label="Stage">
-      <div ref={screen} className="yh-stage__screen" data-part="screen" data-hero={heroDensity} data-layout={layout}>
-        <div className="yh-stage__bar" data-part="bar">
-          <AppBar {...appBar} tipAction={tipAction} />
-        </div>
-        <div className="yh-stage__top" data-part="now">
-          <Region name="Now playing" className="yh-stage__region yh-stage__hero-region">
-            <div className="yh-stage__display" data-part="hero">
-              <Display {...display} parts={undefined} density={heroDensity} tipAction={tipAction} onTap={onTap} />
+    <div ref={frame} className="yh-stage" data-part="root" style={size} data-layout={layout} data-hero={heroDensity}>
+      <Screen
+        name="Stage"
+        className="yh-stage__screen"
+        header={
+          <div className="yh-stage__bar" data-part="bar">
+            <AppBar {...appBar} tipAction={tipAction} />
+          </div>
+        }
+        footer={
+          <>
+            <Region name="Keyboard" className="yh-stage__region yh-stage__keys-region">
+              <div className="yh-stage__keys" data-part="keys" ref={keysSlot}>
+                <Keys {...keys} width={keysWidth} tipAction={tipAction} />
+              </div>
+            </Region>
+            <div className="yh-stage__status" data-part="status">
+              <StatusLine {...status} />
             </div>
-          </Region>
-          <Region name={layout === 'stacked' ? 'Transport column' : 'Song form column'} className="yh-stage__region yh-stage__form-region">
+          </>
+        }
+        areas={plan.areas}
+        columns={plan.columns}
+        rows={plan.rows}
+        gridRef={grid}
+      >
+        <Region name="Hero" area="hero" className="yh-stage__region yh-stage__hero">
+          <div className="yh-stage__display" data-part="hero">
+            <Display {...display} parts={undefined} density={heroDensity} tipAction={tipAction} onTap={onTap} />
+          </div>
+        </Region>
+        {stacked ? (
+          <>
+            <Region name="Transport keys" area="transport" className="yh-stage__region yh-stage__transport">
+              <div className="yh-stage__form" data-part="transport">
+                <SongForm {...songForm} part="transport" tipAction={tipAction} />
+              </div>
+            </Region>
+            <Region name="Song form strip" area="form" className="yh-stage__region yh-stage__strip">
+              <div className="yh-stage__fill" data-part="strip">
+                <SongForm {...songForm} part="form" tipAction={tipAction} />
+              </div>
+            </Region>
+          </>
+        ) : (
+          <Region name="Form and transport" area="form" className="yh-stage__region yh-stage__form-region">
             <div className="yh-stage__form" data-part="transport">
-              <SongForm {...songForm} part={layout === 'stacked' ? 'transport' : 'both'} tipAction={tipAction} />
-              {layout === 'stacked' && statusLine}
-            </div>
-          </Region>
-        </div>
-        {layout === 'stacked' && (
-          <Region name="Song form strip" className="yh-stage__region yh-stage__strip-region">
-            <div className="yh-stage__strip" data-part="strip">
-              <SongForm {...songForm} part="form" tipAction={tipAction} />
+              <SongForm {...songForm} part="both" tipAction={tipAction} />
             </div>
           </Region>
         )}
-        <div className="yh-stage__band" data-part="band">
-          <Region name="Mixer" className="yh-stage__region yh-stage__faders-region">
-            <div className="yh-stage__faders" data-part="faders">
-              <FaderBank {...faders} tipAction={tipAction} />
-            </div>
-          </Region>
-          <div className="yh-stage__controls" data-part="controls">
-            <Region name="Knob panel" className="yh-stage__region yh-stage__knobs-region">
-              <div className="yh-stage__knobs" data-part="knobs">
-                <KnobBank {...knobs} tipAction={tipAction} />
-              </div>
-            </Region>
-            <Region name="Pad panel" className="yh-stage__region yh-stage__pads-region">
-              <div className="yh-stage__pads" data-part="pads">
-                <PadBank {...shownPads} columns={8} tipAction={tipAction} />
-              </div>
-            </Region>
-            {layout === 'split' && (
-              <Region name="Status" className="yh-stage__region yh-stage__status-region">
-                {statusLine}
-              </Region>
-            )}
-          </div>
-        </div>
-        <Region name="Keyboard" className="yh-stage__region yh-stage__keys-region">
-          <div className="yh-stage__keys" data-part="keys" ref={keysSlot}>
-            <Keys {...keys} width={keysWidth} tipAction={tipAction} />
-          </div>
-        </Region>
-      </div>
+        <FaderBankRegion {...faders} area="mixer" className="yh-stage__region yh-stage__mixer" tipAction={tipAction} />
+        <KnobBankRegion {...knobs} area="knobs" className="yh-stage__region yh-stage__knobs" tipAction={tipAction} />
+        <PadBankRegion {...shownPads} area="pads" className="yh-stage__region yh-stage__pads" columns={8} tipAction={tipAction} />
+      </Screen>
     </div>
   );
 }
+
+/**
+ * Each layout's grid. Stacked: the hero with the transport beside it, the song form one strip
+ * across, then the mixer beside the knobs over the pads, on one column seam (1.25 : 1); the strip
+ * and the pads share what the hero and knobs leave, 72 : 380. Split: the hero, and beside it the
+ * song form over the transport at its own width; the mixer, knobs and pads below on the same seam.
+ * `min-content` for the hero's row: the hero clips its overflow, so `auto` would let the row
+ * shrink under it instead of overflowing the grid and refitting.
+ */
+const GRID: Record<StageLayout, { areas: string[]; columns: string; rows: string }> = {
+  stacked: {
+    areas: ['hero transport', 'form form', 'mixer knobs', 'mixer pads'],
+    columns: 'minmax(auto, 1.25fr) minmax(auto, 1fr)',
+    rows: 'min-content minmax(auto, 72fr) auto minmax(min-content, 380fr)',
+  },
+  split: {
+    areas: ['hero form', 'mixer knobs', 'mixer pads'],
+    columns: 'minmax(auto, 1fr) auto',
+    rows: 'min-content auto minmax(min-content, 1fr)',
+  },
+};
 
 export default Stage;

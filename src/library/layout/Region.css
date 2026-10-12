@@ -1,13 +1,12 @@
-/* Region: a block of a screen on the theme's plate material, with optional tabbed views.
-   Contract variables only. */
+/* Region: a block of a screen on the theme's plate material, with optional tabbed views. The
+   header strip has its own inset and rule (--mat-plate-head-*), so a system can pull its tabs to
+   the plate's edge. Contract variables only. */
 
 .lib-region {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: var(--space-2);
   min-width: 0;
   min-height: 0;
-  padding: var(--mat-plate-inset);
   border-radius: var(--radius-card);
   background: var(--mat-plate-texture), var(--mat-plate-fill);
   box-shadow: var(--mat-plate-shadow);
@@ -19,6 +18,8 @@
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
+  padding: var(--mat-plate-head-inset);
+  box-shadow: var(--mat-plate-head-rule);
 }
 .lib-region__label {
   color: var(--text-3);
@@ -36,47 +37,10 @@
   min-width: 0;
 }
 
-/* Tabs: key faces; the chosen one is the solid selection. */
-.lib-region__tabs {
-  display: flex;
-  gap: var(--space-1);
-  min-width: 0;
-}
-.lib-region__tab {
-  height: calc(var(--control-h) * 0.85);
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: var(--radius-control);
-  background: var(--mat-key-texture), var(--mat-key-fill);
-  box-shadow: var(--mat-key-shadow);
-  color: var(--text-2);
-  font: inherit;
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking);
-  text-transform: var(--label-case);
-  white-space: nowrap;
-  cursor: pointer;
-}
-.lib-region__tab:hover { color: var(--text-1); }
-.lib-region__tab[aria-selected='true'] {
-  background: var(--selected);
-  color: var(--selected-text);
-  box-shadow: var(--mat-key-pressed);
-  cursor: default;
-}
-.lib-region__tab[aria-disabled] {
-  color: var(--text-4);
-  cursor: not-allowed;
-}
-.lib-region__tab:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 .lib-region__body {
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
+  padding: var(--mat-plate-inset);
 }

@@ -2,18 +2,18 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { KnobBank, type KnobItem } from './KnobBank';
+import { KnobBankRegion, type KnobItem } from './KnobBank';
 import { knobPages, knobsByPage, reverbKnobs, styleKnobs } from './KnobBank.fixtures';
 
 /**
- * The Stage's Knobs region: the knob page tabs (no title: the tabs name the region), and eight knobs across the
- * region. Compare each story with its namesake under "Yahaha baseline / Components / KnobBank":
- * same names, same sample data. A tab choice is a callback with the page's index; every knob change
+ * The Stage's Knobs region, as the Stage draws it: one `Region` named Knobs whose views are the
+ * knob pages (no title: the tabs name the region), and the KnobBank's eight knobs as its body.
+ * Compare each story with its namesake under "Yahaha baseline / Components / KnobBank": same names, same sample data. A tab choice is a callback with the page's index; every knob change
  * carries the knob's position.
  */
 const meta = {
   title: 'Library/Yahaha/Components/KnobBank',
-  component: KnobBank,
+  component: KnobBankRegion,
   decorators: [
     withLibraryTheme,
     (Story) => (
@@ -39,7 +39,7 @@ const meta = {
     page: { control: { type: 'number', min: 0, max: knobPages.length - 1, step: 1 } },
     pageLabel: { control: 'text' },
   },
-} satisfies Meta<typeof KnobBank>;
+} satisfies Meta<typeof KnobBankRegion>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -113,7 +113,7 @@ export const Playground: Story = {
       );
     };
     return (
-      <KnobBank
+      <KnobBankRegion
         {...args}
         page={page}
         knobs={sets[page]}

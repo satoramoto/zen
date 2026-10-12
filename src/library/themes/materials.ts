@@ -45,7 +45,29 @@ const flatHandle: Material = {
 /** A lamp blooms by the palette's bloom (0px on flat palettes). */
 const flatLit = { glow: '0 0 var(--bloom) var(--lit)' }; // Fader.css fill, Pad.css, Button.css, library.css .lib-lamp
 
-const flat = { well: flatWell, screen: flatScreen, key: flatKey, handle: flatHandle, lit: flatLit };
+/** Popovers and menus: an opaque raised surface (MetronomePopover's card). */
+const flatFloat: Materials['float'] = {
+  fill: 'var(--surface-2)', // MetronomePopover.css
+  shadow: `inset 0 0 0 var(--border-width) var(--border-strong), 0 8px 24px -8px oklch(from var(--surface-0) calc(l * 0.25) c h / 0.6)`, // added
+  texture: 'none',
+  backdrop: 'none',
+};
+
+const flat = { well: flatWell, screen: flatScreen, key: flatKey, handle: flatHandle, lit: flatLit, float: flatFloat };
+
+const bare: Material = { fill: 'transparent', shadow: NO_SHADOW, texture: 'none' };
+
+/** Underline tabs: printed labels, the chosen one underlined in ink (Push's nav, Ableton's rules). */
+const underlineTabs: Materials['tabs'] = {
+  track: bare,
+  tab: bare,
+  chosen: { fill: 'transparent', shadow: 'inset 0 -2px 0 var(--text-1)', texture: 'none' }, // ChosenTabs underline look
+  ink: 'var(--text-3)',
+  chosenInk: 'var(--text-1)',
+  pad: '0px',
+  gap: 'var(--space-3)',
+  tabPad: '0 0 var(--space-1)',
+};
 
 export const pushMaterials: Materials = {
   id: 'push',
@@ -62,7 +84,9 @@ export const pushMaterials: Materials = {
     texture: 'none', // chromes.ts push
     inset: 'var(--space-2) 0 0', // added: Push has no boxes; a region is its hairline and the room under it
     gap: 'var(--space-4)', // added
+    head: { inset: 'var(--space-2) 0 0', rule: NO_SHADOW }, // added: the plate's hairline already heads it
   },
+  tabs: underlineTabs,
   ...flat,
 };
 
@@ -81,6 +105,18 @@ export const elektronMaterials: Materials = {
     texture: 'none', // chromes.ts elektron
     inset: 'var(--space-3)', // added: a flat filled panel needs room inside
     gap: 'var(--space-2)', // added: panels butt up close, like hardware sections
+    head: { inset: 'var(--space-2) var(--space-3) 0', rule: NO_SHADOW }, // added
+  },
+  tabs: {
+    // added: Elektron's square filled selection, as its screens' page tabs
+    track: bare,
+    tab: bare,
+    chosen: { fill: 'var(--selected)', shadow: NO_SHADOW, texture: 'none' },
+    ink: 'var(--text-3)',
+    chosenInk: 'var(--selected-text)',
+    pad: '0px',
+    gap: 'var(--space-1)',
+    tabPad: '0 var(--space-2)',
   },
   ...flat,
 };
@@ -100,7 +136,9 @@ export const abletonMaterials: Materials = {
     texture: 'none', // chromes.ts ableton
     inset: 'var(--space-2) 0 0', // added: a ruled region, the 2px rule then room
     gap: 'var(--space-4)', // added
+    head: { inset: 'var(--space-2) 0 0', rule: NO_SHADOW }, // added: the 2px rule heads it
   },
+  tabs: underlineTabs,
   ...flat,
 };
 
@@ -120,6 +158,18 @@ export const linearMaterials: Materials = {
     texture: 'none', // chromes.ts linear
     inset: 'var(--space-3)', // added: a layered card
     gap: 'var(--space-3)', // added
+    head: { inset: 'var(--space-2) var(--space-3)', rule: 'inset 0 -1px 0 var(--border)' }, // added: Linear's ruled card header
+  },
+  tabs: {
+    // added: Linear's segmented control, a raised chip in a sunk track
+    track: { fill: 'var(--surface-0)', shadow: 'inset 0 0 0 1px var(--border)', texture: 'none' },
+    tab: bare,
+    chosen: { fill: 'var(--surface-3)', shadow: `inset 0 0 0 1px var(--border-strong), 0 1px 2px ${shade(0.3)}`, texture: 'none' },
+    ink: 'var(--text-3)',
+    chosenInk: 'var(--text-1)',
+    pad: '2px',
+    gap: '2px',
+    tabPad: '0 var(--space-3)',
   },
   ...flat,
 };
@@ -163,6 +213,18 @@ export const hardwareMaterials: Materials = {
     texture: `repeating-linear-gradient(0deg, ${light(0.018)} 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, ${shade(0.025)} 0 2px, transparent 2px 5px)`,
     inset: 'var(--space-3)', // app.css .panel padding (14–16px at the source's scale)
     gap: 'var(--space-3)', // app.css: panels a dozen px apart on the chassis
+    head: { inset: 'var(--space-2) var(--space-3) 0', rule: NO_SHADOW }, // HwButton rows sit near the panel's top edge
+  },
+  tabs: {
+    // HwButton.svelte selector rows: buttons set in a sunk well, the chosen one raised and lit ink
+    track: { fill: 'var(--mat-well-fill)', shadow: 'var(--mat-well-shadow)', texture: 'none' },
+    tab: bare,
+    chosen: { fill: 'var(--mat-key-fill)', shadow: 'var(--mat-key-shadow)', texture: 'none' },
+    ink: 'var(--text-3)',
+    chosenInk: 'var(--text-1)',
+    pad: '3px',
+    gap: '2px',
+    tabPad: '0 var(--space-3)',
   },
   well: {
     // app.css .mat-well: linear-gradient(180deg, --well-edge, --well 30%)
@@ -211,6 +273,12 @@ export const hardwareMaterials: Materials = {
     ].join(', '),
     // Fader.svelte .cap grip lines; its centre line stays the component's indicator
     texture: `repeating-linear-gradient(180deg, ${light(0.1)} 0 1px, transparent 1px 3px)`,
+  },
+  float: {
+    fill: raised, // app.css popovers sit on the raised material
+    shadow: `0 0 0 1px ${shade(0.5)}, inset 0 1px 0 ${light(0.16)}, 0 18px 40px -12px ${shade(0.7)}`, // app.css .mat-chassis drop
+    texture: 'none',
+    backdrop: 'none',
   },
   lit: {
     // Fader.svelte lit fill: 0 0 8px color-mix(accent 70%, transparent); max() with bloom added

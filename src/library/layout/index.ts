@@ -3,3 +3,4 @@
 export { Screen, type ScreenProps } from './Screen';
 export { Region, RegionView, type RegionProps, type RegionViewProps } from './Region';
 export { Group, type GroupProps } from './Group';
+export { Tabs, type TabsProps, type TabItem } from './Tabs';

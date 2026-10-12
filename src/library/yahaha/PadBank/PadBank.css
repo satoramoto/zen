@@ -1,8 +1,9 @@
-/* PadBank: the Pads header with its bank tabs, and sixteen square pad cells. Reads only contract
+/* PadBank: sixteen square pad cells in the Pads region's body (the bank tabs are the Region's). Reads only contract
    variables and the --yh-padbank-* / --yh-pad-* ones declared here. */
 
 .yh-padbank {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   box-sizing: border-box;
   width: 100%;
@@ -13,7 +14,7 @@
   font-family: var(--font-sans);
 }
 
-/* The room the pads get: whatever the region leaves under the tabs. A size container, so the pads
+/* The room the pads get: whatever the region's body gives. A size container, so the pads
    can be sized from its width and its height, whichever is tighter. With no height given (a bank
    on its own), its height follows its width (eight a row: a quarter of it; 4 × 4: square), so the
    width decides; in a region with a height, it grows or shrinks to that height. */
@@ -26,7 +27,6 @@
   display: grid;
   /* The grid hangs under the tabs and centres across: spare height goes below the pads. */
   place-content: start center;
-  margin-top: var(--space-2);
 }
 .yh-padbank__room[data-columns='4'] {
   aspect-ratio: 1;

@@ -4,7 +4,7 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { KnobBank, type KnobBankProps } from './KnobBank';
+import { KnobBank, KnobBankRegion, type KnobBankProps } from './KnobBank';
 import { knobPages, reverbKnobs, styleKnobs } from './KnobBank.fixtures';
 
 afterEach(() => cleanup());
@@ -14,26 +14,34 @@ function setup(props: Partial<KnobBankProps> = {}) {
   const onPress = vi.fn<(index: number) => void>();
   const onStep = vi.fn<(index: number, delta: number) => void>();
   render(
-    <KnobBank knobs={styleKnobs} pages={knobPages} page={0} onPage={onPage} onPress={onPress} onStep={onStep} {...props} />,
+    <KnobBankRegion knobs={styleKnobs} pages={knobPages} page={0} onPage={onPage} onPress={onPress} onStep={onStep} {...props} />,
   );
   return { onPage, onPress, onStep };
 }
 
 describe('KnobBank pages', () => {
-  it('is a region named by its heading, with one tab per page and the chosen one selected', () => {
+  it('is one region named Knobs, with one tab per page and the chosen one selected', () => {
     setup({ page: 3 });
     const region = screen.getByRole('region', { name: 'Knobs' });
-    const list = within(region).getByRole('tablist', { name: 'Knob page' });
+    const list = within(region).getByRole('tablist', { name: 'Knobs' });
     expect(within(list).getAllByRole('tab').map((t) => t.textContent)).toEqual(knobPages);
     expect(within(list).getByRole('tab', { name: 'Reverb' })).toHaveAttribute('aria-selected', 'true');
     expect(within(list).getByRole('tab', { name: 'Style' })).toHaveAttribute('aria-selected', 'false');
     expect(within(list).getByRole('tab', { name: 'Reverb' })).toHaveAttribute('data-tip', 'knobs.page');
   });
 
-  it('has no title: the region is named Knobs, the page tabs are underlined', () => {
+  it('has no title and no region inside the region: the bank is the tab panel', () => {
     setup();
     expect(screen.queryByRole('heading')).toBeNull();
-    expect(screen.getByRole('region', { name: 'Knobs' }).querySelector('.yh-chosen-tabs')).toHaveAttribute('data-look', 'underline');
+    expect(screen.getAllByRole('region')).toHaveLength(1);
+    expect(screen.getByRole('tabpanel')).toContainElement(screen.getByRole('button', { name: /^Knob 1:/ }));
+  });
+
+  it('the bank alone draws the knobs and no tabs', () => {
+    render(<KnobBank knobs={styleKnobs} pages={knobPages} page={0} />);
+    expect(screen.queryByRole('tab')).toBeNull();
+    expect(screen.queryByRole('region')).toBeNull();
+    expect(screen.getAllByRole('button')).toHaveLength(7);
   });
 
   it('a tab click or an arrow key asks for that page by index', async () => {
@@ -136,13 +144,12 @@ describe('KnobBank knobs', () => {
     expect(tipAction).toHaveBeenCalledWith(expect.any(HTMLElement), 'knobs.knob');
   });
 
-  it('applies the tooltip hook once to each page tab, with knobs.page', () => {
+  it('gives each page tab the knobs.page key, and the hook only to the knobs', () => {
     const tipAction = vi.fn();
     setup({ tipAction });
-    const calls = tipAction.mock.calls as [HTMLElement, string][];
     const tabs = screen.getAllByRole('tab');
     expect(tabs).toHaveLength(knobPages.length);
-    for (const tab of tabs) expect(calls.filter(([node, key]) => node === tab && key === 'knobs.page')).toHaveLength(1);
-    expect(tipAction).toHaveBeenCalledTimes(7 + knobPages.length);
+    for (const tab of tabs) expect(tab).toHaveAttribute('data-tip', 'knobs.page');
+    expect(tipAction).toHaveBeenCalledTimes(7);
   });
 });

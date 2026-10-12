@@ -114,9 +114,24 @@ export interface Materials {
   borderWidth: string;
   /** How fields are drawn. */
   input: 'filled' | 'box' | 'underline';
-  /** Panels and cards: what a region sits on. `inset` is the padding inside a region and `gap` the
-   *  space between regions, as CSS lengths that may read the scale (`var(--space-3)`). */
-  plate: Material & { inset: string; gap: string };
+  /** Panels and cards: what a region sits on. `inset` is the padding around a region's body and
+   *  `gap` the space between regions, as CSS lengths that may read the scale (`var(--space-3)`).
+   *  `head` is the region header strip: its own padding (`inset`) and the rule under it (a
+   *  box-shadow, or no shadow). */
+  plate: Material & { inset: string; gap: string; head: { inset: string; rule: string } };
+  /** Switches in a region header (and anywhere `Tabs` is used). `track` is what the tabs sit in,
+   *  `tab` a resting tab, `chosen` the chosen one; `ink`/`chosenInk` their text colours; `pad` the
+   *  track's padding, `gap` the space between tabs, `tabPad` a tab's own padding. */
+  tabs: {
+    track: Material;
+    tab: Material;
+    chosen: Material;
+    ink: string;
+    chosenInk: string;
+    pad: string;
+    gap: string;
+    tabPad: string;
+  };
   /** Recessed tracks: fader grooves, knob rings, meter channels. */
   well: Material;
   /** Readout windows: tempo, bar, chord, the display. */
@@ -127,6 +142,9 @@ export interface Materials {
   handle: Material;
   /** Lit indicators. `glow` is a box-shadow that reads `var(--lit)`. */
   lit: { glow: string };
+  /** Things that float over the screen: popovers, menus, a dragged item. `backdrop` is a
+   *  backdrop-filter (`none` for opaque floats, `blur(28px) saturate(1.6)` for glass). */
+  float: Material & { backdrop: string };
 }
 
 export interface Facets {
@@ -137,7 +155,7 @@ export interface Facets {
 }
 
 const SPACE_STEPS = [1, 2, 3, 4, 6, 8] as const;
-const MATERIAL_ROLES = ['plate', 'well', 'screen', 'key', 'handle'] as const;
+const MATERIAL_ROLES = ['plate', 'well', 'screen', 'key', 'handle', 'float'] as const;
 
 export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets, mode: Mode): Record<string, string> {
   const p = palette[mode];
@@ -191,8 +209,16 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--input-border-bottom': m.input === 'filled' ? '0px' : m.borderWidth,
     '--mat-plate-inset': m.plate.inset,
     '--mat-plate-gap': m.plate.gap,
+    '--mat-plate-head-inset': m.plate.head.inset,
+    '--mat-plate-head-rule': m.plate.head.rule,
+    '--mat-tabs-ink': m.tabs.ink,
+    '--mat-tabs-chosen-ink': m.tabs.chosenInk,
+    '--mat-tabs-pad': m.tabs.pad,
+    '--mat-tabs-gap': m.tabs.gap,
+    '--mat-tabs-tab-pad': m.tabs.tabPad,
     '--mat-key-pressed': m.key.pressed,
     '--mat-lit-glow': m.lit.glow,
+    '--mat-float-backdrop': m.float.backdrop,
 
     '--control-h': `${s.control}px`,
   };
@@ -200,6 +226,11 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     vars[`--mat-${role}-fill`] = m[role].fill;
     vars[`--mat-${role}-shadow`] = m[role].shadow;
     vars[`--mat-${role}-texture`] = m[role].texture;
+  }
+  for (const part of ['track', 'tab', 'chosen'] as const) {
+    vars[`--mat-tabs-${part}-fill`] = m.tabs[part].fill;
+    vars[`--mat-tabs-${part}-shadow`] = m.tabs[part].shadow;
+    vars[`--mat-tabs-${part}-texture`] = m.tabs[part].texture;
   }
   p.surface.forEach((v, i) => (vars[`--surface-${i}`] = v));
   p.text.forEach((v, i) => (vars[`--text-${i + 1}`] = v));

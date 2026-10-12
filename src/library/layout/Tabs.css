@@ -1,0 +1,49 @@
+/* Tabs: a track holding the choices, the chosen one drawn by the materials' tabs. Every spacing
+   and face comes from --mat-tabs-*, so a system can make them underlines, a segmented control or
+   a hardware selector. Contract variables only. */
+
+.lib-tabs {
+  display: inline-flex;
+  align-items: stretch;
+  gap: var(--mat-tabs-gap);
+  min-width: 0;
+  height: calc(var(--control-h) * 0.9);
+  padding: var(--mat-tabs-pad);
+  border-radius: var(--radius-control);
+  background: var(--mat-tabs-track-texture), var(--mat-tabs-track-fill);
+  box-shadow: var(--mat-tabs-track-shadow);
+}
+.lib-tabs__tab {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: var(--mat-tabs-tab-pad);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--mat-tabs-tab-texture), var(--mat-tabs-tab-fill);
+  box-shadow: var(--mat-tabs-tab-shadow);
+  color: var(--mat-tabs-ink);
+  font: inherit;
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking);
+  text-transform: var(--label-case);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.lib-tabs__tab:hover { color: var(--text-1); }
+.lib-tabs__tab[aria-selected='true'] {
+  background: var(--mat-tabs-chosen-texture), var(--mat-tabs-chosen-fill);
+  box-shadow: var(--mat-tabs-chosen-shadow);
+  color: var(--mat-tabs-chosen-ink);
+  cursor: default;
+}
+.lib-tabs__tab[aria-disabled] {
+  color: var(--text-4);
+  cursor: not-allowed;
+}
+.lib-tabs__tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

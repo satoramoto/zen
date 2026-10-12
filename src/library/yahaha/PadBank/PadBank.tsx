@@ -1,5 +1,4 @@
-import { ChosenTabs, type TabItem } from '../ChosenTabs/ChosenTabs';
-import { GroupHeader } from '../GroupHeader/GroupHeader';
+import { Region } from '../../layout/Region';
 import { Pad, type PadFamily, type PadOnFace, type PadState, type TipAction } from '../Pad/Pad';
 import './PadBank.css';
 
@@ -62,7 +61,7 @@ export interface PadBankProps {
   pads: PadItem[];
   /** Pads a row: 8 (two rows of eight, the Launchkey's layout) or 4 (a 4 × 4 grid: 1–4, 5–8, 9–12, 13–16). */
   columns?: 4 | 8;
-  /** The pad bank names, one tab each, in order ("Sections", "Quick Racks", "Chord", "Multi Pads", "Setup"). */
+  /** The pad bank names, one view of the Pads region each, in order ("Sections", "Quick Racks", "Chord", "Multi Pads", "Setup"). */
   banks?: string[];
   /** The chosen bank's index in `banks`. */
   bank?: number;
@@ -72,7 +71,7 @@ export interface PadBankProps {
   bankName?: string;
   /** The flash phase of armed and queued pads. */
   lit?: boolean;
-  /** The app's tooltip hook, passed to every pad and to the bank tabs. */
+  /** The app's tooltip hook, passed to every pad. */
   tipAction?: TipAction;
   /** A bank tab was chosen (its index in `banks`), by click or arrow key. */
   onBank?: (index: number) => void;
@@ -81,8 +80,9 @@ export interface PadBankProps {
 }
 
 /**
- * PadBank: the Stage's Pads region. The bank tabs, and the sixteen Launchkey pads of the chosen
- * bank: Sections, Quick Racks, Chord, Multi Pads or Setup.
+ * PadBank: the body of the Stage's Pads region: the sixteen Launchkey pads of the chosen bank
+ * (Sections, Quick Racks, Chord, Multi Pads or Setup). The banks are the region's views
+ * (`PadBankRegion`), so the bank draws no tab row of its own.
  *
  * **Job.** Say which bank the pads are on and, at a glance across sixteen keys, which ones are on
  * (the playing section, the loaded rack, the playing Multi Pad, the chosen fingering), which wait
@@ -106,7 +106,7 @@ export interface PadBankProps {
  * section is the Pad's dashed dark face and is spoken "not in this style". Waiting is the Pad's ring and chip; when more
  * than two pads are armed at once (Store armed arms every slot) the chips go and the warning
  * rings alone say it, so a row of yellow ARMED words doesn't bury the labels. The chosen bank is
- * ink with a 2px underline. *Clutter*: the "Pads" title is gone, since the bank tabs name the
+ * the raised key in the region's tab well. *Clutter*: the "Pads" title is gone, since the bank tabs name the
  * region (it keeps "Pads" as its accessible name). *Mapping*: the Launchkey always has sixteen
  * pads, so the bank always draws sixteen cells, whatever `pads` holds (missing ones are empty,
  * extras ignored), and each screen position maps one to one to a hardware pad. *One empty-slot
@@ -128,7 +128,7 @@ export interface PadBankProps {
  * restyles the bank without touching it.
  *
  * **Kept.** Holds no state: the bank comes in `bank` and the flash phase in `lit`; a tab choice
- * and a press go out by index. A region named "Pads"; the header's one tab style (ChosenTabs, a tablist with arrow keys),
+ * and a press go out by index. A region named "Pads" (now the screen's `Region`, whose tabs are the library `Tabs`),
  * the `bankName` fallback tab, `bankTips`, the 8 / 4 `columns`, each pad's face from the Pad
  * primitive (a waiting pad's ARMED / NEXT chip and the room it keeps above the label are the Pad's
  * own; the bank sets only the inset), and the spoken names ("Rack 1 (pad 1)", "Pad 12: empty").
@@ -136,34 +136,15 @@ export interface PadBankProps {
 export function PadBank({
   pads,
   columns = 8,
-  banks = [],
-  bank = 0,
-  bankTips = [],
-  bankName = '',
   lit = true,
   tipAction,
-  onBank,
   onPress,
 }: PadBankProps) {
-  const names = banks.length > 0 ? banks : [bankName];
-  const tabs: TabItem[] = names.map((label, i) => ({ id: String(i), label, tip: bankTips[i] ?? BANK_TIP[label] }));
-  const chosen = String(banks.length > 0 ? bank : 0);
   const cells = Array.from({ length: PAD_SLOTS }, (_, i) => pads[i] ?? EMPTY);
   const armed = cells.filter((pad) => !pad.empty && pad.state === 'armed').length;
 
   return (
-    <section className="yh-padbank" data-part="plate" aria-label="Pads" lang="en" data-armed={armed > ARMED_CHIPS ? 'many' : undefined}>
-      <GroupHeader>
-        <ChosenTabs
-          size="header"
-          look="underline"
-          label="Pad bank"
-          tabs={tabs}
-          chosen={chosen}
-          tipAction={tipAction}
-          onChoose={(id) => onBank?.(Number(id))}
-        />
-      </GroupHeader>
+    <div className="yh-padbank" data-part="root" lang="en" data-armed={armed > ARMED_CHIPS ? 'many' : undefined}>
       <div className="yh-padbank__room" data-part="room" data-columns={columns}>
         <div className="yh-padbank__pads" data-part="grid" data-columns={columns}>
           {cells.map((pad, i) => (
@@ -190,7 +171,35 @@ export function PadBank({
           ))}
         </div>
       </div>
-    </section>
+    </div>
+  );
+}
+
+export interface PadBankRegionProps extends PadBankProps {
+  /** The region's name. Default "Pads". */
+  name?: string;
+  /** The grid area the region fills in its screen. */
+  area?: string;
+  className?: string;
+}
+
+/**
+ * The pads as a screen region: a library `Region` whose views are the pad banks (or the one
+ * `bankName` view), each tab with its tooltip key, and the PadBank for the chosen bank as its
+ * body. The bank stays the caller's (`bank`, `onBank`, by index).
+ */
+export function PadBankRegion({ name = 'Pads', area, className, ...pads }: PadBankRegionProps) {
+  const { banks = [], bank = 0, bankTips = [], bankName = '' } = pads;
+  const names = banks.length > 0 ? banks : [bankName];
+  const body = <PadBank {...pads} />;
+  return (
+    <Region name={name} area={area} className={className} view={String(banks.length > 0 ? bank : 0)} onView={(id) => pads.onBank?.(Number(id))}>
+      {names.map((label, i) => (
+        <Region.View key={i} id={String(i)} label={label} tip={bankTips[i] ?? BANK_TIP[label]}>
+          {body}
+        </Region.View>
+      ))}
+    </Region>
   );
 }
 

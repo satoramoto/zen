@@ -42,6 +42,8 @@ Each region is one folder under `src/library/yahaha/`, with its own fixtures por
 | Knobs and pads | `KnobBank/`, `PadBank/` | KnobBank, PadBank's other banks |
 | The screen | `Stage/` | Stage, StageGolden, tapTempo: lays the regions out with Keys and StatusLine; built last, from the merged regions |
 
-On the Stage each region (hero, transport, song form, mixer, knobs, pads, keys) is a library `Region` (`src/library/layout/Region.tsx`) on the theme's `plate` material: the material decides how a region looks, the room inside it (`--mat-plate-inset`) and the space between regions (`--mat-plate-gap`). A region component never paints its own panel; it fills the Region it is given.
+The Stage is a library `Screen` (`src/library/layout/`): a few high-level regions that stay put. Its fixed header is the AppBar; its fixed footer is the Keyboard region and the status line; between them a named grid (`areas`) holds Hero, Transport, Song form, Mixer, Knobs and Pads. Only the grid fits or zooms, never the header or footer. Each region is a library `Region` on the theme's `plate` material: the material decides how a region looks, the room inside it (`--mat-plate-inset`) and the space between regions (`--mat-plate-gap`).
+
+Tabs live in the region, so content swaps inside a fixed frame: the pad banks are the Pads region's views, the knob pages the Knobs region's, the fader pages the Mixer's, with the layer switch (Vol … Delay) as `Tabs` in its `aside`. Each bank folder exports its region (`PadBankRegion`, `KnobBankRegion`, `FaderBankRegion`); the bank component itself draws no tabs or title and renders the chosen page's body. A region component never paints its own panel and never nests a region; it fills the Region it is given, and labelled clusters inside it are `Group`s.
 
 A region lane edits only its folders. It may import merged primitives, `hues.ts` and `../components`, never another region.

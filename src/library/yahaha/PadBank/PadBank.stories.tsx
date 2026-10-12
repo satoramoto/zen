@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { PadBank, type PadItem } from './PadBank';
+import { PadBankRegion, type PadItem } from './PadBank';
 import {
   allPadBanks,
   allPadsByBank,
@@ -33,7 +33,8 @@ const MULTI_PADS = 3;
 const SETUP = 4;
 
 /**
- * The Stage's Pads region: the bank tabs and sixteen square pads across the region. Compare each
+ * The Stage's Pads region, as the Stage draws it: one `Region` named Pads whose views are the
+ * banks, and the PadBank's sixteen square pads as its body. Compare each
  * story with its namesake under "Yahaha baseline / Components / PadBank": the same names; the
  * baseline's board is the Sections bank, which is `Sections` here, and `Board` shows Quick Racks.
  * `lit` is the flash phase of armed and queued pads; a tab choice is a callback with the bank's
@@ -41,7 +42,7 @@ const SETUP = 4;
  */
 const meta = {
   title: 'Library/Yahaha/Components/PadBank',
-  component: PadBank,
+  component: PadBankRegion,
   decorators: [
     withLibraryTheme,
     (Story) => (
@@ -69,7 +70,7 @@ const meta = {
     columns: { control: { type: 'inline-radio' }, options: [8, 4] },
     bankName: { control: 'text' },
   },
-} satisfies Meta<typeof PadBank>;
+} satisfies Meta<typeof PadBankRegion>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -111,7 +112,7 @@ export const FourByFour: Story = {
   args: { columns: 4 },
   decorators: [
     (Story) => (
-      <div style={{ width: 464, height: 232 }}>
+      <div style={{ width: 464, height: 232, display: 'grid' }}>
         <Story />
       </div>
     ),
@@ -172,7 +173,7 @@ export const ShortRegion: Story = {
   args: { pads: sectionPads, bank: SECTIONS },
   decorators: [
     (Story) => (
-      <div style={{ width: 552, height: 120, display: 'flex' }}>
+      <div style={{ width: 552, height: 120, display: 'grid' }}>
         <Story />
       </div>
     ),
@@ -188,7 +189,7 @@ export const Playground: Story = {
     const [bank, setBank] = useState(args.bank ?? 0);
     const [sets, setSets] = useState<PadItem[][]>(allPadsByBank);
     return (
-      <PadBank
+      <PadBankRegion
         {...args}
         bank={bank}
         pads={sets[bank]}

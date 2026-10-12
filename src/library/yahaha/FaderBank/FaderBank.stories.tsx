@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { FaderBank, type BankLamp, type FaderStrip } from './FaderBank';
+import { FaderBankRegion, type BankLamp, type FaderStrip } from './FaderBank';
 import { faderPageTabs, functionLamps, layerTabs, panelStrips, partLamps, reverbStrips, styleStrips } from './FaderBank.fixtures';
 
 /** The mixer's region on a 1440×900 Stage (the board's band: 702×368). */
@@ -13,20 +13,21 @@ const SMALL = { width: 593, height: 311 };
 const inRegion =
   (size: { width: number; height: number }): Decorator =>
   (Story) => (
-    <div style={{ width: size.width, height: size.height }}>
+    <div style={{ display: 'grid', width: size.width, height: size.height }}>
       <Story />
     </div>
   );
 
 /**
- * The Stage's mixer: the page and layer tabs, the strips in three clusters (the four parts in
- * their hues, Style and Multi Pad, Master on its plate), each part's On lamp under it, the page
+ * The Stage's mixer, as the Stage draws it: one `Region` named Mixer whose views are the fader
+ * pages (Panel, Style), with the layer Tabs in its aside, and the FaderBank as its body: the
+ * strips in three clusters (the four parts in their hues, Style and Multi Pad, Master on its plate), each part's On lamp under it, the page
  * button under Master, and the Launchkey function lamps in their own row. Every change is a
  * callback carrying the strip's or lamp's id.
  */
 const meta = {
   title: 'Library/Yahaha/Components/FaderBank',
-  component: FaderBank,
+  component: FaderBankRegion,
   decorators: [inRegion(BOARD), withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
@@ -59,7 +60,7 @@ const meta = {
     partLamps: { control: 'object' },
     functionLamps: { control: 'object' },
   },
-} satisfies Meta<typeof FaderBank>;
+} satisfies Meta<typeof FaderBankRegion>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -133,7 +134,7 @@ export const Live: Story = {
       setFunctions((all) => all.map((l) => (l.id === id ? { ...l, on } : l)));
     };
     return (
-      <FaderBank
+      <FaderBankRegion
         {...args}
         strips={page === 'style' ? styleStrips : strips}
         page={page}

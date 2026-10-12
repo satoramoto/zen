@@ -1,6 +1,25 @@
-/* Screen: a grid of regions, spaced by the theme's plate gap. Contract variables only. */
+/* Screen: a fixed header, a grid of regions, a fixed footer, spaced by the theme's plate gap.
+   Contract variables only. */
 
 .lib-screen {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--mat-plate-gap);
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+.lib-screen:not(:has(> .lib-screen__header)) { grid-template-rows: minmax(0, 1fr) auto; }
+.lib-screen:not(:has(> .lib-screen__footer)) { grid-template-rows: auto minmax(0, 1fr); }
+.lib-screen:not(:has(> .lib-screen__header, > .lib-screen__footer)) { grid-template-rows: minmax(0, 1fr); }
+
+.lib-screen__header,
+.lib-screen__footer {
+  display: grid;
+  gap: var(--mat-plate-gap);
+  min-width: 0;
+}
+.lib-screen__grid {
   display: grid;
   gap: var(--mat-plate-gap);
   min-width: 0;
