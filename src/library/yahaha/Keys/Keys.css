@@ -1,7 +1,6 @@
 /* Keys: contract variables only, plus the local --yh-keys-* ones declared here.
-   Key faces are derived from the ground (--surface-0) with relative colour, so they read as a
-   keyboard in either scheme: light faces with dark sharps, tinted like the ground. Not with
-   light-dark(): the build polyfills it with variables that only a literal `color-scheme: light`
+   Key faces come from the contract's --key-white / --key-black, so they read as a keyboard in
+   either scheme: light faces with dark sharps. Not with light-dark(): the build polyfills it with variables that only a literal `color-scheme: light`
    or `dark` sets, and the library scope sets `color-scheme: var(--scheme)`, so every face
    resolved to nothing and the keys vanished. */
 
@@ -18,14 +17,15 @@
   --yh-keys-line: 2px;
   --yh-keys-lamp: 3px;
   --yh-keys-key-radius: calc(var(--radius-control) / 2);
-  /* Key faces (no contract token for them yet), from the ground's lightness `l` (0 dark, 1 light):
-     a dark ground gets soft grey faces, a light one near-paper faces; sharps, gaps and names stay
-     dark either way, so the keys read as keys whatever the scheme. */
-  --yh-keys-white: oklch(from var(--surface-0) calc(0.74 + l * 0.25) calc(c * 0.6) h);
-  --yh-keys-black: oklch(from var(--surface-0) calc(0.19 + l * 0.05) calc(c * 0.6) h);
-  --yh-keys-gap: oklch(from var(--surface-0) calc(0.36 + l * 0.24) calc(c * 0.6) h);
-  --yh-keys-sharp-edge: oklch(from var(--surface-0) calc(0.34 + l * 0.08) calc(c * 0.6) h);
-  --yh-keys-label: oklch(from var(--surface-0) calc(0.36 + l * 0.04) calc(c * 0.6) h);
+  /* Key faces are the contract's `--key-white` and `--key-black`: soft grey faces on a dark
+     palette, near-paper on a light one, dark sharps either way, so the keys read as keys whatever
+     the scheme. The gaps, the sharps' edge and the C names are steps between the two faces; the
+     gaps sit lighter on a light palette (`--scheme-light`), as the old ground-derived faces did. */
+  --yh-keys-white: var(--key-white);
+  --yh-keys-black: var(--key-black);
+  --yh-keys-gap: color-mix(in oklab, var(--key-white) calc(35% + 12% * var(--scheme-light)), var(--key-black));
+  --yh-keys-sharp-edge: color-mix(in oklab, var(--key-white) 25%, var(--key-black));
+  --yh-keys-label: color-mix(in oklab, var(--key-white) 25%, var(--key-black));
   /* The split line, drawn on the faces: dark, like the sharps' ink. */
   --yh-keys-split-ink: var(--yh-keys-black);
 

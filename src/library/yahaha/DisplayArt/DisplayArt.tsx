@@ -21,6 +21,9 @@ export interface DisplayArtProps {
  * is mixed down into the sky so the brightest thing on the display stays the chord. *Theme
  * honesty*: the glow is the palette's `--bloom`; in flat palettes (bloom 0) the sun is a crisp
  * flat disc and the hills are hard-edged shapes, as those sources ask, while Push keeps its glow.
+ * *Scheme*: the mixes switch on `--scheme-light`, so a light palette paints a day (pale sky,
+ * hills deepening towards the viewer, a near-white sun) instead of the night's silhouettes, which
+ * on a light ground left the near hill paler than the sky; dark palettes are unchanged.
  * The picture fills its box at the original's 528 × 300 proportion instead of fixed pixels.
  *
  * **Kept.** Purely decorative and hidden from assistive tech; the two hills and the sun; the fade

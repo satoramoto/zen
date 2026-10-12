@@ -247,13 +247,18 @@ describe('Keys', () => {
     expect(parseFloat(root.style.getPropertyValue('--yh-keys-black-w'))).toBeCloseTo(keys.whiteWidth * BLACK_WIDTH_RATIO);
   });
 
-  it('gives the key faces colours that need no color-scheme, so the build keeps them', () => {
+  it('takes the key faces from the contract, with no color-scheme, so the build keeps them', () => {
     // The build polyfills light-dark() with variables only a literal `color-scheme: light|dark`
     // sets; the library scope sets `color-scheme: var(--scheme)`, so light-dark() faces vanished.
     const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Keys/Keys.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
     expect(css).not.toMatch(/light-dark\(/);
-    for (const face of ['white', 'black', 'gap', 'label']) {
-      expect(css, `--yh-keys-${face}`).toMatch(new RegExp(`--yh-keys-${face}:\\s*oklch\\(from var\\(--surface-0\\)`));
+    expect(css).not.toMatch(/from var\(--surface-0\)/);
+    expect(css).toMatch(/--yh-keys-white:\s*var\(--key-white\);/);
+    expect(css).toMatch(/--yh-keys-black:\s*var\(--key-black\);/);
+    for (const step of ['gap', 'sharp-edge', 'label']) {
+      expect(css, `--yh-keys-${step}`).toMatch(
+        new RegExp(`--yh-keys-${step}:\\s*color-mix\\(in oklab, var\\(--key-white\\) [^,]+, var\\(--key-black\\)\\)`),
+      );
     }
   });
 
