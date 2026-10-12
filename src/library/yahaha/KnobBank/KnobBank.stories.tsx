@@ -67,8 +67,11 @@ export const RackPage: Story = { args: { page: 1, knobs: knobsByPage[1] } };
 /** New: the Pan page: text values ("C", "L24") read in the ring like numbers. */
 export const PanPage: Story = { args: { page: 2, knobs: knobsByPage[2] } };
 
-/** New: the Chorus page, with two unmapped slots in a row. */
+/** New: the Chorus page, with an unmapped slot before the return. */
 export const ChorusPage: Story = { args: { page: 4, knobs: knobsByPage[4] } };
+
+/** New: only three knobs given: the bank still draws all eight, the rest unused, as on the hardware. */
+export const FewerKnobs: Story = { args: { knobs: styleKnobs.slice(0, 3) } };
 
 /** New: no page list, only the page's name as the one tab (a swap page). */
 export const PageLabelOnly: Story = { args: { pages: [], pageLabel: 'Swap R1' } };

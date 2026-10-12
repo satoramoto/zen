@@ -32,8 +32,11 @@
   min-width: 0;
   container-type: inline-size;
 }
+.yh-knobbank__slot > * {
+  --yh-knobbank-ring: min(calc(var(--control-h) * 2.25), calc(100cqi - 2 * var(--space-1)));
+}
 .yh-knobbank__slot .yh-knob {
-  --yh-knob-ring: min(calc(var(--control-h) * 2.25), calc(100cqi - 2 * var(--space-1)));
+  --yh-knob-ring: var(--yh-knobbank-ring);
   width: 100%;
   padding: var(--space-1);
 }
@@ -42,17 +45,30 @@
   font-size: min(var(--size-heading), calc(var(--yh-knob-ring) * 0.32));
 }
 
-/* An unmapped slot: a quiet dot where the ring's centre would be, nothing to read or press. */
+/* An unmapped slot: a knob's footprint (an empty name line, the full ring, an empty code line, on
+   the knob's spacing) holding only a faint track, fainter than an idle knob's, with no arc,
+   pointer or value: the slot is there, nothing is in it, nothing to press. */
 .yh-knobbank__empty {
   display: grid;
-  place-items: center;
+  justify-items: center;
+  align-content: start;
+  gap: var(--space-1);
+  box-sizing: border-box;
   width: 100%;
-  min-height: calc(var(--control-h) * 2);
+  padding: var(--space-1);
 }
-.yh-knobbank__dot {
-  --yh-knobbank-dot: max(4px, calc(var(--space-1) + 1px));
-  width: var(--yh-knobbank-dot);
-  height: var(--yh-knobbank-dot);
-  border-radius: var(--radius-pill);
-  background: color-mix(in oklab, var(--text-1) 22%, transparent);
+.yh-knobbank__line {
+  height: calc(var(--size-caption) * 1.3);
+}
+.yh-knobbank__ring {
+  display: block;
+  width: var(--yh-knobbank-ring);
+  height: var(--yh-knobbank-ring);
+  overflow: visible;
+}
+.yh-knobbank__ring path {
+  fill: none;
+  stroke: color-mix(in oklab, var(--text-1) 10%, transparent);
+  stroke-width: 3.5px;
+  stroke-linecap: butt;
 }

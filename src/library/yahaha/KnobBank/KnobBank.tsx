@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { ChosenTabs, type TabItem } from '../ChosenTabs/ChosenTabs';
 import { GroupHeader } from '../GroupHeader/GroupHeader';
 import { Knob, type TipAction } from '../Knob/Knob';
+import { BOX, START, SWEEP, arc } from '../Knob/geometry';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import './KnobBank.css';
 
@@ -25,8 +26,17 @@ export interface KnobItem {
   part?: Part;
 }
 
+/** The Launchkey's knob count: the bank always draws this many slots. */
+export const KNOB_SLOTS = 8;
+
+/** A slot with nothing given for it. */
+const UNUSED: KnobItem = { label: '', code: '', value: '', fraction: 0, unused: true };
+
+/** The whole ring's track, as the Knob draws it. */
+const TRACK = arc(START, START + SWEEP);
+
 export interface KnobBankProps {
-  /** The eight knobs, left to right. */
+  /** The eight knobs, left to right. Fewer: the rest are unused slots; more: those past eight are ignored. */
   knobs: KnobItem[];
   /** The knob page names, one tab each ("Style", "Rack", "Pan", "Reverb", "Chorus", "Delay"). */
   pages?: string[];
@@ -66,9 +76,13 @@ export function knobName(knob: KnobItem, index: number): string {
  * (the parts' volumes on Rack, their pan, their sends on the effect pages) wears that part's hue on
  * its arc, so it agrees with the mixer strip and keyboard zone of the same part; every other knob
  * (Dynamics, Swing, the effect settings and returns, Tempo) is drawn in ink, so hue still means
- * "part" and nothing else. *Clutter*: an unmapped slot is no longer a dim knob with "---" and an
- * empty ring; it is a quiet dot in its place, out of the tab order, so the mapped knobs read as a
- * group and the slot still counts as one of eight (the hardware's positions). *Fit*: each slot is
+ * "part" and nothing else. *Mapping*: the Launchkey always has eight knobs, so the bank always
+ * draws eight slots, whatever `knobs` holds (missing ones are unused, extras ignored), and each
+ * screen position maps one to one to a hardware knob. An unmapped slot is drawn at a real knob's
+ * size and place, as its full ring in a faint track with no arc, pointer, value or name, so the
+ * slot is plainly there but holds nothing; it is not a control (out of the tab order, not
+ * pressable) and keeps its spoken name, and being quieter than an "Off" knob's track it never
+ * competes with the mapped ones (`color.md`, state changes: structure, not circus). *Fit*: each slot is
  * a size container and the ring takes the slot's width up to the density's size, so eight knobs
  * fit the region of a 1217 × 752 Stage as well as a 1440 × 900 one without clipping, and the value
  * shrinks with the ring rather than overflowing it. *Alignment*: the bank fills its region instead
@@ -85,6 +99,7 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
   const names = pages.length > 0 ? pages : [pageLabel];
   const tabs: TabItem[] = names.map((label, i) => ({ id: String(i), label, tip: 'knobs.page' }));
   const chosen = String(pages.length > 0 ? page : 0);
+  const slots = Array.from({ length: KNOB_SLOTS }, (_, i) => knobs[i] ?? UNUSED);
 
   return (
     <section className="yh-knobbank" aria-labelledby={headingId}>
@@ -99,11 +114,15 @@ export function KnobBank({ knobs, pages = [], page = 0, pageLabel = '', tipActio
         />
       </GroupHeader>
       <div className="yh-knobbank__knobs">
-        {knobs.map((knob, i) => (
+        {slots.map((knob, i) => (
           <div key={i} className="yh-knobbank__slot" data-unused={knob.unused || undefined}>
             {knob.unused ? (
               <span className="yh-knobbank__empty" role="img" aria-label={knobName(knob, i)} data-tip="knobs.knob">
-                <span className="yh-knobbank__dot" aria-hidden="true" />
+                <span className="yh-knobbank__line" aria-hidden="true" />
+                <svg className="yh-knobbank__ring" viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true">
+                  <path d={TRACK} />
+                </svg>
+                <span className="yh-knobbank__line" aria-hidden="true" />
               </span>
             ) : (
               <Knob
