@@ -213,32 +213,6 @@
   height: 100%;
 }
 
-/* Faces this cluster needs from the primitives (hues.ts; one solid fill = sounding or running):
-   - a transport key at rest is neutral; its hue appears only when waiting or on, and on Start;
-   - a lamp on (Accomp, Auto Fill) is an outline in its hue with the LED lit, not a fill;
-   - Fade while fading is a ring in the ink colour, not a fill.
-   Scoped here so the cluster reads right on its own; they match the faces the primitives adopt. */
-.yh-songform__transport .yh-button[data-hue='transport'][data-face='off']:not([data-variant='primary']) {
-  --yh-button-line: var(--border-strong);
-}
-.yh-songform__key .yh-lampbutton[data-face='on'],
-.yh-songform__key .yh-lampbutton[data-face='on']:hover {
-  background: var(--surface-2);
-  border-color: var(--lamp-hue);
-  box-shadow: inset 0 0 0 var(--border-width) var(--lamp-hue);
-  color: var(--text-1);
-}
-.yh-songform__key .yh-lampbutton[data-face='on'] .yh-lampbutton__led {
-  background: var(--lamp-hue);
-  box-shadow: 0 0 var(--bloom) var(--lamp-hue);
-}
-.yh-songform__key[data-key='fade'] .yh-button[data-face='on'],
-.yh-songform__key[data-key='fade'] .yh-button[data-face='on']:hover {
-  background: transparent;
-  box-shadow: inset 0 0 0 var(--yh-button-ring) var(--text-1);
-  color: var(--text-1);
-}
-
 /* The breakpoints are in control heights (this region's em is --control-h; see .yh-songform).
    Side by side the region needs about 47 of them: the form's ten steps (each as wide as "III" at
    heading size) and Break with their gaps (about 29 where headings are 24px), the transport's

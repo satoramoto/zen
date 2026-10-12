@@ -29,7 +29,7 @@ interface SectionDef {
   tip: string;
 }
 
-const NB = ' ';
+const NB = ' ';
 
 /** The song's form: its three parts in order, each its steps in order. */
 export const FORM: readonly { part: Part; caption: string; steps: readonly SectionDef[] }[] = [

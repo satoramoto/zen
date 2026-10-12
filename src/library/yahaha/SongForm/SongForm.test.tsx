@@ -3,7 +3,14 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeScope, resolveTheme } from '../../theme';
 import { packs } from '../../themes/packs';
-import { SongForm, type SongFormProps } from './SongForm';
+import { SECTION_LABEL, SongForm, type SongFormProps } from './SongForm';
+
+describe('SongForm labels', () => {
+  it('joins a section name with a non-breaking space, so "Main C" never wraps', () => {
+    expect(SECTION_LABEL.mainC).toContain(' ');
+    expect(SECTION_LABEL.mainC).not.toContain(' ');
+  });
+});
 import { songFormBoard, songFormFillPending, songFormSparse, songFormStopped, songFormSyncArmed } from './SongForm.fixtures';
 
 const renderForm = (props: SongFormProps = songFormBoard) => render(<SongForm {...props} />);
