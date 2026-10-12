@@ -1,10 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { LAYERS } from '../contract';
-import { Group, Layer, Opaque, Region, Stack, Tabs, type TabItem } from '.';
+import { Group, Layer, Region, Tabs, type TabItem } from '.';
 
 const items: TabItem[] = [
   { id: 'a', label: 'Alpha' },
@@ -120,78 +119,67 @@ describe('Region', () => {
   });
 });
 
-describe('Opaque', () => {
-  // Vitest doesn't load imported CSS, so apply Layer.css itself and read what it computes.
-  const css = readFileSync(join(process.cwd(), 'src/library/layout/Layer.css'), 'utf8');
+describe('Layer (deprecated alias of Surface)', () => {
+  it('renders a Surface at the level, with card corners, keeping the lib-layer class', () => {
+    render(
+      <Layer level="float" className="mine" role="dialog" id="l" aria-label="Pop" data-testid="l">
+        x
+      </Layer>,
+    );
+    const el = screen.getByTestId('l');
+    expect(el.tagName).toBe('DIV');
+    expect(el).toHaveClass('lib-surface', 'lib-layer', 'mine');
+    expect(el).toHaveAttribute('data-layer', 'float');
+    expect(el).toHaveAttribute('data-radius', 'card');
+    expect(el).toHaveAttribute('role', 'dialog');
+    expect(el).toHaveAttribute('id', 'l');
+    expect(el).toHaveAttribute('aria-label', 'Pop');
+    expect(el).toHaveTextContent('x');
+  });
 
-  it('makes every layer inside draw its solid fill and no backdrop', () => {
-    const style = document.createElement('style');
-    style.textContent = css;
-    document.head.appendChild(style);
-    try {
-      const { container } = render(
-        <div>
-          <Layer level="base" data-testid="outside" />
-          <Opaque>
-            <Layer level="float" data-testid="inside" />
-          </Opaque>
-        </div>,
+  it('renders the element `as` names, a component included', () => {
+    function Box({ className, children, ...rest }: { className?: string; children?: ReactNode }) {
+      return (
+        <section className={`box ${className ?? ''}`} {...rest}>
+          {children}
+        </section>
       );
-      const opaque = container.querySelector('.lib-opaque') as HTMLElement;
-      expect(opaque).toContainElement(screen.getByTestId('inside'));
-      const computed = getComputedStyle(opaque);
-      for (const name of LAYERS) {
-        expect(computed.getPropertyValue(`--layer-${name}-fill`).trim(), name).toBe(`var(--layer-${name}-solid)`);
-        expect(computed.getPropertyValue(`--layer-${name}-backdrop`).trim(), name).toBe('none');
-      }
-      // Outside an Opaque scope nothing is swapped.
-      expect(getComputedStyle(container.firstElementChild as HTMLElement).getPropertyValue('--layer-base-fill')).toBe('');
-      // A layer reads its fill from the swappable variable.
-      expect(getComputedStyle(screen.getByTestId('inside')).getPropertyValue('--lib-layer-fill').trim()).toBe('var(--layer-float-fill)');
-    } finally {
-      style.remove();
     }
+    render(
+      <>
+        <Layer level="base" as="aside" data-testid="a" />
+        <Layer level="top" as={Box} data-testid="b" />
+      </>,
+    );
+    expect(screen.getByTestId('a').tagName).toBe('ASIDE');
+    const b = screen.getByTestId('b');
+    expect(b.tagName).toBe('SECTION');
+    expect(b).toHaveClass('box', 'lib-surface', 'lib-layer');
+    expect(b).toHaveAttribute('data-layer', 'top');
   });
 });
 
-describe('Stack', () => {
-  it('defaults to a column, gap step 2, no align/justify/wrap, as a div', () => {
-    const { container } = render(<Stack>x</Stack>);
-    const el = container.firstElementChild as HTMLElement;
-    expect(el.tagName).toBe('DIV');
-    expect(el).toHaveClass('lib-stack');
-    expect(el).toHaveAttribute('data-direction', 'column');
-    expect(el).toHaveAttribute('data-gap', '2');
-    expect(el).not.toHaveAttribute('data-align');
-    expect(el).not.toHaveAttribute('data-justify');
-    expect(el).not.toHaveAttribute('data-wrap');
-  });
-
-  it('renders the given props as attributes, the `as` element, and passes HTML attributes through', () => {
+describe('Group', () => {
+  it('its root is a Stack: a column, gap step 1, named as a group', () => {
     render(
-      <Stack as="ul" direction="row" gap={0} align="baseline" justify="between" wrap className="mine" aria-label="List" data-testid="s">
-        <li>a</li>
-      </Stack>,
+      <Group name="Keys" area="keys" className="mine">
+        <span>a</span>
+      </Group>,
     );
-    const el = screen.getByTestId('s');
-    expect(el.tagName).toBe('UL');
-    expect(el).toHaveClass('lib-stack', 'mine');
-    expect(el).toHaveAttribute('aria-label', 'List');
-    expect(el).toHaveAttribute('data-direction', 'row');
-    expect(el).toHaveAttribute('data-gap', '0');
-    expect(el).toHaveAttribute('data-align', 'baseline');
-    expect(el).toHaveAttribute('data-justify', 'between');
-    expect(el).toHaveAttribute('data-wrap');
+    const root = screen.getByRole('group', { name: 'Keys' });
+    expect(root).toHaveClass('lib-stack', 'lib-group', 'mine');
+    expect(root).toHaveAttribute('data-part', 'group');
+    expect(root).toHaveAttribute('data-direction', 'column');
+    expect(root).toHaveAttribute('data-gap', '1');
+    expect(root.style.gridArea).toContain('keys');
+    expect(root.querySelector(':scope > .lib-group__head > .lib-group__label')).toHaveTextContent('Keys');
+    expect(root.querySelector(':scope > .lib-group__body')).not.toBeNull();
   });
 
-  it('Stack.css has a gap rule per step and paints and measures nothing', () => {
-    const css = readFileSync(join(process.cwd(), 'src/library/layout/Stack.css'), 'utf8');
-    for (let n = 1; n <= 6; n++) {
-      expect(css, `step ${n}`).toMatch(new RegExp(`\\[data-gap='${n}'\\]\\)?\\s*\\{\\s*gap: var\\(--space-${n}\\);`));
-    }
-    for (const banned of ['px', 'margin', 'background', 'box-shadow', 'border']) {
-      expect(css.includes(banned), banned).toBe(false);
-    }
+  it('Group.css keeps no grid of its own', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/layout/Group.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(css).not.toMatch(/display:\s*grid|grid-template/);
+    expect(css).not.toMatch(/\.lib-group\s*\{/);
   });
 });
 

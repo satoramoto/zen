@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { LAYERS, type LayerName } from '../contract';
 import { withLibraryTheme } from '../storybook';
-import { Hole, Layer, Opaque } from './Layer';
+import { Hole, Opaque, Surface } from './Surface';
 
 /** A busy picture standing in for what's behind the page (a video, a GPU preview): it shows what a layer blurs or hides. */
 const PICTURE: CSSProperties = {
@@ -19,7 +19,7 @@ interface LayerArgs {
 }
 
 const meta: Meta<LayerArgs> = {
-  title: 'Design OS/Layout/Layer',
+  title: 'Design OS/Primitives/Layers',
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   args: { level: 'float', overPicture: true, opaque: false },
@@ -32,18 +32,19 @@ const meta: Meta<LayerArgs> = {
 export default meta;
 type Story = StoryObj<LayerArgs>;
 
-function Surface({ level }: { level: LayerName }) {
+/** One `<Surface layer={level}>`, captioned with its level. */
+function Plate({ level }: { level: LayerName }) {
   return (
-    <Layer level={level} style={{ padding: 'var(--space-4)', minHeight: 96, display: 'grid', alignContent: 'end' }}>
+    <Surface layer={level} style={{ padding: 'var(--space-4)', minHeight: 96, display: 'grid', alignContent: 'end' }}>
       <span style={caption}>{level}</span>
-    </Layer>
+    </Surface>
   );
 }
 
 /** One layer, chosen by `level`. Over the picture, a translucent layer shows (or blurs) it; `opaque` wraps it in `Opaque`. */
 export const Level: Story = {
   render: ({ level, overPicture, opaque }) => {
-    const surface = <Surface level={level} />;
+    const surface = <Plate level={level} />;
     return (
       <div style={{ ...(overPicture ? PICTURE : {}), padding: 'var(--space-6)', maxWidth: 480 }}>
         {opaque ? <Opaque>{surface}</Opaque> : surface}
@@ -59,7 +60,7 @@ export const Levels: Story = {
     const row = (
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 'var(--space-4)' }}>
         {LAYERS.map((l) => (
-          <Surface key={l} level={l} />
+          <Plate key={l} level={l} />
         ))}
       </div>
     );
@@ -68,19 +69,19 @@ export const Levels: Story = {
 };
 
 /** Nested depth: a base plate holding a raised control, with a float popover over both. */
-export const Stack: Story = {
+export const Nested: Story = {
   argTypes: { level: { table: { disable: true } } },
   render: ({ overPicture, opaque }) => {
     const stack = (
-      <Layer level="base" style={{ padding: 'var(--space-6)', display: 'grid', gap: 'var(--space-4)', maxWidth: 420 }}>
+      <Surface layer="base" style={{ padding: 'var(--space-6)', display: 'grid', gap: 'var(--space-4)', maxWidth: 420 }}>
         <span style={caption}>base</span>
-        <Layer level="raised" style={{ padding: 'var(--space-3)' }}>
+        <Surface layer="raised" style={{ padding: 'var(--space-3)' }}>
           <span style={caption}>raised</span>
-        </Layer>
-        <Layer level="float" style={{ padding: 'var(--space-3)', marginLeft: 'var(--space-6)' }}>
+        </Surface>
+        <Surface layer="float" style={{ padding: 'var(--space-3)', marginLeft: 'var(--space-6)' }}>
           <span style={caption}>float</span>
-        </Layer>
-      </Layer>
+        </Surface>
+      </Surface>
     );
     return <div style={{ ...(overPicture ? PICTURE : {}), padding: 'var(--space-6)' }}>{opaque ? <Opaque>{stack}</Opaque> : stack}</div>;
   },
@@ -93,9 +94,9 @@ export const OpaqueScope: Story = {
   argTypes: { overPicture: { table: { disable: true } }, opaque: { table: { disable: true } } },
   render: ({ level }) => (
     <div style={{ ...PICTURE, padding: 'var(--space-6)', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 'var(--space-6)', maxWidth: 640 }}>
-      <Surface level={level} />
+      <Plate level={level} />
       <Opaque>
-        <Surface level={level} />
+        <Plate level={level} />
       </Opaque>
     </div>
   ),
@@ -108,15 +109,15 @@ export const HoleThrough: Story = {
   argTypes: { overPicture: { table: { disable: true } } },
   render: ({ level, opaque }) => {
     const panel = (
-      <Layer level={level} style={{ padding: 'var(--space-3)', position: 'absolute', right: 'var(--space-4)', bottom: 'var(--space-4)', width: 200 }}>
+      <Surface layer={level} style={{ padding: 'var(--space-3)', position: 'absolute', right: 'var(--space-4)', bottom: 'var(--space-4)', width: 200 }}>
         <span style={caption}>{level} over the hole</span>
-      </Layer>
+      </Surface>
     );
     return (
       <div style={{ ...PICTURE, padding: 'var(--space-6)', display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)', gap: 'var(--space-4)', maxWidth: 720 }}>
-        <Layer level="base" style={{ padding: 'var(--space-4)', minHeight: 260 }}>
+        <Surface layer="base" style={{ padding: 'var(--space-4)', minHeight: 260 }}>
           <span style={caption}>base plate</span>
-        </Layer>
+        </Surface>
         <Hole name="Preview" style={{ position: 'relative', minHeight: 260 }}>
           {opaque ? <Opaque>{panel}</Opaque> : panel}
         </Hole>

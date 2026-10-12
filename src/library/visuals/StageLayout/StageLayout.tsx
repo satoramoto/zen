@@ -2,7 +2,7 @@ import { useEffect, useRef, type CSSProperties, type RefObject } from 'react';
 import { Layer, Opaque } from '../../layout/Layer';
 import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Text } from '../../primitives/Text';
 import { LEAVE_HOLD_MS } from '../model/liveKeys';
 import { isTyping } from '../model/shell';

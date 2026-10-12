@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from '../components/core';
-import type { Step } from '../primitives/step';
+import type { Step } from './step';
 import { withLibraryTheme } from '../storybook';
 import { Stack, type StackAlign, type StackJustify } from './Stack';
 
@@ -17,7 +17,7 @@ interface StackArgs {
 }
 
 const meta: Meta<StackArgs> = {
-  title: 'Design OS/Layout/Stack',
+  title: 'Design OS/Primitives/Stack',
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   args: { direction: 'row', gap: 2, align: 'unset', justify: 'unset', wrap: false, count: 4, width: 560 },

@@ -8,7 +8,7 @@ import { PartMarks } from '../../components/music/PartMarks/PartMarks';
 import { marksText } from '../../components/music/PartMarks/marks';
 import { SectionName } from '../../components/music/SectionName/SectionName';
 import { TempoReadout } from '../../components/music/TempoReadout/TempoReadout';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Text } from '../../primitives/Text';
 import { DisplayArt } from '../DisplayArt/DisplayArt';
 import { OneTouchPicker } from '../OneTouchPicker/OneTouchPicker';

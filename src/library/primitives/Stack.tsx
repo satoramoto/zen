@@ -1,5 +1,5 @@
 import type { CSSProperties, ElementType, HTMLAttributes, ReactNode } from 'react';
-import type { Step } from '../primitives/step';
+import type { Step } from './step';
 import './Stack.css';
 
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
@@ -24,7 +24,7 @@ export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'className
 }
 
 /**
- * **Job.** The Group tier's atom: a flex line of things with a scale step between them. Spacing
+ * **Job.** A primitive, the Group tier's atom: a flex line of things with a scale step between them. Spacing
  * between things lives here, as `gap`, never as a margin on a control. It paints nothing and
  * sets no lengths of its own; its attributes (`data-direction`, `data-gap`, `data-align`,
  * `data-justify`, `data-wrap`) pick the rules in `Stack.css`. Groups are made of it.

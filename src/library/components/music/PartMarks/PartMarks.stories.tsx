@@ -50,7 +50,7 @@ const PARTS = [
 /** The marks in place after each sound name, as a column of sound cells: the problems stand out by shape. */
 export const InSoundCells: Story = {
   render: () => (
-    <div className="lib-stack" style={{ maxWidth: 280 }}>
+    <div className="lib-specimens"style={{ maxWidth: 280 }}>
       {PARTS.map(({ part, sound, facts }) => (
         <div key={part} className="lib-row" aria-label={`${part}: ${sound}${marksText(facts)}`} role="group">
           <span style={{ color: 'var(--text-3)', fontSize: 'var(--size-caption)', width: 56 }}>{part}</span>

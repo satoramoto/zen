@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, type CSSProperties } from 'react';
 import { Group } from '../../layout/Group';
 import { Region } from '../../layout/Region';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Tabs, type TabItem } from '../../layout/Tabs';
 import { Text } from '../../primitives/Text';
 import { PART_HUE_INDEX, type Part } from '../hues';

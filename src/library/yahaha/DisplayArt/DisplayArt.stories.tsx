@@ -33,7 +33,7 @@ export const UnderReadouts: Story = {
   render: (args) => (
     <div style={{ position: 'relative' }}>
       <DisplayArt {...args} />
-      <div className="lib-stack" style={{ position: 'absolute', inset: 0, alignContent: 'center', padding: 'var(--space-6)' }}>
+      <div className="lib-specimens"style={{ position: 'absolute', inset: 0, alignContent: 'center', padding: 'var(--space-6)' }}>
         <ChordReadout chord="C" extension="maj7" />
         <TempoReadout bpm={120} />
       </div>

@@ -3,7 +3,7 @@ import { Button } from '../../components/core/Button/Button';
 import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
 import { Separator } from '../../components/core/Separator/Separator';
 import { StatusDot } from '../../components/core/StatusDot/StatusDot';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Tabs, type TabItem } from '../../layout/Tabs';
 import { Text } from '../../primitives/Text';
 import { HealthSlot, type HealthTarget } from '../HealthSlot/HealthSlot';

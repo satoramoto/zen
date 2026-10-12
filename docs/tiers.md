@@ -7,9 +7,9 @@ Every visual and structural decision in a zen app belongs to exactly one tier. E
 | Tier | Where | Decides | Never decides | Builds from |
 |---|---|---|---|---|
 | **Tokens** | `src/library/themes/` | values: colour, type, scale, materials, layers | anything about a screen | — |
-| **Primitives** | `src/library/primitives/` | how a thing looks: a `Surface` (a layer, a material), `Text` in a role, an `Icon`, a focus or press `Ring` | spacing between things; behaviour | tokens |
+| **Primitives** | `src/library/primitives/` | how a thing looks: a `Surface` (a layer, a material; `Opaque` makes the layers inside solid, `Hole` is a cut-out), `Text` in a role, an `Icon`, a `Stack` (a flex line with a gap step), a focus or press `Ring` | behaviour | tokens |
 | **Controls** | `src/library/components/core`, `components/music` | one interaction: state, keys, accessibility, its own size on the scale (`size`), its colour slot (`tone`, `hue`) | its outer margin or position; picking a colour by hand | primitives |
-| **Groups** | `src/library/layout/Group`, `Stack` | arranging controls: direction, gap step, alignment, the label | painting anything | controls |
+| **Groups** | `src/library/layout/Group` (a `Stack` plus a label) | arranging controls: direction, gap step, alignment, the label | painting anything | controls |
 | **Regions** | `src/library/layout/Region` | a block of a screen: plate, header, views | arranging controls inside it (that's a Group) | groups |
 | **Screens** | `src/library/layout/Screen`, an app's screens | which regions go where, breakpoints, fit and zoom | styling a region | regions |
 | **App** | an app's root | data, behaviour, which screen and system | CSS | screens |

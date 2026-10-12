@@ -1,5 +1,5 @@
 import type { HueSlot as Hue } from '../../components/core/hue';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Text } from '../../primitives/Text';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import './HueLegend.css';

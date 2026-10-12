@@ -80,7 +80,7 @@ export const CenterOrigin: Story = { args: { orientation: 'horizontal', param: p
 /** Inline: caption over reading beside the track, on the left or the right. */
 export const Inline: Story = {
   render: (args) => (
-    <div className="lib-stack">
+    <div className="lib-specimens">
       <Controlled {...args} orientation="horizontal" layout="inline" side="left" param={amount} value={60} />
       <Controlled {...args} orientation="horizontal" layout="inline" side="right" param={amount} value={20} />
     </div>

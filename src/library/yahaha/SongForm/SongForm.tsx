@@ -1,7 +1,7 @@
 import { Button } from '../../components/core/Button/Button';
 import { LampButton } from '../../components/core/LampButton/LampButton';
 import { Pad, type PadState, type TipAction } from '../../components/music/Pad/Pad';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Text } from '../../primitives/Text';
 import type { SectionState } from '../hues';
 import './SongForm.css';

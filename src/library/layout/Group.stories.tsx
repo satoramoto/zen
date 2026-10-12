@@ -4,7 +4,7 @@ import type { Step } from '../primitives/step';
 import { withLibraryTheme } from '../storybook';
 import { Group } from './Group';
 import { Region } from './Region';
-import type { StackAlign } from './Stack';
+import type { StackAlign } from '../primitives/Stack';
 
 const LABELS = ['Intro A', 'Main A', 'Main B', 'Fill A', 'Fill B', 'Break', 'Ending A', 'Ending B'];
 
