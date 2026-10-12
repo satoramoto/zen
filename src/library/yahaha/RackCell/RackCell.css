@@ -60,8 +60,10 @@
 .yh-rack-cell__separator {
   color: var(--text-4);
 }
+/* The slot is the cell's value: label size, a step above its caption, never the smallest thing. */
 .yh-rack-cell__slot {
   flex: none;
+  font-size: var(--size-label);
   font-family: var(--font-readout);
   font-variant-numeric: tabular-nums;
   text-transform: none;
@@ -85,8 +87,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* No rack: a caption, so an empty slot doesn't take a name's room or weight. */
 .yh-rack-cell__name[data-empty='true'] .yh-rack-cell__title {
   color: var(--text-3);
+  font-size: var(--size-caption);
 }
 .yh-rack-cell__mark {
   flex: none;

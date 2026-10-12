@@ -12,6 +12,8 @@
   --yh-knob-stroke: 3.5px;
 
   display: inline-grid;
+  /* The name's row is two caption lines tall whatever it holds; a one-line name sits on the ring. */
+  grid-template-rows: calc(var(--size-caption) * 2.6) auto;
   justify-items: center;
   align-content: start;
   gap: var(--space-1);
@@ -47,20 +49,31 @@
   font-size: var(--size-caption);
   line-height: 1.3;
 }
+/* The name: up to two balanced lines, and always two lines' room, so every ring in a bank sits
+   on one line and no name is cut to "Dynami…". */
 .yh-knob__label {
+  display: -webkit-box;
+  align-self: end;
   color: var(--text-2);
   font-weight: var(--weight-strong);
   letter-spacing: var(--tracking);
   text-transform: var(--label-case);
+  white-space: normal;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 .yh-knob__code {
   min-height: 1.3em;
   color: var(--text-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-readout);
   font-weight: var(--weight-body);
 }
 .yh-knob[data-unused] .yh-knob__label {
-  color: var(--text-4);
+  color: var(--text-3);
   font-weight: var(--weight-body);
 }
 
@@ -118,6 +131,10 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
   line-height: 1;
+}
+/* "0" and "Off": nothing here, so the value steps back. */
+.yh-knob[data-rest] .yh-knob__value {
+  color: var(--text-3);
 }
 .yh-knob__unit {
   color: var(--text-3);

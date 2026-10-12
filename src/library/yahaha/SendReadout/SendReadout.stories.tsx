@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The board: Band Reverb 40 Chorus 12 Delay 0. */
+/** The board: Reverb 40 Chorus 12 Delay 0 ("Band" leads the spoken name only). */
 export const Board: Story = {
   args: { reverb: 40, chorus: 12, delay: 0, label: 'Band' },
   play: async ({ canvasElement, args }) => {
@@ -40,7 +40,7 @@ export const Full: Story = {
   args: { reverb: 127, chorus: 127, delay: 127 },
 };
 
-/** Every send off: all three levels drop to the faint role. */
+/** Every send off: all three levels step back to muted text. */
 export const AllOff: Story = {
   args: { reverb: 0, chorus: 0, delay: 0 },
 };

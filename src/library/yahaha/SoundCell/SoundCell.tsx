@@ -40,11 +40,13 @@ export interface SoundCellProps {
  * **Changed**: the side-by-side line becomes a caption over a name, the same shape as the
  * RackCell, so a row of cells shares one left edge and one baseline rhythm and scans like a
  * table (alignment, rhythm; `references/typography.md` on a small caption over the value). The
- * short name drops to caption size in the pack's label case, and keeps the part's hue as the
- * cell's only colour: hue identifies the part, nothing else is tinted (colour meaning;
- * `references/color.md`). The sound's number sits in the readout face with tabular numerals in
- * muted text so names line up across cells (numerals). Only the name truncates; the short name
- * and number never do. Both buttons get a quiet face on hover, a deeper one when pressed, and
+ * short name is set at `--size-label` in the pack's label case, and keeps the part's hue as the
+ * cell's only colour: hue identifies the part, nothing else is tinted, and hue on text is never
+ * smaller than the label size, so the part is findable from the keyboard (colour meaning;
+ * `references/color.md`; the 2026-10 review moved it up from caption size). The sound's number
+ * follows the name, at caption size in the readout face with tabular numerals in muted text, so
+ * it no longer reads as part of the name ("41 Warm Strings") and every name starts on the cell's
+ * left edge (numerals, alignment). Only the name truncates; the short name and number never do. Both buttons get a quiet face on hover, a deeper one when pressed, and
  * the accent focus ring on keyboard focus (affordance; `references/craft-details.md` on
  * `:focus-visible`). An off part fades its hue against the surface rather than going grey, so
  * it still says which part it is.
@@ -88,8 +90,8 @@ export function SoundCell({
         data-tip={soundTip}
         onClick={() => onSound?.()}
       >
-        {number && <span className="yh-sound-cell__number">{number}</span>}
         <span className="yh-sound-cell__title">{sound}</span>
+        {number && <span className="yh-sound-cell__number">{number}</span>}
         {marks != null && <span className="yh-sound-cell__marks">{marks}</span>}
       </button>
     </div>

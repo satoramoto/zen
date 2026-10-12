@@ -1,4 +1,3 @@
-import { useId } from 'react';
 import { ChosenTabs, type TabItem } from '../ChosenTabs/ChosenTabs';
 import { GroupHeader } from '../GroupHeader/GroupHeader';
 import { Pad, type PadFamily, type PadState, type TipAction } from '../Pad/Pad';
@@ -38,6 +37,9 @@ const BANK_TIP: Record<string, string> = {
 /** The Launchkey's pad count: the bank always draws this many cells. */
 export const PAD_SLOTS = 16;
 
+/** The most armed pads that still carry their ARMED chip; past this the ring alone says it. */
+export const ARMED_CHIPS = 2;
+
 /** A cell with nothing given for it. */
 const EMPTY: PadItem = { label: '', family: 'util', state: 'idle', empty: true };
 
@@ -65,8 +67,8 @@ export interface PadBankProps {
 }
 
 /**
- * PadBank: the Stage's Pads region. A "Pads" header with the bank tabs, and the sixteen Launchkey
- * pads of the chosen bank: Quick Racks, Chord, Multi Pads or Setup.
+ * PadBank: the Stage's Pads region. The bank tabs, and the sixteen Launchkey pads of the chosen
+ * bank: Quick Racks, Chord, Multi Pads or Setup.
  *
  * **Job.** Say which bank the pads are on and, at a glance across sixteen keys, which ones are on
  * (the loaded rack, the playing Multi Pad, the chosen fingering), which wait (Store armed), which
@@ -77,22 +79,29 @@ export interface PadBankProps {
  * pad here is a section. The bank list is data, so the Stage passes the four banks (or any list),
  * and each tab finds its tooltip by name, not position, so dropping a bank can't shift the tips.
  * *Colour meaning* (`hues.ts`; `color.md`, "state changes: structure, not circus"): the four banks
- * are functions, not parts, so their pads are neutral: on is the one `--selected` fill, waiting is
- * the Pad's ring and chip, and a part hue appears only on a pad the engine lights for that part.
- * *Mapping*: the Launchkey always has sixteen pads, so the bank always draws sixteen cells,
- * whatever `pads` holds (missing ones are empty, extras ignored), and each screen position maps
- * one to one to a hardware pad. *Clutter and hierarchy*: a pad with nothing assigned (the Chord
- * bank's top row, Setup's spare pads) is no longer a dashed key labelled "—" that looks pressable;
- * it is the pad's full face at its size and place, a faint solid edge over a faint wash with no
- * label, out of the tab order and not pressable, so the slot is plainly there but holds nothing
- * and the assigned pads still read as the bank. A dark pad is kept for what exists but is empty or
- * absent (a Quick Rack slot with nothing stored), with its dashed edge and label, since a press
- * there still means something. *Fit*: the bank fills its region and
- * the pads fill their grid cells, stretching to the region's height when it has one, so the same
- * bank works as two rows of eight or a 4 × 4 block at a 1440 × 900 and a 1217 × 752 Stage.
+ * are functions, not parts, so their pads are neutral, and a part hue appears only on a pad the
+ * engine lights for that part. *Hierarchy* (the 2026-10 Stage review: a solid fill means
+ * "sounding or running" only): an on pad (the loaded rack, the chosen fingering) is the Pad's
+ * `ring` face, an outline and a lit dot, not a solid fill, so four on pads no longer read as four
+ * white keys competing with the playing section. Waiting is the Pad's ring and chip; when more
+ * than two pads are armed at once (Store armed arms every slot) the chips go and the warning
+ * rings alone say it, so a row of yellow ARMED words doesn't bury the labels. The chosen bank is
+ * ink with a 2px underline. *Clutter*: the "Pads" title is gone, since the bank tabs name the
+ * region (it keeps "Pads" as its accessible name). *Mapping*: the Launchkey always has sixteen
+ * pads, so the bank always draws sixteen cells, whatever `pads` holds (missing ones are empty,
+ * extras ignored), and each screen position maps one to one to a hardware pad. *One empty-slot
+ * vocabulary* across the three banks: a pad with nothing assigned (the Chord bank's top row,
+ * Setup's spare pads) is the pad's full footprint as a faint wash, with no edge and no label, out
+ * of the tab order and not pressable, the same faint ink as KnobBank's empty ring and FaderBank's
+ * parked groove. A dark pad is kept for what exists but is empty or absent (a Quick Rack slot
+ * with nothing stored), with its dashed edge and label, since a press there still means
+ * something; edge versus no edge keeps the two apart. *Fit*: the bank fills its region and the
+ * pads fill their grid cells; each row is at least two control heights and the rows share the
+ * region's height, so the Stage can make them 2 × 64 or 2 × 56 and the same bank also works as
+ * a 4 × 4 block.
  *
  * **Kept.** Holds no state: the bank comes in `bank` and the flash phase in `lit`; a tab choice
- * and a press go out by index. The header's one tab style (ChosenTabs, a tablist with arrow keys),
+ * and a press go out by index. A region named "Pads"; the header's one tab style (ChosenTabs, a tablist with arrow keys),
  * the `bankName` fallback tab, `bankTips`, the 8 / 4 `columns`, each pad's face from the Pad
  * primitive (a waiting pad's ARMED / NEXT chip and the room it keeps above the label are the Pad's
  * own; the bank sets only the inset), and the spoken names ("Rack 1 (pad 1)", "Pad 12: empty").
@@ -109,17 +118,18 @@ export function PadBank({
   onBank,
   onPress,
 }: PadBankProps) {
-  const headingId = useId();
   const names = banks.length > 0 ? banks : [bankName];
   const tabs: TabItem[] = names.map((label, i) => ({ id: String(i), label, tip: bankTips[i] ?? BANK_TIP[label] }));
   const chosen = String(banks.length > 0 ? bank : 0);
   const cells = Array.from({ length: PAD_SLOTS }, (_, i) => pads[i] ?? EMPTY);
+  const armed = cells.filter((pad) => !pad.empty && pad.state === 'armed').length;
 
   return (
-    <section className="yh-padbank" aria-labelledby={headingId} lang="en">
-      <GroupHeader title="Pads" id={headingId}>
+    <section className="yh-padbank" aria-label="Pads" lang="en" data-armed={armed > ARMED_CHIPS ? 'many' : undefined}>
+      <GroupHeader>
         <ChosenTabs
           size="header"
+          look="underline"
           label="Pad bank"
           tabs={tabs}
           chosen={chosen}
@@ -143,6 +153,7 @@ export function PadBank({
                 tip={pad.tip}
                 tipAction={tipAction}
                 fillCell
+                onFace="ring"
                 onPress={() => onPress?.(i)}
               />
             )}

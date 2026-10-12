@@ -98,6 +98,17 @@ describe('GroupHeader', () => {
     expect(heading).toHaveAttribute('id', 'faders-head');
   });
 
+  it('without a title draws no heading, only its row items', () => {
+    const { container } = render(
+      <GroupHeader>
+        <Tabs label="Knob page" tabs={KNOB_PAGES} chosen="0" onchoose={() => {}} />
+      </GroupHeader>,
+    );
+    expect(screen.queryByRole('heading')).toBeNull();
+    expect(container.querySelector('.yh-group-header')).toHaveAttribute('data-untitled', 'true');
+    expect(screen.getByRole('tablist', { name: 'Knob page' })).toBeInTheDocument();
+  });
+
   it('draws the counter as one run after the legend', () => {
     const { container } = render(<GroupHeader title="Knobs" end={<span>Legend</span>} count={{ label: 'Page', value: '1/6' }} />);
     const count = container.querySelector('.yh-group-header__count')!;

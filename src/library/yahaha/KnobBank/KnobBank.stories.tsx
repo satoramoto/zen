@@ -6,7 +6,7 @@ import { KnobBank, type KnobItem } from './KnobBank';
 import { knobPages, knobsByPage, reverbKnobs, styleKnobs } from './KnobBank.fixtures';
 
 /**
- * The Stage's Knobs region: the knob page tabs after the title, and eight knobs across the
+ * The Stage's Knobs region: the knob page tabs (no title: the tabs name the region), and eight knobs across the
  * region. Compare each story with its namesake under "Yahaha baseline / Components / KnobBank":
  * same names, same sample data. A tab choice is a callback with the page's index; every knob change
  * carries the knob's position.

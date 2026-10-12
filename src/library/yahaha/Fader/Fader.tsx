@@ -11,11 +11,11 @@ export interface FaderProps {
   value?: string;
   /** The set level, 0–127: where the cap sits. */
   level?: number;
-  /** The left meter, 0–1 of the travel. */
+  /** The left meter, 0–1 of the travel. The one meter drawn shows the louder of the two. */
   meter?: number;
   /** The right meter, 0–1 of the travel. */
   meter2?: number;
-  /** The peak hold line, 0–1 of the travel. */
+  /** The peak hold, 0–1 of the travel. Kept for the original's data; not drawn at Stage scale. */
   peak?: number;
   /** Where the hardware fader is, 0–127, while it's away from the level (soft takeover). Undefined: not away. */
   away?: number;
@@ -29,7 +29,7 @@ export interface FaderProps {
   width?: number;
   /** Fill the container's height instead of the fixed six-control-heights travel; a drag still measures the rail. Default false. */
   fillHeight?: boolean;
-  /** With `kind="parked"`: a dotted ghost in the strip's faded hue instead of the dashed grey groove. */
+  /** With `kind="parked"`: an empty hardware slot, a faint solid groove (the banks' empty-slot look) instead of the dashed groove. */
   empty?: boolean;
   /** The tooltip key, rendered as `data-tip`. */
   tip?: string;
@@ -79,11 +79,20 @@ function splitValue(value: string): { word: string; num: string } {
  * the opt-in `fillHeight` (off by default) lets the fader take its container's height, so a bank of
  * strips lines up to whatever height the region gives it without overriding the fader's own size;
  * a drag maps the pointer onto the rail's measured height, so the travel stays exact at any size.
+ * *Affordance, again* (the 2026-10 review): the cap is a raised `--surface-3` key with a
+ * `--border-strong` edge and an ink grip line, not a bar of text ink, so on a neutral strip
+ * (Style, Master, whose fill is ink too) cap and fill no longer merge into one white bar.
+ * *Hierarchy*: one 2px meter in `--text-4`, hard against the groove, showing the louder side,
+ * with no peak line, so it no longer reads as a second, thinner fader; an off part's number drops
+ * to `--size-label`, so a silent "64" doesn't compete with the live levels. *Empty slot*: `empty`
+ * draws the banks' one empty look, a faint solid groove (`--text-1` at 10%) with no cap, value or
+ * edge, instead of a dotted thread.
  *
  * **Kept.** Fully controlled: a drag, ↑ ↓ → ← ±1, Page Up / Down ±10, Home, End and the wheel (±2 a
  * notch, trackpad deltas summed) ask through `onlevel` and move nothing themselves; quick repeats
- * count from the level last asked for until `level` catches up. Two meters with a peak hold, the
- * off / parked / empty / layered looks, and the caller's accessible name.
+ * count from the level last asked for until `level` catches up. The meter props (`meter`,
+ * `meter2`, `peak`) as the original's, the off / parked / empty / layered looks, the warning ghost
+ * cap and arrow for takeover, the word-over-number layer value, and the caller's accessible name.
  */
 export function Fader({
   name,
@@ -91,7 +100,6 @@ export function Fader({
   level = 0,
   meter = 0,
   meter2 = 0,
-  peak = 0,
   away,
   kind = 'part',
   hue = 't',
@@ -252,11 +260,11 @@ export function Fader({
         </span>
         {showMeters && (
           <span className="yh-fader__meters">
-            <span className="yh-fader__meter" style={{ '--yh-fader-m': live ? clamp(meter, 0, 1) : 0 } as CSSProperties} />
-            <span className="yh-fader__meter" style={{ '--yh-fader-m': live ? clamp(meter2, 0, 1) : 0 } as CSSProperties} />
-            {live && peak > 0 && (
-              <span className="yh-fader__peak" style={{ '--yh-fader-p': clamp(peak, 0, 1) } as CSSProperties} />
-            )}
+            {/* One meter, the louder side: two read as a second, thinner fader at Stage scale. */}
+            <span
+              className="yh-fader__meter"
+              style={{ '--yh-fader-m': live ? clamp(Math.max(meter, meter2), 0, 1) : 0 } as CSSProperties}
+            />
           </span>
         )}
       </span>

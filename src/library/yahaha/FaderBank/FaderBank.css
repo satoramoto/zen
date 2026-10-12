@@ -7,9 +7,10 @@
   --yh-faderbank-ink: var(--text-1);
   /* Grid tracks the component names inline. */
   --yh-faderbank-divider-w: var(--space-1);
-  --yh-faderbank-empty-w: var(--space-5);
   --yh-faderbank-master-fr: 1.25fr;
+  --yh-faderbank-empty-fr: 0.5fr;
 
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -23,41 +24,8 @@
   color: var(--text-1);
 }
 
-/* The header's second run: the word "Layer" then its tabs, on the header's baseline. */
-.yh-faderbank__layer {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-}
-.yh-faderbank__layer-word {
-  color: var(--text-3);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: max(var(--tracking), 0.02em);
-  text-transform: var(--label-case);
-}
-
-/* Soft takeover, in words, at the header's right end: a warning mark, the part, the way, the level. */
-.yh-faderbank__takeover {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  color: var(--text-1);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  font-variant-numeric: tabular-nums;
-}
-.yh-faderbank__takeover-mark {
-  flex: none;
-  align-self: center;
-  width: var(--space-2);
-  height: var(--space-2);
-  border-radius: var(--radius-pill);
-  background: var(--warning);
-}
-.yh-faderbank__takeover-value {
-  font-family: var(--font-readout);
-}
+/* Soft takeover in words: a status for assistive tech; on screen the strip's outline and the
+   Fader's ghost cap say it. */
 .yh-faderbank__visually-hidden {
   position: absolute;
   width: 1px;
@@ -199,7 +167,7 @@ span.yh-faderbank__name {
   color: color-mix(in srgb, var(--yh-faderbank-ink) 45%, var(--surface-0));
 }
 .yh-faderbank__strip[data-kind='off'] .yh-faderbank__sound {
-  color: var(--text-4);
+  color: var(--text-3);
 }
 
 /* The lamp row: each part's On under its part, the page button under Master. */
@@ -212,70 +180,33 @@ span.yh-faderbank__name {
   flex: 1 1 auto;
   min-width: 0;
 }
+/* A strip-wide key has a strip's width only: a tighter side inset keeps "Off" and "Panel" whole
+   at a 1217 × 752 Stage instead of cutting them to "O…". */
+.yh-faderbank .yh-faderbank__lamp > :is(.yh-lampbutton, .yh-button) {
+  padding-inline: var(--space-1);
+}
 
-/* The function row: the Launchkey's fader buttons 5–8, a rank below the mixer's own keys. */
+/* The function row: the Launchkey's fader buttons 5–8, under a hairline since they are not mixer
+   controls, but the same `cell` keys as the lamp row, so the region has one key height. Each takes
+   an equal share and grows to its label, never cutting it. */
 .yh-faderbank__foot {
   display: flex;
   flex: none;
-  align-items: center;
-  gap: var(--space-4);
   min-width: 0;
   padding-top: var(--space-2);
   border-top: max(1px, var(--border-width)) solid var(--border);
 }
 .yh-faderbank__functions {
   display: flex;
-  flex: none;
-  align-items: center;
+  flex: 1 1 auto;
   gap: var(--space-2);
   min-width: 0;
 }
-.yh-faderbank__foot > .yh-faderbank__takeover {
-  margin-left: auto;
-}
 .yh-faderbank__functions > .yh-lampbutton {
-  flex: 0 1 auto;
-}
-.yh-faderbank__caption {
-  flex: none;
-  margin-right: var(--space-2);
-  color: var(--text-3);
-  font-size: var(--size-caption);
-  font-weight: var(--weight-strong);
-  letter-spacing: max(var(--tracking), 0.02em);
-  text-transform: var(--label-case);
-}
-
-.yh-faderbank__functions > .yh-lampbutton {
-  flex: none;
+  flex: 1 0 0;
+  width: auto;
+  min-width: max-content;
   white-space: nowrap;
-}
-/* The note gives way to the lamps: its caption first, then its tail is cut with an ellipsis. */
-.yh-faderbank__takeover {
-  flex: 0 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-}
-.yh-faderbank__takeover > .yh-faderbank__caption {
-  flex: 0 100 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.yh-faderbank__takeover-items {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* A narrow region (a 1217×752 Stage gives about 590px): the captions that only repeat what the
-   controls already say give way first, so no tab or lamp label is cut. */
-@container yh-faderbank (max-width: 660px) {
-  .yh-faderbank__layer-word,
-  .yh-faderbank__caption {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

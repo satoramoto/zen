@@ -62,7 +62,7 @@
 /* Caption line: the part's short name, the one coloured thing in the cell. */
 .yh-sound-cell__part {
   align-self: flex-start;
-  font-size: var(--size-caption);
+  font-size: var(--size-label);
   font-weight: var(--weight-strong);
   letter-spacing: var(--tracking);
   text-transform: var(--label-case);
@@ -70,7 +70,7 @@
   color: var(--yh-part-hue);
 }
 
-/* Name line: number then name, the name taking the room and the ellipsis. */
+/* Name line: the name, taking the room and the ellipsis, then its number, small and muted. */
 .yh-sound-cell__sound {
   gap: var(--space-2);
   font-size: var(--size-body);
@@ -79,6 +79,7 @@
 }
 .yh-sound-cell__number {
   flex: none;
+  font-size: var(--size-caption);
   font-family: var(--font-readout);
   font-variant-numeric: tabular-nums;
   color: var(--text-3);
@@ -103,7 +104,7 @@
   color: color-mix(in srgb, var(--yh-part-hue) 45%, var(--surface-0));
 }
 .yh-sound-cell[data-off='true'] .yh-sound-cell__number {
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .yh-sound-cell[data-off='true'] .yh-sound-cell__title {
   color: var(--text-3);

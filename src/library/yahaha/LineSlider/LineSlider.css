@@ -4,12 +4,12 @@
 .yh-lineslider {
   /* What the thumb's cut-out ring is drawn in; a parent on a raised surface may override it. */
   --yh-lineslider-ground: var(--surface-0);
-  --yh-lineslider-line: 3px;
+  --yh-lineslider-line: 4px;
   --yh-lineslider-rail: color-mix(in oklab, var(--text-1) 20%, transparent);
   --yh-lineslider-rail-hover: color-mix(in oklab, var(--text-1) 32%, transparent);
   --yh-lineslider-fill: var(--text-2);
   --yh-lineslider-thumb: var(--text-1);
-  --yh-lineslider-thumb-w: var(--space-1);
+  --yh-lineslider-thumb-w: var(--space-2);
   --yh-lineslider-thumb-h: calc(var(--control-h) * 0.5);
   --yh-lineslider-thumb-radius: min(var(--radius-control), 2px);
   display: inline-flex;
@@ -23,6 +23,14 @@
   --yh-lineslider-rail-hover: var(--yh-lineslider-rail);
   --yh-lineslider-fill: var(--text-4);
   --yh-lineslider-thumb: var(--text-4);
+}
+/* Disabled is dashed, the Stage's one "shown, not usable" edge: the rail breaks into dashes. */
+.yh-lineslider[data-disabled] .yh-lineslider__track {
+  background: repeating-linear-gradient(
+    to right,
+    var(--yh-lineslider-rail) 0 var(--space-1),
+    transparent var(--space-1) var(--space-2)
+  );
 }
 
 /* The whole control height is the target, not just the 3px line. */
@@ -93,7 +101,8 @@
   text-align: right;
   color: var(--text-1);
   font-family: var(--font-readout);
-  font-size: var(--size-heading);
+  /* A step above the label: an inline readout, not a headline, so the line keeps its weight. */
+  font-size: calc(var(--size-label) * 1.25);
   font-weight: var(--weight-numeral);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;

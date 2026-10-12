@@ -34,6 +34,29 @@ describe('PadBank banks', () => {
     expect(within(list).getByRole('tab', { name: 'Multi Pads' })).toHaveAttribute('aria-selected', 'true');
   });
 
+  it('has no title: the region is named Pads, the bank tabs are underlined', () => {
+    setup();
+    expect(screen.queryByRole('heading')).toBeNull();
+    expect(screen.getByRole('region', { name: 'Pads' }).querySelector('.yh-chosen-tabs')).toHaveAttribute('data-look', 'underline');
+  });
+
+  it('an on pad takes the ring face, not the solid fill', () => {
+    const { container } = setup();
+    const pads = container.querySelectorAll('.yh-padbank__cell .yh-pad');
+    expect(pads.length).toBeGreaterThan(0);
+    for (const pad of pads) expect(pad).toHaveAttribute('data-on-face', 'ring');
+  });
+
+  it('drops the ARMED chips when more than two pads are armed, keeps them for one or two', () => {
+    const { container } = setup({ pads: quickRackStorePads });
+    expect(quickRackStorePads.filter((p) => p.state === 'armed').length).toBeGreaterThan(2);
+    expect(container.querySelector('.yh-padbank')).toHaveAttribute('data-armed', 'many');
+    cleanup();
+    const two = quickRackPads.map((pad, i) => (i < 2 ? { ...pad, state: 'armed' as const } : pad));
+    const view = setup({ pads: two });
+    expect(view.container.querySelector('.yh-padbank')).not.toHaveAttribute('data-armed');
+  });
+
   it('each tab takes its tooltip by name, so a list with Sections still lines up', () => {
     setup({ banks: ['Sections', ...padBanks], bank: 1 });
     const tip = (name: string) => screen.getByRole('tab', { name }).getAttribute('data-tip');
