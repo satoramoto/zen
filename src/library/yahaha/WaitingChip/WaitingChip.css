@@ -24,8 +24,9 @@
   vertical-align: middle;
 }
 
-/* A queued style. A waiting section gets the "next" role inline from hues.ts, never a part hue. */
-.yh-waiting-chip[data-hue='a'] { --yh-waiting-chip-hue: var(--accent); }
+/* A queued style wears the style's role hue. A waiting section gets the "next" role inline from
+   hues.ts, never a part hue. */
+.yh-waiting-chip[data-hue='a'] { --yh-waiting-chip-hue: var(--style); }
 
 /* "Next", by shape: a small forward-pointing arrow in the role. */
 .yh-waiting-chip__arrow {

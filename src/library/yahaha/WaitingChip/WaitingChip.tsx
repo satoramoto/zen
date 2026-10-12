@@ -13,7 +13,7 @@ export interface WaitingChipProps {
   /**
    * Which thing is waiting: a section (`intro`, `main`, `ending`, `brk`, `fill`), `a` a queued
    * style, `t` neutral. It tints the "next" arrow, not the words. A section takes no hue of its
-   * own: every section reads the "next" role (`--accent`), the same as `a`.
+   * own: every section reads the "next" role (`--accent`); a queued style (`a`) reads `--style`.
    */
   hue?: WaitingHue;
   /** `count` control-height label text; `line` the same, capped and ellipsized (style line); `display` the display size. */
@@ -31,8 +31,9 @@ export interface WaitingChipProps {
  * as text on light grounds. Now a small forward-pointing arrow before the words says "next" by
  * shape, and only that arrow takes colour. The four categorical hues belong to the four parts
  * (`../hues`), so a waiting section no longer wears one: what is queued next reads `--accent`
- * (`SECTION_STATE_COLOUR.next`) whichever section it is, the same role as a queued style, and the
- * words name the section. The words sit in secondary text so they pass contrast in every pack
+ * (`SECTION_STATE_COLOUR.next`) whichever section it is, and the words name the section. A queued
+ * style's arrow wears the contract's `--style` role hue, the colour of the style and what belongs
+ * to it, so a waiting style reads as the style's and never as the section "next" role. The words sit in secondary text so they pass contrast in every pack
  * (color.md, "Semantic Colors" and "Contrast and Readability"). *Hierarchy:* secondary text keeps
  * the chip a step below what plays; the `display` size uses the display face and weight so the
  * next section reads from across the room (typography.md, "Type Scale"). *Rhythm:* heights come

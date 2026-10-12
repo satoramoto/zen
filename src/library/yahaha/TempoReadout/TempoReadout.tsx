@@ -95,8 +95,10 @@ function useHold(report: ((down: boolean) => void) | undefined) {
  * so the eye lands on the value first (typography.md). *Affordance:* + and − are real keys, a
  * framed pair on the raised surface with one hairline between them, instead of bare glyphs that
  * read as text; the draggable number shows a faint well on hover and the `ns-resize` cursor
- * (craft-details.md). *Colour meaning:* no status colour; the accent appears only as the focus
- * ring, so it reads on light and dark packs alike (color.md). *Sizing:* the numeral's size is one
+ * (craft-details.md). *Colour meaning:* + and − move time, so, as the original drew them, the pair
+ * wears the contract's `--transport` role hue: frame, hairline and glyphs at rest, a tint of it on
+ * hover, a solid fill with `--transport-text` while pressed (`../hues`). The number stays neutral
+ * text and no status colour appears; the accent appears only as the focus ring (color.md). *Sizing:* the numeral's size is one
  * custom property, `--yh-tempo-readout-size` (default `--size-numeral`), which a parent sets on
  * the root or passes as `size`; + and − scale from it, so a display can make the tempo its hero
  * without overriding this widget's CSS.

@@ -1,4 +1,4 @@
-/* AccentBlock: contract variables only. The accent is a leading bar; the name is primary text on a raised surface. */
+/* AccentBlock: contract variables only. The style's hue is a leading bar; the name is primary text on a raised surface. */
 .yh-accentblock {
   --yh-accentblock-h: var(--control-h);
   --yh-accentblock-bar: max(2px, calc(var(--border-width) * 3));
@@ -13,7 +13,7 @@
   margin: 0;
   padding: 0 var(--space-3);
   border: 0;
-  border-left: var(--yh-accentblock-bar) solid var(--accent);
+  border-left: var(--yh-accentblock-bar) solid var(--style);
   border-radius: var(--radius-control);
   appearance: none;
   background: var(--surface-2);

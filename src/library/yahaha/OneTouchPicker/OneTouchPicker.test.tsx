@@ -1,7 +1,23 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { OneTouchPicker } from './OneTouchPicker';
+
+// jsdom gives import.meta.url a non-file scheme and vitest skips CSS; tests run from the repo root.
+const css = readFileSync(join(process.cwd(), 'src/library/yahaha/OneTouchPicker/OneTouchPicker.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+
+describe('OneTouchPicker style hue', () => {
+  it("draws the `a` ink in the style's role hue with its paired ink on the applied fill", () => {
+    const rule = /\[data-ink='a'\]\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(rule).toMatch(/--ots-ink:\s*var\(--style\)/);
+    expect(rule).toMatch(/--ots-line:\s*var\(--style\)/);
+    expect(rule).toMatch(/--ots-on:\s*var\(--style\)/);
+    expect(rule).toMatch(/--ots-on-text:\s*var\(--style-text\)/);
+    expect(rule).not.toContain('--accent');
+  });
+});
 
 describe('OneTouchPicker', () => {
   it('names the group after the applied setting and marks it pressed', () => {
