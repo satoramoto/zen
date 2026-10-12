@@ -30,11 +30,16 @@ const REGIONS = {
   short: { width: 1169, height: 200 },
 } as const;
 
-/** Draws the story in its Stage region, `parameters.region` (`large` by default). */
+/**
+ * Draws the story in its Stage region, `parameters.region` (`large` by default). The region's
+ * height is a floor: where the roomier hero needs more than the original's region (the full
+ * density's thicker beat cells and wider gaps), the frame grows rather than clipping the tempo
+ * keys. A grid, so the hero's `height: 100%` still fills the region.
+ */
 const inRegion: Decorator = (Story, { parameters }) => {
   const size = REGIONS[(parameters.region as keyof typeof REGIONS) ?? 'large'];
   return (
-    <div style={{ width: size.width, height: size.height, maxWidth: '100%' }}>
+    <div style={{ display: 'grid', width: size.width, minHeight: size.height, maxWidth: '100%' }}>
       <Story />
     </div>
   );
@@ -44,7 +49,7 @@ const inRegion: Decorator = (Story, { parameters }) => {
  * The Stage's hero: one hierarchy instead of three competing thirds. The section largest, on the
  * one `--selected` block, the tempo next, the chord a step behind, in neutral ink and no captions;
  * what's next said once, in a "then" tab hanging from the section block; the style header and One
- * Touch on one quiet line above; four beat cells under the tempo. Tempo's Tap (and Reset) lives
+ * Touch on one quiet line above; four beat cells under the tempo. Tempo's Tap (and Style tempo) lives
  * here and nowhere else on the Stage.
  */
 const meta = {
@@ -140,6 +145,11 @@ export const SmallStage: Story = { parameters: { region: 'small' } };
 
 /** The long chord in the small region. */
 export const SmallStageLongChord: Story = { args: { ...displayLongChord }, parameters: { region: 'small' } };
+
+/** At the style's own tempo (104 of 104): the Style tempo key takes the unavailable face, still focusable. */
+export const AtStyleTempo: Story = {
+  args: { nowPlaying: { ...displayBoard.nowPlaying, styleTempo: displayBoard.nowPlaying.bpm } },
+};
 
 /** With the background art at the right edge, without parts. */
 export const WithArt: Story = { args: { ...displayNoParts, art: true } };

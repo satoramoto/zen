@@ -6,16 +6,19 @@
    through their CSS.
 
    Ranks: section 12cqi (cap 96 full, 60 compact), tempo 10.5cqi (84 / 52), chord 9cqi (72 / 44),
-   in push's numbers (display 40, numeral 32, control 28). At the 1440 × 900 Stage's 683px hero
-   that is 82 / 72 / 61; at the 1217 × 752 Stage's 472px hero 57 / 50 / 42. A long section name
-   steps all three down together (data-fit, Display.tsx) until the row fits.
+   in push's numbers (display 40, numeral 32, control 28). At the 1440 × 900 Stage's 767px hero
+   that is 92 / 81 / 69 (full); at the 1217 × 752 Stage's 640px hero the compact caps, 60 / 52 / 44.
+   A long section name steps all three down together (data-fit, Display.tsx) until the row fits.
 
-   Heights, with S, T the section and tempo sizes and H the control height:
-     section cell: the block's line 1.15 S, the "then" tab H under it          = 1.15 S + H
-     tempo cell:   max(1.05 T, 2 H) + gap + beat (3 × line) + gap + keys H
-   Compact (472 px, S 57, T 50, line 4): 94 vs 56 + 4 + 12 + 4 + 28 = 104; plus pad 2 × 8, header
-   37 and one 8 px row gap: about 165 px. Full (683 px, S 82, T 72, line 8): 122 vs 76 + 8 + 24 +
-   8 + 28 = 144; with pads, the header and the row gap about 225 px. */
+   Heights, with S, T the section and tempo sizes, H the control height and G the tempo cell's gap
+   (--yh-display-keys-gap):
+     section cell: the block's line 1.15 S, the "then" tab 1.5 H under it      = 1.15 S + 1.5 H
+     tempo cell:   max(1.15 S, 1.05 T, 2 H) + G + beat (3 × line) + G + keys H
+   Compact (the 1217 × 752 Stage's 640 px hero, push: S 60, T 52, line 4, G 8): 69 + 42 = 111 vs
+   69 + 8 + 12 + 8 + 28 = 125; plus pad 2 × 8, header 37 and a 12 px row gap: 190 px (was 178).
+   Full (the 1440 × 900 Stage's 767 px hero: S 92, T 81, line 12, G 12): 106 + 42 = 148 vs
+   106 + 12 + 36 + 12 + 28 = 194; plus pad 2 × 12, header 41 and a 24 px row gap: 283 px (was 254).
+   At the original's 1392 px region (S 96, T 84) full needs about 307 px. Measured in Chrome. */
 
 .yh-display {
   container: yh-display / inline-size;
@@ -38,10 +41,10 @@
   --yh-display-cap-chord: calc(var(--size-display) * 1.8);
   --yh-display-pad: clamp(var(--space-3), 1.6cqi, var(--space-6));
   --yh-display-gap: clamp(var(--space-4), 2.2cqi, calc(var(--space-6) * 1.5));
-  --yh-display-rows: var(--space-4);
+  --yh-display-rows: var(--space-5);
   --yh-display-rule: var(--space-3);
-  --yh-display-keys-gap: var(--space-2);
-  --yh-display-beat-line: var(--space-2);
+  --yh-display-keys-gap: var(--space-3);
+  --yh-display-beat-line: var(--space-3);
 }
 /* Compact: tight chrome, the caps from the numeral size (60 / 52 / 44 on push). Auto is compact
    below a 1200px wide hero. */
@@ -51,9 +54,9 @@
   --yh-display-cap-chord: calc(var(--size-numeral) * 1.375);
   --yh-display-pad: var(--space-2);
   --yh-display-gap: var(--space-4);
-  --yh-display-rows: var(--space-2);
+  --yh-display-rows: var(--space-3);
   --yh-display-rule: var(--space-2);
-  --yh-display-keys-gap: var(--space-1);
+  --yh-display-keys-gap: var(--space-2);
   --yh-display-beat-line: var(--space-1);
 }
 @container yh-display (max-width: 1199px) {
@@ -63,9 +66,9 @@
     --yh-display-cap-chord: calc(var(--size-numeral) * 1.375);
     --yh-display-pad: var(--space-2);
     --yh-display-gap: var(--space-4);
-    --yh-display-rows: var(--space-2);
+    --yh-display-rows: var(--space-3);
     --yh-display-rule: var(--space-2);
-    --yh-display-keys-gap: var(--space-1);
+    --yh-display-keys-gap: var(--space-2);
     --yh-display-beat-line: var(--space-1);
   }
 }
@@ -295,7 +298,7 @@
   gap: var(--space-2);
   box-sizing: border-box;
   max-width: 100%;
-  height: var(--control-h);
+  height: calc(var(--control-h) * 1.5);
   padding: 0 var(--space-3);
   border-bottom-left-radius: var(--radius-control);
   border-bottom-right-radius: var(--radius-control);
@@ -324,9 +327,12 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+/* The next section's name, a third of the section's size (never below heading size): about 34px
+   under a 96px block at 1440, 24px at 1217. "fill after bar 4" stays label size. */
 .yh-display__then-name {
   flex: none;
-  font-size: var(--size-body);
+  font-size: max(var(--size-heading), calc(var(--yh-display-section) * 0.35));
+  line-height: 1;
   font-weight: var(--weight-strong);
 }
 .yh-display__when {
