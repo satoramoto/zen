@@ -47,3 +47,16 @@ The Stage is a library `Screen` (`src/library/layout/`): a few high-level region
 Tabs live in the region, so content swaps inside a fixed frame: the pad banks are the Pads region's views, the knob pages the Knobs region's, the fader pages the Mixer's, with the layer switch (Vol … Delay) as `Tabs` in its `aside`. Each bank folder exports its region (`PadBankRegion`, `KnobBankRegion`, `FaderBankRegion`); the bank component itself draws no tabs or title and renders the chosen page's body. A region component never paints its own panel and never nests a region; it fills the Region it is given, and labelled clusters inside it are `Group`s.
 
 A region lane edits only its folders. It may import merged primitives, `hues.ts` and `../components`, never another region.
+
+## Assembly: priorities and principles
+
+The Stage is moving onto an assembled `Screen` ([`docs/assembly.md`](../../../docs/assembly.md)): its regions declare forms, the screen declares intent, and the pack's principles (`themes/principles/index.ts`, `yahaha`) settle the rest. The direction above maps onto the solver like this:
+
+| Direction | In the spec / principles |
+|---|---|
+| 1. Now playing (section, chord), then tempo, are loudest | Hero is `priority: 'now'`, so it steps down last; its forms are Display's `full → compact → minimal` |
+| What's next | Song form is `priority: 'next'` |
+| The controls | Transport, Mixer, Knobs and Pads are `priority: 'controls'` (Pads `two-rows → one-row`, faders `tall → short`) |
+| The page bar, keys and status line never move | AppBar is the `header`; Keyboard and the status line are the `footer`: fixed, never stepped or zoomed |
+| One column seam from the bar to the keys | `pairs: [['hero', 'mixer']]` |
+| 5. Every concept on one screen, 1440 × 900 down to 1217 × 752 | `density: 'dense'` (keep the richest form that fits at its least); zoom only when every useful step is taken, never below the 24 px `minTarget` |
