@@ -37,7 +37,7 @@ export interface StageProps {
   pads: Omit<PadBankProps, 'tipAction' | 'columns'>;
   /** The keyboard: range, split, held notes. Its width follows the screen. */
   keys: Omit<KeysProps, 'width' | 'tipAction'>;
-  /** The status line, at the foot of the knobs and pads. */
+  /** The status line: under the transport (stacked), or at the foot of the knobs and pads (split). */
   status: Omit<StatusLineProps, 'width'>;
   /** The app's tooltip action, passed to every region. */
   tipAction?: StageTipAction;
@@ -45,9 +45,9 @@ export interface StageProps {
   width?: number;
   height?: number;
   /**
-   * How the top of the screen is arranged. `split` (the default): the hero, and beside it the song
-   * form over the transport. `stacked`: the hero with the transport beside it, and the song form as
-   * one strip across the screen under them.
+   * How the top of the screen is arranged. `stacked` (the default): the hero with the transport
+   * beside it, the song form one strip across the screen under them, and one column seam from the
+   * top row through the band. `split`: the hero, and beside it the song form over the transport.
    */
   layout?: StageLayout;
 }
@@ -168,42 +168,52 @@ function useFit(layout: StageLayout) {
  * hands reach the controls (the mixer, knobs, pads) and see the keyboard's split and held notes.
  * Every concept of the instrument is on this one screen, each in exactly one place.
  *
- * **Changed.** *One hierarchy, read top to bottom and left to right* (`STAGE.md` 1;
- * `references/layout.md`, reading order): under a quiet page bar the screen has two rows. The top
- * row is *now*: the Display (the hero) in the top-left corner, where the eye lands first, and
- * beside it the song form, so "Main B → Main C" in the hero and the NEXT ring on the form read as
- * one line; the form's own transport cluster sits under it, so Start / Stop is the largest key on
- * screen and next to the sections it moves through. The bottom row is *the hands*: the mixer, then
- * the knobs over the pads, the way the Launchkey lays them out, and the keys at the foot. The
- * original put a row of switches above the hero, so the first thing read was not
- * the music. *One place per job* (`STAGE.md` 3): the transport lives only in SongForm, Tap only
- * in the Display (the Stage times its taps, `tapTempo.ts`), the global switches and Panic only in
- * the AppBar. The Display's parts column is not shown: the mixer already names each part's sound
- * under its fader in the part's hue, so a second list of sounds would be a second place for one
- * fact. *Alignment and grouping*: the pads are two rows of eight under the eight knobs, so each
- * knob stands over its two pads as on the hardware and the right half reads as one eight-wide
- * grid; a 4 × 4 block would break that column alignment and leave half the width empty. The mixer
- * stays a little wider than knobs and pads (1.1 : 1), which still leaves each knob room for its
- * name. *Proportion, and no empty space* (`references/layout.md`, whitespace that groups rather
- * than gaps): the top row takes its own height, the bottom row the rest, so the mixer gets the
- * fader travel. The status line closes the knobs-and-pads column, level with the mixer's Functions
- * line, instead of holding a row of its own over the keys: that row was empty whenever there was
- * nothing to say, a dead band between the hands and the keys. *Hierarchy at every size, then fit*:
- * the screen is laid out at the frame's own size. Where it has the height (the 1440 × 900 board)
- * the hero is the Display's `full` density, its roomy chrome and readouts at their largest, so now
- * playing is the loudest thing on screen; where it is short, the hero goes `compact` and the
- * screen closes its gaps a step, and only then, if the regions still need more room than the
- * frame has, is the whole screen zoomed down. So 1217 × 752 is laid out at 100% with a 470 px hero
- * (the hero may shrink to 15.5 control heights, 434 px), not the 1440 board scaled to 0.845; a pack
- * whose density needs more room than the screen has (Ableton's larger controls) is zoomed down
- * just enough, so nothing is ever cut off or pushed off screen.
+ * **Changed.** The screen reads *now → next → controls*, top to bottom, in four bands under a
+ * quiet page bar (`STAGE.md` 1; `references/layout.md`, reading order). *Now*: the Display (the
+ * hero) in the top-left corner, where the eye lands first, and beside it the transport, so the
+ * tempo and Start / Stop sit on one line. *Next*: the song form, one strip across the whole
+ * screen, Intro → Main A–D → Ending in order with now and next marked on it, the way a player's
+ * timeline runs, so "Main B → Main C" in the hero reads straight down onto the form. *Controls*:
+ * the mixer, then the knobs over the pads, the way the Launchkey lays them out, and the keys at
+ * the foot.
+ *
+ * *One hierarchy* (`STAGE.md` 1): the hero's column is wide enough (760 px at 1440) for section,
+ * tempo and chord to reach their full sizes at the `full` density, so now playing is the loudest
+ * thing a metre away. *No dead bands*: the top row is exactly as tall as the hero (254 px at the
+ * board, 178 at 1217 × 752), and the transport fills that height beside it (its two key rows share
+ * it, Start / Stop spans both) with the status line at its foot, so the transport is a block of
+ * large keys rather than a short row under empty space. The strip and the band share the rest
+ * 72 : 380, each never below what its region needs, so what the top row doesn't use goes to the
+ * fader travel and the pad rows.
+ *
+ * *One column seam* (`references/layout.md`, alignment): the screen is one two-column grid; the top
+ * row and the band are subgrids of it, so the hero and the mixer share the left track and the
+ * transport and the knobs and pads the right one (1.25 : 1, the right never narrower than the
+ * transport's 18 control heights). One vertical line runs from the bar to the keys, marked by the
+ * same hairline beside the transport and beside the knobs. The old screen had two seams 34 px
+ * apart (731 and 765 px), which read as a mistake.
+ *
+ * *One place per job* (`STAGE.md` 3): the transport lives only in SongForm, Tap only in the
+ * Display (the Stage times its taps, `tapTempo.ts`), the global switches and Panic only in the
+ * AppBar, the part colours only on the parts (no hue legend on this screen: the mixer names each
+ * part in its hue). The Display's parts column is not shown: the mixer already names each part's
+ * sound under its fader, so a second list would be a second place for one fact. The status line
+ * sits under the transport, which it most often speaks about ("starts at the next Start"), rather
+ * than holding an empty row over the keys or taking pad height from the band. The pads are two
+ * rows of eight under the eight knobs, so each knob stands over its two pads as on the hardware.
+ *
+ * *Hierarchy at every size, then fit*: the screen is laid out at the frame's own size. Where it has
+ * the height (1440 × 900) the hero is the Display's `full` density; where it is short (1217 × 752)
+ * the hero goes `compact` and the screen closes its gaps a step; only if the regions still need
+ * more room than the frame has is the whole screen zoomed down, so nothing is cut off. The
+ * previous `split` layout (the song form over the transport beside the hero) stays as `layout`.
  *
  * **Kept.** The original's regions and every one of their callbacks, passed straight through,
  * so a region behaves the same here as in its own story; the 1440 × 900 board and the 1217 × 752
- * small screen, each in one layout; the status line in plain sight under the controls; the keys
- * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
+ * small screen; the status line in plain sight; the keys spanning the full
+ * width; the tap tempo rule (two or more taps in time, the last four count).
  */
-export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'split' }: StageProps) {
+export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked' }: StageProps) {
   const [keysSlot, keysWidth] = useSlotWidth(width === undefined ? KEYS_FALLBACK : Math.min(KEYS_FALLBACK, width - 48));
   const [frame, screen, heroDensity] = useFit(layout);
   const taps = useRef<number[]>([]);
@@ -219,6 +229,14 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
   if (width !== undefined) size.width = `${width}px`;
   if (height !== undefined) size.height = `${height}px`;
 
+  // Stacked: under the transport, which it most often speaks about ("starts at the next Start").
+  // Split: at the foot of the knobs and pads, level with the mixer's Functions line.
+  const statusLine = (
+    <div className="yh-stage__status">
+      <StatusLine {...status} />
+    </div>
+  );
+
   return (
     <div ref={frame} className="yh-stage" style={size} role="group" aria-label="Stage">
       <div ref={screen} className="yh-stage__screen" data-hero={heroDensity} data-layout={layout}>
@@ -231,6 +249,7 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
           </div>
           <div className="yh-stage__form">
             <SongForm {...songForm} part={layout === 'stacked' ? 'transport' : 'both'} tipAction={tipAction} />
+            {layout === 'stacked' && statusLine}
           </div>
         </div>
         {layout === 'stacked' && (
@@ -249,9 +268,7 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
             <div className="yh-stage__pads">
               <PadBank {...pads} columns={8} tipAction={tipAction} />
             </div>
-            <div className="yh-stage__status">
-              <StatusLine {...status} />
-            </div>
+            {layout === 'split' && statusLine}
           </div>
         </div>
         <div className="yh-stage__keys" ref={keysSlot}>

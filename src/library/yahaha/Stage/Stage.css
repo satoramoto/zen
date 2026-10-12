@@ -84,23 +84,85 @@
   border-left: var(--border-width) solid var(--border);
 }
 
-/* Stacked: now is the hero with the transport beside it (tempo and Start / Stop side by side), and
-   the song form is one strip across the screen under them, the way a player's timeline runs. */
+/* Stacked (the default): now is the hero with the transport beside it (tempo and Start / Stop side
+   by side); next is the song form, one strip across the screen, the way a player's timeline runs;
+   then the band and the keys.
+
+   One column seam: the screen itself is the two-column grid, and the top row and the band are
+   subgrids of it, so the hero and the mixer share the left track and the transport and the knobs
+   share the right one, and one vertical line runs from the bar to the keys. The right track is
+   never narrower than the transport: Start / Stop and four key columns, about 18 control heights in
+   a caps pack, plus the hairline's inset. 1.25 : 1 gives the hero about 760 px at 1440, where its
+   readouts reach their caps (section 96, tempo 84, chord 72 on push).
+
+   No dead bands: the top row is exactly as tall as the hero's content, and the transport and the
+   status line under it fill that height (taller keys, Start / Stop spanning both rows). Everything
+   below shares what is left: the strip and the band split it 72 : 380, each held at its region's
+   floor, so the band takes the height the top row doesn't need. */
 .yh-stage__screen[data-layout='stacked'] {
-  grid-template-rows: auto auto auto 1fr auto;
+  --yh-stage-right-min: calc(var(--control-h) * 18 + var(--yh-stage-col-gap) + var(--border-width));
+  /* The strip's floor: the steps at their least (SongForm: 1.25 control heights), the part
+     captions over them, and the hairline and gap over the strip. */
+  --yh-stage-strip-min: calc(var(--control-h) * 1.25 + var(--size-caption) * 1.3 + var(--space-1) + var(--yh-stage-gap) + var(--border-width));
+  grid-template-columns: minmax(var(--yh-stage-hero-min), 1.25fr) minmax(var(--yh-stage-right-min), 1fr);
+  grid-template-rows:
+    auto
+    /* min-content, not auto: the hero clips its overflow, so `auto` would let the row shrink under
+       it instead of overflowing the screen and refitting. */
+    min-content
+    minmax(var(--yh-stage-strip-min), 72fr)
+    minmax(min-content, 380fr)
+    auto;
+  column-gap: var(--yh-stage-col-gap);
 }
-/* The transport's column is sized here: SongForm is a size container, so it has no width of its own
-   to give an `auto` column. 17.5 control heights hold Start / Stop and its four key columns. */
-.yh-stage__screen[data-layout='stacked'] .yh-stage__top {
-  grid-template-columns: minmax(var(--yh-stage-hero-min), 1fr) calc(var(--control-h) * 17.5 + var(--yh-stage-col-gap) + var(--border-width));
+/* The short screen closes its gaps one more step: the hairlines still part the bands. */
+.yh-stage__screen[data-layout='stacked'][data-hero='compact'] {
+  --yh-stage-gap: var(--space-2);
 }
+.yh-stage__screen[data-layout='stacked'] > * {
+  grid-column: 1 / -1;
+}
+.yh-stage__screen[data-layout='stacked'] .yh-stage__top,
+.yh-stage__screen[data-layout='stacked'] .yh-stage__band {
+  grid-template-columns: subgrid;
+  min-height: 0;
+}
+/* The transport fills the hero's height, the status line at its foot. */
 .yh-stage__screen[data-layout='stacked'] .yh-stage__form {
-  justify-content: center;
+  justify-content: stretch;
+  gap: var(--yh-stage-gap);
+  min-width: 0;
+}
+.yh-stage__screen[data-layout='stacked'] .yh-stage__form > :first-child {
+  flex: 1 1 0;
+  min-height: 0;
+}
+/* The one place the Stage reaches into a region: the transport's two key rows share the height
+   it is given instead of keeping one control height each, and each key fills its cell (SongForm
+   sizes them for its own story, where it has no height to fill). Start / Stop spans both rows. */
+.yh-stage__screen[data-layout='stacked'] .yh-songform__transport {
+  grid-template-rows: minmax(var(--control-h), 1fr) minmax(var(--control-h), 1fr);
+}
+.yh-stage__screen[data-layout='stacked'] .yh-songform__transport > * > * {
+  height: 100%;
 }
 .yh-stage__strip {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+  min-height: 0;
   padding-top: var(--yh-stage-gap);
   border-top: var(--border-width) solid var(--border);
+}
+.yh-stage__strip > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* The seam's hairline again beside the knobs and pads, with the transport's inset, so both right
+   regions start on one line. */
+.yh-stage__screen[data-layout='stacked'] .yh-stage__controls {
+  padding-left: var(--yh-stage-col-gap);
+  border-left: var(--border-width) solid var(--border);
 }
 
 /* The band: the mixer, and the knobs over the pads, under one hairline. */
