@@ -28,7 +28,7 @@
 [data-hue='4'] { --hue: var(--hue-4); }
 
 .lib-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-.lib-stack { display: grid; gap: var(--space-4); }
+.lib-specimens { display: grid; gap: var(--space-4); }
 
 /* A small caption over a specimen in a story. */
 .lib-field__label { font-size: var(--size-caption); color: var(--text-3); }

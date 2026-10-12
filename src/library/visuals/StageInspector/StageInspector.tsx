@@ -1,8 +1,8 @@
 import type { ChangeEvent } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { NumberField } from '../../components/core/NumberField/NumberField';
-import { Stack } from '../../layout/Stack';
 import { focusRing } from '../../primitives/Ring';
+import { Stack } from '../../primitives/Stack';
 import { Surface } from '../../primitives/Surface';
 import { Text } from '../../primitives/Text';
 import type { Owner, Preset, Problem } from '../model/api';

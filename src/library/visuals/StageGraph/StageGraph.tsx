@@ -4,7 +4,7 @@ import { Device, DevicePortRow } from '../../components/core/Device/Device';
 import { Graph, GraphNode, type GraphView } from '../../components/core/Graph/Graph';
 import { Port } from '../../components/core/Graph/Port';
 import { Popup } from '../../components/core/Popover/Popover';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Surface } from '../../primitives/Surface';
 import { Text } from '../../primitives/Text';
 import { PREVIEW, type Owner, type Preset, type Problem } from '../model/api';

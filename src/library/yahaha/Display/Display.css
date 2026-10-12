@@ -1,32 +1,28 @@
-/* Display: the Stage's hero. Contract variables only, plus the local --yh-display-* ones below.
-   .yh-display is a width container; the sizes live on .yh-display__frame inside it (a container
-   query styles only what is inside the container), in container units of the hero's width,
-   clamped between the pack's numeral size and each readout's own cap for the density. They reach
-   the primitives through their `size` / `thickness` options (Display.tsx, DISPLAY_SIZES), not
-   through their CSS.
+/* Display: the Stage's hero. Contract variables only, plus the local --yh-display-* ones (Display.tsx,
+   Tuning knobs). The hero is drawn in one of its forms (data-form: full, compact, minimal;
+   Display.forms.ts says what each needs, in the same steps and Text roles as the rules below, and
+   the hero carries its form's least as --yh-display-min-w / -min-h).
 
-   Ranks: section 12cqi (cap 96 full, 60 compact), tempo 10.5cqi (84 / 52), chord 9cqi (72 / 44),
-   in push's numbers (display 40, numeral 32, control 28). At the 1440 × 900 Stage's 767px hero
-   that is 92 / 81 / 69 (full); at the 1217 × 752 Stage's 640px hero the compact caps, 60 / 52 / 44.
-   A long section name steps all three down together (data-fit, Display.tsx) until the row fits.
-
-   Heights, with S, T the section and tempo sizes, H the control height and G the tempo cell's gap
-   (--space-3 full, --space-2 compact):
-     section cell: the block's line 1.15 S, the "then" tab 1.5 H under it      = 1.15 S + 1.5 H
-     tempo cell:   max(1.15 S, 1.05 T, 2 H) + G + beat (3 × line) + G + keys H
-   Compact (the 1217 × 752 Stage's 640 px hero, push: S 60, T 52, line 4, G 8): 69 + 42 = 111 vs
-   69 + 8 + 12 + 8 + 28 = 125; plus pad 2 × 8, header 37 and a 12 px row gap: 190 px (was 178).
-   Full (the 1440 × 900 Stage's 767 px hero: S 92, T 81, line 12, G 12): 106 + 42 = 148 vs
-   106 + 12 + 36 + 12 + 28 = 194; plus pad 2 × 12, header 41 and a 24 px row gap: 283 px (was 254).
-   At the original's 1392 px region (S 96, T 84) full needs about 307 px. Measured in Chrome. */
+   .yh-display is a size container that fills the box it is given and never goes below its form's
+   least. The readouts' sizes live on .yh-display__frame inside it: each starts at the pack's
+   numeral size, takes a share of the room past the least on both axes (the smaller of the two),
+   and stops at its form's cap. The shares (DISPLAY_GROWTH) keep every box at least the least free
+   of overflow; the caps (DISPLAY_CAPS) rank the three: section, then tempo, then chord. A long
+   section name steps all three down together (data-fit, Display.tsx). The sizes reach the
+   primitives through their `size` / `thickness` options (DISPLAY_SIZES), never their CSS. */
 
 .yh-display {
-  container: yh-display / inline-size;
+  /* The form's least, set inline by Display.tsx (from DISPLAY_FORMS). */
+  --yh-display-min-w: 0px;
+  --yh-display-min-h: 0px;
+  container: yh-display / size;
   position: relative;
   box-sizing: border-box;
+  flex: 1 1 auto;
   width: 100%;
   height: 100%;
-  min-width: 0;
+  min-width: var(--yh-display-min-w);
+  min-height: var(--yh-display-min-h);
   overflow: hidden;
   /* The display window: the theme's `screen`. Its shadow is drawn by ::after, over the art, so a
      recessed window's inner shadow is not hidden behind the picture. */
@@ -42,74 +38,57 @@
   pointer-events: none;
 }
 
-/* Full: each readout's cap from the pack's display size, and the roomy chrome (the frame's padding
-   and row gap, the rule under the header, the readouts' gaps, the tempo cell's gap: the base rules
-   below). */
-.yh-display__frame {
-  --yh-display-cap-section: calc(var(--size-display) * 2.4);
-  --yh-display-cap-tempo: calc(var(--size-display) * 2.1);
-  --yh-display-cap-chord: calc(var(--size-display) * 1.8);
-  --yh-display-beat-line: var(--space-3);
+/* ---- The forms: each readout's cap, the beat cells' line and the chrome ---- */
+
+/* Full: the roomy chrome, the large caps (96 / 84 / 72 at numeral 32). */
+.yh-display[data-form='full'] .yh-display__frame {
+  --yh-display-cap-section: calc(var(--size-numeral) * 3);
+  --yh-display-cap-tempo: calc(var(--size-numeral) * 2.625);
+  --yh-display-cap-chord: calc(var(--size-numeral) * 2.25);
+  --yh-display-beat-line: var(--space-2);
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-2);
 }
-/* Compact: tight chrome, the caps from the numeral size (60 / 52 / 44 on push). Auto is compact
-   below a 1200px wide hero. */
-.yh-display[data-density='compact'] .yh-display__frame {
+/* Compact: tight chrome (60 / 52 / 44 at numeral 32). */
+.yh-display[data-form='compact'] .yh-display__frame {
   --yh-display-cap-section: calc(var(--size-numeral) * 1.875);
   --yh-display-cap-tempo: calc(var(--size-numeral) * 1.625);
   --yh-display-cap-chord: calc(var(--size-numeral) * 1.375);
   --yh-display-beat-line: var(--space-1);
   gap: var(--space-3);
-  padding: var(--space-2);
+  padding: var(--space-2) var(--space-1);
 }
-.yh-display[data-density='compact'] .yh-display__header {
-  padding-bottom: var(--space-2);
-}
-.yh-display[data-density='compact'] .yh-display__readouts {
-  column-gap: var(--space-4);
-  row-gap: var(--space-3);
-}
-.yh-display[data-density='compact'] .yh-display__tempo {
-  gap: var(--space-2);
-}
-@container yh-display (max-width: 1199px) {
-  .yh-display[data-density='auto'] .yh-display__frame {
-    --yh-display-cap-section: calc(var(--size-numeral) * 1.875);
-    --yh-display-cap-tempo: calc(var(--size-numeral) * 1.625);
-    --yh-display-cap-chord: calc(var(--size-numeral) * 1.375);
-    --yh-display-beat-line: var(--space-1);
-    gap: var(--space-3);
-    padding: var(--space-2);
-  }
-  .yh-display[data-density='auto'] .yh-display__header {
-    padding-bottom: var(--space-2);
-  }
-  .yh-display[data-density='auto'] .yh-display__readouts {
-    column-gap: var(--space-4);
-    row-gap: var(--space-3);
-  }
-  .yh-display[data-density='auto'] .yh-display__tempo {
-    gap: var(--space-2);
-  }
+/* Minimal: the least height that keeps every concept (40 / 36 / 32 at numeral 32). The tempo keys
+   move into the header (Display.tsx), the rule goes, the beat is a hairline. */
+.yh-display[data-form='minimal'] .yh-display__frame {
+  --yh-display-cap-section: calc(var(--size-numeral) * 1.25);
+  --yh-display-cap-tempo: calc(var(--size-numeral) * 1.125);
+  --yh-display-cap-chord: calc(var(--size-numeral) * 1);
+  --yh-display-beat-line: 2px;
+  gap: var(--space-1);
+  padding: var(--space-1);
 }
 
 .yh-display__frame {
   /* The row's fit step, set by Display.tsx as data-fit: all three readouts step together, so a
      long section name never breaks the ranking. */
   --yh-display-fit: 1;
-  /* The readouts, ranked: the section, then the tempo, then the chord. The section's line box
-     (1.15 × the section) is the one the tempo and the chord centre in. */
-  --yh-display-section: calc(clamp(var(--size-numeral), 12cqi, var(--yh-display-cap-section)) * var(--yh-display-fit));
-  --yh-display-tempo: calc(clamp(var(--size-numeral), 10.5cqi, var(--yh-display-cap-tempo)) * var(--yh-display-fit));
-  --yh-display-chord: calc(clamp(var(--size-numeral), 9cqi, var(--yh-display-cap-chord)) * var(--yh-display-fit));
+  /* The room past the form's least, on each axis. */
+  --yh-display-room-w: calc(100cqi - var(--yh-display-min-w));
+  --yh-display-room-h: calc(100cqh - var(--yh-display-min-h));
+  /* The readouts: the numeral size, plus a share of the room (the smaller axis), up to the cap. */
+  --yh-display-section: calc(clamp(var(--size-numeral), min(var(--size-numeral) + var(--yh-display-room-w) * 0.15, var(--size-numeral) + var(--yh-display-room-h) * 0.66), var(--yh-display-cap-section)) * var(--yh-display-fit));
+  --yh-display-tempo: calc(clamp(var(--size-numeral), min(var(--size-numeral) + var(--yh-display-room-w) * 0.1, var(--size-numeral) + var(--yh-display-room-h) * 0.9), var(--yh-display-cap-tempo)) * var(--yh-display-fit));
+  --yh-display-chord: calc(clamp(var(--size-numeral), min(var(--size-numeral) + var(--yh-display-room-w) * 0.07, var(--size-numeral) + var(--yh-display-room-h) * 0.85), var(--yh-display-cap-chord)) * var(--yh-display-fit));
+  /* The chord's column: its three characters, never narrower than a sixteen-character fingering. */
+  --yh-display-chord-w: max(calc(var(--yh-display-chord) * 1.8), calc(var(--size-label) * 9.6));
 
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
   box-sizing: border-box;
   height: 100%;
   min-width: 0;
-  padding: clamp(var(--space-3), 1.6cqi, var(--space-6));
 }
 .yh-display__frame[data-fit='0.9'] { --yh-display-fit: 0.9; }
 .yh-display__frame[data-fit='0.8'] { --yh-display-fit: 0.8; }
@@ -130,12 +109,25 @@
 
 .yh-display__header {
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-6);
+  gap: var(--space-3);
   min-width: 0;
   padding-bottom: var(--space-3);
   border-bottom: var(--border-width) solid var(--border);
+}
+.yh-display[data-form='compact'] .yh-display__header {
+  padding-bottom: var(--space-2);
+}
+/* Minimal: no rule; ‹ name ›, One Touch without its caption, then Tap and Style tempo, a step apart. */
+.yh-display[data-form='minimal'] .yh-display__header {
+  gap: var(--space-1);
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.yh-display[data-form='minimal'] .yh-display__ots .yh-onetouchpicker__label {
+  display: none;
 }
 
 /* A Stack (a row, --space-1 apart, centred); here only how it shares the header. */
@@ -145,11 +137,14 @@
   white-space: nowrap;
 }
 /* The name ends in an ellipsis only once the genre · metre has gone (Display.tsx measures it), and
-   keeps about four control heights so it stays readable. */
+   keeps four and a half control heights (three, minimal) so it stays readable. */
 .yh-display__style-name {
   display: flex;
   flex: 0 1 auto;
   min-width: min(100%, calc(var(--control-h) * 4.5));
+}
+.yh-display[data-form='minimal'] .yh-display__style-name {
+  min-width: min(100%, calc(var(--control-h) * 3));
 }
 .yh-display__meta {
   flex: 0 1 auto;
@@ -181,78 +176,41 @@
   flex: 1 1 auto;
   /* The section as wide as its name (never cut: a long one steps down instead), the tempo as wide
      as its reading, the chord the rest: it steps itself down to fit. */
-  grid-template-columns: max-content minmax(calc(var(--yh-display-chord) * 1.5), 1fr) max-content;
+  grid-template-columns: max-content minmax(var(--yh-display-chord-w), 1fr) max-content;
   /* safe: when the cells are taller than the room they overflow downwards (clipped), never up
      over the header. */
   align-content: safe center;
   align-items: start;
-  column-gap: clamp(var(--space-4), 2.2cqi, calc(var(--space-6) * 1.5));
-  row-gap: var(--space-5);
+  column-gap: var(--space-3);
   min-height: 0;
 }
-/* The parts are a fourth column only from a 900px hero, where a sound name has room; below that
-   they wrap to one row under the readouts, and below 600px they drop (the Stage never shows them:
-   its mixer names the sounds). */
+.yh-display[data-form='compact'] .yh-display__readouts,
+.yh-display[data-form='minimal'] .yh-display__readouts {
+  column-gap: var(--space-2);
+}
+/* The parts (standalone only: the Stage's mixer names the sounds, and the forms leave them out)
+   are a fourth column from a 900px hero, where a sound name has room, and never in minimal. */
+.yh-display .yh-display__parts {
+  display: none;
+}
 @container yh-display (min-width: 900px) {
-  .yh-display[data-parts] .yh-display__readouts {
-    grid-template-columns: max-content minmax(calc(var(--yh-display-chord) * 1.5), 1fr) max-content minmax(calc(var(--control-h) * 6), 0.8fr);
+  .yh-display[data-parts]:not([data-form='minimal']) .yh-display__readouts {
+    grid-template-columns: max-content minmax(var(--yh-display-chord-w), 1fr) max-content minmax(calc(var(--control-h) * 6), 0.8fr);
   }
-}
-/* (These come before the base rules below, so they carry a .yh-display ancestor to win.) */
-@container yh-display (max-width: 899px) {
-  .yh-display .yh-display__parts {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    gap: var(--space-2);
-  }
-  .yh-display .yh-display__parts > li {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-  /* One row: the dot (the part's hue, as on the mixer) names the part, so its name gives way;
-     "off" and "bass" stay. */
-  .yh-display .yh-display__part-label {
-    display: none;
-  }
-  .yh-display .yh-display__part-tail::before {
-    content: none;
-  }
-}
-@container yh-display (max-width: 599px) {
-  .yh-display .yh-display__parts {
-    display: none;
+  .yh-display:not([data-form='minimal']) .yh-display__parts {
+    display: flex;
   }
 }
 
-/* Narrow (a Stage column at 1217 × 752): tighter gaps and keys, so the section, the chord and the
-   tempo each keep their own cell. The chord's notes drop (nobody reads them mid-song); the
-   fingering keeps one line with an ellipsis (its whole text is in the chord's spoken name and its
-   tooltip). */
-@container yh-display (max-width: 599px) {
-  .yh-display[data-density] .yh-display__readouts {
-    column-gap: var(--space-3);
-  }
-  .yh-display .yh-display__header {
-    gap: var(--space-3);
-  }
-  .yh-display .yh-display__tempo-keys {
-    gap: var(--space-1);
-  }
-  .yh-display .yh-display__tempo-keys .yh-button {
-    padding-inline: var(--space-2);
-  }
-  .yh-display .yh-display__chord .yh-chord-readout__tones {
-    display: none;
-  }
-}
-@container yh-display (max-width: 1199px) {
-  .yh-display .yh-display__chord .yh-chord-readout__fingering {
-    max-width: 100%;
-    overflow: hidden;
-    overflow-wrap: normal;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+/* The chord's fingering keeps one line, with an ellipsis when it is longer than the column (its
+   whole text is in the chord's spoken name and its tooltip); the notes stand over it when the two
+   don't share a line. */
+.yh-display .yh-display__chord .yh-chord-readout__fingering {
+  max-width: 100%;
+  overflow: hidden;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .yh-display__cell {
@@ -286,9 +244,8 @@
    the block's foot (the block's lower-left corner squared to meet it). */
 .yh-display__next {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  column-gap: var(--space-3);
+  flex-direction: column;
+  align-items: flex-start;
   margin: 0;
   color: var(--text-2);
 }
@@ -297,35 +254,36 @@
 }
 .yh-display__next > * {
   min-width: 0;
+  max-width: 100%;
 }
 .yh-display__status {
-  --text-leading: var(--control-h);
   color: var(--text-2);
 }
 
-/* The "then" tab: what's next, said once. Control height, primary ink on the raised surface, an
-   arrow in the next role (--accent, set inline from hues.ts), then when, at label size. */
+/* The "then" tab: what's next, said once. Primary ink on the raised surface: an arrow in the next
+   role (--accent, set inline from hues.ts) and the next section's name, and under them when, at
+   label size. */
 .yh-display__then {
   --yh-display-then-hue: var(--accent);
-  display: inline-flex;
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-areas: 'arrow name' 'when when';
   align-items: center;
-  gap: var(--space-2);
+  justify-content: start;
+  column-gap: var(--space-2);
   box-sizing: border-box;
-  max-width: 100%;
-  height: calc(var(--control-h) * 1.5);
-  padding: 0 var(--space-3);
+  padding: var(--space-1) var(--space-3);
   border-bottom-left-radius: var(--radius-control);
   border-bottom-right-radius: var(--radius-control);
   background: var(--surface-2);
   color: var(--text-1);
   white-space: nowrap;
-  overflow: hidden;
 }
 .yh-display__then:not([data-docked]) {
   border-radius: var(--radius-control);
 }
 .yh-display__then-arrow {
-  flex: none;
+  grid-area: arrow;
   width: 0.5em;
   height: 0.7em;
   background: var(--yh-display-then-hue);
@@ -340,23 +298,18 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-/* The next section's name, a third of the section's size (never below heading size): about 34px
-   under a 96px block at 1440, 24px at 1217. "fill after bar 4" stays label size. A strong, tight
-   Text; its size is the knob. */
+/* The next section's name: a third of the section's size, never below heading size (label size,
+   minimal). A strong, tight Text; its size is the knob. */
 .yh-display__then-name {
-  flex: none;
+  grid-area: name;
   --text-size: max(var(--size-heading), calc(var(--yh-display-section) * 0.35));
 }
-.yh-display__when {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text-2);
+.yh-display[data-form='minimal'] .yh-display__then-name {
+  --text-size: var(--size-label);
 }
-.yh-display__then-name + .yh-display__when::before {
-  content: '·';
-  margin-right: var(--space-2);
-  color: var(--text-3);
+.yh-display__when {
+  grid-area: when;
+  color: var(--text-2);
 }
 
 /* The chord centres in the section's line box. Its size comes from its `size` option. */
@@ -365,10 +318,15 @@
 }
 
 /* The tempo: the number centred in the section's line box (never shorter than the ± pair), the
-   four beat cells under it as wide as the cell, then Tap and Reset (a Stack: a row, --space-2
-   apart, centred). */
+   beat cells under it as wide as the cell, then Tap and Style tempo (in the header, minimal). */
 .yh-display__tempo {
   gap: var(--space-3);
+}
+.yh-display[data-form='compact'] .yh-display__tempo {
+  gap: var(--space-2);
+}
+.yh-display[data-form='minimal'] .yh-display__tempo {
+  gap: var(--space-1);
 }
 .yh-display__tempo .yh-tempo-readout {
   align-self: flex-start;
@@ -378,10 +336,22 @@
 .yh-display__beat {
   min-width: 0;
 }
+/* Tap and Style tempo (a Stack: a row, --space-1 apart, centred): two steps each side, one in the
+   tighter forms. */
+.yh-display__tempo-keys {
+  flex: none;
+}
+.yh-display .yh-display__tempo-keys .yh-button {
+  padding-inline: var(--space-2);
+}
+.yh-display[data-form='compact'] .yh-display__tempo-keys .yh-button,
+.yh-display[data-form='minimal'] .yh-display__tempo-keys .yh-button {
+  padding-inline: var(--space-1);
+}
 
 /* ---- The parts: one quiet row each, the part's hue as its dot ---- */
 
-/* A Stack (a column, no gap); a one-row strip below 900px (above). */
+/* A Stack (a column, no gap). */
 .yh-display__parts {
   margin: 0;
   padding: 0;

@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Step } from '../primitives/step';
 import { Text } from '../primitives/Text';
-import { Stack, type StackAlign } from './Stack';
+import { Stack, type StackAlign } from '../primitives/Stack';
 import './Group.css';
 
 export interface GroupProps {
@@ -31,14 +31,18 @@ export interface GroupProps {
  * strips, a row of One Touch numbers. Every group's header looks the same, and the scale sets
  * its spacing, so clusters read alike across the app.
  *
- * **Spacing.** The body is a `Stack`: the space between controls is `gap`, a scale step, never a
- * margin on a control. `direction`, `wrap` and `align` arrange them; the group paints nothing.
+ * **Spacing.** A Group is a `Stack` plus a label: its root is a column `Stack` (gap step 1)
+ * holding the head and the body, and the body is a `Stack` too. The space between controls is
+ * `gap`, a scale step, never a margin on a control. `direction`, `wrap` and `align` arrange them;
+ * the group paints nothing.
  */
 export function Group({ name, label, aside, direction = 'row', wrap = false, gap = 2, align, area, className, style, children }: GroupProps) {
   const shown = label === false ? null : (label ?? name);
   return (
-    <div
+    <Stack
       className={`lib-group${className ? ` ${className}` : ''}`}
+      direction="column"
+      gap={1}
       role="group"
       aria-label={name}
       data-part="group"
@@ -57,6 +61,6 @@ export function Group({ name, label, aside, direction = 'row', wrap = false, gap
       <Stack className="lib-group__body" data-part="body" direction={direction} wrap={wrap} gap={gap} align={align}>
         {children}
       </Stack>
-    </div>
+    </Stack>
   );
 }

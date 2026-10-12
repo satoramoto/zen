@@ -1,5 +1,6 @@
-// Primitives: how a thing looks. Text in a role, a Surface (a layer, a material), an Icon, the
-// focus and press rings, and the spacing steps groups name. They build only from the tokens.
+// Primitives: how a thing looks. Text in a role, a Surface (a layer, a material; Opaque and Hole
+// beside it), an Icon, a Stack (a flex line with a step between), the focus and press rings, and
+// the spacing steps groups name. They build only from the tokens.
 export {
   Text,
   TEXT_ROLES,
@@ -18,6 +19,8 @@ export {
 } from './Text';
 export {
   Surface,
+  Opaque,
+  Hole,
   MATERIAL_ROLES,
   LIT_SLOTS,
   SURFACE_RADII,
@@ -27,5 +30,6 @@ export {
   type SurfaceRadius,
 } from './Surface';
 export { Icon, ICON_SIZES, type IconProps, type IconSize } from './Icon';
+export { Stack, type StackProps, type StackAlign, type StackJustify } from './Stack';
 export { focusRing, pressRing } from './Ring';
 export { STEPS, stepVar, type Step } from './step';

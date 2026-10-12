@@ -8,6 +8,8 @@ import * as api from '../model/api';
 import { usePreview } from '../model/preview';
 import { say } from '../model/words';
 import { frameReadout, type Notice } from '../model/shell';
+import { lengthSum, useForm, type Forms, type Length } from '../../layout/assembly';
+import type { Step } from '../../primitives/step';
 import './Views.css';
 
 // A port of visual[flow]'s `app/src/views.tsx`: the same exports, the views every screen shares
@@ -138,6 +140,48 @@ export function Mark() {
   );
 }
 
+/* ---------- the header's forms (docs/assembly.md): what the home's header row needs ---------- */
+
+/** The header's forms: `full` (the original's spacing), then `narrow` (closed up, the search folded to its ⌕). */
+export type HeaderForm = 'full' | 'narrow';
+
+const gaps = (step: Step, n: number): Length => ({ space: Array<Step>(n).fill(step) });
+
+/**
+ * The home's header row (Home.tsx), its parts added up: the lead sidebar toggle (a control); the
+ * view switch's words ("Home", "Live") in label chars; the library toolbar portaled in, its search
+ * field (`search`) and "Filter ▾" in caption chars, a `--space-3` between them; the camera, Help
+ * and inspector toggles (a control each); the header's gaps between its seven items (the toggle,
+ * the switch, the spacer, the toolbar, the three toggles), and its own padding either side. It
+ * leaves out the pane's title: the home header has none (the library's title head is in its pane).
+ */
+const homeRow = (gap: Step, pad: [Step, Step], search: Length): Length =>
+  lengthSum(
+    { control: 1 }, // the sidebar toggle
+    { chars: { label: 'HomeLive'.length } }, // the view switch's words
+    search, // the toolbar's search field
+    { space: 3 }, // the toolbar's gap
+    { chars: { caption: 'Filter ▾'.length } }, // "Filter ▾"
+    { control: 3 }, // the camera, Help and inspector toggles
+    gaps(gap, 6), // between the header's seven items
+    { space: pad }, // its padding, right and left
+  );
+
+/** The header's own height: a control and `--space-4` (Views.css's min-height). */
+const HEADER_H: Length = { control: 1, space: 4 };
+
+/**
+ * The header's forms. At the visuals pack's roomy scale (control 30, unit 4, label 13, caption 12):
+ * `full` is 30 + 62.4 + 180 + 12 + 57.6 + 90 + 6 × 16 + (12 + 16) = 556px; `narrow` is
+ * 30 + 62.4 + 30 + 12 + 57.6 + 90 + 6 × 12 + (8 + 12) = 374px. Both 46px high.
+ */
+export const HEADER_FORMS: Forms<HeaderForm> = [
+  // full: gaps of --space-4, padding --space-3 and --space-4, the search field at six controls
+  { id: 'full', min: { w: homeRow(4, [3, 4], { control: 6 }), h: HEADER_H }, ideal: { w: homeRow(4, [3, 4], { control: 6 }), h: HEADER_H }, grow: { w: true } },
+  // narrow: closed up (gaps of --space-3, padding --space-2 and --space-3), the search folded to its ⌕ (a control)
+  { id: 'narrow', min: { w: homeRow(3, [2, 3], { control: 1 }), h: HEADER_H }, ideal: { w: homeRow(3, [2, 3], { control: 1 }), h: HEADER_H }, grow: { w: true } },
+];
+
 /**
  * **Job.** Every view's header: the mark, the view switch, then whatever the view
  * puts in it. In the main window it is the title bar too: its empty space drags the
@@ -146,13 +190,32 @@ export function Mark() {
  *
  * **Changed.** It paints no background and no rule under it in any view (the
  * original's rail was overridden away by Home's, decision 68): the screen's layers
- * decide what is behind it. Spacing reads the scale.
+ * decide what is behind it. Spacing reads the scale. It declares its forms
+ * (`HEADER_FORMS`, `Header.forms`) and reads its form with `useForm`, so a `form` prop wins,
+ * then the assembled screen's choice for its region; outside one it is `full`. The form is
+ * `data-form` on the header: `narrow` closes it up (Views.css) and folds the library's search
+ * to its ⌕ (Library.css), where the original did both under a 700px window.
  *
  * **Kept.** Its props, the drag region and the one row of type.
  */
-export function Header({ view, onChange, lead, mark = true, children }: { view: View; onChange(next: View): void; lead?: ReactNode; mark?: boolean; children?: ReactNode }) {
+export function Header({
+  view,
+  onChange,
+  lead,
+  mark = true,
+  form: given,
+  children,
+}: {
+  view: View;
+  onChange(next: View): void;
+  lead?: ReactNode;
+  mark?: boolean;
+  form?: HeaderForm;
+  children?: ReactNode;
+}) {
+  const form = useForm(HEADER_FORMS, given);
   return (
-    <Text as="header" className="vs-header" data-tauri-drag-region>
+    <Text as="header" className="vs-header" data-tauri-drag-region data-form={form}>
       {lead}
       {mark && <Mark />}
       <ViewSwitch view={view} onChange={onChange} />
@@ -160,6 +223,7 @@ export function Header({ view, onChange, lead, mark = true, children }: { view: 
     </Text>
   );
 }
+Header.forms = HEADER_FORMS;
 
 /**
  * **Job.** The preset playing, as the header names it: the folder quietly, then the name.

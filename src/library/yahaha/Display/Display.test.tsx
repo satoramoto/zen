@@ -6,7 +6,9 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeScope } from '../../theme';
 import { packs } from '../../themes/packs';
-import { Display, type DisplayProps } from './Display';
+import { FormProvider } from '../../layout/assembly/forms';
+import { principlesFor, resolveNeed } from '../../layout/assembly/units';
+import { DISPLAY_CAPS, DISPLAY_FORMS, DISPLAY_GROWTH, Display, type DisplayForm, type DisplayProps } from './Display';
 import {
   displayBoard,
   displayLongFingering,
@@ -294,41 +296,144 @@ describe('Display', () => {
     expect(style('.yh-bar-beat').getPropertyValue('--yh-bar-beat-line')).toBe('var(--yh-display-beat-line)');
   });
 
-  it('defines the sizes in container units, each readout with its own cap per density, ranked section > tempo > chord', () => {
+  it('scales the readouts on both axes from the numeral size, each with its own cap per form, as Display.forms.ts says', () => {
     const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'Display.css'), 'utf8');
-    expect(css).toMatch(/container:\s*yh-display\s*\/\s*inline-size/);
-    const cqi = (name: string) => {
-      const m = new RegExp(`--yh-display-${name}:\\s*(?:calc\\()?clamp\\(var\\(--size-numeral\\),\\s*(\\d+(?:\\.\\d+)?)cqi,\\s*var\\(--yh-display-cap-${name}\\)\\)`).exec(css);
-      expect(m, name).not.toBeNull();
-      return Number(m![1]);
-    };
-    expect(cqi('section')).toBeGreaterThan(cqi('tempo'));
-    expect(cqi('tempo')).toBeGreaterThan(cqi('chord'));
-    // Full caps 96 / 84 / 72 from display 40; compact 60 / 52 / 44 from numeral 32 (push's numbers).
-    const caps = (block: string) =>
-      ['section', 'tempo', 'chord'].map((n) => Number(new RegExp(`--yh-display-cap-${n}:\\s*calc\\(var\\(--size-[a-z]+\\) \\* ([\\d.]+)\\)`).exec(block)![1]));
-    const full = /\.yh-display__frame \{([^}]*)\}/.exec(css)![1];
-    const compact = /\.yh-display\[data-density='compact'\] \.yh-display__frame \{([^}]*)\}/.exec(css)![1];
-    expect(caps(full).map((k) => k * 40)).toEqual([96, 84, 72]);
-    expect(caps(compact).map((k) => k * 32)).toEqual([60, 52, 44]);
-    expect(css).toMatch(/@container yh-display \(max-width: 1199px\) \{\s*\.yh-display\[data-density='auto'\] \.yh-display__frame \{[^}]*--yh-display-cap-section:/);
+    expect(css).toMatch(/container:\s*yh-display\s*\/\s*size/);
+    // The share of the room past the least, per axis: the same factors as DISPLAY_GROWTH.
+    for (const r of ['section', 'tempo', 'chord'] as const) {
+      const m = new RegExp(
+        `--yh-display-${r}: calc\\(clamp\\(var\\(--size-numeral\\), min\\(var\\(--size-numeral\\) \\+ var\\(--yh-display-room-w\\) \\* ([\\d.]+), var\\(--size-numeral\\) \\+ var\\(--yh-display-room-h\\) \\* ([\\d.]+)\\), var\\(--yh-display-cap-${r}\\)\\) \\* var\\(--yh-display-fit\\)\\);`,
+      ).exec(css);
+      expect(m, r).not.toBeNull();
+      expect([Number(m![1]), Number(m![2])], r).toEqual([DISPLAY_GROWTH.w[r], DISPLAY_GROWTH.h[r]]);
+    }
+    expect(css).toMatch(/--yh-display-room-w: calc\(100cqi - var\(--yh-display-min-w\)\);/);
+    expect(css).toMatch(/--yh-display-room-h: calc\(100cqh - var\(--yh-display-min-h\)\);/);
+    // Each form's caps, as DISPLAY_CAPS, ranked section > tempo > chord.
+    for (const id of ['full', 'compact', 'minimal'] as const) {
+      const block = new RegExp(`\\.yh-display\\[data-form='${id}'\\] \\.yh-display__frame \\{([^}]*)\\}`).exec(css)![1];
+      const caps = (['section', 'tempo', 'chord'] as const).map((n) => Number(new RegExp(`--yh-display-cap-${n}: calc\\(var\\(--size-numeral\\) \\* ([\\d.]+)\\)`).exec(block)![1]));
+      expect(caps, id).toEqual([DISPLAY_CAPS[id].section, DISPLAY_CAPS[id].tempo, DISPLAY_CAPS[id].chord]);
+      expect(caps[0]).toBeGreaterThan(caps[1]);
+      expect(caps[1]).toBeGreaterThan(caps[2]);
+    }
+    // At numeral 32: full 96 / 84 / 72, compact 60 / 52 / 44.
+    expect(Object.values(DISPLAY_CAPS.full).map((k) => k * 32)).toEqual([96, 84, 72]);
+    expect(Object.values(DISPLAY_CAPS.compact).map((k) => k * 32)).toEqual([60, 52, 44]);
+    // Never below the form's least.
+    expect(css).toMatch(/\.yh-display \{[^}]*min-width: var\(--yh-display-min-w\);[^}]*min-height: var\(--yh-display-min-h\);/);
     // The primitives' own size variables are set only through their options, never overridden here.
     expect(css).not.toMatch(/--yh-(chord-readout-hero|tempo-readout-size|section-name-size|bar-beat-line|bar-beat-lit)\s*:/);
   });
 
-  it('lays out narrow heroes without overlap: parts wrap below 900px and drop below 600px, cells never ride over the header', () => {
+  it('keeps every readout whole: the section never cut, the chord column a fingering wide, cells never over the header', () => {
     const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'Display.css'), 'utf8');
     expect(css).toMatch(/\.yh-display__readouts \{[^}]*align-content:\s*safe center/);
-    // The section is never cut (it steps down instead); the chord keeps a cell and steps itself down.
-    expect(css).toMatch(/grid-template-columns:\s*max-content minmax\(calc\(var\(--yh-display-chord\) \* 1\.5\), 1fr\) max-content;/);
-    expect(css).toMatch(/@container yh-display \(min-width: 900px\) \{\s*\.yh-display\[data-parts\] \.yh-display__readouts \{[^}]*minmax\(calc\(var\(--control-h\) \* 6\), 0\.8fr\)/);
-    expect(css).toMatch(/@container yh-display \(max-width: 899px\) \{\s*\.yh-display \.yh-display__parts \{[^}]*grid-column:\s*1 \/ -1;[^}]*flex-direction:\s*row/);
-    expect(css).toMatch(/@container yh-display \(max-width: 599px\) \{\s*\.yh-display \.yh-display__parts \{\s*display:\s*none/);
+    expect(css).toMatch(/grid-template-columns:\s*max-content minmax\(var\(--yh-display-chord-w\), 1fr\) max-content;/);
+    expect(css).toMatch(/--yh-display-chord-w: max\(calc\(var\(--yh-display-chord\) \* 1\.8\), calc\(var\(--size-label\) \* 9\.6\)\);/);
+    expect(css).toMatch(/@container yh-display \(min-width: 900px\) \{\s*\.yh-display\[data-parts\]:not\(\[data-form='minimal'\]\) \.yh-display__readouts \{[^}]*minmax\(calc\(var\(--control-h\) \* 6\), 0\.8fr\)/);
     expect(css).toMatch(/\.yh-chord-readout__fingering \{[^}]*white-space:\s*nowrap;[^}]*text-overflow:\s*ellipsis/);
-    // Narrow: the notes drop rather than clip.
-    expect(css).toMatch(/@container yh-display \(max-width: 599px\) \{[^@]*\.yh-chord-readout__tones \{\s*display:\s*none/);
-    // No faint text, no mono, no literal sizes for the readouts.
+    // The notes are never dropped.
+    expect(css).not.toMatch(/\.yh-chord-readout__tones \{\s*display:\s*none/);
+    // No faint text, no mono.
     expect(css).not.toMatch(/--text-4|--font-mono/);
+  });
+
+  describe('forms', () => {
+    const display = () => document.querySelector<HTMLElement>('.yh-display')!;
+
+    it('declares full, compact and minimal, also as Display.forms', () => {
+      expect(DISPLAY_FORMS.map((f) => f.id)).toEqual(['full', 'compact', 'minimal']);
+      expect(Display.forms).toBe(DISPLAY_FORMS);
+      for (const f of DISPLAY_FORMS) expect(f.grow).toEqual({ w: true });
+    });
+
+    it('draws each form, from the prop and from the assembled screen, with its least as the scaling floor', () => {
+      for (const id of ['full', 'compact', 'minimal'] as const) {
+        const { unmount } = render(<Display {...displayBoard} form={id} />);
+        expect(display()).toHaveAttribute('data-form', id);
+        expect(display()).not.toHaveAttribute('data-density');
+        expect(display().style.getPropertyValue('--yh-display-min-h')).toMatch(/^calc\(.*var\(--control-h\)/);
+        unmount();
+        const screened = render(
+          <FormProvider form={id}>
+            <Display {...displayBoard} />
+          </FormProvider>,
+        );
+        expect(display()).toHaveAttribute('data-form', id);
+        screened.unmount();
+      }
+    });
+
+    it('minimal keeps every concept: the tempo keys move into the header, one Tap', () => {
+      const { container } = render(<Display {...displayBoard} form="minimal" />);
+      const header = container.querySelector('.yh-display__header')!;
+      expect(within(header as HTMLElement).getByRole('button', { name: 'Tap tempo' })).toBeInTheDocument();
+      expect(within(header as HTMLElement).getByRole('button', { name: "Back to the style's tempo" })).toBeInTheDocument();
+      expect(screen.getAllByRole('button', { name: /tap/i })).toHaveLength(1);
+      for (const part of ['style', 'one-touch', 'now', 'then', 'chord', 'tempo', 'beat']) expect(container.querySelector(`[data-part='${part}']`), part).not.toBeNull();
+      expect(screen.getByText('fill after bar 4')).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'Chord Am7: A C E G, Fingered On Bass' })).toBeInTheDocument();
+    });
+
+    it('precedence: the form prop, then the screen\'s form, then density', () => {
+      const { rerender } = render(<Display {...displayBoard} density="full" />);
+      expect(display()).toHaveAttribute('data-form', 'full');
+      expect(display()).toHaveAttribute('data-density', 'full');
+      rerender(<Display {...displayBoard} density="compact" />);
+      expect(display()).toHaveAttribute('data-form', 'compact');
+      // auto, where nothing measures: compact.
+      rerender(<Display {...displayBoard} />);
+      expect(display()).toHaveAttribute('data-form', 'compact');
+      expect(display()).toHaveAttribute('data-density', 'auto');
+      // The prop wins over density.
+      rerender(<Display {...displayBoard} density="full" form="minimal" />);
+      expect(display()).toHaveAttribute('data-form', 'minimal');
+      // The screen's form wins over density; the prop wins over the screen's.
+      rerender(
+        <FormProvider form="minimal">
+          <Display {...displayBoard} density="full" />
+        </FormProvider>,
+      );
+      expect(display()).toHaveAttribute('data-form', 'minimal');
+      expect(display()).not.toHaveAttribute('data-density');
+      rerender(
+        <FormProvider form="minimal">
+          <Display {...displayBoard} form="compact" />
+        </FormProvider>,
+      );
+      expect(display()).toHaveAttribute('data-form', 'compact');
+    });
+
+    it('are ordered under every pack: each later form shorter and no wider, min ≤ ideal', () => {
+      for (const pack of packs) {
+        const p = principlesFor(pack.facets, pack.principles);
+        const needs = DISPLAY_FORMS.map((f) => ({ min: resolveNeed(f.min, p), ideal: resolveNeed(f.ideal, p) }));
+        needs.forEach(({ min, ideal }, i) => {
+          expect(min.w, `${pack.id} ${i}`).toBeLessThanOrEqual(ideal.w);
+          expect(min.h, `${pack.id} ${i}`).toBeLessThanOrEqual(ideal.h);
+          if (i > 0) expect(min.h, `${pack.id} ${i}`).toBeLessThan(needs[i - 1].min.h);
+        });
+        // Compact is never wider than full.
+        expect(needs[1].min.w).toBeLessThanOrEqual(needs[0].min.w);
+      }
+    });
+
+    it('needs, in px, under yahaha classic (compact scale: control 28, unit 4, numeral 32)', () => {
+      const pack = packs.find((x) => x.id === 'yahaha-classic')!;
+      const p = principlesFor(pack.facets, pack.principles);
+      const px = (id: DisplayForm) => {
+        const f = DISPLAY_FORMS.find((x) => x.id === id)!;
+        const r = (n: { w: number; h: number }) => ({ w: Math.round(n.w), h: Math.round(n.h) });
+        return { min: r(resolveNeed(f.min, p)), ideal: r(resolveNeed(f.ideal, p)) };
+      };
+      expect(px('full')).toEqual({ min: { w: 486, h: 214 }, ideal: { w: 1058, h: 311 } });
+      expect(px('compact')).toEqual({ min: { w: 454, h: 178 }, ideal: { w: 654, h: 220 } });
+      expect(px('minimal')).toEqual({ min: { w: 433, h: 128 }, ideal: { w: 486, h: 140 } });
+      // Minimal is under five control heights tall; compact about 200px.
+      expect(px('minimal').min.h / 28).toBeLessThan(5);
+      expect(px('compact').min.h).toBeLessThan(200);
+    });
   });
 
   it('hands the tooltip action to the primitives, each control\'s key applied once', () => {
@@ -341,13 +446,15 @@ describe('Display', () => {
 
   it('renders under every theme pack', () => {
     for (const pack of packs) {
-      const { unmount } = render(
-        <ThemeScope facets={pack.facets}>
-          <Display {...displayBoard} art />
-        </ThemeScope>,
-      );
-      expect(document.querySelector<HTMLElement>('.yh-display')!).toBeInTheDocument();
-      unmount();
+      for (const form of [undefined, ...DISPLAY_FORMS.map((f) => f.id)]) {
+        const { unmount } = render(
+          <ThemeScope facets={pack.facets}>
+            <Display {...displayBoard} art form={form} />
+          </ThemeScope>,
+        );
+        expect(document.querySelector<HTMLElement>('.yh-display')!).toBeInTheDocument();
+        unmount();
+      }
     }
   });
 });

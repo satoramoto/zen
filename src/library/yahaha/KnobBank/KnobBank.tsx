@@ -2,9 +2,83 @@ import { Region } from '../../layout/Region';
 import { Knob, type TipAction } from '../../components/music/Knob/Knob';
 import { BOX, START, SWEEP, arc } from '../../components/music/Knob/geometry';
 import { PART_HUE_INDEX, type Part } from '../hues';
+import { lengthMax, lengthSum, useForm, type Forms, type Length } from '../../layout/assembly';
+import type { Step } from '../../primitives/step';
 import './KnobBank.css';
 
 export type { TipAction };
+
+/* ---------- forms (docs/assembly.md): what the bank needs, in scale units ---------- */
+
+/** The bank's forms: `labelled` (names whole, the full ring), then `compact` (names may break, ring down to a target). */
+export type KnobBankForm = 'labelled' | 'compact';
+
+/** The Genos knob pages, the Knobs region's tabs: their names size the head (see `TABS_W`). */
+export const KNOB_PAGE_NAMES = ['Style', 'Rack', 'Pan', 'Reverb', 'Chorus', 'Delay'] as const;
+
+const steps = (step: Step, n: number): Step[] => Array<Step>(n).fill(step);
+
+/** The name block: two caption lines (Knob.css's `calc(var(--size-caption) * 2.6)`). */
+const NAME_H: Length = { lines: { caption: 2 } };
+
+/**
+ * The page tabs in the region's head, at their widest material (hardware: 3px track padding, 2px
+ * between tabs, `--space-3` either side of each label; linear is within a px of it). Every
+ * material's head inset matches its plate inset across, so the tabs' width is also what the
+ * body must be at least, or a tab label is cut to an ellipsis. Folded into each form's min width.
+ */
+const TABS_W: Length = {
+  chars: { label: KNOB_PAGE_NAMES.join('').length },
+  space: steps(3, KNOB_PAGE_NAMES.length * 2),
+  px: (KNOB_PAGE_NAMES.length - 1) * 2 + 2 * 3,
+};
+
+/** Eight slots across with `--space-1` between them. */
+const row = (slot: Length): Length => lengthSum(slot, slot, slot, slot, slot, slot, slot, slot, { space: steps(1, 7) });
+
+/**
+ * One slot's width: the wider of its name's longest line and the knob (its ring plus `--space-1`
+ * either side). The name budgets are bold capitals in the widest face (Helvetica, elektron):
+ * labelled keeps every word whole, so the longest ("Metronome") must fit; compact lets a word
+ * break, so seven characters a line, which still keeps every two-word name on two lines.
+ */
+const slot = (nameChars: number, ring: Length): Length =>
+  lengthMax({ chars: { caption: nameChars } }, lengthSum(ring, { space: [1, 1] }));
+
+/**
+ * `labelled`: the knob's padding `--space-1` all round, the name, `--space-1`, the ring (1.5
+ * targets at least, 2.75 control heights as designed, up to 3.5 when the box has room both ways).
+ * `compact`: no padding top or bottom, the name, `--space-1`, the ring (one target at least, two
+ * control heights ideally, up to 2.75).
+ */
+export const KNOB_BANK_FORMS: Forms<KnobBankForm> = [
+  {
+    id: 'labelled',
+    min: {
+      w: lengthMax(TABS_W, row(slot(11, { target: 1.5 }))),
+      h: lengthSum({ space: [1, 1, 1] }, NAME_H, { target: 1.5 }),
+    },
+    ideal: {
+      w: lengthMax(TABS_W, row(slot(11, { control: 2.75 }))),
+      h: lengthSum({ space: [1, 1, 1] }, NAME_H, { control: 2.75 }),
+    },
+    grow: { w: true, h: true },
+    max: { h: lengthSum({ space: [1, 1, 1] }, NAME_H, { control: 3.5 }) },
+  },
+  {
+    id: 'compact',
+    min: {
+      w: lengthMax(TABS_W, row(slot(7, { target: 1 }))),
+      h: lengthSum({ space: 1 }, NAME_H, { target: 1 }),
+    },
+    ideal: {
+      w: lengthMax(TABS_W, row(slot(7, { control: 2 }))),
+      h: lengthSum({ space: 1 }, NAME_H, { control: 2 }),
+    },
+    grow: { w: true, h: true },
+    max: { h: lengthSum({ space: 1 }, NAME_H, { control: 2.75 }) },
+  },
+];
 
 /** One of the eight band knobs. */
 export interface KnobItem {
@@ -50,6 +124,8 @@ export interface KnobBankProps {
   onPress?: (index: number) => void;
   /** A knob asked for steps (its position, then +n clockwise or −n). Not for an unused knob. */
   onStep?: (index: number, delta: number) => void;
+  /** The form to draw (`KNOB_BANK_FORMS`); wins over the one an assembled screen chose. Default: the screen's, else `labelled`. */
+  form?: KnobBankForm;
 }
 
 /** The spoken name of the knob at `index`, as the original's. */
@@ -103,14 +179,32 @@ export function knobName(knob: KnobItem, index: number): string {
  * knob's drag, wheel, keys and press, and the spoken names ("Knob 1: Dynamics (DynCtrl) 127",
  * "Knob 7: unused").
  *
- * **Tuning knobs.** `--yh-knob-ring` (the Knob's ring side, which the bank sets per slot, 2.75
- * control heights at most, and which an empty slot's ring follows too).
+ * **Forms** (`KNOB_BANK_FORMS`, `KnobBank.forms`; read with `useForm`, so a `form` prop wins over
+ * the assembled screen's choice). Both keep all eight slots, every name and value, presses and
+ * steps; only the bank's own shape changes (`data-form` on the root).
+ * - `labelled`: each name whole on up to two caption lines (a slot is at least eleven caption
+ *   characters wide), the knob's `--space-1` padding all round, the ring 1.5 targets at least,
+ *   2.75 control heights as designed, and up to 3.5 when the box has room on both axes.
+ * - `compact`: a long word may break across the two lines (seven caption characters a slot), no
+ *   padding above or below the knob, the ring down to one target (the larger of a control height
+ *   and the pack's `minTarget`), two control heights ideally.
+ * Both grow on w and h: the ring takes what it can of the extra (up to its cap), and the rest of
+ * the height is split above and below the row, which stays centred. Every form's min width
+ * includes the six page tabs in the region's head, which are wider than the compact knob row
+ * would otherwise need.
+ *
+ * **Tuning knobs.**
+ * - `--yh-knob-ring`: the Knob's ring side, which the bank sets per slot from the slot's width,
+ *   the bank's height and the form's cap; an empty slot's ring follows it too.
+ * - `--yh-knobbank-h`: the bank's own height when nothing gives it one (the form's ideal); in a
+ *   box with a height the bank grows or shrinks to fill it.
  */
-export function KnobBank({ knobs, tipAction, onPress, onStep }: KnobBankProps) {
+export function KnobBank({ knobs, tipAction, onPress, onStep, form: given }: KnobBankProps) {
+  const form = useForm(KNOB_BANK_FORMS, given);
   const slots = Array.from({ length: KNOB_SLOTS }, (_, i) => knobs[i] ?? UNUSED);
 
   return (
-    <div className="yh-knobbank" data-part="root" lang="en">
+    <div className="yh-knobbank" data-part="root" data-form={form} lang="en">
       <div className="yh-knobbank__knobs" data-part="knobs">
         {slots.map((knob, i) => (
           <div key={i} className="yh-knobbank__slot" data-part="slot" data-unused={knob.unused || undefined}>
@@ -149,6 +243,7 @@ export function KnobBank({ knobs, tipAction, onPress, onStep }: KnobBankProps) {
     </div>
   );
 }
+KnobBank.forms = KNOB_BANK_FORMS;
 
 export interface KnobBankRegionProps extends KnobBankProps {
   /** The region's name. Default "Knobs". */
@@ -161,7 +256,9 @@ export interface KnobBankRegionProps extends KnobBankProps {
 /**
  * The knobs as a screen region: a library `Region` whose views are the knob pages (or the one
  * `pageLabel` view), and the KnobBank for the chosen page as its body. The page stays the
- * caller's (`page`, `onPage`, by index).
+ * caller's (`page`, `onPage`, by index). `form` goes to the bank; without it the bank reads the
+ * form an assembled screen chose for this region. The region fills the box it is given and the
+ * bank fills its body; with no height given, the bank is its form's ideal height.
  */
 export function KnobBankRegion({ name = 'Knobs', area, className, ...bank }: KnobBankRegionProps) {
   const { pages = [], page = 0, pageLabel = '' } = bank;
@@ -172,8 +269,8 @@ export function KnobBankRegion({ name = 'Knobs', area, className, ...bank }: Kno
       name={name}
       area={area}
       className={className}
-      // The knob row has a natural height: the region is that tall, never squeezed by its row.
-      fit="content"
+      // The region fills its box and the bank its body: the bank sets its own height when the box
+      // has none (`--yh-knobbank-h`), so an `auto` or `min-content` row still can't squeeze it.
       view={String(pages.length > 0 ? page : 0)}
       onView={(id) => bank.onPage?.(Number(id))}
       tipAction={bank.tipAction}

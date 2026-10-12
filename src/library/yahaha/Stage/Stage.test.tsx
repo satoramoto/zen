@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { act, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stage, type StageProps } from './Stage';
 import { sectionPads as padBankSections } from '../PadBank/PadBank.fixtures';
@@ -7,6 +7,9 @@ import { songFormBoard } from '../SongForm/SongForm.fixtures';
 import { stageBoard, stageSections, stageStopped } from './Stage.fixtures';
 import { pressSectionPad, SECTION_PAD_LAYOUT, sectionPads } from './sectionPads';
 import { StagePlayground } from './StagePlayground';
+import type { Placement } from '../../layout/assembly/types';
+import { principlesFor } from '../../layout/assembly/units';
+import { packs } from '../../themes/packs';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -23,31 +26,81 @@ function setup(props: Partial<StageProps> = {}) {
   return render(<Stage {...stageBoard} width={1440} height={900} {...props} />);
 }
 
+/** The Stage screen's zones: header, body (and the body's inner grid box), footer, in that order. */
+function zones() {
+  const stage = screen.getByRole('group', { name: 'Stage' });
+  const children = Array.from(stage.children) as HTMLElement[];
+  expect(children.map((node) => node.dataset.part)).toEqual(['header', 'body', 'footer']);
+  const [header, body, footer] = children;
+  const grid = body.querySelector<HTMLElement>(':scope > [data-part="grid"]')!;
+  expect(grid).not.toBeNull();
+  return { header, body, grid, footer };
+}
+/** A zone's slots, in DOM order: each one's region id and the name of the Region it holds (null for none). */
+const slots = (zone: HTMLElement) =>
+  (Array.from(zone.querySelectorAll(':scope > .lib-assembled__slot')) as HTMLElement[]).map((node) => [
+    node.dataset.region,
+    node.querySelector(':scope > section.lib-region')?.getAttribute('aria-label') ?? null,
+  ]);
+const slot = (zone: HTMLElement, id: string) => zone.querySelector<HTMLElement>(`:scope > .lib-assembled__slot[data-region="${id}"]`)!;
+
 describe('Stage', () => {
-  it('is a Screen: the app bar fixed on top, the regions in a named grid, the keys and status fixed at the foot', () => {
+  it('is an assembled Screen: the app bar in the header, the regions in the body in reading order, the keys then the status line in the footer', () => {
     const { container } = setup();
     expect(container.querySelector('.yh-stage')).toHaveAttribute('data-layout', 'stacked');
-    const screenNode = screen.getByRole('group', { name: 'Stage' });
-    const [header, grid, footer] = Array.from(screenNode.children) as HTMLElement[];
-    expect([header, grid, footer].map((node) => node.dataset.part)).toEqual(['header', 'grid', 'footer']);
+    const { header, body, grid, footer } = zones();
     expect(within(header).getByRole('navigation', { name: 'Pages' })).toBeInTheDocument();
-    expect(Array.from(grid.children).map((node) => [node.getAttribute('aria-label'), (node as HTMLElement).style.gridArea])).toEqual([
-      ['Hero', 'hero'],
-      ['Transport', 'transport'],
-      ['Song form', 'form'],
-      ['Mixer', 'mixer'],
-      ['Knobs', 'knobs'],
-      ['Pads', 'pads'],
+    expect(slots(header).map(([id]) => id)).toEqual(['bar']);
+    expect(grid.parentElement).toBe(body);
+    expect(slots(grid)).toEqual([
+      ['hero', 'Hero'],
+      ['transport', 'Transport'],
+      ['form', 'Song form'],
+      ['mixer', 'Mixer'],
+      ['knobs', 'Knobs'],
+      ['pads', 'Pads'],
     ]);
-    expect(grid.style.gridTemplateAreas).toBe('"hero transport" "form form" "mixer knobs" "mixer pads"');
-    expect(within(footer).getByRole('region', { name: 'Keyboard' })).toBeInTheDocument();
-    expect(footer.querySelector('.yh-status-line')).not.toBeNull();
+    expect(slots(footer)).toEqual([
+      ['keys', 'Keyboard'],
+      ['status', null],
+    ]);
+    expect(slot(footer, 'status').querySelector('.yh-status-line')).not.toBeNull();
     // The hero and the song form halves are plain elements: the Stage's Regions name them.
     expect(within(grid).getByRole('region', { name: 'Hero' })).toContainElement(grid.querySelector<HTMLElement>('.yh-display'));
-    expect(within(grid).getByRole('region', { name: 'Transport' })).toContainElement(screen.getByRole('group', { name: 'Transport' }));
-    expect(within(grid).getByRole('region', { name: 'Song form' })).toContainElement(screen.getByRole('group', { name: 'Sections' }));
+    expect(within(grid).getByRole('region', { name: 'Transport' })).toContainElement(within(grid).getByRole('group', { name: 'Transport' }));
+    expect(within(grid).getByRole('region', { name: 'Song form' })).toContainElement(within(grid).getByRole('group', { name: 'Sections' }));
     expect(screen.queryByRole('region', { name: 'Song form and transport' })).toBeNull();
     expect(screen.queryByRole('region', { name: 'Stage display' })).toBeNull();
+  });
+
+  it("gives each slot the placement's form, and at 1440 × 900 the full hero at zoom 1", () => {
+    for (const layout of ['stacked', 'split'] as const) {
+      const placements: Placement[] = [];
+      const { unmount } = setup({ layout, onPlacement: (p) => void placements.push(p) });
+      expect(placements.length).toBeGreaterThan(0);
+      const placement = placements[placements.length - 1];
+      const stage = screen.getByRole('group', { name: 'Stage' });
+      const all = Array.from(stage.querySelectorAll<HTMLElement>('.lib-assembled__slot'));
+      expect(all.map((node) => node.dataset.region)).toEqual(placement.order);
+      for (const node of all) expect(node.dataset.form, node.dataset.region).toBe(placement.regions[node.dataset.region!].form);
+      expect(placement.regions.hero.form).toBe('full');
+      expect(placement.zoom).toBe(1);
+      expect(stage).toHaveAttribute('data-zoom', '1.000');
+      expect(stage).not.toHaveAttribute('data-overflow');
+      unmount();
+    }
+  });
+
+  it("gives the keys the keys slot's width less the plate", () => {
+    const placements: Placement[] = [];
+    for (const size of [{ width: 1440, height: 900 }, { width: 1217, height: 752 }]) {
+      const { unmount } = setup({ ...size, onPlacement: (p) => void placements.push(p) });
+      const { inset } = principlesFor(packs[0].facets, packs[0].principles).plate;
+      const keysRect = placements[placements.length - 1].regions.keys.rect;
+      const keys = slot(zones().footer, 'keys').querySelector<HTMLElement>('.yh-keys')!;
+      expect(keys.style.width).toBe(`${keysRect.w - inset.left - inset.right}px`);
+      unmount();
+    }
   });
 
   it('folds each bank\'s tabs into its region: no region inside the Mixer, Knobs or Pads', () => {
@@ -148,11 +201,22 @@ describe('Stage', () => {
   it('split: the song form over the transport beside the hero, each key once', () => {
     const { container } = setup({ layout: 'split' });
     expect(container.querySelector('.yh-stage')).toHaveAttribute('data-layout', 'split');
-    expect(container.querySelector('.yh-stage__strip')).toBeNull();
-    const grid = container.querySelector('[data-part="grid"]') as HTMLElement;
-    expect(grid.style.gridTemplateAreas).toBe('"hero form" "mixer knobs" "mixer pads"');
+    const { header, grid, footer } = zones();
+    expect(slots(header).map(([id]) => id)).toEqual(['bar']);
+    expect(slots(grid)).toEqual([
+      ['hero', 'Hero'],
+      ['form', 'Song form and transport'],
+      ['mixer', 'Mixer'],
+      ['knobs', 'Knobs'],
+      ['pads', 'Pads'],
+    ]);
+    expect(slots(footer)).toEqual([
+      ['keys', 'Keyboard'],
+      ['status', null],
+    ]);
+    expect(screen.queryByRole('region', { name: 'Transport' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'Song form' })).toBeNull();
     const outer = screen.getByRole('region', { name: 'Song form and transport' });
-    expect(outer.style.gridArea).toBe('form');
     expect(within(outer).queryAllByRole('region')).toHaveLength(0);
     const form = within(outer);
     for (const name of [...SECTIONS, ...TRANSPORT]) {
@@ -199,9 +263,10 @@ describe('Stage', () => {
     const SECTION_IDS = ['intro1', 'intro2', 'intro3', 'mainA', 'mainB', 'mainC', 'mainD', 'ending1', 'ending2', 'ending3', 'break'] as const;
     /** The strip's step and the bank's pad for one section: the same Pad face on both. */
     function faces(container: HTMLElement, id: (typeof SECTION_IDS)[number]) {
-      const strip = container.querySelector(`.yh-stage__strip [data-section="${id}"] .yh-pad`) as HTMLElement;
+      const slotOf = (id: string) => container.querySelector(`.lib-assembled__slot[data-region="${id}"]`) as HTMLElement;
+      const strip = slotOf('form').querySelector(`[data-section="${id}"] .yh-pad`) as HTMLElement;
       const index = SECTION_PAD_LAYOUT.findIndex((a) => 'section' in a && a.section === id);
-      const cell = container.querySelectorAll('.yh-stage__pads .yh-padbank__cell')[index];
+      const cell = slotOf('pads').querySelectorAll('.yh-padbank__cell')[index];
       return { strip: strip.dataset.state, pad: (cell.querySelector('.yh-pad') as HTMLElement).dataset.state };
     }
     const onSections = (songForm: StageProps['songForm']): Partial<StageProps> => ({ ...stageSections, songForm });
@@ -318,95 +383,13 @@ describe('Stage', () => {
     expect(onTempo).toHaveBeenLastCalledWith(120);
   });
 
-  describe('fitting the frame', () => {
-    afterEach(() => vi.unstubAllGlobals());
-
-    /** A frame of `frame` px and a screen whose content needs `need` px of height per hero density. */
-    function measure(frame: { w: number; h: number }, need: { full: number; compact: number }) {
-      const observers: { fit: () => void; nodes: Element[] }[] = [];
-      vi.stubGlobal(
-        'ResizeObserver',
-        class {
-          nodes: Element[] = [];
-          constructor(fit: () => void) {
-            observers.push({ fit, nodes: this.nodes });
-          }
-          observe(node: Element) {
-            this.nodes.push(node);
-          }
-          disconnect() {}
-        },
-      );
-      // The grid's room is `frame` (what the header and footer leave); a cleared grid fills it.
-      const isGrid = (node: Element) => node.classList.contains('lib-screen__grid');
-      const px = (node: Element, side: 'width' | 'height') => parseFloat((node as HTMLElement).style[side]) || 0;
-      const box = (node: Element, side: 'width' | 'height') => px(node, side) || (side === 'width' ? frame.w : frame.h);
-      vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
-        return isGrid(this) ? box(this, 'width') : 0;
-      });
-      vi.spyOn(Element.prototype, 'clientHeight', 'get').mockImplementation(function (this: Element) {
-        return isGrid(this) ? box(this, 'height') : 0;
-      });
-      vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
-        return isGrid(this) ? box(this, 'width') : 0;
-      });
-      vi.spyOn(Element.prototype, 'scrollHeight', 'get').mockImplementation(function (this: Element) {
-        if (!isGrid(this)) return 0;
-        return (this.closest('.yh-stage') as HTMLElement).dataset.hero === 'compact' ? need.compact : need.full;
-      });
-      return { refit: () => act(() => observers.forEach((o) => o.fit())), observed: () => observers.flatMap((o) => o.nodes) };
+  it("draws the hero in its slot's form, at the board and the small screen", () => {
+    for (const size of [{ width: 1440, height: 900 }, { width: 1217, height: 752 }]) {
+      const { unmount } = setup(size);
+      const hero = slot(zones().grid, 'hero');
+      expect(hero.querySelector('.yh-display')).toHaveAttribute('data-form', hero.dataset.form);
+      unmount();
     }
-    const fit = () => ({
-      zoom: (document.querySelector('.yh-stage') as HTMLElement).dataset.zoom,
-      hero: (document.querySelector('.yh-display') as HTMLElement).getAttribute('data-density'),
-    });
-
-    it('tightens the hero before it zooms, at the 1217 × 752 screen', () => {
-      measure({ w: 1217, h: 752 }, { full: 800, compact: 740 });
-      render(<Stage {...stageBoard} />);
-      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
-    });
-
-    it('keeps the full hero where the screen has the height', () => {
-      measure({ w: 1440, h: 900 }, { full: 860, compact: 800 });
-      render(<Stage {...stageBoard} />);
-      expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
-    });
-
-    it('refits when the content grows, and gives the hero back its room when the frame does', () => {
-      const frame = { w: 1217, h: 752 };
-      const need = { full: 800, compact: 740 };
-      const { refit, observed } = measure(frame, need);
-      const { container } = render(<Stage {...stageBoard} />);
-      // The header, the footer and each region are watched, not only the frame: the fit sets the grid's own box.
-      expect(observed()).toContain(container.querySelector('[data-part="header"]'));
-      expect(observed()).toContain(container.querySelector('[data-part="footer"]'));
-      expect(observed()).toContain(screen.getByRole('region', { name: 'Hero' }));
-      expect(observed()).toContain(screen.getByRole('region', { name: 'Pads' }));
-      need.compact = 940;
-      refit();
-      expect(fit()).toEqual({ zoom: '0.800', hero: 'compact' });
-      Object.assign(frame, { w: 1440, h: 900 });
-      refit();
-      expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
-    });
-
-    it('retries the full hero once when the content shrinks in the same frame', () => {
-      const need = { full: 800, compact: 740 };
-      const { refit } = measure({ w: 1217, h: 752 }, need);
-      render(<Stage {...stageBoard} />);
-      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
-      // A denser pack: the rows shrink, but full still overflows, so the hero settles compact.
-      Object.assign(need, { full: 780, compact: 720 });
-      refit();
-      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
-      refit();
-      expect(fit()).toEqual({ zoom: '1.000', hero: 'compact' });
-      // Denser still: now full fits.
-      Object.assign(need, { full: 740, compact: 690 });
-      refit();
-      expect(fit()).toEqual({ zoom: '1.000', hero: 'full' });
-    });
   });
 
   it('puts the status line in the fixed footer under the keys, in both layouts', () => {

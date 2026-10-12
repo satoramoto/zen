@@ -6,13 +6,14 @@ import { withLibraryTheme } from '../../storybook';
 import { DISPLAYS, FX, LINK_OFF } from '../fixtures/fixtures';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import { useLive } from '../model/useLive';
-import { FullScreenOffer, StageHead } from './StageHead';
+import { FullScreenOffer, StageHead, type StageHeadForm } from './StageHead';
 
-/** What a story sets: the window's width, whether it plays in the window, and whether the crate is docked (its band then holds the window buttons). */
+/** What a story sets: the window's width, whether it plays in the window, whether the crate is docked (its band then holds the window buttons), and the header's form (outside an assembled screen, the first unless given). */
 interface Args {
   width: number;
   windowed: boolean;
   docked: boolean;
+  form?: StageHeadForm;
 }
 
 /**
@@ -23,7 +24,7 @@ interface Args {
  * The picture is the frame's still (`--vs-still`); everything over it is in the
  * Stage's `Opaque` scope, as the shell puts it.
  */
-function Window({ width, windowed, docked }: Args) {
+function Window({ width, windowed, docked, form }: Args) {
   const live = useLive({ start: null, windowed });
   const [crate, setCrate] = useState(docked);
   const [help, setHelp] = useState(false);
@@ -39,7 +40,7 @@ function Window({ width, windowed, docked }: Args) {
         )}
         {/* The shell's header row: 84px kept for the window buttons, or beside the docked crate; 8px at the right. */}
         <div style={{ position: 'absolute', top: 0, right: 8, left: docked ? 272 : 84, display: 'flex' }} data-tauri-drag-region>
-          <StageHead live={live} crateOpen={crate} onCrate={() => setCrate((c) => !c)} help={help} onHelp={() => setHelp((h) => !h)} onView={() => {}} />
+          <StageHead live={live} crateOpen={crate} onCrate={() => setCrate((c) => !c)} help={help} onHelp={() => setHelp((h) => !h)} onView={() => {}} form={form} />
         </div>
         <div style={{ position: 'absolute', top: 64, right: 0, left: 0, display: 'flex', justifyContent: 'center' }}>
           <FullScreenOffer live={live} />
@@ -129,9 +130,9 @@ export const InTheWindow: Story = {
   },
 };
 
-/** 800 wide with one display: still one line each, and the offer says the picture will cover this window. */
+/** 800 wide (the short form) with one display: still one line each, and the offer says the picture will cover this window. */
 export const Narrow: Story = {
-  args: { width: 800 },
+  args: { width: 800, form: 'short' },
   parameters: { world: { displays: [DISPLAYS[0]] } },
   play: async ({ canvas, canvasElement }) => {
     await expect(await canvas.findByText('One display: the picture will cover this window. ✕ or ⌘⇧L comes back.')).toBeVisible();
@@ -139,9 +140,9 @@ export const Narrow: Story = {
   },
 };
 
-/** 800 wide with the Output popover open on one display: the warning that it covers this window too, inside the window. */
+/** 800 wide (the short form) with the Output popover open on one display: the warning that it covers this window too, inside the window. */
 export const NarrowOneDisplayWarning: Story = {
-  args: { width: 800 },
+  args: { width: 800, form: 'short' },
   parameters: { world: { displays: [DISPLAYS[0]] } },
   play: async ({ canvas }) => {
     await userEvent.click(await canvas.findByRole('button', { name: /^Output, / }));

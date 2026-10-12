@@ -3,7 +3,20 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeScope, resolveTheme } from '../../theme';
 import { packs } from '../../themes/packs';
-import { SECTION_LABEL, SongForm, type SongFormProps } from './SongForm';
+import { scales } from '../../themes/scales';
+import { FormProvider, principlesFor, resolveLength, resolveNeed, type Forms, type Length } from '../../layout/assembly';
+import {
+  BOTH_GAP,
+  BREAKS,
+  FORM_FORMS,
+  SECTION_LABEL,
+  SONG_FORM_FORMS,
+  SongForm,
+  TRANSPORT_FORMS,
+  type SongFormProps,
+} from './SongForm';
+import { WIDTHS } from './SongForm.forms';
+import { DISPLAY_FORMS } from '../Display/Display.forms';
 
 describe('SongForm labels', () => {
   it('joins a section name with a non-breaking space, so "Main C" never wraps', () => {
@@ -272,6 +285,209 @@ describe('Yahaha SongForm', () => {
       expect(screen.getByRole('group', { name: 'Sections' })).toBeInTheDocument();
       expect(screen.getByRole('group', { name: 'Transport' })).toBeInTheDocument();
       unmount();
+    }
+  });
+});
+
+const TRANSPORT_KEYS = [
+  /^Start \/ Stop/,
+  /^Sync Start/,
+  /^Sync Stop/,
+  /^Fill Up/,
+  /^Fill Down/,
+  /^Fade/,
+  /^Section reset/,
+  /^Accomp/,
+  /^Auto Fill/,
+];
+const SECTIONS = ['intro1', 'intro2', 'intro3', 'mainA', 'mainB', 'mainC', 'mainD', 'ending1', 'ending2', 'ending3', 'break'];
+
+const expectEveryTransportKey = () => {
+  const transport = screen.getByRole('group', { name: 'Transport' });
+  for (const name of TRANSPORT_KEYS) expect(within(transport).getByRole('button', { name }), String(name)).toBeInTheDocument();
+  expect(within(transport).getAllByRole('button')).toHaveLength(TRANSPORT_KEYS.length);
+};
+const expectEverySection = () => {
+  const form = screen.getByRole('group', { name: 'Sections' });
+  expect(Array.from(form.querySelectorAll('[data-section]')).map((n) => n.getAttribute('data-section'))).toEqual(SECTIONS);
+  // Now, next and absent stay marked in every form.
+  expect(form.querySelector("[data-section='mainB']")).toHaveAttribute('data-state', 'playing');
+  expect(form.querySelector("[data-section='mainC']")).toHaveAttribute('data-state', 'next');
+  expect(form.querySelector("[data-section='intro3']")).toHaveAttribute('data-state', 'absent');
+  // Every part keeps its caption.
+  expect(Array.from(form.querySelectorAll('.yh-songform__caption')).map((c) => c.textContent)).toEqual(['Intro', 'Main', 'Ending']);
+};
+const half = (c: HTMLElement, name: 'form' | 'transport') => c.querySelector(`.yh-songform__${name}`);
+
+/** Every pack as designed, and every pack under every scale (a pack's scale is one facet of it). */
+const WORN = packs.flatMap((pack) => [
+  { id: pack.id, p: principlesFor(pack.facets, pack.principles) },
+  ...scales.map((scale) => ({ id: `${pack.id}@${scale.id}`, p: principlesFor({ ...pack.facets, scale }, pack.principles) })),
+]);
+
+describe('SongForm forms', () => {
+  it('takes each form by prop, on the root and its half, with every control present', () => {
+    for (const { id } of TRANSPORT_FORMS) {
+      const { container, unmount } = render(<SongForm {...songFormBoard} part="transport" transportForm={id} />);
+      expect(container.querySelector('.yh-songform')).toHaveAttribute('data-form', id);
+      expect(half(container, 'transport')).toHaveAttribute('data-form', id);
+      expectEveryTransportKey();
+      unmount();
+    }
+    for (const { id } of FORM_FORMS) {
+      const { container, unmount } = render(<SongForm {...songFormBoard} part="form" formForm={id} />);
+      expect(container.querySelector('.yh-songform')).toHaveAttribute('data-form', id);
+      expect(half(container, 'form')).toHaveAttribute('data-form', id);
+      expectEverySection();
+      unmount();
+    }
+  });
+
+  it('defaults to the richest form outside an assembled screen', () => {
+    const { container } = render(<SongForm {...songFormBoard} />);
+    expect(half(container, 'form')).toHaveAttribute('data-form', 'strip');
+    expect(half(container, 'transport')).toHaveAttribute('data-form', 'keys');
+    // Both carries its form on each half, not the root.
+    expect(container.querySelector('.yh-songform')).not.toHaveAttribute('data-form');
+  });
+
+  it('reads the region’s form through FormProvider, and each part’s in both', () => {
+    for (const { id } of TRANSPORT_FORMS) {
+      const { container, unmount } = render(
+        <FormProvider form={id}>
+          <SongForm {...songFormBoard} part="transport" />
+        </FormProvider>,
+      );
+      expect(container.querySelector('.yh-songform')).toHaveAttribute('data-form', id);
+      expectEveryTransportKey();
+      unmount();
+    }
+    for (const { id } of FORM_FORMS) {
+      const { container, unmount } = render(
+        <FormProvider form={id}>
+          <SongForm {...songFormBoard} part="form" />
+        </FormProvider>,
+      );
+      expect(container.querySelector('.yh-songform')).toHaveAttribute('data-form', id);
+      expectEverySection();
+      unmount();
+    }
+    for (const f of SONG_FORM_FORMS) {
+      const { container, unmount } = render(
+        <FormProvider form={f.id} parts={f.parts}>
+          <SongForm {...songFormBoard} />
+        </FormProvider>,
+      );
+      expect(half(container, 'form')).toHaveAttribute('data-form', f.parts!.form);
+      expect(half(container, 'transport')).toHaveAttribute('data-form', f.parts!.transport);
+      expectEverySection();
+      expectEveryTransportKey();
+      unmount();
+    }
+    // Any pairing the screen names, even one the list doesn't (folded over compact).
+    const { container } = render(
+      <FormProvider form="custom" parts={{ form: 'folded', transport: 'compact' }}>
+        <SongForm {...songFormBoard} />
+      </FormProvider>,
+    );
+    expect(half(container, 'form')).toHaveAttribute('data-form', 'folded');
+    expect(half(container, 'transport')).toHaveAttribute('data-form', 'compact');
+  });
+
+  it('a pinned form wins over the region’s', () => {
+    const { container } = render(
+      <FormProvider form="full" parts={{ form: 'strip', transport: 'keys' }}>
+        <SongForm {...songFormBoard} formForm="folded" transportForm="compact" />
+      </FormProvider>,
+    );
+    expect(half(container, 'form')).toHaveAttribute('data-form', 'folded');
+    expect(half(container, 'transport')).toHaveAttribute('data-form', 'compact');
+  });
+
+  const lists: [string, Forms][] = [
+    ['TRANSPORT_FORMS', TRANSPORT_FORMS],
+    ['FORM_FORMS', FORM_FORMS],
+    ['SONG_FORM_FORMS', SONG_FORM_FORMS],
+  ];
+
+  it('lists its forms most room first under every pack: each smaller on an axis at its min, min ≤ ideal', () => {
+    for (const pack of WORN) {
+      const { p } = pack;
+      for (const [name, forms] of lists) {
+        forms.forEach((f, i) => {
+          const min = resolveNeed(f.min, p);
+          const ideal = resolveNeed(f.ideal, p);
+          const at = `${pack.id} ${name} ${f.id}`;
+          expect(min.w, at).toBeGreaterThan(0);
+          expect(min.h, at).toBeGreaterThan(0);
+          expect(min.w, at).toBeLessThanOrEqual(ideal.w);
+          expect(min.h, at).toBeLessThanOrEqual(ideal.h);
+          if (i > 0) {
+            const prev = resolveNeed(forms[i - 1].min, p);
+            expect(min.w < prev.w || min.h < prev.h, `${at} is smaller than ${forms[i - 1].id} on an axis`).toBe(true);
+          }
+        });
+      }
+    }
+  });
+
+  it('SONG_FORM_FORMS is its parts added up: the form over the transport, BOTH_GAP apart', () => {
+    for (const pack of WORN) {
+      const { p } = pack;
+      const gap = resolveLength({ space: BOTH_GAP }, p);
+      for (const f of SONG_FORM_FORMS) {
+        const form = FORM_FORMS.find((x) => x.id === f.parts!.form)!;
+        const transport = TRANSPORT_FORMS.find((x) => x.id === f.parts!.transport)!;
+        for (const key of ['min', 'ideal'] as const) {
+          const a = resolveNeed(form[key], p);
+          const b = resolveNeed(transport[key], p);
+          const both = resolveNeed(f[key], p);
+          expect(both.w, `${pack.id} ${f.id} ${key}`).toBeCloseTo(Math.max(a.w, b.w), 6);
+          expect(both.h, `${pack.id} ${f.id} ${key}`).toBeCloseTo(a.h + gap + b.h, 6);
+        }
+        expect(f.grow).toEqual({ w: true, h: true });
+      }
+    }
+  });
+
+  it('the CSS width breakpoints hold every font’s row under every scale', () => {
+    for (const pack of WORN) {
+      const { p } = pack;
+      const em = (len: Length) => resolveLength(len, p) / p.scale.control;
+      const at = pack.id;
+      // The strip at its least is at body size, and every width under a breakpoint fits its font.
+      expect(em(FORM_FORMS[0].min.w), at).toBeLessThanOrEqual(BREAKS.stripHeading);
+      expect(em(WIDTHS.strip('heading')), at).toBeLessThanOrEqual(BREAKS.stripHeading);
+      expect(em(WIDTHS.strip('numeral')), at).toBeLessThanOrEqual(BREAKS.stripNumeral);
+      expect(em(FORM_FORMS[1].min.w), at).toBeLessThanOrEqual(BREAKS.foldedHeading);
+      expect(em(WIDTHS.folded('heading')), at).toBeLessThanOrEqual(BREAKS.foldedHeading);
+      expect(em(WIDTHS.keysBig), at).toBeLessThanOrEqual(BREAKS.keysBig);
+      // Every form's least is above the last-resort wrap (21 control heights).
+      for (const f of FORM_FORMS) expect(em(f.min.w), `${at} ${f.id}`).toBeGreaterThan(21);
+    }
+  });
+
+  it('the transport gets narrower form by form at its min, and tight is never taller than the hero’s least', () => {
+    const minimal = DISPLAY_FORMS.find((f) => f.id === 'minimal')!;
+    for (const pack of WORN) {
+      const { p } = pack;
+      const [keys, tight, compact] = (['keys', 'tight', 'compact'] as const).map((id) => resolveNeed(TRANSPORT_FORMS.find((f) => f.id === id)!.min, p));
+      expect(TRANSPORT_FORMS.map((f) => f.id)).toEqual(['keys', 'tight', 'compact']);
+      expect(tight.w, pack.id).toBeLessThan(keys.w);
+      expect(compact.w, pack.id).toBeLessThan(tight.w);
+      // Three key rows, so it sits beside the hero without setting the row's height.
+      expect(tight.h, pack.id).toBeLessThan(compact.h);
+      expect(tight.h, pack.id).toBeLessThanOrEqual(resolveNeed(minimal.min, p).h);
+    }
+  });
+
+  it('compact fits beside the hero on a 900 px screen: about 12 control heights wide', () => {
+    for (const pack of WORN) {
+      const { p } = pack;
+      const compact = TRANSPORT_FORMS.find((f) => f.id === 'compact')!;
+      expect(resolveLength(compact.min.w, p) / p.scale.control, pack.id).toBeLessThanOrEqual(12);
+      // Every key at least one control height, and that at least the target floor.
+      expect(p.scale.control).toBeGreaterThanOrEqual(p.minTarget);
     }
   });
 });

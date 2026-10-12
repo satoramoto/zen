@@ -15,21 +15,21 @@ type View = 'home' | 'editor' | 'live';
 /** The crate: beside the picture's left edge with the dock and header clear of it, laid over them (a narrow window), or put away. */
 export type CrateMode = 'docked' | 'overlay' | 'hidden';
 
-/** The narrowest window the crate docks in (and is shown by default); below it the crate is laid over the rest, and starts put away. */
-export const STAGE_DOCK_AT = 1100;
-
 /** The browser storage key for the crate shown (true) or put away (false) by the viewer, kept between runs. */
 export const CRATE_KEY = 'visuals.live.crate';
 
 /** The crate panel's id: its toggle names it in `aria-controls`, and a press on the toggle doesn't put a laid-over crate away. */
 export const STAGE_CRATE_ID = 'stage-crate';
 
-/** The crate's mode in a window `width` px wide, from the viewer's choice (`shown`; null: never chose, the width's default). */
-export function crateModeFor(width: number, shown: boolean | null): CrateMode {
-  const wide = width >= STAGE_DOCK_AT;
+/**
+ * The crate's mode, from whether it docks in this window (`docks`: the assembled Stage's answer,
+ * StageLayout's `crateDocks`, from the needs; the original's 1100 px comes out of them) and the
+ * viewer's choice (`shown`; null: never chose, where it docks it shows, elsewhere it starts put away).
+ */
+export function crateModeFor(docks: boolean, shown: boolean | null): CrateMode {
   if (shown === false) return 'hidden';
-  if (shown === null) return wide ? 'docked' : 'hidden';
-  return wide ? 'docked' : 'overlay';
+  if (shown === null) return docks ? 'docked' : 'hidden';
+  return docks ? 'docked' : 'overlay';
 }
 
 /**
@@ -57,9 +57,9 @@ export const togglePanels = (p: Panels): Panels => ({ ...p, shown: !p.shown });
  */
 export const escapeDoes = (p: Panels): 'show' | 'stay' => (p.shown ? 'stay' : 'show');
 
-/** The crate's toggle: put it away when it shows at `width`, else show it. */
-export function toggleCrate(p: Panels, width: number): Panels {
-  return { ...p, crate: crateModeFor(width, p.crate) === 'hidden' };
+/** The crate's toggle: put it away when it shows (`docks`: whether it docks here), else show it. */
+export function toggleCrate(p: Panels, docks: boolean): Panels {
+  return { ...p, crate: crateModeFor(docks, p.crate) === 'hidden' };
 }
 
 /**
@@ -70,8 +70,10 @@ export function toggleCrate(p: Panels, width: number): Panels {
  * the parts inert.
  */
 export interface StageLayoutProps {
-  /** The window's width, for the crate's mode. */
+  /** The window's width, for the crate's mode (the room the Stage assembles in). */
   width: number;
+  /** The window's height; unset, the board's 900. */
+  height?: number;
   panels: Panels;
   /** The flashing-lights warning is owed: nothing plays and the controls wait for "I understand". */
   warning?: boolean;

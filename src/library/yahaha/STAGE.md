@@ -42,8 +42,21 @@ Each region is one folder under `src/library/yahaha/`, with its own fixtures por
 | Knobs and pads | `KnobBank/`, `PadBank/` | KnobBank, PadBank's other banks |
 | The screen | `Stage/` | Stage, StageGolden, tapTempo: lays the regions out with Keys and StatusLine; built last, from the merged regions |
 
-The Stage is a library `Screen` (`src/library/layout/`): a few high-level regions that stay put. Its fixed header is the AppBar; its fixed footer is the Keyboard region and the status line; between them a named grid (`areas`) holds Hero, Transport, Song form, Mixer, Knobs and Pads. Only the grid fits or zooms, never the header or footer. Each region is a library `Region` on the theme's `plate` material: the material decides how a region looks, the room inside it (`--mat-plate-inset`) and the space between regions (`--mat-plate-gap`).
+The Stage is an assembled library `Screen` (`src/library/layout/`, `Stage/Stage.spec.ts`): a few high-level regions that stay put. Its fixed header is the AppBar; its fixed footer is the Keyboard region and the status line; between them the body holds Hero, Transport, Song form, Mixer, Knobs and Pads, placed by the solver from their forms. Only the body steps down or zooms, never the header or footer. Each region is a library `Region` on the theme's `plate` material: the material decides how a region looks, the room inside it (`--mat-plate-inset`) and the space between regions (`--mat-plate-gap`).
 
 Tabs live in the region, so content swaps inside a fixed frame: the pad banks are the Pads region's views, the knob pages the Knobs region's, the fader pages the Mixer's, with the layer switch (Vol … Delay) as `Tabs` in its `aside`. Each bank folder exports its region (`PadBankRegion`, `KnobBankRegion`, `FaderBankRegion`); the bank component itself draws no tabs or title and renders the chosen page's body. A region component never paints its own panel and never nests a region; it fills the Region it is given, and labelled clusters inside it are `Group`s.
 
 A region lane edits only its folders. It may import merged primitives, `hues.ts` and `../components`, never another region.
+
+## Assembly: priorities and principles
+
+The Stage is moving onto an assembled `Screen` ([`docs/assembly.md`](../../../docs/assembly.md)): its regions declare forms, the screen declares intent, and the pack's principles (`themes/principles/index.ts`, `yahaha`) settle the rest. The direction above maps onto the solver like this:
+
+| Direction | In the spec / principles |
+|---|---|
+| 1. Now playing (section, chord), then tempo, are loudest | Hero is `priority: 'now'`, so it steps down last; its forms are Display's `full → compact → minimal` |
+| What's next | Song form is `priority: 'next'` |
+| The controls | Transport, Mixer, Knobs and Pads are `priority: 'controls'` (Pads `two-rows → one-row`, faders `tall → short`) |
+| The page bar, keys and status line never move | AppBar is the `header`; Keyboard and the status line are the `footer`: fixed, never stepped or zoomed |
+| One column seam from the bar to the keys | `pairs: [['hero', 'mixer']]` |
+| 5. Every concept on one screen, 1440 × 900 down to 1217 × 752 | `density: 'dense'` (keep the richest form that fits at its least); zoom only when every useful step is taken, never below the 24 px `minTarget` |

@@ -1,5 +1,5 @@
-import { useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
-import { toCssVars, type Facets, type Mode } from './contract';
+import { createContext, useContext, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
+import { toCssVars, type Facets, type Mode, type PackPrinciples } from './contract';
 import { packs, type ThemePack } from './themes/packs';
 import { palettes } from './themes/palettes';
 import { faces } from './themes/faces';
@@ -55,13 +55,37 @@ export function useSystemMode(): Mode {
   return useSyncExternalStore(subscribe, systemMode, () => 'dark');
 }
 
-/** `bleed`: the scope is a whole screen (an app's window), so it runs to the edges with no padding. */
-export function ThemeScope({ facets, mode = 'system', bleed = false, children }: { facets: Facets; mode?: ModeChoice; bleed?: boolean; children: ReactNode }) {
+/** The facets (and the pack's layout principles) of the nearest `ThemeScope`, for code that
+ *  computes with them (the assembly solver). `null` outside any scope. */
+const ScopeContext = createContext<{ facets: Facets; principles?: PackPrinciples } | null>(null);
+
+/** The nearest `ThemeScope`'s facets and principles, or `null` outside one. */
+export function useThemeScope(): { facets: Facets; principles?: PackPrinciples } | null {
+  return useContext(ScopeContext);
+}
+
+/** `bleed`: the scope is a whole screen (an app's window), so it runs to the edges with no padding.
+ *  `principles`: the pack's layout principles, for screens assembled inside it (`layout/assembly`). */
+export function ThemeScope({
+  facets,
+  principles,
+  mode = 'system',
+  bleed = false,
+  children,
+}: {
+  facets: Facets;
+  principles?: PackPrinciples;
+  mode?: ModeChoice;
+  bleed?: boolean;
+  children: ReactNode;
+}) {
   const system = useSystemMode();
   const resolved = mode === 'system' ? system : mode;
   return (
-    <div className="lib-scope" data-mode={resolved} data-bleed={bleed || undefined} style={toCssVars(facets, resolved) as CSSProperties}>
-      {children}
-    </div>
+    <ScopeContext.Provider value={{ facets, principles }}>
+      <div className="lib-scope" data-mode={resolved} data-bleed={bleed || undefined} style={toCssVars(facets, resolved) as CSSProperties}>
+        {children}
+      </div>
+    </ScopeContext.Provider>
   );
 }

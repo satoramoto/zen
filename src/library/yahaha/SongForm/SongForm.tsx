@@ -1,10 +1,15 @@
 import { Button } from '../../components/core/Button/Button';
 import { LampButton } from '../../components/core/LampButton/LampButton';
 import { Pad, type PadState, type TipAction } from '../../components/music/Pad/Pad';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Text } from '../../primitives/Text';
+import { useForm } from '../../layout/assembly';
 import type { SectionState } from '../hues';
+import { FORM_FORMS, TRANSPORT_FORMS, type FormFormId, type TransportFormId } from './SongForm.forms';
 import './SongForm.css';
+
+export { FORM_FORMS, TRANSPORT_FORMS, SONG_FORM_FORMS, BOTH_GAP, BREAKS } from './SongForm.forms';
+export type { FormFormId, TransportFormId, SongFormFormId } from './SongForm.forms';
 
 /** A section of the song, in the order the song runs, plus Break. */
 export type SectionId =
@@ -122,14 +127,24 @@ export interface SongFormProps {
   /** Reset pressed: restart the section from its first bar (`onreset`). */
   onReset?: () => void;
   /**
-   * Which half to draw: `both` (the default), or only the `form` or the `transport`, for a screen
-   * that places them apart (the Stage's stacked layout puts the transport beside the hero). The
-   * form's steps fill the height of the region's container when it has one (the Stage's strip),
-   * and are two control heights tall otherwise; alone, they read at numeral size. The transport
-   * alone fills the height its container gives it (never less than its two key rows), and its
-   * labels grow with its keys once it is five control heights tall.
+   * Which half to draw: `both` (the default: the form over the transport), or only the `form` or
+   * the `transport`, for a screen that places them apart (the Stage puts the transport beside the
+   * hero). Each half fills the box it is given; its forms (`FORM_FORMS`, `TRANSPORT_FORMS`,
+   * `SONG_FORM_FORMS` for both) say what that box must hold.
    */
   part?: SongFormPart;
+  /**
+   * The transport's form, pinned: `keys` (two rows, Start / Stop tall), `tight` (three rows,
+   * Start / Stop tall) or `compact` (Start / Stop down the left, a row a job). Unset, the
+   * assembled screen's choice for the region (its `transport` part in `both`), else `keys`.
+   */
+  transportForm?: TransportFormId;
+  /**
+   * The song form strip's form, pinned: `strip` (captions over the steps) or `folded` (each
+   * caption before its steps, shorter). Unset, the assembled screen's choice (its `form` part in
+   * `both`), else `strip`.
+   */
+  formForm?: FormFormId;
 }
 
 /** Which half of the region a SongForm draws. */
@@ -181,6 +196,17 @@ export type SongFormPart = 'both' | 'form' | 'transport';
  * in control heights (the region's `em` is `--control-h`), so a denser or airier pack changes
  * layout where its keys stop fitting.
  *
+ * **Forms** (`SongForm.forms.ts`, docs/assembly.md). Each half declares what its own box needs in
+ * scale units, read from the lengths this CSS sets, and fills whatever box it is given. The
+ * transport: `keys` (two rows, Start / Stop tall at the left; fills the height beside the hero,
+ * labels growing past five control heights) → `tight` (Start / Stop tall at the left, a column a
+ * job in three rows, never taller than the hero's least form) → `compact` (Start / Stop tall down
+ * the left, a row a job in two columns, about 12 control heights wide). The form: `strip` (captions over the steps)
+ * → `folded` (each caption before its steps: shorter, wider). Both: the form over the transport,
+ * `full` (strip) → `short` (folded). A half reads its form with `useForm` (by its part name in a
+ * region whose form names its parts), or takes `transportForm` / `formForm`; it carries
+ * `data-form`, and a form changes only SongForm's own shape.
+ *
  * **Kept.** Every control the originals had for these jobs and its callback (renamed React-style):
  * the ten sections and Break, Start / Stop (with hold-to-fade-stop from TransportColumn's Stop),
  * Sync Start, Sync Stop, Auto Fill, Fill ▲ / ▼, Fade, Reset and Accomp; fully controlled (a press
@@ -189,8 +215,8 @@ export type SongFormPart = 'both' | 'form' | 'transport';
  * parent-driven flash (`lit`); the keyboard order and every spoken name, unchanged by the new
  * sizes and spacing.
  *
- * **Tuning knobs.** `--yh-sf-step-font` (the steps' letter and numeral size: heading beside the
- * transport, numeral in the form alone, switched down by the width container queries).
+ * **Tuning knobs.** `--yh-sf-step-font` (the steps' letter and numeral size: body, switched up to
+ * heading and numeral by the width container queries as the strip widens; `BREAKS`).
  */
 export function SongForm({
   running = false,
@@ -218,7 +244,14 @@ export function SongForm({
   onFade,
   onReset,
   part = 'both',
+  transportForm,
+  formForm,
 }: SongFormProps) {
+  // Each half reads its own form: by its part name inside a region whose form names its parts
+  // (`both` on an assembled screen), else the region's form.
+  const formId = useForm(FORM_FORMS, formForm, 'form');
+  const transportId = useForm(TRANSPORT_FORMS, transportForm, 'transport');
+  const rootForm = part === 'form' ? formId : part === 'transport' ? transportId : undefined;
   const missing = new Set(absent);
 
   const stateOf = (id: SectionId): SectionState =>
@@ -288,7 +321,7 @@ export function SongForm({
   return (
     // The root is a Text only for its size (one control height, the container queries' em); the
     // inner body Text sets the real type back to the body recipe.
-    <Text as="div" className="yh-songform" data-part="root" data-half={part}>
+    <Text as="div" className="yh-songform" data-part="root" data-half={part} data-form={rootForm}>
       <Text as="div" className="yh-songform__inner" data-part="inner">
         {part !== 'transport' && (
           <Stack
@@ -297,6 +330,7 @@ export function SongForm({
             align="stretch"
             className="yh-songform__form"
             data-part="form"
+            data-form={formId}
             role="group"
             aria-label="Sections"
           >
@@ -326,7 +360,7 @@ export function SongForm({
         )}
 
         {part !== 'form' && (
-          <div className="yh-songform__transport" data-part="transport" role="group" aria-label="Transport">
+          <div className="yh-songform__transport" data-part="transport" data-form={transportId} role="group" aria-label="Transport">
             <div className="yh-songform__start" data-part="start">
               <Button
                 label={running ? 'Stop' : 'Start'}

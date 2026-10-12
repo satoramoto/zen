@@ -9,11 +9,9 @@
   /* home.css --pad: one padding for the main column, so its notes and grid share the hero's edge. */
   --vs-home-pad: var(--mat-plate-inset);
 }
-/* Under 1100px the column's padding tightens (with smaller tiles: HOME_TILE). */
-@media (max-width: 1099px) {
-  .vs-root .vs-home-grid-pane {
-    --vs-home-pad: var(--space-4);
-  }
+/* With small tiles (the pane's `small` form, HomeLayout's PANE_FORMS) the padding tightens too. */
+.vs-root [data-region='pane'][data-form='small'] .vs-home-grid-pane {
+  --vs-home-pad: var(--space-4);
 }
 
 /* The sidebar's and the inspector's toggles, and Help: a quiet glyph, brighter while its pane
@@ -52,13 +50,6 @@
 }
 .vs-home-toolbar:empty {
   display: none;
-}
-/* Under 700px (down to the 560px minimum) the header closes up. */
-@media (max-width: 699px) {
-  .vs-root .vs-header:has(.vs-home-tool) {
-    gap: var(--space-3);
-    padding: 0 var(--space-2) 0 var(--space-3);
-  }
 }
 
 /* Under the hero: the notes, then the grid filling the rest of the column; the grid scrolls,
@@ -234,7 +225,7 @@
 }
 
 /* A playlist's grid: its presets as tiles, in the order they play, wrapping, on the library
-   grid's spacing (tile.css's .home-grid); tiles at least 150px, 124px in a narrow window. */
+   grid's spacing (tile.css's .home-grid); tiles at least 150px, 124px in the pane's small form. */
 .vs-home-grid {
   --vs-home-tile-min: calc(var(--control-h) * 5);
   display: grid;
@@ -250,10 +241,9 @@
   list-style: none;
   overscroll-behavior: contain;
 }
-@media (max-width: 1099px) {
-  .vs-home-grid {
-    --vs-home-tile-min: calc(var(--space-6) * 4 - var(--space-1));
-  }
+/* The pane's `small` form (PANE_FORMS: where five wide tiles don't fit): 124px tiles. */
+[data-region='pane'][data-form='small'] .vs-home-grid {
+  --vs-home-tile-min: calc(var(--space-6) * 4 - var(--space-1));
 }
 .vs-home-tile {
   position: relative;

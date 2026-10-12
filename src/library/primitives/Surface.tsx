@@ -82,3 +82,28 @@ export function Surface({
     </Tag>
   );
 }
+
+/**
+ * **Job.** Where translucency can't composite: over a native view the web page can't blur (a
+ * video, a GPU preview). Every layer inside draws its opaque `solid` fill and no backdrop, so a
+ * panel over the picture never shows a smear. Wrap what sits over a `Hole` in this.
+ */
+export function Opaque({ children, className, style }: { children?: ReactNode; className?: string; style?: CSSProperties }) {
+  return (
+    <div className={`lib-opaque${className ? ` ${className}` : ''}`} style={style}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * **Job.** A cut-out through every layer to what's behind the page (the native preview), so the
+ * ground shows through. It paints nothing; panels over it go in an `Opaque` scope.
+ */
+export function Hole({ className, style, children, name }: { className?: string; style?: CSSProperties; children?: ReactNode; name?: string }) {
+  return (
+    <div className={`lib-hole${className ? ` ${className}` : ''}`} data-part="hole" aria-label={name} role={name ? 'img' : undefined} style={style}>
+      {children}
+    </div>
+  );
+}

@@ -1,13 +1,12 @@
-/* Group: a labelled cluster of controls inside a region. Contract variables only. */
+/* Group: a Stack plus a label. The root and the body are Stacks (primitives/Stack.css: flex, the
+   gap step, alignment, min sizes); this file keeps only what a Stack can't say. Contract
+   variables only. */
 
-.lib-group {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: var(--space-1);
-  min-width: 0;
+/* The body takes the rest of the group's height. */
+.lib-group__body {
+  flex: 1 1 auto;
   min-height: 0;
 }
-.lib-group:not(:has(> .lib-group__head)) { grid-template-rows: minmax(0, 1fr); }
 
 .lib-group__head {
   display: flex;
@@ -21,4 +20,3 @@
   color: var(--text-3);
   white-space: nowrap;
 }
-/* The body is a Stack (Stack.css): its flow, gap step, alignment and min sizes live there. */

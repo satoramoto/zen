@@ -2,9 +2,9 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { SCOPE_VARS, toCssVars } from '../contract';
+import { LAYERS, SCOPE_VARS, toCssVars } from '../contract';
 import { packs } from '../themes/packs';
-import { Icon, STEPS, Surface, Text } from '.';
+import { Hole, Icon, Opaque, STEPS, Stack, Surface, Text } from '.';
 
 const dir = join(process.cwd(), 'src/library/primitives');
 const css = (name: string) => readFileSync(join(dir, name), 'utf8');
@@ -146,6 +146,94 @@ describe('Surface', () => {
     expect(el).toBeDisabled();
     expect(el).toHaveAttribute('data-radius', 'circle');
     expect(css('Surface.css')).toMatch(/data-radius='circle'\]\)\s*\{\s*border-radius:\s*50%/);
+  });
+});
+
+describe('Opaque', () => {
+  it('makes every layer inside draw its solid fill and no backdrop', () => {
+    // Vitest doesn't load imported CSS, so apply Surface.css itself and read what it computes.
+    const style = document.createElement('style');
+    style.textContent = css('Surface.css');
+    document.head.appendChild(style);
+    try {
+      const { container } = render(
+        <div>
+          <Surface layer="base" data-testid="outside" />
+          <Opaque>
+            <Surface layer="float" data-testid="inside" />
+          </Opaque>
+        </div>,
+      );
+      const opaque = container.querySelector('.lib-opaque') as HTMLElement;
+      expect(opaque).toContainElement(screen.getByTestId('inside'));
+      const computed = getComputedStyle(opaque);
+      for (const name of LAYERS) {
+        expect(computed.getPropertyValue(`--layer-${name}-fill`).trim(), name).toBe(`var(--layer-${name}-solid)`);
+        expect(computed.getPropertyValue(`--layer-${name}-backdrop`).trim(), name).toBe('none');
+      }
+      // Outside an Opaque scope nothing is swapped.
+      expect(getComputedStyle(container.firstElementChild as HTMLElement).getPropertyValue('--layer-base-fill')).toBe('');
+      // A layer reads its fill from the swappable variable.
+      expect(getComputedStyle(screen.getByTestId('inside')).getPropertyValue('--lib-surface-fill').trim()).toBe('var(--layer-float-fill)');
+    } finally {
+      style.remove();
+    }
+  });
+});
+
+describe('Hole', () => {
+  it('is a cut-out part, a named image only when named', () => {
+    render(
+      <>
+        <Hole className="mine" />
+        <Hole name="Preview" />
+      </>,
+    );
+    const plain = document.querySelector('.lib-hole.mine') as HTMLElement;
+    expect(plain).toHaveAttribute('data-part', 'hole');
+    expect(plain).not.toHaveAttribute('role');
+    expect(screen.getByRole('img', { name: 'Preview' })).toHaveClass('lib-hole');
+  });
+});
+
+describe('Stack', () => {
+  it('defaults to a column, gap step 2, no align/justify/wrap, as a div', () => {
+    const { container } = render(<Stack>x</Stack>);
+    const el = container.firstElementChild as HTMLElement;
+    expect(el.tagName).toBe('DIV');
+    expect(el).toHaveClass('lib-stack');
+    expect(el).toHaveAttribute('data-direction', 'column');
+    expect(el).toHaveAttribute('data-gap', '2');
+    expect(el).not.toHaveAttribute('data-align');
+    expect(el).not.toHaveAttribute('data-justify');
+    expect(el).not.toHaveAttribute('data-wrap');
+  });
+
+  it('renders the given props as attributes, the `as` element, and passes HTML attributes through', () => {
+    render(
+      <Stack as="ul" direction="row" gap={0} align="baseline" justify="between" wrap className="mine" aria-label="List" data-testid="s">
+        <li>a</li>
+      </Stack>,
+    );
+    const el = screen.getByTestId('s');
+    expect(el.tagName).toBe('UL');
+    expect(el).toHaveClass('lib-stack', 'mine');
+    expect(el).toHaveAttribute('aria-label', 'List');
+    expect(el).toHaveAttribute('data-direction', 'row');
+    expect(el).toHaveAttribute('data-gap', '0');
+    expect(el).toHaveAttribute('data-align', 'baseline');
+    expect(el).toHaveAttribute('data-justify', 'between');
+    expect(el).toHaveAttribute('data-wrap');
+  });
+
+  it('Stack.css has a gap rule per step and paints and measures nothing', () => {
+    const text = css('Stack.css');
+    for (let n = 1; n <= 6; n++) {
+      expect(text, `step ${n}`).toMatch(new RegExp(`\\[data-gap='${n}'\\]\\)?\\s*\\{\\s*gap: var\\(--space-${n}\\);`));
+    }
+    for (const banned of ['px', 'margin', 'background', 'box-shadow', 'border']) {
+      expect(text.includes(banned), banned).toBe(false);
+    }
   });
 });
 

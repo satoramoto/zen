@@ -580,7 +580,7 @@ export function Library({ entries, loaded, search, onSearch, current, into, onLo
     />
   );
   // On the home the search is type on the pane: a ⌕, the text, and a ✕ to clear it. In the inspector view's toolbar the ⌕
-  // is a button: under 700 px the field folds to it (Library.css), and it opens the field again.
+  // is a button: in the header's narrow form the field folds to it (Library.css), and it opens the field again.
   // The field is a caption-size Text: the input inherits its type (the app's button and input reset is `font: inherit`).
   const searchBox = home ? (
     <Text as="div" size="caption" leading="normal" className="vs-library-search-field" data-text={search ? '' : undefined}>

@@ -43,3 +43,13 @@ The `visuals` pack (palette `frost`, faces `instrument`, scale `roomy`, material
 - Small grey text (captions) must be at 4.5:1 or better against the lightest the frost gets: about `#3c3c3c` for the HUD, with the page's tint laid over it. That's why the caption (`--text-3`) is `#a4a4ac` and not the widgets' `#5e5e66` (3:1), which is kept only as the faint step.
 - On raised tints and glass, captions take a lighter step so they stay at 4.5:1 (home.css `--caption-raised`).
 - Colour has one meaning each: green is the signal and the playing mark; the primary is selection and the active underline; amber is caution. Stems and decks keep their own hues and never decorate.
+
+## Assembly
+
+These rules are the `visuals` principles in `index.ts` beside this file, for screens assembled by `layout/assembly` ([`docs/assembly.md`](../../../../docs/assembly.md)):
+
+- `density: 'roomy'`: space is the look (22px padding, 32px between sections), so a region keeps its ideal size and steps to a sparser form sooner.
+- The preview (what's playing) is `priority: 'now'`. The sidebar and inspector are `context`, each with a `docked` form and an overlaid one. The width where each docks (900px and 1200px) comes out of their needs, not out of breakpoints.
+- The header row is the spec's fixed `header`.
+- `minTarget` is 24 (WCAG 2.2). The source's 22px rail controls are under it, so a screen with them never zooms them smaller.
+- `gaps`: step 4 between groups (16px tiles) and step 2 between controls.

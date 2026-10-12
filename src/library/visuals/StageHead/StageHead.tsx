@@ -1,6 +1,7 @@
 import { CameraAction } from '../Camera/Camera';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import type { ReactNode } from 'react';
+import { useForm, type Forms, type Length } from '../../layout/assembly';
 import { Layer } from '../../layout/Layer';
 import { Text } from '../../primitives/Text';
 import { titleOf } from '../HelpOverlay/HelpOverlay';
@@ -15,6 +16,19 @@ import { Popover } from '../Popover/Popover';
 import { BeatDot, beatLabel, bpmText, Fps, linked, openSettings, outputLabel, SkipNote, TapButton } from '../Status/Status';
 import { ViewSwitch } from '../Views/Views';
 import './StageHead.css';
+
+export type StageHeadForm = 'full' | 'short';
+
+/** The title bar's 52px. */
+const TITLEBAR: Length = { space: [6, 4, 1] };
+
+/** what the header's capsules need, in the shell's header row */
+export const STAGE_HEAD_FORMS: Forms<StageHeadForm> = [
+  // full: both capsules with their whole words — 808px, the original's 900px window less the 84px lights room and 8px right inset
+  { id: 'full', min: { w: { unit: 202 }, h: TITLEBAR }, ideal: { w: { unit: 202 }, h: TITLEBAR } },
+  // short: the lights' words and the skipped note cut shorter, so both capsules keep to one line
+  { id: 'short', min: { w: { control: 10 }, h: TITLEBAR }, ideal: { w: { control: 10 }, h: TITLEBAR } },
+];
 
 /** The crate's toggle's tooltip: what it does now, show or hide. */
 export const crateTitle = (open: boolean): string => `${open ? 'Hide' : 'Show'} the ${say('crate')}`;
@@ -103,19 +117,24 @@ function OutputLight({ live }: { live: LiveState }) {
  * (no local overrides). The popovers' panels are the sibling `Popover`'s float
  * layers, opaque inside the Stage's scope, so the stylesheet no longer repaints
  * them, nor styles the Link and Output panels' or the tap key's insides (theirs).
- * The skipped note goes at once rather than fading (nothing animates).
+ * The skipped note goes at once rather than fading (nothing animates). The
+ * narrow window's shorter words are a form (`STAGE_HEAD_FORMS`,
+ * `StageHead.forms`: full → short) the assembled screen picks, or the `form`
+ * prop, drawn off `data-form`, in place of the 900px media query.
  *
  * **Kept.** The props, every name, label, tooltip and key shortcut, the drag
- * region and the 36px capsules on the 52px title bar.
+ * region, the 36px capsules on the 52px title bar, and how far the words
+ * shorten when narrow.
  *
  * **Tuning knobs** (StageHead.css):
  * - `--vs-stagehead-cap-h`: the capsules' 36px, centred on the window buttons' line (y 28).
  * - `--vs-stagehead-cap-radius`: their 12px corners.
  * - `--vs-stagehead-offer-radius`: the offer's 18px corners (the inset panels').
  */
-export function StageHead({ live, crateOpen, onCrate, help, onHelp, onView }: StageHeadProps) {
+export function StageHead({ live, crateOpen, onCrate, help, onHelp, onView, form }: StageHeadProps & { form?: StageHeadForm }) {
+  const f = useForm(STAGE_HEAD_FORMS, form);
   return (
-    <header className="vs-stagehead" data-tauri-drag-region>
+    <header className="vs-stagehead" data-form={f} data-tauri-drag-region>
       <Layer level="base" className="vs-stagehead-cap vs-stagehead-cap-lead">
         <ButtonFace tone="quiet" className="vs-stagehead-tool" aria-label={say('crate')} aria-controls={STAGE_CRATE_ID} aria-expanded={crateOpen} title={crateTitle(crateOpen)} onClick={onCrate}>
           <Icon name="sidebar" />
@@ -141,6 +160,7 @@ export function StageHead({ live, crateOpen, onCrate, help, onHelp, onView }: St
     </header>
   );
 }
+StageHead.forms = STAGE_HEAD_FORMS;
 
 /**
  * **Job.** "Go full screen on…", over the picture while it plays in the window

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, type CSSProperties } from 'react';
 import { Group } from '../../layout/Group';
 import { Region } from '../../layout/Region';
-import { Stack } from '../../layout/Stack';
+import { Stack } from '../../primitives/Stack';
 import { Tabs, type TabItem } from '../../layout/Tabs';
 import { Text } from '../../primitives/Text';
 import { PART_HUE_INDEX, type Part } from '../hues';
@@ -10,7 +10,11 @@ import { Fader, type FaderHue } from '../../components/music/Fader/Fader';
 import { LampButton, type LampHue } from '../../components/core/LampButton/LampButton';
 import { PartMarks } from '../../components/music/PartMarks/PartMarks';
 import { visibleMarks } from '../../components/music/PartMarks/marks';
+import { useForm } from '../../layout/assembly';
+import { FADER_BANK_FORMS, type FaderBankForm } from './FaderBank.forms';
 import './FaderBank.css';
+
+export { FADER_BANK_FORMS, type FaderBankForm } from './FaderBank.forms';
 
 /** The app's tooltip hook (the original's Svelte `use:tip`): called with the node and the key. */
 export type TipAction = (
@@ -113,6 +117,11 @@ export interface FaderBankProps {
   onPageLong?: () => void;
   /** The hold on the page button ended. */
   onPageRelease?: () => void;
+  /**
+   * The form (`FADER_BANK_FORMS`): `tall` (the board's strips) or `short` (much less height, every
+   * control kept). Default: the form the assembled screen chose for the region, else `tall`.
+   */
+  form?: FaderBankForm;
 }
 
 type Cluster = 'parts' | 'groups' | 'empty' | 'master';
@@ -149,8 +158,15 @@ function layout(strips: FaderStrip[]) {
     }
     // Master is a little wider. A parked fader keeps a real strip's place and full height, like the
     // hardware fader it mirrors, at three quarters of a strip's width, so live names ("Multi Pad")
-    // and keys keep theirs.
-    tracks.push(cluster === 'master' ? 'minmax(0, 1.25fr)' : cluster === 'empty' ? 'minmax(0, 0.75fr)' : 'minmax(0, 1fr)');
+    // and keys keep theirs. A live strip never goes below its content (its name, its key; the
+    // sound ellipsizes), so the least width FADER_BANK_FORMS declares is the least it takes.
+    tracks.push(
+      cluster === 'master'
+        ? 'minmax(min-content, 1.25fr)'
+        : cluster === 'empty'
+          ? 'minmax(var(--space-4), 0.75fr)'
+          : 'minmax(min-content, 1fr)',
+    );
     columns.push(tracks.length);
   });
   return { template: tracks.join(' '), columns, dividers };
@@ -277,6 +293,15 @@ function StripName({
  * `Region`, on the theme's `plate` material); Master's plate (`data-part="plate"`) is that
  * material again, raised inside it, and each strip's look comes from the Fader's own materials, so a material set restyles the
  * mixer without touching it.
+ *
+ * **Forms** (2026-10, assembly): `tall → short` (`FADER_BANK_FORMS`, `FaderBank.forms`), read with
+ * `useForm` (a `form` prop wins; `FaderBankRegion` passes it through) and carried as `data-form`.
+ * They declare the body only, in scale units, and the CSS keeps to the same steps. `short` keeps
+ * every strip, key and mark and takes every step tighter: the Fader's gap a `--space-1`, no foot
+ * under its travel, no padding round the name, Master's plate inset a `--space-1`, a tighter
+ * column, row and foot gap. Both fill the box they are given; the travel takes what is left. Each
+ * strip track is at least its content (`minmax(min-content, …)`), and the sound line has no
+ * inline size of its own (it ellipsizes to the strip), so the least width is the names' and keys'.
  */
 export function FaderBank({
   strips,
@@ -295,7 +320,9 @@ export function FaderBank({
   onPageButton,
   onPageLong,
   onPageRelease,
+  form: given,
 }: FaderBankProps) {
+  const form = useForm(FADER_BANK_FORMS, given);
   const layered = layerTabs.length > 0 && layer !== layerTabs[0].id;
   const word = (tab: TabItem | undefined) => (typeof tab?.label === 'string' ? tab.label : (tab?.name ?? ''));
   const pageLabel = word(pageTabs.find((tab) => tab.id === page));
@@ -352,7 +379,7 @@ export function FaderBank({
     ) : undefined;
 
   return (
-    <Stack gap={4} className="yh-faderbank" data-part="root" data-layered={layered || undefined}>
+    <Stack gap={form === 'short' ? 1 : 4} className="yh-faderbank" data-part="root" data-form={form} data-layered={layered || undefined}>
       <div className="yh-faderbank__grid" style={{ gridTemplateColumns: template } as CSSProperties}>
         {dividers.map((column) => (
           <span key={`divider-${column}`} className="yh-faderbank__divider" style={{ gridColumn: column }} aria-hidden="true" />
@@ -481,5 +508,8 @@ export function FaderBankRegion({ name = 'Mixer', area, className, ...bank }: Fa
     </Region>
   );
 }
+
+/** The forms, for a region to add up (`docs/assembly.md`). */
+FaderBank.forms = FADER_BANK_FORMS;
 
 export default FaderBank;

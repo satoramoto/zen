@@ -1,4 +1,4 @@
-/* The Now Playing card (Hero.tsx), pinned at the top of the main column, from the original's
+/* The Now Playing card (Hero.tsx), in the hero's slot at the top of the screen, from the original's
    hero.css. The picture is one 16:9 box with nothing over it: in the app the native preview's
    hole (Views' `Preview`), so nothing behind it paints. Its spread shadow paints the main column
    instead, the window's tint (--surface-0) out to the column's edges (HomeLayout clips it there,
@@ -39,11 +39,12 @@
 .vs-hero .vs-hero-pic:not(.vs-preview) {
   background: var(--vs-thumb);
 }
-/* The picture alone (round 2: the name is in the transport bar): centred in the column, as wide
-   as it at 16:9, and never taller than half the main column, which HomeLayout measures into
-   --vs-lay-col-h; capped by height it narrows and stays centred. */
+/* The picture alone (round 2: the name is in the transport bar): centred, as wide as its room at
+   16:9, and never taller than the room the assembled screen gave the hero: its slot
+   (.vs-lay-hero) is a size container, so 100cqh is the slot's height (outside one, the
+   viewport's, which is fine for a story). Capped by height it narrows and stays centred. */
 .vs-hero[data-only] {
-  --vs-hero-cap: calc(var(--vs-lay-col-h) / 2);
+  --vs-hero-cap: 100cqh;
 }
 .vs-hero[data-only] .vs-hero-pic,
 .vs-hero[data-only] .vs-hero-row > .vs-preview {

@@ -5,7 +5,7 @@ import { withLibraryTheme } from '../../storybook';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import type { Pane } from '../model/home';
 import { Header } from '../Views/Views';
-import { HomeLayout, INSPECTOR_ID, SIDEBAR_ID, TOGGLE_CLASS, TOGGLE_SIDE } from './HomeLayout';
+import { HomeLayout, homeDocks, INSPECTOR_ID, SIDEBAR_ID, TOGGLE_CLASS, TOGGLE_SIDE, useLayoutPrinciples } from './HomeLayout';
 import { InsetSidebar } from '../InsetSidebar/InsetSidebar';
 import { Hero } from '../Hero/Hero';
 import { tileName } from '../PresetTile/PresetTile';
@@ -32,7 +32,8 @@ interface Args {
  */
 function Composed({ width, prefs: start }: Args) {
   const [prefs, setPrefs] = useState(start);
-  const modes = modesFor(width, prefs);
+  // Where the panels dock is the assembled home's answer for this window, as Home asks it.
+  const modes = modesFor(homeDocks({ w: width, h: 900 }, useLayoutPrinciples()), prefs);
   // The playlist playing is the one picked, as the kit's example has a folder picked.
   const [selected, setSelected] = useState<Pane | null>({ kind: 'list', id: WARM_UP.id });
   const [collapsed, setCollapsed] = useState<string[]>([]);
@@ -152,18 +153,15 @@ async function heroPinned(el: HTMLElement) {
   main.scrollTop = 0;
 }
 
-/** The picture alone: 16:9, centred in the column, filling its width unless that would make it taller than half the column. */
+/** The picture alone: 16:9, centred in the hero's slot, filling its width unless that would make it taller than the slot the screen gave it. */
 async function heroCapped(el: HTMLElement) {
-  const col = (el.querySelector('.vs-lay-col') as HTMLElement).getBoundingClientRect();
-  const slot = el.querySelector('.vs-lay-hero') as HTMLElement;
-  const pad = parseFloat(getComputedStyle(slot).paddingLeft);
-  const room = slot.getBoundingClientRect().width - 2 * pad;
+  const slot = (el.querySelector('.vs-lay-hero') as HTMLElement).getBoundingClientRect();
   const box = (el.querySelector('.vs-hero-pic') as HTMLElement).getBoundingClientRect();
   await expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.02);
-  await expect(box.height).toBeLessThanOrEqual(col.height / 2 + 0.5);
-  // Filled one way or the other: the column's width, or half its height.
-  await expect(Math.min(Math.abs(box.width - room), Math.abs(box.height - col.height / 2))).toBeLessThan(1);
-  await expect(Math.abs((box.left + box.right) / 2 - (col.left + col.right) / 2)).toBeLessThan(1);
+  await expect(box.height).toBeLessThanOrEqual(slot.height + 0.5);
+  // Filled one way or the other: the slot's width, or its height.
+  await expect(Math.min(Math.abs(box.width - slot.width), Math.abs(box.height - slot.height))).toBeLessThan(1);
+  await expect(Math.abs((box.left + box.right) / 2 - (slot.left + slot.right) / 2)).toBeLessThan(1);
 }
 
 /** At 1440×900, the sidebar docked and the inspector closed: the header's button opens it beside the column, and closes it. */
@@ -179,7 +177,9 @@ export const Wide: Story = {
     await expect(root(canvasElement)).toHaveAttribute('data-sidebar', 'docked');
     // The root paints nothing; the main column is painted by the picture's spread shadow.
     await expect(getComputedStyle(root(canvasElement)).backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    await expect(getComputedStyle(canvasElement.querySelector('.vs-lay-col-cell')!).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    for (const part of canvasElement.querySelectorAll('.vs-lay-head, .vs-lay-main, .vs-lay-bar, .vs-lay-cell--docked')) {
+      await expect(getComputedStyle(part).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    }
     await expect(getComputedStyle(canvasElement.querySelector('.vs-hero-pic')!).boxShadow).toMatch(/0px 0px 0px \d+(\.\d+)?px/);
     await heroPinned(canvasElement);
     await heroCapped(canvasElement);
@@ -204,8 +204,9 @@ export const InspectorDocked: Story = {
   play: async ({ canvas, canvasElement }) => {
     const insp = canvas.getByRole('complementary', { name: 'about the preset' });
     await expect(insp).toBeVisible();
-    const col = canvasElement.querySelector('.vs-lay-col') as HTMLElement;
-    await expect(col.getBoundingClientRect().right).toBeLessThanOrEqual(insp.getBoundingClientRect().left + 0.5);
+    for (const part of canvasElement.querySelectorAll('.vs-lay-head, .vs-lay-hero, .vs-lay-main, .vs-lay-bar')) {
+      await expect(part.getBoundingClientRect().right).toBeLessThanOrEqual(insp.getBoundingClientRect().left + 0.5);
+    }
     // A press in the column leaves a docked inspector be.
     await userEvent.click(canvas.getByRole('main'));
     await expect(insp).toBeVisible();
@@ -237,7 +238,9 @@ export const SidebarHidden: Story = {
   play: async ({ canvas, canvasElement }) => {
     await expect(canvas.queryByRole('navigation', { name: 'sources' })).toBeNull();
     const head = canvasElement.querySelector('.vs-lay-head') as HTMLElement;
-    await expect(parseFloat(getComputedStyle(head).paddingLeft)).toBeGreaterThanOrEqual(90);
+    // Its content starts at least 90px in from the window's edge (the screen's seam and its own padding).
+    const fromEdge = head.getBoundingClientRect().left - root(canvasElement).getBoundingClientRect().left;
+    await expect(fromEdge + parseFloat(getComputedStyle(head).paddingLeft)).toBeGreaterThanOrEqual(90);
     await userEvent.click(canvas.getByRole('button', { name: 'sidebar' }));
     await waitFor(() => expect(canvas.getByRole('navigation', { name: 'sources' })).toBeVisible());
     await expect(root(canvasElement)).toHaveAttribute('data-sidebar', 'docked');

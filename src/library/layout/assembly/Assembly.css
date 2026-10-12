@@ -1,0 +1,39 @@
+/* The assembled Screen: every zone and region slot is placed by the solver (assemble.ts), which
+   computes in px from the facets. The positions arrive as unitless numbers (--lib-at-x, -y, -w,
+   -h) and become lengths here; the body zooms by --lib-zoom only as the last resort. Paints
+   nothing. */
+
+.lib-assembled {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.lib-assembled[data-overflow] { overflow: auto; }
+
+.lib-assembled__zone,
+.lib-assembled__body,
+.lib-assembled__slot {
+  /* Defaults; the placement sets each inline. */
+  --lib-at-x: 0;
+  --lib-at-y: 0;
+  --lib-at-w: 0;
+  --lib-at-h: 0;
+  --lib-zoom: 1;
+  position: absolute;
+  left: calc(var(--lib-at-x) * 1px);
+  top: calc(var(--lib-at-y) * 1px);
+  width: calc(var(--lib-at-w) * 1px);
+  height: calc(var(--lib-at-h) * 1px);
+  min-width: 0;
+  min-height: 0;
+}
+.lib-assembled__body { zoom: var(--lib-zoom); }
+
+/* A slot's content fills it: a Region stretches to the box the solver gave it. */
+.lib-assembled__slot {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+}

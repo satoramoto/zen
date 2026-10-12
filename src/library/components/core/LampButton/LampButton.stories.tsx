@@ -250,7 +250,7 @@ export const MinWidth: Story = {
 export const JoinStart: Story = {
   args: { label: 'Metronome', join: 'start' },
   render: (args) => (
-    <div className="lib-stack">
+    <div className="lib-specimens">
       {[false, true].map((on) => (
         <div key={String(on)} style={{ display: 'flex' }}>
           <LampButton {...args} on={on} />

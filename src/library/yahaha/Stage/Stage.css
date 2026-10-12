@@ -1,133 +1,16 @@
-/* Stage: the whole app on one screen. Reads only contract variables. It lays the regions out and never reaches into one: each region fills the box
-   it is given.
+/* Stage: the whole app on one screen. Reads only contract variables. It sizes the frame and
+   nothing else: the screen assembles itself from STAGE_SPEC (Stage.spec.ts, docs/assembly.md),
+   so every region's place, size and form is the solver's, and no rule here reaches into one. */
 
-   The screen is a library Screen: the AppBar in its fixed header, the Keyboard region and the
-   status line in its fixed footer, and between them a named grid (Stage.tsx, GRID) of the
-   regions Hero, Transport, Song form, Mixer, Knobs and Pads. Every region is a library Region on
-   the theme's `plate` material, so the material decides how a region looks, the room inside it
-   (--mat-plate-inset) and the space between regions (--mat-plate-gap); the bank regions' tabs are
-   the Region's own. Inside the hero, transport, strip and keys a slot (data-part hero, transport,
-   strip, keys) is what the content fills. A region's floor is set on the Region as its content
-   box, so the material's inset is added to it rather than taken out of it. */
-
-/* The frame: the screen's size on the page. Stage.tsx lays the grid out at the room the header
-   and footer leave, tightens the hero, and zooms the grid only when the regions still need more
-   room than that. */
+/* The frame: the screen's size on the page, and the ground the regions' plates sit on. */
 .yh-stage {
   box-sizing: border-box;
   width: 100%;
   height: 100vh;
   overflow: hidden;
   background: var(--surface-0);
-}
-
-.yh-stage__screen {
-  box-sizing: border-box;
-  padding: 0 var(--space-5) var(--space-5);
-  overflow: hidden;
-  background: var(--surface-0);
   color: var(--text-1);
   font-family: var(--font-sans);
-}
-
-/* The bar runs edge to edge, as on every page. */
-.yh-stage__bar {
-  margin-inline: calc(-1 * var(--space-5));
-}
-
-/* A region's floor is its content box: the plate's inset goes round it. */
-.yh-stage .yh-stage__region {
-  box-sizing: content-box;
-}
-
-/* Hero: never below its least width, so a narrower frame overflows and the grid zooms to fit. */
-.yh-stage .yh-stage__hero {
-  /* 15.5 control heights (434 px compact): there the Display keeps the section, the chord and the
-     tempo each in its own cell on one line (Display.css, a 436 px column). */
-  min-width: calc(var(--control-h) * 15.5);
-}
-.yh-stage__display {
-  display: flex;
-  flex: 1 1 auto;
-  min-width: 0;
-  /* Only the hero's floor counts toward its column's least width, never its content's. */
-  contain: inline-size;
-}
-.yh-stage__display > * {
-  flex: 1 1 auto;
-}
-
-/* Transport (stacked) or the song form over the transport (split): it stands on the hero's foot
-   line; stacked, the transport fills the hero's height (SongForm sizes its own rows and labels to
-   the height it is given). */
-.yh-stage__form {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-width: 0;
-}
-.yh-stage[data-layout='stacked'] .yh-stage__form {
-  justify-content: stretch;
-}
-.yh-stage[data-layout='stacked'] .yh-stage__form > :first-child {
-  flex: 1 1 0;
-  min-height: 0;
-}
-.yh-stage .yh-stage__transport {
-  /* Stacked: Start / Stop and four key columns, about 18 control heights in a caps pack. */
-  min-width: calc(var(--control-h) * 18);
-}
-/* The song form's width (split): 23.57 control heights (660 px compact). SongForm's breakpoints
-   are in control heights, so at every density the form and its transport sit the same way: two
-   rows, steps at body size, Break on the parts' line (between its 21 and 27 breakpoints). */
-.yh-stage .yh-stage__form-region {
-  width: calc(var(--control-h) * 23.57);
-}
-
-/* The song form strip (stacked): one strip across the screen, never below its floor. */
-.yh-stage .yh-stage__strip {
-  /* SongForm's least for the form alone: its part captions, then its steps at their least (a
-     numeral and its inset, or 1.25 control heights). */
-  min-height: calc(
-    var(--size-caption) * 1.3 + var(--space-2) + max(var(--control-h) * 1.25, var(--size-numeral) + var(--space-1) * 2)
-  );
-}
-.yh-stage__fill {
-  display: flex;
-  flex: 1 1 0;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-}
-.yh-stage__fill > * {
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* The mixer and the pads stretch to their rows, and only their floors count toward the grid's
-   height (size containment), so the pads, squares that leave spare height under them, never hold
-   a row taller than it needs. The knobs take their own height. */
-.yh-stage .yh-stage__mixer {
-  contain: size;
-  /* Its page tabs, and enough fader travel to read a level by its position. */
-  min-height: calc(var(--control-h) * 10);
-}
-.yh-stage .yh-stage__pads {
-  contain: size;
-  /* Bank tabs and two rows of square pads about 1.5 control heights on a side (42 px compact);
-     below this the screen zooms rather than shrink them further. */
-  min-height: calc(var(--control-h) * 5);
-}
-
-/* The footer: the keys spanning the width, the status line under them. */
-.yh-stage__keys {
-  display: flex;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.yh-stage__status {
-  min-width: 0;
 }
 
 /* A story frame: the screen sits at the window's corner. Full-screen stories bleed (ThemeScope

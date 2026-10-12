@@ -172,29 +172,33 @@ export const At900: Story = {
 
 /**
  * The picture alone (round 2: the name and where it plays from are in the
- * transport bar): 16:9, centred in the column, as wide as it, but never taller
- * than half the column, where it narrows and stays centred.
+ * transport bar): 16:9, centred in the hero's slot, as wide as it, but never
+ * taller than the room the screen gave the slot, where it narrows and stays centred.
  */
 async function pictureAlone(root: HTMLElement) {
   await expect(root.querySelector('.vs-hero-info')).toBeNull();
   await expect(root.querySelector('.vs-hero')).toHaveAttribute('data-only');
-  const col = (root.querySelector('.vs-lay-col') as HTMLElement).getBoundingClientRect();
   const slot = root.querySelector('.vs-lay-hero') as HTMLElement;
-  const room = slot.getBoundingClientRect().width - 2 * parseFloat(getComputedStyle(slot).paddingLeft);
+  const style = getComputedStyle(slot);
+  const rect = slot.getBoundingClientRect();
+  const room = rect.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  // The slot's content box: the size container whose 100cqh caps the picture.
+  const tall = rect.height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
   const box = (root.querySelector('.vs-hero-pic') as HTMLElement).getBoundingClientRect();
   await expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.02);
-  await expect(box.height).toBeLessThanOrEqual(col.height / 2 + 0.5);
-  await expect(Math.abs((box.left + box.right) / 2 - (col.left + col.right) / 2)).toBeLessThan(1);
-  return { box, col, room };
+  await expect(box.width).toBeLessThanOrEqual(room + 0.5);
+  await expect(box.height).toBeLessThanOrEqual(tall + 0.5);
+  await expect(Math.abs((box.left + box.right) / 2 - (rect.left + rect.right) / 2)).toBeLessThan(1);
+  return { box, tall, room };
 }
 
-/** The picture alone in a 1440 × 800 window: half the column's height caps it, so it narrows, centred. */
+/** The picture alone in a 1440 × 800 window: the slot's height caps it, so it narrows, centred. */
 export const PictureOnly: Story = {
   name: 'Picture only',
   render: (args) => <Hero picture={args.picture} />,
   play: async ({ canvasElement }) => {
-    const { box, col, room } = await pictureAlone(canvasElement);
-    await expect(Math.abs(box.height - col.height / 2)).toBeLessThan(1);
+    const { box, tall, room } = await pictureAlone(canvasElement);
+    await expect(Math.abs(box.height - tall)).toBeLessThan(1);
     await expect(box.width).toBeLessThan(room);
   },
 };

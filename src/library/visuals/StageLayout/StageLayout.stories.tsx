@@ -8,7 +8,8 @@ import { Icon } from '../Icon/Icon';
 import { useLiveKeys } from '../model/liveKeys';
 import { crateModeFor, escapeDoes, panelsAtStart, STAGE_CRATE_ID, toggleCrate, togglePanels, type Panels } from '../model/stage-model';
 import { ViewSwitch } from '../Views/Views';
-import { StageLayout } from './StageLayout';
+import { crateDocks, StageLayout } from './StageLayout';
+import { useLayoutPrinciples } from '../HomeLayout/HomeLayout';
 
 /** The window a story draws, and how it starts. */
 interface Args {
@@ -51,7 +52,9 @@ function Composed({ width, height, crate, hidden, warning, inWindow, leaving: he
   const [panels, setPanels] = useState<Panels>(hidden ? togglePanels(panelsAtStart(crate)) : panelsAtStart(crate));
   const [leaving, setLeaving] = useState(heldAtStart);
   const [left, setLeft] = useState(false);
-  const open = crateModeFor(width, panels.crate) !== 'hidden';
+  // Where the crate docks is the assembled Stage's answer for this window, as Live asks it.
+  const docks = crateDocks({ w: width, h: height }, useLayoutPrinciples());
+  const open = crateModeFor(docks, panels.crate) !== 'hidden';
   const none = () => {};
   // Live's keys as Live wires them: Esc pressed shows hidden panels, held 3 s leaves (here, says so).
   useLiveKeys({
@@ -69,7 +72,7 @@ function Composed({ width, height, crate, hidden, warning, inWindow, leaving: he
         return true;
       }
       // A crate laid over the picture takes Esc before live does.
-      if (crateModeFor(width, panels.crate) !== 'overlay') return false;
+      if (crateModeFor(docks, panels.crate) !== 'overlay') return false;
       setPanels((p) => ({ ...p, crate: false }));
       return true;
     },
@@ -79,6 +82,7 @@ function Composed({ width, height, crate, hidden, warning, inWindow, leaving: he
     <div style={{ position: 'relative', width, height, overflow: 'hidden' }} data-left={left ? '' : undefined}>
       <StageLayout
         width={width}
+        height={height}
         panels={panels}
         warning={warning}
         inWindow={inWindow}
@@ -102,7 +106,7 @@ function Composed({ width, height, crate, hidden, warning, inWindow, leaving: he
         head={
           <>
             <Layer level="base" style={capsule}>
-              <button type="button" style={row} aria-label="crate" aria-controls={STAGE_CRATE_ID} aria-expanded={open} onClick={() => setPanels((p) => toggleCrate(p, width))}>
+              <button type="button" style={row} aria-label="crate" aria-controls={STAGE_CRATE_ID} aria-expanded={open} onClick={() => setPanels((p) => toggleCrate(p, docks))}>
                 <Icon name="sidebar" />
               </button>
               <ViewSwitch view="live" onChange={() => {}} />

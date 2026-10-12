@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import { useParamGesture } from '../../components/core/Param/useParamGesture';
 import { Group } from '../../layout/Group';
+import { useForm, type Forms, type Length } from '../../layout/assembly';
 import { Layer } from '../../layout/Layer';
 import { Text } from '../../primitives/Text';
 import { padKey, titleOf, type ControlId } from '../HelpOverlay/HelpOverlay';
@@ -18,6 +19,23 @@ import { SilenceBanner } from '../Onboarding/Onboarding';
 import { TransportBar, type TransportBarProps } from '../TransportBar/TransportBar';
 import { NoticeBanner } from '../Views/Views';
 import './StageDock.css';
+
+export type StageDockForm = 'full' | 'compact' | 'stacked';
+
+/** Two lines: the transport bar (64px), the row (44px) and the 6px foot. */
+const H2: Length = { space: [6, 6, 6, 3], unit: 1.5 };
+/** Three lines: the row wraps once more (another 44px). */
+const H3: Length = { space: [6, 6, 6, 3, 6, 3], unit: 1.5 };
+
+/** what the dock's content needs (no outer insets: StageLayout adds those) */
+export const STAGE_DOCK_FORMS: Forms<StageDockForm> = [
+  // full: the keys' and the fader's names shown — 940px, where the original's container query took them away
+  { id: 'full', min: { w: { unit: 235 }, h: H2 }, ideal: { w: { unit: 235 }, h: H2 }, grow: { w: true } },
+  // compact: names gone, values kept — the original's 940 → 700 band
+  { id: 'compact', min: { w: { unit: 175 }, h: H2 }, ideal: { w: { unit: 175 }, h: H2 }, grow: { w: true } },
+  // stacked: Next on its own line, the effects under it
+  { id: 'stacked', min: { w: { control: 10 }, h: H3 }, ideal: { w: { control: 10 }, h: H3 }, grow: { w: true } },
+];
 
 /** Intensity's range: 0–1, a double-click back to the middle (1× sensitivity), as Live's slider had it. */
 const INTENSITY = range('intensity', 0, 1, 0.5);
@@ -253,20 +271,25 @@ function IntensityFader({ live }: { live: LiveState }) {
  * label) of core `ButtonFace`s; More effects… a quiet `ButtonFace`; Intensity runs
  * on the core `useParamGesture` (the widgets' gesture). The notice and the hint
  * float above the dock as `top` layers (toasts), opaque in the Stage's scope; the
- * silence banner is the sibling's own. Sizes are the scale's.
+ * silence banner is the sibling's own. Sizes are the scale's. The narrow-dock
+ * steps are forms (`STAGE_DOCK_FORMS`, `StageDock.forms`: full → compact →
+ * stacked) the assembled screen picks, or the `form` prop, drawn off
+ * `data-form`, in place of the container queries at 940 and 700 px.
  *
  * **Kept.** The props, `EffectKey`, every name, tooltip and screen-reader line,
- * the narrow-dock steps (container queries at 940 and 700 px).
+ * what each narrow-dock step shows (compact: the names gone, the values kept;
+ * stacked: Next on its own line, the effects under it).
  *
  * **Tuning knobs** (StageDock.css):
  * - `--vs-stagedock-on`: the soft accent wash of the Hold pill.
  * - `--vs-stagedock-fill`: Intensity's position along its track, set inline from the gesture.
  */
-export function StageDock({ live }: StageDockProps) {
+export function StageDock({ live, form }: StageDockProps & { form?: StageDockForm }) {
+  const f = useForm(STAGE_DOCK_FORMS, form);
   const transport = useTransport(live);
   const e = live.effects;
   return (
-    <div className="vs-stagedock">
+    <div className="vs-stagedock" data-form={f}>
       <div className="vs-stagedock-banners">
         <SilenceBanner />
         {live.error && (
@@ -302,3 +325,4 @@ export function StageDock({ live }: StageDockProps) {
     </div>
   );
 }
+StageDock.forms = STAGE_DOCK_FORMS;

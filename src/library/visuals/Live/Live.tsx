@@ -1,31 +1,33 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HelpOverlay } from '../HelpOverlay/HelpOverlay';
 import { remember, rememberedChoice } from '../model/home';
 import { useTauriEvent } from '../model/hooks';
 import { useLiveKeys } from '../model/liveKeys';
 import * as output from '../model/output';
-import { CRATE_KEY, crateModeFor, escapeDoes, panelsAtStart, STAGE_DOCK_AT, toggleCrate, togglePanels, type Panels } from '../model/stage-model';
+import { CRATE_KEY, crateModeFor, escapeDoes, panelsAtStart, toggleCrate, togglePanels, type Panels } from '../model/stage-model';
 import { useLive } from '../model/useLive';
 import { StageCrate } from '../StageCrate/StageCrate';
 import { StageDock } from '../StageDock/StageDock';
 import { FullScreenOffer, StageHead } from '../StageHead/StageHead';
-import { StageLayout } from '../StageLayout/StageLayout';
+import { crateDocks, StageLayout } from '../StageLayout/StageLayout';
+import { useLayoutPrinciples } from '../HomeLayout/HomeLayout';
 import { HOME, type View } from '../Views/Views';
 import './Live.css';
 
 // Live mode's reckonings moved to model/live-model.ts (the Stage contract); they are still here for what imported them from Live.
 export { intensityOf, keyOf, openEffects, opensOnStart, padLabel, ratingOf, sendIntensity, starred, starsText, whenText, whereSr, whereText, type IntensityAction } from '../model/live-model';
 
-/** The window's width, followed as it is resized. */
-function useWidth(): number {
-  const [width, setWidth] = useState(() => window.innerWidth);
+/** The window's size, followed as it is resized: the room the Stage assembles in. */
+function useWindowRoom(): { w: number; h: number } {
+  const read = () => ({ w: window.innerWidth, h: window.innerHeight });
+  const [room, setRoom] = useState(read);
   useEffect(() => {
-    const resize = () => setWidth(window.innerWidth);
+    const resize = () => setRoom((r) => (r.w === window.innerWidth && r.h === window.innerHeight ? r : read()));
     resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
   }, []);
-  return width;
+  return room;
 }
 
 /**
@@ -37,7 +39,8 @@ function useWidth(): number {
  * picture's middle until the user puts the picture on a display (it, or the
  * Output popover).
  *
- * The crate docks from `STAGE_DOCK_AT` px and is laid over the rest below it,
+ * The crate docks where its needs fit beside the picture's open middle (the
+ * assembled Stage's `crateDocks`: from 1100 px) and is laid over the rest elsewhere,
  * where it starts put away; the viewer's choice is kept (`CRATE_KEY`) where it
  * docks, as Home keeps its sidebar's. `\` hides every panel, leaving only the
  * picture, and shows them again. Esc pressed shows hidden panels, or puts a
@@ -72,9 +75,11 @@ export function Live({
   const live = useLive({ start, windowed });
   const { current } = live;
   const [help, setHelp] = useState(false);
-  const width = useWidth();
-  const [panels, setPanels] = useState<Panels>(() => panelsAtStart(width < STAGE_DOCK_AT ? null : rememberedChoice(CRATE_KEY)));
-  const mode = crateModeFor(width, panels.crate);
+  const room = useWindowRoom();
+  const principles = useLayoutPrinciples();
+  const docks = useMemo(() => crateDocks(room, principles), [room, principles]);
+  const [panels, setPanels] = useState<Panels>(() => panelsAtStart(docks ? rememberedChoice(CRATE_KEY) : null));
+  const mode = crateModeFor(docks, panels.crate);
 
   // ✕ and ⌘⇧L leave at once; Esc leaves only held for LEAVE_HOLD_MS (liveKeys), with its progress shown while held.
   const [leaving, setLeaving] = useState(false);
@@ -84,12 +89,12 @@ export function Live({
   /** Show or put away the crate; kept for next time only where it docks (laid over the picture, it starts put away again). */
   const chooseCrate = useCallback(
     (next: Panels) => {
-      if (width >= STAGE_DOCK_AT && next.crate !== null) remember(CRATE_KEY, next.crate);
+      if (docks && next.crate !== null) remember(CRATE_KEY, next.crate);
       setPanels(next);
     },
-    [width],
+    [docks],
   );
-  const onCrate = () => chooseCrate(toggleCrate(panels, width));
+  const onCrate = () => chooseCrate(toggleCrate(panels, docks));
   const crateAway = () => chooseCrate({ ...panels, crate: false });
 
   const escapes = useLiveKeys({
@@ -126,7 +131,8 @@ export function Live({
   return (
     <div className="vs-live" data-windowed={live.inWindow ? '' : undefined} data-panels={panels.shown ? undefined : 'hidden'} data-crate={mode}>
       <StageLayout
-        width={width}
+        width={room.w}
+        height={room.h}
         panels={panels}
         inWindow={live.inWindow}
         leaving={leaving}

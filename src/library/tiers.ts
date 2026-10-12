@@ -78,11 +78,12 @@ export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
 
 /**
  * How the painting rule reads each file.
- * - `all`: a Group/Stack/Screen file; every painting declaration counts.
+ * - `all`: a Group/Screen file; every painting declaration counts.
  * - `region`: the Region; rules whose selectors are all the plate (`.lib-region`,
  *   `.lib-region__head`, with attribute/pseudo suffixes on that same compound) are its own plate
  *   and pass, others count.
- * - `none`: a primitive (Layer, the depth surface) or a control (Tabs); not counted.
+ * - `none`: a control (Tabs), or a primitive's file kept here (`Layer.css`; the file is gone, as
+ *   Layer is now a `Surface`, but `tiers.test.ts` still names it); not counted.
  * - `app` (yahaha, visuals): a rule counts when any selector names a layout primitive's class
  *   (`.lib-screen`, `.lib-region`, `.lib-group`, `.lib-stack`, or their `__` parts) or
  *   `[data-part='region'|'group']`: that is the app's outer layout CSS. Other app CSS is widget CSS.
@@ -90,7 +91,6 @@ export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
  */
 export const PAINTING_TIERS = {
   'layout/Group.css': 'all',
-  'layout/Stack.css': 'all',
   'layout/Screen.css': 'all',
   'layout/Region.css': 'region',
   'layout/Layer.css': 'none',

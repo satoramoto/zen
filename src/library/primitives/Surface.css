@@ -1,6 +1,7 @@
 /* Surface: the one painter. A layer sets the backdrop, edge and cast (and the fill); a material
    sets the fill, texture and shadow. Everything lands in one shadow list of slots, so they
-   compose. Contract variables plus the --lib-surface-* and --lit declared here.
+   compose. Opaque (a scope where every layer draws solid) and Hole (a cut-out) live here too.
+   Contract variables plus the --lib-surface-* and --lit declared here.
    Every rule is wrapped in :where(), so it has no specificity: a component's class on the same
    element (a radius, a size, a --lib-surface-* slot) wins without !important. */
 
@@ -64,3 +65,27 @@
 :where(.lib-surface[data-radius='pill']) { border-radius: var(--radius-pill); }
 :where(.lib-surface[data-radius='circle']) { border-radius: 50%; }
 :where(.lib-surface[data-radius='none']) { border-radius: 0; }
+
+/* Opaque: over a native view every layer inside draws its solid and blurs nothing (the layer
+   rules above read these variables). */
+:where(.lib-opaque) {
+  --layer-ground-fill: var(--layer-ground-solid);
+  --layer-base-fill: var(--layer-base-solid);
+  --layer-raised-fill: var(--layer-raised-solid);
+  --layer-float-fill: var(--layer-float-solid);
+  --layer-overlay-fill: var(--layer-overlay-solid);
+  --layer-top-fill: var(--layer-top-solid);
+  --layer-ground-backdrop: none;
+  --layer-base-backdrop: none;
+  --layer-raised-backdrop: none;
+  --layer-float-backdrop: none;
+  --layer-overlay-backdrop: none;
+  --layer-top-backdrop: none;
+}
+
+/* Hole: a cut-out that paints nothing. */
+:where(.lib-hole) {
+  background: transparent;
+  min-width: 0;
+  min-height: 0;
+}
