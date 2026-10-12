@@ -68,6 +68,17 @@ describe('FaderBank a11y', () => {
     expect(within(stripOf('Fader 7 unused')).queryByRole('button')).toBeNull();
   });
 
+  it('gives an empty slot the banks\' empty face: no name, no level, no hue, still a named disabled slider', () => {
+    const { props } = setup();
+    const slider = screen.getByRole('slider', { name: 'Fader 8 unused' });
+    const strip = stripOf('Fader 8 unused');
+    expect(strip).toHaveAttribute('data-kind', 'parked');
+    expect(strip).not.toHaveAttribute('data-hue');
+    expect(strip.textContent?.trim()).toBe('');
+    fireEvent.keyDown(slider, { key: 'ArrowUp' });
+    expect(props.onLevel).not.toHaveBeenCalled();
+  });
+
   it('names the part lamps, the function group and the page button', () => {
     setup();
     expect(screen.getByRole('button', { name: /^Right 3 off\./ })).toHaveAttribute('aria-pressed', 'false');
@@ -203,7 +214,7 @@ describe('FaderBank layout', () => {
     const { bank } = setup();
     const grid = bank.querySelector('.yh-faderbank__grid') as HTMLElement;
     expect(grid.querySelectorAll('.yh-faderbank__divider')).toHaveLength(2);
-    // 9 strips + 2 dividers; the parked slots keep their own tracks, like the hardware, at half a strip.
+    // 9 strips + 2 dividers; the parked slots keep their own tracks, like the hardware, at three quarters of a strip.
     const tracks: string[] = [''];
     let depth = 0;
     for (const ch of grid.style.gridTemplateColumns) {
