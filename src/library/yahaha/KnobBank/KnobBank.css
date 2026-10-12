@@ -7,10 +7,7 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  /* The panel the knobs are mounted in: the theme's `plate`. */
-  border-radius: var(--radius-card);
-  background: var(--mat-plate-texture), var(--mat-plate-fill);
-  box-shadow: var(--mat-plate-shadow);
+  /* No panel of its own: the bank sits inside a Region, which wears the theme's `plate`. */
   font-family: var(--font-sans);
   container: yh-knobbank / inline-size;
 }

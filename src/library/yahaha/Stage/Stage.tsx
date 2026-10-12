@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { Region } from '../../layout/Region';
 import { AppBar, type AppBarProps } from '../AppBar/AppBar';
 import { Display, type DisplayDensity, type DisplayProps } from '../Display/Display';
 import { FaderBank, type FaderBankProps } from '../FaderBank/FaderBank';
@@ -192,10 +193,13 @@ function useFit(layout: StageLayout) {
  * squares (PadBank), so a tall band only left empty height under them; the band's floor now counts
  * only the mixer's and the pads' least, and that height went to the full hero.
  *
- * *Room to breathe* (`references/layout.md`, spacing on one scale): one gap from the `--space-*`
- * scale between every row and on both sides of every hairline, the strip's top padding the same,
- * and a wider gap at the column seam, so each region reads as its own plane; no text is made
- * smaller to buy the room. The short screen closes the gaps one step rather than shrink the pads.
+ * *Regions on the plate* (`references/layout.md`, spacing on one scale): every region (the hero,
+ * the transport column, the song form strip, the mixer, the knobs, the pads, the keys) is a
+ * library `Region`, drawn by the theme's `plate` material, so the material decides how a region
+ * looks (a hairline with room under it, a filled card, a brushed panel), the room inside it
+ * (`--mat-plate-inset`) and the space between regions (`--mat-plate-gap`, between every row and
+ * at the column seam). No region paints its own panel inside one, and no text is made smaller to
+ * buy the room.
  *
  * *Mapping* (the Launchkey's pads play the sections): the pad tabs are Sections, Quick Racks,
  * Chord, Multi Pads, Setup, as the hardware pages them. The Sections bank's sixteen pads are drawn
@@ -208,8 +212,8 @@ function useFit(layout: StageLayout) {
  * *One column seam* (`references/layout.md`, alignment): the screen is one two-column grid; the top
  * row and the band are subgrids of it, so the hero and the mixer share the left track and the
  * transport and the knobs and pads the right one (1.25 : 1, the right never narrower than the
- * transport's 18 control heights). One vertical line runs from the bar to the keys, marked by the
- * same hairline beside the transport and beside the knobs. The old screen had two seams 34 px
+ * transport's 18 control heights). One vertical seam runs from the bar to the keys, the one plate
+ * gap beside the hero and beside the mixer. The old screen had two seams 34 px
  * apart (731 and 765 px), which read as a mistake.
  *
  * *One place per job* (`STAGE.md` 3): the transport lives only in SongForm, Tap only in the
@@ -226,8 +230,7 @@ function useFit(layout: StageLayout) {
  *
  * *Hierarchy at every size, then fit*: the screen is laid out at the frame's own size. Where it has
  * the height (1440 × 900) the hero is the Display's `full` density; where it is short (1217 × 752)
- * the hero goes `compact` and the screen closes its gaps a step (both hold zoom 1 under the yahaha
- * packs; the regular-density ableton pack zooms at 1217); only if the regions still need
+ * the hero goes `compact`; only if the regions still need
  * more room than the frame has is the whole screen zoomed down, so nothing is cut off. The
  * previous `split` layout (the song form over the transport beside the hero) stays as `layout`.
  *
@@ -260,13 +263,15 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
   if (height !== undefined) size.height = `${height}px`;
 
   // Stacked: under the transport, which it most often speaks about ("starts at the next Start").
-  // Split: at the foot of the knobs and pads, level with the mixer's Functions line.
+  // Split: its own region at the foot of the knobs and pads, level with the mixer's Functions line.
   const statusLine = (
     <div className="yh-stage__status" data-part="status">
       <StatusLine {...status} />
     </div>
   );
 
+  // Every region is a Region on the theme's plate material; the slot inside it keeps the region's
+  // `data-part` and is what the region's content fills (the keys measure theirs).
   return (
     <div ref={frame} className="yh-stage" data-part="root" style={size} role="group" aria-label="Stage">
       <div ref={screen} className="yh-stage__screen" data-part="screen" data-hero={heroDensity} data-layout={layout}>
@@ -274,36 +279,54 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
           <AppBar {...appBar} tipAction={tipAction} />
         </div>
         <div className="yh-stage__top" data-part="now">
-          <div className="yh-stage__display" data-part="hero">
-            <Display {...display} parts={undefined} density={heroDensity} tipAction={tipAction} onTap={onTap} />
-          </div>
-          <div className="yh-stage__form" data-part="transport">
-            <SongForm {...songForm} part={layout === 'stacked' ? 'transport' : 'both'} tipAction={tipAction} />
-            {layout === 'stacked' && statusLine}
-          </div>
+          <Region name="Now playing" className="yh-stage__region yh-stage__hero-region">
+            <div className="yh-stage__display" data-part="hero">
+              <Display {...display} parts={undefined} density={heroDensity} tipAction={tipAction} onTap={onTap} />
+            </div>
+          </Region>
+          <Region name={layout === 'stacked' ? 'Transport column' : 'Song form column'} className="yh-stage__region yh-stage__form-region">
+            <div className="yh-stage__form" data-part="transport">
+              <SongForm {...songForm} part={layout === 'stacked' ? 'transport' : 'both'} tipAction={tipAction} />
+              {layout === 'stacked' && statusLine}
+            </div>
+          </Region>
         </div>
         {layout === 'stacked' && (
-          <div className="yh-stage__strip" data-part="strip">
-            <SongForm {...songForm} part="form" tipAction={tipAction} />
-          </div>
+          <Region name="Song form strip" className="yh-stage__region yh-stage__strip-region">
+            <div className="yh-stage__strip" data-part="strip">
+              <SongForm {...songForm} part="form" tipAction={tipAction} />
+            </div>
+          </Region>
         )}
         <div className="yh-stage__band" data-part="band">
-          <div className="yh-stage__faders" data-part="faders">
-            <FaderBank {...faders} tipAction={tipAction} />
-          </div>
+          <Region name="Mixer" className="yh-stage__region yh-stage__faders-region">
+            <div className="yh-stage__faders" data-part="faders">
+              <FaderBank {...faders} tipAction={tipAction} />
+            </div>
+          </Region>
           <div className="yh-stage__controls" data-part="controls">
-            <div className="yh-stage__knobs" data-part="knobs">
-              <KnobBank {...knobs} tipAction={tipAction} />
-            </div>
-            <div className="yh-stage__pads" data-part="pads">
-              <PadBank {...shownPads} columns={8} tipAction={tipAction} />
-            </div>
-            {layout === 'split' && statusLine}
+            <Region name="Knob panel" className="yh-stage__region yh-stage__knobs-region">
+              <div className="yh-stage__knobs" data-part="knobs">
+                <KnobBank {...knobs} tipAction={tipAction} />
+              </div>
+            </Region>
+            <Region name="Pad panel" className="yh-stage__region yh-stage__pads-region">
+              <div className="yh-stage__pads" data-part="pads">
+                <PadBank {...shownPads} columns={8} tipAction={tipAction} />
+              </div>
+            </Region>
+            {layout === 'split' && (
+              <Region name="Status" className="yh-stage__region yh-stage__status-region">
+                {statusLine}
+              </Region>
+            )}
           </div>
         </div>
-        <div className="yh-stage__keys" data-part="keys" ref={keysSlot}>
-          <Keys {...keys} width={keysWidth} tipAction={tipAction} />
-        </div>
+        <Region name="Keyboard" className="yh-stage__region yh-stage__keys-region">
+          <div className="yh-stage__keys" data-part="keys" ref={keysSlot}>
+            <Keys {...keys} width={keysWidth} tipAction={tipAction} />
+          </div>
+        </Region>
       </div>
     </div>
   );

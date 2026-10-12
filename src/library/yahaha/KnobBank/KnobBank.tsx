@@ -94,8 +94,8 @@ export function knobName(knob: KnobItem, index: number): string {
  * fit the region of a 1217 × 752 Stage as well as a 1440 × 900 one without clipping, and the value
  * shrinks with the ring rather than overflowing it. *Alignment*: the bank fills its region instead
  * of a fixed band width, and the slots are an even eight-column grid on the library's spacing.
- * *Materials*: the bank is a `plate` the knobs are mounted in, and each knob wears its own
- * materials (Knob); parts are named with `data-part` (root, knobs, slot, empty).
+ * *Materials*: the bank paints no panel of its own; it sits inside a screen's `Region`, which the
+ * theme's `plate` material draws, and each knob wears its own materials (Knob); parts are named with `data-part` (root, knobs, slot, empty).
  *
  * **Kept.** Holds no state: the page comes in `page`, a tab choice goes out by index, and every
  * knob change carries the knob's position. A region named "Knobs"; the header's one tab style

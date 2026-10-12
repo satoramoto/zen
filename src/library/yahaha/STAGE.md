@@ -42,4 +42,6 @@ Each region is one folder under `src/library/yahaha/`, with its own fixtures por
 | Knobs and pads | `KnobBank/`, `PadBank/` | KnobBank, PadBank's other banks |
 | The screen | `Stage/` | Stage, StageGolden, tapTempo: lays the regions out with Keys and StatusLine; built last, from the merged regions |
 
+On the Stage each region (hero, transport, song form, mixer, knobs, pads, keys) is a library `Region` (`src/library/layout/Region.tsx`) on the theme's `plate` material: the material decides how a region looks, the room inside it (`--mat-plate-inset`) and the space between regions (`--mat-plate-gap`). A region component never paints its own panel; it fills the Region it is given.
+
 A region lane edits only its folders. It may import merged primitives, `hues.ts` and `../components`, never another region.

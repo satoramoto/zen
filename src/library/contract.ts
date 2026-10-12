@@ -114,8 +114,9 @@ export interface Materials {
   borderWidth: string;
   /** How fields are drawn. */
   input: 'filled' | 'box' | 'underline';
-  /** Panels and cards: what a region sits on. */
-  plate: Material;
+  /** Panels and cards: what a region sits on. `inset` is the padding inside a region and `gap` the
+   *  space between regions, as CSS lengths that may read the scale (`var(--space-3)`). */
+  plate: Material & { inset: string; gap: string };
   /** Recessed tracks: fader grooves, knob rings, meter channels. */
   well: Material;
   /** Readout windows: tempo, bar, chord, the display. */
@@ -188,6 +189,8 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--input-fill': m.input === 'filled' ? 'var(--surface-2)' : 'transparent',
     '--input-border-sides': m.input === 'box' ? m.borderWidth : '0px',
     '--input-border-bottom': m.input === 'filled' ? '0px' : m.borderWidth,
+    '--mat-plate-inset': m.plate.inset,
+    '--mat-plate-gap': m.plate.gap,
     '--mat-key-pressed': m.key.pressed,
     '--mat-lit-glow': m.lit.glow,
 

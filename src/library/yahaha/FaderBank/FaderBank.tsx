@@ -267,8 +267,9 @@ function StripName({
  * come only from `tipAction` (each control applies it once, the tabs through ChosenTabs), never
  * a native `title`, so no control shows two.
  *
- * **Headless** (2026-10): Master's plate (`data-part="plate"`) is the theme's `plate` material,
- * and each strip's look comes from the Fader's own materials, so a material set restyles the
+ * **Headless** (2026-10): the bank paints no panel of its own (it sits inside a screen's
+ * `Region`, on the theme's `plate` material); Master's plate (`data-part="plate"`) is that
+ * material again, raised inside it, and each strip's look comes from the Fader's own materials, so a material set restyles the
  * mixer without touching it.
  */
 export function FaderBank({

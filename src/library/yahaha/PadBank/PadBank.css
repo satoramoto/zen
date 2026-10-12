@@ -9,10 +9,7 @@
   height: 100%;
   min-width: 0;
   min-height: 0;
-  /* The region is a plate: the theme's plate material. */
-  border-radius: var(--radius-card);
-  background: var(--mat-plate-texture), var(--mat-plate-fill);
-  box-shadow: var(--mat-plate-shadow);
+  /* No panel of its own: the bank sits inside a Region, which wears the theme's `plate`. */
   font-family: var(--font-sans);
 }
 

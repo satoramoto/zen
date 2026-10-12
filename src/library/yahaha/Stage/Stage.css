@@ -2,11 +2,13 @@
    declared here. It lays the regions out and never reaches into one: each region fills the box
    it is given.
 
-   Materials: each region brings its own panel (the mixer, knobs and pads their `plate`, the hero
-   its `screen`, the keys their keybed). The regions with none (the transport column and the song
-   form strip) are parted by spacing and hairlines only, not a plate: a plate there would need
-   padding round its keys, a layout change, and in a flat set it would add a second hairline or a
-   filled card to what is drawn today. */
+   Materials: every region (the hero, the transport column, the song form strip, the mixer, the
+   knobs, the pads, the keys) is a library Region on the theme's `plate` material, so the material
+   decides how a region looks, the room inside it (--mat-plate-inset) and the space between
+   regions (--mat-plate-gap). Nothing inside a region paints its own panel. Inside each Region a
+   slot (data-part hero, transport, strip, faders, knobs, pads, keys) is what the region's content
+   fills. A region's floor is set on the Region as its content box, so the material's inset is
+   added to it rather than taken out of it. */
 
 /* The frame: the screen's size on the page. Stage.tsx lays the screen out at the frame's size,
    tightens the hero, and zooms only when the regions still need more room than the frame has. */
@@ -20,23 +22,28 @@
 
 .yh-stage__screen {
   --yh-stage-pad: var(--space-5);
-  --yh-stage-gap: var(--space-4);
-  /* Between the regions of one row: wide enough that each reads as its own plane. */
-  --yh-stage-col-gap: calc(var(--yh-stage-gap) * 1.5);
-  /* The song form's width: inside its two-row-transport range (641–760 px), so the form and its
-     transport stay two rows tall beside the hero; a larger density's keys need a little more of
-     that range. */
+  /* The song form's width (split): inside its two-row-transport range (641–760 px), so the form
+     and its transport stay two rows tall beside the hero; a larger density's keys need a little
+     more of that range. */
   --yh-stage-form-w: max(660px, calc(var(--control-h) * 20.2));
   /* The least the hero takes: 15.5 control heights (434 px compact). There the Display keeps the
      section, the chord and the tempo each in its own cell on one line (Display.css, a 436 px
-     column), so the 1217 px screen fits at zoom 1; a narrower frame zooms instead. */
+     column); a narrower frame zooms instead. */
   --yh-stage-hero-min: calc(var(--control-h) * 15.5);
+  /* The least the transport takes (stacked): Start / Stop and four key columns, about 18 control
+     heights in a caps pack. */
+  --yh-stage-transport-min: calc(var(--control-h) * 18);
   /* The least the mixer takes: enough fader travel to read a level by its position. */
   --yh-stage-faders-min: calc(var(--control-h) * 9);
   /* The least the pads take: their bank tabs and two rows of square pads about 1.5 control heights
      on a side (42 px compact). The pads are squares (PadBank), so a taller box only leaves room
      under them; below this the screen zooms rather than shrink them further. */
   --yh-stage-pads-min: calc(var(--control-h) * 5);
+  /* The strip's least (stacked): SongForm's least for the form alone (its part captions, then its
+     steps at their least: a numeral and its inset, or 1.25 control heights). */
+  --yh-stage-strip-min: calc(
+    var(--size-caption) * 1.3 + var(--space-2) + max(var(--control-h) * 1.25, var(--size-numeral) + var(--space-1) * 2)
+  );
 
   box-sizing: border-box;
   display: grid;
@@ -44,7 +51,7 @@
      The band takes the rest, and never less than it needs: the hero tightens first, then the
      screen zooms. */
   grid-template-rows: auto auto 1fr auto;
-  row-gap: var(--yh-stage-gap);
+  row-gap: var(--mat-plate-gap);
   width: 100%;
   height: 100%;
   padding: 0 var(--yh-stage-pad) var(--yh-stage-pad);
@@ -52,11 +59,6 @@
   background: var(--surface-0);
   color: var(--text-1);
   font-family: var(--font-sans);
-}
-/* A short screen (the hero compact, Stage.tsx) also closes its own gaps a step, so 1217 × 752
-   fits at zoom 1 with the mixer's travel intact. */
-.yh-stage__screen[data-hero='compact'] {
-  --yh-stage-gap: var(--space-3);
 }
 
 /* Every row may shrink to the screen, except the top row: its hero and form never go below their
@@ -70,28 +72,53 @@
   margin-inline: calc(-1 * var(--yh-stage-pad));
 }
 
+/* A region's floor is its content box: the plate's inset goes round it. */
+.yh-stage__screen .yh-stage__region {
+  box-sizing: content-box;
+}
+.yh-stage__screen .yh-stage__hero-region {
+  min-width: var(--yh-stage-hero-min);
+}
+
+/* Each slot fills its region's body. */
+.yh-stage__display,
+.yh-stage__form,
+.yh-stage__keys {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.yh-stage__strip,
+.yh-stage__faders,
+.yh-stage__pads {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+}
+
 /* Now: the hero, and beside it the song form with the transport. */
 .yh-stage__top {
   display: grid;
-  grid-template-columns: minmax(var(--yh-stage-hero-min), 1fr) calc(var(--yh-stage-form-w) + var(--yh-stage-col-gap) + var(--border-width));
-  column-gap: var(--yh-stage-col-gap);
+  grid-template-columns: minmax(auto, 1fr) auto;
+  column-gap: var(--mat-plate-gap);
   align-items: stretch;
+}
+.yh-stage__screen .yh-stage__form-region {
+  width: var(--yh-stage-form-w);
 }
 .yh-stage__display {
   display: flex;
-  min-width: 0;
+  /* Only the hero's floor counts toward its column's least width, never its content's. */
+  contain: inline-size;
 }
 .yh-stage__display > * {
   flex: 1 1 auto;
 }
 
-/* The song form stands on the hero's foot line, behind a hairline. */
+/* The song form stands on the hero's foot line. */
 .yh-stage__form {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding-left: var(--yh-stage-col-gap);
-  border-left: var(--border-width) solid var(--border);
 }
 
 /* Stacked (the default): now is the hero with the transport beside it (tempo and Start / Stop side
@@ -100,50 +127,27 @@
 
    One column seam: the screen itself is the two-column grid, and the top row and the band are
    subgrids of it, so the hero and the mixer share the left track and the transport and the knobs
-   share the right one, and one vertical line runs from the bar to the keys. The right track is
-   never narrower than the transport: Start / Stop and four key columns, about 18 control heights in
-   a caps pack, plus the hairline's inset. 1.25 : 1 gives the hero about 760 px at 1440, where its
+   share the right one, and one plate gap runs from the bar to the keys. The right track is never
+   narrower than the transport region. 1.25 : 1 gives the hero about 760 px at 1440, where its
    readouts reach their caps (section 96, tempo 84, chord 72 on push).
 
-   No dead bands: the top row is exactly as tall as the hero's content (282 px full at 1440, 190
-   compact at 1217), and the transport (SongForm sizes its own rows and labels to the height it is
-   given) and the status line under it fill that height. Everything below shares what is left: the
-   strip and the band split it 72 : 380, each held at its floor. The band's floor counts only the
-   mixer's and the pads' floors (each fills its column from a zero basis), so the pads, squares
-   that leave spare height under them, never hold the band taller than it needs: the height they
-   gave up at 1440 now goes to the full hero.
-
-   Room to breathe: one gap on the --space-* scale between every row and on both sides of each
-   hairline (space-3 at the board, space-2 on the short screen, where the pads would otherwise
-   shrink), and a wider column gap at the seam (space-5, space-4 short), so each region reads as
-   its own plane; no text is made smaller to buy it. */
+   No dead bands: the top row is exactly as tall as the hero's region, and the transport (SongForm
+   sizes its own rows and labels to the height it is given) and the status line under it fill that
+   height. Everything below shares what is left: the strip and the band split it 72 : 380, each
+   held at its floor. The band's floor counts only the mixer's and the pads' floors (each fills its
+   column from a zero basis), so the pads, squares that leave spare height under them, never hold
+   the band taller than it needs. */
 .yh-stage__screen[data-layout='stacked'] {
-  --yh-stage-gap: var(--space-3);
-  --yh-stage-col-gap: var(--space-5);
-  --yh-stage-right-min: calc(var(--control-h) * 18 + var(--yh-stage-col-gap) + var(--border-width));
-  /* The strip's floor: SongForm's least for the form alone (its part captions, then its steps at
-     their least: a numeral and its inset, or 1.25 control heights), and the hairline and gap over
-     the strip. */
-  --yh-stage-strip-min: calc(
-    var(--size-caption) * 1.3 + var(--space-2) + max(var(--control-h) * 1.25, var(--size-numeral) + var(--space-1) * 2) +
-      var(--yh-stage-gap) + var(--border-width)
-  );
-  grid-template-columns: minmax(var(--yh-stage-hero-min), 1.25fr) minmax(var(--yh-stage-right-min), 1fr);
+  grid-template-columns: minmax(auto, 1.25fr) minmax(auto, 1fr);
   grid-template-rows:
     auto
     /* min-content, not auto: the hero clips its overflow, so `auto` would let the row shrink under
        it instead of overflowing the screen and refitting. */
     min-content
-    minmax(var(--yh-stage-strip-min), 72fr)
+    minmax(auto, 72fr)
     minmax(min-content, 380fr)
     auto;
-  column-gap: var(--yh-stage-col-gap);
-}
-/* The short screen (the hero compact) closes its gaps a step, so 1217 × 752 holds zoom 1 with the
-   pads about 50 px square: the hairlines still part the bands. */
-.yh-stage__screen[data-layout='stacked'][data-hero='compact'] {
-  --yh-stage-gap: var(--space-2);
-  --yh-stage-col-gap: var(--space-4);
+  column-gap: var(--mat-plate-gap);
 }
 .yh-stage__screen[data-layout='stacked'] > * {
   grid-column: 1 / -1;
@@ -153,48 +157,41 @@
   grid-template-columns: subgrid;
   min-height: 0;
 }
+.yh-stage__screen[data-layout='stacked'] .yh-stage__form-region {
+  width: auto;
+  min-width: var(--yh-stage-transport-min);
+}
 /* The transport fills the hero's height, the status line at its foot. */
 .yh-stage__screen[data-layout='stacked'] .yh-stage__form {
   justify-content: stretch;
-  gap: var(--yh-stage-gap);
-  min-width: 0;
+  gap: var(--space-3);
 }
 .yh-stage__screen[data-layout='stacked'] .yh-stage__form > :first-child {
   flex: 1 1 0;
   min-height: 0;
 }
+.yh-stage__screen .yh-stage__strip-region {
+  min-height: var(--yh-stage-strip-min);
+}
 .yh-stage__strip {
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  padding-top: var(--yh-stage-gap);
-  border-top: var(--border-width) solid var(--border);
 }
 .yh-stage__strip > * {
   flex: 1 1 auto;
   min-height: 0;
 }
-/* The seam's hairline again beside the knobs and pads, with the transport's inset, so both right
-   regions start on one line. */
-.yh-stage__screen[data-layout='stacked'] .yh-stage__controls {
-  padding-left: var(--yh-stage-col-gap);
-  border-left: var(--border-width) solid var(--border);
-}
 
-/* The band: the mixer, and the knobs over the pads, under one hairline. */
+/* The band: the mixer, and the knobs over the pads. */
 .yh-stage__band {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  column-gap: var(--yh-stage-col-gap);
-  padding-top: var(--yh-stage-gap);
-  border-top: var(--border-width) solid var(--border);
+  column-gap: var(--mat-plate-gap);
 }
 
 .yh-stage__faders {
   display: flex;
   flex-direction: column;
-  min-width: 0;
   min-height: var(--yh-stage-faders-min);
 }
 /* A zero basis: the mixer stretches to the band, and only its floor counts toward the band's height. */
@@ -205,23 +202,26 @@
 .yh-stage__controls {
   display: flex;
   flex-direction: column;
-  gap: var(--yh-stage-gap);
+  gap: var(--mat-plate-gap);
   min-width: 0;
 }
-.yh-stage__knobs {
+.yh-stage__knobs-region,
+.yh-stage__status-region {
   flex: none;
 }
-.yh-stage__pads {
+.yh-stage__screen .yh-stage__pads-region {
   flex: 1 1 0;
+  min-height: var(--yh-stage-pads-min);
+}
+.yh-stage__pads {
   display: flex;
   flex-direction: column;
-  min-height: var(--yh-stage-pads-min);
 }
 .yh-stage__pads > * {
   flex: 1 1 auto;
 }
-/* The status line closes the right column, on the mixer's Functions line, rather than holding an
-   empty row over the keys while there is nothing to say. */
+/* The status line closes the right column (split), on the mixer's Functions line, rather than
+   holding an empty row over the keys while there is nothing to say. */
 .yh-stage__status {
   flex: none;
   min-width: 0;

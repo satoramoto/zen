@@ -122,8 +122,9 @@ export interface PadBankProps {
  * hangs under the tabs, centred across, and spare height goes below it. *Rhythm*: at least `--space-2` between pads, up to
  * `--space-3` when the region is wide, so sixteen keys read as sixteen, not as one slab. With no
  * height given, the room's height follows its width; the same bank also works as a 4 × 4 block.
- * *Headless*: named parts (`plate`, `room`, `grid`, `cell`, `empty`); the region is made of the
- * theme's `plate` material and each pad of its `key` material (the Pad's), so a material set
+ * *Headless*: named parts (`plate`, `room`, `grid`, `cell`, `empty`); the bank paints no panel of its
+ * own (it sits inside a screen's `Region`, which the theme's `plate` material draws) and each pad
+ * wears the theme's `key` material (the Pad's), so a material set
  * restyles the bank without touching it.
  *
  * **Kept.** Holds no state: the bank comes in `bank` and the flash phase in `lit`; a tab choice

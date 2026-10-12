@@ -60,6 +60,8 @@ export const pushMaterials: Materials = {
     fill: 'transparent', // chromes.ts push card.fill none
     shadow: 'inset 0 1px 0 var(--border)', // chromes.ts push card.borderTop 1px, sides 0
     texture: 'none', // chromes.ts push
+    inset: 'var(--space-2) 0 0', // added: Push has no boxes; a region is its hairline and the room under it
+    gap: 'var(--space-4)', // added
   },
   ...flat,
 };
@@ -77,6 +79,8 @@ export const elektronMaterials: Materials = {
     fill: 'var(--surface-1)', // chromes.ts elektron card.fill surface
     shadow: NO_SHADOW, // chromes.ts elektron card: no borders, no shadow
     texture: 'none', // chromes.ts elektron
+    inset: 'var(--space-3)', // added: a flat filled panel needs room inside
+    gap: 'var(--space-2)', // added: panels butt up close, like hardware sections
   },
   ...flat,
 };
@@ -94,6 +98,8 @@ export const abletonMaterials: Materials = {
     fill: 'transparent', // chromes.ts ableton card.fill none
     shadow: 'inset 0 2px 0 var(--border)', // chromes.ts ableton card.borderTop 2px, sides 0
     texture: 'none', // chromes.ts ableton
+    inset: 'var(--space-2) 0 0', // added: a ruled region, the 2px rule then room
+    gap: 'var(--space-4)', // added
   },
   ...flat,
 };
@@ -112,6 +118,8 @@ export const linearMaterials: Materials = {
     // chromes.ts linear card: 1px border all round, then rgba(0, 0, 0, 0.4) 0 2px 4px as a palette shade
     shadow: `inset 0 0 0 1px var(--border), 0 2px 4px 0 ${shade(0.4)}`,
     texture: 'none', // chromes.ts linear
+    inset: 'var(--space-3)', // added: a layered card
+    gap: 'var(--space-3)', // added
   },
   ...flat,
 };
@@ -153,6 +161,8 @@ export const hardwareMaterials: Materials = {
     ].join(', '),
     // app.css .mat-chassis brushing: fine horizontal light lines, wider vertical dark ones
     texture: `repeating-linear-gradient(0deg, ${light(0.018)} 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, ${shade(0.025)} 0 2px, transparent 2px 5px)`,
+    inset: 'var(--space-3)', // app.css .panel padding (14–16px at the source's scale)
+    gap: 'var(--space-3)', // app.css: panels a dozen px apart on the chassis
   },
   well: {
     // app.css .mat-well: linear-gradient(180deg, --well-edge, --well 30%)

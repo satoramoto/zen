@@ -1,0 +1,8 @@
+/* Screen: a grid of regions, spaced by the theme's plate gap. Contract variables only. */
+
+.lib-screen {
+  display: grid;
+  gap: var(--mat-plate-gap);
+  min-width: 0;
+  min-height: 0;
+}
