@@ -84,8 +84,14 @@ export const FlashOff: Story = { args: { pads: quickRackStorePads, lit: false } 
 /** New: Store armed, the flash's on phase: every rack slot and Store wait for the slot to store into. */
 export const StoreArmed: Story = { args: { pads: quickRackStorePads } };
 
-/** New: the Chord bank: its unassigned top row is eight quiet dots, the switches below read as the bank. */
+/** New: the Chord bank: its unassigned top row is eight empty faces, the switches below read as the bank. */
 export const ChordBank: Story = { args: { bank: 1, pads: padsByBank[1] } };
+
+/** New: only five pads given: the bank still draws all sixteen, the rest empty, as on the hardware. */
+export const FewerPads: Story = { args: { pads: quickRackPads.slice(0, 5) } };
+
+/** New: only five pads given, as a 4 × 4 grid. */
+export const FewerPadsFourByFour: Story = { args: { pads: quickRackPads.slice(0, 5), columns: 4 } };
 
 /** New: the Multi Pads bank, Pad 1 playing. */
 export const MultiPadsBank: Story = { args: { bank: 2, pads: padsByBank[2] } };

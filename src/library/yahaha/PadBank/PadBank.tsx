@@ -35,8 +35,14 @@ const BANK_TIP: Record<string, string> = {
   Setup: 'padpage.setup',
 };
 
+/** The Launchkey's pad count: the bank always draws this many cells. */
+export const PAD_SLOTS = 16;
+
+/** A cell with nothing given for it. */
+const EMPTY: PadItem = { label: '', family: 'util', state: 'idle', empty: true };
+
 export interface PadBankProps {
-  /** The sixteen pads, row by row. */
+  /** The sixteen pads, row by row. Fewer: the rest are empty cells; more: those past sixteen are ignored. */
   pads: PadItem[];
   /** Pads a row: 8 (two rows of eight, the Launchkey's layout) or 4 (a 4 × 4 grid: 1–4, 5–8, 9–12, 13–16). */
   columns?: 4 | 8;
@@ -73,11 +79,15 @@ export interface PadBankProps {
  * *Colour meaning* (`hues.ts`; `color.md`, "state changes: structure, not circus"): the four banks
  * are functions, not parts, so their pads are neutral: on is the one `--selected` fill, waiting is
  * the Pad's ring and chip, and a part hue appears only on a pad the engine lights for that part.
- * *Clutter and hierarchy*: a pad with nothing assigned (the Chord bank's top row, Setup's spare
- * pads) is no longer a dashed key labelled "—" that looks pressable; it is a quiet dot in its place,
- * out of the tab order, so the assigned pads read as the bank and its rows keep their hardware
- * positions. A dark pad is kept for what exists but is empty or absent (a Quick Rack slot with
- * nothing stored), since a press there still means something. *Fit*: the bank fills its region and
+ * *Mapping*: the Launchkey always has sixteen pads, so the bank always draws sixteen cells,
+ * whatever `pads` holds (missing ones are empty, extras ignored), and each screen position maps
+ * one to one to a hardware pad. *Clutter and hierarchy*: a pad with nothing assigned (the Chord
+ * bank's top row, Setup's spare pads) is no longer a dashed key labelled "—" that looks pressable;
+ * it is the pad's full face at its size and place, a faint solid edge over a faint wash with no
+ * label, out of the tab order and not pressable, so the slot is plainly there but holds nothing
+ * and the assigned pads still read as the bank. A dark pad is kept for what exists but is empty or
+ * absent (a Quick Rack slot with nothing stored), with its dashed edge and label, since a press
+ * there still means something. *Fit*: the bank fills its region and
  * the pads fill their grid cells, stretching to the region's height when it has one, so the same
  * bank works as two rows of eight or a 4 × 4 block at a 1440 × 900 and a 1217 × 752 Stage.
  *
@@ -85,7 +95,7 @@ export interface PadBankProps {
  * and a press go out by index. The header's one tab style (ChosenTabs, a tablist with arrow keys),
  * the `bankName` fallback tab, `bankTips`, the 8 / 4 `columns`, each pad's face from the Pad
  * primitive (a waiting pad's ARMED / NEXT chip and the room it keeps above the label are the Pad's
- * own; the bank sets only the inset), and the spoken names ("Rack 1 (pad 1)").
+ * own; the bank sets only the inset), and the spoken names ("Rack 1 (pad 1)", "Pad 12: empty").
  */
 export function PadBank({
   pads,
@@ -103,6 +113,7 @@ export function PadBank({
   const names = banks.length > 0 ? banks : [bankName];
   const tabs: TabItem[] = names.map((label, i) => ({ id: String(i), label, tip: bankTips[i] ?? BANK_TIP[label] }));
   const chosen = String(banks.length > 0 ? bank : 0);
+  const cells = Array.from({ length: PAD_SLOTS }, (_, i) => pads[i] ?? EMPTY);
 
   return (
     <section className="yh-padbank" aria-labelledby={headingId} lang="en">
@@ -117,12 +128,10 @@ export function PadBank({
         />
       </GroupHeader>
       <div className="yh-padbank__pads" data-columns={columns}>
-        {pads.map((pad, i) => (
+        {cells.map((pad, i) => (
           <div key={i} className="yh-padbank__cell" data-empty={pad.empty || undefined}>
             {pad.empty ? (
-              <span className="yh-padbank__empty" role="img" aria-label={pad.name ?? `Pad ${i + 1}: empty`}>
-                <span className="yh-padbank__dot" aria-hidden="true" />
-              </span>
+              <span className="yh-padbank__empty" role="img" aria-label={pad.name ?? `Pad ${i + 1}: empty`} />
             ) : (
               <Pad
                 label={pad.label}

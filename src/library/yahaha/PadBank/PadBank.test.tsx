@@ -95,6 +95,38 @@ describe('PadBank pads', () => {
     expect(screen.getByRole('button', { name: 'Manual Bass (pad 9)' })).toBeInTheDocument();
   });
 
+  it('always draws sixteen cells, like the hardware: missing pads are empty, extras ignored', () => {
+    const { onPress, container } = setup({ pads: quickRackPads.slice(0, 5) });
+    expect(container.querySelectorAll('.yh-padbank__cell')).toHaveLength(16);
+    expect(screen.getAllByRole('button')).toHaveLength(5);
+    for (const n of [6, 12, 16]) expect(screen.getByRole('img', { name: `Pad ${n}: empty` })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('img', { name: 'Pad 12: empty' }));
+    expect(onPress).not.toHaveBeenCalled();
+    cleanup();
+    const many = setup({ pads: [...quickRackPads, ...quickRackPads] });
+    expect(many.container.querySelectorAll('.yh-padbank__cell')).toHaveLength(16);
+    expect(screen.queryByRole('button', { name: /\(pad 17\)$/ })).toBeNull();
+  });
+
+  it('sixteen cells make two rows of eight or a 4 × 4 grid, whatever is given', () => {
+    const { container } = setup({ pads: [], columns: 4 });
+    const grid = container.querySelector('.yh-padbank__pads');
+    expect(grid).toHaveAttribute('data-columns', '4');
+    expect(grid?.children).toHaveLength(16);
+    expect(screen.getAllByRole('img', { name: /^Pad \d+: empty$/ })).toHaveLength(16);
+  });
+
+  it('an empty pad is a full face with no label, skipped by Tab', async () => {
+    setup({ pads: chordPads, bank: 1, banks: [] });
+    const empty = screen.getByRole('img', { name: 'Pad 8: empty' });
+    expect(empty).not.toHaveAttribute('tabindex');
+    expect(empty.closest('.yh-padbank__cell')).toHaveAttribute('data-empty', 'true');
+    // Pads 1–8 of the Chord bank are empty: Tab goes from the bank tab straight to pad 9.
+    screen.getByRole('tab').focus();
+    await userEvent.tab();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Manual Bass (pad 9)' }));
+  });
+
   it('a dark pad (an empty Quick Rack slot) is still a key', () => {
     setup();
     expect(screen.getByRole('button', { name: `Rack${NB}8 (pad 8)` })).toHaveAttribute('data-state', 'dark');

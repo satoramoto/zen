@@ -76,6 +76,33 @@ describe('KnobBank knobs', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
+  it('always draws eight slots, like the hardware: missing knobs are unused, extras ignored', () => {
+    const { onPress } = setup({ knobs: styleKnobs.slice(0, 3) });
+    const region = screen.getByRole('region', { name: 'Knobs' });
+    expect(region.querySelectorAll('.yh-knobbank__slot')).toHaveLength(8);
+    expect(within(region).getAllByRole('button')).toHaveLength(3);
+    for (const n of [4, 5, 6, 7, 8]) expect(within(region).getByRole('img', { name: `Knob ${n}: unused` })).toBeInTheDocument();
+    fireEvent.click(within(region).getByRole('img', { name: 'Knob 8: unused' }));
+    expect(onPress).not.toHaveBeenCalled();
+    cleanup();
+    setup({ knobs: [...styleKnobs, ...styleKnobs] });
+    const full = screen.getByRole('region', { name: 'Knobs' });
+    expect(full.querySelectorAll('.yh-knobbank__slot')).toHaveLength(8);
+    expect(within(full).getAllByRole('button')).toHaveLength(7);
+    expect(within(full).queryByRole('button', { name: /^Knob 9:/ })).toBeNull();
+  });
+
+  it('an unused slot is drawn as a full ring with no value or name, and is skipped by Tab', async () => {
+    setup({ pages: [] });
+    const empty = screen.getByRole('img', { name: 'Knob 7: unused' });
+    expect(empty.querySelector('svg path')).not.toBeNull();
+    expect(empty.textContent).toBe('');
+    expect(empty).not.toHaveAttribute('tabindex');
+    screen.getByRole('button', { name: /^Knob 6:/ }).focus();
+    await userEvent.tab();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: /^Knob 8:/ }));
+  });
+
   it('only a knob that belongs to a part wears a hue, the part’s', () => {
     setup({ knobs: reverbKnobs, page: 3 });
     const hue = (n: number) => screen.getByRole('button', { name: new RegExp(`^Knob ${n}:`) }).getAttribute('data-hue');

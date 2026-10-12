@@ -50,17 +50,15 @@
   letter-spacing: min(var(--tracking), 0.02em);
 }
 
-/* Nothing assigned: a quiet dot where the key would be, nothing to read or press. */
+/* Nothing assigned: the pad's full face in its place, a faint solid edge over a faint wash, with
+   no label and no hover or press give. A dark pad (a slot that exists but is empty) keeps its
+   dashed edge and label, so the two never read alike. */
 .yh-padbank__empty {
-  display: grid;
-  place-items: center;
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
-}
-.yh-padbank__dot {
-  --yh-padbank-dot: max(4px, calc(var(--space-1) + 1px));
-  width: var(--yh-padbank-dot);
-  height: var(--yh-padbank-dot);
-  border-radius: var(--radius-pill);
-  background: color-mix(in oklab, var(--text-1) 22%, transparent);
+  border: var(--border-width) solid color-mix(in oklab, var(--text-1) 12%, transparent);
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--text-1) 4%, transparent);
 }
