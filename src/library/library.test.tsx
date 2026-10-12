@@ -54,6 +54,9 @@ describe('token contract', () => {
       const src = read(file).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
       expect(src, `${file} has a colour literal`).not.toMatch(/#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/);
       expect(src, `${file} has a literal radius`).not.toMatch(/border-radius:(?!\s*var\()/);
+      // The build rewrites light-dark() into variables only a literal color-scheme sets; the
+      // library's scheme comes from var(--scheme), so it renders transparent.
+      expect(src, `${file} uses light-dark()`).not.toMatch(/\blight-dark\(/);
     }
   });
 

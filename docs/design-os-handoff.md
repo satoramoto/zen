@@ -39,15 +39,16 @@ The rules that came out of it:
 | The Stage screen | `src/library/yahaha/Stage/` (layout, `StagePlayground`, `tapTempo`, per-pack shots in `shots/`) | merged; rebalance pending (below) |
 | Rules | `src/library/yahaha/README.md` (widget convention), `STAGE.md` (Stage brief and concepts that must survive), `hues.ts`, `AGENTS.md` | current |
 
-Checks on `design-os`: `npm run typecheck` and `npx vitest run src/library` (465 tests) pass. `npm run build:storybook` also builds the composed baseline.
+Checks on `design-os`: `npm run typecheck` and `npx vitest run src/library` (469 tests) pass. `npm run build:storybook` also builds the composed baseline.
 
 **To look at it:** run `npm run dev` in the worktree. Storybook is at :6021, or set `STORYBOOK_PORT`. A preview from this session may still be running at http://127.0.0.1:6031. Open **Library → Yahaha** for the redesigns, with **Screens → Stage → Playground** for the live screen, and **Yahaha baseline** for the originals. Switch packs with the **Theme** toolbar.
 
 ## In flight and next
 
-1. **`yh-keys-pad`** (01d886c, worktree `awesome-design-yh-keys-pad`): Keys draws a real keyboard, and Pad's NEXT tag no longer covers the label. Being reviewed; merge it once approved.
-   - Why the keys were invisible: the build rewrote `light-dark()` into variables that only a literal `color-scheme` sets. The colours are now relative colours from `--surface-0`. Add a check to `library.test.tsx` that rejects `light-dark()`.
-2. **The Stage rebalance lane**, which starts after (1):
+1. **Done:** `yh-keys-pad` is merged. Keys draws a real keyboard, and Pad's NEXT tag no longer covers the label.
+   - Why the keys were invisible: the build rewrote `light-dark()` into variables that only a literal `color-scheme` sets. The colours are now relative colours from `--surface-0`, and `library.test.tsx` now rejects `light-dark()`.
+   - `PadBank.css` still carries a copy of Pad's NEXT/ARMED padding. Delete it.
+2. **Next, not started: the Stage rebalance lane.**
    - give the hero back its height and remove the empty space above the keys;
    - drop the 84.5% fit-zoom at 1217×752: let the hero column shrink to about 436px and use Display's `density`;
    - fold in the review notes: OTS pads in the Playground should apply One Touch; `useFit` should also observe the inner frame; the stale comment in `Stage.css`; the Playground style-step edge case;
@@ -76,4 +77,4 @@ Each lane's report and review is summarised in the session.
 
 ## Related, outside this repo
 
-- `awesome-claude` PR #27: the `launcher` mod (`/launcher`, `/preview`). It manages the project's `.claude/launch.json` dev servers from the terminal. Auto-merge is on.
+- `awesome-claude` PR #27: the `launcher` mod (`/launcher`, `/preview`). It manages the project's `.claude/launch.json` dev servers from the terminal. Merged.
