@@ -61,6 +61,8 @@ export interface DisplayNowPlaying {
   bars?: number;
   /** The tempo in BPM. */
   bpm: number;
+  /** The style's own tempo in BPM. When `bpm` equals it, the Style tempo key looks unavailable (nothing to reset). Omitted: the key always looks available. */
+  styleTempo?: number;
   /** The band is running. False: "Stopped", the section without its live block, the beat at rest. */
   running?: boolean;
   /** Stopped with Sync Start armed: "Sync Start armed". */
@@ -135,7 +137,7 @@ export interface DisplayProps {
   onTempo?: (bpm: number) => void;
   /** Tap: one tap, reported on press (pointer down, or Enter/Space). The caller times the taps. */
   onTap?: () => void;
-  /** Back to the style's own tempo (the Reset key beside Tap, or a double-click on the number). */
+  /** Back to the style's own tempo (the Style tempo key beside Tap, or a double-click on the number). */
   onStyleTempo?: () => void;
 }
 
@@ -217,10 +219,15 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
  * 0.6) until they fit the row, so the section is never cut, the chord keeps its cell and the
  * ranking holds.
  * *Hierarchy, one place per job:* what's next is said once, a "then" tab hanging flush under the
- * section block: control height, `--text-1` on `--surface-2`, an arrow in the next role
- * (`--accent`, `SECTION_STATE_COLOUR.next`), then when ("fill after bar 4") at label size. Where
- * the bar is is drawn, not written: four beat cells under the tempo (the lit beat in `--text-1`,
- * beat 1 marked), where the old full-width beat bar made a 300px slab louder than the chord.
+ * section block: one and a half control heights, `--text-1` on `--surface-2`, an arrow in the next
+ * role (`--accent`, `SECTION_STATE_COLOUR.next`), the next section's name at 35% of the section's
+ * size (never below heading size, so about 34px under a 96px block rather than a 14px footnote),
+ * then when ("fill after bar 4") at label size. Where the bar is is drawn, not written: four beat
+ * cells under the tempo (the lit beat in `--text-1`, beat 1 marked), where the old full-width beat
+ * bar made a 300px slab louder than the chord; at `full` the cells are `--space-3` thick, enough to
+ * read from a metre. *Rhythm, room to breathe:* the groups (header, readouts, the beat and the
+ * tempo keys) stand a step further apart on the `--space-*` scale than the controls inside them,
+ * so each reads as one group; spacing makes the room, never smaller or fainter text (color.md).
  * *Hierarchy, quiet chrome:* the "Section / Chord / Tempo" captions are gone (a block, a chord
  * symbol and a number with BPM name themselves), so that row goes to the readouts; the style
  * header and One Touch keep one control-height line above them, the applied One Touch underlined
@@ -235,7 +242,10 @@ function useFit(frame: React.RefObject<HTMLDivElement | null>, deps: unknown[]) 
  * 900px hero, one row under the readouts below that and gone below 600px; below 600px the chord's
  * notes drop too (never read mid-song), the fingering keeps one line with an ellipsis.
  * *Affordance:* Tap is a real key, and the style's tempo, once a hidden double-click, is a visible
- * quiet "Reset" key beside it (the double-click still works).
+ * quiet "Style tempo" key beside it (the double-click still works). It says which tempo it goes
+ * back to, so it is never mistaken for the transport's section reset; when the tempo already is
+ * the style's (`styleTempo`), it takes the unavailable face (`--text-3`, `aria-disabled`, still
+ * focusable), since there is nothing to reset.
  *
  * **Kept.** The data and every callback of the original (prev/next/browse, One Touch, a part's
  * sound list, tempo up/down holds, drag/scroll/keys on the number, back to the style's tempo); the
@@ -272,6 +282,8 @@ export function Display({
   const hasParts = (parts?.length ?? 0) > 0;
   const frame = useRef<HTMLDivElement>(null);
   const chord = nowPlaying.chord;
+  /** Already at the style's tempo: the Style tempo key has nothing to do. */
+  const atStyleTempo = nowPlaying.styleTempo !== undefined && nowPlaying.bpm === nowPlaying.styleTempo;
   useFit(frame, [name, meta, queued, nowPlaying.playing, nowPlaying.bpm, chord.chord, chord.extension, hasParts, density]);
 
   return (
@@ -379,7 +391,16 @@ export function Display({
                 onHold={(down) => down && onTap?.()}
                 onPress={onTap}
               />
-              <Button label="Reset" size="md" variant="quiet" name="Back to the style's tempo" tip="tempo.reset" tipAction={tipAction} onPress={onStyleTempo} />
+              <Button
+                label="Style tempo"
+                size="md"
+                variant="quiet"
+                disabled={atStyleTempo}
+                name="Back to the style's tempo"
+                tip="tempo.reset"
+                tipAction={tipAction}
+                onPress={onStyleTempo}
+              />
             </div>
           </div>
 

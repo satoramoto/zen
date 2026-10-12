@@ -157,12 +157,29 @@ describe('Display', () => {
     for (const word of ['Section', 'Tempo']) expect(screen.queryByText(word)).toBeNull();
   });
 
-  it('puts the beat cells under the tempo, with Tap and Reset', () => {
+  it('puts the beat cells under the tempo, with Tap and Style tempo', () => {
     setup();
     const tempo = screen.getByRole('group', { name: 'Tempo and Tap' });
     expect(within(tempo).getByRole('img', { name: 'Beat 2 of 4' })).toBeInTheDocument();
-    expect(within(tempo).getByRole('button', { name: "Back to the style's tempo" })).toHaveTextContent('Reset');
-    expect(screen.queryByText('Style tempo')).toBeNull();
+    const key = within(tempo).getByRole('button', { name: "Back to the style's tempo" });
+    expect(key).toHaveTextContent('Style tempo');
+    expect(key).not.toHaveAttribute('aria-disabled');
+    expect(screen.queryByText('Reset')).toBeNull();
+  });
+
+  it('at the style tempo, the Style tempo key is unavailable but still focusable', async () => {
+    const { calls, rerender } = setup({ nowPlaying: { ...displayBoard.nowPlaying, styleTempo: 104 } });
+    const key = within(screen.getByRole('group', { name: 'Tempo and Tap' })).getByRole('button', { name: "Back to the style's tempo" });
+    expect(key).toHaveAttribute('aria-disabled', 'true');
+    key.focus();
+    expect(key).toHaveFocus();
+    await userEvent.setup().click(key);
+    expect(calls.onStyleTempo).not.toHaveBeenCalled();
+    // Off the style's tempo, it presses again.
+    rerender(<Display {...displayBoard} {...calls} nowPlaying={{ ...displayBoard.nowPlaying, styleTempo: 92 }} />);
+    expect(key).not.toHaveAttribute('aria-disabled');
+    await userEvent.setup().click(key);
+    expect(calls.onStyleTempo).toHaveBeenCalledOnce();
   });
 
   it('steps the readouts down together until a long section fits, and drops the genre · metre before the name is cut', () => {
