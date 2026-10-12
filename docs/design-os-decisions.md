@@ -28,4 +28,13 @@ Decisions made without asking, for the owner to veto. Newest last. Each says wha
     - `instrument` faces use a system mono instead of loading Recursive. Components set tabular figures themselves.
     - Region spacing is a literal 22px inset and 32px gap, so it holds under any scale.
     - Storybook paints a stand-in desktop behind translucent grounds (`pack.desktop`).
+17. **Core and Music components (out of Yahaha):**
+    - A hue slot is the number 1–4 everywhere. Role values are `'role-1'` and `'role-2'`.
+    - Pad takes a separate `hue` and `role`, instead of part families and a `transport` flag.
+    - Keys zones are a generic left and right, with the names passed in as props.
+    - Yahaha maps its parts in its own callers (`PART_HUE_INDEX`).
+    - Older values stay on Button, StatusDot and BarBeat for now: `t`, `t2`, `m`, `a`, `ok`, `rec`, `lamp` and the deprecated section values.
+    - The moved components keep their `yh-` class prefix for now; renaming it is a follow-up.
+18. **AppBar's pages are tablists** (two layout `Tabs`, "Display pages" and "Full pages") instead of buttons with `aria-current`. `Tabs.value` may be `null`, which leaves no tab chosen.
+19. **Display's and SongForm's roots are plain elements,** so the Stage's Regions carry the names: "Hero", "Transport" and "Song form", or "Song form and transport" in the split layout.
 13. **visual[flow] is rebuilt in zen** (`src/library/visuals/`) on the glass system, checked against the original Storybook for drift; the app itself is then wired to zen on a branch in openflowfm/visuals, opened as a draft PR without auto-merge, because that repo is mid-1.0 with its own decision log (#105).
