@@ -90,6 +90,17 @@ describe('Yahaha SongForm', () => {
     expect(running).not.toHaveAttribute('data-bar');
   });
 
+  it('the keys that move time wear the transport tone; running stays success, the rest neutral', () => {
+    const { container, rerender } = render(<SongForm {...songFormStopped} />);
+    expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'transport');
+    const key = (k: string) => container.querySelector(`.yh-songform__key[data-key='${k}'] button`);
+    for (const k of ['sync-start', 'sync-stop', 'fill-up', 'fill-down']) expect(key(k), k).toHaveAttribute('data-hue', 'transport');
+    for (const k of ['accomp', 'fade', 'reset']) expect(key(k), k).toHaveAttribute('data-hue', 't');
+    expect(screen.getByRole('button', { name: 'Auto Fill' })).toHaveAttribute('data-hue', 'transport');
+    rerender(<SongForm {...songFormBoard} />);
+    expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toHaveAttribute('data-hue', 'ok');
+  });
+
   it('waiting keys flash with the queued section', () => {
     const { rerender } = render(<SongForm {...songFormFillPending} lit={false} />);
     expect(screen.getByRole('button', { name: /^Fill Up: .*queued$/ })).toHaveAttribute('data-lit', 'false');

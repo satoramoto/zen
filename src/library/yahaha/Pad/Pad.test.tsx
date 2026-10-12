@@ -76,6 +76,25 @@ describe('Yahaha Pad', () => {
     expect(rule('.yh-pad__tag--corner')).toMatch(/top:\s*calc\(var\(--yh-pad-tag-h\) \* -0\.[5-9]\)/);
   });
 
+  it('inks state fills with their own text tokens and draws transport in its role hue', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Pad/Pad.css'), 'utf8');
+    const rule = (selector: string) => {
+      const at = css.indexOf(`${selector} {`);
+      expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf('}', at));
+    };
+    const success = rule(".yh-pad[data-tone='success']");
+    expect(success).toContain('--yh-pad-ink: var(--success-text)');
+    expect(success).toContain('--yh-pad-ring-ink: var(--success-text)');
+    expect(rule(".yh-pad[data-state='armed']")).toContain('--yh-pad-ring-ink: var(--warning-text)');
+    const transport = rule(".yh-pad[data-tone='transport']");
+    expect(transport).toContain('--yh-pad-fill: var(--transport)');
+    expect(transport).toContain('--yh-pad-ink: var(--transport-text)');
+    expect(css).not.toContain("data-tone='action'");
+    render(<Pad label="Sync Start" family="util" state="armed" transport />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-tone', 'transport');
+  });
+
   it('marks the flash phase only on waiting pads', () => {
     const { rerender } = render(<Pad label="Main C" state="next" lit={false} />);
     expect(screen.getByRole('button')).toHaveAttribute('data-lit', 'false');
@@ -88,8 +107,11 @@ describe('Yahaha Pad', () => {
     expect(padTone('util', 'idle', false)).toBe('neutral');
     expect(padTone('start', 'running', false)).toBe('success');
     expect(padTone('start', 'idle', false)).toBe('neutral');
-    expect(padTone('start', 'running', true)).toBe('action');
-    expect(padTone('util', 'armed', true)).toBe('action');
+    // Running is a state: it stays success on a transport pad too.
+    expect(padTone('start', 'running', true)).toBe('success');
+    expect(padTone('start', 'idle', true)).toBe('transport');
+    expect(padTone('util', 'armed', true)).toBe('transport');
+    expect(padTone('util', 'playing', true)).toBe('transport');
     expect(padTone('main', 'idle', true)).toBe('neutral');
     expect(padTone('r1', 'playing', false)).toBe('hue-1');
     expect(padTone('r2', 'idle', false)).toBe('hue-2');

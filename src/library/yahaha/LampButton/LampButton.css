@@ -34,14 +34,17 @@
   transition: background-color 80ms ease-out, border-color 80ms ease-out, color 80ms ease-out, transform 60ms ease-out;
 }
 
-/* Identity. Part hues only for parts; running and looping read as success, record as danger. */
+/* Identity. Part hues only for parts; running and looping read as success, record as danger;
+   the keys that move time (the metronome, Auto Fill) wear the transport role hue. Each solid
+   fill takes its own ink: --on-hue on a part, the state's or role's text token otherwise. */
 .yh-lampbutton[data-hue='r1'] { --lamp-hue: var(--hue-1); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='r2'] { --lamp-hue: var(--hue-2); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='r3'] { --lamp-hue: var(--hue-3); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='l'] { --lamp-hue: var(--hue-4); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='ok'],
-.yh-lampbutton[data-hue='lamp'] { --lamp-hue: var(--success); --lamp-ink: var(--on-hue); }
-.yh-lampbutton[data-hue='rec'] { --lamp-hue: var(--danger); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='lamp'] { --lamp-hue: var(--success); --lamp-ink: var(--success-text); }
+.yh-lampbutton[data-hue='rec'] { --lamp-hue: var(--danger); --lamp-ink: var(--danger-text); }
+.yh-lampbutton[data-hue='transport'] { --lamp-hue: var(--transport); --lamp-ink: var(--transport-text); }
 
 /* Sizes */
 .yh-lampbutton--sm {

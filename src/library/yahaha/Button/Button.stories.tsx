@@ -6,7 +6,7 @@ import { Button, type ButtonHue } from './Button';
 const NONE = 'none';
 const SIZES = ['icon', 'md', 'band', 'pair', 'cell', 'caret'];
 /** The hues that draw a distinct look (the deprecated `t2` and `m` draw as `t`, so they're left out). */
-const HUES: ButtonHue[] = ['t', 'a', 'lamp', 'rec', 'ok', 'r1', 'r2', 'r3', 'l', 'intro', 'main', 'ending', 'brk', 'fill'];
+const HUES: ButtonHue[] = ['t', 'a', 'lamp', 'rec', 'ok', 'transport', 'r1', 'r2', 'r3', 'l', 'intro', 'main', 'ending', 'brk', 'fill'];
 const SYMBOLS = ['prev', 'next', 'up', 'down', 'plus', 'minus', 'caret'];
 /** A select whose first option is `none` (undefined), so the control can go back to "no value". */
 const optional = (options: string[]) => ({ control: 'select' as const, options: [NONE, ...options], mapping: { [NONE]: undefined } });
@@ -187,6 +187,31 @@ export const WaitingFlash: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Fade, armed, unlit' })).toHaveAttribute('data-lit', 'false');
     await expect(canvas.getByRole('button', { name: 'Fade, armed, lit' })).not.toHaveAttribute('data-lit');
+  },
+};
+
+/**
+ * New: the `transport` tone, the role hue of the keys that move time. Start stopped is the primary
+ * key filled in `--transport` with `--transport-text`; Sync Start armed and a queued fill ring in it
+ * (the waiting ring still says "armed" by shape); Stop running stays `ok`, because running is a state.
+ */
+export const Transport: Story = {
+  render: (args) => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' }}>
+      <Button {...args} label="Start" size="band" variant="primary" hue="transport" tall name="Start / Stop, stopped" />
+      <Button {...args} label="Stop" size="band" hue="transport" bar tall name="Start / Stop, running" />
+      <Button {...args} label="Sync Start" size="md" hue="transport" name="Sync Start" />
+      <Button {...args} label="Sync Start" size="md" hue="transport" waiting name="Sync Start, armed" />
+      <Button {...args} label="Fill" symbol="up" size="md" hue="transport" waiting lit={false} name="Fill up, queued, unlit" />
+      <Button {...args} label="Tap" size="pair" hue="transport" on name="Tap, on" />
+      <Button {...args} symbol="plus" size="icon" hue="transport" name="Tempo up" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'transport');
+    await expect(canvas.getByRole('button', { name: 'Start / Stop, running' })).toHaveAttribute('data-hue', 'ok');
+    await expect(canvas.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('data-face', 'waiting');
   },
 };
 

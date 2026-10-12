@@ -155,6 +155,14 @@ describe('AppBar switches', () => {
     expect(onPanic).toHaveBeenCalledTimes(1);
   });
 
+  it('the metronome wears the transport hue; Unison and the ▾ stay neutral', () => {
+    setup({ metronome: true });
+    const switches = screen.getByRole('group', { name: 'Global switches' });
+    expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'transport');
+    expect(within(switches).getByRole('button', { name: 'Unison' })).toHaveAttribute('data-hue', 't');
+    expect(within(switches).getByRole('button', { name: CARET })).toHaveAttribute('data-hue', 't');
+  });
+
   it('draws help mode on when help is set', () => {
     setup({ help: true });
     expect(screen.getByRole('button', { name: /^Help mode/ })).toHaveAttribute('aria-pressed', 'true');

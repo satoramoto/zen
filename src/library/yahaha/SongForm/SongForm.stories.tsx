@@ -59,7 +59,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Stopped (SectionRow's board): Main A chosen to start, Start on the action fill, Accomp lit. */
+/** Stopped (SectionRow's board): Main A chosen to start, Start on the `--transport` fill, Accomp lit; sync and fill keys outlined in the transport hue. */
 export const Stopped: Story = {
   args: { ...songFormStopped, next: undefined, nextAt: undefined },
   play: async ({ args, canvasElement }) => {
