@@ -42,7 +42,16 @@ export interface PadProps {
   disabled?: boolean;
   /** Fill the parent cell (width and height 100%) instead of the fixed square. Default false. */
   fillCell?: boolean;
+  /**
+   * How an on pad (`playing`) shows it: `fill`, the solid fill (the default; a playing section),
+   * or `ring`, an outline and a lit dot, for a bank's pads, so the solid fill stays with what
+   * plays.
+   */
+  onFace?: PadOnFace;
 }
+
+/** How an on pad shows it: see `PadProps.onFace`. */
+export type PadOnFace = 'fill' | 'ring';
 
 const PART_TONE: Partial<Record<PadFamily, PadTone>> = { r1: 'hue-1', r2: 'hue-2', r3: 'hue-3', l: 'hue-4' };
 
@@ -112,6 +121,7 @@ export function Pad({
   accentNext = false,
   disabled = false,
   fillCell = false,
+  onFace = 'fill',
 }: PadProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const tone = padTone(family, state, transport);
@@ -138,6 +148,7 @@ export function Pad({
       data-tip={tip}
       data-next={accentNext ? 'accent' : undefined}
       data-fill={fillCell || undefined}
+      data-on-face={onFace}
       aria-label={name ?? `${label}${index ? ` (pad ${index})` : ''}`}
       aria-pressed={state === 'playing' || state === 'running'}
       aria-disabled={disabled || undefined}
