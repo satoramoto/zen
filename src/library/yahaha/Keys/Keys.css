@@ -70,7 +70,17 @@
 }
 .yh-keys__zone[data-on='true'] {
   border-bottom-color: var(--yh-keys-hue);
-  box-shadow: 0 calc(var(--yh-keys-lamp) / 2) var(--bloom) calc(-1 * var(--yh-keys-lamp) / 2) var(--yh-keys-hue);
+}
+/* Lit, the underline glows where the palette has bloom: around the line, not the whole zone. */
+.yh-keys__zone[data-on='true']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0;
+  box-shadow: 0 0 var(--bloom) var(--yh-keys-hue);
+  pointer-events: none;
 }
 /* Leave room for the split flag where the zones meet. */
 .yh-keys__zone[data-split][data-side='left'] { padding-right: calc(var(--yh-keys-flag-w) / 2 + var(--space-2)); }
@@ -79,7 +89,7 @@
 .yh-keys__part {
   flex: none;
   font-size: var(--size-label);
-  font-weight: var(--weight-strong);
+  font-weight: var(--weight-body);
   letter-spacing: var(--tracking);
   text-transform: var(--label-case);
   color: var(--text-2);
