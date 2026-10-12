@@ -1,6 +1,11 @@
 import type { HueSlot } from '../../core/hue';
 import { BOX, R, START, arc, point, sweepOf } from './geometry';
+import { focusRing } from '../../../primitives/Ring';
 import { useKnob, type TipAction } from './useKnob';
+// The well and the cap are Surfaces through the class and data attributes, without
+// `data-radius`: they are discs (`--yh-knob-round`), which no Surface radius gives. Before
+// Knob.css, so its corners win.
+import '../../../primitives/Surface.css';
 import './Knob.css';
 
 export type { TipAction };
@@ -66,6 +71,14 @@ export interface KnobProps {
  * wheel step it, a trackpad's small deltas adding up to one notch; a click that didn't turn it is
  * a press, as are Space and Enter. The 270° sweep from bottom left, the sizes, the spoken name and
  * the unused state are the original's.
+ *
+ * **Built from.** The well (`well`) and the cap (`handle`) are `Surface` materials; focus is
+ * `focusRing`. Name, value and code stay plain spans, not `Text`: their sizes follow the ring
+ * (`--yh-knob-ring`) and KnobBank restyles them, which `.lib-text`'s role sizes would override.
+ *
+ * **Tuning knobs.**
+ * - `--yh-knob-ring`: the ring's side (default 2.25 control heights); KnobBank sets it per slot.
+ * - `--yh-knob-round`: the well's and cap's corners, a disc whatever the pack's radii.
  */
 export function Knob({
   label,
@@ -96,7 +109,7 @@ export function Knob({
   return (
     <button
       {...rootProps}
-      className="yh-knob"
+      className={`yh-knob ${focusRing}`}
       data-part="root"
       data-unused={unused || undefined}
       data-rest={rest || undefined}
@@ -108,9 +121,9 @@ export function Knob({
       </span>
       <span className="yh-knob__dial" data-part="dial">
         {/* The groove: the full 270° sweep, cut from a disc so it can wear any material. */}
-        <span className="yh-knob__track" data-part="well" aria-hidden="true" />
+        <span className="yh-knob__track lib-surface" data-material="well" data-part="well" aria-hidden="true" />
         {/* The cap the arc sits around. */}
-        <span className="yh-knob__body" data-part="body" aria-hidden="true" />
+        <span className="yh-knob__body lib-surface" data-material="handle" data-part="body" aria-hidden="true" />
         <svg className="yh-knob__ring" viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true">
           {!unused && lit && <path className="yh-knob__lit" data-part="arc" d={lit} />}
           {!unused && (

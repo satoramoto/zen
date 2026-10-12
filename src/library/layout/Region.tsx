@@ -1,4 +1,5 @@
 import { Children, isValidElement, useId, useState, type CSSProperties, type ReactElement, type ReactNode } from 'react';
+import type { Step } from '../primitives/step';
 import { Tabs, type TipAction } from './Tabs';
 import './Region.css';
 
@@ -38,6 +39,14 @@ export interface RegionProps {
   area?: string;
   /** The app's tooltip action, passed to the views' tabs (each tab with a `tip` gets it). */
   tipAction?: TipAction;
+  /** The space between the Groups in the body, as a scale step (1–6 are `--space-1` to `--space-6`). Default none. */
+  gap?: Step;
+  /**
+   * How the region takes its height. `fill` (default): the box its screen gives it; its content
+   * never holds the region open. `content`: exactly its header plus its body's content, so an
+   * `auto` grid row sized by it never collapses when the screen has no spare height.
+   */
+  fit?: 'fill' | 'content';
   className?: string;
   style?: CSSProperties;
   /** Content, or `Region.View` children: then the header shows a tab per view and the body the chosen one. */
@@ -57,8 +66,11 @@ export interface RegionProps {
  *
  * **Behaviour.** With `view` the choice is the caller's (a hardware button may change it too);
  * without, the region keeps it. The body is the tabs' `tabpanel`.
+ *
+ * **Spacing.** The body stacks its Groups in a column; `gap` sets the scale step between them
+ * (unset: none, the Groups sit as they are).
  */
-function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAction, className, style, children }: RegionProps) {
+function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAction, gap, fit, className, style, children }: RegionProps) {
   const views = Children.toArray(children).filter(
     (c): c is ReactElement<RegionViewProps> => isValidElement(c) && c.type === RegionView,
   );
@@ -80,6 +92,7 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAc
       aria-label={name}
       data-part="region"
       data-tabbed={tabbed || undefined}
+      data-fit={fit === 'content' ? 'content' : undefined}
       style={area ? { gridArea: area, ...style } : style}
     >
       {(label || aside || tabbed) && (
@@ -102,6 +115,7 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAc
       <div
         className="lib-region__body"
         data-part="body"
+        data-gap={gap}
         id={tabbed ? `${uid}-panel` : undefined}
         role={tabbed ? 'tabpanel' : undefined}
         aria-labelledby={tabbed && chosen ? tabId(chosen.props.id) : undefined}

@@ -238,9 +238,9 @@
 }
 
 /* A playlist's grid: its presets as tiles, in the order they play, wrapping, on the library
-   grid's spacing (tile.css's .home-grid). */
+   grid's spacing (tile.css's .home-grid); tiles at least 150px, 124px in a narrow window. */
 .vs-home-grid {
-  --vs-home-tile-min: 150px;
+  --vs-home-tile-min: calc(var(--control-h) * 5);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--vs-home-tile-min), 1fr));
   align-content: start;
@@ -256,7 +256,7 @@
 }
 @media (max-width: 1099px) {
   .vs-home-grid {
-    --vs-home-tile-min: 124px;
+    --vs-home-tile-min: calc(var(--space-6) * 4 - var(--space-1));
   }
 }
 .vs-home-tile {
@@ -267,11 +267,12 @@
   outline-offset: 2px;
   border-radius: var(--radius-control);
 }
-/* "next": a quiet chip, bottom right of the picture, on the thumbnail's dark backing. */
+/* "next": a quiet chip, bottom right of the picture, on the thumbnail's dark backing, 8px in
+   (7px before). */
 .vs-home-tile-next {
   position: absolute;
-  bottom: 7px;
-  right: 7px;
+  bottom: var(--space-2);
+  right: var(--space-2);
   padding: 1px var(--space-2);
   border-radius: var(--radius-pill);
   color: var(--text-1);
@@ -280,11 +281,11 @@
   background: color-mix(in oklab, var(--key-black) 55%, transparent);
   pointer-events: none;
 }
-/* ✕ takes it out: a small round dark key, top right, on hover or focus. */
+/* ✕ takes it out: a small round dark key (24px), top right 8px in (7px before), on hover or focus. */
 .vs-home-tile-tools {
   position: absolute;
-  top: 7px;
-  right: 7px;
+  top: var(--space-2);
+  right: var(--space-2);
   display: none;
 }
 .vs-home-tile:hover .vs-home-tile-tools,
@@ -292,9 +293,9 @@
   display: block;
 }
 .vs-home-tile-tools button {
-  width: 24px;
+  width: var(--space-5);
   min-width: 0;
-  height: 24px;
+  height: var(--space-5);
   padding: 0;
   border: 0;
   border-radius: var(--radius-pill);
@@ -310,21 +311,22 @@
 .vs-home-tile[data-dragged] {
   opacity: 0.35;
 }
-/* Where a dragged preset would land: a bar before or after the tile it is over, in the gap. */
+/* Where a dragged preset would land: a bar before or after the tile it is over, centred in the
+   gap; 4px wide (3px before). */
 .vs-home-tile[data-over]::before {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 3px;
+  width: var(--space-1);
   border-radius: var(--radius-pill);
   background: var(--warning);
 }
 .vs-home-tile[data-over='before']::before {
-  left: calc(var(--space-3) / -2 - 1.5px);
+  left: calc((var(--space-3) + var(--space-1)) / -2);
 }
 .vs-home-tile[data-over='after']::before {
-  right: calc(var(--space-3) / -2 - 1.5px);
+  right: calc((var(--space-3) + var(--space-1)) / -2);
 }
 .vs-home-more {
   align-self: center;
@@ -343,7 +345,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  max-width: 240px;
+  max-width: calc(var(--control-h) * 8); /* 240px */
   padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
   color: var(--text-1);
   font-size: var(--vs-text-label);
@@ -355,7 +357,7 @@
   opacity: 1;
 }
 .vs-home-ghost img {
-  width: 56px;
+  width: calc(var(--space-6) + var(--space-5)); /* 56px */
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: var(--radius-input);

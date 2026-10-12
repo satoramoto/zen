@@ -1,0 +1,16 @@
+/* Rings: focus and press, drawn as outlines so they never fight a Surface's box-shadow.
+   Contract variables only. */
+
+/* Pressed (or held): an inset ring inside the edge. */
+.lib-press-ring[aria-pressed='true'],
+.lib-press-ring[data-pressed],
+.lib-press-ring:active {
+  outline: calc(var(--border-width) * 2) solid var(--accent);
+  outline-offset: calc(var(--border-width) * -2);
+}
+
+/* Focus from the keyboard: a ring just outside the edge. Last, so focus wins over press. */
+.lib-focus-ring:focus-visible {
+  outline: calc(var(--border-width) * 2) solid var(--accent);
+  outline-offset: 2px;
+}

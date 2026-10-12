@@ -2,10 +2,8 @@
 .yh-bar-readout {
   /* The fill and cap's ink; a page may point it at the part's hue (one of the --hue-1..4 roles). */
   --yh-bar-readout-ink: var(--accent);
-  /* The track: a tint of the text colour, so it shows on light and dark palettes. */
-  --yh-bar-readout-track: color-mix(in srgb, var(--text-1) 16%, transparent);
+  /* The line's thickness: a hairline at rest, a scale step under the pointer. */
   --yh-bar-readout-line: 2px;
-  --yh-bar-readout-cap-h: 12px;
 
   display: grid;
   grid-template-columns: minmax(0, calc(var(--size-label) * 6)) minmax(calc(var(--space-6) * 4), 1fr) auto;
@@ -53,7 +51,7 @@
 }
 .yh-bar-readout__bar:hover,
 .yh-bar-readout__bar[data-dragging='true'] {
-  --yh-bar-readout-line: 4px;
+  --yh-bar-readout-line: var(--space-1);
 }
 
 .yh-bar-readout__track,
@@ -68,7 +66,8 @@
 .yh-bar-readout__track {
   left: 0;
   right: 0;
-  background: var(--yh-bar-readout-track);
+  /* A tint of the text colour, so it shows on light and dark palettes. */
+  background: color-mix(in srgb, var(--text-1) 16%, transparent);
 }
 .yh-bar-readout__fill {
   background: var(--yh-bar-readout-ink);
@@ -78,7 +77,7 @@
   position: absolute;
   top: 50%;
   width: 2px;
-  height: var(--yh-bar-readout-cap-h);
+  height: var(--space-3);
   margin-left: -1px;
   background: var(--yh-bar-readout-ink);
   transform: translateY(-50%);
@@ -89,9 +88,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 1px;
-  height: calc(var(--yh-bar-readout-cap-h) * 0.6);
-  margin-left: -0.5px;
+  width: var(--border-width);
+  height: calc(var(--space-3) * 0.6);
+  margin-left: calc(var(--border-width) / -2);
   background: var(--border-strong);
   transform: translateY(-50%);
 }

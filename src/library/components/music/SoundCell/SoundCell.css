@@ -53,11 +53,6 @@
 .yh-sound-cell__sound:active {
   background: var(--surface-3);
 }
-.yh-sound-cell__part:focus-visible,
-.yh-sound-cell__sound:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
 
 /* Caption line: the part's short name, the one coloured thing in the cell. */
 .yh-sound-cell__part {

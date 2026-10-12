@@ -76,6 +76,10 @@ function splitBass(extension: string): [string, string] {
  * line rather than cutting it off; "—" when there's no chord; the spoken name ("Chord Am7: A C E G,
  * Fingered On Bass"); the fingering's tooltip as `data-tip` with the whole text as `data-tip-text`,
  * and the app's `tipAction` applied to the fingering with `tip`, as the original does.
+ *
+ * **Tuning knobs.**
+ * - `--yh-chord-readout-hero`: the chord's full size (default `--size-display`, or `size`); the
+ *   fit steps and the fixed line box scale from it.
  */
 export function ChordReadout({
   chord,

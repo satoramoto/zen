@@ -1,4 +1,5 @@
 import { snap, useLineSlider, type TipAction } from './useLineSlider';
+import { focusRing } from '../../../primitives/Ring';
 import './LineSlider.css';
 
 export type { TipAction };
@@ -59,6 +60,10 @@ export interface LineSliderProps {
  * End), drag with pointer capture, and a11y: role `slider`, `aria-valuetext` carrying the unit,
  * disabled still focusable. The one-line, no-label form and the sizes are kept: the row around it
  * names it.
+ *
+ * **Tuning knobs**
+ * - `--yh-lineslider-ground`: the colour of the ring cut around the thumb; a parent on a raised surface sets it to its own face.
+ * - `--yh-lineslider-thumb-*` (`-w`, `-h`, `-radius`): the thumb's width, resting height and corner; the track's corner and the hit area's side padding follow them.
  */
 export function LineSlider({
   value,
@@ -96,7 +101,7 @@ export function LineSlider({
     <span className="yh-lineslider" data-part="root" data-disabled={disabled || undefined}>
       <span
         {...sliderProps}
-        className="yh-lineslider__hit"
+        className={`yh-lineslider__hit ${focusRing}`}
         data-part="slider"
         style={{ width: `${width}px` }}
         data-tip={tip}

@@ -53,6 +53,10 @@ export interface SectionNameProps {
  *
  * **Kept**: one line, never wrapping; an empty name shows "—" rather than collapsing the layout;
  * the `hue` prop and `data-hue` hook; `state` / `idle` on `data-state`.
+ *
+ * **Tuning knobs.**
+ * - `--yh-section-name-size`: the name's size (default `--size-numeral`); a parent sets it on
+ *   the element, or `size` inline.
  */
 export function SectionName({ label, hue = 'main', state, idle = false, size }: SectionNameProps) {
   const stands: SectionState = idle ? 'idle' : (state ?? 'playing');

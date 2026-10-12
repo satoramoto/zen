@@ -3,9 +3,11 @@
    tint over the frost: the steps are type and paint nothing, except the listen step's words, an
    opaque base layer beside the preview's hole, and the hole's own spread shadow, which paints the
    column round the picture. Near borderless: no rules between header, body and footer. Contract
-   variables only, plus the local ones declared here:
+   variables only, plus the local ones declared in Onboarding.tsx's Tuning knobs:
 
-   --vs-onboarding-main-min  the main button's least width (the original's 120px) */
+   --vs-onboarding-main-min    the main button's least width (the original's 120px)
+   --vs-onboarding-step-width  a step's widest (the original's 560px)
+   --vs-onboarding-text-width  the listen step's words' column at its widest (the original's 460px) */
 
 /* The Screen: header, step, footer, with no gap between them (the plate gap is for regions). */
 .vs-onboarding {
@@ -77,11 +79,12 @@
 }
 
 .vs-onboarding-step {
+  --vs-onboarding-step-width: calc(var(--space-4) * 35); /* onboarding.css 560px */
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   box-sizing: border-box;
-  width: min(560px, 100%);
+  width: min(var(--vs-onboarding-step-width), 100%);
   padding: var(--space-6);
 }
 .vs-onboarding-step h1 {
@@ -129,7 +132,7 @@
 }
 /* The one thing to do next: bigger, and filled in the action colour. */
 .vs-onboarding-main {
-  --vs-onboarding-main-min: 120px;
+  --vs-onboarding-main-min: calc(var(--space-5) * 5); /* onboarding.css 120px */
 }
 .vs-onboarding-main > .lib-action-button-face {
   min-width: var(--vs-onboarding-main-min);
@@ -164,8 +167,9 @@
   overflow: hidden;
 }
 .vs-onboarding-text-scope {
+  --vs-onboarding-text-width: calc(var(--space-1) * 115); /* onboarding.css 460px */
   display: flex;
-  flex: 0 0 min(460px, 45%);
+  flex: 0 0 min(var(--vs-onboarding-text-width), 45%);
   position: relative;
   z-index: 1;
 }
@@ -177,8 +181,7 @@
   gap: var(--space-4);
   padding: var(--space-6);
   /* Square: it runs edge to edge down the window's left. */
-  --vs-onboarding-text-radius: 0px;
-  border-radius: var(--vs-onboarding-text-radius);
+  border-radius: 0;
 }
 .vs-onboarding-picker {
   display: flex;
@@ -202,9 +205,10 @@
 }
 .vs-onboarding-stage > .vs-onboarding-preview {
   aspect-ratio: 16 / 9;
-  width: min(100%, calc((100vh - 200px) * 16 / 9));
+  /* onboarding.css min(100%, (100vh - 200px) * 16 / 9). */
+  width: min(100%, calc((100vh - var(--space-2) * 25) * 16 / 9));
   /* Paints everything round the hole in the frost's opaque tone, so only the picture shows through. */
-  box-shadow: 0 0 0 100vmax var(--vs-corner);
+  box-shadow: 0 0 0 100vmax var(--layer-base-solid);
 }
 
 /* The flashing-lights warning, as the flow's step and as the dialog over any view: a heading in
@@ -221,8 +225,8 @@
 .vs-onboarding-warning [data-part='title']::before {
   content: '';
   flex: none;
-  width: 8px;
-  height: 8px;
+  width: var(--space-2);
+  height: var(--space-2);
   border-radius: var(--radius-pill);
   background: var(--warning);
 }
@@ -233,7 +237,7 @@
   gap: var(--space-2);
 }
 .vs-onboarding-reduce {
-  min-height: 48px;
+  min-height: calc(var(--space-6) * 1.5); /* onboarding.css 48px */
   padding: 0 var(--space-3) 0 var(--space-4);
   border-radius: var(--radius-card);
   background: var(--layer-raised-fill);
@@ -265,7 +269,7 @@
 /* Pick a vibe: a raised tile per starter playlist, and one for anything at all. */
 .vs-onboarding-vibes {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--control-h) * 5), 1fr)); /* onboarding.css 150px */
   gap: var(--space-2);
   margin: 0;
   padding: 0;
@@ -313,7 +317,7 @@
 .vs-onboarding-silence {
   position: fixed;
   left: 50%;
-  bottom: 44px;
+  bottom: calc(var(--space-6) + var(--space-3)); /* onboarding.css 44px */
   z-index: 10;
   transform: translateX(-50%);
   display: flex;

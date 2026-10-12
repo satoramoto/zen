@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
+import { Button } from '../components/core';
+import type { Step } from '../primitives/step';
 import { withLibraryTheme } from '../storybook';
+import { Group } from './Group';
 import { Region } from './Region';
 import { Tabs } from './Tabs';
 
@@ -13,6 +16,7 @@ interface RegionArgs {
   aside: string;
   view: string;
   disableSends: boolean;
+  gap: Step;
   onView: (id: string) => void;
 }
 
@@ -20,22 +24,44 @@ const meta: Meta<RegionArgs> = {
   title: 'Design OS/Layout/Region',
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
-  args: { name: 'Mixer', label: 'Mixer', aside: '', view: 'faders', disableSends: false, onView: fn() },
+  args: { name: 'Mixer', label: 'Mixer', aside: '', view: 'faders', disableSends: false, gap: 3, onView: fn() },
   argTypes: {
     name: { control: 'text' },
     label: { control: 'text' },
     aside: { control: 'text' },
     view: { control: 'inline-radio', options: ['faders', 'sends', 'parts'] },
     disableSends: { control: 'boolean' },
+    gap: { control: { type: 'range', min: 0, max: 6, step: 1 } },
   },
 };
 export default meta;
 type Story = StoryObj<RegionArgs>;
 
+/** Groups in a region's body: `gap` is the scale step between them (unset, the body adds none). */
+export const Groups: Story = {
+  args: { name: 'Pads', label: 'Pads' },
+  argTypes: { view: { table: { disable: true } }, disableSends: { table: { disable: true } } },
+  render: ({ name, label, aside, gap }) => (
+    <div style={{ maxWidth: 560 }}>
+      <Region name={name} label={label || undefined} aside={aside || undefined} gap={gap}>
+        <Group name="Sections">
+          {['Intro', 'Main A', 'Main B', 'Ending'].map((l) => (
+            <Button key={l} label={l} />
+          ))}
+        </Group>
+        <Group name="Transport">
+          <Button label="Sync Start" />
+          <Button label="Start / Stop" variant="primary" />
+        </Group>
+      </Region>
+    </div>
+  ),
+};
+
 /** A plain region: a label in the header strip, content in the body, drawn by the theme's plate material. */
 export const Plain: Story = {
   args: { aside: '8 strips' },
-  argTypes: { view: { table: { disable: true } }, disableSends: { table: { disable: true } } },
+  argTypes: { view: { table: { disable: true } }, disableSends: { table: { disable: true } }, gap: { table: { disable: true } } },
   render: ({ name, label, aside }) => (
     <div style={{ maxWidth: 560 }}>
       <Region name={name} label={label || undefined} aside={aside || undefined}>
@@ -48,7 +74,7 @@ export const Plain: Story = {
 /** No header at all: no label, no aside, no views. */
 export const Headless: Story = {
   args: { label: '' },
-  argTypes: { view: { table: { disable: true } }, disableSends: { table: { disable: true } } },
+  argTypes: { view: { table: { disable: true } }, disableSends: { table: { disable: true } }, gap: { table: { disable: true } } },
   render: ({ name, label, aside }) => (
     <div style={{ maxWidth: 560 }}>
       <Region name={name} label={label || undefined} aside={aside || undefined}>
@@ -90,6 +116,7 @@ function WithViewsDemo({ name, label, aside, view, disableSends, onView }: Regio
 /** Views: the header shows a tab per view and the body only the chosen one. The `view` control (or a tab) chooses; `disableSends` shows a view that can't be chosen. */
 export const WithViews: Story = {
   args: { label: '' },
+  argTypes: { gap: { table: { disable: true } } },
   render: (args) => <WithViewsDemo {...args} />,
 };
 
@@ -120,6 +147,6 @@ function SecondSwitch(args: RegionArgs) {
 
 /** A second switch in the aside (the mixer's layers), using `Tabs`. */
 export const AsideSwitch: Story = {
-  argTypes: { view: { table: { disable: true } }, disableSends: { table: { disable: true } }, aside: { table: { disable: true } } },
+  argTypes: { view: { table: { disable: true } }, disableSends: { table: { disable: true } }, aside: { table: { disable: true } }, gap: { table: { disable: true } } },
   render: (args) => <SecondSwitch {...args} />,
 };

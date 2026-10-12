@@ -1,7 +1,7 @@
 /* The effects (Effects.tsx): a hit (More effects' Punch, a pad) and the effects' settings rows
    in ⚙ Settings. Rows are type, not boxes: a setting's name first, its control in the controls'
    column at the row's end, on space alone (near borderless). Contract variables and visuals.css
-   tokens only, plus the local ones declared here:
+   tokens only, plus the local ones declared in Effects.tsx (EffectSettings' Tuning knobs):
 
    --vs-effects-control  the controls' column: every row's control ends at the panel's right and
                          starts here (settings.css's --set-control, 236px) */
@@ -23,7 +23,7 @@
 
 /* The settings' rows. */
 .vs-effects-rows {
-  --vs-effects-control: 236px;
+  --vs-effects-control: calc(var(--space-6) * 7 + var(--space-3)); /* 236px (spaces: the sheet's --control-h is 44px) */
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -68,6 +68,6 @@
 /* Narrow: the controls' column narrows with the panel. */
 @media (max-width: 480px) {
   .vs-effects-rows {
-    --vs-effects-control: 200px;
+    --vs-effects-control: calc(var(--space-2) * 25); /* settings.css's narrow 200px */
   }
 }

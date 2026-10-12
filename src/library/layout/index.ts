@@ -3,5 +3,6 @@
 export { Screen, type ScreenProps } from './Screen';
 export { Region, RegionView, type RegionProps, type RegionViewProps } from './Region';
 export { Group, type GroupProps } from './Group';
+export { Stack, type StackProps, type StackAlign, type StackJustify } from './Stack';
 export { Tabs, type TabsProps, type TabItem } from './Tabs';
 export { Layer, Opaque, Hole, type LayerProps } from './Layer';

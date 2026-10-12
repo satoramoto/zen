@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { LAYERS, toCssVars, type Layer, type Mode, type Palette, type Scheme } from './contract';
+import { LAYERS, SCOPE_VARS, toCssVars, type Layer, type Mode, type Palette, type Scheme } from './contract';
 import { packs } from './themes/packs';
 import { palettes } from './themes/palettes';
 import { materials } from './themes/materials';
@@ -30,7 +30,7 @@ const COMPONENT_SOURCES = [
   ...filesUnder('visuals', /\.(tsx?|css)$/).filter((f) => !f.startsWith('visuals/model/')),
 ];
 const MODES: Mode[] = ['light', 'dark'];
-const CONTRACT = new Set(Object.keys(toCssVars(packs[0].facets, 'dark')));
+const CONTRACT = new Set([...Object.keys(toCssVars(packs[0].facets, 'dark')), ...SCOPE_VARS]);
 /** Each mode of a palette, named for messages. */
 const schemes = (p: Palette): [string, Scheme][] => MODES.map((mode) => [`${p.id} ${mode}`, p[mode]]);
 
@@ -105,7 +105,7 @@ describe('token contract', () => {
     for (const pack of packs)
       for (const mode of MODES) {
         const vars = toCssVars(pack.facets, mode);
-        expect(new Set(Object.keys(vars)), `${pack.id} ${mode}`).toEqual(CONTRACT);
+        expect(new Set([...Object.keys(vars), ...SCOPE_VARS]), `${pack.id} ${mode}`).toEqual(CONTRACT);
         for (const [name, value] of Object.entries(vars)) expect(value, `${pack.id} ${mode} ${name}`).toBeTruthy();
       }
   });
@@ -186,7 +186,7 @@ describe('token contract', () => {
     for (const part of ['track', 'tab', 'chosen'])
       for (const field of ['fill', 'shadow', 'texture'])
         expect(CONTRACT.has(`--mat-tabs-${part}-${field}`), `--mat-tabs-${part}-${field}`).toBe(true);
-    for (const v of ['--mat-key-pressed', '--mat-lit-glow', '--light-angle', '--mat-plate-inset', '--mat-plate-gap', '--radius-card'])
+    for (const v of ['--mat-key-pressed', '--mat-lit-glow', '--mat-lit-radius', '--mat-lit-strength', '--light-angle', '--mat-plate-inset', '--mat-plate-gap', '--radius-card'])
       expect(CONTRACT.has(v), v).toBe(true);
   });
 });

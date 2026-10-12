@@ -138,6 +138,10 @@ export interface PadBankProps {
  * the `bankName` fallback tab, `bankTips`, the 8 / 4 `columns`, each pad's face from the Pad
  * primitive (a waiting pad's ARMED / NEXT chip and the room it keeps above the label are the Pad's
  * own; the bank sets only the inset), and the spoken names ("Rack 1 (pad 1)", "Pad 12: empty").
+ *
+ * **Tuning knobs.** `--yh-padbank-gap` (the space between pads), `--yh-padbank-cols` and
+ * `--yh-padbank-rows` (the grid the square side is fitted to, set from `columns`),
+ * `--yh-padbank-cell` (the square pad's side, the tighter of the room's width and height share).
  */
 export function PadBank({
   pads,

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import type { CSSProperties } from 'react';
 import { fraction, useAdjust } from './adjust';
 import type { HueSlot } from '../hue';
+import { focusRing } from '../../../primitives/Ring';
 import './StepValue.css';
 
 /** A categorical hue slot (an app maps its own meaning, e.g. Yahaha's parts), or `t` neutral. */
@@ -77,6 +78,9 @@ export interface StepValueProps {
  * double-click to default) and its slider semantics (aria-valuenow/min/max, valuetext, disabled
  * stays focusable); controlled through `onchange`, sending only real changes, at most one per frame
  * while dragging.
+ *
+ * **Tuning knobs**
+ * - `--yh-stepvalue-fill`: how much of the lamp is lit, 0–1 (where the value sits in its range); set inline by the component.
  */
 export function StepValue({
   value,
@@ -113,7 +117,7 @@ export function StepValue({
   return (
     <span
       ref={ref}
-      className="yh-stepvalue"
+      className={`yh-stepvalue ${focusRing}`}
       role="slider"
       tabIndex={0}
       aria-label={name}

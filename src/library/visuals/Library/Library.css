@@ -20,7 +20,7 @@
 .vs-library-search,
 .vs-library-values-find,
 .vs-library-name-input {
-  padding: var(--space-1) 6px;
+  padding: var(--space-1) calc(var(--space-1) * 1.5);
   font: inherit;
   color: var(--text-1);
   background: var(--input-fill);
@@ -49,7 +49,8 @@
 .vs-library-summary,
 .vs-library-note {
   margin: 0;
-  padding: 2px 10px 6px;
+  /* library.css 2px 10px 6px: two and a half steps at the sides, one and a half under. */
+  padding: 2px calc(var(--space-1) * 2.5) calc(var(--space-1) * 1.5);
   color: var(--vs-library-caption);
   font-size: var(--vs-text-label);
   letter-spacing: var(--tracking);
@@ -74,7 +75,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 1px 7px;
+  /* library.css 1px 7px, rounded to the 8px step. */
+  padding: 1px var(--space-2);
   font: inherit;
   font-size: var(--vs-text-label);
   color: var(--text-2);
@@ -105,8 +107,9 @@
   outline-offset: 1px;
 }
 .vs-library-chip-count {
-  min-width: 14px;
-  padding: 0 3px;
+  /* 14px wide at least (8 + 6); library.css 0 3px, rounded to the hairline. */
+  min-width: calc(var(--space-2) + var(--space-1) * 1.5);
+  padding: 0 2px;
   border-radius: var(--radius-pill);
   background: var(--warning);
   color: var(--on-hue);
@@ -139,7 +142,7 @@
   flex-direction: column;
   gap: var(--space-1);
   margin: 0 var(--space-2) var(--space-1);
-  padding: 6px;
+  padding: calc(var(--space-1) * 1.5);
   max-height: 40%;
   min-height: 0;
   background: var(--input-fill);
@@ -149,7 +152,8 @@
 .vs-library-values-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  /* library.css 3px, rounded to the hairline. */
+  gap: 2px;
   overflow: auto;
   min-height: 0;
 }
@@ -178,10 +182,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* library.css 9px, rounded to the 8px step. */
 .vs-library-swatch {
   display: inline-block;
-  width: 9px;
-  height: 9px;
+  width: var(--space-2);
+  height: var(--space-2);
   border-radius: var(--radius-pill);
   flex: none;
 }
@@ -196,14 +201,12 @@
    with the count, "Clear" and "Save as smart playlist"; centred empty states. No boxes and no
    rules: the only lines are the active underline and the focus ring. Everything sits on the
    pane's one padding (--mat-plate-inset), so its left edge is the grid's. */
-.vs-library-home {
-  --vs-library-pad: var(--mat-plate-inset);
-}
 .vs-library-home .vs-library-head {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: 18px var(--vs-library-pad) var(--space-3);
+  /* 18px above: a step and a half of 12. */
+  padding: calc(var(--space-3) * 1.5) var(--mat-plate-inset) var(--space-3);
   min-width: 0;
 }
 .vs-library-home .vs-library-title-head {
@@ -235,9 +238,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  flex: 0 1 260px;
-  min-width: 120px;
-  height: 32px;
+  /* 260px wide (eight of the 32px step and 4), at least 120px (four control heights), 32px tall. */
+  flex: 0 1 calc(var(--space-6) * 8 + var(--space-1));
+  min-width: calc(var(--control-h) * 4);
+  height: var(--space-6);
 }
 .vs-library-home .vs-library-search-glyph {
   flex: none;
@@ -247,7 +251,8 @@
 .vs-library-home .vs-library-search {
   flex: 1;
   min-width: 0;
-  height: 26px;
+  /* 26px: a step under the control height. */
+  height: calc(var(--control-h) - var(--space-1));
   margin: 0;
   padding: 0 var(--space-1);
   color: var(--text-1);
@@ -282,9 +287,10 @@
 .vs-library-home .vs-library-filter {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  /* library.css 7px, rounded to the 8px step; 32px tall. */
+  gap: var(--space-2);
   flex: none;
-  height: 32px;
+  height: var(--space-6);
   padding: 0 2px;
   color: var(--text-2);
   background: none;
@@ -304,7 +310,7 @@
   text-decoration: underline;
   text-decoration-color: var(--vs-line-active);
   text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+  text-underline-offset: calc(var(--space-1) * 1.5);
 }
 .vs-library-home .vs-library-filter:disabled {
   opacity: 0.5;
@@ -313,9 +319,10 @@
 .vs-library-home .vs-library-filter-badge {
   display: grid;
   place-items: center;
-  min-width: 17px;
-  height: 17px;
-  padding: 0 5px;
+  /* library.css 17px round, 5px in, rounded to the 16px and 4px steps. */
+  min-width: var(--space-4);
+  height: var(--space-4);
+  padding: 0 var(--space-1);
   border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--on-hue);
@@ -329,12 +336,13 @@
 /* The groups: a switch made of type, the open one underlined. */
 .vs-library-home .vs-library-chips {
   gap: var(--space-1) var(--mat-plate-inset);
-  padding: 2px var(--vs-library-pad) var(--space-3);
+  padding: 2px var(--mat-plate-inset) var(--space-3);
 }
 .vs-library-home .vs-library-chip {
-  gap: 6px;
+  gap: calc(var(--space-1) * 1.5);
   height: auto;
-  padding: 3px 0;
+  /* library.css 3px 0, rounded to the hairline. */
+  padding: 2px 0;
   color: var(--text-4);
   background: none;
   border: 0;
@@ -359,7 +367,7 @@
   text-decoration: underline;
   text-decoration-color: var(--vs-line-active);
   text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+  text-underline-offset: calc(var(--space-1) * 1.5);
 }
 .vs-library-home .vs-library-chip-count {
   min-width: 0;
@@ -370,8 +378,9 @@
 
 /* The open group's values: text with a count, no box round them; picked is the ink and underlined. */
 .vs-library-home .vs-library-values {
-  gap: 10px;
-  margin: 0 var(--vs-library-pad) 14px;
+  /* 10px between (two and a half steps), 14px under (8 + 6). */
+  gap: calc(var(--space-1) * 2.5);
+  margin: 0 var(--mat-plate-inset) calc(var(--space-2) + var(--space-1) * 1.5);
   padding: 0 0 var(--space-1);
   overflow: auto;
   background: none;
@@ -379,7 +388,7 @@
   border-radius: var(--radius-input);
 }
 .vs-library-home .vs-library-values-list {
-  gap: 6px 14px;
+  gap: calc(var(--space-1) * 1.5) calc(var(--space-2) + var(--space-1) * 1.5);
   overflow: visible;
 }
 .vs-library-home .vs-library-value {
@@ -404,7 +413,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--space-1) 14px;
+  gap: var(--space-1) calc(var(--space-2) + var(--space-1) * 1.5);
 }
 .vs-library-home .vs-library-values-in {
   flex-basis: 100%;
@@ -423,9 +432,10 @@
 }
 .vs-library-home .vs-library-values-find {
   align-self: flex-start;
-  width: 220px;
+  /* 220px: seven of the 32px step less 4. library.css 3px 0, rounded to the hairline. */
+  width: calc(var(--space-6) * 7 - var(--space-1));
   max-width: 100%;
-  padding: 3px 0;
+  padding: 2px 0;
   color: var(--text-1);
   background: none;
   border: 0;
@@ -439,8 +449,8 @@
 
 /* The values picked: type with a ✕, the count, then "Clear" and "Save as smart playlist" at the right. */
 .vs-library-home .vs-library-picked {
-  gap: 6px 14px;
-  padding: 0 var(--vs-library-pad) var(--space-3);
+  gap: calc(var(--space-1) * 1.5) calc(var(--space-2) + var(--space-1) * 1.5);
+  padding: 0 var(--mat-plate-inset) var(--space-3);
   font-size: var(--size-caption);
 }
 .vs-library-home .vs-library-chip-picked {
@@ -470,7 +480,7 @@
 .vs-library-home .vs-library-name-input {
   /* A raised tint: the caption a step lighter on it. */
   --vs-library-caption: var(--vs-caption-raised);
-  flex: 0 1 260px;
+  flex: 0 1 calc(var(--space-6) * 8 + var(--space-1));
   padding: var(--space-1) var(--space-2);
   color: var(--text-1);
   background: var(--surface-3);
@@ -483,7 +493,7 @@
 /* The notes: the save note, the loading note, the first run's. */
 .vs-library-home .vs-library-summary,
 .vs-library-home .vs-library-note {
-  padding: 0 var(--vs-library-pad) var(--space-3);
+  padding: 0 var(--mat-plate-inset) var(--space-3);
   font-size: var(--size-caption);
   letter-spacing: normal;
   word-spacing: var(--vs-sep-space);
@@ -492,13 +502,13 @@
   color: var(--danger);
 }
 .vs-library-home .vs-library-first-run {
-  padding: var(--space-2) var(--vs-library-pad);
+  padding: var(--space-2) var(--mat-plate-inset);
   font-size: var(--vs-text-body);
 }
 
 /* The starter pack's offer (PackOffer): one quiet line on the pane's padding. */
 .vs-library-home .vs-library-offer {
-  padding: 0 var(--vs-library-pad) var(--space-3);
+  padding: 0 var(--mat-plate-inset) var(--space-3);
   font-size: var(--size-caption);
 }
 /* PackOffer draws nothing while there is nothing to offer: its line goes too. */
@@ -513,19 +523,22 @@
   place-content: center;
   justify-items: center;
   gap: var(--space-2);
-  padding: 0 var(--vs-library-pad) 80px;
+  /* 80px under: five 16px steps. */
+  padding: 0 var(--mat-plate-inset) calc(var(--space-4) * 5);
   text-align: center;
 }
 .vs-library-home .vs-library-empty-glyph {
   color: var(--text-4);
-  font-size: 28px;
+  /* 28px: the numeral size. */
+  font-size: var(--size-numeral);
   line-height: 1;
 }
 .vs-library-home .vs-library-empty-title {
-  margin: 6px 0 0;
+  margin: calc(var(--space-1) * 1.5) 0 0;
   color: var(--text-1);
   font-family: var(--font-display);
-  font-size: 15px;
+  /* 15px: the body and a hairline pair. */
+  font-size: calc(var(--size-body) + 2px);
   font-weight: var(--weight-strong);
   overflow-wrap: anywhere;
 }
@@ -535,7 +548,7 @@
   font-size: var(--size-caption);
 }
 .vs-library-home .vs-library-empty-clear {
-  margin-top: 6px;
+  margin-top: calc(var(--space-1) * 1.5);
   padding: var(--space-1) 2px;
   color: var(--text-2);
   background: none;
@@ -575,7 +588,6 @@
 /* Its search and "Filter ▾" in the header's toolbar (portalled there; the wrapper is also
    .vs-library-home, so the rules above reach it). */
 .vs-library-toolbar {
-  --vs-library-pad: var(--mat-plate-inset);
   --vs-library-caption: var(--text-3);
   --vs-library-small: calc(var(--size-caption) - 1px);
   display: flex;
@@ -584,7 +596,7 @@
   min-width: 0;
 }
 .vs-library-toolbar .vs-library-search-field {
-  flex: 0 1 220px;
+  flex: 0 1 calc(var(--space-6) * 7 - var(--space-1));
 }
 .vs-library-toolbar button.vs-library-search-glyph {
   display: grid;
@@ -599,8 +611,9 @@
   cursor: text;
 }
 .vs-library-toolbar .vs-library-filter-badge {
-  min-width: 15px;
-  height: 15px;
+  /* library.css 15px, rounded to the 16px step. */
+  min-width: var(--space-4);
+  height: var(--space-4);
   padding: 0 var(--space-1);
 }
 .vs-library-toolbar .vs-library-filter-caret {
@@ -615,7 +628,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  width: min(400px, calc(100vw - 48px));
+  /* 400px (25 of the 16px step), or the window less 48px (two 24px steps). */
+  width: min(calc(var(--space-4) * 25), calc(100vw - var(--space-5) * 2));
   padding: var(--space-1);
 }
 .vs-library-toolbar .vs-library-filter-panel :is(.vs-library-chips, .vs-library-picked) {
@@ -647,8 +661,9 @@
     cursor: pointer;
   }
   .vs-library-home.vs-library-toolbar .vs-library-search-field:is(:focus-within, [data-text]) {
-    flex: 1 1 180px;
-    min-width: 120px;
+    /* 180px to start (six control heights), at least 120px (four). */
+    flex: 1 1 calc(var(--control-h) * 6);
+    min-width: calc(var(--control-h) * 4);
     gap: var(--space-2);
   }
 }

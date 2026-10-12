@@ -1,4 +1,5 @@
 import type { HueSlot as Hue } from '../../components/core/hue';
+import { Stack } from '../../layout/Stack';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import './HueLegend.css';
 
@@ -66,12 +67,19 @@ export interface HueLegendProps {
  *
  * **Kept.** One row, left to right in the given order, no wrapping, not interactive; the chips
  * are decorative and the words carry the meaning; `items` of `{ label, hue }` still render.
+ *
+ * **Tuning knobs.** `--yh-huelegend-radius` (the chip's corners: a third of `--radius-control`,
+ * a pad in miniature).
  */
 export function HueLegend({ items = PART_LEGEND, label = 'Part colours' }: HueLegendProps) {
   return (
-    <ul className="yh-huelegend" aria-label={label}>
+    <Stack as="ul" direction="row" gap={4} align="center" className="yh-huelegend" aria-label={label}>
       {items.map((item, i) => (
-        <li
+        <Stack
+          as="li"
+          direction="row"
+          gap={2}
+          align="center"
           key={`${i}-${item.label}`}
           className="yh-huelegend__item"
           data-part={item.part}
@@ -80,8 +88,8 @@ export function HueLegend({ items = PART_LEGEND, label = 'Part colours' }: HueLe
         >
           <span className="yh-huelegend__chip" aria-hidden="true" />
           {item.label}
-        </li>
+        </Stack>
       ))}
-    </ul>
+    </Stack>
   );
 }

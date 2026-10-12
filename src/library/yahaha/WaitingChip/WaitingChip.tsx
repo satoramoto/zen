@@ -51,6 +51,10 @@ export interface WaitingChipProps {
  * only `line` caps its width and ends in "…" (and shrinks in a flex row); tabular figures; the
  * section values of `hue`; the `data-face="waiting"`, `data-hue` and `data-size` hooks; no role,
  * focus or motion.
+ *
+ * **Tuning knobs.** `--yh-waiting-chip-hue` (the arrow's colour role: `--accent`, `--style` for a
+ * queued style, set inline for a section), `--yh-waiting-chip-max` (the `line` size's width cap,
+ * six control heights).
  */
 export function WaitingChip({ label, hue = 't', size = 'count' }: WaitingChipProps) {
   if (label.trim() === '') return null;

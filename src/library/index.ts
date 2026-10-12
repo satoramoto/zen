@@ -29,7 +29,10 @@ export { faces } from './themes/faces';
 export { scales } from './themes/scales';
 export { materials } from './themes/materials';
 
-// Layout primitives.
+// Primitives: how a thing looks (Text, Surface, Icon, the rings, the spacing steps). See docs/tiers.md.
+export * from './primitives';
+
+// Layout: Stack and Group arrange controls, Regions are blocks, a Screen places them.
 export * from './layout';
 
 // Components: core controls any app builds with, and the music ones an instrument shows.

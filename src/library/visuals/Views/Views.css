@@ -117,7 +117,7 @@
   font-variant-numeric: tabular-nums;
   word-spacing: var(--vs-sep-space);
   font-size: var(--vs-text-label);
-  min-width: 120px;
+  min-width: calc(var(--control-h) * 4); /* 120px */
   text-align: right;
 }
 .vs-stats[data-slow] {
@@ -175,17 +175,20 @@
   user-select: none;
 }
 /* The rounded corners (decision 69): the native view under the hole is square, so the page paints
-   the four corners over it in an opaque tone. */
+   the four corners over it in an opaque tone (home.css --surface-corner, the frost's base solid).
+   Each corner's edge is anti-aliased over half a hairline. */
 .vs-preview:not([data-loading]) > .vs-preview-hole::before {
   content: '';
   grid-area: 1 / 1;
   align-self: stretch;
   justify-self: stretch;
-  --vs-r: var(--vs-hole-radius);
-  --vs-corner-stop: transparent var(--vs-r), var(--vs-corner) calc(var(--vs-r) + 0.5px);
   background:
-    radial-gradient(circle at 100% 100%, var(--vs-corner-stop)) top left / var(--vs-r) var(--vs-r) no-repeat,
-    radial-gradient(circle at 0 100%, var(--vs-corner-stop)) top right / var(--vs-r) var(--vs-r) no-repeat,
-    radial-gradient(circle at 100% 0, var(--vs-corner-stop)) bottom left / var(--vs-r) var(--vs-r) no-repeat,
-    radial-gradient(circle at 0 0, var(--vs-corner-stop)) bottom right / var(--vs-r) var(--vs-r) no-repeat;
+    radial-gradient(circle at 100% 100%, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+      top left / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat,
+    radial-gradient(circle at 0 100%, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+      top right / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat,
+    radial-gradient(circle at 100% 0, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+      bottom left / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat,
+    radial-gradient(circle at 0 0, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+      bottom right / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat;
 }

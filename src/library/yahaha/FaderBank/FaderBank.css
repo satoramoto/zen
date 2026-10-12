@@ -1,26 +1,14 @@
-/* FaderBank: the Stage's mixer. Reads only contract variables and its own --yh-faderbank-* ones.
-   It fills its region's body (the page and layer tabs are the Region's): the strip grid (strips
-   over their lamps), then the function row. */
+/* FaderBank: the Stage's mixer. Reads only contract variables. It fills its region's body (the
+   page and layer tabs are the Region's): the strip grid (strips over their lamps), then the
+   function row. The root is a column Stack (gap step 4: air between the strips and the Functions
+   rule); the grid's tracks come from the component. */
 
 .yh-faderbank {
-  /* A part's hue on its strip; set from data-hue below, neutral otherwise. */
-  --yh-faderbank-ink: var(--text-1);
-  /* Grid tracks the component names inline. */
-  --yh-faderbank-divider-w: var(--space-1);
-  --yh-faderbank-master-fr: 1.25fr;
-  --yh-faderbank-empty-fr: 0.75fr;
-
   position: relative;
-  display: flex;
   flex: 1 1 0;
-  flex-direction: column;
-  /* Air between the strips and the Functions rule. */
-  gap: var(--space-4);
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  min-width: 0;
-  min-height: 0;
   container: yh-faderbank / inline-size;
   font-family: var(--font-sans);
   color: var(--text-1);
@@ -74,14 +62,10 @@
   box-shadow: var(--layer-raised-edge), var(--layer-raised-cast);
 }
 
+/* A strip is a column Stack (gap step 1): the Fader over its name. */
 .yh-faderbank__strip {
   position: relative;
-  display: flex;
-  flex-direction: column;
   grid-row: 1;
-  gap: var(--space-1);
-  min-width: 0;
-  min-height: 0;
   border-radius: var(--radius-control);
 }
 .yh-faderbank__strip[data-kind='master'] {
@@ -100,10 +84,6 @@
 .yh-faderbank .yh-faderbank__strip[data-kind='parked'] .yh-fader .yh-fader__groove {
   background: none;
 }
-.yh-faderbank__strip[data-hue='1'] { --yh-faderbank-ink: var(--hue-1); }
-.yh-faderbank__strip[data-hue='2'] { --yh-faderbank-ink: var(--hue-2); }
-.yh-faderbank__strip[data-hue='3'] { --yh-faderbank-ink: var(--hue-3); }
-.yh-faderbank__strip[data-hue='4'] { --yh-faderbank-ink: var(--hue-4); }
 
 /* A strip whose hardware fader is away: outlined in the warning colour, so the column itself says it. */
 .yh-faderbank__strip[data-away]::after {
@@ -164,7 +144,7 @@ span.yh-faderbank__name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--yh-faderbank-ink);
+  color: var(--text-1);
   font-size: var(--size-label);
   font-weight: var(--weight-strong);
   letter-spacing: var(--tracking);
@@ -181,10 +161,18 @@ span.yh-faderbank__name {
   font-weight: var(--weight-body);
 }
 
+/* A part's name wears its hue (data-hue on the strip); the others stay neutral. */
+.yh-faderbank__strip[data-hue='1'] .yh-faderbank__tag-text { color: var(--hue-1); }
+.yh-faderbank__strip[data-hue='2'] .yh-faderbank__tag-text { color: var(--hue-2); }
+.yh-faderbank__strip[data-hue='3'] .yh-faderbank__tag-text { color: var(--hue-3); }
+.yh-faderbank__strip[data-hue='4'] .yh-faderbank__tag-text { color: var(--hue-4); }
+
 /* Off: the name keeps its hue, faded, so it still says which part; the sound steps back. */
-.yh-faderbank__strip[data-kind='off'] .yh-faderbank__tag-text {
-  color: color-mix(in srgb, var(--yh-faderbank-ink) 45%, var(--surface-0));
-}
+.yh-faderbank__strip[data-kind='off'] .yh-faderbank__tag-text { color: color-mix(in srgb, var(--text-1) 45%, var(--surface-0)); }
+.yh-faderbank__strip[data-kind='off'][data-hue='1'] .yh-faderbank__tag-text { color: color-mix(in srgb, var(--hue-1) 45%, var(--surface-0)); }
+.yh-faderbank__strip[data-kind='off'][data-hue='2'] .yh-faderbank__tag-text { color: color-mix(in srgb, var(--hue-2) 45%, var(--surface-0)); }
+.yh-faderbank__strip[data-kind='off'][data-hue='3'] .yh-faderbank__tag-text { color: color-mix(in srgb, var(--hue-3) 45%, var(--surface-0)); }
+.yh-faderbank__strip[data-kind='off'][data-hue='4'] .yh-faderbank__tag-text { color: color-mix(in srgb, var(--hue-4) 45%, var(--surface-0)); }
 .yh-faderbank__strip[data-kind='off'] .yh-faderbank__sound {
   color: var(--text-3);
 }
@@ -217,9 +205,6 @@ span.yh-faderbank__name {
 }
 .yh-faderbank__functions {
   flex: 1 1 auto;
-}
-.yh-faderbank__functions > .lib-group__body {
-  gap: var(--space-3);
 }
 .yh-faderbank__functions > .lib-group__body > .yh-lampbutton {
   flex: 1 0 0;

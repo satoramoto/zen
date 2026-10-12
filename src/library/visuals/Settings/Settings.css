@@ -7,7 +7,9 @@
 
 /* The sheets. */
 .vs-sheet {
-  --control-h: 44px; /* the original's finger-sized targets in its sheets */
+  /* The original's finger-sized targets in its sheets: 44px, the widest and the middle space steps. */
+  --vs-sheet-target: calc(var(--space-6) + var(--space-3));
+  --control-h: var(--vs-sheet-target);
 }
 .vs-sheet .lib-modal__pane {
   border-radius: var(--radius-card);

@@ -6,7 +6,7 @@
 
 .yh-keys {
   /* Geometry set from the layout (inline), with defaults. */
-  --yh-keys-black-w: 22px;
+  --yh-keys-black-w: calc(var(--space-5) - var(--space-1) / 2);
   --yh-keys-split-x: 0px;
   --yh-keys-split-step: 0;
   /* Sizes, all from density. */
@@ -15,7 +15,6 @@
   --yh-keys-black-h: calc(var(--yh-keys-strip-h) * 0.6);
   --yh-keys-flag-w: calc(var(--control-h) * 1.9);
   --yh-keys-line: 2px;
-  --yh-keys-lamp: 2px;
   --yh-keys-key-radius: calc(var(--radius-control) / 2);
   /* Key faces are the contract's `--key-white` and `--key-black`: soft grey faces on a dark
      palette, near-paper on a light one, dark sharps either way, so the keys read as keys whatever
@@ -66,7 +65,7 @@
   white-space: nowrap;
   /* The zone's lamp: its underline, in the zone's hue, lit while the zone sounds. It ties the
      zone's name to its colour and to the keys under it. */
-  border-bottom: var(--yh-keys-lamp) solid color-mix(in oklab, var(--yh-keys-hue) 45%, transparent);
+  border-bottom: 2px solid color-mix(in oklab, var(--yh-keys-hue) 45%, transparent);
 }
 .yh-keys__zone[data-on='true'] {
   border-bottom-color: var(--yh-keys-hue);
@@ -283,7 +282,7 @@
 /* The grip: two short rules saying "this slides". */
 .yh-keys__grip {
   flex: none;
-  width: 3px;
+  width: calc(var(--border-width) * 3);
   height: 45%;
   border-left: 1px solid var(--text-3);
   border-right: 1px solid var(--text-3);

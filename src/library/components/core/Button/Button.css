@@ -1,5 +1,6 @@
 /* Button (from Yahaha's, redesigned). Reads only contract variables and the local --yh-* ones
-   declared here; no literal colours or radii.
+   declared here (its tuning knobs, listed in Button.tsx); no literal colours or radii. Focus is
+   the primitives' focusRing.
 
    --yh-button-tone   what the button belongs to: text colour (neutral), a hue slot, a state or a role
    --yh-button-fill   the on ring and dot, the chosen underline, and the solid face of a running or
@@ -242,8 +243,6 @@
 }
 .yh-button[data-join='start']::before { border-top-right-radius: 0; border-bottom-right-radius: 0; }
 .yh-button[data-join='end']::before { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-
-.yh-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
   .yh-button { transition: none; }

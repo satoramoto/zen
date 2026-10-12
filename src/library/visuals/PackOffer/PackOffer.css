@@ -17,5 +17,5 @@
   color: var(--danger);
 }
 .vs-pack-offer .vs-pack-progress {
-  flex: 1 1 240px;
+  flex: 1 1 calc(var(--space-6) * 7.5); /* 240px */
 }

@@ -4,10 +4,6 @@
 .yh-lineslider {
   /* What the thumb's cut-out ring is drawn in; a parent on a raised surface may override it. */
   --yh-lineslider-ground: var(--surface-0);
-  --yh-lineslider-line: 4px;
-  /* Hover's wash over the well; none at rest. */
-  --yh-lineslider-lift-ink: color-mix(in oklab, var(--text-1) 12%, transparent);
-  --yh-lineslider-lift: linear-gradient(transparent, transparent);
   /* The fill is lit in neutral ink: the value belongs to no part. */
   --lit: var(--text-2);
   --yh-lineslider-thumb-w: var(--space-2);
@@ -33,7 +29,7 @@
   box-shadow: none;
 }
 
-/* The whole control height is the target, not just the 3px line. */
+/* The whole control height is the target, not just the line. */
 .yh-lineslider__hit {
   position: relative;
   display: flex;
@@ -47,22 +43,23 @@
   outline: none;
 }
 .yh-lineslider[data-disabled] .yh-lineslider__hit { cursor: not-allowed; }
-.yh-lineslider__hit:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+/* Focus: the library's focus ring (`focusRing` on the hit area). */
 
 .yh-lineslider__track {
   position: relative;
   flex: 1;
-  height: var(--yh-lineslider-line);
+  height: var(--space-1);
   /* The groove: the theme's `well`. */
-  background: var(--yh-lineslider-lift), var(--mat-well-texture), var(--mat-well-fill);
+  background: var(--mat-well-texture), var(--mat-well-fill);
   box-shadow: var(--mat-well-shadow);
   border-radius: var(--yh-lineslider-thumb-radius);
 }
+/* Hover: a wash over the well; none at rest. */
 .yh-lineslider:not([data-disabled]) .yh-lineslider__hit:hover .yh-lineslider__track {
-  --yh-lineslider-lift: linear-gradient(var(--yh-lineslider-lift-ink), var(--yh-lineslider-lift-ink));
+  background:
+    linear-gradient(color-mix(in oklab, var(--text-1) 12%, transparent), color-mix(in oklab, var(--text-1) 12%, transparent)),
+    var(--mat-well-texture),
+    var(--mat-well-fill);
 }
 
 /* The fill is lit: `--lit`, glowing as the theme's lit parts do. */

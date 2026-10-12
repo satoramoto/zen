@@ -95,6 +95,11 @@ function OutputLight({ live }: { live: LiveState }) {
  *
  * **Kept.** The props, every name, label, tooltip and key shortcut, the drag
  * region and the 36px capsules on the 52px title bar.
+ *
+ * **Tuning knobs** (StageHead.css):
+ * - `--vs-stagehead-cap-h`: the capsules' 36px, centred on the window buttons' line (y 28).
+ * - `--vs-stagehead-cap-radius`: their 12px corners.
+ * - `--vs-stagehead-offer-radius`: the offer's 18px corners (the inset panels').
  */
 export function StageHead({ live, crateOpen, onCrate, help, onHelp, onView }: StageHeadProps) {
   return (

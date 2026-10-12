@@ -1,0 +1,63 @@
+/* Surface: the one painter. A layer sets the backdrop, edge and cast (and the fill); a material
+   sets the fill, texture and shadow. Everything lands in one shadow list of slots, so they
+   compose. Contract variables plus the --lib-surface-* and --lit declared here. */
+
+.lib-surface {
+  --lib-surface-fill: transparent;
+  --lib-surface-texture: none;
+  --lib-surface-backdrop: none;
+  --lib-surface-border: 0 0 0 0 transparent;
+  --lib-surface-mat-shadow: 0 0 0 0 transparent;
+  --lib-surface-glow: 0 0 0 0 transparent;
+  --lib-surface-edge: 0 0 0 0 transparent;
+  --lib-surface-cast: 0 0 0 0 transparent;
+
+  background: var(--lib-surface-texture), var(--lib-surface-fill);
+  backdrop-filter: var(--lib-surface-backdrop);
+  box-shadow:
+    var(--lib-surface-border),
+    var(--lib-surface-mat-shadow),
+    var(--lib-surface-glow),
+    var(--lib-surface-edge),
+    var(--lib-surface-cast);
+  border-radius: var(--radius-control);
+}
+
+/* Layers: fill, texture, backdrop, edge, cast. */
+.lib-surface[data-layer='ground'] { --lib-surface-fill: var(--layer-ground-fill); --lib-surface-texture: var(--layer-ground-texture); --lib-surface-backdrop: var(--layer-ground-backdrop); --lib-surface-edge: var(--layer-ground-edge); --lib-surface-cast: var(--layer-ground-cast); }
+.lib-surface[data-layer='base'] { --lib-surface-fill: var(--layer-base-fill); --lib-surface-texture: var(--layer-base-texture); --lib-surface-backdrop: var(--layer-base-backdrop); --lib-surface-edge: var(--layer-base-edge); --lib-surface-cast: var(--layer-base-cast); }
+.lib-surface[data-layer='raised'] { --lib-surface-fill: var(--layer-raised-fill); --lib-surface-texture: var(--layer-raised-texture); --lib-surface-backdrop: var(--layer-raised-backdrop); --lib-surface-edge: var(--layer-raised-edge); --lib-surface-cast: var(--layer-raised-cast); }
+.lib-surface[data-layer='float'] { --lib-surface-fill: var(--layer-float-fill); --lib-surface-texture: var(--layer-float-texture); --lib-surface-backdrop: var(--layer-float-backdrop); --lib-surface-edge: var(--layer-float-edge); --lib-surface-cast: var(--layer-float-cast); }
+.lib-surface[data-layer='overlay'] { --lib-surface-fill: var(--layer-overlay-fill); --lib-surface-texture: var(--layer-overlay-texture); --lib-surface-backdrop: var(--layer-overlay-backdrop); --lib-surface-edge: var(--layer-overlay-edge); --lib-surface-cast: var(--layer-overlay-cast); }
+.lib-surface[data-layer='top'] { --lib-surface-fill: var(--layer-top-fill); --lib-surface-texture: var(--layer-top-texture); --lib-surface-backdrop: var(--layer-top-backdrop); --lib-surface-edge: var(--layer-top-edge); --lib-surface-cast: var(--layer-top-cast); }
+
+/* Materials: after the layers, so with both the material paints the face (fill, texture) and
+   the layer keeps its backdrop, edge and cast. */
+.lib-surface[data-material='well'] { --lib-surface-fill: var(--mat-well-fill); --lib-surface-texture: var(--mat-well-texture); --lib-surface-mat-shadow: var(--mat-well-shadow); }
+.lib-surface[data-material='screen'] { --lib-surface-fill: var(--mat-screen-fill); --lib-surface-texture: var(--mat-screen-texture); --lib-surface-mat-shadow: var(--mat-screen-shadow); }
+.lib-surface[data-material='key'] { --lib-surface-fill: var(--mat-key-fill); --lib-surface-texture: var(--mat-key-texture); --lib-surface-mat-shadow: var(--mat-key-shadow); }
+.lib-surface[data-material='handle'] { --lib-surface-fill: var(--mat-handle-fill); --lib-surface-texture: var(--mat-handle-texture); --lib-surface-mat-shadow: var(--mat-handle-shadow); }
+
+.lib-surface[data-pressed] { --lib-surface-mat-shadow: var(--mat-key-pressed); }
+
+/* Lit: the lamp colour, and the theme's glow that reads it. */
+.lib-surface[data-lit] { --lib-surface-glow: var(--mat-lit-glow); }
+.lib-surface[data-lit='hue-1'] { --lit: var(--hue-1); }
+.lib-surface[data-lit='hue-2'] { --lit: var(--hue-2); }
+.lib-surface[data-lit='hue-3'] { --lit: var(--hue-3); }
+.lib-surface[data-lit='hue-4'] { --lit: var(--hue-4); }
+.lib-surface[data-lit='role-1'] { --lit: var(--role-1); }
+.lib-surface[data-lit='role-2'] { --lit: var(--role-2); }
+.lib-surface[data-lit='accent'] { --lit: var(--accent); }
+.lib-surface[data-lit='success'] { --lit: var(--success); }
+.lib-surface[data-lit='warning'] { --lit: var(--warning); }
+.lib-surface[data-lit='danger'] { --lit: var(--danger); }
+
+.lib-surface[data-border='true'] { --lib-surface-border: inset 0 0 0 var(--border-width) var(--border); }
+.lib-surface[data-border='strong'] { --lib-surface-border: inset 0 0 0 var(--border-width) var(--border-strong); }
+
+.lib-surface[data-radius='control'] { border-radius: var(--radius-control); }
+.lib-surface[data-radius='card'] { border-radius: var(--radius-card); }
+.lib-surface[data-radius='input'] { border-radius: var(--radius-input); }
+.lib-surface[data-radius='pill'] { border-radius: var(--radius-pill); }
+.lib-surface[data-radius='none'] { border-radius: 0; }

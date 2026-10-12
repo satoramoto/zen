@@ -29,6 +29,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "tiers": "tsx scripts/tiers.ts",
     "build": "tsc --noEmit && vite build",
     "build:storybook": "storybook build --disable-telemetry"
   },

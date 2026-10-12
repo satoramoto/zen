@@ -1,5 +1,6 @@
 /* KnobBank: eight knob slots across the Knobs region's body (the page tabs are the Region's). Reads only
-   contract variables and the --yh-knobbank-* / --yh-knob-ring ones declared here. */
+   contract variables and the Knob's --yh-knob-ring, which it sets for every slot (a full knob's and
+   an empty one's ring alike). */
 
 .yh-knobbank {
   display: flex;
@@ -25,11 +26,11 @@
   min-width: 0;
   container-type: inline-size;
 }
-.yh-knobbank__slot > * {
-  --yh-knobbank-ring: min(calc(var(--control-h) * 2.75), calc(100cqi - 2 * var(--space-1)));
+.yh-knobbank__slot .yh-knob,
+.yh-knobbank__empty {
+  --yh-knob-ring: min(calc(var(--control-h) * 2.75), calc(100cqi - 2 * var(--space-1)));
 }
 .yh-knobbank__slot .yh-knob {
-  --yh-knob-ring: var(--yh-knobbank-ring);
   width: 100%;
   padding: var(--space-1);
 }
@@ -68,13 +69,14 @@
 }
 .yh-knobbank__ring {
   display: block;
-  width: var(--yh-knobbank-ring);
-  height: var(--yh-knobbank-ring);
+  width: var(--yh-knob-ring);
+  height: var(--yh-knob-ring);
   overflow: visible;
 }
 .yh-knobbank__ring path {
   fill: none;
   stroke: color-mix(in oklab, var(--text-1) 10%, transparent);
-  stroke-width: 3.5px;
+  /* In the ring's viewBox units, as the Knob's 3.5px stroke: px on an SVG stroke is a user unit. */
+  stroke-width: 3.5;
   stroke-linecap: butt;
 }

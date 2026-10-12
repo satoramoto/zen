@@ -1,7 +1,6 @@
 /* StatusLine: one row on the control grid. The message reads as plain words in --text-1; an
    error leads with a chip (mark + word on a faint danger tint), so colour never says it alone. */
 .yh-status-line {
-  --yh-status-line-ring: 2px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -40,7 +39,7 @@
 }
 
 .yh-status-line-button:focus-visible {
-  outline: var(--yh-status-line-ring) solid var(--accent);
+  outline: 2px solid var(--accent);
   outline-offset: var(--space-1);
 }
 

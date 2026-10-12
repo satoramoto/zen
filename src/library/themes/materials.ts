@@ -66,7 +66,7 @@ const flatHandle: Material = {
 };
 
 /** A lamp blooms by the palette's bloom (0px on flat palettes). */
-const flatLit = { glow: '0 0 var(--bloom) var(--lit)' }; // Fader.css fill, Pad.css, Button.css, library.css .lib-lamp
+const flatLit: Materials['lit'] = { radius: 'var(--bloom)', strength: '100%' }; // Fader.css fill, Pad.css, Button.css, library.css .lib-lamp: 0 0 var(--bloom) var(--lit)
 
 const flat = { well: flatWell, screen: flatScreen, key: flatKey, handle: flatHandle, lit: flatLit, light: '180deg' };
 
@@ -369,7 +369,8 @@ export const hardwareMaterials: Materials = {
   },
   lit: {
     // Fader.svelte lit fill: 0 0 8px color-mix(accent 70%, transparent); max() with bloom added
-    glow: '0 0 max(8px, var(--bloom)) color-mix(in oklab, var(--lit) 70%, transparent)',
+    radius: 'max(8px, var(--bloom))',
+    strength: '70%',
   },
 };
 

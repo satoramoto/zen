@@ -20,9 +20,9 @@
   letter-spacing: var(--tracking);
 }
 
+/* The row, nav and groups are Stacks (direction, align, gap step); these rules add only what a
+   Stack doesn't decide, and the knob gaps outweigh the Stack's step by load order. */
 .yh-appbar__row {
-  display: flex;
-  align-items: center;
   gap: var(--yh-appbar-gap);
   box-sizing: border-box;
   /* The tabs reach the rule; everything else is centred on the tabs' line. */
@@ -41,9 +41,7 @@
 
 /* The page nav: two runs of the layout's Tabs, split by a hairline. */
 .yh-appbar__nav {
-  display: flex;
   flex: none;
-  align-items: center;
   align-self: stretch;
 }
 
@@ -96,9 +94,7 @@
 .yh-appbar__switches,
 .yh-appbar__panic,
 .yh-appbar__status {
-  display: flex;
   flex: none;
-  align-items: center;
   gap: var(--yh-appbar-inner);
 }
 
@@ -116,8 +112,6 @@
 /* Metronome and its ▾: one key in two halves, the popover hung under it. */
 .yh-appbar__metronome {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
 .yh-appbar__caret {
@@ -125,7 +119,8 @@
 }
 
 /* The ▾ as a drawn chevron on a full control-width key: the font's ▾ came out smaller than the
-   LED beside it. The glyph's character is hidden; its box draws the chevron. */
+   LED beside it. The glyph's character is hidden; its box draws the chevron. Its lengths are
+   fractions of --control-h (10, 6 and 1.5 px at the compact 28 px), so it scales with the key. */
 .yh-appbar__caret .yh-button[data-size='caret'] {
   width: var(--control-h);
 }
@@ -133,8 +128,8 @@
 .yh-appbar__caret .yh-button__glyph[data-glyph='caret'] {
   position: relative;
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: calc(var(--control-h) * 5 / 14);
+  height: calc(var(--control-h) * 5 / 14);
   font-size: 0;
   opacity: 1;
 }
@@ -145,10 +140,10 @@
   left: 50%;
   top: 50%;
   box-sizing: border-box;
-  width: 6px;
-  height: 6px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
+  width: calc(var(--control-h) * 3 / 14);
+  height: calc(var(--control-h) * 3 / 14);
+  border-right: calc(var(--control-h) * 3 / 56) solid currentColor;
+  border-bottom: calc(var(--control-h) * 3 / 56) solid currentColor;
   transform: translate(-50%, -75%) rotate(45deg);
 }
 
@@ -165,9 +160,6 @@
 
 /* The connections: words in secondary text, the dot carries the state. */
 .yh-appbar__launchkey {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
   color: var(--text-2);
   text-transform: var(--label-case);
   white-space: nowrap;

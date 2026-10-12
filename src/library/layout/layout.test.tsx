@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { LAYERS } from '../contract';
-import { Layer, Opaque, Region, Tabs, type TabItem } from '.';
+import { Group, Layer, Opaque, Region, Stack, Tabs, type TabItem } from '.';
 
 const items: TabItem[] = [
   { id: 'a', label: 'Alpha' },
@@ -150,6 +150,99 @@ describe('Opaque', () => {
       expect(getComputedStyle(screen.getByTestId('inside')).getPropertyValue('--lib-layer-fill').trim()).toBe('var(--layer-float-fill)');
     } finally {
       style.remove();
+    }
+  });
+});
+
+describe('Stack', () => {
+  it('defaults to a column, gap step 2, no align/justify/wrap, as a div', () => {
+    const { container } = render(<Stack>x</Stack>);
+    const el = container.firstElementChild as HTMLElement;
+    expect(el.tagName).toBe('DIV');
+    expect(el).toHaveClass('lib-stack');
+    expect(el).toHaveAttribute('data-direction', 'column');
+    expect(el).toHaveAttribute('data-gap', '2');
+    expect(el).not.toHaveAttribute('data-align');
+    expect(el).not.toHaveAttribute('data-justify');
+    expect(el).not.toHaveAttribute('data-wrap');
+  });
+
+  it('renders the given props as attributes, the `as` element, and passes HTML attributes through', () => {
+    render(
+      <Stack as="ul" direction="row" gap={0} align="baseline" justify="between" wrap className="mine" aria-label="List" data-testid="s">
+        <li>a</li>
+      </Stack>,
+    );
+    const el = screen.getByTestId('s');
+    expect(el.tagName).toBe('UL');
+    expect(el).toHaveClass('lib-stack', 'mine');
+    expect(el).toHaveAttribute('aria-label', 'List');
+    expect(el).toHaveAttribute('data-direction', 'row');
+    expect(el).toHaveAttribute('data-gap', '0');
+    expect(el).toHaveAttribute('data-align', 'baseline');
+    expect(el).toHaveAttribute('data-justify', 'between');
+    expect(el).toHaveAttribute('data-wrap');
+  });
+
+  it('Stack.css has a gap rule per step and paints and measures nothing', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/layout/Stack.css'), 'utf8');
+    for (let n = 1; n <= 6; n++) {
+      expect(css, `step ${n}`).toMatch(new RegExp(`\\[data-gap='${n}'\\]\\)?\\s*\\{\\s*gap: var\\(--space-${n}\\);`));
+    }
+    for (const banned of ['px', 'margin', 'background', 'box-shadow', 'border']) {
+      expect(css.includes(banned), banned).toBe(false);
+    }
+  });
+});
+
+describe('Group spacing', () => {
+  const body = () => screen.getByRole('group', { name: 'Keys' }).querySelector('[data-part="body"]') as HTMLElement;
+
+  it('its body is a Stack: a row, gap step 2 by default', () => {
+    render(
+      <Group name="Keys">
+        <span>a</span>
+      </Group>,
+    );
+    expect(body()).toHaveClass('lib-group__body', 'lib-stack');
+    expect(body()).toHaveAttribute('data-direction', 'row');
+    expect(body()).toHaveAttribute('data-gap', '2');
+    expect(body()).not.toHaveAttribute('data-align');
+    expect(body()).not.toHaveAttribute('data-wrap');
+  });
+
+  it('forwards gap, align, direction and wrap to its body', () => {
+    render(
+      <Group name="Keys" gap={5} align="center" direction="column" wrap>
+        <span>a</span>
+      </Group>,
+    );
+    expect(body()).toHaveAttribute('data-gap', '5');
+    expect(body()).toHaveAttribute('data-align', 'center');
+    expect(body()).toHaveAttribute('data-direction', 'column');
+    expect(body()).toHaveAttribute('data-wrap');
+  });
+});
+
+describe('Region spacing', () => {
+  const body = () => screen.getByRole('region', { name: 'Pads' }).querySelector('[data-part="body"]') as HTMLElement;
+
+  it('puts data-gap on its body only when given', () => {
+    const { rerender } = render(<Region name="Pads">x</Region>);
+    expect(body()).not.toHaveAttribute('data-gap');
+    rerender(
+      <Region name="Pads" gap={4}>
+        x
+      </Region>,
+    );
+    expect(body()).toHaveAttribute('data-gap', '4');
+    expect(screen.getByRole('region', { name: 'Pads' })).not.toHaveAttribute('data-gap');
+  });
+
+  it('Region.css has a body gap rule per step', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/layout/Region.css'), 'utf8');
+    for (let n = 1; n <= 6; n++) {
+      expect(css, `step ${n}`).toContain(`.lib-region__body[data-gap='${n}'] { gap: var(--space-${n}); }`);
     }
   });
 });

@@ -29,6 +29,13 @@ export const HERO_PIC = 'vs-hero-pic';
  * where it plays from are in the transport bar) the hero is the picture alone, marked
  * `data-only`: centred in the main column, as wide as the column at 16:9, and never taller than
  * half the column (HomeLayout measures it), where it narrows and stays centred.
+ *
+ * **Tuning knobs** (Hero.css, on `.vs-hero`):
+ * - `--vs-hero-cap`: the picture's tallest, about two fifths of the window, clamped to 160–440px
+ *   on the scale; half the measured column (`--vs-lay-col-h`) for the picture alone.
+ * - `--vs-hero-name-size` (24px): the name, a fifth over the heading size.
+ * - `--vs-hole-radius`: Views' `Preview`'s corner knob, set here to the hero's
+ *   `--vs-lay-hero-radius`.
  */
 export interface HeroProps {
   /** The preset playing, from the index; null before anything plays. Left out (round 2: the hero is only the picture, its name in the transport bar): no name or actions column. */

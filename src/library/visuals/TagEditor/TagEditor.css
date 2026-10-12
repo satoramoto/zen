@@ -5,7 +5,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 12px;
+  gap: var(--space-1) var(--space-3);
 }
 .vs-tag-editor .vs-tag-chip {
   display: inline-flex;
@@ -32,8 +32,8 @@
 .vs-tag-editor .vs-tag-chip-x {
   display: inline-grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
+  width: var(--space-4);
+  height: var(--space-4);
   padding: 0;
   border: 0;
   /* 4px: half a row's pill. */
@@ -57,7 +57,8 @@
   content: none;
 }
 .vs-tag-editor .vs-tag-chip-add {
-  height: 22px;
+  /* 22px: a step and a half over the 16px step. */
+  height: calc(var(--space-4) + var(--space-1) * 1.5);
   padding: 0;
   border: 0;
   background: none;
@@ -72,9 +73,10 @@
 }
 .vs-tag-editor .vs-tag-chip-input {
   flex: 1;
-  min-width: 120px;
-  height: 24px;
-  padding: 0 8px;
+  /* 120px: four control heights. */
+  min-width: calc(var(--control-h) * 4);
+  height: var(--space-5);
+  padding: 0 var(--space-2);
   border: 0;
   border-radius: var(--radius-input);
   background: var(--surface-3);

@@ -8,7 +8,7 @@
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  padding: 0 10px;
+  padding: 0 calc(var(--space-2) + var(--space-1) / 2); /* 10px */
   color: var(--text-2);
   font-family: var(--font-sans);
   font-size: var(--size-body);
@@ -23,14 +23,14 @@
   display: flex;
   flex: none;
   align-items: center;
-  height: 32px;
-  margin-bottom: 10px;
-  padding: 0 6px;
+  height: var(--space-6); /* 32px */
+  margin-bottom: calc(var(--space-2) + var(--space-1) / 2); /* 10px */
+  padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   user-select: none;
 }
 .vs-stagecrate-note {
   margin: 0;
-  padding: var(--space-1) 10px;
+  padding: var(--space-1) calc(var(--space-2) + var(--space-1) / 2); /* 4px 10px */
   color: var(--text-3);
   font-size: var(--vs-text-annot);
   line-height: 1.45;

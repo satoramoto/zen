@@ -54,7 +54,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 4px;
+  padding: var(--space-1);
   box-sizing: border-box;
   color: var(--text-3);
   font-size: var(--vs-text-label);
@@ -64,7 +64,8 @@
 .vs-drawer-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 3px;
+  /* library.css 3px, rounded to the hairline. */
+  gap: 2px;
 }
 .vs-drawer-strip > * {
   aspect-ratio: 4 / 3;
@@ -94,14 +95,16 @@
 .vs-drawer-colour {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  margin-right: 6px;
+  /* library.css 3px, rounded to the hairline; 6px (a step and a half) after. */
+  gap: 2px;
+  margin-right: calc(var(--space-1) * 1.5);
 }
+/* library.css 9px, rounded to the 8px step. */
 .vs-drawer-swatch {
   display: inline-block;
   flex: none;
-  width: 9px;
-  height: 9px;
+  width: var(--space-2);
+  height: var(--space-2);
   border-radius: var(--radius-pill);
 }
 
@@ -115,13 +118,14 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 3px;
+  /* library.css 3px, rounded to the hairline. */
+  gap: 2px;
 }
 .vs-drawer-tag {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  padding: 0 2px 0 6px;
+  padding: 0 2px 0 calc(var(--space-1) * 1.5);
   border-radius: var(--radius-pill);
   background: var(--surface-3);
   color: var(--text-1);
@@ -135,7 +139,8 @@
   color: var(--text-3);
 }
 .vs-drawer-tag-x {
-  padding: 0 3px;
+  /* library.css 0 3px, rounded to the hairline. */
+  padding: 0 2px;
   font: inherit;
   color: var(--text-3);
   background: none;
@@ -148,9 +153,10 @@
   color: var(--text-1);
 }
 .vs-drawer-tag-input {
-  flex: 1 1 80px;
+  /* 80px to start (five 16px steps), padded 4px by 6px. */
+  flex: 1 1 calc(var(--space-4) * 5);
   min-width: 0;
-  padding: 4px 6px;
+  padding: var(--space-1) calc(var(--space-1) * 1.5);
   font: inherit;
   color: var(--text-1);
   background: var(--surface-3);

@@ -214,6 +214,11 @@ export function keepStep(step: Step | null, page: () => StepStorage | undefined 
  *
  * **Kept.** The whole flow and its order, the kept step, the focus moving to the step on each
  * change, every export, all copy, names and tooltips.
+ *
+ * **Tuning knobs.** `--vs-onboarding-main-min`: the main button's least width
+ * (`calc(var(--space-5) * 5)`, the original's 120px); `--vs-onboarding-step-width`: a step's
+ * widest (`calc(var(--space-4) * 35)`, onboarding.css's 560px); `--vs-onboarding-text-width`: the
+ * listen step's words' column at its widest (`calc(var(--space-1) * 115)`, onboarding.css's 460px).
  */
 export function Onboarding({ onDone: done, start, store = kept }: { onDone(ending: Ending): void; start?: Step; store?: WarningStore }) {
   const [step, setStep] = useState<Step>(() => start ?? keptStep());

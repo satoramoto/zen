@@ -1,5 +1,9 @@
 import type { HueSlot, RoleSlot } from '../../core/hue';
+import { focusRing } from '../../../primitives/Ring';
 import { usePad, type TipAction } from './usePad';
+// The face is a Surface (material key) through its class and data attributes: a `<button>` that
+// needs a ref and `type`, which `Surface`'s props don't carry. Before Pad.css, so the states win.
+import '../../../primitives/Surface.css';
 import './Pad.css';
 
 export type { TipAction };
@@ -133,6 +137,17 @@ export function padTone(family: PadFamily, state: PadState, role?: RoleSlot, hue
  * the flash driven by the parent through `lit`; rings drawn without changing the pad's size; the
  * `tagCorner` option of the golden Stage and its transport option (now `role`); the classes and
  * `data-*` hooks.
+ *
+ * **Built from.** The face is a `Surface` at rest (`lib-surface`, `data-material="key"`), focus is
+ * `focusRing`. The label and chip stay plain spans, not `Text`: they inherit the face's type, which
+ * banks (PadBank, SongForm) restyle on `.yh-pad`, and `.lib-text` would reset it.
+ *
+ * **Tuning knobs.**
+ * - `--yh-pad-size`: the square's side (default 2.5 control heights); `fillCell` takes the cell instead.
+ * - `--yh-pad-*` tone slots (`fill`, `ink`, `ring`, `ring-ink`, `edge`): the solid fill, its ink,
+ *   the wait ring and its chip ink, the idle edge; set per tone and state.
+ * - `--yh-pad-tag-h`: the NEXT / ARMED chip's height, the row a top chip keeps clear.
+ * - `--yh-wait-ring`: the waiting and on ring's weight, border included (shared with Button and LampButton).
  */
 export function Pad({
   label,
@@ -161,7 +176,9 @@ export function Pad({
     <button
       ref={ref}
       type="button"
-      className="yh-pad"
+      className={`yh-pad lib-surface ${focusRing}`}
+      data-material="key"
+      data-radius="control"
       data-part="face"
       data-state={state}
       data-tone={tone}

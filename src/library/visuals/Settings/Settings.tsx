@@ -44,6 +44,9 @@ export function closesSheet(e: { key: string; target: EventTarget | null }): boo
  * `bottom` (More effects); the original placed each in CSS.
  *
  * **Kept.** The props, the name, "Close <title>" and its "Close (Esc)" tooltip.
+ *
+ * **Tuning knobs.** `--vs-sheet-target`: the sheets' finger-sized target, which their
+ * `--control-h` takes (`calc(var(--space-6) + var(--space-3))`, the original's 44px).
  */
 export function Sheet({
   title,

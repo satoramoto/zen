@@ -31,16 +31,15 @@
   min-width: calc(var(--control-h) * 2.5);
 }
 
+/* The title is Text in the label role (size, weight, case) and primary tone; only its offset is here. */
 .yh-metronome-popover__title {
   padding-bottom: var(--space-1);
-  color: var(--text-1);
-  font-size: var(--size-label);
-  font-weight: var(--weight-strong);
-  text-transform: var(--label-case);
 }
 
+/* Bespoke, not Text's caption role: the two lines keep a 1.4 leading (the role's is 1.3). The cap
+   is 300 px at the compact 28 px control height. */
 .yh-metronome-popover__note {
-  max-width: 300px;
+  max-width: calc(var(--control-h) * 75 / 7);
   margin: var(--space-1) 0 0;
   color: var(--text-2);
   font-size: var(--size-caption);

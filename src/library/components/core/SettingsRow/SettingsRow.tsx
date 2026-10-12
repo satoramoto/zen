@@ -37,6 +37,10 @@ export interface SettingsRowProps {
  *
  * **Kept**: the order name → control → hint, the fixed label column (`labelWidth`, 120 by
  * default), one line per row, tabular numerals, and the control keeping its own name and keys.
+ *
+ * **Tuning knobs**
+ * - `--yh-settings-label-w`: the label column's width (set inline from `labelWidth`).
+ * - `--yh-settings-control-w`: the control column's minimum; a page sets it once on the stack so every hint starts on one line.
  */
 export function SettingsRow({ label, hint = '', labelWidth = 120, children }: SettingsRowProps) {
   const id = useId();

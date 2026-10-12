@@ -1,4 +1,5 @@
 import type { ComponentPropsWithRef, CSSProperties, MouseEvent, ReactNode } from 'react';
+import { focusRing } from '../../../primitives/Ring';
 import './ActionButton.css';
 
 export type ActionTone = 'normal' | 'quiet' | 'danger';
@@ -35,7 +36,7 @@ export function ButtonFace({ lit, size, tone = 'normal', className = '', childre
       {...props}
       type={props.type ?? 'button'}
       aria-pressed={pressed}
-      className={`lib-action-button-face${className ? ` ${className}` : ''}`}
+      className={`lib-action-button-face ${focusRing}${className ? ` ${className}` : ''}`}
       data-kind={toggle ? 'toggle' : 'button'}
       data-tone={tone}
       data-size={size}

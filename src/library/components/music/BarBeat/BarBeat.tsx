@@ -56,6 +56,11 @@ export function beatState(n: number, beat: number): BeatState {
  *
  * **Kept.** The segment states and their order, the 1-based beat with 0 for stopped, at least
  * one segment, and the single `img` with its spoken name.
+ *
+ * **Tuning knobs.**
+ * - `--yh-bar-beat-line`: the resting line's height (the `thickness` prop, or a parent such as a
+ *   display); the downbeat is twice it, the lit beat and the bar three times.
+ * - `--yh-bar-beat-count`: the number of cells, set inline from `beats`.
  */
 export function BarBeat({ beat = 0, beats = 4, thickness }: BarBeatProps) {
   const count = Math.max(1, Math.floor(beats));

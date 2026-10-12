@@ -2,14 +2,16 @@
    (a `top` layer in an Opaque scope) over a dimmed window, no border. Areas are told apart by
    space and tone, not lines: quiet caption-grey headings, a control's name over what it does, its
    keys as small keycaps in the theme's key material. Wide, the groups sit in columns; narrow, in
-   one. Contract variables only, plus the local ones declared here:
+   one. Contract variables only, plus the local ones declared in HelpOverlay.tsx's Tuning knobs:
 
    --vs-help-z      the stacking order over the page (over a Modal's)
-   --vs-help-scrim  the scrim: the always-dark key colour, part see-through */
+   --vs-help-scrim  the scrim: the always-dark key colour, part see-through
+   --vs-help-width  the panel's widest (help.css's 880px) */
 
 .vs-help {
   --vs-help-z: 110; /* added: over a Modal or Sheet (100) */
   --vs-help-scrim: color-mix(in oklab, var(--key-black) 55%, transparent);
+  --vs-help-width: calc(var(--space-4) * 55); /* help.css 880px */
   display: contents;
 }
 
@@ -28,7 +30,7 @@
 
 .vs-help-dialog {
   display: flex;
-  width: min(880px, 100%);
+  width: min(var(--vs-help-width), 100%);
   max-height: 100%;
   min-height: 0;
   outline: none;
@@ -77,7 +79,7 @@
 
 /* The groups: columns as wide as a group reads well, each kept whole. */
 .vs-help-groups {
-  columns: 2 320px;
+  columns: 2 calc(var(--space-6) * 10); /* help.css 320px */
   column-gap: var(--space-6);
 }
 .vs-help-group {
@@ -139,7 +141,7 @@
   font-variant-numeric: tabular-nums;
   font-size: var(--vs-text-annot);
   font-weight: var(--weight-strong);
-  line-height: 16px;
+  line-height: var(--space-4); /* help.css 16px */
   white-space: nowrap;
 }
 .vs-help-hint kbd {

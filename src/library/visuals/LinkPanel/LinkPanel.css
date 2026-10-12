@@ -26,8 +26,9 @@
   letter-spacing: var(--tracking);
   text-transform: none;
 }
+/* link.css's 96px. */
 .vs-link-toggle {
-  width: 96px;
+  width: calc(var(--space-6) * 3);
 }
 
 /* The session: a caption, green only while someone else is in it (the signal). */
@@ -67,8 +68,8 @@
 }
 /* Soft dots, no ring: the lit beat in the ink, the one lit in the signal's green. */
 .vs-link-light {
-  width: 16px;
-  height: 16px;
+  width: var(--space-4);
+  height: var(--space-4);
   border-radius: var(--radius-pill);
   background: var(--surface-3);
 }
@@ -133,6 +134,7 @@
   flex: 1 0 100%;
   color: var(--text-3);
 }
+/* settings.css's 52px keys. */
 .vs-link-settings .vs-link-one .lib-action-button-face {
-  min-width: 52px;
+  min-width: calc(var(--space-5) * 2 + var(--space-1));
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, type MouseEvent, type PointerEvent } from 'react';
 import { useLongPress } from './useLongPress';
 import type { HueSlot } from '../hue';
+import { focusRing } from '../../../primitives/Ring';
 import './Button.css';
 
 export type ButtonGlyph = 'prev' | 'next' | 'up' | 'down' | 'plus' | 'minus' | 'caret';
@@ -148,6 +149,13 @@ const SOLID = new Set<ButtonHue>(['ok', 'rec']);
  * names, `aria-pressed`/`aria-haspopup`/`aria-expanded`/`aria-disabled`; disabled stays focusable;
  * long press (held or right-click) swallows its click; `hold` follows one pointer and ends on
  * release, cancel, lost capture, disable or unmount.
+ *
+ * **Tuning knobs**
+ * - `--yh-button-*`: the face's colour roles, set per tone and variant in Button.css: `tone`
+ *   (whose key it is), `fill` and `ink` (the on ring, dot, underline and solid face, and the label
+ *   on it), `line` (rest outline), `rest` (rest hover tint), `glow` (lit bloom), `cta` and
+ *   `cta-ink` (the primary fill and its label), `tint` (the hover, press and waiting wash).
+ * - `--yh-wait-ring`: the waiting and on ring's weight, one weight across Button, LampButton and Pad.
  */
 export function Button({
   label = '',
@@ -243,7 +251,7 @@ export function Button({
     <button
       ref={node}
       type="button"
-      className="yh-button"
+      className={`yh-button ${focusRing}`}
       data-part="face"
       data-size={size}
       data-variant={variant}

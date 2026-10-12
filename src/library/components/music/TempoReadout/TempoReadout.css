@@ -125,12 +125,9 @@
   cursor: default;
 }
 
-.yh-tempo-readout__bpm:focus-visible,
+/* The number takes the shared focus ring; a step draws it inside its frame instead. */
 .yh-tempo-readout__step:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.yh-tempo-readout__step:focus-visible {
   outline-offset: -2px;
 }
 

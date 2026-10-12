@@ -1,12 +1,12 @@
 /* Pad: one bank pad drawn as a key. Reads only contract variables and the --yh-pad-*
-   ones declared here. Tone (data-tone) picks the colour role; state (data-state) the structure. */
+   ones declared here. Tone (data-tone) picks the colour role; state (data-state) the structure.
+   The face at rest is a Surface (`lib-surface`, material key, radius control): its fill, texture,
+   shadow and corners come from there; the states below paint over it. */
 
 .yh-pad {
-  /* Size: square by default; a layout may override width and height on this class. */
-  /* 2.5 control heights: wide enough for "Ending II" on one line once its numeral is tied to it. */
+  /* Size: square by default; 2.5 control heights, wide enough for "Ending II" on one line once
+     its numeral is tied to it. */
   --yh-pad-size: calc(var(--control-h) * 2.5);
-  --yh-pad-width: var(--yh-pad-size);
-  --yh-pad-height: var(--yh-pad-size);
   /* Tone: the solid fill, the text on it, the ring colour and the text on a solid ring chip. */
   --yh-pad-fill: var(--selected);
   --yh-pad-ink: var(--selected-text);
@@ -14,7 +14,6 @@
   --yh-pad-ring-ink: var(--surface-0);
   /* The idle edge: neutral pads take the strong border, coloured ones their own colour. */
   --yh-pad-edge: var(--border-strong);
-  --yh-pad-label: var(--text-1);
   /* The waiting and on ring's weight, border included: one weight across Button, LampButton and Pad. */
   --yh-wait-ring: calc(var(--border-width) * 2);
 
@@ -22,17 +21,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--yh-pad-width);
+  width: var(--yh-pad-size);
   min-width: 0;
-  height: var(--yh-pad-height);
+  height: var(--yh-pad-size);
   margin: 0;
   padding: var(--space-2) var(--space-1);
   border: var(--border-width) solid var(--yh-pad-edge);
-  border-radius: var(--radius-control);
-  /* The face is a key: the theme's key material at rest. */
-  background: var(--mat-key-texture), var(--mat-key-fill);
-  box-shadow: var(--mat-key-shadow);
-  color: var(--yh-pad-label);
+  color: var(--text-1);
   font-family: var(--font-sans);
   font-size: var(--size-label);
   font-weight: var(--weight-strong);
@@ -46,7 +41,7 @@
   transition: background-color 80ms ease-out, box-shadow 80ms ease-out;
 }
 
-.yh-pad[data-util] { --yh-pad-label: var(--text-2); }
+.yh-pad[data-util] { color: var(--text-2); }
 
 .yh-pad[data-tone='hue-1'] { --yh-pad-fill: var(--hue-1); }
 .yh-pad[data-tone='hue-2'] { --yh-pad-fill: var(--hue-2); }
@@ -94,8 +89,8 @@
 
 /* fillCell: the pad takes its cell instead of the fixed square. */
 .yh-pad[data-fill] {
-  --yh-pad-width: 100%;
-  --yh-pad-height: 100%;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
 }
 
@@ -111,11 +106,6 @@
 .yh-pad:active:where(:not([aria-disabled='true'])) {
   transform: translateY(1px);
   box-shadow: var(--mat-key-pressed);
-}
-
-.yh-pad:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 /* The label: centred lines, wrapping only at word boundaries. */

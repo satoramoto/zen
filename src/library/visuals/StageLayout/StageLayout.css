@@ -7,19 +7,17 @@
    Opaque scope: each layer over the picture draws its solid and blurs nothing (a blur never
    reaches the native view). Nothing animates but Esc's hold to leave (its ring).
 
-   Local variables:
-     --vs-stagelayout-crate      the crate's column: the 240px inset sidebar and 8px either side
-     --vs-stagelayout-titlebar   the title bar's 52px (layout.css --lay-titlebar)
-     --vs-stagelayout-lights     the window buttons' room: x 24, 12px each, 8px apart
-     --vs-stagelayout-radius     the inset panels' 18px corners (layout.css --lay-side-radius)
-     --vs-stagelayout-z-*        the cells' stacking over the picture
-     --vs-stagelayout-hold       Esc's hold (LEAVE_HOLD_MS), set inline on the progress */
+   The tuning knobs (--vs-stagelayout-*) are listed in StageLayout.tsx. */
 
 .vs-stagelayout {
-  --vs-stagelayout-crate: calc(240px + 2 * var(--space-2));
-  --vs-stagelayout-titlebar: 52px;
-  --vs-stagelayout-lights: 84px;
-  --vs-stagelayout-radius: 18px;
+  /* The crate's column: the 240px inset sidebar (8 controls) and 8px either side. */
+  --vs-stagelayout-crate: calc(var(--control-h) * 8 + 2 * var(--space-2));
+  /* The title bar's 52px (layout.css --lay-titlebar). */
+  --vs-stagelayout-titlebar: calc(var(--space-5) * 2 + var(--space-1));
+  /* The window buttons' room, 84px: x 24, three 12px buttons 8px apart, and 8px after. */
+  --vs-stagelayout-lights: calc(var(--space-5) + 3 * var(--space-3) + 3 * var(--space-2));
+  /* The inset panels' 18px corners (layout.css --lay-side-radius). */
+  --vs-stagelayout-radius: calc(var(--space-3) * 1.5);
   --vs-stagelayout-z-panel: 1;
   --vs-stagelayout-z-centre: 2;
   /* Above the centre: the header's popovers open over "Go full screen on…". */
@@ -57,11 +55,16 @@
   background: color-mix(in oklab, var(--layer-base-solid), var(--key-black));
 }
 
-/* The panels' look over the picture: the base layer's solid, its edge and the lift shadow (stage.css's 0 18px 48px). */
-.vs-stagelayout .lib-layer.vs-stagelayout-crate,
-.vs-stagelayout .lib-region.vs-stagelayout-dock {
+/* The panels' look over the picture: the base layer's solid, its edge and the lift shadow (stage.css's 0 18px 48px).
+   The crate is a base Layer; the dock is a Region, drawn by its own plate (the base layer), whose
+   cast is the lift here. */
+.vs-stagelayout .lib-layer.vs-stagelayout-crate {
   border-radius: var(--vs-stagelayout-radius);
-  box-shadow: var(--layer-base-edge), var(--vs-lift);
+  box-shadow: var(--layer-base-edge), var(--layer-float-cast);
+}
+.vs-stagelayout .vs-stagelayout-dock {
+  --layer-base-cast: var(--layer-float-cast);
+  border-radius: var(--vs-stagelayout-radius);
 }
 
 /* The crate: Home's inset sidebar, opaque, over the picture's left edge. Docked, the header and
@@ -189,7 +192,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: 96px;
+  height: calc(var(--space-6) * 3); /* 96px */
   padding-bottom: var(--space-4);
   box-sizing: border-box;
 }
@@ -240,10 +243,11 @@
 .vs-stagelayout .lib-layer.vs-stagelayout-leaving-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: var(--space-4) 28px var(--space-4) 18px;
+  gap: calc((var(--space-3) + var(--space-4)) / 2); /* 14px */
+  /* 16px 28px 16px 18px */
+  padding: var(--space-4) calc(var(--space-6) - var(--space-1)) var(--space-4) calc(var(--space-3) * 1.5);
   border-radius: var(--radius-pill);
-  box-shadow: var(--layer-base-edge), var(--vs-lift);
+  box-shadow: var(--layer-base-edge), var(--layer-float-cast);
 }
 .vs-stagelayout-leaving-card p {
   margin: 0;
@@ -254,8 +258,9 @@
 }
 .vs-stagelayout-ring {
   flex: none;
-  width: 44px;
-  height: 44px;
+  /* 44px */
+  width: calc(var(--space-6) + var(--space-3));
+  height: calc(var(--space-6) + var(--space-3));
   transform: rotate(-90deg);
 }
 .vs-stagelayout-ring circle {

@@ -102,6 +102,23 @@ type Zone = { side: KeyPart; name: string; hue: HueSlot; from: number; to: numbe
  * black key the way the keys' own edges do; held right notes drawing over held left ones; the
  * controlled model (the strip only asks through `onSplit`/`onPick`); the slider semantics,
  * keyboard steps, drag slop, Esc caught before the app's, and the accessible names.
+ *
+ * **Built from.** No `Surface`, `Text` or `focusRing` yet: the key faces are the contract's
+ * `--key-white` / `--key-black`, not the `key` material, so a Surface would change them; the
+ * ruler's type mixes weights the text roles don't pair (a label at body weight, readout figures
+ * at label size); and focus lands on the handle while its ring is drawn on the flag inside it.
+ *
+ * **Tuning knobs.**
+ * - `--yh-keys-black-w`, `--yh-keys-split-x`, `--yh-keys-split-step`: the layout's geometry (a
+ *   sharp's width, the split's x and its step round a sharp), set inline from the key layout.
+ * - `--yh-keys-ruler-h`, `--yh-keys-strip-h`, `--yh-keys-black-h`, `--yh-keys-flag-w`: the ruler's
+ *   and strip's heights, a sharp's length, the split flag's width; all from `--control-h`.
+ * - `--yh-keys-line`, `--yh-keys-key-radius`: the split line's weight, a key's lower corners.
+ * - `--yh-keys-white`, `--yh-keys-black`, `--yh-keys-gap`, `--yh-keys-sharp-edge`,
+ *   `--yh-keys-label`: the key faces and the steps between them (gaps, a sharp's edge, C names).
+ * - `--yh-keys-split-ink`, `--yh-keys-split-halo`: the split line's ink and the halo that keeps it
+ *   off the faces.
+ * - `--yh-keys-hue`: a zone's hue slot, for its lamp and held keys.
  */
 export function Keys({
   range = { low: 36, high: 96 },

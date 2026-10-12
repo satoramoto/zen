@@ -33,6 +33,10 @@ export interface DisplayArtProps {
  *
  * **Kept.** Purely decorative and hidden from assistive tech; the two hills and the sun; the fade
  * from the ground on the left (and `fade` off to show it bare) so readouts over the art stay clear.
+ *
+ * **Tuning knobs.** `--yh-displayart-sky`, `--yh-displayart-far`, `--yh-displayart-near`,
+ * `--yh-displayart-sun` (the picture's four colours: the sky, the far and near hills and the sun,
+ * each a theme mix that switches on `--scheme-light`).
  */
 export function DisplayArt({ fade = true }: DisplayArtProps) {
   return (

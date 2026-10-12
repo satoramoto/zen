@@ -75,6 +75,11 @@ const KEY_DELTAS: Record<string, number> = { ArrowRight: 1, ArrowUp: 1, ArrowLef
  * until the state matches or 500 ms pass); the slider role, name, `aria-valuetext` ("Level 90",
  * "Low freq 120 Hz", "Ratio 3:1"), "hardware fader away", and a disabled row that stays focusable
  * and reads its absence ("Send 5, not added").
+ *
+ * **Tuning knobs.**
+ * - `--yh-bar-readout-ink`: the fill and cap's ink (default `--accent`; a page may point it at a hue).
+ * - `--yh-bar-readout-line`: the line's thickness, a hairline at rest and `--space-1` under the
+ *   pointer or while dragging.
  */
 export function BarReadout({
   label,

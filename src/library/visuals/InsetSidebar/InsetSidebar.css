@@ -1,7 +1,7 @@
 /* The inset sidebar's content (InsetSidebar.tsx), from the original's inset-sidebar.css, inside
    HomeLayout's panel (the raised layer, so captions take the raised step). The app's source
    list: quiet sentence-case headings that fold with a chevron, rows of --vs-lay-row, the row
-   picked a soft pill of --vs-lay-row-radius in the ink, heavier, the playlist playing its green
+   picked a soft pill of --radius-control in the ink, heavier, the playlist playing its green
    dot. No lines: areas told apart by space and tone (decision 68). Nothing animates. */
 
 /* A column as tall as the panel's body: the mark, the sections, which scroll inside themselves,
@@ -9,9 +9,11 @@
    over the rows to hide them (the panel's tone is a tint over glass: a second coat would show as
    a box). */
 .vs-isb {
-  --vs-isb-caption: var(--vs-caption-raised);
   --vs-isb-small: calc(var(--size-caption) - 1px);
-  --vs-isb-gutter: 10px;
+  /* A row's side padding and the space between its parts: 10px. */
+  --vs-isb-gutter: calc(var(--space-1) * 2.5);
+  /* A row's hover keys (play, "…"): 22px. */
+  --vs-isb-key: calc(var(--space-4) + var(--space-1) * 1.5);
   --vs-isb-hover: color-mix(in oklab, var(--text-1) 4%, transparent);
   --vs-isb-tool-hover: color-mix(in oklab, var(--text-1) 6%, transparent);
   --vs-isb-picked: color-mix(in oklab, var(--text-1) 9%, transparent);
@@ -35,14 +37,14 @@
 }
 
 /* The mark, the sidebar's first item, under the window buttons' band (HomeLayout's panel). Its
-   text starts where the headings' titles do (the mark's own padding plus 6). */
+   text starts where the headings' titles do (the mark's own padding plus 6). 32px tall. */
 .vs-isb-mark {
   display: flex;
   align-items: center;
-  height: 32px;
+  height: var(--space-6);
   flex: none;
   margin: 0 0 var(--vs-isb-gutter);
-  padding: 0 6px;
+  padding: 0 calc(var(--space-1) * 1.5);
   user-select: none;
 }
 
@@ -57,12 +59,12 @@
   align-items: center;
   gap: var(--vs-isb-gutter);
   width: 100%;
-  height: 32px;
+  height: var(--space-6); /* 32px */
   padding: 0 var(--vs-isb-gutter);
   border: 0;
-  border-radius: var(--vs-lay-row-radius, var(--radius-control));
+  border-radius: var(--radius-control);
   background: none;
-  color: var(--vs-isb-caption);
+  color: var(--vs-caption-raised);
   font: inherit;
   font-size: var(--vs-text-label);
   text-align: left;
@@ -78,7 +80,7 @@
   flex: none;
 }
 .vs-isb-section + .vs-isb-section {
-  margin-top: 14px;
+  margin-top: calc(var(--space-3) + var(--space-1) / 2); /* 14px */
 }
 
 /* A section's heading: its title in the caption's grey, the chevron after it, faint until the
@@ -92,12 +94,12 @@
   align-items: center;
   gap: var(--space-1);
   width: 100%;
-  height: 28px;
+  height: calc(var(--space-6) - var(--space-1)); /* 28px */
   padding: 0 var(--vs-isb-gutter);
   border: 0;
-  border-radius: var(--vs-lay-row-radius, var(--radius-control));
+  border-radius: var(--radius-control);
   background: none;
-  color: var(--vs-isb-caption);
+  color: var(--vs-caption-raised);
   font: inherit;
   font-size: var(--vs-isb-small);
   font-weight: var(--weight-strong);
@@ -128,10 +130,10 @@
   align-items: center;
   gap: var(--vs-isb-gutter);
   width: 100%;
-  height: var(--vs-lay-row, 40px);
+  height: var(--vs-lay-row, calc(var(--space-6) + var(--space-2))); /* 40px */
   padding: 0 var(--vs-isb-gutter);
   border: 0;
-  border-radius: var(--vs-lay-row-radius, var(--radius-control));
+  border-radius: var(--radius-control);
   background: none;
   color: var(--text-2);
   font: inherit;
@@ -174,12 +176,12 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-/* The playlist playing: a small green dot after its name. */
+/* The playlist playing: a small green dot after its name, 6px (5px before). */
 .vs-isb-dot {
   flex: none;
-  width: 5px;
-  height: 5px;
-  margin-left: -4px;
+  width: calc(var(--space-1) * 1.5);
+  height: calc(var(--space-1) * 1.5);
+  margin-left: calc(-1 * var(--space-1));
   border-radius: var(--radius-pill);
   background: var(--vs-playing);
 }
@@ -187,8 +189,8 @@
 .vs-isb-count {
   flex: none;
   margin-left: auto;
-  padding-left: 6px;
-  color: var(--vs-isb-caption);
+  padding-left: calc(var(--space-1) * 1.5); /* 6px */
+  color: var(--vs-caption-raised);
   font-family: var(--font-readout);
   font-variant-numeric: tabular-nums;
   font-size: var(--vs-isb-small);
@@ -197,7 +199,7 @@
 }
 .vs-isb-empty {
   padding: var(--space-1) var(--vs-isb-gutter);
-  color: var(--vs-isb-caption);
+  color: var(--vs-caption-raised);
   font-size: var(--vs-isb-small);
 }
 
@@ -225,13 +227,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: var(--space-5); /* 24px */
+  height: var(--space-5);
   padding: 0;
   border: 0;
   border-radius: var(--vs-isb-key-radius);
   background: none;
-  color: var(--vs-isb-caption);
+  color: var(--vs-caption-raised);
   font: inherit;
   cursor: pointer;
 }
@@ -255,8 +257,8 @@
   display: none;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: var(--vs-isb-key);
+  height: var(--vs-isb-key);
   padding: 0;
   border: 0;
   border-radius: var(--vs-isb-key-radius);
@@ -265,12 +267,12 @@
   cursor: pointer;
   transform: translateY(-50%);
 }
-/* Centred where the row's 16 px icon sits (the row's 10 px padding). */
+/* Centred where the row's 16 px icon sits (the row's 10 px padding): 7px in. The "…" 6px in. */
 .vs-isb-play {
-  left: 7px;
+  left: calc(var(--vs-isb-gutter) + var(--space-2) - var(--vs-isb-key) / 2);
 }
 .vs-isb-more {
-  right: 6px;
+  right: calc(var(--space-1) * 1.5);
 }
 .vs-isb-play:hover:not(:disabled),
 .vs-isb-more:hover,
@@ -278,7 +280,7 @@
   color: var(--text-1);
 }
 .vs-isb-play:disabled {
-  color: var(--vs-isb-caption);
+  color: var(--vs-caption-raised);
   cursor: default;
 }
 .vs-isb-item[data-live]:hover :is(.vs-isb-play, .vs-isb-more),
@@ -312,9 +314,9 @@
 .vs-isb .vs-isb-rename {
   flex: 1;
   min-width: 0;
-  height: 24px;
-  margin: 0 -6px;
-  padding: 0 6px;
+  height: var(--space-5); /* 24px, 6px padding pulled back out */
+  margin: 0 calc(var(--space-1) * -1.5);
+  padding: 0 calc(var(--space-1) * 1.5);
   border: 0;
   border-radius: var(--vs-isb-key-radius);
   background: var(--surface-3);
@@ -328,7 +330,7 @@
 .vs-isb-menu {
   position: fixed;
   z-index: 60;
-  min-width: 180px;
+  min-width: calc(var(--control-h) * 6); /* 180px */
 }
 .vs-isb-menu > .vs-isb-menu-panel {
   display: flex;
@@ -336,10 +338,11 @@
   gap: 1px;
   width: max-content;
   min-width: 100%;
-  max-width: min(420px, calc(100vw - 24px));
+  /* At most 420px, and 24px short of the window; 6px padding. */
+  max-width: min(calc(var(--control-h) * 14), calc(100vw - var(--space-5)));
   max-height: 60vh;
   overflow: auto;
-  padding: 6px;
+  padding: calc(var(--space-1) * 1.5);
   box-sizing: border-box;
   color: var(--text-2);
   font-family: var(--font-sans);
@@ -350,8 +353,8 @@
 .vs-isb-menu [role='menuitem'] {
   display: block;
   width: 100%;
-  height: 30px;
-  padding: 0 var(--vs-isb-gutter, 10px);
+  height: var(--control-h); /* 30px */
+  padding: 0 var(--vs-isb-gutter, calc(var(--space-1) * 2.5));
   text-align: left;
   color: var(--text-2);
   font: inherit;

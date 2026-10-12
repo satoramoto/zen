@@ -110,6 +110,9 @@ function Levels() {
  *
  * **Kept.** The polling, the gone note, the kept channels, the native `<details>` for Advanced
  * (its summary's name and tooltip), the empty state, every label, title and word.
+ *
+ * **Tuning knobs**
+ * - `--vs-audio-note-width`: a note's widest beside the picker.
  */
 export function SourcePicker({
   onError,

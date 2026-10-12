@@ -15,6 +15,15 @@
 }
 .lib-region:not(:has(> .lib-region__head)) { grid-template-rows: minmax(0, 1fr); }
 
+/* fit="content": the region is its header plus its body's content. Every floor is the content
+   (no min-height: 0 here or on the body), so an `auto` row it sits in can't squeeze it to 0. */
+.lib-region[data-fit='content'] {
+  grid-template-rows: auto auto;
+  min-height: min-content;
+}
+.lib-region[data-fit='content']:not(:has(> .lib-region__head)) { grid-template-rows: auto; }
+.lib-region[data-fit='content'] > .lib-region__body { min-height: min-content; }
+
 .lib-region__head {
   display: flex;
   align-items: center;
@@ -46,3 +55,11 @@
   min-height: 0;
   padding: var(--mat-plate-inset);
 }
+/* The space between the Groups in the body, as a scale step (`gap`). */
+.lib-region__body[data-gap='0'] { gap: 0; }
+.lib-region__body[data-gap='1'] { gap: var(--space-1); }
+.lib-region__body[data-gap='2'] { gap: var(--space-2); }
+.lib-region__body[data-gap='3'] { gap: var(--space-3); }
+.lib-region__body[data-gap='4'] { gap: var(--space-4); }
+.lib-region__body[data-gap='5'] { gap: var(--space-5); }
+.lib-region__body[data-gap='6'] { gap: var(--space-6); }

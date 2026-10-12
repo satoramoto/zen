@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { HueSlot } from '../../core/hue';
+import { focusRing } from '../../../primitives/Ring';
 import './SoundCell.css';
 
 export interface SoundCellProps {
@@ -52,6 +53,10 @@ export interface SoundCellProps {
  * **Kept**: two buttons and their callbacks, their spoken names ("Right 1: open Channel",
  * "Right 1 sound: 1 Stage Grand. Opens the quick sound list"), the full part name as the short
  * name's title, the marks after the name, and the tooltip keys as `data-tip`.
+ *
+ * **Tuning knobs.**
+ * - `--yh-part-hue`: the part's ink, `--hue-N` from `hue`; the short name wears it (faded when off).
+ * - `--yh-sound-cell-width`: the cell's width on the row (default `14em`); the row may set it.
  */
 export function SoundCell({
   part,
@@ -73,7 +78,7 @@ export function SoundCell({
     <div className="yh-sound-cell" data-hue={hue} data-off={off ? 'true' : undefined}>
       <button
         type="button"
-        className="yh-sound-cell__part"
+        className={`yh-sound-cell__part ${focusRing}`}
         title={partName}
         aria-label={`${partName}: open Channel`}
         data-tip={partTip}
@@ -83,7 +88,7 @@ export function SoundCell({
       </button>
       <button
         type="button"
-        className="yh-sound-cell__sound"
+        className={`yh-sound-cell__sound ${focusRing}`}
         aria-label={spoken}
         data-tip={soundTip}
         onClick={() => onSound?.()}

@@ -1,9 +1,6 @@
-/* SendReadout: a flat inline button; name + level per send. Only contract
-   variables and the --yh-send-readout-* one declared here. */
+/* SendReadout: a flat inline button; name + level per send. Only contract variables. */
 
 .yh-send-readout {
-  --yh-send-readout-hover: color-mix(in srgb, var(--text-1) 6%, transparent);
-
   display: inline-flex;
   flex: none;
   align-items: baseline;
@@ -24,7 +21,7 @@
   transition: background-color 120ms ease-out;
 }
 .yh-send-readout:hover {
-  background: var(--yh-send-readout-hover);
+  background: color-mix(in srgb, var(--text-1) 6%, transparent);
 }
 .yh-send-readout:focus-visible {
   outline: var(--border-width) solid var(--accent);

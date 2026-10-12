@@ -4,11 +4,11 @@
    up with the strip, and its actions are type with no boxes: the one on (shuffle) in the ink and
    underlined in the accent. Contract variables and visuals.css tokens only. */
 .vs-playlisthead {
-  --vs-playlisthead-small: calc(var(--size-caption) - 1px); /* playlisthead.css 11px: "Playlist" */
   display: flex;
   gap: var(--space-4);
   align-items: center;
-  padding: 18px var(--mat-plate-inset) var(--space-3);
+  /* 18px above: a step and a half of 12. */
+  padding: calc(var(--space-3) * 1.5) var(--mat-plate-inset) var(--space-3);
   font-family: var(--font-sans);
 }
 .vs-playlisthead-cover {
@@ -16,7 +16,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 2px;
   flex: none;
-  width: 96px;
+  /* 96px: three of the 32px step. */
+  width: calc(var(--space-6) * 3);
   border-radius: var(--radius-control);
   overflow: hidden;
 }
@@ -36,7 +37,7 @@
 }
 .vs-playlisthead-caps {
   color: var(--text-3);
-  font-size: var(--vs-playlisthead-small);
+  font-size: calc(var(--size-caption) - 1px); /* playlisthead.css 11px: "Playlist" */
   font-weight: 500;
 }
 .vs-playlisthead .vs-playlisthead-name {
@@ -79,12 +80,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1) 14px;
+  /* 14px between actions (8 + 6). */
+  gap: var(--space-1) calc(var(--space-2) + var(--space-1) * 1.5);
   margin: var(--space-2) 0 0 calc(-1 * var(--space-1));
 }
 .vs-playlisthead-confirm {
   display: inline-flex;
-  gap: 14px;
+  gap: calc(var(--space-2) + var(--space-1) * 1.5);
 }
 
 /* The actions: type, no boxes. Play (and stop) in the ink; shuffle, while on, in the ink and underlined. */
@@ -93,8 +95,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  height: 28px;
+  /* playlisthead.css 5px between icon and word (rounded to the 4px step), 28px tall (24 + 4). */
+  gap: var(--space-1);
+  height: calc(var(--space-5) + var(--space-1));
   padding: 0 var(--space-1);
   color: var(--text-2);
   font-family: var(--font-sans);
@@ -116,7 +119,7 @@
 .vs-playlisthead .vs-playlisthead-btn[aria-pressed='true'] {
   color: var(--text-1);
   text-decoration: underline 2px var(--vs-line-active);
-  text-underline-offset: 6px;
+  text-underline-offset: calc(var(--space-1) * 1.5);
 }
 .vs-playlisthead .vs-playlisthead-btn[data-danger] {
   color: var(--danger);
@@ -144,16 +147,18 @@
   padding: var(--space-3);
 }
 .vs-playlisthead .vs-playlisthead-settings {
-  max-width: 520px;
+  /* 520px: sixteen of the 32px step and 8. */
+  max-width: calc(var(--space-6) * 16 + var(--space-2));
 }
 .vs-playlisthead .vs-playlisthead-settings > [data-part='body'] {
   align-items: center;
-  gap: 10px var(--space-4);
+  /* 10px between lines: two and a half steps. */
+  gap: calc(var(--space-1) * 2.5) var(--space-4);
 }
 .vs-playlisthead .vs-playlisthead-setting {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: calc(var(--space-1) * 1.5);
   color: var(--vs-caption-raised);
   font-size: var(--size-caption);
 }
@@ -171,10 +176,12 @@
 
 @media (max-width: 899px) {
   .vs-playlisthead[data-variant='pane'] .vs-playlisthead-cover {
-    width: 72px;
+    /* 72px: three of the 24px step. */
+    width: calc(var(--space-5) * 3);
   }
   .vs-playlisthead[data-variant='pane'] .vs-playlisthead-name {
-    font-size: 18px;
+    /* 18px: the heading a hairline pair smaller. */
+    font-size: calc(var(--size-heading) - 2px);
   }
 }
 
@@ -186,7 +193,7 @@
 .vs-playlisthead[data-variant='inspector'] {
   flex-direction: column;
   align-items: stretch;
-  gap: 14px;
+  gap: calc(var(--space-2) + var(--space-1) * 1.5);
   padding: var(--space-1) 0 0;
 }
 .vs-playlisthead[data-variant='inspector'] .vs-playlisthead-cover {
@@ -195,7 +202,8 @@
 }
 .vs-playlisthead[data-variant='inspector'] .vs-playlisthead-name {
   margin: var(--space-1) 0;
-  font-size: 22px;
+  /* 22px: the heading a hairline pair larger. */
+  font-size: calc(var(--size-heading) + 2px);
   font-weight: var(--weight-strong);
   line-height: 1.2;
   white-space: normal;
@@ -209,7 +217,7 @@
 .vs-playlisthead[data-variant='inspector'] .vs-playlisthead-name-input {
   width: 100%;
   box-sizing: border-box;
-  font-size: 22px;
+  font-size: calc(var(--size-heading) + 2px);
 }
 .vs-playlisthead[data-variant='inspector'] .vs-playlisthead-summary {
   line-height: 1.45;
@@ -219,7 +227,7 @@
 .vs-playlisthead[data-variant='inspector'] .vs-playlisthead-acts {
   position: relative;
   margin-top: var(--space-3);
-  padding-right: 28px;
+  padding-right: calc(var(--space-5) + var(--space-1));
 }
 .vs-playlisthead[data-variant='inspector'] .vs-playlisthead-more {
   position: absolute;

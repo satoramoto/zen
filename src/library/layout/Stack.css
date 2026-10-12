@@ -1,0 +1,32 @@
+/* Stack: the Group tier's atom. Flex, a scale step between children, nothing painted. Contract
+   variables only. The attribute rules sit inside :where() so every rule here weighs one class:
+   a component's own `.x > .lib-group__body { gap: … }` still wins whatever the load order. */
+
+.lib-stack {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
+.lib-stack:where([data-direction='row']) { flex-direction: row; }
+.lib-stack:where([data-direction='column']) { flex-direction: column; }
+.lib-stack:where([data-wrap]) { flex-wrap: wrap; }
+
+.lib-stack:where([data-gap='0']) { gap: 0; }
+.lib-stack:where([data-gap='1']) { gap: var(--space-1); }
+.lib-stack:where([data-gap='2']) { gap: var(--space-2); }
+.lib-stack:where([data-gap='3']) { gap: var(--space-3); }
+.lib-stack:where([data-gap='4']) { gap: var(--space-4); }
+.lib-stack:where([data-gap='5']) { gap: var(--space-5); }
+.lib-stack:where([data-gap='6']) { gap: var(--space-6); }
+
+.lib-stack:where([data-align='start']) { align-items: flex-start; }
+.lib-stack:where([data-align='center']) { align-items: center; }
+.lib-stack:where([data-align='end']) { align-items: flex-end; }
+.lib-stack:where([data-align='stretch']) { align-items: stretch; }
+.lib-stack:where([data-align='baseline']) { align-items: baseline; }
+
+.lib-stack:where([data-justify='start']) { justify-content: flex-start; }
+.lib-stack:where([data-justify='center']) { justify-content: center; }
+.lib-stack:where([data-justify='end']) { justify-content: flex-end; }
+.lib-stack:where([data-justify='between']) { justify-content: space-between; }
+.lib-stack:where([data-justify='around']) { justify-content: space-around; }

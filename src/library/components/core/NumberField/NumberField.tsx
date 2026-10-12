@@ -2,6 +2,7 @@ import { useCallback, useState, type CSSProperties, type KeyboardEvent } from 'r
 import { defaultOrigin, fillFrom, hintAttribute, useReserved, type FillOrigin } from '../Param/fill';
 import { clamp, quantize, type Param } from '../Param/param';
 import { useParamGesture } from '../Param/useParamGesture';
+import { focusRing } from '../../../primitives/Ring';
 import './NumberField.css';
 
 export type { FillOrigin } from '../Param/fill';
@@ -129,7 +130,7 @@ export function NumberField({
       )}
       {draft === null ? (
         <div
-          className="lib-number-field__body"
+          className={`lib-number-field__body ${focusRing}`}
           data-part="body"
           title={title}
           {...gesture.props}

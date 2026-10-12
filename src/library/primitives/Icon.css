@@ -1,0 +1,33 @@
+/* Icon: a square SVG slot sized on the scale. Ink comes from .lib-tone (Text.css). Contract
+   variables plus the --lib-icon-* declared here. */
+
+.lib-icon {
+  --lib-icon-size: 1em;
+  --lib-icon-stroke: 2;
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--lib-icon-size);
+  height: var(--lib-icon-size);
+  line-height: 0;
+}
+.lib-icon > svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--lib-icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lib-icon[data-size='display'] { --lib-icon-size: var(--size-display); }
+.lib-icon[data-size='numeral'] { --lib-icon-size: var(--size-numeral); }
+.lib-icon[data-size='heading'] { --lib-icon-size: var(--size-heading); }
+.lib-icon[data-size='body'] { --lib-icon-size: var(--size-body); }
+.lib-icon[data-size='label'] { --lib-icon-size: var(--size-label); }
+.lib-icon[data-size='caption'] { --lib-icon-size: var(--size-caption); }
+.lib-icon[data-size='code'] { --lib-icon-size: var(--size-body); }
+.lib-icon[data-size='control'] { --lib-icon-size: var(--control-h); }
