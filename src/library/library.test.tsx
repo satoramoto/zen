@@ -30,6 +30,40 @@ const COMPONENT_SOURCES = [
 ];
 const CONTRACT = new Set(Object.keys(toCssVars(packs[0].facets)));
 
+// Colour maths for the palette checks: WCAG 2 contrast and OKLab distance, from #rrggbb.
+const channels = (hex: string) => {
+  expect(hex, 'palette colours are #rrggbb').toMatch(/^#[0-9a-f]{6}$/i);
+  return [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+};
+const luminance = (hex: string) => {
+  const [r, g, b] = channels(hex);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (a: string, b: string) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+const oklab = (hex: string) => {
+  const [r, g, b] = channels(hex);
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+};
+const distance = (a: string, b: string) => {
+  const [p, q] = [oklab(a), oklab(b)];
+  return Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+};
+/** The least OKLab distance at which two role colours read as different at a glance. */
+const DISTINCT = 0.12;
+
 describe('token contract', () => {
   it('every theme pack fills every contract variable', () => {
     for (const pack of packs) {
@@ -62,6 +96,43 @@ describe('token contract', () => {
 
   it('palettes keep four distinct categorical hues', () => {
     for (const p of palettes) expect(new Set(p.hues).size, p.id).toBe(4);
+  });
+
+  it('ink on a solid fill meets WCAG AA against it in every pack', () => {
+    for (const { id, facets } of packs) {
+      const p = facets.palette;
+      const pairs: [string, string, string][] = [
+        ['success', p.success, p.successText],
+        ['warning', p.warning, p.warningText],
+        ['danger', p.danger, p.dangerText],
+        ['style', p.style, p.styleText],
+        ['transport', p.transport, p.transportText],
+      ];
+      for (const [role, fill, ink] of pairs) expect(contrast(fill, ink), `${id} ${role}`).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it('the style and transport hues cannot pass for a part, a state or each other', () => {
+    for (const p of palettes) {
+      const others = { part: p.hues, state: [p.success, p.warning, p.danger] };
+      for (const [role, hue] of [['style', p.style], ['transport', p.transport]] as const) {
+        for (const [kind, list] of Object.entries(others))
+          for (const other of list) expect(distance(hue, other), `${p.id} ${role} vs ${kind} ${other}`).toBeGreaterThanOrEqual(DISTINCT);
+      }
+      expect(distance(p.style, p.transport), `${p.id} style vs transport`).toBeGreaterThanOrEqual(DISTINCT);
+    }
+  });
+
+  it('white keys are light and black keys dark in every palette', () => {
+    for (const p of palettes) {
+      expect(luminance(p.keyWhite), p.id).toBeGreaterThan(luminance(p.keyBlack));
+      expect(contrast(p.keyWhite, p.keyBlack), p.id).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it('the scheme flag is 1 in a light palette and 0 in a dark one', () => {
+    for (const { id, facets } of packs)
+      expect(toCssVars(facets)['--scheme-light'], id).toBe(facets.palette.scheme === 'light' ? '1' : '0');
   });
 });
 

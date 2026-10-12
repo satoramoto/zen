@@ -5,6 +5,16 @@
 // Song sections (intro, main, fill, break, ending) are not hues: what is playing is
 // `--selected`, what is queued next is `--accent`, the rest is neutral text. A section
 // tells itself apart by its name and its place in the song, not by colour.
+//
+// Two role hues sit beside the parts, and neither is categorical: each names exactly one
+// thing. `--style` is the current style and what belongs to it (its name, its One Touch
+// numbers, a queued style, the Style fader group). `--transport` is the controls that move
+// time (Start / Stop, sync, fills, Tap, tempo up and down, the metronome, their pad twins).
+// Neither stands for a part, a section or a state; neither indexes a list or appears in the
+// hue legend; a part's control never wears one. Solid fills of them take `--style-text` and
+// `--transport-text`. The contract test keeps both clear of the four part hues, of success,
+// warning and danger, and of each other, in every palette. Start / Stop while running is
+// still `--success`: running is a state, not the transport's identity.
 
 export type Part = 'r1' | 'r2' | 'r3' | 'l';
 
@@ -20,6 +30,10 @@ export const PART_HUE: Record<Part, string> = {
 
 /** A part's hue index, for `data-hue` attributes that CSS maps to `--hue-n`. */
 export const PART_HUE_INDEX: Record<Part, 1 | 2 | 3 | 4> = { r1: 1, r2: 2, r3: 3, l: 4 };
+
+/** The two role hues: one job each, never categorical. */
+export const STYLE_HUE = 'var(--style)';
+export const TRANSPORT_HUE = 'var(--transport)';
 
 /** Where a song section stands; each maps to one contract role, never a hue. */
 export type SectionState = 'playing' | 'next' | 'idle' | 'absent';

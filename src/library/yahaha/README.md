@@ -22,6 +22,7 @@ src/library/yahaha/<Name>/
 - Keep what the original does for people: keyboard steps, wheel, press, a11y names. Change how it looks and is laid out.
 - It must read well under every theme pack in the toolbar, not only `yahaha-push`.
 - Colour means what `hues.ts` says: the four hues are the four parts; sections and other states use contract roles. Import its maps rather than writing your own.
+- Use the contract's role tokens instead of deriving your own: `--style` and `--transport` (one job each, never categorical; `hues.ts` has the rule), `--success-text`, `--warning-text`, `--danger-text`, `--style-text` and `--transport-text` for ink on those solid fills, `--key-white` and `--key-black` for keyboard faces, and `--scheme-light` (1 light, 0 dark, for `calc()`) where a value must switch by scheme. Never `light-dark()`.
 - The Stage and its regions follow `STAGE.md`.
 
 ## What each redesign records
