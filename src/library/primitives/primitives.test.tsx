@@ -34,8 +34,66 @@ describe('Text', () => {
   });
 
   it('sets tabular figures for numerals in its CSS', () => {
-    const rule = css('Text.css').match(/\.lib-text\[data-role='numeral'\]\s*\{([^}]*)\}/);
+    const rule = css('Text.css').match(/\.lib-text\[data-role='numeral'\]\)\s*\{([^}]*)\}/);
     expect(rule?.[1]).toMatch(/font-variant-numeric:\s*tabular-nums/);
+  });
+
+  it('renders leading, size, weight, case and tabular refinements, an ARIA role and a ref', () => {
+    let node: HTMLElement | null = null;
+    render(
+      <Text
+        as="button"
+        type="button"
+        role="label"
+        ariaRole="switch"
+        aria-checked="true"
+        leading="tight"
+        size="caption"
+        weight="body"
+        case="none"
+        tabular={false}
+        ref={(el: HTMLElement | null) => {
+          node = el;
+        }}
+      >
+        On
+      </Text>,
+    );
+    const el = screen.getByRole('switch', { name: 'On' });
+    expect(node).toBe(el);
+    expect(el.tagName).toBe('BUTTON');
+    expect(el).toHaveAttribute('type', 'button');
+    expect(el).toHaveAttribute('data-role', 'label');
+    expect(el).toHaveAttribute('data-leading', 'tight');
+    expect(el).toHaveAttribute('data-size', 'caption');
+    expect(el).toHaveAttribute('data-weight', 'body');
+    expect(el).toHaveAttribute('data-case', 'none');
+    expect(el).toHaveAttribute('data-tabular', 'false');
+  });
+
+  it('reads each knob over the role value and resets the knobs on every Text', () => {
+    const text = css('Text.css');
+    for (const [prop, knob] of [
+      ['font-size', '--text-size'],
+      ['font-weight', '--text-weight'],
+      ['line-height', '--text-leading'],
+      ['letter-spacing', '--text-tracking'],
+    ]) {
+      expect(text).toMatch(new RegExp(`${prop}:\\s*var\\(${knob},\\s*var\\(--lib-text-`));
+      expect(text).toMatch(new RegExp(`${knob}:\\s*initial`));
+    }
+    expect(text).toMatch(/data-leading='tight'\]\)\s*\{\s*--lib-text-leading:\s*1;/);
+    expect(text).toMatch(/data-leading='snug'\]\)\s*\{\s*--lib-text-leading:\s*1\.15;/);
+  });
+});
+
+describe('primitive specificity', () => {
+  // Every rule is :where(), so a component's class on the same element refines it.
+  it.each(['Text.css', 'Surface.css'])('%s wraps every selector in :where()', (file) => {
+    const src = css(file).replace(/\/\*[\s\S]*?\*\//g, '');
+    const selectors = [...src.matchAll(/([^{}]+)\{/g)].flatMap((m) => m[1].split(',').map((s) => s.trim()));
+    expect(selectors.length).toBeGreaterThan(10);
+    for (const s of selectors) expect(s, file).toMatch(/^:where\(/);
   });
 });
 
@@ -65,6 +123,29 @@ describe('Surface', () => {
     expect(screen.getByTestId('none')).toHaveAttribute('data-radius', 'none');
     expect(screen.getByTestId('mat')).not.toHaveAttribute('data-pressed');
     expect(screen.getByTestId('mat')).not.toHaveAttribute('data-lit');
+  });
+
+  it('can be a control root: native props, a ref and a circle radius', () => {
+    let node: HTMLElement | null = null;
+    render(
+      <Surface
+        as="button"
+        type="button"
+        disabled
+        material="key"
+        radius="circle"
+        aria-label="Play"
+        ref={(el: HTMLElement | null) => {
+          node = el;
+        }}
+      />,
+    );
+    const el = screen.getByRole('button', { name: 'Play' });
+    expect(node).toBe(el);
+    expect(el).toHaveAttribute('type', 'button');
+    expect(el).toBeDisabled();
+    expect(el).toHaveAttribute('data-radius', 'circle');
+    expect(css('Surface.css')).toMatch(/data-radius='circle'\]\)\s*\{\s*border-radius:\s*50%/);
   });
 });
 
