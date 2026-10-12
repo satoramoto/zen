@@ -27,6 +27,10 @@
   --yh-stage-hero-min: calc(var(--control-h) * 15.5);
   /* The least the mixer takes: enough fader travel to read a level by its position. */
   --yh-stage-faders-min: calc(var(--control-h) * 9);
+  /* The least the pads take: their bank tabs and two rows of square pads about 1.5 control heights
+     on a side (42 px compact). The pads are squares (PadBank), so a taller box only leaves room
+     under them; below this the screen zooms rather than shrink them further. */
+  --yh-stage-pads-min: calc(var(--control-h) * 5);
 
   box-sizing: border-box;
   display: grid;
@@ -95,15 +99,29 @@
    a caps pack, plus the hairline's inset. 1.25 : 1 gives the hero about 760 px at 1440, where its
    readouts reach their caps (section 96, tempo 84, chord 72 on push).
 
-   No dead bands: the top row is exactly as tall as the hero's content, and the transport and the
-   status line under it fill that height (taller keys, Start / Stop spanning both rows). Everything
-   below shares what is left: the strip and the band split it 72 : 380, each held at its region's
-   floor, so the band takes the height the top row doesn't need. */
+   No dead bands: the top row is exactly as tall as the hero's content (282 px full at 1440, 190
+   compact at 1217), and the transport (SongForm sizes its own rows and labels to the height it is
+   given) and the status line under it fill that height. Everything below shares what is left: the
+   strip and the band split it 72 : 380, each held at its floor. The band's floor counts only the
+   mixer's and the pads' floors (each fills its column from a zero basis), so the pads, squares
+   that leave spare height under them, never hold the band taller than it needs: the height they
+   gave up at 1440 now goes to the full hero.
+
+   Room to breathe: one gap on the --space-* scale between every row and on both sides of each
+   hairline (space-3 at the board, space-2 on the short screen, where the pads would otherwise
+   shrink), and a wider column gap at the seam (space-5, space-4 short), so each region reads as
+   its own plane; no text is made smaller to buy it. */
 .yh-stage__screen[data-layout='stacked'] {
+  --yh-stage-gap: var(--space-3);
+  --yh-stage-col-gap: var(--space-5);
   --yh-stage-right-min: calc(var(--control-h) * 18 + var(--yh-stage-col-gap) + var(--border-width));
-  /* The strip's floor: the steps at their least (SongForm: 1.25 control heights), the part
-     captions over them, and the hairline and gap over the strip. */
-  --yh-stage-strip-min: calc(var(--control-h) * 1.25 + var(--size-caption) * 1.3 + var(--space-1) + var(--yh-stage-gap) + var(--border-width));
+  /* The strip's floor: SongForm's least for the form alone (its part captions, then its steps at
+     their least: a numeral and its inset, or 1.25 control heights), and the hairline and gap over
+     the strip. */
+  --yh-stage-strip-min: calc(
+    var(--size-caption) * 1.3 + var(--space-2) + max(var(--control-h) * 1.25, var(--size-numeral) + var(--space-1) * 2) +
+      var(--yh-stage-gap) + var(--border-width)
+  );
   grid-template-columns: minmax(var(--yh-stage-hero-min), 1.25fr) minmax(var(--yh-stage-right-min), 1fr);
   grid-template-rows:
     auto
@@ -115,9 +133,11 @@
     auto;
   column-gap: var(--yh-stage-col-gap);
 }
-/* The short screen closes its gaps one more step: the hairlines still part the bands. */
+/* The short screen (the hero compact) closes its gaps a step, so 1217 × 752 holds zoom 1 with the
+   pads about 50 px square: the hairlines still part the bands. */
 .yh-stage__screen[data-layout='stacked'][data-hero='compact'] {
   --yh-stage-gap: var(--space-2);
+  --yh-stage-col-gap: var(--space-4);
 }
 .yh-stage__screen[data-layout='stacked'] > * {
   grid-column: 1 / -1;
@@ -136,15 +156,6 @@
 .yh-stage__screen[data-layout='stacked'] .yh-stage__form > :first-child {
   flex: 1 1 0;
   min-height: 0;
-}
-/* The one place the Stage reaches into a region: the transport's two key rows share the height
-   it is given instead of keeping one control height each, and each key fills its cell (SongForm
-   sizes them for its own story, where it has no height to fill). Start / Stop spans both rows. */
-.yh-stage__screen[data-layout='stacked'] .yh-songform__transport {
-  grid-template-rows: minmax(var(--control-h), 1fr) minmax(var(--control-h), 1fr);
-}
-.yh-stage__screen[data-layout='stacked'] .yh-songform__transport > * > * {
-  height: 100%;
 }
 .yh-stage__strip {
   display: flex;
@@ -180,8 +191,9 @@
   min-width: 0;
   min-height: var(--yh-stage-faders-min);
 }
+/* A zero basis: the mixer stretches to the band, and only its floor counts toward the band's height. */
 .yh-stage__faders > * {
-  flex: 1 1 auto;
+  flex: 1 1 0;
 }
 
 .yh-stage__controls {
@@ -194,9 +206,10 @@
   flex: none;
 }
 .yh-stage__pads {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
+  min-height: var(--yh-stage-pads-min);
 }
 .yh-stage__pads > * {
   flex: 1 1 auto;

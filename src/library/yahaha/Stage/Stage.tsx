@@ -7,6 +7,7 @@ import { KnobBank, type KnobBankProps } from '../KnobBank/KnobBank';
 import { PadBank, type PadBankProps } from '../PadBank/PadBank';
 import { SongForm, type SongFormProps } from '../SongForm/SongForm';
 import { StatusLine, type StatusLineProps } from '../StatusLine/StatusLine';
+import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
 import { tapTempo } from './tapTempo';
 import './Stage.css';
 
@@ -33,7 +34,11 @@ export interface StageProps {
   faders: Omit<FaderBankProps, 'tipAction'>;
   /** The eight knobs and their pages. */
   knobs: Omit<KnobBankProps, 'tipAction'>;
-  /** The sixteen pads and their banks, always two rows of eight here. */
+  /**
+   * The sixteen pads and their banks, always two rows of eight here. While the chosen bank is
+   * `Sections`, its pads come from `songForm` (`sectionPads`) and their presses go to `songForm`'s
+   * callbacks and the hero's Tap; `pads` and `onPress` are used only for the other banks.
+   */
   pads: Omit<PadBankProps, 'tipAction' | 'columns'>;
   /** The keyboard: range, split, held notes. Its width follows the screen. */
   keys: Omit<KeysProps, 'width' | 'tipAction'>;
@@ -179,12 +184,26 @@ function useFit(layout: StageLayout) {
  *
  * *One hierarchy* (`STAGE.md` 1): the hero's column is wide enough (760 px at 1440) for section,
  * tempo and chord to reach their full sizes at the `full` density, so now playing is the loudest
- * thing a metre away. *No dead bands*: the top row is exactly as tall as the hero (254 px at the
- * board, 178 at 1217 × 752), and the transport fills that height beside it (its two key rows share
- * it, Start / Stop spans both) with the status line at its foot, so the transport is a block of
- * large keys rather than a short row under empty space. The strip and the band share the rest
- * 72 : 380, each never below what its region needs, so what the top row doesn't use goes to the
- * fader travel and the pad rows.
+ * thing a metre away. *No dead bands*: the top row is exactly as tall as the hero (282 px at the
+ * board, 190 at 1217 × 752), and the transport fills that height beside it (SongForm sizes its
+ * own two key rows and their labels to the height; the Stage never reaches in) with the status
+ * line at its foot, so the transport is a block of large keys rather than a short row under empty
+ * space. The strip and the band share the rest 72 : 380, each never below its floor. The pads are
+ * squares (PadBank), so a tall band only left empty height under them; the band's floor now counts
+ * only the mixer's and the pads' least, and that height went to the full hero.
+ *
+ * *Room to breathe* (`references/layout.md`, spacing on one scale): one gap from the `--space-*`
+ * scale between every row and on both sides of every hairline, the strip's top padding the same,
+ * and a wider gap at the column seam, so each region reads as its own plane; no text is made
+ * smaller to buy the room. The short screen closes the gaps one step rather than shrink the pads.
+ *
+ * *Mapping* (the Launchkey's pads play the sections): the pad tabs are Sections, Quick Racks,
+ * Chord, Multi Pads, Setup, as the hardware pages them. The Sections bank's sixteen pads are drawn
+ * from the song form's props by one function (`sectionPads.ts`), so they can never disagree with
+ * the strip: the playing section filled (only while running), next in the accent ring, absent
+ * sections dark, Sync Start, Sync Stop, Auto Fill and Start / Stop wearing the transport's state.
+ * A pad press calls exactly what that step or key calls (`onSection`, `onSyncStart`,
+ * `onAutoFill`, `onSyncStop`, `onStartStop`), and Tap is the hero's Tap, timed the same way.
  *
  * *One column seam* (`references/layout.md`, alignment): the screen is one two-column grid; the top
  * row and the band are subgrids of it, so the hero and the mixer share the left track and the
@@ -201,10 +220,14 @@ function useFit(layout: StageLayout) {
  * sits under the transport, which it most often speaks about ("starts at the next Start"), rather
  * than holding an empty row over the keys or taking pad height from the band. The pads are two
  * rows of eight under the eight knobs, so each knob stands over its two pads as on the hardware.
+ * The one deliberate second place: on the Sections bank the pads mirror the hardware's pads, so
+ * each section and the five transport pads appear there as well as in the strip and transport;
+ * they are the same controls (one state, one callback), not a second set.
  *
  * *Hierarchy at every size, then fit*: the screen is laid out at the frame's own size. Where it has
  * the height (1440 × 900) the hero is the Display's `full` density; where it is short (1217 × 752)
- * the hero goes `compact` and the screen closes its gaps a step; only if the regions still need
+ * the hero goes `compact` and the screen closes its gaps a step (both hold zoom 1 under the yahaha
+ * packs; the regular-density ableton pack zooms at 1217); only if the regions still need
  * more room than the frame has is the whole screen zoomed down, so nothing is cut off. The
  * previous `split` layout (the song form over the transport beside the hero) stays as `layout`.
  *
@@ -224,6 +247,13 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
     taps.current = next.taps;
     if (next.bpm !== undefined) display.onTempo?.(Math.min(TEMPO_MAX, Math.max(TEMPO_MIN, next.bpm)));
   };
+
+  // The Sections bank mirrors the hardware: its pads are drawn from the song form's props (never
+  // from `pads.pads`), and a press does what that step or key does in the strip and the transport.
+  const onSections = pads.banks?.[pads.bank ?? 0] === SECTIONS_BANK;
+  const shownPads: StageProps['pads'] = onSections
+    ? { ...pads, pads: sectionPads(songForm), lit: songForm.lit ?? pads.lit, onPress: (i) => pressSectionPad(i, { ...songForm, onTap }) }
+    : pads;
 
   const size: CSSProperties = {};
   if (width !== undefined) size.width = `${width}px`;
@@ -266,7 +296,7 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
               <KnobBank {...knobs} tipAction={tipAction} />
             </div>
             <div className="yh-stage__pads">
-              <PadBank {...pads} columns={8} tipAction={tipAction} />
+              <PadBank {...shownPads} columns={8} tipAction={tipAction} />
             </div>
             {layout === 'split' && statusLine}
           </div>
