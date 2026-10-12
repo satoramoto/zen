@@ -253,11 +253,20 @@ describe('Stage', () => {
     });
   });
 
-  it('puts the status line at the foot of the knobs and pads, not in a row of its own', () => {
+  it('puts the status line under the transport, not in a row of its own', () => {
     const { container } = setup(stageStopped);
-    const status = container.querySelector('.yh-status-line');
-    expect(status?.closest('.yh-stage__controls')).not.toBeNull();
-    expect(status).toHaveTextContent('Style queued');
+    const status = container.querySelectorAll('.yh-status-line');
+    expect(status).toHaveLength(1);
+    expect(status[0].closest('.yh-stage__form')).not.toBeNull();
+    expect(status[0].closest('.yh-stage__band')).toBeNull();
+    expect(status[0]).toHaveTextContent('Style queued');
+  });
+
+  it('split: puts the status line at the foot of the knobs and pads', () => {
+    const { container } = setup({ ...stageStopped, layout: 'split' });
+    const status = container.querySelectorAll('.yh-status-line');
+    expect(status).toHaveLength(1);
+    expect(status[0].closest('.yh-stage__controls')).not.toBeNull();
   });
 
   it('renders the stopped board', () => {
