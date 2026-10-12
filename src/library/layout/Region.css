@@ -15,6 +15,15 @@
 }
 .lib-region:not(:has(> .lib-region__head)) { grid-template-rows: minmax(0, 1fr); }
 
+/* fit="content": the region is its header plus its body's content. Every floor is the content
+   (no min-height: 0 here or on the body), so an `auto` row it sits in can't squeeze it to 0. */
+.lib-region[data-fit='content'] {
+  grid-template-rows: auto auto;
+  min-height: min-content;
+}
+.lib-region[data-fit='content']:not(:has(> .lib-region__head)) { grid-template-rows: auto; }
+.lib-region[data-fit='content'] > .lib-region__body { min-height: min-content; }
+
 .lib-region__head {
   display: flex;
   align-items: center;

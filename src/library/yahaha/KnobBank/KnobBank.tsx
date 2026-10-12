@@ -172,6 +172,8 @@ export function KnobBankRegion({ name = 'Knobs', area, className, ...bank }: Kno
       name={name}
       area={area}
       className={className}
+      // The knob row has a natural height: the region is that tall, never squeezed by its row.
+      fit="content"
       view={String(pages.length > 0 ? page : 0)}
       onView={(id) => bank.onPage?.(Number(id))}
       tipAction={bank.tipAction}

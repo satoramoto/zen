@@ -339,19 +339,20 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
  * across, then the mixer beside the knobs over the pads, on one column seam (1.25 : 1); the strip
  * and the pads share what the hero and knobs leave, 72 : 380. Split: the hero, and beside it the
  * song form over the transport at its own width; the mixer, knobs and pads below on the same seam.
- * `min-content` for the hero's row: the hero clips its overflow, so `auto` would let the row
- * shrink under it instead of overflowing the grid and refitting.
+ * `min-content` for the hero's and the knobs' rows: `auto` lets a row shrink under a region whose
+ * content then overflows onto the next one (the knobs once drew over the pads), instead of
+ * overflowing the grid so the fit zooms.
  */
 const GRID: Record<StageLayout, { areas: string[]; columns: string; rows: string }> = {
   stacked: {
     areas: ['hero transport', 'form form', 'mixer knobs', 'mixer pads'],
     columns: 'minmax(auto, 1.25fr) minmax(auto, 1fr)',
-    rows: 'min-content minmax(auto, 72fr) auto minmax(min-content, 380fr)',
+    rows: 'min-content minmax(auto, 72fr) min-content minmax(min-content, 380fr)',
   },
   split: {
     areas: ['hero form', 'mixer knobs', 'mixer pads'],
     columns: 'minmax(auto, 1fr) auto',
-    rows: 'min-content auto minmax(min-content, 1fr)',
+    rows: 'min-content min-content minmax(min-content, 1fr)',
   },
 };
 
