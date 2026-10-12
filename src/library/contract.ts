@@ -148,8 +148,11 @@ export interface Materials {
   key: Material & { pressed: string };
   /** Things you grab: fader caps, knob bodies. */
   handle: Material;
-  /** Lit indicators. `glow` is a box-shadow that reads `var(--lit)`. */
-  lit: { glow: string };
+  /** Lit indicators: the glow's blur `radius` and its `strength` (how much of the lit colour, a
+   *  percentage). Every element in a scope gets `--mat-lit-glow` built from these and its own
+   *  `--lit` (library.css), because a custom property resolves `var()` where it is declared: the
+   *  scope can't hold a glow that reads each lamp's colour. */
+  lit: { radius: string; strength: string };
 }
 
 /**
@@ -183,6 +186,10 @@ export interface Facets {
   scale: Scale;
   materials: Materials;
 }
+
+/** Contract variables the scope stylesheet (library.css) builds on every element instead of
+ *  `toCssVars`, because they read a variable each element sets for itself (`--lit`). */
+export const SCOPE_VARS = ['--mat-lit-glow'] as const;
 
 const SPACE_STEPS = [1, 2, 3, 4, 6, 8] as const;
 const MATERIAL_ROLES = ['well', 'screen', 'key', 'handle'] as const;
@@ -247,7 +254,8 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--mat-tabs-gap': m.tabs.gap,
     '--mat-tabs-tab-pad': m.tabs.tabPad,
     '--mat-key-pressed': m.key.pressed,
-    '--mat-lit-glow': m.lit.glow,
+    '--mat-lit-radius': m.lit.radius,
+    '--mat-lit-strength': m.lit.strength,
     '--light-angle': m.light,
 
     '--control-h': `${s.control}px`,

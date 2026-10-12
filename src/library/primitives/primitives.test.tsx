@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { toCssVars } from '../contract';
+import { SCOPE_VARS, toCssVars } from '../contract';
 import { packs } from '../themes/packs';
 import { Icon, STEPS, Surface, Text } from '.';
 
@@ -92,7 +92,7 @@ describe('step', () => {
 });
 
 describe('primitives CSS', () => {
-  const contract = new Set(Object.keys(toCssVars(packs[0].facets, 'dark')));
+  const contract = new Set([...Object.keys(toCssVars(packs[0].facets, 'dark')), ...SCOPE_VARS]);
   const all = cssFiles.map(css).join('\n');
   const declared = new Set([...all.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]));
 

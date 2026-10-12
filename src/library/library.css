@@ -16,6 +16,11 @@
 /* A whole screen (a full-screen story, an app's window) runs to the frame's edges. */
 .lib-scope[data-bleed] { padding: 0; }
 .lib-scope *, .lib-scope *::before, .lib-scope *::after { box-sizing: border-box; }
+/* The lit glow is built on every element, so `var(--lit)` resolves to the colour that element (or
+   its lamp) sets; declared once on the scope it would resolve there, where no --lit exists. */
+.lib-scope, .lib-scope *, .lib-scope *::before, .lib-scope *::after {
+  --mat-lit-glow: 0 0 var(--mat-lit-radius) color-mix(in oklab, var(--lit, transparent) var(--mat-lit-strength), transparent);
+}
 
 [data-hue='1'] { --hue: var(--hue-1); }
 [data-hue='2'] { --hue: var(--hue-2); }
