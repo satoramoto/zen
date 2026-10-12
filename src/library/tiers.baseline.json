@@ -1,0 +1,483 @@
+{
+  "components/core": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/ActionButton": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Button": {
+    "knobs": 10,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Checkbox": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Disclosure": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/FolderList": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/LampButton": {
+    "knobs": 1,
+    "margins": 1,
+    "pixels": 0
+  },
+  "components/core/LineSlider": {
+    "knobs": 7,
+    "margins": 0,
+    "pixels": 1
+  },
+  "components/core/Modal": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 2
+  },
+  "components/core/NumberField": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/PageList": {
+    "knobs": 1,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Param": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Popover": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Radio": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Readout": {
+    "knobs": 3,
+    "margins": 0,
+    "pixels": 1
+  },
+  "components/core/SearchField": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Segmented": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Select": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/Separator": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/core/SettingsRow": {
+    "knobs": 3,
+    "margins": 1,
+    "pixels": 1
+  },
+  "components/core/Slider": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 1
+  },
+  "components/core/StatusDot": {
+    "knobs": 4,
+    "margins": 0,
+    "pixels": 5
+  },
+  "components/core/StepValue": {
+    "knobs": 6,
+    "margins": 0,
+    "pixels": 1
+  },
+  "components/core/Toggle": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/BarBeat": {
+    "knobs": 3,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/BarReadout": {
+    "knobs": 4,
+    "margins": 0,
+    "pixels": 3
+  },
+  "components/music/ChordReadout": {
+    "knobs": 1,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/Fader": {
+    "knobs": 10,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/Keys": {
+    "knobs": 18,
+    "margins": 0,
+    "pixels": 2
+  },
+  "components/music/Knob": {
+    "knobs": 6,
+    "margins": 0,
+    "pixels": 1
+  },
+  "components/music/Meter": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/Pad": {
+    "knobs": 11,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/PartMarks": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/RackCell": {
+    "knobs": 1,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/SectionName": {
+    "knobs": 1,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/SendReadout": {
+    "knobs": 1,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/SoundCell": {
+    "knobs": 2,
+    "margins": 0,
+    "pixels": 0
+  },
+  "components/music/TempoReadout": {
+    "knobs": 2,
+    "margins": 0,
+    "pixels": 0
+  },
+  "layout": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "primitives": {},
+  "visuals": {
+    "knobs": 15,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/App": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/AudioInput": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 2
+  },
+  "visuals/CrashPrompt": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/Crate": {
+    "knobs": 7,
+    "painting": 0,
+    "pixels": 24
+  },
+  "visuals/Credits": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/Effects": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 2
+  },
+  "visuals/Field": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 12
+  },
+  "visuals/HelpOverlay": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 3
+  },
+  "visuals/Hero": {
+    "knobs": 4,
+    "painting": 0,
+    "pixels": 11
+  },
+  "visuals/Home": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 13
+  },
+  "visuals/HomeLayout": {
+    "knobs": 18,
+    "painting": 0,
+    "pixels": 14
+  },
+  "visuals/Icon": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/InsetSidebar": {
+    "knobs": 7,
+    "painting": 0,
+    "pixels": 26
+  },
+  "visuals/Inspector": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 38
+  },
+  "visuals/Library": {
+    "knobs": 3,
+    "painting": 0,
+    "pixels": 46
+  },
+  "visuals/LibraryGrid": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 15
+  },
+  "visuals/LinkPanel": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 4
+  },
+  "visuals/Live": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/MoreEffects": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 6
+  },
+  "visuals/Numbers": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/Onboarding": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 9
+  },
+  "visuals/OutputPanel": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 2
+  },
+  "visuals/Pack": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/PackOffer": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 1
+  },
+  "visuals/PlaylistHead": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 16
+  },
+  "visuals/Popover": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 10
+  },
+  "visuals/PresetDrawer": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 12
+  },
+  "visuals/PresetTile": {
+    "knobs": 7,
+    "painting": 0,
+    "pixels": 47
+  },
+  "visuals/Settings": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 1
+  },
+  "visuals/SourcePicker": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 1
+  },
+  "visuals/StageCrate": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 5
+  },
+  "visuals/StageDock": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 22
+  },
+  "visuals/StageHead": {
+    "knobs": 3,
+    "painting": 0,
+    "pixels": 19
+  },
+  "visuals/StageLayout": {
+    "knobs": 10,
+    "painting": 1,
+    "pixels": 10
+  },
+  "visuals/Status": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 6
+  },
+  "visuals/TagEditor": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 8
+  },
+  "visuals/TransportBar": {
+    "knobs": 3,
+    "painting": 0,
+    "pixels": 16
+  },
+  "visuals/Tune": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 3
+  },
+  "visuals/Update": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "visuals/Views": {
+    "knobs": 3,
+    "painting": 0,
+    "pixels": 2
+  },
+  "yahaha": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/AccentBlock": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/AppBar": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 7
+  },
+  "yahaha/Display": {
+    "knobs": 16,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/DisplayArt": {
+    "knobs": 4,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/FaderBank": {
+    "knobs": 4,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/HealthSlot": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/HueLegend": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/KnobBank": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 1
+  },
+  "yahaha/OneTouchPicker": {
+    "knobs": 0,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/PadBank": {
+    "knobs": 4,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/SongForm": {
+    "knobs": 8,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/Stage": {
+    "knobs": 7,
+    "painting": 0,
+    "pixels": 1
+  },
+  "yahaha/StatusLine": {
+    "knobs": 1,
+    "painting": 0,
+    "pixels": 0
+  },
+  "yahaha/WaitingChip": {
+    "knobs": 2,
+    "painting": 0,
+    "pixels": 0
+  }
+}
