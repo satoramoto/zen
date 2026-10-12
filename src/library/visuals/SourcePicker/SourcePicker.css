@@ -75,3 +75,29 @@
 .vs-audio-channels-name {
   color: var(--text-3);
 }
+
+.vs-audio-lane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+/* Lane names and the combined level are caption Text (SourcePicker.tsx); only their ink is here. */
+.vs-audio-lane-name,
+.vs-audio-mix-levels {
+  color: var(--text-2);
+}
+.vs-audio-optional {
+  color: var(--text-3);
+}
+.vs-audio-mixer-shown {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.vs-audio-mix-levels {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
