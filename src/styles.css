@@ -20,9 +20,9 @@
 body {
   margin: 0;
 }
-button,
-input,
-select {
+/* Element resets have no specificity, so the library's zero-specificity primitives (Text, Surface,
+   rendered as any element) still win them on source order. */
+:where(button, input, select) {
   font: inherit;
 }
 button,
@@ -42,10 +42,10 @@ summary:focus-visible {
   outline: 3px solid #3d5ed1;
   outline-offset: 5px;
 }
-a {
+:where(a) {
   color: inherit;
 }
-button {
+:where(button) {
   color: inherit;
 }
 button,
