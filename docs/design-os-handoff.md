@@ -1,6 +1,6 @@
 # Design OS: handoff
 
-Where the Yahaha redesign stands on 2026-10-11, and the ideas behind it. The work lives on the local branch `design-os` (worktree `~/Code/satoramoto/awesome-design-os`). `main` is untouched. The repo has no GitHub remote, so nothing has been pushed and nothing has run in CI.
+Where the Yahaha redesign stands on 2026-10-11, and the ideas behind it. Everything is on `main` of [satoramoto/zen](https://github.com/satoramoto/zen) (checkout `~/Code/satoramoto/zen`), together with the field guide.
 
 ## The spirit
 
@@ -33,15 +33,15 @@ The rules that came out of it:
 
 | Layer | Where | State |
 |---|---|---|
-| The originals (Svelte, untouched) | `yahaha/`, shown in Storybook as "Yahaha baseline" | copied from yahaha `develop` at b426bcb3 |
+| The originals (Svelte, untouched) | `yahaha/`, for reference (`npm --prefix yahaha run storybook` to see them) | copied from yahaha `develop` at b426bcb3 |
 | 33 primitives (React) | `src/library/yahaha/<Name>/` | merged; follow `hues.ts`; tooltip hook, sizes and states added in a polish pass |
 | 6 regions | `AppBar`, `Display`, `SongForm` (new), `FaderBank`, `KnobBank`, `PadBank` | merged, with a fix round |
 | The Stage screen | `src/library/yahaha/Stage/` (layout, `StagePlayground`, `tapTempo`, per-pack shots in `shots/`) | merged; rebalance pending (below) |
 | Rules | `src/library/yahaha/README.md` (widget convention), `STAGE.md` (Stage brief and concepts that must survive), `hues.ts`, `AGENTS.md` | current |
 
-Checks on `design-os`: `npm run typecheck` and `npx vitest run src/library` (469 tests) pass. `npm run build:storybook` also builds the composed baseline.
+Checks: `npm run typecheck`, `npm test` and `npx vitest run src/library` pass; `npm run build:storybook:yahaha` builds the Yahaha Storybook.
 
-**To look at it:** run `npm run dev` in the worktree. Storybook is at :6021, or set `STORYBOOK_PORT`. A preview from this session may still be running at http://127.0.0.1:6031. Open **Library → Yahaha** for the redesigns, with **Screens → Stage → Playground** for the live screen, and **Yahaha baseline** for the originals. Switch packs with the **Theme** toolbar.
+**To look at it:** `npm run dev` starts the Yahaha Storybook at http://127.0.0.1:6022 (set `YAHAHA_STORYBOOK_PORT` to move it). It holds only **Library → Yahaha**: Screens → Stage → Playground is the live screen. Switch packs with the **Theme** toolbar. The main Storybook (:6021) holds the field guide and the library's own components.
 
 ## In flight and next
 

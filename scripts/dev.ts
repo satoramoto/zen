@@ -2,7 +2,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { createServer } from 'node:net';
 import { resolve } from 'node:path';
 
-const label = process.env.PREVIEW_LABEL ?? 'Awesome Design';
+const label = process.env.PREVIEW_LABEL ?? 'Zen';
 function port(value: string | undefined, fallback: number): number {
   const parsed = value === undefined ? fallback : Number(value);
   if (!Number.isInteger(parsed) || parsed < 1024 || parsed > 65535) throw new Error('Preview ports must be integers between 1024 and 65535.');
@@ -29,15 +29,15 @@ function stop(code: number) {
   timeout.unref();
   Promise.all(children.map(child => new Promise<void>(done => { if(child.exitCode !== null || child.signalCode !== null) done(); else child.once('exit', () => done()); }))).then(() => process.exit(code));
 }
-function start(binary: string, args: string[], cwd = '.') {
-  const child = spawn(resolve(cwd, 'node_modules/.bin', binary), args, { cwd, stdio: 'inherit', detached: true, env: { ...process.env, STORYBOOK_DISABLE_TELEMETRY: '1', YAHAHA_STORYBOOK_PORT: String(yahahaPort) } });
+function start(binary: string, args: string[]) {
+  const child = spawn(resolve('node_modules/.bin', binary), args, { stdio: 'inherit', detached: true, env: { ...process.env, STORYBOOK_DISABLE_TELEMETRY: '1' } });
   children.push(child);
   child.on('error', error => { console.error(error); stop(1); });
   child.on('exit', code => { if (!stopping) { console.error(`[${label}] ${binary} exited (${code}); stopping the complete preview group.`); stop(code === 0 ? 1 : (code ?? 1)); } });
 }
 process.once('SIGINT', () => stop(0));
 process.once('SIGTERM', () => stop(0));
-console.log(`[${label}] App http://127.0.0.1:${webPort} | Storybook http://127.0.0.1:${storyPort} (Yahaha baseline composed from :${yahahaPort})`);
+console.log(`[${label}] App http://127.0.0.1:${webPort} | Storybook http://127.0.0.1:${storyPort} | Yahaha Storybook http://127.0.0.1:${yahahaPort}`);
 start('vite', ['--host', '127.0.0.1', '--port', String(webPort), '--strictPort']);
 start('storybook', ['dev', '--host', '127.0.0.1', '--port', String(storyPort), '--ci', '--no-open', '--disable-telemetry']);
-start('storybook', ['dev', '--host', '127.0.0.1', '--port', String(yahahaPort), '--ci', '--no-open', '--disable-telemetry'], 'yahaha');
+start('storybook', ['dev', '-c', '.storybook-yahaha', '--host', '127.0.0.1', '--port', String(yahahaPort), '--ci', '--no-open', '--disable-telemetry']);

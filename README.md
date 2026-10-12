@@ -1,26 +1,29 @@
-# Awesome Design
+# Zen
 
-An interactive React/TypeScript field guide to typography, grids, color, and interface styling. Six books, eighteen original illustrations, and a Storybook workshop for inspecting each principle.
+Interface design from first principles. Two parts:
+
+- **A field guide**: an interactive React/TypeScript guide to typography, grids, colour and interface styling. Six books, eighteen original illustrations, and a Storybook workshop for inspecting each principle.
+- **A design OS**: a token contract whose theme facets (palette, type, chrome, density) mix freely, and the [Yahaha](https://github.com/satoramoto/yahaha) arranger app's interface redesigned on it, widget by widget and then the whole Stage screen. [docs/design-os-handoff.md](docs/design-os-handoff.md) explains the ideas and where the work stands.
 
 ## Development
 
-Use Node.js 22.12+ and npm. Run `npm install` and `npm --prefix yahaha install`, then `npm run dev`.
+Use Node.js 22.12+ and npm. Run `npm install`, then `npm run dev`.
 
-The unified launcher starts the app on http://127.0.0.1:4191 and Storybook on http://127.0.0.1:6021, plus the Yahaha baseline Storybook on 6022, which the main Storybook composes in its sidebar. Ctrl-C stops all three. To use other ports:
+The unified launcher starts the app on http://127.0.0.1:4191, the main Storybook (field guide and library) on http://127.0.0.1:6021, and the Yahaha Storybook (the redesigned widgets, regions and Stage) on http://127.0.0.1:6022. Ctrl-C stops all three. To use other ports:
 
 ```sh
-PREVIEW_LABEL="Awesome Design" PREVIEW_PORT=4191 STORYBOOK_PORT=6021 YAHAHA_STORYBOOK_PORT=6022 npm run dev
+PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6021 YAHAHA_STORYBOOK_PORT=6022 npm run dev
 ```
-
-## Yahaha baseline
-
-`yahaha/` is a verbatim copy of the Yahaha app's Svelte UI library (`app/src/ui`) and its Storybook config, taken from yahaha `develop` at b426bcb3. It is the starting set of widgets to redesign one by one against the principles here. It is its own npm package (Svelte, TypeScript 6) so it doesn't touch the React workspace; its checks are `npm --prefix yahaha run check` and `npm --prefix yahaha test`.
 
 Do not start independent child servers. If a preview fails, stop its entire owned group and restart the launcher. It refuses occupied ports and never stops unrelated processes.
 
+## Yahaha originals
+
+`yahaha/` is a verbatim copy of the Yahaha app's Svelte UI library (`app/src/ui`) and its Storybook config, taken from yahaha `develop` at b426bcb3 (MIT). It is the reference the redesigns started from. It is its own npm package (Svelte, TypeScript 6) and isn't part of `npm run dev`; to see an original, run `npm --prefix yahaha install` and `npm --prefix yahaha run storybook`.
+
 ## Checks
 
-`npm run typecheck`, `npm test`, `npm run build`, `npm run build:storybook`.
+`npm run typecheck`, `npm test`, `npm run build`, `npm run build:storybook`, `npm run build:storybook:yahaha`. `AGENTS.md` says when to run each.
 
 ## Reference boundary
 

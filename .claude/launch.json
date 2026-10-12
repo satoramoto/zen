@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "app",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--host", "127.0.0.1", "--port", "4191", "--strictPort"],
+      "port": 4191
+    },
+    {
+      "name": "storybook",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["storybook", "dev", "--host", "127.0.0.1", "--port", "6021", "--ci", "--no-open", "--disable-telemetry"],
+      "port": 6021
+    },
+    {
+      "name": "yahaha storybook",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["storybook", "dev", "-c", ".storybook-yahaha", "--host", "127.0.0.1", "--port", "6022", "--ci", "--no-open", "--disable-telemetry"],
+      "port": 6022
+    }
+  ]
+}
