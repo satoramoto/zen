@@ -99,7 +99,7 @@ export type StageHeroDensity = Extract<DisplayDensity, 'full' | 'compact'>;
  * set here, so its rows are observed too (a pack switch, a status message, the hero's density).
  * Nothing measures in jsdom: the screen stays at zoom 1 and the hero `full`.
  */
-function useFit() {
+function useFit(layout: StageLayout) {
   const frame = useRef<HTMLDivElement>(null);
   const screen = useRef<HTMLDivElement>(null);
   const [hero, setHero] = useState<StageHeroDensity>('full');
@@ -156,7 +156,7 @@ function useFit() {
     observer.observe(inner);
     for (const row of Array.from(inner.children)) observer.observe(row);
     return () => observer.disconnect();
-  }, [hero]);
+  }, [hero, layout]);
   return [frame, screen, hero] as const;
 }
 
@@ -205,7 +205,7 @@ function useFit() {
  */
 export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'split' }: StageProps) {
   const [keysSlot, keysWidth] = useSlotWidth(width === undefined ? KEYS_FALLBACK : Math.min(KEYS_FALLBACK, width - 48));
-  const [frame, screen, heroDensity] = useFit();
+  const [frame, screen, heroDensity] = useFit(layout);
   const taps = useRef<number[]>([]);
 
   const onTap = () => {
