@@ -63,6 +63,11 @@ export const Board: Story = {
     await expect(args.onSplit).toHaveBeenLastCalledWith(66);
     // Unarmed, pressing on the keys picks nothing: there is no pick surface to press.
     await expect(canvasElement.querySelector('.yh-keys__pick')).toBeNull();
+    // Drawn as keys: the faces are painted, and sharps differ from naturals, under every pack.
+    const face = (selector: string) => getComputedStyle(canvasElement.querySelector(selector)!).backgroundColor;
+    const white = face('.yh-keys__white:not([data-held])');
+    await expect(white).not.toBe('rgba(0, 0, 0, 0)');
+    await expect(face('.yh-keys__black:not([data-held])')).not.toBe(white);
   },
 };
 

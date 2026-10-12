@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -227,5 +229,64 @@ describe('Keys', () => {
     expect(screen.getByText('C3 D#3 G3')).toBeInTheDocument();
     const held = [...container.querySelectorAll('[data-held]')].map((el) => el.getAttribute('data-held'));
     expect(held).toEqual(['r2', 'r2', 'r2']);
+  });
+
+  it('draws every key: whites side by side, sharps on their boundaries at the black-key width', () => {
+    const { container } = setup({ split: 54, heldLeft: [], heldRight: [] });
+    const whites = [...container.querySelectorAll<HTMLElement>('.yh-keys__white')];
+    const blacks = [...container.querySelectorAll<HTMLElement>('.yh-keys__black')];
+    expect(whites).toHaveLength(36);
+    expect(blacks).toHaveLength(25);
+    const keys = layout(range61, WIDTH, 54, [], [], 'r1');
+    whites.forEach((el, i) => {
+      expect(parseFloat(el.style.left)).toBeCloseTo(i * keys.whiteWidth);
+      expect(parseFloat(el.style.width)).toBeCloseTo(keys.whiteWidth);
+    });
+    blacks.forEach((el, i) => expect(parseFloat(el.style.left)).toBeCloseTo(keys.blacks[i].x));
+    const root = container.querySelector<HTMLElement>('.yh-keys')!;
+    expect(parseFloat(root.style.getPropertyValue('--yh-keys-black-w'))).toBeCloseTo(keys.whiteWidth * BLACK_WIDTH_RATIO);
+  });
+
+  it('gives the key faces colours that need no color-scheme, so the build keeps them', () => {
+    // The build polyfills light-dark() with variables only a literal `color-scheme: light|dark`
+    // sets; the library scope sets `color-scheme: var(--scheme)`, so light-dark() faces vanished.
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Keys/Keys.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(css).not.toMatch(/light-dark\(/);
+    for (const face of ['white', 'black', 'gap', 'label']) {
+      expect(css, `--yh-keys-${face}`).toMatch(new RegExp(`--yh-keys-${face}:\\s*oklch\\(from var\\(--surface-0\\)`));
+    }
+  });
+
+  it('maps a pointer to the right key when an ancestor zooms or scales the strip', () => {
+    // A zoomed or transformed strip reports a scaled box; points inside it map back to its own px.
+    for (const { scale, left, top } of [
+      { scale: 0.845, left: 0, top: 0 }, // the Stage at 1217 x 752
+      { scale: 0.5, left: 120, top: 40 },
+      { scale: 1.5, left: -30, top: 10 },
+    ]) {
+      const onSplit = vi.fn();
+      const { container, unmount } = render(<Keys {...boardKeys} split={60} heldLeft={[]} heldRight={[]} picking onSplit={onSplit} onPick={vi.fn()} />);
+      const strip = screen.getByRole('img', { name: /^Keys:/ });
+      const w = WIDTH * scale;
+      const h = HEIGHT * scale;
+      strip.getBoundingClientRect = () =>
+        ({ left, top, right: left + w, bottom: top + h, width: w, height: h, x: left, y: top, toJSON: () => ({}) }) as DOMRect;
+      const pick = container.querySelector('.yh-keys__pick') as HTMLElement;
+      const keys = layout(range61, WIDTH, 60, [], [], 'r1');
+      const press = (x: number, yShare: number) => {
+        fireEvent.pointerDown(pick, point(left + x * scale, top + yShare * h));
+        fireEvent.pointerUp(pick, point(left + x * scale, top + yShare * h));
+      };
+      for (const black of keys.blacks) {
+        press(black.x, BLACK_HEIGHT_RATIO / 2);
+        expect(onSplit, `scale ${scale}, black ${noteName(black.note)}`).toHaveBeenLastCalledWith(black.note);
+      }
+      for (const white of keys.whites) {
+        if (white.note === 60) continue; // already the split: nothing to ask
+        press(white.x + keys.whiteWidth / 2, 0.9);
+        expect(onSplit, `scale ${scale}, white ${noteName(white.note)}`).toHaveBeenLastCalledWith(white.note);
+      }
+      unmount();
+    }
   });
 });

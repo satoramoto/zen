@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -51,6 +53,27 @@ describe('Yahaha Pad', () => {
     expect(screen.getByText('ARMED')).toHaveClass('yh-pad__tag--corner');
     rerender(<Pad label="Main C" state="idle" />);
     expect(screen.queryByText('NEXT')).toBeNull();
+  });
+
+  it('keeps the NEXT / ARMED chip off the label: a clear row on top, or hung on the top edge', () => {
+    const { rerender } = render(<Pad label="Main C" state="next" />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-tag', 'top');
+    rerender(<Pad label="C" state="next" tagCorner />);
+    expect(screen.getByRole('button')).toHaveAttribute('data-tag', 'corner');
+    rerender(<Pad label="C" state="playing" tagCorner />);
+    expect(screen.getByRole('button')).not.toHaveAttribute('data-tag');
+
+    // jsdom lays nothing out, so check the rules that do it (the Pad story TagClearance measures
+    // them in a browser): the top chip's row is reserved above the label, and the corner chip
+    // sits mostly above the pad's top edge rather than over its centred label.
+    const css = readFileSync(join(process.cwd(), 'src/library/yahaha/Pad/Pad.css'), 'utf8');
+    const rule = (selector: string) => {
+      const at = css.indexOf(`${selector} {`);
+      expect(at, `${selector} has a rule`).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf('}', at));
+    };
+    expect(rule(".yh-pad.yh-pad[data-tag='top']")).toMatch(/padding-top:\s*calc\(var\(--yh-pad-tag-h\)/);
+    expect(rule('.yh-pad__tag--corner')).toMatch(/top:\s*calc\(var\(--yh-pad-tag-h\) \* -0\.[5-9]\)/);
   });
 
   it('marks the flash phase only on waiting pads', () => {
