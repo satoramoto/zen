@@ -8,7 +8,7 @@ const preview: Preview = {
     layout: 'padded',
     controls: { expanded: true },
     a11y: { test: 'todo' },
-    options: { storySort: { order: ['Library', 'Overview','Thinking with Type', 'Grid Systems', 'Interaction of Color', 'Refactoring UI', 'On Web Typography', 'Practical Typography'] } },
+    options: { storySort: { order: ['Library', ['Yahaha', ['Screens', 'Components', 'Primitives']], 'Overview','Thinking with Type', 'Grid Systems', 'Interaction of Color', 'Refactoring UI', 'On Web Typography', 'Practical Typography'] } },
   },
 };
 export default preview;

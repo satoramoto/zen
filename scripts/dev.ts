@@ -9,15 +9,13 @@ function port(value: string | undefined, fallback: number): number {
   return parsed;
 }
 const webPort = port(process.env.PREVIEW_PORT, 4191);
-const storyPort = port(process.env.STORYBOOK_PORT, 6021);
-const yahahaPort = port(process.env.YAHAHA_STORYBOOK_PORT, 6022);
-if (new Set([webPort, storyPort, yahahaPort]).size !== 3) throw new Error('The app and both Storybooks need different ports.');
+const storyPort = port(process.env.STORYBOOK_PORT, 6022);
+if (webPort === storyPort) throw new Error('The app and Storybook need different ports.');
 async function available(value: number) {
   await new Promise<void>((yes, no) => { const server = createServer(); server.once('error', () => no(new Error(`Port ${value} is occupied. Choose a free port; no existing process was stopped.`))); server.listen(value, '127.0.0.1', () => server.close(() => yes())); });
 }
 await available(webPort);
 await available(storyPort);
-await available(yahahaPort);
 const children: ChildProcess[] = [];
 let stopping = false;
 function stop(code: number) {
@@ -37,7 +35,6 @@ function start(binary: string, args: string[]) {
 }
 process.once('SIGINT', () => stop(0));
 process.once('SIGTERM', () => stop(0));
-console.log(`[${label}] App http://127.0.0.1:${webPort} | Storybook http://127.0.0.1:${storyPort} | Yahaha Storybook http://127.0.0.1:${yahahaPort}`);
+console.log(`[${label}] App http://127.0.0.1:${webPort} | Storybook http://127.0.0.1:${storyPort}`);
 start('vite', ['--host', '127.0.0.1', '--port', String(webPort), '--strictPort']);
 start('storybook', ['dev', '--host', '127.0.0.1', '--port', String(storyPort), '--ci', '--no-open', '--disable-telemetry']);
-start('storybook', ['dev', '-c', '.storybook-yahaha', '--host', '127.0.0.1', '--port', String(yahahaPort), '--ci', '--no-open', '--disable-telemetry']);

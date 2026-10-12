@@ -23,4 +23,3 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run build:storybook
-      - run: npm run build:storybook:yahaha

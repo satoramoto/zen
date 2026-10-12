@@ -46,7 +46,7 @@ The rules that came out of it:
 
 Checks: see `AGENTS.md`. CI (`.github/workflows/checks.yml`) runs them on every PR, and `main` only takes a PR once `checks` passes.
 
-**To look at it:** `npm run dev` starts the Yahaha Storybook at http://127.0.0.1:6022 (set `YAHAHA_STORYBOOK_PORT` to move it). It holds only **Library → Yahaha**: Screens → Stage → Playground is the live screen. Switch packs with the **Theme** toolbar. The main Storybook (:6021) holds the field guide and the library's own components.
+**To look at it:** `npm run dev` starts Storybook at http://127.0.0.1:6022 (set `STORYBOOK_PORT` to move it). **Library → Yahaha → Screens → Stage → Playground** is the live screen. Switch packs with the **Theme** toolbar. The same Storybook holds the library's own components and the field guide.
 
 ## Done in the 2026-10-12 round
 
