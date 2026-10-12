@@ -12,9 +12,16 @@
 // time (Start / Stop, sync, fills, Tap, tempo up and down, the metronome, their pad twins).
 // Neither stands for a part, a section or a state; neither indexes a list or appears in the
 // hue legend; a part's control never wears one. Solid fills of them take `--style-text` and
-// `--transport-text`. The contract test keeps both clear of the four part hues, of success,
-// warning and danger, and of each other, in every palette. Start / Stop while running is
-// still `--success`: running is a state, not the transport's identity.
+// `--transport-text`. Start / Stop while running is still `--success`: running is a state,
+// not the transport's identity.
+//
+// So every meaning-bearing colour is distinct: the four part hues, success, warning, danger,
+// `--style`, `--transport`, `--accent` (next) and `--selected` (playing). The contract test
+// holds every pair at least 0.12 apart in OKLab, in every palette, with no exemptions. When
+// a source's own colours collided (Push's orange warning was Right 3's hue, Elektron's amber
+// was both the accent and Left, Linear's indigo and green were both a role and a part), the
+// newer role hue, the state or an approximated part hue moved; a brand accent moved only in
+// Push light, where Right 1's blue left no room. `themes/palettes.ts` notes each move.
 
 export type Part = 'r1' | 'r2' | 'r3' | 'l';
 

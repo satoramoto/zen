@@ -112,14 +112,24 @@ describe('token contract', () => {
     }
   });
 
-  it('the style and transport hues cannot pass for a part, a state or each other', () => {
+  it('every meaning-bearing colour is distinct from every other in every palette', () => {
+    // Colour has one meaning (yahaha/hues.ts): the four parts, the three states, the two role
+    // hues, next (--accent) and playing (--selected). No pair is exempt: no source defines two
+    // of these roles as one colour. Exempt a pair here only with the source rule that joins them.
     for (const p of palettes) {
-      const others = { part: p.hues, state: [p.success, p.warning, p.danger] };
-      for (const [role, hue] of [['style', p.style], ['transport', p.transport]] as const) {
-        for (const [kind, list] of Object.entries(others))
-          for (const other of list) expect(distance(hue, other), `${p.id} ${role} vs ${kind} ${other}`).toBeGreaterThanOrEqual(DISTINCT);
-      }
-      expect(distance(p.style, p.transport), `${p.id} style vs transport`).toBeGreaterThanOrEqual(DISTINCT);
+      const roles: [string, string][] = [
+        ...p.hues.map((hue, i): [string, string] => [`hue-${i + 1}`, hue]),
+        ['success', p.success],
+        ['warning', p.warning],
+        ['danger', p.danger],
+        ['style', p.style],
+        ['transport', p.transport],
+        ['accent', p.accent],
+        ['selected', p.selected],
+      ];
+      for (const [i, [a, x]] of roles.entries())
+        for (const [b, y] of roles.slice(i + 1))
+          expect(distance(x, y), `${p.id} ${a} ${x} vs ${b} ${y}`).toBeGreaterThanOrEqual(DISTINCT);
     }
   });
 
