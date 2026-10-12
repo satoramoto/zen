@@ -35,7 +35,16 @@ export interface ChosenTabsProps {
   dense?: boolean;
   /** The app's tooltip action, applied to each tab that has a `tip`, with that tab's key. */
   tipAction?: TipAction;
+  /**
+   * How the chosen tab is marked: `block`, the solid `--selected` fill (the default), or
+   * `underline`, ink and a rule under it, for a region's quiet header where the solid fill is
+   * kept for what plays.
+   */
+  look?: ChosenTabsLook;
 }
+
+/** How a ChosenTabs marks its chosen tab: see `ChosenTabsProps.look`. */
+export type ChosenTabsLook = 'block' | 'underline';
 
 type Face = 'chosen' | 'off' | 'disabled';
 
@@ -101,6 +110,7 @@ export function ChosenTabs({
   onChoose,
   dense = false,
   tipAction,
+  look = 'block',
 }: ChosenTabsProps) {
   const isList = size !== 'page';
   const root = useRef<HTMLDivElement>(null);
@@ -148,7 +158,7 @@ export function ChosenTabs({
 
   if (!isList) {
     return (
-      <div className="yh-chosen-tabs" data-size={size} data-density={density}>
+      <div className="yh-chosen-tabs" data-size={size} data-density={density} data-look={look}>
         {tabs.map((tab) => (
           <TabButton
             key={tab.id}
@@ -174,6 +184,7 @@ export function ChosenTabs({
       className="yh-chosen-tabs"
       data-size={size}
       data-density={density}
+      data-look={look}
       role="tablist"
       aria-label={label || undefined}
       aria-orientation="horizontal"

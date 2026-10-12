@@ -13,7 +13,9 @@
 // Neither stands for a part, a section or a state; neither indexes a list or appears in the
 // hue legend; a part's control never wears one. Solid fills of them take `--style-text` and
 // `--transport-text`. Start / Stop while running is still `--success`: running is a state,
-// not the transport's identity.
+// not the transport's identity. A transport key wears `--transport` only while it is active
+// (armed, waiting, on); at rest it is neutral, so Start / Stop is the one saturated key a
+// player finds without looking.
 //
 // So every meaning-bearing colour is distinct: the four part hues, success, warning, danger,
 // `--style`, `--transport`, `--accent` (next) and `--selected` (playing). The contract test
