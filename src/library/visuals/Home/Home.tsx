@@ -1,3 +1,4 @@
+import { CameraAction } from '../Camera/Camera';
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
 import { Layer } from '../../layout/Layer';
@@ -707,6 +708,7 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
           >
             <span className="vs-fill" />
             <div className="vs-home-toolbar" ref={setToolbar} />
+            <CameraAction />
             <button
               type="button"
               className="vs-home-tool vs-home-tool-help"

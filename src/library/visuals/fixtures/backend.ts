@@ -1,3 +1,5 @@
+import type { AudioStatus, AudioLane } from '../model/audio-api';
+import { sameSource } from '../SourcePicker/SourcePicker';
 /**
  * The app behind the page, faked for Storybook and the tests: every command the
  * page sends answered from the fixtures (`fixtures.ts`), with the events it
@@ -46,6 +48,7 @@ export interface World {
   update: api.Update | null;
   sources: api.AudioSources;
   heard: api.Heard;
+  audio?: AudioStatus;
   levels: [number, number];
   stats: api.Stats;
   firstRun: boolean;
@@ -59,6 +62,10 @@ export interface World {
   fail: Record<string, string>;
   /** Seeds what the app would make up (a random pick, the meter's wobble), so a story draws the same every run. */
   seed: number;
+  /** The lab: what `open` reads at each path (`fixtures/presets.ts`); a path not here opens as the original's, with no preset. */
+  presets?: Record<string, api.Preset>;
+  /** The lab: what `open` and `apply` say failed to compile; nothing when left out. */
+  report?: api.Report;
 }
 
 export const world = (over: Partial<World> = {}): World => ({
@@ -314,7 +321,7 @@ export function handler(w: World) {
         return w.recent;
       case 'open':
         live({ ...w.lists.deck, current: args.path as string });
-        return { preset: null, report: { equations: [], shaders: [] } };
+        return { preset: w.presets?.[args.path as string] ?? null, report: w.report ?? { equations: [], shaders: [] } };
       case 'resume_state':
         return w.resume;
 
@@ -445,8 +452,84 @@ export function handler(w: World) {
         return ++hoverTicket;
       case 'hover_frame':
         return new ArrayBuffer(0);
+
+      // The lab (not in the original's fake app): edits land, a setting goes live, "write my own" gets a default shader.
+      case 'apply':
+        return w.report ?? { equations: [], shaders: [] };
+      case 'set_value':
+        return true;
+      case 'default_shader':
+        return args.which === 'warp'
+          ? 'shader_body\n{\n  ret = tex2D(sampler_main, uv).xyz * 0.98;\n}'
+          : 'shader_body\n{\n  ret = tex2D(sampler_main, uv).xyz;\n  ret = pow(ret, 1.0);\n}';
       case 'audio_sources':
         return w.sources;
+      case 'audio_status': {
+        if (!w.audio) {
+          const source = w.sources.sources.find((s) => s.name === w.heard.choice?.name)?.id ?? null;
+          w.audio = {
+            main: {
+              ...w.heard,
+              source,
+              selected: source,
+              enabled: !!source,
+              unavailable: false,
+            },
+            mic: {
+              choice: null,
+              channels: 0,
+              source: null,
+              selected: null,
+              enabled: false,
+              unavailable: false,
+            },
+          };
+        }
+        return w.audio;
+      }
+      case 'choose_audio_lane': {
+        if (!w.audio) {
+          const source = w.sources.sources.find((s) => s.name === w.heard.choice?.name)?.id ?? null;
+          w.audio = {
+            main: {
+              ...w.heard,
+              source,
+              selected: source,
+              enabled: !!source,
+              unavailable: false,
+            },
+            mic: {
+              choice: null,
+              channels: 0,
+              source: null,
+              selected: null,
+              enabled: false,
+              unavailable: false,
+            },
+          };
+        }
+        const lane = args.lane as AudioLane;
+        const id = args.source as api.SourceId | null;
+        const source = w.sources.sources.find((s) => sameSource(s.id, id));
+        if (id && (!source || (lane === 'mic' && id.kind !== 'device'))) throw new Error('Input unavailable');
+        w.audio[lane] = {
+          choice: source
+            ? {
+                name: source.name,
+                size: source.channels,
+                left: Number(args.left),
+                right: Number(args.right),
+              }
+            : null,
+          channels: source?.channels ?? 0,
+          source: id,
+          selected: id,
+          enabled: !!id,
+          unavailable: false,
+        };
+        w.heard = w.audio.main;
+        return w.audio;
+      }
       case 'listening':
         return w.heard;
       case 'inputs':

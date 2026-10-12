@@ -40,7 +40,7 @@ export const Hearing: Story = {
 export const Advanced: Story = {
   play: async ({ canvas, userEvent }) => {
     await canvas.findByRole('combobox', { name: 'listen to' });
-    await userEvent.click(canvas.getByLabelText('Advanced: the left and right channels'));
+    await userEvent.click(canvas.getByLabelText('Audio mixer: main and microphone inputs'));
     await expect(canvas.getByRole('combobox', { name: 'left channel' })).toBeVisible();
   },
 };
@@ -73,15 +73,20 @@ export const Denied: Story = {
 
 /** Nothing to listen to at all: said so instead of an empty picker. */
 export const Nothing: Story = {
-  parameters: { world: { sources: { ...SOURCES, sources: [] } } },
+  parameters: {
+    world: {
+      sources: { ...SOURCES, sources: [] },
+      heard: { choice: null, channels: 0 },
+    },
+  },
   play: async ({ canvas }) => {
-    await expect(await canvas.findByText('nothing to listen to: connect a microphone or interface')).toBeVisible();
+    await expect(await canvas.findByRole('combobox', { name: 'listen to' })).toHaveTextContent('Off');
   },
 };
 
 /** Failing: what is heard can't be read; the caller hears the error. */
 export const Failing: Story = {
-  parameters: { world: { fail: { listening: 'the audio engine stopped' } } },
+  parameters: { world: { fail: { audio_status: 'the audio engine stopped' } } },
   play: async ({ args }) => {
     await waitFor(() => expect(args.onError).toHaveBeenCalled());
   },

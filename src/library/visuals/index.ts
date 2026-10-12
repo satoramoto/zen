@@ -5,7 +5,7 @@
 //   setBridge(tauriBridge);          // once, before rendering
 //   createRoot(root).render(<StrictMode><VisualsApp /></StrictMode>);
 
-export { VisualsApp, type VisualsAppProps } from './App/App';
+export { VisualsApp, type VisualsAppProps, type LabEditor } from './App/App';
 export {
   setBridge,
   currentBridge,
@@ -18,3 +18,5 @@ export {
   type BridgeWindow,
   type BridgeWebview,
 } from './model/ipc';
+
+export type { CameraController, CameraSettings, CameraState } from './model/camera';

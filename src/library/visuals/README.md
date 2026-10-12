@@ -2,7 +2,7 @@
 
 **Where does this go?** This is the app tier and its screens and regions: data, behaviour, which regions go where. A look is a primitive, an interaction a control in `components/`, spacing a Group's `gap`; a folder here arranges them. See [`docs/tiers.md`](../../../docs/tiers.md); `src/library/tiers.test.ts` counts breaches per folder against `../tiers.baseline.json`, and a folder's `--vs-*` properties are listed under **Tuning knobs** in its component's doc comment.
 
-visual[flow] 1.0's UI (openflowfm/visuals, `app/src/`), rebuilt on zen's contract, layout primitives and generic controls, worn in the `visuals` pack (palette `frost`, faces `instrument`, scale `roomy`, materials `frost`). The rules for the look are `../themes/principles/visuals.md`. Lab is not ported.
+visual[flow] 1.0's UI (openflowfm/visuals, `app/src/`), rebuilt on zen's contract, layout primitives and generic controls, worn in the `visuals` pack (palette `frost`, faces `instrument`, scale `roomy`, materials `frost`). The rules for the look are `../themes/principles/visuals.md`. The lab's preset editor is ported too (`Editor/`, `StageGraph/`, `StageInspector/`), as its own package entry, `@satoramoto/zen/visuals/lab` (`lab.ts`), which a lab build passes as `<VisualsApp lab={VisualsEditor} />`; its editor-only commands are in `model/lab.ts`, never `model/api.ts`, so none of them reaches an app built without it.
 
 ## Layout of this folder
 
@@ -53,3 +53,16 @@ What differs and why. "Principles" is `../themes/principles/visuals.md`.
 | Core Modal | A `div role="dialog"` around an overlay Layer, rendered in place (no top layer, page behind not `inert`). | Keeps the theme scope's variables. |
 
 Not yet checked in a browser: layout, the popover placement and `across` width, and the frame's desk stand-ins.
+
+## Camera and dual audio inputs
+
+The host supplies `cameraController` to `VisualsApp`. Zen owns the persistent provider,
+Home/Live entrypoints and camera sheet; the app adapter owns capture, segmentation,
+asset URLs and binary IPC. Closing the sheet preserves capture; disabling, unmounting
+or pagehide releases it. No adapter means capture is disabled. The UI keeps independent
+camera and outline opacity, source selection, person isolation and contour controls.
+
+SourcePicker uses `audio_status` and `choose_audio_lane` for independent main and mic
+inputs. Stable native identities, serialized writes and revision-guarded polling prevent
+a stale poll from undoing a selection. The compact mixer uses Zen's top-layer Popover;
+Settings exposes both lanes directly. Fixtures never access hardware.

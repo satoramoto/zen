@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { cameraFixture } from '../Camera/fixture';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, screen, waitFor } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
@@ -49,4 +51,12 @@ export const FirstRun: Story = {
 /** An update waiting: its prompt over the home. */
 export const UpdateWaiting: Story = {
   parameters: { world: { update: { version: '1.1.0', date: '2026-09-30', notes: 'Faster library scans.' } } },
+};
+
+/** Whole app with a simulated camera: screen changes never own capture. */
+export const CameraPreview: Story = {
+  render: function CameraPreview(args) {
+    const [cameraController] = useState(() => cameraFixture());
+    return <VisualsApp {...args} cameraController={cameraController} />;
+  },
 };
