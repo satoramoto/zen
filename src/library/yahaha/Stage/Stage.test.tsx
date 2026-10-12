@@ -2,7 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stage, type StageProps } from './Stage';
-import { stageBoard, stageStopped } from './Stage.fixtures';
+import { sectionPads as padBankSections } from '../PadBank/PadBank.fixtures';
+import { songFormBoard } from '../SongForm/SongForm.fixtures';
+import { stageBoard, stageSections, stageStopped } from './Stage.fixtures';
+import { pressSectionPad, SECTION_PAD_LAYOUT, sectionPads } from './sectionPads';
 import { StagePlayground } from './StagePlayground';
 
 afterEach(() => vi.restoreAllMocks());
@@ -150,6 +153,128 @@ describe('Stage', () => {
     expect(container.querySelector('.yh-padbank__pads')).toHaveAttribute('data-columns', '8');
   });
 
+  it('has the pad banks Sections first, then Quick Racks, Chord, Multi Pads, Setup; the board on Quick Racks', () => {
+    setup();
+    const tabs = region('Pads').getAllByRole('tab');
+    expect(tabs.map((tab) => tab.textContent)).toEqual(['Sections', 'Quick Racks', 'Chord', 'Multi Pads', 'Setup']);
+    expect(region('Pads').getByRole('tab', { name: 'Quick Racks' })).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('says whether the tempo is the style tempo: unavailable on the board at 104, available stopped at 92', () => {
+    const { unmount } = setup();
+    expect(screen.getByRole('button', { name: "Back to the style's tempo" })).toHaveAttribute('aria-disabled', 'true');
+    unmount();
+    setup(stageStopped);
+    expect(screen.getByRole('button', { name: "Back to the style's tempo" })).not.toHaveAttribute('aria-disabled');
+  });
+
+  describe('the Sections pad bank', () => {
+    const SECTION_IDS = ['intro1', 'intro2', 'intro3', 'mainA', 'mainB', 'mainC', 'mainD', 'ending1', 'ending2', 'ending3', 'break'] as const;
+    /** The strip's step and the bank's pad for one section: the same Pad face on both. */
+    function faces(container: HTMLElement, id: (typeof SECTION_IDS)[number]) {
+      const strip = container.querySelector(`.yh-stage__strip [data-section="${id}"] .yh-pad`) as HTMLElement;
+      const index = SECTION_PAD_LAYOUT.findIndex((a) => 'section' in a && a.section === id);
+      const cell = container.querySelectorAll('.yh-stage__pads .yh-padbank__cell')[index];
+      return { strip: strip.dataset.state, pad: (cell.querySelector('.yh-pad') as HTMLElement).dataset.state };
+    }
+    const onSections = (songForm: StageProps['songForm']): Partial<StageProps> => ({ ...stageSections, songForm });
+
+    it('draws its pads from the song form, so they agree with the strip in every state', () => {
+      const forms: StageProps['songForm'][] = [
+        stageBoard.songForm,
+        stageStopped.songForm,
+        { ...stageBoard.songForm, syncStart: false, syncStop: true, autoFill: true, next: 'ending1' },
+        { ...stageStopped.songForm, playing: 'intro1', syncStart: true, absent: ['intro2', 'intro3', 'mainC', 'mainD', 'break'] },
+      ];
+      for (const songForm of forms) {
+        const { container, unmount } = setup(onSections(songForm));
+        for (const id of SECTION_IDS) {
+          const face = faces(container, id);
+          expect(face.strip, id).toBeTruthy();
+          expect(face.pad, id).toBe(face.strip);
+        }
+        const transport = region('Transport');
+        const pads = region('Pads');
+        const pressed = (name: RegExp) => transport.getByRole('button', { name }).getAttribute('aria-pressed') === 'true';
+        const state = (name: RegExp) => pads.getByRole('button', { name }).getAttribute('data-state');
+        expect(state(/^Sync Start\b.*\(pad 4\)/)).toBe(pressed(/^Sync Start/) ? 'armed' : 'idle');
+        expect(state(/^Sync Stop\b.*\(pad 15\)/)).toBe(pressed(/^Sync Stop/) ? 'armed' : 'idle');
+        expect(state(/^Auto Fill\b.*\(pad 8\)/)).toBe(pressed(/^Auto Fill/) ? 'playing' : 'idle');
+        expect(state(/^Start \/ Stop\b.*\(pad 16\)/)).toBe(pressed(/^Start \/ Stop/) ? 'running' : 'idle');
+        unmount();
+      }
+    });
+
+    it("matches PadBank's own board fixture for the board's song form", () => {
+      const mine = sectionPads(songFormBoard);
+      expect(mine.map(({ label, family, state, transport, tip }) => ({ label, family, state, transport: !!transport, tip }))).toEqual(
+        padBankSections.map(({ label, family, state, transport, tip }) => ({ label, family, state, transport: !!transport, tip })),
+      );
+    });
+
+    it('shows each section and transport key once in its own region and once on the pads, which mirror the hardware', () => {
+      setup(stageSections);
+      const form = region('Song form');
+      const pads = region('Pads');
+      for (const name of SECTIONS) {
+        expect(form.getAllByRole('button', { name })).toHaveLength(1);
+        expect(pads.getAllByRole('button', { name })).toHaveLength(1);
+        expect(screen.getAllByRole('button', { name })).toHaveLength(2);
+      }
+      for (const name of [/^Sync Start/, /^Sync Stop/, /^Auto Fill/, /^Start \/ Stop/]) {
+        expect(region('Transport').getAllByRole('button', { name })).toHaveLength(1);
+        expect(pads.getAllByRole('button', { name })).toHaveLength(1);
+      }
+      expect(pads.getAllByRole('button', { name: /^Tap tempo \(pad 14\)/ })).toHaveLength(1);
+      expect(region('Stage display').getAllByRole('button', { name: 'Tap tempo' })).toHaveLength(1);
+    });
+
+    it('sends a pad press where the same step or key in the strip and transport sends it, and Tap to the hero', async () => {
+      const songForm = {
+        ...stageBoard.songForm,
+        onSection: vi.fn(),
+        onSyncStart: vi.fn(),
+        onSyncStop: vi.fn(),
+        onAutoFill: vi.fn(),
+        onStartStop: vi.fn(),
+      };
+      const onTap = vi.fn();
+      const onPress = vi.fn();
+      setup({ ...stageSections, songForm, display: { ...stageBoard.display, onTap }, pads: { ...stageSections.pads, onPress } });
+      const user = userEvent.setup();
+      const pads = region('Pads');
+      await user.click(pads.getByRole('button', { name: /^Main D \(pad 12\)/ }));
+      await user.click(region('Song form').getByRole('button', { name: 'Main D' }));
+      expect(songForm.onSection.mock.calls).toEqual([['mainD'], ['mainD']]);
+      await user.click(pads.getByRole('button', { name: /^Break/ }));
+      expect(songForm.onSection).toHaveBeenLastCalledWith('break');
+      await user.click(pads.getByRole('button', { name: /^Intro III, not in this style/ }));
+      expect(songForm.onSection).toHaveBeenCalledTimes(3);
+      await user.click(pads.getByRole('button', { name: /^Sync Start/ }));
+      expect(songForm.onSyncStart).toHaveBeenLastCalledWith(true);
+      await user.click(pads.getByRole('button', { name: /^Sync Stop/ }));
+      expect(songForm.onSyncStop).toHaveBeenLastCalledWith(true);
+      await user.click(pads.getByRole('button', { name: /^Auto Fill/ }));
+      expect(songForm.onAutoFill).toHaveBeenLastCalledWith(true);
+      await user.click(pads.getByRole('button', { name: /^Start \/ Stop/ }));
+      expect(songForm.onStartStop).toHaveBeenCalledTimes(1);
+      await user.click(pads.getByRole('button', { name: /^Tap tempo/ }));
+      expect(onTap).toHaveBeenCalledTimes(1);
+      expect(onPress).not.toHaveBeenCalled();
+    });
+
+    it('presses each pad as its layout says, with the state it asks for', () => {
+      const form = { syncStart: true, syncStop: false, autoFill: true, absent: ['mainD'] as const, onSection: vi.fn(), onSyncStart: vi.fn(), onSyncStop: vi.fn(), onAutoFill: vi.fn(), onStartStop: vi.fn(), onTap: vi.fn() };
+      for (let i = 0; i < 16; i++) pressSectionPad(i, { ...form, absent: [...form.absent] });
+      expect(form.onSection.mock.calls.flat()).toEqual(['intro1', 'intro2', 'intro3', 'ending1', 'ending2', 'ending3', 'mainA', 'mainB', 'mainC', 'break']);
+      expect(form.onSyncStart).toHaveBeenCalledWith(false);
+      expect(form.onAutoFill).toHaveBeenCalledWith(false);
+      expect(form.onSyncStop).toHaveBeenCalledWith(true);
+      expect(form.onStartStop).toHaveBeenCalledTimes(1);
+      expect(form.onTap).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('times taps from the hero Tap and asks for their tempo', async () => {
     const onTempo = vi.fn();
     const onTap = vi.fn();
@@ -290,6 +415,31 @@ describe('StagePlayground', () => {
     await user.click(form.getByRole('button', { name: /^Main D, next/ }));
     expect(form.getByRole('button', { name: 'Main D, playing' })).toBeInTheDocument();
     expect(region('Stage display').getByRole('img', { name: /^Playing Main\sD$/ })).toBeInTheDocument();
+  });
+
+  it('plays the song from the Sections pads exactly as from the strip', async () => {
+    play();
+    const user = userEvent.setup();
+    const pads = region('Pads');
+    await user.click(pads.getByRole('tab', { name: 'Sections' }));
+    const pad = (name: RegExp) => pads.getByRole('button', { name });
+    expect(pad(/^Main B, playing/)).toHaveAttribute('data-state', 'playing');
+    expect(pad(/^Main C, next/)).toHaveAttribute('data-state', 'next');
+    // A pad queues as the strip's step does, and the strip and the hero follow.
+    await user.click(pad(/^Main D \(pad 12\)/));
+    expect(region('Song form').getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
+    expect(pad(/^Main D, next/)).toHaveAttribute('data-state', 'next');
+    expect(pad(/^Main C \(pad 11\)/)).toHaveAttribute('data-state', 'idle');
+    // The strip lands it, and the pad shows it playing.
+    await user.click(region('Song form').getByRole('button', { name: /^Main D, next/ }));
+    expect(pad(/^Main D, playing/)).toHaveAttribute('data-state', 'playing');
+    // Start / Stop and Auto Fill from the pads change the transport's keys.
+    await user.click(pad(/^Start \/ Stop, running/));
+    expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toBeInTheDocument();
+    expect(pad(/^Main D, starts here/)).toHaveAttribute('data-state', 'idle');
+    await user.click(pad(/^Auto Fill, off/));
+    expect(region('Transport').getByRole('button', { name: 'Auto Fill' })).toHaveAttribute('aria-pressed', 'true');
+    expect(pad(/^Auto Fill, on/)).toHaveAttribute('data-state', 'playing');
   });
 
   it('stops and starts the band', async () => {

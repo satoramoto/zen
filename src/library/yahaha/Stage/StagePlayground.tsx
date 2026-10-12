@@ -46,13 +46,17 @@ const otsNumber = (pad: PadItem | undefined) => Number(pad?.label.match(/^OTS\s(
  *   form, "→ Main C" on the hero), and lands at the end of the four-bar phrase, or at once on a
  *   second press. A landed Ending stops the band. Fill ▲ ▼ queue a fill and the next Main.
  * - Start / Stop runs and stops; while running the beat moves at the tempo.
- * - Tempo − + step it, a drag or wheel on the number sets it, Style tempo goes back to 104, and Tap
+ * - Tempo − + step it, a drag or wheel on the number sets it, Style tempo goes back to the style's
+ *   tempo (104; unavailable while the tempo already is that), and Tap
  *   (timed by the Stage) sets it from two or more taps; the Tempo knob follows.
  * - One Touch applies, from the hero or from the OTS 1–4 pads (the hardware mirror), and both show
  *   the one applied; ‹ › step through a few styles (a 3/4 waltz among them), wrapping at either end.
  *   A seed style the list doesn't hold shows as given, and › from it goes to the first, ‹ to the last.
  * - Faders move on every layer (each keeps its own values), Panel / Style pages and the page button
  *   switch, part lamps turn a part off (its strip dims), knob and pad pages switch, knobs turn, pads toggle.
+ * - The Sections pads are the song form's (the Stage draws them from the form's state and sends
+ *   their presses to its callbacks), so a section pad queues, lands and starts exactly as the strip
+ *   does, and Sync Start, Auto Fill, Sync Stop, Tap and Start / Stop act as their keys do.
  */
 export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundProps) {
   const say = (event: string, ...args: unknown[]) => log?.(event, ...args);
@@ -75,6 +79,7 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
   const [oneTouch, setOneTouch] = useState(seed.display.style.oneTouch ?? 0);
   const oneTouchCount = seed.display.style.oneTouchCount ?? 4;
   const [bpm, setBpm] = useState(seed.display.nowPlaying.bpm);
+  const styleTempo = seed.display.nowPlaying.styleTempo ?? stageStyleTempo;
   const setTempo = (n: number) => setBpm(clamp(Math.round(n), TEMPO_MIN, TEMPO_MAX));
 
   // ---- Song form and transport
@@ -298,6 +303,7 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
           bar: pos.bar,
           bars: BARS,
           bpm,
+          styleTempo,
           running,
           syncStart,
           beat: running ? pos.beat : 0,
@@ -311,7 +317,7 @@ export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundPr
         onTempoDown: (down) => (say('display.onTempoDown', down), down && setTempo(bpm - 1)),
         onTempo: (n) => (say('display.onTempo', n), setTempo(n)),
         onTap: () => say('display.onTap'),
-        onStyleTempo: () => (say('display.onStyleTempo'), setTempo(stageStyleTempo)),
+        onStyleTempo: () => (say('display.onStyleTempo'), setTempo(styleTempo)),
       }}
       songForm={{
         ...sf,

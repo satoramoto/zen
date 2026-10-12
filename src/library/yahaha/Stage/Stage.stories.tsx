@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { Stage } from './Stage';
-import { stageBoard, stageStopped } from './Stage.fixtures';
+import { stageBoard, stageSections, stageStopped } from './Stage.fixtures';
 import { StagePlayground } from './StagePlayground';
 
 /**
@@ -47,6 +47,15 @@ type Story = StoryObj<typeof meta>;
  * them, then the mixer and the knobs over the pads on the same column seam.
  */
 export const Board: Story = {};
+
+/**
+ * The board on the Sections pad bank, as the Launchkey's pads play it: the pads are drawn from the
+ * song form's state (Main B filled, Main C ringed in the accent, Intro III and Ending III dark,
+ * Start / Stop running), and a pad press does what that step or key does.
+ */
+export const Sections: Story = {
+  args: { ...stageSections },
+};
 
 /** Stopped on Main A at 92 with Coastal Highway queued, the faders on the Reverb layer, a message on the status line. */
 export const Stopped: Story = {

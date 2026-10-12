@@ -3,7 +3,7 @@ import { displayBoard, displayStopped } from '../Display/Display.fixtures';
 import { faderPageTabs, functionLamps, layerTabs, panelStrips, partLamps, reverbStrips } from '../FaderBank/FaderBank.fixtures';
 import { boardKeys } from '../Keys/Keys.fixtures';
 import { chorusKnobs, delayKnobs, knobPages, panKnobs, rackKnobs, reverbKnobs, styleKnobs } from '../KnobBank/KnobBank.fixtures';
-import { padBanks, padsByBank, quickRackPads } from '../PadBank/PadBank.fixtures';
+import { allPadBanks, allPadsByBank, quickRackPads } from '../PadBank/PadBank.fixtures';
 import { songFormBoard, songFormStopped } from '../SongForm/SongForm.fixtures';
 import type { KnobItem } from '../KnobBank/KnobBank';
 import { TEMPO_MAX, TEMPO_MIN, type StageProps } from './Stage';
@@ -17,16 +17,27 @@ export function withTempo(knobs: KnobItem[], bpm: number): KnobItem[] {
   return knobs.map((k) => (k.label === 'Tempo' ? { ...k, value: `${bpm}`, fraction: (bpm - TEMPO_MIN) / (TEMPO_MAX - TEMPO_MIN) } : k));
 }
 
+/** The style's own tempo, which Style tempo goes back to. */
+export const stageStyleTempo = 104;
+
+/** The pad banks' tabs: Sections first, as the Launchkey pages them. */
+export const stagePadBankNames = allPadBanks;
+/** The Quick Racks bank's index in `stagePadBankNames`. */
+export const QUICK_RACKS = allPadBanks.indexOf('Quick Racks');
+
 const { width: _barWidth, ...appBar } = boardAppBar;
 const { width: _keysWidth, ...keys } = boardKeys;
-const { parts: _parts, ...display } = displayBoard;
-const { parts: _stoppedParts, ...stoppedDisplay } = displayStopped;
+const { parts: _parts, ...heroBoard } = displayBoard;
+const { parts: _stoppedParts, ...heroStopped } = displayStopped;
+const display = { ...heroBoard, nowPlaying: { ...heroBoard.nowPlaying, styleTempo: stageStyleTempo } };
+const stoppedDisplay = { ...heroStopped, nowPlaying: { ...heroStopped.nowPlaying, styleTempo: stageStyleTempo } };
 
 /**
  * The board: Sunday Drive Pop, Am7 in Main B with Main C next after bar 4, running at 104; Right 1
  * Stage Grand 90, Right 2 Silk Strings 72 (soft takeover), Right 3 Brass Section 64 off, Left
- * Finger Bass 80, Style 100, Multi Pad 90, Master 100; the Style knob page, the Quick Racks pads;
- * split F#2 with the left hand's Am7 held.
+ * Finger Bass 80, Style 100, Multi Pad 90, Master 100; the Style knob page, the Quick Racks pads
+ * (the Sections bank's tab first, its pads mirroring the song form when chosen); split F#2 with the
+ * left hand's Am7 held. At the style's own tempo, so Style tempo has nothing to do.
  */
 export const stageBoard = {
   appBar,
@@ -42,7 +53,7 @@ export const stageBoard = {
     functionLamps,
   },
   knobs: { knobs: withTempo(styleKnobs, display.nowPlaying.bpm), pages: knobPages, page: 0 },
-  pads: { pads: quickRackPads, banks: padBanks, bank: 0, lit: true },
+  pads: { pads: quickRackPads, banks: stagePadBankNames, bank: QUICK_RACKS, lit: true },
   keys,
   status: { text: null },
 } satisfies StageProps;
@@ -58,11 +69,20 @@ export const stageStopped = {
   keys: { ...keys, heldLeft: [], heldRight: [] },
 } satisfies StageProps;
 
+/** The board on the Sections bank: its pads say what the song form says (the Stage draws them from `songForm`). */
+export const stageSections = {
+  ...stageBoard,
+  pads: { ...stageBoard.pads, bank: stagePadBankNames.indexOf('Sections') },
+} satisfies StageProps;
+
 /** The knob pages' eight knobs, in `knobPages` order (Style, Rack, Pan, Reverb, Chorus, Delay). */
 export const stageKnobPages = [styleKnobs, rackKnobs, panKnobs, reverbKnobs, chorusKnobs, delayKnobs];
 
-/** Every pad bank's sixteen pads, in `padBanks` order. */
-export const stagePadBanks = padsByBank;
+/**
+ * Every pad bank's sixteen pads, in `stagePadBankNames` order. The Sections entry is PadBank's
+ * board fixture; the Stage never shows it, since it draws that bank from the song form.
+ */
+export const stagePadBanks = allPadsByBank;
 
 /** The styles ‹ › step through in the Playground (ported from the original's `stageStyles`). */
 export const stageStyles = [
@@ -71,6 +91,3 @@ export const stageStyles = [
   { name: 'Ballad Night', category: 'Ballad', timeSignature: '4/4', beats: 4 },
   { name: 'Waltz for Two', category: 'Ballroom', timeSignature: '3/4', beats: 3 },
 ];
-
-/** The style's own tempo, which Style tempo goes back to. */
-export const stageStyleTempo = 104;
