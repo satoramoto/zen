@@ -46,3 +46,15 @@ export * from './layout';
 // `ButtonFace`), and Param's `format` is `formatParam`.
 export * from './components/core';
 export * from './components/music';
+
+// Dialog behaviour for an app's own overlays (a help sheet, a settings dialog) that aren't a Modal.
+/** Esc closes a dialog unless an open menu inside it takes the key first; `useModal` is the whole dialog behaviour. */
+export { closesOnKey, useModal } from './components/core/Modal/useModal';
+/** Tab stays inside a dialog; `isTopTrap` says whether a trap is the topmost one, the one keys are for. */
+export { useFocusTrap, isTopTrap } from './components/core/Modal/focusTrap';
+
+/** The look a cluster asks of its controls: `CONTROL_TOOLBAR` (quiet) in a toolbar, `CONTROL_FIELD` (fields) in a panel that floats out of one. */
+export { ControlContext, CONTROL_FIELD, CONTROL_TOOLBAR, useControlContext, type ControlContextValue } from './primitives/Stack';
+
+/** The design window a Storybook frame draws a view at, or null in an app (`@satoramoto/zen/storybook` provides it). */
+export { useFrameRoom, type StoryFrame, type StoryFrameParam } from './frame';

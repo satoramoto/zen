@@ -23,12 +23,12 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 |---|---|
 | `npm run typecheck` | Any TS/TSX change. Fast compile check. |
 | `npx vitest run src/library` | Library tokens, themes, layout, components, or anything under `src/library/yahaha/` or `src/library/visuals/`. |
+| `npx vitest run src/library/public-surface.test.ts` | Anything under `src/library/visuals/`, or a change to what `src/library/index.ts` or `src/library/storybook.tsx` exports: every import leaving `visuals/` names something a public entry exports. |
 | `npx vitest run src/library/tiers.test.ts` | Any CSS or TSX under `src/library/{components,layout,yahaha,visuals,primitives}`: the tier rules hold their baseline (`npm run tiers` prints the table; `npm run tiers -- --write` records a lower one). |
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The field guide app. |
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
-| `npm run build:lib` | The package: `src/library/index.ts`, `src/library/visuals/index.ts`, `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
-| `npm run build:lib` | Anything exported from the library (`src/library/index.ts` and what it reaches), `vite.lib.config.ts`, `tsconfig.lib.json`. |
+| `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/storybook.tsx`, `src/library/visuals/index.ts`, `src/library/visuals/lab.ts` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
 
 Builds and unit tests are not browser evidence: look at layout and perceptual effects in a browser (the invisible-keyboard bug passed every test).
 
@@ -43,7 +43,29 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 
 ## Library rules
 
-- Apps consume zen from GitHub: `"@satoramoto/zen": "github:satoramoto/zen#<sha>"`; npm runs `prepare` (`build:lib`) on install, then `import { ThemeScope } from '@satoramoto/zen'` and `import '@satoramoto/zen/zen.css'`. The public surface is `src/library/index.ts`.
+- Apps consume zen from GitHub: `"@satoramoto/zen": "github:satoramoto/zen#<sha>"`; npm runs `prepare` (`build:lib`) on install, then `import { ThemeScope } from '@satoramoto/zen'` and `import '@satoramoto/zen/zen.css'`.
+- The public entries (`package.json` `exports`, built by `vite.lib.config.ts`) are the only way an app reaches zen; nothing imports a deeper path:
+  - `@satoramoto/zen` (`src/library/index.ts`): the tokens, themes, primitives, layout and components; its stylesheet is `@satoramoto/zen/zen.css`.
+  - `@satoramoto/zen/storybook` (`src/library/storybook.tsx`): the toolbar globals (`libraryGlobalTypes`, `libraryInitialGlobals`) and decorators (`withLibraryTheme`, `withStoryFrame`) for an app's own Storybook. Storybook is never reached from the main entry.
+  - `@satoramoto/zen/visuals` and `/visuals/lab` (with `visuals.css`, `visuals-lab.css`): visual[flow]'s UI, until it moves to its repo.
+- App-specific UI lives in the app's repo, built on these entries; zen holds only generic parts (Yahaha's redesign is the reference exception). `src/library/visuals/` is on its way out: `public-surface.test.ts` fails if it imports anything from zen that the public entries don't export, so it can move without changes beyond its import paths. Export what it needs (with a one-line doc) rather than reaching in.
+- **Running an app against a local zen** (hot reload of zen's source): every entry has a `zen-source` export condition pointing at the TS/TSX source (the CSS entries at the empty `src/library/source.css`, since in source each component imports its own stylesheet). A plain install ignores it and resolves the built `lib/`. In the app, point the package at the checkout and add the condition first in its Vite config:
+
+  1. Make `node_modules/@satoramoto/zen` a link to the checkout: `npm install --no-save ~/Code/satoramoto/zen` (a folder installs as a symlink; the next plain `npm install` puts the GitHub build back). Not a `resolve.alias` to the folder: an alias to a path skips `exports`, so `@satoramoto/zen/storybook` and the CSS entries don't resolve.
+  2. Vite config:
+
+     ```ts
+     const zenSource = process.env.ZEN_SOURCE; // the checkout, e.g. ~/Code/satoramoto/zen
+     export default defineConfig({
+       resolve: {
+         conditions: zenSource ? ['zen-source', 'module', 'browser', 'development|production'] : undefined,
+         dedupe: ['react', 'react-dom'], // zen's source would otherwise reach its own react
+       },
+       server: { fs: { allow: zenSource ? ['.', zenSource] : ['.'] } },
+     });
+     ```
+
+  The link resolves to the checkout's real path, outside `node_modules`, so Vite compiles zen's TSX with the app's React plugin and hot-reloads it. The condition only resolves against a checkout: the installed package ships `lib/` only.
 
 - Every decision belongs to one tier (tokens, primitives, controls, groups, regions, screens, app): `docs/tiers.md` says which, and `src/library/tiers.test.ts` holds its four rules to `tiers.baseline.json` (counts only go down).
 - Components in `src/library/components`, `src/library/layout`, `src/library/yahaha` and `src/library/visuals` (except `visuals/model`) read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.

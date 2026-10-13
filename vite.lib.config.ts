@@ -1,8 +1,10 @@
-// The library build: three ES-module entries in `lib/`, React left to the app. Types come from
-// tsconfig.lib.json.
+// The library build: four ES-module entries in `lib/`, React and Storybook left to the app. Types
+// come from tsconfig.lib.json.
 //
 // - `index` (`src/library/index.ts`, the package's `.`) → `lib/index.js`, and every library
 //   stylesheet in `lib/zen.css`.
+// - `storybook` (`src/library/storybook.tsx`, `./storybook`: toolbar globals and decorators for an
+//   app's own Storybook) → `lib/storybook.js`. Its own entry, so the main one never reaches it.
 // - `visuals` (`src/library/visuals/index.ts`, `./visuals`: visual[flow]'s app on zen) →
 //   `lib/visuals.js`, and visuals' own stylesheets (those under `src/library/visuals/`) in
 //   `lib/visuals.css`. The app imports both stylesheets; no rule is in both.
@@ -75,12 +77,12 @@ export default defineConfig({
     cssCodeSplit: true,
     sourcemap: true,
     lib: {
-      entry: { index: 'src/library/index.ts', visuals: 'src/library/visuals/index.ts', 'visuals-lab': 'src/library/visuals/lab.ts' },
+      entry: { index: 'src/library/index.ts', storybook: 'src/library/storybook.tsx', visuals: 'src/library/visuals/index.ts', 'visuals-lab': 'src/library/visuals/lab.ts' },
       formats: ['es'],
       fileName: (_format, name) => `${name}.js`,
     },
     rollupOptions: {
-      external: [/^react(\/.*)?$/, /^react-dom(\/.*)?$/],
+      external: [/^react(\/.*)?$/, /^react-dom(\/.*)?$/, /^storybook(\/.*)?$/, /^@storybook\//],
       output: { chunkFileNames: 'chunks/zen-[hash].js', assetFileNames: '[name][extname]' },
     },
   },

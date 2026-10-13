@@ -1,3 +1,10 @@
+// The Storybook entry of @satoramoto/zen: `@satoramoto/zen/storybook`, the toolbar globals and the
+// decorators an app's own Storybook draws its stories with (zen's `.storybook/preview.ts` uses the
+// same). `vite.lib.config.ts` builds it to `lib/storybook.js`. Storybook stays out of the main
+// entry: only types come from it here.
+//
+//   import { libraryGlobalTypes, libraryInitialGlobals, withLibraryTheme, withStoryFrame } from '@satoramoto/zen/storybook';
+//   export default { globalTypes: libraryGlobalTypes, initialGlobals: libraryInitialGlobals, decorators: [withStoryFrame, withLibraryTheme] };
 import type { Decorator } from '@storybook/react-vite';
 import { createContext, useContext, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { FROM_THEME, ThemeScope, resolveTheme, useSystemMode, type ModeChoice } from './theme';
@@ -42,6 +49,7 @@ export const libraryGlobalTypes = {
   materials: facetMenu('Materials', 'component', materials),
 };
 
+/** The toolbar's starting choice: the first pack, the system's mode, every facet from the pack. */
 export const libraryInitialGlobals = {
   theme: packs[0].id,
   mode: 'system',
@@ -176,6 +184,7 @@ export const withStoryFrame: Decorator = (Story, { parameters }) => {
   );
 };
 
+/** Draws the story in a `ThemeScope` of the toolbar's pack, mode and facets, on the pack's stand-in desktop. */
 export const withLibraryTheme: Decorator = (Story, context) => {
   const { pack, facets } = resolveTheme(context.globals);
   const mode = (context.globals.mode as ModeChoice) ?? 'system';
