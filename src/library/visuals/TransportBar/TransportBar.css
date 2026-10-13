@@ -51,6 +51,22 @@
 .vs-transport[data-layout='overlay'] :is(.vs-transport-keys, .vs-transport-mid, .vs-transport-right) {
   pointer-events: auto;
 }
+/* On the preview: two lines, the name a title's size over where it plays from. */
+.vs-transport[data-layout='overlay'] .vs-transport-now {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.vs-transport[data-layout='overlay'] .vs-transport-name {
+  --text-size: var(--vs-text-title);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vs-transport[data-layout='overlay'] .vs-transport-from {
+  margin-left: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 @container vs-transport (max-width: 560px) {
   .vs-transport .vs-transport-bar > .lib-group__body {
     grid-template-columns: auto minmax(0, 1fr);
