@@ -552,6 +552,18 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
     y += head.hs[i] + gap;
   });
   for (const r of s.regions) put(r.spec.id, rects[r.spec.id], 'body');
+  // A region that scrolls behind a pinned one above it reaches up to that region's top.
+  for (const r of s.regions) {
+    const id = r.spec.under;
+    if (id === undefined) continue;
+    const own = placed[r.spec.id].rect;
+    const head = placed[id];
+    if (!head || head.zone !== 'body') throw new Error(`assembly: region '${r.spec.id}' scrolls under '${id}', which isn't in the body`);
+    const above = head.rect.y + head.rect.h <= own.y + 1e-6;
+    const across = head.rect.x < own.x + own.w && own.x < head.rect.x + head.rect.w;
+    if (!above || !across) throw new Error(`assembly: region '${r.spec.id}' scrolls under '${id}', which must sit above it`);
+    placed[r.spec.id].under = { id, reach: own.y - head.rect.y };
+  }
   y = 0;
   (spec.footer ?? []).forEach((r, i) => {
     put(r.id, { x: 0, y, w: inner, h: foot.hs[i] }, 'footer');

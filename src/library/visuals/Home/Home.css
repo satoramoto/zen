@@ -62,6 +62,25 @@
   min-height: 0;
   height: 100%;
 }
+/* The pane starts under the pinned preview (HomeLayout's `under: 'hero'`). With no note over the
+   grid, the grid's scroller reaches up into the preview's room (`--vs-grid-reach`, unitless px:
+   the slot's --lib-under), its tiles starting below the preview and scrolling up behind it.
+   A note (a notice, a settings problem, quick add's strip, the library's save or drop line)
+   sits under the preview instead, and the grid starts under it. */
+.vs-home-grid-pane:not(:has(.vs-home-notice, .vs-home-problem, .vs-home-quickadd, .vs-library-summary)) {
+  --vs-grid-reach: var(--lib-under, 0);
+}
+/* A playlist's grid, reaching up: its first row below the preview, focus scrolled clear of it. */
+.vs-home-grid-pane .vs-home-grid {
+  margin-top: calc(var(--vs-grid-reach, 0) * -1px);
+  padding-top: calc(var(--space-2) + var(--vs-grid-reach, 0) * 1px);
+  scroll-padding-top: calc(var(--space-2) + var(--vs-grid-reach, 0) * 1px);
+  /* No scrollbar: it still scrolls by trackpad, wheel and keys. */
+  scrollbar-width: none;
+}
+.vs-home-grid-pane .vs-home-grid::-webkit-scrollbar {
+  display: none;
+}
 /* The library fills the rest (home.css's `.home-grid-pane > .lib`, by a slot of Home's own, not
    the library's class). */
 .vs-home-library {

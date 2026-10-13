@@ -82,6 +82,10 @@ const at = (r: Rect): CSSProperties =>
  * room of that ratio, centred. The leftover strips are `ground` bands (`data-part="band"`): no
  * plate, nothing in them, hidden from assistive tech.
  *
+ * A region placed `under` another (`RegionSpec.under`) has its slot drawn reaching up to that
+ * region's top and after it, so above it: `data-under` names the pinned region and `--lib-under`
+ * (unitless px) is how much of the slot's top it covers, for the content's scroll padding.
+ *
  * With `aspect.fit: 'scale'` the room is laid out at its design size and drawn smaller by a CSS
  * `transform: scale()` (Assembly.css), carried in `data-scale` on the room.
  */
@@ -96,8 +100,12 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
   const slot = (id: string) => {
     const placed = placement.regions[id];
     const content = regions[id];
+    // Scrolling under a pinned region: the slot reaches up to its top, and `--lib-under` (unitless px) says how much of the slot's top it covers.
+    const reach = placed.under?.reach ?? 0;
+    const rect = reach ? { ...placed.rect, y: placed.rect.y - reach, h: placed.rect.h + reach } : placed.rect;
+    const style = reach ? ({ ...at(rect), '--lib-under': reach } as CSSProperties) : at(rect);
     return (
-      <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} style={at(placed.rect)}>
+      <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} data-under={placed.under?.id} style={style}>
         <FormProvider form={placed.form} parts={placed.parts}>{typeof content === 'function' ? content(placed.form, placed) : content}</FormProvider>
       </div>
     );

@@ -16,11 +16,10 @@ import { Live } from './Live';
  * their own (Live/Stage…); the pads are the dock's.
  */
 /**
- * The original's 1440×900 window, which these stories open in (its `globals.viewport`), as the
- * design window (`parameters.frame`): drawn at it and scaled to the canvas, so the crate docks
- * (from 1100 px) whatever the canvas's size.
+ * The fluid window (`parameters.frame: 'fill'`): the Stage fills the canvas at its real size, as
+ * the app fills its window, so the crate docks (from 1100 px) when the canvas is that wide.
  */
-const WINDOW = { w: 1440, h: 900 };
+const WINDOW = 'fill' as const;
 
 /** The window buttons' stand-in over the Stage (the real ones are macOS's), so the header's room beside them can be judged. */
 const withLights: Decorator = (Story) => (

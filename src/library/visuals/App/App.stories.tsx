@@ -24,8 +24,8 @@ const meta = {
   parameters: {
     scope: 'bare',
     layout: 'fullscreen',
-    // The original's 1440×900 window, drawn at that size and scaled to the canvas.
-    frame: { w: 1440, h: 900 },
+    // The fluid window: the canvas at its real size, as the app fills its window.
+    frame: 'fill',
     world: { resume: { playlist: WARM_UP.id, index: PLAYING_DECK.index, current: PLAYING_DECK.current, source: null } },
   },
 } satisfies Meta<typeof VisualsApp>;

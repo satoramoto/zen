@@ -45,7 +45,7 @@ import { HelpOverlay, HOME_HELP } from '../HelpOverlay/HelpOverlay';
 import { modalOpen } from '../model/liveKeys';
 import { Hero, HERO_PIC } from '../Hero/Hero';
 import { TransportBar } from '../TransportBar/TransportBar';
-import { InsetSidebar, sidebarSections } from '../InsetSidebar/InsetSidebar';
+import { InsetSidebar, SettingsButton, sidebarSections } from '../InsetSidebar/InsetSidebar';
 import { Inspector } from '../Inspector/Inspector';
 import { Icon } from '../Icon/Icon';
 import { INSPECTOR_KEY, modesFor, offersQuickAdd, paneName, SIDEBAR_KEY, type QuickAdd, type Selection, type SidebarActions } from '../model/home-model';
@@ -133,6 +133,9 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  *   `--space-4` in the pane's small form (HomeLayout's `PANE_FORMS`).
  * - `--vs-home-tile-min`: a playlist grid's narrowest tile, 150px (124px in the small form), on
  *   the scale.
+ * - `--vs-grid-reach` (unitless px): how far the grid's scroller reaches up into the pinned
+ *   preview's room, so its tiles scroll behind it: the pane slot's `--lib-under` while no note
+ *   sits over the grid, else 0. The playlist grid and `LibraryGrid` read it.
  */
 export function Home({
   start,
@@ -679,6 +682,8 @@ export function Home({
         sidebarMode={modes.sidebar}
         inspectorMode={modes.inspector}
         onDismiss={dismissOverlays}
+        // Settings: the gear on the title's line (the sidebar's top band, or the header beside the title).
+        titleAction={<SettingsButton onSettings={openSettings} />}
         sidebar={
           <InsetSidebar
             sections={sections}

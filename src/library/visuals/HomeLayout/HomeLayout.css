@@ -31,6 +31,10 @@
   /* The band at the sidebar's top for the window buttons and the title: the title bar less the
      panel's inset above and below (36px), so the title sits on the header row's line. */
   --vs-lay-band: calc(var(--vs-lay-titlebar) - 2 * var(--space-2));
+  /* The content line, from the window's top: the header row (the title bar) and the screen's gap
+     under it, where the solver starts the column's hero (TITLEBAR + plate gap). The sidebar's rows
+     start on it too, so the two content tops line up at every size, pack and scale. */
+  --vs-lay-content-top: calc(var(--vs-lay-titlebar) + var(--mat-plate-gap));
   /* The room the title and a header leave the window buttons (chrome.css --chrome-lights 98px;
      LIGHTS_ROOM in HomeLayout.tsx). Nothing in full screen, below. */
   --vs-lay-lights-room: calc(var(--space-6) * 3 + var(--space-1) / 2);
@@ -132,9 +136,9 @@
   left: 0;
   width: calc(var(--vs-lay-side) + 2 * var(--space-2));
 }
-/* The inspector laid over starts under the header row (inspector.css), so its toggle stays in reach. */
+/* The inspector laid over mirrors the sidebar laid over: the same inset glass panel, the window's
+   full height, 8px in from its edges (its ✕ and Esc put it away). */
 .vs-lay .vs-lay-insp-cell.vs-lay-cell--overlay {
-  top: var(--vs-lay-titlebar);
   right: 0;
   width: calc(var(--vs-lay-insp) + 2 * var(--space-2));
 }
@@ -173,6 +177,11 @@
 .vs-lay-side {
   padding-top: var(--vs-lay-band);
 }
+/* In the window, the rows start on the content line, level with the column's hero (the panel
+   sits its cell's inset, --space-2, below the window's top). */
+.vs-lay .vs-lay-side {
+  padding-top: calc(var(--vs-lay-content-top) - var(--space-2));
+}
 .vs-lay-side-band {
   position: absolute;
   top: 0;
@@ -183,6 +192,22 @@
   height: var(--vs-lay-band);
   padding-left: max(calc(var(--vs-lay-lights-room) - var(--space-2)), var(--space-4));
   box-sizing: border-box;
+}
+/* The title's action (Settings) at the band's right end, on the title's line, the band's inset
+   from the panel's edge; in the header row, just after the title. It takes presses (only the
+   band itself drags). */
+.vs-lay-side-band > .vs-lay-title-action {
+  margin-left: auto;
+  padding-right: var(--space-2);
+}
+.vs-lay-title-action {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+.vs-lay .vs-lay-head > .vs-lay-title-action {
+  flex: none;
+  margin-left: var(--space-2);
 }
 /* The title takes no presses: a drag on it is the band's, and moves the window. */
 .vs-lay-title {
@@ -250,23 +275,48 @@
    blocks keeps a long section title from widening the column. The column's one padding is the
    parts' own (--mat-plate-inset), inside the screen's seam. */
 .vs-lay .vs-lay-main {
+  /* The pinned hero's room at the column's top: its slot reaches up behind the hero
+     (`under: 'hero'`, the slot's --lib-under), so what scrolls here passes behind it. */
+  --vs-lay-under: calc(var(--lib-under, 0) * 1px);
+  /* The preview's bottom edge in the column (unitless px), set inline by useHoleClip while there
+     is a preview. */
+  --vs-lay-hole-b: 0;
+  /* Where the fade under that edge ends: where the grid's first row sits at rest (the pinned
+     room and the grid's top padding), so nothing at rest is faded and a tile kept in view below
+     the preview is whole; tiles scrolling up dissolve across the band above it. */
+  --vs-lay-fade-end: calc(var(--vs-lay-under) + var(--space-2));
   display: flex;
   flex-direction: column;
   gap: var(--mat-plate-gap);
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  padding: 0 var(--mat-plate-inset);
+  padding: var(--vs-lay-under) var(--mat-plate-inset) 0;
+  scroll-padding-top: var(--vs-lay-under);
+  box-sizing: border-box;
+}
+/* Under the preview (useHoleClip): clipped above its bottom edge, full width, so nothing passing
+   under it shows beside it, paints over the native picture or takes a press there; and faded in
+   under that edge by the band, so what scrolls up dissolves as it flows underneath. (The mask
+   reads only its stops' alpha: the ink is any opaque contract colour.) */
+.vs-lay .vs-lay-main[data-hole] {
+  clip-path: inset(calc(var(--vs-lay-hole-b) * 1px) 0 0 0);
+  mask-image: linear-gradient(
+    to bottom,
+    transparent calc(var(--vs-lay-hole-b) * 1px),
+    var(--key-black) var(--vs-lay-fade-end)
+  );
 }
 .vs-lay .vs-lay-main > * {
   flex: none;
   min-width: 0;
 }
 /* A pane (Home's grid, a playlist's): it fills the rest of the column and scrolls itself, with
-   its own side padding, so the column adds none and doesn't scroll. */
+   its own side padding, so the column adds none and doesn't scroll. It starts under the hero's
+   room; a scroller in it may reach up into that room (Home.css) to pass behind the preview. */
 .vs-lay .vs-lay-main[data-pane] {
   overflow-y: hidden;
-  padding: 0;
+  padding: var(--vs-lay-under) 0 0;
 }
 .vs-lay .vs-lay-main[data-pane] > * {
   flex: 1 1 auto;

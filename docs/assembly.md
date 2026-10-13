@@ -67,6 +67,10 @@ type Row = (RegionSpec | { rows: Row[] })[];  // a row's slot can hold a nested 
 
 There is no grid, no fraction and no breakpoint. A **pair** is two regions that share a column seam: they take one width, so the seam beside them runs straight. Both must sit in rows of the same stack, and be first in both rows or last in both. The solver refuses any other pair.
 
+### Scrolling under a pinned region
+
+A region can say its content scrolls up behind the region directly above it: `under: 'hero'` (Home's grid under the pinned preview). Nothing about sizing changes: both are placed as before. The placement adds `under: { id, reach }` to the lower one, `reach` being the px from the pinned region's top down to its own (the pinned one's height and the gap). `AssembledScreen` draws that slot reaching up to the pinned region's top, after it (so above it), with `data-under` and `--lib-under` (unitless px): the content pads its scroll by that much, so it starts below the pinned region and passes behind it as it scrolls. What "behind" looks like is the content's call (Home clips its column round the preview's hole, since the native preview must never be painted over). The solver refuses an `under` that names a region outside the body, or one not above it across the same columns.
+
 Regions sit `--mat-plate-gap` apart, and the header and footer are that far from the body. The `edge` keeps the body and footer off the room's sides and foot (an app bar in the header still spans the room). Two arrangements of one screen are two specs (the Stage's `STAGE_SPEC` and `STAGE_SPLIT_SPEC`), never CSS.
 
 ### Aspect

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type ReactNode, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, type ReactNode, type RefObject } from 'react';
 import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
 import { assemble, lengthSum, principlesFor, resolveLength, useForm, type Form, type Forms, type Length, type Principles, type RegionSpec, type ScreenSpec, type Units } from '../../layout/assembly';
@@ -7,7 +7,7 @@ import { packs } from '../../themes/packs';
 import { say } from '../model/words';
 import type { Docks, InspectorMode, SidebarMode } from '../model/home-model';
 import { HEADER_FORMS, Mark } from '../Views/Views';
-import { HERO_FORMS } from '../Hero/Hero';
+import { HERO_FORMS, HERO_PIC } from '../Hero/Hero';
 import { TRANSPORT_FORMS } from '../TransportBar/TransportBar';
 import './HomeLayout.css';
 
@@ -92,7 +92,8 @@ export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true
             // Pinned undocked (put away or laid over), the header holds the window buttons' room and the title; free to choose, the docking answer leaves them out.
             [region('header', sidebar === 'overlaid' ? HEAD_TITLED_FORMS : HEAD_FORMS, 'controls')],
             ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
-            [region('pane', PANE_FORMS, 'chrome')],
+            // The grid scrolls up behind the pinned preview: its slot reaches up to the hero's top.
+            [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}) }],
             ...(bar ? [[region('bar', TRANSPORT_FORMS, 'controls')]] : []),
           ],
         },
@@ -162,7 +163,14 @@ export function useLayoutPrinciples(): Principles {
  *
  * From the original: the hero's picture is the native preview's hole (`Preview`, placed under
  * the page each frame), and a scroll container can't clip that view, so the hero never scrolls:
- * only the pane under it does. Nothing paints under the hole: the root paints nothing, and the
+ * only the pane under it does. Unlike the original, the pane scrolls up *behind* the pinned
+ * hero (the owner's call: a wide window shows more rows passing under the preview): its slot
+ * reaches up to the hero's top (`under: 'hero'`, docs/assembly.md), drawn above the hero, its
+ * content padded by the hero's room (`--lib-under`), so at rest it starts below the preview. The
+ * column is clipped above the preview's bottom edge, full width (`useHoleClip`), so a tile never
+ * shows beside the preview, paints over the native picture or takes a press there, and as it
+ * scrolls a soft band under that edge fades the tiles out as they flow underneath. The scrollers
+ * draw no scrollbar (they still scroll by trackpad, wheel and keys). Nothing paints under the hole: the root paints nothing, and the
  * picture's own spread shadow (Hero.css) paints the window's tint everywhere else, the panels,
  * header, pane and bar sitting above it with no background of their own. With no hero the
  * docked panels' cells are the plain `base` plate.
@@ -183,6 +191,16 @@ export function useLayoutPrinciples(): Principles {
  * - `--vs-lay-insp` (288px): the inspector's width.
  * - `--vs-lay-z-over-hole`, `--vs-lay-z-overlay`: what stacks over the hero's shadow, and the
  *   panels laid over the column.
+ * - `--vs-lay-content-top`: the content line, the title bar and the screen's gap (`TITLEBAR`
+ *   plus the plate gap, where the solver puts the hero's top): the sidebar's rows start on it,
+ *   so the sidebar's first row and the column's hero line up.
+ * - `--vs-lay-under`: the room the pinned hero takes at the top of the column that scrolls
+ *   behind it (the slot's `--lib-under`, in px); 0 with no hero.
+ * - `--vs-lay-hole-b` (set by `useHoleClip`, unitless px): the preview's bottom edge in the
+ *   column, above which it is clipped.
+ * - `--vs-lay-fade-end`: where the fade under the preview's edge ends: the pinned room
+ *   (`--vs-lay-under`) and the grid's top padding (`--space-2`), where the first row sits at rest,
+ *   so a tile kept in view below the preview is never faded.
  * The docked panels' widths and the title bar's height are also declared needs
  * (`SIDEBAR_FORMS`, `INSPECTOR_FORMS`, `TITLEBAR`, `LIGHTS_ROOM`, `TITLE_W`), which the solver places by.
  * Also `--lay-tile` (200px) and `--lay-tile-gap` (`--space-4`), the stories' grid.
@@ -212,6 +230,13 @@ export interface HomeLayoutProps {
   inspectorMode?: InspectorMode;
   /** Put away what is laid over the main column (the overlay sidebar or inspector): Escape, or a press outside it. A press on a control naming the panel in `aria-controls` (`SIDEBAR_ID`, `INSPECTOR_ID`: its toggle) counts as inside. */
   onDismiss?(): void;
+  /**
+   * A quiet control on the title's line (Home: Settings, InsetSidebar's `SettingsButton`): at the
+   * right end of the sidebar's top band, or beside the title in the header row while no sidebar
+   * is docked (and it folds away with the title). The band drags the window; a button in it
+   * doesn't (only the element marked `data-tauri-drag-region` itself drags).
+   */
+  titleAction?: ReactNode;
   /** A pane under the hero in place of `children` (Home's grid, a playlist's): it fills the rest of the column and scrolls itself, with its own side padding (the column adds none and doesn't scroll). */
   pane?: ReactNode;
 }
@@ -245,12 +270,28 @@ export function InspectorPanel({ label = INSPECTOR_LABEL, id, children, panelRef
  * story (the original's story drew it by hand). `lights` draws the window buttons' stand-in at
  * its corner.
  */
-export function SidebarPanel({ label = 'sources', id, children, panelRef, lights = false }: { label?: string; id?: string; children: ReactNode; panelRef?: RefObject<HTMLElement | null>; lights?: boolean }) {
+export function SidebarPanel({
+  label = 'sources',
+  id,
+  children,
+  panelRef,
+  lights = false,
+  titleAction,
+}: {
+  label?: string;
+  id?: string;
+  children: ReactNode;
+  panelRef?: RefObject<HTMLElement | null>;
+  lights?: boolean;
+  /** At the band's right end, on the title's line (Home: InsetSidebar's `SettingsButton`). */
+  titleAction?: ReactNode;
+}) {
   return (
     <nav className="vs-lay-panel vs-lay-side" id={id} aria-label={label} ref={panelRef} tabIndex={-1} data-lights={lights ? '' : undefined}>
       {lights && <Lights />}
       <div className="vs-lay-side-band" data-tauri-drag-region>
         <WindowTitle />
+        {titleAction && <span className="vs-lay-title-action">{titleAction}</span>}
       </div>
       <div className="vs-lay-side-body">{children}</div>
     </nav>
@@ -266,9 +307,15 @@ function WindowTitle() {
   );
 }
 
-/** The title in the header row (no sidebar docked), while the header's form has room for it. */
-function HeadTitle() {
-  return useForm(HEAD_TITLED_FORMS) === 'titled' ? <WindowTitle /> : null;
+/** The title in the header row (no sidebar docked), while the header's form has room for it, and the title's action (Settings) beside it. */
+function HeadTitle({ action }: { action?: ReactNode }) {
+  if (useForm(HEAD_TITLED_FORMS) !== 'titled') return null;
+  return (
+    <>
+      <WindowTitle />
+      {action && <span className="vs-lay-title-action">{action}</span>}
+    </>
+  );
 }
 
 /** The native window buttons' stand-in (stories only; Live's stories lay it over the Stage). */
@@ -348,6 +395,50 @@ function useDismiss(side: RefObject<HTMLElement | null>, insp: RefObject<HTMLEle
   }, [on, key, side, insp]);
 }
 
+/**
+ * Where the column that scrolls under the preview may show: below the preview's bottom edge (the
+ * picture, `HERO_PIC`, with the card's words when it has them), measured in the column's own box
+ * (`main`, whose slot reaches up behind the hero) as unitless px in `--vs-lay-hole-b`, with
+ * `data-hole` while there is a preview. HomeLayout.css clips the column above that edge, full
+ * width (nothing shows beside the preview, nothing paints over the native picture or takes a
+ * press there), and fades it in across the band between that edge and where the first row sits
+ * at rest, so tiles dissolve as they flow underneath. Followed as the column or
+ * the hero resizes; in layout px (a scaled story frame's transform taken out).
+ */
+function useHoleClip(main: RefObject<HTMLElement | null>, hero: RefObject<HTMLElement | null>, on: boolean) {
+  useLayoutEffect(() => {
+    const col = main.current;
+    const slot = hero.current;
+    if (!col) return;
+    const clear = () => {
+      delete col.dataset.hole;
+      col.style.removeProperty('--vs-lay-hole-b');
+    };
+    if (!on || !slot) return clear();
+    const read = () => {
+      // The picture, and the card's words beside or under it when it has them (its later siblings).
+      const parts = [...slot.querySelectorAll<HTMLElement>(`.${HERO_PIC}, .${HERO_PIC} ~ *`)].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0 && r.height > 0);
+      const box = col.getBoundingClientRect();
+      if (!parts.length || !col.offsetWidth || !box.width) return clear();
+      const s = box.width / col.offsetWidth;
+      const bottom = (Math.max(...parts.map((p) => p.bottom)) - box.top) / s;
+      if (bottom <= 0) return clear();
+      col.style.setProperty('--vs-lay-hole-b', String(Math.round(bottom * 100) / 100));
+      col.dataset.hole = '';
+    };
+    read();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(read);
+    observer?.observe(col);
+    observer?.observe(slot);
+    const pic = slot.querySelector(`.${HERO_PIC}`);
+    if (pic) observer?.observe(pic);
+    return () => {
+      observer?.disconnect();
+      clear();
+    };
+  }, [main, hero, on]);
+}
+
 /** The window: the sidebar, the main column and the inspector, each shown as its mode says, assembled. */
 export function HomeLayout({
   sidebar,
@@ -363,9 +454,13 @@ export function HomeLayout({
   inspectorMode = 'docked',
   onDismiss,
   pane,
+  titleAction,
 }: HomeLayoutProps) {
   const side = useRef<HTMLElement | null>(null);
   const insp = useRef<HTMLElement | null>(null);
+  const mainRef = useRef<HTMLElement | null>(null);
+  const heroRef = useRef<HTMLElement | null>(null);
+  useHoleClip(mainRef, heroRef, !!hero);
   const principles = useLayoutPrinciples();
   const inspMode = inspector ? inspectorMode : null;
   const sideOver = sidebarMode === 'overlay';
@@ -393,24 +488,24 @@ export function HomeLayout({
           sidebar:
             sidebarMode === 'hidden' ? null : (
               <Region name="sidebar" className={cell(sidebarMode, 'side')}>
-                <SidebarPanel label={sidebarLabel} id={SIDEBAR_ID} panelRef={side}>
+                <SidebarPanel label={sidebarLabel} id={SIDEBAR_ID} panelRef={side} titleAction={titleAction}>
                   {sidebar}
                 </SidebarPanel>
               </Region>
             ),
           header: (
             <div className="vs-lay-head" data-tauri-drag-region>
-              {sidebarMode !== 'docked' && <HeadTitle />}
+              {sidebarMode !== 'docked' && <HeadTitle action={titleAction} />}
               {header}
             </div>
           ),
           hero: (
-            <section className="vs-lay-hero" aria-label={say('stage')}>
+            <section className="vs-lay-hero" aria-label={say('stage')} ref={heroRef}>
               {hero}
             </section>
           ),
           pane: (
-            <main className="vs-lay-main" data-pane={pane ? '' : undefined}>
+            <main className="vs-lay-main" data-pane={pane ? '' : undefined} ref={mainRef}>
               {pane ?? children}
             </main>
           ),

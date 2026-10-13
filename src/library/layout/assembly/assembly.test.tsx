@@ -385,3 +385,36 @@ describe('assemble: ratio, parts, edge', () => {
     expect(p.zoom).toBeLessThan(1);
   });
 });
+
+describe('assemble: a region scrolling under a pinned one', () => {
+  const spec: ScreenSpec = {
+    rows: [
+      [{ id: 'pin', forms: [{ id: 'pin', min: { w: 0, h: { control: 3 } }, ideal: { w: 0, h: { control: 3 } } }] }],
+      [{ id: 'list', under: 'pin', forms: [{ id: 'list', min: { w: 0, h: { control: 2 } }, ideal: { w: 0, h: { control: 2 } }, grow: { w: true, h: true } }] }],
+    ],
+  };
+
+  it('keeps the sizes and reaches up to the pinned region: its height and the gap', () => {
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const plain = assemble({ rows: spec.rows.map((row) => row.map((r) => ({ ...(r as RegionSpec), under: undefined }))) }, { w: 600, h: 400 }, P);
+    expect(p.regions.list.rect).toEqual(plain.regions.list.rect);
+    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap });
+    expect(p.regions.pin.under).toBeUndefined();
+  });
+
+  it('refuses a region that is not above it', () => {
+    const bad: ScreenSpec = { rows: [[{ ...(spec.rows[0][0] as RegionSpec), under: 'list' }], spec.rows[1]] };
+    expect(() => assemble(bad, { w: 600, h: 400 }, P)).toThrow(/must sit above it/);
+    expect(() => assemble({ rows: [[{ ...(spec.rows[1][0] as RegionSpec), under: 'nope' }]] }, { w: 600, h: 400 }, P)).toThrow(/isn't in the body/);
+  });
+
+  it('draws the slot reaching up, with --lib-under', () => {
+    render(<Screen name="Under" spec={spec} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List' }} />);
+    const root = screen.getByRole('group', { name: 'Under' });
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const slot = root.querySelector('[data-region="list"]') as HTMLElement;
+    expect(slot).toHaveAttribute('data-under', 'pin');
+    expect(slot.style.getPropertyValue('--lib-at-y')).toBe(String(p.regions.pin.rect.y));
+    expect(slot.style.getPropertyValue('--lib-under')).toBe(String(p.regions.list.under!.reach));
+  });
+});

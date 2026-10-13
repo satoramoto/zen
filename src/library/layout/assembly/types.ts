@@ -89,6 +89,13 @@ export interface RegionSpec {
   head?: boolean;
   /** Drawn on a plate: the plate's inset is added round it. Default true. */
   plate?: boolean;
+  /**
+   * The id of a body region directly above this one that its content scrolls up behind (a list
+   * passing under a pinned preview). Sizes are unchanged: the region's slot is drawn reaching up
+   * to that region's top, above it, and the content is told how much of its top that pinned
+   * region covers (`Placed.under`).
+   */
+  under?: string;
 }
 
 /** A stack of rows inside a row's slot (a column of regions next to another region). */
@@ -200,6 +207,12 @@ export interface Placed {
   /** In px, relative to its zone (header, body or footer), before the body's zoom. */
   rect: Rect;
   zone: 'header' | 'body' | 'footer';
+  /**
+   * With `RegionSpec.under`: the pinned region it scrolls behind, and `reach`, the px from that
+   * region's top down to this one's (its height and the gap): the slot is drawn that much taller,
+   * reaching up, and its content keeps that much of its top for the pinned region.
+   */
+  under?: { id: string; reach: number };
 }
 
 /** The solver's answer. */

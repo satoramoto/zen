@@ -38,7 +38,12 @@ export { paneKey, samePane, sidebarSections, type SidebarRow, type SidebarSectio
  * walk (arrows, Home, End, ← folds, → unfolds, Enter or Space); a playlist's row playing on
  * double-click and from its hover button, taking drops (a smart one refusing, faded), its menu
  * (right-click, ⇧F10, the menu key, the "…") with delete asking first and rename in place; the
- * playlists' heading's + and import; the Settings row pinned at the foot.
+ * playlists' heading's + and import; Settings' name, tooltip and press.
+ *
+ * Unlike the original (the owner's call), Settings is no longer a row at the foot: it is the
+ * gear alone (`SettingsButton`), which HomeLayout draws at the right end of the sidebar's top
+ * band on the title's line (`titleAction`), or beside the title in the header while no sidebar
+ * is docked; the rows get the foot's height. `actions.onSettings` stays in the type, unused here.
  *
  * From the original: a playlist's row also plays: its icon turns into a play (or stop) button on
  * hover, a double-click plays or stops it, and it is a place to drop a preset (a smart one
@@ -46,9 +51,21 @@ export { paneKey, samePane, sidebarSections, type SidebarRow, type SidebarSectio
  * right-click, ⇧F10 (or the menu key) and the "…" that shows on hover: play or stop, quick add (a
  * manual playlist's), show info (the playlist's card in the inspector), rename (in place), save
  * to a file, delete (asking first). The playlists' heading has + (a new playlist) and an import
- * arrow (add one from a file). At the foot, pinned under the rows, a quiet Settings row (the
- * gear) opens Settings.
+ * arrow (add one from a file). A quiet gear opens Settings.
  */
+
+/**
+ * Settings, as the gear alone: a quiet glyph button (brighter on hover), named "Settings", its
+ * tooltip the shortcut. HomeLayout puts it on the title's line (`titleAction`); it takes presses
+ * inside the band that drags the window, since only the band itself is the drag region.
+ */
+export function SettingsButton({ onSettings }: { onSettings(): void }) {
+  return (
+    <button type="button" className="vs-isb-settings" aria-label="Settings" title="Settings (⌘,)" data-hint="Settings (⌘,)" onClick={() => onSettings()}>
+      <Icon className="vs-isb-gear" name="gear" />
+    </button>
+  );
+}
 
 export interface InsetSidebarProps {
   sections: SidebarSection[];
@@ -399,17 +416,6 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
           );
         })}
       </div>
-      {/* The foot, pinned under the rows (it stays put while they scroll): a quiet Settings row. */}
-      {actions?.onSettings && (
-        <div className="vs-isb-foot">
-          <button type="button" className="vs-isb-settings" title="Settings (⌘,)" onClick={() => actions.onSettings?.()}>
-            <Icon className="vs-isb-gear" name="gear" />
-            <Text role="caption" leading="normal" className="vs-isb-name">
-              Settings
-            </Text>
-          </button>
-        </div>
-      )}
       {menu && <RowMenu name={menu.list.name} items={rowMenu(menu.list, playingNow(menu), lists, { info: !!actions?.onInfo })} at={menu} onChoose={choose} onClose={closeMenu} />}
     </Text>
   );

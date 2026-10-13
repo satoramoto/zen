@@ -61,8 +61,47 @@ function Desktop({ desktop, mode, children }: { desktop?: { light: string; dark:
 
 // The design window a story is drawn at (`parameters.frame`, in px); its context lives in
 // frame.ts so app code can read it without importing anything from Storybook.
-import { FrameRoom, type StoryFrame } from './frame';
-export { useFrameRoom, type StoryFrame } from './frame';
+import { FrameRoom, type StoryFrame, type StoryFrameParam } from './frame';
+export { useFrameRoom, type StoryFrame, type StoryFrameParam } from './frame';
+
+/** The canvas's own size, followed as it is resized (null until measured). */
+function useCanvasSize(box: { current: HTMLDivElement | null }, deps: readonly unknown[]): StoryFrame | null {
+  const [size, setSize] = useState<StoryFrame | null>(null);
+  useLayoutEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const read = () => {
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      if (w > 0 && h > 0) setSize((was) => (was && was.w === w && was.h === h ? was : { w, h }));
+    };
+    read();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(read);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, deps);
+  return size;
+}
+
+/** The canvas box every frame sits in: the whole story iframe. */
+const CANVAS: CSSProperties = { position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' };
+
+/**
+ * `frame: 'fill'`: the story fills the canvas at its real size, unscaled, as a resizable window
+ * does. `useFrameRoom()` reports the canvas's size (followed as it resizes), and
+ * `--story-frame-w` / `--story-frame-h` are that size.
+ */
+function FillFrame({ children }: { children: ReactNode }) {
+  const box = useRef<HTMLDivElement | null>(null);
+  const size = useCanvasSize(box, []);
+  const vars = (size ? { '--story-frame-w': `${size.w}px`, '--story-frame-h': `${size.h}px` } : {}) as CSSProperties;
+  return (
+    <div ref={box} data-story-canvas="" data-story-frame="fill" style={{ ...CANVAS, ...vars }}>
+      <FrameRoom.Provider value={size}>{children}</FrameRoom.Provider>
+    </div>
+  );
+}
 
 /** How the frame sits in the canvas: its scale and its offset (letterboxed, centred). */
 interface Fit {
@@ -72,35 +111,22 @@ interface Fit {
 }
 
 /**
- * The story at exactly `frame.w` × `frame.h`, scaled uniformly (a transform, origin top left,
- * so hit-testing and `getBoundingClientRect` stay right) to the largest box that fits the canvas,
- * centred, measured again whenever the canvas resizes. Layout inside is at design px: element
- * sizes and ResizeObservers see the frame's size, and `--story-frame-w` / `--story-frame-h` stand
- * in for `100vw` / `100vh`. What renders outside it (the top layer: native popovers, dialogs
- * shown modal) isn't scaled.
+ * The story at exactly `frame.w` × `frame.h`, centred in the canvas, and scaled down uniformly
+ * (a transform, origin top left, so hit-testing and `getBoundingClientRect` stay right) only when
+ * the canvas is smaller than it, never up; measured again whenever the canvas resizes. Layout
+ * inside is at design px: element sizes and ResizeObservers see the frame's size, and
+ * `--story-frame-w` / `--story-frame-h` stand in for `100vw` / `100vh`. What renders outside it
+ * (the top layer: native popovers, dialogs shown modal) isn't scaled.
  */
 function ScaledFrame({ frame, children }: { frame: StoryFrame; children: ReactNode }) {
   const box = useRef<HTMLDivElement | null>(null);
-  const [fit, setFit] = useState<Fit | null>(null);
-  useLayoutEffect(() => {
-    const el = box.current;
-    if (!el) return;
-    const read = () => {
-      const w = el.clientWidth;
-      const h = el.clientHeight;
-      if (w <= 0 || h <= 0) return;
-      const s = Math.min(w / frame.w, h / frame.h);
-      setFit((was) => {
-        const next = { s, x: (w - frame.w * s) / 2, y: (h - frame.h * s) / 2 };
-        return was && was.s === next.s && was.x === next.x && was.y === next.y ? was : next;
-      });
-    };
-    read();
-    if (typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(read);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [frame.w, frame.h]);
+  const canvas = useCanvasSize(box, [frame.w, frame.h]);
+  const fit: Fit | null = canvas
+    ? (() => {
+        const s = Math.min(1, canvas.w / frame.w, canvas.h / frame.h);
+        return { s, x: (canvas.w - frame.w * s) / 2, y: (canvas.h - frame.h * s) / 2 };
+      })()
+    : null;
   const inner = {
     position: 'absolute',
     left: fit?.x ?? 0,
@@ -113,7 +139,7 @@ function ScaledFrame({ frame, children }: { frame: StoryFrame; children: ReactNo
     '--story-frame-h': `${frame.h}px`,
   } as CSSProperties;
   return (
-    <div ref={box} data-story-canvas="" style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+    <div ref={box} data-story-canvas="" style={CANVAS}>
       <div data-story-frame={`${frame.w}x${frame.h}`} style={inner}>
         <FrameRoom.Provider value={frame}>{children}</FrameRoom.Provider>
       </div>
@@ -122,14 +148,25 @@ function ScaledFrame({ frame, children }: { frame: StoryFrame; children: ReactNo
 }
 
 /**
- * A full-window story drawn at its design window and scaled to the canvas, keeping the ratio:
- * set `parameters.frame = { w, h }` (and `layout: 'fullscreen'`). Without `frame` it does nothing.
- * Put it inside `withLibraryTheme` (before it in `decorators`, which wrap outward:
- * `[withVisualsFrame, withStoryFrame, withLibraryTheme]`), so the theme's desktop fills the
- * letterbox and the frame sits in the theme scope.
+ * A full-window story's window (`parameters.frame`, with `layout: 'fullscreen'`):
+ *
+ * - `'fill'`: a fluid window. The story fills the canvas at its real size, unscaled; the room it
+ *   lays out in is the canvas, followed as it resizes (`useFrameRoom()`).
+ * - `{ w, h }`: a story named for a size ("At 900 px"). Drawn at that design window, centred, and
+ *   scaled down (keeping the ratio) only when the canvas is smaller than it, never up.
+ *
+ * Without `frame` it does nothing. Put it inside `withLibraryTheme` (before it in `decorators`,
+ * which wrap outward: `[withVisualsFrame, withStoryFrame, withLibraryTheme]`), so the theme's
+ * desktop fills the letterbox and the frame sits in the theme scope.
  */
 export const withStoryFrame: Decorator = (Story, { parameters }) => {
-  const frame = parameters.frame as StoryFrame | undefined;
+  const frame = parameters.frame as StoryFrameParam | undefined;
+  if (frame === 'fill')
+    return (
+      <FillFrame>
+        <Story />
+      </FillFrame>
+    );
   return frame ? (
     <ScaledFrame frame={frame}>
       <Story />

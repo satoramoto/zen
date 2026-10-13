@@ -46,8 +46,11 @@
   transform-origin: 0 0;
 }
 
-/* A slot's content fills it: a Region stretches to the box the solver gave it. */
+/* A slot's content fills it: a Region stretches to the box the solver gave it. A slot placed
+   `under` a pinned region reaches up behind it; --lib-under (unitless px, set inline) is how much
+   of its top that region covers, for the content's scroll padding (0 otherwise). */
 .lib-assembled__slot {
+  --lib-under: 0;
   display: grid;
   grid-template: minmax(0, 1fr) / minmax(0, 1fr);
 }

@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
-import { assemble, principlesFor, type Placement } from '../../layout/assembly';
+import { assemble, principlesFor, resolveLength, type Placement } from '../../layout/assembly';
 import { packs } from '../../themes/packs';
+import { scales } from '../../themes/scales';
 import { modesFor } from '../model/home-model';
-import { HomeLayout, homeDocks, homeSpec } from './HomeLayout';
+import { HomeLayout, homeDocks, homeSpec, TITLEBAR } from './HomeLayout';
 
 // Home assembled under the visuals pack's own principles (roomy scale, frost materials): which
 // regions dock at the original's sizes, from their needs alone (docs/assembly.md).
@@ -134,5 +135,38 @@ describe('HomeLayout on screen', () => {
     expect(slot('inspector')?.querySelector('.vs-lay-cell--overlay.lib-opaque')).not.toBeNull();
     // No grid of its own: the frame is the assembled screen.
     expect(container.querySelector('.lib-screen__grid')).toBeNull();
+  });
+
+  it('the grid scrolls under the pinned hero: its slot reaches up to the hero, above it', () => {
+    const { container } = render(
+      <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} bar={<p>bar</p>} pane={<p>grid</p>} />,
+    );
+    const pane = container.querySelector<HTMLElement>("[data-region='pane']")!;
+    const hero = container.querySelector<HTMLElement>("[data-region='hero']")!;
+    expect(pane).toHaveAttribute('data-under', 'hero');
+    expect(pane.style.getPropertyValue('--lib-at-y')).toBe(hero.style.getPropertyValue('--lib-at-y'));
+    expect(Number(pane.style.getPropertyValue('--lib-under'))).toBeGreaterThan(0);
+    // After the hero in the DOM, so drawn over it.
+    expect(hero.compareDocumentPosition(pane) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
+
+describe('the column and the sidebar start their content on one line', () => {
+  // HomeLayout.css's --vs-lay-content-top: the title bar and the screen's gap. The sidebar's rows
+  // start there (the panel's padding); the hero must too, under every pack and scale, docked or not.
+  it('the hero sits at TITLEBAR + the plate gap from the window top, at every size, pack and scale', () => {
+    for (const pk of packs)
+      for (const scale of scales) {
+        const p = principlesFor({ ...pk.facets, scale }, pk.principles);
+        const line = resolveLength(TITLEBAR, p) + p.plate.gap;
+        for (const room of [{ w: 1440, h: 900 }, { w: 1100, h: 800 }, { w: 700, h: 800 }])
+          for (const sidebar of ['either', 'overlaid'] as const) {
+            const placed = assemble(homeSpec({ sidebar }), room, p);
+            if (placed.zoom !== 1) continue;
+            const { hero, sidebar: side } = placed.regions;
+            expect(Math.abs(hero.rect.y - line), `${pk.id} ${scale.id} ${room.w}×${room.h} ${sidebar}`).toBeLessThanOrEqual(1);
+            expect(side.rect.y).toBe(0);
+          }
+      }
   });
 });
