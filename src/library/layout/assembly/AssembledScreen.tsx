@@ -133,6 +133,7 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
         data-over-glass={placed.over?.glass ? '' : undefined}
         style={style}
       >
+        {placed.glass && <Surface layer="float" radius="none" className="lib-assembled__glass" aria-hidden="true" />}
         <FormProvider form={placed.form} parts={placed.parts}>{typeof content === 'function' ? content(placed.form, placed) : content}</FormProvider>
       </div>
     );

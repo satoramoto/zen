@@ -112,22 +112,24 @@
   --lib-over-edge: 0;
   --lib-fade-b: calc(var(--lib-over) * 1px);
 }
-/* The glass itself: the theme's float backdrop (its blur) and a faint float tint behind the
-   region's content, feathered a band past its top and bottom so no box shows. No edge, no cast:
-   it is clear. Isolated, so the glass (z -1) stays behind the content whatever it positions. */
+/* The glass itself (AssembledScreen's `lib-assembled__glass`, a float Surface: the theme's backdrop,
+   its blur): behind the region's content, its tint thinned, no edge, no cast (it is clear), and
+   feathered a band past its top and bottom so no box shows. Isolated, so the glass (z -1) stays
+   behind the content whatever it positions. */
 .lib-assembled__slot[data-glass] {
   isolation: isolate;
 }
-.lib-assembled__slot[data-glass]::before {
+.lib-assembled__glass {
   --lib-glass-feather: var(--space-4);
   --lib-glass-tint: 30%;
-  content: '';
+  --lib-surface-fill: color-mix(in oklab, var(--layer-float-fill) var(--lib-glass-tint), transparent);
+  --lib-surface-edge: 0 0 0 0 transparent;
+  --lib-surface-cast: 0 0 0 0 transparent;
   position: absolute;
   inset: calc(var(--lib-glass-feather) * -1) 0;
   z-index: -1;
   pointer-events: none;
-  backdrop-filter: var(--layer-float-backdrop);
-  background: color-mix(in oklab, var(--layer-float-fill) var(--lib-glass-tint), transparent);
+  border-radius: 0;
   mask-image: linear-gradient(
     to bottom,
     transparent,
