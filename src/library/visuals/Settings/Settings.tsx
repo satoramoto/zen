@@ -17,6 +17,7 @@ import { NoticeBanner } from '../Views/Views';
 import * as api from '../model/api';
 import { REDUCE_WHAT, setMotion, useMotion } from '../model/access';
 import { useNotice, useTauriEvent } from '../model/hooks';
+import { emit } from '../model/ipc';
 import * as output from '../model/output';
 import * as pack from '../model/pack';
 import { say, Say } from '../model/words';
@@ -158,6 +159,54 @@ export function QualitySettings() {
         </>
       )}
       <NoticeBanner notice={notice} onDismiss={dismiss} />
+    </div>
+  );
+}
+
+/** The update channels in the order the picker lists them, and what it says. */
+export const UPDATE_CHANNELS: readonly api.UpdateChannelName[] = ['release', 'latest'];
+const CHANNEL_NAMES: Record<api.UpdateChannelName, string> = { release: 'Release', latest: 'Latest' };
+
+/** The picker's words, the default marked. */
+export const channelNames = (fallback: api.UpdateChannelName): string[] =>
+  UPDATE_CHANNELS.map((c) => (c === fallback ? `${CHANNEL_NAMES[c]} (default)` : CHANNEL_NAMES[c]));
+
+/** Updates: Release or Latest; after a change the app looks for an update on the new channel. */
+function UpdateSettings() {
+  const [channel, setChannel] = useState<api.UpdateChannel | null>(null);
+  const [problem, setProblem] = useState<string | null>(null);
+  useEffect(() => {
+    api.updateChannel().then(setChannel, (e) => setProblem(why(e)));
+  }, []);
+  const change = (i: number) => {
+    const next = UPDATE_CHANNELS[i];
+    if (!channel || next === channel.channel) return;
+    setChannel({ ...channel, channel: next });
+    setProblem(null);
+    api
+      .updateChannelSet(next)
+      .then(setChannel, (e) => setProblem(why(e)))
+      .finally(() => void emit(api.UPDATE_CHECK_EVENT));
+  };
+  return (
+    <div className="vs-settings-updates">
+      {channel && (
+        <>
+          <Segmented
+            label="Updates"
+            items={channelNames(channel.default)}
+            index={Math.max(0, UPDATE_CHANNELS.indexOf(channel.channel))}
+            onChange={change}
+            title="Release: each published version. Latest: every build from main, untested beyond building"
+          />
+          <Line>{channel.channel === 'latest' ? 'Every build from main, untested beyond building.' : 'Each published version.'}</Line>
+        </>
+      )}
+      {problem && (
+        <Line className="vs-settings-problem" ariaRole="status">
+          {problem}
+        </Line>
+      )}
     </div>
   );
 }
@@ -331,7 +380,7 @@ function PresetsSection() {
 }
 
 /** The sections, in the order the sheet shows them. */
-export const SECTIONS = ['Sound', 'Presets', 'Output', 'Link', 'Effects', Say('render quality'), 'Accessibility', 'Privacy'] as const;
+export const SECTIONS = ['Sound', 'Presets', 'Output', 'Link', 'Effects', Say('render quality'), 'Accessibility', 'Privacy', 'Updates'] as const;
 
 /**
  * **Job.** ⚙ Settings (#98), a sheet over any view: opened with `openSheet('settings')` from
@@ -354,7 +403,7 @@ export const SECTIONS = ['Sound', 'Presets', 'Output', 'Link', 'Effects', Say('r
  */
 export function Settings({ open, onClose }: { open: boolean; onClose(): void }) {
   if (!open) return null;
-  const [sound, presets, out, linked, effects, quality, access, privacy] = SECTIONS;
+  const [sound, presets, out, linked, effects, quality, access, privacy, updates] = SECTIONS;
   return (
     <Sheet title="Settings" className="vs-settings" scrim modal onClose={onClose}>
       <Section name={sound}>
@@ -386,6 +435,9 @@ export function Settings({ open, onClose }: { open: boolean; onClose(): void }) 
           title="Keep a note when the app crashes, and offer to send it as a GitHub issue you look over first"
           note={`No ${say('telemetry')}: nothing about you or how you use the app leaves this Mac. A crash report only goes anywhere if you send it yourself.`}
         />
+      </Section>
+      <Section name={updates}>
+        <UpdateSettings />
       </Section>
     </Sheet>
   );
