@@ -45,7 +45,7 @@ import { HelpOverlay, HOME_HELP } from '../HelpOverlay/HelpOverlay';
 import { modalOpen } from '../model/liveKeys';
 import { Hero, HERO_PIC } from '../Hero/Hero';
 import { TransportBar } from '../TransportBar/TransportBar';
-import { InsetSidebar, SettingsButton, sidebarSections } from '../InsetSidebar/InsetSidebar';
+import { InsetSidebar, sidebarSections } from '../InsetSidebar/InsetSidebar';
 import { Inspector } from '../Inspector/Inspector';
 import { Icon } from '../Icon/Icon';
 import { INSPECTOR_KEY, modesFor, offersQuickAdd, paneName, SIDEBAR_KEY, type QuickAdd, type Selection, type SidebarActions } from '../model/home-model';
@@ -674,6 +674,20 @@ export function Home({
   // Where it plays from, as the deck says, for the preset shown playing: never a playlist that isn't playing it.
   const from = playsFrom(deck, playlists, true, current?.path ?? null);
   const stepWords = playing ? ' in the playlist' : '';
+  // Shows or hides the sidebar: on the title's line in the sidebar's band while it shows, else at the header's lead.
+  const sidebarToggle = (
+    <button
+      type="button"
+      className="vs-home-tool vs-home-tool-sidebar"
+      aria-label={say('source list')}
+      aria-controls={SIDEBAR_ID}
+      aria-pressed={modes.sidebar !== 'hidden'}
+      title={`${modes.sidebar === 'hidden' ? 'Show' : 'Hide'} the ${say('source list')} (⌃⌘S)`}
+      onClick={toggleSidebar}
+    >
+      <Icon name="sidebar" />
+    </button>
+  );
 
   return (
     <>
@@ -682,8 +696,10 @@ export function Home({
         sidebarMode={modes.sidebar}
         inspectorMode={modes.inspector}
         onDismiss={dismissOverlays}
-        // Settings: the gear on the title's line (the sidebar's top band, or the header beside the title).
-        titleAction={<SettingsButton onSettings={openSettings} />}
+        // The sidebar's toggle on the title's line in its band (Settings is the sidebar's foot row).
+        titleAction={sidebarToggle}
+        // The panels' glass takes the playing preset's colours (its thumbnail: the native preview can't be read from the page).
+        ambient={playingShown?.row.thumbnail ?? null}
         sidebar={
           <InsetSidebar
             sections={sections}
@@ -709,19 +725,8 @@ export function Home({
             // The mark is at the top of the sidebar (decision 71).
             mark={false}
             onChange={(next) => next !== 'home' && onMode(next, current?.path ?? null)}
-            lead={
-              <button
-                type="button"
-                className="vs-home-tool vs-home-tool-sidebar"
-                aria-label={say('source list')}
-                aria-controls={SIDEBAR_ID}
-                aria-pressed={modes.sidebar !== 'hidden'}
-                title={`${modes.sidebar === 'hidden' ? 'Show' : 'Hide'} the ${say('source list')} (⌃⌘S)`}
-                onClick={toggleSidebar}
-              >
-                <Icon name="sidebar" />
-              </button>
-            }
+            // Docked, the toggle is in the sidebar's band.
+            lead={modes.sidebar === 'docked' ? undefined : sidebarToggle}
           >
             <span className="vs-fill" />
             <div className="vs-home-toolbar" ref={setToolbar} />

@@ -130,7 +130,7 @@
 }
 .vs-lay .vs-lay-cell--overlay .vs-lay-panel {
   pointer-events: auto;
-  box-shadow: var(--layer-raised-edge), var(--layer-float-edge), var(--layer-overlay-cast);
+  --lib-surface-cast: var(--layer-overlay-cast);
 }
 .vs-lay .vs-lay-side-cell.vs-lay-cell--overlay {
   left: 0;
@@ -155,8 +155,11 @@
   min-height: 0;
   margin: 0;
   border-radius: var(--vs-lay-side-radius);
-  background: var(--layer-raised-texture), var(--layer-raised-fill);
-  box-shadow: var(--layer-raised-edge), var(--layer-float-edge);
+  /* A raised Surface (its fill, texture and the picture's ambient light), with the float's edge
+     too and no cast or backdrop: the native preview under it can't be blurred. */
+  --lib-surface-edge: var(--layer-raised-edge), var(--layer-float-edge);
+  --lib-surface-cast: 0 0 0 0 transparent;
+  --lib-surface-backdrop: none;
   overflow: hidden;
   outline: none;
   color: var(--text-2);
@@ -193,9 +196,8 @@
   padding-left: max(calc(var(--vs-lay-lights-room) - var(--space-2)), var(--space-4));
   box-sizing: border-box;
 }
-/* The title's action (Settings) at the band's right end, on the title's line, the band's inset
-   from the panel's edge; in the header row, just after the title. It takes presses (only the
-   band itself drags). */
+/* The title's action (Home: the sidebar's toggle) at the band's right end, on the title's line,
+   the band's inset from the panel's edge. It takes presses (only the band itself drags). */
 .vs-lay-side-band > .vs-lay-title-action {
   margin-left: auto;
   padding-right: var(--space-2);
@@ -204,10 +206,6 @@
   display: flex;
   flex: none;
   align-items: center;
-}
-.vs-lay .vs-lay-head > .vs-lay-title-action {
-  flex: none;
-  margin-left: var(--space-2);
 }
 /* The title takes no presses: a drag on it is the band's, and moves the window. */
 .vs-lay-title {

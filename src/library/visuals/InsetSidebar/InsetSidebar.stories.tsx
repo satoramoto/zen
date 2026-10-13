@@ -10,7 +10,7 @@ import { BRIGHT_FAST, CLOSING, LISTS, ROWS, WARM_UP } from '../fixtures/fixtures
 import { SIDEBAR, STARRED } from '../fixtures/layout';
 import type { SidebarActions } from '../model/home-model';
 import { SidebarPanel } from '../HomeLayout/HomeLayout';
-import { InsetSidebar, SettingsButton, sidebarSections, type InsetSidebarProps } from './InsetSidebar';
+import { InsetSidebar, sidebarSections, type InsetSidebarProps } from './InsetSidebar';
 
 /** A name as a literal for a RegExp. */
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -110,9 +110,9 @@ const meta = {
   },
   parameters: { scope: 'bare', layout: 'fullscreen' },
   decorators: [
-    (Story, { args }) => (
+    (Story) => (
       <div style={{ display: 'flex', width: 256, height: 640 }}>
-        <SidebarPanel lights titleAction={args.actions?.onSettings ? <SettingsButton onSettings={args.actions.onSettings} /> : undefined}>
+        <SidebarPanel lights>
           <Story />
         </SidebarPanel>
       </div>
@@ -251,7 +251,7 @@ export const InfoAndQuickAdd: Story = {
   },
 };
 
-/** The app's title in the panel's top band beside the window buttons, and the gear (Settings) at the band's right end on the title's line: both stay put while the rows scroll, and the rows run to the panel's foot. */
+/** The app's title in the panel's top band beside the window buttons, and the quiet Settings row pinned to its foot: it stays at the bottom while the rows scroll under it. */
 export const MarkAndSettings: Story = {
   name: 'Mark and Settings',
   args: { sections: sidebarSections(MANY, { library: 250, starred: 12 }), lists: MANY },
@@ -267,33 +267,26 @@ export const MarkAndSettings: Story = {
     await expect(getComputedStyle(mark).pointerEvents).toBe('none');
     const markTop = mark.getBoundingClientRect().top;
     const settings = canvas.getByRole('button', { name: 'Settings' });
-    // In the band, right of the title, on its line.
-    const onLine = () => {
-      const g = settings.getBoundingClientRect();
-      const m = mark.getBoundingClientRect();
-      expect(settings.closest('.vs-lay-side-band')).not.toBeNull();
-      expect(g.left).toBeGreaterThan(m.right);
-      expect(Math.abs((g.top + g.bottom) / 2 - (m.top + m.bottom) / 2)).toBeLessThan(2);
-    };
-    onLine();
-    // The rows run to the panel's foot.
-    await expect(Math.abs(panel.getBoundingClientRect().bottom - scroller.getBoundingClientRect().bottom)).toBeLessThan(12);
-    // The rows scroll; the mark and the gear stay where they were.
+    const atFoot = () => expect(Math.abs(panel.getBoundingClientRect().bottom - settings.closest('.vs-isb-foot')!.getBoundingClientRect().bottom)).toBeLessThan(1);
+    await atFoot();
+    // The rows scroll; the mark and the foot stay where they were.
     scroller.scrollTop = scroller.scrollHeight / 2;
     await waitFor(() => expect(scroller.scrollTop).toBeGreaterThan(0));
-    onLine();
+    await atFoot();
     await expect(mark.getBoundingClientRect().top).toBe(markTop);
     await userEvent.click(settings);
     await expect(args.actions!.onSettings).toHaveBeenCalled();
   },
 };
 
-/** Few rows: the gear still sits in the top band, the space under the rows empty. */
+/** Few rows: the Settings row still sits at the panel's foot, the space between empty. */
 export const SettingsFewRows: Story = {
   name: 'Settings with few rows',
   args: { sections: sidebarSections(EMPTY, { library: ROWS.length, starred: STARRED.length }), lists: EMPTY, selected: { kind: 'library' } },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByRole('button', { name: 'Settings' }).closest('.vs-lay-side-band')).not.toBeNull();
+  play: async ({ canvasElement, canvas }) => {
+    const panel = canvasElement.querySelector<HTMLElement>('.vs-lay-side')!;
+    const foot = canvas.getByRole('button', { name: 'Settings' }).closest('.vs-isb-foot')!;
+    await expect(Math.abs(panel.getBoundingClientRect().bottom - foot.getBoundingClientRect().bottom)).toBeLessThan(1);
   },
 };
 

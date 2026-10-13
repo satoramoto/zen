@@ -4,8 +4,8 @@
    picked a soft pill of --radius-control in the ink, heavier, the playlist playing its green
    dot. No lines: areas told apart by space and tone (decision 68). Nothing animates. */
 
-/* A column as tall as the panel's body: the sections, which scroll inside themselves (Settings
-   is on the band's title line now, so they take the whole height). The panel's body never scrolls, so nothing is painted
+/* A column as tall as the panel's body: the sections, which scroll inside themselves,
+   then the foot, which stays at the bottom. The panel's body never scrolls, so nothing is painted
    over the rows to hide them (the panel's tone is a tint over glass: a second coat would show as
    a box). */
 .vs-isb {
@@ -36,30 +36,33 @@
 }
 
 
-/* Settings (SettingsButton): the gear alone on the title's line (HomeLayout's title action), a
-   quiet glyph a control high, brighter on hover; no box. It sits outside `.vs-isb`. */
-.vs-isb-settings {
-  display: inline-grid;
-  place-items: center;
+/* The foot: a quiet Settings row at the panel's bottom, under the rows that scroll; no line
+   between. */
+.vs-isb-foot {
   flex: none;
-  width: var(--control-h);
-  height: var(--control-h);
-  padding: 0;
+  padding: var(--space-1) 0 var(--vs-isb-gutter);
+}
+.vs-isb-settings {
+  display: flex;
+  align-items: center;
+  gap: var(--vs-isb-gutter);
+  width: 100%;
+  height: var(--space-6); /* 32px */
+  padding: 0 var(--vs-isb-gutter);
   border: 0;
-  border-radius: var(--vs-lay-key-radius, var(--radius-control));
+  border-radius: var(--radius-control);
   background: none;
   color: var(--vs-caption-raised);
   font: inherit;
+  text-align: left;
   cursor: pointer;
   user-select: none;
 }
 .vs-isb-settings:hover {
   color: var(--text-1);
+  background: var(--vs-isb-hover);
 }
-.vs-isb-settings:focus-visible {
-  outline: 2px solid var(--vs-focus-ring);
-  outline-offset: -2px;
-}
+/* The gear, where the rows' 16 px icons sit. */
 .vs-isb-gear {
   flex: none;
 }
@@ -151,7 +154,7 @@
   color: var(--text-1);
 }
 /* The focus ring goes inside: the panel scrolls, and would clip one drawn outside. */
-.vs-isb :is(.vs-isb-row, .vs-isb-toggle):focus-visible {
+.vs-isb :is(.vs-isb-row, .vs-isb-toggle, .vs-isb-settings):focus-visible {
   outline: 2px solid var(--vs-focus-ring);
   outline-offset: -2px;
 }

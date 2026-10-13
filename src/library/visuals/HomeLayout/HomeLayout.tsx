@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useMemo, useRef, type ReactNode, type RefOb
 import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
 import { assemble, lengthSum, principlesFor, resolveLength, useForm, type Form, type Forms, type Length, type Principles, type RegionSpec, type ScreenSpec, type Units } from '../../layout/assembly';
+import { Ambient, type AmbientSource } from '../../primitives/Ambient';
+import { Surface } from '../../primitives/Surface';
 import { useThemeScope } from '../../theme';
 import { packs } from '../../themes/packs';
 import { say } from '../model/words';
@@ -231,12 +233,18 @@ export interface HomeLayoutProps {
   /** Put away what is laid over the main column (the overlay sidebar or inspector): Escape, or a press outside it. A press on a control naming the panel in `aria-controls` (`SIDEBAR_ID`, `INSPECTOR_ID`: its toggle) counts as inside. */
   onDismiss?(): void;
   /**
-   * A quiet control on the title's line (Home: Settings, InsetSidebar's `SettingsButton`): at the
-   * right end of the sidebar's top band, or beside the title in the header row while no sidebar
-   * is docked (and it folds away with the title). The band drags the window; a button in it
-   * doesn't (only the element marked `data-tauri-drag-region` itself drags).
+   * A quiet control on the title's line at the right end of the sidebar's top band (Home: the
+   * sidebar's own toggle; with no sidebar showing, Home puts it at the header's lead instead).
+   * The band drags the window; a button in it doesn't (only the element marked
+   * `data-tauri-drag-region` itself drags).
    */
   titleAction?: ReactNode;
+  /**
+   * The picture the panels' glass takes its light from (`Ambient`): the sidebar the picture's
+   * left, the inspector its right, as much as the pack's raised layer shares (frost only). In the
+   * app the playing preset's thumbnail (the native preview can't be read from the page); none: no tint.
+   */
+  ambient?: AmbientSource;
   /** A pane under the hero in place of `children` (Home's grid, a playlist's): it fills the rest of the column and scrolls itself, with its own side padding (the column adds none and doesn't scroll). */
   pane?: ReactNode;
 }
@@ -259,9 +267,9 @@ export const TOGGLE_SIDE = 'vs-lay-toggle--side';
 /** The inspector's inset panel: HomeLayout's right slot, and the inspector's frame on its own in a story. */
 export function InspectorPanel({ label = INSPECTOR_LABEL, id, children, panelRef }: { label?: string; id?: string; children: ReactNode; panelRef?: RefObject<HTMLElement | null> }) {
   return (
-    <aside className="vs-lay-panel vs-lay-insp" id={id} aria-label={label} ref={panelRef} tabIndex={-1}>
+    <Surface as="aside" layer="raised" ambient="right" className="vs-lay-panel vs-lay-insp" id={id} aria-label={label} ref={panelRef} tabIndex={-1}>
       <div className="vs-lay-insp-body">{children}</div>
-    </aside>
+    </Surface>
   );
 }
 
@@ -283,18 +291,18 @@ export function SidebarPanel({
   children: ReactNode;
   panelRef?: RefObject<HTMLElement | null>;
   lights?: boolean;
-  /** At the band's right end, on the title's line (Home: InsetSidebar's `SettingsButton`). */
+  /** At the band's right end, on the title's line (Home: the sidebar's toggle). */
   titleAction?: ReactNode;
 }) {
   return (
-    <nav className="vs-lay-panel vs-lay-side" id={id} aria-label={label} ref={panelRef} tabIndex={-1} data-lights={lights ? '' : undefined}>
+    <Surface as="nav" layer="raised" ambient="left" className="vs-lay-panel vs-lay-side" id={id} aria-label={label} ref={panelRef} tabIndex={-1} data-lights={lights ? '' : undefined}>
       {lights && <Lights />}
       <div className="vs-lay-side-band" data-tauri-drag-region>
         <WindowTitle />
         {titleAction && <span className="vs-lay-title-action">{titleAction}</span>}
       </div>
       <div className="vs-lay-side-body">{children}</div>
-    </nav>
+    </Surface>
   );
 }
 
@@ -307,15 +315,10 @@ function WindowTitle() {
   );
 }
 
-/** The title in the header row (no sidebar docked), while the header's form has room for it, and the title's action (Settings) beside it. */
-function HeadTitle({ action }: { action?: ReactNode }) {
+/** The title in the header row (no sidebar docked), while the header's form has room for it. */
+function HeadTitle() {
   if (useForm(HEAD_TITLED_FORMS) !== 'titled') return null;
-  return (
-    <>
-      <WindowTitle />
-      {action && <span className="vs-lay-title-action">{action}</span>}
-    </>
-  );
+  return <WindowTitle />;
 }
 
 /** The native window buttons' stand-in (stories only; Live's stories lay it over the Stage). */
@@ -455,6 +458,7 @@ export function HomeLayout({
   onDismiss,
   pane,
   titleAction,
+  ambient,
 }: HomeLayoutProps) {
   const side = useRef<HTMLElement | null>(null);
   const insp = useRef<HTMLElement | null>(null);
@@ -478,7 +482,15 @@ export function HomeLayout({
   const cell = (mode: 'docked' | 'overlay', which: 'side' | 'insp') => `vs-lay-cell vs-lay-${which}-cell vs-lay-cell--${mode}${mode === 'overlay' ? ' lib-opaque' : ''}`;
 
   return (
-    <div className="vs-lay" data-view="home" data-sidebar={sidebarMode} data-inspector={inspMode ?? undefined} data-hero={hero ? '' : undefined} data-lights={lights ? '' : undefined}>
+    <Ambient
+      source={ambient}
+      className="vs-lay"
+      data-view="home"
+      data-sidebar={sidebarMode}
+      data-inspector={inspMode ?? undefined}
+      data-hero={hero ? '' : undefined}
+      data-lights={lights ? '' : undefined}
+    >
       <Screen
         name="home"
         className="vs-lay-screen"
@@ -495,7 +507,7 @@ export function HomeLayout({
             ),
           header: (
             <div className="vs-lay-head" data-tauri-drag-region>
-              {sidebarMode !== 'docked' && <HeadTitle action={titleAction} />}
+              {sidebarMode !== 'docked' && <HeadTitle />}
               {header}
             </div>
           ),
@@ -520,6 +532,6 @@ export function HomeLayout({
         }}
       />
       {lights && <Lights />}
-    </div>
+    </Ambient>
   );
 }
