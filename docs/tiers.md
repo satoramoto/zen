@@ -23,7 +23,7 @@ Ask in order and stop at the first yes:
 3. Is it what one control does? The **control**.
 4. Is it how controls sit together? A **Group** (`gap`, `align`, `direction`). Where a control sits can change how it looks, but only through context, never through a per-use style: a `Group toolbar` provides `ControlContext { quiet: true }`, and a Select inside it drops its field chrome by itself.
 5. Is it a block of the screen with a frame? A **Region**.
-6. Is it where blocks go? The **Screen**.
+6. Is it where blocks go? The **Screen**. That includes content scrolling behind a pinned region (declared with `under`/`over`, never painted with a mask or clip) and a panel's margin and lift from the window's edge (`panel: true`): [`assembly.md`](assembly.md).
 
 ## The rules the checks hold
 

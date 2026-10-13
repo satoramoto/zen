@@ -89,6 +89,17 @@ const at = (r: Rect): CSSProperties =>
  * down to that region's bottom and before it (reading order), so beneath it: `data-over` and
  * `--lib-over` (how much of the slot's bottom it covers).
  *
+ * The scroll-behind look is the screen's, not the content's: such a slot is clipped at the pinned
+ * region's drawn edge (`--lib-under-pin` / `--lib-over-pin`, unitless px from the slot's top or
+ * bottom), so nothing paints or takes presses behind it, and masked by a fade band beside that
+ * edge (transparent at the edge, opaque a gap and `--space-2` further in), each end on its own.
+ * The mask sits on the slot, which never scrolls, so every scroller nested in it fades alike. One
+ * knob: set `--lib-under-edge` (or `--lib-over-edge`) on the slot to narrow the edge to what the
+ * pinned region really draws (Home's picture, shorter than its slot).
+ *
+ * A floating panel (`RegionSpec.panel`) meeting the room's edge carries `data-panel` and is padded
+ * by `--lib-inset-t|r|b|l` (unitless px, the panel inset on the sides it meets).
+ *
  * With `aspect.fit: 'scale'` the room is laid out at its design size and drawn smaller by a CSS
  * `transform: scale()` (Assembly.css), carried in `data-scale` on the room.
  */
@@ -107,9 +118,16 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
     const up = placed.under?.reach ?? 0;
     const down = placed.over?.reach ?? 0;
     const rect = up || down ? { ...placed.rect, y: placed.rect.y - up, h: placed.rect.h + up + down } : placed.rect;
-    const style = { ...at(rect), ...(up ? { '--lib-under': up } : {}), ...(down ? { '--lib-over': down } : {}) } as CSSProperties;
+    // What scrolls behind is clipped at the pinned region's drawn edge (`--lib-under-pin`, `--lib-over-pin`: px from the slot's top or bottom) and fades in beside it (Assembly.css).
+    const inset = placed.inset;
+    const style = {
+      ...at(rect),
+      ...(up ? { '--lib-under': up, '--lib-under-pin': placed.under!.edge } : {}),
+      ...(down ? { '--lib-over': down, '--lib-over-pin': placed.over!.edge } : {}),
+      ...(inset ? { '--lib-inset-t': inset.top, '--lib-inset-r': inset.right, '--lib-inset-b': inset.bottom, '--lib-inset-l': inset.left } : {}),
+    } as CSSProperties;
     return (
-      <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} data-under={placed.under?.id} data-over={placed.over?.id} style={style}>
+      <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} data-under={placed.under?.id} data-over={placed.over?.id} data-panel={inset ? '' : undefined} style={style}>
         <FormProvider form={placed.form} parts={placed.parts}>{typeof content === 'function' ? content(placed.form, placed) : content}</FormProvider>
       </div>
     );

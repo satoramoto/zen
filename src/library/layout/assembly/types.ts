@@ -103,6 +103,14 @@ export interface RegionSpec {
    * the content is told how much of its bottom that pinned region covers (`Placed.over`).
    */
   over?: string;
+  /**
+   * A floating panel (a sidebar, an inspector, a bottom bar): on every side where it meets the
+   * room's edge it sits the panel inset (`PANEL_INSET`, `--space-2`; `--lib-panel-inset` in CSS) in
+   * from it. The solver adds that inset to its size on those sides and the slot pads its content
+   * by it (`Placed.inset`), so no app sets a window margin by hand. A form that takes no room (0
+   * on an axis: a panel put away or laid over) gets none.
+   */
+  panel?: boolean;
 }
 
 /** A stack of rows inside a row's slot (a column of regions next to another region). */
@@ -217,15 +225,20 @@ export interface Placed {
   /**
    * With `RegionSpec.under`: the pinned region it scrolls behind, and `reach`, the px from that
    * region's top down to this one's (its height and the gap): the slot is drawn that much taller,
-   * reaching up, and its content keeps that much of its top for the pinned region.
+   * reaching up, and its content keeps that much of its top for the pinned region. `edge` is the
+   * px from the slot's top to the pinned region's drawn bottom edge (its height less any panel
+   * inset there): the slot is clipped above it and fades in below it.
    */
-  under?: { id: string; reach: number };
+  under?: { id: string; reach: number; edge: number };
   /**
    * With `RegionSpec.over`: the pinned region below it that it scrolls behind, and `reach`, the px
    * from this one's bottom down to that region's (the gap and its height): the slot is drawn that
    * much taller, reaching down, and its content keeps that much of its bottom for the pinned region.
+   * `edge` is the px from the slot's bottom to the pinned region's drawn top edge.
    */
-  over?: { id: string; reach: number };
+  over?: { id: string; reach: number; edge: number };
+  /** With `RegionSpec.panel`: the px it sits in from the room's edge on each side (0 where it doesn't meet it); unset when all are 0. */
+  inset?: Box;
 }
 
 /** The solver's answer. */

@@ -102,19 +102,17 @@
   padding-left: calc(var(--vs-lay-lights-room) - var(--mat-plate-gap));
 }
 
-/* A side panel's cell: a region of the screen, its panel 8px in from the window's edges (the
-   declared need's inset; the seam toward the column is the screen's gap). Docked, it sits above
-   the hero's shadow, which paints the window's tint under it (with no hero it is the base plate);
-   laid over the main column it is drawn from its empty slot at the window's edge, paints nothing
+/* A side panel's cell: a region of the screen. Docked, its panel sits the panel inset in from the
+   window's edges (a `panel` region: the solver's, the slot pads it; the seam toward the column is
+   the screen's gap), above the hero's shadow, which paints the window's tint under it (with no
+   hero it is the base plate). Laid over the main column it is drawn from its empty slot at the
+   window's edge, the same inset in (--lib-panel-inset, the assembled screen's), paints nothing
    (presses there fall through to the column), and its panel is opaque. */
-.vs-lay .vs-lay-cell > .lib-region__body {
-  padding: var(--space-2);
+.vs-lay .vs-lay-cell--docked > .lib-region__body {
+  padding: 0;
 }
-.vs-lay .vs-lay-side-cell.vs-lay-cell--docked > .lib-region__body {
-  padding-right: 0;
-}
-.vs-lay .vs-lay-insp-cell.vs-lay-cell--docked > .lib-region__body {
-  padding-left: 0;
+.vs-lay .vs-lay-cell--overlay > .lib-region__body {
+  padding: var(--lib-panel-inset);
 }
 .vs-lay .vs-lay-cell--docked {
   position: relative;
@@ -135,17 +133,19 @@
 }
 .vs-lay .vs-lay-cell--overlay .vs-lay-panel {
   pointer-events: auto;
+  /* Laid over, the same float edge as a docked panel's, and the overlay layer's stronger cast. */
+  --lib-surface-edge: var(--layer-float-edge);
   --lib-surface-cast: var(--layer-overlay-cast);
 }
 .vs-lay .vs-lay-side-cell.vs-lay-cell--overlay {
   left: 0;
-  width: calc(var(--vs-lay-side) + 2 * var(--space-2));
+  width: calc(var(--vs-lay-side) + 2 * var(--lib-panel-inset));
 }
 /* The inspector laid over mirrors the sidebar laid over: the same inset glass panel, the window's
    full height, 8px in from its edges (its ✕ and Esc put it away). */
 .vs-lay .vs-lay-insp-cell.vs-lay-cell--overlay {
   right: 0;
-  width: calc(var(--vs-lay-insp) + 2 * var(--space-2));
+  width: calc(var(--vs-lay-insp) + 2 * var(--lib-panel-inset));
 }
 
 /* The inset panels: a raised layer over the window's tint, a hint of glass at the top edge (the
@@ -160,10 +160,9 @@
   min-height: 0;
   margin: 0;
   border-radius: var(--vs-lay-side-radius);
-  /* A raised Surface (its fill, texture and the picture's ambient light), with the float's edge
-     too and no cast or backdrop: the native preview under it can't be blurred. */
-  --lib-surface-edge: var(--layer-raised-edge), var(--layer-float-edge);
-  --lib-surface-cast: 0 0 0 0 transparent;
+  /* A raised Surface (its fill, texture and the picture's ambient light) and no backdrop: the
+     native preview under it can't be blurred. Docked, its lift (the float's edge and cast) is the
+     assembled screen's, as for every `panel` region (Assembly.css). */
   --lib-surface-backdrop: none;
   overflow: hidden;
   outline: none;
@@ -288,27 +287,11 @@
   /* The pinned hero's room at the column's top: its slot reaches up behind the hero
      (`under: 'hero'`, the slot's --lib-under), so what scrolls here passes behind it. */
   --vs-lay-under: calc(var(--lib-under, 0) * 1px);
-  /* The preview's bottom edge in the column (unitless px), set inline by useHoleClip while there
-     is a preview. */
-  --vs-lay-hole-b: 0;
-  /* Where the fade under that edge ends: where the grid's first row sits at rest (the pinned
-     room and the grid's top padding), so nothing at rest is faded and a tile kept in view below
-     the preview is whole; tiles scrolling up dissolve across the band above it. */
-  --vs-lay-fade-end: calc(var(--vs-lay-under) + var(--space-2));
   /* The pinned bar's room at the column's foot: its slot reaches down behind the bar
      (`over: 'bar'`, the slot's --lib-over: the gap and the bar), so what scrolls there passes
-     behind it. */
+     behind it. The clip and the fade at both ends are the assembled screen's (Assembly.css);
+     useHoleClip only narrows the top edge to the preview's picture (--lib-under-edge). */
   --vs-lay-over: calc(var(--lib-over, 0) * 1px);
-  /* The bar's top, from the column's bottom (its room less the gap): the column is clipped there. */
-  --vs-lay-bar-top: max(0px, var(--vs-lay-over) - var(--mat-plate-gap));
-  /* Where the fade above the bar starts, from the column's bottom: the bar's room and the grid's
-     --space-2, the top fade's mirror, so a tile kept in view above the bar is whole and tiles
-     scrolling down dissolve across the band before they pass under it. */
-  --vs-lay-fade-start: calc(var(--vs-lay-over) + var(--space-2));
-  /* The clip and the mask's ends, each a no-op until the preview's hole or the bar sets it. */
-  --vs-lay-clip-t: 0px;
-  --vs-lay-ink-t: var(--key-black);
-  --vs-lay-ink-b: var(--key-black);
   display: flex;
   flex-direction: column;
   gap: var(--mat-plate-gap);
@@ -319,31 +302,6 @@
   scroll-padding-top: var(--vs-lay-under);
   scroll-padding-bottom: var(--vs-lay-over);
   box-sizing: border-box;
-}
-/* Under the preview (useHoleClip): clipped above its bottom edge, full width, so nothing passing
-   under it shows beside it, paints over the native picture or takes a press there; and faded in
-   under that edge by the band, so what scrolls up dissolves as it flows underneath. */
-.vs-lay .vs-lay-main[data-hole] {
-  --vs-lay-clip-t: calc(var(--vs-lay-hole-b) * 1px);
-  --vs-lay-ink-t: transparent;
-}
-/* Over the bar (the slot's `data-over`): what scrolls down passes under the bar whole, neither
-   clipped nor faded; the bar is frosted glass drawn after it (so it keeps its presses), and the
-   tiles read through it blurred. */
-.vs-lay [data-over] > .vs-lay-main {
-  --vs-lay-bar-top: 0px;
-}
-/* (The mask reads only its stops' alpha: the ink is any opaque contract colour.) */
-.vs-lay .vs-lay-main[data-hole],
-.vs-lay [data-over] > .vs-lay-main {
-  clip-path: inset(var(--vs-lay-clip-t) 0 var(--vs-lay-bar-top) 0);
-  mask-image: linear-gradient(
-    to bottom,
-    var(--vs-lay-ink-t) var(--vs-lay-clip-t),
-    var(--key-black) var(--vs-lay-fade-end),
-    var(--key-black) calc(100% - var(--vs-lay-fade-start)),
-    var(--vs-lay-ink-b) calc(100% - var(--vs-lay-bar-top))
-  );
 }
 .vs-lay .vs-lay-main > * {
   flex: none;

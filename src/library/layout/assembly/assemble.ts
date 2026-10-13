@@ -1,8 +1,19 @@
 // The solver: a screen spec, the room and the principles in; a placement out. Pure and
 // deterministic: no DOM, no randomness, the same answer for the same input (docs/assembly.md).
 import type { Density } from '../../contract';
-import type { Aspect, Form, Nest, Placed, Placement, Principles, Rect, RegionSpec, Row, ScreenSpec } from './types';
+import type { Aspect, Box, Form, Nest, Placed, Placement, Principles, Rect, RegionSpec, Row, ScreenSpec, Units } from './types';
 import { resolveLength, resolveNeed } from './units';
+
+/** How far a floating panel (`RegionSpec.panel`) sits in from the room's edges: `--space-2` (`--lib-panel-inset`, Assembly.css). */
+export const PANEL_INSET: Units = { space: 2 };
+
+/** Which of the room's edges a node meets. */
+interface Sides {
+  top: boolean;
+  right: boolean;
+  bottom: boolean;
+  left: boolean;
+}
 
 /** How far from a form's least toward its ideal the fit test aims, per density. */
 export const DENSITY_AIM: Record<Density, number> = { dense: 0, balanced: 0.5, roomy: 1 };
@@ -72,6 +83,39 @@ class Solver {
     this.body = rows(spec.rows);
     for (const s of spec.footer ?? []) add(s);
     this.pairs();
+    // Which room edges each body region meets: the body meets the sides and the foot unless the
+    // screen keeps an edge, the top unless there is a header, the foot unless there is a footer.
+    const kept = resolveLength(spec.edge ?? 0, p) > 0;
+    this.sides(this.body, { top: !spec.header?.length, right: !kept, bottom: !kept && !spec.footer?.length, left: !kept });
+  }
+
+  /** Each region's edges of the room (`meets`), from where it sits in its rows and stacks. */
+  readonly meets = new Map<string, Sides>();
+  private sides(n: Node, at: Sides) {
+    if (n.kind === 'region') {
+      this.meets.set(n.spec.id, at);
+      return;
+    }
+    const last = n.kids.length - 1;
+    n.kids.forEach((k, i) =>
+      this.sides(
+        k,
+        n.kind === 'col'
+          ? { ...at, top: at.top && i === 0, bottom: at.bottom && i === last }
+          : { ...at, left: at.left && i === 0, right: at.right && i === last },
+      ),
+    );
+  }
+
+  /** A floating panel's inset from the room's edges it meets, in px (all 0 for any other region, or a form that takes no room). */
+  inset(r: RegionNode): Box {
+    const none = { top: 0, right: 0, bottom: 0, left: 0 };
+    const m = this.meets.get(r.spec.id);
+    if (!r.spec.panel || !m) return none;
+    const f = this.form(r);
+    if (resolveLength(f.ideal.w, this.p) <= 0 || resolveLength(f.ideal.h, this.p) <= 0) return none;
+    const v = resolveLength(PANEL_INSET, this.p);
+    return { top: m.top ? v : 0, right: m.right ? v : 0, bottom: m.bottom ? v : 0, left: m.left ? v : 0 };
   }
 
   private track(n: RegionNode): RegionNode {
@@ -112,20 +156,22 @@ class Solver {
     return r.spec.forms[this.steps.get(r.spec.id) ?? 0];
   }
 
-  /** The plate round a region's form: inset on every side, plus the head strip. */
-  chrome(s: RegionSpec): Size {
+  /** The plate round a region's form: inset on every side, plus the head strip, plus a panel's inset from the room's edges. */
+  chrome(r: RegionNode): Size {
+    const s = r.spec;
     const { inset, head } = this.p.plate;
     const plate = s.plate !== false;
+    const edge = this.inset(r);
     return {
-      w: plate ? inset.left + inset.right : 0,
-      h: (plate ? inset.top + inset.bottom : 0) + (s.head ? head.top + head.bottom + this.p.scale.control : 0),
+      w: (plate ? inset.left + inset.right : 0) + edge.left + edge.right,
+      h: (plate ? inset.top + inset.bottom : 0) + (s.head ? head.top + head.bottom + this.p.scale.control : 0) + edge.top + edge.bottom,
     };
   }
 
   /** A region's own size at aim `k` (0 its form's least, 1 its ideal), plate included. */
   own(r: RegionNode, k: number): Size {
     const f = this.form(r);
-    const c = this.chrome(r.spec);
+    const c = this.chrome(r);
     const lerp = (a: Axis) => {
       const lo = resolveLength(f.min[a], this.p);
       const hi = Math.max(lo, resolveLength(f.ideal[a], this.p));
@@ -164,7 +210,7 @@ class Solver {
       const min = this.size(n, 0);
       const ideal = this.size(n, 1);
       const f = this.form(n);
-      const c = this.chrome(n.spec);
+      const c = this.chrome(n);
       const cap = (a: Axis) => (f.max?.[a] === undefined ? Infinity : Math.max(ideal[a], c[a] + resolveLength(f.max[a]!, this.p)));
       const max = { w: cap('w'), h: cap('h') };
       const grow = { w: !!f.grow?.w, h: !!f.grow?.h };
@@ -544,7 +590,9 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
     const r = s.byId(id);
     const step = s.steps.get(id) ?? 0;
     const form = r.spec.forms[step];
-    placed[id] = { id, form: form.id, step, rect, zone, ...(form.parts ? { parts: form.parts } : {}) };
+    const inset = s.inset(r);
+    const inside = inset.top || inset.right || inset.bottom || inset.left;
+    placed[id] = { id, form: form.id, step, rect, zone, ...(form.parts ? { parts: form.parts } : {}), ...(inside ? { inset } : {}) };
   };
   let y = 0;
   (spec.header ?? []).forEach((r, i) => {
@@ -567,11 +615,12 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
     };
     if (r.spec.under !== undefined) {
       const head = pinned(r.spec.under, 'above');
-      placed[r.spec.id].under = { id: r.spec.under, reach: own.y - head.y };
+      // The pinned region's drawn bottom edge: its height less a panel's inset there.
+      placed[r.spec.id].under = { id: r.spec.under, reach: own.y - head.y, edge: head.h - (placed[r.spec.under].inset?.bottom ?? 0) };
     }
     if (r.spec.over !== undefined) {
       const foot = pinned(r.spec.over, 'below');
-      placed[r.spec.id].over = { id: r.spec.over, reach: foot.y + foot.h - (own.y + own.h) };
+      placed[r.spec.id].over = { id: r.spec.over, reach: foot.y + foot.h - (own.y + own.h), edge: foot.h - (placed[r.spec.over].inset?.top ?? 0) };
     }
   }
   y = 0;

@@ -132,6 +132,17 @@ describe('token contract', () => {
     }
   });
 
+  it('scrolling behind a pinned region is declared (`under`, `over`), never painted', () => {
+    // The assembled screen clips and fades a slot that scrolls behind (layout/assembly/Assembly.css).
+    // Anywhere else, a vertical fade mask or a clip read from the scroll-behind room is that look hand-rolled.
+    for (const file of COMPONENT_SOURCES.filter((f) => !f.startsWith('layout/assembly/'))) {
+      const src = read(file).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
+      expect(src, `${file} hand-rolls a scroll fade: declare under/over instead`).not.toMatch(/\bmask(-image)?\s*:[^;]*linear-gradient\(\s*(to (top|bottom)|0deg|180deg)/);
+      expect(src, `${file} hand-rolls a scroll fade: declare under/over instead`).not.toMatch(/\bmaskImage\b/);
+      expect(src, `${file} hand-rolls a scroll-under clip: declare under/over instead`).not.toMatch(/\bclip-?path\s*:[^;]*--[a-z0-9-]*(under|over|hole|bar-top|clip)/i);
+    }
+  });
+
   it('palettes keep four distinct categorical hues in each mode', () => {
     for (const p of palettes) for (const [name, s] of schemes(p)) expect(new Set(s.hues).size, name).toBe(4);
   });

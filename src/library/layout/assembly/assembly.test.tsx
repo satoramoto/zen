@@ -398,7 +398,7 @@ describe('assemble: a region scrolling under a pinned one', () => {
     const p = assemble(spec, { w: 600, h: 400 }, P);
     const plain = assemble({ rows: spec.rows.map((row) => row.map((r) => ({ ...(r as RegionSpec), under: undefined }))) }, { w: 600, h: 400 }, P);
     expect(p.regions.list.rect).toEqual(plain.regions.list.rect);
-    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap });
+    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap, edge: p.regions.pin.rect.h });
     expect(p.regions.pin.under).toBeUndefined();
   });
 
@@ -434,8 +434,8 @@ describe('assemble: a region scrolling over a pinned one below it', () => {
     const p = assemble(spec, { w: 600, h: 400 }, P);
     const plain = assemble(strip(spec), { w: 600, h: 400 }, P);
     expect(p.regions.list.rect).toEqual(plain.regions.list.rect);
-    expect(p.regions.list.over).toEqual({ id: 'foot', reach: P.plate.gap + p.regions.foot.rect.h });
-    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap });
+    expect(p.regions.list.over).toEqual({ id: 'foot', reach: P.plate.gap + p.regions.foot.rect.h, edge: p.regions.foot.rect.h });
+    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap, edge: p.regions.pin.rect.h });
     expect(p.regions.foot.over).toBeUndefined();
   });
 
@@ -461,5 +461,83 @@ describe('assemble: a region scrolling over a pinned one below it', () => {
     expect(bottom).toBeCloseTo(p.regions.foot.rect.y + p.regions.foot.rect.h);
     // The pinned region comes later, so it is drawn over the slot reaching behind it.
     expect(slot.compareDocumentPosition(foot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('gives the slot the clip and fade edges at both ends, and none to a slot without under/over', () => {
+    render(<Screen name="Edges" spec={spec} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List', foot: 'Foot' }} />);
+    const root = screen.getByRole('group', { name: 'Edges' });
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const slot = root.querySelector('[data-region="list"]') as HTMLElement;
+    expect(slot.style.getPropertyValue('--lib-under-pin')).toBe(String(p.regions.pin.rect.h));
+    expect(slot.style.getPropertyValue('--lib-over-pin')).toBe(String(p.regions.foot.rect.h));
+    for (const id of ['pin', 'foot']) {
+      const plain = root.querySelector(`[data-region="${id}"]`) as HTMLElement;
+      expect(plain).not.toHaveAttribute('data-under');
+      expect(plain).not.toHaveAttribute('data-over');
+      for (const v of ['--lib-under', '--lib-over', '--lib-under-pin', '--lib-over-pin']) expect(plain.style.getPropertyValue(v)).toBe('');
+    }
+    // Only under: the top end alone.
+    render(<Screen name="Top" spec={{ rows: [spec.rows[0], [{ ...(spec.rows[1][0] as RegionSpec), over: undefined }], spec.rows[2]] }} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List', foot: 'Foot' }} />);
+    const top = screen.getByRole('group', { name: 'Top' }).querySelector('[data-region="list"]') as HTMLElement;
+    expect(top.style.getPropertyValue('--lib-under-pin')).toBe(String(p.regions.pin.rect.h));
+    expect(top.style.getPropertyValue('--lib-over-pin')).toBe('');
+    expect(top).not.toHaveAttribute('data-over');
+  });
+
+  it('draws the look in the slot: clipped at each edge, faded beside it, each end on its own (Assembly.css)', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/layout/assembly/Assembly.css'), 'utf8');
+    const rule = (sel: string) => new RegExp(`${sel.replace(/[[\]().:]/g, '\\$&')}\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+    const both = rule('.lib-assembled__slot:is([data-under], [data-over])');
+    expect(both).toMatch(/clip-path:\s*inset\(var\(--lib-cut-t\) 0 var\(--lib-cut-b\) 0\)/);
+    expect(both).toMatch(/mask-image:\s*linear-gradient\(/);
+    expect(rule('.lib-assembled__slot[data-under]')).toMatch(/--lib-under-edge:\s*var\(--lib-under-pin\)/);
+    expect(rule('.lib-assembled__slot[data-under]')).toMatch(/--lib-ink-t:\s*transparent/);
+    expect(rule('.lib-assembled__slot[data-over]')).toMatch(/--lib-over-edge:\s*var\(--lib-over-pin\)/);
+    expect(rule('.lib-assembled__slot[data-over]')).toMatch(/--lib-ink-b:\s*transparent/);
+  });
+});
+
+describe('assemble: a floating panel on the room edge', () => {
+  const box = (id: string, w: number, h: number, extra: Partial<RegionSpec> = {}): RegionSpec => ({
+    id,
+    forms: [{ id, min: { w: { control: w }, h: { control: h } }, ideal: { w: { control: w }, h: { control: h } }, grow: { h: true } }],
+    ...extra,
+  });
+  const spec = (panel: boolean, side = true): ScreenSpec => ({
+    rows: [
+      [
+        side ? box('side', 4, 4, { panel }) : { ...box('side', 4, 4, { panel }), forms: [{ id: 'away', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } }] },
+        { rows: [[{ id: 'main', forms: [{ id: 'main', min: { w: { control: 6 }, h: { control: 4 } }, ideal: { w: { control: 6 }, h: { control: 4 } }, grow: { w: true, h: true } }] }], [{ id: 'bar', panel, forms: [{ id: 'bar', min: { w: { control: 6 }, h: { control: 1 } }, ideal: { w: { control: 6 }, h: { control: 1 } } }] }]] },
+      ],
+    ],
+  });
+  const inset = resolveLength({ space: 2 }, P);
+
+  it('sits the panel inset in from the edges it meets, adding it to its size there', () => {
+    const p = assemble(spec(true), { w: 600, h: 400 }, P);
+    const plain = assemble(spec(false), { w: 600, h: 400 }, P);
+    expect(p.regions.side.inset).toEqual({ top: inset, right: 0, bottom: inset, left: inset });
+    expect(p.regions.bar.inset).toEqual({ top: 0, right: inset, bottom: inset, left: 0 });
+    expect(p.regions.side.rect.w).toBeCloseTo(plain.regions.side.rect.w + inset);
+    expect(p.regions.bar.rect.h).toBeCloseTo(plain.regions.bar.rect.h + inset);
+    expect(p.regions.main.inset).toBeUndefined();
+    expect(plain.regions.side.inset).toBeUndefined();
+  });
+
+  it('gives a form that takes no room no inset', () => {
+    const p = assemble(spec(true, false), { w: 600, h: 400 }, P);
+    expect(p.regions.side.inset).toBeUndefined();
+    // The column now meets the left edge, but it is no panel; the bar is still inset from the window's bottom and right only (it is not first in its row).
+    expect(p.regions.bar.inset).toEqual({ top: 0, right: inset, bottom: inset, left: 0 });
+  });
+
+  it('pads the slot by the inset and marks it data-panel', () => {
+    render(<Screen name="Panels" spec={spec(true)} room={{ w: 600, h: 400 }} principles={P} regions={{ side: 'Side', main: 'Main', bar: 'Bar' }} />);
+    const root = screen.getByRole('group', { name: 'Panels' });
+    const side = root.querySelector('[data-region="side"]') as HTMLElement;
+    expect(side).toHaveAttribute('data-panel');
+    expect(side.style.getPropertyValue('--lib-inset-l')).toBe(String(inset));
+    expect(side.style.getPropertyValue('--lib-inset-r')).toBe('0');
+    expect(root.querySelector('[data-region="main"]')).not.toHaveAttribute('data-panel');
   });
 });

@@ -18,18 +18,18 @@ import './HomeLayout.css';
 /** The title bar's 52px: the header row's height (`--vs-lay-titlebar`). */
 export const TITLEBAR: Units = { space: [6, 4, 1] };
 
-/** The side panels' forms. Docked: the panel and its 8px window inset (the seam beside it is the screen's gap). Overlaid: nothing in the row; laid over the column when open. */
+/** The side panels' forms. Docked: the panel (a `panel` region: the solver adds its 8px inset from the window's edges; the seam beside it is the screen's gap). Overlaid: nothing in the row; laid over the column when open. */
 export type PanelForm = 'docked' | 'overlaid';
 
-/** The inset sidebar: 240px (eight controls, `--vs-lay-side`) and its 8px inset from the window. */
+/** The inset sidebar: 240px (eight controls, `--vs-lay-side`). */
 export const SIDEBAR_FORMS: Forms<PanelForm> = [
-  { id: 'docked', min: { w: { control: 8, space: 2 }, h: { control: 8 } }, ideal: { w: { control: 8, space: 2 }, h: { control: 8 } } },
+  { id: 'docked', min: { w: { control: 8 }, h: { control: 8 } }, ideal: { w: { control: 8 }, h: { control: 8 } } },
   { id: 'overlaid', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } },
 ];
 
-/** The inspector: 288px (`--vs-lay-insp`, 72 units) and its 8px inset from the window. */
+/** The inspector: 288px (`--vs-lay-insp`, 72 units). */
 export const INSPECTOR_FORMS: Forms<PanelForm> = [
-  { id: 'docked', min: { w: { unit: 72, space: 2 }, h: { control: 8 } }, ideal: { w: { unit: 72, space: 2 }, h: { control: 8 } } },
+  { id: 'docked', min: { w: { unit: 72 }, h: { control: 8 } }, ideal: { w: { unit: 72 }, h: { control: 8 } } },
   { id: 'overlaid', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } },
 ];
 
@@ -84,10 +84,12 @@ export type PanelChoice = PanelForm | 'either';
 export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true, bar = true }: { sidebar?: PanelChoice; inspector?: PanelChoice; hero?: boolean; bar?: boolean } = {}): ScreenSpec {
   const pick = (forms: Forms<PanelForm>, c: PanelChoice): Forms => (c === 'either' ? forms : [forms.find((f) => f.id === c)!]);
   const region = (id: string, forms: Forms, priority: RegionSpec['priority']): RegionSpec => ({ id, forms, priority, plate: false });
+  // The floating panels (the sidebar, the inspector, the bar) sit the panel inset in from the window's edges they meet: the solver's, one rule for all three.
+  const panel = (id: string, forms: Forms, priority: RegionSpec['priority']): RegionSpec => ({ ...region(id, forms, priority), panel: true });
   return {
     rows: [
       [
-        region('sidebar', pick(SIDEBAR_FORMS, sidebar), 'context'),
+        panel('sidebar', pick(SIDEBAR_FORMS, sidebar), 'context'),
         {
           id: 'column',
           rows: [
@@ -96,10 +98,10 @@ export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true
             ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
             // The grid scrolls up behind the pinned preview and down behind the transport: its slot reaches up to the hero's top and down to the bar's bottom.
             [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}), ...(bar ? { over: 'bar' } : {}) }],
-            ...(bar ? [[region('bar', TRANSPORT_FORMS, 'controls')]] : []),
+            ...(bar ? [[panel('bar', TRANSPORT_FORMS, 'controls')]] : []),
           ],
         },
-        region('inspector', pick(INSPECTOR_FORMS, inspector), 'context'),
+        panel('inspector', pick(INSPECTOR_FORMS, inspector), 'context'),
       ],
     ],
   };
@@ -168,14 +170,16 @@ export function useLayoutPrinciples(): Principles {
  * only the pane under it does. Unlike the original, the pane scrolls up *behind* the pinned
  * hero (the owner's call: a wide window shows more rows passing under the preview): its slot
  * reaches up to the hero's top (`under: 'hero'`, docs/assembly.md), drawn above the hero, its
- * content padded by the hero's room (`--lib-under`), so at rest it starts below the preview. The
- * column is clipped above the preview's bottom edge, full width (`useHoleClip`), so a tile never
- * shows beside the preview, paints over the native picture or takes a press there, and as it
- * scrolls a soft band under that edge fades the tiles out as they flow underneath. Likewise at
- * the foot: the slot reaches down behind the transport bar (`over: 'bar'`, `--lib-over`), its
- * content padded by the bar's room so the last row comes to rest above it; the column is clipped
- * at the bar's top and faded out across a band above it, so tiles dissolve as they pass under the
- * bar, which paints nothing new and, drawn after the pane, keeps its presses. The scrollers
+ * content padded by the hero's room (`--lib-under`), so at rest it starts below the preview.
+ * Likewise at the foot: the slot reaches down behind the transport bar (`over: 'bar'`,
+ * `--lib-over`), its content padded by the bar's room so the last row comes to rest above it.
+ * The clip and the fade at both ends are the assembled screen's (Assembly.css), not Home's: a
+ * tile never shows beside the preview, paints over the native picture or takes a press there, and
+ * dissolves across a soft band as it flows under the preview or the bar. Home's one refinement is
+ * the top edge: the preview's picture is shorter than its slot, so `useHoleClip` narrows the edge
+ * to the picture's real bottom (`--lib-under-edge`). The bar, drawn after the pane, keeps its
+ * presses. The sidebar, the inspector and the bar are `panel` regions: the solver sits each the
+ * panel inset (`--space-2`) in from the window's edges it meets. The scrollers
  * draw no scrollbar (they still scroll by trackpad, wheel and keys). Nothing paints under the hole: the root paints nothing, and the
  * picture's own spread shadow (Hero.css) paints the window's tint everywhere else, the panels,
  * header, pane and bar sitting above it with no background of their own. With no hero the
@@ -202,16 +206,8 @@ export function useLayoutPrinciples(): Principles {
  *   so the sidebar's first row and the column's hero line up.
  * - `--vs-lay-under`: the room the pinned hero takes at the top of the column that scrolls
  *   behind it (the slot's `--lib-under`, in px); 0 with no hero.
- * - `--vs-lay-hole-b` (set by `useHoleClip`, unitless px): the preview's bottom edge in the
- *   column, above which it is clipped.
- * - `--vs-lay-fade-end`: where the fade under the preview's edge ends: the pinned room
- *   (`--vs-lay-under`) and the grid's top padding (`--space-2`), where the first row sits at rest,
- *   so a tile kept in view below the preview is never faded.
  * - `--vs-lay-over`: the room the pinned bar takes at the column's foot (the slot's `--lib-over`,
- *   in px: the gap and the bar); 0 with no bar. `--vs-lay-bar-top` (the bar's top, from the
- *   column's bottom: that room less the gap) is where the column is clipped, and
- *   `--vs-lay-fade-start` (the bar's room and the grid's `--space-2`, where the last row rests) is
- *   where the fade above it starts, so a tile kept in view above the bar is never faded.
+ *   in px: the gap and the bar); 0 with no bar.
  * The docked panels' widths and the title bar's height are also declared needs
  * (`SIDEBAR_FORMS`, `INSPECTOR_FORMS`, `TITLEBAR`, `LIGHTS_ROOM`, `TITLE_W`), which the solver places by.
  * Also `--lay-tile` (200px) and `--lay-tile-gap` (`--space-4`), the stories' grid.
@@ -408,23 +404,23 @@ function useDismiss(side: RefObject<HTMLElement | null>, insp: RefObject<HTMLEle
 }
 
 /**
- * Where the column that scrolls under the preview may show: below the preview's bottom edge (the
- * picture, `HERO_PIC`, with the card's words when it has them), measured in the column's own box
- * (`main`, whose slot reaches up behind the hero) as unitless px in `--vs-lay-hole-b`, with
- * `data-hole` while there is a preview. HomeLayout.css clips the column above that edge, full
- * width (nothing shows beside the preview, nothing paints over the native picture or takes a
- * press there), and fades it in across the band between that edge and where the first row sits
- * at rest, so tiles dissolve as they flow underneath. Followed as the column or
- * the hero resizes; in layout px (a scaled story frame's transform taken out).
+ * The one refinement Home makes to the screen's scroll-behind look (Assembly.css): the preview's
+ * picture is shorter than the hero's slot, so the pane's slot is clipped and faded from the
+ * preview's real bottom edge (the picture, `HERO_PIC`, with the card's words when it has them),
+ * not the slot's. Measured in the pane slot's own box (it reaches up behind the hero) and set on
+ * it as the assembly's knob `--lib-under-edge` (unitless px), with `data-hole` on the column
+ * while there is a preview. Followed as the column or the hero resizes; in layout px (a scaled
+ * story frame's transform taken out).
  */
 function useHoleClip(main: RefObject<HTMLElement | null>, hero: RefObject<HTMLElement | null>, on: boolean) {
   useLayoutEffect(() => {
-    const col = main.current;
+    const node = main.current;
+    const col = node?.closest<HTMLElement>('[data-under]') ?? null;
     const slot = hero.current;
-    if (!col) return;
+    if (!node || !col) return;
     const clear = () => {
-      delete col.dataset.hole;
-      col.style.removeProperty('--vs-lay-hole-b');
+      delete node.dataset.hole;
+      col.style.removeProperty('--lib-under-edge');
     };
     if (!on || !slot) return clear();
     const read = () => {
@@ -435,8 +431,8 @@ function useHoleClip(main: RefObject<HTMLElement | null>, hero: RefObject<HTMLEl
       const s = box.width / col.offsetWidth;
       const bottom = (Math.max(...parts.map((p) => p.bottom)) - box.top) / s;
       if (bottom <= 0) return clear();
-      col.style.setProperty('--vs-lay-hole-b', String(Math.round(bottom * 100) / 100));
-      col.dataset.hole = '';
+      col.style.setProperty('--lib-under-edge', String(Math.round(bottom * 100) / 100));
+      node.dataset.hole = '';
     };
     read();
     const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(read);
