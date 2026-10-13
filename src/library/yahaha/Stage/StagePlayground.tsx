@@ -42,8 +42,8 @@ const otsNumber = (pad: PadItem | undefined) => Number(pad?.label.match(/^OTS\s(
  * live in Storybook. It is seeded from the Stage's props and renders the Stage with its state.
  *
  * - Page tabs choose; Metronome and its ▾ popover, Unison and ? switch; Panic writes the status line.
- * - Sections: stopped, a press picks where the band starts; running, it queues as next (NEXT on the
- *   form, "→ Main C" on the hero), and lands at the end of the four-bar phrase, or at once on a
+ * - Sections (the Pads region's Sections bank, its default view): stopped, a press picks where the
+ *   band starts; running, it queues as next (the pad's accent ring, "→ Main C" on the hero), and lands at the end of the four-bar phrase, or at once on a
  *   second press. A landed Ending stops the band. Fill ▲ ▼ queue a fill and the next Main.
  * - Start / Stop runs and stops; while running the beat moves at the tempo.
  * - Tempo − + step it, a drag or wheel on the number sets it, Style tempo goes back to the style's
@@ -55,8 +55,8 @@ const otsNumber = (pad: PadItem | undefined) => Number(pad?.label.match(/^OTS\s(
  * - Faders move on every layer (each keeps its own values), Panel / Style pages and the page button
  *   switch, part lamps turn a part off (its strip dims), knob and pad pages switch, knobs turn, pads toggle.
  * - The Sections pads are the song form's (the Stage draws them from the form's state and sends
- *   their presses to its callbacks), so a section pad queues, lands and starts exactly as the strip
- *   does, and Sync Start, Auto Fill, Sync Stop, Tap and Start / Stop act as their keys do.
+ *   their presses to its callbacks), so a section pad queues, lands and starts exactly as a
+ *   SongForm step would, and Sync Start, Auto Fill, Sync Stop, Tap and Start / Stop act as their keys do.
  */
 export function StagePlayground({ log, tick = true, ...seed }: StagePlaygroundProps) {
   const say = (event: string, ...args: unknown[]) => log?.(event, ...args);

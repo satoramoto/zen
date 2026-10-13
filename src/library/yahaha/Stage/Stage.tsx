@@ -12,7 +12,7 @@ import { PadBankRegion, type PadBankProps } from '../PadBank/PadBank';
 import { SongForm, type SongFormProps } from '../SongForm/SongForm';
 import { StatusLine, type StatusLineProps } from '../StatusLine/StatusLine';
 import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
-import { STAGE_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
+import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
 import { tapTempo } from './tapTempo';
 import './Stage.css';
 
@@ -33,7 +33,10 @@ export interface StageProps {
    * Its form (`full`, `compact`, `minimal`) is the screen's choice.
    */
   display: Omit<DisplayProps, 'parts' | 'tipAction' | 'density' | 'form'>;
-  /** The song form and the screen's one transport cluster. */
+  /**
+   * The song's state and the screen's one transport cluster. The Stage draws no song form strip:
+   * the transport region reads it, and the Pads region's Sections bank draws the sections from it.
+   */
   songForm: Omit<SongFormProps, 'tipAction'>;
   /** The mixer. */
   faders: Omit<FaderBankProps, 'tipAction'>;
@@ -57,16 +60,30 @@ export interface StageProps {
   height?: number;
   /**
    * Which spec the screen assembles (`Stage.spec.ts`). `stacked` (the default): the hero with the
-   * transport beside it, the song form one strip across under them. `split`: the hero, and beside
-   * it the song form over the transport in one region.
+   * transport beside it, then the mixer beside the knobs over the pads. `split`: the hero across
+   * the top, and the transport down the right-hand side beside the knobs and pads.
    */
   layout?: StageLayout;
+  /**
+   * How the 16:9 screen meets the window. `contain` (the default, the app): it is laid out in the
+   * largest 16:9 room inside the window, stepping forms down as it shrinks. `scale` (previews and
+   * stories): it is laid out once at the 1920 × 1080 board and drawn scaled to that room.
+   */
+  fit?: StageFit;
   /** Called with each new placement (the solver's forms, sizes and zoom), for tests and inspectors. */
   onPlacement?: (placement: Placement) => void;
 }
 
 /** The Stage's top arrangements: see `StageProps.layout`. */
 export type StageLayout = 'split' | 'stacked';
+
+/** How the Stage meets the window: see `StageProps.fit`. */
+export type StageFit = 'contain' | 'scale';
+
+const SPECS = {
+  stacked: { contain: STAGE_SPEC, scale: STAGE_SCALED_SPEC },
+  split: { contain: STAGE_SPLIT_SPEC, scale: STAGE_SPLIT_SCALED_SPEC },
+} as const;
 
 /**
  * Stage: the whole app on one screen, what a player looks at while playing live.
@@ -78,15 +95,18 @@ export type StageLayout = 'split' | 'stacked';
  *
  * **Assembled** (`docs/assembly.md`). The Stage is a spec, never a grid: `STAGE_SPEC` says what
  * it holds and what matters (STAGE.md › Assembly), each region's forms are its component's own
- * (Display `full → compact → minimal`, the transport, the song form, FaderBank `tall → short`,
- * KnobBank, PadBank), and `assemble()` picks every form, size and the zoom from them and the
- * pack's principles. *Now*: the Display (the hero, `now`, the last to step down) in the top-left
+ * (Display `full → compact → minimal`, the transport, FaderBank `tall → short`, KnobBank,
+ * PadBank), and `assemble()` picks every form, size and the zoom from them and the pack's
+ * principles. *Now*: the Display (the hero, `now`, the last to step down) in the top-left
  * corner, and beside it the transport, so the tempo and Start / Stop share a line. *Next*: the
- * song form, one strip across. *Controls*: the mixer beside the knobs over the pads, each knob
- * over its column of pads as on the Launchkey. The hero and the mixer are a pair: one column seam
+ * hero's next section, and the Pads region's Sections bank (its default view), which reads as
+ * the song's form. *Controls*: the mixer beside the knobs over the pads, each knob over its
+ * column of pads as on the Launchkey. The hero and the mixer are a pair: one column seam
  * from the bar to the keys. The app bar (the header) and the keys and status line (the footer)
  * never step down or zoom; only the body zooms, and only when no step down helps, never below
  * the pack's `minTarget`. A region's form changes only its own shape; the Stage never reaches in.
+ * The screen is 16:9 (`aspect`): it is laid out in the largest 16:9 room inside the window, and
+ * the rest of the window is ground bands (letterbox or pillarbox).
  *
  * Each region is a library `Region` on the theme's `plate` material, so the material decides how
  * a region looks, the room inside it (`--mat-plate-inset`) and the space between regions
@@ -96,18 +116,19 @@ export type StageLayout = 'split' | 'stacked';
  * *Mapping* (the Launchkey's pads play the sections): the pad tabs are Sections, Quick Racks,
  * Chord, Multi Pads, Setup, as the hardware pages them. The Sections bank's sixteen pads are drawn
  * from the song form's props by one function (`sectionPads.ts`), so they can never disagree with
- * the strip, and a pad press calls exactly what that step or key calls; Tap is the hero's Tap,
- * timed the same way (`tapTempo.ts`).
+ * the hero or the transport, and a pad press calls exactly what that step or key calls; Tap is
+ * the hero's Tap, timed the same way (`tapTempo.ts`). The board opens on Sections; there is no
+ * song form strip, since it drew the same sections twice.
  *
  * *One place per job* (`STAGE.md` 3): the transport lives only in SongForm, Tap only in the
  * Display, the global switches and Panic only in the AppBar, the part colours only on the parts.
  * The status line sits in the fixed footer under the keys, so a message never moves a region.
  *
  * **Kept.** The original's regions and every one of their callbacks, passed straight through;
- * the 1440 × 900 board and the 1217 × 752 small screen; the keys spanning the full width; the
- * tap tempo rule (two or more taps in time, the last four count).
+ * the 1217 × 752 small screen (now a 16:9 room inside it; the board is 1920 × 1080); the keys
+ * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
  */
-export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked', onPlacement }: StageProps) {
+export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked', fit = 'contain', onPlacement }: StageProps) {
   const taps = useRef<number[]>([]);
   const { inset } = useScopePrinciples().plate;
 
@@ -131,11 +152,11 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
   const room = width !== undefined && height !== undefined ? { w: width, h: height } : undefined;
 
   return (
-    <div className="yh-stage" data-part="root" style={size} data-layout={layout}>
+    <div className="yh-stage" data-part="root" style={size} data-layout={layout} data-fit={fit}>
       <Screen
         name="Stage"
         className="yh-stage__screen"
-        spec={layout === 'split' ? STAGE_SPLIT_SPEC : STAGE_SPEC}
+        spec={SPECS[layout][fit]}
         room={room}
         onPlacement={onPlacement}
         regions={{
@@ -150,23 +171,13 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
               <SongForm {...songForm} part="transport" tipAction={tipAction} />
             </Region>
           ),
-          form:
-            layout === 'split' ? (
-              <Region name="Song form and transport">
-                <SongForm {...songForm} part="both" tipAction={tipAction} />
-              </Region>
-            ) : (
-              <Region name="Song form">
-                <SongForm {...songForm} part="form" tipAction={tipAction} />
-              </Region>
-            ),
           mixer: <FaderBankRegion {...faders} tipAction={tipAction} />,
           knobs: <KnobBankRegion {...knobs} tipAction={tipAction} />,
           pads: <PadBankRegion {...shownPads} tipAction={tipAction} />,
           // The keys take the width the solver gave their region, less its plate.
           keys: (_form: string, placed: Placed) => (
             <Region name="Keyboard">
-              <Keys {...keys} width={Math.max(0, placed.rect.w - inset.left - inset.right)} tipAction={tipAction} />
+              <Keys {...keys} ruler={false} width={Math.max(0, placed.rect.w - inset.left - inset.right)} tipAction={tipAction} />
             </Region>
           ),
           status: <StatusLine {...status} />,

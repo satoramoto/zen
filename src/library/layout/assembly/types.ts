@@ -119,7 +119,41 @@ export interface ScreenSpec {
    * edge to edge, as an app bar does). Default none.
    */
   edge?: Length;
+  /**
+   * Lay the screen out in a room of this shape instead of the whole window (`{ ratio: 16 / 9 }`).
+   * The header, body and footer all live inside that room; what the window has left over is a
+   * band of the `ground` layer (letterbox), with no plate and nothing in it. Default: the window.
+   */
+  aspect?: Aspect;
 }
+
+/**
+ * How a screen fits a room of one shape into the window. Both take the largest box of the ratio
+ * inside the window, centred, with ground bands round it.
+ *
+ * - `contain`: the screen is laid out in that box, so a smaller window steps forms down (an app).
+ * - `scale`: the screen is laid out once in its `design` room and drawn scaled to the box, so a
+ *   small frame shows the whole design smaller (a preview, a story).
+ *
+ * (Room is left in the union for `cover`, `stretch`.)
+ */
+export type AspectFit = 'contain' | 'scale';
+
+/** A screen's shape: see `ScreenSpec.aspect`. */
+export type Aspect =
+  | {
+      /** Width ÷ height (`16 / 9`). */
+      ratio: number;
+      /** Default `contain`. */
+      fit?: 'contain';
+    }
+  | {
+      /** Width ÷ height; must be `design.w / design.h`. */
+      ratio: number;
+      fit: 'scale';
+      /** The room the screen is laid out in, in px (Yahaha: 1920 × 1080). */
+      design: { w: number; h: number };
+    };
 
 /** A box's four sides in px. */
 export interface Box {
@@ -170,6 +204,19 @@ export interface Placed {
 
 /** The solver's answer. */
 export interface Placement {
+  /**
+   * The room the screen is drawn in, in px relative to the window: the whole window, or with
+   * `aspect` the largest box of that ratio inside it, centred. Everything else is relative to it,
+   * in layout px: on screen, multiply by `scale`.
+   */
+  room: Rect;
+  /**
+   * The factor the room's content is drawn at: 1, except with `aspect.fit: 'scale'`, where the
+   * screen is laid out at `aspect.design` and drawn at `room.w / design.w`.
+   */
+  scale: number;
+  /** The window's leftover strips outside the room (none, or two: left and right, or top and bottom). */
+  bands: Rect[];
   regions: Record<string, Placed>;
   /** Region ids in reading order: header, body rows, footer. */
   order: string[];

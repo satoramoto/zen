@@ -2,6 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type Re
 import type { PackPrinciples } from '../../contract';
 import { useThemeScope } from '../../theme';
 import { packs } from '../../themes/packs';
+import { Surface } from '../../primitives/Surface';
 import { assemble } from './assemble';
 import { FormProvider } from './forms';
 import type { Placed, Placement, Principles, Rect, ScreenSpec } from './types';
@@ -76,6 +77,13 @@ const at = (r: Rect): CSSProperties =>
  *
  * Each region's slot is absolutely placed; its content fills it (a `Region` stretches to it). The
  * slot carries `data-region` and `data-form`; the root carries `data-zoom` and `data-overflow`.
+ *
+ * The zones sit in the room (`data-part="room"`): the whole box, or with `spec.aspect` the largest
+ * room of that ratio, centred. The leftover strips are `ground` bands (`data-part="band"`): no
+ * plate, nothing in them, hidden from assistive tech.
+ *
+ * With `aspect.fit: 'scale'` the room is laid out at its design size and drawn smaller by a CSS
+ * `transform: scale()` (Assembly.css), carried in `data-scale` on the room.
  */
 export function AssembledScreen({ name, spec, regions, room: given, principles, onPlacement, className, style }: AssembledScreenProps) {
   const [ref, room] = useRoom(given);
@@ -96,6 +104,8 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
   };
   const zone = (part: 'header' | 'body' | 'footer') => placement.order.filter((id) => placement.regions[id].zone === part);
   const { zones } = placement;
+  // The room's box in layout px (the design room when scaled); `--lib-scale` draws it at `room`.
+  const laidOut = { ...placement.room, w: placement.room.w / placement.scale, h: placement.room.h / placement.scale };
 
   return (
     <div
@@ -106,27 +116,38 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
       data-part="screen"
       data-zoom={placement.zoom.toFixed(3)}
       data-overflow={placement.overflow || undefined}
+      data-aspect={spec.aspect ? spec.aspect.ratio.toFixed(3) : undefined}
       style={style}
     >
-      {spec.header?.length ? (
-        <div className="lib-assembled__zone" data-part="header" style={at(zones.header)}>
-          {zone('header').map(slot)}
+      {placement.bands.map((band, i) => (
+        <Surface key={i} layer="ground" radius="none" className="lib-assembled__band" data-part="band" aria-hidden="true" style={at(band)} />
+      ))}
+      <div
+        className="lib-assembled__room"
+        data-part="room"
+        data-scale={placement.scale === 1 ? undefined : placement.scale.toFixed(3)}
+        style={{ ...at(laidOut), '--lib-scale': placement.scale } as CSSProperties}
+      >
+        {spec.header?.length ? (
+          <div className="lib-assembled__zone" data-part="header" style={at(zones.header)}>
+            {zone('header').map(slot)}
+          </div>
+        ) : null}
+        <div className="lib-assembled__zone" data-part="body" style={at(zones.body)}>
+          <div
+            className="lib-assembled__body"
+            data-part="grid"
+            style={{ ...at({ x: 0, y: 0, w: placement.layout.w, h: placement.layout.h }), '--lib-zoom': placement.zoom } as CSSProperties}
+          >
+            {zone('body').map(slot)}
+          </div>
         </div>
-      ) : null}
-      <div className="lib-assembled__zone" data-part="body" style={at(zones.body)}>
-        <div
-          className="lib-assembled__body"
-          data-part="grid"
-          style={{ ...at({ x: 0, y: 0, w: placement.layout.w, h: placement.layout.h }), '--lib-zoom': placement.zoom } as CSSProperties}
-        >
-          {zone('body').map(slot)}
-        </div>
+        {spec.footer?.length ? (
+          <div className="lib-assembled__zone" data-part="footer" style={at(zones.footer)}>
+            {zone('footer').map(slot)}
+          </div>
+        ) : null}
       </div>
-      {spec.footer?.length ? (
-        <div className="lib-assembled__zone" data-part="footer" style={at(zones.footer)}>
-          {zone('footer').map(slot)}
-        </div>
-      ) : null}
     </div>
   );
 }
