@@ -17,33 +17,26 @@ interface AmbientArgs {
   smoothing: number;
   reduce: boolean;
   strength: number;
-  /** How much of the ambient colour the panels mix in at full strength, in %. Story only: the real wiring is the materials'. */
-  tint: number;
 }
 
+// The panels are plain `Surface layer=…`: how much light each takes is the material's (frost's
+// `ambient` shares, decision 85), so the story opens under visual[flow]'s pack. Other packs take none.
 const meta: Meta<AmbientArgs> = {
   title: 'Design OS/Primitives/Ambient',
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
-  args: { source: 'animation', rate: 10, smoothing: 600, reduce: false, strength: 1, tint: 40 },
+  globals: { theme: 'visuals' },
+  args: { source: 'animation', rate: 10, smoothing: 600, reduce: false, strength: 1 },
   argTypes: {
     source: { control: 'inline-radio', options: ['animation', 'thumbnails', 'none'] },
     rate: { control: { type: 'range', min: 1, max: 30, step: 1 } },
     smoothing: { control: { type: 'range', min: 0, max: 3000, step: 50 } },
     reduce: { control: 'boolean' },
     strength: { control: { type: 'range', min: 0, max: 1, step: 0.05 } },
-    tint: { control: { type: 'range', min: 0, max: 80, step: 5 } },
   },
 };
 export default meta;
 type Story = StoryObj<AmbientArgs>;
-
-/** A panel's fill: its layer's own, mixed with one ambient region by strength × tint. */
-const tinted = (region: AmbientRegion, layer: 'float' | 'base', tint: number): CSSProperties =>
-  ({
-    '--lib-surface-fill': `color-mix(in oklab, var(--ambient-${region}) calc(var(--ambient-strength) * ${tint}%), var(--layer-${layer}-fill))`,
-    '--lib-surface-cast': `0 0 calc(var(--space-6) * 2) calc(var(--ambient-strength) * var(--space-1)) color-mix(in oklab, var(--ambient-${region}) calc(var(--ambient-strength) * ${tint}%), transparent)`,
-  }) as CSSProperties;
 
 /** A slow looping canvas animation: drifting colour fields, so each region changes on its own. */
 function useAnimation(canvas: HTMLCanvasElement | null) {
@@ -90,7 +83,34 @@ const swatch = (region: AmbientRegion): CSSProperties => ({
   background: `var(--ambient-${region})`,
 });
 
-function Demo({ source, rate, smoothing, reduce, strength, tint }: AmbientArgs) {
+/** A float panel beside the picture: a label in the primary ink and a caption in the muted one (held at 4.5:1). */
+function Panel({ region, layer = 'float', wide }: { region: AmbientRegion; layer?: 'float' | 'overlay'; wide?: boolean }) {
+  return (
+    <Surface
+      layer={layer}
+      ambient={region}
+      style={{ gridColumn: wide ? '1 / -1' : undefined, padding: wide ? 'var(--space-3) var(--space-4)' : 'var(--space-4)', display: 'grid', gap: 'var(--space-2)', alignContent: 'start' }}
+    >
+      <Text role="label">
+        {layer} · ambient=&quot;{region}&quot;
+      </Text>
+      <Text role="caption" tone="muted">
+        Caption ink, held at 4.5:1
+      </Text>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+        {['raised', 'chip'].map((w) => (
+          <Surface key={w} layer="raised" radius="pill" style={{ padding: 'var(--space-1) var(--space-3)' }}>
+            <Text role="caption" tone="secondary">
+              {w}
+            </Text>
+          </Surface>
+        ))}
+      </div>
+    </Surface>
+  );
+}
+
+function Demo({ source, rate, smoothing, reduce, strength }: AmbientArgs) {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const img = useRef<HTMLImageElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -109,13 +129,9 @@ function Demo({ source, rate, smoothing, reduce, strength, tint }: AmbientArgs) 
       strength={strength}
       style={{ minHeight: '100vh', boxSizing: 'border-box', padding: 'var(--space-5)', display: 'grid', gap: 'var(--space-4)', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 3fr) minmax(0, 1fr)', gridTemplateRows: 'auto auto auto auto', alignItems: 'stretch' }}
     >
-      <Surface layer="float" style={{ ...tinted('top', 'float', tint), gridColumn: '1 / -1', padding: 'var(--space-3) var(--space-4)' }}>
-        <Text role="label">Top · --ambient-top</Text>
-      </Surface>
-      <Surface layer="float" style={{ ...tinted('left', 'float', tint), padding: 'var(--space-4)' }}>
-        <Text role="caption">Left · --ambient-left</Text>
-      </Surface>
-      <Surface layer="base" style={{ ...tinted('avg', 'base', tint), padding: 'var(--space-3)', display: 'grid' }}>
+      <Panel region="top" wide />
+      <Panel region="left" />
+      <Surface layer="base" style={{ padding: 'var(--space-3)', display: 'grid' }}>
         {source === 'animation' && <canvas ref={setCanvas} width={320} height={180} style={picture} aria-label="A looping colour animation" />}
         {source === 'thumbnails' && <img ref={img} src={THUMBS[slide]} alt="A fixture thumbnail" style={picture} />}
         {source === 'none' && (
@@ -124,12 +140,8 @@ function Demo({ source, rate, smoothing, reduce, strength, tint }: AmbientArgs) 
           </div>
         )}
       </Surface>
-      <Surface layer="float" style={{ ...tinted('right', 'float', tint), padding: 'var(--space-4)' }}>
-        <Text role="caption">Right · --ambient-right</Text>
-      </Surface>
-      <Surface layer="float" style={{ ...tinted('bottom', 'float', tint), gridColumn: '1 / -1', padding: 'var(--space-3) var(--space-4)' }}>
-        <Text role="label">Bottom · --ambient-bottom</Text>
-      </Surface>
+      <Panel region="right" />
+      <Panel region="bottom" layer="overlay" wide />
       <div style={{ gridColumn: '1 / -1', display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         {AMBIENT_REGIONS.map((r) => (
           <div key={r} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>

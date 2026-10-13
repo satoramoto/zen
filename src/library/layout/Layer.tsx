@@ -1,5 +1,5 @@
 import type { CSSProperties, ElementType, ReactNode } from 'react';
-import type { LayerName } from '../contract';
+import type { AmbientRegion, LayerName } from '../contract';
 import { Surface, type SurfaceProps } from '../primitives/Surface';
 
 // Opaque and Hole are primitives now (primitives/Surface.tsx); re-exported so imports from here keep working.
@@ -8,6 +8,8 @@ export { Opaque, Hole } from '../primitives/Surface';
 export interface LayerProps {
   /** Which layer of the depth stack this surface is. */
   level: LayerName;
+  /** Which region's ambient light it takes (`Surface`'s `ambient`). */
+  ambient?: AmbientRegion;
   /** The element to render; default `div`. */
   as?: ElementType;
   className?: string;

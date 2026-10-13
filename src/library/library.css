@@ -20,7 +20,17 @@
    its lamp) sets; declared once on the scope it would resolve there, where no --lit exists. */
 .lib-scope, .lib-scope *, .lib-scope *::before, .lib-scope *::after {
   --mat-lit-glow: 0 0 var(--mat-lit-radius) color-mix(in oklab, var(--lit, transparent) var(--mat-lit-strength), transparent);
+  /* Ambient light held to the element's lightness band (the band its layer sets; 0..1 elsewhere),
+     built here for the same reason: it reads the nearest Ambient's colours and this element's band. */
+  --ambient-held: oklch(from var(--ambient-light, var(--ambient-avg)) clamp(var(--ambient-l-min), l, var(--ambient-l-max)) c h);
 }
+/* Which region of the picture an element takes (Surface's `ambient`); what's inside inherits it. */
+.lib-scope [data-ambient='avg'] { --ambient-light: var(--ambient-avg); }
+.lib-scope [data-ambient='left'] { --ambient-light: var(--ambient-left); }
+.lib-scope [data-ambient='right'] { --ambient-light: var(--ambient-right); }
+.lib-scope [data-ambient='top'] { --ambient-light: var(--ambient-top); }
+.lib-scope [data-ambient='bottom'] { --ambient-light: var(--ambient-bottom); }
+.lib-scope [data-ambient='centre'] { --ambient-light: var(--ambient-centre); }
 
 [data-hue='1'] { --hue: var(--hue-1); }
 [data-hue='2'] { --hue: var(--hue-2); }

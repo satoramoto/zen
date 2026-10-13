@@ -1,4 +1,4 @@
-import type { Layer, LayerName, Material, Materials } from '../contract';
+import type { Layer, LayerAmbient, LayerName, Material, Materials } from '../contract';
 
 // Materials: shape plus what each part is made of. Every value reads palette variables, so a set
 // works with every palette in light and dark.
@@ -408,6 +408,24 @@ function glass(alpha: number, lift: string): Layer {
 
 const quiet = (fill: string): Material => ({ fill, shadow: NO_SHADOW, texture: 'none' });
 
+/**
+ * design-os decision 85: frost takes the preview's ambient light (owner: "the glass material to
+ * react to the preview video"), as Apple TV's and YouTube's ambient modes do. The colour is held
+ * to an OKLab lightness band before it tints: at most 0.33 in the dark mode (no lighter than the
+ * page over the lightest HUD, #3c3c3c) and at least 0.87 in the light (no darker than the light
+ * frost, #e6e6e6). So a tint only moves hue, never the captions' contrast: the worst in-gamut
+ * colour, at any share, keeps `--text-3` at 4.75:1 (dark) and 4.70:1 (light). The shares are what
+ * reads as glass catching light: more on what floats, less on the page's tints.
+ */
+function frostAmbient(fill: string, edge: string, cast: string): LayerAmbient {
+  return {
+    fill, // added
+    edge, // added
+    cast, // added
+    lightness: ['calc(var(--scheme-light) * 0.87)', 'calc(0.33 + var(--scheme-light) * 0.67)'], // added: the bands above
+  };
+}
+
 export const frostMaterials: Materials = {
   id: 'frost',
   label: 'Frost (visual[flow] glass)',
@@ -428,6 +446,14 @@ export const frostMaterials: Materials = {
     float: glass(0.86, '0 10px 24px oklch(0 0 0 / 0.55)'), // popover.css: --lift, --glass-edge
     overlay: glass(0.9, '0 18px 52px oklch(0 0 0 / 0.55)'), // added: a sheet, a step further (palette.css --shadow-modal)
     top: glass(0.9, '0 10px 24px oklch(0 0 0 / 0.55)'), // added: a toast, glass like a popover
+  },
+  // design-os decision 85: the page's tints take a little of the picture (a tint only: regions have
+  // no edge), the glass more, with a coloured top edge and a glow cast behind it. Ground and top take none.
+  ambient: {
+    base: frostAmbient('24%', '0%', '0%'),
+    raised: frostAmbient('20%', '0%', '0%'),
+    float: frostAmbient('36%', '60%', '35%'),
+    overlay: frostAmbient('32%', '60%', '30%'),
   },
   plate: {
     inset: '22px', // home.css --pad: the main column's one padding

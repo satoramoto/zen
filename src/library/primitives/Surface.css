@@ -14,14 +14,35 @@
   --lib-surface-glow: 0 0 0 0 transparent;
   --lib-surface-edge: 0 0 0 0 transparent;
   --lib-surface-cast: 0 0 0 0 transparent;
+  /* Ambient light (contract `LayerAmbient`): the layer's shares, 0 without a layer. Mixed here on
+     the element, never in toCssVars, so the ambient colours are the nearest Ambient's rather than
+     the scope's fallbacks. The band (ambient-l-min, -max) is reset per surface, so a surface
+     without a layer never keeps its parent's. */
+  --lib-surface-ambient-fill: 0%;
+  --lib-surface-ambient-edge: 0%;
+  --lib-surface-ambient-cast: 0%;
+  --ambient-l-min: 0;
+  --ambient-l-max: 1;
+  /* Laid over the fill as its own background layer, so it tints any fill (a colour or a gradient);
+     at share or strength 0 it is transparent. The colour is held to the layer's lightness band
+     (ambient-held, library.css). */
+  --lib-surface-tint: color-mix(in oklab, var(--ambient-held) calc(var(--lib-surface-ambient-fill) * var(--ambient-strength)), transparent);
+  /* A specular edge on the lit side (light-angle) and a glow cast onto what's behind, in the
+     region's own colour. */
+  --lib-surface-ambient-shadow:
+    inset calc(sin(var(--light-angle)) * var(--border-width)) calc(cos(var(--light-angle)) * -1 * var(--border-width)) 0 0
+      color-mix(in oklab, var(--ambient-light, var(--ambient-avg)) calc(var(--lib-surface-ambient-edge) * var(--ambient-strength)), transparent),
+    0 calc(cos(var(--light-angle)) * -1 * var(--space-2)) calc(var(--space-6) * 2) 0
+      color-mix(in oklab, var(--ambient-light, var(--ambient-avg)) calc(var(--lib-surface-ambient-cast) * var(--ambient-strength)), transparent);
 
-  background: var(--lib-surface-texture), var(--lib-surface-fill);
+  background: var(--lib-surface-texture), linear-gradient(var(--lib-surface-tint), var(--lib-surface-tint)), var(--lib-surface-fill);
   backdrop-filter: var(--lib-surface-backdrop);
   box-shadow:
     var(--lib-surface-border),
     var(--lib-surface-mat-shadow),
     var(--lib-surface-glow),
     var(--lib-surface-edge),
+    var(--lib-surface-ambient-shadow),
     var(--lib-surface-cast);
   border-radius: var(--radius-control);
 }
@@ -33,6 +54,15 @@
 :where(.lib-surface[data-layer='float']) { --lib-surface-fill: var(--layer-float-fill); --lib-surface-texture: var(--layer-float-texture); --lib-surface-backdrop: var(--layer-float-backdrop); --lib-surface-edge: var(--layer-float-edge); --lib-surface-cast: var(--layer-float-cast); }
 :where(.lib-surface[data-layer='overlay']) { --lib-surface-fill: var(--layer-overlay-fill); --lib-surface-texture: var(--layer-overlay-texture); --lib-surface-backdrop: var(--layer-overlay-backdrop); --lib-surface-edge: var(--layer-overlay-edge); --lib-surface-cast: var(--layer-overlay-cast); }
 :where(.lib-surface[data-layer='top']) { --lib-surface-fill: var(--layer-top-fill); --lib-surface-texture: var(--layer-top-texture); --lib-surface-backdrop: var(--layer-top-backdrop); --lib-surface-edge: var(--layer-top-edge); --lib-surface-cast: var(--layer-top-cast); }
+
+/* Layers' ambient light: how much of the picture's colour each takes (0% in most packs) and the
+   lightness band it is held to. The region (`ambient`, data-ambient) is library.css's. */
+:where(.lib-surface[data-layer='ground']) { --lib-surface-ambient-fill: var(--layer-ground-ambient-fill); --lib-surface-ambient-edge: var(--layer-ground-ambient-edge); --lib-surface-ambient-cast: var(--layer-ground-ambient-cast); --ambient-l-min: var(--layer-ground-ambient-l-min); --ambient-l-max: var(--layer-ground-ambient-l-max); }
+:where(.lib-surface[data-layer='base']) { --lib-surface-ambient-fill: var(--layer-base-ambient-fill); --lib-surface-ambient-edge: var(--layer-base-ambient-edge); --lib-surface-ambient-cast: var(--layer-base-ambient-cast); --ambient-l-min: var(--layer-base-ambient-l-min); --ambient-l-max: var(--layer-base-ambient-l-max); }
+:where(.lib-surface[data-layer='raised']) { --lib-surface-ambient-fill: var(--layer-raised-ambient-fill); --lib-surface-ambient-edge: var(--layer-raised-ambient-edge); --lib-surface-ambient-cast: var(--layer-raised-ambient-cast); --ambient-l-min: var(--layer-raised-ambient-l-min); --ambient-l-max: var(--layer-raised-ambient-l-max); }
+:where(.lib-surface[data-layer='float']) { --lib-surface-ambient-fill: var(--layer-float-ambient-fill); --lib-surface-ambient-edge: var(--layer-float-ambient-edge); --lib-surface-ambient-cast: var(--layer-float-ambient-cast); --ambient-l-min: var(--layer-float-ambient-l-min); --ambient-l-max: var(--layer-float-ambient-l-max); }
+:where(.lib-surface[data-layer='overlay']) { --lib-surface-ambient-fill: var(--layer-overlay-ambient-fill); --lib-surface-ambient-edge: var(--layer-overlay-ambient-edge); --lib-surface-ambient-cast: var(--layer-overlay-ambient-cast); --ambient-l-min: var(--layer-overlay-ambient-l-min); --ambient-l-max: var(--layer-overlay-ambient-l-max); }
+:where(.lib-surface[data-layer='top']) { --lib-surface-ambient-fill: var(--layer-top-ambient-fill); --lib-surface-ambient-edge: var(--layer-top-ambient-edge); --lib-surface-ambient-cast: var(--layer-top-ambient-cast); --ambient-l-min: var(--layer-top-ambient-l-min); --ambient-l-max: var(--layer-top-ambient-l-max); }
 
 /* Materials: after the layers, so with both the material paints the face (fill, texture) and
    the layer keeps its backdrop, edge and cast. */

@@ -121,6 +121,9 @@ export interface Materials {
    * `overlay`. See `Layer`.
    */
   layers: Record<LayerName, Layer>;
+  /** How much of the picture's ambient light each layer takes (`LayerAmbient`); a layer left out
+   *  takes none. */
+  ambient?: Partial<Record<LayerName, LayerAmbient>>;
   /** The one light source every edge and cast shadow agrees on, as a CSS angle (`180deg`: from above). */
   light: string;
   /** Region spacing: `inset` is the padding around a region's body and `gap` the space between
@@ -180,6 +183,28 @@ export interface Layer {
   edge: string;
 }
 
+/**
+ * How much of the ambient light (the picture's colour, `AMBIENT_VARS`) a layer takes, at full
+ * `--ambient-strength` (`Materials.ambient`). Plain values only (never `var(--ambient-*)`: the
+ * scope would resolve it to the fallbacks); `Surface` builds the mix on each element
+ * (`Surface.css`, from `--ambient-held` and `--ambient-light`), from the region its `ambient` prop
+ * names. With no `Ambient` above (strength 0) the layer looks exactly as it does without one.
+ */
+export interface LayerAmbient {
+  /** The share of the ambient colour laid over its fill, a percentage (`'24%'`). */
+  fill: string;
+  /** The share in a specular edge on its lit side (`light`), a percentage. */
+  edge: string;
+  /** The share in a coloured glow it casts onto what's behind, a percentage. */
+  cast: string;
+  /** The OKLab lightness band (`[min, max]`, numbers 0–1, may `calc()` with `--scheme-light`) the
+   *  colour is held to before it tints the fill, so no picture can take text below its contrast. */
+  lightness: readonly [string, string];
+}
+
+/** A layer that takes no ambient light. */
+const NO_AMBIENT: LayerAmbient = { fill: '0%', edge: '0%', cast: '0%', lightness: ['0', '1'] };
+
 export interface Facets {
   palette: Palette;
   faces: Faces;
@@ -188,8 +213,9 @@ export interface Facets {
 }
 
 /** Contract variables the scope stylesheet (library.css) builds on every element instead of
- *  `toCssVars`, because they read a variable each element sets for itself (`--lit`). */
-export const SCOPE_VARS = ['--mat-lit-glow'] as const;
+ *  `toCssVars`, because they read a variable each element sets for itself (`--lit`, the ambient
+ *  region and band: see `AMBIENT_VARS`). */
+export const SCOPE_VARS = ['--mat-lit-glow', '--ambient-light', '--ambient-held'] as const;
 
 /**
  * Ambient light: the colour of the picture a screen shows (the preview video), which components
@@ -205,6 +231,13 @@ export const SCOPE_VARS = ['--mat-lit-glow'] as const;
  *
  * A custom property resolves `var()` where it is declared, so a value built from these in
  * `toCssVars` (on the scope) reads the fallbacks: read them on the element (as `--mat-lit-glow` is).
+ *
+ * Built per element by the scope stylesheet (library.css, `SCOPE_VARS`), for layers that take
+ * the light (`Materials.ambient`):
+ * - `--ambient-light`: the region an element takes (`data-ambient`, `Surface`'s `ambient`),
+ *   inherited by what's inside; unset means `--ambient-avg`.
+ * - `--ambient-held`: that colour with its OKLab lightness held to `--ambient-l-min`..`-l-max`
+ *   (the layer's band, which `Surface` sets; `0`..`1` on the scope).
  */
 export const AMBIENT_REGIONS = ['avg', 'left', 'right', 'top', 'bottom', 'centre'] as const;
 export type AmbientRegion = (typeof AMBIENT_REGIONS)[number];
@@ -336,6 +369,12 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     vars[`--layer-${name}-backdrop`] = l.backdrop;
     vars[`--layer-${name}-cast`] = l.cast;
     vars[`--layer-${name}-edge`] = l.edge;
+    const a = m.ambient?.[name] ?? NO_AMBIENT;
+    vars[`--layer-${name}-ambient-fill`] = a.fill;
+    vars[`--layer-${name}-ambient-edge`] = a.edge;
+    vars[`--layer-${name}-ambient-cast`] = a.cast;
+    vars[`--layer-${name}-ambient-l-min`] = a.lightness[0];
+    vars[`--layer-${name}-ambient-l-max`] = a.lightness[1];
   }
   for (const part of ['track', 'tab', 'chosen'] as const) {
     vars[`--mat-tabs-${part}-fill`] = m.tabs[part].fill;
@@ -348,5 +387,7 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
   for (const [role, px] of Object.entries(s.sizes)) vars[`--size-${role}`] = `${px}px`;
   SPACE_STEPS.forEach((n, i) => (vars[`--space-${i + 1}`] = `${n * s.unit}px`));
   Object.assign(vars, AMBIENT_FALLBACKS);
+  vars['--ambient-l-min'] = '0';
+  vars['--ambient-l-max'] = '1';
   return vars;
 }
