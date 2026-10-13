@@ -1,173 +1,49 @@
-/* The Stage's dock (StageDock.tsx), from live/stage-dock.css: Home's transport bar along the
-   bottom over the full-bleed picture, and a second row under it: the deck's Next, then the
-   effect keys, Intensity and More effects. Areas told apart by space and tone, no lines.
+/* Live's controls over the picture (StageDock.tsx), under the header: Home's floating transport
+   (the preset at the top left, its star at the top right, the keys and the audio input at the
+   foot), and under its keys the effects' row: Strobe, Blackout, Freeze, Intensity as an Apple
+   slider row, More effects…. Type and glyphs on the shell's scrim, no boxes, no dock bar.
 
-   Who paints what: the shell (StageLayout) places the dock's panel (a Region) and paints it; the
-   dock is its contents, paints nothing of its own, fills the width it is given and is as tall as
-   it needs. Notices float above it as top layers, opaque in the Stage's scope.
-
-   The tuning knobs (--vs-stagedock-*) are listed in StageDock.tsx. */
+   Who paints what: the shell (StageLayout) places it, paints the scrim and fades it in and out;
+   this paints nothing, fills the room it is given, and only its rows take presses (the clear
+   middle passes them to the picture). The corner toasts (StageNotices) are float Surfaces. */
 
 .vs-stagedock {
-  /* The soft accent wash of the Hold pill. */
-  --vs-stagedock-on: color-mix(in oklab, var(--accent) 24%, transparent);
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
   min-width: 0;
-  padding-bottom: calc(var(--space-1) * 1.5); /* 6px */
+  min-height: 0;
   box-sizing: border-box;
   color: var(--text-2);
   font-family: var(--font-sans);
-}
-
-/* Screen readers only. */
-.vs-stagedock-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* The notice, the silence strip and the hint: above the dock, centred, over the picture. */
-.vs-stagedock-banners {
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + var(--space-2));
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
   pointer-events: none;
 }
-.vs-stagedock-banners > * {
-  max-width: 100%;
-  box-sizing: border-box;
-  pointer-events: auto;
-}
-.vs-stagedock .lib-layer.vs-stagedock-banner {
-  padding: var(--space-2) var(--space-2) var(--space-2) calc((var(--space-3) + var(--space-4)) / 2); /* 8px 8px 8px 14px */
-  border-radius: var(--radius-card);
-  /* A body Text (StageDock.tsx), at the line height it inherited. */
-  --text-leading: normal;
-}
-.vs-stagedock-notice {
-  gap: var(--space-2);
-}
-/* A state over the dock (Hold keeping the preset, leaving asking again): quiet, the panel's colour, no alarm. */
-.vs-stagedock .lib-layer.vs-stagedock-hint-face {
-  border-radius: var(--radius-pill);
-}
-.vs-stagedock .lib-layer.vs-stagedock-hint-face[data-hidden] {
-  display: none;
-}
-.vs-stagedock-hint {
-  margin: 0;
-  padding: calc(var(--space-1) * 1.5) calc((var(--space-3) + var(--space-4)) / 2); /* 6px 14px */
-  color: var(--text-2);
-}
 
-/* The row under the transport: Next takes what's left, the effects keep their size. */
+/* The effects' row, under the transport's keys: the keys, Intensity taking what's left, More
+   effects…; wraps once in the stacked form. */
 .vs-stagedock-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  column-gap: calc(var(--space-4) + var(--space-1)); /* 20px */
-  row-gap: var(--space-1);
+  gap: var(--space-1) var(--space-4);
   min-width: 0;
-  min-height: calc(var(--space-6) + var(--space-3)); /* 44px */
-  padding: 0 var(--mat-plate-inset);
+  pointer-events: auto;
+}
+.vs-stagedock .vs-stagedock-keys {
+  flex: none;
+  margin-left: calc(var(--space-1) * -1.5); /* the keys' own padding, as the transport's */
 }
 
-/* Next, with HOLD, the star and the rating before it. */
-.vs-stagedock-next {
-  display: flex;
-  flex: 1 1 calc(var(--control-h) * 8); /* 240px */
-  align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-}
-.vs-stagedock-held {
-  flex: none;
-  padding: 2px var(--space-2);
-  border-radius: var(--radius-pill);
-  background: var(--vs-stagedock-on);
-  color: var(--text-1);
-  --text-size: var(--vs-text-annot);
-}
-.vs-stagedock-star {
-  display: inline-grid;
-  flex: none;
-  color: var(--warning);
-}
-.vs-stagedock-star svg {
-  fill: currentColor;
-}
-.vs-stagedock-rating {
-  flex: none;
-  color: var(--text-3);
-  --text-size: var(--vs-text-annot);
-  --text-tracking: 0.08em;
-}
-.vs-stagedock-next-line {
-  display: flex;
-  flex: 1;
-  align-items: baseline;
-  gap: calc(var(--space-2) + var(--space-1) / 2); /* 10px */
-  min-width: 0;
-  margin: 0;
-  white-space: nowrap;
-}
-.vs-stagedock-next-label {
-  flex: none;
-  color: var(--text-3);
-  --text-size: var(--vs-text-annot);
-}
-.vs-stagedock-next-name,
-.vs-stagedock-quiet {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.vs-stagedock-next-name {
-  color: var(--text-2);
-}
-.vs-stagedock-next-name[data-missing],
-.vs-stagedock-quiet {
-  color: var(--text-3);
-}
-.vs-stagedock-when {
-  flex: none;
-  color: var(--text-3);
-  font-family: var(--font-readout);
-  font-style: normal;
-}
-/* A dot sets the when apart from the name before it. */
-.vs-stagedock-when::before {
-  content: '·' / '';
-  margin-right: calc(var(--space-2) + var(--space-1) / 2); /* 10px */
-  color: var(--text-3);
-}
-
-/* The effects: the keys, Intensity, More effects. */
-.vs-stagedock-fx {
-  display: flex;
-  flex: 0 1 auto;
-  align-items: center;
-  gap: var(--space-3);
-  min-width: 0;
-  margin-left: auto;
-}
-.vs-stagedock-keys {
-  flex: none;
-}
-/* The key's name and letter are body-weight Texts (StageDock.tsx) on the face's label size. */
+/* An effect key: the glyph and the name, quiet; on, the name white and the glyph in the accent. */
 .vs-stagedock .lib-action-button-face.vs-stagedock-key {
   gap: calc(var(--space-1) * 1.5); /* 6px */
   padding: 0 var(--space-2);
   color: var(--text-2);
   touch-action: none;
+}
+.vs-stagedock .lib-action-button-face.vs-stagedock-key:hover {
+  color: var(--text-1);
 }
 .vs-stagedock .lib-action-button-face.vs-stagedock-key[data-on] {
   color: var(--text-1);
@@ -175,93 +51,63 @@
 .vs-stagedock .lib-action-button-face.vs-stagedock-key[data-on] svg {
   color: var(--accent);
 }
-.vs-stagedock-key-letter {
-  color: var(--text-3);
-  font-family: var(--font-readout);
-  --text-size: var(--vs-text-annot);
-}
 
-/* Intensity: the transport's thin track, a round cap, the value after it. */
-.vs-stagedock-fader {
-  --vs-stagedock-fill: 0%; /* set inline from the gesture */
-  display: flex;
-  flex: 0 1 calc(var(--space-6) * 7 - var(--space-1)); /* 220px */
-  align-items: center;
-  gap: var(--space-3);
+/* Intensity: the core slider's Apple row (its name leading, its reading trailing, the groove under
+   them), taking the row's room between the keys and More effects…. */
+.vs-stagedock .vs-stagedock-intensity {
+  flex: 1 1 calc(var(--control-h) * 6); /* 180px */
   min-width: calc(var(--control-h) * 4); /* 120px */
+  max-width: calc(var(--control-h) * 10); /* 300px */
 }
-.vs-stagedock-fader-name {
-  flex: none;
+.vs-stagedock .vs-stagedock-intensity .lib-slider__caption {
   color: var(--text-2);
+  --text-size: var(--size-caption);
 }
-.vs-stagedock-fader-track {
-  position: relative;
-  flex: 1;
-  min-width: calc(var(--control-h) * 2); /* 60px */
-  height: calc(var(--space-4) + var(--space-1)); /* 20px */
-  border-radius: var(--radius-control);
-  cursor: pointer;
-  touch-action: none;
-  /* The thin track: 3px in the original, a 2px hairline here. */
-  background:
-    linear-gradient(var(--text-2), var(--text-2)) left center / var(--vs-stagedock-fill) 2px no-repeat,
-    linear-gradient(var(--surface-2), var(--surface-2)) center / 100% 2px no-repeat;
+.vs-stagedock .vs-stagedock-intensity .lib-slider__readout {
+  color: var(--text-1);
+  --text-size: var(--size-caption);
 }
-.vs-stagedock-fader-thumb {
-  position: absolute;
-  top: 50%;
-  left: var(--vs-stagedock-fill);
-  /* 14px */
-  width: calc((var(--space-3) + var(--space-4)) / 2);
-  height: calc((var(--space-3) + var(--space-4)) / 2);
-  border-radius: var(--radius-pill);
-  background: var(--text-1);
-  box-shadow: var(--mat-handle-shadow);
-  transform: translate(-50%, -50%);
-}
-.vs-stagedock-fader-track:focus-visible {
+.vs-stagedock .vs-stagedock-intensity .lib-slider__track:focus-visible {
   outline: 2px solid var(--vs-focus-ring);
   outline-offset: 2px;
 }
-.vs-stagedock-fader-value {
-  flex: none;
-  min-width: 2.6em;
-  color: var(--text-3);
-  text-align: right;
-}
 
-/* More effects…: quiet text with a glyph. */
+/* More effects…: quiet type with the mixer glyph, at the row's end. */
 .vs-stagedock .lib-action-button-face.vs-stagedock-more {
   gap: calc(var(--space-1) * 1.5); /* 6px */
+  margin-left: auto;
   padding: 0 calc(var(--space-1) * 1.5);
   color: var(--text-2);
+}
+.vs-stagedock .lib-action-button-face.vs-stagedock-more:hover {
+  color: var(--text-1);
 }
 .vs-stagedock .lib-action-button-face:is(.vs-stagedock-key, .vs-stagedock-more):focus-visible {
   outline: 2px solid var(--vs-focus-ring);
   outline-offset: 0;
 }
 
-/* The compact form (and the stacked one, which is narrower still; STAGE_DOCK_FORMS): the keys keep
-   their glyph and key letter, the fader its value, and Next gets its own line when the effects
-   need the width. */
-.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-key-name,
-.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-fader-name {
-  display: none;
-}
-.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-fader {
-  flex-basis: calc(var(--control-h) * 5); /* 150px */
-}
-.vs-stagedock:is([data-form='compact'], [data-form='stacked']) .vs-stagedock-row {
-  column-gap: var(--space-3);
-}
-/* The stacked form: Next on a line of its own, the effects under it across the width. */
-.vs-stagedock[data-form='stacked'] .vs-stagedock-next {
+/* The stacked form (STAGE_DOCK_FORMS, a narrow window): the keys on a row of their own, Intensity
+   and More effects… under them. */
+.vs-stagedock[data-form='stacked'] .vs-stagedock-keys {
   flex-basis: 100%;
 }
-.vs-stagedock[data-form='stacked'] .vs-stagedock-fx {
-  flex: 1 1 100%;
-  margin-left: 0;
+
+/* The corner toasts (StageNotices): Home's toast, a float Surface in caption type; the shell
+   stacks them at the window's bottom right. */
+.vs-stagedock-toast {
+  max-width: 100%;
+  box-sizing: border-box;
 }
-.vs-stagedock[data-form='stacked'] .vs-stagedock-fader {
-  flex: 1 1 calc(var(--control-h) * 4); /* 120px */
+.vs-stagedock-toast-type {
+  display: contents;
+}
+.vs-stagedock-toast .vs-stagedock-notice {
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+}
+.vs-stagedock-hint {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-2);
 }

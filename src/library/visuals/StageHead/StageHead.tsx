@@ -2,15 +2,14 @@ import { CameraAction } from '../Camera/Camera';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import type { ReactNode } from 'react';
 import { useForm, type Forms, type Length } from '../../layout/assembly';
-import { Layer } from '../../layout/Layer';
+import { Surface } from '../../primitives/Surface';
 import { Text } from '../../primitives/Text';
 import { titleOf } from '../HelpOverlay/HelpOverlay';
 import { Icon } from '../Icon/Icon';
 import { LinkPanel } from '../LinkPanel/LinkPanel';
 import type { LiveState } from '../model/live-model';
-import { STAGE_CRATE_ID, type FullScreenOfferProps, type StageHeadProps } from '../model/stage-model';
+import type { FullScreenOfferProps, StageHeadProps } from '../model/stage-model';
 import { useLinkFrame } from '../model/useLive';
-import { say } from '../model/words';
 import { OutputPanel } from '../OutputPanel/OutputPanel';
 import { Popover } from '../Popover/Popover';
 import { BeatDot, beatLabel, bpmText, Fps, linked, openSettings, outputLabel, SkipNote, TapButton } from '../Status/Status';
@@ -22,19 +21,27 @@ export type StageHeadForm = 'full' | 'short';
 /** The title bar's 52px. */
 const TITLEBAR: Length = { space: [6, 4, 1] };
 
-/** what the header's capsules need, in the shell's header row */
+/** what the header's type needs, in the shell's header row */
 export const STAGE_HEAD_FORMS: Forms<StageHeadForm> = [
-  // full: both capsules with their whole words — 808px, the original's 900px window less the 84px lights room and 8px right inset
-  { id: 'full', min: { w: { unit: 202 }, h: TITLEBAR }, ideal: { w: { unit: 202 }, h: TITLEBAR } },
-  // short: the lights' words and the skipped note cut shorter, so both capsules keep to one line
-  { id: 'short', min: { w: { control: 10 }, h: TITLEBAR }, ideal: { w: { control: 10 }, h: TITLEBAR } },
+  // full: the switch and the lights with their whole words — 808px, the original's 900px window less the 84px lights room and 8px right inset
+  { id: 'full', min: { w: { unit: 202 }, h: TITLEBAR }, ideal: { w: { unit: 202 }, h: TITLEBAR }, grow: { w: true } },
+  // short: the lights' words and the skipped note cut shorter, so the row keeps to one line
+  { id: 'short', min: { w: { control: 10 }, h: TITLEBAR }, ideal: { w: { control: 10 }, h: TITLEBAR }, grow: { w: true } },
 ];
 
-/** The crate's toggle's tooltip: what it does now, show or hide. */
-export const crateTitle = (open: boolean): string => `${open ? 'Hide' : 'Show'} the ${say('crate')}`;
+/** What ✕ is called, and its tooltip: it leaves at once, as ⌘⇧L does; Esc held does too. */
+export const LEAVE_LABEL = 'Leave live';
+export const LEAVE_TITLE = 'Leave live (⌘⇧L, hold Esc)';
 
-/** What the Output light shows beside its glyph: the display the picture is on, or "In this window" (in the header's normal ink) while it is on none. */
+/** What the Output light shows beside its glyph: the display the picture is on, or "In this window" while it is on none. */
 export const outputWords = (live: Pick<LiveState, 'status'>): string => live.status.display?.name ?? 'In this window';
+
+/** The header's props: Home | Live, the lights, ?, settings and ✕ (the crate's toggle is gone with the crate). */
+export type StageHeadOwnProps = Omit<StageHeadProps, 'crateOpen' | 'onCrate'> & {
+  /** ✕: leave live at once. */
+  onLeave(): void;
+  form?: StageHeadForm;
+};
 
 /** Figures in a light's label: tabular, at the label's size (StageHead.css matches its weight). */
 function LightNum({ className, children, ...rest }: { className: string; children: ReactNode; 'aria-hidden'?: 'true' }) {
@@ -81,19 +88,18 @@ function BeatLight({ live }: { live: LiveState }) {
   );
 }
 
-/** The Output light: where the picture goes, the display's name or "In this window" in the header's normal ink; its popover picks the display and says how it fits. */
+/** The Output light: where the picture goes, as words, white while it is on a display and grey while in this window; its popover picks the display and says how it fits. */
 function OutputLight({ live }: { live: LiveState }) {
   return (
     <Popover
-      className="vs-stagehead-light"
+      className="vs-stagehead-light vs-stagehead-output"
       name={outputLabel(live.status)}
       title={titleOf('output')}
       align="right"
       label={
-        <>
-          <Icon name="output" size={14} />
-          <span className="vs-stagehead-light-text">{outputWords(live)}</span>
-        </>
+        <span className="vs-stagehead-light-text" data-on={live.status.display ? '' : undefined}>
+          {outputWords(live)}
+        </span>
       }
     >
       <div className="vs-stagehead-pop" data-pop="output">
@@ -104,84 +110,72 @@ function OutputLight({ live }: { live: LiveState }) {
 }
 
 /**
- * **Job.** The Stage's header, on the traffic lights' line: two opaque capsules
- * over the picture, and between them the picture itself, which drags the window.
- * The leading one is the crate's toggle and Home | Live, as Home's header
- * switches them; the trailing one says when presets were skipped or the picture
- * runs slow, then the Beat and Output lights (Home's popovers, not modal: live's
- * keys keep working while one is open), ? and settings.
+ * **Job.** The Stage's header: one row of bare type on the window buttons' line, 8px in from
+ * the window's edge. On the left Home | Live, as Home's header switches them; on the right the
+ * skipped note and a slow frame rate when there are any, the Beat and Output lights as words
+ * (Home's popovers, not modal: live's keys keep working while one is open), then the camera, ?
+ * and settings as quiet glyphs and a quiet ✕ that leaves live. The empty line between them is
+ * the title bar: a drag there moves the window. It shows and fades with the controls (the
+ * shell's one overlay, StageLayout).
  *
- * **Changed.** Each capsule is a base `Layer` (the shell's `Opaque` makes it the
- * solid tone, no blur, over the picture); the glyph tools are core `ButtonFace`s
- * in the quiet tone; Home | Live is Views' `ViewSwitch` as the theme's tabs draw it
- * (no local overrides). The popovers' panels are the sibling `Popover`'s float
- * layers, opaque inside the Stage's scope, so the stylesheet no longer repaints
- * them, nor styles the Link and Output panels' or the tap key's insides (theirs).
- * The skipped note goes at once rather than fading (nothing animates). The
- * narrow window's shorter words are a form (`STAGE_HEAD_FORMS`,
- * `StageHead.forms`: full → short) the assembled screen picks, or the `form`
- * prop, drawn off `data-form`, in place of the 900px media query.
+ * **Changed.** No capsules and no crate toggle: type and glyphs on the shell's scrim, the
+ * popovers' panels the only solid layers (opaque over the native picture in the Stage's scope).
+ * The Output light is its words alone, white on a display and grey in this window. ✕ is new:
+ * "Leave live (⌘⇧L, hold Esc)". The narrow window's shorter words are a form
+ * (`STAGE_HEAD_FORMS`: full → short) the assembled screen picks, or the `form` prop.
  *
- * **Kept.** The props, every name, label, tooltip and key shortcut, the drag
- * region, the 36px capsules on the 52px title bar, and how far the words
- * shorten when narrow.
- *
- * **Tuning knobs** (StageHead.css):
- * - `--vs-stagehead-cap-h`: the capsules' 36px, centred on the window buttons' line (y 28).
- * - `--vs-stagehead-cap-radius`: their 12px corners.
- * - `--vs-stagehead-offer-radius`: the offer's 18px corners (the inset panels').
+ * **Kept.** Every name, label, tooltip and key shortcut of the lights, ? and settings; the drag
+ * region; how far the words shorten when narrow.
  */
-export function StageHead({ live, crateOpen, onCrate, help, onHelp, onView, form }: StageHeadProps & { form?: StageHeadForm }) {
+export function StageHead({ live, help, onHelp, onView, onLeave, form }: StageHeadOwnProps) {
   const f = useForm(STAGE_HEAD_FORMS, form);
   return (
-    <header className="vs-stagehead" data-form={f} data-tauri-drag-region>
-      <Layer level="base" className="vs-stagehead-cap vs-stagehead-cap-lead">
-        <ButtonFace tone="quiet" className="vs-stagehead-tool" aria-label={say('crate')} aria-controls={STAGE_CRATE_ID} aria-expanded={crateOpen} title={crateTitle(crateOpen)} onClick={onCrate}>
-          <Icon name="sidebar" />
-        </ButtonFace>
-        <span className="vs-stagehead-switch">
-          <ViewSwitch view="live" onChange={onView} />
-        </span>
-      </Layer>
+    <Text as="header" className="vs-stagehead" data-form={f} data-tauri-drag-region>
+      <span className="vs-stagehead-switch">
+        <ViewSwitch view="live" onChange={onView} />
+      </span>
       <span className="vs-stagehead-fill" />
-      <Layer level="base" className="vs-stagehead-cap vs-stagehead-cap-trail">
-        <SkipNote className="vs-stagehead-skipped" />
-        <Fps className="vs-stagehead-fps" />
-        <BeatLight live={live} />
-        <OutputLight live={live} />
-        <CameraAction />
+      <SkipNote className="vs-stagehead-skipped" />
+      <Fps className="vs-stagehead-fps" />
+      <BeatLight live={live} />
+      <OutputLight live={live} />
+      <span className="vs-stagehead-tools">
+        <CameraAction className="vs-stagehead-tool" />
         <ButtonFace tone="quiet" className="vs-stagehead-tool" aria-label="Help" aria-haspopup="dialog" aria-expanded={help} aria-keyshortcuts="?" title={titleOf('help')} onClick={onHelp}>
           <Icon name="help" />
         </ButtonFace>
         <ButtonFace tone="quiet" className="vs-stagehead-tool" aria-label="Settings" aria-haspopup="dialog" aria-keyshortcuts="Meta+," title={`${titleOf('settings')} (⌘,)`} onClick={openSettings}>
           <Icon name="gear" />
         </ButtonFace>
-      </Layer>
-    </header>
+        <ButtonFace tone="quiet" className="vs-stagehead-tool vs-stagehead-leave" aria-label={LEAVE_LABEL} aria-keyshortcuts="Meta+Shift+L" title={LEAVE_TITLE} onClick={onLeave}>
+          <Icon name="close" />
+        </ButtonFace>
+      </span>
+    </Text>
   );
 }
 StageHead.forms = STAGE_HEAD_FORMS;
 
 /**
- * **Job.** "Go full screen on…", over the picture while it plays in the window
- * (as it does on the way in: live never opens the output by itself): a button
- * for each display, and with only one the note that the picture will cover this
- * window. Nothing while the output is on a display, or before the displays are
- * known.
+ * **Job.** "Go full screen on…", a corner toast while the picture plays in the window (as it does
+ * on the way in: live never opens the output by itself): a button for each display, and with only
+ * one the note that the picture will cover this window. Nothing while the output is on a display,
+ * or before the displays are known. The shell stacks it at the window's bottom right.
  *
- * **Changed.** The capsule is a base `Layer` (opaque inside the Stage's scope);
- * each display's button a core `ButtonFace` in the key material.
+ * **Changed.** It was over the picture's middle; it is now Home's toast: a float `Surface` (opaque
+ * in the Stage's scope, taking the picture's light from the right), in caption type, each
+ * display's button a quiet `ButtonFace`.
  *
  * **Kept.** The group's name and tooltip, the buttons' names and the note.
  */
 export function FullScreenOffer({ live }: FullScreenOfferProps) {
   if (!live.inWindow || !live.displays?.length) return null;
   return (
-    <div className="vs-stagehead-offer" role="group" aria-label="Go full screen" title={titleOf('fullscreen')}>
-      <Layer level="base" className="vs-stagehead-offer-face">
+    <Surface layer="float" radius="control" ambient="right" className="vs-stagehead-offer" role="group" aria-label="Go full screen" title={titleOf('fullscreen')}>
+      <Text as="div" size="caption" leading="normal" className="vs-stagehead-offer-body">
         {live.displays.map((d) => (
-          <ButtonFace key={d.id} className="vs-stagehead-offer-go" onClick={() => live.show(d.id)} aria-label={`Go full screen on ${d.name}`}>
-            <Icon name="fullscreen" />
+          <ButtonFace key={d.id} tone="quiet" className="vs-stagehead-offer-go" onClick={() => live.show(d.id)} aria-label={`Go full screen on ${d.name}`}>
+            <Icon name="fullscreen" size={14} />
             <span>
               Full screen on{' '}
               <Text as="b" size="inherit" weight="strong" leading="tight" className="vs-stagehead-offer-name">
@@ -195,7 +189,7 @@ export function FullScreenOffer({ live }: FullScreenOfferProps) {
             One display: the picture will cover this window. ✕ or ⌘⇧L comes back.
           </Text>
         )}
-      </Layer>
-    </div>
+      </Text>
+    </Surface>
   );
 }
