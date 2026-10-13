@@ -530,7 +530,12 @@ export function HomeLayout({
               {pane ?? children}
             </main>
           ),
-          bar: <div className="vs-lay-bar">{bar}</div>,
+          // Frosted (the float layer: glass and its blur), so the tiles passing under it show through.
+          bar: (
+            <Surface layer="float" ambient="bottom" className="vs-lay-bar">
+              {bar}
+            </Surface>
+          ),
           inspector: inspMode ? (
             <Region name="inspector" className={cell(inspMode, 'insp')}>
               <InspectorPanel label={inspectorLabel} id={INSPECTOR_ID} panelRef={insp}>

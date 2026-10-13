@@ -264,11 +264,14 @@
 }
 
 /* The main column's parts, each in the slot the solver gave it, the screen's 32px gap between
-   them and at the window's edges. Above the hero's shadow, and painting nothing. */
+   them and at the window's edges. Above the hero's shadow; the column paints nothing (the bar is
+   its own glass, below). */
 .vs-lay .vs-lay-main,
 .vs-lay .vs-lay-bar {
   position: relative;
   z-index: var(--vs-lay-z-over-hole);
+}
+.vs-lay .vs-lay-main {
   background: none;
 }
 /* The hero's slot is a size container: the picture is as tall as the room it was given (Hero.css
@@ -324,12 +327,11 @@
   --vs-lay-clip-t: calc(var(--vs-lay-hole-b) * 1px);
   --vs-lay-ink-t: transparent;
 }
-/* Over the bar (the slot's `data-over`): clipped at the bar's top, so nothing passing under it
-   paints behind its controls or takes a press there (the bar, drawn after, keeps its own); and
-   faded out above that edge by the band, so what scrolls down dissolves as it flows underneath.
-   The bar paints nothing new. */
+/* Over the bar (the slot's `data-over`): what scrolls down passes under the bar whole, neither
+   clipped nor faded; the bar is frosted glass drawn after it (so it keeps its presses), and the
+   tiles read through it blurred. */
 .vs-lay [data-over] > .vs-lay-main {
-  --vs-lay-ink-b: transparent;
+  --vs-lay-bar-top: 0px;
 }
 /* (The mask reads only its stops' alpha: the ink is any opaque contract colour.) */
 .vs-lay .vs-lay-main[data-hole],
@@ -359,8 +361,19 @@
   flex: 1 1 auto;
   min-height: 0;
 }
+/* The bar: a float Surface (the theme's glass: tint, blur, edge and cast; Home.tsx), the inset
+   panels' corners, so the tiles passing under it read through the frost. */
 .vs-lay .vs-lay-bar {
+  /* The float's tint thinned (frost's is 86%, which reads as solid), so the blurred tiles show. */
+  --vs-lay-bar-tint: 60%;
+  --lib-surface-fill: color-mix(in oklab, var(--layer-float-fill) var(--vs-lay-bar-tint), transparent);
   min-width: 0;
+  border-radius: var(--vs-lay-side-radius);
+  /* Its edges on the tiles' edges under it: the grid's side padding (Home.css --vs-home-pad). */
+  margin-inline: var(--mat-plate-inset);
+}
+.vs-lay:has([data-region='pane'][data-form='small']) .vs-lay-bar {
+  margin-inline: var(--space-4);
 }
 
 /* The header's buttons that open and close a panel (TOGGLE_CLASS): the sidebar's glyph turned to
