@@ -12,8 +12,6 @@ import type { FullScreenOfferProps, StageHeadProps } from '../model/stage-model'
 import { useLinkFrame } from '../model/useLive';
 import { OutputPanel } from '../OutputPanel/OutputPanel';
 import { Popover } from '../Popover/Popover';
-import { notice } from '../model/shell';
-import { SourcePicker } from '../SourcePicker/SourcePicker';
 import { BeatDot, beatLabel, bpmText, Fps, linked, openSettings, outputLabel, SkipNote, TapButton } from '../Status/Status';
 import { ViewSwitch } from '../Views/Views';
 import './StageHead.css';
@@ -114,8 +112,7 @@ function OutputLight({ live }: { live: LiveState }) {
 /**
  * **Job.** The Stage's header: one row of bare type on the window buttons' line, 8px in from
  * the window's edge. On the left Home | Live, as Home's header switches them; on the right the
- * skipped note and a slow frame rate when there are any, the audio input (its mixer glyph and
- * level, moved up from the controls over the picture), the Beat and Output lights as words
+ * skipped note and a slow frame rate when there are any, the Beat and Output lights as words
  * (Home's popovers, not modal: live's keys keep working while one is open), then the camera, ?
  * and settings as quiet glyphs and a quiet ✕ that leaves live. The empty line between them is
  * the title bar: a drag there moves the window. It shows and fades with the controls (the
@@ -140,9 +137,6 @@ export function StageHead({ live, help, onHelp, onView, onLeave, form }: StageHe
       <span className="vs-stagehead-fill" />
       <SkipNote className="vs-stagehead-skipped" />
       <Fps className="vs-stagehead-fps" />
-      <span className="vs-stagehead-audio">
-        <SourcePicker onError={(e) => live.setError(notice("Couldn't use that audio input.", e))} channels="none" width={180} />
-      </span>
       <BeatLight live={live} />
       <OutputLight live={live} />
       <span className="vs-stagehead-tools">

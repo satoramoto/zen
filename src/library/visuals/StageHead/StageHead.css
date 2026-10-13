@@ -173,9 +173,3 @@
   padding: var(--space-1) var(--space-2);
   color: var(--text-3);
 }
-
-/* The audio input (its mixer glyph and level), just left of the lights: the transport's quiet picker. */
-.vs-stagehead-audio {
-  display: inline-flex;
-  align-items: center;
-}

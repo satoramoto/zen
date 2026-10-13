@@ -148,8 +148,8 @@ export function EffectKey({
 /**
  * **Job.** Live's controls over the picture (see `StageDockProps`), under the header: Home's
  * floating transport (`TransportBar layout="overlay"`: the preset and where it plays from at the
- * top left, the dice and its star at the top right, ◀ the auto-change ring ▶ dead centre at the
- * foot; the audio input is in the header, StageHead), and under its keys a second line: Strobe, Blackout and Freeze (strobe and freeze held,
+ * top left, its star at the top right, ◀ the auto-change ring ▶ the dice and the audio input at the
+ * foot), and under its keys a second line: Strobe, Blackout and Freeze (strobe and freeze held,
  * blackout a toggle), Intensity as an Apple slider row and More effects…. The shell places it and
  * fades it in with the header (StageLayout); this paints nothing.
  *
