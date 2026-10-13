@@ -23,7 +23,6 @@ const preview: Preview = {
           ['Systems', 'Layout', 'Components', ['Core', 'Music']],
           'Yahaha',
           ['Screens', 'Components', 'Primitives'],
-          'open[flow]',
           'Overview',
           'Thinking with Type',
           'Grid Systems',

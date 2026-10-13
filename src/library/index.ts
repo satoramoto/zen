@@ -1,6 +1,6 @@
 // The public entry of @satoramoto/zen: what apps import. `vite.lib.config.ts` builds it to
 // `lib/index.js` (plus every stylesheet it imports in `lib/zen.css`), `tsconfig.lib.json` its types.
-// visual[flow]'s app is the second entry, `@satoramoto/zen/visuals` (`visuals/index.ts`).
+// The other entry is `@satoramoto/zen/storybook` (`storybook.tsx`).
 
 // The token contract.
 export {

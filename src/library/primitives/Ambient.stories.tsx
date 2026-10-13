@@ -6,10 +6,19 @@ import { Ambient } from './Ambient';
 import { Surface } from './Surface';
 import { Text } from './Text';
 
-// A few of the starter fixture's thumbnails, evenly spread, for the slideshow source.
-const thumbFiles = import.meta.glob<string>('../visuals/fixtures/starter/thumbnails/*.webp', { eager: true, query: '?url', import: 'default' });
-const ALL_THUMBS = Object.keys(thumbFiles).sort().map((k) => thumbFiles[k]);
-const THUMBS = Array.from({ length: 8 }, (_, i) => ALL_THUMBS[Math.floor((i * ALL_THUMBS.length) / 8)]).filter(Boolean);
+// Eight generated stills for the slideshow source: each a different pair of colour fields, so
+// every region's light changes from one slide to the next.
+const THUMBS = Array.from({ length: 8 }, (_, i) => {
+  const a = (i * 45) % 360;
+  const b = (a + 150) % 360;
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">` +
+    `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
+    `<stop offset="0" stop-color="hsl(${a} 80% 55%)"/><stop offset="1" stop-color="hsl(${b} 70% 25%)"/>` +
+    `</linearGradient></defs><rect width="320" height="180" fill="url(#g)"/>` +
+    `<circle cx="${60 + i * 28}" cy="90" r="50" fill="hsl(${(a + 60) % 360} 90% 65%)"/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+});
 
 interface AmbientArgs {
   source: 'animation' | 'thumbnails' | 'none';
@@ -133,7 +142,7 @@ function Demo({ source, rate, smoothing, reduce, strength }: AmbientArgs) {
       <Panel region="left" />
       <Surface layer="base" style={{ padding: 'var(--space-3)', display: 'grid' }}>
         {source === 'animation' && <canvas ref={setCanvas} width={320} height={180} style={picture} aria-label="A looping colour animation" />}
-        {source === 'thumbnails' && <img ref={img} src={THUMBS[slide]} alt="A fixture thumbnail" style={picture} />}
+        {source === 'thumbnails' && <img ref={img} src={THUMBS[slide]} alt="A generated still" style={picture} />}
         {source === 'none' && (
           <div style={{ ...picture, display: 'grid', placeItems: 'center' }}>
             <Text role="caption">No picture: the fallbacks, at strength 0</Text>
@@ -157,7 +166,7 @@ function Demo({ source, rate, smoothing, reduce, strength }: AmbientArgs) {
 /** The panels round a picture take its light: each from the region it sits beside. Change the source, the rate, the easing, Reduce flashing. */
 export const Playground: Story = { render: (args) => <Demo {...args} /> };
 
-/** The fixture thumbnails as a slideshow: each change eases in over the smoothing time. */
+/** Generated stills as a slideshow: each change eases in over the smoothing time. */
 export const Thumbnails: Story = { args: { source: 'thumbnails' }, render: (args) => <Demo {...args} /> };
 
 /** Reduce flashing: the same picture, but the light drifts over seconds. */

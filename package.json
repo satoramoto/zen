@@ -17,24 +17,6 @@
       "zen-source": "./src/library/storybook.tsx",
       "types": "./lib/storybook.d.ts",
       "import": "./lib/storybook.js"
-    },
-    "./visuals": {
-      "zen-source": "./src/library/visuals/index.ts",
-      "types": "./lib/visuals/index.d.ts",
-      "import": "./lib/visuals.js"
-    },
-    "./visuals.css": {
-      "zen-source": "./src/library/source.css",
-      "default": "./lib/visuals.css"
-    },
-    "./visuals/lab": {
-      "zen-source": "./src/library/visuals/lab.ts",
-      "types": "./lib/visuals/lab.d.ts",
-      "import": "./lib/visuals-lab.js"
-    },
-    "./visuals-lab.css": {
-      "zen-source": "./src/library/source.css",
-      "default": "./lib/visuals-lab.css"
     }
   },
   "types": "./lib/index.d.ts",
