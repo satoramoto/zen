@@ -641,7 +641,8 @@ export function Home({
     if (!p) return;
     const tile = list ? tiles.find((t) => tilesPicked.includes(t.key) && t.path === p.row.path) : undefined;
     if (tile) playAt(tile.index, tile.path, tile.name);
-    else load(entryOf(p));
+    // Claimed, as a tile's play is: the deck's word on what played before can't put it back while this opens.
+    else load(entryOf(p), true);
   };
 
   const openInspector = () => {
@@ -796,10 +797,13 @@ export function Home({
               mine={data?.presets}
               onSet={setData}
               onAddTo={addTo}
+              // A dot in the field plays at once, as a library tile's play does, and on its own (not from a playlist shown):
+              // what was picked is let go, so the inspector, the field's rings and the grid follow what plays from here on.
               onPick={(row: LibraryRow) => {
-                setSel({ kind: 'presets', keys: [row.key] });
-                setTilesPicked([]);
-                setInfo(false);
+                const p = byKey.get(row.key);
+                if (!p) return;
+                toSource();
+                void load(entryOf(p), true);
               }}
               onBack={toSource}
               onPlay={picked.length === 1 ? playPicked : undefined}

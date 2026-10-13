@@ -106,12 +106,17 @@ function tuned(data: LibraryData): LibraryData {
   return { ...data, presets: { ...data.presets, [key]: { ...data.presets[key], tune: { speed: 0.5, sensitivity: 1.5 } } } };
 }
 
-/** What a Home holds for the inspector: the user's data, the playlists and the one picked, so its actions, picks and "back" work. */
+/** What a Home holds for the inspector: the user's data, the playlists, the one picked and the one playing, so its actions, the field's plays, Play and "back" work. */
 function useInspector(start: Start, library: readonly LibraryRow[], tune = false) {
   const [data, setData] = useState(() => (tune ? tuned(DATA) : DATA));
   const [playlists, setPlaylists] = useState<Playlist[]>(PLAYLISTS);
   const [picked, setPicked] = useState<LibraryRow | null>(start === 'picked' ? PICKED : null);
-  const playing = start === 'nothing' ? null : NOW.preset;
+  const [playing, setPlaying] = useState<LibraryRow | null>(start === 'nothing' ? null : NOW.preset);
+  // Playing lets go of what was picked, as the Home's field does.
+  const play = (row: LibraryRow) => {
+    setPicked(null);
+    setPlaying(row);
+  };
   // A source shows while no preset is: the Home passes no subject then.
   const shown = start === 'source' ? picked : (picked ?? playing);
   const props: InspectorProps = {
@@ -126,9 +131,9 @@ function useInspector(start: Start, library: readonly LibraryRow[], tune = false
     onSet: (keys, change) => setData((d) => applied(d, keys, change)),
     onAddTo: (id, paths) =>
       setPlaylists((ls) => ls.map((l) => (l.id === id ? { ...l, items: [...l.items, ...paths.map((path) => ({ path, name: path, group: '', missing: false, hash: null }))] } : l))),
-    onPick: setPicked,
+    onPick: play,
     onBack: () => setPicked(null),
-    onPlay: () => setPicked(null),
+    onPlay: () => picked && play(picked),
     onEdit: () => {},
   };
   return { props, pick: setPicked, playing, data };
@@ -226,8 +231,8 @@ function Story({ start, window, pack, error, overlay, tuned }: Args) {
  * inspector), mirroring the sidebar: the actions on it as glyphs in the header row, then the
  * preset's name and authors, its facts (style, the measures in words, its colours, my tags), the
  * map (a field of every preset by speed and brightness with this one lit) and its own speed and
- * sensitivity as sliders. It is about the preset playing, or one picked (a dot in the field, or a
- * tile in the main column) until "back".
+ * sensitivity as sliders. It is about the preset playing, or one picked (a tile in the main column)
+ * until "back"; a dot in the field plays its preset.
  */
 const meta = {
   title: 'open[flow]/visuals/Layout/Inspector',
@@ -296,9 +301,9 @@ export const NowPlaying: S = {
   },
 };
 
-/** A dot picked in the field: hover names it, a click shows it with the way back, and the dot playing stays marked; back returns. */
-export const PickedInTheField: S = {
-  name: 'Picked in the field',
+/** A dot played from the field: hover names it, a click plays it at once (no way back, no Play: it is what plays), and the playing ring is the lit one; another dot does the same. */
+export const PlayedFromTheField: S = {
+  name: 'Played from the field',
   play: async ({ canvasElement }) => {
     const panelEl = panelOf(within(canvasElement));
     const panel = within(panelEl);
@@ -308,12 +313,16 @@ export const PickedInTheField: S = {
     fireEvent.pointerDown(svg, at);
     fireEvent.click(svg, at);
     await waitFor(() => expect(panel.getByRole('heading', { name })).toBeVisible());
-    await expect(panel.getByRole('button', { name: 'play it' })).toBeVisible();
     await expect(hit.key).not.toBe(NOW.preset!.key);
-    // The preset playing keeps its mark while another is shown.
-    await expect(panelEl.querySelector('.vs-field-playing')).not.toBeNull();
-    await userEvent.click(panel.getByRole('button', { name: 'back to now playing' }));
-    await waitFor(() => expect(panel.getByRole('heading', { name: PLAYING_NAME })).toBeVisible());
+    await expect(panel.queryByRole('button', { name: 'play it' })).toBeNull();
+    await expect(panel.queryByRole('button', { name: 'back to now playing' })).toBeNull();
+    // The dot played is the lit one: no other playing mark.
+    await expect(panelEl.querySelector('.vs-field-playing')).toBeNull();
+    // Back to the first preset's dot: it plays again.
+    const back = dotOnScreen(panelEl, STARTER, NOW.preset!.key);
+    fireEvent.pointerDown(back.svg, back.at);
+    fireEvent.click(back.svg, back.at);
+    await waitFor(() => expect(panel.getByRole('heading', { name: back.name })).toBeVisible());
     await expect(panelEl.querySelector('.vs-field-playing')).toBeNull();
   },
 };
@@ -455,7 +464,7 @@ export const FullPack: S = {
     const svg = panelEl.querySelector('.vs-field-scope')!;
     await expect(svg.querySelectorAll('.vs-field-dots path').length).toBeLessThanOrEqual(13);
     await expect(svg.querySelectorAll('*').length).toBeLessThan(60);
-    // From the keyboard: Tab reaches the field, its cursor starts on the preset playing, the arrows move it, Enter shows the one under it.
+    // From the keyboard: Tab reaches the field, its cursor starts on the preset playing, the arrows move it, Enter plays the one under it.
     const field = fieldOf(panelEl);
     field.focus();
     await waitFor(() => expect(panel.getByRole('option', { name: /playing$/ })).toHaveAttribute('aria-selected', 'true'));
@@ -466,8 +475,9 @@ export const FullPack: S = {
     const name = option.textContent!.split(', by ')[0];
     await userEvent.keyboard('{Enter}');
     await waitFor(() => expect(panel.getByRole('heading', { name })).toBeVisible());
-    await userEvent.click(panel.getByRole('button', { name: 'back to now playing' }));
-    await waitFor(() => expect(panel.getByRole('heading', { name: PLAYING_NAME })).toBeVisible());
+    // It plays: the option under the cursor says so, and there is no way back to go.
+    await waitFor(() => expect(panel.getByRole('option')).toHaveAccessibleName(/playing$/));
+    await expect(panel.queryByRole('button', { name: 'back to now playing' })).toBeNull();
   },
 };
 

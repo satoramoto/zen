@@ -22,8 +22,10 @@ export type { InspectorProps } from '../model/inspector-model';
  * authors), then its facts (style, its measures read out as one line of words, its colours as
  * dots, my tags), then the map (the field: the preset placed among the library, as an
  * instrument's XY display would), then its own speed and how much it reacts ("for this preset",
- * Tune) and the playlists holding it. It is about the preset playing, or one picked (a dot in
- * the field, or a tile the Home passes in) until "back". For several picked together (`chosen`),
+ * Tune) and the playlists holding it. It is about the preset playing, or one picked (a tile the
+ * Home passes in) until "back". A dot in the field plays that preset (`onPick`), so the inspector
+ * follows it as it follows any change of what plays; the dot playing, while a tile is shown, goes
+ * back. For several picked together (`chosen`),
  * "n selected", their styles and tags, their pictures in the map's place, and the actions over
  * all of them in the header (a tune is one preset's, so none shows for several). With no preset,
  * the source the Home passes (`source`, a playlist's head); with neither, the field still draws
@@ -35,7 +37,9 @@ export type { InspectorProps } from '../model/inspector-model';
  * original's groups were, with no visible label but the tune's heading. It paints nothing: the
  * panel's layer is behind it. Colours are the contract's ink steps and the raised caption
  * (visuals.css), spacing the scale's where the source's steps match. The several-picked count
- * sits on the black key at 60% rather than a literal black.
+ * sits on the black key at 60% rather than a literal black. A dot in the field plays rather than
+ * shows (the Home's `onPick`), so it no longer leaves a picked preset that outlives its Play; with
+ * nothing playing the words say a click plays one.
  *
  * **Kept.** Its props, the order, every name, role, title and word, Escape closing it unless
  * something inside took the key first or it was typed in a text box.
@@ -106,7 +110,7 @@ function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, o
   const colours = c ? colourNames(c) : [];
   const inLists = p ? holding(p, playlists) : null;
   const measured = library.reduce((n, r) => (r.look ? n + 1 : n), 0);
-  // The dot playing goes back to it, unless it is already shown.
+  // A dot plays (the Home's `onPick`); the dot playing goes back to it from a tile picked, and does nothing while it is shown.
   const pick = (row: LibraryRow) => (row.key !== playing ? onPick(row) : picked ? onBack() : undefined);
   const field = (
     <Field
@@ -128,7 +132,7 @@ function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, o
             Nothing playing yet
           </Text>
           <Text as="p" role="caption" className="vs-inspector-quiet">
-            Each dot is a preset, by how fast it moves and how bright it is. Pick one to see it here, or play one and it lights up.
+            Each dot is a preset, by how fast it moves and how bright it is. Click one to play it, and it lights up here.
           </Text>
         </div>
         {field}
