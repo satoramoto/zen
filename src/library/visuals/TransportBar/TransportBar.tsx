@@ -60,6 +60,8 @@ export interface TransportBarProps {
   audioTrouble?: { message: string; detail: string | null } | null;
   /** The preset playing: its name, and where it plays from as `playsFrom` says it ("from Warm-up · 3 of 10"); null or left out: nothing playing. One line, the name brighter, ellipsised before the controls or the audio input give way. */
   now?: { name: string; from?: string } | null;
+  /** The overlay only: the playing preset's star, at the picture's top right; pressed while starred. Left out: none. */
+  star?: { on: boolean; onToggle(): void } | null;
   /** Whether the deck moves on by itself when not held (a playlist's timing, or Link's bars): with no length, the ring's tooltip says it moves on by itself rather than that it stays. Left out: it stays. */
   moves?: boolean;
   /**
@@ -143,7 +145,7 @@ function LoopRing({ fill, timed, size }: { fill: number; timed: boolean; size: n
 }
 
 /** The bar. */
-export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, onAudioError, audioTrouble = null, now, moves = false, layout = 'bar' }: TransportBarProps) {
+export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, onAudioError, audioTrouble = null, now, moves = false, layout = 'bar', star = null }: TransportBarProps) {
   const timed = playing && position !== null && position.length !== null && position.length !== undefined;
   const fill = loopFill(playing, position);
   const state = position === null ? 'off' : !playing ? 'held' : timed ? 'timed' : 'endless';
@@ -195,6 +197,18 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
           <FrameRate slowOnly />
           <SourcePicker onError={onAudioError} channels="none" width={180} trouble={audioTrouble} />
         </Text>
+        {layout === 'overlay' && star && (
+          <button
+            type="button"
+            className="vs-transport-key vs-transport-star"
+            aria-label="star"
+            aria-pressed={star.on}
+            title={star.on ? 'Unstar this preset' : 'Star this preset'}
+            onClick={star.onToggle}
+          >
+            <Icon name="star" />
+          </button>
+        )}
       </Group>
     </div>
   );

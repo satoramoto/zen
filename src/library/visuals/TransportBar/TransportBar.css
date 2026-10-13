@@ -38,8 +38,21 @@
   height: 100%;
   grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr auto;
-  grid-template-areas: 'now now now' '. . .' 'keys . right';
+  grid-template-areas: 'now now star' '. . .' 'keys . right';
   align-items: end;
+}
+/* The playing preset's star, top right: an outline, filled in the ink while starred. */
+.vs-transport[data-layout='overlay'] .vs-transport-star {
+  grid-area: star;
+  align-self: start;
+  justify-self: end;
+  pointer-events: auto;
+}
+.vs-transport-star[aria-pressed='true'] {
+  color: var(--text-1);
+}
+.vs-transport-star[aria-pressed='true'] .vs-icon path {
+  fill: currentColor;
 }
 .vs-transport[data-layout='overlay'] .vs-transport-keys { grid-area: keys; }
 .vs-transport[data-layout='overlay'] .vs-transport-right { grid-area: right; }

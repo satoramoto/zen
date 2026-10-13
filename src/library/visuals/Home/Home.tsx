@@ -770,6 +770,7 @@ export function Home({
                 position={position}
                 onAudioError={audioFailed}
                 audioTrouble={audioTrouble}
+                star={playingShown ? { on: !!playingShown.star, onToggle: () => setData([playingShown.row.key], { star: !playingShown.star }) } : null}
               />
             }
           />
