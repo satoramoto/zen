@@ -4,7 +4,7 @@
    picked a soft pill of --radius-control in the ink, heavier, the playlist playing its green
    dot. No lines: areas told apart by space and tone (decision 68). Nothing animates. */
 
-/* A column as tall as the panel's body: the mark, the sections, which scroll inside themselves,
+/* A column as tall as the panel's body: the sections, which scroll inside themselves,
    then the foot, which stays at the bottom. The panel's body never scrolls, so nothing is painted
    over the rows to hide them (the panel's tone is a tint over glass: a second coat would show as
    a box). */
@@ -35,17 +35,6 @@
   overflow-y: auto;
 }
 
-/* The mark, the sidebar's first item, under the window buttons' band (HomeLayout's panel). Its
-   text starts where the headings' titles do (the mark's own padding plus 6). 32px tall. */
-.vs-isb-mark {
-  display: flex;
-  align-items: center;
-  height: var(--space-6);
-  flex: none;
-  margin: 0 0 var(--vs-isb-gutter);
-  padding: 0 calc(var(--space-1) * 1.5);
-  user-select: none;
-}
 
 /* The foot: a quiet Settings row at the panel's bottom, under the rows that scroll; no line
    between. */

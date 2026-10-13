@@ -11,23 +11,25 @@ import { StageDock } from '../StageDock/StageDock';
 import { FullScreenOffer, StageHead } from '../StageHead/StageHead';
 import { crateDocks, StageLayout } from '../StageLayout/StageLayout';
 import { useLayoutPrinciples } from '../HomeLayout/HomeLayout';
+import { useFrameRoom } from '../../frame';
 import { HOME, type View } from '../Views/Views';
 import './Live.css';
 
 // Live mode's reckonings moved to model/live-model.ts (the Stage contract); they are still here for what imported them from Live.
 export { intensityOf, keyOf, openEffects, opensOnStart, padLabel, ratingOf, sendIntensity, starred, starsText, whenText, whereSr, whereText, type IntensityAction } from '../model/live-model';
 
-/** The window's size, followed as it is resized: the room the Stage assembles in. */
+/** The window's size, followed as it is resized: the room the Stage assembles in (a story frame's design window inside one). */
 function useWindowRoom(): { w: number; h: number } {
   const read = () => ({ w: window.innerWidth, h: window.innerHeight });
   const [room, setRoom] = useState(read);
+  const frame = useFrameRoom();
   useEffect(() => {
     const resize = () => setRoom((r) => (r.w === window.innerWidth && r.h === window.innerHeight ? r : read()));
     resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
   }, []);
-  return room;
+  return frame ?? room;
 }
 
 /**

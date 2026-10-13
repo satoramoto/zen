@@ -96,7 +96,29 @@ describe('Home: the viewer’s choices over where the panels dock', () => {
   });
 });
 
+describe('Home: the title beside the window buttons', () => {
+  const header = (w: number) => assemble(homeSpec({ sidebar: 'overlaid', inspector: 'overlaid' }), { w, h: 900 }, P).regions.header.form;
+
+  it('with no sidebar docked the header holds the buttons’ room and the title, which folds before the header narrows', () => {
+    expect(header(1440)).toBe('titled');
+    expect(header(760)).toBe('full');
+    expect(header(560)).toBe('narrow');
+  });
+
+  it('free to choose (the docking answer), the header needs neither: the docking widths stay', () => {
+    expect(assemble(homeSpec(), { w: 1440, h: 900 }, P).regions.header.form).toBe('full');
+  });
+});
+
 describe('HomeLayout on screen', () => {
+  it('draws the title in the sidebar’s band, which still drags the window, and not in the header', () => {
+    const { container } = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} sidebarMode="docked" />);
+    const band = container.querySelector('.vs-lay-side-band');
+    expect(band).toHaveAttribute('data-tauri-drag-region');
+    expect(band?.querySelector('.vs-lay-title')).toHaveTextContent('visual[flow]');
+    expect(container.querySelector('.vs-lay-head .vs-lay-title')).toBeNull();
+  });
+
   it('places each part in its slot, in the form the solver chose', () => {
     const { container } = render(
       <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} bar={<p>bar</p>} inspector={<p>insp</p>} sidebarMode="docked" inspectorMode="overlay">

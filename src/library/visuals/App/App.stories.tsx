@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { cameraFixture } from '../Camera/fixture';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, screen, waitFor } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme, withStoryFrame } from '../../storybook';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import { PLAYING_DECK, WARM_UP } from '../fixtures/fixtures';
 import { SIDEBAR_ID } from '../HomeLayout/HomeLayout';
@@ -17,13 +17,15 @@ import { VisualsApp } from './App';
 const meta = {
   title: 'open[flow]/visuals/App',
   component: VisualsApp,
-  decorators: [withVisualsFrame, withLibraryTheme],
+  decorators: [withVisualsFrame, withStoryFrame, withLibraryTheme],
   globals: VISUALS_GLOBALS,
   beforeEach: visualsBeforeEach,
   args: { frame: false, chrome: false },
   parameters: {
     scope: 'bare',
     layout: 'fullscreen',
+    // The original's 1440×900 window, drawn at that size and scaled to the canvas.
+    frame: { w: 1440, h: 900 },
     world: { resume: { playlist: WARM_UP.id, index: PLAYING_DECK.index, current: PLAYING_DECK.current, source: null } },
   },
 } satisfies Meta<typeof VisualsApp>;

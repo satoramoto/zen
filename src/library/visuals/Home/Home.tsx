@@ -40,6 +40,7 @@ import {
   type TilePick,
 } from '../model/home';
 import { HomeLayout, homeDocks, INSPECTOR_ID, PaneTile, SIDEBAR_ID, useLayoutPrinciples } from '../HomeLayout/HomeLayout';
+import { useFrameRoom } from '../../frame';
 import { HelpOverlay, HOME_HELP } from '../HelpOverlay/HelpOverlay';
 import { modalOpen } from '../model/liveKeys';
 import { Hero, HERO_PIC } from '../Hero/Hero';
@@ -58,17 +59,18 @@ import './Home.css';
 
 export type { Pane } from '../model/home';
 
-/** The window's size, followed as it is resized: the room the home assembles in. */
+/** The window's size, followed as it is resized: the room the home assembles in (a story frame's design window inside one). */
 function useWindowRoom(): { w: number; h: number } {
   const read = () => ({ w: window.innerWidth, h: window.innerHeight });
   const [room, setRoom] = useState(read);
+  const frame = useFrameRoom();
   useEffect(() => {
     const resize = () => setRoom((r) => (r.w === window.innerWidth && r.h === window.innerHeight ? r : read()));
     resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
   }, []);
-  return room;
+  return frame ?? room;
 }
 
 /** No presets picked. */
@@ -132,7 +134,18 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  * - `--vs-home-tile-min`: a playlist grid's narrowest tile, 150px (124px in the small form), on
  *   the scale.
  */
-export function Home({ start, onMode, library: startOnLibrary = false }: { start: string | null; onMode(view: View, path: string | null): void; library?: boolean }) {
+export function Home({
+  start,
+  onMode,
+  library: startOnLibrary = false,
+  lights = false,
+}: {
+  start: string | null;
+  onMode(view: View, path: string | null): void;
+  library?: boolean;
+  /** Draw the window buttons' stand-in (stories: HomeLayout's `lights`; the app's are macOS's). */
+  lights?: boolean;
+}) {
   const [current, setCurrent] = useState<Entry | null>(null);
   const { notice: banner, set: setNotice, fail, dismiss } = useNotice();
   const [lists, setLists] = useState<Lists | null>(null);
@@ -662,6 +675,7 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
   return (
     <>
       <HomeLayout
+        lights={lights}
         sidebarMode={modes.sidebar}
         inspectorMode={modes.inspector}
         onDismiss={dismissOverlays}

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, type ReactNode, type RefObject } from 'react';
 import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
-import { assemble, principlesFor, resolveLength, useForm, type Form, type Forms, type Principles, type RegionSpec, type ScreenSpec, type Units } from '../../layout/assembly';
+import { assemble, lengthSum, principlesFor, resolveLength, useForm, type Form, type Forms, type Length, type Principles, type RegionSpec, type ScreenSpec, type Units } from '../../layout/assembly';
 import { useThemeScope } from '../../theme';
 import { packs } from '../../themes/packs';
 import { say } from '../model/words';
 import type { Docks, InspectorMode, SidebarMode } from '../model/home-model';
-import { HEADER_FORMS } from '../Views/Views';
+import { HEADER_FORMS, Mark } from '../Views/Views';
 import { HERO_FORMS } from '../Hero/Hero';
 import { TRANSPORT_FORMS } from '../TransportBar/TransportBar';
 import './HomeLayout.css';
@@ -45,8 +45,28 @@ export const PANE_FORMS: Forms<PaneForm> = [
   { id: 'small', min: { w: { unit: 93, space: [3, 3] }, h: { unit: 26 } }, ideal: { w: { unit: 93, space: [3, 3] }, h: { unit: 26 } }, grow: { w: true, h: true } },
 ];
 
-/** The header's forms at the title bar's height. */
-const HEAD_FORMS = HEADER_FORMS.map((f): Form => ({ ...f, min: { w: f.min.w, h: TITLEBAR }, ideal: { w: f.ideal.w, h: TITLEBAR } })) as unknown as Forms;
+/** The header's forms at the title bar's height, with `extra` room across. */
+const headForms = (...extra: Length[]): Form[] =>
+  HEADER_FORMS.map((f): Form => ({ ...f, min: { w: extra.length ? lengthSum(f.min.w, ...extra) : f.min.w, h: TITLEBAR }, ideal: { w: extra.length ? lengthSum(f.ideal.w, ...extra) : f.ideal.w, h: TITLEBAR } }));
+
+/** The header's forms beside a docked sidebar (whose band holds the window buttons and the title). */
+const HEAD_FORMS = headForms() as unknown as Forms;
+
+/** The room the window buttons take from the window's left edge, 98px (`--vs-lay-lights-room`). */
+export const LIGHTS_ROOM: Units = { space: [6, 6, 6], unit: 0.5 };
+
+/** The app's title (`Mark`): its twelve characters, at the heading's size (an upper bound on the mark's own, padding and all). */
+export const TITLE_W: Units = { chars: { heading: 'visual[flow]'.length } };
+
+/** The header's forms with no sidebar docked: `titled` (the window buttons' room, the title, the full header), then the full and the narrow header after the buttons' room, the title folded away. */
+export type HeadForm = 'titled' | 'full' | 'narrow';
+
+/**
+ * With no sidebar docked the header row is the title bar beside the window buttons, so it holds
+ * their room and the app's title too. The title is the first to go (`titled` → `full`), before the
+ * header narrows. Header reads `titled` as its own first form, `full`.
+ */
+export const HEAD_TITLED_FORMS = [{ ...headForms(LIGHTS_ROOM, TITLE_W)[0], id: 'titled' }, ...headForms(LIGHTS_ROOM)] as unknown as Forms<HeadForm>;
 
 /** Which forms a side panel may take: either (the solver decides), or one, as its mode says. */
 export type PanelChoice = PanelForm | 'either';
@@ -69,7 +89,8 @@ export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true
         {
           id: 'column',
           rows: [
-            [region('header', HEAD_FORMS, 'controls')],
+            // Pinned undocked (put away or laid over), the header holds the window buttons' room and the title; free to choose, the docking answer leaves them out.
+            [region('header', sidebar === 'overlaid' ? HEAD_TITLED_FORMS : HEAD_FORMS, 'controls')],
             ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
             [region('pane', PANE_FORMS, 'chrome')],
             ...(bar ? [[region('bar', TRANSPORT_FORMS, 'controls')]] : []),
@@ -124,7 +145,11 @@ export function useLayoutPrinciples(): Principles {
  * The header goes narrow, the hero compact and the tiles small by their forms (`HEADER_FORMS`,
  * `HERO_FORMS`, `PANE_FORMS`). As in the original, the sidebar runs the window's full height with
  * a band at its top for the window buttons, and the header row is the column's first row beside
- * it. A panel laid over the column takes no room in the row (its `overlaid` form) and is drawn
+ * it. Unlike the original (whose mark sat under the band, InsetSidebar's first item), the app's
+ * title (`Mark`) sits in that band after the window buttons' room, taking no presses so the band
+ * still drags the window; with no sidebar docked it is the header row's first item, after the
+ * same room (`HEAD_TITLED_FORMS`: the room and the title are the header's needs then, and the
+ * title folds away before the header narrows). In full screen the room is nothing. A panel laid over the column takes no room in the row (its `overlaid` form) and is drawn
  * from its slot at the window's edge, in the `Opaque` scope (its class on the cell itself, so
  * the panel is not remounted when it turns from docked to laid over), which draws every layer
  * solid: the native preview under it would show through anything less. Panels are the `raised`
@@ -147,9 +172,11 @@ export function useLayoutPrinciples(): Principles {
  * px under the roomy scale: `--vs-lay-*`:
  * - `--vs-lay-window-radius` (26px): the window's corners, stories only.
  * - `--vs-lay-side` (240px), `--vs-lay-side-radius` (18px): the inset sidebar's width and corners.
- * - `--vs-lay-titlebar` (52px): the header row; `--vs-lay-band` the sidebar's top band (the
- *   title bar's height, a margin in full screen).
- * - `--vs-lay-lights-room` (98px): the room a header leaves the window buttons.
+ * - `--vs-lay-titlebar` (52px): the header row; `--vs-lay-band` (36px) the sidebar's top band,
+ *   which holds the title: the title bar less the panel's inset above and below, so the title
+ *   sits on the header row's line.
+ * - `--vs-lay-lights-room` (98px, `LIGHTS_ROOM`; 0 in full screen): the room the title and a
+ *   header leave the window buttons.
  * - `--vs-lay-row` (40px): a sidebar row.
  * - `--vs-lay-key-radius` (6px): a small key's corners.
  * - `--vs-lay-hero-radius` (18px): the hero's corners.
@@ -157,7 +184,7 @@ export function useLayoutPrinciples(): Principles {
  * - `--vs-lay-z-over-hole`, `--vs-lay-z-overlay`: what stacks over the hero's shadow, and the
  *   panels laid over the column.
  * The docked panels' widths and the title bar's height are also declared needs
- * (`SIDEBAR_FORMS`, `INSPECTOR_FORMS`, `TITLEBAR`), which the solver places by.
+ * (`SIDEBAR_FORMS`, `INSPECTOR_FORMS`, `TITLEBAR`, `LIGHTS_ROOM`, `TITLE_W`), which the solver places by.
  * Also `--lay-tile` (200px) and `--lay-tile-gap` (`--space-4`), the stories' grid.
  */
 export interface HomeLayoutProps {
@@ -222,14 +249,30 @@ export function SidebarPanel({ label = 'sources', id, children, panelRef, lights
   return (
     <nav className="vs-lay-panel vs-lay-side" id={id} aria-label={label} ref={panelRef} tabIndex={-1} data-lights={lights ? '' : undefined}>
       {lights && <Lights />}
-      <div className="vs-lay-side-band" data-tauri-drag-region />
+      <div className="vs-lay-side-band" data-tauri-drag-region>
+        <WindowTitle />
+      </div>
       <div className="vs-lay-side-body">{children}</div>
     </nav>
   );
 }
 
-/** The native window buttons' stand-in (stories only). */
-function Lights() {
+/** The app's title beside the window buttons: the mark, taking no presses, so a drag on it moves the window. */
+function WindowTitle() {
+  return (
+    <span className="vs-lay-title">
+      <Mark />
+    </span>
+  );
+}
+
+/** The title in the header row (no sidebar docked), while the header's form has room for it. */
+function HeadTitle() {
+  return useForm(HEAD_TITLED_FORMS) === 'titled' ? <WindowTitle /> : null;
+}
+
+/** The native window buttons' stand-in (stories only; Live's stories lay it over the Stage). */
+export function Lights() {
   return (
     <span className="vs-lay-lights" aria-hidden="true">
       <i />
@@ -357,6 +400,7 @@ export function HomeLayout({
             ),
           header: (
             <div className="vs-lay-head" data-tauri-drag-region>
+              {sidebarMode !== 'docked' && <HeadTitle />}
               {header}
             </div>
           ),

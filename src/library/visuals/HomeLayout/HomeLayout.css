@@ -28,9 +28,11 @@
   --vs-lay-side-radius: calc(var(--space-3) * 1.5);
   /* The header row's height: the title bar, 52px. */
   --vs-lay-titlebar: calc(var(--space-6) + var(--space-4) + var(--space-1));
-  /* The band at the sidebar's top for the window buttons (a margin in full screen, below). */
-  --vs-lay-band: var(--vs-lay-titlebar);
-  /* Where the window buttons' stand-in sits, and the room a header leaves them when no sidebar is docked (chrome.css --chrome-lights 98px). */
+  /* The band at the sidebar's top for the window buttons and the title: the title bar less the
+     panel's inset above and below (36px), so the title sits on the header row's line. */
+  --vs-lay-band: calc(var(--vs-lay-titlebar) - 2 * var(--space-2));
+  /* The room the title and a header leave the window buttons (chrome.css --chrome-lights 98px;
+     LIGHTS_ROOM in HomeLayout.tsx). Nothing in full screen, below. */
   --vs-lay-lights-room: calc(var(--space-6) * 3 + var(--space-1) / 2);
   /* A sidebar row: 40px. */
   --vs-lay-row: calc(var(--space-6) + var(--space-2));
@@ -59,8 +61,9 @@
 .vs-lay[data-lights] {
   border-radius: var(--vs-lay-window-radius);
 }
+/* Full screen: macOS hides the window buttons, so the title needs no room for them. */
 :root[data-fullscreen] :is(.vs-lay, .vs-lay-panel) {
-  --vs-lay-band: var(--space-3);
+  --vs-lay-lights-room: 0px;
 }
 
 /* The header row: the main column's first row, beside the sidebar (which runs up past it to the
@@ -78,6 +81,9 @@
 .vs-lay .vs-lay-head > * {
   flex: 1;
   min-width: 0;
+}
+.vs-lay .vs-lay-head > .vs-lay-title {
+  flex: none;
 }
 /* No sidebar docked: the window buttons are over the header, so it leaves them their room
    (stories' stand-in, or the app's own buttons, chrome.css), less the screen's gap it already
@@ -160,8 +166,10 @@
   flex: none;
   width: var(--vs-lay-insp);
 }
-/* The sidebar's top band is the title bar there: the window buttons sit in it, and a drag on it
-   moves the window. Full screen (macOS hides the buttons) shrinks it to a margin. */
+/* The sidebar's top band is the title bar there: the window buttons sit in it, then the app's
+   title, centred in it, after the buttons' room (less the panel's own inset from the window); a
+   drag on it moves the window. In full screen the room is nothing, and the title starts where
+   the sidebar's rows' text does. */
 .vs-lay-side {
   padding-top: var(--vs-lay-band);
 }
@@ -170,10 +178,21 @@
   top: 0;
   left: 0;
   right: 0;
+  display: flex;
+  align-items: center;
   height: var(--vs-lay-band);
+  padding-left: max(calc(var(--vs-lay-lights-room) - var(--space-2)), var(--space-4));
+  box-sizing: border-box;
 }
-/* The sidebar's content fills it and scrolls its own sections (InsetSidebar, between its mark
-   and its pinned foot), so the body doesn't. */
+/* The title takes no presses: a drag on it is the band's, and moves the window. */
+.vs-lay-title {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  user-select: none;
+}
+/* The sidebar's content fills it and scrolls its own sections (InsetSidebar, above its pinned
+   foot), so the body doesn't. */
 .vs-lay-side-body {
   display: flex;
   flex: 1;
@@ -195,7 +214,7 @@
   position: absolute;
   top: calc(var(--space-5) - var(--space-1) / 2);
   left: var(--space-5);
-  z-index: calc(var(--vs-lay-z-overlay) + 1);
+  z-index: calc(var(--vs-lay-z-overlay, 10) + 1);
   display: flex;
   gap: var(--space-2);
   pointer-events: none;
