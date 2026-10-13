@@ -29,20 +29,16 @@ export type ControlId =
   | 'tempo'
   | 'intensity'
   | 'more'
-  | 'playlists'
-  | 'moods'
-  | 'upnext'
   | 'rate'
   | 'favourite'
   | 'punch'
   | 'invert'
   | 'mirror'
   | 'reset'
-  | 'crate' /* the Stage's crate toggle */
-  | 'panels'; /* the Stage's \: hide or show the panels */
+  | 'panels'; /* the Stage's \: pin the controls shown */
 
-/** Where a control is: the status bar, what's playing, the control grid, the dock's transport bar, the crate, or only on a key. */
-export type Where = 'status' | 'playing' | 'controls' | 'dock' | 'crate' | 'keys';
+/** Where a control is: the status bar, what's playing, the control grid, the dock's transport bar, or only on a key. */
+export type Where = 'status' | 'playing' | 'controls' | 'dock' | 'keys';
 
 /** A live control: what it's called, its keys (empty when none), and what it does. */
 export interface Control {
@@ -66,7 +62,7 @@ export const CONTROLS: readonly Control[] = [
   { id: 'fps', where: 'status', name: 'Frames per second', keys: '', does: 'Only shown when the picture runs slow, under 50' },
   { id: 'help', where: 'status', name: 'Help', keys: '?', does: 'This list of every live control' },
   { id: 'settings', where: 'status', name: 'Settings', keys: '', does: 'How the app looks, listens and draws' },
-  { id: 'leave', where: 'status', name: 'Leave live', keys: 'hold Esc, ⌘⇧L', does: 'Back to your playlists and the library: ✕ or ⌘⇧L at once, or hold Esc for 3 seconds' },
+  { id: 'leave', where: 'status', name: '✕ Leave live', keys: '⌘⇧L, hold Esc', does: 'Back to your playlists and the library: the ✕ in the header or ⌘⇧L at once, or hold Esc for 3 seconds' },
   { id: 'now', where: 'playing', name: 'Now', keys: '', does: "What's playing" },
   { id: 'next', where: 'playing', name: 'Next', keys: '', does: 'What comes next, and when, for example in 8 beats' },
   { id: 'fullscreen', where: 'playing', name: 'Go full screen on…', keys: '', does: 'Puts the picture full screen on that display. Shows while it plays in this window, as it does when you go live' },
@@ -80,17 +76,13 @@ export const CONTROLS: readonly Control[] = [
   { id: 'tempo', where: 'status', name: 'Tap tempo', keys: 'T', does: 'Tap the tempo in time, in the Beat panel or on T. Follows Link when others are in time' },
   { id: 'intensity', where: 'controls', name: 'Intensity', keys: '', does: `${Say('sensitivity')}: brightness and strobe level together, never to white` },
   { id: 'more', where: 'controls', name: 'More effects…', keys: '', does: 'The rest: speed, colour, mirror, trails…' },
-  { id: 'playlists', where: 'crate', name: 'Playlists', keys: '', does: 'Tap one to cue it; Play, Enter or a double-click plays it' },
-  { id: 'moods', where: 'crate', name: 'Moods', keys: '', does: `${Say('user tags')}: tap one to play it, a second to add it` },
-  { id: 'upnext', where: 'crate', name: 'Up next', keys: 'Alt+↑/↓', does: 'What plays after next. Drag a row by its ≡ (it shows on hover) to reorder' },
   { id: 'rate', where: 'keys', name: 'Rate', keys: '1–5', does: 'Rates the preset from 1 to 5' },
   { id: 'favourite', where: 'keys', name: 'Favourite', keys: 'L', does: 'Stars the preset as a favourite, or takes the star off' },
   { id: 'punch', where: 'keys', name: 'Punch', keys: 'hold P, ⇧P latches', does: 'A burst of brightness while held' },
   { id: 'invert', where: 'keys', name: 'Invert', keys: 'I', does: "Turns the picture's colours inside out, and back" },
   { id: 'mirror', where: 'keys', name: 'Mirror', keys: 'M', does: 'Mirrors the picture: across, down, four ways, off' },
   { id: 'reset', where: 'keys', name: 'Reset effects', keys: '0', does: 'Turns every effect off' },
-  { id: 'crate', where: 'status', stage: true, name: Say('crate'), keys: '', does: 'Shows or puts away the panel down the left' },
-  { id: 'panels', where: 'keys', stage: true, name: `Hide the ${say('panels')}`, keys: '\\', does: `Only the picture shows in this window; \\ or Esc brings the ${say('panels')} back` },
+  { id: 'panels', where: 'keys', stage: true, name: 'Pin the controls shown', keys: '\\', does: "\\ shows Live's controls until pressed again" },
 ];
 
 /** The headings the overlay groups the controls under, in order. */
@@ -99,7 +91,6 @@ export const GROUPS: readonly { where: Where; heading: string }[] = [
   { where: 'playing', heading: "What's playing" },
   { where: 'controls', heading: 'Controls' },
   { where: 'dock', heading: 'Along the bottom' },
-  { where: 'crate', heading: 'Playlists and up next' },
   { where: 'keys', heading: 'Keys only' },
 ];
 
