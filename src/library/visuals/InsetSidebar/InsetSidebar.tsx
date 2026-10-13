@@ -408,6 +408,20 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
               Settings
             </Text>
           </button>
+          {actions.onHelp && (
+            <button
+              type="button"
+              className="vs-isb-help"
+              aria-label="Help"
+              aria-haspopup="dialog"
+              aria-expanded={!!actions.helpOpen}
+              aria-keyshortcuts="?"
+              title="Help: what every key and button on the home does (?)"
+              onClick={() => actions.onHelp?.()}
+            >
+              <Icon name="help" />
+            </button>
+          )}
         </div>
       )}
       {menu && <RowMenu name={menu.list.name} items={rowMenu(menu.list, playingNow(menu), lists, { info: !!actions?.onInfo })} at={menu} onChoose={choose} onClose={closeMenu} />}

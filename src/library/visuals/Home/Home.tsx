@@ -543,6 +543,8 @@ export function Home({
       openInspector();
     },
     onSettings: openSettings,
+    onHelp: () => setHelp(true),
+    helpOpen: help,
     count: counts.list,
     onError: (what) => fail(`Couldn't ${what}.`),
   };
@@ -737,18 +739,6 @@ export function Home({
             <span className="vs-fill" />
             <div className="vs-home-toolbar" ref={setToolbar} />
             <CameraAction />
-            <button
-              type="button"
-              className="vs-home-tool vs-home-tool-help"
-              aria-label="Help"
-              aria-haspopup="dialog"
-              aria-expanded={help}
-              aria-keyshortcuts="?"
-              title="Help: what every key and button on the home does (?)"
-              onClick={() => setHelp(true)}
-            >
-              <Icon name="help" />
-            </button>
             <button
               type="button"
               className="vs-home-tool vs-home-tool-inspector"

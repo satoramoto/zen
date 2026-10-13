@@ -38,12 +38,40 @@
 
 /* The foot: a quiet Settings row at the panel's bottom, under the rows that scroll; no line
    between. */
+/* The foot: Settings, and Help (?) at its right end. */
 .vs-isb-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   flex: none;
   padding: var(--space-1) 0 var(--vs-isb-gutter);
 }
+.vs-isb-help {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--vs-caption-raised);
+  cursor: pointer;
+}
+.vs-isb-help:hover,
+.vs-isb-help[aria-expanded='true'] {
+  color: var(--text-1);
+  background: var(--vs-isb-hover);
+}
+.vs-isb-help:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
 .vs-isb-settings {
   display: flex;
+  flex: 1;
+  min-width: 0;
   align-items: center;
   gap: var(--vs-isb-gutter);
   width: 100%;
