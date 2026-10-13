@@ -1,6 +1,6 @@
 /*
- * The `zen-source` condition's stand-in for every built stylesheet (`./zen.css`, `./visuals.css`,
- * `./visuals-lab.css` in package.json). It is empty on purpose: in source, each stylesheet is
+ * The `zen-source` condition's stand-in for the built stylesheet (`./zen.css` in package.json).
+ * It is empty on purpose: in source, each stylesheet is
  * imported by the module that uses it (`theme.tsx` brings `library.css`, each component its own),
  * so an app resolving `@satoramoto/zen` to the TS source already gets the same CSS from its
  * imports, and the stylesheet import an app makes for the built package resolves here to nothing.

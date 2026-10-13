@@ -22,7 +22,6 @@ describe('tiers scanner', () => {
     expect(folderOf('components/core/hue.ts')).toBe('components/core');
     expect(folderOf('yahaha/Stage/Stage.css')).toBe('yahaha/Stage');
     expect(folderOf('yahaha/tokens.css')).toBe('yahaha');
-    expect(folderOf('visuals/visuals.css')).toBe('visuals');
     expect(folderOf('layout/Group.css')).toBe('layout');
     expect(folderOf('primitives/Surface/Surface.css')).toBe('primitives');
   });
@@ -94,9 +93,9 @@ export const X = () => <div style={{ width: 560, height: 2, padding: 0, opacity:
   });
 
   it('counts knobs not listed under **Tuning knobs**', () => {
-    const css = `.yh-f { --yh-fader-h: 1; --yh-cap: 2; --yh-free: 3; --vs-other: 4; --lib-local: 5; }`;
+    const css = `.yh-f { --yh-fader-h: 1; --yh-cap: 2; --yh-free: 3; --yh-other: 4; --lib-local: 5; }`;
     const knobs = scanCss('yahaha/F/F.css', css, { knobs: ['--yh-fader-*', '--yh-cap'] });
-    expect(rules(knobs, 'knobs').map((f) => f.snippet)).toEqual(['--yh-free', '--vs-other']);
+    expect(rules(knobs, 'knobs').map((f) => f.snippet)).toEqual(['--yh-free', '--yh-other']);
 
     const lonely = `/* Tokens.
    **Tuning knobs.** --yh-a, --yh-b-*
@@ -146,8 +145,7 @@ describe('tiers adoption', () => {
     const a = adoption(join(process.cwd(), 'src/library'));
     expect(a.components).toContain('components/core/Button');
     expect(a.components).toContain('yahaha/Stage');
-    expect(a.components.some((f) => f === 'components/core' || f === 'yahaha' || f === 'visuals')).toBe(false);
-    expect(a.components.some((f) => f.startsWith('visuals/model') || f.startsWith('visuals/fixtures'))).toBe(false);
+    expect(a.components.some((f) => f === 'components/core' || f === 'yahaha')).toBe(false);
     expect(a.text).toContain('yahaha/SongForm');
     expect(a.surface).toContain('components/music/Fader');
     for (const f of [...a.text, ...a.surface]) expect(a.components).toContain(f);

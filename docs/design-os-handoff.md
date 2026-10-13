@@ -37,20 +37,20 @@ A colour slot is a hue number 1–4 or a role (`role-1`, `role-2`); the app deci
 ## Apps on zen
 
 - **Yahaha** (`src/library/yahaha/`): the arranger's widgets and the Stage screen, redesigned. `README.md` is the convention, `STAGE.md` the brief, `hues.ts` what colour means. The Svelte originals are in `yahaha/`, read-only.
-- **visual[flow] 1.0** (`src/library/visuals/`): every shipping screen rebuilt on the glass system (`visuals` pack), with the original's API, data through a swappable bridge (`model/ipc.ts`) and fixtures for Storybook. `README.md` lists the drift from the original. `VisualsApp` is the whole app (Home/Live, sheets, onboarding, update and crash prompts; no Lab); story `open[flow]/visuals/App`.
+- **visual[flow] 1.0**: its UI was rebuilt here on the glass system (`visuals` pack) and now lives in its own repo, openflowfm/visuals `app/src/ui/`, built on the package below. zen keeps the `visuals` pack and its principles (`themes/principles/visuals.md`).
 
 ## Package
 
 `@satoramoto/zen`, built by `npm run build:lib` (on `prepare`, so a GitHub install builds it) to `lib/`:
 
 - `@satoramoto/zen` + `@satoramoto/zen/zen.css`: contract, themes, layout, core and music components.
-- `@satoramoto/zen/visuals` + `@satoramoto/zen/visuals.css`: `VisualsApp`, `setBridge`, `currentBridge`, the `Bridge` type. The app installs a Tauri bridge with `setBridge`, then renders `VisualsApp`.
+- `@satoramoto/zen/storybook`: toolbar globals and decorators for an app's own Storybook.
 
-React is a peer dependency. The visual[flow] app is being wired to this package on a branch in openflowfm/visuals.
+React is a peer dependency.
 
 ## Look at it
 
-`PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6022 npm run dev`, then Storybook at http://127.0.0.1:6022: `Design OS` (systems, layout, components), `Yahaha`, `open[flow]`, then the field guide. Viewports 1440×900, 1217×752, 900×700 and 560×800 are in the toolbar.
+`PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6022 npm run dev`, then Storybook at http://127.0.0.1:6022: `Design OS` (systems, layout, components), `Yahaha`, then the field guide. Viewports 1440×900, 1217×752, 900×700 and 560×800 are in the toolbar.
 
 ## Open issues
 
@@ -59,4 +59,4 @@ React is a peer dependency. The visual[flow] app is being wired to this package 
 - **#28** Layout systems: design systems for layouts.
 - **#29** Storybook composition: zen as the master Storybook.
 
-Also open: visual[flow]'s fonts (Instrument Sans isn't loaded), a browser pass over the visuals layouts and popovers, and the moved components' `yh-` class prefix.
+Also open: the `instrument` faces' font (Instrument Sans isn't loaded) and the moved components' `yh-` class prefix.

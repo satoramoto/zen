@@ -3,13 +3,12 @@
  * `tiers.test.ts` can hold every count to its recorded baseline (`tiers.baseline.json`).
  * Pure node:fs and string work, no React.
  *
- * **What is scanned.** `src/library/{components,layout,yahaha,visuals,primitives}`: CSS, TSX and
- * TS files, except stories, tests, story/test data (`*.fixtures.ts`), `visuals/model/**` (logic
- * ported 1:1) and `visuals/fixtures/**`. `themes/` is never scanned: values live there. Comments
- * are stripped before matching (line numbers are kept).
+ * **What is scanned.** `src/library/{components,layout,yahaha,primitives}`: CSS, TSX and TS
+ * files, except stories, tests and story/test data (`*.fixtures.ts`). `themes/` is never
+ * scanned: values live there. Comments are stripped before matching (line numbers are kept).
  *
  * **Folders** (what counts are per): `components/<core|music>/<Name>`, `yahaha/<Name>`,
- * `visuals/<Name>`, `layout`, `primitives`. A file directly in a folder keys to that folder
+ * `layout`, `primitives`. A file directly in a folder keys to that folder
  * (`yahaha/tokens.css` → `yahaha`, `components/core/hue.ts` → `components/core`).
  *
  * **pixels** (every folder but `primitives`). CSS: each `px` length in a declaration value
@@ -31,13 +30,13 @@
  * `border-collapse`, `border-spacing`), unless the value is `none`, `0`, `transparent`,
  * `inherit`, `initial` or `unset`. Which rules count is {@link PAINTING_TIERS}.
  *
- * **knobs** (`components`, `layout`, `yahaha`, `visuals`). Each distinct `--yh-*` / `--vs-*`
+ * **knobs** (`components`, `layout`, `yahaha`). Each distinct `--yh-*`
  * custom property declared in a folder's CSS and not listed under a **Tuning knobs** heading in a
  * doc comment of a TSX file in the same directory (or, for a CSS file with no sibling TSX, in that
  * CSS file's own comments). The list runs to the next `**Heading**` or the comment's end; a
  * trailing `*` (`--yh-fader-*`) lists a family by prefix. A name counts once per folder.
  *
- * **type** (`components`, `layout`, `yahaha`, `visuals`): type belongs to `Text`. CSS: each
+ * **type** (`components`, `layout`, `yahaha`): type belongs to `Text`. CSS: each
  * `font`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, `text-transform` or
  * `font-variant-numeric` declaration, unless its value is only a CSS-wide keyword (`inherit`,
  * `initial`, `unset`, `revert`: `button { font: inherit }` is a reset, not a decision). TS/TSX:
@@ -65,15 +64,15 @@ export const RULES: Record<RuleId, { fix: string }> = {
 export const RULE_IDS = Object.keys(RULES) as RuleId[];
 
 /** The folders scanned, under `src/library`. */
-export const TOP_FOLDERS = ['components', 'layout', 'yahaha', 'visuals', 'primitives'] as const;
+export const TOP_FOLDERS = ['components', 'layout', 'yahaha', 'primitives'] as const;
 
 /** Which top folders each rule applies to. */
 export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
-  pixels: ['components', 'layout', 'yahaha', 'visuals'],
+  pixels: ['components', 'layout', 'yahaha'],
   margins: ['components'],
-  painting: ['layout', 'yahaha', 'visuals'],
-  knobs: ['components', 'layout', 'yahaha', 'visuals'],
-  type: ['components', 'layout', 'yahaha', 'visuals'],
+  painting: ['layout', 'yahaha'],
+  knobs: ['components', 'layout', 'yahaha'],
+  type: ['components', 'layout', 'yahaha'],
 };
 
 /**
@@ -84,7 +83,7 @@ export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
  *   and pass, others count.
  * - `none`: a control (Tabs), or a primitive's file kept here (`Layer.css`; the file is gone, as
  *   Layer is now a `Surface`, but `tiers.test.ts` still names it); not counted.
- * - `app` (yahaha, visuals): a rule counts when any selector names a layout primitive's class
+ * - `app` (yahaha): a rule counts when any selector names a layout primitive's class
  *   (`.lib-screen`, `.lib-region`, `.lib-group`, `.lib-stack`, or their `__` parts) or
  *   `[data-part='region'|'group']`: that is the app's outer layout CSS. Other app CSS is widget CSS.
  * `components/**` and `primitives/**` are never counted. A layout file not listed reads as `all`.
@@ -97,7 +96,6 @@ export const PAINTING_TIERS = {
   'layout/Tabs.css': 'none',
   'layout/*': 'all',
   'yahaha/**': 'app',
-  'visuals/**': 'app',
   'components/**': 'none',
   'primitives/**': 'none',
 } as const;
@@ -121,7 +119,7 @@ export function folderOf(file: string): string {
   const parts = file.split('/');
   const t = parts[0];
   if (t === 'components') return parts.length >= 4 ? parts.slice(0, 3).join('/') : parts.slice(0, -1).join('/');
-  if (t === 'yahaha' || t === 'visuals') return parts.length >= 3 ? parts.slice(0, 2).join('/') : t;
+  if (t === 'yahaha') return parts.length >= 3 ? parts.slice(0, 2).join('/') : t;
   return t;
 }
 
@@ -129,7 +127,7 @@ const applies = (rule: RuleId, file: string) => RULE_FOLDERS[rule].includes(top(
 
 export function paintingTier(file: string): PaintingTier {
   const t = top(file);
-  if (t === 'yahaha' || t === 'visuals') return 'app';
+  if (t === 'yahaha') return 'app';
   if (t === 'layout') return (PAINTING_TIERS as Record<string, PaintingTier>)[file] ?? 'all';
   return 'none';
 }
@@ -452,7 +450,7 @@ function paintingCounts(tier: PaintingTier, rule: CssRule): boolean {
 
 /* ---------- tuning knobs ---------- */
 
-const KNOB = /^--(?:yh|vs)-[\w-]+$/;
+const KNOB = /^--yh-[\w-]+$/;
 
 /** The knob names (and `prefix*` families) listed under **Tuning knobs** in the given comments. */
 export function tuningKnobs(comments: string[]): string[] {
@@ -463,7 +461,7 @@ export function tuningKnobs(comments: string[]): string[] {
       const rest = c.slice((h.index ?? 0) + h[0].length);
       const next = /\*\*[A-Z][^*\n]*\*\*/.exec(rest);
       const body = next ? rest.slice(0, next.index) : rest;
-      for (const m of body.matchAll(/--(?:yh|vs)-[\w-]*\*?/g)) out.push(m[0]);
+      for (const m of body.matchAll(/--yh-[\w-]*\*?/g)) out.push(m[0]);
     }
   }
   return out;
@@ -558,7 +556,7 @@ export function scanTsx(path: string, source: string): Finding[] {
 export type LibraryScan = Finding[] & { folders: string[] };
 
 const SKIP = /\.(?:stories|test|fixtures)\.tsx?$/;
-const excluded = (rel: string) => SKIP.test(rel) || /^visuals\/(?:model|fixtures)\//.test(rel);
+const excluded = (rel: string) => SKIP.test(rel);
 
 /** Every finding under `root` (the `src/library` directory), with every scanned folder. */
 export function scanLibrary(root: string): LibraryScan {
@@ -650,10 +648,10 @@ export function compare(counts: Counts, baseline: Counts, findings: Finding[] = 
 /* ---------- adoption ---------- */
 
 /** The top folders whose widget folders are counted for adoption. */
-export const ADOPTION_TOPS = ['components', 'yahaha', 'visuals'] as const;
+export const ADOPTION_TOPS = ['components', 'yahaha'] as const;
 
 export interface Adoption {
-  /** Widget folders (`components/core/<Name>`, `yahaha/<Name>`, `visuals/<Name>`) with a TSX file. */
+  /** Widget folders (`components/core/<Name>`, `yahaha/<Name>`) with a TSX file. */
   components: string[];
   /** Of those, the ones whose TSX renders `<Text` / `<Surface`. */
   text: string[];
