@@ -21,13 +21,13 @@
 }
 
 /* Live's arrangement of the transport: the preset at the top left, the dice then the star at the top
-   right, ◀ the ring ▶ dead centre at the foot. The keys' group lends its keys to the bar's grid so
-   each takes its own place; the audio input is in the header (StageHead), so the transport's own
-   right column is not shown here. */
+   right (TransportBar `diceByStar`), ◀ the ring ▶ dead centre at the foot. The keys' group lends its
+   keys to the bar's grid so each takes its own place; the audio input is in the header (StageHead),
+   so the transport leaves its own out (`audio={false}`). */
 .vs-stagedock .vs-transport[data-layout='overlay'] .vs-transport-bar > .lib-group__body {
   grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
-  grid-template-areas: 'now now now now top' '. . . . .' '. prev auto next .';
+  grid-template-areas: 'now now now now star' '. . . . .' '. prev auto next .';
 }
 .vs-stagedock .vs-transport .vs-transport-keys,
 .vs-stagedock .vs-transport .vs-transport-keys > .lib-group__body {
@@ -40,17 +40,6 @@
 .vs-stagedock .vs-transport .vs-transport-auto { grid-area: auto; }
 .vs-stagedock .vs-transport .vs-transport-key[aria-label='next preset'] { grid-area: next; }
 .vs-stagedock .vs-transport .vs-transport-mid { grid-area: now; }
-.vs-stagedock .vs-transport .vs-transport-star { grid-area: top; }
-/* The dice, immediately left of the star (the star is its 16px glyph and 6px either side). */
-.vs-stagedock .vs-transport .vs-transport-random {
-  grid-area: top;
-  align-self: start;
-  justify-self: end;
-  margin-right: calc(var(--space-6) + var(--space-1)); /* 28px */
-}
-.vs-stagedock .vs-transport .vs-transport-right {
-  display: none;
-}
 
 /* The effects' row, under the transport's keys: the keys, Intensity taking what's left, More
    effects…; wraps once in the stacked form. */

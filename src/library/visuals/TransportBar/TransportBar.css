@@ -48,6 +48,14 @@
   justify-self: end;
   pointer-events: auto;
 }
+/* `diceByStar`: the dice then the star, side by side in the star's corner. */
+.vs-transport[data-layout='overlay'] .vs-transport-top {
+  grid-area: star;
+  display: flex;
+  align-self: start;
+  justify-self: end;
+  pointer-events: auto;
+}
 .vs-transport-star[aria-pressed='true'] {
   color: var(--text-1);
 }
