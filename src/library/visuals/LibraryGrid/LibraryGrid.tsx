@@ -28,6 +28,8 @@ export interface Look {
   aspect: number;
   /** How much of the view's top a pinned region covers (the home's preview, which the grid scrolls behind): a row under it is out of view. Included in `padTop`. Default 0. */
   under?: number;
+  /** How much of the view's bottom a pinned region covers (the home's transport bar, which the grid also scrolls behind): a row under it is out of view. Included in `padBottom`. Default 0. */
+  over?: number;
 }
 
 /** The lab editor's column: `TILE`, 4:3 pictures with a title line. */
@@ -44,18 +46,20 @@ export const HOME_PAD = 22;
  * not an overlay) comes out of the right padding, so the columns don't change
  * with it (3 at 900 px). `under` px of the view's top are covered by the pinned preview the grid
  * scrolls behind (the home's `--vs-grid-reach`): the first row starts below it, and a row under
- * it counts as out of view.
+ * it counts as out of view. `over` px of its bottom are covered likewise by the pinned transport
+ * bar (`--vs-grid-reach-down`): the last row comes to rest above it, and a row under it is out of view.
  */
-export const homeLook = (pad: number = HOME_PAD, scrollbar = 0, under = 0): Look => ({
+export const homeLook = (pad: number = HOME_PAD, scrollbar = 0, under = 0, over = 0): Look => ({
   gap: 12,
   rowGap: 12,
   label: 0,
   padX: pad,
   padRight: Math.max(0, pad - scrollbar),
   padTop: 8 + under,
-  padBottom: 22,
+  padBottom: 22 + over,
   aspect: 9 / 16,
   ...(under ? { under } : {}),
+  ...(over ? { over } : {}),
 });
 
 export interface Layout {
@@ -86,12 +90,13 @@ export function windowOf(top: number, height: number, rowHeight: number, rows: n
 
 /** Where to scroll so that `row` is fully in a view `height` px tall now at `top`; null when it already is. */
 export function scrollFor(row: number, rowHeight: number, top: number, height: number, look: Look = LAB_LOOK): number | null {
-  // The view's top `under` px are covered (the pinned preview): what is visible starts below them.
+  // The view's top `under` px are covered (the pinned preview) and its bottom `over` px (the pinned bar): what is visible lies between.
   const under = look.under ?? 0;
+  const over = look.over ?? 0;
   const y = look.padTop + row * rowHeight;
   if (y < top + under) return Math.max(0, y - look.padTop);
   const bottom = y + rowHeight - look.rowGap + look.padTop - under;
-  if (bottom > top + height) return bottom - height;
+  if (bottom > top + height - over) return bottom - (height - over);
   return null;
 }
 
@@ -102,10 +107,11 @@ export function scrollFor(row: number, rowHeight: number, top: number, height: n
  */
 export function centreFor(row: number, rowHeight: number, height: number, look: Look = LAB_LOOK): number {
   if (rowHeight <= 0) return 0;
-  // In the middle of what is visible: below the `under` px a pinned preview covers.
+  // In the middle of what is visible: below the `under` px a pinned preview covers and above the `over` px a pinned bar does.
   const under = look.under ?? 0;
+  const over = look.over ?? 0;
   const middle = look.padTop - under + row * rowHeight + (rowHeight - look.rowGap) / 2;
-  const first = Math.max(0, Math.round((middle - (height - under) / 2) / rowHeight));
+  const first = Math.max(0, Math.round((middle - (height - under - over) / 2) / rowHeight));
   return Math.min(first, row) * rowHeight;
 }
 
@@ -206,18 +212,20 @@ export const gridHint = (use: GridUse, into: string | null): string =>
  * **Tuning knobs** (LibraryGrid.css): `--vs-grid-reach` (unitless px, set by Home.css): how far
  * the grid reaches up behind the home's pinned preview; the first row starts below it, and
  * keeping a tile in view (`scrollFor`, `centreFor`) counts that much of the top as covered.
+ * `--vs-grid-reach-down` likewise: how far it reaches down behind the home's pinned transport
+ * bar; the last row comes to rest above it, and that much of the bottom counts as covered.
  */
 export function LibraryGrid({ rows, active, selected, current, into, onMove, onPick, onAdd, onClear, reveal, onPress, tileMin, home: homeGrid = false, adding = null, controls }: LibraryGridProps) {
   const ref = useRef<HTMLDivElement>(null);
   // Its size, and whether it is on the home (decision 68's look, on the main pane's `--mat-plate-inset`) or in the lab editor's column.
-  const [size, setSize] = useState({ width: 0, height: 0, home: false, pad: HOME_PAD, bar: 0, under: 0 });
+  const [size, setSize] = useState({ width: 0, height: 0, home: false, pad: HOME_PAD, bar: 0, under: 0, over: 0 });
   // The first row in view: state changes only when a scroll crosses a row.
   const [topRow, setTopRow] = useState(0);
   // The tile the pointer is on (its key), whose preset moves in it on the home (`useHoverPreview`).
   const [hovered, setHovered] = useState<string | null>(null);
   const onHover = useCallback((key: string, on: boolean) => setHovered((h) => (on ? key : h === key ? null : h)), []);
   const failed = useFailedPresets();
-  const look = useMemo(() => (size.home ? homeLook(size.pad, size.bar, size.under) : LAB_LOOK), [size.home, size.pad, size.bar, size.under]);
+  const look = useMemo(() => (size.home ? homeLook(size.pad, size.bar, size.under, size.over) : LAB_LOOK), [size.home, size.pad, size.bar, size.under, size.over]);
   const lay = layout(size.width, rows.length, tileMin, look);
   const { first, last } = windowOf(topRow * lay.rowHeight, size.height, lay.rowHeight, lay.rows);
 
@@ -234,10 +242,13 @@ export function LibraryGrid({ rows, active, selected, current, into, onMove, onP
       // How far it reaches up behind the home's pinned preview (`--vs-grid-reach`, unitless px; Home.css).
       const reached = home ? parseFloat(getComputedStyle(el).getPropertyValue('--vs-grid-reach')) : NaN;
       const under = Number.isFinite(reached) && reached > 0 ? reached : 0;
+      // And down behind its pinned transport bar (`--vs-grid-reach-down`).
+      const down = home ? parseFloat(getComputedStyle(el).getPropertyValue('--vs-grid-reach-down')) : NaN;
+      const over = Number.isFinite(down) && down > 0 ? down : 0;
       setSize((s) =>
-        s.width === el.clientWidth && s.height === el.clientHeight && s.home === !!home && s.pad === pad && s.bar === bar && s.under === under
+        s.width === el.clientWidth && s.height === el.clientHeight && s.home === !!home && s.pad === pad && s.bar === bar && s.under === under && s.over === over
           ? s
-          : { width: el.clientWidth, height: el.clientHeight, home: !!home, pad, bar, under },
+          : { width: el.clientWidth, height: el.clientHeight, home: !!home, pad, bar, under, over },
       );
     };
     measure();
@@ -307,7 +318,7 @@ export function LibraryGrid({ rows, active, selected, current, into, onMove, onP
   }, [rows.length, firstKey]);
 
   const id = (i: number) => `lib-tile-${i}`;
-  const page = Math.max(1, Math.floor((size.height - (look.under ?? 0)) / Math.max(1, lay.rowHeight)));
+  const page = Math.max(1, Math.floor((size.height - (look.under ?? 0) - (look.over ?? 0)) / Math.max(1, lay.rowHeight)));
   const touch = () => void (touched.current = true);
 
   const onKey = (ev: KeyboardEvent<HTMLDivElement>) => {

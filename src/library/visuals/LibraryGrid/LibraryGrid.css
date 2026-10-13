@@ -10,9 +10,11 @@
   flex: 1;
   min-height: 0;
   overscroll-behavior: contain;
-  /* On the home, reaching up behind the pinned preview (`--vs-grid-reach`, Home.css): homeLook's
-     `under` keeps the first row below it. */
+  /* On the home, reaching up behind the pinned preview (`--vs-grid-reach`, Home.css) and down
+     behind the pinned transport bar (`--vs-grid-reach-down`): homeLook's `under` keeps the first
+     row below the one, its `over` the last row above the other. */
   margin-top: calc(var(--vs-grid-reach, 0) * -1px);
+  margin-bottom: calc(var(--vs-grid-reach-down, 0) * -1px);
 }
 /* On the home, no scrollbar (owner's call): it still scrolls by trackpad, wheel and keys. */
 .vs-root .vs-lib-grid {

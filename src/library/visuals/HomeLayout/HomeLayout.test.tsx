@@ -149,6 +149,30 @@ describe('HomeLayout on screen', () => {
     // After the hero in the DOM, so drawn over it.
     expect(hero.compareDocumentPosition(pane) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
+
+  it('the grid also scrolls over the pinned bar: its slot reaches down to the bar, beneath it', () => {
+    const { container } = render(
+      <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} bar={<p>bar</p>} pane={<p>grid</p>} />,
+    );
+    const pane = container.querySelector<HTMLElement>("[data-region='pane']")!;
+    const bar = container.querySelector<HTMLElement>("[data-region='bar']")!;
+    const end = (el: HTMLElement) => Number(el.style.getPropertyValue('--lib-at-y')) + Number(el.style.getPropertyValue('--lib-at-h'));
+    expect(pane).toHaveAttribute('data-over', 'bar');
+    expect(end(pane)).toBeCloseTo(end(bar));
+    expect(Number(pane.style.getPropertyValue('--lib-over'))).toBeGreaterThan(Number(bar.style.getPropertyValue('--lib-at-h')));
+    // The bar comes after the pane in the DOM, so it is drawn over it and keeps its presses.
+    expect(pane.compareDocumentPosition(bar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('with no bar the grid reaches down nowhere; with no hero, still down behind the bar', () => {
+    const noBar = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} pane={<p>grid</p>} />);
+    expect(noBar.container.querySelector("[data-region='pane']")).not.toHaveAttribute('data-over');
+    noBar.unmount();
+    const noHero = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} bar={<p>bar</p>} pane={<p>grid</p>} />);
+    const pane = noHero.container.querySelector("[data-region='pane']");
+    expect(pane).toHaveAttribute('data-over', 'bar');
+    expect(pane).not.toHaveAttribute('data-under');
+  });
 });
 
 describe('the column and the sidebar start their content on one line', () => {

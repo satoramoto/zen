@@ -292,26 +292,55 @@
      room and the grid's top padding), so nothing at rest is faded and a tile kept in view below
      the preview is whole; tiles scrolling up dissolve across the band above it. */
   --vs-lay-fade-end: calc(var(--vs-lay-under) + var(--space-2));
+  /* The pinned bar's room at the column's foot: its slot reaches down behind the bar
+     (`over: 'bar'`, the slot's --lib-over: the gap and the bar), so what scrolls there passes
+     behind it. */
+  --vs-lay-over: calc(var(--lib-over, 0) * 1px);
+  /* The bar's top, from the column's bottom (its room less the gap): the column is clipped there. */
+  --vs-lay-bar-top: max(0px, var(--vs-lay-over) - var(--mat-plate-gap));
+  /* Where the fade above the bar starts, from the column's bottom: the bar's room and the grid's
+     --space-2, the top fade's mirror, so a tile kept in view above the bar is whole and tiles
+     scrolling down dissolve across the band before they pass under it. */
+  --vs-lay-fade-start: calc(var(--vs-lay-over) + var(--space-2));
+  /* The clip and the mask's ends, each a no-op until the preview's hole or the bar sets it. */
+  --vs-lay-clip-t: 0px;
+  --vs-lay-ink-t: var(--key-black);
+  --vs-lay-ink-b: var(--key-black);
   display: flex;
   flex-direction: column;
   gap: var(--mat-plate-gap);
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  padding: var(--vs-lay-under) var(--mat-plate-inset) 0;
+  padding: var(--vs-lay-under) var(--mat-plate-inset) var(--vs-lay-over);
   scroll-padding-top: var(--vs-lay-under);
+  scroll-padding-bottom: var(--vs-lay-over);
   box-sizing: border-box;
 }
 /* Under the preview (useHoleClip): clipped above its bottom edge, full width, so nothing passing
    under it shows beside it, paints over the native picture or takes a press there; and faded in
-   under that edge by the band, so what scrolls up dissolves as it flows underneath. (The mask
-   reads only its stops' alpha: the ink is any opaque contract colour.) */
+   under that edge by the band, so what scrolls up dissolves as it flows underneath. */
 .vs-lay .vs-lay-main[data-hole] {
-  clip-path: inset(calc(var(--vs-lay-hole-b) * 1px) 0 0 0);
+  --vs-lay-clip-t: calc(var(--vs-lay-hole-b) * 1px);
+  --vs-lay-ink-t: transparent;
+}
+/* Over the bar (the slot's `data-over`): clipped at the bar's top, so nothing passing under it
+   paints behind its controls or takes a press there (the bar, drawn after, keeps its own); and
+   faded out above that edge by the band, so what scrolls down dissolves as it flows underneath.
+   The bar paints nothing new. */
+.vs-lay [data-over] > .vs-lay-main {
+  --vs-lay-ink-b: transparent;
+}
+/* (The mask reads only its stops' alpha: the ink is any opaque contract colour.) */
+.vs-lay .vs-lay-main[data-hole],
+.vs-lay [data-over] > .vs-lay-main {
+  clip-path: inset(var(--vs-lay-clip-t) 0 var(--vs-lay-bar-top) 0);
   mask-image: linear-gradient(
     to bottom,
-    transparent calc(var(--vs-lay-hole-b) * 1px),
-    var(--key-black) var(--vs-lay-fade-end)
+    var(--vs-lay-ink-t) var(--vs-lay-clip-t),
+    var(--key-black) var(--vs-lay-fade-end),
+    var(--key-black) calc(100% - var(--vs-lay-fade-start)),
+    var(--vs-lay-ink-b) calc(100% - var(--vs-lay-bar-top))
   );
 }
 .vs-lay .vs-lay-main > * {
@@ -320,10 +349,11 @@
 }
 /* A pane (Home's grid, a playlist's): it fills the rest of the column and scrolls itself, with
    its own side padding, so the column adds none and doesn't scroll. It starts under the hero's
-   room; a scroller in it may reach up into that room (Home.css) to pass behind the preview. */
+   room and ends above the bar's; a scroller in it may reach up into the one (Home.css) to pass
+   behind the preview, and down into the other to pass behind the bar. */
 .vs-lay .vs-lay-main[data-pane] {
   overflow-y: hidden;
-  padding: var(--vs-lay-under) 0 0;
+  padding: var(--vs-lay-under) 0 var(--vs-lay-over);
 }
 .vs-lay .vs-lay-main[data-pane] > * {
   flex: 1 1 auto;

@@ -96,6 +96,13 @@ export interface RegionSpec {
    * region covers (`Placed.under`).
    */
   under?: string;
+  /**
+   * The id of a body region directly below this one that its content also scrolls down behind
+   * (a list passing under a pinned transport bar): `under`'s mirror. Sizes are unchanged: the
+   * region's slot is drawn reaching down to that region's bottom, before it (so beneath it), and
+   * the content is told how much of its bottom that pinned region covers (`Placed.over`).
+   */
+  over?: string;
 }
 
 /** A stack of rows inside a row's slot (a column of regions next to another region). */
@@ -213,6 +220,12 @@ export interface Placed {
    * reaching up, and its content keeps that much of its top for the pinned region.
    */
   under?: { id: string; reach: number };
+  /**
+   * With `RegionSpec.over`: the pinned region below it that it scrolls behind, and `reach`, the px
+   * from this one's bottom down to that region's (the gap and its height): the slot is drawn that
+   * much taller, reaching down, and its content keeps that much of its bottom for the pinned region.
+   */
+  over?: { id: string; reach: number };
 }
 
 /** The solver's answer. */

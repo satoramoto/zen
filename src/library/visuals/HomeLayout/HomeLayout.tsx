@@ -94,8 +94,8 @@ export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true
             // Pinned undocked (put away or laid over), the header holds the window buttons' room and the title; free to choose, the docking answer leaves them out.
             [region('header', sidebar === 'overlaid' ? HEAD_TITLED_FORMS : HEAD_FORMS, 'controls')],
             ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
-            // The grid scrolls up behind the pinned preview: its slot reaches up to the hero's top.
-            [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}) }],
+            // The grid scrolls up behind the pinned preview and down behind the transport: its slot reaches up to the hero's top and down to the bar's bottom.
+            [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}), ...(bar ? { over: 'bar' } : {}) }],
             ...(bar ? [[region('bar', TRANSPORT_FORMS, 'controls')]] : []),
           ],
         },
@@ -171,7 +171,11 @@ export function useLayoutPrinciples(): Principles {
  * content padded by the hero's room (`--lib-under`), so at rest it starts below the preview. The
  * column is clipped above the preview's bottom edge, full width (`useHoleClip`), so a tile never
  * shows beside the preview, paints over the native picture or takes a press there, and as it
- * scrolls a soft band under that edge fades the tiles out as they flow underneath. The scrollers
+ * scrolls a soft band under that edge fades the tiles out as they flow underneath. Likewise at
+ * the foot: the slot reaches down behind the transport bar (`over: 'bar'`, `--lib-over`), its
+ * content padded by the bar's room so the last row comes to rest above it; the column is clipped
+ * at the bar's top and faded out across a band above it, so tiles dissolve as they pass under the
+ * bar, which paints nothing new and, drawn after the pane, keeps its presses. The scrollers
  * draw no scrollbar (they still scroll by trackpad, wheel and keys). Nothing paints under the hole: the root paints nothing, and the
  * picture's own spread shadow (Hero.css) paints the window's tint everywhere else, the panels,
  * header, pane and bar sitting above it with no background of their own. With no hero the
@@ -203,6 +207,11 @@ export function useLayoutPrinciples(): Principles {
  * - `--vs-lay-fade-end`: where the fade under the preview's edge ends: the pinned room
  *   (`--vs-lay-under`) and the grid's top padding (`--space-2`), where the first row sits at rest,
  *   so a tile kept in view below the preview is never faded.
+ * - `--vs-lay-over`: the room the pinned bar takes at the column's foot (the slot's `--lib-over`,
+ *   in px: the gap and the bar); 0 with no bar. `--vs-lay-bar-top` (the bar's top, from the
+ *   column's bottom: that room less the gap) is where the column is clipped, and
+ *   `--vs-lay-fade-start` (the bar's room and the grid's `--space-2`, where the last row rests) is
+ *   where the fade above it starts, so a tile kept in view above the bar is never faded.
  * The docked panels' widths and the title bar's height are also declared needs
  * (`SIDEBAR_FORMS`, `INSPECTOR_FORMS`, `TITLEBAR`, `LIGHTS_ROOM`, `TITLE_W`), which the solver places by.
  * Also `--lay-tile` (200px) and `--lay-tile-gap` (`--space-4`), the stories' grid.

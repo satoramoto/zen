@@ -136,6 +136,9 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  * - `--vs-grid-reach` (unitless px): how far the grid's scroller reaches up into the pinned
  *   preview's room, so its tiles scroll behind it: the pane slot's `--lib-under` while no note
  *   sits over the grid, else 0. The playlist grid and `LibraryGrid` read it.
+ * - `--vs-grid-reach-down` (unitless px): how far the grid's scroller reaches down into the
+ *   pinned transport bar's room, so its tiles scroll behind it: the pane slot's `--lib-over`,
+ *   always (notes sit at the top). The playlist grid and `LibraryGrid` read it.
  */
 export function Home({
   start,

@@ -552,17 +552,27 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
     y += head.hs[i] + gap;
   });
   for (const r of s.regions) put(r.spec.id, rects[r.spec.id], 'body');
-  // A region that scrolls behind a pinned one above it reaches up to that region's top.
+  // A region that scrolls behind a pinned one above it reaches up to that region's top (`under`);
+  // behind one below it, down to that region's bottom (`over`).
   for (const r of s.regions) {
-    const id = r.spec.under;
-    if (id === undefined) continue;
     const own = placed[r.spec.id].rect;
-    const head = placed[id];
-    if (!head || head.zone !== 'body') throw new Error(`assembly: region '${r.spec.id}' scrolls under '${id}', which isn't in the body`);
-    const above = head.rect.y + head.rect.h <= own.y + 1e-6;
-    const across = head.rect.x < own.x + own.w && own.x < head.rect.x + head.rect.w;
-    if (!above || !across) throw new Error(`assembly: region '${r.spec.id}' scrolls under '${id}', which must sit above it`);
-    placed[r.spec.id].under = { id, reach: own.y - head.rect.y };
+    const pinned = (id: string, side: 'above' | 'below') => {
+      const pin = placed[id];
+      const verb = side === 'above' ? 'under' : 'over';
+      if (!pin || pin.zone !== 'body') throw new Error(`assembly: region '${r.spec.id}' scrolls ${verb} '${id}', which isn't in the body`);
+      const beside = side === 'above' ? pin.rect.y + pin.rect.h <= own.y + 1e-6 : own.y + own.h <= pin.rect.y + 1e-6;
+      const across = pin.rect.x < own.x + own.w && own.x < pin.rect.x + pin.rect.w;
+      if (!beside || !across) throw new Error(`assembly: region '${r.spec.id}' scrolls ${verb} '${id}', which must sit ${side} it`);
+      return pin.rect;
+    };
+    if (r.spec.under !== undefined) {
+      const head = pinned(r.spec.under, 'above');
+      placed[r.spec.id].under = { id: r.spec.under, reach: own.y - head.y };
+    }
+    if (r.spec.over !== undefined) {
+      const foot = pinned(r.spec.over, 'below');
+      placed[r.spec.id].over = { id: r.spec.over, reach: foot.y + foot.h - (own.y + own.h) };
+    }
   }
   y = 0;
   (spec.footer ?? []).forEach((r, i) => {

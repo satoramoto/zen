@@ -418,3 +418,48 @@ describe('assemble: a region scrolling under a pinned one', () => {
     expect(slot.style.getPropertyValue('--lib-under')).toBe(String(p.regions.list.under!.reach));
   });
 });
+
+describe('assemble: a region scrolling over a pinned one below it', () => {
+  const fixed = (id: string, h: number): RegionSpec => ({ id, forms: [{ id, min: { w: 0, h: { control: h } }, ideal: { w: 0, h: { control: h } } }] });
+  const spec: ScreenSpec = {
+    rows: [
+      [fixed('pin', 3)],
+      [{ id: 'list', under: 'pin', over: 'foot', forms: [{ id: 'list', min: { w: 0, h: { control: 2 } }, ideal: { w: 0, h: { control: 2 } }, grow: { w: true, h: true } }] }],
+      [fixed('foot', 1)],
+    ],
+  };
+  const strip = (s: ScreenSpec): ScreenSpec => ({ rows: s.rows.map((row) => row.map((r) => ({ ...(r as RegionSpec), under: undefined, over: undefined }))) });
+
+  it('keeps the sizes and reaches down to the pinned region: the gap and its height', () => {
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const plain = assemble(strip(spec), { w: 600, h: 400 }, P);
+    expect(p.regions.list.rect).toEqual(plain.regions.list.rect);
+    expect(p.regions.list.over).toEqual({ id: 'foot', reach: P.plate.gap + p.regions.foot.rect.h });
+    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap });
+    expect(p.regions.foot.over).toBeUndefined();
+  });
+
+  it('refuses a region that is not below it', () => {
+    const rows = spec.rows;
+    expect(() => assemble({ rows: [rows[0], [{ ...(rows[1][0] as RegionSpec), over: 'pin' }], rows[2]] }, { w: 600, h: 400 }, P)).toThrow(/must sit below it/);
+    expect(() => assemble({ rows: [[{ ...(rows[1][0] as RegionSpec), under: undefined, over: 'nope' }]] }, { w: 600, h: 400 }, P)).toThrow(/isn't in the body/);
+    // Beside it, not below: a different column.
+    const side: ScreenSpec = { rows: [[{ ...(rows[1][0] as RegionSpec), under: undefined, over: 'foot' }, fixed('foot', 1)]] };
+    expect(() => assemble(side, { w: 600, h: 400 }, P)).toThrow(/must sit below it/);
+  });
+
+  it('draws the slot reaching up and down, with --lib-under and --lib-over, before the pinned region', () => {
+    render(<Screen name="Over" spec={spec} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List', foot: 'Foot' }} />);
+    const root = screen.getByRole('group', { name: 'Over' });
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const slot = root.querySelector('[data-region="list"]') as HTMLElement;
+    const foot = root.querySelector('[data-region="foot"]') as HTMLElement;
+    expect(slot).toHaveAttribute('data-over', 'foot');
+    expect(slot.style.getPropertyValue('--lib-over')).toBe(String(p.regions.list.over!.reach));
+    expect(slot.style.getPropertyValue('--lib-at-y')).toBe(String(p.regions.pin.rect.y));
+    const bottom = Number(slot.style.getPropertyValue('--lib-at-y')) + Number(slot.style.getPropertyValue('--lib-at-h'));
+    expect(bottom).toBeCloseTo(p.regions.foot.rect.y + p.regions.foot.rect.h);
+    // The pinned region comes later, so it is drawn over the slot reaching behind it.
+    expect(slot.compareDocumentPosition(foot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
