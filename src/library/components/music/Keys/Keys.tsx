@@ -43,6 +43,13 @@ export interface KeysProps {
   rightName?: string;
   /** The widget's width in px. */
   width?: number;
+  /**
+   * The zone ruler above the keys: each zone's name, what it holds, the split's name. Default
+   * true. Off, it is just the keys (one strip height): held keys still wear their zone's hue, so
+   * the split reads on the keys, and the picture's accessible label still says it all. With
+   * `onSplit` the handle stays (the split line is its hit column), without its labelled flag.
+   */
+  ruler?: boolean;
   /** The lowest and highest note the split may be set to (the engine's 24-96). */
   splitMin?: number;
   splitMax?: number;
@@ -131,6 +138,7 @@ export function Keys({
   rightHue = 1,
   rightName = 'Right',
   width = 1392,
+  ruler = true,
   splitMin = 24,
   splitMax = 96,
   splitLocked = false,
@@ -318,7 +326,9 @@ export function Keys({
       style={rootStyle}
       data-picking={armed ? '' : undefined}
       data-locked={splitLocked ? '' : undefined}
+      data-ruler={ruler ? undefined : 'off'}
     >
+      {ruler && (
       <div className="yh-keys__ruler" data-part="ruler" aria-hidden="true">
         {zones.map((zone) => (
           <div
@@ -361,6 +371,7 @@ export function Keys({
           </Text>
         )}
       </div>
+      )}
 
       <div className="yh-keys__body" data-part="body">
         <div className="yh-keys__strip" data-part="strip" role="img" aria-label={label} ref={strip}>

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { Stage, type StageProps } from './Stage';
 import { sectionPads as padBankSections } from '../PadBank/PadBank.fixtures';
 import { songFormBoard } from '../SongForm/SongForm.fixtures';
-import { stageBoard, stageSections, stageStopped } from './Stage.fixtures';
+import { stageBoard, stageQuickRacks, stageStopped } from './Stage.fixtures';
 import { pressSectionPad, SECTION_PAD_LAYOUT, sectionPads } from './sectionPads';
 import { StagePlayground } from './StagePlayground';
 import type { Placement } from '../../layout/assembly/types';
@@ -57,7 +57,6 @@ describe('Stage', () => {
     expect(slots(grid)).toEqual([
       ['hero', 'Hero'],
       ['transport', 'Transport'],
-      ['form', 'Song form'],
       ['mixer', 'Mixer'],
       ['knobs', 'Knobs'],
       ['pads', 'Pads'],
@@ -70,8 +69,10 @@ describe('Stage', () => {
     // The hero and the song form halves are plain elements: the Stage's Regions name them.
     expect(within(grid).getByRole('region', { name: 'Hero' })).toContainElement(grid.querySelector<HTMLElement>('.yh-display'));
     expect(within(grid).getByRole('region', { name: 'Transport' })).toContainElement(within(grid).getByRole('group', { name: 'Transport' }));
-    expect(within(grid).getByRole('region', { name: 'Song form' })).toContainElement(within(grid).getByRole('group', { name: 'Sections' }));
-    expect(screen.queryByRole('region', { name: 'Song form and transport' })).toBeNull();
+    // No song form strip: the sections are the Pads region's Sections bank, its default view.
+    expect(screen.queryByRole('region', { name: 'Song form' })).toBeNull();
+    expect(screen.queryByRole('group', { name: 'Sections' })).toBeNull();
+    expect(region('Pads').getByRole('tab', { name: 'Sections' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.queryByRole('region', { name: 'Stage display' })).toBeNull();
   });
 
@@ -144,7 +145,7 @@ describe('Stage', () => {
     setup();
     const stage = screen.getByRole('group', { name: 'Stage' });
     expect(within(stage).getAllByRole('navigation', { name: 'Pages' })).toHaveLength(1);
-    for (const name of ['Hero', 'Song form', 'Transport', 'Mixer', 'Knobs', 'Pads', 'Keyboard']) {
+    for (const name of ['Hero', 'Transport', 'Mixer', 'Knobs', 'Pads', 'Keyboard']) {
       expect(within(stage).getAllByRole('region', { name })).toHaveLength(1);
     }
     expect(stage.querySelectorAll('.yh-keys')).toHaveLength(1);
@@ -200,13 +201,16 @@ describe('Stage', () => {
   const SECTIONS = [/^Intro I\b(?!I)/, /^Intro II\b(?!I)/, /^Intro III/, /^Main A/, /^Main B/, /^Main C/, /^Main D/, /^Ending I\b(?!I)/, /^Ending II\b(?!I)/, /^Ending III/, /^Break/];
   const TRANSPORT = [/^Start \/ Stop/, /^Sync Start/, 'Sync Stop', 'Auto Fill', /^Fill Up/, /^Fill Down/, /^Fade\b/, /^Section reset/, 'Accomp (ACMP)'];
 
-  it('has every section once, in the song form strip, and every transport key once, beside the hero', () => {
-    setup();
-    const form = region('Song form');
+  it('has every section once, on the Pads region\'s Sections bank, and every transport key once beside the hero', () => {
+    const { unmount } = setup();
+    const pads = region('Pads');
     for (const name of SECTIONS) {
       once(name);
-      expect(form.getByRole('button', { name })).toBeInTheDocument();
+      expect(pads.getByRole('button', { name })).toBeInTheDocument();
     }
+    unmount();
+    // On another bank the transport keys the Sections pads mirror are only in the transport.
+    setup(stageQuickRacks);
     const transport = region('Transport');
     for (const name of TRANSPORT) {
       once(name);
@@ -214,31 +218,24 @@ describe('Stage', () => {
     }
   });
 
-  it('split: the song form over the transport beside the hero, each key once', () => {
+  it('split: the hero across the top, the transport down the right beside the knobs and pads', () => {
     const { container } = setup({ layout: 'split' });
     expect(container.querySelector('.yh-stage')).toHaveAttribute('data-layout', 'split');
     const { header, grid, footer } = zones();
     expect(slots(header).map(([id]) => id)).toEqual(['bar']);
     expect(slots(grid)).toEqual([
       ['hero', 'Hero'],
-      ['form', 'Song form and transport'],
       ['mixer', 'Mixer'],
       ['knobs', 'Knobs'],
       ['pads', 'Pads'],
+      ['transport', 'Transport'],
     ]);
     expect(slots(footer)).toEqual([
       ['keys', 'Keyboard'],
       ['status', null],
     ]);
-    expect(screen.queryByRole('region', { name: 'Transport' })).toBeNull();
     expect(screen.queryByRole('region', { name: 'Song form' })).toBeNull();
-    const outer = screen.getByRole('region', { name: 'Song form and transport' });
-    expect(within(outer).queryAllByRole('region')).toHaveLength(0);
-    const form = within(outer);
-    for (const name of [...SECTIONS, ...TRANSPORT]) {
-      once(name);
-      expect(form.getByRole('button', { name })).toBeInTheDocument();
-    }
+    for (const name of SECTIONS) once(name);
   });
 
   it('shows the Tempo knob at the hero tempo in every fixture', () => {
@@ -260,11 +257,11 @@ describe('Stage', () => {
     expect(container.querySelector('.yh-padbank__pads')).toHaveAttribute('data-columns', '8');
   });
 
-  it('has the pad banks Sections first, then Quick Racks, Chord, Multi Pads, Setup; the board on Quick Racks', () => {
+  it('has the pad banks Sections first, then Quick Racks, Chord, Multi Pads, Setup; the board on Sections', () => {
     setup();
     const tabs = region('Pads').getAllByRole('tab');
     expect(tabs.map((tab) => tab.textContent)).toEqual(['Sections', 'Quick Racks', 'Chord', 'Multi Pads', 'Setup']);
-    expect(region('Pads').getByRole('tab', { name: 'Quick Racks' })).toHaveAttribute('aria-selected', 'true');
+    expect(region('Pads').getByRole('tab', { name: 'Sections' })).toHaveAttribute('aria-selected', 'true');
   });
 
   it('says whether the tempo is the style tempo: unavailable on the board at 104, available stopped at 92', () => {
@@ -277,17 +274,15 @@ describe('Stage', () => {
 
   describe('the Sections pad bank', () => {
     const SECTION_IDS = ['intro1', 'intro2', 'intro3', 'mainA', 'mainB', 'mainC', 'mainD', 'ending1', 'ending2', 'ending3', 'break'] as const;
-    /** The strip's step and the bank's pad for one section: the same Pad face on both. */
-    function faces(container: HTMLElement, id: (typeof SECTION_IDS)[number]) {
-      const slotOf = (id: string) => container.querySelector(`.lib-assembled__slot[data-region="${id}"]`) as HTMLElement;
-      const strip = slotOf('form').querySelector(`[data-section="${id}"] .yh-pad`) as HTMLElement;
+    /** The state the song form asks of a section, and the state the bank's pad wears. */
+    function faces(container: HTMLElement, songForm: StageProps['songForm'], id: (typeof SECTION_IDS)[number]) {
       const index = SECTION_PAD_LAYOUT.findIndex((a) => 'section' in a && a.section === id);
-      const cell = slotOf('pads').querySelectorAll('.yh-padbank__cell')[index];
-      return { strip: strip.dataset.state, pad: (cell.querySelector('.yh-pad') as HTMLElement).dataset.state };
+      const cell = container.querySelector('.lib-assembled__slot[data-region="pads"]')!.querySelectorAll('.yh-padbank__cell')[index];
+      return { asked: sectionPads(songForm)[index].state, pad: (cell.querySelector('.yh-pad') as HTMLElement).dataset.state };
     }
-    const onSections = (songForm: StageProps['songForm']): Partial<StageProps> => ({ ...stageSections, songForm });
+    const onSections = (songForm: StageProps['songForm']): Partial<StageProps> => ({ ...stageBoard, songForm });
 
-    it('draws its pads from the song form, so they agree with the strip in every state', () => {
+    it('draws its pads from the song form in every state', () => {
       const forms: StageProps['songForm'][] = [
         stageBoard.songForm,
         stageStopped.songForm,
@@ -297,9 +292,9 @@ describe('Stage', () => {
       for (const songForm of forms) {
         const { container, unmount } = setup(onSections(songForm));
         for (const id of SECTION_IDS) {
-          const face = faces(container, id);
-          expect(face.strip, id).toBeTruthy();
-          expect(face.pad, id).toBe(face.strip);
+          const face = faces(container, songForm, id);
+          expect(face.asked, id).toBeTruthy();
+          expect(face.pad, id).toBe(face.asked);
         }
         const transport = region('Transport');
         const pads = region('Pads');
@@ -320,14 +315,12 @@ describe('Stage', () => {
       );
     });
 
-    it('shows each section and transport key once in its own region and once on the pads, which mirror the hardware', () => {
-      setup(stageSections);
-      const form = region('Song form');
+    it('shows each section only on the pads, and each transport key once in the transport and once on the pads, which mirror the hardware', () => {
+      setup();
       const pads = region('Pads');
       for (const name of SECTIONS) {
-        expect(form.getAllByRole('button', { name })).toHaveLength(1);
         expect(pads.getAllByRole('button', { name })).toHaveLength(1);
-        expect(screen.getAllByRole('button', { name })).toHaveLength(2);
+        expect(screen.getAllByRole('button', { name })).toHaveLength(1);
       }
       for (const name of [/^Sync Start/, /^Sync Stop/, /^Auto Fill/, /^Start \/ Stop/]) {
         expect(region('Transport').getAllByRole('button', { name })).toHaveLength(1);
@@ -337,7 +330,7 @@ describe('Stage', () => {
       expect(region('Hero').getAllByRole('button', { name: 'Tap tempo' })).toHaveLength(1);
     });
 
-    it('sends a pad press where the same step or key in the strip and transport sends it, and Tap to the hero', async () => {
+    it('sends a pad press where the same step or transport key sends it, and Tap to the hero', async () => {
       const songForm = {
         ...stageBoard.songForm,
         onSection: vi.fn(),
@@ -348,16 +341,15 @@ describe('Stage', () => {
       };
       const onTap = vi.fn();
       const onPress = vi.fn();
-      setup({ ...stageSections, songForm, display: { ...stageBoard.display, onTap }, pads: { ...stageSections.pads, onPress } });
+      setup({ ...stageBoard, songForm, display: { ...stageBoard.display, onTap }, pads: { ...stageBoard.pads, onPress } });
       const user = userEvent.setup();
       const pads = region('Pads');
       await user.click(pads.getByRole('button', { name: /^Main D \(pad 12\)/ }));
-      await user.click(region('Song form').getByRole('button', { name: 'Main D' }));
-      expect(songForm.onSection.mock.calls).toEqual([['mainD'], ['mainD']]);
+      expect(songForm.onSection.mock.calls).toEqual([['mainD']]);
       await user.click(pads.getByRole('button', { name: /^Break/ }));
       expect(songForm.onSection).toHaveBeenLastCalledWith('break');
       await user.click(pads.getByRole('button', { name: /^Intro III, not in this style/ }));
-      expect(songForm.onSection).toHaveBeenCalledTimes(3);
+      expect(songForm.onSection).toHaveBeenCalledTimes(2);
       await user.click(pads.getByRole('button', { name: /^Sync Start/ }));
       expect(songForm.onSyncStart).toHaveBeenLastCalledWith(true);
       await user.click(pads.getByRole('button', { name: /^Sync Stop/ }));
@@ -434,30 +426,30 @@ describe('StagePlayground', () => {
   it('queues a section as next while running, and lands it on a second press', async () => {
     play();
     const user = userEvent.setup();
-    const form = region('Song form');
-    await user.click(form.getByRole('button', { name: 'Main D' }));
-    expect(form.getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
+    const pads = region('Pads');
+    await user.click(pads.getByRole('button', { name: /^Main D \(pad 12\)/ }));
+    expect(pads.getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
     expect(region('Hero').getByText('Main D')).toBeInTheDocument();
-    await user.click(form.getByRole('button', { name: /^Main D, next/ }));
-    expect(form.getByRole('button', { name: 'Main D, playing' })).toBeInTheDocument();
+    await user.click(pads.getByRole('button', { name: /^Main D, next/ }));
+    expect(pads.getByRole('button', { name: /^Main D, playing/ })).toBeInTheDocument();
     expect(region('Hero').getByRole('img', { name: /^Playing Main\sD$/ })).toBeInTheDocument();
   });
 
-  it('plays the song from the Sections pads exactly as from the strip', async () => {
+  it('plays the song from the Sections pads, its default bank', async () => {
     play();
     const user = userEvent.setup();
     const pads = region('Pads');
-    await user.click(pads.getByRole('tab', { name: 'Sections' }));
+    expect(pads.getByRole('tab', { name: 'Sections' })).toHaveAttribute('aria-selected', 'true');
     const pad = (name: RegExp) => pads.getByRole('button', { name });
     expect(pad(/^Main B, playing/)).toHaveAttribute('data-state', 'playing');
     expect(pad(/^Main C, next/)).toHaveAttribute('data-state', 'next');
-    // A pad queues as the strip's step does, and the strip and the hero follow.
+    // A pad queues the section, and the hero follows.
     await user.click(pad(/^Main D \(pad 12\)/));
-    expect(region('Song form').getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
+    expect(region('Hero').getByText('Main D')).toBeInTheDocument();
     expect(pad(/^Main D, next/)).toHaveAttribute('data-state', 'next');
     expect(pad(/^Main C \(pad 11\)/)).toHaveAttribute('data-state', 'idle');
-    // The strip lands it, and the pad shows it playing.
-    await user.click(region('Song form').getByRole('button', { name: /^Main D, next/ }));
+    // A second press lands it.
+    await user.click(pad(/^Main D, next/));
     expect(pad(/^Main D, playing/)).toHaveAttribute('data-state', 'playing');
     // Start / Stop and Auto Fill from the pads change the transport's keys.
     await user.click(pad(/^Start \/ Stop, running/));
@@ -471,13 +463,14 @@ describe('StagePlayground', () => {
   it('stops and starts the band', async () => {
     play();
     const user = userEvent.setup();
-    await user.click(screen.getByRole('button', { name: /^Start \/ Stop, running/ }));
+    const transport = region('Transport');
+    await user.click(transport.getByRole('button', { name: /^Start \/ Stop, running/ }));
     expect(screen.getByRole('button', { name: 'Start / Stop, stopped' })).toBeInTheDocument();
     expect(region('Hero').getByRole('img', { name: /^Stopped on Main\sB$/ })).toBeInTheDocument();
-    // Stopped, a section press picks where the band starts.
-    await user.click(screen.getByRole('button', { name: 'Main A' }));
+    // Stopped, a section pad picks where the band starts.
+    await user.click(region('Pads').getByRole('button', { name: /^Main A \(pad 9\)/ }));
     await user.click(screen.getByRole('button', { name: 'Start / Stop, stopped' }));
-    expect(screen.getByRole('button', { name: /^Start \/ Stop, running/ })).toBeInTheDocument();
+    expect(transport.getByRole('button', { name: /^Start \/ Stop, running/ })).toBeInTheDocument();
     expect(region('Hero').getByRole('img', { name: /^Playing Main\sA$/ })).toBeInTheDocument();
   });
 
@@ -510,6 +503,7 @@ describe('StagePlayground', () => {
     play();
     const user = userEvent.setup();
     const pads = region('Pads');
+    await user.click(pads.getByRole('tab', { name: 'Quick Racks' }));
     const ots = (n: number) => pads.getByRole('button', { name: new RegExp(`^OTS\\s${n}\\b`) });
     // The seed's One Touch 2 lights OTS 2, not the bank's own lit OTS 1.
     expect(ots(2)).toHaveAttribute('data-state', 'playing');

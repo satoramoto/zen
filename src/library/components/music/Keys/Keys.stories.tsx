@@ -31,6 +31,7 @@ const meta = {
     rightHue: { control: 'inline-radio', options: [1, 2, 3, 4] },
     rightName: { control: 'text' },
     width: { control: { type: 'number', min: 200, step: 1 } },
+    ruler: { control: 'boolean' },
     splitMin: { control: { type: 'number', min: 0, max: 127, step: 1 } },
     splitMax: { control: { type: 'number', min: 0, max: 127, step: 1 } },
     splitLocked: { control: 'boolean' },
@@ -183,6 +184,18 @@ export const HighSplit: Story = {
 /** Added: without `onSplit` the keys are a picture: the split's name sits on the ruler, nothing to grab. */
 export const Picture: Story = {
   args: { onSplit: undefined },
+};
+
+/**
+ * Added: `ruler={false}`, just the keys (as the Yahaha Stage draws them): no zone names, held
+ * list or split name above; the held keys keep their zone's hue, so the split still reads.
+ */
+export const NoRuler: Story = {
+  args: { ruler: false, onSplit: undefined },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('.yh-keys__ruler')).toBeNull();
+    await expect(canvasElement.querySelector(".yh-keys__white[data-held='left']")).toHaveAttribute('data-hue', '4');
+  },
 };
 
 /** Added: a narrow strip (49 keys at 480px), where the zone labels give way before the keys do. */

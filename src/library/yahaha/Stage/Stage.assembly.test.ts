@@ -76,29 +76,28 @@ function expectHeroLast(p: Placement, label: string) {
 
 describe('the Stage assembles itself', () => {
   /** The forms the solver picks for the three Yahaha packs (the table in the lane's report). */
-  const BOARD_FORMS = { hero: 'full', transport: 'keys', form: 'strip', mixer: 'tall', knobs: 'labelled', pads: 'two-rows' };
-  const SMALL = { hero: 'minimal', transport: 'keys', form: 'folded', mixer: 'short', knobs: 'compact', pads: 'small' };
-  const LEAST = { hero: 'minimal', transport: 'compact', form: 'folded', mixer: 'short', knobs: 'compact', pads: 'small' };
+  const BOARD_FORMS = { hero: 'full', transport: 'keys', mixer: 'tall', knobs: 'labelled', pads: 'two-rows' };
+  const LEAST = { hero: 'minimal', transport: 'compact', mixer: 'short', knobs: 'compact', pads: 'small' };
   const CHOSEN: Record<string, Record<string, Record<string, string>>> = {
     'yahaha-classic': {
-      '1440x1200': { hero: 'compact', transport: 'keys', form: 'folded', mixer: 'short', knobs: 'compact', pads: 'small' },
+      '1440x1200': BOARD_FORMS,
       '2560x1080': BOARD_FORMS,
       '1920x1080': BOARD_FORMS,
-      '1217x752': SMALL,
+      '1217x752': { hero: 'minimal', transport: 'keys', mixer: 'short', knobs: 'labelled', pads: 'small' },
       '900x700': LEAST,
     },
     'yahaha-push': {
-      '1440x1200': { hero: 'full', transport: 'keys', form: 'strip', mixer: 'short', knobs: 'compact', pads: 'small' },
+      '1440x1200': BOARD_FORMS,
       '2560x1080': BOARD_FORMS,
       '1920x1080': BOARD_FORMS,
-      '1217x752': SMALL,
+      '1217x752': { hero: 'compact', transport: 'keys', mixer: 'short', knobs: 'labelled', pads: 'small' },
       '900x700': LEAST,
     },
     'yahaha-elektron': {
-      '1440x1200': { hero: 'compact', transport: 'keys', form: 'strip', mixer: 'short', knobs: 'compact', pads: 'small' },
+      '1440x1200': BOARD_FORMS,
       '2560x1080': BOARD_FORMS,
       '1920x1080': BOARD_FORMS,
-      '1217x752': SMALL,
+      '1217x752': { hero: 'compact', transport: 'keys', mixer: 'short', knobs: 'compact', pads: 'small' },
       '900x700': LEAST,
     },
   };
@@ -145,18 +144,16 @@ describe('the Stage assembles itself', () => {
 
   /**
    * Where the Stage holds the zoom floor and scrolls. visual[flow]'s frost materials part regions
-   * by 32 px and pad them by 22 (space is the look), which the Stage's six regions can't afford
-   * below the board. At 900 × 700 the 16:9 room is 900 × 506.25, shorter than the Stage's least
-   * at the floor under every pack. Linear's 1217 × 752 room (684.6 high) is 2 px short of its
-   * least at the floor. Everything else is viable.
+   * by 32 px and pad them by 22 (space is the look), which the Stage's five regions can't afford
+   * in the small screen's 1217 × 684.6 room. At 900 × 700 the 16:9 room is 900 × 506.25,
+   * shorter than the Stage's least at the floor under every pack. Everything else is viable.
    */
-  const scrolls = (id: string, w: number, h: number) =>
-    w === 900 || (id === 'visuals' && (w < BOARD.w || h < BOARD.h)) || (id === 'linear' && w === 1217);
+  const scrolls = (id: string, w: number) => w === 900 || (id === 'visuals' && w === 1217);
 
   for (const pack of packs)
     for (const [w, h] of SIZES) {
       const label = `${pack.id} ${w}x${h}`;
-      const scrolling = scrolls(pack.id, w, h);
+      const scrolling = scrolls(pack.id, w);
       it(`${label}: viable (${scrolling ? 'scrolls at the floor' : 'no overflow, zoom ≥ floor, nothing cut off or overlapping'})`, () => {
         const pr = principlesFor(pack.facets, pack.principles);
         const p = assemble(STAGE_SPEC, { w, h }, pr);
@@ -209,12 +206,19 @@ describe('the Stage assembles itself', () => {
       }
   });
 
-  it('the split spec places the song form with its transport beside the hero, its parts named', () => {
-    const pack = packs.find((p) => p.id === 'yahaha-classic')!;
-    const pr = principlesFor(pack.facets, pack.principles);
-    const p = assemble(STAGE_SPLIT_SPEC, BOARD, pr);
-    expectViable(STAGE_SPLIT_SPEC, p, pr, 'split 1920x1080');
-    expect(p.regions.form.parts).toEqual({ form: 'strip', transport: 'keys' });
-    expect(p.regions.transport).toBeUndefined();
+  it('has no song form region: the sections live in the Pads region, in both specs', () => {
+    for (const spec of [STAGE_SPEC, STAGE_SPLIT_SPEC]) expect(regionsOf(spec).map((r) => r.id)).not.toContain('form');
+  });
+
+  it('the split spec: the hero across the top, the transport beside the knobs and pads, viable down to the small screen', () => {
+    for (const pack of packs.filter((p) => p.id.startsWith('yahaha')))
+      for (const win of [BOARD, { w: 1217, h: 752 }]) {
+        const pr = principlesFor(pack.facets, pack.principles);
+        const p = assemble(STAGE_SPLIT_SPEC, win, pr);
+        const label = `split ${pack.id} ${win.w}x${win.h}`;
+        expectViable(STAGE_SPLIT_SPEC, p, pr, label);
+        expect(p.regions.hero.rect.w, label).toBeCloseTo(p.layout.w, 6);
+        expect(p.regions.transport.rect.x, label).toBeGreaterThan(p.regions.pads.rect.x + p.regions.pads.rect.w - 0.5);
+      }
   });
 });

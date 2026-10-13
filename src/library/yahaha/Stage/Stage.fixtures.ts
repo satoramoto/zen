@@ -24,6 +24,8 @@ export const stageStyleTempo = 104;
 export const stagePadBankNames = allPadBanks;
 /** The Quick Racks bank's index in `stagePadBankNames`. */
 export const QUICK_RACKS = allPadBanks.indexOf('Quick Racks');
+/** The Sections bank's index: the Pads region's default view, where the song's sections live. */
+export const SECTIONS = allPadBanks.indexOf('Sections');
 
 const { width: _barWidth, ...appBar } = boardAppBar;
 const { width: _keysWidth, ...keys } = boardKeys;
@@ -35,8 +37,8 @@ const stoppedDisplay = { ...heroStopped, nowPlaying: { ...heroStopped.nowPlaying
 /**
  * The board: Sunday Drive Pop, Am7 in Main B with Main C next after bar 4, running at 104; Right 1
  * Stage Grand 90, Right 2 Silk Strings 72 (soft takeover), Right 3 Brass Section 64 off, Left
- * Finger Bass 80, Style 100, Multi Pad 90, Master 100; the Style knob page, the Quick Racks pads
- * (the Sections bank's tab first, its pads mirroring the song form when chosen); split F#2 with the
+ * Finger Bass 80, Style 100, Multi Pad 90, Master 100; the Style knob page, the pads on the
+ * Sections bank (drawn from the song form; `pads.pads` is what Quick Racks shows); split F#2 with the
  * left hand's Am7 held. At the style's own tempo, so Style tempo has nothing to do.
  */
 export const stageBoard = {
@@ -53,7 +55,7 @@ export const stageBoard = {
     functionLamps,
   },
   knobs: { knobs: withTempo(styleKnobs, display.nowPlaying.bpm), pages: knobPages, page: 0 },
-  pads: { pads: quickRackPads, banks: stagePadBankNames, bank: QUICK_RACKS, lit: true },
+  pads: { pads: quickRackPads, banks: stagePadBankNames, bank: SECTIONS, lit: true },
   keys,
   status: { text: null },
 } satisfies StageProps;
@@ -69,10 +71,10 @@ export const stageStopped = {
   keys: { ...keys, heldLeft: [], heldRight: [] },
 } satisfies StageProps;
 
-/** The board on the Sections bank: its pads say what the song form says (the Stage draws them from `songForm`). */
-export const stageSections = {
+/** The board on the Quick Racks bank: the pads' own items (`pads.pads`), not the song's sections. */
+export const stageQuickRacks = {
   ...stageBoard,
-  pads: { ...stageBoard.pads, bank: stagePadBankNames.indexOf('Sections') },
+  pads: { ...stageBoard.pads, bank: QUICK_RACKS },
 } satisfies StageProps;
 
 /** The knob pages' eight knobs, in `knobPages` order (Style, Rack, Pan, Reverb, Chorus, Delay). */

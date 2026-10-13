@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { Stage } from './Stage';
-import { stageBoard, stageSections, stageStopped } from './Stage.fixtures';
+import { stageBoard, stageQuickRacks, stageStopped } from './Stage.fixtures';
 import { StagePlayground } from './StagePlayground';
 
 /**
- * The whole app on one screen: the AppBar, the Display (the hero), the song form and transport,
- * the mixer, the knobs over the pads, the status line and the keys. Each region takes its data as
+ * The whole app on one screen: the AppBar, the Display (the hero), the transport, the mixer, the
+ * knobs over the pads (open on the Sections bank, where the song's sections live), the status line and the keys. Each region takes its data as
  * one object; its callbacks pass straight through.
  */
 const meta = {
@@ -42,19 +42,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * The board at 1920 × 1080 (16:9, so the room is the whole window): Am7 in Main B, Main C next after bar 4, running at 104; split F#2 with
- * the left hand's Am7 held. The hero with the transport beside it, the song form one strip under
- * them, then the mixer and the knobs over the pads on the same column seam.
+ * The board at 1920 × 1080 (16:9, so the room is the whole window): Am7 in Main B, Main C next
+ * after bar 4, running at 104; split F#2 with the left hand's Am7 held. The hero with the
+ * transport beside it, then the mixer and the knobs over the pads (on Sections) on the same
+ * column seam.
  */
 export const Board: Story = {};
 
-/**
- * The board on the Sections pad bank, as the Launchkey's pads play it: the pads are drawn from the
- * song form's state (Main B filled, Main C ringed in the accent, Intro III and Ending III dark,
- * Start / Stop running), and a pad press does what that step or key does.
- */
-export const Sections: Story = {
-  args: { ...stageSections },
+/** The board with the pads on Quick Racks: the bank's own pads, not the song's sections. */
+export const QuickRacks: Story = {
+  args: { ...stageQuickRacks },
 };
 
 /** Stopped on Main A at 92 with Coastal Highway queued, the faders on the Reverb layer, a message on the status line. */
@@ -82,7 +79,7 @@ export const Narrow: Story = {
   args: { width: 900, height: 700 },
 };
 
-/** The alternative `split` layout on the board: the hero, and beside it the song form over the transport. */
+/** The alternative `split` layout on the board: the hero across the top, the transport down the right beside the pads. */
 export const SplitBoard: Story = {
   args: { layout: 'split' },
 };
@@ -105,9 +102,10 @@ export const Playground: Story = {
   render: (args) => <StagePlayground {...args} log={fn().mockName('stage')} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const form = within(canvas.getByRole('group', { name: 'Sections' }));
-    await userEvent.click(form.getByRole('button', { name: 'Main D' }));
-    await expect(form.getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
+    // The Pads region opens on its Sections bank: a section pad queues as next.
+    const pads = within(canvas.getByRole('region', { name: 'Pads' }));
+    await userEvent.click(pads.getByRole('button', { name: /^Main D \(pad 12\)/ }));
+    await expect(pads.getByRole('button', { name: /^Main D, next/ })).toBeInTheDocument();
     await userEvent.click(canvas.getByRole('button', { name: /^Metronome settings/ }));
     await expect(canvas.getByRole('dialog', { name: 'Metronome settings' })).toBeInTheDocument();
     await userEvent.keyboard('{Escape}');

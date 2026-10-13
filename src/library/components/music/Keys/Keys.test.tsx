@@ -236,6 +236,20 @@ describe('Keys', () => {
     expect(screen.getByText('F#2', { selector: '.yh-keys__marker' })).toBeInTheDocument();
   });
 
+  it('ruler={false}: just the keys, held keys in their hues, the picture still named', () => {
+    const { container } = render(<Keys {...boardKeys} ruler={false} />);
+    expect(container.querySelector('.yh-keys')).toHaveAttribute('data-ruler', 'off');
+    expect(container.querySelector('.yh-keys__ruler')).toBeNull();
+    expect(container.querySelector('.yh-keys__marker')).toBeNull();
+    expect(screen.queryByText('Left')).toBeNull();
+    expect(screen.getByRole('img', { name: /^Keys: split F#2/ })).toBeInTheDocument();
+    expect(container.querySelector(".yh-keys__white[data-held='left']")).toHaveAttribute('data-hue', '4');
+    expect(container.querySelector(".yh-keys__white[data-held='right']")).toHaveAttribute('data-hue', '1');
+    // With onSplit the handle stays: the split can still be set.
+    render(<Keys {...boardKeys} ruler={false} onSplit={vi.fn()} />);
+    expect(screen.getByRole('slider', { name: /^Split point/ })).toHaveAttribute('aria-valuetext', 'F#2');
+  });
+
   it('takes zone names and hues from leftName/leftHue and rightName/rightHue, defaulting to Left 4 and Right 1', () => {
     const { container, rerender } = render(<Keys split={54} heldLeft={[43]} heldRight={[76]} />);
     expect(screen.getByText('Left')).toBeInTheDocument();

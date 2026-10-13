@@ -40,6 +40,10 @@
   color: var(--text-1);
 }
 
+/* No ruler (`ruler={false}`): just the keys. The handle keeps its hit column, without the flag. */
+.yh-keys[data-ruler='off'] { grid-template-rows: var(--yh-keys-strip-h); }
+.yh-keys[data-ruler='off'] .yh-keys__flag { display: none; }
+
 /* Zone identity: each zone's hue slot (leftHue, rightHue), used only for its zone lamp and held keys. */
 .yh-keys [data-hue='1'] { --yh-keys-hue: var(--hue-1); }
 .yh-keys [data-hue='2'] { --yh-keys-hue: var(--hue-2); }
