@@ -78,4 +78,4 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 
 ## Ownership
 
-Work on a branch in your own worktree. Changes reach `main` only through a PR. `main` is protected: the `checks` job in `.github/workflows/checks.yml` must pass first. It runs every command in the table above except `npx vitest run src/library`, which `npm test` already covers. Lane leads push their branch but don't open the PR. The orchestrator opens it after review and turns on auto-merge.
+Work on a branch in your own worktree. Changes reach `main` only through a PR. `main` is protected: the `checks` job in `.github/workflows/checks.yml` must pass first. It runs every command in the table above except `npx vitest run src/library`, which `npm test` already covers. A PR that changes only docs (`*.md` anywhere, or `docs/`) skips them and passes at once. Lane leads push their branch but don't open the PR. The orchestrator opens it after review and turns on auto-merge.
