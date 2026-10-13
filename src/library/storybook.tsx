@@ -164,7 +164,7 @@ function ScaledFrame({ frame, children }: { frame: StoryFrame; children: ReactNo
  *   scaled down (keeping the ratio) only when the canvas is smaller than it, never up.
  *
  * Without `frame` it does nothing. Put it inside `withLibraryTheme` (before it in `decorators`,
- * which wrap outward: `[withVisualsFrame, withStoryFrame, withLibraryTheme]`), so the theme's
+ * which wrap outward: `[withAppFrame, withStoryFrame, withLibraryTheme]` for an app's own frame decorator), so the theme's
  * desktop fills the letterbox and the frame sits in the theme scope.
  */
 export const withStoryFrame: Decorator = (Story, { parameters }) => {

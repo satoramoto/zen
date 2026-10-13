@@ -26,8 +26,6 @@ const COMPONENT_SOURCES = [
   ...filesUnder('components', /\.(tsx?|css)$/),
   ...filesUnder('layout', /\.(tsx?|css)$/),
   ...filesUnder('yahaha', /\.(tsx?|css)$/),
-  // visual[flow] on zen; its model/ is logic ported 1:1 (the field's spectral bands are data, not theme).
-  ...filesUnder('visuals', /\.(tsx?|css)$/).filter((f) => !f.startsWith('visuals/model/')),
 ];
 const MODES: Mode[] = ['light', 'dark'];
 const CONTRACT = new Set([...Object.keys(toCssVars(packs[0].facets, 'dark')), ...SCOPE_VARS]);
