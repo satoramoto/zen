@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { HelpOverlay } from '../HelpOverlay/HelpOverlay';
 import * as api from '../model/api';
 import { useTauriEvent } from '../model/hooks';
 import { useLiveKeys } from '../model/liveKeys';
 import * as output from '../model/output';
 import { useLive } from '../model/useLive';
-import { EffectsPanel } from '../EffectsPanel/EffectsPanel';
+import { EFFECTS_PANEL_ID, EffectsPanel } from '../EffectsPanel/EffectsPanel';
 import { StageDock } from '../StageDock/StageDock';
 import { StageHead } from '../StageHead/StageHead';
 import { StageLayout } from '../StageLayout/StageLayout';
@@ -78,7 +78,26 @@ export function Live({
   const [pinned, setPinned] = useState(false);
   // The effects panel (the Effects button, or E), docked at the Stage's left.
   const [effects, setEffects] = useState(false);
-  const toggleEffects = useCallback(() => setEffects((o) => !o), []);
+  // Opened by the button, focus moves into the panel; by E, it stays on the picture.
+  const [effectsFocus, setEffectsFocus] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  // Closing (✕, Esc, E or the button) gives focus back to the Effects button if it was in the panel.
+  const closeEffects = useCallback(() => {
+    const root = rootRef.current;
+    const inside = root?.querySelector(`#${EFFECTS_PANEL_ID}`)?.contains(document.activeElement) ?? false;
+    if (inside) root?.querySelector<HTMLElement>('.vs-stagedock-effects')?.focus();
+    setEffects(false);
+  }, []);
+  const toggleEffects = useCallback(() => {
+    if (effects) return closeEffects();
+    setEffectsFocus(false);
+    setEffects(true);
+  }, [effects, closeEffects]);
+  const pressEffects = useCallback(() => {
+    if (effects) return closeEffects();
+    setEffectsFocus(true);
+    setEffects(true);
+  }, [effects, closeEffects]);
   const thumbnail = useThumbnail(live.key);
 
   // ✕ and ⌘⇧L leave at once; Esc leaves only held for LEAVE_HOLD_MS (liveKeys), with its progress shown while held.
@@ -99,7 +118,7 @@ export function Live({
     // A short Esc puts the effects panel away (held on, it still leaves).
     escape: () => {
       if (!effects) return false;
-      setEffects(false);
+      closeEffects();
       return true;
     },
   });
@@ -107,15 +126,15 @@ export function Live({
   useTauriEvent(output.onEscape, (says) => (says === 'up' ? escapes.escapeUp() : escapes.escapeDown()));
 
   return (
-    <div className="vs-live" data-windowed={live.inWindow ? '' : undefined} data-pinned={pinned ? '' : undefined}>
+    <div ref={rootRef} className="vs-live" data-windowed={live.inWindow ? '' : undefined} data-pinned={pinned ? '' : undefined}>
       <StageLayout
         pinned={pinned}
         inWindow={live.inWindow}
         leaving={leaving}
         ambient={thumbnail}
         head={<StageHead live={live} help={help} onHelp={() => setHelp(true)} onView={onView} onLeave={leaveLive} pinned={pinned} />}
-        dock={<StageDock live={live} effectsOpen={effects} onEffects={toggleEffects} />}
-        panel={effects ? <EffectsPanel live={live} onClose={() => setEffects(false)} /> : null}
+        dock={<StageDock live={live} effectsOpen={effects} onEffects={pressEffects} />}
+        panel={effects ? <EffectsPanel live={live} onClose={closeEffects} focusOnOpen={effectsFocus} /> : null}
       >
         {/* Laid over everything: the ? overlay. */}
         <HelpOverlay open={help} onClose={() => setHelp(false)} stage />

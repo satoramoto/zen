@@ -168,13 +168,17 @@ function Notes({ live, pinned }: { live: LiveState; pinned: boolean }) {
       <SkipNote className="vs-stagehead-skipped" />
       <Fps className="vs-stagehead-fps" />
       {silent && (
-        <Text role="caption" leading="normal" className="vs-stagehead-note" ariaRole="status" title="Nothing heard for a few seconds: is the music on? Pick what to listen to in the mixer">
+        <Text role="caption" leading="normal" className="vs-stagehead-note" ariaRole="status" data-note="" title="Nothing heard for a few seconds: is the music on? Pick what to listen to in the mixer">
           {SILENT_TEXT}
         </Text>
       )}
-      <NoticeBanner className="vs-stagehead-note vs-stagehead-notice" notice={live.error} onDismiss={live.dismiss} />
+      {live.error && (
+        <span className="vs-stagehead-noteslot" data-note="">
+          <NoticeBanner className="vs-stagehead-note vs-stagehead-notice" notice={live.error} onDismiss={live.dismiss} />
+        </span>
+      )}
       {live.hint && (
-        <Text role="caption" leading="normal" className="vs-stagehead-note" ariaRole="status">
+        <Text role="caption" leading="normal" className="vs-stagehead-note" ariaRole="status" data-note="">
           {live.hint}
         </Text>
       )}

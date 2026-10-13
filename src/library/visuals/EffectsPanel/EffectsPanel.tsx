@@ -1,4 +1,4 @@
-import type { KeyboardEvent } from 'react';
+import { useEffect, type KeyboardEvent } from 'react';
 import { ActionButton, ButtonFace } from '../../components/core/ActionButton/ActionButton';
 import type { Param } from '../../components/core/Param/param';
 import { Slider } from '../../components/core/Slider/Slider';
@@ -74,8 +74,16 @@ function Amount({ name, param, value, onChange, display, title }: { name: string
  *
  * **Tuning knobs** (EffectsPanel.css): `--vs-effects-panel-pad`, the pads' height (56px).
  */
-export function EffectsPanel({ live, onClose }: { live: LiveState; onClose(): void }) {
+export function EffectsPanel({ live, onClose, focusOnOpen = false }: { live: LiveState; onClose(): void; focusOnOpen?: boolean }) {
   const { state, set, send, notice, dismiss } = useFx();
+  // Opened by the Effects button: focus moves to its first pad (E leaves focus on the picture).
+  useEffect(() => {
+    if (!focusOnOpen) return;
+    const panel = document.getElementById(EFFECTS_PANEL_ID);
+    (panel?.querySelector<HTMLElement>('.vs-effects-panel-hold button') ?? panel?.querySelector<HTMLElement>('button'))?.focus();
+    // On mount only: a later prop change never moves focus.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const pct = Math.round(live.intensity * 100);
   return (
     <Surface as="aside" layer="raised" ambient="left" className="vs-effects-panel" id={EFFECTS_PANEL_ID} aria-label={EFFECTS_LABEL} onKeyDown={keepOwnKeys}>

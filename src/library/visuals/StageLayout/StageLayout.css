@@ -78,6 +78,19 @@
 .vs-stagelayout-reveal[data-pinned] {
   opacity: 1;
 }
+/* A note owed (the header marks it `[data-note]`: no sound, a failure, a hint): the header shows
+   with the overlay otherwise hidden, on the scrim's top tint; the controls stay faded. */
+.vs-stagelayout-reveal:has(.vs-stagelayout-head [data-note]) {
+  opacity: 1;
+}
+.vs-stagelayout-dock {
+  transition: opacity var(--vs-stagelayout-fade) ease;
+}
+@media (hover: hover) {
+  .vs-stagelayout:not(:hover) .vs-stagelayout-reveal:has(.vs-stagelayout-head [data-note]):not(:focus-within):not([data-pinned]):not(:has([aria-expanded='true'])) .vs-stagelayout-dock {
+    opacity: 0;
+  }
+}
 @media (hover: none) {
   .vs-stagelayout-reveal {
     opacity: 1;

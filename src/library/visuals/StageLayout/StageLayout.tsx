@@ -139,6 +139,12 @@ export function StageLayout({ pinned = false, warning = false, inWindow, leaving
         {/* The one overlay: the scrim, the header and the controls, fading together. */}
         <div className="vs-stagelayout-reveal" data-pinned={pinned ? '' : undefined}>
           <Surface radius="none" className="vs-stagelayout-scrim" aria-hidden="true" />
+          {/* The panel first in the tab order: opened by E with focus on the picture, Tab reaches it next. */}
+          {panel != null && panel !== false && (
+            <div className="vs-stagelayout-panel" inert={warning || undefined}>
+              {panel}
+            </div>
+          )}
           <Screen
             name="Stage"
             className="vs-stagelayout-screen"
@@ -157,11 +163,6 @@ export function StageLayout({ pinned = false, warning = false, inWindow, leaving
               ),
             }}
           />
-          {panel != null && panel !== false && (
-            <div className="vs-stagelayout-panel" inert={warning || undefined}>
-              {panel}
-            </div>
-          )}
         </div>
 
         {warning && centre != null && <div className="vs-stagelayout-centre">{centre}</div>}
