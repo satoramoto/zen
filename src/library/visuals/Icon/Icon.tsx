@@ -63,6 +63,8 @@ export const ICON_NAMES = [
   'intensity',
   // Home's transport: the deck moving on by itself, preset after preset.
   'loop',
+  'dice',
+  'mixer',
 ] as const;
 export type IconName = (typeof ICON_NAMES)[number];
 
@@ -254,6 +256,24 @@ const GLYPHS: Record<IconName, ReactNode> = {
   ),
   // A ring that comes round to its start: moving on by itself, preset after preset, with no end.
   loop: <path d={LOOP_RING + LOOP_HEAD} />,
+  // Three faders, their caps at different heights: the audio mixer.
+  mixer: (
+    <>
+      <path d="M4 2.75V13.25M8 2.75V13.25M12 2.75V13.25" />
+      <path strokeWidth="2.5" d="M2.75 10H5.25M6.75 5.5H9.25M10.75 8.5H13.25" />
+    </>
+  ),
+  // A die showing five: a random preset.
+  dice: (
+    <>
+      <rect x="2.75" y="2.75" width="10.5" height="10.5" rx="2.5" />
+      <circle {...solid} stroke="none" cx="5.6" cy="5.6" r="1" />
+      <circle {...solid} stroke="none" cx="10.4" cy="5.6" r="1" />
+      <circle {...solid} stroke="none" cx="8" cy="8" r="1" />
+      <circle {...solid} stroke="none" cx="5.6" cy="10.4" r="1" />
+      <circle {...solid} stroke="none" cx="10.4" cy="10.4" r="1" />
+    </>
+  ),
 };
 
 /** The stroke, in the 16-unit box's units, for an icon `size` px across: 1.5 px at 16, 1/32 px more or less per px. */

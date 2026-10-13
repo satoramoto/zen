@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Popover } from '../Popover/Popover';
+import { Icon } from '../Icon/Icon';
 import { Meter } from '../../components/music/Meter/Meter';
 import { Select } from '../../components/core/Select/Select';
 import { Text } from '../../primitives/Text';
@@ -285,7 +286,17 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
         <>
           {picker('main')}
           {notices('main')}
-          <Popover name="Audio mixer: main and microphone inputs" label={status.mic.enabled ? 'Mixer + mic' : 'Mixer'}>
+          <Popover
+            name="Audio mixer: main and microphone inputs"
+            title={status.mic.enabled ? 'Mixer (main and microphone)' : 'Mixer'}
+            // The faders glyph, and "+ mic" while the microphone is mixed in.
+            label={
+              <>
+                <Icon name="mixer" />
+                {status.mic.enabled && '+ mic'}
+              </>
+            }
+          >
             {/* The panel floats out of any toolbar the picker sits in: its pickers are fields again. */}
             <ControlContext.Provider value={CONTROL_FIELD}>
               <span className="vs-audio-lane">

@@ -166,7 +166,7 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
             <Icon name="next" />
           </Text>
           <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-random" aria-label="random preset" title={`Random preset${stepIn} (R)`} onClick={() => onStep(0)}>
-            R
+            <Icon name="dice" />
           </Text>
         </Group>
         <div className="vs-transport-mid">
