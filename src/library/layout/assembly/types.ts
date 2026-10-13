@@ -119,6 +119,26 @@ export interface ScreenSpec {
    * edge to edge, as an app bar does). Default none.
    */
   edge?: Length;
+  /**
+   * Lay the screen out in a room of this shape instead of the whole window (`{ ratio: 16 / 9 }`).
+   * The header, body and footer all live inside that room; what the window has left over is a
+   * band of the `ground` layer (letterbox), with no plate and nothing in it. Default: the window.
+   */
+  aspect?: Aspect;
+}
+
+/**
+ * How a screen fits a room of one shape into the window. `contain`: the largest room of that
+ * ratio inside the window, centred. (Room is left in the union for `cover`, `stretch`.)
+ */
+export type AspectFit = 'contain';
+
+/** A screen's shape: see `ScreenSpec.aspect`. */
+export interface Aspect {
+  /** Width ÷ height (`16 / 9`). */
+  ratio: number;
+  /** Default `contain`. */
+  fit?: AspectFit;
 }
 
 /** A box's four sides in px. */
@@ -170,6 +190,13 @@ export interface Placed {
 
 /** The solver's answer. */
 export interface Placement {
+  /**
+   * The room the screen is laid out in, in px relative to the window: the whole window, or with
+   * `aspect` the largest room of that ratio inside it, centred. Everything else is relative to it.
+   */
+  room: Rect;
+  /** The window's leftover strips outside the room (none, or two: left and right, or top and bottom). */
+  bands: Rect[];
   regions: Record<string, Placed>;
   /** Region ids in reading order: header, body rows, footer. */
   order: string[];

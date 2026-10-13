@@ -1,7 +1,8 @@
 /* The assembled Screen: every zone and region slot is placed by the solver (assemble.ts), which
    computes in px from the facets. The positions arrive as unitless numbers (--lib-at-x, -y, -w,
-   -h) and become lengths here; the body zooms by --lib-zoom only as the last resort. Paints
-   nothing. */
+   -h) and become lengths here; the body zooms by --lib-zoom only as the last resort. The zones
+   sit in the room (the whole box, or an aspect-locked room centred in it); the strips left over
+   are ground-layer Surfaces (the bands), the only paint, and it is the primitive's. */
 
 .lib-assembled {
   position: relative;
@@ -13,6 +14,8 @@
 }
 .lib-assembled[data-overflow] { overflow: auto; }
 
+.lib-assembled__room,
+.lib-assembled__band,
 .lib-assembled__zone,
 .lib-assembled__body,
 .lib-assembled__slot {

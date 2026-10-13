@@ -29,6 +29,13 @@ const footer: RegionSpec[] = [
  */
 const EDGE = { space: 2 } as const;
 
+/**
+ * Yahaha targets 16:9 (a stage monitor, a TV, a laptop in full screen): the screen is laid out
+ * in the largest 16:9 room inside the window, centred, and the rest is ground (letterbox). So
+ * one window shape is designed for, and a 16:10 laptop or an ultrawide adds bands, not layouts.
+ */
+const ASPECT = { ratio: 16 / 9, fit: 'contain' } as const;
+
 const hero: RegionSpec = { id: 'hero', priority: 'now', forms: DISPLAY_FORMS };
 const mixer: RegionSpec = { id: 'mixer', priority: 'controls', head: true, forms: FADER_BANK_FORMS };
 const knobs: RegionSpec = { id: 'knobs', priority: 'controls', head: true, forms: KNOB_BANK_FORMS };
@@ -49,6 +56,7 @@ export const STAGE_SPEC: ScreenSpec = {
   ],
   pairs: [['hero', 'mixer']],
   edge: EDGE,
+  aspect: ASPECT,
 };
 
 /** Split: the hero, and beside it the song form over the transport in one region (`Form.parts`). */
@@ -61,4 +69,5 @@ export const STAGE_SPLIT_SPEC: ScreenSpec = {
   ],
   pairs: [['hero', 'mixer']],
   edge: EDGE,
+  aspect: ASPECT,
 };

@@ -1,7 +1,7 @@
 // The solver: a screen spec, the room and the principles in; a placement out. Pure and
 // deterministic: no DOM, no randomness, the same answer for the same input (docs/assembly.md).
 import type { Density } from '../../contract';
-import type { Form, Nest, Placed, Placement, Principles, Rect, RegionSpec, Row, ScreenSpec } from './types';
+import type { Aspect, Form, Nest, Placed, Placement, Principles, Rect, RegionSpec, Row, ScreenSpec } from './types';
 import { resolveLength, resolveNeed } from './units';
 
 /** How far from a form's least toward its ideal the fit test aims, per density. */
@@ -408,8 +408,37 @@ class Solver {
 }
 
 /**
- * Assembles a screen into `room` (px) under `principles`.
+ * The room a screen is laid out in, inside a window of `win` px: the whole window, or with an
+ * `aspect` the largest room of that ratio that fits (`contain`), centred, its offset in whole px.
+ * The bands are what the window has left over, each side of the room.
+ */
+export function fitAspect(win: { w: number; h: number }, aspect?: Aspect): { room: Rect; bands: Rect[] } {
+  if (!aspect) return { room: { x: 0, y: 0, w: win.w, h: win.h }, bands: [] };
+  const { ratio, fit = 'contain' } = aspect;
+  if (!(ratio > 0) || !Number.isFinite(ratio)) throw new Error(`assembly: aspect ratio must be a positive number, not ${ratio}`);
+  if (fit !== 'contain') throw new Error(`assembly: aspect fit '${String(fit)}' is not supported`);
+  const w = Math.min(win.w, win.h * ratio);
+  const h = Math.min(win.h, win.w / ratio);
+  const x = Math.floor((win.w - w) / 2);
+  const y = Math.floor((win.h - h) / 2);
+  const bands: Rect[] = [];
+  // Thinner than a hair is float noise, not a band.
+  const keep = (r: Rect) => r.w > 1e-6 && r.h > 1e-6 && bands.push(r);
+  if (win.w - w > 1e-6) {
+    keep({ x: 0, y: 0, w: x, h: win.h });
+    keep({ x: x + w, y: 0, w: win.w - x - w, h: win.h });
+  } else if (win.h - h > 1e-6) {
+    keep({ x: 0, y: 0, w: win.w, h: y });
+    keep({ x: 0, y: y + h, w: win.w, h: win.h - y - h });
+  }
+  return { room: { x, y, w, h }, bands };
+}
+
+/**
+ * Assembles a screen into a window of `win` px under `principles`.
  *
+ * 0. The room: the whole window, or with `spec.aspect` the largest room of that ratio inside it,
+ *    centred (`fitAspect`). Everything below happens in the room; the rest of the window is bands.
  * 1. Every region starts at its first (richest) form. The header and footer are fixed: their first
  *    form at its ideal height, full width, and they never step down or zoom.
  * 2. While the body overflows its room, aiming each form between its least and its ideal by the
@@ -421,7 +450,9 @@ class Solver {
  * 5. The room is then split: least first, raised toward ideal by priority, spare to the growers
  *    by priority. Regions stretch across their row or stack.
  */
-export function assemble(spec: ScreenSpec, room: { w: number; h: number }, principles: Principles): Placement {
+export function assemble(spec: ScreenSpec, win: { w: number; h: number }, principles: Principles): Placement {
+  const fitted = fitAspect(win, spec.aspect);
+  const room = { w: fitted.room.w, h: fitted.room.h };
   const s = new Solver(spec, principles);
   const p = principles;
   const gap = p.plate.gap;
@@ -518,6 +549,8 @@ export function assemble(spec: ScreenSpec, room: { w: number; h: number }, princ
   });
 
   return {
+    room: fitted.room,
+    bands: fitted.bands,
     regions: placed,
     order: [...(spec.header ?? []).map((r) => r.id), ...s.regions.map((r) => r.spec.id), ...(spec.footer ?? []).map((r) => r.id)],
     zones: {
