@@ -182,19 +182,23 @@
   color: var(--text-3);
 }
 
-/* Something that went wrong (a preset that wouldn't open), over the grid: a tinted note, no rule.
+/* Something that went wrong (a preset that wouldn't open): a small toast in the window's
+   bottom-right corner, on the float layer (Surface paints it), over everything, never in the grid.
    Views' NoticeBanner sits in a caption-size Text of Home's own that draws no box (`display:
-   contents`), so the banner inherits the size and still lays out in the column. */
+   contents`), so the banner inherits the size. */
+.vs-home-toast {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 10;
+  max-width: calc(var(--space-6) * 10);
+}
 .vs-home-notice-type {
   display: contents;
 }
-.vs-home-grid-pane > .vs-home-notice-type > .vs-home-notice {
-  flex: none;
+.vs-home-toast .vs-home-notice {
   gap: var(--space-1);
-  margin: var(--space-2) var(--vs-home-pad) 0;
   padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
-  background: color-mix(in oklab, var(--danger) 12%, var(--surface-0));
-  border-radius: var(--radius-control);
 }
 .vs-home-note {
   --text-size: var(--vs-text-body);

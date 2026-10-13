@@ -6,6 +6,7 @@ import { Text } from '../../primitives/Text';
 import * as api from '../model/api';
 import type { Entry, LibraryChange, LibraryData, LibraryRow } from '../model/api';
 import { Library } from '../Library/Library';
+import { Surface } from '../../primitives/Surface';
 import { browsable, browseOrder, facet, stepIn, prepare, type Prepared } from '../model/librarySearch';
 import { useLibrary, rereadOn, stepDeck } from '../model/library';
 import { onChanged } from '../model/pack';
@@ -156,7 +157,9 @@ export function Home({
   const { notice: banner, set: setNotice, fail, dismiss } = useNotice();
   const [lists, setLists] = useState<Lists | null>(null);
   const [pane, setPane] = useState<Pane | null>(startOnLibrary ? { kind: 'library' } : null);
-  const audioFailed = useMemo(() => fail("Couldn't read the audio input."), [fail]);
+  // The audio input's failure shows on the input itself, not as a toast.
+  const { notice: audioTrouble, fail: audioFail } = useNotice();
+  const audioFailed = useMemo(() => audioFail("Couldn't read the audio input."), [audioFail]);
 
   // How long the preset playing has played: counted from when the app last said what plays (D9), or a tile was played.
   const [since, setSince] = useState(() => Date.now());
@@ -760,18 +763,25 @@ export function Home({
           </Header>
         }
         // Round 2 (decision 71): the hero is the picture alone; the bar names what plays.
-        hero={<Hero picture={<Preview className={HERO_PIC} />} />}
-        bar={
-          <TransportBar
-            now={current ? { name: playingShown?.title ?? current.name, from } : null}
-            playing={!deck.hold}
-            // It moves on by itself on a timer, or on Link's bars.
-            moves={movesByItself(deck)}
-            onPlayPause={hold}
-            onStep={step}
-            stepIn={stepWords}
-            position={position}
-            onAudioError={audioFailed}
+        // The transport floats over the preview's foot, shown on hover or focus (Hero's `controls`); its keys (H, ← →, R) work whether it shows or not.
+        hero={
+          <Hero
+            picture={<Preview className={HERO_PIC} />}
+            controls={
+              <TransportBar
+                layout="overlay"
+                now={current ? { name: playingShown?.title ?? current.name, from } : null}
+                playing={!deck.hold}
+                // It moves on by itself on a timer, or on Link's bars.
+                moves={movesByItself(deck)}
+                onPlayPause={hold}
+                onStep={step}
+                stepIn={stepWords}
+                position={position}
+                onAudioError={audioFailed}
+                audioTrouble={audioTrouble}
+              />
+            }
           />
         }
         inspector={
@@ -804,9 +814,6 @@ export function Home({
         // The grid scrolls itself under the pinned hero, on the column's padding (`--vs-home-pad`).
         pane={
           <div className="vs-home-grid-pane">
-            <Text as="div" size="caption" leading="normal" className="vs-home-notice-type">
-              <NoticeBanner className="vs-home-notice" notice={banner} onDismiss={dismiss} />
-            </Text>
             <SettingsNotes />
             {shown && shown.kind !== 'list' ? (
               <>
@@ -873,6 +880,14 @@ export function Home({
         }
       />
       <HelpOverlay open={help} onClose={() => setHelp(false)} list={HOME_HELP} />
+      {/* Any other notice: a small toast in the window's bottom-right corner, over everything, never in the grid. */}
+      {banner && (
+        <Surface layer="float" radius="control" className="vs-home-toast">
+          <Text as="div" size="caption" leading="normal" className="vs-home-notice-type">
+            <NoticeBanner className="vs-home-notice" notice={banner} onDismiss={dismiss} />
+          </Text>
+        </Surface>
+      )}
     </>
   );
 }

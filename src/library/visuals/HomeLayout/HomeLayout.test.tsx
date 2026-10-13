@@ -4,7 +4,7 @@ import { assemble, principlesFor, resolveLength, type Placement } from '../../la
 import { packs } from '../../themes/packs';
 import { scales } from '../../themes/scales';
 import { modesFor } from '../model/home-model';
-import { HomeLayout, homeDocks, homeSpec, TITLEBAR } from './HomeLayout';
+import { HEAD_GAP, HomeLayout, homeDocks, homeSpec, TITLEBAR } from './HomeLayout';
 
 // Home assembled under the visuals pack's own principles (roomy scale, frost materials): which
 // regions dock at the original's sizes, from their needs alone (docs/assembly.md).
@@ -42,7 +42,9 @@ describe('Home assembles itself at the original sizes', () => {
 
   it('1440 × 900: both panels docked, everything at its richest', () => {
     const p = at(1440, 900);
-    expect(forms(p)).toEqual({ sidebar: 'docked', header: 'full', hero: 'full', pane: 'wide', bar: 'bar', inspector: 'docked' });
+    expect(forms(p)).toEqual({ sidebar: 'docked', header: 'full', hero: 'full', pane: 'wide', inspector: 'docked' });
+    // No bar: the grid runs to the window's foot.
+    expect(p.regions.pane.rect.y + p.regions.pane.rect.h).toBeCloseTo(900);
     // The sidebar's panel is 240px with its 8px inset; the inspector's 288 with its own.
     expect(p.regions.sidebar.rect.w).toBe(248);
     expect(p.regions.inspector.rect.w).toBe(296);
@@ -57,9 +59,9 @@ describe('Home assembles itself at the original sizes', () => {
     expect(p.regions.inspector.rect.w).toBe(0);
   });
 
-  it('900 × 700: the sidebar still docks (from 900), the inspector laid over, the hero shorter', () => {
+  it('900 × 700: the sidebar still docks (from 900), the inspector laid over; with no bar and a tight header gap the hero keeps its full form', () => {
     const p = at(900, 700);
-    expect(forms(p)).toMatchObject({ sidebar: 'docked', inspector: 'overlaid', header: 'full', hero: 'compact', pane: 'small' });
+    expect(forms(p)).toMatchObject({ sidebar: 'docked', inspector: 'overlaid', header: 'full', hero: 'full', pane: 'small' });
   });
 
   it('560 × 800: both panels laid over, the header narrow', () => {
@@ -112,17 +114,18 @@ describe('Home: the title beside the window buttons', () => {
 });
 
 describe('HomeLayout on screen', () => {
-  it('draws the title in the sidebar’s band, which still drags the window, and not in the header', () => {
-    const { container } = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} sidebarMode="docked" />);
-    const band = container.querySelector('.vs-lay-side-band');
-    expect(band).toHaveAttribute('data-tauri-drag-region');
-    expect(band?.querySelector('.vs-lay-title')).toHaveTextContent('visual[flow]');
-    expect(container.querySelector('.vs-lay-head .vs-lay-title')).toBeNull();
+  it('leaves the title to the native title bar: the band still drags the window, and neither it nor the header draws one', () => {
+    for (const sidebarMode of ['docked', 'hidden'] as const) {
+      const { container, unmount } = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} sidebarMode={sidebarMode} />);
+      if (sidebarMode === 'docked') expect(container.querySelector('.vs-lay-side-band')).toHaveAttribute('data-tauri-drag-region');
+      expect(container.querySelector('.vs-lay-title')).toBeNull();
+      unmount();
+    }
   });
 
   it('places each part in its slot, in the form the solver chose', () => {
     const { container } = render(
-      <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} bar={<p>bar</p>} inspector={<p>insp</p>} sidebarMode="docked" inspectorMode="overlay">
+      <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} inspector={<p>insp</p>} sidebarMode="docked" inspectorMode="overlay">
         <p>tiles</p>
       </HomeLayout>,
     );
@@ -139,7 +142,7 @@ describe('HomeLayout on screen', () => {
 
   it('the grid scrolls under the pinned hero: its slot reaches up to the hero, above it', () => {
     const { container } = render(
-      <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} bar={<p>bar</p>} pane={<p>grid</p>} />,
+      <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} pane={<p>grid</p>} />,
     );
     const pane = container.querySelector<HTMLElement>("[data-region='pane']")!;
     const hero = container.querySelector<HTMLElement>("[data-region='hero']")!;
@@ -150,39 +153,25 @@ describe('HomeLayout on screen', () => {
     expect(hero.compareDocumentPosition(pane) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it('the grid also scrolls over the pinned bar: its slot reaches down to the bar, beneath it', () => {
-    const { container } = render(
-      <HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} bar={<p>bar</p>} pane={<p>grid</p>} />,
-    );
-    const pane = container.querySelector<HTMLElement>("[data-region='pane']")!;
-    const bar = container.querySelector<HTMLElement>("[data-region='bar']")!;
-    const end = (el: HTMLElement) => Number(el.style.getPropertyValue('--lib-at-y')) + Number(el.style.getPropertyValue('--lib-at-h'));
-    expect(pane).toHaveAttribute('data-over', 'bar');
-    expect(end(pane)).toBeCloseTo(end(bar));
-    expect(Number(pane.style.getPropertyValue('--lib-over'))).toBeGreaterThan(Number(bar.style.getPropertyValue('--lib-at-h')));
-    // The bar comes after the pane in the DOM, so it is drawn over it and keeps its presses.
-    expect(pane.compareDocumentPosition(bar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-  });
-
-  it('with no bar the grid reaches down nowhere; with no hero, still down behind the bar', () => {
-    const noBar = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} pane={<p>grid</p>} />);
-    expect(noBar.container.querySelector("[data-region='pane']")).not.toHaveAttribute('data-over');
-    noBar.unmount();
-    const noHero = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} bar={<p>bar</p>} pane={<p>grid</p>} />);
-    const pane = noHero.container.querySelector("[data-region='pane']");
-    expect(pane).toHaveAttribute('data-over', 'bar');
-    expect(pane).not.toHaveAttribute('data-under');
+  it('no bar region: the grid reaches down behind nothing; with no hero, up behind nothing either', () => {
+    const { container, unmount } = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} hero={<p>hero</p>} pane={<p>grid</p>} />);
+    expect(container.querySelector("[data-region='bar']")).toBeNull();
+    expect(container.querySelector("[data-region='pane']")).not.toHaveAttribute('data-over');
+    unmount();
+    const noHero = render(<HomeLayout sidebar={<p>side</p>} header={<p>head</p>} pane={<p>grid</p>} />);
+    expect(noHero.container.querySelector("[data-region='pane']")).not.toHaveAttribute('data-under');
   });
 });
 
 describe('the column and the sidebar start their content on one line', () => {
-  // HomeLayout.css's --vs-lay-content-top: the title bar and the screen's gap. The sidebar's rows
-  // start there (the panel's padding); the hero must too, under every pack and scale, docked or not.
-  it('the hero sits at TITLEBAR + the plate gap from the window top, at every size, pack and scale', () => {
+  // HomeLayout.css's --vs-lay-content-top: the title bar and the tight gap under it (HEAD_GAP). The
+  // sidebar's rows start there (the panel's padding); the hero must too, under every pack and scale, docked or not.
+  it('the hero sits at TITLEBAR + HEAD_GAP from the window top, at every size, pack and scale', () => {
     for (const pk of packs)
       for (const scale of scales) {
         const p = principlesFor({ ...pk.facets, scale }, pk.principles);
-        const line = resolveLength(TITLEBAR, p) + p.plate.gap;
+        const line = resolveLength(TITLEBAR, p) + resolveLength(HEAD_GAP, p);
+        expect(resolveLength(HEAD_GAP, p)).toBeLessThan(p.plate.gap + 1);
         for (const room of [{ w: 1440, h: 900 }, { w: 1100, h: 800 }, { w: 700, h: 800 }])
           for (const sidebar of ['either', 'overlaid'] as const) {
             const placed = assemble(homeSpec({ sidebar }), room, p);

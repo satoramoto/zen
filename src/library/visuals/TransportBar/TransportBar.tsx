@@ -12,8 +12,8 @@ import './TransportBar.css';
 export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 10 }, h: { space: [6, 4] } }, ideal: { w: { control: 10 }, h: { space: [6, 4] } }, grow: { w: true } }];
 
 /**
- * **Job.** The bar along the bottom of the home's main column (HomeLayout's `bar` slot): the
- * transport, the hero above being the picture alone. ◀ the auto-change ring ▶ R on the left; in
+ * **Job.** The transport: floating over the foot of the home's preview (`layout="overlay"`, in
+ * Hero's `controls`, shown on hover or focus), or docked along live mode's foot (`bar`). ◀ the auto-change ring ▶ R on the left; in
  * the middle the preset playing and where it plays from (`now`); the audio input on the right, and
  * before it a warning only while the picture draws slowly (`FrameRate slowOnly`).
  *
@@ -56,10 +56,18 @@ export interface TransportBarProps {
    */
   position: { elapsed: number; length?: number | null } | null;
   onAudioError(e: unknown): void;
+  /** The audio input's last failure, shown on the input as a caution glyph (its message in the title); null or left out: none. */
+  audioTrouble?: { message: string; detail: string | null } | null;
   /** The preset playing: its name, and where it plays from as `playsFrom` says it ("from Warm-up · 3 of 10"); null or left out: nothing playing. One line, the name brighter, ellipsised before the controls or the audio input give way. */
   now?: { name: string; from?: string } | null;
   /** Whether the deck moves on by itself when not held (a playlist's timing, or Link's bars): with no length, the ring's tooltip says it moves on by itself rather than that it stays. Left out: it stays. */
   moves?: boolean;
+  /**
+   * `bar` (default): the 48px bar along a column's foot (live mode's dock). `overlay`: floating
+   * over the preview's foot (Home, Hero's `controls`): no height or side padding of its own, and
+   * in a narrow picture the preset's name takes its own line above the keys and the audio input.
+   */
+  layout?: 'bar' | 'overlay';
 }
 
 /** Seconds as m:ss. */
@@ -135,12 +143,12 @@ function LoopRing({ fill, timed, size }: { fill: number; timed: boolean; size: n
 }
 
 /** The bar. */
-export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, onAudioError, now, moves = false }: TransportBarProps) {
+export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, onAudioError, audioTrouble = null, now, moves = false, layout = 'bar' }: TransportBarProps) {
   const timed = playing && position !== null && position.length !== null && position.length !== undefined;
   const fill = loopFill(playing, position);
   const state = position === null ? 'off' : !playing ? 'held' : timed ? 'timed' : 'endless';
   return (
-    <div className="vs-transport" role="region" aria-label="transport">
+    <div className="vs-transport" role="region" aria-label="transport" data-layout={layout}>
       {/* A toolbar: every control in it takes its quiet look (the source picker is text and a caret, not a field). */}
       <Group name="transport controls" label={false} toolbar className="vs-transport-bar">
         <Group name="keys" label={false} className="vs-transport-keys">
@@ -185,7 +193,7 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
         </div>
         <Text as="div" className="vs-transport-right">
           <FrameRate slowOnly />
-          <SourcePicker onError={onAudioError} channels="none" width={180} />
+          <SourcePicker onError={onAudioError} channels="none" width={180} trouble={audioTrouble} />
         </Text>
       </Group>
     </div>

@@ -10,13 +10,15 @@ import { say } from '../model/words';
 import type { Docks, InspectorMode, SidebarMode } from '../model/home-model';
 import { HEADER_FORMS, Mark } from '../Views/Views';
 import { HERO_FORMS, HERO_PIC } from '../Hero/Hero';
-import { TRANSPORT_FORMS } from '../TransportBar/TransportBar';
 import './HomeLayout.css';
 
 /* ---------- the home's parts, declared (docs/assembly.md) ---------- */
 
 /** The title bar's 52px: the header row's height (`--vs-lay-titlebar`). */
 export const TITLEBAR: Units = { space: [6, 4, 1] };
+
+/** The gap under the header row, to the preview (and the sidebar's first row): `--space-2`, 8px (`--vs-lay-head-gap`). */
+export const HEAD_GAP: Units = { space: 2 };
 
 /** The side panels' forms. Docked: the panel (a `panel` region: the solver adds its 8px inset from the window's edges; the seam beside it is the screen's gap). Overlaid: nothing in the row; laid over the column when open. */
 export type PanelForm = 'docked' | 'overlaid';
@@ -75,13 +77,13 @@ export type PanelChoice = PanelForm | 'either';
 
 /**
  * Home's screen: what it holds and what matters, never a grid. One row: the sidebar, the main
- * column (the header, the hero, the pane, the bar, top to bottom) and the inspector. What is
- * playing (the hero) is `now`; the header and the bar are `controls`; the panels `context`, so
+ * column (the header, the hero, the pane, top to bottom; the transport floats in the hero) and the
+ * inspector. What is playing (the hero) is `now`; the header is `controls`; the panels `context`, so
  * they go before the column narrows past the hero's ideal (that is where the original's 900 and
  * 1200 come from); the pane's tile size is `chrome`, the first to give. Every region is plateless:
  * the frost paints no plates, and the screen's 32px gap is the column's side room.
  */
-export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true, bar = true }: { sidebar?: PanelChoice; inspector?: PanelChoice; hero?: boolean; bar?: boolean } = {}): ScreenSpec {
+export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true }: { sidebar?: PanelChoice; inspector?: PanelChoice; hero?: boolean } = {}): ScreenSpec {
   const pick = (forms: Forms<PanelForm>, c: PanelChoice): Forms => (c === 'either' ? forms : [forms.find((f) => f.id === c)!]);
   const region = (id: string, forms: Forms, priority: RegionSpec['priority']): RegionSpec => ({ id, forms, priority, plate: false });
   // The floating panels (the sidebar, the inspector) sit the panel inset in from the window's edges they meet: the solver's, one rule for both.
@@ -94,12 +96,11 @@ export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true
           id: 'column',
           rows: [
             // Pinned undocked (put away or laid over), the header holds the window buttons' room and the title; free to choose, the docking answer leaves them out.
-            [region('header', sidebar === 'overlaid' ? HEAD_TITLED_FORMS : HEAD_FORMS, 'controls')],
+            // A tight step (`HEAD_GAP`) under the title bar, not the plate's gap: the preview starts close under the header.
+            [{ ...region('header', sidebar === 'overlaid' ? HEAD_TITLED_FORMS : HEAD_FORMS, 'controls'), gapAfter: HEAD_GAP }],
             ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
-            // The grid scrolls up behind the pinned preview and down behind the transport: its slot reaches up to the hero's top and down to the bar's bottom.
-            [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}), ...(bar ? { over: 'bar' } : {}) }],
-            // The bar floats free (no panel) on clear glass: the grid goes on under it, diffused.
-            ...(bar ? [[{ ...region('bar', TRANSPORT_FORMS, 'controls'), glass: true }]] : []),
+            // The grid scrolls up behind the pinned preview (its slot reaches up to the hero's top) and runs to the window's foot; the transport floats in the preview (Hero's `controls`).
+            [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}) }],
           ],
         },
         panel('inspector', pick(INSPECTOR_FORMS, inspector), 'context'),
@@ -172,9 +173,8 @@ export function useLayoutPrinciples(): Principles {
  * hero (the owner's call: a wide window shows more rows passing under the preview): its slot
  * reaches up to the hero's top (`under: 'hero'`, docs/assembly.md), drawn above the hero, its
  * content padded by the hero's room (`--lib-under`), so at rest it starts below the preview.
- * Likewise at the foot: the slot reaches down behind the transport bar (`over: 'bar'`,
- * `--lib-over`), its content padded by the bar's room so the last row comes to rest above it.
- * The clip and the fade at both ends are the assembled screen's (Assembly.css), not Home's: a
+ * At the foot the pane runs to the window's bottom (no bar: the transport floats over the
+ * preview's foot, Hero's `controls`), its content's own padding clearing the edge. The clip and the fade at both ends are the assembled screen's (Assembly.css), not Home's: a
  * tile never shows beside the preview, paints over the native picture or takes a press there, and
  * dissolves across a soft band as it flows under the preview or the bar. Home's one refinement is
  * the top edge: the preview's picture is shorter than its slot, so `useHoleClip` narrows the edge
@@ -207,8 +207,8 @@ export function useLayoutPrinciples(): Principles {
  *   so the sidebar's first row and the column's hero line up.
  * - `--vs-lay-under`: the room the pinned hero takes at the top of the column that scrolls
  *   behind it (the slot's `--lib-under`, in px); 0 with no hero.
- * - `--vs-lay-over`: the room the pinned bar takes at the column's foot (the slot's `--lib-over`,
- *   in px: the gap and the bar); 0 with no bar.
+ * - `--vs-lay-head-gap` (8px, `HEAD_GAP`): the gap under the header row, the header region's
+ *   `gapAfter`; part of the content line.
  * The docked panels' widths and the title bar's height are also declared needs
  * (`SIDEBAR_FORMS`, `INSPECTOR_FORMS`, `TITLEBAR`, `LIGHTS_ROOM`, `TITLE_W`), which the solver places by.
  * Also `--lay-tile` (200px) and `--lay-tile-gap` (`--space-4`), the stories' grid.
@@ -224,8 +224,6 @@ export interface HomeLayoutProps {
   hero?: ReactNode;
   /** What scrolls under the hero (the grid, or a story's tiles), unless `pane` is given. */
   children?: ReactNode;
-  /** The bar along the bottom of the main column: the transport. */
-  bar?: ReactNode;
   /** Draw a stand-in for the native window buttons and round the window's corners (stories: the real ones are macOS's). */
   lights?: boolean;
   /** The inspector (`Inspector`), in an inset panel down the right mirroring the sidebar, a named `aside`. None: closed, whatever `inspectorMode` says. */
@@ -303,28 +301,13 @@ export function SidebarPanel({
   return (
     <Surface as="nav" layer="raised" ambient="left" className="vs-lay-panel vs-lay-side" id={id} aria-label={label} ref={panelRef} tabIndex={-1} data-lights={lights ? '' : undefined}>
       {lights && <Lights />}
+      {/* The app's title is the native title bar's (macOS draws it); the band keeps the window buttons' room and the action. */}
       <div className="vs-lay-side-band" data-tauri-drag-region>
-        <WindowTitle />
         {titleAction && <span className="vs-lay-title-action">{titleAction}</span>}
       </div>
       <div className="vs-lay-side-body">{children}</div>
     </Surface>
   );
-}
-
-/** The app's title beside the window buttons: the mark, taking no presses, so a drag on it moves the window. */
-function WindowTitle() {
-  return (
-    <span className="vs-lay-title">
-      <Mark />
-    </span>
-  );
-}
-
-/** The title in the header row (no sidebar docked), while the header's form has room for it. */
-function HeadTitle() {
-  if (useForm(HEAD_TITLED_FORMS) !== 'titled') return null;
-  return <WindowTitle />;
 }
 
 /** The native window buttons' stand-in (stories only; Live's stories lay it over the Stage). */
@@ -455,7 +438,6 @@ export function HomeLayout({
   header,
   hero,
   children,
-  bar,
   lights = false,
   inspector,
   inspectorLabel,
@@ -483,8 +465,7 @@ export function HomeLayout({
   const sideForm: PanelForm = sidebarMode === 'docked' ? 'docked' : 'overlaid';
   const inspForm: PanelForm = inspMode === 'docked' ? 'docked' : 'overlaid';
   const hasHero = !!hero;
-  const hasBar = !!bar;
-  const spec = useMemo(() => homeSpec({ sidebar: sideForm, inspector: inspForm, hero: hasHero, bar: hasBar }), [sideForm, inspForm, hasHero, hasBar]);
+  const spec = useMemo(() => homeSpec({ sidebar: sideForm, inspector: inspForm, hero: hasHero }), [sideForm, inspForm, hasHero]);
   const cell = (mode: 'docked' | 'overlay', which: 'side' | 'insp') => `vs-lay-cell vs-lay-${which}-cell vs-lay-cell--${mode}${mode === 'overlay' ? ' lib-opaque' : ''}`;
 
   return (
@@ -513,7 +494,6 @@ export function HomeLayout({
             ),
           header: (
             <div className="vs-lay-head" data-tauri-drag-region>
-              {sidebarMode !== 'docked' && <HeadTitle />}
               {header}
             </div>
           ),
@@ -527,8 +507,6 @@ export function HomeLayout({
               {pane ?? children}
             </main>
           ),
-          // No panel: the controls float over the grid, which fades out beneath them.
-          bar: <div className="vs-lay-bar">{bar}</div>,
           inspector: inspMode ? (
             <Region name="inspector" className={cell(inspMode, 'insp')}>
               <InspectorPanel label={inspectorLabel} id={INSPECTOR_ID} panelRef={insp}>

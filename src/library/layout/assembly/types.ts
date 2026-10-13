@@ -119,6 +119,14 @@ export interface RegionSpec {
    * the theme it is the fade alone.
    */
   glass?: boolean;
+  /**
+   * The gap under this region's row in its stack of rows (a column, the body, the header zone), in
+   * place of the plate's gap: a tight step under a title bar (`{ space: 2 }`). A row's gap is the
+   * largest its regions ask (a region that asks nothing asks the plate's gap), so one tight region
+   * beside an ordinary one keeps the ordinary gap. Across a row the plate's gap stays. Default: the
+   * plate's gap.
+   */
+  gapAfter?: Length;
 }
 
 /** A stack of rows inside a row's slot (a column of regions next to another region). */

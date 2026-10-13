@@ -541,3 +541,27 @@ describe('assemble: a floating panel on the room edge', () => {
     expect(root.querySelector('[data-region="main"]')).not.toHaveAttribute('data-panel');
   });
 });
+
+describe('assemble: gapAfter', () => {
+  const fixed = (id: string, h: number, extra: Partial<RegionSpec> = {}): RegionSpec => ({ id, plate: false, forms: [{ id: 'f', min: { w: { unit: 10 }, h: { unit: h } }, ideal: { w: { unit: 10 }, h: { unit: h } }, grow: { w: true } }], ...extra });
+  const grower = (id: string): RegionSpec => ({ id, plate: false, forms: [{ id: 'f', min: { w: { unit: 10 }, h: { unit: 10 } }, ideal: { w: { unit: 10 }, h: { unit: 10 } }, grow: { w: true, h: true } }] });
+  const spec = (gapAfter?: RegionSpec['gapAfter']): ScreenSpec => ({ rows: [[{ id: 'col', rows: [[fixed('head', 13, gapAfter === undefined ? {} : { gapAfter })], [fixed('hero', 50)], [grower('pane')]] }]] });
+
+  it('replaces the plate gap under its row, and the rows below move up with it (measure, split and place agree)', () => {
+    const plain = assemble(spec(), { w: 400, h: 600 }, P);
+    const tight = assemble(spec({ space: 1 }), { w: 400, h: 600 }, P);
+    expect(plain.regions.hero.rect.y).toBe(52 + 8);
+    expect(tight.regions.hero.rect.y).toBe(52 + 4);
+    // The room it saves goes to the grower; the gap under the hero stays the plate's.
+    expect(tight.regions.pane.rect.y).toBe(tight.regions.hero.rect.y + 200 + 8);
+    expect(tight.regions.pane.rect.y + tight.regions.pane.rect.h).toBeCloseTo(600);
+    expect(tight.regions.pane.rect.h - plain.regions.pane.rect.h).toBeCloseTo(4);
+  });
+
+  it('a row keeps the largest gap its regions ask', () => {
+    const s: ScreenSpec = { rows: [[fixed('a', 10, { gapAfter: 0 }), fixed('b', 10)], [grower('c')]] };
+    expect(assemble(s, { w: 400, h: 300 }, P).regions.c.rect.y).toBe(40 + 8);
+    const both: ScreenSpec = { rows: [[fixed('a', 10, { gapAfter: 0 }), fixed('b', 10, { gapAfter: 0 })], [grower('c')]] };
+    expect(assemble(both, { w: 400, h: 300 }, P).regions.c.rect.y).toBe(40);
+  });
+});

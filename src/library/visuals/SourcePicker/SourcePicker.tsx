@@ -123,7 +123,7 @@ let commands: Promise<unknown> = Promise.resolve();
  * **Tuning knobs**
  * - `--vs-audio-note-width`: maximum notice width beside the picker.
  */
-export function SourcePicker({ onError, channels: where = 'advanced', width = 180 }: { onError(error: unknown): void; channels?: 'advanced' | 'shown' | 'none'; width?: number }) {
+export function SourcePicker({ onError, channels: where = 'advanced', width = 180, trouble = null }: { onError(error: unknown): void; channels?: 'advanced' | 'shown' | 'none'; width?: number; trouble?: { message: string; detail: string | null } | null }) {
   const [sources, setSources] = useState<api.Source[]>([]);
   const [status, setStatus] = useState<AudioStatus>({ main: OFF, mic: OFF });
   const [problem, setProblem] = useState<string | null>(null);
@@ -312,6 +312,17 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
       {pending && (
         <span className="vs-audio-note" role="status">
           Connecting {pending === 'main' ? 'main source' : 'microphone'}…
+        </span>
+      )}
+      {trouble && (
+        // The app couldn't read this input: a caution glyph on the input, the whole message in its title.
+        <span
+          className="vs-warning vs-audio-trouble"
+          role="alert"
+          aria-label={trouble.message}
+          title={trouble.detail ? `${trouble.message} ${trouble.detail}` : trouble.message}
+        >
+          ⚠
         </span>
       )}
       {problem && (

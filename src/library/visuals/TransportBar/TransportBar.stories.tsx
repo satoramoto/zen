@@ -5,6 +5,7 @@ import { withLibraryTheme } from '../../storybook';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import type { SidebarMode } from '../model/home-model';
 import { HomeLayout } from '../HomeLayout/HomeLayout';
+import { Hero } from '../Hero/Hero';
 import { TransportBar, type TransportBarProps } from './TransportBar';
 
 /** The window's width a story draws the bar in (the shell's sidebar takes its share), 1440 by default. */
@@ -14,12 +15,27 @@ interface Frame {
   sidebar?: SidebarMode;
 }
 
-/** The bar in the shell's `bar` slot, in a window of the story's width. */
-const inWindow: Decorator = (Story, { parameters }) => {
+/** The docked sidebar's share of the window (its 240px panel and 8px inset). */
+const SIDE = 248;
+
+/**
+ * The transport over the preview's foot (Hero's `controls`, as on the home), in the shell's hero
+ * slot, in a window of the story's width; `layout` is `overlay` unless a story says otherwise.
+ * Touch has no hover, so the stories' canvas shows the controls only under the pointer: a story
+ * reads them, never their opacity.
+ */
+const inWindow: Decorator = (Story, { parameters, args }) => {
   const frame = (parameters.frame as Frame | undefined) ?? {};
+  if (args.layout === 'bar')
+    // Live mode's docked bar: the column's width, the bar's own height.
+    return (
+      <div style={{ width: (frame.width ?? 1440) - (frame.sidebar === 'hidden' ? 0 : SIDE) }}>
+        <Story />
+      </div>
+    );
   return (
-    <div style={{ width: frame.width ?? 1440, height: 240 }}>
-      <HomeLayout sidebar={null} sidebarMode={frame.sidebar} header={null} bar={<Story />} />
+    <div style={{ width: frame.width ?? 1440, height: 640 }}>
+      <HomeLayout sidebar={null} sidebarMode={frame.sidebar} header={null} hero={<Hero picture={null} controls={<Story />} />} />
     </div>
   );
 };
@@ -62,7 +78,7 @@ function Ticking(props: TransportBarProps): ReactNode {
   );
 }
 
-/** Home's bottom bar: the transport and the preset playing (the hero above is the picture alone). */
+/** The transport and the preset playing: docked along live mode's foot, or floating over Home's preview (`Overlay`). */
 const meta = {
   title: 'open[flow]/visuals/Layout/Transport bar',
   component: TransportBar,
@@ -79,6 +95,8 @@ const meta = {
     onAudioError: fn(),
     // As Home has it with a playlist moving on by itself.
     moves: true,
+    // The bar's own layout (live mode's dock); `Overlay` shows it floating over the preview, as Home has it.
+    layout: 'bar',
   },
   parameters: { scope: 'bare', layout: 'fullscreen' },
 } satisfies Meta<typeof TransportBar>;
@@ -293,5 +311,16 @@ export const At1600: Story = {
   args: { now: { name: 'Flexi - mindblob mix', from: 'from Warm-up · 3 of 10' } },
   play: async ({ canvasElement }) => {
     await middleFits(canvasElement);
+  },
+};
+
+/** As Home has it: floating over the preview's foot on a scrim, shown while the preview is hovered or focus is inside; Tab reaches the keys while they are hidden, and focus shows them. */
+export const Overlay: Story = {
+  args: { layout: 'overlay', now: { name: 'Flexi - mindblob mix', from: 'from Warm-up · 3 of 10' } },
+  play: async ({ canvas, canvasElement }) => {
+    const controls = canvasElement.querySelector('.vs-hero-stage > .vs-hero-controls') as HTMLElement;
+    await expect(controls.querySelector('.vs-transport[data-layout="overlay"]')).not.toBeNull();
+    canvas.getByRole('button', { name: 'previous preset' }).focus();
+    await waitFor(() => expect(getComputedStyle(controls).opacity).toBe('1'));
   },
 };

@@ -194,12 +194,33 @@ class Solver {
     return r;
   }
 
+  /** The gap a region asks under its row (`RegionSpec.gapAfter`), in px: the plate's gap unless it says otherwise. */
+  gapAfter(s: RegionSpec): number {
+    return s.gapAfter === undefined ? this.p.plate.gap : resolveLength(s.gapAfter, this.p);
+  }
+
+  /**
+   * The gaps between a stack's kids, in px, one fewer than its kids. Down a column, the gap under
+   * each row is the largest its regions ask (`gapAfter`; a nest in it asks the plate's gap); across
+   * a row, the plate's gap.
+   */
+  gaps(n: StackNode): number[] {
+    const g = this.p.plate.gap;
+    const under = (row: Node): number => (row.kind === 'row' && row.kids.length ? Math.max(...row.kids.map((c) => (c.kind === 'region' ? this.gapAfter(c.spec) : g))) : g);
+    return n.kids.slice(0, -1).map((kid) => (n.kind === 'col' ? under(kid) : g));
+  }
+
+  /** All of a stack's gaps added up. */
+  gapSum(n: StackNode): number {
+    return this.gaps(n).reduce((t, v) => t + v, 0);
+  }
+
   /** Room a node takes at aim `k`. */
   measure(n: Node, k: number): Size {
     if (n.kind === 'region') return this.size(n, k);
     const main: Axis = n.kind === 'row' ? 'w' : 'h';
     const sizes = n.kids.map((c) => this.measure(c, k));
-    const gaps = Math.max(0, n.kids.length - 1) * this.p.plate.gap;
+    const gaps = this.gapSum(n);
     const along = sizes.reduce((t, s) => t + s[main], 0) + gaps;
     const across = Math.max(0, ...sizes.map((s) => s[other(main)]));
     return main === 'w' ? { w: along, h: across } : { w: across, h: along };
@@ -228,7 +249,7 @@ class Solver {
     const main: Axis = n.kind === 'row' ? 'w' : 'h';
     const cross = other(main);
     const kids = n.kids.map((c) => this.info(c));
-    const gaps = Math.max(0, kids.length - 1) * this.p.plate.gap;
+    const gaps = this.gapSum(n);
     const add = (pick: (i: Info) => number) => kids.reduce((t, i) => t + pick(i), 0) + gaps;
     const top = (pick: (i: Info) => number) => Math.max(0, ...kids.map(pick));
     const out = (along: number, acr: number): Size => (main === 'w' ? { w: along, h: acr } : { w: acr, h: along });
@@ -249,10 +270,10 @@ class Solver {
   /**
    * Splits `total` along an axis: everyone gets their least; then, highest priority first, each
    * tier is raised toward its ideal (in proportion to what it still lacks); then the spare goes to
-   * the growers, highest priority first, in proportion to their ideals, up to their max.
+   * the growers, highest priority first, in proportion to their ideals, up to their max. `gaps`
+   * is the room the stack's gaps take (`gapSum`).
    */
-  split(infos: Info[], axis: Axis, total: number): number[] {
-    const gaps = Math.max(0, infos.length - 1) * this.p.plate.gap;
+  split(infos: Info[], axis: Axis, total: number, gaps: number): number[] {
     const out = infos.map((i) => i.min[axis]);
     let avail = total - gaps - out.reduce((t, v) => t + v, 0);
     if (avail <= 0) return out;
@@ -294,11 +315,12 @@ class Solver {
     }
     if (n.kind === 'col') {
       const caps = this.pairCaps(n, rect.w);
-      const hs = this.split(n.kids.map((c) => this.info(c)), 'h', rect.h);
+      const gaps = this.gaps(n);
+      const hs = this.split(n.kids.map((c) => this.info(c)), 'h', rect.h, this.gapSum(n));
       let y = rect.y;
       n.kids.forEach((row, i) => {
         this.placeRow(row as StackNode, { x: rect.x, y, w: rect.w, h: hs[i] }, out, fixed, caps);
-        y += hs[i] + this.p.plate.gap;
+        y += hs[i] + (gaps[i] ?? 0);
       });
       return;
     }
@@ -317,7 +339,7 @@ class Solver {
       const c = Math.max(i.min.w, cap);
       return { ...i, ideal: { ...i.ideal, w: Math.min(i.ideal.w, c) }, max: { ...i.max, w: Math.min(i.max.w, c) } };
     });
-    const ws = this.split(infos, 'w', rect.w);
+    const ws = this.split(infos, 'w', rect.w, this.gapSum(row));
     let x = rect.x;
     row.kids.forEach((k, i) => {
       if (k.kind === 'region') {

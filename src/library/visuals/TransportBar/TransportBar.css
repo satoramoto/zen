@@ -22,6 +22,33 @@
   font-family: var(--font-sans);
 }
 
+/* Floating over the preview's foot (`layout="overlay"`, Hero's controls): as tall as its keys,
+   no side padding of its own (the scrim pads it), and a container, so a narrow picture puts the
+   preset's name on its own line above the keys and the audio input. */
+.vs-transport[data-layout='overlay'] {
+  height: auto;
+  min-height: var(--space-6);
+  padding: 0;
+  container: vs-transport / inline-size;
+}
+@container vs-transport (max-width: 560px) {
+  .vs-transport .vs-transport-bar > .lib-group__body {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'now now' 'keys right';
+    row-gap: 0;
+  }
+  .vs-transport .vs-transport-keys {
+    grid-area: keys;
+  }
+  .vs-transport .vs-transport-mid {
+    grid-area: now;
+    justify-content: flex-start;
+  }
+  .vs-transport .vs-transport-right {
+    grid-area: right;
+  }
+}
+
 /* The toolbar Group filling the bar; its body lays the three columns out. */
 .vs-transport .vs-transport-bar {
   flex: 1 1 auto;
