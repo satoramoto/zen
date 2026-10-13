@@ -70,13 +70,13 @@ export const SeveralSelected: Story = {
   },
 };
 
-/** One playing: green level bars before its name, on its picture. */
+/** One playing: a "Playing" chip at its picture's foot. */
 export const Playing: Story = {
   args: { current: rows[6].row.path },
   play: async ({ canvas }) => {
     const playing = await canvas.findByRole('option', { name: /playing/ });
     await expect(playing).toBeVisible();
-    await expect(playing.querySelector('.vs-tile-pic .vs-tile-caption .vs-tile-name .vs-tile-live')).toBeTruthy();
+    await expect(playing.querySelector('.vs-tile-pic > .vs-tile-live')).toBeTruthy();
   },
 };
 
