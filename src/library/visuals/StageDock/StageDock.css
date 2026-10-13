@@ -27,7 +27,8 @@
 .vs-stagedock .vs-transport[data-layout='overlay'] .vs-transport-bar > .lib-group__body {
   grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
-  grid-template-areas: 'now now now now star' '. . . . .' '. prev auto next .';
+  /* `ring`, never `auto`: `grid-area: auto` is the keyword (auto-placement), not the named area. */
+  grid-template-areas: 'now now now now star' '. . . . .' '. prev ring next .';
 }
 .vs-stagedock .vs-transport .vs-transport-keys,
 .vs-stagedock .vs-transport .vs-transport-keys > .lib-group__body {
@@ -37,7 +38,7 @@
   pointer-events: auto;
 }
 .vs-stagedock .vs-transport .vs-transport-prev { grid-area: prev; }
-.vs-stagedock .vs-transport .vs-transport-auto { grid-area: auto; }
+.vs-stagedock .vs-transport .vs-transport-auto { grid-area: ring; }
 .vs-stagedock .vs-transport .vs-transport-key[aria-label='next preset'] { grid-area: next; }
 .vs-stagedock .vs-transport .vs-transport-mid { grid-area: now; }
 
