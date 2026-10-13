@@ -48,6 +48,26 @@
   justify-self: end;
   pointer-events: auto;
 }
+/* `diceByStar`: the dice then the star, side by side in the star's corner. */
+.vs-transport[data-layout='overlay'] .vs-transport-top {
+  grid-area: star;
+  display: flex;
+  align-self: start;
+  justify-self: end;
+  pointer-events: auto;
+}
+/* `centreKeys`: two equal side columns, so the keys' column sits dead centre; the audio input
+   (when the bar keeps it) still at the right end. */
+.vs-transport[data-layout='overlay'][data-centre-keys] .vs-transport-bar > .lib-group__body {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: 'now now star' '. . .' '. keys right';
+}
+.vs-transport[data-layout='overlay'][data-centre-keys] .vs-transport-keys {
+  margin-left: 0;
+}
+.vs-transport[data-layout='overlay'][data-centre-keys] .vs-transport-right {
+  justify-self: end;
+}
 .vs-transport-star[aria-pressed='true'] {
   color: var(--text-1);
 }

@@ -15,7 +15,10 @@ export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 
  * **Job.** The transport: floating over the foot of the home's preview (`layout="overlay"`, in
  * Hero's `controls`, shown on hover or focus), or docked along live mode's foot (`bar`). ◀ the auto-change ring ▶ R on the left; in
  * the middle the preset playing and where it plays from (`now`); the audio input on the right, and
- * before it a warning only while the picture draws slowly (`FrameRate slowOnly`).
+ * before it a warning only while the picture draws slowly (`FrameRate slowOnly`). Opt-ins for the
+ * overlay (all off by default, as Live has it): `audio={false}` leaves the input out entirely for a
+ * host that mounts `TransportAudio` elsewhere; `diceByStar` moves the dice beside the star;
+ * `centreKeys` puts ◀ ring ▶ dead centre along the foot. Home uses all three.
  *
  * **Changed.** Presets are endless (decision 86): no playhead, no time on it, no countdown, no
  * track. Where play/pause was, the auto-change key: a loop ring (`Icon` `loop`) that fills
@@ -70,6 +73,22 @@ export interface TransportBarProps {
    * in a narrow picture the preset's name takes its own line above the keys and the audio input.
    */
   layout?: 'bar' | 'overlay';
+  /** False: no audio input side (no slow-drawing warning, no `SourcePicker`), not even mounted, for a host that shows it elsewhere (Home's header, `TransportAudio`). Default true. */
+  audio?: boolean;
+  /** The overlay only: the dice leaves the keys and sits immediately left of the star, in its corner (Home). Default false. */
+  diceByStar?: boolean;
+  /** The overlay only: the keys (◀ ring ▶) sit dead centre along the foot, the audio input (if any) still on the right (Home). Default false. */
+  centreKeys?: boolean;
+}
+
+/** The audio input side: the slow-drawing warning, then the input. The bar's right end, or a host's own place for it (Home's header) with the bar's `audio={false}`. */
+export function TransportAudio({ onAudioError, audioTrouble = null }: Pick<TransportBarProps, 'onAudioError' | 'audioTrouble'>) {
+  return (
+    <Text as="div" className="vs-transport-right">
+      <FrameRate slowOnly />
+      <SourcePicker onError={onAudioError} channels="none" width={180} trouble={audioTrouble} />
+    </Text>
+  );
 }
 
 /** Seconds as m:ss. */
@@ -145,12 +164,30 @@ function LoopRing({ fill, timed, size }: { fill: number; timed: boolean; size: n
 }
 
 /** The bar. */
-export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, onAudioError, audioTrouble = null, now, moves = false, layout = 'bar', star = null }: TransportBarProps) {
+export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, onAudioError, audioTrouble = null, now, moves = false, layout = 'bar', star = null, audio = true, diceByStar = false, centreKeys = false }: TransportBarProps) {
+  const top = layout === 'overlay' && diceByStar;
+  const dice = (
+    <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-random" aria-label="random preset" title={`Random preset${stepIn} (R)`} onClick={() => onStep(0)}>
+      <Icon name="dice" />
+    </Text>
+  );
+  const starKey = layout === 'overlay' && star && (
+    <button
+      type="button"
+      className="vs-transport-key vs-transport-star"
+      aria-label="star"
+      aria-pressed={star.on}
+      title={star.on ? 'Unstar this preset' : 'Star this preset'}
+      onClick={star.onToggle}
+    >
+      <Icon name="star" />
+    </button>
+  );
   const timed = playing && position !== null && position.length !== null && position.length !== undefined;
   const fill = loopFill(playing, position);
   const state = position === null ? 'off' : !playing ? 'held' : timed ? 'timed' : 'endless';
   return (
-    <div className="vs-transport" role="region" aria-label="transport" data-layout={layout}>
+    <div className="vs-transport" role="region" aria-label="transport" data-layout={layout} data-centre-keys={layout === 'overlay' && centreKeys ? '' : undefined}>
       {/* A toolbar: every control in it takes its quiet look (the source picker is text and a caret, not a field). */}
       <Group name="transport controls" label={false} toolbar className="vs-transport-bar">
         <Group name="keys" label={false} className="vs-transport-keys">
@@ -175,9 +212,7 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
           <Text as="button" weight="strong" type="button" className="vs-transport-key" aria-label="next preset" title={`Next preset${stepIn} (→)`} onClick={() => onStep(1)}>
             <Icon name="next" />
           </Text>
-          <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-random" aria-label="random preset" title={`Random preset${stepIn} (R)`} onClick={() => onStep(0)}>
-            <Icon name="dice" />
-          </Text>
+          {!top && dice}
         </Group>
         <div className="vs-transport-mid">
           {now && (
@@ -193,21 +228,14 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
             </Text>
           )}
         </div>
-        <Text as="div" className="vs-transport-right">
-          <FrameRate slowOnly />
-          <SourcePicker onError={onAudioError} channels="none" width={180} trouble={audioTrouble} />
-        </Text>
-        {layout === 'overlay' && star && (
-          <button
-            type="button"
-            className="vs-transport-key vs-transport-star"
-            aria-label="star"
-            aria-pressed={star.on}
-            title={star.on ? 'Unstar this preset' : 'Star this preset'}
-            onClick={star.onToggle}
-          >
-            <Icon name="star" />
-          </button>
+        {audio && <TransportAudio onAudioError={onAudioError} audioTrouble={audioTrouble} />}
+        {top ? (
+          <div className="vs-transport-top">
+            {dice}
+            {starKey}
+          </div>
+        ) : (
+          starKey
         )}
       </Group>
     </div>

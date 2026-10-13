@@ -45,7 +45,7 @@ import { useFrameRoom } from '../../frame';
 import { HelpOverlay, HOME_HELP } from '../HelpOverlay/HelpOverlay';
 import { modalOpen } from '../model/liveKeys';
 import { Hero, HERO_PIC } from '../Hero/Hero';
-import { TransportBar } from '../TransportBar/TransportBar';
+import { TransportAudio, TransportBar } from '../TransportBar/TransportBar';
 import { InsetSidebar, sidebarSections } from '../InsetSidebar/InsetSidebar';
 import { Inspector } from '../Inspector/Inspector';
 import { Icon } from '../Icon/Icon';
@@ -738,6 +738,8 @@ export function Home({
           >
             <span className="vs-fill" />
             <div className="vs-home-toolbar" ref={setToolbar} />
+            {/* The audio input, out of the Now Playing card (its TransportBar has `audio={false}`), left of the icon buttons. */}
+            <TransportAudio onAudioError={audioFailed} audioTrouble={audioTrouble} />
             {/* The icon buttons, spaced as the view switch's links are. */}
             <div className="vs-home-tools">
               <CameraAction />
@@ -763,6 +765,10 @@ export function Home({
             controls={
               <TransportBar
                 layout="overlay"
+                // The dice by the star, ◀ ring ▶ dead centre, the audio input in the header.
+                audio={false}
+                diceByStar
+                centreKeys
                 now={current ? { name: playingShown?.title ?? current.name, from } : null}
                 playing={!deck.hold}
                 // It moves on by itself on a timer, or on Link's bars.
