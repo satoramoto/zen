@@ -21,7 +21,7 @@ Ask in order and stop at the first yes:
 1. Is it a value (a colour, a size, a radius, a blur)? A **token**, in a theme facet.
 2. Is it how something looks, whatever it is? A **primitive** prop (`<Text role="numeral">`, `<Surface layer="raised" material="key">`).
 3. Is it what one control does? The **control**.
-4. Is it how controls sit together? A **Group** (`gap`, `align`, `direction`).
+4. Is it how controls sit together? A **Group** (`gap`, `align`, `direction`). Where a control sits can change how it looks, but only through context, never through a per-use style: a `Group toolbar` provides `ControlContext { quiet: true }`, and a Select inside it drops its field chrome by itself.
 5. Is it a block of the screen with a frame? A **Region**.
 6. Is it where blocks go? The **Screen**.
 

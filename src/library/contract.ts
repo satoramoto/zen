@@ -191,6 +191,36 @@ export interface Facets {
  *  `toCssVars`, because they read a variable each element sets for itself (`--lit`). */
 export const SCOPE_VARS = ['--mat-lit-glow'] as const;
 
+/**
+ * Ambient light: the colour of the picture a screen shows (the preview video), which components
+ * and materials may read to react to it. An `Ambient` primitive (`primitives/Ambient`) samples
+ * its source and writes these on its own element, eased over time; the theme scope sets the
+ * neutral fallbacks below, so CSS that reads them works with no `Ambient` around.
+ * - `--ambient-avg`: the whole picture's average colour (`oklab(...)`).
+ * - `--ambient-left`, `--ambient-right`, `--ambient-top`, `--ambient-bottom`, `--ambient-centre`:
+ *   the light from each region (a quarter at each side, a third at top and bottom, the middle).
+ * - `--ambient-strength`: 0–1, how much to tint by it: 0 with no picture (or no Ambient), eased
+ *   up once samples arrive. Mix by it, so a screen with no picture looks exactly as before:
+ *   `color-mix(in oklab, var(--ambient-avg) calc(var(--ambient-strength) * 30%), var(--layer-float-fill))`.
+ *
+ * A custom property resolves `var()` where it is declared, so a value built from these in
+ * `toCssVars` (on the scope) reads the fallbacks: read them on the element (as `--mat-lit-glow` is).
+ */
+export const AMBIENT_REGIONS = ['avg', 'left', 'right', 'top', 'bottom', 'centre'] as const;
+export type AmbientRegion = (typeof AMBIENT_REGIONS)[number];
+export const AMBIENT_VARS = [...AMBIENT_REGIONS.map((r) => `--ambient-${r}` as const), '--ambient-strength'] as const;
+
+/** The ambient variables with no picture: a mid surface of the scheme, at strength 0. */
+export const AMBIENT_FALLBACKS: Record<(typeof AMBIENT_VARS)[number], string> = {
+  '--ambient-avg': 'var(--surface-2)',
+  '--ambient-left': 'var(--surface-2)',
+  '--ambient-right': 'var(--surface-2)',
+  '--ambient-top': 'var(--surface-2)',
+  '--ambient-bottom': 'var(--surface-2)',
+  '--ambient-centre': 'var(--surface-2)',
+  '--ambient-strength': '0',
+};
+
 /** Each spacing step's multiple of the scale unit: `--space-N` is `SPACE_STEPS[N - 1] * unit`. */
 export const SPACE_STEPS = [1, 2, 3, 4, 6, 8] as const;
 
@@ -317,5 +347,6 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
   p.hues.forEach((v, i) => (vars[`--hue-${i + 1}`] = v));
   for (const [role, px] of Object.entries(s.sizes)) vars[`--size-${role}`] = `${px}px`;
   SPACE_STEPS.forEach((n, i) => (vars[`--space-${i + 1}`] = `${n * s.unit}px`));
+  Object.assign(vars, AMBIENT_FALLBACKS);
   return vars;
 }

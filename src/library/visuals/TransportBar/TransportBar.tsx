@@ -20,7 +20,9 @@ export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 
  * **Changed.** The keys are a library `Group` (unlabelled: the bar names them). Sizes and tones
  * read the contract (the track is the raised layer's tint, the time in the readout face with
  * tabular figures); the side padding is the main column's `--mat-plate-inset`. The audio input
- * is the library port of `SourcePicker`, quiet type at the bar's end.
+ * is the library port of `SourcePicker`, quiet type at the bar's end. The bar is a toolbar
+ * `Group` ("transport controls", inside the "transport" region), so every control in it takes its
+ * quiet look by context: the source picker's Select is text and a caret, not a field.
  *
  * **Tuning knobs** (TransportBar.css):
  * - `--vs-transport-h` (64px): the bar's height.
@@ -84,85 +86,88 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
   const hint = position ? timeHint(playing, moves) : null;
   return (
     <div className="vs-transport" role="region" aria-label="transport">
-      <Group name="keys" label={false} className="vs-transport-keys">
-        <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-prev" aria-label="previous preset" title={`Previous preset${stepIn} (←)`} onClick={() => onStep(-1)}>
-          <Icon name="previous" />
-        </Text>
-        <Text
-          as="button"
-          weight="strong"
-          type="button"
-          className="vs-transport-key vs-transport-play"
-          aria-label={playing ? 'pause' : 'play'}
-          title={playing ? 'Hold on this preset (H)' : 'Move on by itself again (H)'}
-          onClick={onPlayPause}
-        >
-          <Icon name={playing ? 'pause' : 'play'} size={18} />
-        </Text>
-        <Text as="button" weight="strong" type="button" className="vs-transport-key" aria-label="next preset" title={`Next preset${stepIn} (→)`} onClick={() => onStep(1)}>
-          <Icon name="next" />
-        </Text>
-        <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-random" aria-label="random preset" title={`Random preset${stepIn} (R)`} onClick={() => onStep(0)}>
-          R
-        </Text>
-      </Group>
-      <div className="vs-transport-mid">
-        {now && (
-          <Text as="p" className="vs-transport-now" title={now.from ? `${now.name} ${now.from}` : now.name}>
-            <Text weight="strong" className="vs-transport-name">
-              {now.name}
+      {/* A toolbar: every control in it takes its quiet look (the source picker is text and a caret, not a field). */}
+      <Group name="transport controls" label={false} toolbar className="vs-transport-bar">
+        <Group name="keys" label={false} className="vs-transport-keys">
+          <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-prev" aria-label="previous preset" title={`Previous preset${stepIn} (←)`} onClick={() => onStep(-1)}>
+            <Icon name="previous" />
+          </Text>
+          <Text
+            as="button"
+            weight="strong"
+            type="button"
+            className="vs-transport-key vs-transport-play"
+            aria-label={playing ? 'pause' : 'play'}
+            title={playing ? 'Hold on this preset (H)' : 'Move on by itself again (H)'}
+            onClick={onPlayPause}
+          >
+            <Icon name={playing ? 'pause' : 'play'} size={18} />
+          </Text>
+          <Text as="button" weight="strong" type="button" className="vs-transport-key" aria-label="next preset" title={`Next preset${stepIn} (→)`} onClick={() => onStep(1)}>
+            <Icon name="next" />
+          </Text>
+          <Text as="button" weight="strong" type="button" className="vs-transport-key vs-transport-random" aria-label="random preset" title={`Random preset${stepIn} (R)`} onClick={() => onStep(0)}>
+            R
+          </Text>
+        </Group>
+        <div className="vs-transport-mid">
+          {now && (
+            <Text as="p" className="vs-transport-now" title={now.from ? `${now.name} ${now.from}` : now.name}>
+              <Text weight="strong" className="vs-transport-name">
+                {now.name}
+              </Text>
+              {now.from && (
+                <Text className="vs-transport-from">
+                  <Numbers text={now.from} />
+                </Text>
+              )}
             </Text>
-            {now.from && (
-              <Text className="vs-transport-from">
-                <Numbers text={now.from} />
+          )}
+          <div className="vs-transport-time" data-off={position ? undefined : ''} data-open={open ? '' : undefined}>
+            {open ? (
+              <>
+                {/* No end to count down to (or none left): the time on it, and a track with nothing to fill. */}
+                <Text tabular className="vs-transport-num" ariaRole="timer" aria-label={`time on this preset: ${clock(elapsed)}${endless ? ', until moved on' : ''}`}>
+                  {clock(elapsed)}
+                </Text>
+                <div className="vs-transport-track" aria-hidden="true" />
+                <Text tabular className="vs-transport-num" aria-hidden="true" />
+              </>
+            ) : position ? (
+              <>
+                <Text tabular className="vs-transport-num">
+                  {clock(elapsed)}
+                </Text>
+                <div
+                  className="vs-transport-track"
+                  role="progressbar"
+                  aria-label="time on this preset"
+                  aria-valuemin={0}
+                  aria-valuemax={length}
+                  aria-valuenow={elapsed}
+                  aria-valuetext={`${clock(elapsed)} of ${clock(length)}`}
+                >
+                  <div className="vs-transport-fill" style={{ width: length ? `${(elapsed / length) * 100}%` : '0%' }} />
+                </div>
+                <Text tabular className="vs-transport-num">
+                  −{clock(length - elapsed)}
+                </Text>
+              </>
+            ) : (
+              <div className="vs-transport-track" aria-hidden="true" />
+            )}
+            {hint && (
+              <Text className="vs-transport-hint" title={hint.title}>
+                {hint.text}
               </Text>
             )}
-          </Text>
-        )}
-        <div className="vs-transport-time" data-off={position ? undefined : ''} data-open={open ? '' : undefined}>
-          {open ? (
-            <>
-              {/* No end to count down to (or none left): the time on it, and a track with nothing to fill. */}
-              <Text tabular className="vs-transport-num" ariaRole="timer" aria-label={`time on this preset: ${clock(elapsed)}${endless ? ', until moved on' : ''}`}>
-                {clock(elapsed)}
-              </Text>
-              <div className="vs-transport-track" aria-hidden="true" />
-              <Text tabular className="vs-transport-num" aria-hidden="true" />
-            </>
-          ) : position ? (
-            <>
-              <Text tabular className="vs-transport-num">
-                {clock(elapsed)}
-              </Text>
-              <div
-                className="vs-transport-track"
-                role="progressbar"
-                aria-label="time on this preset"
-                aria-valuemin={0}
-                aria-valuemax={length}
-                aria-valuenow={elapsed}
-                aria-valuetext={`${clock(elapsed)} of ${clock(length)}`}
-              >
-                <div className="vs-transport-fill" style={{ width: length ? `${(elapsed / length) * 100}%` : '0%' }} />
-              </div>
-              <Text tabular className="vs-transport-num">
-                −{clock(length - elapsed)}
-              </Text>
-            </>
-          ) : (
-            <div className="vs-transport-track" aria-hidden="true" />
-          )}
-          {hint && (
-            <Text className="vs-transport-hint" title={hint.title}>
-              {hint.text}
-            </Text>
-          )}
+          </div>
         </div>
-      </div>
-      <Text as="div" className="vs-transport-right">
-        <FrameRate slowOnly />
-        <SourcePicker onError={onAudioError} channels="none" width={180} />
-      </Text>
+        <Text as="div" className="vs-transport-right">
+          <FrameRate slowOnly />
+          <SourcePicker onError={onAudioError} channels="none" width={180} />
+        </Text>
+      </Group>
     </div>
   );
 }

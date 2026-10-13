@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { Layer } from '../../../layout/Layer';
 import { Text } from '../../../primitives/Text';
+import { ControlContext, CONTROL_FIELD } from '../../../primitives/Stack';
 import './Popover.css';
 
 /** How an open panel was asked to go away. Only `escape` has somewhere obvious to put focus back. */
@@ -161,7 +162,8 @@ export function Popover({ anchor, onDismiss, within, role, label, id, className,
         aria-label={label}
         id={id}
       >
-        {children}
+        {/* A popover is a new surface: controls in it are fields again, even when it opens from a toolbar. */}
+        <ControlContext.Provider value={CONTROL_FIELD}>{children}</ControlContext.Provider>
       </Layer>
     </Text>
   );

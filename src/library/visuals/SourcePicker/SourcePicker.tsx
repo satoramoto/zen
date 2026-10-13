@@ -3,6 +3,7 @@ import { Popover } from '../Popover/Popover';
 import { Meter } from '../../components/music/Meter/Meter';
 import { Select } from '../../components/core/Select/Select';
 import { Text } from '../../primitives/Text';
+import { CONTROL_FIELD, ControlContext } from '../../primitives/Stack';
 import * as api from '../model/api';
 import { audioStatus, chooseAudioLane, type AudioLane, type AudioLaneStatus, type AudioStatus } from '../model/audio-api';
 import { meterLevel } from '../model/shell';
@@ -285,11 +286,14 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
           {picker('main')}
           {notices('main')}
           <Popover name="Audio mixer: main and microphone inputs" label={status.mic.enabled ? 'Mixer + mic' : 'Mixer'}>
-            <span className="vs-audio-lane">
-              <Text size="caption" className="vs-audio-lane-name">Main channels</Text>
-              {channelControls('main')}
-            </span>
-            {mic}
+            {/* The panel floats out of any toolbar the picker sits in: its pickers are fields again. */}
+            <ControlContext.Provider value={CONTROL_FIELD}>
+              <span className="vs-audio-lane">
+                <Text size="caption" className="vs-audio-lane-name">Main channels</Text>
+                {channelControls('main')}
+              </span>
+              {mic}
+            </ControlContext.Provider>
           </Popover>
           <Levels />
         </>

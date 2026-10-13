@@ -10,13 +10,8 @@
   /* The bar's height: 64px. */
   --vs-transport-h: calc(var(--space-6) * 2);
   --vs-transport-small: calc(var(--size-caption) - 1px);
-  display: grid;
-  /* The right column never shrinks under what it holds (its input shrinks itself first), so in a
-     narrow bar the time gives way rather than running under the audio input. Columns 12–28px
-     apart. */
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(var(--space-3), 3%, calc(var(--space-6) - var(--space-1)));
+  display: flex;
+  flex-direction: column;
   height: var(--vs-transport-h);
   padding: 0 var(--mat-plate-inset);
   box-sizing: border-box;
@@ -24,6 +19,20 @@
   background: none;
   color: var(--text-2);
   font-family: var(--font-sans);
+}
+
+/* The toolbar Group filling the bar; its body lays the three columns out. */
+.vs-transport .vs-transport-bar {
+  flex: 1 1 auto;
+}
+.vs-transport .vs-transport-bar > .lib-group__body {
+  display: grid;
+  /* The right column never shrinks under what it holds (its input shrinks itself first), so in a
+     narrow bar the time gives way rather than running under the audio input. Columns 12–28px
+     apart. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(var(--space-3), 3%, calc(var(--space-6) - var(--space-1)));
 }
 
 /* The keys: 6px out to the left (their own padding), 10px apart, each 32px. */

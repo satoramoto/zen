@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Step } from '../primitives/step';
 import { Text } from '../primitives/Text';
-import { Stack, type StackAlign } from '../primitives/Stack';
+import { CONTROL_TOOLBAR, ControlContext, Stack, type StackAlign } from '../primitives/Stack';
 import './Group.css';
 
 export interface GroupProps {
@@ -21,6 +21,11 @@ export interface GroupProps {
   align?: StackAlign;
   /** The grid area this group fills inside its region. */
   area?: string;
+  /**
+   * A toolbar (`role="toolbar"`): the controls inside take their quiet look (a Select is text and
+   * a caret, not a field) through `ControlContext`; they never take a per-use style for it.
+   */
+  toolbar?: boolean;
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
@@ -35,15 +40,25 @@ export interface GroupProps {
  * holding the head and the body, and the body is a `Stack` too. The space between controls is
  * `gap`, a scale step, never a margin on a control. `direction`, `wrap` and `align` arrange them;
  * the group paints nothing.
+ *
+ * **Toolbar.** `toolbar` makes it a `role="toolbar"` and provides `ControlContext { quiet: true }`
+ * to everything inside, so its controls drop their field chrome (macOS toolbar convention: text
+ * with a chevron, a faint hover and press tint). The context changes the look; the controls keep
+ * their size, hit target, keys and menus.
  */
-export function Group({ name, label, aside, direction = 'row', wrap = false, gap = 2, align, area, className, style, children }: GroupProps) {
+export function Group({ name, label, aside, direction = 'row', wrap = false, gap = 2, align, area, toolbar = false, className, style, children }: GroupProps) {
   const shown = label === false ? null : (label ?? name);
+  const body = (
+    <Stack className="lib-group__body" data-part="body" direction={direction} wrap={wrap} gap={gap} align={align}>
+      {children}
+    </Stack>
+  );
   return (
     <Stack
       className={`lib-group${className ? ` ${className}` : ''}`}
       direction="column"
       gap={1}
-      role="group"
+      role={toolbar ? 'toolbar' : 'group'}
       aria-label={name}
       data-part="group"
       style={area ? { gridArea: area, ...style } : style}
@@ -58,9 +73,7 @@ export function Group({ name, label, aside, direction = 'row', wrap = false, gap
           {aside && <span className="lib-group__aside">{aside}</span>}
         </div>
       )}
-      <Stack className="lib-group__body" data-part="body" direction={direction} wrap={wrap} gap={gap} align={align}>
-        {children}
-      </Stack>
+      {toolbar ? <ControlContext.Provider value={CONTROL_TOOLBAR}>{body}</ControlContext.Provider> : body}
     </Stack>
   );
 }
