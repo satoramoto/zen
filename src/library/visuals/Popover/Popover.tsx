@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { usePopover, type Dismissal } from '../../components/core/Popover/Popover';
 import { Layer } from '../../layout/Layer';
+import type { LayerName } from '../../contract';
 import { Text, type TextProps } from '../../primitives/Text';
 import './Popover.css';
 
@@ -43,6 +44,11 @@ export interface PopoverProps {
    * the original did that with `position: static` on the wrapper, which a top-layer panel can't.
    */
   across?: RefObject<HTMLElement | null>;
+  /**
+   * Added: the panel's layer, default `float`. `raised` draws it in the side panels' material
+   * (Home's folded mixer).
+   */
+  layer?: LayerName;
   children: ReactNode | ((close: () => void) => ReactNode);
 }
 
@@ -69,7 +75,7 @@ export interface PopoverProps {
  * left-hung panel would run past the window, the focus handling, and the look: type with no box,
  * underlined in the accent when open or pressed; menu items as whole-width rows.
  */
-export function Popover({ label, title, name, className, role = 'dialog', align = 'left', pressed, across, children }: PopoverProps) {
+export function Popover({ label, title, name, className, role = 'dialog', align = 'left', pressed, across, layer = 'float', children }: PopoverProps) {
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
   const id = useId();
@@ -96,7 +102,7 @@ export function Popover({ label, title, name, className, role = 'dialog', align 
         {label}
       </Text>
       {open && (
-        <Panel id={id} role={role} name={name} align={align} anchor={button} across={across} onClose={() => setOpen(false)} onEscape={close}>
+        <Panel id={id} role={role} name={name} align={align} anchor={button} across={across} layer={layer} onClose={() => setOpen(false)} onEscape={close}>
           {typeof children === 'function' ? children(close) : children}
         </Panel>
       )}
@@ -112,10 +118,12 @@ function Panel({
   align,
   anchor,
   across,
+  layer,
   onClose,
   onEscape,
   children,
 }: {
+  layer: LayerName;
   id: string;
   role: 'dialog' | 'menu';
   name: string;
@@ -158,7 +166,7 @@ function Panel({
   }, [hang]);
   return (
     <div ref={box} className="lib-popover vs-popover-box" popover="manual" data-part="popover" data-across={across ? '' : undefined}>
-      <Layer level="float" as={PanelText} className="lib-popover__panel vs-popover-panel" data-part="panel" data-align={side} role={role} aria-label={name} id={id}>
+      <Layer level={layer} as={PanelText} className="lib-popover__panel vs-popover-panel" data-part="panel" data-align={side} role={role} aria-label={name} id={id}>
         {children}
       </Layer>
     </div>

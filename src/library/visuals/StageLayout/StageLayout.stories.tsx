@@ -19,6 +19,8 @@ interface Args {
   inWindow: boolean;
   /** Esc held at start, as if pressed and not let go: the progress toward leaving. */
   leaving?: boolean;
+  /** The effects panel open (a stand-in), docked at the left. */
+  effects?: boolean;
 }
 
 /** The stand-in parts' looks (the real ones are their own stories'): type on the scrim, and the toast a float surface. */
@@ -42,7 +44,7 @@ function Lights() {
  * stories'), working as Live wires it: `\` pins the controls shown and lets
  * them go, Esc held shows its progress toward leaving.
  */
-function Composed({ width, height, pinned: pinnedAtStart, warning, inWindow, leaving: heldAtStart = false }: Args) {
+function Composed({ width, height, pinned: pinnedAtStart, warning, inWindow, leaving: heldAtStart = false, effects = false }: Args) {
   const [pinned, setPinned] = useState(pinnedAtStart);
   const [leaving, setLeaving] = useState(heldAtStart);
   const [left, setLeft] = useState(false);
@@ -87,16 +89,14 @@ function Composed({ width, height, pinned: pinnedAtStart, warning, inWindow, lea
                   ▶
                 </button>
               </span>
-              <span>Strobe · Blackout · Freeze · Intensity · More effects…</span>
+              <span>Effects · ◀ ⟳ ▶ · dice · star</span>
             </div>
           </div>
         }
-        toasts={
-          inWindow ? (
-            <Surface layer="float" radius="control" style={{ padding: 4 }}>
-              <button type="button" style={key}>
-                Go full screen on Projector
-              </button>
+        panel={
+          effects ? (
+            <Surface as="aside" layer="raised" aria-label="Effects" style={{ ...panel, height: '100%', boxSizing: 'border-box' }}>
+              Effects: Strobe · Blackout · Freeze · Punch · Intensity · Speed · Colour · Trails
             </Surface>
           ) : undefined
         }
@@ -120,7 +120,7 @@ const meta = {
   decorators: [withVisualsFrame, withLibraryTheme],
   globals: VISUALS_GLOBALS,
   beforeEach: visualsBeforeEach,
-  args: { width: 1440, height: 900, pinned: false, warning: false, inWindow: false, leaving: false },
+  args: { width: 1440, height: 900, pinned: false, warning: false, inWindow: false, leaving: false, effects: false },
   parameters: { scope: 'bare', layout: 'fullscreen' },
 } satisfies Meta<typeof Composed>;
 export default meta;
@@ -156,22 +156,21 @@ export const Pinned: Story = {
   },
 };
 
-/** Playing in the window: the "Go full screen on…" offer is a toast in the bottom-right corner, shown whether the controls are or not. */
-export const Windowed: Story = {
-  args: { inWindow: true },
-  play: async ({ canvas }) => {
-    const go = canvas.getByRole('button', { name: 'Go full screen on Projector' });
-    await expect(go).toBeVisible();
-    const r = go.getBoundingClientRect();
-    await expect(r.right).toBeGreaterThan(1440 - 400);
-    await expect(r.bottom).toBeGreaterThan(900 / 2);
+/** The effects panel open: docked at the left, 20px in, from 64px down to 100px over the foot, 340px wide. No corner toasts. */
+export const EffectsOpen: Story = {
+  args: { effects: true, pinned: true },
+  play: async ({ canvas, canvasElement }) => {
+    const r = canvas.getByRole('complementary', { name: 'Effects' }).getBoundingClientRect();
+    const root = canvasElement.querySelector('.vs-stagelayout')!.getBoundingClientRect();
+    await expect([r.left - root.left, r.top - root.top, r.width, root.bottom - r.bottom]).toEqual([20, 64, 340, 100]);
+    await expect(canvasElement.querySelector('.vs-stagelayout-toasts')).toBeNull();
   },
 };
 
-/** At 1000 × 700, the same, smaller. */
+/** At 1000 × 700, pinned, the panel open. */
 export const At1000: Story = {
   name: 'At 1000 × 700',
-  args: { width: 1000, height: 700, pinned: true, inWindow: true },
+  args: { width: 1000, height: 700, pinned: true, effects: true },
 };
 
 /** Esc held to leave live: a ring filling over 3 s and "Keep holding Esc to leave live" over the picture's middle; let go early, it goes. */

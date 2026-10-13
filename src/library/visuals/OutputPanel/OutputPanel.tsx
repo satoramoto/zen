@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { ActionButton } from '../../components/core/ActionButton/ActionButton';
+import { Segmented } from '../../components/core/Segmented/Segmented';
 import { Select } from '../../components/core/Select/Select';
 import { Text } from '../../primitives/Text';
 import * as fx from '../model/fx';
@@ -26,6 +27,67 @@ export function fitLine(status: output.Status): string {
   if (!size || (size[0] === shown.width && size[1] === shown.height)) return `Fills ${shown.name}.`;
   const bars = size[0] < shown.width ? 'at the sides' : 'above and below';
   return `The whole picture, ${size[0]}×${size[1]} on ${shown.name}, with black bars ${bars}.`;
+}
+
+const RESOLUTIONS: { label: string; size: output.Render['resolution'] }[] = [
+  { label: 'Match display', size: 'display' },
+  { label: '720p', size: [1280, 720] },
+  { label: '1080p', size: [1920, 1080] },
+  { label: '1440p', size: [2560, 1440] },
+  { label: '4K', size: [3840, 2160] },
+];
+const SCALES = [0.5, 0.75, 1, 1.5, 2];
+const RATES: (number | null)[] = [30, 60, null];
+
+/** The pixels the output draws: the resolution (or the display's, else 1920×1080) times the scale. */
+export function renderLine(r: output.Render, display: output.Display | null): string {
+  const [w, h] = r.resolution === 'display' ? (display ? [display.width, display.height] : [1920, 1080]) : r.resolution;
+  return `${Math.round(w * r.scale)} × ${Math.round(h * r.scale)} at ${Math.round(r.scale * 100)}%`;
+}
+
+/**
+ * How the output is drawn: resolution, render scale and frame-rate cap. Read once and set
+ * through `output.setRender`; a failed call (not in the native app yet) keeps the choice quietly.
+ */
+function RenderSettings({ display }: { display: output.Display | null }) {
+  const [r, setR] = useState<output.Render>(output.RENDER_DEFAULT);
+  useEffect(() => {
+    output.render().then(setR, () => {});
+  }, []);
+  const change = (next: output.Render) => {
+    setR(next);
+    output.setRender(next).then(setR, () => {});
+  };
+  const res = RESOLUTIONS.findIndex((x) => JSON.stringify(x.size) === JSON.stringify(r.resolution));
+  return (
+    <div className="vs-output-render">
+      <Select
+        className="vs-output-display"
+        items={RESOLUTIONS.map((x) => x.label)}
+        index={Math.max(0, res)}
+        onChange={(i) => change({ ...r, resolution: RESOLUTIONS[i].size })}
+        label="Resolution"
+        title="The size the output draws at, before the render scale"
+      />
+      <Segmented
+        items={SCALES.map((s) => `${s * 100}%`)}
+        index={Math.max(0, SCALES.indexOf(r.scale))}
+        onChange={(i) => change({ ...r, scale: SCALES[i] })}
+        label="Render scale"
+        name="Scale"
+        title="Draw below the resolution for speed, or above it for smoother edges"
+      />
+      <Segmented
+        items={RATES.map((f) => (f === null ? 'Display' : `${f}`))}
+        index={Math.max(0, RATES.indexOf(r.fps))}
+        onChange={(i) => change({ ...r, fps: RATES[i] })}
+        label="Frame rate cap"
+        name="Frame rate"
+        title="The most frames a second the output draws; Display follows its refresh"
+      />
+      <Note ariaRole="status">{renderLine(r, display)}</Note>
+    </div>
+  );
 }
 
 /** A note: a caption paragraph (OutputPanel.css sets its leading). */
@@ -124,6 +186,9 @@ export function leave() {
  *
  * **Kept.** The display list read again on focus, the chosen display (the one showing, else the
  * first without the menu bar), the one-display warning, every word and tooltip.
+ *
+ * **Added.** The render settings under the display: resolution (core `Select`), render scale and
+ * frame-rate cap (core `Segmented`), and the pixel size they make.
  */
 export function OutputPanel({ status, show }: { status: output.Status; show: (id: number | null) => void }) {
   const [displays, setDisplays] = useState<output.Display[]>([]);
@@ -171,6 +236,7 @@ export function OutputPanel({ status, show }: { status: output.Status; show: (id
       ) : (
         <Note>No displays found.</Note>
       )}
+      <RenderSettings display={shown ?? displays.find((d) => d.id === chosen) ?? null} />
       <FitNote status={status} />
       {alone ? (
         <Text as="p" role="caption" ariaRole="note" className="vs-output-warn">

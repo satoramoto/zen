@@ -85,3 +85,16 @@ export const SettingsOff: Story = {
     await expect(await canvas.findByRole('combobox', { name: 'Display' })).toBeDisabled();
   },
 };
+
+/** The render settings under the display: 1080p at 150% draws 2880 × 1620, kept by the model. */
+export const Render: Story = {
+  play: async ({ canvas, userEvent }) => {
+    await expect(await canvas.findByRole('status')).toHaveTextContent('1920 × 1080 at 100%');
+    await userEvent.click(canvas.getByRole('combobox', { name: 'Resolution' }));
+    await userEvent.click(await canvas.findByRole('option', { name: '1080p' }));
+    await userEvent.click(canvas.getByRole('radio', { name: '150%' }));
+    await expect(canvas.getByRole('status')).toHaveTextContent('2880 × 1620 at 150%');
+    await userEvent.click(canvas.getByRole('radio', { name: '30' }));
+    await expect(canvas.getByRole('radio', { name: '30' })).toBeChecked();
+  },
+};

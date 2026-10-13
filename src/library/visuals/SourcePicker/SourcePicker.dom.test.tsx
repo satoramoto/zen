@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-libra
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as api from '../model/api';
 import * as audio from '../model/audio-api';
-import { sameSource, SourcePicker } from './SourcePicker';
+import { channelPairs, sameSource, SourcePicker } from './SourcePicker';
 vi.mock('../model/api', async (original) => ({
   ...(await original<typeof import('../model/api')>()),
   audioSources: vi.fn(),
@@ -148,5 +148,26 @@ describe('audio mixer', () => {
     const b = { ...a, uid: 'b' };
     expect(sameSource(a, b)).toBe(false);
     expect(sameSource(a, { ...a, name: 'Renamed' })).toBe(true);
+  });
+});
+describe('folded', () => {
+  it('keeps the source Select out of the header and puts it at the top of the mixer popover', async () => {
+    render(<SourcePicker onError={(e) => expect.unreachable(String(e))} channels="none" folded />);
+    const mixer = await screen.findByRole('button', { name: /Audio mixer: listening to Live/ });
+    expect(screen.queryByRole('combobox', { name: 'listen to' })).toBeNull();
+    fireEvent.click(mixer);
+    const panel = await waitFor(() => document.getElementById(mixer.getAttribute('aria-controls')!)!);
+    const main = panel.querySelector('[aria-label="Main source"]');
+    expect(main).toBe(panel.querySelector('.vs-audio-lane'));
+    expect(main?.querySelector('[role="combobox"]')?.textContent).toContain('Live');
+    // One Select of stereo pairs for the channels, not an L and an R.
+    expect(screen.queryByRole('combobox', { name: 'left channel' })).toBeNull();
+    expect(panel.querySelector('.vs-audio-fold')).not.toBeNull();
+  });
+  it('offers stereo pairs, and mono for an odd last channel', () => {
+    expect(channelPairs(1).map((p) => p.label)).toEqual(['1']);
+    expect(channelPairs(2)).toEqual([{ label: '1–2', left: 1, right: 2 }]);
+    expect(channelPairs(5).map((p) => p.label)).toEqual(['1–2', '3–4', '5']);
+    expect(channelPairs(5)[2]).toEqual({ label: '5', left: 5, right: 5 });
   });
 });

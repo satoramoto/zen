@@ -8,12 +8,14 @@ import { Live } from './Live';
 
 /**
  * Live mode, whole, as `App` shows it: the Stage — the picture full-bleed,
- * and over it, on hover, the header's bare type along the top and Home's
- * floating transport with the effects' row under it. No sidebar, no dock bar.
- * It plays in the window on the way in, "Go full screen on…" a toast in the
- * corner until a display is picked (only a start in live mode, `windowed`
- * false, opens the output by itself). `\` pins the controls shown; ? lists
- * every control. The parts have stories of their own (Live/Stage…).
+ * and over it, on hover, the header's bare type along the top (laid out as
+ * Home's) and Home's floating transport: the preset at the top left, and at
+ * the foot Effects, ◀ ring ▶ centred, the dice and star. Effects (or E) opens
+ * the effects panel at the left. No sidebar, no dock bar, no toasts. It plays
+ * in the window on the way in, "Full screen on…" in the Output popover until a
+ * display is picked (only a start in live mode, `windowed` false, opens the
+ * output by itself). `\` pins the controls shown; ? lists every control. The
+ * parts have stories of their own (Live/Stage…).
  */
 /**
  * The fluid window (`parameters.frame: 'fill'`): the Stage fills the canvas at its real size, as
@@ -58,10 +60,11 @@ export const Playing: Story = {
     await waitFor(() => expect(root(canvasElement)).toBeInTheDocument());
     // No sidebar in live.
     await expect(canvasElement.querySelector('nav')).toBeNull();
-    // Going live plays in the window, with two displays too, until one is picked: the offer is a corner toast.
+    // Going live plays in the window, with two displays too, until one is picked: the offer is in the Output popover (no toasts).
     await waitFor(() => expect(root(canvasElement).dataset.windowed).toBe(''));
-    const go = await canvas.findByRole('button', { name: 'Go full screen on Projector (HDMI)' });
-    await expect(go.closest('.vs-stagelayout-toasts')).not.toBeNull();
+    await expect(canvasElement.querySelector('.vs-stagelayout-toasts')).toBeNull();
+    await userEvent.click(await canvas.findByRole('button', { name: 'Output, in this window' }));
+    const go = await within(canvas.getByRole('dialog', { name: 'Output, in this window' })).findByRole('button', { name: 'Go full screen on Projector (HDMI)' });
     await userEvent.click(go);
     await waitFor(() => expect(root(canvasElement).dataset.windowed).toBeUndefined());
     // The controls show while focus is in them.
@@ -71,8 +74,32 @@ export const Playing: Story = {
     await userEvent.keyboard('\\');
     await waitFor(() => expect(root(canvasElement).dataset.pinned).toBe(''));
     await shows(canvasElement);
+    await expect(canvas.getByText('Pinned')).toBeVisible();
     await userEvent.keyboard('\\');
     await waitFor(() => expect(root(canvasElement).dataset.pinned).toBeUndefined());
+  },
+};
+
+/**
+ * Design C with the effects panel open (E, or the Effects button): docked at the left under the
+ * header, in Home's side-panel material; the pads, Intensity, Speed, Colour and Trails, Mirror and
+ * Invert, Back to normal. E closes it again.
+ */
+export const EffectsOpen: Story = {
+  name: 'Effects open',
+  play: async ({ canvas, canvasElement }) => {
+    await waitFor(() => expect(root(canvasElement)).toBeInTheDocument());
+    await userEvent.keyboard('e');
+    const panel = await canvas.findByRole('complementary', { name: 'Effects' });
+    await shows(canvasElement);
+    await expect(canvas.getByRole('button', { name: 'Effects' })).toHaveAttribute('aria-expanded', 'true');
+    for (const name of ['Strobe (S)', 'Blackout (B)', 'Freeze (F)', 'Punch (P)']) await expect(within(panel).getByRole('button', { name })).toBeVisible();
+    await expect(within(panel).getByRole('slider', { name: 'intensity' })).toBeVisible();
+    for (const name of ['speed', 'hue', 'trails']) await expect(await within(panel).findByRole('slider', { name })).toBeVisible();
+    await expect(within(panel).getByRole('button', { name: 'Back to normal' })).toBeVisible();
+    const r = panel.getBoundingClientRect();
+    const win = canvasElement.querySelector('.vs-stagelayout')!.getBoundingClientRect();
+    await expect([r.left - win.left, r.top - win.top]).toEqual([20, 64]);
   },
 };
 
@@ -103,12 +130,14 @@ export const Busy: Story = {
   parameters: { world: { fx: FX_BUSY, lists: { ...LISTS, deck: { ...PLAYING_DECK, hold: true } } } },
 };
 
-/** One display: played in the window, the toast offering to cover it with the picture. */
+/** One display: played in the window, the Output popover offering to cover it with the picture. */
 export const OneDisplay: Story = {
   parameters: { world: { displays: [{ id: 1, index: 0, name: 'Built-in Retina Display', width: 3024, height: 1964, main: true }] } },
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     await waitFor(() => expect(root(canvasElement).dataset.windowed).toBe(''));
-    await expect(await within(canvasElement).findByRole('button', { name: 'Go full screen on Built-in Retina Display' })).toBeVisible();
+    await userEvent.click(await canvas.findByRole('button', { name: 'Output, in this window' }));
+    await expect(await within(canvas.getByRole('dialog')).findByRole('button', { name: 'Go full screen on Built-in Retina Display' })).toBeVisible();
   },
 };
 

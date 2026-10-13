@@ -1,16 +1,19 @@
-/* Live's controls over the picture (StageDock.tsx), under the header: Home's floating transport
-   (the preset at the top left, its star at the top right, the keys and the audio input at the
-   foot), and under its keys the effects' row: Strobe, Blackout, Freeze, Intensity as an Apple
-   slider row, More effects…. Type and glyphs on the shell's scrim, no boxes, no dock bar.
+/* Live's controls over the picture (StageDock.tsx), under the header: Home's floating transport,
+   the preset at the top left and one row at the foot: Effects on the left, ◀ ring ▶ dead centre,
+   the dice and star on the right. Type and glyphs on the shell's scrim, no boxes, no dock bar.
 
-   Who paints what: the shell (StageLayout) places it, paints the scrim and fades it in and out;
-   this paints nothing, fills the room it is given, and only its rows take presses (the clear
-   middle passes them to the picture). The corner toasts (StageNotices) are float Surfaces. */
+   Who paints what: the shell (StageLayout) places it 32px in from the window's sides, paints the
+   scrim and fades it in and out; this paints nothing, fills the room it is given, and only its
+   rows take presses (the clear middle passes them to the picture). The keys' hit areas reach 8px
+   past their glyphs, so the glyphs' outer edges, and the preset's name, sit on the 40px margin.
+
+   --vs-stagedock-clear  how far the preset's name moves right while the effects panel shows
+                         (368px: listed in StageDock.tsx's Tuning knobs) */
 
 .vs-stagedock {
+  --vs-stagedock-clear: calc(var(--space-6) * 11 + var(--space-4));
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
   height: 100%;
   min-width: 0;
   min-height: 0;
@@ -20,94 +23,35 @@
   pointer-events: none;
 }
 
-/* The effects' row, under the transport's keys: the keys, Intensity taking what's left, More
-   effects…; wraps once in the stacked form. */
-.vs-stagedock-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-1) var(--space-4);
-  min-width: 0;
-  pointer-events: auto;
+/* The preset's name, on the 40px margin (the dock's 32px and 8px), and clear of the effects panel
+   while it shows. */
+.vs-stagedock .vs-transport-mid {
+  padding-left: var(--space-2);
 }
-.vs-stagedock .vs-stagedock-keys {
-  flex: none;
-  margin-left: calc(var(--space-1) * -1.5); /* the keys' own padding, as the transport's */
+.vs-stagedock[data-panel] .vs-transport-mid {
+  padding-left: var(--vs-stagedock-clear);
 }
 
-/* An effect key: the glyph and the name, quiet; on, the name white and the glyph in the accent. */
-.vs-stagedock .lib-action-button-face.vs-stagedock-key {
-  gap: calc(var(--space-1) * 1.5); /* 6px */
+/* Effects: the spark, its word and its key, quiet; pressed while the panel shows. */
+.vs-stagedock .lib-action-button-face.vs-stagedock-effects {
+  gap: var(--space-2);
   padding: 0 var(--space-2);
   color: var(--text-2);
-  touch-action: none;
 }
-.vs-stagedock .lib-action-button-face.vs-stagedock-key:hover {
+.vs-stagedock .lib-action-button-face.vs-stagedock-effects:hover,
+.vs-stagedock .lib-action-button-face.vs-stagedock-effects[aria-expanded='true'] {
   color: var(--text-1);
 }
-.vs-stagedock .lib-action-button-face.vs-stagedock-key[data-on] {
-  color: var(--text-1);
-}
-.vs-stagedock .lib-action-button-face.vs-stagedock-key[data-on] svg {
-  color: var(--accent);
-}
-
-/* Intensity: the core slider's Apple row (its name leading, its reading trailing, the groove under
-   them), taking the row's room between the keys and More effects…. */
-.vs-stagedock .vs-stagedock-intensity {
-  flex: 1 1 calc(var(--control-h) * 6); /* 180px */
-  min-width: calc(var(--control-h) * 4); /* 120px */
-  max-width: calc(var(--control-h) * 10); /* 300px */
-}
-.vs-stagedock .vs-stagedock-intensity .lib-slider__caption {
-  color: var(--text-2);
-  --text-size: var(--size-caption);
-}
-.vs-stagedock .vs-stagedock-intensity .lib-slider__readout {
-  color: var(--text-1);
-  --text-size: var(--size-caption);
-}
-.vs-stagedock .vs-stagedock-intensity .lib-slider__track:focus-visible {
-  outline: 2px solid var(--vs-focus-ring);
-  outline-offset: 2px;
-}
-
-/* More effects…: quiet type with the mixer glyph, at the row's end. */
-.vs-stagedock .lib-action-button-face.vs-stagedock-more {
-  gap: calc(var(--space-1) * 1.5); /* 6px */
-  margin-left: auto;
-  padding: 0 calc(var(--space-1) * 1.5);
-  color: var(--text-2);
-}
-.vs-stagedock .lib-action-button-face.vs-stagedock-more:hover {
-  color: var(--text-1);
-}
-.vs-stagedock .lib-action-button-face:is(.vs-stagedock-key, .vs-stagedock-more):focus-visible {
+.vs-stagedock .lib-action-button-face.vs-stagedock-effects:focus-visible {
   outline: 2px solid var(--vs-focus-ring);
   outline-offset: 0;
 }
-
-/* The stacked form (STAGE_DOCK_FORMS, a narrow window): the keys on a row of their own, Intensity
-   and More effects… under them. */
-.vs-stagedock[data-form='stacked'] .vs-stagedock-keys {
-  flex-basis: 100%;
+.vs-stagedock-effects-key {
+  --text-size: var(--size-caption);
+  color: var(--text-4);
 }
 
-/* The corner toasts (StageNotices): Home's toast, a float Surface in caption type; the shell
-   stacks them at the window's bottom right. */
-.vs-stagedock-toast {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-.vs-stagedock-toast-type {
-  display: contents;
-}
-.vs-stagedock-toast .vs-stagedock-notice {
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
-}
-.vs-stagedock-hint {
-  margin: 0;
-  padding: var(--space-2) var(--space-3);
-  color: var(--text-2);
+/* The stacked form (STAGE_DOCK_FORMS, a narrow window): Effects its glyph alone. */
+.vs-stagedock[data-form='stacked'] :is(.vs-stagedock-effects-word, .vs-stagedock-effects-key) {
+  display: none;
 }

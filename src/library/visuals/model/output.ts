@@ -60,3 +60,25 @@ export type EscapeSays = 'down' | 'up';
  * or the app being left while it is held (`up`), so a hold can be timed.
  */
 export const onEscape = (f: (says: EscapeSays) => void): Promise<UnlistenFn> => listen<EscapeSays>('output-escape', (e) => f(e.payload));
+
+/**
+ * `output::Render`: how the live output is drawn. `resolution` is the size it
+ * renders at (`'display'`: the display's own pixels), `scale` multiplies it
+ * (1 = 100%), `fps` caps the frame rate (null: the display's refresh).
+ */
+export interface Render {
+  resolution: 'display' | [number, number];
+  scale: number;
+  fps: number | null;
+}
+export const RENDER_DEFAULT: Render = { resolution: 'display', scale: 1, fps: null };
+
+/**
+ * The render settings, and setting them (remembered for next time).
+ *
+ * Not in the native app yet: `output_render` and `output_set_render` still need
+ * adding to openflowfm/visuals. Until then these calls fail, and the page keeps
+ * the user's choice without saying so.
+ */
+export const render = () => invoke<Render>('output_render');
+export const setRender = (r: Render) => invoke<Render>('output_set_render', { render: r });

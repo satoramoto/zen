@@ -36,6 +36,13 @@
      shadow never paints under the picture), then the spread. */
   box-shadow: var(--layer-float-cast), 0 0 0 100vmax var(--surface-0);
 }
+/* The app's preview: the native view under the hole is square and no clip reaches it, so the hole
+   paints its corners (Views.css) in the spread's tone. Clipping here would cut those corners away
+   too, leaving the native view's square ones showing. */
+.vs-hero .vs-hero-row > .vs-preview {
+  --vs-hole-corner: var(--surface-0);
+  overflow: visible;
+}
 /* A still or thumbnail (and the empty box) has the dark backing behind it; the preview's hole
    paints nothing once it draws (Views.css backs it while loading). */
 .vs-hero .vs-hero-pic:not(.vs-preview) {

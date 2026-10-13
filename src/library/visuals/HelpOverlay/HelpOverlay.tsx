@@ -28,7 +28,7 @@ export type ControlId =
   | 'freeze'
   | 'tempo'
   | 'intensity'
-  | 'more'
+  | 'effects' /* the Stage's effects panel (it replaced More effects…) */
   | 'rate'
   | 'favourite'
   | 'punch'
@@ -65,7 +65,7 @@ export const CONTROLS: readonly Control[] = [
   { id: 'leave', where: 'status', name: '✕ Leave live', keys: '⌘⇧L, hold Esc', does: 'Back to your playlists and the library: the ✕ in the header or ⌘⇧L at once, or hold Esc for 3 seconds' },
   { id: 'now', where: 'playing', name: 'Now', keys: '', does: "What's playing" },
   { id: 'next', where: 'playing', name: 'Next', keys: '', does: 'What comes next, and when, for example in 8 beats' },
-  { id: 'fullscreen', where: 'playing', name: 'Go full screen on…', keys: '', does: 'Puts the picture full screen on that display. Shows while it plays in this window, as it does when you go live' },
+  { id: 'fullscreen', where: 'playing', name: 'Go full screen on…', keys: '', does: "Puts the picture full screen on that display. In the Output light's panel while it plays in this window, as it does when you go live" },
   { id: 'previous', where: 'controls', name: 'Previous', keys: '← ↑', does: 'Back to the preset before' },
   { id: 'random', where: 'controls', name: 'Random', keys: 'R', does: 'A preset picked at random' },
   { id: 'step', where: 'controls', name: 'Next', keys: '→ ↓', does: 'On to the next preset' },
@@ -75,7 +75,7 @@ export const CONTROLS: readonly Control[] = [
   { id: 'freeze', where: 'controls', name: 'Freeze', keys: 'hold F, ⇧F latches', does: 'Stops the picture while held; or press and hold the button' },
   { id: 'tempo', where: 'status', name: 'Tap tempo', keys: 'T', does: 'Tap the tempo in time, in the Beat panel or on T. Follows Link when others are in time' },
   { id: 'intensity', where: 'controls', name: 'Intensity', keys: '', does: `${Say('sensitivity')}: brightness and strobe level together, never to white` },
-  { id: 'more', where: 'controls', name: 'More effects…', keys: '', does: 'The rest: speed, colour, mirror, trails…' },
+  { id: 'effects', where: 'controls', stage: true, name: 'Effects', keys: 'E', does: 'Opens the effects panel at the left, and closes it: the held effects, intensity, speed, colour, trails, mirror, invert' },
   { id: 'rate', where: 'keys', name: 'Rate', keys: '1–5', does: 'Rates the preset from 1 to 5' },
   { id: 'favourite', where: 'keys', name: 'Favourite', keys: 'L', does: 'Stars the preset as a favourite, or takes the star off' },
   { id: 'punch', where: 'keys', name: 'Punch', keys: 'hold P, ⇧P latches', does: 'A burst of brightness while held' },
@@ -202,6 +202,8 @@ export const HOME_HELP: HelpList = {
  * so this overlay and every Modal or Sheet share one stack of traps and only the topmost hears Esc.
  * It does not use `Modal` itself: Modal has no room in its head for the "? or Esc closes" hint and
  * names its ✕ "Close", where this names it after the list.
+ *
+ * Live's list names the Stage's Effects panel and its key, E, where More effects… was.
  *
  * **Kept.** Every export (`ControlId`, `Where`, `Control`, `CONTROLS`, `GROUPS`, `control`,
  * `titleOf`, `padKey`, `HomeControl`, `HelpList`, `liveHelp`, `HOME_HELP`, `HelpOverlay`), all

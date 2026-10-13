@@ -48,6 +48,44 @@
   justify-self: end;
   pointer-events: auto;
 }
+/* `diceByStar`: the dice then the star, side by side in the star's corner. */
+.vs-transport[data-layout='overlay'] .vs-transport-top {
+  grid-area: star;
+  display: flex;
+  align-self: start;
+  justify-self: end;
+  pointer-events: auto;
+}
+/* `centreKeys`: two equal side columns, so the keys' column sits dead centre; the audio input
+   (when the bar keeps it) still at the right end. */
+.vs-transport[data-layout='overlay'][data-centre-keys] .vs-transport-bar > .lib-group__body {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: 'now now star' '. . .' 'lead keys right';
+}
+/* `lead` (with `centreKeys`; Live's Effects button): at the foot's left end, on the keys' line. */
+.vs-transport[data-layout='overlay'] .vs-transport-lead {
+  grid-area: lead;
+  display: flex;
+  justify-self: start;
+  min-width: 0;
+  pointer-events: auto;
+}
+/* `footStar` (with `diceByStar`; Live's Stage): the dice and star at the foot's right end, the
+   preset's name the whole top line, and the foot's three parts centred on one line. */
+.vs-transport[data-layout='overlay'][data-foot-star] .vs-transport-bar > .lib-group__body {
+  grid-template-areas: 'now now now' '. . .' 'lead keys right';
+  align-items: center;
+}
+.vs-transport[data-layout='overlay'][data-foot-star] .vs-transport-top {
+  grid-area: right;
+  align-self: center;
+}
+.vs-transport[data-layout='overlay'][data-centre-keys] .vs-transport-keys {
+  margin-left: 0;
+}
+.vs-transport[data-layout='overlay'][data-centre-keys] .vs-transport-right {
+  justify-self: end;
+}
 .vs-transport-star[aria-pressed='true'] {
   color: var(--text-1);
 }
@@ -95,6 +133,11 @@
   }
   .vs-transport .vs-transport-right {
     grid-area: right;
+  }
+  /* `footStar` keeps its one foot line (lead, keys centred, dice and star) however narrow. */
+  .vs-transport[data-layout='overlay'][data-foot-star] .vs-transport-bar > .lib-group__body {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas: 'now now now' '. . .' 'lead keys right';
   }
 }
 

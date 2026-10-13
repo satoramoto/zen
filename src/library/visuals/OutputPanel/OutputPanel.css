@@ -68,3 +68,10 @@
   background: color-mix(in oklab, var(--warning) 12%, transparent);
   color: var(--warning);
 }
+
+/* The render settings: resolution, scale, frame rate and the pixel line, on the column's gap. */
+.vs-output-render {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

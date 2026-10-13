@@ -15,13 +15,13 @@ import './StageLayout.css';
 
 /* ---------- the Stage's parts, declared (docs/assembly.md) ---------- */
 
-/** The header's 8px inset from the window's right edge. */
-const INSET: Units = { space: 2 };
+/** The header's 16px inset from the window's right edge. */
+const INSET: Units = { space: 4 };
 /** The window buttons' room at the header's start, 84px: x 24, three 12px buttons 8px apart, and 8px after. */
 export const LIGHTS: Units = { space: [5, 3, 3, 3, 2, 2, 2] };
-/** The controls' room round them on the scrim: 20px either side, 12px under. */
-const CONTROLS_W: Length = { space: [5, 5] };
-const CONTROLS_H: Length = { space: 3 };
+/** The controls' room round them on the scrim: 32px either side (the keys' hit areas reach 8px past their glyphs, so the glyphs sit on a 40px margin), 20px over them under the header, 36px under. */
+const CONTROLS_W: Length = { space: [6, 6] };
+const CONTROLS_H: Length = { space: [6, 5] };
 
 /** Forms with room added on each axis (the insets, the lights' room). */
 function padded(forms: Forms, w: Length, h: Length): Forms {
@@ -50,14 +50,14 @@ export const LEAVING_TEXT = 'Keep holding Esc to leave live';
 
 /**
  * The shell's props: the contract's `StageLayoutProps` less the crate, the hidden panels and the
- * window's size (Live has no crate, nothing hides now, and the screen fills its box), plus the pin, the corner toasts and the ambient light.
+ * window's size (Live has no crate, nothing hides now, and the screen fills its box), plus the pin, the effects panel and the ambient light.
  */
 export type StageProps = Pick<StageLayoutProps, 'warning' | 'inWindow' | 'leaving' | 'head' | 'dock' | 'centre' | 'children'> & {
   /** `\`: the controls stay shown, hovered or not. */
   pinned?: boolean;
-  /** The corner toasts, stacked at the window's bottom right: "Go full screen on…", notices, silence. */
-  toasts?: ReactNode;
-  /** The picture the toasts' and popovers' surfaces take their light from (the playing preset's thumbnail). */
+  /** The effects panel (`EffectsPanel`) while it is open, docked at the left under the header, over the controls' room; null or left out: none. */
+  panel?: ReactNode;
+  /** The picture the panel's and popovers' surfaces take their light from (the playing preset's thumbnail). */
   ambient?: AmbientSource;
 };
 
@@ -87,17 +87,20 @@ function Leaving() {
  * that fades in and out as Home's preview controls do: the header (`head`) on the window buttons'
  * line and the controls (`dock`, "Live controls") under it, on a scrim from the window's tint at
  * the top and the foot. The overlay shows while the window is hovered, while focus is in it or one
- * of its popovers is open, while `pinned` (`\`), and always with no hover (touch). The corner
- * toasts (`toasts`) stack at the bottom right, over everything, shown whether the controls are or
- * not. With the warning owed the picture is dark (the preview isn't mounted), the controls inert
+ * of its popovers is open (or the effects panel: its Effects button is expanded), while `pinned`
+ * (`\`), and always with no hover (touch). The effects panel (`panel`) docks at the left in the
+ * overlay, 20px in from the window's left and under the header, ending above the controls' foot
+ * row, so the Effects button under it stays in sight. With the warning owed the picture is dark (the preview isn't mounted), the controls inert
  * and dimmed, and `centre` (the warning) centred over the window. While Esc is held to leave live
  * (`leaving`), its progress shows over everything; the output never shows it. The whole Stage is
  * an `Ambient` lit by `ambient`, so the float surfaces over it take the picture's colours.
  *
  * **Changed.** No crate and no dock bar: the inset panels are gone, the header is bare type, and
  * the controls float on the scrim (Hero's look: its scrim and fade, the same knobs). Nothing hides
- * the controls any more, so `\` pins them shown; the peek hint is gone. "Go full screen on…" and
- * the notices left the picture's middle and the dock for the corner. The window is still an
+ * the controls any more, so `\` pins them shown; the peek hint is gone. Design C: no corner toasts
+ * ("Go full screen on…" is in the Output light's popover, the notices quiet words in the header);
+ * the controls keep a 40px margin at the sides (their 32px room and the keys' own 8px) and sit
+ * 36px over the foot; the effects panel is the overlay's one solid. The window is still an
  * assembled `Screen` (`stageSpec`, docs/assembly.md) over the picture: the header and the
  * controls take their forms from the room they are given. Everything sits in one `Opaque` scope,
  * so each layer over the picture draws its solid and no backdrop.
@@ -109,12 +112,14 @@ function Leaving() {
  * - `--vs-stagelayout-lights`: the window buttons' room, 84px.
  * - `--vs-stagelayout-fade` (160ms, Hero's `--vs-hero-fade`): how long the overlay fades (none under reduced motion).
  * - `--vs-stagelayout-scrim` (85%, Hero's `--vs-hero-scrim`): how much of the window's tint the scrim starts with.
- * - `--vs-stagelayout-toast-lift`: how far the toasts sit above the window's foot, clear of the controls' rows.
+ * - `--vs-stagelayout-panel` (340px): the effects panel's width; `--vs-stagelayout-panel-inset`
+ *   (20px): its inset from the window's left; `--vs-stagelayout-panel-top` (64px) and
+ *   `--vs-stagelayout-panel-foot` (100px): where it starts under the header and ends over the foot row.
  * - `--vs-stagelayout-z-*`: the parts' stacking over the picture.
  * - `--vs-stagelayout-hold`: Esc's hold (`LEAVE_HOLD_MS`), set inline on the progress.
  * - `--vs-hole-radius`: Views' `Preview` knob, set to 0 here (the picture is square; macOS rounds the window).
  */
-export function StageLayout({ pinned = false, warning = false, inWindow, leaving = false, head, dock, centre, toasts, ambient, children }: StageProps) {
+export function StageLayout({ pinned = false, warning = false, inWindow, leaving = false, head, dock, centre, panel, ambient, children }: StageProps) {
   const principles = useLayoutPrinciples();
   const spec = useMemo(() => stageSpec(), []);
   return (
@@ -125,6 +130,7 @@ export function StageLayout({ pinned = false, warning = false, inWindow, leaving
       data-pinned={pinned ? '' : undefined}
       data-warning={warning ? '' : undefined}
       data-windowed={inWindow ? '' : undefined}
+      data-panel={panel != null && panel !== false ? '' : undefined}
     >
       <Opaque className="vs-stagelayout-opaque">
         {/* The picture: the whole window under everything, whatever shows over it. */}
@@ -133,6 +139,12 @@ export function StageLayout({ pinned = false, warning = false, inWindow, leaving
         {/* The one overlay: the scrim, the header and the controls, fading together. */}
         <div className="vs-stagelayout-reveal" data-pinned={pinned ? '' : undefined}>
           <Surface radius="none" className="vs-stagelayout-scrim" aria-hidden="true" />
+          {/* The panel first in the tab order: opened by E with focus on the picture, Tab reaches it next. */}
+          {panel != null && panel !== false && (
+            <div className="vs-stagelayout-panel" inert={warning || undefined}>
+              {panel}
+            </div>
+          )}
           <Screen
             name="Stage"
             className="vs-stagelayout-screen"
@@ -154,8 +166,6 @@ export function StageLayout({ pinned = false, warning = false, inWindow, leaving
         </div>
 
         {warning && centre != null && <div className="vs-stagelayout-centre">{centre}</div>}
-
-        {toasts != null && <div className="vs-stagelayout-toasts">{toasts}</div>}
 
         {children}
 

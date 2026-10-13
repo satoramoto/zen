@@ -1,7 +1,7 @@
 /* Live's Stage (StageLayout.tsx): the picture full-bleed across the main window, and over it one
    overlay (the header and the controls on a scrim) that fades in on hover as Home's preview
-   controls do (Hero.css: the same scrim and fade). Toasts at the bottom right; the warning and
-   Esc's hold over everything.
+   controls do (Hero.css: the same scrim and fade). The effects panel docks at the left in the
+   overlay (no corner toasts); the warning and Esc's hold over everything.
 
    Where the header and the controls sit and how big they are is the solver's (stageSpec in
    StageLayout.tsx): nothing here sizes the screen, and no query decides it.
@@ -21,11 +21,14 @@
   /* Hero's fade and scrim (Hero.css --vs-hero-fade, --vs-hero-scrim). */
   --vs-stagelayout-fade: 160ms;
   --vs-stagelayout-scrim: 85%;
-  /* The toasts clear the controls' two rows at the foot. */
-  --vs-stagelayout-toast-lift: calc(var(--control-h) * 3 + var(--space-4));
+  /* The effects panel: 340px wide, 20px in from the window's left, from 64px down (12px under the
+     header) to 100px over the foot (clear of the controls' foot row, so Effects stays in sight). */
+  --vs-stagelayout-panel: calc(var(--space-6) * 10 + var(--space-4) + var(--space-1));
+  --vs-stagelayout-panel-inset: calc(var(--space-4) + var(--space-1));
+  --vs-stagelayout-panel-top: calc(var(--space-6) * 2);
+  --vs-stagelayout-panel-foot: calc(var(--space-6) * 3 + var(--space-1));
   --vs-stagelayout-z-reveal: 1;
   --vs-stagelayout-z-centre: 2;
-  --vs-stagelayout-z-toasts: 3;
   --vs-stagelayout-z-overlay: 10;
   position: relative;
   height: 100%;
@@ -75,6 +78,19 @@
 .vs-stagelayout-reveal[data-pinned] {
   opacity: 1;
 }
+/* A note owed (the header marks it `[data-note]`: no sound, a failure, a hint): the header shows
+   with the overlay otherwise hidden, on the scrim's top tint; the controls stay faded. */
+.vs-stagelayout-reveal:has(.vs-stagelayout-head [data-note]) {
+  opacity: 1;
+}
+.vs-stagelayout-dock {
+  transition: opacity var(--vs-stagelayout-fade) ease;
+}
+@media (hover: hover) {
+  .vs-stagelayout:not(:hover) .vs-stagelayout-reveal:has(.vs-stagelayout-head [data-note]):not(:focus-within):not([data-pinned]):not(:has([aria-expanded='true'])) .vs-stagelayout-dock {
+    opacity: 0;
+  }
+}
 @media (hover: none) {
   .vs-stagelayout-reveal {
     opacity: 1;
@@ -101,28 +117,28 @@
 }
 
 /* The header's row: the title bar's 52px, the type centred on the window buttons' line (y 28),
-   clear of them at its start and 8px in from the right. It paints nothing; its empty line drags
-   the window. Above the controls, so its popovers open over them. */
+   clear of them at its start and 16px in from the right. It paints nothing; its empty line drags
+   the window. Above the controls and the effects panel, so its popovers open over them. */
 .vs-stagelayout-head {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   min-width: 0;
   height: var(--vs-stagelayout-titlebar);
-  padding: 0 var(--space-2) 0 var(--vs-stagelayout-lights);
+  padding: 0 var(--space-4) 0 var(--vs-stagelayout-lights);
   box-sizing: border-box;
   pointer-events: auto;
 }
 
-/* The controls: the room under the header, 20px in at the sides and 12px over the foot (part of
-   their declared need); StageDock fills it. */
+/* The controls: the room under the header, 20px under it, 32px in at the sides and 36px over the
+   foot (part of their declared need: CONTROLS_W, CONTROLS_H); StageDock fills it. */
 .vs-stagelayout-dock {
   display: flex;
   flex-direction: column;
   height: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 0 var(--space-5) var(--space-3);
+  padding: calc(var(--space-4) + var(--space-1)) var(--space-6) calc(var(--space-6) + var(--space-1));
   box-sizing: border-box;
 }
 .vs-stagelayout-dock > * {
@@ -149,25 +165,22 @@
   pointer-events: auto;
 }
 
-/* The corner toasts (Home's): stacked at the bottom right, over the picture, clear of the
-   controls' rows, shown whether the controls are or not. */
-.vs-stagelayout-toasts {
+/* The effects panel, in the overlay (it fades with it, and keeps it shown while open: its Effects
+   button is expanded): docked at the left under the header, over the controls' room but ending
+   above their foot row. Never wider than the window allows. */
+.vs-stagelayout-panel {
   position: absolute;
-  right: var(--space-4);
-  bottom: var(--vs-stagelayout-toast-lift);
-  z-index: var(--vs-stagelayout-z-toasts);
+  top: var(--vs-stagelayout-panel-top);
+  bottom: var(--vs-stagelayout-panel-foot);
+  left: var(--vs-stagelayout-panel-inset);
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--space-2);
-  max-width: min(calc(var(--space-6) * 12), calc(100% - 2 * var(--space-4)));
-  pointer-events: none;
-}
-.vs-stagelayout-toasts:empty {
-  display: none;
-}
-.vs-stagelayout-toasts > * {
+  width: min(var(--vs-stagelayout-panel), calc(100% - 2 * var(--vs-stagelayout-panel-inset)));
   pointer-events: auto;
+}
+.vs-stagelayout-panel > * {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* Esc held to leave live: over everything in this window (never the output), an opaque card in
