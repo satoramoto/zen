@@ -70,7 +70,7 @@
   margin-top: calc(var(--space-3) + var(--space-1) / 2); /* 14px */
 }
 
-/* A section's heading: its title in the caption's grey, the chevron after it, faint until the
+/* A section's heading: its title in the caption's grey, the chevron after it, hidden until the
    heading is hovered or focused. The whole heading folds it. */
 .vs-isb-head {
   margin: 0;
@@ -100,11 +100,13 @@
   color: var(--text-1);
   background: none;
 }
+/* Hidden until the heading's row is hovered or the heading focused, folded or not (as Finder's
+   sidebar does); it keeps its room, so the title doesn't shift. */
 .vs-isb-chevron {
   flex: none;
-  opacity: 0.55;
+  opacity: 0;
 }
-.vs-isb-toggle:hover .vs-isb-chevron,
+.vs-isb-headrow:hover .vs-isb-chevron,
 .vs-isb-toggle:focus-visible .vs-isb-chevron {
   opacity: 1;
 }
