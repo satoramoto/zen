@@ -132,6 +132,17 @@ export interface Update {
 }
 /** A newer version on this build's channel, or null when this one is the latest. */
 export const updateCheck = () => invoke<Update | null>('update_check');
+/** Which builds updates come from: `release` (each published version) or `latest` (every build from main). */
+export type UpdateChannelName = 'release' | 'latest';
+/** The update channel in use, and the one a fresh install starts on. */
+export interface UpdateChannel {
+  channel: UpdateChannelName;
+  default: UpdateChannelName;
+}
+/** The update channel in use. */
+export const updateChannel = () => invoke<UpdateChannel>('update_channel');
+/** Change the update channel. Rejects with why when it couldn't be saved; it still applies until quit. */
+export const updateChannelSet = (channel: UpdateChannelName) => invoke<UpdateChannel>('update_channel_set', { channel });
 /** Download and install the update `updateCheck` found, then relaunch. */
 export const updateInstall = () => invoke<void>('update_install');
 

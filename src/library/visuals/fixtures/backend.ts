@@ -46,6 +46,7 @@ export interface World {
   crashes: api.CrashReport[];
   crashesEnabled: boolean;
   update: api.Update | null;
+  channel: api.UpdateChannel;
   sources: api.AudioSources;
   heard: api.Heard;
   audio?: AudioStatus;
@@ -87,6 +88,7 @@ export const world = (over: Partial<World> = {}): World => ({
   crashes: [],
   crashesEnabled: true,
   update: null,
+  channel: { channel: 'release', default: 'release' },
   sources: F.SOURCES,
   heard: F.HEARD,
   levels: [0.46, 0.4],
@@ -580,6 +582,11 @@ export function handler(w: World) {
         return null;
       case 'update_check':
         return w.update;
+      case 'update_channel':
+        return w.channel;
+      case 'update_channel_set':
+        w.channel = { ...w.channel, channel: args.channel as api.UpdateChannelName };
+        return w.channel;
       case 'update_install':
         return never;
     }
