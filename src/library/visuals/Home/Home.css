@@ -307,17 +307,24 @@
 .vs-home-tile:focus-within .vs-home-tile-tools {
   display: block;
 }
-.vs-home-tile-tools button {
+/* The ActionButton's face (its own class, so its quiet look doesn't win): a 24px circle, the
+   glyph centred, on the thumbnail's dark backing. */
+.vs-home-tile-tools .lib-action-button,
+.vs-home-tile-tools .lib-action-button-face {
+  display: grid;
+  place-items: center;
   width: var(--space-5);
   min-width: 0;
   height: var(--space-5);
   padding: 0;
+}
+.vs-home-tile-tools .lib-action-button-face {
   border: 0;
   border-radius: var(--radius-pill);
   color: var(--text-1);
   background: color-mix(in oklab, var(--key-black) 55%, transparent);
 }
-.vs-home-tile-tools button:hover {
+.vs-home-tile-tools .lib-action-button-face:hover {
   background: color-mix(in oklab, var(--key-black) 75%, transparent);
 }
 .vs-home-tile[data-missing] {
