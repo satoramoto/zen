@@ -34,6 +34,8 @@ later:
   breadcrumbs;
 - `Sheet` / `DeviceMore` / `driver`;
 - drawing modulations differently;
+- drawing buses (a labelled rail with short named stubs at each tap; until
+  then the binding draws a bus's taps as cords from its source);
 - `tb` rendering.
 
 Compatibility: every change to `Graph`, `GraphNode`, `Port` and `Device` is
@@ -72,7 +74,14 @@ export interface Node {
   [extra: string]: unknown; // unknown fields are preserved by every operation
 }
 
-export interface End { node: string; port: string }
+export interface PortEnd { node: string; port: string }
+export interface BusEnd { bus: string }
+export type End = PortEnd | BusEnd;   // Exposed.maps and Promoted.maps always use PortEnd
+
+// A named rail: one outlet feeds it (an edge whose `to` is the bus), any number of
+// inlets tap it (edges whose `from` is the bus). Purely presentational: it means the
+// direct edges source → each tap.
+export interface Bus { id: string; label?: string; kind?: string }
 
 export interface Edge {
   id: string;           // unique within its GraphDef
@@ -104,6 +113,7 @@ export interface GraphDef {
   outlets: Exposed[];   // ... and trailing edge
   params?: Promoted[];
   groups?: Group[];
+  buses?: Bus[];
   direction?: 'lr' | 'tb'; // default 'lr'
   [extra: string]: unknown;
 }
@@ -116,7 +126,8 @@ export interface GraphDoc {
 
 export type GraphErrorCode =
   | 'unknown-def' | 'unknown-node' | 'unknown-port' | 'unknown-edge' | 'unknown-group'
-  | 'duplicate-id' | 'wrong-side' | 'self-loop' | 'cycle-in-definitions' | 'bad-amount';
+  | 'duplicate-id' | 'wrong-side' | 'self-loop' | 'cycle-in-definitions' | 'bad-amount'
+  | 'unknown-bus' | 'bus-has-source' | 'bus-to-bus';
 
 export class GraphError extends Error { constructor(public code: GraphErrorCode, message: string); }
 
@@ -134,6 +145,11 @@ export function moveNode(doc: GraphDoc, def: string, node: string, x: number, y:
 export function connect(doc: GraphDoc, def: string, edge: Edge): GraphDoc;
 export function disconnect(doc: GraphDoc, def: string, edge: string): GraphDoc;
 export function validate(doc: GraphDoc): Issue[];
+export function addBus(doc: GraphDoc, def: string, bus: Bus): GraphDoc;
+export function removeBus(doc: GraphDoc, def: string, bus: string): GraphDoc;
+// The def's edges with every bus expanded: one edge source → tap per tap, ids
+// `${tapEdgeId}`, kind and role from the tap edge. Edges without a bus pass through.
+export function flatten(doc: GraphDoc, def: string): Edge[];
 ```
 
 New file `src/library/components/core/Graph/useGraphModel.ts`, exported from
@@ -203,6 +219,26 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 17. Adding an inlet or outlet to a definition is visible on every instance
     through `portsOf`, with no change to the instances themselves.
 
+### Buses
+
+17a. `addBus` adds a bus to a def. It throws `duplicate-id` if one with that id
+     exists, and `removeBus` throws `unknown-bus` if it doesn't.
+17b. `connect` accepts a `BusEnd` on either side:
+     - `to: {bus}` makes that edge the bus's source, and throws `bus-has-source`
+       if the bus already has one;
+     - `from: {bus}` makes a tap;
+     - both ends a bus throws `bus-to-bus`;
+     - an unknown bus throws `unknown-bus`.
+     A tap's `to` must still be an inlet (`wrong-side` otherwise), and a source's
+     `from` must be an outlet.
+17c. A bus may have taps before it has a source. `flatten` leaves those taps
+     out until a source exists.
+17d. `removeBus` removes the bus and every edge to or from it.
+17e. `flatten` returns the same connectivity as if every tap were a direct edge
+     from the bus's source outlet. Taps keep their own id, kind, role and amount.
+17f. A bus belongs to its def: `BusEnd`s resolve only against their own def's
+     `buses`. A subgraph reaches a parent's bus through an exposed inlet.
+
 ### validate
 
 18. `validate` never throws. It returns `[]` for a valid doc, and otherwise
@@ -216,7 +252,8 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
     - edges whose ends don't resolve, run in the wrong direction, or loop on
       one node;
     - `Exposed` and `Promoted` entries that don't resolve;
-    - `subgraph` and `group` references that don't resolve;
+    - `subgraph`, `group` and bus references that don't resolve;
+    - buses with more than one source, and edges with a bus at both ends;
     - out-of-range amounts;
     - cycles among definitions.
 20. Every doc produced only by the operations, starting from `emptyDoc`,
@@ -224,7 +261,8 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 
 ### Binding to Graph (`useGraphModel`)
 
-21. `cords` holds one `GraphCord` per edge of the bound def, with
+21. `cords` holds one `GraphCord` per edge of `flatten(doc, def)` (so a bus's
+    taps draw as cords from its source until buses get their own drawing), with
     `id = edge.id`, `kind = edge.kind`, `from = portKeyOf(edge.from)` and
     `to = portKeyOf(edge.to)`.
 22. `onConnect(from, to)` with two keys from `portKeyOf` calls `onChange`
