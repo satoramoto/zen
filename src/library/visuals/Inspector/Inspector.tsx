@@ -4,10 +4,10 @@ import { Text } from '../../primitives/Text';
 import type { LibraryRow } from '../model/api';
 import { Say } from '../model/words';
 import type { Prepared } from '../model/librarySearch';
-import { characterOf, colourNames, fieldSays, listed, type InspectorProps } from '../model/inspector-model';
+import { characterOf, colourNames, listed, type InspectorProps } from '../model/inspector-model';
 import { TagEditor } from '../TagEditor/TagEditor';
 import { Icon } from '../Icon/Icon';
-import { Field } from '../Field/Field';
+import { LibraryMap } from '../Field/LibraryMap';
 import { TuneCard } from '../Tune/Tune';
 import { AddAction, BackAction, CloseAction, EditAction, holding, NeverAction, PlayAction, StarAction } from './actions';
 import './Inspector.css';
@@ -15,71 +15,82 @@ import './Inspector.css';
 export type { InspectorProps } from '../model/inspector-model';
 
 /**
- * **Job.** The inspector ("Scope"): what is selected, as Finder's and Photos' inspectors show
- * it. Its header row holds the panel's controls and the actions on what it is about, as glyphs:
- * back (for one picked) at the left; Play (for one picked), star, add, never play and edit at the
- * right, then ✕. Under it every state reads in one order: what it is (the name large, its
- * authors), then its facts (style, its measures read out as one line of words, its colours as
- * dots, my tags), then the map (the field: the preset placed among the library, as an
- * instrument's XY display would), then its own speed and how much it reacts ("for this preset",
- * Tune) and the playlists holding it. It is about the preset playing, or one picked (a tile the
- * Home passes in) until "back". A dot in the field plays that preset (`onPick`), so the inspector
- * follows it as it follows any change of what plays; the dot playing, while a tile is shown, goes
- * back. For several picked together (`chosen`),
- * "n selected", their styles and tags, their pictures in the map's place, and the actions over
+ * **Job.** The inspector ("Scope"): the right-hand region's two parts. On top, the details of
+ * what is selected, as Finder's and Photos' inspectors show it; at the bottom, pinned, the
+ * library map (`LibraryMap`: the whole library by speed and brightness, the preset playing lit),
+ * which never depends on what the details are about. The details' header row holds the panel's
+ * controls and the actions on what it is about, as glyphs: back (for one picked) at the left;
+ * Play (for one picked), star, add, never play and edit at the right, then ✕. Under it every
+ * state reads in one order: what it is (the name large, its authors), then its facts (style, its
+ * measures read out as one line of words, its colours as dots, my tags), then its own speed and
+ * how much it reacts ("for this preset", Tune) and the playlists holding it. It is about the
+ * preset playing, or one picked (a tile the Home passes in) until "back". For several picked
+ * together (`chosen`), "n selected", their styles and tags, their pictures, and the actions over
  * all of them in the header (a tune is one preset's, so none shows for several). With no preset,
- * the source the Home passes (`source`, a playlist's head); with neither, the field still draws
- * the library, and it says so. Mount it in HomeLayout's `inspector` slot (its panel, the
- * right-hand `Region`, is InspectorPanel); it holds no state of its own beyond the field's pointer
- * and keyboard cursor.
+ * the source the Home passes (`source`, a playlist's head); with neither, it says nothing plays.
+ * A dot in the map plays that preset (`onPick`), so the details follow it as they follow any
+ * change of what plays; the dot playing goes back to it (`onBack`) while the details are about
+ * something else. The details scroll when the region is short; the map keeps its 4:3 at the
+ * region's width. Mount it in HomeLayout's `inspector` slot (its panel, the right-hand `Region`,
+ * is InspectorPanel); it holds no state of its own beyond the field's pointer and keyboard cursor.
  *
  * **Changed.** Its sections are `Group`s (the actions, the facts, the tune), named as the
  * original's groups were, with no visible label but the tune's heading. It paints nothing: the
  * panel's layer is behind it. Colours are the contract's ink steps and the raised caption
  * (visuals.css), spacing the scale's where the source's steps match. The several-picked count
- * sits on the black key at 60% rather than a literal black. A dot in the field plays rather than
- * shows (the Home's `onPick`), so it no longer leaves a picked preset that outlives its Play; with
- * nothing playing the words say a click plays one.
+ * sits on the black key at 60% rather than a literal black. The map is no longer one of the
+ * details (between the facts and the tune, given up for several picked's pictures or a source's
+ * card): it is its own section under them, always there, lighting the preset playing rather than
+ * the one shown. A dot plays rather than shows (the Home's `onPick`).
  *
- * **Kept.** Its props, the order, every name, role, title and word, Escape closing it unless
- * something inside took the key first or it was typed in a text box.
+ * **Kept.** Its props, the details' order, every name, role, title and word, Escape closing it
+ * unless something inside took the key first or it was typed in a text box.
  */
 export function Inspector(props: InspectorProps) {
-  const { subject: p, playing, chosen, source, error, playlists, onSet, onAddTo, onPlay, onEdit, onBack, onClose } = props;
+  const { subject: p, playing, playingPreset, chosen, source, error, playlists, library, mine, onSet, onAddTo, onPick, onPlay, onEdit, onBack, onClose } = props;
   const many = chosen && chosen.length > 1 ? chosen : null;
   const picked = !many && p !== null && p.row.key !== playing;
   // What the actions act on: several picked, or the one shown (none for the source or nothing).
   const on = many ?? (p ? [p] : null);
+  // The details are about the preset playing: one shown that plays, not several, not a source.
+  const aboutPlaying = !many && p !== null && p.row.key === playing;
+  // The map lights the preset playing: the Home's, else the one shown when it is the one playing.
+  const lit = playingPreset !== undefined ? playingPreset : aboutPlaying ? p : null;
+  // A dot plays (the Home's `onPick`); the dot playing brings the details back to it, and does nothing while they show it.
+  const pick = (row: LibraryRow) => (row.key !== playing ? onPick(row) : aboutPlaying ? undefined : onBack());
   useEscape(onClose);
   return (
     <div className="vs-inspector" data-none={many || p || source ? undefined : ''}>
-      {(picked || onClose || on) && (
-        <div className="vs-inspector-top">
-          {picked && (
-            <BackAction className="vs-inspector-back" onBack={onBack}>
-              <Text role="caption" className="vs-inspector-back-label" aria-hidden="true">
-                {Say('stage')}
-              </Text>
-            </BackAction>
-          )}
-          {on && (
-            <Group name={many ? 'on these presets' : 'on this preset'} label={false} className="vs-inspector-keys">
-              {picked && <PlayAction className="vs-inspector-key" onPlay={onPlay} children="" />}
-              <StarAction className="vs-inspector-key" chosen={on} onSet={onSet} children="" />
-              <AddAction className="vs-inspector-key" chosen={on} playlists={playlists} onAddTo={onAddTo} children="" />
-              <NeverAction className="vs-inspector-key" chosen={on} onSet={onSet} children="" />
-              {!many && <EditAction className="vs-inspector-key" onEdit={onEdit} children="" />}
-            </Group>
-          )}
-          <CloseAction className="vs-inspector-close" onClose={onClose} />
-        </div>
-      )}
-      {many ? <Selected {...props} chosen={many} /> : !p && source ? <div className="vs-inspector-source">{source}</div> : <Scope {...props} picked={picked} />}
-      {error && (
-        <Text as="p" role="caption" className="vs-inspector-error" ariaRole="alert">
-          {error}
-        </Text>
-      )}
+      <div className="vs-inspector-details">
+        {(picked || onClose || on) && (
+          <div className="vs-inspector-top">
+            {picked && (
+              <BackAction className="vs-inspector-back" onBack={onBack}>
+                <Text role="caption" className="vs-inspector-back-label" aria-hidden="true">
+                  {Say('stage')}
+                </Text>
+              </BackAction>
+            )}
+            {on && (
+              <Group name={many ? 'on these presets' : 'on this preset'} label={false} className="vs-inspector-keys">
+                {picked && <PlayAction className="vs-inspector-key" onPlay={onPlay} children="" />}
+                <StarAction className="vs-inspector-key" chosen={on} onSet={onSet} children="" />
+                <AddAction className="vs-inspector-key" chosen={on} playlists={playlists} onAddTo={onAddTo} children="" />
+                <NeverAction className="vs-inspector-key" chosen={on} onSet={onSet} children="" />
+                {!many && <EditAction className="vs-inspector-key" onEdit={onEdit} children="" />}
+              </Group>
+            )}
+            <CloseAction className="vs-inspector-close" onClose={onClose} />
+          </div>
+        )}
+        {many ? <Selected {...props} chosen={many} /> : !p && source ? <div className="vs-inspector-source">{source}</div> : <Scope {...props} />}
+        {error && (
+          <Text as="p" role="caption" className="vs-inspector-error" ariaRole="alert">
+            {error}
+          </Text>
+        )}
+      </div>
+      <LibraryMap library={library} mine={mine} playing={lit} onPick={pick} />
     </div>
   );
 }
@@ -103,40 +114,22 @@ function useEscape(onClose: InspectorProps['onClose']) {
   }, [on]);
 }
 
-/** One preset (or none): its name, its facts and tags, the field, then its tune and playlists (its actions are in the header). With none, the words saying so above the field. */
-function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, onBack, picked }: InspectorProps & { picked: boolean }) {
+/** One preset (or none): its name, its facts and tags, then its tune and playlists (its actions are in the header). With none, the words saying so. */
+function Scope({ subject: p, playlists, onSet }: InspectorProps) {
   const c = p ? characterOf(p) : null;
   const readout = c ? [c.speed.word, c.brightness.word, c.intensity.word].filter((w): w is string => !!w) : [];
   const colours = c ? colourNames(c) : [];
   const inLists = p ? holding(p, playlists) : null;
-  const measured = library.reduce((n, r) => (r.look ? n + 1 : n), 0);
-  // A dot plays (the Home's `onPick`); the dot playing goes back to it from a tile picked, and does nothing while it is shown.
-  const pick = (row: LibraryRow) => (row.key !== playing ? onPick(row) : picked ? onBack() : undefined);
-  const field = (
-    <Field
-      library={library}
-      mine={mine}
-      subject={p?.row.key ?? null}
-      playing={playing}
-      intensity={c?.intensity.at ?? null}
-      hue={c?.hues[0]?.css ?? 'var(--text-1)'}
-      description={fieldSays(c, measured, library.length)}
-      onPick={pick}
-    />
-  );
   if (!p || !c)
     return (
-      <>
-        <div className="vs-inspector-head vs-inspector-none">
-          <Text as="p" role="heading" className="vs-inspector-none-title">
-            Nothing playing yet
-          </Text>
-          <Text as="p" role="caption" className="vs-inspector-quiet">
-            Each dot is a preset, by how fast it moves and how bright it is. Click one to play it, and it lights up here.
-          </Text>
-        </div>
-        {field}
-      </>
+      <div className="vs-inspector-head vs-inspector-none">
+        <Text as="p" role="heading" className="vs-inspector-none-title">
+          Nothing playing yet
+        </Text>
+        <Text as="p" role="caption" className="vs-inspector-quiet">
+          Play a preset and its name, its look and its tune show here.
+        </Text>
+      </div>
     );
   return (
     <>
@@ -186,8 +179,6 @@ function Scope({ subject: p, playing, playlists, library, mine, onSet, onPick, o
         </div>
       </Group>
 
-      {field}
-
       <TuneCard key={p.row.key} subject={p} onSet={onSet} />
 
       {inLists && (
@@ -210,7 +201,7 @@ export function stylesSaid(chosen: readonly Prepared[]): string {
   return `${styles.slice(0, 2).join(', ')} and ${rest} other styles`;
 }
 
-/** Several presets picked together: how many, their styles and tags over all of them, and their pictures (star, add and never play over all of them are in the header). */
+/** Several presets picked together: how many, their styles and tags over all of them, and their pictures under those (star, add and never play over all of them are in the header). */
 function Selected({ chosen, onSet }: InspectorProps & { chosen: Prepared[] }) {
   const n = chosen.length;
   const more = n - PICTURES;

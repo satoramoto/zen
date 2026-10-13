@@ -6,7 +6,7 @@ import { LISTS, PLAYING_DECK, WARM_UP } from '../fixtures/fixtures';
 import { INSPECTOR_LABEL } from '../HomeLayout/HomeLayout';
 import { Home } from './Home';
 
-/** The field in the inspector: the listbox its dots are reached by from the keyboard. */
+/** The field in the inspector's library map: the listbox its dots are reached by from the keyboard. */
 const fieldOf = (panel: HTMLElement) => within(panel).getByRole('listbox', { name: 'The library by speed and brightness' });
 const panelOf = () => screen.getByRole('complementary', { name: INSPECTOR_LABEL });
 /** The inspector's name for what it is about. */
@@ -69,15 +69,15 @@ describe('the field in the Home', () => {
     await waitFor(() => expect(transportName()).toContain(a));
     expect(within(panel).queryByRole('button', { name: 'back to now playing' })).toBeNull();
     expect(within(panel).queryByRole('button', { name: 'play it' })).toBeNull();
-    // The playing ring is the lit one: no separate mark for a preset playing elsewhere.
-    expect(panel.querySelector('.vs-field-playing')).toBeNull();
+    // The map lights one dot, the one playing.
+    expect(panel.querySelectorAll('.vs-field-lit')).toHaveLength(1);
 
     // Another dot: the same again.
     const b = playNext(panel, 'ArrowUp');
     await waitFor(() => expect(shownName(panel)).toBe(b));
     await waitFor(() => expect(transportName()).toContain(b));
     expect(within(panel).queryByRole('button', { name: 'back to now playing' })).toBeNull();
-    expect(panel.querySelector('.vs-field-playing')).toBeNull();
+    expect(panel.querySelectorAll('.vs-field-lit')).toHaveLength(1);
 
     // The deck moving on by itself (next): the inspector follows it, not the dot played before.
     fireEvent.click(screen.getByRole('button', { name: 'next preset' }));
@@ -85,6 +85,6 @@ describe('the field in the Home', () => {
     const now = transportName();
     await waitFor(() => expect(now).toContain(shownName(panel)));
     expect(within(panel).queryByRole('button', { name: 'back to now playing' })).toBeNull();
-    expect(panel.querySelector('.vs-field-playing')).toBeNull();
+    expect(panel.querySelectorAll('.vs-field-lit')).toHaveLength(1);
   });
 });
