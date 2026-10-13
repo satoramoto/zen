@@ -47,7 +47,7 @@ const meta = {
   args: { param: volume, value: -6, length: 120, onChange: fn(), onRelease: fn() },
   argTypes: {
     orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
-    layout: { control: 'inline-radio', options: ['stacked', 'inline', 'inside'] },
+    layout: { control: 'inline-radio', options: ['stacked', 'inline', 'inside', 'row'] },
     side: { control: 'inline-radio', options: ['left', 'right'] },
     origin: { control: 'inline-radio', options: ['min', 'center'] },
     fill: { control: 'boolean' },
@@ -99,6 +99,19 @@ export const Inside: Story = {
 
 /** A row that asks for its fill back. */
 export const InsideFilled: Story = { ...Inside, args: { ...Inside.args, fill: true } };
+
+/** Apple's slider: the name leading and the reading trailing above a thin groove, a knob proud of it. */
+export const Row: Story = {
+  args: { layout: 'row', length: 'auto', param: amount, value: 42 },
+  render: (args) => (
+    <div style={{ width: 'calc(var(--control-h) * 7)' }}>
+      <Controlled {...args} />
+    </div>
+  ),
+};
+
+/** A row filled from the middle, as the inspector's tune sliders are (1× in the middle). */
+export const RowCenter: Story = { ...Row, args: { ...Row.args, param: pan, value: 0.3 } };
 
 /** Depth: shift-drag sets how far a modulator may carry it; the span runs the sign's way, `live` marks where it is. */
 export const Depth: Story = {

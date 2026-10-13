@@ -435,21 +435,33 @@ export const frostMaterials: Materials = {
     head: { inset: 'var(--space-3) 22px 0', rule: NO_SHADOW }, // decision 68: no lines; the header shares --pad's edge
   },
   tabs: {
-    // decision 68: controls are type, the active one underlined in --primary (home.css --line-active)
+    // docs/design-os-decisions.md 81 (the owner, over Apple's segmented thumb and visuals decision
+    // 68's underline): a switch
+    // is plain type, like the header's glyph buttons. No track, no face, no underline, no thumb;
+    // only the ink tells the chosen one.
     track: bare,
     tab: bare,
-    chosen: { fill: 'transparent', shadow: 'inset 0 -2px 0 var(--accent)', texture: 'none' },
-    ink: 'var(--text-3)',
-    chosenInk: 'var(--text-1)',
+    chosen: bare,
+    ink: 'var(--text-2)', // the header's panel toggles at rest (HomeLayout .vs-lay-toggle)
+    chosenInk: 'var(--text-1)', // the toggles open or hovered: white in the dark mode
     pad: '0px',
-    gap: 'var(--space-4)', // the header's Home | Live
-    tabPad: '0 0 var(--space-1)',
+    gap: 'var(--space-3)', // added: tight, about the toolbar glyphs' spacing
+    tabPad: '0px',
   },
-  well: quiet('var(--surface-2)'), // home.css: a progress track is --surface-2
+  // design-os decision 82: Apple's slider groove (macOS 27 UI Kit, openflowfm/visuals kit/tokens.css
+  // --mac-*-tracks-active-unfilled-bg: black 10–27% light, white 7–10% dark), as the ink at 12% so
+  // it reads in both modes. Was home.css's --surface-2, which all but vanished on light frost.
+  well: quiet('color-mix(in oklab, var(--text-1) 12%, transparent)'),
   screen: quiet('var(--surface-1)'), // home.css --surface-1: the now playing panel, one faint step
   key: { ...quiet('var(--surface-2)'), pressed: `inset 0 0 0 100vmax var(--surface-3)` }, // home.css --surface-3: a pressed key
-  // widgets theme.md: markers (a slider's thumb, a knob's pointer) are the text colour; a quiet cap of it
-  handle: quiet('color-mix(in oklab, var(--text-1) 22%, transparent)'),
+  handle: {
+    // design-os decision 82: Apple's knob (kit --mac-*-knobs-toggle-idle-bg, white 87.5%): a pale cap,
+    // its alpha following --surface-3's (0.6 light, 0.05 dark), so ~0.98 on light frost and ~0.83 on dark
+    fill: 'oklch(from var(--surface-3) calc(0.8 + l * 0.2) 0 h / calc(0.76 + alpha * 0.36))',
+    // kit --mac-*-knobs-toggle-idle-shadow: a specular top edge, a hairline rim, a soft cast (lit from above)
+    shadow: [`inset 0 1px 0 ${light(0.6)}`, `0 0 0 0.5px ${shade(0.18)}`, `0 1px 3px ${shade(0.3)}`].join(', '),
+    texture: 'none',
+  },
   lit: flatLit, // added: the frost palette has no bloom
 };
 
