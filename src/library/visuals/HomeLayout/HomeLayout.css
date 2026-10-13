@@ -89,6 +89,11 @@
 .vs-lay .vs-lay-head > .vs-lay-title {
   flex: none;
 }
+/* The header's words and buttons on the column's edges, level with the preview's: the slot is
+   the column's width already, so the header adds no inset of its own. */
+.vs-lay .vs-lay-head > .vs-header {
+  padding-inline: 0;
+}
 /* No sidebar docked: the window buttons are over the header, so it leaves them their room
    (stories' stand-in, or the app's own buttons, chrome.css), less the screen's gap it already
    sits in from the window's edge. */
