@@ -1,0 +1,165 @@
+/* AxisPicker: a chart axis's measure as a quiet chip on the axis, its ends' words either side,
+   and a float menu of the other measures.
+   Reads only contract variables and the --lib-axis-picker-* ones declared here.
+
+   --lib-axis-picker-wash        the chip's tint at rest, so it reads as pickable
+   --lib-axis-picker-wash-hover  the tint on hover, and on a highlighted option
+   --lib-axis-picker-wash-open   the tint while open or pressed
+   --lib-axis-picker-caret       the caret's length
+   --lib-axis-picker-gap         the least room between the chip and an end
+   --lib-axis-picker-tint        the wash over the chip now (on the trigger) */
+
+.lib-axis-picker {
+  --lib-axis-picker-wash: color-mix(in oklab, var(--text-1) 8%, transparent);
+  --lib-axis-picker-wash-hover: color-mix(in oklab, var(--text-1) 14%, transparent);
+  --lib-axis-picker-wash-open: color-mix(in oklab, var(--text-1) 18%, transparent);
+  --lib-axis-picker-caret: var(--space-2);
+  --lib-axis-picker-gap: var(--space-2);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lib-axis-picker-gap);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Vertical: a column along a plot's left edge, low at the bottom and high at the top (the DOM
+   runs low, chip, high, so the column runs reversed). */
+.lib-axis-picker[data-orientation='vertical'] {
+  flex-direction: column-reverse;
+  width: auto;
+  height: 100%;
+  min-height: 0;
+}
+
+/* No ends: just the chip, its own width (a title row). */
+.lib-axis-picker[data-bare] {
+  display: inline-flex;
+  width: auto;
+  height: auto;
+}
+
+/* The ends' words: caption Text, muted, tabular. Equal shares either side keep the chip centred. */
+.lib-axis-picker__end {
+  flex: 1 1 0;
+  min-width: 0;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.lib-axis-picker__low { text-align: left; }
+.lib-axis-picker__high { text-align: right; }
+.lib-axis-picker[data-orientation='vertical'] .lib-axis-picker__end {
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+  text-align: center;
+}
+.lib-axis-picker[data-orientation='vertical'] .lib-axis-picker__low { align-items: flex-end; }
+.lib-axis-picker[data-orientation='vertical'] .lib-axis-picker__high { align-items: flex-start; }
+
+/* The chip: a quiet trigger (no field edge), a body Text at label size and strong weight. */
+.lib-axis-picker__trigger {
+  --lib-axis-picker-tint: var(--lib-axis-picker-wash);
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: calc(var(--control-h) * 0.8);
+  margin: 0;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--lib-axis-picker-tint);
+  box-shadow: none;
+  color: var(--text-1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.lib-axis-picker__trigger:hover:not(:disabled) { --lib-axis-picker-tint: var(--lib-axis-picker-wash-hover); }
+.lib-axis-picker[data-open] .lib-axis-picker__trigger,
+.lib-axis-picker__trigger:active:not(:disabled) {
+  --lib-axis-picker-tint: var(--lib-axis-picker-wash-open);
+}
+.lib-axis-picker__trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.lib-axis-picker__trigger:disabled {
+  color: var(--text-4);
+  cursor: not-allowed;
+}
+
+/* Vertical: the chip reads bottom to top. */
+.lib-axis-picker[data-orientation='vertical'] .lib-axis-picker__trigger {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  max-width: none;
+  max-height: 100%;
+  min-height: 0;
+  min-width: calc(var(--control-h) * 0.8);
+  padding: var(--space-2) 0;
+}
+
+.lib-axis-picker__value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A drawn triangle in the current ink, pointing down (at the plot, under it); flips while open. */
+.lib-axis-picker__caret {
+  flex: none;
+  width: var(--lib-axis-picker-caret);
+  height: calc(var(--lib-axis-picker-caret) * 0.6);
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  opacity: 0.6;
+  transition: transform 120ms ease-out;
+}
+/* Vertical: drawn pointing left, so the chip's half-turn points it right, at the plot. */
+.lib-axis-picker[data-orientation='vertical'] .lib-axis-picker__caret {
+  width: calc(var(--lib-axis-picker-caret) * 0.6);
+  height: var(--lib-axis-picker-caret);
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+}
+.lib-axis-picker[data-open] .lib-axis-picker__caret { transform: rotate(180deg); }
+
+/* The menu: the Popover's float Layer, at least the chip's width. Each option is a body Text at
+   label size. */
+.lib-axis-picker__panel {
+  box-sizing: border-box;
+  min-width: var(--lib-popover-anchor);
+}
+.lib-axis-picker__menu {
+  padding: var(--space-1);
+}
+.lib-axis-picker__option {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--control-h) * 0.85);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.lib-axis-picker__option[data-active] {
+  background: var(--lib-axis-picker-wash-hover);
+}
+.lib-axis-picker__option[data-chosen] {
+  background: var(--selected);
+  color: var(--selected-text);
+}
+.lib-axis-picker__option[data-chosen][data-active] {
+  box-shadow: inset 0 0 0 var(--border-width) var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-axis-picker__caret { transition: none; }
+}

@@ -25,6 +25,8 @@ export {
 } from './ActionButton/ActionButton';
 export { Select, useSelect, TYPING_WINDOW, type SelectProps, type UseSelectOptions } from './Select/Select';
 export { Segmented, useSegmented, itemsOf, type SegmentedProps } from './Segmented/Segmented';
+/** A chart axis's measure, picked from a menu on the axis itself, with its ends' words either side. */
+export { AxisPicker, type AxisPickerProps } from './AxisPicker/AxisPicker';
 export { Popover, Popup, usePopover, type PopoverProps, type PopupProps, type PopupAnchor, type PopupBox, type Dismissal } from './Popover/Popover';
 export { Toggle, Switch, useToggle, CONTROL_SIZES, type ToggleProps, type SwitchProps, type ControlSize } from './Toggle/Toggle';
 export { Checkbox, CheckMark, DashMark, type CheckboxProps, type CheckProps, type ToggleValue } from './Checkbox/Checkbox';
