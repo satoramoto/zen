@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
@@ -24,13 +24,36 @@ const inWindow: Decorator = (Story, { parameters }) => {
   );
 };
 
-/** The bar with play/pause working, reporting to the story's spy. */
+/** The bar with the ring working (a click holds or lets go), reporting to the story's spy. */
 function Stateful(props: TransportBarProps): ReactNode {
   const [playing, setPlaying] = useState(props.playing);
   return (
     <TransportBar
       {...props}
       playing={playing}
+      onPlayPause={() => {
+        setPlaying((p) => !p);
+        props.onPlayPause();
+      }}
+    />
+  );
+}
+
+/** As Home drives it: the time on the preset ticking once a second while it moves on by itself, the next preset at the length, held while held. */
+function Ticking(props: TransportBarProps): ReactNode {
+  const [playing, setPlaying] = useState(props.playing);
+  const length = props.position?.length ?? 10;
+  const [elapsed, setElapsed] = useState(props.position?.elapsed ?? 0);
+  useEffect(() => {
+    if (!playing) return;
+    const t = window.setInterval(() => setElapsed((e) => (e + 1 >= length ? 0 : e + 1)), 1000);
+    return () => window.clearInterval(t);
+  }, [playing, length]);
+  return (
+    <TransportBar
+      {...props}
+      playing={playing}
+      position={{ elapsed, length: playing ? length : null }}
       onPlayPause={() => {
         setPlaying((p) => !p);
         props.onPlayPause();
@@ -54,7 +77,7 @@ const meta = {
     stepIn: ' in the playlist',
     position: { elapsed: 12, length: 30 },
     onAudioError: fn(),
-    // As Home has it with a playlist moving on by itself: the time says so, and that H stays.
+    // As Home has it with a playlist moving on by itself.
     moves: true,
   },
   parameters: { scope: 'bare', layout: 'fullscreen' },
@@ -62,17 +85,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Moving on by itself, 12 s into 30: pause holds, the steps step, the time reads 0:12 and −0:18. */
+/** The auto-change key: the toggle named "move on by itself". */
+const ring = (canvas: { getByRole: (role: string, o: { name: string }) => HTMLElement }) => canvas.getByRole('button', { name: 'move on by itself' });
+
+/** Moving on by itself, 12 s into 30: the ring pressed and two fifths round, saying when it moves on; a click holds; the steps step. No playhead, no time. */
 export const Playing: Story = {
-  play: async ({ canvas, args }) => {
-    const track = canvas.getByRole('progressbar', { name: 'time on this preset' });
-    await expect(track).toHaveAttribute('aria-valuenow', '12');
-    await expect(track).toHaveAttribute('aria-valuemax', '30');
-    await expect(canvas.getByText('0:12')).toBeVisible();
-    await expect(canvas.getByText('−0:18')).toBeVisible();
-    await userEvent.click(canvas.getByRole('button', { name: 'pause' }));
+  play: async ({ canvas, canvasElement, args }) => {
+    const key = ring(canvas);
+    await expect(key).toHaveAttribute('aria-pressed', 'true');
+    await expect(key).toHaveAttribute('data-fill', '0.400');
+    await expect(key).toHaveAttribute('title', 'Moves on in 0:18 · click or H to stay on this preset');
+    await expect(canvas.queryByRole('progressbar')).toBeNull();
+    await expect(canvas.queryByRole('timer')).toBeNull();
+    await expect(canvasElement.querySelector('.vs-transport')!.textContent).not.toMatch(/\d:\d\d/);
+    await userEvent.click(key);
     await expect(args.onPlayPause).toHaveBeenCalledOnce();
-    await waitFor(() => expect(canvas.getByRole('button', { name: 'play' })).toBeVisible());
+    await waitFor(() => expect(ring(canvas)).toHaveAttribute('aria-pressed', 'false'));
     await userEvent.click(canvas.getByRole('button', { name: 'previous preset' }));
     await userEvent.click(canvas.getByRole('button', { name: 'next preset' }));
     await userEvent.click(canvas.getByRole('button', { name: 'random preset' }));
@@ -82,21 +110,27 @@ export const Playing: Story = {
   },
 };
 
-/** Holding: play shows, and the time stands. */
+/** Holding: the ring empty and dimmed, saying it stays; a click lets it move on again. */
 export const Paused: Story = {
   args: { playing: false },
   play: async ({ canvas, args }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'play' }));
+    const key = ring(canvas);
+    await expect(key).toHaveAttribute('aria-pressed', 'false');
+    await expect(key).toHaveAttribute('data-fill', '0.000');
+    await expect(key).toHaveAttribute('data-state', 'held');
+    await expect(key).toHaveAttribute('title', 'Staying on this preset · click or H to move on by itself');
+    await expect(getComputedStyle(key).color).not.toBe(getComputedStyle(canvas.getByRole('button', { name: 'next preset' })).color);
+    await userEvent.click(key);
     await expect(args.onPlayPause).toHaveBeenCalledOnce();
-    await waitFor(() => expect(canvas.getByRole('button', { name: 'pause' })).toBeVisible());
+    await waitFor(() => expect(ring(canvas)).toHaveAttribute('aria-pressed', 'true'));
   },
 };
 
-/** Before anything plays: the keys, and a quiet track with no time. */
+/** Before anything plays: the keys, the ring quiet. */
 export const NothingPlaying: Story = {
   args: { playing: false, position: null, stepIn: '' },
   play: async ({ canvas }) => {
-    await expect(canvas.queryByRole('progressbar')).toBeNull();
+    await expect(ring(canvas)).toHaveAttribute('data-state', 'off');
     await expect(canvas.getByRole('button', { name: 'next preset' })).toBeVisible();
     // The bar sits on the main column's surface and paints none of its own.
     const bar = canvas.getByRole('button', { name: 'next preset' }).closest('.vs-transport');
@@ -105,30 +139,87 @@ export const NothingPlaying: Story = {
   },
 };
 
-/** Staying until moved on (held, on Link's bars, moving on by itself off): the time on it counts, with no end and no countdown. */
+/** Staying until moved on (on Link's bars, moving on by itself off): the plain loop, nothing to fill. */
 export const UntilMovedOn: Story = {
   name: 'Until moved on',
   args: { position: { elapsed: 75, length: null } },
   play: async ({ canvas, canvasElement }) => {
-    await expect(canvas.getByRole('timer', { name: /time on this preset: 1:15/ })).toHaveTextContent('1:15');
-    await expect(canvas.queryByRole('progressbar')).toBeNull();
-    await expect(canvasElement.querySelector('.vs-transport-fill')).toBeNull();
-    await expect(canvas.queryByText(/^−/)).toBeNull();
+    const key = ring(canvas);
+    await expect(key).toHaveAttribute('data-state', 'endless');
+    await expect(key).toHaveAttribute('data-fill', '0.000');
+    await expect(key).toHaveAttribute('title', 'Moves on by itself · click or H to stay on this preset');
+    await expect(canvasElement.querySelector('.vs-transport-loop-fill')).toBeNull();
   },
 };
 
-/** In an 800 px window with no sidebar docked: the time gives way, and never runs under the audio input. */
+/** The deck ticking as Home drives it, a 10 s preset: the ring fills a tenth a second, and starts again from empty, never running back; a click holds it empty and dim. */
+export const Fills: Story = {
+  name: 'Fills to the change',
+  render: (args) => <Ticking {...args} />,
+  args: { position: { elapsed: 7, length: 10 } },
+  play: async ({ canvas, canvasElement }) => {
+    const key = ring(canvas);
+    await expect(key).toHaveAttribute('data-fill', '0.700');
+    await waitFor(() => expect(key).toHaveAttribute('data-fill', '0.800'), { timeout: 1500 });
+    const fill = canvasElement.querySelector('.vs-transport-loop-fill') as SVGPathElement;
+    await expect(getComputedStyle(fill).transitionDuration).toBe('1s');
+    // Round to the change, then empty again at once.
+    await waitFor(() => expect(key).toHaveAttribute('data-fill', '0.000'), { timeout: 3500 });
+    await expect(canvasElement.querySelector('.vs-transport-loop-fill')).toHaveAttribute('data-back');
+    await waitFor(() => expect(key).toHaveAttribute('data-fill', '0.100'), { timeout: 1500 });
+    await expect(canvasElement.querySelector('.vs-transport-loop-fill')).not.toHaveAttribute('data-back');
+    await userEvent.click(key);
+    await waitFor(() => expect(key).toHaveAttribute('data-state', 'held'));
+    await expect(key).toHaveAttribute('data-fill', '0.000');
+  },
+};
+
+/** The length run out (30 s of 30, or past it): the ring full, the arrowhead lit, moving on. */
+export const RunOut: Story = {
+  name: 'Length run out',
+  args: { position: { elapsed: 31, length: 30 } },
+  play: async ({ canvas, canvasElement }) => {
+    await expect(ring(canvas)).toHaveAttribute('data-fill', '1.000');
+    await expect(ring(canvas)).toHaveAttribute('title', 'Moving on · click or H to stay on this preset');
+    await expect(canvasElement.querySelector('.vs-transport-loop-head')).toHaveAttribute('data-lit');
+  },
+};
+
+/** A long preset, past ten minutes: the tooltip counts it in minutes. */
+export const LongPreset: Story = {
+  args: { position: { elapsed: 754, length: 900 } },
+  play: async ({ canvas }) => {
+    await expect(ring(canvas)).toHaveAttribute('title', 'Moves on in 2:26 · click or H to stay on this preset');
+  },
+};
+
+/** The middle (the preset playing) between the keys and the audio input, never under either, and the bar not scrolling. */
+async function middleFits(root: HTMLElement) {
+  const rect = (sel: string) => (root.querySelector(sel) as HTMLElement).getBoundingClientRect();
+  const keys = rect('.vs-transport-keys');
+  const mid = rect('.vs-transport-mid');
+  const right = rect('.vs-transport-right');
+  await expect(mid.left).toBeGreaterThanOrEqual(keys.right - 0.5);
+  await expect(mid.right).toBeLessThanOrEqual(right.left + 0.5);
+  const now = root.querySelector('.vs-transport-now') as HTMLElement | null;
+  if (now) {
+    const n = now.getBoundingClientRect();
+    await expect(n.left).toBeGreaterThanOrEqual(mid.left - 0.5);
+    await expect(n.right).toBeLessThanOrEqual(mid.right + 0.5);
+    // One line.
+    await expect(n.height).toBeLessThan(24);
+  }
+  const bar = root.querySelector('.vs-transport') as HTMLElement;
+  await expect(bar.scrollWidth).toBeLessThanOrEqual(bar.clientWidth);
+}
+
+/** In an 800 px window with no sidebar docked: the middle never runs under the keys or the audio input. */
 export const At800: Story = {
   name: 'At 800 px',
   parameters: { frame: { width: 800, sidebar: 'hidden' } },
+  args: { now: { name: 'Flexi - mindblob mix', from: 'from Warm-up · 3 of 10' } },
   play: async ({ canvasElement }) => {
-    const time = (canvasElement.querySelector('.vs-transport-time') as HTMLElement).getBoundingClientRect();
-    const right = (canvasElement.querySelector('.vs-transport-right') as HTMLElement).getBoundingClientRect();
-    const keys = (canvasElement.querySelector('.vs-transport-keys') as HTMLElement).getBoundingClientRect();
-    await expect(time.right).toBeLessThanOrEqual(right.left + 0.5);
-    await expect(time.left).toBeGreaterThanOrEqual(keys.right - 0.5);
-    const bar = canvasElement.querySelector('.vs-transport') as HTMLElement;
-    await expect(bar.scrollWidth).toBeLessThanOrEqual(bar.clientWidth);
+    await middleFits(canvasElement);
   },
 };
 
@@ -155,42 +246,29 @@ export const Slow: Story = {
   },
 };
 
-/** A long preset, past ten minutes: the time stays in its place. */
-export const LongPreset: Story = {
-  args: { position: { elapsed: 754, length: 900 } },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByText('12:34')).toBeVisible();
-    await expect(canvas.getByText('−2:26')).toBeVisible();
-  },
-};
-
 /** In a 900 px window. */
 export const At900: Story = {
   name: 'At 900 px',
   parameters: { frame: { width: 900 } },
+  args: { now: { name: 'Flexi - mindblob mix', from: 'from Warm-up · 3 of 10' } },
   play: async ({ canvas, canvasElement }) => {
-    await expect(canvas.getByRole('progressbar')).toBeVisible();
-    const bar = canvasElement.querySelector('.vs-transport') as HTMLElement;
-    await expect(bar.scrollWidth).toBeLessThanOrEqual(bar.clientWidth);
+    await expect(ring(canvas)).toBeVisible();
+    await middleFits(canvasElement);
   },
 };
 
-/** The preset playing left of the time: its name, and where it plays from quieter, on one line. */
+/** The preset playing in the middle: its name, and where it plays from quieter, on one line. */
 export const NowPlaying: Story = {
   name: 'Now playing',
   args: { now: { name: 'Flexi - mindblob mix', from: 'from Warm-up · 3 of 10' } },
   play: async ({ canvas, canvasElement }) => {
     await expect(canvas.getByText('Flexi - mindblob mix')).toBeVisible();
     await expect(canvas.getByText(/from Warm-up/)).toBeVisible();
-    const now = (canvasElement.querySelector('.vs-transport-now') as HTMLElement).getBoundingClientRect();
-    const time = (canvasElement.querySelector('.vs-transport-time') as HTMLElement).getBoundingClientRect();
-    await expect(now.right).toBeLessThanOrEqual(time.left + 0.5);
-    // One line.
-    await expect(now.height).toBeLessThan(24);
+    await middleFits(canvasElement);
   },
 };
 
-/** A long name in an 800 px window with no sidebar: it ellipsises; the keys, the time and the audio input keep their places, nothing overlapping. */
+/** A long name in an 800 px window with no sidebar: it ellipsises; the keys and the audio input keep their places, nothing overlapping. */
 export const NowLongAt800: Story = {
   name: 'Now playing, long name, 800 px',
   parameters: { frame: { width: 800, sidebar: 'hidden' } },
@@ -201,70 +279,19 @@ export const NowLongAt800: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const rect = (sel: string) => (canvasElement.querySelector(sel) as HTMLElement).getBoundingClientRect();
-    const keys = rect('.vs-transport-keys');
-    const now = rect('.vs-transport-now');
-    const time = rect('.vs-transport-time');
-    const right = rect('.vs-transport-right');
-    await expect(now.left).toBeGreaterThanOrEqual(keys.right - 0.5);
-    await expect(now.right).toBeLessThanOrEqual(time.left + 0.5);
-    await expect(time.right).toBeLessThanOrEqual(right.left + 0.5);
+    await middleFits(canvasElement);
     const el = canvasElement.querySelector('.vs-transport-now') as HTMLElement;
     // Ellipsised on one line.
     await expect(el.scrollWidth).toBeGreaterThan(el.clientWidth);
-    await expect(now.height).toBeLessThan(24);
-    // The time keeps a usable width.
-    await expect(time.width).toBeGreaterThanOrEqual(100);
-    const bar = canvasElement.querySelector('.vs-transport') as HTMLElement;
-    await expect(bar.scrollWidth).toBeLessThanOrEqual(bar.clientWidth);
   },
 };
 
-/** The length run out (30 s of 30, or past it): the time on it alone, not a countdown stuck at −0:00. */
-export const RunOut: Story = {
-  name: 'Length run out',
-  args: { position: { elapsed: 31, length: 30 } },
-  play: async ({ canvas }) => {
-    await expect(canvas.getByRole('timer', { name: 'time on this preset: 0:31' })).toHaveTextContent('0:31');
-    await expect(canvas.queryByRole('progressbar')).toBeNull();
-    await expect(canvas.queryByText(/^−/)).toBeNull();
-  },
-};
-
-/** What the time does, said after it: moving on by itself and H to stay; once held, staying and H to move on. Narrow, the words give way before the track. */
-export const SaysWhatItDoes: Story = {
-  name: 'Says it moves on, and H holds',
-  play: async ({ canvas, canvasElement }) => {
-    await expect(canvas.getByText('moves on by itself · H to stay')).toBeVisible();
-    await userEvent.click(canvas.getByRole('button', { name: 'pause' }));
-    await waitFor(() => expect(canvas.getByText('staying · H to move on')).toBeVisible());
-    const track = (canvasElement.querySelector('.vs-transport-track') as HTMLElement).getBoundingClientRect();
-    await expect(track.width).toBeGreaterThanOrEqual(100);
-  },
-};
-
-/** The words after the time in an 800 px window with a long name: they give way (ellipsised) and the track keeps its width. */
-export const SaysAt800: Story = {
-  name: 'Says it moves on, 800 px',
-  parameters: { frame: { width: 800, sidebar: 'hidden' } },
-  args: { now: { name: 'Flexi - mindblob mix', from: 'from Warm-up · 3 of 10' } },
-  play: async ({ canvasElement }) => {
-    // The time is narrow here with or without the words: they give way entirely, the track keeps its least.
-    const track = (canvasElement.querySelector('.vs-transport-track') as HTMLElement).getBoundingClientRect();
-    const hint = (canvasElement.querySelector('.vs-transport-hint') as HTMLElement).getBoundingClientRect();
-    await expect(track.width).toBeGreaterThanOrEqual(40);
-    await expect(hint.width).toBeLessThan(track.width);
-    const bar = canvasElement.querySelector('.vs-transport') as HTMLElement;
-    await expect(bar.scrollWidth).toBeLessThanOrEqual(bar.clientWidth);
-  },
-};
-
-/** In a 1600 px window: the track no wider than its cap, in the middle. */
+/** In a 1600 px window, a long name: still between its neighbours. */
 export const At1600: Story = {
   name: 'At 1600 px',
   parameters: { frame: { width: 1600 } },
+  args: { now: { name: 'Flexi - mindblob mix', from: 'from Warm-up · 3 of 10' } },
   play: async ({ canvasElement }) => {
-    const time = canvasElement.querySelector('.vs-transport-time') as HTMLElement;
-    await expect(time.getBoundingClientRect().width).toBeLessThanOrEqual(560.5);
+    await middleFits(canvasElement);
   },
 };

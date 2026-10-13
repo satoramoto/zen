@@ -40,8 +40,8 @@ function Window({ width, form }: Args) {
 
 /**
  * **The Stage's dock.** Home's transport bar as an opaque inset panel along the
- * bottom of the picture: ◀ ⏸ ▶ R, where pause is HOLD; the preset playing and
- * where from; the time on it; the audio input. Under it the deck's Next (and
+ * bottom of the picture: ◀ the auto-change ring ▶ R, where a click on the ring is
+ * HOLD; the preset playing and where from; the audio input. Under it the deck's Next (and
  * when), HOLD, the star and rating; Strobe and Freeze (held while pressed,
  * Shift latches) and Blackout (a toggle) as keys with their letters;
  * Intensity; More effects…. In the compact form (the original's dock under
@@ -74,7 +74,7 @@ async function nothingOverlaps(root: HTMLElement) {
   }
 }
 
-/** Playing Warm-up on Link's bars: Next names the fourth item and the beats until it; pause holds, and Next says nothing comes. */
+/** Playing Warm-up on Link's bars: Next names the fourth item and the beats until it; the ring holds, and Next says nothing comes. */
 export const Playing: Story = {
   play: async ({ canvas, canvasElement }) => {
     await expect(await canvas.findByText(WARM_UP.items[3].name)).toBeVisible();
@@ -82,8 +82,9 @@ export const Playing: Story = {
     await expect(canvas.getByRole('button', { name: 'Strobe (hold S, ⇧S latches)' })).toBeVisible();
     await expect(canvas.getByRole('slider', { name: 'Intensity' })).toHaveAttribute('aria-valuetext', '50%');
     await nothingOverlaps(canvasElement);
-    await userEvent.click(canvas.getByRole('button', { name: 'pause' }));
-    await expect(await canvas.findByRole('button', { name: 'play' })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'move on by itself' })).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(canvas.getByRole('button', { name: 'move on by itself' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'move on by itself' })).toHaveAttribute('aria-pressed', 'false'));
     await waitFor(() => expect(canvasElement.querySelector('.vs-stagedock-next-line')!.textContent).toContain('held'));
     await userEvent.click(canvas.getByRole('button', { name: 'Blackout (B)' }));
     await waitFor(() => expect(canvas.getByRole('button', { name: 'Blackout (B)' })).toHaveAttribute('aria-pressed', 'true'));
@@ -108,12 +109,12 @@ export const Narrower: Story = {
   },
 };
 
-/** Mid-set on a mood: HOLD on (the Hold pill, play showing), the strobe latched. */
+/** Mid-set on a mood: HOLD on (the Hold pill, the ring not pressed), the strobe latched. */
 export const Busy: Story = {
   parameters: { world: { fx: { ...FX_BUSY, strobe: true }, lists: { ...LISTS, deck: MOOD_DECK } } },
   play: async ({ canvas }) => {
     await expect(await canvas.findByText('Hold')).toBeVisible();
-    await expect(canvas.getByRole('button', { name: 'play' })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'move on by itself' })).toHaveAttribute('aria-pressed', 'false');
     await waitFor(() => expect(canvas.getByRole('button', { name: /^Strobe/ })).toHaveAttribute('aria-pressed', 'true'));
   },
 };

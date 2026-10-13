@@ -1,9 +1,10 @@
+import { useEffect, useRef } from 'react';
 import { Group } from '../../layout/Group';
 import { Text } from '../../primitives/Text';
 import { Numbers } from '../Numbers/Numbers';
 import { SourcePicker } from '../SourcePicker/SourcePicker';
 import { FrameRate } from '../Views/Views';
-import { Icon } from '../Icon/Icon';
+import { Icon, LOOP_HEAD, LOOP_RING, strokeFor } from '../Icon/Icon';
 import type { Forms } from '../../layout/assembly';
 import './TransportBar.css';
 
@@ -12,30 +13,35 @@ export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 
 
 /**
  * **Job.** The bar along the bottom of the home's main column (HomeLayout's `bar` slot): the
- * transport, the hero above being the picture alone. ◀ play/pause ▶ R on the left; in the middle
- * the preset playing and where it plays from (`now`), then the time on it and how long until the
- * next one (the time on it alone once that has run out); the audio input on the right, and
+ * transport, the hero above being the picture alone. ◀ the auto-change ring ▶ R on the left; in
+ * the middle the preset playing and where it plays from (`now`); the audio input on the right, and
  * before it a warning only while the picture draws slowly (`FrameRate slowOnly`).
  *
- * **Changed.** The keys are a library `Group` (unlabelled: the bar names them). Sizes and tones
- * read the contract (the track is the raised layer's tint, the time in the readout face with
- * tabular figures); the side padding is the main column's `--mat-plate-inset`. The audio input
- * is the library port of `SourcePicker`, quiet type at the bar's end. The bar is a toolbar
- * `Group` ("transport controls", inside the "transport" region), so every control in it takes its
- * quiet look by context: the source picker's Select is text and a caret, not a field.
+ * **Changed.** Presets are endless (decision 86): no playhead, no time on it, no countdown, no
+ * track. Where play/pause was, the auto-change key: a loop ring (`Icon` `loop`) that fills
+ * clockwise with `elapsed / length` while the deck moves on by itself, full at the change, then
+ * empty again at once (it never runs backwards). Held, the ring is empty and dimmed; with no length
+ * (stays until moved on, Link's bars) it is the plain glyph; with nothing playing, quiet. A click
+ * or H holds or lets go (`onPlayPause`); it is a toggle named "move on by itself", pressed while
+ * the deck does, its tooltip saying what is happening, how long until the next change when known,
+ * and what a click does (`loopTitle`). The keys are a library `Group` (unlabelled: the bar names
+ * them); sizes and tones read the contract; the side padding is the main column's
+ * `--mat-plate-inset`. The audio input is the library port of `SourcePicker`, quiet type at the
+ * bar's end. The bar is a toolbar `Group` ("transport controls", inside the "transport" region),
+ * so every control in it takes its quiet look by context.
  *
  * **Tuning knobs** (TransportBar.css):
  * - `--vs-transport-h` (64px): the bar's height.
- * - `--vs-transport-small`: the time's and the hint's type, a pixel under the caption.
- * - `--vs-transport-track-radius` (2px): the track's and its fill's corners.
+ * - `--vs-transport-tick` (1s): how long the ring eases between the position's ticks (none under
+ *   reduced motion).
  *
- * **Kept.** Props, `clock`, `timeHint`, copy, titles, roles (the "transport" region, the
- * progressbar, the timer) and how the time reads; the middle never running under its neighbours.
- * No preview, so no hole: the bar paints nothing, sitting over the hero's spread shadow, which
- * paints the main column.
+ * **Kept.** Props (`position` now only feeds the ring and its tooltip; `moves` only the tooltip),
+ * `clock`, the step keys and their titles, the "transport" region; the middle never running under
+ * its neighbours. No preview, so no hole: the bar paints nothing, sitting over the hero's spread
+ * shadow, which paints the main column.
  */
 export interface TransportBarProps {
-  /** Whether the deck is moving on by itself (pause shows) or holding (play shows). */
+  /** Whether the deck is moving on by itself (the ring pressed and filling) or holding (the ring empty and dimmed). */
   playing: boolean;
   onPlayPause(): void;
   /** Step: -1 previous, 1 next, 0 random. */
@@ -45,14 +51,14 @@ export interface TransportBarProps {
   /**
    * Seconds on the preset playing and its length before the deck moves on (the
    * deck's `seconds`); a null length when it stays until moved on (held, on
-   * Link's bars, moving on by itself off): the time on it counts, with no end.
+   * Link's bars, moving on by itself off): the ring has nothing to fill.
    * Null when nothing plays.
    */
   position: { elapsed: number; length?: number | null } | null;
   onAudioError(e: unknown): void;
-  /** The preset playing, left of the time: its name, and where it plays from as `playsFrom` says it ("from Warm-up · 3 of 10"); null or left out: nothing playing. One line, the name brighter, ellipsised before the controls or the audio input give way. */
+  /** The preset playing: its name, and where it plays from as `playsFrom` says it ("from Warm-up · 3 of 10"); null or left out: nothing playing. One line, the name brighter, ellipsised before the controls or the audio input give way. */
   now?: { name: string; from?: string } | null;
-  /** Whether the deck moves on by itself when not held (a playlist's timing, or Link's bars): the time says so, and that H stays. Left out: it says nothing. */
+  /** Whether the deck moves on by itself when not held (a playlist's timing, or Link's bars): with no length, the ring's tooltip says it moves on by itself rather than that it stays. Left out: it stays. */
   moves?: boolean;
 }
 
@@ -62,28 +68,77 @@ export function clock(seconds: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
+/** How far round the ring is: `elapsed / length`, 0–1; 0 when held, with no length, or with nothing playing. */
+export function loopFill(playing: boolean, position: TransportBarProps['position']): number {
+  if (!playing || !position || position.length === null || position.length === undefined) return 0;
+  if (position.length <= 0) return 1;
+  return Math.min(1, Math.max(0, position.elapsed / position.length));
+}
+
 /**
- * The quiet words after the time, so a newcomer can tell the preset moves on by
- * itself and that Hold (H, or ⏸) stops it: while it moves on, "moves on by
- * itself · H to stay"; held, "staying · H to move on". None when it doesn't move
- * on by itself (`moves` false), held or not.
+ * The ring's tooltip: what is happening, then what a click (or H) does. "Moves on in 0:18 · click
+ * or H to stay on this preset" while it counts to a change; "Staying on this preset · click or H
+ * to move on by itself" while held.
  */
-export function timeHint(playing: boolean, moves: boolean): { text: string; title: string } | null {
-  if (!moves) return null;
-  return playing
-    ? { text: 'moves on by itself · H to stay', title: 'Moves on to the next preset by itself. H, or ⏸, stays on this one until pressed again' }
-    : { text: 'staying · H to move on', title: 'Staying on this preset. H, or ▶, moves on by itself again' };
+export function loopTitle(playing: boolean, position: TransportBarProps['position'], moves: boolean): string {
+  if (!playing) return 'Staying on this preset · click or H to move on by itself';
+  const stay = 'click or H to stay on this preset';
+  if (position && position.length !== null && position.length !== undefined) {
+    const left = position.length - position.elapsed;
+    return `${left > 0 ? `Moves on in ${clock(Math.ceil(left))}` : 'Moving on'} · ${stay}`;
+  }
+  return `${moves || !position ? 'Moves on by itself' : 'Stays until moved on'} · ${stay}`;
+}
+
+/** The ring's glyph: the loop, its unfilled ring quiet under a fill that runs clockwise along it to the arrowhead. */
+function LoopRing({ fill, timed, size }: { fill: number; timed: boolean; size: number }) {
+  // Back to empty at a change: no easing, so it never runs backwards round the ring.
+  const last = useRef(fill);
+  const back = fill < last.current;
+  useEffect(() => {
+    last.current = fill;
+  }, [fill]);
+  return (
+    <svg
+      className="vs-icon vs-transport-loop"
+      data-icon="loop"
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeFor(size)}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      focusable="false"
+    >
+      {timed ? (
+        <>
+          <path className="vs-transport-loop-track" d={LOOP_RING} />
+          <path
+            className="vs-transport-loop-fill"
+            d={LOOP_RING}
+            pathLength={1}
+            strokeDasharray="1 1"
+            data-back={back ? '' : undefined}
+            // An empty fill draws no dot at the start (a round cap on a zero-length dash would).
+            style={{ strokeDashoffset: 1 - fill, opacity: fill > 0 ? undefined : 0 }}
+          />
+          <path className="vs-transport-loop-head" d={LOOP_HEAD} data-lit={fill >= 1 ? '' : undefined} />
+        </>
+      ) : (
+        <path d={LOOP_RING + LOOP_HEAD} />
+      )}
+    </svg>
+  );
 }
 
 /** The bar. */
 export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, onAudioError, now, moves = false }: TransportBarProps) {
-  const endless = position !== null && (position.length === null || position.length === undefined);
-  // Once the length has run out (the deck about to move on, or held there), there is nothing left to count down: the time on it alone, as with no end.
-  const spent = position !== null && !endless && position.elapsed >= Math.max(0, position.length ?? 0);
-  const open = endless || spent;
-  const length = position && !open ? Math.max(0, position.length ?? 0) : 0;
-  const elapsed = position ? (open ? Math.max(0, position.elapsed) : Math.min(Math.max(0, position.elapsed), length)) : 0;
-  const hint = position ? timeHint(playing, moves) : null;
+  const timed = playing && position !== null && position.length !== null && position.length !== undefined;
+  const fill = loopFill(playing, position);
+  const state = position === null ? 'off' : !playing ? 'held' : timed ? 'timed' : 'endless';
   return (
     <div className="vs-transport" role="region" aria-label="transport">
       {/* A toolbar: every control in it takes its quiet look (the source picker is text and a caret, not a field). */}
@@ -96,12 +151,16 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
             as="button"
             weight="strong"
             type="button"
-            className="vs-transport-key vs-transport-play"
-            aria-label={playing ? 'pause' : 'play'}
-            title={playing ? 'Hold on this preset (H)' : 'Move on by itself again (H)'}
+            className="vs-transport-key vs-transport-auto"
+            aria-label="move on by itself"
+            aria-pressed={playing}
+            aria-keyshortcuts="H"
+            title={loopTitle(playing, position, moves)}
+            data-state={state}
+            data-fill={fill.toFixed(3)}
             onClick={onPlayPause}
           >
-            <Icon name={playing ? 'pause' : 'play'} size={18} />
+            <LoopRing fill={fill} timed={timed} size={18} />
           </Text>
           <Text as="button" weight="strong" type="button" className="vs-transport-key" aria-label="next preset" title={`Next preset${stepIn} (→)`} onClick={() => onStep(1)}>
             <Icon name="next" />
@@ -123,45 +182,6 @@ export function TransportBar({ playing, onPlayPause, onStep, stepIn, position, o
               )}
             </Text>
           )}
-          <div className="vs-transport-time" data-off={position ? undefined : ''} data-open={open ? '' : undefined}>
-            {open ? (
-              <>
-                {/* No end to count down to (or none left): the time on it, and a track with nothing to fill. */}
-                <Text tabular className="vs-transport-num" ariaRole="timer" aria-label={`time on this preset: ${clock(elapsed)}${endless ? ', until moved on' : ''}`}>
-                  {clock(elapsed)}
-                </Text>
-                <div className="vs-transport-track" aria-hidden="true" />
-                <Text tabular className="vs-transport-num" aria-hidden="true" />
-              </>
-            ) : position ? (
-              <>
-                <Text tabular className="vs-transport-num">
-                  {clock(elapsed)}
-                </Text>
-                <div
-                  className="vs-transport-track"
-                  role="progressbar"
-                  aria-label="time on this preset"
-                  aria-valuemin={0}
-                  aria-valuemax={length}
-                  aria-valuenow={elapsed}
-                  aria-valuetext={`${clock(elapsed)} of ${clock(length)}`}
-                >
-                  <div className="vs-transport-fill" style={{ width: length ? `${(elapsed / length) * 100}%` : '0%' }} />
-                </div>
-                <Text tabular className="vs-transport-num">
-                  −{clock(length - elapsed)}
-                </Text>
-              </>
-            ) : (
-              <div className="vs-transport-track" aria-hidden="true" />
-            )}
-            {hint && (
-              <Text className="vs-transport-hint" title={hint.title}>
-                {hint.text}
-              </Text>
-            )}
-          </div>
         </div>
         <Text as="div" className="vs-transport-right">
           <FrameRate slowOnly />

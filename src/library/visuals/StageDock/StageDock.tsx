@@ -53,9 +53,9 @@ function useElapsed(current: string | null, since: number, length: number | null
 }
 
 /**
- * Home's transport bar driving the deck: pause is HOLD (the preset stays, as
- * the H key and today's Hold pad have it), ◀ ▶ step, R random, the preset
- * playing and where from, the time on it, the audio input.
+ * Home's transport bar driving the deck: a click on the auto-change ring is
+ * HOLD (the preset stays, as the H key and today's Hold pad have it), ◀ ▶ step,
+ * R random, the preset playing and where from, the audio input.
  */
 function useTransport(live: LiveState): TransportBarProps {
   const deck = live.deck;

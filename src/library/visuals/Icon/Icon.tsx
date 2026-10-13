@@ -61,6 +61,8 @@ export const ICON_NAMES = [
   'audio',
   'mood',
   'intensity',
+  // Home's transport: the deck moving on by itself, preset after preset.
+  'loop',
 ] as const;
 export type IconName = (typeof ICON_NAMES)[number];
 
@@ -78,6 +80,15 @@ const solid = { fill: 'currentColor' } as const;
 
 /** The two long rows of a playlist; the third, short one leaves room for its mark. */
 const rows = 'M2.25 3.75H13.75M2.25 7.75H13.75M2.25 11.75H7.25';
+
+/**
+ * The loop's ring: from twelve o'clock clockwise round to half past ten (315°),
+ * the gap left for its arrowhead. TransportBar fills along this same path
+ * (`pathLength` 1), so the fill starts at the top and ends at the arrowhead.
+ */
+export const LOOP_RING = 'M8 2.25A5.75 5.75 0 1 1 3.93 3.93';
+/** The loop's arrowhead at the ring's end, pointing on round, clockwise: its point on the ring, a leg down inside and a leg out to the left. */
+export const LOOP_HEAD = 'M3.93 6.18V3.93H1.68';
 
 /** The glyphs, on a 16×16 box; the svg strokes them unless a shape says otherwise. */
 const GLYPHS: Record<IconName, ReactNode> = {
@@ -241,6 +252,8 @@ const GLYPHS: Record<IconName, ReactNode> = {
       <rect x="5.25" y="5.25" width="5.5" height="5.5" rx="1.25" />
     </>
   ),
+  // A ring that comes round to its start: moving on by itself, preset after preset, with no end.
+  loop: <path d={LOOP_RING + LOOP_HEAD} />,
 };
 
 /** The stroke, in the 16-unit box's units, for an icon `size` px across: 1.5 px at 16, 1/32 px more or less per px. */
