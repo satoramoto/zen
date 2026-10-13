@@ -151,6 +151,92 @@ describe('assemble: pairs', () => {
   });
 });
 
+describe('assemble: aspect', () => {
+  const WIDE: ScreenSpec = { ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'contain' } };
+
+  it('a wide window: the largest 16:9 room, full height, centred, a band each side', () => {
+    const p = assemble(WIDE, { w: 2000, h: 900 }, P);
+    expect(p.room).toEqual({ x: 200, y: 0, w: 1600, h: 900 });
+    expect(p.bands).toEqual([
+      { x: 0, y: 0, w: 200, h: 900 },
+      { x: 1800, y: 0, w: 200, h: 900 },
+    ]);
+  });
+
+  it('a tall window: full width, centred, a band above and below', () => {
+    const p = assemble(WIDE, { w: 1600, h: 1200 }, P);
+    expect(p.room).toEqual({ x: 0, y: 150, w: 1600, h: 900 });
+    expect(p.bands).toEqual([
+      { x: 0, y: 0, w: 1600, h: 150 },
+      { x: 0, y: 1050, w: 1600, h: 150 },
+    ]);
+  });
+
+  it('an exact window: the room is the window, no bands', () => {
+    const p = assemble(WIDE, { w: 1920, h: 1080 }, P);
+    expect(p.room).toEqual({ x: 0, y: 0, w: 1920, h: 1080 });
+    expect(p.bands).toEqual([]);
+  });
+
+  it('a fractional room keeps its exact ratio; its offset is whole px', () => {
+    const p = assemble(WIDE, { w: 1217, h: 752 }, P);
+    expect(p.room.w / p.room.h).toBeCloseTo(16 / 9, 12);
+    expect(p.room).toMatchObject({ x: 0, y: 33, w: 1217 });
+    expect(p.bands[1].y + p.bands[1].h).toBeCloseTo(752, 9);
+  });
+
+  it('without an aspect the room is the window', () => {
+    expect(assemble(DEMO_SPEC, { w: 2000, h: 900 }, P)).toMatchObject({ room: { x: 0, y: 0, w: 2000, h: 900 }, bands: [] });
+  });
+
+  it('places everything in the room exactly as a window of that size: forms step, the header spans and the body zooms by the room', () => {
+    for (const win of [
+      { w: 2000, h: 900 },
+      { w: 900, h: 1000 },
+      { w: 600, h: 400 },
+      { w: 300, h: 600 },
+    ]) {
+      const p = assemble(WIDE, win, P);
+      const q = assemble(DEMO_SPEC, { w: p.room.w, h: p.room.h }, P);
+      expect({ ...p, room: q.room, bands: [] }, `${win.w}x${win.h}`).toEqual(q);
+      expect(p.regions.bar.rect.w).toBe(p.room.w);
+    }
+    // 300 × 600 gives a 300 × 168.75 room: the floor holds and it overflows, as a window that size does.
+    expect(assemble(WIDE, { w: 300, h: 600 }, P)).toMatchObject({ overflow: true, zoom: expect.closeTo(24 / 28, 6) });
+  });
+
+  it('refuses a ratio that is not a positive number', () => {
+    expect(() => assemble({ ...DEMO_SPEC, aspect: { ratio: 0 } }, { w: 800, h: 600 }, P)).toThrow(/positive/);
+    expect(() => assemble({ ...DEMO_SPEC, aspect: { ratio: Number.NaN } }, { w: 800, h: 600 }, P)).toThrow(/positive/);
+  });
+
+  it('on screen: the zones sit in the room, and the bands are ground with nothing in them', () => {
+    render(<Screen name="Locked" spec={WIDE} room={{ w: 2000, h: 900 }} principles={P} regions={{ bar: <button type="button">Bar</button>, now: 'Now', side: 'Side', pads: 'Pads' }} />);
+    const root = screen.getByRole('group', { name: 'Locked' });
+    expect(root).toHaveAttribute('data-aspect', '1.778');
+    const room = root.querySelector<HTMLElement>(':scope > [data-part="room"]')!;
+    expect(room.style.getPropertyValue('--lib-at-x')).toBe('200');
+    expect(room.style.getPropertyValue('--lib-at-w')).toBe('1600');
+    expect(Array.from(room.children).map((n) => (n as HTMLElement).dataset.part)).toEqual(['header', 'body']);
+    const bands = Array.from(root.querySelectorAll<HTMLElement>(':scope > [data-part="band"]'));
+    expect(bands).toHaveLength(2);
+    for (const band of bands) {
+      expect(band).toHaveAttribute('data-layer', 'ground');
+      expect(band).toHaveAttribute('aria-hidden', 'true');
+      expect(band).toBeEmptyDOMElement();
+    }
+    expect(bands[1].style.getPropertyValue('--lib-at-x')).toBe('1800');
+  });
+
+  it('on screen without an aspect: no bands, the room is the box', () => {
+    render(<Screen name="Free" spec={DEMO_SPEC} room={{ w: 900, h: 330 }} principles={P} regions={{}} />);
+    const root = screen.getByRole('group', { name: 'Free' });
+    expect(root.querySelectorAll('[data-part="band"]')).toHaveLength(0);
+    expect(root).not.toHaveAttribute('data-aspect');
+    expect(root.querySelector<HTMLElement>(':scope > [data-part="room"]')!.style.getPropertyValue('--lib-at-w')).toBe('900');
+  });
+});
+
 describe('Screen with a spec', () => {
   function Pads() {
     const form = useForm(PAD_FORMS);

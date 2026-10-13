@@ -87,6 +87,8 @@ export type StageLayout = 'split' | 'stacked';
  * from the bar to the keys. The app bar (the header) and the keys and status line (the footer)
  * never step down or zoom; only the body zooms, and only when no step down helps, never below
  * the pack's `minTarget`. A region's form changes only its own shape; the Stage never reaches in.
+ * The screen is 16:9 (`aspect`): it is laid out in the largest 16:9 room inside the window, and
+ * the rest of the window is ground bands (letterbox or pillarbox).
  *
  * Each region is a library `Region` on the theme's `plate` material, so the material decides how
  * a region looks, the room inside it (`--mat-plate-inset`) and the space between regions
@@ -104,8 +106,8 @@ export type StageLayout = 'split' | 'stacked';
  * The status line sits in the fixed footer under the keys, so a message never moves a region.
  *
  * **Kept.** The original's regions and every one of their callbacks, passed straight through;
- * the 1440 × 900 board and the 1217 × 752 small screen; the keys spanning the full width; the
- * tap tempo rule (two or more taps in time, the last four count).
+ * the 1217 × 752 small screen (now a 16:9 room inside it; the board is 1920 × 1080); the keys
+ * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
  */
 export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked', onPlacement }: StageProps) {
   const taps = useRef<number[]>([]);

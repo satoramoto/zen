@@ -22,7 +22,7 @@ const meta = {
     withLibraryTheme,
   ],
   parameters: { layout: 'fullscreen' },
-  args: { ...stageBoard, width: 1440, height: 900, tipAction: fn() },
+  args: { ...stageBoard, width: 1920, height: 1080, tipAction: fn() },
   argTypes: {
     appBar: { control: 'object', table: { category: 'AppBar' } },
     display: { control: 'object', table: { category: 'Display' } },
@@ -42,7 +42,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * The board at 1440 × 900: Am7 in Main B, Main C next after bar 4, running at 104; split F#2 with
+ * The board at 1920 × 1080 (16:9, so the room is the whole window): Am7 in Main B, Main C next after bar 4, running at 104; split F#2 with
  * the left hand's Am7 held. The hero with the transport beside it, the song form one strip under
  * them, then the mixer and the knobs over the pads on the same column seam.
  */
@@ -62,12 +62,22 @@ export const Stopped: Story = {
   args: { ...stageStopped },
 };
 
-/** The smallest screen, 1217 × 752: the solver steps the controls, then the hero, down before it zooms; nothing cut off. */
+/** A 16:10 laptop, 1440 × 900: the Stage stays 16:9, a 1440 × 810 room with a ground band above and below. */
+export const Letterboxed: Story = {
+  args: { width: 1440, height: 900 },
+};
+
+/** An ultrawide, 2560 × 1080: the board's 1920 × 1080 room, centred, with a ground band each side. */
+export const Pillarboxed: Story = {
+  args: { width: 2560, height: 1080 },
+};
+
+/** The smallest screen, 1217 × 752: a 1217 × 684.6 room between ground bands; the solver steps the controls, then the hero, down before it zooms; nothing cut off. */
 export const Small: Story = {
   args: { width: 1217, height: 752 },
 };
 
-/** 900 × 700: every region at a lean form, the body zoomed no further than the pack's 24 px target. */
+/** 900 × 700: a 900 × 506 room, below the Stage's least: every region at a lean form, the body held at the 24 px target, and it scrolls. */
 export const Narrow: Story = {
   args: { width: 900, height: 700 },
 };

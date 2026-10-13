@@ -23,13 +23,15 @@ const once = (name: string | RegExp, role: 'button' | 'slider' | 'group' | 'img'
   ).toHaveLength(1);
 
 function setup(props: Partial<StageProps> = {}) {
-  return render(<Stage {...stageBoard} width={1440} height={900} {...props} />);
+  return render(<Stage {...stageBoard} width={1920} height={1080} {...props} />);
 }
 
-/** The Stage screen's zones: header, body (and the body's inner grid box), footer, in that order. */
+/** The Stage screen's zones, in its 16:9 room: header, body (and the body's inner grid box), footer, in that order. */
 function zones() {
   const stage = screen.getByRole('group', { name: 'Stage' });
-  const children = Array.from(stage.children) as HTMLElement[];
+  const room = stage.querySelector<HTMLElement>(':scope > [data-part="room"]')!;
+  expect(room).not.toBeNull();
+  const children = Array.from(room.children) as HTMLElement[];
   expect(children.map((node) => node.dataset.part)).toEqual(['header', 'body', 'footer']);
   const [header, body, footer] = children;
   const grid = body.querySelector<HTMLElement>(':scope > [data-part="grid"]')!;
@@ -73,7 +75,7 @@ describe('Stage', () => {
     expect(screen.queryByRole('region', { name: 'Stage display' })).toBeNull();
   });
 
-  it("gives each slot the placement's form, and at 1440 × 900 the full hero at zoom 1", () => {
+  it("gives each slot the placement's form, and at the 1920 × 1080 board the full hero at zoom 1", () => {
     for (const layout of ['stacked', 'split'] as const) {
       const placements: Placement[] = [];
       const { unmount } = setup({ layout, onPlacement: (p) => void placements.push(p) });
@@ -91,9 +93,23 @@ describe('Stage', () => {
     }
   });
 
+  it('is 16:9: a 1440 × 900 window draws a 1440 × 810 room with a ground band above and below', () => {
+    setup({ width: 1440, height: 900 });
+    const stage = screen.getByRole('group', { name: 'Stage' });
+    const room = stage.querySelector<HTMLElement>(':scope > [data-part="room"]')!;
+    expect(room.style.getPropertyValue('--lib-at-h')).toBe('810');
+    expect(room.style.getPropertyValue('--lib-at-y')).toBe('45');
+    const bands = Array.from(stage.querySelectorAll<HTMLElement>(':scope > [data-part="band"]'));
+    expect(bands.map((b) => [b.dataset.layer, b.style.getPropertyValue('--lib-at-h')])).toEqual([
+      ['ground', '45'],
+      ['ground', '45'],
+    ]);
+    expect(slot(zones().header, 'bar').style.getPropertyValue('--lib-at-w')).toBe('1440');
+  });
+
   it("gives the keys the keys slot's width less the plate", () => {
     const placements: Placement[] = [];
-    for (const size of [{ width: 1440, height: 900 }, { width: 1217, height: 752 }]) {
+    for (const size of [{ width: 1920, height: 1080 }, { width: 1217, height: 752 }]) {
       const { unmount } = setup({ ...size, onPlacement: (p) => void placements.push(p) });
       const { inset } = principlesFor(packs[0].facets, packs[0].principles).plate;
       const keysRect = placements[placements.length - 1].regions.keys.rect;
@@ -384,7 +400,7 @@ describe('Stage', () => {
   });
 
   it("draws the hero in its slot's form, at the board and the small screen", () => {
-    for (const size of [{ width: 1440, height: 900 }, { width: 1217, height: 752 }]) {
+    for (const size of [{ width: 1920, height: 1080 }, { width: 1217, height: 752 }]) {
       const { unmount } = setup(size);
       const hero = slot(zones().grid, 'hero');
       expect(hero.querySelector('.yh-display')).toHaveAttribute('data-form', hero.dataset.form);
