@@ -91,7 +91,7 @@ function rowTitle(r: SidebarRow, p: Playlist | undefined): string {
 }
 
 /** What an empty section says. */
-const emptySays = (id: string) => (id === 'smart' ? `Filter the library, then ${say('save query')}.` : id === 'playlists' ? 'None yet: + makes one.' : 'None yet.');
+const emptySays = (id: string) => (id === 'smart' ? 'None yet: save a library filter.' : id === 'playlists' ? 'None yet: + makes one.' : 'None yet.');
 
 /** A row's menu open: whose, where, and what opened it (focus goes back there when it closes). */
 interface OpenMenu {

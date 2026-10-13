@@ -346,7 +346,7 @@ export const Empty: Story = {
   args: { sections: sidebarSections(EMPTY, { library: ROWS.length, starred: STARRED.length }), lists: EMPTY, selected: { kind: 'library' } },
   play: async ({ canvas, args }) => {
     await expect(canvas.getByText('None yet: + makes one.')).toBeVisible();
-    await expect(canvas.getByText(/^Filter the library, then /)).toBeVisible();
+    await expect(canvas.getByText('None yet: save a library filter.')).toBeVisible();
     await userEvent.click(canvas.getByRole('button', { name: 'new playlist' }));
     await expect(args.actions!.onCreate).toHaveBeenCalled();
   },
