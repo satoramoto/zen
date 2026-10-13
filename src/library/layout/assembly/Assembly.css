@@ -101,6 +101,42 @@
   --lib-ink-b: transparent;
 }
 
+/* Clear glass (`RegionSpec.glass`): what scrolls behind a glass region isn't cut at its edge; it
+   goes on under it, faded from whole at the gap beside it to nothing at the slot's far end, and
+   the glass diffuses it. */
+.lib-assembled__slot[data-under][data-under-glass] {
+  --lib-under-edge: 0;
+  --lib-fade-t: calc(var(--lib-under) * 1px);
+}
+.lib-assembled__slot[data-over][data-over-glass] {
+  --lib-over-edge: 0;
+  --lib-fade-b: calc(var(--lib-over) * 1px);
+}
+/* The glass itself: the theme's float backdrop (its blur) and a faint float tint behind the
+   region's content, feathered a band past its top and bottom so no box shows. No edge, no cast:
+   it is clear. Isolated, so the glass (z -1) stays behind the content whatever it positions. */
+.lib-assembled__slot[data-glass] {
+  isolation: isolate;
+}
+.lib-assembled__slot[data-glass]::before {
+  --lib-glass-feather: var(--space-4);
+  --lib-glass-tint: 30%;
+  content: '';
+  position: absolute;
+  inset: calc(var(--lib-glass-feather) * -1) 0;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: var(--layer-float-backdrop);
+  background: color-mix(in oklab, var(--layer-float-fill) var(--lib-glass-tint), transparent);
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    var(--key-black) var(--lib-glass-feather),
+    var(--key-black) calc(100% - var(--lib-glass-feather)),
+    transparent
+  );
+}
+
 /* A floating panel (`RegionSpec.panel`) sits the panel inset in from the room's edges it meets:
    the solver gave it the room, the slot pads it (--lib-inset-*, unitless px). --lib-panel-inset is
    the same inset (PANEL_INSET in assemble.ts) for anything an app lays over the screen as a panel. */

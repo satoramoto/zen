@@ -111,6 +111,14 @@ export interface RegionSpec {
    * on an axis: a panel put away or laid over) gets none.
    */
   panel?: boolean;
+  /**
+   * Clear glass: a pinned region (one another names in `under` or `over`) that what scrolls behind
+   * it shows through, very diffused, instead of being cut at its edge. Its slot draws the theme's
+   * float backdrop (the blur) with a faint float tint, feathered at its edges so no box shows; the
+   * region scrolling behind it isn't clipped there, only faded across it. Without a backdrop in
+   * the theme it is the fade alone.
+   */
+  glass?: boolean;
 }
 
 /** A stack of rows inside a row's slot (a column of regions next to another region). */
@@ -229,14 +237,17 @@ export interface Placed {
    * px from the slot's top to the pinned region's drawn bottom edge (its height less any panel
    * inset there): the slot is clipped above it and fades in below it.
    */
-  under?: { id: string; reach: number; edge: number };
+  under?: { id: string; reach: number; edge: number; glass?: boolean };
   /**
    * With `RegionSpec.over`: the pinned region below it that it scrolls behind, and `reach`, the px
    * from this one's bottom down to that region's (the gap and its height): the slot is drawn that
    * much taller, reaching down, and its content keeps that much of its bottom for the pinned region.
-   * `edge` is the px from the slot's bottom to the pinned region's drawn top edge.
+   * `edge` is the px from the slot's bottom to the pinned region's drawn top edge. `glass`: the
+   * pinned region is clear glass (`RegionSpec.glass`), so the slot isn't clipped there.
    */
-  over?: { id: string; reach: number; edge: number };
+  over?: { id: string; reach: number; edge: number; glass?: boolean };
+  /** With `RegionSpec.glass`: it is clear glass, so its slot draws the diffusing backdrop. */
+  glass?: boolean;
   /** With `RegionSpec.panel`: the px it sits in from the room's edge on each side (0 where it doesn't meet it); unset when all are 0. */
   inset?: Box;
 }

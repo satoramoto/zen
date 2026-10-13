@@ -98,8 +98,8 @@ export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true
             ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
             // The grid scrolls up behind the pinned preview and down behind the transport: its slot reaches up to the hero's top and down to the bar's bottom.
             [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}), ...(bar ? { over: 'bar' } : {}) }],
-            // The bar floats free (no panel): the grid fades out under it as if under clear glass (HomeLayout.css).
-            ...(bar ? [[region('bar', TRANSPORT_FORMS, 'controls')]] : []),
+            // The bar floats free (no panel) on clear glass: the grid goes on under it, diffused.
+            ...(bar ? [[{ ...region('bar', TRANSPORT_FORMS, 'controls'), glass: true }]] : []),
           ],
         },
         panel('inspector', pick(INSPECTOR_FORMS, inspector), 'context'),

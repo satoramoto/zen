@@ -321,9 +321,8 @@
 }
 /* The bar: a float Surface (the theme's glass: tint, blur, edge and cast; Home.tsx), the inset
    panels' corners, so the tiles passing under it read through the frost. */
-/* The bar: controls floating free, no panel. The grid slips under it as under clear glass: the
-   assembly's `over` fade (Assembly.css) dissolves it across the band above the bar, gone by the
-   bar's top, so the controls float on nothing. */
+/* The bar: controls floating free, no panel, on the assembly's clear glass (`glass`, Assembly.css):
+   the grid slips under it, very diffused. */
 .vs-lay .vs-lay-bar {
   min-width: 0;
 }

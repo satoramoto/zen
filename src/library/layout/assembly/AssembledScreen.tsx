@@ -127,7 +127,12 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
       ...(inset ? { '--lib-inset-t': inset.top, '--lib-inset-r': inset.right, '--lib-inset-b': inset.bottom, '--lib-inset-l': inset.left } : {}),
     } as CSSProperties;
     return (
-      <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} data-under={placed.under?.id} data-over={placed.over?.id} data-panel={inset ? '' : undefined} style={style}>
+      <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} data-under={placed.under?.id} data-over={placed.over?.id} data-panel={inset ? '' : undefined}
+        data-glass={placed.glass ? '' : undefined}
+        data-under-glass={placed.under?.glass ? '' : undefined}
+        data-over-glass={placed.over?.glass ? '' : undefined}
+        style={style}
+      >
         <FormProvider form={placed.form} parts={placed.parts}>{typeof content === 'function' ? content(placed.form, placed) : content}</FormProvider>
       </div>
     );

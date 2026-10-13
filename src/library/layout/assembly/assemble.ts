@@ -602,6 +602,8 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
   for (const r of s.regions) put(r.spec.id, rects[r.spec.id], 'body');
   // A region that scrolls behind a pinned one above it reaches up to that region's top (`under`);
   // behind one below it, down to that region's bottom (`over`).
+  const glassy = new Set(s.regions.filter((r) => r.spec.glass).map((r) => r.spec.id));
+  for (const id of glassy) placed[id].glass = true;
   for (const r of s.regions) {
     const own = placed[r.spec.id].rect;
     const pinned = (id: string, side: 'above' | 'below') => {
@@ -616,11 +618,11 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
     if (r.spec.under !== undefined) {
       const head = pinned(r.spec.under, 'above');
       // The pinned region's drawn bottom edge: its height less a panel's inset there.
-      placed[r.spec.id].under = { id: r.spec.under, reach: own.y - head.y, edge: head.h - (placed[r.spec.under].inset?.bottom ?? 0) };
+      placed[r.spec.id].under = { id: r.spec.under, reach: own.y - head.y, edge: head.h - (placed[r.spec.under].inset?.bottom ?? 0), ...(glassy.has(r.spec.under) ? { glass: true } : {}) };
     }
     if (r.spec.over !== undefined) {
       const foot = pinned(r.spec.over, 'below');
-      placed[r.spec.id].over = { id: r.spec.over, reach: foot.y + foot.h - (own.y + own.h), edge: foot.h - (placed[r.spec.over].inset?.top ?? 0) };
+      placed[r.spec.id].over = { id: r.spec.over, reach: foot.y + foot.h - (own.y + own.h), edge: foot.h - (placed[r.spec.over].inset?.top ?? 0), ...(glassy.has(r.spec.over) ? { glass: true } : {}) };
     }
   }
   y = 0;
