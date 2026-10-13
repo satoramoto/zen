@@ -1,8 +1,7 @@
 /* The inspector's field (Field.tsx), read like an instrument's XY display: every measured preset
    a faint dot by speed (across, slow to fast) and brightness (up, dark to bright), tinted by its
-   strongest hue's band; the subject lit in its own hue, with a fine cursor through it and a ring
-   as wide as it is intense; the preset playing a quiet ring with a play mark while another is
-   shown. No frame and no grid: the edges carry a scale's markings (five hairline ticks, the
+   strongest hue's band; the preset playing lit in its own hue, with a fine cursor through it and
+   a ring as wide as it is intense. No frame and no grid: the edges carry a scale's markings (five hairline ticks, the
    middle one longer, a small cross at the centre) and four words in tiny type, as an
    oscilloscope's graticule is engraved. The dot under the pointer, or the keyboard's cursor, gets
    a fine ring and its name in a small floating tip. Contract variables and visuals.css tokens
@@ -126,19 +125,6 @@
   stroke: currentColor;
   stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
-}
-
-/* The preset playing, while another is shown. */
-.vs-field-playing circle {
-  fill: none;
-  stroke: var(--text-1);
-  stroke-width: 1;
-  opacity: 0.8;
-  vector-effect: non-scaling-stroke;
-}
-.vs-field-playing path {
-  fill: var(--text-1);
-  opacity: 0.8;
 }
 
 /* The dot under the pointer or the keyboard's cursor. */

@@ -124,6 +124,7 @@ function useInspector(start: Start, library: readonly LibraryRow[], tune = false
     chosen: start === 'several' ? SEVERAL.map((r) => prepareRow(r, data.presets[r.key])) : undefined,
     source: start === 'source' ? <SourceHead /> : undefined,
     playing: playing?.key ?? null,
+    playingPreset: playing ? prepareRow(playing, data.presets[playing.key]) : null,
     from: playing ? NOW.from : '',
     playlists,
     library,
@@ -228,11 +229,12 @@ function Story({ start, window, pack, error, overlay, tuned }: Args) {
 
 /**
  * The inspector ("Scope"), the macOS layout's inset panel down the window's right (macOS 26's
- * inspector), mirroring the sidebar: the actions on it as glyphs in the header row, then the
- * preset's name and authors, its facts (style, the measures in words, its colours, my tags), the
- * map (a field of every preset by speed and brightness with this one lit) and its own speed and
- * sensitivity as sliders. It is about the preset playing, or one picked (a tile in the main column)
- * until "back"; a dot in the field plays its preset.
+ * inspector), mirroring the sidebar, in two parts. The details on top: the actions on it as
+ * glyphs in the header row, then the preset's name and authors, its facts (style, the measures in
+ * words, its colours, my tags) and its own speed and sensitivity as sliders; about the preset
+ * playing, or one picked (a tile in the main column) until "back", or several, or a source. The
+ * library map pinned at the bottom: every preset by speed and brightness with the one playing
+ * lit, whatever the details show; a dot in it plays its preset.
  */
 const meta = {
   title: 'open[flow]/visuals/Layout/Inspector',
@@ -251,6 +253,15 @@ type S = StoryObj<typeof meta>;
 const panelOf = (canvas: ReturnType<typeof within>) => canvas.getByRole('complementary', { name: INSPECTOR_LABEL });
 /** The field, the one control the dots are reached by. */
 const fieldOf = (panel: HTMLElement) => within(panel).getByRole('listbox', { name: 'The library by speed and brightness' });
+/** The library map: the section the field is in, at the panel's bottom. */
+const mapOf = (panel: HTMLElement) => within(panel).getByRole('group', { name: 'Library map' });
+/** Whether the map sits under the details, its bottom near the panel's (less its padding). */
+function mapAtBottom(panel: HTMLElement) {
+  const map = mapOf(panel).getBoundingClientRect();
+  const details = panel.querySelector('.vs-inspector-details')!.getBoundingClientRect();
+  const body = panel.getBoundingClientRect();
+  return details.bottom <= map.top + 0.5 && body.bottom - map.bottom < 48;
+}
 
 /** Where a row's dot is on screen, and the row the field takes a click there for (the nearest dot to it, which may be another on the same spot). */
 function dotOnScreen(panel: HTMLElement, library: readonly LibraryRow[], key: string) {
@@ -267,7 +278,7 @@ function dotOnScreen(panel: HTMLElement, library: readonly LibraryRow[], key: st
 /** Whether `a` comes before `b` in the document. */
 const before = (a: Element, b: Element) => !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
 
-/** Now playing: the actions as glyphs in the header, the name first under it, its facts, then the field and the tune; star toggling, and a tag added. */
+/** Now playing: the actions as glyphs in the header, the name first under it, its facts, then the tune, and the library map pinned under them; star toggling, and a tag added. */
 export const NowPlaying: S = {
   name: 'Now playing',
   play: async ({ canvasElement }) => {
@@ -277,12 +288,14 @@ export const NowPlaying: S = {
     await expect(name).toBeVisible();
     // No status line: the transport bar says where it plays from.
     await expect(panel.queryByText(NOW.from)).toBeNull();
-    // The order: the header's keys, the name, facts, the field, the tune.
+    // The order: the header's keys, the name, facts, the tune; then the map, at the panel's bottom.
     const facts = panel.getByRole('group', { name: 'about this preset' });
     await expect(before(panel.getByRole('button', { name: 'star' }), name)).toBe(true);
     await expect(before(name, facts)).toBe(true);
-    await expect(before(facts, fieldOf(panelEl))).toBe(true);
-    await expect(before(fieldOf(panelEl), panel.getByRole('group', { name: 'for this preset' }))).toBe(true);
+    await expect(before(facts, panel.getByRole('group', { name: 'for this preset' }))).toBe(true);
+    await expect(before(panel.getByRole('group', { name: 'for this preset' }), mapOf(panelEl))).toBe(true);
+    await expect(mapAtBottom(panelEl)).toBe(true);
+    await expect(mapOf(panelEl)).toHaveTextContent('Speed × Brightness');
     await expect(panel.queryByRole('button', { name: 'back to now playing' })).toBeNull();
     const star = panel.getByRole('button', { name: 'star' });
     const was = star.getAttribute('aria-pressed');
@@ -316,24 +329,27 @@ export const PlayedFromTheField: S = {
     await expect(hit.key).not.toBe(NOW.preset!.key);
     await expect(panel.queryByRole('button', { name: 'play it' })).toBeNull();
     await expect(panel.queryByRole('button', { name: 'back to now playing' })).toBeNull();
-    // The dot played is the lit one: no other playing mark.
-    await expect(panelEl.querySelector('.vs-field-playing')).toBeNull();
     // Back to the first preset's dot: it plays again.
     const back = dotOnScreen(panelEl, STARTER, NOW.preset!.key);
     fireEvent.pointerDown(back.svg, back.at);
     fireEvent.click(back.svg, back.at);
     await waitFor(() => expect(panel.getByRole('heading', { name: back.name })).toBeVisible());
-    await expect(panelEl.querySelector('.vs-field-playing')).toBeNull();
   },
 };
 
-/** One picked (as a tile's click would): its name, its star, and back goes to the preset playing. */
+/** One picked (as a tile's click would): its name, its star, and back goes to the preset playing; the map keeps lighting the one playing. */
 export const Picked: S = {
   name: 'Picked',
   args: { start: 'picked' },
   play: async ({ canvasElement }) => {
-    const panel = within(panelOf(within(canvasElement)));
+    const panelEl = panelOf(within(canvasElement));
+    const panel = within(panelEl);
     await expect(panel.getByRole('heading', { name: PICKED_NAME })).toBeVisible();
+    // The map's cursor starts on its lit dot: the preset playing, not the one picked.
+    fieldOf(panelEl).focus();
+    await waitFor(() => expect(panel.getByRole('option')).toHaveAccessibleName(/playing$/));
+    await expect(panel.getByRole('option')).toHaveAttribute('aria-selected', 'true');
+    fieldOf(panelEl).blur();
     await expect(panel.getByRole('button', { name: 'star' })).toHaveAttribute('aria-pressed', 'true');
     await expect(panel.getByRole('group', { name: 'my tags' })).toHaveTextContent('peak');
     await expect(panel.getByRole('button', { name: 'play it' })).toBeVisible();
@@ -369,7 +385,7 @@ export const ForThisPreset: S = {
   },
 };
 
-/** Nothing playing: the field still draws the library, the words say so, and no action shows. */
+/** Nothing playing: the details say so and no action shows; the map still draws the library, its words saying what the dots are. */
 export const NothingPlaying: S = {
   name: 'Nothing playing',
   args: { start: 'nothing' },
@@ -379,10 +395,12 @@ export const NothingPlaying: S = {
     await expect(panel.getByText(/nothing playing/i)).toBeVisible();
     await expect(panel.queryByRole('button', { name: 'star' })).toBeNull();
     await expect(fieldOf(panelEl)).toBeVisible();
+    await expect(within(mapOf(panelEl)).getByText(/each dot is a preset/i)).toBeVisible();
+    await expect(mapAtBottom(panelEl)).toBe(true);
   },
 };
 
-/** Several picked in a section together: star, add and never play over all of them in the header, "9 selected", their styles and tags, and their first pictures. */
+/** Several picked in a section together: star, add and never play over all of them in the header, "9 selected", their styles and tags, their first pictures, and the library map still under them. */
 export const Several: S = {
   name: 'Several picked',
   args: { start: 'several' },
@@ -391,10 +409,15 @@ export const Several: S = {
     const panel = within(panelEl);
     const name = panel.getByRole('heading', { name: `${SEVERAL.length} selected` });
     await expect(name).toBeVisible();
-    await expect(panel.queryByRole('listbox')).toBeNull();
     const facts = panel.getByRole('group', { name: 'about these presets' });
+    const pictures = panelEl.querySelector('.vs-inspector-pictures')!;
     await expect(before(name, facts)).toBe(true);
-    await expect(before(facts, panelEl.querySelector('.vs-inspector-pictures')!)).toBe(true);
+    await expect(before(facts, pictures)).toBe(true);
+    // The pictures are the details'; the map stays below them, lighting the preset playing.
+    await expect(before(pictures, mapOf(panelEl))).toBe(true);
+    await expect(fieldOf(panelEl)).toBeVisible();
+    await expect(panelEl.querySelector('.vs-field-lit')).not.toBeNull();
+    await expect(mapAtBottom(panelEl)).toBe(true);
     await expect(before(panel.getByRole('button', { name: 'star' }), name)).toBe(true);
     await expect(panel.queryByRole('button', { name: 'play it' })).toBeNull();
     const star = panel.getByRole('button', { name: 'star' });
@@ -410,7 +433,7 @@ export const Several: S = {
   },
 };
 
-/** No preset picked, the playlist playing as the source: its head as a card, with how it plays and more (no playback controls). */
+/** No preset picked, the playlist playing as the source: its head as a card, with how it plays and more (no playback controls); the library map under it. */
 export const Source: S = {
   name: 'The source',
   args: { start: 'source' },
@@ -421,7 +444,8 @@ export const Source: S = {
     // No playback controls on the card: shuffle is in how it plays.
     await expect(panel.queryByRole('button', { name: /Stop/ })).toBeNull();
     await expect(panel.queryByRole('button', { name: 'Shuffle' })).toBeNull();
-    await expect(panel.queryByRole('listbox')).toBeNull();
+    await expect(fieldOf(panelEl)).toBeVisible();
+    await expect(before(panel.getByRole('heading', { level: 2, name: WARM_UP.name }), mapOf(panelEl))).toBe(true);
     await userEvent.click(panel.getByRole('button', { name: 'more' }));
     await expect(panel.getByRole('menu', { name: 'more' })).toBeVisible();
   },

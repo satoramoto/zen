@@ -11,15 +11,13 @@ export interface FieldProps {
   library: readonly LibraryRow[];
   /** The user's data by key: speed and brightness overrides move a dot, and so does its own speed (`tune.speed`), which marks it too. */
   mine?: Readonly<Record<string, Mine>>;
-  /** The preset the panel shows (lit), or null. */
-  subject: string | null;
-  /** The preset playing: marked too while another one is shown. */
+  /** The preset playing (lit), or null: the only one the field marks, whatever a panel beside it is about. */
   playing: string | null;
-  /** How intense the subject is, 0–1: its ring's width; null when unmeasured. */
+  /** How intense the preset playing is, 0–1: its ring's width; null when unmeasured. */
   intensity: number | null;
-  /** The subject's hue, a CSS colour, for its marks. */
+  /** The playing preset's hue, a CSS colour, for its marks. */
   hue: string;
-  /** What the field says about the subject ("Slow and dark, among 250 presets"). */
+  /** What the field says about the preset playing ("Slow and dark, among 250 presets"), or the library with none. */
   description: string;
   /** A dot picked, by click or Enter: the caller plays it (the field is a way through the library, not a second selection). */
   onPick(row: LibraryRow): void;
@@ -36,24 +34,25 @@ const nameOf = (row: LibraryRow) => tileName(row.title, row.path);
 
 /**
  * **Job.** The field: every preset in the library a faint dot by speed (slow to fast, across)
- * and brightness (dark to bright, up), the subject lit with a fine cursor through it and a ring
- * as wide as it is intense, the preset playing marked with a ring of its own while another is
- * shown (one picked elsewhere, a tile). Markings at the edges, no grid or frame. The dots are one
- * SVG path per hue band, so the full pack's ~9,800 draw as a dozen nodes. It is the quick way
+ * and brightness (dark to bright, up), the preset playing lit with a fine cursor through it and a
+ * ring as wide as it is intense. Markings at the edges, no grid or frame. The dots are one SVG
+ * path per hue band, so the full pack's ~9,800 draw as a dozen nodes. It is the quick way
  * through the whole library: the pointer finds the dot nearest it, hover names it, a click plays
  * it. From the keyboard the field is one stop, a listbox whose one rendered option is the dot
  * under its cursor: the arrows move the cursor to the nearest dot that way, Enter (or Space)
- * plays it, and the cursor starts on the subject. Its name shows in the same tip as hover's.
+ * plays it, and the cursor starts on the preset playing. Its name shows in the same tip as
+ * hover's. Mount it in `LibraryMap`, the inspector region's section for it.
  *
  * **Changed.** A dot picked plays (`onPick`; the Home plays it as a library tile's play does), so
- * the lit dot and the playing one move together; it no longer shows a preset without playing it,
+ * the lit dot is always the one playing: the field no longer follows what a panel beside it is
+ * about (it has no `subject`, and no second mark for a preset playing while another is shown),
  * and its words say "Enter plays one". The tip is a `Layer level="float"` (it floats over the field, so it takes the
  * float's glass, edge and cast instead of a raised tint and a hand-made shadow) whose element is a
  * caption `Text`; the edges' words are `Text`s in capitals on a tight line. The markings'
  * hairline is the ink at a fifth rather than a literal white, so it follows the palette. Classes
  * are `vs-field-*`.
  *
- * **Kept.** Its props, the drawing (box, ticks, dots, ring, cursor, playing mark), hover's tip,
+ * **Kept.** Its other props, the drawing (box, ticks, dots, ring, cursor), hover's tip,
  * the arrows' cursor, the roles and names.
  *
  * **Tuning knobs**
@@ -61,7 +60,7 @@ const nameOf = (row: LibraryRow) => tileName(row.title, row.path);
  * - `--vs-field-at`: the tip's place across, 0–1 (set inline from the dot).
  * - `--vs-field-tip-width`: the tip's widest.
  */
-export function Field({ library, mine, subject, playing, intensity, hue, description, onPick }: FieldProps) {
+export function Field({ library, mine, playing, intensity, hue, description, onPick }: FieldProps) {
   const dots = useMemo(() => dotsOf(library, mine), [library, mine]);
   const paths = useMemo(() => bandPaths(dots), [dots]);
   const tuned = useMemo(() => tunedPath(dots), [dots]);
@@ -72,9 +71,8 @@ export function Field({ library, mine, subject, playing, intensity, hue, descrip
   const setCursor = (i: number) => setCursorKey(dots[i]?.row.key ?? null);
   const id = useId();
 
-  const lit = dotOf(dots, subject);
-  const mark = playing && playing !== subject ? dotOf(dots, playing) : -1;
-  const start = () => (lit >= 0 ? lit : mark >= 0 ? mark : nearest(dots, xOf(0.5), yOf(0.5), Infinity));
+  const lit = dotOf(dots, playing);
+  const start = () => (lit >= 0 ? lit : nearest(dots, xOf(0.5), yOf(0.5), Infinity));
 
   /** Where the pointer is, in the box's units: the svg keeps the box's 4:3, so its rectangle maps straight on. */
   const at = (ev: MouseEvent<SVGSVGElement>) => {
@@ -153,7 +151,6 @@ export function Field({ library, mine, subject, playing, intensity, hue, descrip
             ))}
           </g>
           {tuned && <path className="vs-field-tuned" d={tuned} />}
-          {mark >= 0 && <PlayingMark dot={dots[mark]} />}
           {lit >= 0 && <Lit dot={dots[lit]} ring={ring} hue={hue} />}
           {tip && <circle className="vs-field-hot" cx={tip.x} cy={tip.y} r={4} />}
         </svg>
@@ -171,7 +168,7 @@ export function Field({ library, mine, subject, playing, intensity, hue, descrip
           </Layer>
         )}
         {active && (
-          <span className="vs-field-sr" role="option" id={optionId} aria-selected={active.row.key === subject} aria-setsize={dots.length} aria-posinset={cursor + 1}>
+          <span className="vs-field-sr" role="option" id={optionId} aria-selected={active.row.key === playing} aria-setsize={dots.length} aria-posinset={cursor + 1}>
             {optionName(active, playing)}
           </span>
         )}
@@ -207,7 +204,7 @@ function optionName(d: Dot, playing: string | null): string {
   const by = tileBy(d.row.authors, '');
   return `${nameOf(d.row)}${by ? `, by ${by}` : ''}${d.tuned ? `, at ${timesOf(d.tuned.speed)} speed` : ''}${d.row.key === playing ? ', playing' : ''}`;
 }
-/** The subject: a fine cursor through it to the edges' ticks, a ring as wide as it is intense, a point in its hue. */
+/** The preset playing: a fine cursor through it to the edges' ticks, a ring as wide as it is intense, a point in its hue. */
 function Lit({ dot: { x, y }, ring, hue }: { dot: Dot; ring: number; hue: string }) {
   return (
     <g className="vs-field-lit" style={{ color: hue }}>
@@ -216,16 +213,6 @@ function Lit({ dot: { x, y }, ring, hue }: { dot: Dot; ring: number; hue: string
       <circle className="vs-field-ring" cx={x} cy={y} r={ring} />
       <circle className="vs-field-glow" cx={x} cy={y} r={4.5} />
       <circle className="vs-field-point" cx={x} cy={y} r={2.6} />
-    </g>
-  );
-}
-
-/** The preset playing, while another is shown: a quiet ring and a small play mark beside it, so the way back is in sight. */
-function PlayingMark({ dot: { x, y } }: { dot: Dot }) {
-  return (
-    <g className="vs-field-playing">
-      <circle cx={x} cy={y} r={3.5} />
-      <path d={`M${x + 5.5} ${y - 2.5} l3.5 2.5 l-3.5 2.5Z`} />
     </g>
   );
 }

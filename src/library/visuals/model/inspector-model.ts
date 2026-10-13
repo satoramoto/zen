@@ -12,23 +12,25 @@ import { tileBy, tileName } from '../PresetTile/PresetTile';
 
 /** What the inspector takes: the preset it is about, the library around it, and what it can do to them. */
 export interface InspectorProps {
-  /** The preset shown, with the user's star, never play and tags on it: the one playing, or one picked (in the field or a section); null when nothing plays and nothing is picked. */
+  /** The preset the details show, with the user's star, never play and tags on it: the one playing, or one picked (a tile in a section); null when nothing plays and nothing is picked. */
   subject: Prepared | null;
-  /** The index key of the preset playing, or null when nothing plays (or it isn't in the index). A subject that isn't it is "picked": the way back to now playing and Play show, and its dot stays marked in the field. */
+  /** The index key of the preset playing, or null when nothing plays (or it isn't in the index). A subject that isn't it is "picked": the way back to now playing and Play show. Its dot is the one the library map lights. */
   playing: string | null;
+  /** The preset playing, with the user's data on it, for the library map's lit dot (its hue and ring), whatever the details show; null when nothing plays. Left out, the map lights the subject when it is the one playing, and none otherwise. */
+  playingPreset?: Prepared | null;
   /** Where the preset playing plays from ("from Warm-up · 3 of 10"). Not shown: the transport bar says it, and the inspector's top is the name. */
   from: string;
   /** Every playlist (for "add to a playlist" and "in"); null until read. */
   playlists: Playlist[] | null;
-  /** The library's rows, for the field: every one the index has measured is a dot. */
+  /** The library's rows, for the library map: every one the index has measured is a dot. */
   library: readonly LibraryRow[];
-  /** What the user keeps about each preset, by key (`library.json`'s presets): their speed and brightness overrides move its dot. */
+  /** What the user keeps about each preset, by key (`library.json`'s presets): their speed and brightness overrides move its dot on the map. */
   mine?: Readonly<Record<string, Mine>>;
   /** Change star / never play / tags on these preset keys. */
   onSet(keys: string[], change: LibraryChange): void;
   /** Add these preset paths to a manual playlist, by id. */
   onAddTo(playlist: string, paths: string[]): void;
-  /** A dot in the field picked (click, or Enter on the keyboard's cursor): show this preset. A pick of the dot playing calls `onBack` instead. */
+  /** A dot in the library map picked (click, or Enter on the keyboard's cursor): play this preset. A pick of the dot playing calls `onBack` instead while the details show something else, and nothing while they show it. */
   onPick(row: LibraryRow): void;
   /** Back to the preset playing, from one picked. */
   onBack(): void;
@@ -38,9 +40,9 @@ export interface InspectorProps {
   onEdit?(): void;
   /** Several presets picked together: with two or more the inspector is about them ("n selected": star, add, never play and tags over all), whatever `subject` is; one or none is ignored. */
   chosen?: Prepared[];
-  /** The source (a playlist's head, `PlaylistHead variant='inspector'`), shown in place of the field when `subject` is null and fewer than two are chosen. */
+  /** The source (a playlist's head, `PlaylistHead variant='inspector'`), shown in the details when `subject` is null and fewer than two are chosen (the library map stays under it). */
   source?: ReactNode;
-  /** Something that failed: one alert line under whatever shows. */
+  /** Something that failed: one alert line under whatever the details show. */
   error?: string | null;
   /** Close the inspector: with it a ✕ shows, and Escape anywhere in the window (not typed in a text box, nor taken by a popover or the tag box) calls it; pass it only when laid over. */
   onClose?(): void;
@@ -187,7 +189,7 @@ export function tunePosition(multiplier: number): number {
 }
 
 /**
- * What the field says about the subject: "Slow and dark, among 9,791 presets".
+ * What the field says about the preset playing: "Slow and dark, among 9,791 presets".
  * `count` is how many presets the field draws (those measured) and `total` how
  * many the library holds: the count is said only when the field draws them all,
  * so a library of 9,791 with 250 measured never reads "among 250 presets".

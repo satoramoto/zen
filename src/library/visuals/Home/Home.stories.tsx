@@ -32,6 +32,20 @@ const heroNamesPlaying = async (canvasElement: HTMLElement) => {
 };
 
 /**
+ * The inspector's two parts, where it shows: the details on top and the library map pinned at the
+ * region's bottom, under them, the preset playing lit.
+ */
+const mapUnderDetails = async (canvasElement: HTMLElement) => {
+  const inspector = canvasElement.querySelector<HTMLElement>(`#${INSPECTOR_ID}`);
+  if (!inspector) return;
+  const map = within(inspector).getByRole('group', { name: 'Library map' });
+  const details = inspector.querySelector('.vs-inspector-details')!;
+  await expect(details.getBoundingClientRect().bottom).toBeLessThanOrEqual(map.getBoundingClientRect().top + 0.5);
+  await expect(inspector.getBoundingClientRect().bottom - map.getBoundingClientRect().bottom).toBeLessThan(48);
+  await expect(map.querySelector('.vs-field-lit')).not.toBeNull();
+};
+
+/**
  * The whole home as an inspector view (decision 70): the sidebar picking a
  * source, the Now Playing hero over a grid of the source's presets, the
  * inspector about what is picked (else the source), and the transport bar,
@@ -71,6 +85,7 @@ export const Wide: Story = {
     const headrow = canvasElement.querySelector('.vs-isb-headrow');
     const hero = canvasElement.querySelector('.vs-lay-hero');
     if (headrow && hero) await expect(Math.abs(headrow.getBoundingClientRect().top - hero.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
+    await mapUnderDetails(canvasElement);
   },
 };
 
@@ -100,6 +115,22 @@ export const Library: Story = {
     await waitFor(() => expect(first.getAttribute('aria-selected')).toBe('true'));
     // The library's search and "Filter ▾" sit in the header's toolbar slot.
     await expect(canvasElement.querySelector('.vs-header .vs-home-toolbar input')).toBeTruthy();
+  },
+};
+
+/** The library with several presets picked (⌘-click): the inspector's details show them and their pictures, and the library map stays under them, lighting what plays. */
+export const SeveralPicked: Story = {
+  name: 'Several picked',
+  args: { library: true },
+  parameters: { frame: 'fill' },
+  play: async ({ canvas, canvasElement }) => {
+    const grid = await canvas.findByRole('listbox', { name: 'presets' });
+    const options = await within(grid).findAllByRole('option');
+    for (const o of options.slice(0, 3)) fireEvent.click(o, { metaKey: true });
+    const inspector = canvasElement.querySelector<HTMLElement>(`#${INSPECTOR_ID}`);
+    if (!inspector) return;
+    await waitFor(() => expect(within(inspector).getByRole('heading', { name: '3 selected' })).toBeVisible());
+    await mapUnderDetails(canvasElement);
   },
 };
 

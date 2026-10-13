@@ -97,8 +97,9 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  * sidebar's foot); the inset sidebar down the left picking a source (the
  * library, starred, recently played, the playlists and the smart playlists);
  * the main column, the preview pinned over a plain grid of the source's
- * presets; the inspector down the right, about the preset playing, or the
- * presets picked in the grid, or a source's card ("Show info"); and the
+ * presets; the inspector down the right, its details about the preset playing,
+ * or the presets picked in the grid, or a source's card ("Show info"), and the
+ * library map pinned under them, lighting what plays whatever they show; and the
  * transport bar along the bottom, naming what plays (decision 71).
  *
  * A click on a tile, or Enter, plays it; ⌘ or ⇧ picks (the inspector shows
@@ -791,14 +792,16 @@ export function Home({
               // The preset picked, else the one playing; the source's card for "Show info", or while nothing plays.
               subject={onSource ? null : (picked[0] ?? playingShown)}
               playing={playingShown?.row.key ?? null}
+              // The library map under the details lights what plays, whatever they show.
+              playingPreset={playingShown}
               from={playsFrom(deck, playlists, false, current?.path ?? null)}
               playlists={lists?.playlists ?? null}
               library={libraryRows}
               mine={data?.presets}
               onSet={setData}
               onAddTo={addTo}
-              // A dot in the field plays at once, as a library tile's play does, and on its own (not from a playlist shown):
-              // what was picked is let go, so the inspector, the field's rings and the grid follow what plays from here on.
+              // A dot in the library map plays at once, as a library tile's play does, and on its own (not from a playlist shown):
+              // what was picked is let go, so the details, the map's ring and the grid follow what plays from here on.
               onPick={(row: LibraryRow) => {
                 const p = byKey.get(row.key);
                 if (!p) return;
