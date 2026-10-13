@@ -41,6 +41,12 @@
 .vs-home-tool-inspector .vs-icon {
   transform: scaleX(-1);
 }
+/* The header's icon buttons: the same gap as the view switch's links (Segmented's track). */
+.vs-home-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--mat-tabs-gap);
+}
 /* Where the library puts its search and "Filter ▾" (a portal); empty for a playlist. */
 .vs-home-toolbar {
   display: flex;

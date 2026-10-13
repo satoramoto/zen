@@ -738,18 +738,21 @@ export function Home({
           >
             <span className="vs-fill" />
             <div className="vs-home-toolbar" ref={setToolbar} />
-            <CameraAction />
-            <button
-              type="button"
-              className="vs-home-tool vs-home-tool-inspector"
-              aria-label={say('inspector')}
-              aria-controls={INSPECTOR_ID}
-              aria-pressed={modes.inspector !== null}
-              title={`${modes.inspector === null ? 'Show' : 'Hide'} the ${say('inspector')} (⌘I)`}
-              onClick={toggleInspector}
-            >
-              <Icon name="sidebar" />
-            </button>
+            {/* The icon buttons, spaced as the view switch's links are. */}
+            <div className="vs-home-tools">
+              <CameraAction />
+              <button
+                type="button"
+                className="vs-home-tool vs-home-tool-inspector"
+                aria-label={say('inspector')}
+                aria-controls={INSPECTOR_ID}
+                aria-pressed={modes.inspector !== null}
+                title={`${modes.inspector === null ? 'Show' : 'Hide'} the ${say('inspector')} (⌘I)`}
+                onClick={toggleInspector}
+              >
+                <Icon name="sidebar" />
+              </button>
+            </div>
           </Header>
         }
         // Round 2 (decision 71): the hero is the picture alone; the bar names what plays.
