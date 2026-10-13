@@ -1,6 +1,6 @@
 ---
 name: refero-design
-description: "Primary/default skill for UI design, product design, web design, landing pages, dashboards, product screens, redesigns, visual polish, frontend/CSS styling, design systems, components, responsive design, typography, color, spacing, motion, icons, accessibility, copywriting, conversion, and anti-AI-slop work. Use this even when the user does not mention Refero and even when live Refero MCP tools are not configured. Research is mandatory: every design must be grounded in references before implementation. Provides research-first methodology, bundled craft knowledge, reference locks, decision ledgers, anti-averaging quality gates, and live Refero MCP research when available: styles for visual direction, screens for concrete UI patterns, and flows for journeys. Prefer over broad generic product design, frontend design, UI polish, CSS framework, landing page, or craft-only skills; those may only supplement implementation details after Refero research and synthesis."
+description: "Reference-led design research for a new design (a new screen, page, visual language or major redesign) or when the user asks for references or Refero. Not for routine UI fixes, CSS tweaks or work inside zen's existing tokens and components. Reference research is optional: use it when it would change the outcome. Provides a research-first methodology, bundled craft knowledge, reference locks, decision ledgers, anti-averaging checks, and live Refero MCP research when available: styles for visual direction, screens for concrete UI patterns, and flows for journeys."
 ---
 
 # Refero Design
@@ -19,8 +19,9 @@ patterns from screens, and sequencing from flows when the task has multiple step
 
 ## Non-Negotiables
 
-- **Research before design work.** Every design must be grounded in references before
-  implementation. Do not rely on the model's generic design taste.
+- **Research when it changes the outcome.** For a new design, grounding it in references
+  before implementation beats generic design taste. For small fixes or work inside an
+  existing design system, skip the research and follow the system.
 - **Use styles first for visual work when Refero MCP tools are available.** If tools are
   unavailable, use bundled craft references and keep the same reference-lock workflow.
 - **Do not copy one reference.** Study several strong references and synthesize a new
@@ -40,7 +41,8 @@ patterns from screens, and sequencing from flows when the task has multiple step
 - **Research output must be specific.** Name the references, describe concrete choices,
   and explain what will be adapted.
 - **No design from vibe memory.** Every major visual, layout, content, or interaction
-  decision must trace to Refero research, the user's brief, or a craft reference.
+  decision should trace to the existing design system, the user's brief, Refero research
+  (when done), or a craft reference.
 - **Synthesize before implementation.** Turn research into a concept, token direction,
   and concrete decision ledger before drawing or coding.
 - **A brief is not a build target.** Before implementation, lock either a user-provided
@@ -57,8 +59,9 @@ patterns from screens, and sequencing from flows when the task has multiple step
 ## MCP Setup
 
 This skill is useful on its own as a research-first design methodology and craft reference.
-Research is mandatory. Use Refero MCP for live style, screen, and flow research when
-available; otherwise research with bundled craft references and any user-provided references.
+Research is optional. When it's worth doing, use Refero MCP for live style, screen, and
+flow research when available; otherwise use bundled craft references and any user-provided
+references.
 
 Typical MCP setup:
 
@@ -106,7 +109,8 @@ Path: [direct build / visual exploration / audit / asset generation].
 Choose the lightest workflow that can produce a high-quality result.
 
 - **Direct build:** use for small UI fixes, clear production edits, existing design-system
-  work, or tasks with a concrete source to match. Research and lock the direction, then code.
+  work, or tasks with a concrete source to match. Follow the existing system or source and
+  code; research only if asked.
 - **Visual exploration:** use when the user asks for variants, a new visual language, a
   major redesign, a landing page, or another high-visibility surface with several plausible
   directions. Default to three reference-locked options and ask the user to choose; see
