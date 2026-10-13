@@ -150,3 +150,15 @@ describe('audio mixer', () => {
     expect(sameSource(a, { ...a, name: 'Renamed' })).toBe(true);
   });
 });
+describe('folded', () => {
+  it('keeps the source Select out of the header and puts it at the top of the mixer popover', async () => {
+    render(<SourcePicker onError={(e) => expect.unreachable(String(e))} channels="none" folded />);
+    const mixer = await screen.findByRole('button', { name: /Audio mixer: listening to Live/ });
+    expect(screen.queryByRole('combobox', { name: 'listen to' })).toBeNull();
+    fireEvent.click(mixer);
+    const panel = await waitFor(() => document.getElementById(mixer.getAttribute('aria-controls')!)!);
+    const main = panel.querySelector('[aria-label="Main source"]');
+    expect(main).toBe(panel.querySelector('.vs-audio-lane'));
+    expect(main?.querySelector('[role="combobox"]')?.textContent).toContain('Live');
+  });
+});

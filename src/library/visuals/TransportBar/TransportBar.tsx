@@ -81,12 +81,15 @@ export interface TransportBarProps {
   centreKeys?: boolean;
 }
 
-/** The audio input side: the slow-drawing warning, then the input. The bar's right end, or a host's own place for it (Home's header) with the bar's `audio={false}`. */
-export function TransportAudio({ onAudioError, audioTrouble = null }: Pick<TransportBarProps, 'onAudioError' | 'audioTrouble'>) {
+/**
+ * The audio input side: the slow-drawing warning, then the input. The bar's right end, or a host's own place for it (Home's header) with the bar's `audio={false}`.
+ * `folded`: the source Select moves into the mixer's popover, so only the mixer icon and the meter show (Home). Default false (the bar keeps its Select).
+ */
+export function TransportAudio({ onAudioError, audioTrouble = null, folded = false }: Pick<TransportBarProps, 'onAudioError' | 'audioTrouble'> & { folded?: boolean }) {
   return (
     <Text as="div" className="vs-transport-right">
       <FrameRate slowOnly />
-      <SourcePicker onError={onAudioError} channels="none" width={180} trouble={audioTrouble} />
+      <SourcePicker onError={onAudioError} channels="none" width={180} trouble={audioTrouble} folded={folded} />
     </Text>
   );
 }

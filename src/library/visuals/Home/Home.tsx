@@ -739,7 +739,7 @@ export function Home({
             <span className="vs-fill" />
             <div className="vs-home-toolbar" ref={setToolbar} />
             {/* The audio input, out of the Now Playing card (its TransportBar has `audio={false}`), left of the icon buttons. */}
-            <TransportAudio onAudioError={audioFailed} audioTrouble={audioTrouble} />
+            <TransportAudio onAudioError={audioFailed} audioTrouble={audioTrouble} folded />
             {/* The icon buttons, spaced as the view switch's links are. */}
             <div className="vs-home-tools">
               <CameraAction />

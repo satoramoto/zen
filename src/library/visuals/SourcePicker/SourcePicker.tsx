@@ -120,10 +120,14 @@ let revision = 0;
 let commands: Promise<unknown> = Promise.resolve();
 
 /** Independent main and microphone inputs.
+ * Unless `channels="shown"`, the main source's Select sits beside the mixer icon (whose popover holds
+ * the channels and the microphone) and the level meter; `folded` moves that Select into the popover,
+ * at its top as "Main source", so only the mixer icon and the meter show (Home's header). Live keeps
+ * the Select out (default).
  * **Tuning knobs**
  * - `--vs-audio-note-width`: maximum notice width beside the picker.
  */
-export function SourcePicker({ onError, channels: where = 'advanced', width = 180, trouble = null }: { onError(error: unknown): void; channels?: 'advanced' | 'shown' | 'none'; width?: number; trouble?: { message: string; detail: string | null } | null }) {
+export function SourcePicker({ onError, channels: where = 'advanced', width = 180, trouble = null, folded = false }: { onError(error: unknown): void; channels?: 'advanced' | 'shown' | 'none'; width?: number; trouble?: { message: string; detail: string | null } | null; folded?: boolean }) {
   const [sources, setSources] = useState<api.Source[]>([]);
   const [status, setStatus] = useState<AudioStatus>({ main: OFF, mic: OFF });
   const [problem, setProblem] = useState<string | null>(null);
@@ -284,11 +288,11 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
         </>
       ) : (
         <>
-          {picker('main')}
+          {!folded && picker('main')}
           {notices('main')}
           <Popover
-            name="Audio mixer: main and microphone inputs"
-            title={status.mic.enabled ? 'Mixer (main and microphone)' : 'Mixer'}
+            name={folded ? `Audio mixer: ${status.main.enabled ? `listening to ${status.main.choice?.name ?? 'the main source'}` : 'main source off'}${status.mic.enabled ? ' and the microphone' : ''}` : 'Audio mixer: main and microphone inputs'}
+            title={folded ? sourceTitle(status.main.enabled ? (status.main.choice?.name ?? null) : null) : status.mic.enabled ? 'Mixer (main and microphone)' : 'Mixer'}
             // The faders glyph, and "+ mic" while the microphone is mixed in.
             label={
               <>
@@ -299,6 +303,12 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
           >
             {/* The panel floats out of any toolbar the picker sits in: its pickers are fields again. */}
             <ControlContext.Provider value={CONTROL_FIELD}>
+              {folded && (
+                <span className="vs-audio-lane" role="group" aria-label="Main source">
+                  <Text size="caption" className="vs-audio-lane-name">Main source</Text>
+                  {picker('main')}
+                </span>
+              )}
               <span className="vs-audio-lane">
                 <Text size="caption" className="vs-audio-lane-name">Main channels</Text>
                 {channelControls('main')}
