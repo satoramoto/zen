@@ -12,7 +12,7 @@ A component lists its **forms**, the ways it can be drawn, from most room to lea
 |---|---|
 | Display | `full → compact → minimal` (`DISPLAY_FORMS`) |
 | SongForm's transport | `keys → tight → compact` (`TRANSPORT_FORMS`) |
-| SongForm's strip | `strip → folded` (`FORM_FORMS`); both halves together `full → short` (`SONG_FORM_FORMS`) |
+| SongForm's strip (not on the Stage) | `strip → folded` (`FORM_FORMS`); both halves together `full → short` (`SONG_FORM_FORMS`) |
 | FaderBank | `tall → short` (`FADER_BANK_FORMS`) |
 | KnobBank | `labelled → compact` (`KNOB_BANK_FORMS`) |
 | PadBank | `two-rows → small → one-row` (`PAD_BANK_FORMS`) |
@@ -58,6 +58,9 @@ interface ScreenSpec {
   rows: Row[];             // the body, top to bottom
   pairs?: [string, string][];
   edge?: Length;           // room round the body and footer; the header runs edge to edge
+  aspect?:                 // lay the screen out in a room of this shape (below)
+    | { ratio: number; fit?: 'contain' }
+    | { ratio: number; fit: 'scale'; design: { w: number; h: number } };
 }
 type Row = (RegionSpec | { rows: Row[] })[];  // a row's slot can hold a nested stack of rows
 ```
@@ -65,6 +68,15 @@ type Row = (RegionSpec | { rows: Row[] })[];  // a row's slot can hold a nested 
 There is no grid, no fraction and no breakpoint. A **pair** is two regions that share a column seam: they take one width, so the seam beside them runs straight. Both must sit in rows of the same stack, and be first in both rows or last in both. The solver refuses any other pair.
 
 Regions sit `--mat-plate-gap` apart, and the header and footer are that far from the body. The `edge` keeps the body and footer off the room's sides and foot (an app bar in the header still spans the room). Two arrangements of one screen are two specs (the Stage's `STAGE_SPEC` and `STAGE_SPLIT_SPEC`), never CSS.
+
+### Aspect
+
+`aspect: { ratio: 16 / 9 }` fixes the screen's shape. The solver takes the largest box of that ratio inside the window (`fitAspect`), centred, its offset rounded down to whole px, its size exact (a 1217 × 752 window gives 1217 × 684.5625). The header, body and footer all live inside the box, so the app bar spans the box, not the window. What the window has left over are **bands**: two strips (left and right of a wide window, above and below a tall one, none for an exact one), drawn as `Surface layer="ground"` with nothing in them, hidden from assistive tech. Two fits:
+
+- `contain` (the default; an app): the screen is laid out in the box, exactly as in a window that size. A smaller window steps forms down; the zoom rules and the `minTarget` floor are unchanged.
+- `scale` (a preview or story): the screen is laid out once in its `design` room (`ratio` must be `design.w / design.h`) and drawn at `box.w / design.w`, so a small frame shows the whole design smaller and a large one bigger; the forms never change. The room is scaled with a CSS `transform: scale()`, not `zoom`: hit-testing follows a transform exactly in every engine, content keeps laying out in design px (ResizeObservers agree with the solver), a resize is the compositor's job, and it doesn't compound with the body's own last-resort zoom. Portaled popovers outside the screen aren't scaled.
+
+`cover` and `stretch` have room in the type for later.
 
 ## The principles
 
@@ -90,6 +102,7 @@ How the two systems map onto it:
 
 `assemble(spec, room, principles)` is pure and deterministic.
 
+0. **The room.** The whole window, or with `aspect` the box above (the `design` room for `scale`). Everything below happens in it.
 1. **Start rich.** Every body region starts at its first form. The header and footer take their first form's ideal height at full width. The body gets the room that is left.
 2. **Step down by priority.** The fit test aims each form between its `min` and its `ideal` by density (dense 0, balanced ½, roomy 1). While the body overflows, the **lowest-priority** region whose next form is smaller on the overflowing axis steps down one form. Within that tier, a region whose step also shrinks the body goes first, and on a tie the later one in reading order. A step that would make the body worse on an axis where it then overflows is no help and isn't taken (sixteen pads in one row are shorter than two rows of eight, but wider than the room).
 3. **Take back needless steps.** A step taken early can turn out not to be needed once a later one makes room. Picture a short sidebar beside a tall hero: stepping the sidebar down doesn't help until the hero shrinks too. So once the body fits, each stepped region tries its richer form again, highest priority first, and keeps it if the body still fits.
@@ -97,7 +110,7 @@ How the two systems map onto it:
 5. **Zoom last.** Only when no step down helps any more (normally, when every region is at its last form) is the body zoomed. First every step that costs the body nothing is taken back (a narrower transport beside the hero, once the row below sets the width). The zoom is the one factor that fits the body's least, and never goes below `minTarget / control`. If it would, the solver takes back what the floor's room still holds (a step that traded one axis for the other) and tries again; failing that it sets `overflow`, keeps the leaner forms, and the screen scrolls. Under the zoom, any step the zoomed room still holds is taken back. The header and footer never zoom.
 6. **Split the room.** Along each row (widths) and each stack (heights), every part gets its least. Then each priority tier, highest first, is raised toward its ideal. Then the spare goes to the parts that `grow`, highest priority first, in proportion to their ideals and up to their `max`. A row with no grower leaves its spare at the end. Across a row, regions stretch to the row's height, so there are no dead bands. Widths never depend on heights, so a second pass, with every width known, gives each `ratio` form the height its width asks.
 
-The answer is a `Placement`: each region's `form`, `step` and `rect` (px, in its zone, before zoom), the three zones, `zoom`, `layout` (the body's box before zooming), `overflow`, and `steps`, the log of every step down and back.
+The answer is a `Placement`: the `room` (the box in window px), its `bands` and `scale` (1 unless `fit: 'scale'`), each region's `form`, `step` and `rect` (px, in its zone, before zoom), the three zones (relative to the room), `zoom`, `layout` (the body's box before zooming), `overflow`, and `steps`, the log of every step down and back.
 
 ## On screen
 
@@ -109,7 +122,7 @@ The answer is a `Placement`: each region's `form`, `step` and `rect` (px, in its
 />
 ```
 
-`Screen` with a `spec` renders `AssembledScreen`. It measures its own box, which is the room (only the room, never the parts). It runs the solver with the nearest `ThemeScope`'s principles, places every slot absolutely where the placement says, and wraps each region's content in its chosen form, for `useForm()`. The root carries `data-zoom` and `data-overflow`, and each slot `data-region` and `data-form`. Without a `spec`, `Screen` is the named grid it always was.
+`Screen` with a `spec` renders `AssembledScreen`. It measures its own box, which is the room (only the room, never the parts). It runs the solver with the nearest `ThemeScope`'s principles, places every slot absolutely where the placement says, and wraps each region's content in its chosen form, for `useForm()`. The root carries `data-zoom`, `data-overflow` and (with an aspect) `data-aspect`, and each slot `data-region` and `data-form`. The zones sit in a `data-part="room"` box at the placement's room (with `data-scale` when scaled); the bands are `data-part="band"` siblings. Without a `spec`, `Screen` is the named grid it always was.
 
 ## Worked example
 
@@ -131,7 +144,7 @@ With a 28 px control, a 4 px unit, a 12 px plate inset, an 8 px gap and `dense`:
 
 ## The Stage
 
-`yahaha/Stage/Stage.spec.ts` is the whole of the Stage's layout: header `bar`; footer `keys` then `status`; rows `[hero, transport]`, `[form]`, `[mixer, { rows: [[knobs], [pads]] }]`; the pair `hero`/`mixer`; edge `--space-2`. `Stage.assembly.test.ts` proves it at 1440 × 900, 1217 × 752 and 900 × 700 under every pack (the forms chosen, no overflow, zoom ≥ the floor, every region at least its form's least, nothing overlapping, the hero stepping only after the controls). visual[flow]'s frost materials (32 px gaps, 22 px insets) hold the floor and scroll below the board.
+`yahaha/Stage/Stage.spec.ts` is the whole of the Stage's layout: header `bar`; footer `keys` (just the keys, `ruler={false}`: 1.75 control heights) then `status`; rows `[hero, transport]`, `[mixer, { rows: [[knobs], [pads]] }]` (no song form strip: the sections are the Pads region's Sections bank, its default view); the pair `hero`/`mixer`; edge `--space-2`; `aspect: { ratio: 16 / 9, fit: 'contain' }`. The split spec is `[hero]`, `[mixer, controls, transport]` with no pair. The stories draw `STAGE_SCALED_SPEC` (`fit: 'scale'`, design 1920 × 1080) by default and have a `fit` control. `Stage.assembly.test.ts` proves it in five windows, 1440 × 1200, 2560 × 1080, 1920 × 1080 (the board), 1217 × 752 and 900 × 700, under every pack: the room exactly 16:9, centred, bands on the right axis; the forms chosen; no overflow, zoom ≥ the floor, every region at least its form's least, nothing overlapping, the hero stepping only after the controls. Two cases scroll at the floor: 900 × 700 gives a 900 × 506 room, below the Stage's least under every pack, and visual[flow]'s frost materials (32 px gaps, 22 px insets) can't afford the 1217 × 684.6 room.
 
 ## What it doesn't do yet
 

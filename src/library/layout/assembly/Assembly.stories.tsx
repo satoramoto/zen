@@ -7,7 +7,7 @@ import { Region } from '../Region';
 import { Screen } from '../Screen';
 import { DEMO_SPEC, NOW_FORMS, PAD_FORMS, SIDE_FORMS } from './Assembly.fixtures';
 import { useForm } from './forms';
-import type { Placement } from './types';
+import type { Placement, ScreenSpec } from './types';
 
 // Each demo part declares its forms (Assembly.fixtures.ts) and reads the chosen one with
 // useForm(); the screen is only DEMO_SPEC. There is no screen CSS: drag the frame's corner.
@@ -53,13 +53,21 @@ function Pads() {
   );
 }
 
-function Demo({ width, height }: { width: number; height: number }) {
+/** The demo screen with no aspect, or locked to 16:9 (`contain` steps forms down; `scale` draws the 1600 × 900 design smaller). */
+const SPECS: Record<DemoAspect, ScreenSpec> = {
+  none: DEMO_SPEC,
+  contain: { ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'contain' } },
+  scale: { ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: { w: 1600, h: 900 } } },
+};
+type DemoAspect = 'none' | 'contain' | 'scale';
+
+function Demo({ width, height, aspect = 'none' }: { width: number; height: number; aspect?: DemoAspect }) {
   const [placement, setPlacement] = useState<Placement | null>(null);
   return (
     <div style={{ padding: 16, display: 'grid', gap: 12 }}>
       <Text role="caption" tone="muted">
         {placement
-          ? `zoom ${placement.zoom.toFixed(3)}${placement.overflow ? ' (overflow)' : ''} · ${Object.values(placement.regions)
+          ? `room ${Math.round(placement.room.w)} × ${Math.round(placement.room.h)}${placement.scale !== 1 ? ` at ${placement.scale.toFixed(3)}` : ''} · zoom ${placement.zoom.toFixed(3)}${placement.overflow ? ' (overflow)' : ''} · ${Object.values(placement.regions)
               .map((r) => `${r.id} ${r.form}`)
               .join(' · ')}${placement.steps.length ? ` · steps: ${placement.steps.join('; ')}` : ''}`
           : '…'}
@@ -68,7 +76,7 @@ function Demo({ width, height }: { width: number; height: number }) {
       <div key={`${width}x${height}`} style={{ width, height, resize: 'both', overflow: 'hidden', outline: '1px dashed var(--border)' }}>
         <Screen
           name="Assembly demo"
-          spec={DEMO_SPEC}
+          spec={SPECS[aspect]}
           onPlacement={setPlacement}
           regions={{
             bar: <Text role="label">Bar</Text>,
@@ -99,10 +107,11 @@ const meta: Meta<typeof Demo> = {
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   component: Demo,
-  args: { width: 900, height: 420 },
+  args: { width: 900, height: 420, aspect: 'none' },
   argTypes: {
     width: { control: { type: 'range', min: 320, max: 1600, step: 10 } },
     height: { control: { type: 'range', min: 140, max: 1000, step: 10 } },
+    aspect: { control: 'inline-radio', options: ['none', 'contain', 'scale'] },
   },
 };
 export default meta;
@@ -117,3 +126,14 @@ export const Board: Story = { args: { width: 1440, height: 900 } };
 export const Short: Story = { args: { width: 900, height: 330 } };
 /** Tighter still: every part at its last form; what's playing goes last. */
 export const Small: Story = { args: { width: 600, height: 240 } };
+/**
+ * Locked to 16:9 (`aspect: { ratio: 16 / 9, fit: 'contain' }`): drag the frame's corner and the
+ * screen keeps its shape, laid out in the largest 16:9 room inside, the rest ground bands. A
+ * smaller room steps forms down, as an app does.
+ */
+export const AspectLocked: Story = { args: { width: 1100, height: 420, aspect: 'contain' } };
+/**
+ * Scaled (`fit: 'scale'`, design 1600 × 900): the screen is laid out once at its design room and
+ * drawn smaller to the largest 16:9 box in the frame. Drag the corner: the forms never change.
+ */
+export const AspectScaled: Story = { args: { width: 700, height: 600, aspect: 'scale' } };
