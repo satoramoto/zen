@@ -54,6 +54,8 @@ export const HERO_FORMS: Forms<HeroForm> = [
  * - `--vs-hero-name-size` (24px): the name, a fifth over the heading size.
  * - `--vs-hole-radius`: Views' `Preview`'s corner knob, set here to the hero's
  *   `--vs-lay-hero-radius`.
+ * - `--vs-hole-corner`: Views' `Preview`'s corner tone, set here to the spread's `--surface-0`
+ *   (the preview isn't clipped, so its painted corners survive).
  * - `--vs-hero-fade` (160ms): how long the floating `controls` fade in and out (none under
  *   reduced motion); `--vs-hero-scrim` (85%): how much of the window's tint the scrim starts with
  *   at the picture's foot.

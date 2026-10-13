@@ -158,6 +158,8 @@
    box is the page's own surface, saying so. */
 .vs-preview {
   --vs-hole-radius: 0px;
+  /* The corners' tone: what surrounds the picture where it sits (the hero sets its spread's). */
+  --vs-hole-corner: var(--layer-base-solid);
   display: grid;
   min-width: 0;
   min-height: 0;
@@ -188,12 +190,12 @@
   align-self: stretch;
   justify-self: stretch;
   background:
-    radial-gradient(circle at 100% 100%, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+    radial-gradient(circle at 100% 100%, transparent var(--vs-hole-radius), var(--vs-hole-corner) calc(var(--vs-hole-radius) + 1px / 2))
       top left / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat,
-    radial-gradient(circle at 0 100%, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+    radial-gradient(circle at 0 100%, transparent var(--vs-hole-radius), var(--vs-hole-corner) calc(var(--vs-hole-radius) + 1px / 2))
       top right / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat,
-    radial-gradient(circle at 100% 0, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+    radial-gradient(circle at 100% 0, transparent var(--vs-hole-radius), var(--vs-hole-corner) calc(var(--vs-hole-radius) + 1px / 2))
       bottom left / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat,
-    radial-gradient(circle at 0 0, transparent var(--vs-hole-radius), var(--layer-base-solid) calc(var(--vs-hole-radius) + 1px / 2))
+    radial-gradient(circle at 0 0, transparent var(--vs-hole-radius), var(--vs-hole-corner) calc(var(--vs-hole-radius) + 1px / 2))
       bottom right / var(--vs-hole-radius) var(--vs-hole-radius) no-repeat;
 }

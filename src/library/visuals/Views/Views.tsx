@@ -76,6 +76,8 @@ const LOADING = 'Loading the display…';
  *
  * **Tuning knobs** (Views.css):
  * - `--vs-hole-radius`: the preview's corner radius, 0 by default; a screen sets it.
+ * - `--vs-hole-corner`: the opaque tone painted in the corners over the square native view,
+ *   `--layer-base-solid` by default; a screen sets it to whatever surrounds the picture.
  */
 export function Preview({ className }: { className: string }) {
   const ref = useRef<HTMLDivElement>(null);
