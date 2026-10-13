@@ -84,7 +84,7 @@ export type PanelChoice = PanelForm | 'either';
 export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true, bar = true }: { sidebar?: PanelChoice; inspector?: PanelChoice; hero?: boolean; bar?: boolean } = {}): ScreenSpec {
   const pick = (forms: Forms<PanelForm>, c: PanelChoice): Forms => (c === 'either' ? forms : [forms.find((f) => f.id === c)!]);
   const region = (id: string, forms: Forms, priority: RegionSpec['priority']): RegionSpec => ({ id, forms, priority, plate: false });
-  // The floating panels (the sidebar, the inspector, the bar) sit the panel inset in from the window's edges they meet: the solver's, one rule for all three.
+  // The floating panels (the sidebar, the inspector) sit the panel inset in from the window's edges they meet: the solver's, one rule for both.
   const panel = (id: string, forms: Forms, priority: RegionSpec['priority']): RegionSpec => ({ ...region(id, forms, priority), panel: true });
   return {
     rows: [
@@ -98,7 +98,8 @@ export function homeSpec({ sidebar = 'either', inspector = 'either', hero = true
             ...(hero ? [[region('hero', HERO_FORMS, 'now')]] : []),
             // The grid scrolls up behind the pinned preview and down behind the transport: its slot reaches up to the hero's top and down to the bar's bottom.
             [{ ...region('pane', PANE_FORMS, 'chrome'), ...(hero ? { under: 'hero' } : {}), ...(bar ? { over: 'bar' } : {}) }],
-            ...(bar ? [[panel('bar', TRANSPORT_FORMS, 'controls')]] : []),
+            // The bar floats free (no panel): the grid fades out under it as if under clear glass (HomeLayout.css).
+            ...(bar ? [[region('bar', TRANSPORT_FORMS, 'controls')]] : []),
           ],
         },
         panel('inspector', pick(INSPECTOR_FORMS, inspector), 'context'),
@@ -526,12 +527,8 @@ export function HomeLayout({
               {pane ?? children}
             </main>
           ),
-          // Frosted (the float layer: glass and its blur), so the tiles passing under it show through.
-          bar: (
-            <Surface layer="float" ambient="bottom" className="vs-lay-bar">
-              {bar}
-            </Surface>
-          ),
+          // No panel: the controls float over the grid, which fades out beneath them.
+          bar: <div className="vs-lay-bar">{bar}</div>,
           inspector: inspMode ? (
             <Region name="inspector" className={cell(inspMode, 'insp')}>
               <InspectorPanel label={inspectorLabel} id={INSPECTOR_ID} panelRef={insp}>

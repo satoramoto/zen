@@ -321,12 +321,11 @@
 }
 /* The bar: a float Surface (the theme's glass: tint, blur, edge and cast; Home.tsx), the inset
    panels' corners, so the tiles passing under it read through the frost. */
+/* The bar: controls floating free, no panel. The grid slips under it as under clear glass: the
+   assembly's `over` fade (Assembly.css) dissolves it across the band above the bar, gone by the
+   bar's top, so the controls float on nothing. */
 .vs-lay .vs-lay-bar {
-  /* The float's tint thinned (frost's is 86%, which reads as solid), so the blurred tiles show. */
-  --vs-lay-bar-tint: 60%;
-  --lib-surface-fill: color-mix(in oklab, var(--layer-float-fill) var(--vs-lay-bar-tint), transparent);
   min-width: 0;
-  border-radius: var(--vs-lay-side-radius);
 }
 
 /* The header's buttons that open and close a panel (TOGGLE_CLASS): the sidebar's glyph turned to
