@@ -60,11 +60,16 @@ export interface PortSpec {
   kind?: string;        // opaque type tag; also the style hook (data-kind)
   label?: string;
   param?: boolean;      // an inlet that drives a parameter rather than carrying the signal
-  // Where the port sits on the node. Presentation only: `side` alone decides signal
-  // direction and every connect rule. 'auto' (default) lets the layout choose, e.g. the
-  // face nearest the other end, so a graph can flow outward from a centre, not left to right.
-  placement?: 'auto' | 'n' | 'e' | 's' | 'w';
+  // Where the port sits on the node, placed freely for layout, like pins on a chip.
+  // Presentation only: `side` alone decides signal direction and every connect rule.
+  //  - 'auto' (default): the layout chooses, e.g. the face nearest the other end.
+  //  - a face: centred on that face.
+  //  - { face, at }: a pin along that face, `at` 0..1 from its start (top or left).
+  //  - { x, y }: anywhere on or in the node, as fractions 0..1 of its box.
+  placement?: 'auto' | Face | { face: Face; at: number } | { x: number; y: number };
 }
+
+export type Face = 'n' | 'e' | 's' | 'w';
 
 export interface Node {
   id: string;           // unique within its GraphDef
@@ -232,8 +237,10 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 ### Direction is semantic, placement is not
 
 17g. `placement`, `layout` and `routing` never affect an operation, `connect`'s
-     rules or `validate`, beyond checking that their values are among those
-     listed. Only `side` decides which way a signal flows.
+     rules or `validate`, beyond checking that their values are well-formed:
+     a listed keyword, a known face, and `at`, `x` and `y` within 0..1. Only
+     `side` decides which way a signal flows. Nodes are chips and ports are
+     their pins, so an inlet and an outlet may sit on any face, side by side.
 17h. Every operation preserves `placement`, `layout` and `routing` unchanged.
 
 ### Buses
