@@ -118,13 +118,16 @@ export const DATA: api.LibraryData = {
   },
 };
 
-/** A manual playlist: ten presets, a change every 30 s in order. */
+/**
+ * A manual playlist: thirty-six presets (enough rows that its grid scrolls under the pinned
+ * preview), a change every 30 s in order. The first ten are the original's; the deck plays the third.
+ */
 export const WARM_UP: pl.Playlist = {
   id: 'p-warm-up',
   name: 'Warm-up',
   kind: 'manual',
   query: null,
-  items: [0, 3, 7, 12, 18, 24, 30, 36, 42, 50].map((n) => itemOf(row(n))),
+  items: [0, 3, 7, 12, 18, 24, 30, 36, 42, 50, ...Array.from({ length: 26 }, (_, i) => 55 + i * 7)].map((n) => itemOf(row(n))),
   settings: { ...pl.DEFAULT_SETTINGS, change: { unit: 'seconds', every: 30 }, transition: 3 },
 };
 
