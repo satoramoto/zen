@@ -196,13 +196,18 @@
    focus is inside them or one of their popovers or menus is open; always shown with no hover. */
 .vs-hero .vs-hero-controls {
   position: absolute;
-  inset: auto 0 0;
+  /* The whole picture: the title row at its top, the keys at its foot, each on its own scrim;
+     clicks pass through the clear middle to the picture. */
+  inset: 0;
   z-index: 1;
-  padding: var(--space-6) var(--space-2) var(--space-1);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) var(--space-5);
   border-radius: var(--vs-lay-hero-radius, var(--radius-card));
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  --lib-surface-fill: linear-gradient(to top, color-mix(in oklab, var(--surface-0) var(--vs-hero-scrim), transparent), color-mix(in oklab, var(--surface-0) calc(var(--vs-hero-scrim) * 0.6), transparent) 55%, transparent);
+  pointer-events: none;
+  --lib-surface-fill:
+    linear-gradient(to bottom, color-mix(in oklab, var(--surface-0) var(--vs-hero-scrim), transparent), transparent calc(var(--space-6) * 2)),
+    linear-gradient(to top, color-mix(in oklab, var(--surface-0) var(--vs-hero-scrim), transparent), color-mix(in oklab, var(--surface-0) calc(var(--vs-hero-scrim) * 0.6), transparent) calc(var(--space-6) * 1.2), transparent calc(var(--space-6) * 2.5));
   opacity: 0;
   transition: opacity var(--vs-hero-fade) ease;
 }

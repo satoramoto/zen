@@ -30,6 +30,26 @@
   min-height: var(--space-6);
   padding: 0;
   container: vs-transport / inline-size;
+  flex: 1 1 auto;
+}
+/* The overlay fills the picture: the preset's name and where it plays from at its top-left, the
+   keys and the audio input at its foot; only the rows take clicks. */
+.vs-transport[data-layout='overlay'] .vs-transport-bar > .lib-group__body {
+  height: 100%;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 'now now now' '. . .' 'keys . right';
+  align-items: end;
+}
+.vs-transport[data-layout='overlay'] .vs-transport-keys { grid-area: keys; }
+.vs-transport[data-layout='overlay'] .vs-transport-right { grid-area: right; }
+.vs-transport[data-layout='overlay'] .vs-transport-mid {
+  grid-area: now;
+  align-self: start;
+  justify-content: flex-start;
+}
+.vs-transport[data-layout='overlay'] :is(.vs-transport-keys, .vs-transport-mid, .vs-transport-right) {
+  pointer-events: auto;
 }
 @container vs-transport (max-width: 560px) {
   .vs-transport .vs-transport-bar > .lib-group__body {
