@@ -5,20 +5,37 @@
   "type": "module",
   "exports": {
     ".": {
+      "zen-source": "./src/library/index.ts",
       "types": "./lib/index.d.ts",
       "import": "./lib/index.js"
     },
-    "./zen.css": "./lib/zen.css",
+    "./zen.css": {
+      "zen-source": "./src/library/source.css",
+      "default": "./lib/zen.css"
+    },
+    "./storybook": {
+      "zen-source": "./src/library/storybook.tsx",
+      "types": "./lib/storybook.d.ts",
+      "import": "./lib/storybook.js"
+    },
     "./visuals": {
+      "zen-source": "./src/library/visuals/index.ts",
       "types": "./lib/visuals/index.d.ts",
       "import": "./lib/visuals.js"
     },
-    "./visuals.css": "./lib/visuals.css",
+    "./visuals.css": {
+      "zen-source": "./src/library/source.css",
+      "default": "./lib/visuals.css"
+    },
     "./visuals/lab": {
+      "zen-source": "./src/library/visuals/lab.ts",
       "types": "./lib/visuals/lab.d.ts",
       "import": "./lib/visuals-lab.js"
     },
-    "./visuals-lab.css": "./lib/visuals-lab.css"
+    "./visuals-lab.css": {
+      "zen-source": "./src/library/source.css",
+      "default": "./lib/visuals-lab.css"
+    }
   },
   "types": "./lib/index.d.ts",
   "files": [
