@@ -7,8 +7,12 @@ import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
 import './Slider.css';
 
-/** Caption above the control, beside it, or laid over a horizontal track. */
-export type SliderLayout = 'stacked' | 'inline' | 'inside';
+/**
+ * Caption above the control, beside it, or laid over a horizontal track; or `row`, Apple's slider
+ * (HIG Sliders): the caption at the leading edge and the reading at the trailing edge on one line,
+ * over a thin groove the full width with a knob that stands proud of it. `row` is horizontal only.
+ */
+export type SliderLayout = 'stacked' | 'inline' | 'inside' | 'row';
 /** Which side of the control the caption and reading sit on, laid inline. */
 export type SliderSide = 'left' | 'right';
 
@@ -65,7 +69,9 @@ export interface SliderProps {
  *
  * **Parts** (`data-part`). `caption`; `track` the channel, a `well`, carrying the gesture; `fill` the
  * value from `origin`, lit (`--lit`, `--mat-lit-glow`); `span` and `reach` the depth range and its
- * far end; `live` where a driver has it; `thumb` the cap, a `handle` (a thin lit mark when `inside`);
+ * far end; `live` where a driver has it; `thumb` the cap, a `handle` (a thin lit mark when `inside`, a round-ended knob
+ * standing proud of a thin groove in a `row`, where the track is the knob's height and the groove
+ * is drawn inside it);
  * `readout` the reading, in the readout face with tabular figures.
  */
 export function Slider({
@@ -95,6 +101,7 @@ export function Slider({
   width,
 }: SliderProps) {
   const reserved = useReserved(param);
+  const axis = layout === 'row' ? 'horizontal' : orientation;
   const gesture = useParamGesture({
     param,
     value,
@@ -103,7 +110,7 @@ export function Slider({
     depth,
     onDepth,
     disabled,
-    axis: orientation,
+    axis,
     // An `inside` row is stretched to its line, so `length` describes nothing: use the hook's own
     // travel there, and the element's measured extent for an `auto` one.
     travel: travel ?? (length === 'auto' ? 'element' : layout === 'inside' ? undefined : length),
@@ -132,7 +139,7 @@ export function Slider({
   return (
     <div
       className={`lib-slider${className ? ` ${className}` : ''}`}
-      data-orientation={orientation}
+      data-orientation={axis}
       data-layout={layout}
       data-side={layout === 'inline' ? side : undefined}
       data-length={length === 'auto' ? 'auto' : undefined}

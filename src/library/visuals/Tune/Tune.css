@@ -1,8 +1,8 @@
 /* "For this preset" (Tune.tsx): its own speed and how much it reacts, a Group of two library
    Slider rows. The group's label is the heading ("for this preset"), "as made" a quiet word as
-   its aside, as the panel's back is. Each slider is the `inside` row: its name and reading over a
-   full-width well, lit from 1× to the value in the signal colour, with the 1× detent a tick at
-   the well's centre. Contract variables and visuals.css tokens only. */
+   its aside, as the panel's back is. Each slider is the Apple-style `row`: its name leading, the
+   reading trailing, a thin groove lit from 1× to the value in the system accent, with the 1×
+   detent a tick at the groove's centre. Contract variables and visuals.css tokens only. */
 
 /* The original's 22px above the card: the plate's inset. */
 .vs-tune {
@@ -39,21 +39,21 @@
 
 /* One slider row: the name in the controls' ink, the reading in the ink, tabular (the slider's
    caption and readout are Texts: their knobs). */
-.vs-tune .vs-tune-slider[data-layout='inside'] {
+.vs-tune .vs-tune-slider[data-layout='row'] {
   width: 100%;
   min-width: 0;
 }
-.vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__caption {
+.vs-tune .vs-tune-slider[data-layout='row'] .lib-slider__caption {
   color: var(--text-2);
   --text-size: var(--size-caption);
 }
-.vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__readout {
+.vs-tune .vs-tune-slider[data-layout='row'] .lib-slider__readout {
   color: var(--text-1);
   --text-size: var(--size-caption);
   --text-weight: 500;
 }
-/* The 1× detent: a tick through the well at its centre, under the reading. */
-.vs-tune .vs-tune-slider[data-layout='inside'] .lib-slider__track::after {
+/* The 1× detent: a tick through the groove at its centre. */
+.vs-tune .vs-tune-slider[data-layout='row'] .lib-slider__track::after {
   position: absolute;
   top: 25%;
   bottom: 25%;

@@ -9,22 +9,21 @@ import { queryName } from '../model/librarySearch';
 import { say } from '../model/words';
 import { rowSays, type SidebarActions } from '../model/home-model';
 import { canToggle, dropState, menuAt, menuStep, paneKey, renamed, rowMenu, samePane, toggleTitle, type MenuAction, type MenuItem, type SidebarRow, type SidebarSection } from '../model/sidebar-model';
-import { Mark } from '../Views/Views';
 import { Icon } from '../Icon/Icon';
 import './InsetSidebar.css';
 
 export { paneKey, samePane, sidebarSections, type SidebarRow, type SidebarSection } from '../model/sidebar-model';
 
 /**
- * **Job.** The home's sidebar (HomeLayout's `sidebar` slot, inside its `nav`): the visual[flow]
- * mark at its top; then collapsible sections ("Library", "Playlists", "Smart playlists"), each a
+ * **Job.** The home's sidebar (HomeLayout's `sidebar` slot, inside its `nav`): collapsible sections ("Library", "Playlists", "Smart playlists"), each a
  * quiet heading with a chevron over its rows; a row an icon, a name, a count and, for the
  * playlist playing, the green dot after its name. The row picked is a soft pill in the ink.
  *
  * **Changed.** A row's menu is a `Layer level="float"` (the theme's glass, solid when the sidebar
  * is laid over the preview, in HomeLayout's Opaque scope), in place of the popovers' stylesheet.
- * The mark sits at the panel's top: the header row above is the title bar now (HomeLayout), so
- * there is no window buttons' band to clear. Sizes and tones read the contract and the layout's
+ * The visual[flow] mark, the original's first item here, is the app's title in the panel's top
+ * band beside the window buttons now (HomeLayout's `SidebarPanel`), so the rows start under the
+ * band. Sizes and tones read the contract and the layout's
  * `--vs-lay-*`. Nothing fades (the chevron's and the tools' opacity steps show at once).
  *
  * **Tuning knobs** (InsetSidebar.css, on `.vs-isb`):
@@ -92,7 +91,7 @@ function rowTitle(r: SidebarRow, p: Playlist | undefined): string {
 }
 
 /** What an empty section says. */
-const emptySays = (id: string) => (id === 'smart' ? `Filter the library, then ${say('save query')}.` : id === 'playlists' ? 'None yet: + makes one.' : 'None yet.');
+const emptySays = (id: string) => (id === 'smart' ? 'None yet: save a library filter.' : id === 'playlists' ? 'None yet: + makes one.' : 'None yet.');
 
 /** A row's menu open: whose, where, and what opened it (focus goes back there when it closes). */
 interface OpenMenu {
@@ -240,10 +239,6 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
         if (!(e.target instanceof HTMLInputElement)) e.preventDefault();
       }}
     >
-      {/* The mark, the sidebar's first item. */}
-      <div className="vs-isb-mark">
-        <Mark />
-      </div>
       <div className="vs-isb-sections">
         {sections.map((s) => {
           const open = !collapsed.includes(s.id);
@@ -413,6 +408,20 @@ export function InsetSidebar({ sections, selected, onSelect, collapsed, onToggle
               Settings
             </Text>
           </button>
+          {actions.onHelp && (
+            <button
+              type="button"
+              className="vs-isb-help"
+              aria-label="Help"
+              aria-haspopup="dialog"
+              aria-expanded={!!actions.helpOpen}
+              aria-keyshortcuts="?"
+              title="Help: what every key and button on the home does (?)"
+              onClick={() => actions.onHelp?.()}
+            >
+              <Icon name="help" />
+            </button>
+          )}
         </div>
       )}
       {menu && <RowMenu name={menu.list.name} items={rowMenu(menu.list, playingNow(menu), lists, { info: !!actions?.onInfo })} at={menu} onChoose={choose} onClose={closeMenu} />}

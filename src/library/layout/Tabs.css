@@ -18,7 +18,10 @@
   min-width: 0;
   padding: var(--mat-tabs-tab-pad);
   border: 0;
-  border-radius: var(--radius-control);
+  /* Square in a bare track (an underline mustn't curve with the corner); rounded chips only in a
+     padded track (hardware, Linear), as Segmented does. */
+  --lib-tabs-radius: min(var(--radius-control), calc(var(--mat-tabs-pad) * 4));
+  border-radius: var(--lib-tabs-radius);
   background: var(--mat-tabs-tab-texture), var(--mat-tabs-tab-fill);
   box-shadow: var(--mat-tabs-tab-shadow);
   color: var(--mat-tabs-ink);

@@ -89,6 +89,44 @@ export interface RegionSpec {
   head?: boolean;
   /** Drawn on a plate: the plate's inset is added round it. Default true. */
   plate?: boolean;
+  /**
+   * The id of a body region directly above this one that its content scrolls up behind (a list
+   * passing under a pinned preview). Sizes are unchanged: the region's slot is drawn reaching up
+   * to that region's top, above it, and the content is told how much of its top that pinned
+   * region covers (`Placed.under`).
+   */
+  under?: string;
+  /**
+   * The id of a body region directly below this one that its content also scrolls down behind
+   * (a list passing under a pinned transport bar): `under`'s mirror. Sizes are unchanged: the
+   * region's slot is drawn reaching down to that region's bottom, before it (so beneath it), and
+   * the content is told how much of its bottom that pinned region covers (`Placed.over`).
+   */
+  over?: string;
+  /**
+   * A floating panel (a sidebar, an inspector, a bottom bar): on every side where it meets the
+   * room's edge it sits the panel inset (`PANEL_INSET`, `--space-2`; `--lib-panel-inset` in CSS) in
+   * from it. The solver adds that inset to its size on those sides and the slot pads its content
+   * by it (`Placed.inset`), so no app sets a window margin by hand. A form that takes no room (0
+   * on an axis: a panel put away or laid over) gets none.
+   */
+  panel?: boolean;
+  /**
+   * Clear glass: a pinned region (one another names in `under` or `over`) that what scrolls behind
+   * it shows through, very diffused, instead of being cut at its edge. Its slot draws the theme's
+   * float backdrop (the blur) with a faint float tint, feathered at its edges so no box shows; the
+   * region scrolling behind it isn't clipped there, only faded across it. Without a backdrop in
+   * the theme it is the fade alone.
+   */
+  glass?: boolean;
+  /**
+   * The gap under this region's row in its stack of rows (a column, the body, the header zone), in
+   * place of the plate's gap: a tight step under a title bar (`{ space: 2 }`). A row's gap is the
+   * largest its regions ask (a region that asks nothing asks the plate's gap), so one tight region
+   * beside an ordinary one keeps the ordinary gap. Across a row the plate's gap stays. Default: the
+   * plate's gap.
+   */
+  gapAfter?: Length;
 }
 
 /** A stack of rows inside a row's slot (a column of regions next to another region). */
@@ -200,6 +238,26 @@ export interface Placed {
   /** In px, relative to its zone (header, body or footer), before the body's zoom. */
   rect: Rect;
   zone: 'header' | 'body' | 'footer';
+  /**
+   * With `RegionSpec.under`: the pinned region it scrolls behind, and `reach`, the px from that
+   * region's top down to this one's (its height and the gap): the slot is drawn that much taller,
+   * reaching up, and its content keeps that much of its top for the pinned region. `edge` is the
+   * px from the slot's top to the pinned region's drawn bottom edge (its height less any panel
+   * inset there): the slot is clipped above it and fades in below it.
+   */
+  under?: { id: string; reach: number; edge: number; glass?: boolean };
+  /**
+   * With `RegionSpec.over`: the pinned region below it that it scrolls behind, and `reach`, the px
+   * from this one's bottom down to that region's (the gap and its height): the slot is drawn that
+   * much taller, reaching down, and its content keeps that much of its bottom for the pinned region.
+   * `edge` is the px from the slot's bottom to the pinned region's drawn top edge. `glass`: the
+   * pinned region is clear glass (`RegionSpec.glass`), so the slot isn't clipped there.
+   */
+  over?: { id: string; reach: number; edge: number; glass?: boolean };
+  /** With `RegionSpec.glass`: it is clear glass, so its slot draws the diffusing backdrop. */
+  glass?: boolean;
+  /** With `RegionSpec.panel`: the px it sits in from the room's edge on each side (0 where it doesn't meet it); unset when all are 0. */
+  inset?: Box;
 }
 
 /** The solver's answer. */

@@ -251,17 +251,20 @@ export const InfoAndQuickAdd: Story = {
   },
 };
 
-/** The mark atop the sidebar under the window buttons, and the quiet Settings row pinned to its foot: it stays at the bottom while the rows scroll under it. */
+/** The app's title in the panel's top band beside the window buttons, and the quiet Settings row pinned to its foot: it stays at the bottom while the rows scroll under it. */
 export const MarkAndSettings: Story = {
   name: 'Mark and Settings',
   args: { sections: sidebarSections(MANY, { library: 250, starred: 12 }), lists: MANY },
   play: async ({ canvasElement, canvas, args }) => {
     const panel = canvasElement.querySelector<HTMLElement>('.vs-lay-side')!;
     const scroller = canvasElement.querySelector<HTMLElement>('.vs-isb-sections')!;
-    const mark = canvasElement.querySelector<HTMLElement>('.vs-isb-mark')!;
+    const mark = canvasElement.querySelector<HTMLElement>('.vs-lay-side-band .vs-lay-title')!;
     await expect(mark).toHaveTextContent('visual[flow]');
-    // Under the window buttons' room, not in it.
-    await expect(mark.getBoundingClientRect().top).toBeGreaterThanOrEqual(canvasElement.querySelector('.vs-lay-side-body')!.getBoundingClientRect().top);
+    // In the band, after the window buttons, above the rows; and a drag on it is the band's.
+    const lights = canvasElement.querySelector('.vs-lay-lights')!.getBoundingClientRect();
+    await expect(mark.getBoundingClientRect().left).toBeGreaterThan(lights.right);
+    await expect(mark.getBoundingClientRect().bottom).toBeLessThanOrEqual(canvasElement.querySelector('.vs-lay-side-body')!.getBoundingClientRect().top + 0.5);
+    await expect(getComputedStyle(mark).pointerEvents).toBe('none');
     const markTop = mark.getBoundingClientRect().top;
     const settings = canvas.getByRole('button', { name: 'Settings' });
     const atFoot = () => expect(Math.abs(panel.getBoundingClientRect().bottom - settings.closest('.vs-isb-foot')!.getBoundingClientRect().bottom)).toBeLessThan(1);
@@ -343,7 +346,7 @@ export const Empty: Story = {
   args: { sections: sidebarSections(EMPTY, { library: ROWS.length, starred: STARRED.length }), lists: EMPTY, selected: { kind: 'library' } },
   play: async ({ canvas, args }) => {
     await expect(canvas.getByText('None yet: + makes one.')).toBeVisible();
-    await expect(canvas.getByText(/^Filter the library, then /)).toBeVisible();
+    await expect(canvas.getByText('None yet: save a library filter.')).toBeVisible();
     await userEvent.click(canvas.getByRole('button', { name: 'new playlist' }));
     await expect(args.actions!.onCreate).toHaveBeenCalled();
   },

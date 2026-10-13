@@ -1,5 +1,5 @@
 import type { AllHTMLAttributes, CSSProperties, ElementType, ReactNode, Ref } from 'react';
-import type { LayerName } from '../contract';
+import type { AmbientRegion, LayerName } from '../contract';
 import type { HueSlot } from '../components/core/hue';
 import './Surface.css';
 
@@ -30,6 +30,10 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as'>
   lit?: LitSlot;
   /** An inset hairline: `--border`, or `--border-strong` with `'strong'`. */
   border?: boolean | 'strong';
+  /** Which region of the picture's ambient light it takes, as much as its layer's `ambient`
+   *  shares say (`--ambient-<region>`, from the nearest `Ambient`). Default: the region a
+   *  surrounding surface took, else `avg`. Surfaces inside inherit it. */
+  ambient?: AmbientRegion;
   /** The element to render; default `div`. */
   as?: ElementType;
   className?: string;
@@ -49,10 +53,18 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as'>
  * Every rule has no specificity (`:where()`), so the component's own class refines it (a size, a
  * different radius, a shadow slot) without `!important`.
  *
+ * A layer whose materials give it `ambient` shares (contract `LayerAmbient`) takes the picture's
+ * light from the nearest `Ambient`: a tint over its fill (held to the layer's lightness band, so
+ * text keeps its contrast), a specular edge on its lit side and a glow cast behind it, all scaled
+ * by `--ambient-strength`. With no `Ambient` (strength 0) it looks exactly as it does without.
+ * `ambient` picks the region (`left` for a panel at the picture's left).
+ *
  * **Tuning knobs.** `--lib-surface-fill`, `--lib-surface-texture`, `--lib-surface-backdrop`, and
  * the shadow slots `--lib-surface-border`, `--lib-surface-mat-shadow`, `--lib-surface-glow`,
- * `--lib-surface-edge`, `--lib-surface-cast` (each `0 0 0 0 transparent` when unused);
- * `--lit` is the lamp colour `--mat-lit-glow` reads.
+ * `--lib-surface-edge`, `--lib-surface-ambient-shadow`, `--lib-surface-cast` (each
+ * `0 0 0 0 transparent` when unused); `--lib-surface-tint` (the ambient layer over the fill) and
+ * the layer's ambient shares `--lib-surface-ambient-fill`, `-edge`, `-cast`; `--lit` is the lamp
+ * colour `--mat-lit-glow` reads.
  */
 export function Surface({
   layer,
@@ -61,6 +73,7 @@ export function Surface({
   pressed,
   lit,
   border,
+  ambient,
   as: Tag = 'div',
   className,
   children,
@@ -76,6 +89,7 @@ export function Surface({
       data-pressed={pressed ? '' : undefined}
       data-lit={lit === undefined ? undefined : typeof lit === 'number' ? `hue-${lit}` : lit}
       data-border={border === 'strong' ? 'strong' : border ? 'true' : undefined}
+      data-ambient={ambient}
       {...rest}
     >
       {children}

@@ -1,8 +1,19 @@
 // The solver: a screen spec, the room and the principles in; a placement out. Pure and
 // deterministic: no DOM, no randomness, the same answer for the same input (docs/assembly.md).
 import type { Density } from '../../contract';
-import type { Aspect, Form, Nest, Placed, Placement, Principles, Rect, RegionSpec, Row, ScreenSpec } from './types';
+import type { Aspect, Box, Form, Nest, Placed, Placement, Principles, Rect, RegionSpec, Row, ScreenSpec, Units } from './types';
 import { resolveLength, resolveNeed } from './units';
+
+/** How far a floating panel (`RegionSpec.panel`) sits in from the room's edges: `--space-2` (`--lib-panel-inset`, Assembly.css). */
+export const PANEL_INSET: Units = { space: 2 };
+
+/** Which of the room's edges a node meets. */
+interface Sides {
+  top: boolean;
+  right: boolean;
+  bottom: boolean;
+  left: boolean;
+}
 
 /** How far from a form's least toward its ideal the fit test aims, per density. */
 export const DENSITY_AIM: Record<Density, number> = { dense: 0, balanced: 0.5, roomy: 1 };
@@ -72,6 +83,39 @@ class Solver {
     this.body = rows(spec.rows);
     for (const s of spec.footer ?? []) add(s);
     this.pairs();
+    // Which room edges each body region meets: the body meets the sides and the foot unless the
+    // screen keeps an edge, the top unless there is a header, the foot unless there is a footer.
+    const kept = resolveLength(spec.edge ?? 0, p) > 0;
+    this.sides(this.body, { top: !spec.header?.length, right: !kept, bottom: !kept && !spec.footer?.length, left: !kept });
+  }
+
+  /** Each region's edges of the room (`meets`), from where it sits in its rows and stacks. */
+  readonly meets = new Map<string, Sides>();
+  private sides(n: Node, at: Sides) {
+    if (n.kind === 'region') {
+      this.meets.set(n.spec.id, at);
+      return;
+    }
+    const last = n.kids.length - 1;
+    n.kids.forEach((k, i) =>
+      this.sides(
+        k,
+        n.kind === 'col'
+          ? { ...at, top: at.top && i === 0, bottom: at.bottom && i === last }
+          : { ...at, left: at.left && i === 0, right: at.right && i === last },
+      ),
+    );
+  }
+
+  /** A floating panel's inset from the room's edges it meets, in px (all 0 for any other region, or a form that takes no room). */
+  inset(r: RegionNode): Box {
+    const none = { top: 0, right: 0, bottom: 0, left: 0 };
+    const m = this.meets.get(r.spec.id);
+    if (!r.spec.panel || !m) return none;
+    const f = this.form(r);
+    if (resolveLength(f.ideal.w, this.p) <= 0 || resolveLength(f.ideal.h, this.p) <= 0) return none;
+    const v = resolveLength(PANEL_INSET, this.p);
+    return { top: m.top ? v : 0, right: m.right ? v : 0, bottom: m.bottom ? v : 0, left: m.left ? v : 0 };
   }
 
   private track(n: RegionNode): RegionNode {
@@ -112,20 +156,22 @@ class Solver {
     return r.spec.forms[this.steps.get(r.spec.id) ?? 0];
   }
 
-  /** The plate round a region's form: inset on every side, plus the head strip. */
-  chrome(s: RegionSpec): Size {
+  /** The plate round a region's form: inset on every side, plus the head strip, plus a panel's inset from the room's edges. */
+  chrome(r: RegionNode): Size {
+    const s = r.spec;
     const { inset, head } = this.p.plate;
     const plate = s.plate !== false;
+    const edge = this.inset(r);
     return {
-      w: plate ? inset.left + inset.right : 0,
-      h: (plate ? inset.top + inset.bottom : 0) + (s.head ? head.top + head.bottom + this.p.scale.control : 0),
+      w: (plate ? inset.left + inset.right : 0) + edge.left + edge.right,
+      h: (plate ? inset.top + inset.bottom : 0) + (s.head ? head.top + head.bottom + this.p.scale.control : 0) + edge.top + edge.bottom,
     };
   }
 
   /** A region's own size at aim `k` (0 its form's least, 1 its ideal), plate included. */
   own(r: RegionNode, k: number): Size {
     const f = this.form(r);
-    const c = this.chrome(r.spec);
+    const c = this.chrome(r);
     const lerp = (a: Axis) => {
       const lo = resolveLength(f.min[a], this.p);
       const hi = Math.max(lo, resolveLength(f.ideal[a], this.p));
@@ -148,12 +194,33 @@ class Solver {
     return r;
   }
 
+  /** The gap a region asks under its row (`RegionSpec.gapAfter`), in px: the plate's gap unless it says otherwise. */
+  gapAfter(s: RegionSpec): number {
+    return s.gapAfter === undefined ? this.p.plate.gap : resolveLength(s.gapAfter, this.p);
+  }
+
+  /**
+   * The gaps between a stack's kids, in px, one fewer than its kids. Down a column, the gap under
+   * each row is the largest its regions ask (`gapAfter`; a nest in it asks the plate's gap); across
+   * a row, the plate's gap.
+   */
+  gaps(n: StackNode): number[] {
+    const g = this.p.plate.gap;
+    const under = (row: Node): number => (row.kind === 'row' && row.kids.length ? Math.max(...row.kids.map((c) => (c.kind === 'region' ? this.gapAfter(c.spec) : g))) : g);
+    return n.kids.slice(0, -1).map((kid) => (n.kind === 'col' ? under(kid) : g));
+  }
+
+  /** All of a stack's gaps added up. */
+  gapSum(n: StackNode): number {
+    return this.gaps(n).reduce((t, v) => t + v, 0);
+  }
+
   /** Room a node takes at aim `k`. */
   measure(n: Node, k: number): Size {
     if (n.kind === 'region') return this.size(n, k);
     const main: Axis = n.kind === 'row' ? 'w' : 'h';
     const sizes = n.kids.map((c) => this.measure(c, k));
-    const gaps = Math.max(0, n.kids.length - 1) * this.p.plate.gap;
+    const gaps = this.gapSum(n);
     const along = sizes.reduce((t, s) => t + s[main], 0) + gaps;
     const across = Math.max(0, ...sizes.map((s) => s[other(main)]));
     return main === 'w' ? { w: along, h: across } : { w: across, h: along };
@@ -164,7 +231,7 @@ class Solver {
       const min = this.size(n, 0);
       const ideal = this.size(n, 1);
       const f = this.form(n);
-      const c = this.chrome(n.spec);
+      const c = this.chrome(n);
       const cap = (a: Axis) => (f.max?.[a] === undefined ? Infinity : Math.max(ideal[a], c[a] + resolveLength(f.max[a]!, this.p)));
       const max = { w: cap('w'), h: cap('h') };
       const grow = { w: !!f.grow?.w, h: !!f.grow?.h };
@@ -182,7 +249,7 @@ class Solver {
     const main: Axis = n.kind === 'row' ? 'w' : 'h';
     const cross = other(main);
     const kids = n.kids.map((c) => this.info(c));
-    const gaps = Math.max(0, kids.length - 1) * this.p.plate.gap;
+    const gaps = this.gapSum(n);
     const add = (pick: (i: Info) => number) => kids.reduce((t, i) => t + pick(i), 0) + gaps;
     const top = (pick: (i: Info) => number) => Math.max(0, ...kids.map(pick));
     const out = (along: number, acr: number): Size => (main === 'w' ? { w: along, h: acr } : { w: acr, h: along });
@@ -203,10 +270,10 @@ class Solver {
   /**
    * Splits `total` along an axis: everyone gets their least; then, highest priority first, each
    * tier is raised toward its ideal (in proportion to what it still lacks); then the spare goes to
-   * the growers, highest priority first, in proportion to their ideals, up to their max.
+   * the growers, highest priority first, in proportion to their ideals, up to their max. `gaps`
+   * is the room the stack's gaps take (`gapSum`).
    */
-  split(infos: Info[], axis: Axis, total: number): number[] {
-    const gaps = Math.max(0, infos.length - 1) * this.p.plate.gap;
+  split(infos: Info[], axis: Axis, total: number, gaps: number): number[] {
     const out = infos.map((i) => i.min[axis]);
     let avail = total - gaps - out.reduce((t, v) => t + v, 0);
     if (avail <= 0) return out;
@@ -248,11 +315,12 @@ class Solver {
     }
     if (n.kind === 'col') {
       const caps = this.pairCaps(n, rect.w);
-      const hs = this.split(n.kids.map((c) => this.info(c)), 'h', rect.h);
+      const gaps = this.gaps(n);
+      const hs = this.split(n.kids.map((c) => this.info(c)), 'h', rect.h, this.gapSum(n));
       let y = rect.y;
       n.kids.forEach((row, i) => {
         this.placeRow(row as StackNode, { x: rect.x, y, w: rect.w, h: hs[i] }, out, fixed, caps);
-        y += hs[i] + this.p.plate.gap;
+        y += hs[i] + (gaps[i] ?? 0);
       });
       return;
     }
@@ -271,7 +339,7 @@ class Solver {
       const c = Math.max(i.min.w, cap);
       return { ...i, ideal: { ...i.ideal, w: Math.min(i.ideal.w, c) }, max: { ...i.max, w: Math.min(i.max.w, c) } };
     });
-    const ws = this.split(infos, 'w', rect.w);
+    const ws = this.split(infos, 'w', rect.w, this.gapSum(row));
     let x = rect.x;
     row.kids.forEach((k, i) => {
       if (k.kind === 'region') {
@@ -544,7 +612,9 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
     const r = s.byId(id);
     const step = s.steps.get(id) ?? 0;
     const form = r.spec.forms[step];
-    placed[id] = { id, form: form.id, step, rect, zone, ...(form.parts ? { parts: form.parts } : {}) };
+    const inset = s.inset(r);
+    const inside = inset.top || inset.right || inset.bottom || inset.left;
+    placed[id] = { id, form: form.id, step, rect, zone, ...(form.parts ? { parts: form.parts } : {}), ...(inside ? { inset } : {}) };
   };
   let y = 0;
   (spec.header ?? []).forEach((r, i) => {
@@ -552,6 +622,31 @@ export function assemble(spec: ScreenSpec, win: { w: number; h: number }, princi
     y += head.hs[i] + gap;
   });
   for (const r of s.regions) put(r.spec.id, rects[r.spec.id], 'body');
+  // A region that scrolls behind a pinned one above it reaches up to that region's top (`under`);
+  // behind one below it, down to that region's bottom (`over`).
+  const glassy = new Set(s.regions.filter((r) => r.spec.glass).map((r) => r.spec.id));
+  for (const id of glassy) placed[id].glass = true;
+  for (const r of s.regions) {
+    const own = placed[r.spec.id].rect;
+    const pinned = (id: string, side: 'above' | 'below') => {
+      const pin = placed[id];
+      const verb = side === 'above' ? 'under' : 'over';
+      if (!pin || pin.zone !== 'body') throw new Error(`assembly: region '${r.spec.id}' scrolls ${verb} '${id}', which isn't in the body`);
+      const beside = side === 'above' ? pin.rect.y + pin.rect.h <= own.y + 1e-6 : own.y + own.h <= pin.rect.y + 1e-6;
+      const across = pin.rect.x < own.x + own.w && own.x < pin.rect.x + pin.rect.w;
+      if (!beside || !across) throw new Error(`assembly: region '${r.spec.id}' scrolls ${verb} '${id}', which must sit ${side} it`);
+      return pin.rect;
+    };
+    if (r.spec.under !== undefined) {
+      const head = pinned(r.spec.under, 'above');
+      // The pinned region's drawn bottom edge: its height less a panel's inset there.
+      placed[r.spec.id].under = { id: r.spec.under, reach: own.y - head.y, edge: head.h - (placed[r.spec.under].inset?.bottom ?? 0), ...(glassy.has(r.spec.under) ? { glass: true } : {}) };
+    }
+    if (r.spec.over !== undefined) {
+      const foot = pinned(r.spec.over, 'below');
+      placed[r.spec.id].over = { id: r.spec.over, reach: foot.y + foot.h - (own.y + own.h), edge: foot.h - (placed[r.spec.over].inset?.top ?? 0), ...(glassy.has(r.spec.over) ? { glass: true } : {}) };
+    }
+  }
   y = 0;
   (spec.footer ?? []).forEach((r, i) => {
     put(r.id, { x: 0, y, w: inner, h: foot.hs[i] }, 'footer');

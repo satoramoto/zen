@@ -2,6 +2,9 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { Group } from '../../../layout/Group';
+import { Stack } from '../../../primitives/Stack';
+import { Text } from '../../../primitives/Text';
 import { Select } from './Select';
 
 const MODES = ['neon', 'soft', 'band'];
@@ -94,5 +97,37 @@ export const Live: Story = {
   render: function LiveSelect(args) {
     const [index, setIndex] = useState(args.index);
     return <Select {...args} items={BLENDS} label="Blend" name="Blend" index={index} onChange={(next) => (setIndex(next), args.onChange(next))} />;
+  },
+};
+
+/**
+ * Field vs. in a toolbar: the same Select, its look set by where it sits. On its own it is a
+ * field (a key face, an edge); inside a toolbar `Group` (`ControlContext { quiet: true }`) it is
+ * the value and a caret in the bar's ink, a faint wash only on hover and while open. Same size,
+ * keys and menu.
+ */
+export const FieldVsToolbar: Story = {
+  render: function FieldVsToolbarStory(args) {
+    const [field, setField] = useState(0);
+    const [bar, setBar] = useState(0);
+    return (
+      <Stack direction="column" gap={5} align="start">
+        <Select {...args} label="Field mode" index={field} onChange={(next) => (setField(next), args.onChange(next))} />
+        <Group name="Toolbar" label={false} toolbar align="center" gap={4}>
+          <Text weight="strong">Play</Text>
+          <Select {...args} label="Toolbar mode" index={bar} onChange={(next) => (setBar(next), args.onChange(next))} />
+          <Text>Mixer</Text>
+        </Group>
+      </Stack>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole('combobox', { name: 'Field mode' });
+    const quiet = canvas.getByRole('combobox', { name: 'Toolbar mode' });
+    await expect(field.closest('[data-part="root"]')).not.toHaveAttribute('data-quiet');
+    await expect(quiet.closest('[data-part="root"]')).toHaveAttribute('data-quiet');
+    await expect(canvas.getByRole('toolbar', { name: 'Toolbar' })).toContainElement(quiet);
+    await expect(quiet.getBoundingClientRect().height).toBe(field.getBoundingClientRect().height);
   },
 };

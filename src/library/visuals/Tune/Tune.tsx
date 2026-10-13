@@ -26,10 +26,9 @@ const SENSITIVITY = position(say('preset sensitivity'));
  * is sent when the inspector moves to another preset. Mount it keyed by the preset's key.
  *
  * **Changed.** The card is a `Group` named by its heading, with "as made" as the group's aside.
- * The sliders are the library's `Slider` row (`inside`: name and reading over a full-width well,
- * the part from 1× lit in the signal colour, a tick at the 1× detent), not macOS 26's over-glass
- * rail with a glass knob: glass is only for what floats (principles), and the kit's tokens the
- * original read aren't part of the contract.
+ * The sliders are the library's Apple-style `Slider` row (`row`: the name leading, the reading
+ * trailing, a thin groove lit from 1× in the system accent, the knob the slider's own, a tick at
+ * the 1× detent); the kit's tokens the original read aren't part of the contract.
  *
  * **Kept.** The behaviour (log scale, steps, the rest before sending, double-click back to 1×,
  * sending what waits on unmount), the names, titles and words.
@@ -79,13 +78,12 @@ export function TuneCard({ subject, onSet }: { subject: Prepared; onSet: Inspect
       onChange={(at) => change(which, at)}
       display={formatMultiplier(shown[which])}
       orientation="horizontal"
-      layout="inside"
+      layout="row"
       fill
       origin="center"
       length="auto"
       name={param.name}
       label={param.name}
-      ink="var(--success)"
       className="vs-tune-slider"
       title={`${title} (double-click puts it back to 1×)`}
     />

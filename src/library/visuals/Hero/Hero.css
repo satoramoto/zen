@@ -32,7 +32,9 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: var(--vs-hole-radius);
-  box-shadow: 0 0 0 100vmax var(--surface-0);
+  /* The theme's float lift first, so it paints over the spread tint, outside the box (an outer
+     shadow never paints under the picture), then the spread. */
+  box-shadow: var(--layer-float-cast), 0 0 0 100vmax var(--surface-0);
 }
 /* A still or thumbnail (and the empty box) has the dark backing behind it; the preview's hole
    paints nothing once it draws (Views.css backs it while loading). */
@@ -166,5 +168,61 @@
   }
   .vs-hero .vs-hero-row .vs-hero-info {
     padding: 0 0 var(--space-1);
+  }
+}
+
+/* With floating controls (`controls`): the picture and the controls share one box the picture's
+   size (the stage takes the picture's width and shape; the picture fills it), so the controls lie
+   over the picture's foot whatever its size. */
+.vs-hero .vs-hero-stage {
+  --vs-hero-fade: 160ms;
+  --vs-hero-scrim: 85%;
+  position: relative;
+  width: min(100%, calc(var(--vs-hero-cap) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  container: vs-hero-stage / inline-size;
+}
+.vs-hero[data-only] .vs-hero-stage {
+  margin-inline: auto;
+}
+.vs-hero .vs-hero-stage > :is(.vs-hero-pic, .vs-preview) {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+/* The controls: along the picture's foot, on a scrim (a Surface whose fill is a gradient of the
+   window's tint, rising from the foot to clear; the native preview under a transparent page can't
+   be blurred, so no backdrop), the picture's bottom corners. Hidden until the picture is hovered,
+   focus is inside them or one of their popovers or menus is open; always shown with no hover. */
+.vs-hero .vs-hero-controls {
+  position: absolute;
+  /* The whole picture: the title row at its top, the keys at its foot, each on its own scrim;
+     clicks pass through the clear middle to the picture. */
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--vs-lay-hero-radius, var(--radius-card));
+  pointer-events: none;
+  --lib-surface-fill:
+    linear-gradient(to bottom, color-mix(in oklab, var(--surface-0) var(--vs-hero-scrim), transparent), transparent calc(var(--space-6) * 2)),
+    linear-gradient(to top, color-mix(in oklab, var(--surface-0) var(--vs-hero-scrim), transparent), color-mix(in oklab, var(--surface-0) calc(var(--vs-hero-scrim) * 0.6), transparent) calc(var(--space-6) * 1.2), transparent calc(var(--space-6) * 2.5));
+  opacity: 0;
+  transition: opacity var(--vs-hero-fade) ease;
+}
+.vs-hero .vs-hero-stage:hover > .vs-hero-controls,
+.vs-hero .vs-hero-controls:focus-within,
+.vs-hero .vs-hero-controls:has([aria-expanded='true']) {
+  opacity: 1;
+}
+@media (hover: none) {
+  .vs-hero .vs-hero-controls {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vs-hero .vs-hero-controls {
+    transition: none;
   }
 }

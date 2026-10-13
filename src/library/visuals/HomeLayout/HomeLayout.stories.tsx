@@ -85,16 +85,21 @@ function Composed({ width, prefs: start }: Args) {
             </button>
           </Header>
         }
-        hero={<Hero picture={NOW.picture} />}
-        bar={
-          <TransportBar
-            playing={NOW.playing}
-            onPlayPause={() => {}}
-            onStep={() => {}}
-            stepIn=" in the playlist"
-            position={{ elapsed: 12, length: 30 }}
-            onAudioError={() => {}}
-            now={NOW.preset ? { name: tileName(NOW.preset.title, NOW.preset.path), from: NOW.from } : null}
+        hero={
+          <Hero
+            picture={NOW.picture}
+            controls={
+              <TransportBar
+                layout="overlay"
+                playing={NOW.playing}
+                onPlayPause={() => {}}
+                onStep={() => {}}
+                stepIn=" in the playlist"
+                position={{ elapsed: 12, length: 30 }}
+                onAudioError={() => {}}
+                now={NOW.preset ? { name: tileName(NOW.preset.title, NOW.preset.path), from: NOW.from } : null}
+              />
+            }
           />
         }
         inspector={

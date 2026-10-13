@@ -8,11 +8,16 @@ The `visuals` pack (palette `frost`, faces `instrument`, scale `roomy`, material
 - Areas such as the header, sidebar, main pane and bar paint only faint tints over the frost (`--surface-0`..`-3`, the `base` and `raised` layers). Let the material carry the look; don't put a solid colour behind a region.
 - Glass is only for what floats: popovers, menus, a dragged item, sheets and toasts (`float`, `overlay`, `top`). Glass is a darker fill over a blur of what's under it (`blur(28px) saturate(1.6)`), with a top edge catching the light and a lift shadow. A region on the page is never glass.
 
+## The glass catches the picture's light (design-os decision 85)
+
+- The page can't blur the native preview, so the frost takes its colour instead, as Apple TV's ambient mode does. Put the screen inside an `Ambient` fed by the preview, and every `base`, `raised`, `float` and `overlay` surface tints by it: the page's tints faintly (24%, 20%), the glass more (36%, 32%), with a coloured top edge and a glow cast behind what floats. A panel at one side takes that side's light (`<Surface layer="float" ambient="left">`). Don't hand-mix ambient colours into a component; the material does it. The colour is held to a lightness band (at most 0.33 dark, at least 0.87 light), so captions stay at 4.5:1 whatever plays, and it moves only at Ambient's easing, drifting over seconds under Reduce flashing.
+
 ## Near borderless (decision 68)
 
 - Tell areas apart by space and tone, not lines. Regions have no edge and their headers have no rule.
 - Only three lines are left: the selection ring, the focus ring and the playing mark. Don't add a hairline to separate two things; add space or a tone step.
-- Controls are type. A switch is a row of words, and the active one is underlined in the primary (`--accent`, 2px). Don't draw boxes around buttons.
+- Controls are type. A switch (`Segmented`, `Tabs`) is a row of words drawn like the header's glyph buttons: no track, no face, no underline, no thumb. Resting words are grey (`--text-2`, the panel toggles at rest), the chosen one white (`--text-1`), and hover brightens a resting word to white as it does an icon. Keep them tight, about the toolbar glyphs' spacing (`--space-3`). Don't draw boxes around buttons. (The owner chose plain text over both visual[flow]'s underline and Apple's segmented thumb: design-os decision 81.)
+- A slider is Apple's (HIG Sliders, macOS 26 kit): a thin capsule groove (the `well`, the ink at 12%), the value filled in the primary from its origin, and a round-ended knob (the `handle`: a pale, nearly white cap with a specular top edge and a soft cast). Its name sits above at the leading edge and its reading at the trailing edge in the secondary ink, tabular, never printed inside the track (`Slider layout="row"`).
 
 ## Layout (decisions 70–71)
 
@@ -42,7 +47,7 @@ The `visuals` pack (palette `frost`, faces `instrument`, scale `roomy`, material
 
 - Small grey text (captions) must be at 4.5:1 or better against the lightest the frost gets: about `#3c3c3c` for the HUD, with the page's tint laid over it. That's why the caption (`--text-3`) is `#a4a4ac` and not the widgets' `#5e5e66` (3:1), which is kept only as the faint step.
 - On raised tints and glass, captions take a lighter step so they stay at 4.5:1 (home.css `--caption-raised`).
-- Colour has one meaning each: green is the signal and the playing mark; the primary is selection and the active underline; amber is caution. Stems and decks keep their own hues and never decorate.
+- Colour has one meaning each: green is the signal and the playing mark; the primary is selection and a slider's fill; amber is caution. Stems and decks keep their own hues and never decorate.
 
 ## Assembly
 

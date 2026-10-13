@@ -4,7 +4,7 @@
    picked a soft pill of --radius-control in the ink, heavier, the playlist playing its green
    dot. No lines: areas told apart by space and tone (decision 68). Nothing animates. */
 
-/* A column as tall as the panel's body: the mark, the sections, which scroll inside themselves,
+/* A column as tall as the panel's body: the sections, which scroll inside themselves,
    then the foot, which stays at the bottom. The panel's body never scrolls, so nothing is painted
    over the rows to hide them (the panel's tone is a tint over glass: a second coat would show as
    a box). */
@@ -35,26 +35,43 @@
   overflow-y: auto;
 }
 
-/* The mark, the sidebar's first item, under the window buttons' band (HomeLayout's panel). Its
-   text starts where the headings' titles do (the mark's own padding plus 6). 32px tall. */
-.vs-isb-mark {
-  display: flex;
-  align-items: center;
-  height: var(--space-6);
-  flex: none;
-  margin: 0 0 var(--vs-isb-gutter);
-  padding: 0 calc(var(--space-1) * 1.5);
-  user-select: none;
-}
 
 /* The foot: a quiet Settings row at the panel's bottom, under the rows that scroll; no line
    between. */
+/* The foot: Settings, and Help (?) at its right end. */
 .vs-isb-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   flex: none;
   padding: var(--space-1) 0 var(--vs-isb-gutter);
 }
+.vs-isb-help {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--vs-caption-raised);
+  cursor: pointer;
+}
+.vs-isb-help:hover,
+.vs-isb-help[aria-expanded='true'] {
+  color: var(--text-1);
+  background: var(--vs-isb-hover);
+}
+.vs-isb-help:focus-visible {
+  outline: 2px solid var(--vs-focus-ring);
+  outline-offset: -2px;
+}
 .vs-isb-settings {
   display: flex;
+  flex: 1;
+  min-width: 0;
   align-items: center;
   gap: var(--vs-isb-gutter);
   width: 100%;
@@ -81,7 +98,7 @@
   margin-top: calc(var(--space-3) + var(--space-1) / 2); /* 14px */
 }
 
-/* A section's heading: its title in the caption's grey, the chevron after it, faint until the
+/* A section's heading: its title in the caption's grey, the chevron after it, hidden until the
    heading is hovered or focused. The whole heading folds it. */
 .vs-isb-head {
   margin: 0;
@@ -111,11 +128,13 @@
   color: var(--text-1);
   background: none;
 }
+/* Hidden until the heading's row is hovered or the heading focused, folded or not (as Finder's
+   sidebar does); it keeps its room, so the title doesn't shift. */
 .vs-isb-chevron {
   flex: none;
-  opacity: 0.55;
+  opacity: 0;
 }
-.vs-isb-toggle:hover .vs-isb-chevron,
+.vs-isb-headrow:hover .vs-isb-chevron,
 .vs-isb-toggle:focus-visible .vs-isb-chevron {
   opacity: 1;
 }

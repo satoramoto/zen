@@ -4,7 +4,9 @@
    --lib-select-chars  the longest member, in characters (set inline)
    --lib-select-width  the field's width: room for the longest member and the caret, unless
                        `width` sets it inline
-   --lib-select-wash   hover and highlight tint over a face */
+   --lib-select-wash   hover and highlight tint over a face
+   --lib-select-tint   the wash currently over the trigger (transparent at rest)
+   --lib-select-caret  the caret's width */
 
 .lib-select {
   --lib-select-chars: 0;
@@ -58,6 +60,31 @@
   color: var(--text-4);
   cursor: not-allowed;
 }
+
+/* In a toolbar (a toolbar Group's ControlContext sets data-quiet): no field. The value in the
+   bar's ink, the caret after it a step quieter, and only a faint wash on hover (the quiet
+   ActionButton's 8%) and while open or pressed (its 12%). Height and padding stay, so the hit
+   target doesn't shrink; the width is the value's own, like toolbar text, not the field's. */
+.lib-select[data-quiet] .lib-select__trigger {
+  width: auto;
+  gap: var(--space-2);
+  justify-content: flex-start;
+  background: linear-gradient(var(--lib-select-tint), var(--lib-select-tint));
+  box-shadow: none;
+  color: inherit;
+}
+.lib-select[data-quiet] .lib-select__caret { opacity: 0.6; }
+.lib-select[data-quiet] .lib-select__trigger:hover:not(:disabled) {
+  --lib-select-tint: color-mix(in oklab, var(--text-1) 8%, transparent);
+  color: var(--text-1);
+}
+.lib-select[data-quiet][data-open] .lib-select__trigger,
+.lib-select[data-quiet] .lib-select__trigger:active:not(:disabled) {
+  --lib-select-tint: color-mix(in oklab, var(--text-1) 12%, transparent);
+  box-shadow: none;
+  color: var(--text-1);
+}
+.lib-select[data-quiet] .lib-select__trigger:disabled { color: var(--text-4); }
 
 .lib-select__value {
   min-width: 0;

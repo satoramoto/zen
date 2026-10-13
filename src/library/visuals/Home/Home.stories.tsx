@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme, withStoryFrame } from '../../storybook';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import { PLAYING_DECK, row, WARM_UP } from '../fixtures/fixtures';
 import { INSPECTOR_ID, SIDEBAR_ID } from '../HomeLayout/HomeLayout';
@@ -10,14 +10,15 @@ import { Home } from './Home';
 const PLAYING = row(7);
 
 /**
- * The original's `.storybook/preview.tsx` viewports: the width the home is built around, the one
- * where it turns narrow, and the narrowest it goes. Zen's Storybook has none of its own, so they
- * come with these stories.
+ * The original's `.storybook/preview.tsx` viewports, as design windows (`parameters.frame`): the
+ * one where it turns narrow, and the narrowest it goes. The stories named for them are drawn at
+ * that window, scaled down only when the canvas is smaller (storybook.tsx's `withStoryFrame`).
+ * The rest are the fluid window (`frame: 'fill'`): the canvas at its real size, the panels at
+ * their sizes and the central column taking what is left, as in the app.
  */
-const VIEWPORTS = {
-  narrow: { name: 'Narrow, 560 px', styles: { width: '560px', height: '800px' }, type: 'desktop' },
-  home900: { name: 'Home at 900 px', styles: { width: '900px', height: '800px' }, type: 'desktop' },
-  home1440: { name: 'Home at 1440 px', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
+const WINDOWS = {
+  narrow: { w: 560, h: 800 },
+  home900: { w: 900, h: 800 },
 };
 
 /**
@@ -40,24 +41,25 @@ const heroNamesPlaying = async (canvasElement: HTMLElement) => {
 const meta = {
   title: 'open[flow]/visuals/Home/Home',
   component: Home,
-  decorators: [withVisualsFrame, withLibraryTheme],
+  decorators: [withVisualsFrame, withStoryFrame, withLibraryTheme],
   globals: VISUALS_GLOBALS,
   beforeEach: visualsBeforeEach,
-  args: { start: null, onMode: () => {} },
+  // The window buttons' stand-in, so the title's and the header's room beside them can be judged.
+  args: { start: null, onMode: () => {}, lights: true },
   // Picked up where the app left off, as at a launch: without a resume the home opens a random preset, and the hero wouldn't name the deck's.
   parameters: {
     scope: 'bare',
     layout: 'fullscreen',
-    viewport: { options: VIEWPORTS },
+    frame: 'fill',
     world: { resume: { playlist: WARM_UP.id, index: PLAYING_DECK.index, current: PLAYING_DECK.current, source: null } },
   },
 } satisfies Meta<typeof Home>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** At 1440×900: Warm-up's grid, the sidebar and the inspector docked. */
+/** The canvas's window: Warm-up's grid scrolling up behind the pinned preview; the sidebar and the inspector docked where the canvas has room for them. */
 export const Wide: Story = {
-  globals: { viewport: { value: 'home1440', isRotated: false } },
+  parameters: { frame: 'fill' },
   play: async ({ canvas, canvasElement }) => {
     const list = await canvas.findByRole('list', { name: `${WARM_UP.name}, in the order it plays` });
     await heroNamesPlaying(canvasElement);
@@ -65,13 +67,17 @@ export const Wide: Story = {
     const first = (await within(list).findAllByRole('listitem'))[0];
     await expect(first.getAttribute('aria-label')).toMatch(/^1\. /);
     await expect(first.querySelector('.vs-home-tile-n')).toBeNull();
+    // The sidebar's first row and the column's preview start on one line (HomeLayout's content line).
+    const headrow = canvasElement.querySelector('.vs-isb-headrow');
+    const hero = canvasElement.querySelector('.vs-lay-hero');
+    if (headrow && hero) await expect(Math.abs(headrow.getBoundingClientRect().top - hero.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
   },
 };
 
 /** At 900×800: the sidebar docked, the inspector closed at first. */
 export const At900: Story = {
   name: 'At 900 px',
-  globals: { viewport: { value: 'home900', isRotated: false } },
+  parameters: { frame: WINDOWS.home900 },
   play: async ({ canvas, canvasElement }) => {
     await expect(await canvas.findByRole('list', { name: `${WARM_UP.name}, in the order it plays` })).toBeTruthy();
     await heroNamesPlaying(canvasElement);
@@ -80,13 +86,13 @@ export const At900: Story = {
 
 /** Under 900 px: both panes put away, opened over the grid from the header. */
 export const Narrow: Story = {
-  globals: { viewport: { value: 'narrow', isRotated: false } },
+  parameters: { frame: WINDOWS.narrow },
 };
 
 /** Opened on the library (`VISUALS_VIEW=library`) while Warm-up plays, with a preset picked (⌘-click; a plain click plays): the inspector shows it. */
 export const Library: Story = {
   args: { library: true },
-  globals: { viewport: { value: 'home1440', isRotated: false } },
+  parameters: { frame: 'fill' },
   play: async ({ canvas, canvasElement }) => {
     const grid = await canvas.findByRole('listbox', { name: 'presets' });
     const first = (await within(grid).findAllByRole('option'))[0];
@@ -100,7 +106,7 @@ export const Library: Story = {
 /** Quick add on Warm-up (its card's "Add presets", from its row picked again): the library with the strip over it, ✓ on what Warm-up holds. */
 export const QuickAdd: Story = {
   name: 'Quick add',
-  globals: { viewport: { value: 'home1440', isRotated: false } },
+  parameters: { frame: 'fill' },
   play: async ({ canvas, canvasElement }) => {
     await canvas.findByRole('list', { name: `${WARM_UP.name}, in the order it plays` });
     // In a narrow frame the sidebar and the inspector start put away: open them from the header.

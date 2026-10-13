@@ -33,3 +33,5 @@ export { Icon, ICON_SIZES, type IconProps, type IconSize } from './Icon';
 export { Stack, type StackProps, type StackAlign, type StackJustify } from './Stack';
 export { focusRing, pressRing } from './Ring';
 export { STEPS, stepVar, type Step } from './step';
+export { Ambient, type AmbientProps, type AmbientSource } from './Ambient';
+export { sampleRegions, easeFactor, smoothToward, oklabCss, regionBuffer, scratchBuffer, type Pixels as AmbientPixels } from './Ambient.model';

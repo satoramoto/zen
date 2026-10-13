@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { withLibraryTheme } from '../../storybook';
+import { withLibraryTheme, withStoryFrame } from '../../storybook';
+import { Lights } from '../HomeLayout/HomeLayout';
 import { FX_BUSY, LISTS, PLAYING_DECK, WARM_UP } from '../fixtures/fixtures';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
 import { Live } from './Live';
@@ -15,22 +16,27 @@ import { Live } from './Live';
  * their own (Live/Stage…); the pads are the dock's.
  */
 /**
- * The original's 1440×900 window, which these stories open in (its `globals.viewport`): the crate
- * docks from 1100 px, so a canvas narrower than that would start with it put away. Zen's
- * Storybook has no viewports of its own, so it comes with these stories (as Home's do).
+ * The fluid window (`parameters.frame: 'fill'`): the Stage fills the canvas at its real size, as
+ * the app fills its window, so the crate docks (from 1100 px) when the canvas is that wide.
  */
-const VIEWPORTS = {
-  home1440: { name: 'Home at 1440 px', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
-};
+const WINDOW = 'fill' as const;
+
+/** The window buttons' stand-in over the Stage (the real ones are macOS's), so the header's room beside them can be judged. */
+const withLights: Decorator = (Story) => (
+  <div style={{ position: 'relative', height: '100%' }}>
+    <Story />
+    <Lights />
+  </div>
+);
 
 const meta = {
   title: 'open[flow]/visuals/Live/Live',
   component: Live,
-  decorators: [withVisualsFrame, withLibraryTheme],
-  globals: { ...VISUALS_GLOBALS, viewport: { value: 'home1440', isRotated: false } },
+  decorators: [withLights, withVisualsFrame, withStoryFrame, withLibraryTheme],
+  globals: VISUALS_GLOBALS,
   beforeEach: visualsBeforeEach,
   args: { start: null, onMode: () => {} },
-  parameters: { scope: 'bare', layout: 'fullscreen', viewport: { options: VIEWPORTS } },
+  parameters: { scope: 'bare', layout: 'fullscreen', frame: WINDOW },
 } satisfies Meta<typeof Live>;
 export default meta;
 type Story = StoryObj<typeof meta>;

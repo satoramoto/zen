@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Popover } from '../Popover/Popover';
+import { Icon } from '../Icon/Icon';
 import { Meter } from '../../components/music/Meter/Meter';
 import { Select } from '../../components/core/Select/Select';
 import { Text } from '../../primitives/Text';
+import { CONTROL_FIELD, ControlContext } from '../../primitives/Stack';
 import * as api from '../model/api';
 import { audioStatus, chooseAudioLane, type AudioLane, type AudioLaneStatus, type AudioStatus } from '../model/audio-api';
 import { meterLevel } from '../model/shell';
@@ -87,8 +89,8 @@ function Levels() {
   const hint = 'what the presets hear, left above right: −60 dB empty to 0 dB full';
   return (
     <span className="vs-meters" data-hint={hint}>
-      <Meter value={l} label="left level" width={4} length={44} />
-      <Meter value={r} label="right level" width={4} length={44} />
+      <Meter value={l} label="left level" width={3} length={44} />
+      <Meter value={r} label="right level" width={3} length={44} />
     </span>
   );
 }
@@ -121,7 +123,7 @@ let commands: Promise<unknown> = Promise.resolve();
  * **Tuning knobs**
  * - `--vs-audio-note-width`: maximum notice width beside the picker.
  */
-export function SourcePicker({ onError, channels: where = 'advanced', width = 180 }: { onError(error: unknown): void; channels?: 'advanced' | 'shown' | 'none'; width?: number }) {
+export function SourcePicker({ onError, channels: where = 'advanced', width = 180, trouble = null }: { onError(error: unknown): void; channels?: 'advanced' | 'shown' | 'none'; width?: number; trouble?: { message: string; detail: string | null } | null }) {
   const [sources, setSources] = useState<api.Source[]>([]);
   const [status, setStatus] = useState<AudioStatus>({ main: OFF, mic: OFF });
   const [problem, setProblem] = useState<string | null>(null);
@@ -284,12 +286,25 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
         <>
           {picker('main')}
           {notices('main')}
-          <Popover name="Audio mixer: main and microphone inputs" label={status.mic.enabled ? 'Mixer + mic' : 'Mixer'}>
-            <span className="vs-audio-lane">
-              <Text size="caption" className="vs-audio-lane-name">Main channels</Text>
-              {channelControls('main')}
-            </span>
-            {mic}
+          <Popover
+            name="Audio mixer: main and microphone inputs"
+            title={status.mic.enabled ? 'Mixer (main and microphone)' : 'Mixer'}
+            // The faders glyph, and "+ mic" while the microphone is mixed in.
+            label={
+              <>
+                <Icon name="mixer" />
+                {status.mic.enabled && '+ mic'}
+              </>
+            }
+          >
+            {/* The panel floats out of any toolbar the picker sits in: its pickers are fields again. */}
+            <ControlContext.Provider value={CONTROL_FIELD}>
+              <span className="vs-audio-lane">
+                <Text size="caption" className="vs-audio-lane-name">Main channels</Text>
+                {channelControls('main')}
+              </span>
+              {mic}
+            </ControlContext.Provider>
           </Popover>
           <Levels />
         </>
@@ -297,6 +312,17 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
       {pending && (
         <span className="vs-audio-note" role="status">
           Connecting {pending === 'main' ? 'main source' : 'microphone'}…
+        </span>
+      )}
+      {trouble && (
+        // The app couldn't read this input: a caution glyph on the input, the whole message in its title.
+        <span
+          className="vs-warning vs-audio-trouble"
+          role="alert"
+          aria-label={trouble.message}
+          title={trouble.detail ? `${trouble.message} ${trouble.detail}` : trouble.message}
+        >
+          ⚠
         </span>
       )}
       {problem && (

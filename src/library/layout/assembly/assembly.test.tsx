@@ -385,3 +385,183 @@ describe('assemble: ratio, parts, edge', () => {
     expect(p.zoom).toBeLessThan(1);
   });
 });
+
+describe('assemble: a region scrolling under a pinned one', () => {
+  const spec: ScreenSpec = {
+    rows: [
+      [{ id: 'pin', forms: [{ id: 'pin', min: { w: 0, h: { control: 3 } }, ideal: { w: 0, h: { control: 3 } } }] }],
+      [{ id: 'list', under: 'pin', forms: [{ id: 'list', min: { w: 0, h: { control: 2 } }, ideal: { w: 0, h: { control: 2 } }, grow: { w: true, h: true } }] }],
+    ],
+  };
+
+  it('keeps the sizes and reaches up to the pinned region: its height and the gap', () => {
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const plain = assemble({ rows: spec.rows.map((row) => row.map((r) => ({ ...(r as RegionSpec), under: undefined }))) }, { w: 600, h: 400 }, P);
+    expect(p.regions.list.rect).toEqual(plain.regions.list.rect);
+    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap, edge: p.regions.pin.rect.h });
+    expect(p.regions.pin.under).toBeUndefined();
+  });
+
+  it('refuses a region that is not above it', () => {
+    const bad: ScreenSpec = { rows: [[{ ...(spec.rows[0][0] as RegionSpec), under: 'list' }], spec.rows[1]] };
+    expect(() => assemble(bad, { w: 600, h: 400 }, P)).toThrow(/must sit above it/);
+    expect(() => assemble({ rows: [[{ ...(spec.rows[1][0] as RegionSpec), under: 'nope' }]] }, { w: 600, h: 400 }, P)).toThrow(/isn't in the body/);
+  });
+
+  it('draws the slot reaching up, with --lib-under', () => {
+    render(<Screen name="Under" spec={spec} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List' }} />);
+    const root = screen.getByRole('group', { name: 'Under' });
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const slot = root.querySelector('[data-region="list"]') as HTMLElement;
+    expect(slot).toHaveAttribute('data-under', 'pin');
+    expect(slot.style.getPropertyValue('--lib-at-y')).toBe(String(p.regions.pin.rect.y));
+    expect(slot.style.getPropertyValue('--lib-under')).toBe(String(p.regions.list.under!.reach));
+  });
+});
+
+describe('assemble: a region scrolling over a pinned one below it', () => {
+  const fixed = (id: string, h: number): RegionSpec => ({ id, forms: [{ id, min: { w: 0, h: { control: h } }, ideal: { w: 0, h: { control: h } } }] });
+  const spec: ScreenSpec = {
+    rows: [
+      [fixed('pin', 3)],
+      [{ id: 'list', under: 'pin', over: 'foot', forms: [{ id: 'list', min: { w: 0, h: { control: 2 } }, ideal: { w: 0, h: { control: 2 } }, grow: { w: true, h: true } }] }],
+      [fixed('foot', 1)],
+    ],
+  };
+  const strip = (s: ScreenSpec): ScreenSpec => ({ rows: s.rows.map((row) => row.map((r) => ({ ...(r as RegionSpec), under: undefined, over: undefined }))) });
+
+  it('keeps the sizes and reaches down to the pinned region: the gap and its height', () => {
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const plain = assemble(strip(spec), { w: 600, h: 400 }, P);
+    expect(p.regions.list.rect).toEqual(plain.regions.list.rect);
+    expect(p.regions.list.over).toEqual({ id: 'foot', reach: P.plate.gap + p.regions.foot.rect.h, edge: p.regions.foot.rect.h });
+    expect(p.regions.list.under).toEqual({ id: 'pin', reach: p.regions.pin.rect.h + P.plate.gap, edge: p.regions.pin.rect.h });
+    expect(p.regions.foot.over).toBeUndefined();
+  });
+
+  it('refuses a region that is not below it', () => {
+    const rows = spec.rows;
+    expect(() => assemble({ rows: [rows[0], [{ ...(rows[1][0] as RegionSpec), over: 'pin' }], rows[2]] }, { w: 600, h: 400 }, P)).toThrow(/must sit below it/);
+    expect(() => assemble({ rows: [[{ ...(rows[1][0] as RegionSpec), under: undefined, over: 'nope' }]] }, { w: 600, h: 400 }, P)).toThrow(/isn't in the body/);
+    // Beside it, not below: a different column.
+    const side: ScreenSpec = { rows: [[{ ...(rows[1][0] as RegionSpec), under: undefined, over: 'foot' }, fixed('foot', 1)]] };
+    expect(() => assemble(side, { w: 600, h: 400 }, P)).toThrow(/must sit below it/);
+  });
+
+  it('draws the slot reaching up and down, with --lib-under and --lib-over, before the pinned region', () => {
+    render(<Screen name="Over" spec={spec} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List', foot: 'Foot' }} />);
+    const root = screen.getByRole('group', { name: 'Over' });
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const slot = root.querySelector('[data-region="list"]') as HTMLElement;
+    const foot = root.querySelector('[data-region="foot"]') as HTMLElement;
+    expect(slot).toHaveAttribute('data-over', 'foot');
+    expect(slot.style.getPropertyValue('--lib-over')).toBe(String(p.regions.list.over!.reach));
+    expect(slot.style.getPropertyValue('--lib-at-y')).toBe(String(p.regions.pin.rect.y));
+    const bottom = Number(slot.style.getPropertyValue('--lib-at-y')) + Number(slot.style.getPropertyValue('--lib-at-h'));
+    expect(bottom).toBeCloseTo(p.regions.foot.rect.y + p.regions.foot.rect.h);
+    // The pinned region comes later, so it is drawn over the slot reaching behind it.
+    expect(slot.compareDocumentPosition(foot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('gives the slot the clip and fade edges at both ends, and none to a slot without under/over', () => {
+    render(<Screen name="Edges" spec={spec} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List', foot: 'Foot' }} />);
+    const root = screen.getByRole('group', { name: 'Edges' });
+    const p = assemble(spec, { w: 600, h: 400 }, P);
+    const slot = root.querySelector('[data-region="list"]') as HTMLElement;
+    expect(slot.style.getPropertyValue('--lib-under-pin')).toBe(String(p.regions.pin.rect.h));
+    expect(slot.style.getPropertyValue('--lib-over-pin')).toBe(String(p.regions.foot.rect.h));
+    for (const id of ['pin', 'foot']) {
+      const plain = root.querySelector(`[data-region="${id}"]`) as HTMLElement;
+      expect(plain).not.toHaveAttribute('data-under');
+      expect(plain).not.toHaveAttribute('data-over');
+      for (const v of ['--lib-under', '--lib-over', '--lib-under-pin', '--lib-over-pin']) expect(plain.style.getPropertyValue(v)).toBe('');
+    }
+    // Only under: the top end alone.
+    render(<Screen name="Top" spec={{ rows: [spec.rows[0], [{ ...(spec.rows[1][0] as RegionSpec), over: undefined }], spec.rows[2]] }} room={{ w: 600, h: 400 }} principles={P} regions={{ pin: 'Pin', list: 'List', foot: 'Foot' }} />);
+    const top = screen.getByRole('group', { name: 'Top' }).querySelector('[data-region="list"]') as HTMLElement;
+    expect(top.style.getPropertyValue('--lib-under-pin')).toBe(String(p.regions.pin.rect.h));
+    expect(top.style.getPropertyValue('--lib-over-pin')).toBe('');
+    expect(top).not.toHaveAttribute('data-over');
+  });
+
+  it('draws the look in the slot: clipped at each edge, faded beside it, each end on its own (Assembly.css)', () => {
+    const css = readFileSync(join(process.cwd(), 'src/library/layout/assembly/Assembly.css'), 'utf8');
+    const rule = (sel: string) => new RegExp(`${sel.replace(/[[\]().:]/g, '\\$&')}\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+    const both = rule('.lib-assembled__slot:is([data-under], [data-over])');
+    expect(both).toMatch(/clip-path:\s*inset\(var\(--lib-cut-t\) 0 var\(--lib-cut-b\) 0\)/);
+    expect(both).toMatch(/mask-image:\s*linear-gradient\(/);
+    expect(rule('.lib-assembled__slot[data-under]')).toMatch(/--lib-under-edge:\s*var\(--lib-under-pin\)/);
+    expect(rule('.lib-assembled__slot[data-under]')).toMatch(/--lib-ink-t:\s*transparent/);
+    expect(rule('.lib-assembled__slot[data-over]')).toMatch(/--lib-over-edge:\s*var\(--lib-over-pin\)/);
+    expect(rule('.lib-assembled__slot[data-over]')).toMatch(/--lib-ink-b:\s*transparent/);
+  });
+});
+
+describe('assemble: a floating panel on the room edge', () => {
+  const box = (id: string, w: number, h: number, extra: Partial<RegionSpec> = {}): RegionSpec => ({
+    id,
+    forms: [{ id, min: { w: { control: w }, h: { control: h } }, ideal: { w: { control: w }, h: { control: h } }, grow: { h: true } }],
+    ...extra,
+  });
+  const spec = (panel: boolean, side = true): ScreenSpec => ({
+    rows: [
+      [
+        side ? box('side', 4, 4, { panel }) : { ...box('side', 4, 4, { panel }), forms: [{ id: 'away', min: { w: 0, h: 0 }, ideal: { w: 0, h: 0 } }] },
+        { rows: [[{ id: 'main', forms: [{ id: 'main', min: { w: { control: 6 }, h: { control: 4 } }, ideal: { w: { control: 6 }, h: { control: 4 } }, grow: { w: true, h: true } }] }], [{ id: 'bar', panel, forms: [{ id: 'bar', min: { w: { control: 6 }, h: { control: 1 } }, ideal: { w: { control: 6 }, h: { control: 1 } } }] }]] },
+      ],
+    ],
+  });
+  const inset = resolveLength({ space: 2 }, P);
+
+  it('sits the panel inset in from the edges it meets, adding it to its size there', () => {
+    const p = assemble(spec(true), { w: 600, h: 400 }, P);
+    const plain = assemble(spec(false), { w: 600, h: 400 }, P);
+    expect(p.regions.side.inset).toEqual({ top: inset, right: 0, bottom: inset, left: inset });
+    expect(p.regions.bar.inset).toEqual({ top: 0, right: inset, bottom: inset, left: 0 });
+    expect(p.regions.side.rect.w).toBeCloseTo(plain.regions.side.rect.w + inset);
+    expect(p.regions.bar.rect.h).toBeCloseTo(plain.regions.bar.rect.h + inset);
+    expect(p.regions.main.inset).toBeUndefined();
+    expect(plain.regions.side.inset).toBeUndefined();
+  });
+
+  it('gives a form that takes no room no inset', () => {
+    const p = assemble(spec(true, false), { w: 600, h: 400 }, P);
+    expect(p.regions.side.inset).toBeUndefined();
+    // The column now meets the left edge, but it is no panel; the bar is still inset from the window's bottom and right only (it is not first in its row).
+    expect(p.regions.bar.inset).toEqual({ top: 0, right: inset, bottom: inset, left: 0 });
+  });
+
+  it('pads the slot by the inset and marks it data-panel', () => {
+    render(<Screen name="Panels" spec={spec(true)} room={{ w: 600, h: 400 }} principles={P} regions={{ side: 'Side', main: 'Main', bar: 'Bar' }} />);
+    const root = screen.getByRole('group', { name: 'Panels' });
+    const side = root.querySelector('[data-region="side"]') as HTMLElement;
+    expect(side).toHaveAttribute('data-panel');
+    expect(side.style.getPropertyValue('--lib-inset-l')).toBe(String(inset));
+    expect(side.style.getPropertyValue('--lib-inset-r')).toBe('0');
+    expect(root.querySelector('[data-region="main"]')).not.toHaveAttribute('data-panel');
+  });
+});
+
+describe('assemble: gapAfter', () => {
+  const fixed = (id: string, h: number, extra: Partial<RegionSpec> = {}): RegionSpec => ({ id, plate: false, forms: [{ id: 'f', min: { w: { unit: 10 }, h: { unit: h } }, ideal: { w: { unit: 10 }, h: { unit: h } }, grow: { w: true } }], ...extra });
+  const grower = (id: string): RegionSpec => ({ id, plate: false, forms: [{ id: 'f', min: { w: { unit: 10 }, h: { unit: 10 } }, ideal: { w: { unit: 10 }, h: { unit: 10 } }, grow: { w: true, h: true } }] });
+  const spec = (gapAfter?: RegionSpec['gapAfter']): ScreenSpec => ({ rows: [[{ id: 'col', rows: [[fixed('head', 13, gapAfter === undefined ? {} : { gapAfter })], [fixed('hero', 50)], [grower('pane')]] }]] });
+
+  it('replaces the plate gap under its row, and the rows below move up with it (measure, split and place agree)', () => {
+    const plain = assemble(spec(), { w: 400, h: 600 }, P);
+    const tight = assemble(spec({ space: 1 }), { w: 400, h: 600 }, P);
+    expect(plain.regions.hero.rect.y).toBe(52 + 8);
+    expect(tight.regions.hero.rect.y).toBe(52 + 4);
+    // The room it saves goes to the grower; the gap under the hero stays the plate's.
+    expect(tight.regions.pane.rect.y).toBe(tight.regions.hero.rect.y + 200 + 8);
+    expect(tight.regions.pane.rect.y + tight.regions.pane.rect.h).toBeCloseTo(600);
+    expect(tight.regions.pane.rect.h - plain.regions.pane.rect.h).toBeCloseTo(4);
+  });
+
+  it('a row keeps the largest gap its regions ask', () => {
+    const s: ScreenSpec = { rows: [[fixed('a', 10, { gapAfter: 0 }), fixed('b', 10)], [grower('c')]] };
+    expect(assemble(s, { w: 400, h: 300 }, P).regions.c.rect.y).toBe(40 + 8);
+    const both: ScreenSpec = { rows: [[fixed('a', 10, { gapAfter: 0 }), fixed('b', 10, { gapAfter: 0 })], [grower('c')]] };
+    expect(assemble(both, { w: 400, h: 300 }, P).regions.c.rect.y).toBe(40);
+  });
+});

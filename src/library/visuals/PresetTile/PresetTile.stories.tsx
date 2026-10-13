@@ -74,11 +74,11 @@ export const Moving: Story = {
 /** Picked in the grid: the ring with a gap. */
 export const Selected: Story = { args: { 'aria-selected': true } };
 
-/** Playing: green level bars before the name. */
+/** Playing: a "Playing" chip at the picture's foot, the name bold. */
 export const Playing: Story = {
   args: { playing: true, star: true },
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.querySelector('.vs-tile-caption .vs-tile-name .vs-tile-live')).toBeVisible();
+    await expect(canvasElement.querySelector('.vs-tile-pic > .vs-tile-live')).toBeVisible();
   },
 };
 

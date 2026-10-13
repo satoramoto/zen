@@ -61,6 +61,10 @@ export const ICON_NAMES = [
   'audio',
   'mood',
   'intensity',
+  // Home's transport: the deck moving on by itself, preset after preset.
+  'loop',
+  'dice',
+  'mixer',
 ] as const;
 export type IconName = (typeof ICON_NAMES)[number];
 
@@ -78,6 +82,15 @@ const solid = { fill: 'currentColor' } as const;
 
 /** The two long rows of a playlist; the third, short one leaves room for its mark. */
 const rows = 'M2.25 3.75H13.75M2.25 7.75H13.75M2.25 11.75H7.25';
+
+/**
+ * The loop's ring: from twelve o'clock clockwise round to half past ten (315°),
+ * the gap left for its arrowhead. TransportBar fills along this same path
+ * (`pathLength` 1), so the fill starts at the top and ends at the arrowhead.
+ */
+export const LOOP_RING = 'M8 2.25A5.75 5.75 0 1 1 3.93 3.93';
+/** The loop's arrowhead at the ring's end, pointing on round, clockwise: its point on the ring, a leg down inside and a leg out to the left. */
+export const LOOP_HEAD = 'M3.93 6.18V3.93H1.68';
 
 /** The glyphs, on a 16×16 box; the svg strokes them unless a shape says otherwise. */
 const GLYPHS: Record<IconName, ReactNode> = {
@@ -214,12 +227,12 @@ const GLYPHS: Record<IconName, ReactNode> = {
     </>
   ),
 
+  // The canonical cog (Lucide's "settings", ISC), drawn on its 24 box scaled into 16, the stroke kept at the set's weight.
   gear: (
-    <>
-      <circle cx="8" cy="8" r="3.75" />
-      <circle cx="8" cy="8" r="1.25" />
-      <path d="M8 1.75V4.25M8 11.75V14.25M1.75 8H4.25M11.75 8H14.25M3.58 3.58 5.35 5.35M10.65 10.65 12.42 12.42M3.58 12.42 5.35 10.65M10.65 5.35 12.42 3.58" />
-    </>
+    <g transform="scale(0.6667)" strokeWidth="2.25">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
+    </g>
   ),
   // An arrow down into a tray: add (import) from a file.
   import: <path d="M8 2.25V9.75M4.75 6.5 8 9.75 11.25 6.5M2.75 10.75V12.25A1 1 0 0 0 3.75 13.25H12.25A1 1 0 0 0 13.25 12.25V10.75" />,
@@ -239,6 +252,26 @@ const GLYPHS: Record<IconName, ReactNode> = {
     <>
       <path d="M2.25 8H5.25M10.75 8H13.75" />
       <rect x="5.25" y="5.25" width="5.5" height="5.5" rx="1.25" />
+    </>
+  ),
+  // A ring that comes round to its start: moving on by itself, preset after preset, with no end.
+  loop: <path d={LOOP_RING + LOOP_HEAD} />,
+  // Three faders, their caps at different heights: the audio mixer.
+  mixer: (
+    <>
+      <path d="M4 2.75V13.25M8 2.75V13.25M12 2.75V13.25" />
+      <path strokeWidth="2.5" d="M2.75 10H5.25M6.75 5.5H9.25M10.75 8.5H13.25" />
+    </>
+  ),
+  // A die showing five: a random preset.
+  dice: (
+    <>
+      <rect x="2.75" y="2.75" width="10.5" height="10.5" rx="2.5" />
+      <circle {...solid} stroke="none" cx="5.6" cy="5.6" r="1" />
+      <circle {...solid} stroke="none" cx="10.4" cy="5.6" r="1" />
+      <circle {...solid} stroke="none" cx="8" cy="8" r="1" />
+      <circle {...solid} stroke="none" cx="5.6" cy="10.4" r="1" />
+      <circle {...solid} stroke="none" cx="10.4" cy="10.4" r="1" />
     </>
   ),
 };

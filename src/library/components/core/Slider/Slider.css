@@ -223,6 +223,68 @@
   box-shadow: none;
 }
 
+/* Row: Apple's slider (HIG Sliders; macOS 26). The caption leads and the reading trails on one
+   line above a full-width track. The track is the knob's height (the gesture and focus target);
+   the groove is a thin capsule `well` drawn inside it, and the fill, span and marks sit on the
+   groove. The knob is the `handle`, round-ended and wider than tall, standing proud of it. */
+.lib-slider[data-layout='row'] {
+  --lib-slider-groove: var(--space-1);
+  --lib-slider-knob-h: calc(var(--control-h) * 0.5);
+  --lib-slider-thumb: calc(var(--control-h) * 0.75);
+  display: grid;
+  grid-template-areas: 'caption readout' 'frame frame';
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  justify-items: stretch;
+  column-gap: var(--space-2);
+  row-gap: var(--space-1);
+}
+.lib-slider[data-layout='row'][data-length='auto'] {
+  width: 100%;
+}
+.lib-slider[data-layout='row'] .lib-slider__caption {
+  justify-self: start;
+  color: var(--text-1);
+}
+.lib-slider[data-layout='row'] .lib-slider__readout {
+  justify-self: end;
+  color: var(--text-2);
+  text-align: end;
+}
+.lib-slider[data-layout='row'] .lib-slider__track {
+  --lib-surface-fill: transparent;
+  --lib-surface-texture: none;
+  --lib-surface-mat-shadow: 0 0 0 0 transparent;
+  height: var(--lib-slider-knob-h);
+  overflow: visible;
+}
+.lib-slider[data-layout='row'][data-length='auto'] .lib-slider__track {
+  width: 100%;
+}
+.lib-slider[data-layout='row'] .lib-slider__track::before {
+  content: '';
+  position: absolute;
+  inset: calc(50% - var(--lib-slider-groove) / 2) 0 auto;
+  height: var(--lib-slider-groove);
+  border-radius: var(--radius-pill);
+  background: var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: var(--mat-well-shadow);
+  pointer-events: none;
+}
+.lib-slider[data-layout='row'] :is(.lib-slider__fill, .lib-slider__span, .lib-slider__reach, .lib-slider__live) {
+  top: calc(50% - var(--lib-slider-groove) / 2);
+  bottom: auto;
+  height: var(--lib-slider-groove);
+}
+.lib-slider[data-layout='row'] .lib-slider__fill {
+  border-radius: var(--radius-pill);
+}
+.lib-slider[data-layout='row'] .lib-slider__thumb {
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
 .lib-slider[data-disabled] .lib-slider__track {
   cursor: default;
   opacity: 0.45;

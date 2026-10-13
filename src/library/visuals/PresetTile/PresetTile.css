@@ -70,15 +70,16 @@
 
 /* The name and author on the picture's foot, over a scrim darkest at the edge and gone by the
    middle, so a bright picture or a dark one reads the same and the picture above stays whole. */
+/* The name and author pinned to the picture's top, as the preview's are: 8px in at the top and
+   sides, the scrim falling 22px (16 + 6) below them. */
 .vs-tile-caption {
   position: absolute;
-  inset: auto 0 0 0;
+  inset: 0 0 auto 0;
   display: flex;
   flex-direction: column;
-  /* tile.css 22px 9px 7px: the scrim's rise (16 + 6), then 8px at the sides and foot. */
-  padding: calc(var(--space-4) + var(--space-1) * 1.5) var(--space-2) var(--space-2);
+  padding: var(--space-2) var(--space-2) calc(var(--space-4) + var(--space-1) * 1.5);
   background: linear-gradient(
-    to top,
+    to bottom,
     color-mix(in oklab, var(--key-black) 66%, transparent),
     color-mix(in oklab, var(--key-black) 38%, transparent) 45%,
     transparent
@@ -106,13 +107,9 @@
   /* 14px: the 10px annotation and a step. */
   --text-leading: calc(var(--vs-text-annot) + var(--space-1));
 }
-/* A chip at the bottom right (failed !, the strip's "next") keeps the name and author clear of it:
-   28px (24 + 4) for the failed mark, 54px (4.5 of the 12px step) for "next". */
-.vs-tile[data-failed] .vs-tile-caption {
-  padding-right: calc(var(--space-5) + var(--space-1));
-}
-.vs-tile[data-next] .vs-tile-caption {
-  padding-right: calc(var(--space-3) * 4.5);
+/* The tools at the top right (a strip's ✕, the library's +) show on hover: the name gives way. */
+.vs-tile:is(:hover, :focus-within) .vs-tile-caption {
+  padding-right: calc(var(--space-5) + var(--space-3));
 }
 
 /* Hover: the picture lifts, no line. */
@@ -136,42 +133,31 @@
   outline-offset: 2px;
 }
 
-/* Playing: green level bars before the name, which goes bold. */
+/* Playing: the name goes bold, and a dark chip at the bottom left says so, the transport's loop
+   glyph before "Playing" (an annotation-size caption). */
 .vs-tile[data-playing] .vs-tile-name {
   --text-weight: var(--weight-display);
 }
 .vs-tile-live {
+  --text-size: var(--vs-text-annot);
+  position: absolute;
+  left: var(--space-2);
+  bottom: var(--space-2);
   display: inline-flex;
-  align-items: flex-end;
-  gap: 2px;
-  /* 10px tall (two and a half steps), 6px (a step and a half) before the name. */
-  height: calc(var(--space-1) * 2.5);
-  margin-right: calc(var(--space-1) * 1.5);
-  vertical-align: -1px;
-}
-/* The bars: 5, 10, 3 and 7px of the mark's 10px. */
-.vs-tile-live i {
-  width: 2px;
-  height: 50%;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 1px var(--space-2) 1px calc(var(--space-1) * 1.5);
   border-radius: var(--radius-pill);
-  background: var(--vs-playing);
-  box-shadow: 0 0 2px var(--vs-tile-shade);
-}
-.vs-tile-live i:nth-child(2) {
-  height: 100%;
-}
-.vs-tile-live i:nth-child(3) {
-  height: 30%;
-}
-.vs-tile-live i:nth-child(4) {
-  height: 70%;
+  background: var(--vs-tile-chip);
+  color: var(--key-white);
+  pointer-events: none;
 }
 
-/* Starred: a light star, top left (6px down, 8px in). */
+/* Starred: a light star, bottom right (8px in). */
 .vs-tile-star {
   position: absolute;
-  top: calc(var(--space-1) * 1.5);
-  left: var(--space-2);
+  bottom: var(--space-2);
+  right: var(--space-2);
   color: var(--key-white);
   /* A caption Text at the annotation size. */
   --text-size: var(--vs-text-annot);

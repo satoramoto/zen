@@ -38,6 +38,10 @@ export interface SidebarActions {
   onInfo?(id: string): void;
   /** The quiet Settings row at the sidebar's foot: open the Settings sheet. Optional until the sidebar and Home lanes wire it. */
   onSettings?(): void;
+  /** Help, the ? at the right end of the sidebar's foot: open the help overlay. */
+  onHelp?(): void;
+  /** Whether the help overlay is open (the ? reads as pressed). */
+  helpOpen?: boolean;
   /** How many presets a playlist holds (manual: items; smart: its matches); null while unknown. */
   count(p: Playlist): number | null;
   /** Something failed: `what` it was doing, then the error, as the home says it. */

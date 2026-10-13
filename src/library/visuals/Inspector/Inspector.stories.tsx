@@ -17,7 +17,6 @@ import { HomeLayout, InspectorPanel, INSPECTOR_LABEL, TOGGLE_CLASS } from '../Ho
 import { InsetSidebar } from '../InsetSidebar/InsetSidebar';
 import { Hero } from '../Hero/Hero';
 import { StoryGrid } from '../fixtures/StoryGrid';
-import { TransportBar } from '../TransportBar/TransportBar';
 import { Icon } from '../Icon/Icon';
 import { NOW, SIDEBAR } from '../fixtures/layout';
 import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixtures/story';
@@ -199,7 +198,6 @@ function InWindow({ start, library }: { start: Start; library: readonly LibraryR
             onAdd={() => {}}
           />
         }
-        bar={<TransportBar playing={NOW.playing} onPlayPause={() => {}} onStep={() => {}} stepIn=" in the playlist" position={{ elapsed: 12, length: 30 }} onAudioError={() => {}} />}
         inspector={open ? <Inspector {...props} /> : undefined}
       >
         <StoryGrid title="Hypnotic" rows={ROWS.filter((r) => r.style === 'Hypnotic')} playing={playing?.path ?? null} starred={starred} onPlay={pick} />

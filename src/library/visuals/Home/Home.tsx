@@ -6,6 +6,7 @@ import { Text } from '../../primitives/Text';
 import * as api from '../model/api';
 import type { Entry, LibraryChange, LibraryData, LibraryRow } from '../model/api';
 import { Library } from '../Library/Library';
+import { Surface } from '../../primitives/Surface';
 import { browsable, browseOrder, facet, stepIn, prepare, type Prepared } from '../model/librarySearch';
 import { useLibrary, rereadOn, stepDeck } from '../model/library';
 import { onChanged } from '../model/pack';
@@ -40,6 +41,7 @@ import {
   type TilePick,
 } from '../model/home';
 import { HomeLayout, homeDocks, INSPECTOR_ID, PaneTile, SIDEBAR_ID, useLayoutPrinciples } from '../HomeLayout/HomeLayout';
+import { useFrameRoom } from '../../frame';
 import { HelpOverlay, HOME_HELP } from '../HelpOverlay/HelpOverlay';
 import { modalOpen } from '../model/liveKeys';
 import { Hero, HERO_PIC } from '../Hero/Hero';
@@ -58,17 +60,18 @@ import './Home.css';
 
 export type { Pane } from '../model/home';
 
-/** The window's size, followed as it is resized: the room the home assembles in. */
+/** The window's size, followed as it is resized: the room the home assembles in (a story frame's design window inside one). */
 function useWindowRoom(): { w: number; h: number } {
   const read = () => ({ w: window.innerWidth, h: window.innerHeight });
   const [room, setRoom] = useState(read);
+  const frame = useFrameRoom();
   useEffect(() => {
     const resize = () => setRoom((r) => (r.w === window.innerWidth && r.h === window.innerHeight ? r : read()));
     resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
   }, []);
-  return room;
+  return frame ?? room;
 }
 
 /** No presets picked. */
@@ -131,13 +134,32 @@ const ownsArrows = (target: EventTarget | null): boolean => {
  *   `--space-4` in the pane's small form (HomeLayout's `PANE_FORMS`).
  * - `--vs-home-tile-min`: a playlist grid's narrowest tile, 150px (124px in the small form), on
  *   the scale.
+ * - `--vs-grid-reach` (unitless px): how far the grid's scroller reaches up into the pinned
+ *   preview's room, so its tiles scroll behind it: the pane slot's `--lib-under` while no note
+ *   sits over the grid, else 0. The playlist grid and `LibraryGrid` read it.
+ * - `--vs-grid-reach-down` (unitless px): how far the grid's scroller reaches down into the
+ *   pinned transport bar's room, so its tiles scroll behind it: the pane slot's `--lib-over`,
+ *   always (notes sit at the top). The playlist grid and `LibraryGrid` read it.
  */
-export function Home({ start, onMode, library: startOnLibrary = false }: { start: string | null; onMode(view: View, path: string | null): void; library?: boolean }) {
+export function Home({
+  start,
+  onMode,
+  library: startOnLibrary = false,
+  lights = false,
+}: {
+  start: string | null;
+  onMode(view: View, path: string | null): void;
+  library?: boolean;
+  /** Draw the window buttons' stand-in (stories: HomeLayout's `lights`; the app's are macOS's). */
+  lights?: boolean;
+}) {
   const [current, setCurrent] = useState<Entry | null>(null);
   const { notice: banner, set: setNotice, fail, dismiss } = useNotice();
   const [lists, setLists] = useState<Lists | null>(null);
   const [pane, setPane] = useState<Pane | null>(startOnLibrary ? { kind: 'library' } : null);
-  const audioFailed = useMemo(() => fail("Couldn't read the audio input."), [fail]);
+  // The audio input's failure shows on the input itself, not as a toast.
+  const { notice: audioTrouble, fail: audioFail } = useNotice();
+  const audioFailed = useMemo(() => audioFail("Couldn't read the audio input."), [audioFail]);
 
   // How long the preset playing has played: counted from when the app last said what plays (D9), or a tile was played.
   const [since, setSince] = useState(() => Date.now());
@@ -521,6 +543,8 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
       openInspector();
     },
     onSettings: openSettings,
+    onHelp: () => setHelp(true),
+    helpOpen: help,
     count: counts.list,
     onError: (what) => fail(`Couldn't ${what}.`),
   };
@@ -658,13 +682,32 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
   // Where it plays from, as the deck says, for the preset shown playing: never a playlist that isn't playing it.
   const from = playsFrom(deck, playlists, true, current?.path ?? null);
   const stepWords = playing ? ' in the playlist' : '';
+  // Shows or hides the sidebar: on the title's line in the sidebar's band while it shows, else at the header's lead.
+  const sidebarToggle = (
+    <button
+      type="button"
+      className="vs-home-tool vs-home-tool-sidebar"
+      aria-label={say('source list')}
+      aria-controls={SIDEBAR_ID}
+      aria-pressed={modes.sidebar !== 'hidden'}
+      title={`${modes.sidebar === 'hidden' ? 'Show' : 'Hide'} the ${say('source list')} (⌃⌘S)`}
+      onClick={toggleSidebar}
+    >
+      <Icon name="sidebar" />
+    </button>
+  );
 
   return (
     <>
       <HomeLayout
+        lights={lights}
         sidebarMode={modes.sidebar}
         inspectorMode={modes.inspector}
         onDismiss={dismissOverlays}
+        // The sidebar's toggle on the title's line in its band (Settings is the sidebar's foot row).
+        titleAction={sidebarToggle}
+        // The panels' glass takes the playing preset's colours (its thumbnail: the native preview can't be read from the page).
+        ambient={playingShown?.row.thumbnail ?? null}
         sidebar={
           <InsetSidebar
             sections={sections}
@@ -690,35 +733,12 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
             // The mark is at the top of the sidebar (decision 71).
             mark={false}
             onChange={(next) => next !== 'home' && onMode(next, current?.path ?? null)}
-            lead={
-              <button
-                type="button"
-                className="vs-home-tool vs-home-tool-sidebar"
-                aria-label={say('source list')}
-                aria-controls={SIDEBAR_ID}
-                aria-pressed={modes.sidebar !== 'hidden'}
-                title={`${modes.sidebar === 'hidden' ? 'Show' : 'Hide'} the ${say('source list')} (⌃⌘S)`}
-                onClick={toggleSidebar}
-              >
-                <Icon name="sidebar" />
-              </button>
-            }
+            // Docked, the toggle is in the sidebar's band.
+            lead={modes.sidebar === 'docked' ? undefined : sidebarToggle}
           >
             <span className="vs-fill" />
             <div className="vs-home-toolbar" ref={setToolbar} />
             <CameraAction />
-            <button
-              type="button"
-              className="vs-home-tool vs-home-tool-help"
-              aria-label="Help"
-              aria-haspopup="dialog"
-              aria-expanded={help}
-              aria-keyshortcuts="?"
-              title="Help: what every key and button on the home does (?)"
-              onClick={() => setHelp(true)}
-            >
-              <Icon name="help" />
-            </button>
             <button
               type="button"
               className="vs-home-tool vs-home-tool-inspector"
@@ -733,18 +753,26 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
           </Header>
         }
         // Round 2 (decision 71): the hero is the picture alone; the bar names what plays.
-        hero={<Hero picture={<Preview className={HERO_PIC} />} />}
-        bar={
-          <TransportBar
-            now={current ? { name: playingShown?.title ?? current.name, from } : null}
-            playing={!deck.hold}
-            // It moves on by itself on a timer, or on Link's bars.
-            moves={movesByItself(deck)}
-            onPlayPause={hold}
-            onStep={step}
-            stepIn={stepWords}
-            position={position}
-            onAudioError={audioFailed}
+        // The transport floats over the preview's foot, shown on hover or focus (Hero's `controls`); its keys (H, ← →, R) work whether it shows or not.
+        hero={
+          <Hero
+            picture={<Preview className={HERO_PIC} />}
+            controls={
+              <TransportBar
+                layout="overlay"
+                now={current ? { name: playingShown?.title ?? current.name, from } : null}
+                playing={!deck.hold}
+                // It moves on by itself on a timer, or on Link's bars.
+                moves={movesByItself(deck)}
+                onPlayPause={hold}
+                onStep={step}
+                stepIn={stepWords}
+                position={position}
+                onAudioError={audioFailed}
+                audioTrouble={audioTrouble}
+                star={playingShown ? { on: !!playingShown.star, onToggle: () => setData([playingShown.row.key], { star: !playingShown.star }) } : null}
+              />
+            }
           />
         }
         inspector={
@@ -777,9 +805,6 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
         // The grid scrolls itself under the pinned hero, on the column's padding (`--vs-home-pad`).
         pane={
           <div className="vs-home-grid-pane">
-            <Text as="div" size="caption" leading="normal" className="vs-home-notice-type">
-              <NoticeBanner className="vs-home-notice" notice={banner} onDismiss={dismiss} />
-            </Text>
             <SettingsNotes />
             {shown && shown.kind !== 'list' ? (
               <>
@@ -846,6 +871,14 @@ export function Home({ start, onMode, library: startOnLibrary = false }: { start
         }
       />
       <HelpOverlay open={help} onClose={() => setHelp(false)} list={HOME_HELP} />
+      {/* Any other notice: a small toast in the window's bottom-right corner, over everything, never in the grid. */}
+      {banner && (
+        <Surface layer="float" radius="control" className="vs-home-toast">
+          <Text as="div" size="caption" leading="normal" className="vs-home-notice-type">
+            <NoticeBanner className="vs-home-notice" notice={banner} onDismiss={dismiss} />
+          </Text>
+        </Surface>
+      )}
     </>
   );
 }

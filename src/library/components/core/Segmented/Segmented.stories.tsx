@@ -71,6 +71,31 @@ export const Disabled: Story = {
   },
 };
 
+/** Each system draws the chosen segment from its tabs materials. visual[flow]: type, the chosen
+ *  one underlined straight in the accent (decision 68). */
+export const VisualsUnderline: Story = {
+  name: 'visual[flow] (underline)',
+  globals: { theme: 'visuals' },
+  args: { items: ['Home', 'Live'], index: 0, label: 'View' },
+  play: async ({ canvasElement }) => {
+    const chosen = within(canvasElement).getByRole('radio', { name: 'Home' });
+    // A straight line: the underline is an inset shadow on an unrounded segment.
+    await expect(getComputedStyle(chosen).borderTopLeftRadius).toBe('0px');
+  },
+};
+
+/** Ableton: printed labels, the chosen one underlined in ink. */
+export const AbletonUnderline: Story = { name: 'Ableton (underline)', globals: { theme: 'ableton' } };
+
+/** Elektron: a square filled block. */
+export const ElektronBlock: Story = { name: 'Elektron (filled block)', globals: { theme: 'elektron' } };
+
+/** Linear: a raised chip in a sunk track. */
+export const LinearChip: Story = { name: 'Linear (segmented chip)', globals: { theme: 'linear' } };
+
+/** yahaha classic: hardware selector, the chosen key raised in a well. */
+export const HardwareKey: Story = { name: 'yahaha classic (raised key in a well)', globals: { theme: 'yahaha-classic' } };
+
 /** Live: controlled by its parent; focus follows the choice as the arrows move it. */
 export const Live: Story = {
   render: function LiveSegmented(args) {

@@ -23,6 +23,7 @@ export {
   type Density,
   type PackPrinciples,
 } from './contract';
+export { AMBIENT_REGIONS, AMBIENT_VARS, AMBIENT_FALLBACKS, type AmbientRegion } from './contract';
 
 // The theme: resolving a choice of facets and scoping its variables.
 export { ThemeScope, useThemeScope, resolveTheme, useSystemMode, FROM_THEME, type ModeChoice, type ThemeChoice } from './theme';

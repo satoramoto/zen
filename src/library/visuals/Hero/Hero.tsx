@@ -5,6 +5,7 @@ import { Numbers } from '../Numbers/Numbers';
 import { tileBy, tileName } from '../PresetTile/PresetTile';
 import { Icon } from '../Icon/Icon';
 import { Text } from '../../primitives/Text';
+import { Surface } from '../../primitives/Surface';
 import type { Forms } from '../../layout/assembly';
 import './Hero.css';
 
@@ -53,6 +54,9 @@ export const HERO_FORMS: Forms<HeroForm> = [
  * - `--vs-hero-name-size` (24px): the name, a fifth over the heading size.
  * - `--vs-hole-radius`: Views' `Preview`'s corner knob, set here to the hero's
  *   `--vs-lay-hero-radius`.
+ * - `--vs-hero-fade` (160ms): how long the floating `controls` fade in and out (none under
+ *   reduced motion); `--vs-hero-scrim` (85%): how much of the window's tint the scrim starts with
+ *   at the picture's foot.
  */
 export interface HeroProps {
   /** The preset playing, from the index; null before anything plays. Left out (round 2: the hero is only the picture, its name in the transport bar): no name or actions column. */
@@ -70,6 +74,12 @@ export interface HeroProps {
   onStar?(): void;
   /** Add it to a playlist (the caller opens its picker). */
   onAdd?(): void;
+  /**
+   * Controls floating over the picture's foot (Home: the transport, `TransportBar
+   * layout="overlay"`), on a scrim from the window's tint: shown while the picture is hovered,
+   * while focus is in them or a popover of theirs is open, and always with no hover (touch).
+   */
+  controls?: ReactNode;
 }
 
 /** An action's word: strong, at the body size (a step larger on play and pause, Hero.css); its button carries the name. */
@@ -82,26 +92,39 @@ function ActWord({ children }: { children: string }) {
 }
 
 /** The card. */
-export function Hero({ preset, picture, playing = false, from = '', starred = false, onPlayPause, onNext, onStar, onAdd }: HeroProps) {
+export function Hero({ preset, picture, playing = false, from = '', starred = false, onPlayPause, onNext, onStar, onAdd, controls }: HeroProps) {
   const info = preset !== undefined;
   const name = preset ? tileName(preset.title, preset.path) : null;
   const by = preset ? tileBy(preset.authors, preset.style) : '';
+  const pic =
+    picture && typeof picture !== 'string' ? (
+      // The app's `<Preview />`: the box itself, the native preview's hole, so nothing wraps it.
+      picture
+    ) : (
+      <div className={HERO_PIC} data-empty={picture ? undefined : ''}>
+        {typeof picture === 'string' && picture ? (
+          <img src={picture} alt={name ? `preview of ${name}` : 'preview'} draggable={false} />
+        ) : (
+          <Text role="caption" leading="normal" className="vs-hero-pic-none">
+            {preset ? 'Drawing…' : 'Nothing playing yet'}
+          </Text>
+        )}
+      </div>
+    );
   return (
     <div className="vs-hero" data-none={preset ? undefined : ''} data-only={info ? undefined : ''}>
       <div className="vs-hero-row">
-        {picture && typeof picture !== 'string' ? (
-          // The app's `<Preview />`: the box itself, the native preview's hole, so nothing wraps it.
-          picture
-        ) : (
-          <div className={HERO_PIC} data-empty={picture ? undefined : ''}>
-            {typeof picture === 'string' && picture ? (
-              <img src={picture} alt={name ? `preview of ${name}` : 'preview'} draggable={false} />
-            ) : (
-              <Text role="caption" leading="normal" className="vs-hero-pic-none">
-                {preset ? 'Drawing…' : 'Nothing playing yet'}
-              </Text>
-            )}
+        {controls ? (
+          // The picture and its controls in one box the picture's size; the scrim (a Surface: the
+          // native preview can't be blurred, so a gradient from the window's tint) lies over its foot.
+          <div className="vs-hero-stage">
+            {pic}
+            <Surface radius="none" className="vs-hero-controls">
+              {controls}
+            </Surface>
           </div>
+        ) : (
+          pic
         )}
         {info && (
           <div className="vs-hero-info">

@@ -28,9 +28,17 @@
   --vs-lay-side-radius: calc(var(--space-3) * 1.5);
   /* The header row's height: the title bar, 52px. */
   --vs-lay-titlebar: calc(var(--space-6) + var(--space-4) + var(--space-1));
-  /* The band at the sidebar's top for the window buttons (a margin in full screen, below). */
-  --vs-lay-band: var(--vs-lay-titlebar);
-  /* Where the window buttons' stand-in sits, and the room a header leaves them when no sidebar is docked (chrome.css --chrome-lights 98px). */
+  /* The band at the sidebar's top for the window buttons and the title: the title bar less the
+     panel's inset above and below (36px), so the title sits on the header row's line. */
+  --vs-lay-band: calc(var(--vs-lay-titlebar) - 2 * var(--space-2));
+  /* The gap under the header row (HEAD_GAP, the header region's gapAfter): a tight step, 8px. */
+  --vs-lay-head-gap: var(--space-2);
+  /* The content line, from the window's top: the header row (the title bar) and the tight gap
+     under it, where the solver starts the column's hero (TITLEBAR + HEAD_GAP). The sidebar's rows
+     start on it too, so the two content tops line up at every size, pack and scale. */
+  --vs-lay-content-top: calc(var(--vs-lay-titlebar) + var(--vs-lay-head-gap));
+  /* The room the title and a header leave the window buttons (chrome.css --chrome-lights 98px;
+     LIGHTS_ROOM in HomeLayout.tsx). Nothing in full screen, below. */
   --vs-lay-lights-room: calc(var(--space-6) * 3 + var(--space-1) / 2);
   /* A sidebar row: 40px. */
   --vs-lay-row: calc(var(--space-6) + var(--space-2));
@@ -59,8 +67,9 @@
 .vs-lay[data-lights] {
   border-radius: var(--vs-lay-window-radius);
 }
+/* Full screen: macOS hides the window buttons, so the title needs no room for them. */
 :root[data-fullscreen] :is(.vs-lay, .vs-lay-panel) {
-  --vs-lay-band: var(--space-3);
+  --vs-lay-lights-room: 0px;
 }
 
 /* The header row: the main column's first row, beside the sidebar (which runs up past it to the
@@ -79,6 +88,14 @@
   flex: 1;
   min-width: 0;
 }
+.vs-lay .vs-lay-head > .vs-lay-title {
+  flex: none;
+}
+/* The header's words and buttons on the column's edges, level with the preview's: the slot is
+   the column's width already, so the header adds no inset of its own. */
+.vs-lay .vs-lay-head > .vs-header {
+  padding-inline: 0;
+}
 /* No sidebar docked: the window buttons are over the header, so it leaves them their room
    (stories' stand-in, or the app's own buttons, chrome.css), less the screen's gap it already
    sits in from the window's edge. */
@@ -87,19 +104,17 @@
   padding-left: calc(var(--vs-lay-lights-room) - var(--mat-plate-gap));
 }
 
-/* A side panel's cell: a region of the screen, its panel 8px in from the window's edges (the
-   declared need's inset; the seam toward the column is the screen's gap). Docked, it sits above
-   the hero's shadow, which paints the window's tint under it (with no hero it is the base plate);
-   laid over the main column it is drawn from its empty slot at the window's edge, paints nothing
+/* A side panel's cell: a region of the screen. Docked, its panel sits the panel inset in from the
+   window's edges (a `panel` region: the solver's, the slot pads it; the seam toward the column is
+   the screen's gap), above the hero's shadow, which paints the window's tint under it (with no
+   hero it is the base plate). Laid over the main column it is drawn from its empty slot at the
+   window's edge, the same inset in (--lib-panel-inset, the assembled screen's), paints nothing
    (presses there fall through to the column), and its panel is opaque. */
-.vs-lay .vs-lay-cell > .lib-region__body {
-  padding: var(--space-2);
+.vs-lay .vs-lay-cell--docked > .lib-region__body {
+  padding: 0;
 }
-.vs-lay .vs-lay-side-cell.vs-lay-cell--docked > .lib-region__body {
-  padding-right: 0;
-}
-.vs-lay .vs-lay-insp-cell.vs-lay-cell--docked > .lib-region__body {
-  padding-left: 0;
+.vs-lay .vs-lay-cell--overlay > .lib-region__body {
+  padding: var(--lib-panel-inset);
 }
 .vs-lay .vs-lay-cell--docked {
   position: relative;
@@ -120,17 +135,19 @@
 }
 .vs-lay .vs-lay-cell--overlay .vs-lay-panel {
   pointer-events: auto;
-  box-shadow: var(--layer-raised-edge), var(--layer-float-edge), var(--layer-overlay-cast);
+  /* Laid over, the same float edge as a docked panel's, and the overlay layer's stronger cast. */
+  --lib-surface-edge: var(--layer-float-edge);
+  --lib-surface-cast: var(--layer-overlay-cast);
 }
 .vs-lay .vs-lay-side-cell.vs-lay-cell--overlay {
   left: 0;
-  width: calc(var(--vs-lay-side) + 2 * var(--space-2));
+  width: calc(var(--vs-lay-side) + 2 * var(--lib-panel-inset));
 }
-/* The inspector laid over starts under the header row (inspector.css), so its toggle stays in reach. */
+/* The inspector laid over mirrors the sidebar laid over: the same inset glass panel, the window's
+   full height, 8px in from its edges (its ✕ and Esc put it away). */
 .vs-lay .vs-lay-insp-cell.vs-lay-cell--overlay {
-  top: var(--vs-lay-titlebar);
   right: 0;
-  width: calc(var(--vs-lay-insp) + 2 * var(--space-2));
+  width: calc(var(--vs-lay-insp) + 2 * var(--lib-panel-inset));
 }
 
 /* The inset panels: a raised layer over the window's tint, a hint of glass at the top edge (the
@@ -145,8 +162,10 @@
   min-height: 0;
   margin: 0;
   border-radius: var(--vs-lay-side-radius);
-  background: var(--layer-raised-texture), var(--layer-raised-fill);
-  box-shadow: var(--layer-raised-edge), var(--layer-float-edge);
+  /* A raised Surface (its fill, texture and the picture's ambient light) and no backdrop: the
+     native preview under it can't be blurred. Docked, its lift (the float's edge and cast) is the
+     assembled screen's, as for every `panel` region (Assembly.css). */
+  --lib-surface-backdrop: none;
   overflow: hidden;
   outline: none;
   color: var(--text-2);
@@ -160,20 +179,51 @@
   flex: none;
   width: var(--vs-lay-insp);
 }
-/* The sidebar's top band is the title bar there: the window buttons sit in it, and a drag on it
-   moves the window. Full screen (macOS hides the buttons) shrinks it to a margin. */
+/* The sidebar's top band is the title bar there: the window buttons sit in it, then the app's
+   title, centred in it, after the buttons' room (less the panel's own inset from the window); a
+   drag on it moves the window. In full screen the room is nothing, and the title starts where
+   the sidebar's rows' text does. */
 .vs-lay-side {
   padding-top: var(--vs-lay-band);
+}
+/* In the window, the rows start on the content line, level with the column's hero (the panel
+   sits its cell's inset, --space-2, below the window's top). */
+.vs-lay .vs-lay-side {
+  padding-top: calc(var(--vs-lay-content-top) - var(--space-2));
 }
 .vs-lay-side-band {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+  display: flex;
+  align-items: center;
   height: var(--vs-lay-band);
+  padding-left: max(calc(var(--vs-lay-lights-room) - var(--space-2)), var(--space-4));
+  box-sizing: border-box;
 }
-/* The sidebar's content fills it and scrolls its own sections (InsetSidebar, between its mark
-   and its pinned foot), so the body doesn't. */
+/* The title's action (Home: the sidebar's toggle) at the band's right end, on the title's line,
+   the band's inset from the panel's edge. It takes presses (only the band itself drags). */
+/* In the band the title sits at the right, against its action, a step of room between them. */
+/* The band's action (the sidebar toggle) at its right end; the title is the native title bar's. */
+.vs-lay-side-band > .vs-lay-title-action {
+  margin-left: auto;
+  padding-right: var(--space-2);
+}
+.vs-lay-title-action {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+/* The title takes no presses: a drag on it is the band's, and moves the window. */
+.vs-lay-title {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  user-select: none;
+}
+/* The sidebar's content fills it and scrolls its own sections (InsetSidebar, above its pinned
+   foot), so the body doesn't. */
 .vs-lay-side-body {
   display: flex;
   flex: 1;
@@ -195,7 +245,7 @@
   position: absolute;
   top: calc(var(--space-5) - var(--space-1) / 2);
   left: var(--space-5);
-  z-index: calc(var(--vs-lay-z-overlay) + 1);
+  z-index: calc(var(--vs-lay-z-overlay, 10) + 1);
   display: flex;
   gap: var(--space-2);
   pointer-events: none;
@@ -213,11 +263,13 @@
 }
 
 /* The main column's parts, each in the slot the solver gave it, the screen's 32px gap between
-   them and at the window's edges. Above the hero's shadow, and painting nothing. */
-.vs-lay .vs-lay-main,
-.vs-lay .vs-lay-bar {
+   them and at the window's edges. Above the hero's shadow; the column paints nothing (the bar is
+   its own glass, below). */
+.vs-lay .vs-lay-main {
   position: relative;
   z-index: var(--vs-lay-z-over-hole);
+}
+.vs-lay .vs-lay-main {
   background: none;
 }
 /* The hero's slot is a size container: the picture is as tall as the room it was given (Hero.css
@@ -231,30 +283,36 @@
    blocks keeps a long section title from widening the column. The column's one padding is the
    parts' own (--mat-plate-inset), inside the screen's seam. */
 .vs-lay .vs-lay-main {
+  /* The pinned hero's room at the column's top: its slot reaches up behind the hero
+     (`under: 'hero'`, the slot's --lib-under), so what scrolls here passes behind it. */
+  --vs-lay-under: calc(var(--lib-under, 0) * 1px);
+  /* The clip and the fade are the assembled screen's (Assembly.css); useHoleClip only narrows the
+     top edge to the preview's picture (--lib-under-edge). The column runs to the window's foot. */
   display: flex;
   flex-direction: column;
   gap: var(--mat-plate-gap);
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  padding: 0 var(--mat-plate-inset);
+  padding: var(--vs-lay-under) var(--mat-plate-inset) var(--mat-plate-inset);
+  scroll-padding-top: var(--vs-lay-under);
+  box-sizing: border-box;
 }
 .vs-lay .vs-lay-main > * {
   flex: none;
   min-width: 0;
 }
 /* A pane (Home's grid, a playlist's): it fills the rest of the column and scrolls itself, with
-   its own side padding, so the column adds none and doesn't scroll. */
+   its own side padding, so the column adds none and doesn't scroll. It starts under the hero's
+   room and runs to the window's foot; a scroller in it may reach up into the hero's room
+   (Home.css) to pass behind the preview, and pads its own end clear of the window's edge. */
 .vs-lay .vs-lay-main[data-pane] {
   overflow-y: hidden;
-  padding: 0;
+  padding: var(--vs-lay-under) 0 0;
 }
 .vs-lay .vs-lay-main[data-pane] > * {
   flex: 1 1 auto;
   min-height: 0;
-}
-.vs-lay .vs-lay-bar {
-  min-width: 0;
 }
 
 /* The header's buttons that open and close a panel (TOGGLE_CLASS): the sidebar's glyph turned to

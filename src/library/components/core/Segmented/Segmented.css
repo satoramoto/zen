@@ -48,7 +48,11 @@
   margin: 0;
   padding: var(--mat-tabs-tab-pad);
   border: 0;
-  border-radius: var(--radius-control);
+  /* A segment rounds only when it sits inside a padded track (a key in a well, a chip in a
+     track). Bare-track systems (underlines, filled blocks) have no track pad, so the segment is
+     square and an inset underline stays a straight line rather than curving into the radius. */
+  --lib-segmented-radius: min(var(--radius-control), calc(var(--mat-tabs-pad) * 4));
+  border-radius: var(--lib-segmented-radius);
   background: var(--mat-tabs-tab-texture), var(--mat-tabs-tab-fill);
   box-shadow: var(--mat-tabs-tab-shadow);
   color: var(--mat-tabs-ink);

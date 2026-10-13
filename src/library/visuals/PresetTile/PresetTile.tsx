@@ -1,6 +1,7 @@
 import { createElement, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { Layer } from '../../layout/Layer';
 import { Text } from '../../primitives/Text';
+import { Icon } from '../Icon/Icon';
 import './PresetTile.css';
 
 /**
@@ -83,7 +84,6 @@ export function PresetTile({ as = 'div', thumbnail, empty = '', name, by, playin
       {motion}
       <span className="vs-tile-caption">
         <Text role="caption" className="vs-tile-name">
-          {playing && <LevelMark />}
           {name}
         </Text>
         {by && (
@@ -92,6 +92,7 @@ export function PresetTile({ as = 'div', thumbnail, empty = '', name, by, playin
           </Text>
         )}
       </span>
+      {playing && <PlayingMark />}
       {star && (
         <Text role="caption" className="vs-tile-star" aria-hidden="true">
           ★
@@ -103,15 +104,13 @@ export function PresetTile({ as = 'div', thumbnail, empty = '', name, by, playin
   );
 }
 
-/** The playing mark: a few green bars, before the name. */
-function LevelMark() {
+/** The playing mark: a dark chip at the picture's foot, the transport's loop glyph and "Playing". */
+function PlayingMark() {
   return (
-    <span className="vs-tile-live" aria-hidden="true">
-      <i />
-      <i />
-      <i />
-      <i />
-    </span>
+    <Text role="caption" className="vs-tile-live" aria-hidden="true">
+      <Icon name="loop" size={12} />
+      Playing
+    </Text>
   );
 }
 

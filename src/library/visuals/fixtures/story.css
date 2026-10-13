@@ -1,6 +1,12 @@
 /* The window a visuals story sits in (story.tsx's withVisualsFrame): the desktop behind the HUD
    frost, the ground layer over it, and `.vs-root`. Nothing here changes a component. */
 
+/* The window's height: the canvas's, unless a story frame (storybook.tsx's withStoryFrame) sets
+   its design window's on the frame. */
+:root {
+  --story-frame-h: 100vh;
+}
+
 .vs-frame {
   /* Set inline from the fixtures: the starter still, as the desktop and as the native preview. */
   --vs-still: none;
@@ -13,7 +19,8 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: 100vh;
+  /* The canvas, or the design window inside a story frame (storybook.tsx's withStoryFrame). */
+  min-height: var(--story-frame-h, 100vh);
 }
 .vs-frame[data-desk='light'] {
   --vs-frost-tint: 62%;
@@ -42,7 +49,7 @@
    ground under the others. */
 .vs-frame-ground {
   position: relative;
-  min-height: 100vh;
+  min-height: var(--story-frame-h, 100vh);
   border-radius: var(--vs-frame-radius);
 }
 
@@ -52,7 +59,7 @@
 }
 /* `scope: 'bare'`: a whole view, filling the canvas. */
 .vs-frame[data-scope='bare'] .vs-root {
-  height: 100vh;
+  height: var(--story-frame-h, 100vh);
 }
 
 /* The native preview's stand-in: where the engine's view would show through a hole, the still. */

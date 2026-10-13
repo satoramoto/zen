@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { Text } from '../../../primitives/Text';
+import { useControlContext } from '../../../primitives/Stack';
 import { Popover } from '../Popover/Popover';
 import { TYPING_WINDOW, useSelect, type UseSelectOptions } from './useSelect';
 import './Select.css';
@@ -38,6 +39,12 @@ export interface SelectProps {
  * or a wheel elsewhere closes it (only Escape puts focus back); Tab closes without being
  * swallowed. Handled keys are stopped so a surface underneath doesn't act on them.
  *
+ * **In a toolbar.** Inside a toolbar `Group` (`ControlContext { quiet: true }`) the trigger is
+ * quiet: no fill, border or shadow, the value in the bar's ink and the caret in a quieter one, a
+ * faint tint from the material only on hover and while open. Same height, width and hit target;
+ * keys and the menu are unchanged. The root says so as `data-quiet`. There is no prop for it: the
+ * context changes the look, never a per-use style.
+ *
  * **Parts.** `root` (`--lib-select-chars`, the longest member; `--lib-select-width` when `width`
  * is set), `caption` (the `name`), `trigger` (a `key`), `value`, `caret`, `menu` (a `Popover`,
  * so a float `Layer`, at least the trigger's width), `option` (`data-active` while highlighted,
@@ -46,6 +53,8 @@ export interface SelectProps {
 export function Select({ items, index, onChange, disabled = false, label, name, width, className, title, hint }: SelectProps) {
   const chars = Math.max(0, ...items.map((item) => item.length));
   const s = useSelect({ items, index, onChange, disabled });
+  // In a toolbar Group the trigger is quiet: the context decides the look, not the caller.
+  const { quiet } = useControlContext();
   // `role` is the ARIA role here; on a Text that prop is the type role.
   const { role: triggerRole, ...trigger } = s.triggerProps;
 
@@ -55,6 +64,7 @@ export function Select({ items, index, onChange, disabled = false, label, name, 
       data-part="root"
       data-disabled={disabled || undefined}
       data-open={s.open || undefined}
+      data-quiet={quiet || undefined}
       data-hint={hint}
       style={
         {
