@@ -7,7 +7,9 @@ Zen: React + TypeScript (TSX), Vite, Vitest, Storybook. Two things live here:
 
 ## Preview
 
-Use only the unified launcher:
+**Working on an app and zen together** (on trial as the default, #49): start from the app's repo, not here. In openflowfm/visuals, `npm run dev:app` (the real app window with hot reload) or `npm run dev` (the page in a browser) links this checkout, starts zen's launcher below on 6022/4191 (or `ZEN_STORYBOOK_PORT`/`ZEN_PREVIEW_PORT`), and shows zen's Storybook inside the app's. Zen's source hot-reloads in both. Generic parts still land here first as their own PR.
+
+For zen on its own, use only the unified launcher:
 
 ```sh
 PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6022 npm run dev
