@@ -156,7 +156,7 @@ export function VisualsApp({ theme, mode = 'system', frame = true, chrome = true
 function Framed({ theme, mode, children }: { theme?: ThemeChoice; mode: ModeChoice; children: ReactNode }) {
   const { facets } = resolveTheme({ theme: 'visuals', ...theme });
   return (
-    <ThemeScope facets={facets} mode={mode}>
+    <ThemeScope facets={facets} mode={mode} bleed>
       <Layer level="ground" className="vs-app">
         <Text as="div" className="vs-root">
           {children}
