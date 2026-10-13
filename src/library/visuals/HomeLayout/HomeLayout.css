@@ -198,8 +198,12 @@
 }
 /* The title's action (Home: the sidebar's toggle) at the band's right end, on the title's line,
    the band's inset from the panel's edge. It takes presses (only the band itself drags). */
-.vs-lay-side-band > .vs-lay-title-action {
+/* In the band the title sits at the right, against its action, a step of room between them. */
+.vs-lay-side-band > .vs-lay-title {
   margin-left: auto;
+}
+.vs-lay-side-band > .vs-lay-title-action {
+  margin-left: var(--space-3);
   padding-right: var(--space-2);
 }
 .vs-lay-title-action {
