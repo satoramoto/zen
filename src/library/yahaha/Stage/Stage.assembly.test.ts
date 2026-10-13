@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { assemble, principlesFor, resolveLength, resolveNeed, type Placement, type Principles, type RegionSpec, type ScreenSpec } from '../../layout/assembly';
 import { packs } from '../../themes/packs';
 import { scales } from '../../themes/scales';
-import { STAGE_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
+import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
 
 const SIZES = [
   [1440, 1200],
@@ -203,6 +203,24 @@ describe('the Stage assembles itself', () => {
       for (const scale of scales) {
         const pr = principlesFor({ ...pack.facets, scale }, pack.principles);
         expectViable(STAGE_SPEC, assemble(STAGE_SPEC, BOARD, pr), pr, `${pack.id} ${scale.id}`);
+      }
+  });
+
+  it('scaled (the stories): every frame shows the board placement, drawn smaller or larger; the app specs stay contain', () => {
+    expect(STAGE_SPEC.aspect?.fit).toBe('contain');
+    expect(STAGE_SPLIT_SPEC.aspect?.fit).toBe('contain');
+    for (const [scaled, plain] of [
+      [STAGE_SCALED_SPEC, STAGE_SPEC],
+      [STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC],
+    ] as const)
+      for (const pack of packs) {
+        const pr = principlesFor(pack.facets, pack.principles);
+        const board = assemble(plain, BOARD, pr);
+        for (const [w, h] of SIZES) {
+          const p = assemble(scaled, { w, h }, pr);
+          expect({ ...p, room: board.room, bands: [], scale: 1 }, `${pack.id} ${w}x${h}`).toEqual(board);
+          expect(p.scale).toBeCloseTo(p.room.w / BOARD.w, 12);
+        }
       }
   });
 

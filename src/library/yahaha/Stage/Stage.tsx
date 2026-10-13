@@ -12,7 +12,7 @@ import { PadBankRegion, type PadBankProps } from '../PadBank/PadBank';
 import { SongForm, type SongFormProps } from '../SongForm/SongForm';
 import { StatusLine, type StatusLineProps } from '../StatusLine/StatusLine';
 import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
-import { STAGE_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
+import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
 import { tapTempo } from './tapTempo';
 import './Stage.css';
 
@@ -64,12 +64,26 @@ export interface StageProps {
    * the top, and the transport down the right-hand side beside the knobs and pads.
    */
   layout?: StageLayout;
+  /**
+   * How the 16:9 screen meets the window. `contain` (the default, the app): it is laid out in the
+   * largest 16:9 room inside the window, stepping forms down as it shrinks. `scale` (previews and
+   * stories): it is laid out once at the 1920 × 1080 board and drawn scaled to that room.
+   */
+  fit?: StageFit;
   /** Called with each new placement (the solver's forms, sizes and zoom), for tests and inspectors. */
   onPlacement?: (placement: Placement) => void;
 }
 
 /** The Stage's top arrangements: see `StageProps.layout`. */
 export type StageLayout = 'split' | 'stacked';
+
+/** How the Stage meets the window: see `StageProps.fit`. */
+export type StageFit = 'contain' | 'scale';
+
+const SPECS = {
+  stacked: { contain: STAGE_SPEC, scale: STAGE_SCALED_SPEC },
+  split: { contain: STAGE_SPLIT_SPEC, scale: STAGE_SPLIT_SCALED_SPEC },
+} as const;
 
 /**
  * Stage: the whole app on one screen, what a player looks at while playing live.
@@ -114,7 +128,7 @@ export type StageLayout = 'split' | 'stacked';
  * the 1217 × 752 small screen (now a 16:9 room inside it; the board is 1920 × 1080); the keys
  * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
  */
-export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked', onPlacement }: StageProps) {
+export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked', fit = 'contain', onPlacement }: StageProps) {
   const taps = useRef<number[]>([]);
   const { inset } = useScopePrinciples().plate;
 
@@ -138,11 +152,11 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
   const room = width !== undefined && height !== undefined ? { w: width, h: height } : undefined;
 
   return (
-    <div className="yh-stage" data-part="root" style={size} data-layout={layout}>
+    <div className="yh-stage" data-part="root" style={size} data-layout={layout} data-fit={fit}>
       <Screen
         name="Stage"
         className="yh-stage__screen"
-        spec={layout === 'split' ? STAGE_SPLIT_SPEC : STAGE_SPEC}
+        spec={SPECS[layout][fit]}
         room={room}
         onPlacement={onPlacement}
         regions={{

@@ -22,7 +22,8 @@ const meta = {
     withLibraryTheme,
   ],
   parameters: { layout: 'fullscreen' },
-  args: { ...stageBoard, width: 1920, height: 1080, tipAction: fn() },
+  // Scaled by default: the 1920 × 1080 board drawn to fit the canvas. Switch `fit` to `contain` (and set a width and height) to see the forms step down.
+  args: { ...stageBoard, fit: 'scale', tipAction: fn() },
   argTypes: {
     appBar: { control: 'object', table: { category: 'AppBar' } },
     display: { control: 'object', table: { category: 'Display' } },
@@ -35,6 +36,7 @@ const meta = {
     width: { control: { type: 'number', min: 0, step: 1 }, table: { category: 'Layout' } },
     height: { control: { type: 'number', min: 0, step: 1 }, table: { category: 'Layout' } },
     layout: { control: 'inline-radio', options: ['stacked', 'split'], table: { category: 'Layout' } },
+    fit: { control: 'inline-radio', options: ['scale', 'contain'], table: { category: 'Layout' } },
   },
 } satisfies Meta<typeof Stage>;
 
@@ -42,7 +44,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * The board at 1920 × 1080 (16:9, so the room is the whole window): Am7 in Main B, Main C next
+ * The 1920 × 1080 board, scaled to the canvas (16:9, ground bands round it): Am7 in Main B, Main C next
  * after bar 4, running at 104; split F#2 with the left hand's Am7 held. The hero with the
  * transport beside it, then the mixer and the knobs over the pads (on Sections) on the same
  * column seam.
@@ -61,22 +63,27 @@ export const Stopped: Story = {
 
 /** A 16:10 laptop, 1440 × 900: the Stage stays 16:9, a 1440 × 810 room with a ground band above and below. */
 export const Letterboxed: Story = {
-  args: { width: 1440, height: 900 },
+  args: { fit: 'contain', width: 1440, height: 900 },
 };
 
 /** An ultrawide, 2560 × 1080: the board's 1920 × 1080 room, centred, with a ground band each side. */
 export const Pillarboxed: Story = {
-  args: { width: 2560, height: 1080 },
+  args: { fit: 'contain', width: 2560, height: 1080 },
 };
 
 /** The smallest screen, 1217 × 752: a 1217 × 684.6 room between ground bands; the solver steps the controls, then the hero, down before it zooms; nothing cut off. */
 export const Small: Story = {
-  args: { width: 1217, height: 752 },
+  args: { fit: 'contain', width: 1217, height: 752 },
 };
 
 /** 900 × 700: a 900 × 506 room, below the Stage's least: every region at a lean form, the body held at the 24 px target, and it scrolls. */
 export const Narrow: Story = {
-  args: { width: 900, height: 700 },
+  args: { fit: 'contain', width: 900, height: 700 },
+};
+
+/** The same 900 × 700 frame scaled: the whole 1920 × 1080 board drawn at 0.469, the forms the board's. */
+export const NarrowScaled: Story = {
+  args: { fit: 'scale', width: 900, height: 700 },
 };
 
 /** The alternative `split` layout on the board: the hero across the top, the transport down the right beside the pads. */
@@ -86,7 +93,7 @@ export const SplitBoard: Story = {
 
 /** The `split` layout on the smallest screen, 1217 × 752. */
 export const SplitSmall: Story = {
-  args: { layout: 'split', width: 1217, height: 752 },
+  args: { layout: 'split', fit: 'contain', width: 1217, height: 752 },
 };
 
 /**

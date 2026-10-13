@@ -74,3 +74,14 @@ export const STAGE_SPLIT_SPEC: ScreenSpec = {
   edge: EDGE,
   aspect: ASPECT,
 };
+
+/** The room the Stage is designed in: the 16:9 board. */
+export const STAGE_DESIGN = { w: 1920, h: 1080 } as const;
+
+/**
+ * The two specs drawn scaled (`fit: 'scale'`): laid out once at the 1920 × 1080 board and drawn
+ * smaller to the largest 16:9 box in the frame, so a story shows the whole board at any size.
+ * The app uses `contain` (the specs above), where a smaller window steps forms down.
+ */
+export const STAGE_SCALED_SPEC: ScreenSpec = { ...STAGE_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: STAGE_DESIGN } };
+export const STAGE_SPLIT_SCALED_SPEC: ScreenSpec = { ...STAGE_SPLIT_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: STAGE_DESIGN } };

@@ -228,6 +228,57 @@ describe('assemble: aspect', () => {
     expect(bands[1].style.getPropertyValue('--lib-at-x')).toBe('1800');
   });
 
+  const SCALED: ScreenSpec = { ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: { w: 1600, h: 900 } } };
+  const DESIGNED = assemble(DEMO_SPEC, { w: 1600, h: 900 }, P);
+
+  it("scale: the placement is the design room's at any frame; only the box and the factor change", () => {
+    for (const win of [
+      { w: 1000, h: 450 },
+      { w: 800, h: 1200 },
+      { w: 3200, h: 1800 },
+      { w: 32, h: 18 },
+      { w: 300, h: 600 },
+    ]) {
+      const p = assemble(SCALED, win, P);
+      expect({ ...p, room: DESIGNED.room, bands: [], scale: 1 }, `${win.w}x${win.h}`).toEqual(DESIGNED);
+      expect(p.room.w / p.room.h).toBeCloseTo(16 / 9, 9);
+      expect(p.scale).toBeCloseTo(p.room.w / 1600, 12);
+    }
+  });
+
+  it('scale: the factor and the centring, wide, tall and tiny', () => {
+    // Wide: full height, pillarboxed.
+    expect(assemble(SCALED, { w: 1000, h: 450 }, P)).toMatchObject({ room: { x: 100, y: 0, w: 800, h: 450 }, scale: 0.5, bands: [{ x: 0, w: 100 }, { x: 900, w: 100 }] });
+    // Tall: full width, letterboxed.
+    expect(assemble(SCALED, { w: 800, h: 1200 }, P)).toMatchObject({ room: { x: 0, y: 375, w: 800, h: 450 }, scale: 0.5, bands: [{ y: 0, h: 375 }, { y: 825, h: 375 }] });
+    // Larger than the design: drawn bigger.
+    expect(assemble(SCALED, { w: 3200, h: 1800 }, P)).toMatchObject({ scale: 2, bands: [] });
+    // Tiny: still the whole design, at 2 %, never a re-layout (no zoom, no overflow).
+    const tiny = assemble(SCALED, { w: 32, h: 18 }, P);
+    expect(tiny).toMatchObject({ room: { x: 0, y: 0, w: 32, h: 18 }, zoom: 1, overflow: false });
+    expect(tiny.scale).toBeCloseTo(0.02, 12);
+    // Contain is drawn at 1.
+    expect(assemble({ ...DEMO_SPEC, aspect: { ratio: 16 / 9 } }, { w: 1000, h: 450 }, P).scale).toBe(1);
+  });
+
+  it('scale needs a design room of its ratio', () => {
+    expect(() => assemble({ ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: { w: 1440, h: 900 } } }, { w: 800, h: 600 }, P)).toThrow(/not of ratio/);
+    expect(() => assemble({ ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: { w: 0, h: 0 } } }, { w: 800, h: 600 }, P)).toThrow(/design room/);
+  });
+
+  it('on screen, scaled: the room is laid out at the design size and drawn at the factor, centred', () => {
+    render(<Screen name="Scaled" spec={SCALED} room={{ w: 1000, h: 450 }} principles={P} regions={{}} />);
+    const root = screen.getByRole('group', { name: 'Scaled' });
+    const room = root.querySelector<HTMLElement>(':scope > [data-part="room"]')!;
+    expect(room).toHaveAttribute('data-scale', '0.500');
+    expect(room.style.getPropertyValue('--lib-scale')).toBe('0.5');
+    expect(room.style.getPropertyValue('--lib-at-x')).toBe('100');
+    expect(room.style.getPropertyValue('--lib-at-w')).toBe('1600');
+    expect(room.style.getPropertyValue('--lib-at-h')).toBe('900');
+    expect(root.querySelectorAll(':scope > [data-part="band"]')).toHaveLength(2);
+    expect(root.querySelector('[data-region="pads"]')).toHaveAttribute('data-form', DESIGNED.regions.pads.form);
+  });
+
   it('on screen without an aspect: no bands, the room is the box', () => {
     render(<Screen name="Free" spec={DEMO_SPEC} room={{ w: 900, h: 330 }} principles={P} regions={{}} />);
     const root = screen.getByRole('group', { name: 'Free' });

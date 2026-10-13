@@ -35,6 +35,17 @@
 }
 .lib-assembled__body { zoom: var(--lib-zoom); }
 
+/* fit: 'scale': the room is laid out at its design size and drawn at --lib-scale. A transform,
+   not zoom: hit-testing follows transforms exactly in every engine (a pointer lands on what it is
+   drawn over, and getBoundingClientRect reports the drawn box), the content keeps laying out in
+   design px (so ResizeObservers and the solver agree), it is the compositor's job (no relayout as
+   the frame resizes), and it can't compound with the body's own last-resort zoom. */
+.lib-assembled__room {
+  --lib-scale: 1;
+  transform: scale(var(--lib-scale));
+  transform-origin: 0 0;
+}
+
 /* A slot's content fills it: a Region stretches to the box the solver gave it. */
 .lib-assembled__slot {
   display: grid;

@@ -108,6 +108,18 @@ describe('Stage', () => {
     expect(slot(zones().header, 'bar').style.getPropertyValue('--lib-at-w')).toBe('1440');
   });
 
+  it("fit='scale': a 900 × 700 frame draws the whole 1920 × 1080 board, scaled to 900 × 506.25, in the board's forms", () => {
+    const placements: Placement[] = [];
+    setup({ fit: 'scale', width: 900, height: 700, onPlacement: (p) => void placements.push(p) });
+    const placement = placements[placements.length - 1];
+    expect(placement.regions.hero.form).toBe('full');
+    expect(placement.scale).toBeCloseTo(900 / 1920, 12);
+    const room = screen.getByRole('group', { name: 'Stage' }).querySelector<HTMLElement>(':scope > [data-part="room"]')!;
+    expect(room).toHaveAttribute('data-scale', (900 / 1920).toFixed(3));
+    expect(room.style.getPropertyValue('--lib-at-w')).toBe('1920');
+    expect(room.style.getPropertyValue('--lib-at-h')).toBe('1080');
+  });
+
   it("gives the keys the keys slot's width less the plate", () => {
     const placements: Placement[] = [];
     for (const size of [{ width: 1920, height: 1080 }, { width: 1217, height: 752 }]) {

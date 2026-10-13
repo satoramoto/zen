@@ -81,6 +81,9 @@ const at = (r: Rect): CSSProperties =>
  * The zones sit in the room (`data-part="room"`): the whole box, or with `spec.aspect` the largest
  * room of that ratio, centred. The leftover strips are `ground` bands (`data-part="band"`): no
  * plate, nothing in them, hidden from assistive tech.
+ *
+ * With `aspect.fit: 'scale'` the room is laid out at its design size and drawn smaller by a CSS
+ * `transform: scale()` (Assembly.css), carried in `data-scale` on the room.
  */
 export function AssembledScreen({ name, spec, regions, room: given, principles, onPlacement, className, style }: AssembledScreenProps) {
   const [ref, room] = useRoom(given);
@@ -101,6 +104,8 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
   };
   const zone = (part: 'header' | 'body' | 'footer') => placement.order.filter((id) => placement.regions[id].zone === part);
   const { zones } = placement;
+  // The room's box in layout px (the design room when scaled); `--lib-scale` draws it at `room`.
+  const laidOut = { ...placement.room, w: placement.room.w / placement.scale, h: placement.room.h / placement.scale };
 
   return (
     <div
@@ -117,7 +122,12 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
       {placement.bands.map((band, i) => (
         <Surface key={i} layer="ground" radius="none" className="lib-assembled__band" data-part="band" aria-hidden="true" style={at(band)} />
       ))}
-      <div className="lib-assembled__room" data-part="room" style={at(placement.room)}>
+      <div
+        className="lib-assembled__room"
+        data-part="room"
+        data-scale={placement.scale === 1 ? undefined : placement.scale.toFixed(3)}
+        style={{ ...at(laidOut), '--lib-scale': placement.scale } as CSSProperties}
+      >
         {spec.header?.length ? (
           <div className="lib-assembled__zone" data-part="header" style={at(zones.header)}>
             {zone('header').map(slot)}
