@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-libra
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as api from '../model/api';
 import * as audio from '../model/audio-api';
-import { sameSource, SourcePicker } from './SourcePicker';
+import { channelPairs, sameSource, SourcePicker } from './SourcePicker';
 vi.mock('../model/api', async (original) => ({
   ...(await original<typeof import('../model/api')>()),
   audioSources: vi.fn(),
@@ -160,5 +160,14 @@ describe('folded', () => {
     const main = panel.querySelector('[aria-label="Main source"]');
     expect(main).toBe(panel.querySelector('.vs-audio-lane'));
     expect(main?.querySelector('[role="combobox"]')?.textContent).toContain('Live');
+    // One Select of stereo pairs for the channels, not an L and an R.
+    expect(screen.queryByRole('combobox', { name: 'left channel' })).toBeNull();
+    expect(panel.querySelector('.vs-audio-fold')).not.toBeNull();
+  });
+  it('offers stereo pairs, and mono for an odd last channel', () => {
+    expect(channelPairs(1).map((p) => p.label)).toEqual(['1']);
+    expect(channelPairs(2)).toEqual([{ label: '1–2', left: 1, right: 2 }]);
+    expect(channelPairs(5).map((p) => p.label)).toEqual(['1–2', '3–4', '5']);
+    expect(channelPairs(5)[2]).toEqual({ label: '5', left: 5, right: 5 });
   });
 });

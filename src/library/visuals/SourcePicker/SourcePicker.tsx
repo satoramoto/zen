@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Popover } from '../Popover/Popover';
 import { Icon } from '../Icon/Icon';
 import { Meter } from '../../components/music/Meter/Meter';
@@ -64,6 +64,18 @@ export function keepChannels(choice: api.Heard['choice'], next: api.Source): [nu
 }
 
 /**
+ * The channel choices the folded mixer offers for a source with `count` channels: stereo pairs
+ * 1–2, 3–4, …, and an odd last channel (or a lone one) as mono, left and right both that channel.
+ */
+export function channelPairs(count: number): { label: string; left: number; right: number }[] {
+  const out: { label: string; left: number; right: number }[] = [];
+  for (let c = 1; c <= Math.max(1, count); c += 2) {
+    out.push(c + 1 <= count ? { label: `${c}–${c + 1}`, left: c, right: c + 1 } : { label: `${c}`, left: c, right: c });
+  }
+  return out;
+}
+
+/**
  * The left and right levels. A leaf of its own: it re-renders twenty times a
  * second, and nothing else around it has to.
  */
@@ -93,6 +105,11 @@ function Levels() {
       <Meter value={r} label="right level" width={3} length={44} />
     </span>
   );
+}
+
+/** The folded mixer's roomy column; unfolded (Live) the lanes stay as they were, unwrapped. */
+function Fold({ on, children }: { on: boolean; children: ReactNode }) {
+  return on ? <span className="vs-audio-fold">{children}</span> : <>{children}</>;
 }
 
 /** Match identities, never a display name when native identity is available. */
@@ -126,6 +143,8 @@ let commands: Promise<unknown> = Promise.resolve();
  * the Select out (default).
  * **Tuning knobs**
  * - `--vs-audio-note-width`: maximum notice width beside the picker.
+ * - `--vs-audio-fold-width`: the folded mixer's width (Home), so its Selects aren't squeezed; folded, the
+ *   popover takes the side panels' `raised` layer and each lane's channels are one Select of stereo pairs.
  */
 export function SourcePicker({ onError, channels: where = 'advanced', width = 180, trouble = null, folded = false }: { onError(error: unknown): void; channels?: 'advanced' | 'shown' | 'none'; width?: number; trouble?: { message: string; detail: string | null } | null; folded?: boolean }) {
   const [sources, setSources] = useState<api.Source[]>([]);
@@ -224,6 +243,28 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
     const heard = status[lane];
     const source = sources.find((s) => sameSource(s.id, heard.source));
     const count = heard.channels || 2;
+    const off = pending !== null || !source || !heard.enabled || heard.unavailable;
+    if (folded) {
+      // One Select of stereo pairs (mono for a lone or odd last channel); a choice that's no pair shows as itself first.
+      const pairs = channelPairs(count);
+      const l = heard.choice?.left ?? 1;
+      const r = heard.choice?.right ?? Math.min(2, count);
+      const at = pairs.findIndex((p) => p.left === l && p.right === r);
+      const odd = at < 0 && heard.choice ? [{ label: l === r ? `${l}` : `${l} / ${r}`, left: l, right: r }] : [];
+      const items = [...odd, ...pairs];
+      return (
+        <Select
+          items={items.map((p) => p.label)}
+          index={at < 0 ? 0 : at + odd.length}
+          onChange={(i) => {
+            const p = items[i];
+            if (source && heard.choice && p) choose(lane, source, p.left, p.right);
+          }}
+          label={lane === 'main' ? say('audio channels') : 'microphone audio channels'}
+          disabled={off}
+        />
+      );
+    }
     return (
       <span className="vs-audio-channels" role="group" aria-label={lane === 'main' ? say('audio channels') : 'microphone audio channels'}>
         {(['left', 'right'] as const).map((which) => (
@@ -235,7 +276,7 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
               if (source && heard.choice) choose(lane, source, which === 'left' ? i + 1 : heard.choice.left, which === 'right' ? i + 1 : heard.choice.right);
             }}
             label={lane === 'main' ? `${which} channel` : `microphone ${which} channel`}
-            disabled={pending !== null || !source || !heard.enabled || heard.unavailable}
+            disabled={off}
           />
         ))}
       </span>
@@ -292,6 +333,7 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
           {notices('main')}
           <Popover
             name={folded ? `Audio mixer: ${status.main.enabled ? `listening to ${status.main.choice?.name ?? 'the main source'}` : 'main source off'}${status.mic.enabled ? ' and the microphone' : ''}` : 'Audio mixer: main and microphone inputs'}
+            layer={folded ? 'raised' : undefined}
             title={folded ? sourceTitle(status.main.enabled ? (status.main.choice?.name ?? null) : null) : status.mic.enabled ? 'Mixer (main and microphone)' : 'Mixer'}
             // The faders glyph, and "+ mic" while the microphone is mixed in.
             label={
@@ -303,6 +345,7 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
           >
             {/* The panel floats out of any toolbar the picker sits in: its pickers are fields again. */}
             <ControlContext.Provider value={CONTROL_FIELD}>
+              <Fold on={folded}>
               {folded && (
                 <span className="vs-audio-lane" role="group" aria-label="Main source">
                   <Text size="caption" className="vs-audio-lane-name">Main source</Text>
@@ -314,6 +357,7 @@ export function SourcePicker({ onError, channels: where = 'advanced', width = 18
                 {channelControls('main')}
               </span>
               {mic}
+              </Fold>
             </ControlContext.Provider>
           </Popover>
           <Levels />

@@ -106,3 +106,15 @@
   align-items: center;
   gap: var(--space-2);
 }
+
+/* Folded (Home): the mixer's popover, roomy. Lanes stand apart by the theme's steps, the panel
+   pads them in from its edge, and a width wide enough that no Select is squeezed. */
+.vs-audio-fold {
+  --vs-audio-fold-width: calc(var(--control-h) * 9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: var(--vs-audio-fold-width);
+  max-width: 100%;
+  padding: var(--space-3);
+}
