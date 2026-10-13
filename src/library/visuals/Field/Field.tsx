@@ -21,7 +21,7 @@ export interface FieldProps {
   hue: string;
   /** What the field says about the subject ("Slow and dark, among 250 presets"). */
   description: string;
-  /** A dot picked, by click or Enter. */
+  /** A dot picked, by click or Enter: the caller plays it (the field is a way through the library, not a second selection). */
   onPick(row: LibraryRow): void;
 }
 
@@ -38,21 +38,23 @@ const nameOf = (row: LibraryRow) => tileName(row.title, row.path);
  * **Job.** The field: every preset in the library a faint dot by speed (slow to fast, across)
  * and brightness (dark to bright, up), the subject lit with a fine cursor through it and a ring
  * as wide as it is intense, the preset playing marked with a ring of its own while another is
- * shown. Markings at the edges, no grid or frame. The dots are one SVG path per hue band, so the
- * full pack's ~9,800 draw as a dozen nodes. The pointer finds the dot nearest it: hover names it,
- * a click picks it. From the keyboard the field is one stop, a listbox whose one rendered option
- * is the dot under its cursor: the arrows move the cursor to the nearest dot that way, Enter (or
- * Space) picks it, and the cursor starts on the subject. Its name shows in the same tip as
- * hover's.
+ * shown (one picked elsewhere, a tile). Markings at the edges, no grid or frame. The dots are one
+ * SVG path per hue band, so the full pack's ~9,800 draw as a dozen nodes. It is the quick way
+ * through the whole library: the pointer finds the dot nearest it, hover names it, a click plays
+ * it. From the keyboard the field is one stop, a listbox whose one rendered option is the dot
+ * under its cursor: the arrows move the cursor to the nearest dot that way, Enter (or Space)
+ * plays it, and the cursor starts on the subject. Its name shows in the same tip as hover's.
  *
- * **Changed.** The tip is a `Layer level="float"` (it floats over the field, so it takes the
+ * **Changed.** A dot picked plays (`onPick`; the Home plays it as a library tile's play does), so
+ * the lit dot and the playing one move together; it no longer shows a preset without playing it,
+ * and its words say "Enter plays one". The tip is a `Layer level="float"` (it floats over the field, so it takes the
  * float's glass, edge and cast instead of a raised tint and a hand-made shadow) whose element is a
  * caption `Text`; the edges' words are `Text`s in capitals on a tight line. The markings'
  * hairline is the ink at a fifth rather than a literal white, so it follows the palette. Classes
  * are `vs-field-*`.
  *
- * **Kept.** Its props, the drawing (box, ticks, dots, ring, cursor, playing mark), the pointer
- * and keyboard behaviour, the roles, names and words.
+ * **Kept.** Its props, the drawing (box, ticks, dots, ring, cursor, playing mark), hover's tip,
+ * the arrows' cursor, the roles and names.
  *
  * **Tuning knobs**
  * - `--vs-field-hair`: the markings' hairline colour.
@@ -175,7 +177,7 @@ export function Field({ library, mine, subject, playing, intensity, hue, descrip
         )}
       </div>
       <span className="vs-field-sr" id={`${id}-says`}>
-        {description}.{lit >= 0 && dots[lit].tuned ? ` ${tunedSays(dots[lit])}.` : ''} Arrow keys move among the presets; Enter shows one.
+        {description}.{lit >= 0 && dots[lit].tuned ? ` ${tunedSays(dots[lit])}.` : ''} Arrow keys move among the presets; Enter plays one.
       </span>
       <Axis className="vs-field-axis-low">dark</Axis>
       <Axis className="vs-field-axis-x">
