@@ -36,7 +36,9 @@ later:
 - drawing modulations differently;
 - drawing buses (a labelled rail with short named stubs at each tap; until
   then the binding draws a bus's taps as cords from its source);
-- `tb` rendering.
+- placement-aware ports, radial and free layouts, and `trace` routing (the
+  circuit-board look). The first pass draws today's left-to-right curves
+  whatever the hints say.
 
 Compatibility: every change to `Graph`, `GraphNode`, `Port` and `Device` is
 additive. openflowfm/visuals' `StageGraph`, the only consumer, keeps working
@@ -58,6 +60,10 @@ export interface PortSpec {
   kind?: string;        // opaque type tag; also the style hook (data-kind)
   label?: string;
   param?: boolean;      // an inlet that drives a parameter rather than carrying the signal
+  // Where the port sits on the node. Presentation only: `side` alone decides signal
+  // direction and every connect rule. 'auto' (default) lets the layout choose, e.g. the
+  // face nearest the other end, so a graph can flow outward from a centre, not left to right.
+  placement?: 'auto' | 'n' | 'e' | 's' | 'w';
 }
 
 export interface Node {
@@ -114,7 +120,11 @@ export interface GraphDef {
   params?: Promoted[];
   groups?: Group[];
   buses?: Bus[];
-  direction?: 'lr' | 'tb'; // default 'lr'
+  // Layout and routing hints, presentation only. The goal is a web or root system that
+  // flows outward from a centre in whatever direction suits, with circuit-board traces,
+  // not a strict left-to-right chain.
+  layout?: 'free' | 'radial' | 'lr' | 'tb'; // default 'free' (positions as stored)
+  routing?: 'curve' | 'trace';               // default 'curve'; 'trace' = straight runs, 45° bends
   [extra: string]: unknown;
 }
 
@@ -218,6 +228,13 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
     instance of itself.
 17. Adding an inlet or outlet to a definition is visible on every instance
     through `portsOf`, with no change to the instances themselves.
+
+### Direction is semantic, placement is not
+
+17g. `placement`, `layout` and `routing` never affect an operation, `connect`'s
+     rules or `validate`, beyond checking that their values are among those
+     listed. Only `side` decides which way a signal flows.
+17h. Every operation preserves `placement`, `layout` and `routing` unchanged.
 
 ### Buses
 
