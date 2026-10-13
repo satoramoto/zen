@@ -1,5 +1,7 @@
 # `@openflow/widgets` in openflowfm/visuals: the review
 
+> **History.** On 2026-10-13 visual[flow]'s UI moved out of zen into openflowfm/visuals (`app/src/ui/`); `src/library/visuals/` and `@satoramoto/zen/visuals` no longer exist. This review is kept as a record.
+
 After openflowfm/visuals#239 moved the app's UI onto zen (`@satoramoto/zen/visuals`), the
 widgets suite was still a dependency of the visuals app (`package.json` pinned
 `openflowfm/widgets#ef99d1b`). This is every import that was left, what each widget did

@@ -2,6 +2,8 @@
 
 Decisions made without asking, for the owner to veto. Newest last. Each says what was decided and why.
 
+> Entries before 2026-10-13 that name `src/library/visuals/`, `@satoramoto/zen/visuals`, `splitStyles` or `lib/visuals.css` describe zen as it was then: visual[flow]'s UI has since moved to openflowfm/visuals (`app/src/ui/`).
+
 ## 2026-10-12
 
 1. **Materials replace Chrome.** Parts declare a role (`well`, `screen`, `key`, `handle`, lit); a material set says how each role looks. No Forms facet yet (#27).
