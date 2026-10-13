@@ -7,8 +7,8 @@
    next one comes. The audio input is quiet text. */
 
 .vs-transport {
-  /* The bar's height: 64px. */
-  --vs-transport-h: calc(var(--space-6) * 2);
+  /* The bar's height: 48px (the frosted panel's; the keys are 36px). */
+  --vs-transport-h: calc(var(--space-6) + var(--space-4));
   /* How long the ring eases between the position's ticks (about once a second). */
   --vs-transport-tick: 1s;
   display: flex;

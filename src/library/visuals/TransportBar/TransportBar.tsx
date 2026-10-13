@@ -8,8 +8,8 @@ import { Icon, LOOP_HEAD, LOOP_RING, strokeFor } from '../Icon/Icon';
 import type { Forms } from '../../layout/assembly';
 import './TransportBar.css';
 
-/** The bar's one form (docs/assembly.md): ten controls across at least, growing; `--vs-transport-h` (two `--space-6`, 64px) high. */
-export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 10 }, h: { space: [6, 6] } }, ideal: { w: { control: 10 }, h: { space: [6, 6] } }, grow: { w: true } }];
+/** The bar's one form (docs/assembly.md): ten controls across at least, growing; `--vs-transport-h` (`--space-6` and `--space-4`, 48px) high. */
+export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 10 }, h: { space: [6, 4] } }, ideal: { w: { control: 10 }, h: { space: [6, 4] } }, grow: { w: true } }];
 
 /**
  * **Job.** The bar along the bottom of the home's main column (HomeLayout's `bar` slot): the
@@ -31,7 +31,7 @@ export const TRANSPORT_FORMS: Forms<'bar'> = [{ id: 'bar', min: { w: { control: 
  * so every control in it takes its quiet look by context.
  *
  * **Tuning knobs** (TransportBar.css):
- * - `--vs-transport-h` (64px): the bar's height.
+ * - `--vs-transport-h` (48px): the bar's height, the keys' 36px and a little room above and below.
  * - `--vs-transport-tick` (1s): how long the ring eases between the position's ticks (none under
  *   reduced motion).
  *

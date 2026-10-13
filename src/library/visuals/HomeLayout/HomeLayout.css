@@ -369,11 +369,6 @@
   --lib-surface-fill: color-mix(in oklab, var(--layer-float-fill) var(--vs-lay-bar-tint), transparent);
   min-width: 0;
   border-radius: var(--vs-lay-side-radius);
-  /* Its edges on the tiles' edges under it: the grid's side padding (Home.css --vs-home-pad). */
-  margin-inline: var(--mat-plate-inset);
-}
-.vs-lay:has([data-region='pane'][data-form='small']) .vs-lay-bar {
-  margin-inline: var(--space-4);
 }
 
 /* The header's buttons that open and close a panel (TOGGLE_CLASS): the sidebar's glyph turned to
