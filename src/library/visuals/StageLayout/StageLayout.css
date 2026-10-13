@@ -1,30 +1,31 @@
-/* Live's Stage (StageLayout.tsx), from live/stage.css: the picture full-bleed across the main
-   window, Home's inset panels over it. Home's sizes (8px in, 18px corners, the 52px title bar);
-   areas told apart by space and tone, no lines.
+/* Live's Stage (StageLayout.tsx): the picture full-bleed across the main window, and over it one
+   overlay (the header and the controls on a scrim) that fades in on hover as Home's preview
+   controls do (Hero.css: the same scrim and fade). Toasts at the bottom right; the warning and
+   Esc's hold over everything.
 
-   Where each part sits and how big it is is the solver's (stageSpec in StageLayout.tsx): nothing
-   here sizes the screen, and no query decides it.
+   Where the header and the controls sit and how big they are is the solver's (stageSpec in
+   StageLayout.tsx): nothing here sizes the screen, and no query decides it.
 
    Who paints what: the picture is the native preview under the page (Views' Preview, a Hole) and
-   fills the window under the assembled Screen, so the root and every slot paint nothing. Everything sits in one
-   Opaque scope: each layer over the picture draws its solid and blurs nothing (a blur never
-   reaches the native view). Nothing animates but Esc's hold to leave (its ring).
+   fills the window, so the root and every slot paint nothing; the scrim is a Surface whose fill is
+   a gradient of the window's tint (no backdrop: a blur never reaches the native view). Everything
+   sits in one Opaque scope: each layer over the picture (a popover, a toast) draws its solid.
 
    The tuning knobs (--vs-stagelayout-*) are listed in StageLayout.tsx. */
 
 .vs-stagelayout {
-  /* The crate's column: the 240px inset sidebar (8 controls) and 8px either side. */
-  --vs-stagelayout-crate: calc(var(--control-h) * 8 + 2 * var(--space-2));
   /* The title bar's 52px (layout.css --lay-titlebar). */
   --vs-stagelayout-titlebar: calc(var(--space-5) * 2 + var(--space-1));
   /* The window buttons' room, 84px: x 24, three 12px buttons 8px apart, and 8px after. */
   --vs-stagelayout-lights: calc(var(--space-5) + 3 * var(--space-3) + 3 * var(--space-2));
-  /* The inset panels' 18px corners (layout.css --lay-side-radius). */
-  --vs-stagelayout-radius: calc(var(--space-3) * 1.5);
-  --vs-stagelayout-z-panel: 1;
+  /* Hero's fade and scrim (Hero.css --vs-hero-fade, --vs-hero-scrim). */
+  --vs-stagelayout-fade: 160ms;
+  --vs-stagelayout-scrim: 85%;
+  /* The toasts clear the controls' two rows at the foot. */
+  --vs-stagelayout-toast-lift: calc(var(--control-h) * 3 + var(--space-4));
+  --vs-stagelayout-z-reveal: 1;
   --vs-stagelayout-z-centre: 2;
-  /* Above the centre: the header's popovers open over "Go full screen on…". */
-  --vs-stagelayout-z-head: 3;
+  --vs-stagelayout-z-toasts: 3;
   --vs-stagelayout-z-overlay: 10;
   position: relative;
   height: 100%;
@@ -35,13 +36,8 @@
   position: relative;
   height: 100%;
 }
-/* The assembled screen over the picture, the window's size. */
-.vs-stagelayout .vs-stagelayout-screen {
-  position: absolute;
-  inset: 0;
-}
 
-/* The picture: the whole window under the screen, whatever shows over it; square (macOS rounds the window). */
+/* The picture: the whole window under everything, whatever shows over it; square (macOS rounds the window). */
 .vs-stagelayout .vs-stagelayout-picture,
 .vs-stagelayout .vs-stagelayout-dark {
   position: absolute;
@@ -56,183 +52,128 @@
 .vs-stagelayout-picture[data-loading] {
   background: var(--layer-base-solid);
 }
-/* The warning owed: nothing plays, a dark window (the panels' solid half way to black), opaque over whatever the native view last showed. */
+/* The warning owed: nothing plays, a dark window (the base solid half way to black), opaque over whatever the native view last showed. */
 .vs-stagelayout-dark {
   background: color-mix(in oklab, var(--layer-base-solid), var(--key-black));
 }
 
-/* The panels' look over the picture: the base layer's solid, its edge and the lift shadow (stage.css's 0 18px 48px).
-   The crate is a base Layer; the dock is a Region, drawn by its own plate (the base layer), whose
-   cast is the lift here. */
-.vs-stagelayout .lib-layer.vs-stagelayout-crate {
-  border-radius: var(--vs-stagelayout-radius);
-  box-shadow: var(--layer-base-edge), var(--layer-float-cast);
-}
-.vs-stagelayout .vs-stagelayout-dock {
-  --layer-base-cast: var(--layer-float-cast);
-  border-radius: var(--vs-stagelayout-radius);
-}
-
-/* The crate: Home's inset sidebar, opaque, over the picture's left edge. Docked, it fills its slot
-   (its need is the panel and its 8px inset from the window; the seam beside it is the screen's
-   gap), and the header and the dock keep clear of it; laid over (a narrow window), it takes no
-   room and covers them. The cell paints nothing and lets presses through around its panel. */
-.vs-stagelayout-crate-cell {
-  z-index: var(--vs-stagelayout-z-panel);
-  display: flex;
-  min-height: 0;
-  padding: var(--space-2) 0 var(--space-2) var(--space-2);
-  box-sizing: border-box;
+/* The one overlay: the scrim under the assembled screen (the header and the controls), the
+   window's size. Hidden until the window is hovered, focus is inside it, one of its popovers is
+   open or `\` pinned it; always shown with no hover (touch). Only its rows take presses: the clear
+   middle passes them to the picture. */
+.vs-stagelayout-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: var(--vs-stagelayout-z-reveal);
   pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--vs-stagelayout-fade) ease;
 }
-.vs-stagelayout-crate-cell[data-mode='overlay'] {
+.vs-stagelayout:hover .vs-stagelayout-reveal,
+.vs-stagelayout-reveal:focus-within,
+.vs-stagelayout-reveal:has([aria-expanded='true']),
+.vs-stagelayout-reveal[data-pinned] {
+  opacity: 1;
+}
+@media (hover: none) {
+  .vs-stagelayout-reveal {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vs-stagelayout-reveal {
+    transition: none;
+  }
+}
+/* Hero's scrim (Hero.css .vs-hero-controls): the window's tint from the top, clear by 64px under
+   the header; from the foot, clear by about a third up so the controls' rows sit on it. */
+.vs-stagelayout .vs-stagelayout-scrim {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: var(--vs-stagelayout-crate);
-  padding: var(--space-2);
-  z-index: var(--vs-stagelayout-z-overlay);
+  inset: 0;
+  pointer-events: none;
+  --lib-surface-fill:
+    linear-gradient(to bottom, color-mix(in oklab, var(--surface-0) var(--vs-stagelayout-scrim), transparent), transparent calc(var(--space-6) * 3)),
+    linear-gradient(to top, color-mix(in oklab, var(--surface-0) var(--vs-stagelayout-scrim), transparent), color-mix(in oklab, var(--surface-0) calc(var(--vs-stagelayout-scrim) * 0.6), transparent) calc(var(--space-6) * 3), transparent calc(var(--space-6) * 6));
 }
-.vs-stagelayout-crate {
-  /* A raised panel's captions take the lighter step, so they stay at 4.5:1 (layout.css .lay-side). */
-  --text-3: var(--vs-caption-raised);
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  pointer-events: auto;
-}
-.vs-stagelayout-crate-panel {
-  position: relative;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  padding-top: var(--vs-stagelayout-titlebar);
-  outline: none;
-}
-/* Its top band is the title bar there: the window buttons sit in it, and a drag on it moves the window. */
-.vs-stagelayout-band {
+.vs-stagelayout .vs-stagelayout-screen {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: var(--vs-stagelayout-titlebar);
-}
-.vs-stagelayout-crate-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
+  inset: 0;
 }
 
-/* The header row: the title bar's 52px, the capsules (StageHead) centred on the window buttons'
-   line (y 28). The row paints nothing; the empty line between and around the capsules is the
-   title bar, and drags the window. It leaves the window buttons room, or starts beside a docked
-   crate (whose band holds them). */
+/* The header's row: the title bar's 52px, the type centred on the window buttons' line (y 28),
+   clear of them at its start and 8px in from the right. It paints nothing; its empty line drags
+   the window. Above the controls, so its popovers open over them. */
 .vs-stagelayout-head {
-  z-index: var(--vs-stagelayout-z-head);
-  /* A row Stack: its gap (space 2) between the capsules, centred on the line. */
+  position: relative;
+  z-index: 1;
+  display: flex;
   min-width: 0;
   height: var(--vs-stagelayout-titlebar);
   padding: 0 var(--space-2) 0 var(--vs-stagelayout-lights);
   box-sizing: border-box;
-}
-.vs-stagelayout[data-crate='docked'] .vs-stagelayout-head {
-  padding-left: 0;
+  pointer-events: auto;
 }
 
-/* Over the picture's middle: "Go full screen on…" just under the header, or the warning centred
-   where the picture would be (above the dock). Only what it holds takes presses. */
-.vs-stagelayout-centre {
-  z-index: var(--vs-stagelayout-z-centre);
+/* The controls: the room under the header, 20px in at the sides and 12px over the foot (part of
+   their declared need); StageDock fills it. */
+.vs-stagelayout-dock {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  height: 100%;
   min-width: 0;
   min-height: 0;
-  padding: var(--space-3) var(--space-4) 0;
+  padding: 0 var(--space-5) var(--space-3);
+  box-sizing: border-box;
+}
+.vs-stagelayout-dock > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* The warning owed: the controls wait for "I understand". */
+.vs-stagelayout[data-warning] .vs-stagelayout-dock {
+  opacity: 0.4;
+}
+
+/* The warning, centred over the window. Only what it holds takes presses. */
+.vs-stagelayout-centre {
+  position: absolute;
+  inset: 0;
+  z-index: var(--vs-stagelayout-z-centre);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
   pointer-events: none;
 }
 .vs-stagelayout-centre > * {
   pointer-events: auto;
 }
-.vs-stagelayout-centre[data-for='warning'] {
-  align-items: center;
-  padding-top: 0;
-}
 
-/* The dock: an inset panel along the bottom of its slot (its content is StageDock's), 8px in
-   from the window's edges (part of its declared need). */
-.vs-stagelayout-dock-cell {
-  z-index: var(--vs-stagelayout-z-panel);
+/* The corner toasts (Home's): stacked at the bottom right, over the picture, clear of the
+   controls' rows, shown whether the controls are or not. */
+.vs-stagelayout-toasts {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--vs-stagelayout-toast-lift);
+  z-index: var(--vs-stagelayout-z-toasts);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  min-width: 0;
-  min-height: 0;
-  padding: 0 var(--space-2) var(--space-2);
-}
-.vs-stagelayout .lib-region.vs-stagelayout-dock {
-  min-width: 0;
-}
-/* StageDock keeps its own padding: the region's inset is the plate's. */
-.vs-stagelayout-dock > .lib-region__body {
-  padding: 0;
-}
-/* The warning owed: the controls wait for "I understand". */
-.vs-stagelayout[data-warning] .vs-stagelayout-dock-cell,
-.vs-stagelayout[data-warning] .vs-stagelayout-crate-cell {
-  opacity: 0.4;
-}
-
-/* Panels hidden: only the picture, and along the bottom a strip that paints nothing until the
-   pointer nears it, then a quiet capsule: \ for controls. It shows at once (nothing animates). */
-.vs-stagelayout-peek {
-  z-index: var(--vs-stagelayout-z-panel);
-  display: flex;
   align-items: flex-end;
-  justify-content: center;
-  /* Its 96px is its declared need (StageLayout.tsx's PEEK). */
-  padding-bottom: var(--space-4);
-  box-sizing: border-box;
+  gap: var(--space-2);
+  max-width: min(calc(var(--space-6) * 12), calc(100% - 2 * var(--space-4)));
+  pointer-events: none;
 }
-.vs-stagelayout .lib-layer.vs-stagelayout-hint-face {
-  border-radius: var(--radius-pill);
-  opacity: 0;
+.vs-stagelayout-toasts:empty {
+  display: none;
 }
-.vs-stagelayout-peek:hover .vs-stagelayout-hint-face,
-.vs-stagelayout-hint-face:has(:focus-visible) {
-  opacity: 1;
-}
-.vs-stagelayout-hint {
-  margin: 0;
-  padding: var(--space-1) var(--space-3);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--vs-caption-raised);
-  cursor: pointer;
-  user-select: none;
-}
-/* The key: a strong, tabular Text in the readout face at the hint's size. */
-.vs-stagelayout-hint-key {
-  color: var(--text-1);
-  font-family: var(--font-readout);
-}
-.vs-stagelayout-hint:focus-visible {
-  outline: 2px solid var(--vs-focus-ring);
-  outline-offset: 0;
+.vs-stagelayout-toasts > * {
+  pointer-events: auto;
 }
 
 /* Esc held to leave live: over everything in this window (never the output), an opaque card in
    the picture's middle with a ring filling over the hold and the line to keep holding. It shows
-   after a beat (no fade), so a short Esc (showing the panels) flashes nothing; the ring fills from
-   the press all the same. Presses go through to what's under it. */
+   after a beat (no fade), so a short Esc flashes nothing; the ring fills from the press all the
+   same. Presses go through to what's under it. */
 .vs-stagelayout-leaving {
   --vs-stagelayout-hold: 3s; /* set inline: LEAVE_HOLD_MS */
   position: absolute;

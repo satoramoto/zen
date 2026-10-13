@@ -7,17 +7,17 @@ import { VISUALS_GLOBALS, visualsBeforeEach, withVisualsFrame } from '../fixture
 import { Live } from './Live';
 
 /**
- * Live mode, whole, as `App` shows it: the Stage — the picture full-bleed, the
- * header's two capsules along the top, the crate down the left (docked from
- * 1100 px), the dock along the bottom. It plays in the window on the way in,
- * "Go full screen on…" over the picture until a display is picked (only a start
- * in live mode, `windowed` false, opens the output by itself). `\` hides the
- * panels and shows them again; ? lists every control. The parts have stories of
- * their own (Live/Stage…); the pads are the dock's.
+ * Live mode, whole, as `App` shows it: the Stage — the picture full-bleed,
+ * and over it, on hover, the header's bare type along the top and Home's
+ * floating transport with the effects' row under it. No sidebar, no dock bar.
+ * It plays in the window on the way in, "Go full screen on…" a toast in the
+ * corner until a display is picked (only a start in live mode, `windowed`
+ * false, opens the output by itself). `\` pins the controls shown; ? lists
+ * every control. The parts have stories of their own (Live/Stage…).
  */
 /**
  * The fluid window (`parameters.frame: 'fill'`): the Stage fills the canvas at its real size, as
- * the app fills its window, so the crate docks (from 1100 px) when the canvas is that wide.
+ * the app fills its window.
  */
 const WINDOW = 'fill' as const;
 
@@ -43,19 +43,58 @@ type Story = StoryObj<typeof meta>;
 
 /** Live's root: what it is doing, as data (it takes no box of its own). */
 const root = (el: HTMLElement) => el.querySelector<HTMLElement>('.vs-live')!;
+/** The one overlay over the picture (the header and the controls), and whether it shows. */
+const reveal = (el: HTMLElement) => el.querySelector<HTMLElement>('.vs-stagelayout-reveal')!;
+const shows = (el: HTMLElement) => waitFor(() => expect(getComputedStyle(reveal(el)).opacity).toBe('1'));
 
-/** Playing Warm-up with Link on (two peers, 124 BPM), the output put on the projector from the offer; `\` hides the panels and shows them again. */
+/**
+ * Playing Warm-up with Link on (two peers, 124 BPM), the output put on the projector from the
+ * corner toast; focus in the controls shows them (as hovering the window does); `\` pins them
+ * shown and lets them go.
+ */
 export const Playing: Story = {
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     await waitFor(() => expect(root(canvasElement)).toBeInTheDocument());
-    // Going live plays in the window, with two displays too, until one is picked.
+    // No sidebar in live.
+    await expect(canvasElement.querySelector('nav')).toBeNull();
+    // Going live plays in the window, with two displays too, until one is picked: the offer is a corner toast.
     await waitFor(() => expect(root(canvasElement).dataset.windowed).toBe(''));
-    await userEvent.click(await within(canvasElement).findByRole('button', { name: 'Go full screen on Projector (HDMI)' }));
+    const go = await canvas.findByRole('button', { name: 'Go full screen on Projector (HDMI)' });
+    await expect(go.closest('.vs-stagelayout-toasts')).not.toBeNull();
+    await userEvent.click(go);
     await waitFor(() => expect(root(canvasElement).dataset.windowed).toBeUndefined());
+    // The controls show while focus is in them.
+    canvas.getByRole('button', { name: 'next preset' }).focus();
+    await shows(canvasElement);
+    (document.activeElement as HTMLElement | null)?.blur();
     await userEvent.keyboard('\\');
-    await waitFor(() => expect(root(canvasElement).dataset.panels).toBe('hidden'));
+    await waitFor(() => expect(root(canvasElement).dataset.pinned).toBe(''));
+    await shows(canvasElement);
     await userEvent.keyboard('\\');
-    await waitFor(() => expect(root(canvasElement).dataset.panels).toBeUndefined());
+    await waitFor(() => expect(root(canvasElement).dataset.pinned).toBeUndefined());
+  },
+};
+
+/** Pinned shown (`\`) at 1440 × 900, to judge the overlay's look. */
+export const PinnedWide: Story = {
+  name: 'Pinned, 1440 × 900',
+  parameters: { frame: { w: 1440, h: 900 } },
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(root(canvasElement)).toBeInTheDocument());
+    await userEvent.keyboard('\\');
+    await shows(canvasElement);
+  },
+};
+
+/** Pinned shown at 1000 × 700. */
+export const PinnedNarrow: Story = {
+  name: 'Pinned, 1000 × 700',
+  parameters: { frame: { w: 1000, h: 700 } },
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(root(canvasElement)).toBeInTheDocument());
+    await userEvent.keyboard('\\');
+    await shows(canvasElement);
   },
 };
 
@@ -64,7 +103,7 @@ export const Busy: Story = {
   parameters: { world: { fx: FX_BUSY, lists: { ...LISTS, deck: { ...PLAYING_DECK, hold: true } } } },
 };
 
-/** One display: played in the window, the offer to cover it with the picture over it. */
+/** One display: played in the window, the toast offering to cover it with the picture. */
 export const OneDisplay: Story = {
   parameters: { world: { displays: [{ id: 1, index: 0, name: 'Built-in Retina Display', width: 3024, height: 1964, main: true }] } },
   play: async ({ canvasElement }) => {

@@ -1,40 +1,36 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
-import { useParamGesture } from '../../components/core/Param/useParamGesture';
+import { Slider } from '../../components/core/Slider/Slider';
 import { Group } from '../../layout/Group';
 import { useForm, type Forms, type Length } from '../../layout/assembly';
-import { Layer } from '../../layout/Layer';
+import { Surface } from '../../primitives/Surface';
 import { Text } from '../../primitives/Text';
-import { padKey, titleOf, type ControlId } from '../HelpOverlay/HelpOverlay';
+import { titleOf, type ControlId } from '../HelpOverlay/HelpOverlay';
 import { Icon, type IconName } from '../Icon/Icon';
 import { range } from '../model/controls';
 import * as fx from '../model/fx';
-import { playsFrom, presetLength } from '../model/home';
-import { nextName, nextWhenText, openEffects, padLabel, saysWhere, starsText, whereSr, whereText, type LiveState } from '../model/live-model';
+import { movesByItself, playsFrom, presetLength } from '../model/home';
+import { openEffects, padLabel, type LiveState } from '../model/live-model';
 import { nameOf, notice } from '../model/shell';
 import type { StageDockProps } from '../model/stage-model';
-import { useLinkFrame } from '../model/useLive';
-import { say, Say } from '../model/words';
 import { SilenceBanner } from '../Onboarding/Onboarding';
 import { TransportBar, type TransportBarProps } from '../TransportBar/TransportBar';
 import { NoticeBanner } from '../Views/Views';
 import './StageDock.css';
 
-export type StageDockForm = 'full' | 'compact' | 'stacked';
+export type StageDockForm = 'full' | 'stacked';
 
-/** Two lines: the transport bar (64px), the row (44px) and the 6px foot. */
-const H2: Length = { space: [6, 6, 6, 3], unit: 1.5 };
-/** Three lines: the row wraps once more (another 44px). */
-const H3: Length = { space: [6, 6, 6, 3, 6, 3], unit: 1.5 };
+/** The controls over the picture under the header: the preset's two lines, the keys' row and the effects' row (150px at the least). */
+const H_ONE: Length = { control: 5 };
+/** The effects' row wrapped once (another 30px). */
+const H_TWO: Length = { control: 6 };
 
-/** what the dock's content needs (no outer insets: StageLayout adds those) */
+/** what the controls over the picture need (no outer insets: StageLayout adds those) */
 export const STAGE_DOCK_FORMS: Forms<StageDockForm> = [
-  // full: the keys' and the fader's names shown — 940px, where the original's container query took them away
-  { id: 'full', min: { w: { unit: 235 }, h: H2 }, ideal: { w: { unit: 235 }, h: H2 }, grow: { w: true } },
-  // compact: names gone, values kept — the original's 940 → 700 band
-  { id: 'compact', min: { w: { unit: 175 }, h: H2 }, ideal: { w: { unit: 175 }, h: H2 }, grow: { w: true } },
-  // stacked: Next on its own line, the effects under it
-  { id: 'stacked', min: { w: { control: 10 }, h: H3 }, ideal: { w: { control: 10 }, h: H3 }, grow: { w: true } },
+  // full: the effects, Intensity and More effects… on one row under the transport's keys — 700px
+  { id: 'full', min: { w: { unit: 175 }, h: H_ONE }, ideal: { w: { unit: 175 }, h: H_ONE }, grow: { w: true, h: true } },
+  // stacked: the effect keys on one row, Intensity and More effects… on the next
+  { id: 'stacked', min: { w: { control: 10 }, h: H_TWO }, ideal: { w: { control: 10 }, h: H_TWO }, grow: { w: true, h: true } },
 ];
 
 /** Intensity's range: 0–1, a double-click back to the middle (1× sensitivity), as Live's slider had it. */
@@ -53,101 +49,38 @@ function useElapsed(current: string | null, since: number, length: number | null
 }
 
 /**
- * Home's transport bar driving the deck: a click on the auto-change ring is
- * HOLD (the preset stays, as the H key and today's Hold pad have it), ◀ ▶ step,
- * R random, the preset playing and where from, the audio input.
+ * Home's floating transport driving the deck, with the props Home passes: the auto-change ring is
+ * HOLD (H; its tooltip says whether and when it moves on), ◀ ▶ step, the dice random, the preset
+ * playing and where from at the picture's top left, its star at the top right, the audio input.
  */
 function useTransport(live: LiveState): TransportBarProps {
   const deck = live.deck;
   const position = useElapsed(live.current, live.since, deck ? presetLength({ ...deck, hold: live.held }) : null);
   const name = live.current ? nameOf(live.current) : null;
   return {
+    layout: 'overlay',
     playing: !live.held,
     onPlayPause: () => live.actFx({ kind: 'hold', on: null }),
     onStep: (by) => live.act({ kind: by === -1 ? 'previous' : by === 1 ? 'next' : 'random' }),
     stepIn: deck?.playlist ? ' in the playlist' : '',
     position,
+    moves: deck ? movesByItself(deck) : false,
     onAudioError: (e) => live.setError(notice("Couldn't use that audio input.", e)),
     now: name ? { name, from: deck && live.lists ? playsFrom(deck, live.lists.playlists) : undefined } : null,
+    star: live.current && live.key ? { on: live.star, onToggle: live.favourite } : null,
   };
 }
 
-/** When the next preset comes: its own leaf, as Link's frames come ten times a second. */
-function NextWhen({ deck }: { deck: LiveState['deck'] }) {
-  const when = nextWhenText(useLinkFrame(), deck, Date.now());
-  // Set apart from the name by a dot (and a comma for screen readers), and named in its tooltip: "every 30 s" is when it changes.
-  return when ? (
-    <Text as="em" role="caption" leading="normal" tabular className="vs-stagedock-when" title={`When the next preset comes: ${when}`}>
-      <span className="vs-stagedock-sr">, changes </span>
-      {when}
-    </Text>
-  ) : null;
-}
-
-/** The deck's Next line, with HOLD, the favourite's star and the rating before it: what the transport's now line doesn't say. */
-function NextLine({ live }: { live: LiveState }) {
-  const next = nextName(live.says);
-  const says = live.says;
-  const item = says.kind === 'item' || says.kind === 'filter' ? says.item : null;
-  return (
-    <div className="vs-stagedock-next">
-      {live.held && (
-        <Text
-          weight="strong"
-          leading="normal"
-          className="vs-stagedock-held"
-          title={`${Say('hold')}: this preset stays — ${say('auto-advance')} and Link's changes wait until you let go (H)`}
-        >
-          Hold
-        </Text>
-      )}
-      {live.star && (
-        <span className="vs-stagedock-star" title="A favourite (L takes the star off)" role="img" aria-label="favourite">
-          <Icon name="star" size={12} />
-        </span>
-      )}
-      {live.rating !== null && (
-        <Text
-          leading="normal"
-          className="vs-stagedock-rating"
-          title={`Rated ${live.rating} of 5 (press ${live.rating} again to take it off)`}
-          ariaRole="img"
-          aria-label={`rated ${live.rating} of 5`}
-        >
-          {starsText(live.rating)}
-        </Text>
-      )}
-      <Text as="p" leading="normal" className="vs-stagedock-next-line" title={`${titleOf('next')}. ${whereText(live.up, live.deck)}`}>
-        <Text weight="strong" leading="normal" className="vs-stagedock-next-label">
-          Next
-        </Text>
-        <span className="vs-stagedock-sr">: </span>
-        {item ? (
-          <span className="vs-stagedock-next-name" data-missing={item.missing ? '' : undefined} title={item.missing ? `Not in the library any more: ${item.path}` : item.path}>
-            {item.missing ? <s>{item.name}</s> : item.name}
-            {item.missing && <span className="vs-stagedock-sr"> — missing from the library, it won't open</span>}
-          </span>
-        ) : (
-          <span className="vs-stagedock-quiet">{next.text}</span>
-        )}
-        {saysWhere(says, live.up, live.deck) && <span className="vs-stagedock-sr">{whereSr(live.up, live.deck)}</span>}
-        {says.kind !== 'held' && live.deck && <NextWhen deck={live.deck} />}
-      </Text>
-    </div>
-  );
-}
-
 /**
- * **Job.** One effect key: a glyph, its name and its key letter, as one button
- * (the name and letter quiet, its accessible name the help list's with its
- * keys). `on` makes it a toggle (`aria-pressed`). With `hold` it is a held
- * effect: on while the pointer is down, off when it comes up or leaves;
- * Shift-click latches; from the keyboard (Enter or Space) it toggles.
+ * **Job.** One effect key: its glyph and its name, as one quiet button (its key letter in the
+ * tooltip and its accessible name, the help list's). `on` makes it a toggle (`aria-pressed`), the
+ * name white and the glyph in the accent while on. With `hold` it is a held effect: on while the
+ * pointer is down, off when it comes up or leaves; Shift-click latches; from the keyboard (Enter or
+ * Space) it toggles.
  *
- * **Changed.** The face is the core `ButtonFace` in the quiet tone: no key until
- * pointed at, pressed in and lit in the accent while on.
+ * **Changed.** No key letter under the name (the tooltip has it); no key until pointed at.
  *
- * **Kept.** Its props, the hold gesture, the names, tooltips and key letters.
+ * **Kept.** Its props, the hold gesture, the names and tooltips.
  */
 export function EffectKey({
   id,
@@ -170,7 +103,6 @@ export function EffectKey({
     pressed.current = false;
     hold.send(fx.hitAction(hold.kind, false));
   };
-  const key = padKey(id);
   return (
     <ButtonFace
       tone="quiet"
@@ -209,120 +141,95 @@ export function EffectKey({
       <Text size="label" leading="tight" className="vs-stagedock-key-name">
         {name}
       </Text>
-      {key && (
-        <Text as="small" size="label" leading="tight" className="vs-stagedock-key-letter" aria-hidden="true">
-          {key}
-        </Text>
-      )}
     </ButtonFace>
   );
 }
 
 /**
- * Intensity: one fader (sensitivity, brightness and strobe level together),
- * the transport's thin track. The core gesture, as Live's slider had it: grab
- * and drag (a modifier for fine), arrows, Page Up/Down, Home and End (the
- * arrows aren't also a preset step), a double-click back to the middle.
- */
-function IntensityFader({ live }: { live: LiveState }) {
-  const pct = Math.round(live.intensity * 100);
-  const gesture = useParamGesture({
-    param: INTENSITY,
-    value: live.intensity,
-    onChange: live.setIntensity,
-    axis: 'horizontal',
-    anchor: 'pointer',
-    travel: 'element',
-    label: 'Intensity',
-    display: `${pct}%`,
-  });
-  return (
-    <Text
-      as="div"
-      leading="normal"
-      className="vs-stagedock-fader"
-      title={titleOf('intensity')}
-      style={{ '--vs-stagedock-fill': `${gesture.fraction * 100}%` } as CSSProperties}
-    >
-      <span className="vs-stagedock-fader-name" aria-hidden="true">
-        Intensity
-      </span>
-      <div className="vs-stagedock-fader-track" {...gesture.props}>
-        <span className="vs-stagedock-fader-thumb" aria-hidden="true" />
-      </div>
-      <Text role="caption" leading="normal" tabular className="vs-stagedock-fader-value vs-num" aria-hidden="true">
-        {pct}%
-      </Text>
-    </Text>
-  );
-}
-
-/**
- * **Job.** The Stage's dock along the bottom (see `StageDockProps`): Home's
- * transport bar (pause is HOLD, ◀ ▶ step, R random, the time on the preset, the
- * audio input, a warning only while the picture draws slowly) and a row under
- * it: the Next line (with HOLD, the star and the rating), the effect keys
- * (strobe and freeze held, blackout a toggle), Intensity and More effects…. The
- * notice, and the silence banner when the music stops, show over them. The
- * shell places it and paints its panel (the "Live controls" region); the dock is
- * its contents.
+ * **Job.** Live's controls over the picture (see `StageDockProps`), under the header: Home's
+ * floating transport (`TransportBar layout="overlay"`: the preset and where it plays from at the
+ * top left, its star at the top right, ◀ the auto-change ring ▶ the dice and the audio input at the
+ * foot), and under its keys a second line: Strobe, Blackout and Freeze (strobe and freeze held,
+ * blackout a toggle), Intensity as an Apple slider row and More effects…. The shell places it and
+ * fades it in with the header (StageLayout); this paints nothing.
  *
- * **Changed.** The effect keys are a layout `Group` (named "Effects", no visible
- * label) of core `ButtonFace`s; More effects… a quiet `ButtonFace`; Intensity runs
- * on the core `useParamGesture` (the widgets' gesture). The notice and the hint
- * float above the dock as `top` layers (toasts), opaque in the Stage's scope; the
- * silence banner is the sibling's own. Sizes are the scale's. The narrow-dock
- * steps are forms (`STAGE_DOCK_FORMS`, `StageDock.forms`: full → compact →
- * stacked) the assembled screen picks, or the `form` prop, drawn off
- * `data-form`, in place of the container queries at 940 and 700 px.
+ * **Changed.** No dock bar: it floats over the picture on the shell's scrim. HOLD is the ring (its
+ * tooltip says whether and when it moves on), so the Hold pill, the Next line, its "in N beats"
+ * and the rating chips are gone. Intensity is the core `Slider` (`layout="row"`: its gestures and
+ * keys); More effects… is the mixer glyph. The forms are `full` (one effects row) and `stacked`
+ * (two), from the room the shell gives it (`STAGE_DOCK_FORMS`), or the `form` prop.
  *
- * **Kept.** The props, `EffectKey`, every name, tooltip and screen-reader line,
- * what each narrow-dock step shows (compact: the names gone, the values kept;
- * stacked: Next on its own line, the effects under it).
- *
- * **Tuning knobs** (StageDock.css):
- * - `--vs-stagedock-on`: the soft accent wash of the Hold pill.
- * - `--vs-stagedock-fill`: Intensity's position along its track, set inline from the gesture.
+ * **Kept.** The props, `EffectKey`, the effects' names, tooltips and keys.
  */
 export function StageDock({ live, form }: StageDockProps & { form?: StageDockForm }) {
   const f = useForm(STAGE_DOCK_FORMS, form);
   const transport = useTransport(live);
   const e = live.effects;
+  const pct = Math.round(live.intensity * 100);
   return (
     <div className="vs-stagedock" data-form={f}>
-      <div className="vs-stagedock-banners">
-        <SilenceBanner />
-        {live.error && (
-          <Layer level="top" as={Text} className="vs-stagedock-banner">
-            <NoticeBanner className="vs-stagedock-notice" notice={live.error} onDismiss={live.dismiss} />
-          </Layer>
-        )}
-        {/* A state, not a failure (Hold keeping the preset, leaving asking for a second press): quiet, polite, no dismiss. */}
-        <Layer level="top" className="vs-stagedock-hint-face" data-hidden={live.hint ? undefined : ''}>
-          <Text as="p" role="caption" leading="normal" className="vs-stagedock-hint" ariaRole="status" hidden={!live.hint}>
-            {live.hint}
-          </Text>
-        </Layer>
-      </div>
       <TransportBar {...transport} />
       <div className="vs-stagedock-row">
-        <NextLine live={live} />
-        <div className="vs-stagedock-fx">
-          <Group className="vs-stagedock-keys" name="Effects" label={false} gap={1}>
-            <EffectKey id="strobe" glyph="strobe" name="Strobe" on={e?.strobe === true} hold={{ kind: 'strobe', send: live.actFx }} />
-            <EffectKey id="blackout" glyph="blackout" name="Blackout" on={e?.blackout === true} onPress={() => live.actFx({ kind: 'blackout', on: null })} />
-            <EffectKey id="freeze" glyph="freeze" name="Freeze" on={e?.freeze === true} hold={{ kind: 'freeze', send: live.actFx }} />
-          </Group>
-          <IntensityFader live={live} />
-          <ButtonFace tone="quiet" className="vs-stagedock-more" onClick={openEffects} title={titleOf('more')}>
-            <Icon name="effects" size={14} />
-            <Text size="label" leading="tight">
-              More effects…
-            </Text>
-          </ButtonFace>
-        </div>
+        <Group className="vs-stagedock-keys" name="Effects" label={false} gap={1}>
+          <EffectKey id="strobe" glyph="strobe" name="Strobe" on={e?.strobe === true} hold={{ kind: 'strobe', send: live.actFx }} />
+          <EffectKey id="blackout" glyph="blackout" name="Blackout" on={e?.blackout === true} onPress={() => live.actFx({ kind: 'blackout', on: null })} />
+          <EffectKey id="freeze" glyph="freeze" name="Freeze" on={e?.freeze === true} hold={{ kind: 'freeze', send: live.actFx }} />
+        </Group>
+        <Slider
+          param={INTENSITY}
+          value={live.intensity}
+          onChange={live.setIntensity}
+          display={`${pct}%`}
+          layout="row"
+          length="auto"
+          fill
+          origin="min"
+          name="Intensity"
+          label="Intensity"
+          title={titleOf('intensity')}
+          className="vs-stagedock-intensity"
+        />
+        <ButtonFace tone="quiet" className="vs-stagedock-more" onClick={openEffects} title={titleOf('more')}>
+          <Icon name="mixer" size={14} />
+          <Text size="label" leading="tight">
+            More effects…
+          </Text>
+        </ButtonFace>
       </div>
     </div>
   );
 }
 StageDock.forms = STAGE_DOCK_FORMS;
+
+/**
+ * **Job.** Live's notices as corner toasts (the shell stacks them at the window's bottom right, as
+ * Home's toast): the silence banner when the music stops, a failure (`live.error`, with its
+ * dismiss) and a quiet state line (`live.hint`, polite, no dismiss). Nothing when there is none.
+ *
+ * **Changed.** They were over the dock's middle; each is now Home's toast: a float `Surface`
+ * (opaque in the Stage's scope) taking the picture's light from the right, in caption type.
+ *
+ * **Kept.** The banners, their roles and copy.
+ */
+export function StageNotices({ live }: { live: LiveState }) {
+  return (
+    <>
+      <SilenceBanner />
+      {live.error && (
+        <Surface layer="float" radius="control" ambient="right" className="vs-stagedock-toast">
+          <Text as="div" size="caption" leading="normal" className="vs-stagedock-toast-type">
+            <NoticeBanner className="vs-stagedock-notice" notice={live.error} onDismiss={live.dismiss} />
+          </Text>
+        </Surface>
+      )}
+      {/* A state, not a failure (Hold keeping the preset, leaving asking for a second press): quiet, polite, no dismiss. */}
+      {live.hint && (
+        <Surface layer="float" radius="control" ambient="right" className="vs-stagedock-toast">
+          <Text as="p" size="caption" leading="normal" className="vs-stagedock-hint" ariaRole="status">
+            {live.hint}
+          </Text>
+        </Surface>
+      )}
+    </>
+  );
+}

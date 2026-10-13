@@ -1,62 +1,54 @@
-/* The Stage's header (StageHead.tsx), from live/stage-head.css: two capsules on the traffic
-   lights' line over the full-bleed picture, in Home's language, and the "Go full screen on…"
-   offer. The capsules are base layers inside the Stage's Opaque scope: the solid tone, no blur
-   (the picture is a native view a blur never reaches). The space between the capsules is the
-   picture's and the title bar's: a drag there moves the window.
+/* The Stage's header (StageHead.tsx): one row of bare type on the window buttons' line over the
+   full-bleed picture, on the shell's scrim, as Home's header is type on its tint. No capsules: the
+   popovers' panels are the only solid layers, opaque in the Stage's scope (a blur never reaches the
+   native picture). The empty line between the switch and the lights is the title bar: a drag
+   there moves the window. And "Go full screen on…" as a corner toast.
 
-   The tuning knobs (--vs-stagehead-*) are listed in StageHead.tsx. */
+   Tuning knobs: none. */
 
 .vs-stagehead {
-  /* The capsules' 36px, centred on the window buttons' line (y 28). */
-  --vs-stagehead-cap-h: calc(var(--space-6) + var(--space-1));
-  /* Their 12px corners. */
-  --vs-stagehead-cap-radius: var(--space-3);
-  /* The offer's 18px corners (the inset panels'). */
-  --vs-stagehead-offer-radius: calc(var(--space-3) * 1.5);
   display: flex;
   flex: 1;
-  align-items: flex-start;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-3);
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  /* The title bar's 52px. */
-  height: calc(var(--space-5) * 2 + var(--space-1));
-  /* The capsules, 36px tall, centred on y 28 (10px down); the shell's row already keeps 8px at the right. */
-  padding: calc(var(--space-2) + var(--space-1) / 2) var(--space-1) 0 var(--space-3);
-  font-family: var(--font-sans);
+  height: 100%;
   color: var(--text-2);
+  font-family: var(--font-sans);
+  white-space: nowrap;
   user-select: none;
   -webkit-user-select: none;
+  pointer-events: auto;
+}
+.vs-stagehead > * {
+  flex: none;
 }
 /* Tauri's drag region takes only presses on the element itself: the spacer lets them through to the header. */
-.vs-stagehead-fill {
+.vs-stagehead > .vs-stagehead-fill {
   flex: 1;
   min-width: 0;
   align-self: stretch;
   pointer-events: none;
 }
-.vs-stagehead .lib-layer.vs-stagehead-cap {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: var(--space-1);
-  min-width: 0;
-  height: var(--vs-stagehead-cap-h);
-  padding: 0 calc(var(--space-1) * 1.5); /* 6px */
-  box-sizing: border-box;
-  border-radius: var(--vs-stagehead-cap-radius);
-  box-shadow: var(--layer-base-edge), var(--layer-float-cast);
-}
-.vs-stagehead .lib-layer.vs-stagehead-cap-trail {
-  flex: 0 1 auto;
+
+/* Home | Live: the theme's plain-text switch, at the row's start. */
+.vs-stagehead-switch {
+  display: inline-flex;
 }
 
-/* The crate's toggle, ? and settings: Home's quiet glyph tools, brighter while what they open shows. */
+/* The camera, ?, settings and ✕: Home's quiet glyph tools, brighter on hover and while what they open shows. */
+.vs-stagehead-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  margin-left: calc(var(--space-1) * -1);
+}
 .vs-stagehead .lib-action-button-face.vs-stagehead-tool {
   width: var(--control-h);
   padding: 0;
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .vs-stagehead .lib-action-button-face.vs-stagehead-tool:hover,
 .vs-stagehead .lib-action-button-face.vs-stagehead-tool[aria-expanded='true'] {
@@ -67,32 +59,32 @@
   outline-offset: 0;
 }
 
-/* Home | Live, just after the toggle. */
-.vs-stagehead-switch {
-  display: inline-flex;
-  margin-left: var(--space-1);
-}
-
-/* The lights: a dot or a glyph and a few words, in the Popover button's own type (a body Text at
-   --vs-text-body, weight 500); the figures are Texts at its size and weight, tabular. */
+/* The lights: a dot and a few words, in the Popover button's own type; the figures are Texts at
+   its size and weight, tabular. */
 .vs-stagehead-num {
   --text-weight: 500;
 }
 .vs-stagehead-light-sub {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1); /* 3px, rounded to the step */
+  gap: var(--space-1);
   color: var(--text-3);
 }
 .vs-stagehead-light-text {
+  display: inline-block;
   max-width: calc(var(--control-h) * 6); /* 180px */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  vertical-align: bottom;
+  color: var(--text-3);
+}
+/* The Output light: white while the picture is on a display, grey while it plays in this window. */
+.vs-stagehead-light-text[data-on] {
+  color: var(--text-1);
 }
 .vs-stagehead-beat-dot {
   flex: none;
-  /* 7px, rounded to the step */
   width: var(--space-2);
   height: var(--space-2);
   border-radius: var(--radius-pill);
@@ -103,91 +95,81 @@
 }
 
 /* The frame rate, only while it is low, and the skipped note, quiet; one line, cut short, its
-   tooltip whole. Both keep Status's own type (--vs-text-label, the caption size). Fading, the
-   note goes at once (nothing animates). */
+   tooltip whole. Fading, the note goes at once. */
 .vs-stagehead-fps {
-  padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--warning);
   white-space: nowrap;
 }
-.vs-stagehead-skipped {
+.vs-stagehead > .vs-stagehead-skipped {
+  flex: 0 1 auto;
   min-width: 0;
   max-width: calc(var(--space-6) * 8 + var(--space-1)); /* 260px */
   overflow: hidden;
-  padding: 0 calc(var(--space-1) * 1.5); /* 6px */
   color: var(--text-4);
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-.vs-stagehead-skipped:empty {
-  padding: 0;
 }
 .vs-stagehead-skipped[data-fading] {
   visibility: hidden;
 }
 
 /* The lights' panels' contents: the popover's float layer is opaque in the Stage's scope, so its
-   captions take the raised step. They take the panel's type (a body Text at --vs-text-body, the
-   body size). */
+   captions take the raised step. */
 .vs-stagehead-pop {
   --text-3: var(--vs-caption-raised);
   display: grid;
   gap: var(--space-3);
   min-width: calc(var(--space-6) * 8 + var(--space-5)); /* 280px */
   padding: var(--space-2);
+  white-space: normal;
 }
-/* Tap tempo, at the top of the Beat panel, fills the line. */
 .vs-stagehead-pop[data-pop='beat'] > :first-child {
   width: 100%;
 }
 
-/* The short form (STAGE_HEAD_FORMS, a narrow window): the words shorten so both capsules keep to one line. */
+/* The short form (STAGE_HEAD_FORMS, a narrow window): the words shorten so the row keeps to one line. */
+.vs-stagehead[data-form='short'] {
+  gap: var(--space-2);
+}
 .vs-stagehead[data-form='short'] .vs-stagehead-light-text {
   max-width: calc(var(--control-h) * 3 + var(--space-4) + var(--space-1)); /* 110px */
 }
-.vs-stagehead[data-form='short'] .vs-stagehead-skipped {
+.vs-stagehead[data-form='short'] > .vs-stagehead-skipped {
   max-width: calc(var(--control-h) * 4); /* 120px */
 }
 
-/* "Go full screen on…": a capsule over the picture while it plays in the window; the shell places it. */
+/* "Go full screen on…": Home's toast (a float Surface), the shell stacks it at the bottom right. */
 .vs-stagehead-offer {
-  display: flex;
-  max-width: calc(var(--space-6) * 18 - var(--space-4)); /* 560px */
-  min-width: 0;
-}
-.vs-stagehead-offer .lib-layer.vs-stagehead-offer-face {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) calc((var(--space-3) + var(--space-4)) / 2); /* 8px 14px */
-  min-width: 0;
-  padding: var(--space-2);
+  max-width: 100%;
   box-sizing: border-box;
-  border-radius: var(--vs-stagehead-offer-radius);
-  box-shadow: var(--layer-base-edge), var(--layer-float-cast);
-  font-family: var(--font-sans);
+}
+.vs-stagehead-offer-body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: var(--space-1);
   color: var(--text-2);
 }
-.vs-stagehead-offer .vs-stagehead-offer-go {
+.vs-stagehead-offer .lib-action-button-face.vs-stagehead-offer-go {
+  justify-content: flex-start;
   gap: var(--space-2);
-  padding: 0 calc((var(--space-3) + var(--space-4)) / 2); /* 14px */
-  border-radius: var(--radius-pill);
+  padding: 0 var(--space-2);
   color: var(--text-2);
-  /* The face is a Text: in the body weight; the display's name a strong Text on its line. */
   --text-weight: var(--weight-body);
 }
 .vs-stagehead-offer .vs-stagehead-offer-name {
   color: var(--text-1);
 }
-.vs-stagehead-offer .vs-stagehead-offer-go:hover {
+.vs-stagehead-offer .lib-action-button-face.vs-stagehead-offer-go:hover {
   color: var(--text-1);
 }
-.vs-stagehead-offer .vs-stagehead-offer-go:focus-visible {
+.vs-stagehead-offer .lib-action-button-face.vs-stagehead-offer-go:focus-visible {
   outline: 2px solid var(--vs-focus-ring);
   outline-offset: 0;
 }
 .vs-stagehead-offer-note {
   margin: 0;
-  padding-right: var(--space-2);
+  padding: var(--space-1) var(--space-2);
   color: var(--text-3);
 }
