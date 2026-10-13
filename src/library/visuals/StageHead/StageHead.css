@@ -2,7 +2,8 @@
    full-bleed picture, on the shell's scrim, as Home's header is type on its tint. No capsules: the
    popovers' panels are the only solid layers, opaque in the Stage's scope (a blur never reaches the
    native picture). The empty line between the switch and the lights is the title bar: a drag
-   there moves the window. And "Go full screen on…" as a corner toast.
+   there moves the window. The notices are quiet words before Beat (no toasts), and "Full screen
+   on…" is in the Output popover.
 
    Tuning knobs: none. */
 
@@ -38,12 +39,53 @@
   display: inline-flex;
 }
 
-/* The camera, ?, settings and ✕: Home's quiet glyph tools, brighter on hover and while what they open shows. */
+/* The mixer, the camera, ?, settings and ✕: Home's quiet glyph tools, in Home's order, brighter on
+   hover and while what they open shows. The mixer is Home's folded audio input (its glyph and
+   meter, the source in its popover). */
 .vs-stagehead-tools {
   display: inline-flex;
   align-items: center;
   gap: 0;
-  margin-left: calc(var(--space-1) * -1);
+}
+.vs-stagehead-tools > .vs-transport-right {
+  margin-right: var(--space-1);
+  /* A label Text, which the audio input inherits. */
+  --text-size: var(--vs-text-label);
+  color: var(--text-3);
+}
+
+/* The hairline between the status area and the icons. */
+.vs-stagehead-rule {
+  align-self: center;
+  width: var(--border-width);
+  height: calc(var(--space-4) + var(--space-1)); /* 20px */
+  background: var(--border);
+}
+
+/* The status area's notes (no toasts): quiet caption words before Beat, one line, cut short. */
+.vs-stagehead > .vs-stagehead-note {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: calc(var(--space-6) * 8 + var(--space-1)); /* 260px */
+  overflow: hidden;
+  color: var(--text-3);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* A failure: its words, and its quiet ✕ to dismiss it. */
+.vs-stagehead > .vs-stagehead-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0;
+  background: none;
+  color: var(--text-2);
+  --text-size: var(--size-caption);
+}
+.vs-stagehead-notice .vs-notice-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .vs-stagehead .lib-action-button-face.vs-stagehead-tool {
   width: var(--control-h);
@@ -82,6 +124,20 @@
 /* The Output light: white while the picture is on a display, grey while it plays in this window. */
 .vs-stagehead-light-text[data-on] {
   color: var(--text-1);
+}
+/* The Output light's dot: the ink while the picture is on a display, quiet while in this window. */
+.vs-stagehead-output-dot {
+  display: inline-block;
+  flex: none;
+  width: var(--space-2);
+  height: var(--space-2);
+  margin-right: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  vertical-align: middle;
+}
+.vs-stagehead-output-dot[data-on] {
+  background: var(--text-1);
 }
 .vs-stagehead-beat-dot {
   flex: none;
@@ -134,21 +190,18 @@
 .vs-stagehead[data-form='short'] .vs-stagehead-light-text {
   max-width: calc(var(--control-h) * 3 + var(--space-4) + var(--space-1)); /* 110px */
 }
-.vs-stagehead[data-form='short'] > .vs-stagehead-skipped {
+.vs-stagehead[data-form='short'] > :is(.vs-stagehead-skipped, .vs-stagehead-note) {
   max-width: calc(var(--control-h) * 4); /* 120px */
 }
 
-/* "Go full screen on…": Home's toast (a float Surface), the shell stacks it at the bottom right. */
+/* "Full screen on…": at the top of the Output popover while the picture plays in this window; the
+   popover's panel is its surface. */
 .vs-stagehead-offer {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-.vs-stagehead-offer-body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0;
-  padding: var(--space-1);
+  margin: 0 calc(var(--space-2) * -1);
   color: var(--text-2);
 }
 .vs-stagehead-offer .lib-action-button-face.vs-stagehead-offer-go {

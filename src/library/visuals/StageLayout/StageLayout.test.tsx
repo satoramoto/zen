@@ -38,20 +38,20 @@ describe('the Stage assembles itself', () => {
     expect(p.regions.dock.rect.h).toBeGreaterThan(780);
   });
 
-  it('1000 × 700: still full', () => {
-    expect(forms(stage(1000, 700))).toMatchObject({ head: 'full', dock: 'full' });
+  it('1000 × 700: the header full, the controls stacked (Effects its glyph alone)', () => {
+    expect(forms(stage(1000, 700))).toMatchObject({ head: 'full', dock: 'stacked' });
   });
-
   it('560 × 800: the header short, the controls stacked', () => {
     expect(forms(stage(560, 800))).toMatchObject({ head: 'short', dock: 'stacked' });
   });
 
-  it('the controls step from full to stacked once, no wider than their 700 and 20px either side allow', () => {
+  it('the controls step from full to stacked once, at about 1060px (their 996 and 32px either side)', () => {
     const dockAt = (w: number) => assemble(stageSpec(), { w, h: 900 }, P).regions.dock.form;
     let from = 0;
-    for (let w = 1000; w >= 560; w--) if (dockAt(w) === 'full') from = w;
-    expect(from).toBeGreaterThanOrEqual(740);
-    for (let w = from; w <= 1000; w += 10) expect(dockAt(w)).toBe('full');
+    for (let w = 1400; w >= 560; w--) if (dockAt(w) === 'full') from = w;
+    expect(from).toBeGreaterThanOrEqual(1050);
+    expect(from).toBeLessThanOrEqual(1070);
+    for (let w = from; w <= 1400; w += 10) expect(dockAt(w)).toBe('full');
     expect(dockAt(from - 1)).toBe('stacked');
   });
 });

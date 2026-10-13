@@ -1,40 +1,31 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ButtonFace } from '../../components/core/ActionButton/ActionButton';
-import { Slider } from '../../components/core/Slider/Slider';
-import { Group } from '../../layout/Group';
 import { useForm, type Forms, type Length } from '../../layout/assembly';
-import { Surface } from '../../primitives/Surface';
 import { Text } from '../../primitives/Text';
-import { titleOf, type ControlId } from '../HelpOverlay/HelpOverlay';
-import { Icon, type IconName } from '../Icon/Icon';
-import { range } from '../model/controls';
-import * as fx from '../model/fx';
+import { EFFECTS_PANEL_ID } from '../EffectsPanel/EffectsPanel';
+import { titleOf } from '../HelpOverlay/HelpOverlay';
+import { Icon } from '../Icon/Icon';
 import { movesByItself, playsFrom, presetLength } from '../model/home';
-import { openEffects, padLabel, type LiveState } from '../model/live-model';
+import type { LiveState } from '../model/live-model';
 import { nameOf, notice } from '../model/shell';
 import type { StageDockProps } from '../model/stage-model';
-import { SilenceBanner } from '../Onboarding/Onboarding';
 import { TransportBar, type TransportBarProps } from '../TransportBar/TransportBar';
-import { NoticeBanner } from '../Views/Views';
 import './StageDock.css';
 
 export type StageDockForm = 'full' | 'stacked';
 
-/** The controls over the picture under the header: the preset's two lines, the keys' row and the effects' row (150px at the least). */
+/** The controls over the picture under the header: the preset's two lines at the top, the one row at the foot (150px at the least). */
 const H_ONE: Length = { control: 5 };
-/** The effects' row wrapped once (another 30px). */
+/** The preset's name wrapped once (another 30px). */
 const H_TWO: Length = { control: 6 };
 
 /** what the controls over the picture need (no outer insets: StageLayout adds those) */
 export const STAGE_DOCK_FORMS: Forms<StageDockForm> = [
-  // full: the effects, Intensity and More effects… on one row under the transport's keys — 700px
-  { id: 'full', min: { w: { unit: 175 }, h: H_ONE }, ideal: { w: { unit: 175 }, h: H_ONE }, grow: { w: true, h: true } },
-  // stacked: the effect keys on one row, Intensity and More effects… on the next
+  // full: Effects with its word on the row's left, ◀ ring ▶ dead centre, the dice and star at the right, clear of one another — 996px (a 1060px window less the 32px either side)
+  { id: 'full', min: { w: { unit: 249 }, h: H_ONE }, ideal: { w: { unit: 249 }, h: H_ONE }, grow: { w: true, h: true } },
+  // stacked: Effects its glyph alone, so the row keeps to one line in a narrow window
   { id: 'stacked', min: { w: { control: 10 }, h: H_TWO }, ideal: { w: { control: 10 }, h: H_TWO }, grow: { w: true, h: true } },
 ];
-
-/** Intensity's range: 0–1, a double-click back to the middle (1× sensitivity), as Live's slider had it. */
-const INTENSITY = range('intensity', 0, 1, 0.5);
 
 /** Seconds on the preset playing, ticking each second while one plays, from when it opened (`since`, ms; a re-open of the same preset restarts it); null while nothing plays. */
 function useElapsed(current: string | null, since: number, length: number | null): TransportBarProps['position'] {
@@ -49,9 +40,10 @@ function useElapsed(current: string | null, since: number, length: number | null
 }
 
 /**
- * Home's floating transport driving the deck, with the props Home passes: the auto-change ring is
- * HOLD (H; its tooltip says whether and when it moves on), ◀ ▶ step, the dice random, the preset
- * playing and where from at the picture's top left, its star at the top right, the audio input.
+ * Home's floating transport driving the deck: the auto-change ring is HOLD (H; its tooltip says
+ * whether and when it moves on), ◀ ▶ step, the dice random, the preset playing and where from at
+ * the picture's top left; the dice and star at the foot's right end (`footStar`), ◀ ring ▶ dead
+ * centre, no audio input (it is in the header, as Home's).
  */
 function useTransport(live: LiveState): TransportBarProps {
   const deck = live.deck;
@@ -59,6 +51,10 @@ function useTransport(live: LiveState): TransportBarProps {
   const name = live.current ? nameOf(live.current) : null;
   return {
     layout: 'overlay',
+    audio: false,
+    diceByStar: true,
+    centreKeys: true,
+    footStar: true,
     playing: !live.held,
     onPlayPause: () => live.actFx({ kind: 'hold', on: null }),
     onStep: (by) => live.act({ kind: by === -1 ? 'previous' : by === 1 ? 'next' : 'random' }),
@@ -71,165 +67,64 @@ function useTransport(live: LiveState): TransportBarProps {
   };
 }
 
-/**
- * **Job.** One effect key: its glyph and its name, as one quiet button (its key letter in the
- * tooltip and its accessible name, the help list's). `on` makes it a toggle (`aria-pressed`), the
- * name white and the glyph in the accent while on. With `hold` it is a held effect: on while the
- * pointer is down, off when it comes up or leaves; Shift-click latches; from the keyboard (Enter or
- * Space) it toggles.
- *
- * **Changed.** No key letter under the name (the tooltip has it); no key until pointed at.
- *
- * **Kept.** Its props, the hold gesture, the names and tooltips.
- */
-export function EffectKey({
-  id,
-  glyph,
-  name,
-  on,
-  onPress,
-  hold,
-}: {
-  id: ControlId;
-  glyph: IconName;
-  name: string;
-  on: boolean;
-  onPress?(): void;
-  hold?: { kind: fx.Hit; send(action: fx.FxAction): void };
-}) {
-  const pressed = useRef(false);
-  const release = () => {
-    if (!hold || !pressed.current) return;
-    pressed.current = false;
-    hold.send(fx.hitAction(hold.kind, false));
-  };
-  return (
-    <ButtonFace
-      tone="quiet"
-      className="vs-stagedock-key"
-      data-pad={id}
-      aria-pressed={on}
-      aria-label={padLabel(id, name)}
-      title={titleOf(id)}
-      onClick={hold ? undefined : onPress}
-      onPointerDown={
-        hold
-          ? (e) => {
-              if (e.button !== 0) return;
-              if (e.shiftKey) return hold.send(fx.hitAction(hold.kind, null));
-              pressed.current = true;
-              e.currentTarget.setPointerCapture?.(e.pointerId);
-              hold.send(fx.hitAction(hold.kind, true));
-            }
-          : undefined
-      }
-      onPointerUp={hold ? release : undefined}
-      onPointerCancel={hold ? release : undefined}
-      onLostPointerCapture={hold ? release : undefined}
-      onKeyDown={
-        hold
-          ? (e) => {
-              if (e.key !== 'Enter' && e.key !== ' ') return;
-              e.preventDefault();
-              e.stopPropagation();
-              if (!e.repeat) hold.send(fx.hitAction(hold.kind, null));
-            }
-          : undefined
-      }
-    >
-      <Icon name={glyph} />
-      <Text size="label" leading="tight" className="vs-stagedock-key-name">
-        {name}
-      </Text>
-    </ButtonFace>
-  );
-}
+/** The props the Stage's controls take: live, and the effects panel's toggle. */
+export type StageDockOwnProps = StageDockProps & {
+  form?: StageDockForm;
+  /** Whether the effects panel is open: the Effects button pressed, the preset's name clear of the panel. */
+  effectsOpen?: boolean;
+  /** The Effects button (as E): open the effects panel, or close it. Left out: no Effects button. */
+  onEffects?: () => void;
+};
 
 /**
  * **Job.** Live's controls over the picture (see `StageDockProps`), under the header: Home's
- * floating transport (`TransportBar layout="overlay"`: the preset and where it plays from at the
- * top left, its star at the top right, ◀ the auto-change ring ▶ the dice and the audio input at the
- * foot), and under its keys a second line: Strobe, Blackout and Freeze (strobe and freeze held,
- * blackout a toggle), Intensity as an Apple slider row and More effects…. The shell places it and
- * fades it in with the header (StageLayout); this paints nothing.
+ * floating transport (`TransportBar layout="overlay"`) with the preset and where it plays from at
+ * the top left and, at the foot, one row on one line: Effects (the spark and its word, E) on the
+ * left, ◀ the auto-change ring ▶ dead centre, the dice and star on the right. Effects opens the
+ * Stage's effects panel (`EffectsPanel`, which the shell docks at the left) and is pressed while it
+ * shows; the preset's name then moves right, clear of it. The shell places this and fades it in
+ * with the header (StageLayout); this paints nothing.
  *
- * **Changed.** No dock bar: it floats over the picture on the shell's scrim. HOLD is the ring (its
- * tooltip says whether and when it moves on), so the Hold pill, the Next line, its "in N beats"
- * and the rating chips are gone. Intensity is the core `Slider` (`layout="row"`: its gestures and
- * keys); More effects… is the mixer glyph. The forms are `full` (one effects row) and `stacked`
- * (two), from the room the shell gives it (`STAGE_DOCK_FORMS`), or the `form` prop.
+ * **Changed.** Design C: the effects' row (Strobe, Blackout, Freeze, Intensity, More effects…) is
+ * gone from the foot; the effects are all in the panel. The dice and star sit at the foot's right
+ * end, not the picture's top right. The forms are `full` (Effects with its word) and `stacked` (a
+ * narrow window: Effects its glyph alone), from the room the shell gives it (`STAGE_DOCK_FORMS`),
+ * or the `form` prop. `EffectKey` and the corner toasts (`StageNotices`) are gone: the notices are
+ * quiet words in the header (StageHead).
  *
- * **Kept.** The props, `EffectKey`, the effects' names, tooltips and keys.
+ * **Kept.** The props, the transport's keys, names and tooltips, HOLD as the ring.
+ *
+ * **Tuning knobs** (StageDock.css): `--vs-stagedock-clear`, how far the preset's name moves right
+ * while the effects panel shows (368px: the panel's 340 and its 20px inset, less the dock's own
+ * 32px, plus 8 so the name stays on the 40px margin's line beside it).
  */
-export function StageDock({ live, form }: StageDockProps & { form?: StageDockForm }) {
+export function StageDock({ live, form, effectsOpen = false, onEffects }: StageDockOwnProps) {
   const f = useForm(STAGE_DOCK_FORMS, form);
   const transport = useTransport(live);
-  const e = live.effects;
-  const pct = Math.round(live.intensity * 100);
+  const effects = onEffects && (
+    <ButtonFace
+      tone="quiet"
+      className="vs-stagedock-effects"
+      aria-label="Effects"
+      aria-expanded={effectsOpen}
+      aria-controls={EFFECTS_PANEL_ID}
+      aria-keyshortcuts="E"
+      title={titleOf('effects')}
+      onClick={onEffects}
+    >
+      <Icon name="effects" />
+      <Text size="label" weight="strong" leading="tight" className="vs-stagedock-effects-word" aria-hidden="true">
+        Effects
+      </Text>
+      <Text as="small" role="numeral" weight="body" className="vs-stagedock-effects-key" aria-hidden="true">
+        E
+      </Text>
+    </ButtonFace>
+  );
   return (
-    <div className="vs-stagedock" data-form={f}>
-      <TransportBar {...transport} />
-      <div className="vs-stagedock-row">
-        <Group className="vs-stagedock-keys" name="Effects" label={false} gap={1}>
-          <EffectKey id="strobe" glyph="strobe" name="Strobe" on={e?.strobe === true} hold={{ kind: 'strobe', send: live.actFx }} />
-          <EffectKey id="blackout" glyph="blackout" name="Blackout" on={e?.blackout === true} onPress={() => live.actFx({ kind: 'blackout', on: null })} />
-          <EffectKey id="freeze" glyph="freeze" name="Freeze" on={e?.freeze === true} hold={{ kind: 'freeze', send: live.actFx }} />
-        </Group>
-        <Slider
-          param={INTENSITY}
-          value={live.intensity}
-          onChange={live.setIntensity}
-          display={`${pct}%`}
-          layout="row"
-          length="auto"
-          fill
-          origin="min"
-          name="Intensity"
-          label="Intensity"
-          title={titleOf('intensity')}
-          className="vs-stagedock-intensity"
-        />
-        <ButtonFace tone="quiet" className="vs-stagedock-more" onClick={openEffects} title={titleOf('more')}>
-          <Icon name="mixer" size={14} />
-          <Text size="label" leading="tight">
-            More effects…
-          </Text>
-        </ButtonFace>
-      </div>
+    <div className="vs-stagedock" data-form={f} data-panel={effectsOpen ? '' : undefined}>
+      <TransportBar {...transport} lead={effects} />
     </div>
   );
 }
 StageDock.forms = STAGE_DOCK_FORMS;
-
-/**
- * **Job.** Live's notices as corner toasts (the shell stacks them at the window's bottom right, as
- * Home's toast): the silence banner when the music stops, a failure (`live.error`, with its
- * dismiss) and a quiet state line (`live.hint`, polite, no dismiss). Nothing when there is none.
- *
- * **Changed.** They were over the dock's middle; each is now Home's toast: a float `Surface`
- * (opaque in the Stage's scope) taking the picture's light from the right, in caption type.
- *
- * **Kept.** The banners, their roles and copy.
- */
-export function StageNotices({ live }: { live: LiveState }) {
-  return (
-    <>
-      <SilenceBanner />
-      {live.error && (
-        <Surface layer="float" radius="control" ambient="right" className="vs-stagedock-toast">
-          <Text as="div" size="caption" leading="normal" className="vs-stagedock-toast-type">
-            <NoticeBanner className="vs-stagedock-notice" notice={live.error} onDismiss={live.dismiss} />
-          </Text>
-        </Surface>
-      )}
-      {/* A state, not a failure (Hold keeping the preset, leaving asking for a second press): quiet, polite, no dismiss. */}
-      {live.hint && (
-        <Surface layer="float" radius="control" ambient="right" className="vs-stagedock-toast">
-          <Text as="p" size="caption" leading="normal" className="vs-stagedock-hint" ariaRole="status">
-            {live.hint}
-          </Text>
-        </Surface>
-      )}
-    </>
-  );
-}

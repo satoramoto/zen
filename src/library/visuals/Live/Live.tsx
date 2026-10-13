@@ -5,8 +5,9 @@ import { useTauriEvent } from '../model/hooks';
 import { useLiveKeys } from '../model/liveKeys';
 import * as output from '../model/output';
 import { useLive } from '../model/useLive';
-import { StageDock, StageNotices } from '../StageDock/StageDock';
-import { FullScreenOffer, StageHead } from '../StageHead/StageHead';
+import { EffectsPanel } from '../EffectsPanel/EffectsPanel';
+import { StageDock } from '../StageDock/StageDock';
+import { StageHead } from '../StageHead/StageHead';
 import { StageLayout } from '../StageLayout/StageLayout';
 import { HOME, type View } from '../Views/Views';
 import './Live.css';
@@ -33,12 +34,13 @@ function useThumbnail(key: string | null): string | null {
 
 /**
  * **Job.** Live mode, as the Stage: the picture full-bleed across the main window, and over it,
- * on hover, the header (`StageHead`: Home | Live, the Beat and Output lights, the camera, ?,
- * settings and ✕) and the controls (`StageDock`: Home's floating transport and the effects' row),
- * laid out and faded by `StageLayout` and fed from `useLive`. Going live plays in this window;
- * "Go full screen on…" is a corner toast until the user puts the picture on a display (it, or the
- * Output popover), as are the notices. The Stage takes the playing preset's light (its thumbnail),
- * as Home does.
+ * on hover, the header (`StageHead`: Home | Live, the notes, the Beat and Output lights, the
+ * mixer, the camera, ?, settings and ✕) and the controls (`StageDock`: the preset at the top left,
+ * and at the foot Effects, ◀ ring ▶ centred, the dice and star), laid out and faded by
+ * `StageLayout` and fed from `useLive`. Effects (or E) opens the effects panel (`EffectsPanel`)
+ * docked at the left; ✕ on it, E or a short Esc puts it away. Going live plays in this window;
+ * "Full screen on…" is in the Output light's popover until the user puts the picture on a display.
+ * The Stage takes the playing preset's light (its thumbnail), as Home does.
  *
  * `\` pins the controls shown (hovered or not) and lets them go again. Esc held for 3 s
  * (`LEAVE_HOLD_MS`) leaves live, here or on the output (which tells the page of Esc down and up,
@@ -49,7 +51,9 @@ function useThumbnail(key: string | null): string | null {
  *
  * **Changed.** No crate (no sidebar in Live: the owner's call), no dock bar and no capsules: the
  * Stage is Home's language, type and glyphs fading in over the picture. `\` pins rather than
- * hides; a short Esc does nothing (it showed hidden panels, and nothing hides now).
+ * hides, and the header says "Pinned" while it does; a short Esc only puts the effects panel away.
+ * Design C: no corner toasts (the notices are quiet words in the header); the bottom More effects
+ * drawer and the effects' row gave way to the effects panel.
  *
  * **Kept.** The props, the re-exports, the keys, the root's `data-windowed`; the root's class is
  * `vs-live`, and it says `data-pinned` while `\` holds the controls shown.
@@ -72,6 +76,9 @@ export function Live({
   const { current } = live;
   const [help, setHelp] = useState(false);
   const [pinned, setPinned] = useState(false);
+  // The effects panel (the Effects button, or E), docked at the Stage's left.
+  const [effects, setEffects] = useState(false);
+  const toggleEffects = useCallback(() => setEffects((o) => !o), []);
   const thumbnail = useThumbnail(live.key);
 
   // ✕ and ⌘⇧L leave at once; Esc leaves only held for LEAVE_HOLD_MS (liveKeys), with its progress shown while held.
@@ -88,6 +95,13 @@ export function Live({
     favourite: live.favourite,
     help: () => setHelp((h) => !h),
     panels: () => setPinned((p) => !p),
+    effects: toggleEffects,
+    // A short Esc puts the effects panel away (held on, it still leaves).
+    escape: () => {
+      if (!effects) return false;
+      setEffects(false);
+      return true;
+    },
   });
   // Esc on the output does what it does here: held, it leaves (shown here, never on the output).
   useTauriEvent(output.onEscape, (says) => (says === 'up' ? escapes.escapeUp() : escapes.escapeDown()));
@@ -99,14 +113,9 @@ export function Live({
         inWindow={live.inWindow}
         leaving={leaving}
         ambient={thumbnail}
-        head={<StageHead live={live} help={help} onHelp={() => setHelp(true)} onView={onView} onLeave={leaveLive} />}
-        dock={<StageDock live={live} />}
-        toasts={
-          <>
-            <FullScreenOffer live={live} />
-            <StageNotices live={live} />
-          </>
-        }
+        head={<StageHead live={live} help={help} onHelp={() => setHelp(true)} onView={onView} onLeave={leaveLive} pinned={pinned} />}
+        dock={<StageDock live={live} effectsOpen={effects} onEffects={toggleEffects} />}
+        panel={effects ? <EffectsPanel live={live} onClose={() => setEffects(false)} /> : null}
       >
         {/* Laid over everything: the ? overlay. */}
         <HelpOverlay open={help} onClose={() => setHelp(false)} stage />
