@@ -9,12 +9,17 @@
 }
 
 /* The levels, left above right: two thin bars lit in the signal's green. */
+/* The two bars span the text's cap height beside "Mixer": left at the caps' top, right on the
+   baseline. Each Meter's empty caption and readout rows take no room. */
 .vs-meters {
   display: inline-flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 2px;
+  justify-content: space-between;
+  height: 1cap;
   margin-left: 2px;
+}
+.vs-meters .lib-meter {
+  gap: 0;
 }
 
 /* Caution, in a control's size (a Text at the label size, --vs-text-control): nothing to hear, a

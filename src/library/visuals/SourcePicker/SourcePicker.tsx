@@ -88,8 +88,8 @@ function Levels() {
   const hint = 'what the presets hear, left above right: −60 dB empty to 0 dB full';
   return (
     <span className="vs-meters" data-hint={hint}>
-      <Meter value={l} label="left level" width={4} length={44} />
-      <Meter value={r} label="right level" width={4} length={44} />
+      <Meter value={l} label="left level" width={3} length={44} />
+      <Meter value={r} label="right level" width={3} length={44} />
     </span>
   );
 }
