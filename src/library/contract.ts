@@ -97,6 +97,9 @@ export interface Material {
   shadow: string;
   /** A background layer drawn over the fill: grip lines, ticks, grain. `none` for plain. */
   texture: string;
+  /** The opaque fill used instead under reduced transparency or more contrast (library.css), as
+   *  `Layer.solid` is for layers. Left out, it is `fill` (a fill that is already opaque). */
+  solid?: string;
 }
 
 /**
@@ -358,6 +361,7 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
   };
   for (const role of MATERIAL_ROLES) {
     vars[`--mat-${role}-fill`] = m[role].fill;
+    vars[`--mat-${role}-solid`] = m[role].solid ?? m[role].fill;
     vars[`--mat-${role}-shadow`] = m[role].shadow;
     vars[`--mat-${role}-texture`] = m[role].texture;
   }
