@@ -45,7 +45,7 @@ export interface ButtonProps {
   bar?: boolean;
   /** The on face: switched on (help mode's ?, Fade while fading). A ring and a lit dot; solid only in `ok` (running) and `rec` (recording). */
   on?: boolean;
-  /** The chosen face: the one picked from a set (the applied One Touch). Ink and a rule along the bottom. */
+  /** The chosen face: the one picked from a set (the applied One Touch). Ink and a rule along the bottom; a `quiet` key (a toggle such as a panel's JSON switch) takes the pack's chosen-tab face instead. */
   chosen?: boolean;
   /** The waiting face: queued or armed, a double-weight ring over a faint tint. */
   waiting?: boolean;
@@ -143,7 +143,9 @@ const SOLID = new Set<ButtonHue>(['ok', 'rec']);
  * theme's `key` material, `--mat-key-pressed` while held, on or chosen, and the on dot is lit with
  * `--mat-lit-glow`, so a material set restyles every key without touching it. Meaning still wins:
  * the primary, running and recording fills, the rings, the underline and the dashed edge stay; a
- * `quiet` key has no key material at all.
+ * `quiet` key has no key material at all, and chosen it draws as the pack's chosen tab
+ * (`--mat-tabs-chosen-*`: fill, shadow, ink), so a quiet toggle reads as selected in each pack's
+ * own vocabulary rather than as a rule curving into a rounded corner.
  *
  * **Kept.** Every face comes from props, in the same precedence (disabled, chosen, on, waiting,
  * off); the outline is an inset shadow so faces never change size; the same glyphs, accessible

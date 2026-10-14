@@ -343,6 +343,24 @@ export const Hierarchy: Story = {
   ),
 };
 
+/** New: the quiet toggle (a panel's JSON switch) off, chosen and disabled. Chosen, it takes the pack's chosen-tab face. */
+export const Quiet: Story = {
+  render: (args) => (
+    <div style={row}>
+      <Button {...args} label="JSON" variant="quiet" pressed={false} name="JSON off" />
+      <Button {...args} label="JSON" variant="quiet" pressed chosen name="JSON chosen" />
+      <Button {...args} label="JSON" variant="quiet" disabled name="JSON disabled" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('button', { name: 'JSON off' })).toHaveAttribute('data-face', 'off');
+    await expect(canvas.getByRole('button', { name: 'JSON chosen' })).toHaveAttribute('data-face', 'chosen');
+    await expect(canvas.getByRole('button', { name: 'JSON chosen' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(canvas.getByRole('button', { name: 'JSON disabled' })).toHaveAttribute('data-face', 'disabled');
+  },
+};
+
 /** New: every face in every tone, to compare rest, waiting, on, chosen and disabled across hues. */
 export const Faces: Story = {
   render: (args) => (
