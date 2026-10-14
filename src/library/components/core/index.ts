@@ -63,7 +63,5 @@ export {
 } from './Param';
 export { Modal, Sheet, type ModalProps, type SheetProps, type SheetSide } from './Modal/Modal';
 
-// The node graph and the device face a node wears (the lab editor's stage graph; APIs mirroring @openflow/widgets).
-export { Graph, GraphNode, cordPath, cordInk, type GraphProps, type GraphNodeProps, type GraphCord, type GraphView, type PortSide } from './Graph/Graph';
-export { Port, type PortProps } from './Graph/Port';
-export { Device, DevicePortRow, type DeviceProps, type DevicePortRowProps } from './Device/Device';
+// The node graph (Graph, Port, Device, NodeSheet) and the Circuit model live in their own area,
+// `src/library/graph/`, exported from the package root beside this.

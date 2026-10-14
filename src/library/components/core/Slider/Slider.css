@@ -38,6 +38,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Who is moving it: after the caption, in the one ink the control keeps for the value. */
+.lib-slider__driver {
+  color: var(--lib-slider-ink);
+}
 .lib-slider__frame {
   grid-area: frame;
   display: flex;

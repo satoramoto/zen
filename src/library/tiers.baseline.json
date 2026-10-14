@@ -11,6 +11,12 @@
     "pixels": 0,
     "type": 0
   },
+  "components/core/AxisPicker": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
   "components/core/Button": {
     "knobs": 0,
     "margins": 0,
@@ -23,12 +29,6 @@
     "pixels": 0,
     "type": 0
   },
-  "components/core/Device": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
   "components/core/Disclosure": {
     "knobs": 0,
     "margins": 0,
@@ -36,12 +36,6 @@
     "type": 0
   },
   "components/core/FolderList": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "components/core/Graph": {
     "knobs": 0,
     "margins": 0,
     "pixels": 0,
@@ -240,6 +234,42 @@
     "type": 0
   },
   "components/music/TempoReadout": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "graph": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "graph/model": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "graph/view/Device": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "graph/view/Graph": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "graph/view/GraphPath": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "graph/view/NodeSheet": {
     "knobs": 0,
     "margins": 0,
     "pixels": 0,

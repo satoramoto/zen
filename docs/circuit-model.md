@@ -52,10 +52,48 @@ Compatibility: every change to `Graph`, `GraphNode`, `Port` and `Device` is
 additive. openflowfm/visuals' `StageGraph`, the only consumer, keeps working
 unchanged.
 
+### Second pass: the drawing layers (built)
+
+The view now draws most of what the model already held. Every addition is an
+optional prop; without it a graph looks and behaves as before. The binding
+(`useCircuit`, behaviours 21–25) is unchanged: a host maps traces onto these.
+
+- **Pin placement.** `Port` takes `face` (`n`, `e`, `s`, `w`), and a cord
+  leaves each port along its face. `Device` takes `edges` (each a `DeviceEdge`
+  with `face` and `at`, or `x` and `y`) for pins placed on the outline, and
+  `pins="edge"` to stand rail pins on the edge. `placement: 'auto'` is the
+  host's to resolve (the samples pick the face toward a pin's one other end in
+  a `free` layout).
+- **Routing.** `Graph` takes `routing: 'curve' | 'trace'`; `'trace'` is
+  straight runs with 45° bends. Layout (`lr`, `tb`, `radial`) is still the
+  stored positions.
+- **Trace labels and modulation.** `GraphCord` takes `label`, `role`,
+  `amount` and `dim`: a label mid-cord, a dashed modulation with its amount as
+  a signed percentage near the inlet.
+- **Buses.** `Graph` takes `buses` (`GraphBus`: `id`, `label`, `kind`, `from`
+  the source outlet, `axis`, `at`), and a `GraphCord` with `bus` is drawn as a
+  stub from that rail. Contract addition: `Bus.rail?: { axis: 'h' | 'v'; at?:
+  number }`, presentation only like `placement` (not checked by `validate`,
+  preserved by every operation as part of the bus).
+- **Zones.** `Graph` takes `zones` (`GraphZone`: `id`, `label`, `nodes`), a
+  labelled frame round those nodes' boxes.
+- **Modules.** `GraphPath` is a breadcrumb trail (board, then each instance
+  entered). Entering and leaving is the host's state; inside a module the
+  samples draw its `inPins` and `outPins` as boundary terminals wired to the
+  inner pins they map to.
+- `Port` also takes `shape: 'diamond'` (a param pin) and `hue: 'role-1' |
+  'role-2'` (a host with more kinds than hue slots); `Device` takes `kicker`
+  (the type line under the name); `GraphView` gains `zoom(factor)`, and
+  `Graph` `fitAlign: 'center'`.
+
+Still to draw: the `controls` entry on the canvas (the samples list them in the
+JSON panel), `radial`/`tb` layout, converting or expanding modules, and
+obstacle-aware routing.
+
 ## Public API
 
-New file `src/library/components/core/Circuit/circuit.ts`, exported from
-`core/index.ts`.
+New file `src/library/graph/model/circuit.ts`, exported from
+`graph/index.ts` (and so from the package root).
 
 ```ts
 export type Json = null | boolean | number | string | Json[] | { [k: string]: Json };
@@ -100,7 +138,10 @@ export type End = PinEnd | BusEnd;   // ModulePin.maps and Control.maps always u
 // A named rail: one out pin feeds it (a trace whose `to` is the bus), any number of
 // in pins tap it (traces whose `from` is the bus). Purely presentational: it means the
 // direct traces source → each tap.
-export interface Bus { id: string; label?: string; kind?: string }
+export interface Bus {
+  id: string; label?: string; kind?: string;
+  rail?: { axis: 'h' | 'v'; at?: number }; // where the rail is drawn; presentation only (second pass)
+}
 
 export interface Trace {
   id: string;           // unique within its Module
@@ -177,8 +218,8 @@ export function removeBus(circuit: Circuit, module: string, bus: string): Circui
 export function flatten(circuit: Circuit, module: string): Trace[];
 ```
 
-New file `src/library/components/core/Circuit/useCircuit.ts`, exported from
-`core/index.ts`:
+New file `src/library/graph/model/useCircuit.ts`, exported from
+`graph/index.ts`:
 
 ```ts
 export interface CircuitBinding {
@@ -334,7 +375,7 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 
 ### Story
 
-29. `Design OS/Components/Core/Circuit` shows a circuit drawn by the Graph
+29. `Design OS/Graph/Circuit` shows a circuit drawn by the Graph
     view with:
     - two chips and a modulation trace;
     - a chip that is a module instance, with module pins;
@@ -344,10 +385,17 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 
 ## Files
 
+The graph has its own area, `src/library/graph/` (moved out of
+`components/core`): `model/` (the Circuit model), `view/` (`Graph`, `Port`,
+`graphContext`, `Device`, `NodeSheet`), `stories/` (fixtures, Samples and
+Behaviours), and `index.ts`, which the package root re-exports, so every
+import from `@satoramoto/zen` is unchanged. Its stories sit under
+`Design OS/Graph/…`.
+
 | File | Side |
 | --- | --- |
-| `core/Circuit/circuit.ts`, `core/Circuit/useCircuit.ts` (new), additions to `Graph.tsx` / `Graph.css` / `Port.tsx`, `core/index.ts` exports, `Circuit.stories.tsx` | developer |
-| `core/Circuit/circuit.test.ts`, `core/Circuit/useCircuit.test.tsx` (new), cord-delete cases in `Graph.test.tsx` | test-engineer |
+| `graph/model/circuit.ts`, `graph/model/useCircuit.ts`, additions to `graph/view/Graph/Graph.tsx` / `Graph.css` / `Port.tsx`, `graph/index.ts` exports, `graph/stories/Circuit.stories.tsx` | developer |
+| `graph/model/circuit.test.ts`, `graph/stories/Circuit.behaviours.stories.tsx`, cord-delete cases in `graph/view/Graph/Graph.test.tsx` | test-engineer |
 
 ## Open questions
 

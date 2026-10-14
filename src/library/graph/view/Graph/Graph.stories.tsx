@@ -153,7 +153,7 @@ function FitHarness({ fitOnResize }: { fitOnResize: boolean }) {
 }
 
 const meta: Meta = {
-  title: 'Design OS/Components/Core/Graph',
+  title: 'Design OS/Graph/Graph',
   decorators: [withLibraryTheme],
   parameters: { layout: 'padded' },
 };

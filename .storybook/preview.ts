@@ -20,7 +20,7 @@ const preview: Preview = {
       storySort: {
         order: [
           'Design OS',
-          ['Systems', 'Layout', 'Components', ['Core', 'Music']],
+          ['Systems', 'Layout', 'Components', ['Core', 'Music'], 'Graph', ['Circuit', ['Samples', 'Behaviours'], 'Graph', 'Device', 'NodeSheet']],
           'Yahaha',
           ['Screens', 'Components', 'Primitives'],
           'Overview',

@@ -24,6 +24,7 @@ const filesUnder = (rel: string, ext: RegExp) =>
 const COMPONENT_SOURCES = [
   'library.css',
   ...filesUnder('components', /\.(tsx?|css)$/),
+  ...filesUnder('graph', /\.(tsx?|css)$/),
   ...filesUnder('layout', /\.(tsx?|css)$/),
   ...filesUnder('yahaha', /\.(tsx?|css)$/),
 ];

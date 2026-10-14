@@ -1,0 +1,149 @@
+/* NodeSheet: a node's whole face hung beside it, in the top layer, on a float Surface.
+   Reads only contract variables and the knobs declared here (see NodeSheet.tsx):
+
+   --lib-node-sheet-width    the sheet's width
+   --lib-node-sheet-caption  the rows' caption column
+   --lib-node-sheet-gap      room between the node and the sheet (read by the component)
+   --lib-node-sheet-margin   room kept from the window's edge (read by the component) */
+
+.lib-node-sheet {
+  --lib-node-sheet-width: calc(var(--control-h) * 12);
+  --lib-node-sheet-caption: calc(var(--control-h) * 3.5);
+  --lib-node-sheet-gap: var(--space-2);
+  --lib-node-sheet-margin: var(--space-1);
+  /* The top layer's own box: no UA border, padding or Canvas fill; the plate inside draws. */
+  position: fixed;
+  inset: auto;
+  display: flex;
+  flex-direction: column;
+  width: var(--lib-node-sheet-width);
+  max-height: calc(100vh - var(--lib-node-sheet-margin) * 2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-1);
+  overflow: visible;
+}
+
+.lib-node-sheet__plate {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.lib-node-sheet__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  padding: 0 var(--space-2);
+  border-bottom: var(--border-width) solid var(--border);
+  touch-action: none;
+  user-select: none;
+  cursor: default;
+}
+
+.lib-node-sheet[data-parkable] .lib-node-sheet__head {
+  cursor: grab;
+}
+
+.lib-node-sheet[data-dragging] .lib-node-sheet__head {
+  cursor: grabbing;
+}
+
+.lib-node-sheet__name {
+  flex: 0 1 auto;
+  min-width: 0;
+  color: var(--text-1);
+}
+
+.lib-node-sheet__about {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.lib-node-sheet__head-end {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+  margin-inline-start: auto;
+}
+
+.lib-node-sheet__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  padding: var(--space-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.lib-node-sheet__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* A row: caption column, the control stretched to the middle, what spells the value at the end. */
+.lib-node-sheet__row {
+  display: grid;
+  grid-template-columns: var(--lib-node-sheet-caption) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+}
+
+.lib-node-sheet__caption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-2);
+}
+
+.lib-node-sheet__mark {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.lib-node-sheet__row-name {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.lib-node-sheet__driver {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.lib-node-sheet__control {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.lib-node-sheet__control > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.lib-node-sheet__end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  min-width: 0;
+  color: var(--text-1);
+}
+
+.lib-node-sheet__end:empty {
+  display: none;
+}

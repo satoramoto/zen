@@ -31,6 +31,8 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
 | `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/storybook.tsx` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
 
+UI is tested by exercising behaviours in Storybook stories, never by unit tests; pure models and functions get unit tests.
+
 Builds and unit tests are not browser evidence: look at layout and perceptual effects in a browser (the invisible-keyboard bug passed every test).
 
 ## Field guide quality
@@ -68,11 +70,12 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
   The link resolves to the checkout's real path, outside `node_modules`, so Vite compiles zen's TSX with the app's React plugin and hot-reloads it. The condition only resolves against a checkout: the installed package ships `lib/` only.
 
 - Every decision belongs to one tier (tokens, primitives, controls, groups, regions, screens, app): `docs/tiers.md` says which, and `src/library/tiers.test.ts` holds its four rules to `tiers.baseline.json` (counts only go down).
-- Components in `src/library/components`, `src/library/layout`, and `src/library/yahaha` read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.
+- Components in `src/library/components`, `src/library/graph`, `src/library/layout`, and `src/library/yahaha` read only the variables produced by `toCssVars()` in `src/library/contract.ts` (plus local ones they declare). No literal colours or radii, no `light-dark()`; `library.test.tsx` enforces this.
 - Generic components live in `src/library/components/core/<Name>/` (controls) and `src/library/components/music/<Name>/` (instrument parts), each exported from that folder's `index.ts`, stories titled `Design OS/Components/Core|Music/<Name>`. They carry no app meaning: colour is a slot (`hue` 1–4, `role-1`/`role-2`; `components/core/hue.ts`), and an app maps its meanings onto it (Yahaha in `yahaha/hues.ts`). Never import `yahaha/` from them.
+- The graph is its own area, `src/library/graph/`: `model/` (the Circuit model, `docs/circuit-model.md`), `view/<Name>/` (`Graph`, `Port`, `Device`, `NodeSheet` and the canvas layers), `stories/` (fixtures, Samples, Behaviours), all exported from `graph/index.ts`, which the package root re-exports. Stories are titled `Design OS/Graph/<Name>`. The tier rules and `library.test.tsx` hold it to the same rules as the controls (`graph/<view|model>/<Name>` is a tiers folder), and the same colour-slot rule applies.
 - Colour, type, shape and spacing values live only in `src/library/themes/` (one file per facet). Mark any value the source style doesn't define with `// added`.
 - A theme pack (`themes/packs.ts`) names its Refero style id and the source rules it keeps.
-- Shared files: `contract.ts`, `themes/`, `storybook.tsx`, `.storybook/`, `library.test.tsx`, `index.ts`, `components/core/index.ts`, `components/music/index.ts`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.
+- Shared files: `contract.ts`, `themes/`, `storybook.tsx`, `.storybook/`, `library.test.tsx`, `index.ts`, `components/core/index.ts`, `components/music/index.ts`, `graph/index.ts`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.
 
 ## Yahaha redesigns
 

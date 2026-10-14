@@ -1,0 +1,267 @@
+/* Device: a raised Surface with a head, a picture, its wiring and a body.
+   Reads only contract variables and the knobs declared in Device.tsx:
+
+   --lib-device-accent  the head's leading mark and the ports' ink (none by default)
+   --lib-device-width   the width (auto by default, zero specificity)
+   --lib-device-more-indent  where DeviceMore's line starts (a row control's indent by default)
+
+   Declared once at the document root, unset, so the fallbacks below apply and a host can set
+   either on any wrapper around a device: a default on .lib-device itself would reset it. */
+
+:where(:root) {
+  --lib-device-accent: initial;
+  --lib-device-width: initial;
+  --lib-device-more-indent: initial;
+}
+
+:where(.lib-device) {
+  width: var(--lib-device-width, auto);
+}
+
+.lib-device {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--text-1);
+  font-family: var(--font-sans);
+}
+
+/* A kicker: the head is two lines (name over type), parted from the wiring by a hairline. */
+.lib-device[data-kicker] > .lib-device__head {
+  padding-block: var(--space-2);
+  box-shadow: inset 0 calc(var(--border-width) * -1) 0 var(--border);
+}
+.lib-device[data-kicker] .lib-device__name {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-1) / 2);
+  color: var(--text-1);
+}
+.lib-device__kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.lib-device[data-kicker] > .lib-device__rows,
+.lib-device[data-kicker] > .lib-device__rails {
+  padding-block-start: var(--space-1);
+}
+
+/* Edge pins (`pins="edge"`): every port cell drops its inset and its dot is pulled half over the
+   edge, ringed in the face's fill so the outline reads as broken by the pin. */
+.lib-device[data-pins='edge'] .lib-device__port[data-side='in'] {
+  padding-inline-start: 0;
+}
+.lib-device[data-pins='edge'] .lib-device__port[data-side='out'] {
+  padding-inline-end: 0;
+}
+.lib-device[data-pins='edge'] .lib-device__port[data-side='in'] > .lib-graph__port-slot {
+  margin-inline-start: calc(var(--lib-graph-port-size) / -2);
+}
+.lib-device[data-pins='edge'] .lib-device__port[data-side='out'] > .lib-graph__port-slot {
+  margin-inline-end: calc(var(--lib-graph-port-size) / -2);
+}
+.lib-device[data-pins='edge'] .lib-graph__port,
+.lib-device__edge .lib-graph__port {
+  border-width: calc(var(--border-width) * 2);
+  background: var(--layer-raised-solid);
+  box-shadow: 0 0 0 calc(var(--border-width) * 2) var(--layer-raised-solid);
+}
+.lib-device[data-pins='edge'] .lib-graph__port[data-connected],
+.lib-device__edge .lib-graph__port[data-connected] {
+  background: var(--lib-graph-port-hue, var(--lib-device-accent, var(--lib-graph-port-ink)));
+}
+.lib-device[data-pins='edge'] .lib-graph__port:hover:not(:disabled),
+.lib-device__edge .lib-graph__port:hover:not(:disabled) {
+  scale: 1.3;
+}
+
+/* Placed ports (`edges`): a layer over the whole face; each `DeviceEdge` centres its child on its point. */
+.lib-device__edges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.lib-device__edge {
+  position: absolute;
+  display: flex;
+  translate: -50% -50%;
+  pointer-events: auto;
+}
+
+/* Selected: a ring just outside the edge, the same width as the focus and press rings. */
+.lib-device[data-selected] {
+  outline: calc(var(--border-width) * 2) solid var(--accent);
+  outline-offset: 0;
+}
+
+/* A problem: the Surface's hairline edge in the danger ink, selected or not. */
+.lib-surface.lib-device[data-problem] {
+  --lib-surface-border: inset 0 0 0 var(--border-width) var(--danger);
+}
+
+.lib-device__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  padding: 0 var(--space-2);
+  border-inline-start: calc(var(--border-width) * 3) solid var(--lib-device-accent, transparent);
+  /* The mark follows the face's top corner instead of poking out of it. */
+  border-start-start-radius: inherit;
+  cursor: default;
+  user-select: none;
+}
+
+.lib-device__name {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-2);
+}
+
+.lib-device[data-selected] .lib-device__name {
+  color: var(--text-1);
+}
+
+.lib-device__head-end {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.lib-device__screen {
+  padding: 0 var(--space-2);
+}
+
+.lib-device__screen > * {
+  display: block;
+  width: 100%;
+}
+
+/* Outlets beside the picture (`outletsAt="screen"`): the picture keeps its leading inset, and the
+   outlets stand against its foot on the same trailing line as every other out port. */
+.lib-device__screen-band {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  padding-inline-start: var(--space-2);
+}
+
+.lib-device__screen-band > .lib-device__screen {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+
+.lib-device__port.lib-device__screen-outlets {
+  flex: none;
+  justify-content: flex-end;
+}
+
+/* The line standing for the rows not shown: a row's height, its text at a row control's indent. */
+.lib-device__more {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-2) 0 var(--lib-device-more-indent, calc(var(--space-2) * 2 + var(--space-3)));
+  border: 0;
+  background: none;
+  color: var(--text-3);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  appearance: none;
+}
+
+.lib-device__more:hover {
+  color: var(--text-1);
+}
+
+.lib-device__more-mark {
+  transform: rotate(-90deg);
+  transition: transform 150ms ease-out;
+}
+
+.lib-device__more[aria-expanded='true'] > .lib-device__more-mark {
+  transform: none;
+}
+
+.lib-device__more-text {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-device__more-mark { transition: none; }
+}
+
+/* The rows share three columns, so every port stands on the same two lines. */
+.lib-device__rows {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  padding: var(--space-1) 0;
+}
+
+.lib-device__row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  min-height: var(--control-h);
+}
+
+.lib-device__rails {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: stretch;
+}
+
+/* A port cell: the same inset from the edge in the rails and in every row. */
+.lib-device__port {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 0;
+  color: var(--lib-device-accent, var(--text-3));
+}
+
+.lib-device__port[data-side='in'] {
+  align-items: flex-start;
+  padding-inline-start: var(--space-2);
+}
+
+.lib-device__port[data-side='out'] {
+  align-items: flex-end;
+  padding-inline-end: var(--space-2);
+}
+
+.lib-device__port:empty {
+  padding: 0;
+}
+
+.lib-device__row-control {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0 var(--space-2);
+}
+
+.lib-device__row-control > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.lib-device__body {
+  min-width: 0;
+  padding: var(--space-2);
+}

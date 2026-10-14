@@ -55,6 +55,9 @@ export interface SliderProps {
   ink?: string;
   /** Across the track in px. Default: the material's track thickness. */
   width?: number;
+  /** What is moving this control (an LFO, a cord's source), printed after the caption as
+   *  `← {driver}` in the fill ink, so the row says who carries it without the cord being traced. */
+  driver?: string;
   /**
    * No single value (several things that differ): no thumb or fill, `data-mixed` on the root, ARIA
    * without `aria-valuenow` and reading `display` (else "Mixed"). `value` is where a drag starts;
@@ -87,7 +90,8 @@ export interface SliderProps {
  * one at the default), in line with the thumb's centre; `thumb` (absent while `mixed`) the cap, a `handle` (a thin lit mark when `inside`, a round-ended knob
  * standing proud of a thin groove in a `row`, where the track is the knob's height and the groove
  * is drawn inside it);
- * `readout` the reading, in the readout face with tabular figures.
+ * `readout` the reading, in the readout face with tabular figures; `driver` (inside `caption`, with
+ * `driver` set) who is moving it, `← {driver}` in the fill ink (`--lib-slider-ink`).
  */
 export function Slider({
   param,
@@ -114,6 +118,7 @@ export function Slider({
   hint,
   ink,
   width,
+  driver,
   mixed = false,
   detents,
   snap,
@@ -171,9 +176,14 @@ export function Slider({
       {...hintAttribute(hint)}
       style={style}
     >
-      {name && (
+      {(name || driver) && (
         <Text role="body" size="caption" case="label" className="lib-slider__caption" data-part="caption">
           {name}
+          {driver && (
+            <span className="lib-slider__driver" data-part="driver">
+              {name ? ' ' : ''}← {driver}
+            </span>
+          )}
         </Text>
       )}
       <div className="lib-slider__frame" title={title}>

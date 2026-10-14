@@ -1,0 +1,73 @@
+/* GraphPath: a breadcrumb trail of nested modules. Contract variables only. */
+
+.lib-graph-path {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: var(--control-h);
+}
+
+.lib-graph-path__steps {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lib-graph-path__step {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* The current level keeps its room; earlier steps give way first. */
+.lib-graph-path__step[data-current] {
+  flex-shrink: 0;
+  max-width: 60%;
+}
+
+.lib-graph-path__sep {
+  flex: none;
+  color: var(--text-4);
+}
+
+.lib-graph-path__crumb {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: 0 var(--space-1);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: default;
+  appearance: none;
+}
+
+button.lib-graph-path__crumb {
+  cursor: pointer;
+}
+
+button.lib-graph-path__crumb:hover {
+  background: var(--selected);
+}
+
+button.lib-graph-path__crumb:hover > * {
+  color: var(--text-1);
+}
+
+.lib-graph-path__end {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+}

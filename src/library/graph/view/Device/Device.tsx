@@ -1,6 +1,7 @@
 import { useRef, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
+import { Icon } from '../../../primitives/Icon';
 import { focusRing } from '../../../primitives/Ring';
 import './Device.css';
 
@@ -25,11 +26,31 @@ export interface DeviceProps {
   outlets?: ReactNode;
   /** Lines where a port governs one thing: each child a `DevicePortRow`. Above the body. */
   portRows?: ReactNode;
+  /**
+   * Where `outlets` stand. `band` (the default): on the trailing rail beside the body. `screen`:
+   * in a column beside the picture, for a face whose picture is what leaves it (the outlet a host
+   * previews is the one the picture shows); the rails then hold only the inlets. Only read with a
+   * `screen`: without one there is nothing to stand beside, and the outlets keep the rail.
+   */
+  outletsAt?: 'band' | 'screen';
   /** The faceplate. */
   children?: ReactNode;
   /** A device with something wrong with it: its edge is drawn in `--danger`. */
   problem?: boolean;
   className?: string;
+  /**
+   * A second line under the name: what the device is (its type), quieter than the name. With it,
+   * the head is two lines and a hairline parts it from the wiring.
+   */
+  kicker?: ReactNode;
+  /**
+   * Where the port cells stand. `inset` (default): inside the face, `--space-2` from its edge.
+   * `edge`: each dot centred on the face's edge, half outside it, ringed in the face's fill so it
+   * reads as a pin on the outline.
+   */
+  pins?: 'inset' | 'edge';
+  /** Ports placed anywhere on the face's outline or inside it: each a `DeviceEdge`. */
+  edges?: ReactNode;
 }
 
 /** Interactive things in the head that keep their own clicks: a click on one is not a select. */
@@ -50,12 +71,17 @@ const INTERACTIVE = 'button, a[href], input, select, textarea, [role="button"], 
  * `problem` draws the edge in `--danger`. With `inlets` or `outlets`, the body sits between two
  * rails; `portRows` are lines above the body, each a grid with the inlet at the start, the child
  * in the middle and the outlet at the end. Every port cell keeps the same `--space-2` inset from
- * the edge, so the ports of the rails and the rows stand on the same two vertical lines.
+ * the edge, so the ports of the rails and the rows stand on the same two vertical lines. With
+ * `outletsAt="screen"` and a `screen`, the outlets stand in a column beside the picture, against
+ * its foot, on that same trailing line, and only the inlets keep a rail.
  *
  * **Parts** (`data-part`). `root` the face (`data-selected`, `data-problem`); `head` the title
  * bar; `name` the name, the tab stop; `head-end` the trailing actions; `screen` the picture;
+ * `screen-band` (with `outletsAt="screen"`) the picture and its `screen-outlets` side by side;
  * `rows` the port rows, each a `row` (with `row-in`, `row-control`, `row-out`); `rails` the body
- * between its `inlets` and `outlets` (`rail-in`, `rail-out`); `body` the faceplate.
+ * between its `inlets` and `outlets` (`rail-in`, `rail-out`); `body` the faceplate; `kicker` the
+ * line under the name (`data-kicker` on the root); `edges` the layer of placed ports, each an
+ * `edge`. `data-pins="edge"` on the root with `pins="edge"`.
  *
  * **Tuning knobs.** `--lib-device-accent` the head's leading mark and the ink of the port cells
  * (a host sets it per kind; default none, and the ports keep `--text-3`); `--lib-device-width`
@@ -72,12 +98,18 @@ export function Device({
   inlets,
   outlets,
   portRows,
+  outletsAt = 'band',
   children,
   problem = false,
   className,
+  kicker,
+  pins = 'inset',
+  edges,
 }: DeviceProps) {
   const nameRef = useRef<HTMLSpanElement>(null);
-  const railed = inlets !== undefined || outlets !== undefined;
+  const beside = outletsAt === 'screen' && screen !== undefined;
+  const railOutlets = beside ? undefined : outlets;
+  const railed = inlets !== undefined || railOutlets !== undefined;
 
   const onHeadClick = (e: MouseEvent<HTMLDivElement>) => {
     if (!onSelect) return;
@@ -99,6 +131,8 @@ export function Device({
       data-part="root"
       data-selected={selected ? '' : undefined}
       data-problem={problem ? '' : undefined}
+      data-kicker={kicker !== undefined ? '' : undefined}
+      data-pins={pins === 'edge' ? 'edge' : undefined}
     >
       <div className="lib-device__head" data-part="head" title={title} onClick={onHeadClick}>
         {headerStart}
@@ -111,6 +145,17 @@ export function Device({
           <Text role="label" truncate>
             {name}
           </Text>
+          {kicker !== undefined && (
+            <span className="lib-device__kicker" data-part="kicker">
+              {typeof kicker === 'string' ? (
+                <Text role="caption" tone="muted" truncate>
+                  {kicker}
+                </Text>
+              ) : (
+                kicker
+              )}
+            </span>
+          )}
         </span>
         {headerEnd !== undefined && (
           <span className="lib-device__head-end" data-part="head-end">
@@ -118,10 +163,23 @@ export function Device({
           </span>
         )}
       </div>
-      {screen !== undefined && (
-        <div className="lib-device__screen" data-part="screen">
-          {screen}
+      {beside ? (
+        <div className="lib-device__screen-band" data-part="screen-band">
+          <div className="lib-device__screen" data-part="screen">
+            {screen}
+          </div>
+          {outlets !== undefined && (
+            <div className="lib-device__port lib-device__screen-outlets" data-part="screen-outlets" data-side="out">
+              {outlets}
+            </div>
+          )}
         </div>
+      ) : (
+        screen !== undefined && (
+          <div className="lib-device__screen" data-part="screen">
+            {screen}
+          </div>
+        )
       )}
       {portRows !== undefined && (
         <div className="lib-device__rows" data-part="rows">
@@ -137,7 +195,7 @@ export function Device({
             {children}
           </div>
           <div className="lib-device__port" data-part="rail-out" data-side="out">
-            {outlets}
+            {railOutlets}
           </div>
         </div>
       ) : (
@@ -147,7 +205,55 @@ export function Device({
           </div>
         )
       )}
+      {edges !== undefined && (
+        <div className="lib-device__edges" data-part="edges">
+          {edges}
+        </div>
+      )}
     </Surface>
+  );
+}
+
+export interface DeviceEdgeProps {
+  /**
+   * Where on the face: a face (`n`, `e`, `s`, `w`), centred on it or `at` 0..1 along it from its
+   * start (top or left); or `x` and `y`, fractions 0..1 of the face's box.
+   */
+  face?: 'n' | 'e' | 's' | 'w';
+  at?: number;
+  x?: number;
+  y?: number;
+  /** The `Port` (usually with `showLabel={false}` and its `face`). */
+  children?: ReactNode;
+  className?: string;
+}
+
+/** Each face's point at a fraction along it, as fractions of the box. */
+const EDGE_POINT = {
+  n: (t: number) => [t, 0],
+  s: (t: number) => [t, 1],
+  w: (t: number) => [0, t],
+  e: (t: number) => [1, t],
+} as const;
+
+/**
+ * **Job.** One port placed on a `Device`'s outline (or inside its box): the pin a cord should leave
+ * from when the face nearest its other end isn't a rail's. Its child's centre sits exactly on the
+ * point, so a dot straddles the edge.
+ *
+ * **Parts** (`data-part`). `edge` (`data-face`).
+ */
+export function DeviceEdge({ face, at = 0.5, x, y, children, className }: DeviceEdgeProps) {
+  const [fx, fy] = face ? EDGE_POINT[face](Math.min(1, Math.max(0, at))) : [x ?? 0.5, y ?? 0.5];
+  return (
+    <span
+      className={`lib-device__edge${className ? ` ${className}` : ''}`}
+      data-part="edge"
+      {...(face ? { 'data-face': face } : {})}
+      style={{ left: `${fx * 100}%`, top: `${fy * 100}%` }}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -188,5 +294,54 @@ export function DevicePortRow({ inlet, outlet, children, className }: DevicePort
         {outlet}
       </div>
     </div>
+  );
+}
+
+export interface DeviceMoreProps {
+  /** Whether the rows this line stands for are showing. */
+  open: boolean;
+  onToggle(next: boolean): void;
+  /** The accessible name, for a line whose printed text is a count. */
+  label?: string;
+  /** What is folded away, said as a count or a list: `7 at default`. */
+  children?: ReactNode;
+  className?: string;
+}
+
+/**
+ * **Job.** The one line on a `Device`'s face that stands for the rows it isn't showing. A face
+ * that draws only the rows that matter (the mode's own, anything wired or turned) says what it
+ * left out, or the folded rows read as rows the node doesn't have. It says how many (`7 at
+ * default`), never "advanced": a count is a fact about the node.
+ *
+ * **Behaviour.** A button with `aria-expanded` from `open`; a click (or Enter/Space) asks
+ * `onToggle(!open)`. What opening does is the host's (grow in place, or open a `NodeSheet`); the
+ * line only reports the state. It is a row's height, with its text at the indent of a row's
+ * control, so it reads as the last line of the list rather than a button under it; in `portRows`
+ * it spans the row's columns. The triangle points right while closed and down while open.
+ *
+ * **Parts** (`data-part`). `more` the button (`aria-expanded`); `more-mark` the triangle;
+ * `more-text` the children, clipped rather than wrapped.
+ *
+ * **Tuning knobs.** `--lib-device-more-indent` where the line starts (default the port column
+ * plus a row control's inset: `--space-2` twice and a `--space-3` port).
+ */
+export function DeviceMore({ open, onToggle, label, children, className }: DeviceMoreProps) {
+  return (
+    <button
+      type="button"
+      className={`lib-device__more ${focusRing}${className ? ` ${className}` : ''}`}
+      data-part="more"
+      aria-expanded={open}
+      aria-label={label}
+      onClick={() => onToggle(!open)}
+    >
+      <Icon viewBox="0 0 8 8" size="caption" className="lib-device__more-mark" data-part="more-mark">
+        <path d="M1.5 2.75H6.5L4 6.25Z" fill="currentColor" stroke="none" />
+      </Icon>
+      <Text role="caption" truncate className="lib-device__more-text" data-part="more-text">
+        {children}
+      </Text>
+    </button>
   );
 }

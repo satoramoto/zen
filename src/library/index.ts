@@ -49,6 +49,9 @@ export * from './layout';
 export * from './components/core';
 export * from './components/music';
 
+// The graph: the node-graph view (Graph, GraphNode, Port, Device, NodeSheet) and the Circuit model it draws.
+export * from './graph';
+
 // Dialog behaviour for an app's own overlays (a help sheet, a settings dialog) that aren't a Modal.
 /** Esc closes a dialog unless an open menu inside it takes the key first; `useModal` is the whole dialog behaviour. */
 export { closesOnKey, useModal } from './components/core/Modal/useModal';
