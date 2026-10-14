@@ -150,7 +150,9 @@ export interface Circuit {
 export type CircuitErrorCode =
   | 'unknown-module' | 'unknown-chip' | 'unknown-pin' | 'unknown-trace' | 'unknown-zone'
   | 'duplicate-id' | 'wrong-side' | 'self-loop' | 'cycle-in-modules' | 'bad-amount'
-  | 'unknown-bus' | 'bus-has-source' | 'bus-to-bus';
+  | 'unknown-bus' | 'bus-has-source' | 'bus-to-bus'
+  | 'bad-hint'      // malformed placement, layout or routing (validate only)
+  | 'key-mismatch'; // a `modules` key differs from its module's id (validate only)
 
 export class CircuitError extends Error { constructor(public code: CircuitErrorCode, message: string); }
 
@@ -207,9 +209,9 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
    input, which stays deep-equal to what it was.
 2. Every operation preserves fields it doesn't know (the `[extra]` fields on
    Chip, Trace and Module), unchanged.
-3. An operation naming a module, chip, pin, trace or zone that doesn't
-   exist throws `CircuitError` with the matching `unknown-*` code. The input is
-   unchanged.
+3. Every function except `validate` (including `pinsOf` and `flatten`) that is
+   given a module, chip, pin, trace, zone or bus that doesn't exist throws
+   `CircuitError` with the matching `unknown-*` code. The input is unchanged.
 4. `placeChip` throws `duplicate-id` if a chip with that id is already in the
    module. `connect` and `addModule` do the same for traces and modules.
 5. `connect` throws `wrong-side` unless `from` names an out pin and `to` an
@@ -221,7 +223,9 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 8. An in pin may take several traces, and an out pin may feed several.
    `connect` doesn't reject a second trace into an in pin.
 9. `removeChip` also removes every trace to or from that chip, and every
-   `ModulePin` or `Control` entry that maps to it.
+   `ModulePin` or `Control` entry that maps to it. Removing a ModulePin this way
+   also removes, in every module, each trace that ended at that pin on an
+   instance of the module. So the result still validates (behaviour 20).
 10. `moveChip` changes only that chip's `x` and `y`.
 11. `disconnect` removes only that trace.
 12. `emptyCircuit()` returns `{ version: 1, board: 'board', modules: { board:
@@ -277,8 +281,8 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 
 18. `validate` never throws. It returns `[]` for a valid circuit, and otherwise
     one `Issue` per problem. Each issue has the code that the matching
-    operation would have thrown, the module's id and a path, e.g.
-    `traces[2].to.pin`.
+    operation would have thrown (`bad-hint` and `key-mismatch` exist only
+    here), the module's id and a path, e.g. `traces[2].to.pin`.
 19. It reports:
     - a missing `board` module;
     - a `modules` key that differs from its module's id;
