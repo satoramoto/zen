@@ -118,6 +118,14 @@
 .yh-button[data-join='start'] { border-top-right-radius: 0; border-bottom-right-radius: 0; }
 .yh-button[data-join='end'] { border-top-left-radius: 0; border-bottom-left-radius: 0; }
 
+/* The icon: the caller's SVG or `Icon`, in the face's ink, centred; never shrinks. */
+.yh-button__icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+}
+.yh-button__icon > svg { display: block; }
+
 /* The label is never clipped: the key's min-width holds it whole. */
 .yh-button__label { flex: none; }
 /* The glyph is a label Text sized against the face (em). */

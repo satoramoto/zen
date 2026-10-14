@@ -66,7 +66,7 @@
     inset 0 0 0 var(--lib-check-box) color-mix(in oklab, var(--text-1) 10%, transparent);
 }
 .lib-check__input:focus-visible ~ .lib-check__face {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 .lib-check__input:disabled ~ .lib-check__face {

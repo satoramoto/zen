@@ -1,8 +1,9 @@
 import './Ring.css';
 
 /**
- * **Job.** The focus ring every control uses: an `--accent` outline just outside the edge while
- * focused from the keyboard (`:focus-visible`), nothing else changes. Add the class to the
+ * **Job.** The focus ring every control uses: a `--focus-ring` outline (the accent, unless the
+ * pack's materials set `focus.ink`) `--focus-ring-offset` outside the edge while focused from the
+ * keyboard (`:focus-visible`), nothing else changes. Add the class to the
  * focusable element: `className={focusRing}`.
  */
 export const focusRing = 'lib-focus-ring';

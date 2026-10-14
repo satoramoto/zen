@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, type MouseEvent, type PointerEvent } from 'react';
+import { useCallback, useEffect, useRef, type MouseEvent, type PointerEvent, type ReactNode } from 'react';
 import { useLongPress } from './useLongPress';
 import type { HueSlot } from '../hue';
 import { focusRing } from '../../../primitives/Ring';
@@ -33,6 +33,12 @@ export interface ButtonProps {
   label?: string;
   /** A glyph after the label, or alone: ◀ ▶ ▲ ▼ + − ▾. Hidden from assistive tech. */
   symbol?: ButtonGlyph;
+  /** An icon before the label, or alone (an `Icon`, an SVG), drawn in the face's ink and hidden
+   *  from assistive tech. Alone (no `label`), give the button a `name` for its accessible name and
+   *  a `title` for its hover hint: an icon-only key, such as a panel's show/hide toggle. */
+  icon?: ReactNode;
+  /** The native hover hint (`title`), e.g. "Hide the inspector (⌘I)". */
+  title?: string;
   /** `icon` square; `md` width from the label; `band` a wide, left-aligned transport key; `pair` one of two; `cell` fills its container; `caret` the narrow ▾. All heights are `--control-h`. */
   size?: ButtonSize;
   /** Rank at rest. `primary`: the one filled call to action on the screen (`--action`). `secondary` (default): an outlined key. `quiet`: no outline, for low-stakes steps. The on, chosen, waiting and disabled faces override it. */
@@ -163,6 +169,8 @@ const SOLID = new Set<ButtonHue>(['ok', 'rec']);
 export function Button({
   label = '',
   symbol,
+  icon,
+  title,
   size = 'md',
   variant = 'secondary',
   bar,
@@ -272,6 +280,7 @@ export function Button({
       data-solid={!disabled && face === 'on' && SOLID.has(drawn) ? '' : undefined}
       data-contrast={disabled ? 'dim' : undefined}
       data-tip={tip}
+      title={title}
       aria-label={accessibleName}
       aria-pressed={pressed}
       aria-haspopup={popup}
@@ -284,6 +293,11 @@ export function Button({
       onPointerCancel={pointerEnd}
       onLostPointerCapture={pointerEnd}
     >
+      {icon !== undefined && (
+        <span className="yh-button__icon" data-part="icon" aria-hidden="true">
+          {icon}
+        </span>
+      )}
       {label !== '' && (
         <span className="yh-button__label" data-part="label">
           {label}

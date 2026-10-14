@@ -165,6 +165,10 @@ export interface Materials {
    *  `--lit` (library.css), because a custom property resolves `var()` where it is declared: the
    *  scope can't hold a glow that reads each lamp's colour. */
   lit: { radius: string; strength: string };
+  /** The keyboard focus ring: its `ink` (default `var(--accent)`) and its `offset` from the edge
+   *  (default `2px`), as `--focus-ring` and `--focus-ring-offset`. A system whose focus ring is
+   *  the controls' ink rather than the accent (visuals) sets `ink`. */
+  focus?: { ink?: string; offset?: string };
   /** A shader material (docs/shader-graph.md) drawn over a layer's CSS fill and under its
    *  content, where WebGL2 allows; the CSS layer is the fallback. A layer left out has none. */
   shaders?: Partial<Record<LayerName, 'water' | 'ether' | 'glass'>>;
@@ -378,6 +382,8 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--mat-lit-radius': m.lit.radius,
     '--mat-lit-strength': m.lit.strength,
     '--light-angle': m.light,
+    '--focus-ring': m.focus?.ink ?? 'var(--accent)',
+    '--focus-ring-offset': m.focus?.offset ?? '2px',
 
     '--control-h': `${s.control}px`,
   };
