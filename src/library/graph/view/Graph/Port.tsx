@@ -96,6 +96,7 @@ export function Port({ id, side, label, showLabel = true, kind, hue, connected, 
         {...(shape === 'diamond' ? { 'data-shape': 'diamond' } : {})}
         {...(kind === undefined ? {} : { 'data-kind': kind })}
         {...(hue === undefined ? {} : { 'data-hue': hue })}
+        {...(graph?.lit?.has(at) ? { 'data-lit': '' } : {})}
         {...(connected ? { 'data-connected': '' } : {})}
         {...(graph?.cordFrom === at ? { 'data-pending': '' } : {})}
         {...(graph?.cordOver === at ? { 'data-over': '' } : {})}

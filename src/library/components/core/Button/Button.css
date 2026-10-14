@@ -203,9 +203,21 @@
     var(--mat-key-pressed);
   color: var(--text-1);
 }
+/* A quiet key has no key to latch, so chosen it takes the pack's own chosen face for a toggle: the
+   chosen tab (--mat-tabs-chosen-*), as Tabs and Segmented draw it — an underline, a --selected
+   block, a raised chip, or (visuals) the ink alone. Square in a bare-track pack, as Tabs is, so an
+   underline stays a straight line instead of curving up into the corners. */
 .yh-button[data-face='chosen'][data-variant='quiet'] {
-  background: linear-gradient(var(--yh-button-tint), var(--yh-button-tint));
-  box-shadow: inset 0 calc(-1 * var(--yh-wait-ring)) 0 var(--yh-button-fill);
+  background:
+    linear-gradient(var(--yh-button-tint), var(--yh-button-tint)),
+    var(--mat-tabs-chosen-texture),
+    var(--mat-tabs-chosen-fill);
+  box-shadow: var(--mat-tabs-chosen-shadow);
+  color: var(--mat-tabs-chosen-ink);
+}
+.yh-button[data-face='chosen'][data-variant='quiet']:not([data-join]) {
+  --yh-button-chosen-radius: min(var(--radius-control), calc(var(--mat-tabs-pad) * 4));
+  border-radius: var(--yh-button-chosen-radius);
 }
 
 /* Waiting: queued or armed, the double-weight ring over a faint tint of the key; the label stays legible. */

@@ -140,6 +140,8 @@ export type CircuitErrorCode =
   | 'unknown-bus'
   | 'bus-has-source'
   | 'bus-to-bus'
+  /** An in pin already has its one trace (rule 8). */
+  | 'inlet-taken'
   /** A malformed placement, layout or routing (`validate` only). */
   | 'bad-hint'
   /** A `modules` key differs from its module's id (`validate` only). */
@@ -339,6 +341,8 @@ export function connect(circuit: Circuit, module: string, trace: Trace): Circuit
   const to = trace.to;
   if (isBus(to) && m.traces.some((t) => isBus(t.to) && t.to.bus === to.bus))
     throw new CircuitError('bus-has-source', `bus "${to.bus}" already has a source`);
+  if (!isBus(to) && m.traces.some((t) => !isBus(t.to) && t.to.chip === to.chip && t.to.pin === to.pin))
+    throw new CircuitError('inlet-taken', `pin "${to.chip}/${to.pin}" already has a trace`);
   return withModule(circuit, { ...m, traces: [...m.traces, trace] });
 }
 
@@ -484,6 +488,7 @@ function issuesOfModule(circuit: Circuit, id: string): Issue[] {
   duplicates(m.controls, 'controls', id, 'control', out);
 
   const fed = new Set<string>();
+  const taken = new Set<string>();
   m.traces.forEach((t, i) => {
     const path = `traces[${i}]`;
     if (isBus(t.from) && isBus(t.to)) {
@@ -493,13 +498,20 @@ function issuesOfModule(circuit: Circuit, id: string): Issue[] {
     // One issue per broken trace: once its first end fails, the other isn't judged.
     const a = endIssue(circuit, m, t.from, 'out', `${path}.from`, out);
     const b = a && endIssue(circuit, m, t.to, 'in', `${path}.to`, out);
-    if (a && b && !isBus(t.from) && !isBus(t.to) && t.from.chip === t.to.chip)
+    let loops = false;
+    if (a && b && !isBus(t.from) && !isBus(t.to) && t.from.chip === t.to.chip) {
+      loops = true;
       push('self-loop', `${path}.to.chip`, `trace "${t.id}" loops on chip "${t.from.chip}"`);
+    }
     const bad = amountIssue(t);
     if (bad) push('bad-amount', `${path}.amount`, bad);
     if (isBus(t.to)) {
       if (fed.has(t.to.bus)) push('bus-has-source', `${path}.to.bus`, `bus "${t.to.bus}" has more than one source`);
       fed.add(t.to.bus);
+    } else if (a && b && !loops) {
+      const key = `${t.to.chip}/${t.to.pin}`;
+      if (taken.has(key)) push('inlet-taken', `${path}.to.pin`, `pin "${key}" has more than one trace`);
+      taken.add(key);
     }
   });
 
