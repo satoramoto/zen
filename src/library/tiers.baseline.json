@@ -263,6 +263,12 @@
     "pixels": 0,
     "type": 0
   },
+  "graph/view/GraphPath": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
   "graph/view/NodeSheet": {
     "knobs": 0,
     "margins": 0,

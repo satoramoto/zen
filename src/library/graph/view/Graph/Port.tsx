@@ -18,8 +18,9 @@ export interface PortProps {
   /**
    * The hue slot the host gives this port's kind (`--hue-1` … `--hue-4`, as `data-hue`): the ring
    * in that hue, and the fill once connected. Unset, the port keeps the graph's neutral ink.
+   * `role-1` / `role-2` take a role hue instead, for a host with more kinds than hue slots.
    */
-  hue?: HueSlot;
+  hue?: HueSlot | 'role-1' | 'role-2';
   /** Whether a cord lands here. The host knows; the port doesn't. */
   connected?: boolean;
   disabled?: boolean;

@@ -185,6 +185,8 @@ const FIT_MARGIN = 16;
 const FIT_DEBOUNCE_MS = 120;
 /** A size change smaller than this (screen pixels, either axis) isn't worth a re-fit. */
 const FIT_NOTABLE = 4;
+/** Screen pixels a press must travel before it is a node drag rather than a click. */
+const DRAG_SLOP = 3;
 /** Graph units a bus tap or source runs square off its port before bending. */
 const STUB = 16;
 /** Graph units between the lowest node and a horizontal rail placed for itself. */
@@ -278,6 +280,20 @@ function contentStyle(view: View): CSSProperties {
  * - `--lib-graph-grid`: the dot spacing in graph units. `--lib-graph-dot`: the dot ink (default `--border`).
  * - `--lib-graph-port-*` (`-size`, `-ink`): a port's dot size, and the fill of a connected port; `-ink` may be set around a node.
  * - `--lib-graph-zoom`, `--lib-graph-x`, `--lib-graph-y`: published inline by the graph (zoom, pan); read them, don't set them.
+ * - `--lib-graph-ground`: the canvas fill (default transparent). `--lib-graph-rule`: a ruled line every fourth dot (default transparent).
+ * - `--lib-graph-rail-width`: a bus rail's stroke on screen (default 2.5 cords). `--lib-graph-joint`: a rail joint's radius; set by the graph.
+ * - `--lib-graph-word-fill`: the fill a cord's label knocks out of the line (default `--surface-1`; set it to the canvas's own fill).
+ * - `--lib-graph-zone-fill`, `--lib-graph-zone-edge`: a zone frame's tint and dashed edge.
+ *
+ * **Layers** (all optional). `routing="trace"` draws circuit-board traces (straight runs, 45°
+ * bends) instead of curves; either way a cord leaves each port along the port's `face`. A cord's
+ * `label` is printed mid-cord (`cord-label`), a modulation (`role: 'modulation'`) is dashed
+ * (`data-role`) with its `amount` near the inlet (`cord-amount`), and a `dim` cord recedes. `buses`
+ * draws each rail (`bus`: `bus-source`, `rail`, `joint`, `rail-label`) and a cord with `bus` as a
+ * stub from the rail to its inlet (`data-bus`). `zones` frames groups of nodes (`zones`: `zone`,
+ * `zone-label`), measured from the nodes' boxes (`GraphNode` carries `data-node-id`). Words and
+ * frames take no pointer. A node is captured for dragging only once the press has moved a few
+ * pixels, so a click on its face stays a click.
  */
 export function Graph({
   children,
@@ -898,18 +914,24 @@ export interface GraphNodeProps {
  */
 export function GraphNode({ id, x, y, children, className }: GraphNodeProps) {
   const graph = useContext(GraphContext);
-  const drag = useRef<{ id: number; fromX: number; fromY: number; atX: number; atY: number } | null>(null);
+  const drag = useRef<{ id: number; fromX: number; fromY: number; atX: number; atY: number; held: boolean } | null>(null);
 
   const down = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!graph || e.button !== 0 || e.defaultPrevented) return;
     if ((e.target as HTMLElement).closest(INTERACTIVE)) return;
-    e.currentTarget.setPointerCapture?.(e.pointerId);
-    drag.current = { id: e.pointerId, fromX: e.clientX, fromY: e.clientY, atX: x, atY: y };
+    // The pointer is captured only once it has moved: capturing on the press would retarget the
+    // click that follows to the node, and a click on the face (its name, to select it) is lost.
+    drag.current = { id: e.pointerId, fromX: e.clientX, fromY: e.clientY, atX: x, atY: y, held: false };
   };
 
   const move = (e: ReactPointerEvent<HTMLDivElement>) => {
     const held = drag.current;
     if (!held || held.id !== e.pointerId || !graph) return;
+    if (!held.held) {
+      if (Math.hypot(e.clientX - held.fromX, e.clientY - held.fromY) < DRAG_SLOP) return;
+      held.held = true;
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    }
     const k = graph.scale();
     graph.moveNode(id, held.atX + (e.clientX - held.fromX) / k, held.atY + (e.clientY - held.fromY) / k);
   };

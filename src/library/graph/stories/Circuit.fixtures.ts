@@ -6,18 +6,21 @@ import type { HueSlot } from '../../components/core/hue';
 import type { Param } from '../../components/core/Param/param';
 import type { Chip, Circuit, Module, Pin, Trace } from '../model/circuit';
 
-/** Each pin and trace kind's hue slot (`--hue-n`): the host's choice, not the model's. */
-export const KIND_HUE: Record<string, HueSlot> = {
+/** A kind's colour slot: a hue (`--hue-n`), or a role hue for a sample with more kinds than hues. */
+export type KindInk = HueSlot | 'role-1' | 'role-2';
+
+/** Each pin and trace kind's colour slot: the host's choice, not the model's. */
+export const KIND_HUE: Record<string, KindInk> = {
   // patch
   audio: 1,
   mod: 2,
-  // diffusion
+  // diffusion: six kinds, so the two that ride alongside (the VAE and the image) take the role hues
   model: 1,
   clip: 2,
   conditioning: 3,
   latent: 4,
-  vae: 2,
-  image: 3,
+  vae: 'role-1',
+  image: 'role-2',
   // session, root
   flow: 1,
   fail: 4,
@@ -314,11 +317,12 @@ const stage = (
 /** A check's way out when it fails: its own pin, so pass and fail leave from different faces. */
 const failPin = (face: Face) => outPin('fail', 'fail', { label: 'Fail', placement: face });
 
-// A meander: Work runs left to right, Ship comes back right to left, Land runs out again, and
-// Repair stands to the right. Columns leave room for a face at the widest pack's spacing.
-const COL = 280;
-const ROW = 210;
-const REPAIR = COL * 5 + 60;
+// A meander four wide: Work runs left to right, Review comes back right to left, Ship runs out
+// again, and Repair stands to the right. Columns leave room for a face at the widest spacing
+// (the samples stretch positions by the pack's step).
+const COL = 260;
+const ROW = 200;
+const REPAIR = COL * 4 + 40;
 
 export const session: Circuit = {
   version: 1,
@@ -330,8 +334,8 @@ export const session: Circuit = {
       routing: 'trace',
       zones: [
         { id: 'work', label: 'Work' },
+        { id: 'review', label: 'Check and review' },
         { id: 'ship', label: 'Ship' },
-        { id: 'land', label: 'Land' },
         { id: 'repair', label: 'Repair' },
       ],
       chips: [
@@ -343,23 +347,23 @@ export const session: Circuit = {
           ]),
           zone: 'work',
         },
-        { ...stage('checked', COL * 3, 0, { in: 'w', out: 'e' }, { check: 'npm run typecheck' }, [failPin('s')]), zone: 'work' },
-        { ...stage('tested', COL * 4, 0, { in: 'w', out: 's' }, { check: 'npx vitest run' }, [failPin('e')]), zone: 'work' },
-        { ...stage('committed', COL * 4, ROW, { in: 'n', out: 'w' }, { branch: 'lane' }), zone: 'ship' },
-        { ...stage('reviewed', COL * 3, ROW, { in: 'e', out: 'w' }, { agent: 'reviewer' }, [failPin('s')]), zone: 'ship' },
-        { ...stage('pr_open', COL * 2, ROW, { in: 'e', out: 'w' }, { automerge: true }), zone: 'ship' },
-        { ...stage('ci', COL, ROW, { in: 'e', out: 'w' }, { job: 'checks' }, [failPin('s')]), zone: 'ship' },
-        { ...stage('merged', 0, ROW, { in: 'e', out: 's' }), zone: 'ship' },
-        { ...stage('pulled', 0, ROW * 2, { in: 'n', out: 'e' }), zone: 'land' },
-        { ...stage('done', COL, ROW * 2, { in: 'w' }), zone: 'land' },
+        { ...stage('checked', COL * 3, 0, { in: 'w', out: 's' }, { check: 'npm run typecheck' }, [failPin('e')]), zone: 'work' },
+        { ...stage('tested', COL * 3, ROW, { in: 'n', out: 'w' }, { check: 'npx vitest run' }, [failPin('e')]), zone: 'review' },
+        { ...stage('committed', COL * 2, ROW, { in: 'e', out: 'w' }, { branch: 'lane' }), zone: 'review' },
+        { ...stage('reviewed', COL, ROW, { in: 'e', out: 'w' }, { agent: 'reviewer' }, [failPin('s')]), zone: 'review' },
+        { ...stage('pr_open', 0, ROW, { in: 'e', out: 's' }, { automerge: true }), zone: 'review' },
+        { ...stage('ci', 0, ROW * 2, { in: 'n', out: 'e' }, { job: 'checks' }, [failPin('s')]), zone: 'ship' },
+        { ...stage('merged', COL, ROW * 2, { in: 'w', out: 'e' }), zone: 'ship' },
+        { ...stage('pulled', COL * 2, ROW * 2, { in: 'w', out: 'e' }), zone: 'ship' },
+        { ...stage('done', COL * 3, ROW * 2, { in: 'w' }), zone: 'ship' },
         {
-          ...stage('fixing', REPAIR, ROW * 0.55, { in: 'w' }, { agent: 'quick-fix', attempts: 3 }, [
+          ...stage('fixing', REPAIR, ROW * 0.6, { in: 'w' }, { agent: 'quick-fix', attempts: 3 }, [
             outPin('retry', 'flow', { label: 'Retry', placement: 'n' }),
             outPin('give-up', 'fail', { label: 'Give up', placement: 's' }),
           ]),
           zone: 'repair',
         },
-        { ...stage('failed', REPAIR, ROW * 1.55, { in: 'n' }), zone: 'repair' },
+        { ...stage('failed', REPAIR, ROW * 1.6, { in: 'n' }), zone: 'repair' },
       ],
       traces: [
         wire('asked-routed', 'asked.out', 'routed.in', { kind: 'flow' }),

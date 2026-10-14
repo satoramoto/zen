@@ -131,7 +131,7 @@
 
 /* A quiet cord (`dim`). */
 .lib-graph__cord[data-dim] {
-  stroke-opacity: 0.35;
+  stroke-opacity: 0.55;
 }
 
 /* Bus: the rail, the run from its source and a joint where each tap leaves. */
@@ -258,6 +258,12 @@
 }
 .lib-graph__port[data-hue='4'] {
   --lib-graph-port-hue: var(--hue-4);
+}
+.lib-graph__port[data-hue='role-1'] {
+  --lib-graph-port-hue: var(--role-1);
+}
+.lib-graph__port[data-hue='role-2'] {
+  --lib-graph-port-hue: var(--role-2);
 }
 .lib-graph__port[data-hue] {
   border-color: var(--lib-graph-port-hue);

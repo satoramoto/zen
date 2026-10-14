@@ -79,7 +79,9 @@ const INTERACTIVE = 'button, a[href], input, select, textarea, [role="button"], 
  * bar; `name` the name, the tab stop; `head-end` the trailing actions; `screen` the picture;
  * `screen-band` (with `outletsAt="screen"`) the picture and its `screen-outlets` side by side;
  * `rows` the port rows, each a `row` (with `row-in`, `row-control`, `row-out`); `rails` the body
- * between its `inlets` and `outlets` (`rail-in`, `rail-out`); `body` the faceplate.
+ * between its `inlets` and `outlets` (`rail-in`, `rail-out`); `body` the faceplate; `kicker` the
+ * line under the name (`data-kicker` on the root); `edges` the layer of placed ports, each an
+ * `edge`. `data-pins="edge"` on the root with `pins="edge"`.
  *
  * **Tuning knobs.** `--lib-device-accent` the head's leading mark and the ink of the port cells
  * (a host sets it per kind; default none, and the ports keep `--text-3`); `--lib-device-width`

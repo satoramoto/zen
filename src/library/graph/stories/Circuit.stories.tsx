@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
@@ -6,7 +6,6 @@ import { Surface } from '../../primitives/Surface';
 import { Text, type TextTone } from '../../primitives/Text';
 import { Button } from '../../components/core/Button/Button';
 import { StatusDot } from '../../components/core/StatusDot/StatusDot';
-import type { HueSlot } from '../../components/core/hue';
 import { Device, DeviceEdge, DeviceMore, DevicePortRow } from '../view/Device/Device';
 import { Graph, GraphNode, type GraphBus, type GraphCord, type GraphFace, type GraphView, type GraphZone } from '../view/Graph/Graph';
 import { Port } from '../view/Graph/Port';
@@ -17,7 +16,7 @@ import { format } from '../../components/core/Param/format';
 import type { Param } from '../../components/core/Param/param';
 import { pinsOf, validate, type Chip, type Circuit, type Json, type Module, type Pin, type Trace } from '../model/circuit';
 import { useCircuit, type CircuitBinding } from '../model/useCircuit';
-import { CIRCUITS, KIND_HUE, PARAM_SPECS, SESSION_STATES, TYPE_NAMES, type SessionState } from './Circuit.fixtures';
+import { CIRCUITS, KIND_HUE, PARAM_SPECS, SESSION_STATES, TYPE_NAMES, type KindInk, type SessionState } from './Circuit.fixtures';
 
 // ---------------------------------------------------------------------------------------------
 // Host concerns: names, inks, faces, new-trace kinds, param edits. None of these are the model's.
@@ -27,10 +26,15 @@ const FACE_PARAMS = 2;
 /** A chip's rough box in module units, for choosing an auto pin's face before anything is measured. */
 const CHIP_W = 160;
 const CHIP_H = 96;
+/** The `--space-6` the samples' positions were laid out at (a compact pack's); other packs stretch them. */
+const BASE_STEP = 32;
 
 const nameOf = (chip: Chip) => (typeof chip.name === 'string' ? chip.name : (TYPE_NAMES[chip.type] ?? chip.id));
 const isPinEnd = (end: Trace['from']): end is { chip: string; pin: string } => 'chip' in end;
-const hueOf = (kind: string | undefined): HueSlot | undefined => (kind ? KIND_HUE[kind] : undefined);
+const hueOf = (kind: string | undefined): KindInk | undefined => (kind ? KIND_HUE[kind] : undefined);
+/** A colour slot as a CSS colour: `--hue-n` or `--role-n`. */
+const inkOf = (slot: KindInk | undefined, fallback = 'var(--text-3)') =>
+  slot === undefined ? fallback : typeof slot === 'number' ? `var(--hue-${slot})` : `var(--${slot})`;
 
 /** A trace the binding made has no kind: give it its out pin's kind (or its bus's) so it's inked. */
 function inkNewTraces(circuit: Circuit, module: string): Circuit {
@@ -79,7 +83,7 @@ const valueText = (key: string, value: Json): string =>
 
 /** `--lib-cord-<kind>: var(--hue-n)` for every kind, and `active` (the current state's way out) in the accent. */
 const INKS = {
-  ...Object.fromEntries(Object.entries(KIND_HUE).map(([kind, hue]) => [`--lib-cord-${kind}`, `var(--hue-${hue})`])),
+  ...Object.fromEntries(Object.entries(KIND_HUE).map(([kind, hue]) => [`--lib-cord-${kind}`, inkOf(hue)])),
   '--lib-cord-active': 'var(--accent)',
 } as CSSProperties;
 
@@ -160,7 +164,7 @@ interface FaceProps {
 }
 
 /** A small square in a kind's hue: the chip's identity at a glance. */
-function KindMark({ hue }: { hue?: HueSlot }) {
+function KindMark({ hue }: { hue?: KindInk }) {
   return (
     <span
       aria-hidden="true"
@@ -169,7 +173,7 @@ function KindMark({ hue }: { hue?: HueSlot }) {
         width: 'var(--space-2)',
         height: 'var(--space-2)',
         borderRadius: 'calc(var(--radius-control) / 2)',
-        background: hue ? `var(--hue-${hue})` : 'var(--text-3)',
+        background: inkOf(hue),
         alignSelf: 'flex-start',
         marginTop: 'calc(var(--space-1) + 1px)',
       }}
@@ -338,7 +342,7 @@ function Legend({ kinds, modulation, bus }: { kinds: string[]; modulation: boole
       data-testid="legend"
       style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', margin: 0, padding: 0, listStyle: 'none', flex: 1, minWidth: 0, overflow: 'hidden', justifyContent: 'flex-end' }}
     >
-      {kinds.map((k) => item(k, swatch(hueOf(k) ? `var(--hue-${hueOf(k)})` : 'var(--text-3)'), k))}
+      {kinds.map((k) => item(k, swatch(inkOf(hueOf(k))), k))}
       {modulation && item('modulation', swatch('var(--text-3)', true), 'modulation')}
       {bus && item('bus', swatch('var(--text-3)', false, true), 'bus rail')}
     </ul>
@@ -356,7 +360,7 @@ function ZoomBar({ view }: { view: RefObject<GraphView | null> }) {
 }
 
 /** The stage's height: most of the window, never less than a comfortable minimum. */
-const STAGE_H = 'max(calc(var(--space-6) * 16), calc(100vh - var(--space-6) * 5))';
+const STAGE_H = 'max(calc(var(--space-6) * 16), calc(100vh - var(--space-6) * 6))';
 
 // ---------------------------------------------------------------------------------------------
 // The JSON panel: the live circuit, its validity and the module's controls.
@@ -405,7 +409,8 @@ function CircuitPanel({ circuit, module, onParam }: PanelProps) {
       layer="base"
       border
       style={{
-        flex: '1 1 calc(var(--space-6) * 9)',
+        flex: '1 1 clamp(calc(var(--space-6) * 7), 30%, calc(var(--space-6) * 11))',
+        maxWidth: 'calc(var(--space-6) * 12)',
         minWidth: 0,
         height: STAGE_H,
         display: 'grid',
@@ -521,9 +526,32 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [more, setMore] = useState<Record<string, boolean>>({});
   const [parked, setParked] = useState<NodeSheetPlace | null>(null);
+  const [showJson, setShowJson] = useState(true);
   const anchor = useRef<HTMLDivElement | null>(null);
   const view = useRef<GraphView>(null);
   const m = circuit.modules[mod];
+  // The stage changes width when the panel shows or hides: frame it again.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => view.current?.fit(1));
+    return () => cancelAnimationFrame(id);
+  }, [showJson]);
+
+  // Module units are drawn at the pack's spacing: a chip is `--space-6` × 5 wide, so positions
+  // stretch by the same step and a roomy pack's faces don't run into each other.
+  const stage = useRef<HTMLDivElement | null>(null);
+  const [unit, setUnit] = useState(1);
+  useLayoutEffect(() => {
+    const el = stage.current;
+    if (!el) return;
+    const step = parseFloat(getComputedStyle(el).getPropertyValue('--space-6'));
+    const next = Number.isFinite(step) && step > 0 ? step / BASE_STEP : 1;
+    if (Math.abs(next - unit) > 0.001) setUnit(next);
+  });
+  useEffect(() => {
+    const id = requestAnimationFrame(() => view.current?.fit(1));
+    return () => cancelAnimationFrame(id);
+  }, [unit]);
+  const onMove = useCallback((id: string, x: number, y: number) => binding.onMove(id, Math.round(x / unit), Math.round(y / unit)), [binding, unit]);
 
   // Frame the module once it's drawn (after its faces and frames have measured), and again when
   // another module is shown.
@@ -592,10 +620,10 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
           ...(b.label ? { label: b.label } : {}),
           ...(b.kind ? { kind: b.kind } : {}),
           ...(from ? { from } : {}),
-          ...(b.rail ? { axis: b.rail.axis, ...(b.rail.at !== undefined ? { at: b.rail.at } : {}) } : {}),
+          ...(b.rail ? { axis: b.rail.axis, ...(b.rail.at !== undefined ? { at: b.rail.at * unit } : {}) } : {}),
         };
       }),
-    [m.buses, m.traces, binding],
+    [m.buses, m.traces, binding, unit],
   );
   const zones: GraphZone[] = useMemo(
     () => (m.zones ?? []).map((z) => ({ id: z.id, ...(z.label ? { label: z.label } : {}), nodes: m.chips.filter((c) => c.zone === z.id).map((c) => c.id) })),
@@ -633,14 +661,15 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
         <Text role="caption" tone="muted" style={{ flex: 'none' }}>
           {m.chips.length} chips · {m.traces.length} traces{(m.buses ?? []).length ? ` · ${m.buses!.length} bus` : ''}
         </Text>
+        <Button variant="quiet" label="JSON" name="Show the circuit JSON" pressed={showJson} chosen={showJson} onPress={() => setShowJson((s) => !s)} />
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', alignItems: 'stretch', minWidth: 0 }}>
+      <div ref={stage} style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', alignItems: 'stretch', minWidth: 0 }}>
         <Surface
           layer="base"
           border
           style={{
             ...CANVAS,
-            flex: '999 1 calc(var(--space-6) * 20)',
+            flex: '999 1 calc(var(--space-6) * 14)',
             minWidth: 0,
             height: STAGE_H,
             display: 'grid',
@@ -673,13 +702,14 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
               buses={buses}
               zones={zones}
               fitAlign="center"
+              fitOnResize
               onConnect={binding.onConnect}
-              onMove={binding.onMove}
+              onMove={onMove}
               onDisconnect={binding.onDisconnect}
               onClearSelection={() => setSelected(null)}
             >
               {m.chips.map((c) => (
-                <GraphNode key={c.id} id={c.id} x={c.x} y={c.y}>
+                <GraphNode key={c.id} id={c.id} x={c.x * unit} y={c.y * unit}>
                   <div
                     ref={c.id === selected ? anchor : undefined}
                     style={{ '--lib-device-width': 'calc(var(--space-6) * 5)' } as CSSProperties}
@@ -702,7 +732,7 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
                 </GraphNode>
               ))}
               {terminals.map((t) => (
-                <GraphNode key={t.id} id={t.id} x={t.x} y={t.y}>
+                <GraphNode key={t.id} id={t.id} x={t.x * unit} y={t.y * unit}>
                   <Terminal id={`${t.id}/port`} side={t.side} label={t.label} kind={t.kind} />
                 </GraphNode>
               ))}
@@ -736,7 +766,7 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
             />
           )}
         </Surface>
-        <CircuitPanel circuit={circuit} module={mod} onParam={(c, key, value) => setCircuit((was) => setParam(was, mod, c, key, value))} />
+        {showJson && <CircuitPanel circuit={circuit} module={mod} onParam={(c, key, value) => setCircuit((was) => setParam(was, mod, c, key, value))} />}
       </div>
     </div>
   );
