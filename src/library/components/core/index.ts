@@ -61,7 +61,17 @@ export { Modal, Sheet, type ModalProps, type SheetProps, type SheetSide } from '
 // The node graph and the device face a node wears (the lab editor's stage graph; APIs mirroring @openflow/widgets).
 export { Graph, GraphNode, cordPath, cordInk, type GraphProps, type GraphNodeProps, type GraphCord, type GraphView, type PortSide } from './Graph/Graph';
 export { Port, type PortProps } from './Graph/Port';
-export { Device, DevicePortRow, type DeviceProps, type DevicePortRowProps } from './Device/Device';
+export { Device, DevicePortRow, DeviceMore, type DeviceProps, type DevicePortRowProps, type DeviceMoreProps } from './Device/Device';
+/** A node's whole face hung beside it at screen scale (ported from @openflow/widgets' Sheet; `Sheet` here is Modal's). */
+export {
+  NodeSheet,
+  NodeSheetSection,
+  NodeSheetRow,
+  type NodeSheetProps,
+  type NodeSheetPlace,
+  type NodeSheetSectionProps,
+  type NodeSheetRowProps,
+} from './NodeSheet/NodeSheet';
 
 // The Circuit model (docs/circuit-model.md): one plain-JSON circuit of modules, chips, pins, traces
 // and buses, pure operations on it, and the hook that binds one module to the Graph above.
