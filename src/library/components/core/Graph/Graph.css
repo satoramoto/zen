@@ -70,6 +70,26 @@
     calc(var(--lib-graph-cord-width) * 1.5 / var(--lib-graph-zoom));
 }
 
+/* A selectable cord (Graph's `onDisconnect`): the drawn stroke and a wider, invisible hit path
+   take the pointer; selection and keyboard focus thicken the stroke in the accent. */
+.lib-graph__cord-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: calc(var(--lib-graph-cord-width) * 5 / var(--lib-graph-zoom));
+  pointer-events: stroke;
+  cursor: pointer;
+}
+.lib-graph__cord[data-selectable] {
+  pointer-events: stroke;
+  cursor: pointer;
+  outline: none;
+}
+.lib-graph__cord[data-selectable]:focus-visible,
+.lib-graph__cord[data-selected] {
+  stroke: var(--accent);
+  stroke-width: calc(var(--lib-graph-cord-width) * 2 / var(--lib-graph-zoom));
+}
+
 .lib-graph__node {
   position: absolute;
   cursor: default;
@@ -106,6 +126,25 @@
 .lib-graph__port[data-connected] {
   border-color: var(--lib-device-accent, var(--lib-graph-port-ink));
   background: var(--lib-device-accent, var(--lib-graph-port-ink));
+}
+/* A port in a kind's hue slot (`hue`): its ring always, its fill once connected. */
+.lib-graph__port[data-hue='1'] {
+  --lib-graph-port-hue: var(--hue-1);
+}
+.lib-graph__port[data-hue='2'] {
+  --lib-graph-port-hue: var(--hue-2);
+}
+.lib-graph__port[data-hue='3'] {
+  --lib-graph-port-hue: var(--hue-3);
+}
+.lib-graph__port[data-hue='4'] {
+  --lib-graph-port-hue: var(--hue-4);
+}
+.lib-graph__port[data-hue] {
+  border-color: var(--lib-graph-port-hue);
+}
+.lib-graph__port[data-hue][data-connected] {
+  background: var(--lib-graph-port-hue);
 }
 .lib-graph__port:hover:not(:disabled):not([data-reach='shut']),
 .lib-graph__port[data-over]:not([data-reach='shut']),

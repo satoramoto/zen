@@ -25,6 +25,8 @@ export interface GraphCord {
   to: string;
   /** Surfaced as `data-kind`, and stroked with `--lib-cord-<kind>` where a host sets it. */
   kind?: string;
+  /** The host's id for this cord. With `onDisconnect`, a cord with an id can be selected and deleted. */
+  id?: string;
 }
 
 export interface GraphView {
@@ -48,6 +50,11 @@ export interface GraphProps {
   onConnect?(from: string, to: string): void;
   /** The empty canvas was pressed, for a host that clears a selection on it. */
   onClearSelection?(): void;
+  /**
+   * A selected cord (one with an `id`) was deleted with Delete or Backspace. Without it, cords
+   * aren't selectable and behave exactly as before.
+   */
+  onDisconnect?(cordId: string): void;
   /** A read-only view of the canvas, plus `fit`. Pan and zoom stay the graph's. */
   viewRef?: Ref<GraphView>;
   minZoom?: number;
@@ -167,7 +174,10 @@ function contentStyle(view: View): CSSProperties {
  * (or Space) on a port arms it, Enter on a port of the other side lands the cord, Escape drops it;
  * a same-side landing is refused. Arrow keys move a node from its own focusable head (8 units,
  * Shift 1); the node adds no tab stop of its own. A node drags from anywhere a control hasn't
- * claimed: a `preventDefault`ed pointerdown or one inside interactive HTML.
+ * claimed: a `preventDefault`ed pointerdown or one inside interactive HTML. With `onDisconnect`,
+ * a cord with an `id` is a tab stop (`role="button"`): a click or focus selects it
+ * (`data-selected`), Delete or Backspace hands its id to `onDisconnect`, Escape or a press on the
+ * empty canvas clears the selection. The cord stays drawn until the host drops it from `cords`.
  *
  * Coordinates: the viewport holds a 0×0 content origin carrying `zoom: k` and the pan, so its
  * `getBoundingClientRect()` is graph (0, 0) on screen and every conversion is a subtraction and a
@@ -177,7 +187,8 @@ function contentStyle(view: View): CSSProperties {
  *
  * **Parts.** `viewport` (the root, `.lib-graph`, `data-panning` while panning): the clip and the
  * dotted grid. `content`: the zoomed, panned origin. `cords`: the SVG layer (no pointer events);
- * each `cord` carries `data-kind`, the one in flight `data-pending`. `node`: one `GraphNode`.
+ * each `cord` carries `data-kind`, the one in flight `data-pending`; a selectable cord also
+ * carries `data-cord-id` and `data-selectable`, and a wider invisible `cord-hit` path under it. `node`: one `GraphNode`.
  * Ports are `Port` buttons inside nodes.
  *
  * **Tuning knobs**
@@ -195,6 +206,7 @@ export function Graph({
   onMove,
   onConnect,
   onClearSelection,
+  onDisconnect,
   viewRef,
   minZoom = 0.25,
   maxZoom = 3,
@@ -209,6 +221,8 @@ export function Graph({
   const [drawing, setDrawing] = useState<Drawing | null>(null);
   const [over, setOver] = useState<string | null>(null);
   const [panning, setPanning] = useState(false);
+  /** The selected cord's id, when cords are selectable. */
+  const [chosen, setChosen] = useState<string | null>(null);
 
   /** Registered port elements and where they last measured, by `portKey`. Refs, not state. */
   const elements = useRef(new Map<string, Held>());
@@ -455,6 +469,7 @@ export function Graph({
     [register, startCord, armCord, hoverPort, drawing?.at, wants, over],
   );
 
+  const selectable = onDisconnect !== undefined;
   const drawn = (cords ?? []).flatMap((cord) => {
     const a = spots.current.get(portKey(cord.from, 'out'));
     const b = spots.current.get(portKey(cord.to, 'in'));
@@ -492,6 +507,7 @@ export function Graph({
         e.currentTarget.setPointerCapture?.(e.pointerId);
         pan.current = { id: e.pointerId, fromX: e.clientX, fromY: e.clientY, atX: view.x, atY: view.y };
         setPanning(true);
+        setChosen(null);
         onClearSelection?.();
       }}
       onPointerMove={(e) => {
@@ -510,16 +526,63 @@ export function Graph({
       }}
     >
       <div ref={content} className="lib-graph__content" data-part="content" style={contentStyle(view)}>
-        <svg className="lib-graph__cords" data-part="cords" aria-hidden="true">
-          {drawn.map(({ cord, d }) => (
-            <path
-              key={`${cord.from} ${cord.to}`}
-              className="lib-graph__cord"
-              data-part="cord"
-              d={d}
-              {...(cord.kind ? { 'data-kind': cord.kind, style: { '--lib-cord-ink': cordInk(cord.kind) } as CSSProperties } : {})}
-            />
-          ))}
+        <svg className="lib-graph__cords" data-part="cords" {...(selectable ? {} : { 'aria-hidden': true })}>
+          {drawn.map(({ cord, d }) => {
+            const inked = cord.kind ? { 'data-kind': cord.kind, style: { '--lib-cord-ink': cordInk(cord.kind) } as CSSProperties } : {};
+            const id = cord.id;
+            if (!selectable || id === undefined)
+              return (
+                <path
+                  key={id ?? `${cord.from} ${cord.to}`}
+                  className="lib-graph__cord"
+                  data-part="cord"
+                  d={d}
+                  {...(selectable ? { 'aria-hidden': true } : {})}
+                  {...inked}
+                />
+              );
+            const pick = (e: ReactPointerEvent<SVGPathElement>) => {
+              if (e.button !== 0) return;
+              e.stopPropagation();
+              setChosen(id);
+              e.currentTarget.parentElement?.querySelector<SVGPathElement>(`[data-cord-id="${CSS.escape(id)}"]`)?.focus();
+            };
+            const selected = chosen === id;
+            return (
+              <g key={id}>
+                <path className="lib-graph__cord-hit" data-part="cord-hit" d={d} aria-hidden="true" onPointerDown={pick} />
+                <path
+                  className="lib-graph__cord"
+                  data-part="cord"
+                  data-cord-id={id}
+                  data-selectable=""
+                  {...(selected ? { 'data-selected': '' } : {})}
+                  d={d}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Cord ${cord.from} to ${cord.to}`}
+                  aria-pressed={selected}
+                  onPointerDown={pick}
+                  onFocus={() => setChosen(id)}
+                  onBlur={() => setChosen((was) => (was === id ? null : was))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      e.preventDefault();
+                      setChosen(null);
+                    } else if ((e.key === 'Delete' || e.key === 'Backspace') && chosen === id) {
+                      e.preventDefault();
+                      setChosen(null);
+                      onDisconnect?.(id);
+                    } else if ((e.key === 'Enter' || e.key === ' ') && chosen !== id) {
+                      e.preventDefault();
+                      setChosen(id);
+                    }
+                  }}
+                  {...inked}
+                />
+              </g>
+            );
+          })}
           {loose && <path className="lib-graph__cord" data-part="cord" data-pending="" d={loose} />}
         </svg>
         <GraphContext.Provider value={surface}>{children}</GraphContext.Provider>
