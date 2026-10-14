@@ -317,6 +317,19 @@ describe('9. removeChip removes the chip, its traces, and module pins / controls
     expect(v.inPins.map((p) => p.id)).toEqual(['gate']);
     expect(v.traces).toEqual([]);
   });
+  it('removing a chip a ModulePin maps to drops, in every module, the traces into that pin on instances', () => {
+    let c = addModule(circuit(), mod('rack', { chips: [chip('inner', [], { module: 'voice' }), chip('src', [pin('out', 'out')])] }));
+    c = placeChip(c, 'board', chip('rk', [], { module: 'rack' }));
+    c = connect(c, 'board', trace('toGate', end('lfo', 'out'), end('v1', 'gate')));
+    c = connect(c, 'board', trace('fromOut', end('v1', 'out'), end('amp', 'in')));
+    c = connect(c, 'rack', trace('innerGate', end('src', 'out'), end('inner', 'gate')));
+    c = removeChip(c, 'voice', 'env');
+    expect(c.modules.voice.inPins).toEqual([]);
+    expect(traceIds(board(c).traces)).toEqual(['fromOut', 't1']);
+    expect(c.modules.rack.traces).toEqual([]);
+    expect(pinsOf(c, 'board', 'v1').map((p) => p.id)).toEqual(['out']);
+    expect(validate(c)).toEqual([]);
+  });
   it('removing the only chip leaves an empty module', () => {
     const c = removeChip(placeChip(emptyCircuit(), 'board', chip('a', [])), 'board', 'a');
     expect(c).toEqual(emptyCircuit());
@@ -516,7 +529,7 @@ describe('17g. placement, layout and routing never affect the rules', () => {
     (board(c).chips[3].pins[0] as { placement?: unknown }).placement = placement;
     const issues = validate(c);
     expect(issues).toHaveLength(1);
-    expect(issues[0].module).toBe('board');
+    expect(issues[0]).toMatchObject({ code: 'bad-hint', module: 'board' });
     expect(issues[0].path).toContain(`chips[3].pins[0].${field}`);
   });
   it.each<[string, string]>([
@@ -527,6 +540,7 @@ describe('17g. placement, layout and routing never affect the rules', () => {
     (board(c) as unknown as Record<string, unknown>)[field] = value;
     const issues = validate(c);
     expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatchObject({ code: 'bad-hint', module: 'board' });
     expect(issues[0].path).toContain(field);
   });
 });
@@ -721,8 +735,8 @@ describe('19. what validate reports', () => {
     const issues = planted((c) => {
       c.modules.other = mod('different');
     });
-    expect(issues.length).toBeGreaterThan(0);
-    expect(issues.some((i) => /other|different|id/.test(`${i.module} ${i.path}`))).toBe(true);
+    expect(issues).toHaveLength(1);
+    expect(issues[0].code).toBe('key-mismatch');
   });
   it.each<[string, (c: Circuit) => void, string]>([
     ['chips', (c) => board(c).chips.push(chip('osc', [])), 'chips[5].id'],
@@ -809,6 +823,7 @@ describe('20. whatever the operations build validates to []', () => {
       (c) => moveChip(c, 'board', 'v2', 300, 40),
       (c) => removeChip(c, 'voice', 'vca'), // its out pin isn't wired on the board
       (c) => disconnect(c, 'board', 'g1'),
+      (c) => removeChip(c, 'voice', 'env'), // its gate pin is tapped on v2: that tap goes too (9)
       (c) => removeChip(c, 'board', 'lfo'),
       (c) => removeBus(c, 'board', 'gate'),
       (c) => removeChip(c, 'board', 'v1'),
