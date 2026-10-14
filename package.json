@@ -17,11 +17,14 @@
       "zen-source": "./src/library/storybook.tsx",
       "types": "./lib/storybook.d.ts",
       "import": "./lib/storybook.js"
-    }
+    },
+    "./harness/*": "./src/harness/*",
+    "./package.json": "./package.json"
   },
   "types": "./lib/index.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "src/harness"
   ],
   "sideEffects": [
     "*.css"
@@ -30,7 +33,7 @@
     "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json",
     "prepare": "npm run build:lib",
     "dev": "tsx scripts/dev.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p src/harness/claude-code",
     "test": "vitest run",
     "test:watch": "vitest",
     "tiers": "tsx scripts/tiers.ts",

@@ -1,0 +1,15 @@
+{
+  // The Claude Code harness compiles JSX as the engine does: classic, against the global `h` and
+  // `Fragment` (engine.d.ts), never React's runtime. So its engine-side files (the kit, the sample
+  // mod, the stories, the bench) are their own project; the root tsconfig.json leaves them out
+  // and `npm run typecheck` checks both. The Storybook glue (storybook.ts) and the skin mapping
+  // (skins.ts) read zen's React library, so they stay in the root project.
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
+  },
+  "include": ["kit", "sample", "stories", "bench", "engine.d.ts"],
+  "exclude": []
+}

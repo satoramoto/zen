@@ -411,4 +411,63 @@ export const frost: Palette = {
   },
 };
 
-export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost];
+// Claude Code: the instrument inspector awesome-claude's mods draw in the Claude Code pane (its kit,
+// now zen's src/harness/claude-code/kit). The desktop draws one value per meaning on its light and
+// dark panes alike, so both modes carry the same states and accent; the surfaces and inks are the
+// pane's. docs/harness-claude-code.md says how the harness maps a palette onto the pane. The kit's
+// purple (merged), cyan, slate (quantity) and orchid sit closer to its blue than the 0.12 rule
+// allows, as the kit means them as shades of one family; they are the harness's tuning for this
+// palette (src/harness/claude-code/skins.ts), not roles here. The hues and roles below are added,
+// clear of the states and of each other, for zen's own components.
+export const claudeCode: Palette = {
+  id: 'claude-code',
+  label: 'Claude Code',
+  dark: {
+    surface: ['#1f1f1e', '#262625', '#2c2c2b', '#333332'], // the dark pane, then added steps
+    text: ['#ececec', '#b9b9b6', '#8a8a87', '#62625f'], // the pane's ink, then the kit's GRAY light, mid, dark
+    border: '#2c2c2b', // added
+    borderStrong: '#62625f', // added
+    action: '#ececec', // added
+    actionText: '#1f1f1e', // added
+    selected: '#ececec', // added
+    selectedText: '#1f1f1e', // added
+    accent: '#6c8ef5', // the kit's blue: live or in progress
+    success: '#5bc08a', // the kit's green: finished well
+    warning: '#e3a33b', // the kit's amber: close to a limit
+    danger: '#e5636f', // the kit's red: failed
+    successText: '#000000', // added
+    warningText: '#000000', // added
+    dangerText: '#000000', // added: 6.4:1
+    hues: ['#c58ad6', '#2fd0f0', '#d6d65c', '#b0613a'], // the kit's orchid, then added
+    onHue: '#000000', // added
+    roles: ['#a35ff0', '#3a5fd0'], // added
+    roleText: ['#000000', '#ffffff'], // added: 5.4:1 and 5.6:1
+    bloom: '0px',
+    keys: { white: '#ececec', black: '#1f1f1e' }, // added
+  },
+  light: {
+    surface: ['#fbfbfa', '#f3f3f1', '#ececea', '#e4e4e1'], // the light pane, then added steps
+    text: ['#1d1d1f', '#3c3c3e', '#6e6e6b', '#9a9a96'], // the pane's ink, then added
+    border: '#e4e4e1', // added
+    borderStrong: '#9a9a96', // added
+    action: '#1d1d1f', // added
+    actionText: '#fbfbfa', // added
+    selected: '#1d1d1f', // added
+    selectedText: '#fbfbfa', // added
+    accent: '#6c8ef5', // as dark: the desktop draws one value on both panes
+    success: '#5bc08a',
+    warning: '#e3a33b',
+    danger: '#e5636f',
+    successText: '#000000',
+    warningText: '#000000',
+    dangerText: '#000000',
+    hues: ['#c58ad6', '#2fd0f0', '#d6d65c', '#b0613a'],
+    onHue: '#000000',
+    roles: ['#a35ff0', '#3a5fd0'],
+    roleText: ['#000000', '#ffffff'],
+    bloom: '0px',
+    keys: { white: '#fbfbfa', black: '#1d1d1f' }, // added
+  },
+};
+
+export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode];
