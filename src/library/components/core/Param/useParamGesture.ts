@@ -220,6 +220,9 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
   const sent = useRef(Number.NaN);
   /** The last key's write, and the value the control was given when it was made. */
   const keyed = useRef<{ given: number; sent: number } | null>(null);
+  // The record only bridges keys pressed before the host re-renders: once the control is given any
+  // other value, it is stale, even if the value later comes back (an undo, a preset recall).
+  if (keyed.current !== null && keyed.current.given !== value) keyed.current = null;
 
   const flush = useCallback(() => {
     frame.current = null;
