@@ -1,9 +1,9 @@
-import type { CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { Text } from '../../../primitives/Text';
-import { Device, DevicePortRow } from './Device';
+import { Device, DeviceMore, DevicePortRow, type DeviceProps } from './Device';
 
 /** A stand-in for the Graph's `Port`: a dot in the port cell's ink. */
 function Dot({ label }: { label: string }) {
@@ -121,5 +121,57 @@ export const WithHeaderEnd: Story = {
     await expect(args.onSelect).not.toHaveBeenCalled();
     await userEvent.click(canvasElement.querySelector<HTMLElement>('[data-part="head"]')!);
     await expect(args.onSelect).toHaveBeenCalledTimes(1);
+  },
+};
+
+/** A face showing only the rows that matter, with its outlets beside the picture. */
+function Folded(props: DeviceProps) {
+  const [open, setOpen] = useState(false);
+  const rows = ['Zoom', 'Rotate', 'Warp'];
+  const shown = open ? rows : rows.slice(0, 1);
+  return (
+    <Device
+      {...props}
+      portRows={
+        <>
+          {shown.map((row) => (
+            <DevicePortRow key={row} inlet={<Dot label={`${row} in`} />}>
+              {row}
+            </DevicePortRow>
+          ))}
+          <DeviceMore open={open} onToggle={setOpen} label={open ? 'Show fewer rows' : 'Show 2 more rows'}>
+            {open ? 'Fewer' : '2 at default'}
+          </DeviceMore>
+        </>
+      }
+    />
+  );
+}
+
+/**
+ * `outletsAt="screen"`: the outlets stand beside the picture they are, and the rows under it hold
+ * only inlets. `DeviceMore` is the line standing for the rows not shown; clicking it opens them.
+ */
+export const OutletsBesideScreen: Story = {
+  args: {
+    name: 'Warp',
+    screen: picture,
+    outletsAt: 'screen',
+    outlets: (
+      <>
+        <Dot label="Warped out" />
+        <Dot label="Depth out" />
+      </>
+    ),
+  },
+  render: (args) => <Folded {...args} />,
+  play: async ({ canvasElement }) => {
+    const band = canvasElement.querySelector('[data-part="screen-band"]')!;
+    await expect(within(band as HTMLElement).getByRole('button', { name: 'Warped out' })).toBeTruthy();
+    const more = within(canvasElement).getByRole('button', { name: 'Show 2 more rows' });
+    await expect(more).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(more);
+    await expect(within(canvasElement).getByRole('button', { name: 'Show fewer rows' })).toHaveAttribute('aria-expanded', 'true');
+    await expect(canvasElement.querySelectorAll('[data-part="row"]')).toHaveLength(3);
   },
 };

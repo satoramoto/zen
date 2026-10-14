@@ -3,6 +3,7 @@
 
    --lib-device-accent  the head's leading mark and the ports' ink (none by default)
    --lib-device-width   the width (auto by default, zero specificity)
+   --lib-device-more-indent  where DeviceMore's line starts (a row control's indent by default)
 
    Declared once at the document root, unset, so the fallbacks below apply and a host can set
    either on any wrapper around a device: a default on .lib-device itself would reset it. */
@@ -10,6 +11,7 @@
 :where(:root) {
   --lib-device-accent: initial;
   --lib-device-width: initial;
+  --lib-device-more-indent: initial;
 }
 
 :where(.lib-device) {
@@ -72,6 +74,69 @@
 .lib-device__screen > * {
   display: block;
   width: 100%;
+}
+
+/* Outlets beside the picture (`outletsAt="screen"`): the picture keeps its leading inset, and the
+   outlets stand against its foot on the same trailing line as every other out port. */
+.lib-device__screen-band {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  padding-inline-start: var(--space-2);
+}
+
+.lib-device__screen-band > .lib-device__screen {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+
+.lib-device__port.lib-device__screen-outlets {
+  flex: none;
+  justify-content: flex-end;
+}
+
+/* The line standing for the rows not shown: a row's height, its text at a row control's indent. */
+.lib-device__more {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-h);
+  margin: 0;
+  padding: 0 var(--space-2) 0 var(--lib-device-more-indent, calc(var(--space-2) * 2 + var(--space-3)));
+  border: 0;
+  background: none;
+  color: var(--text-3);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  appearance: none;
+}
+
+.lib-device__more:hover {
+  color: var(--text-1);
+}
+
+.lib-device__more-mark {
+  transform: rotate(-90deg);
+  transition: transform 150ms ease-out;
+}
+
+.lib-device__more[aria-expanded='true'] > .lib-device__more-mark {
+  transform: none;
+}
+
+.lib-device__more-text {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-device__more-mark { transition: none; }
 }
 
 /* The rows share three columns, so every port stands on the same two lines. */
