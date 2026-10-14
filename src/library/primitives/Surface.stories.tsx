@@ -101,6 +101,38 @@ export const LayersByMaterials: Story = {
   },
 };
 
+/** Something with texture behind the panes, so their blur and tint read: the palette's hues as
+ *  bands and dots. */
+const busy: CSSProperties = {
+  padding: 'var(--space-6)',
+  background: [
+    'radial-gradient(circle at 20% 30%, var(--hue-1) 0 12%, transparent 13%)',
+    'radial-gradient(circle at 70% 60%, var(--hue-3) 0 16%, transparent 17%)',
+    'repeating-linear-gradient(115deg, var(--hue-2) 0 var(--space-3), transparent var(--space-3) calc(var(--space-3) * 3))',
+    'linear-gradient(var(--hue-4), var(--surface-0))',
+  ].join(', '),
+};
+
+/** A float and an overlay pane wearing each shader material, and `false` (the CSS layer alone),
+ *  over a busy ground. Where the shader can't draw (no WebGL2, reduced motion or transparency) or
+ *  a material is still empty, every pane shows its layer's CSS look: that must already be finished. */
+export const Shader: Story = {
+  render: () => (
+    <div style={busy}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(calc(var(--control-h) * 4), 1fr))', gap: 'var(--space-4)' }}>
+        {(['float', 'overlay'] as const).map((layer) =>
+          (['water', 'ether', 'glass', false] as const).map((shader) => (
+            <Surface key={`${layer}-${String(shader)}`} layer={layer} shader={shader} style={{ ...specimen, width: 'auto', flexDirection: 'column' }}>
+              <Text role="label">{shader === false ? 'no shader' : shader}</Text>
+              <Text role="caption" tone="muted">{layer}</Text>
+            </Surface>
+          )),
+        )}
+      </div>
+    </div>
+  ),
+};
+
 /** Keys at rest, pressed, lit in each slot, and bordered. */
 export const States: Story = {
   render: () => (
