@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { defaultOrigin, fillFrom, hintAttribute, useReserved, type FillOrigin } from '../Param/fill';
-import type { Param } from '../Param/param';
-import { useParamGesture } from '../Param/useParamGesture';
+import { fractionOf, type Param } from '../Param/param';
+import { useParamGesture, type ParamKeyStep } from '../Param/useParamGesture';
 import { focusRing } from '../../../primitives/Ring';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
@@ -55,6 +55,18 @@ export interface SliderProps {
   ink?: string;
   /** Across the track in px. Default: the material's track thickness. */
   width?: number;
+  /**
+   * No single value (several things that differ): no thumb or fill, `data-mixed` on the root, ARIA
+   * without `aria-valuenow` and reading `display` (else "Mixed"). `value` is where a drag starts;
+   * the first drag, key or double-click calls `onChange`, even onto `value`.
+   */
+  mixed?: boolean;
+  /** Values marked on the track with a tick; the one at the default is drawn taller and brighter. */
+  detents?: readonly number[];
+  /** How near a detent (in the parameter's units) a drag must come to land on it. Default 0: no catch. */
+  snap?: number;
+  /** The keys' own next values, asked before the default steps (`stepDetent` steps through detents). */
+  keyStep?: ParamKeyStep;
 }
 
 /**
@@ -64,12 +76,14 @@ export interface SliderProps {
  * **Behaviour.** Controlled through `onChange` (and `onRelease` when a gesture ends). A drag along
  * the track grabs the value where it is, geared to the drawn length (⌘/Ctrl held for fine); ← → ↑ ↓
  * step, Page Up / Down ten steps, Home / End the ends; double-click (not after a drag) resets to the
- * default; Escape abandons a drag. With `onDepth`, shift-drag sets `depth` and shift-double-click
+ * default; Escape abandons a drag. `keyStep` supplies the keys' own next values first; a drag
+ * within `snap` of one of `detents` lands on it. With `onDepth`, shift-drag sets `depth` and shift-double-click
  * clears it. `role="slider"` with the orientation, named by `label`, else the caption.
  *
  * **Parts** (`data-part`). `caption`; `track` the channel, a `well`, carrying the gesture; `fill` the
  * value from `origin`, lit (`--lit`, `--mat-lit-glow`); `span` and `reach` the depth range and its
- * far end; `live` where a driver has it; `thumb` the cap, a `handle` (a thin lit mark when `inside`, a round-ended knob
+ * far end; `live` where a driver has it; `detent` a tick at each of `detents` (`data-default` on the
+ * one at the default), in line with the thumb's centre; `thumb` (absent while `mixed`) the cap, a `handle` (a thin lit mark when `inside`, a round-ended knob
  * standing proud of a thin groove in a `row`, where the track is the knob's height and the groove
  * is drawn inside it);
  * `readout` the reading, in the readout face with tabular figures.
@@ -99,6 +113,10 @@ export function Slider({
   hint,
   ink,
   width,
+  mixed = false,
+  detents,
+  snap,
+  keyStep,
 }: SliderProps) {
   const reserved = useReserved(param);
   const axis = layout === 'row' ? 'horizontal' : orientation;
@@ -116,6 +134,10 @@ export function Slider({
     travel: travel ?? (length === 'auto' ? 'element' : layout === 'inside' ? undefined : length),
     label: label ?? name,
     display,
+    mixed,
+    detents,
+    snap,
+    keyStep,
   });
 
   const reach = depth ?? 0;
@@ -125,7 +147,7 @@ export function Slider({
       ? null
       : { at: Math.min(gesture.fraction, far), size: Math.abs(far - gesture.fraction) };
 
-  const filled = fill ?? layout !== 'inside';
+  const filled = !mixed && (fill ?? layout !== 'inside');
   const style = {
     ...reserved,
     ...fillFrom(param, origin, gesture.fraction),
@@ -144,6 +166,7 @@ export function Slider({
       data-side={layout === 'inline' ? side : undefined}
       data-length={length === 'auto' ? 'auto' : undefined}
       data-disabled={disabled || undefined}
+      data-mixed={mixed || undefined}
       {...hintAttribute(hint)}
       style={style}
     >
@@ -158,7 +181,17 @@ export function Slider({
           {span !== null && <span className="lib-slider__span" data-part="span" aria-hidden="true" />}
           {span !== null && <span className="lib-slider__reach" data-part="reach" aria-hidden="true" />}
           {span !== null && live !== undefined && <span className="lib-slider__live" data-part="live" aria-hidden="true" />}
-          <Surface as="span" material="handle" radius="pill" className="lib-slider__thumb" data-part="thumb" aria-hidden="true" />
+          {detents?.map((d) => (
+            <span
+              key={d}
+              className="lib-slider__detent"
+              data-part="detent"
+              data-default={d === param.defaultValue || undefined}
+              aria-hidden="true"
+              style={{ '--lib-slider-detent': fractionOf(param, d) } as CSSProperties}
+            />
+          ))}
+          {!mixed && <Surface as="span" material="handle" radius="pill" className="lib-slider__thumb" data-part="thumb" aria-hidden="true" />}
         </Surface>
       </div>
       {showValue && (
