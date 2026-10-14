@@ -38,6 +38,19 @@ export interface DeviceProps {
   /** A device with something wrong with it: its edge is drawn in `--danger`. */
   problem?: boolean;
   className?: string;
+  /**
+   * A second line under the name: what the device is (its type), quieter than the name. With it,
+   * the head is two lines and a hairline parts it from the wiring.
+   */
+  kicker?: ReactNode;
+  /**
+   * Where the port cells stand. `inset` (default): inside the face, `--space-2` from its edge.
+   * `edge`: each dot centred on the face's edge, half outside it, ringed in the face's fill so it
+   * reads as a pin on the outline.
+   */
+  pins?: 'inset' | 'edge';
+  /** Ports placed anywhere on the face's outline or inside it: each a `DeviceEdge`. */
+  edges?: ReactNode;
 }
 
 /** Interactive things in the head that keep their own clicks: a click on one is not a select. */
@@ -87,6 +100,9 @@ export function Device({
   children,
   problem = false,
   className,
+  kicker,
+  pins = 'inset',
+  edges,
 }: DeviceProps) {
   const nameRef = useRef<HTMLSpanElement>(null);
   const beside = outletsAt === 'screen' && screen !== undefined;
@@ -113,6 +129,8 @@ export function Device({
       data-part="root"
       data-selected={selected ? '' : undefined}
       data-problem={problem ? '' : undefined}
+      data-kicker={kicker !== undefined ? '' : undefined}
+      data-pins={pins === 'edge' ? 'edge' : undefined}
     >
       <div className="lib-device__head" data-part="head" title={title} onClick={onHeadClick}>
         {headerStart}
@@ -125,6 +143,17 @@ export function Device({
           <Text role="label" truncate>
             {name}
           </Text>
+          {kicker !== undefined && (
+            <span className="lib-device__kicker" data-part="kicker">
+              {typeof kicker === 'string' ? (
+                <Text role="caption" tone="muted" truncate>
+                  {kicker}
+                </Text>
+              ) : (
+                kicker
+              )}
+            </span>
+          )}
         </span>
         {headerEnd !== undefined && (
           <span className="lib-device__head-end" data-part="head-end">
@@ -174,7 +203,55 @@ export function Device({
           </div>
         )
       )}
+      {edges !== undefined && (
+        <div className="lib-device__edges" data-part="edges">
+          {edges}
+        </div>
+      )}
     </Surface>
+  );
+}
+
+export interface DeviceEdgeProps {
+  /**
+   * Where on the face: a face (`n`, `e`, `s`, `w`), centred on it or `at` 0..1 along it from its
+   * start (top or left); or `x` and `y`, fractions 0..1 of the face's box.
+   */
+  face?: 'n' | 'e' | 's' | 'w';
+  at?: number;
+  x?: number;
+  y?: number;
+  /** The `Port` (usually with `showLabel={false}` and its `face`). */
+  children?: ReactNode;
+  className?: string;
+}
+
+/** Each face's point at a fraction along it, as fractions of the box. */
+const EDGE_POINT = {
+  n: (t: number) => [t, 0],
+  s: (t: number) => [t, 1],
+  w: (t: number) => [0, t],
+  e: (t: number) => [1, t],
+} as const;
+
+/**
+ * **Job.** One port placed on a `Device`'s outline (or inside its box): the pin a cord should leave
+ * from when the face nearest its other end isn't a rail's. Its child's centre sits exactly on the
+ * point, so a dot straddles the edge.
+ *
+ * **Parts** (`data-part`). `edge` (`data-face`).
+ */
+export function DeviceEdge({ face, at = 0.5, x, y, children, className }: DeviceEdgeProps) {
+  const [fx, fy] = face ? EDGE_POINT[face](Math.min(1, Math.max(0, at))) : [x ?? 0.5, y ?? 0.5];
+  return (
+    <span
+      className={`lib-device__edge${className ? ` ${className}` : ''}`}
+      data-part="edge"
+      {...(face ? { 'data-face': face } : {})}
+      style={{ left: `${fx * 100}%`, top: `${fy * 100}%` }}
+    >
+      {children}
+    </span>
   );
 }
 

@@ -56,6 +56,12 @@ export interface Bus {
   id: string;
   label?: string;
   kind?: string;
+  /**
+   * Where the rail is drawn, presentation only (like `placement`): horizontal (`h`) or vertical
+   * (`v`), and optionally the line it runs on (`at`, y for `h`, x for `v`, in module units).
+   * Unset, the view chooses (a horizontal rail under the module's chips).
+   */
+  rail?: { axis: 'h' | 'v'; at?: number };
 }
 
 export interface Trace {

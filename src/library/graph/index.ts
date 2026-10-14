@@ -4,8 +4,14 @@
 
 // The node graph and the device face a node wears (the lab editor's stage graph; APIs mirroring @openflow/widgets).
 export { Graph, GraphNode, cordPath, cordInk, type GraphProps, type GraphNodeProps, type GraphCord, type GraphView, type PortSide } from './view/Graph/Graph';
+/** The canvas layers: bus rails, zone frames, faced ports and cord words (labels, amounts). */
+export { amountText, type GraphBus, type GraphZone, type GraphFace } from './view/Graph/Graph';
 export { Port, type PortProps } from './view/Graph/Port';
 export { Device, DevicePortRow, DeviceMore, type DeviceProps, type DevicePortRowProps, type DeviceMoreProps } from './view/Device/Device';
+/** A port placed anywhere on a Device's outline (pin `placement`). */
+export { DeviceEdge, type DeviceEdgeProps } from './view/Device/Device';
+/** Where a graph view is among nested modules: a breadcrumb trail. */
+export { GraphPath, type GraphPathProps, type GraphPathStep } from './view/GraphPath/GraphPath';
 /** A node's whole face hung beside it at screen scale (ported from @openflow/widgets' Sheet; `Sheet` here is Modal's). */
 export {
   NodeSheet,

@@ -19,11 +19,76 @@
 }
 
 .lib-device {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
   color: var(--text-1);
   font-family: var(--font-sans);
+}
+
+/* A kicker: the head is two lines (name over type), parted from the wiring by a hairline. */
+.lib-device[data-kicker] > .lib-device__head {
+  padding-block: var(--space-2);
+  box-shadow: inset 0 calc(var(--border-width) * -1) 0 var(--border);
+}
+.lib-device[data-kicker] .lib-device__name {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-1) / 2);
+  color: var(--text-1);
+}
+.lib-device__kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.lib-device[data-kicker] > .lib-device__rows,
+.lib-device[data-kicker] > .lib-device__rails {
+  padding-block-start: var(--space-1);
+}
+
+/* Edge pins (`pins="edge"`): every port cell drops its inset and its dot is pulled half over the
+   edge, ringed in the face's fill so the outline reads as broken by the pin. */
+.lib-device[data-pins='edge'] .lib-device__port[data-side='in'] {
+  padding-inline-start: 0;
+}
+.lib-device[data-pins='edge'] .lib-device__port[data-side='out'] {
+  padding-inline-end: 0;
+}
+.lib-device[data-pins='edge'] .lib-device__port[data-side='in'] > .lib-graph__port-slot {
+  margin-inline-start: calc(var(--lib-graph-port-size) / -2);
+}
+.lib-device[data-pins='edge'] .lib-device__port[data-side='out'] > .lib-graph__port-slot {
+  margin-inline-end: calc(var(--lib-graph-port-size) / -2);
+}
+.lib-device[data-pins='edge'] .lib-graph__port,
+.lib-device__edge .lib-graph__port {
+  border-width: calc(var(--border-width) * 2);
+  background: var(--layer-raised-solid);
+  box-shadow: 0 0 0 calc(var(--border-width) * 2) var(--layer-raised-solid);
+}
+.lib-device[data-pins='edge'] .lib-graph__port[data-connected],
+.lib-device__edge .lib-graph__port[data-connected] {
+  background: var(--lib-graph-port-hue, var(--lib-device-accent, var(--lib-graph-port-ink)));
+}
+.lib-device[data-pins='edge'] .lib-graph__port:hover:not(:disabled),
+.lib-device__edge .lib-graph__port:hover:not(:disabled) {
+  scale: 1.3;
+}
+
+/* Placed ports (`edges`): a layer over the whole face; each `DeviceEdge` centres its child on its point. */
+.lib-device__edges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.lib-device__edge {
+  position: absolute;
+  display: flex;
+  translate: -50% -50%;
+  pointer-events: auto;
 }
 
 /* Selected: a ring just outside the edge, the same width as the focus and press rings. */

@@ -24,8 +24,11 @@ export const opposite = (side: PortSide): PortSide => (side === 'out' ? 'in' : '
  * here, never what a port means.
  */
 export interface GraphSurface {
-  /** A port announces its element so the graph can measure it; `null` when it unmounts. */
-  register(id: string, side: PortSide, element: HTMLElement | null): void;
+  /**
+   * A port announces its element so the graph can measure it; `null` when it unmounts. `face`
+   * (`n`, `e`, `s`, `w`) is the edge it sits on, so its cords leave that way.
+   */
+  register(id: string, side: PortSide, element: HTMLElement | null, face?: 'n' | 'e' | 's' | 'w'): void;
   /** The pointer went down on a port: draw a cord from it. Either side may start one. */
   startCord(id: string, side: PortSide, event: PointerEvent<HTMLElement>): void;
   /** The keyboard's two presses: the first arms a port, the second lands on one. */

@@ -14,6 +14,13 @@
   --lib-graph-zoom: 1;
   --lib-graph-x: 0px;
   --lib-graph-y: 0px;
+  /* Opt-in canvas: none of these change how a graph that doesn't set them looks. */
+  --lib-graph-ground: transparent;
+  --lib-graph-rule: transparent;
+  --lib-graph-rail-width: calc(var(--lib-graph-cord-width) * 2.5);
+  --lib-graph-word-fill: var(--surface-1);
+  --lib-graph-zone-fill: color-mix(in oklab, var(--text-1) 3%, transparent);
+  --lib-graph-zone-edge: var(--border-strong);
 }
 
 /* The viewport: the clip, the pan cursor and the dotted grid, which moves with the content
@@ -28,9 +35,21 @@
   cursor: grab;
   color: var(--text-1);
   font-family: var(--font-sans);
-  background-image: radial-gradient(circle at center, var(--lib-graph-dot) 1px, transparent 2px);
-  background-position: var(--lib-graph-x) var(--lib-graph-y);
-  background-size: calc(var(--lib-graph-grid) * var(--lib-graph-zoom)) calc(var(--lib-graph-grid) * var(--lib-graph-zoom));
+  background-color: var(--lib-graph-ground);
+  /* The dots, and a ruled line every fourth dot (`--lib-graph-rule`, transparent by default). */
+  background-image:
+    radial-gradient(circle at center, var(--lib-graph-dot) 1px, transparent 2px),
+    linear-gradient(to right, var(--lib-graph-rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--lib-graph-rule) 1px, transparent 1px);
+  /* The rules are shifted half a cell so they run through the dots. */
+  background-position:
+    var(--lib-graph-x) var(--lib-graph-y),
+    calc(var(--lib-graph-x) + var(--lib-graph-grid) * var(--lib-graph-zoom) / 2) calc(var(--lib-graph-y) + var(--lib-graph-grid) * var(--lib-graph-zoom) / 2),
+    calc(var(--lib-graph-x) + var(--lib-graph-grid) * var(--lib-graph-zoom) / 2) calc(var(--lib-graph-y) + var(--lib-graph-grid) * var(--lib-graph-zoom) / 2);
+  background-size:
+    calc(var(--lib-graph-grid) * var(--lib-graph-zoom)) calc(var(--lib-graph-grid) * var(--lib-graph-zoom)),
+    calc(var(--lib-graph-grid) * 4 * var(--lib-graph-zoom)) calc(var(--lib-graph-grid) * 4 * var(--lib-graph-zoom)),
+    calc(var(--lib-graph-grid) * 4 * var(--lib-graph-zoom)) calc(var(--lib-graph-grid) * 4 * var(--lib-graph-zoom));
 }
 .lib-graph[data-panning] {
   cursor: grabbing;
@@ -88,6 +107,106 @@
 .lib-graph__cord[data-selected] {
   stroke: var(--accent);
   stroke-width: calc(var(--lib-graph-cord-width) * 2 / var(--lib-graph-zoom));
+}
+
+/* A pointer over a selectable cord's hit path lifts the cord beside it. */
+.lib-graph__cord-hit:hover + .lib-graph__cord:not([data-selected]),
+.lib-graph__cord[data-selectable]:hover:not([data-selected]) {
+  stroke-width: calc(var(--lib-graph-cord-width) * 1.75 / var(--lib-graph-zoom));
+}
+
+/* Traces bend at corners: round joins keep a 45° bend from spiking. */
+.lib-graph__cord,
+.lib-graph__rail {
+  stroke-linejoin: round;
+}
+
+/* A modulation (`role: 'modulation'`): dashed and a little lighter, so it reads as control, not signal. */
+.lib-graph__cord[data-role='modulation'] {
+  stroke-dasharray:
+    calc(var(--lib-graph-cord-width) * 3 / var(--lib-graph-zoom))
+    calc(var(--lib-graph-cord-width) * 2 / var(--lib-graph-zoom));
+  stroke-linecap: butt;
+}
+
+/* A quiet cord (`dim`). */
+.lib-graph__cord[data-dim] {
+  stroke-opacity: 0.35;
+}
+
+/* Bus: the rail, the run from its source and a joint where each tap leaves. */
+.lib-graph__bus {
+  --lib-graph-joint: calc(var(--lib-graph-rail-width) * 0.9 / var(--lib-graph-zoom));
+}
+.lib-graph__rail {
+  fill: none;
+  stroke: var(--lib-cord-ink);
+  stroke-width: calc(var(--lib-graph-rail-width) / var(--lib-graph-zoom));
+  stroke-linecap: round;
+}
+.lib-graph__joint {
+  r: var(--lib-graph-joint);
+  fill: var(--lib-cord-ink);
+  stroke: var(--lib-graph-word-fill);
+  stroke-width: calc(var(--lib-graph-cord-width) * 0.75 / var(--lib-graph-zoom));
+}
+
+/* Zones: a frame padded round its nodes, its name in the top padding. Under the cords and nodes. */
+.lib-graph__zones,
+.lib-graph__words {
+  position: absolute;
+  left: 0;
+  top: 0;
+  inline-size: 0;
+  block-size: 0;
+  pointer-events: none;
+}
+.lib-graph__zone-at {
+  position: absolute;
+}
+.lib-graph__zone {
+  position: absolute;
+  inset: calc(var(--space-6) * -1 - var(--space-1)) calc(var(--space-4) * -1) calc(var(--space-4) * -1);
+  border: var(--border-width) dashed var(--lib-graph-zone-edge);
+  border-radius: var(--radius-card);
+  background: var(--lib-graph-zone-fill);
+}
+.lib-graph__zone-label {
+  position: absolute;
+  inset-inline: var(--space-3);
+  top: var(--space-2);
+}
+
+/* Words on the canvas: a cord's label (mid-cord), a modulation's amount, a rail's name. Each is
+   centred on its point and knocks the line out behind it. */
+.lib-graph__word {
+  position: absolute;
+  display: inline-flex;
+  max-inline-size: calc(var(--space-6) * 4);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-control);
+  background: var(--lib-graph-word-fill);
+  box-shadow: inset 0 0 0 var(--border-width) color-mix(in oklab, var(--lib-cord-ink) 45%, transparent);
+  color: color-mix(in oklab, var(--lib-cord-ink) 65%, var(--text-1));
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+.lib-graph__word[data-selected] {
+  box-shadow: inset 0 0 0 var(--border-width) var(--accent);
+  color: var(--text-1);
+}
+.lib-graph__word[data-dim] {
+  opacity: 0.5;
+}
+/* A rail's name: a solid tag in the rail's ink, ahead of its start. */
+.lib-graph__word[data-part='rail-label'] {
+  background: var(--lib-cord-ink);
+  box-shadow: none;
+  color: var(--on-hue);
+  transform: translate(calc(-100% - var(--space-1)), -50%);
+}
+.lib-graph__word[data-part='rail-label'][data-axis='v'] {
+  transform: translate(-50%, calc(-100% - var(--space-1)));
 }
 
 .lib-graph__node {
@@ -162,4 +281,9 @@
 .lib-graph__port:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+/* A parameter port (`shape="diamond"`): a square on its point. */
+.lib-graph__port[data-shape='diamond'] {
+  border-radius: 0;
+  transform: rotate(45deg) scale(0.82);
 }

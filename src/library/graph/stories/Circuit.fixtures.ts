@@ -129,7 +129,7 @@ const upscale = mod({
   id: 'upscale',
   layout: 'lr',
   chips: [
-    { id: 'reroute', type: 'reroute', x: 0, y: 160, pins: [inPin('in', 'vae'), outPin('out', 'vae')] },
+    { id: 'reroute', type: 'reroute', x: -240, y: 170, pins: [inPin('in', 'vae'), outPin('out', 'vae')] },
     { id: 'encode', type: 'vae-encode', x: 0, y: 0, pins: [inPin('image', 'image', { label: 'Image' }), inPin('vae', 'vae', { label: 'VAE' }), outPin('latent', 'latent', { label: 'Latent' })] },
     {
       id: 'sampler',
@@ -173,7 +173,7 @@ export const diffusion: Circuit = {
         { id: 'sample', label: 'Sample' },
         { id: 'finish', label: 'Upscale and save' },
       ],
-      buses: [{ id: 'vae', label: 'VAE', kind: 'vae' }],
+      buses: [{ id: 'vae', label: 'VAE', kind: 'vae', rail: { axis: 'h' } }],
       chips: [
         {
           id: 'ckpt',
@@ -263,7 +263,8 @@ export const diffusion: Circuit = {
 };
 
 // ---------------------------------------------------------------------------------------------
-// session: the syn job lifecycle, one chip per state, laid out as three rows that read like text.
+// session: the syn job lifecycle, one chip per state, laid out as a meander with pins on the faces
+// their neighbours are on, and each check's failure leaving from its own pin.
 
 /** The lifecycle states, in the order a job meets them; each is a chip id in `session`. */
 export const SESSION_STATES = [
@@ -284,19 +285,40 @@ export const SESSION_STATES = [
 ] as const;
 export type SessionState = (typeof SESSION_STATES)[number];
 
-const stage = (id: SessionState, x: number, y: number, params?: Chip['params']): Chip => ({
+type Face = 'n' | 'e' | 's' | 'w';
+
+/**
+ * A state: an in pin and an out pin on the faces its neighbours are on (the meander turns, so a
+ * row that runs right to left has its in pin east), plus any named extra pins.
+ */
+const stage = (
+  id: SessionState,
+  x: number,
+  y: number,
+  faces: { in?: Face; out?: Face },
+  params?: Chip['params'],
+  extra: Pin[] = [],
+): Chip => ({
   id,
   type: 'stage',
   name: id.replace('_', ' '),
   x,
   y,
-  pins: [inPin('in', 'flow'), outPin('out', 'flow')],
+  pins: [
+    ...(faces.in ? [inPin('in', 'flow', { label: 'In', placement: faces.in })] : []),
+    ...(faces.out ? [outPin('out', 'flow', { label: 'Out', placement: faces.out })] : []),
+    ...extra,
+  ],
   ...(params ? { params } : {}),
 });
+/** A check's way out when it fails: its own pin, so pass and fail leave from different faces. */
+const failPin = (face: Face) => outPin('fail', 'fail', { label: 'Fail', placement: face });
 
-// Room for a face at the widest pack's spacing (chips are `--space-6` × 5 wide), so cords show between them.
-const COL = 300;
-const ROW = 170;
+// A meander: Work runs left to right, Ship comes back right to left, Land runs out again, and
+// Repair stands to the right. Columns leave room for a face at the widest pack's spacing.
+const COL = 280;
+const ROW = 210;
+const REPAIR = COL * 5 + 60;
 
 export const session: Circuit = {
   version: 1,
@@ -309,42 +331,54 @@ export const session: Circuit = {
       zones: [
         { id: 'work', label: 'Work' },
         { id: 'ship', label: 'Ship' },
+        { id: 'land', label: 'Land' },
         { id: 'repair', label: 'Repair' },
       ],
       chips: [
-        { ...stage('asked', 0, 0), zone: 'work' },
-        { ...stage('routed', COL, 0, { agent: 'orchestrator' }), zone: 'work' },
-        { ...stage('working', COL * 2, 0, { agent: 'developer', effort: 'medium' }), zone: 'work' },
-        { ...stage('checked', COL * 3, 0, { check: 'npm run typecheck' }), zone: 'work' },
-        { ...stage('tested', 0, ROW, { check: 'npx vitest run' }), zone: 'work' },
-        { ...stage('committed', COL, ROW), zone: 'ship' },
-        { ...stage('reviewed', COL * 2, ROW, { agent: 'reviewer' }), zone: 'ship' },
-        { ...stage('pr_open', COL * 3, ROW, { automerge: true }), zone: 'ship' },
-        { ...stage('ci', 0, ROW * 2), zone: 'ship' },
-        { ...stage('merged', COL, ROW * 2), zone: 'ship' },
-        { ...stage('pulled', COL * 2, ROW * 2), zone: 'ship' },
-        { ...stage('done', COL * 3, ROW * 2), zone: 'ship' },
-        { ...stage('fixing', COL * 4 + 40, ROW * 0.5, { agent: 'quick-fix', attempts: 3 }), zone: 'repair' },
-        { ...stage('failed', COL * 4 + 40, ROW * 1.5), zone: 'repair' },
+        { ...stage('asked', 0, 0, { out: 'e' }, { from: 'Ryan' }), zone: 'work' },
+        { ...stage('routed', COL, 0, { in: 'w', out: 'e' }, { agent: 'orchestrator' }), zone: 'work' },
+        {
+          ...stage('working', COL * 2, 0, { in: 'w', out: 'e' }, { agent: 'developer', effort: 'medium' }, [
+            inPin('retry', 'flow', { label: 'Retry', placement: { face: 'n', at: 0.7 } }),
+          ]),
+          zone: 'work',
+        },
+        { ...stage('checked', COL * 3, 0, { in: 'w', out: 'e' }, { check: 'npm run typecheck' }, [failPin('s')]), zone: 'work' },
+        { ...stage('tested', COL * 4, 0, { in: 'w', out: 's' }, { check: 'npx vitest run' }, [failPin('e')]), zone: 'work' },
+        { ...stage('committed', COL * 4, ROW, { in: 'n', out: 'w' }, { branch: 'lane' }), zone: 'ship' },
+        { ...stage('reviewed', COL * 3, ROW, { in: 'e', out: 'w' }, { agent: 'reviewer' }, [failPin('s')]), zone: 'ship' },
+        { ...stage('pr_open', COL * 2, ROW, { in: 'e', out: 'w' }, { automerge: true }), zone: 'ship' },
+        { ...stage('ci', COL, ROW, { in: 'e', out: 'w' }, { job: 'checks' }, [failPin('s')]), zone: 'ship' },
+        { ...stage('merged', 0, ROW, { in: 'e', out: 's' }), zone: 'ship' },
+        { ...stage('pulled', 0, ROW * 2, { in: 'n', out: 'e' }), zone: 'land' },
+        { ...stage('done', COL, ROW * 2, { in: 'w' }), zone: 'land' },
+        {
+          ...stage('fixing', REPAIR, ROW * 0.55, { in: 'w' }, { agent: 'quick-fix', attempts: 3 }, [
+            outPin('retry', 'flow', { label: 'Retry', placement: 'n' }),
+            outPin('give-up', 'fail', { label: 'Give up', placement: 's' }),
+          ]),
+          zone: 'repair',
+        },
+        { ...stage('failed', REPAIR, ROW * 1.55, { in: 'n' }), zone: 'repair' },
       ],
       traces: [
         wire('asked-routed', 'asked.out', 'routed.in', { kind: 'flow' }),
         wire('routed-working', 'routed.out', 'working.in', { kind: 'flow' }),
         wire('working-checked', 'working.out', 'checked.in', { kind: 'flow' }),
         wire('checked-tested', 'checked.out', 'tested.in', { kind: 'flow', label: 'pass' }),
-        wire('checked-fixing', 'checked.out', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('checked-fixing', 'checked.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
         wire('tested-committed', 'tested.out', 'committed.in', { kind: 'flow', label: 'pass' }),
-        wire('tested-fixing', 'tested.out', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('tested-fixing', 'tested.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
         wire('committed-reviewed', 'committed.out', 'reviewed.in', { kind: 'flow' }),
         wire('reviewed-pr', 'reviewed.out', 'pr_open.in', { kind: 'flow', label: 'pass' }),
-        wire('reviewed-fixing', 'reviewed.out', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('reviewed-fixing', 'reviewed.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
         wire('pr-ci', 'pr_open.out', 'ci.in', { kind: 'flow' }),
         wire('ci-merged', 'ci.out', 'merged.in', { kind: 'flow', label: 'pass' }),
-        wire('ci-fixing', 'ci.out', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('ci-fixing', 'ci.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
         wire('merged-pulled', 'merged.out', 'pulled.in', { kind: 'flow' }),
         wire('pulled-done', 'pulled.out', 'done.in', { kind: 'flow' }),
-        wire('fixing-working', 'fixing.out', 'working.in', { kind: 'flow', label: 'retry' }),
-        wire('fixing-failed', 'fixing.out', 'failed.in', { kind: 'fail', label: 'give up' }),
+        wire('fixing-working', 'fixing.retry', 'working.retry', { kind: 'flow', label: 'retry' }),
+        wire('fixing-failed', 'fixing.give-up', 'failed.in', { kind: 'fail', label: 'give up' }),
       ],
     }),
   },
@@ -440,14 +474,19 @@ export const tddCircuit: Circuit = {
 // ---------------------------------------------------------------------------------------------
 // brain: threads that feed, dogfood and block each other, and assistants on a shared context bus.
 
-const thread = (id: string, name: string, x: number, y: number, status: string): Chip => ({
+/** A thread: what it needs on the west, what it gives on the east (or `gives` elsewhere), and a dogfood inlet on top for one that has one. */
+const thread = (id: string, name: string, x: number, y: number, status: string, more: { gives?: Pin['placement']; dogfood?: boolean } = {}): Chip => ({
   id,
   type: 'thread',
   name,
   zone: 'threads',
   x,
   y,
-  pins: [inPin('needs', 'thread', { label: 'Needs' }), outPin('gives', 'thread', { label: 'Gives' })],
+  pins: [
+    inPin('needs', 'thread', { label: 'Needs' }),
+    outPin('gives', 'thread', { label: 'Gives', ...(more.gives ? { placement: more.gives } : {}) }),
+    ...(more.dogfood ? [inPin('dogfood', 'thread', { label: 'Dogfood', placement: 'n' as const })] : []),
+  ],
   params: { status },
 });
 
@@ -469,21 +508,22 @@ export const brain: Circuit = {
     board: mod({
       id: 'board',
       layout: 'free',
+      routing: 'trace',
       zones: [
         { id: 'assistants', label: 'Assistants' },
         { id: 'threads', label: 'Threads' },
       ],
-      buses: [{ id: 'base-context', label: 'Base context', kind: 'context' }],
+      buses: [{ id: 'base-context', label: 'Base context', kind: 'context', rail: { axis: 'v' } }],
       chips: [
         { id: 'lexicon', type: 'context', name: 'Lexicon + CLAUDE.md', x: 0, y: 190, pins: [outPin('context', 'context', { label: 'Context' })], params: { files: 2 } },
         assistant('orchestrator', 'Orchestrator', 250, 40, 'opus'),
         assistant('developer', 'Developer', 250, 190, 'opus'),
         assistant('reviewer', 'Reviewer', 250, 340, 'sonnet'),
-        thread('syn', 'syn', 520, 0, 'running'),
-        thread('zen', 'zen circuit model', 520, 190, 'open'),
-        thread('visuals', 'visuals', 790, 60, 'waiting'),
-        thread('session', 'session machine', 790, 260, 'draft'),
-        thread('awesome', 'awesome-claude', 1060, 190, 'open'),
+        thread('syn', 'syn', 520, 20, 'running', { gives: 's', dogfood: true }),
+        thread('zen', 'zen circuit model', 520, 210, 'open', { dogfood: true }),
+        thread('visuals', 'visuals', 790, 110, 'waiting'),
+        thread('session', 'session machine', 790, 310, 'draft'),
+        thread('awesome', 'awesome-claude', 1060, 210, 'open', { gives: 'n' }),
       ],
       traces: [
         { id: 'ctx-source', from: { chip: 'lexicon', pin: 'context' }, to: { bus: 'base-context' }, kind: 'context' },
@@ -496,8 +536,8 @@ export const brain: Circuit = {
         wire('zen-visuals', 'zen.gives', 'visuals.needs', { kind: 'thread', label: 'feeds' }),
         wire('zen-session', 'zen.gives', 'session.needs', { kind: 'thread', label: 'feeds' }),
         wire('session-awesome', 'session.gives', 'awesome.needs', { kind: 'blocks', label: 'blocks' }),
-        wire('awesome-syn', 'awesome.gives', 'syn.needs', { kind: 'thread', label: 'dogfoods' }),
-        wire('syn-zen', 'syn.gives', 'zen.needs', { kind: 'thread', label: 'dogfoods' }),
+        wire('awesome-syn', 'awesome.gives', 'syn.dogfood', { kind: 'thread', label: 'dogfoods' }),
+        wire('syn-zen', 'syn.gives', 'zen.dogfood', { kind: 'thread', label: 'dogfoods' }),
       ],
     }),
   },
