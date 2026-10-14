@@ -9,6 +9,7 @@ import type { Decorator } from '@storybook/react-vite';
 import { createContext, useContext, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { FROM_THEME, ThemeScope, resolveTheme, useSystemMode, type ModeChoice } from './theme';
 import { packs } from './themes/packs';
+import { toCssVars } from './contract';
 import { palettes } from './themes/palettes';
 import { faces } from './themes/faces';
 import { scales } from './themes/scales';
@@ -198,3 +199,29 @@ export const withLibraryTheme: Decorator = (Story, context) => {
     </Desktop>
   );
 };
+
+/**
+ * Draws its children once in each theme pack, one labelled band per pack on the pack's stand-in
+ * desktop, so a story shows a component in every pack at once. Pass the toolbar's mode
+ * (`render: (args, { globals }) => <EveryPack mode={globals.mode}>…</EveryPack>`).
+ */
+export function EveryPack({ mode = 'system', children }: { mode?: ModeChoice; children: ReactNode }) {
+  const system = useSystemMode();
+  const resolved = mode === 'system' ? system : mode;
+  return (
+    <div style={{ display: 'grid', gap: 'var(--space-2)' }}>
+      {packs.map((pack) => (
+        <div key={pack.id} data-pack={pack.id} style={{ background: pack.desktop?.[resolved] }}>
+          <div
+            className="lib-scope"
+            data-mode={resolved}
+            style={{ ...(toCssVars(pack.facets, resolved) as CSSProperties), minHeight: 0, padding: 'var(--space-4)' }}
+          >
+            <div style={{ marginBottom: 'var(--space-2)', color: 'var(--text-3)', fontSize: 'var(--size-caption)' }}>{pack.label}</div>
+            {children}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

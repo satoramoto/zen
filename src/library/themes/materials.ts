@@ -525,6 +525,9 @@ export const frostMaterials: Materials = {
     texture: 'none',
   },
   lit: flatLit, // added: the frost palette has no bloom
+  // access.css --vf-focus-ring (the ui ink): the focus ring is the controls' ink, not the accent,
+  // drawn on the edge (visuals' `outline: 2px solid; outline-offset: 0`)
+  focus: { ink: 'var(--text-2)', offset: '0px' },
 };
 
 export const materials: Materials[] = [
