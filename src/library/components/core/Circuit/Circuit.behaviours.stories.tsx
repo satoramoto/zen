@@ -238,7 +238,12 @@ export const SelectThenDelete: StoryObj = {
     const last = cords(canvasElement)[0];
     const focusable = (last.closest('[data-part="cords"] [tabindex]') ?? last) as SVGElement;
     expect(focusable.getAttribute('tabindex')).not.toBeNull();
+    // Tab onto it: `focus()` alone fires no focus event when the window lacks OS focus, so step
+    // away and back with userEvent, which dispatches the focus events itself.
     focusable.focus();
+    await userEvent.tab({ shift: true });
+    await userEvent.tab();
+    expect(document.activeElement).toBe(focusable);
     await userEvent.keyboard('{Delete}');
     await waitFor(() => expect(changes(canvasElement)).toBe('Changes: 3'));
     expect(traceIds(canvasElement)).toEqual(['orphan', 'src']);
