@@ -294,8 +294,9 @@ const stage = (id: SessionState, x: number, y: number, params?: Chip['params']):
   ...(params ? { params } : {}),
 });
 
-const COL = 190;
-const ROW = 150;
+// Room for a face at the widest pack's spacing (chips are `--space-6` × 5 wide), so cords show between them.
+const COL = 300;
+const ROW = 170;
 
 export const session: Circuit = {
   version: 1,
