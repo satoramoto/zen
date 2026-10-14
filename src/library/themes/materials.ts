@@ -455,7 +455,8 @@ export const frostMaterials: Materials = {
       solid: `color-mix(in oklab, ${frostSolid}, var(--text-1) 4%)`, // added: raised's solid
     },
     zone: {
-      ...glass(0.3, NO_SHADOW), // added
+      ...glass(0.4, NO_SHADOW), // added
+      fill: frostTone(1.05, 0.45), // added: a step deeper than the chips' glass, so the pane reads in the light mode too
       solid: `color-mix(in oklab, ${frostSolid}, var(--text-1) 2%)`, // added: a step under the chips
       backdrop: 'blur(20px) saturate(1.4)', // added
       edge: `inset 0 1px 0 ${light(0.05)}`, // added
