@@ -69,7 +69,8 @@ export interface ParamGestureOptions {
   /**
    * No single value (several things that differ): `value` is only where a drag starts from. ARIA
    * drops `aria-valuenow` and reads `display` (else "Mixed"); the first drag, key or double-click
-   * calls `onChange` even when it lands on `value`.
+   * calls `onChange` even when it lands on `value`. A press and release without moving leaves it
+   * mixed, and Escape mid-drag writes nothing back.
    */
   mixed?: boolean;
   /** Values a drag catches on: within `snap` (in the parameter's units) of one, it lands there. */
@@ -210,6 +211,8 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
     extent: number;
     from: number;
     fromDepth: number;
+    /** Whether the drag started mixed, so `from` is only a placeholder. */
+    mixed: boolean;
   } | null>(null);
   const wandered = useRef(false);
   const pending = useRef<number | null>(null);
@@ -296,6 +299,7 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
         extent: Math.max(1, axis === 'vertical' ? e.currentTarget.offsetHeight : e.currentTarget.offsetWidth),
         from: now.value,
         fromDepth: now.depth ?? 1,
+        mixed: now.mixed,
       };
       setDragging(true);
     },
@@ -336,14 +340,20 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
     [finish],
   );
 
-  /** A drag still in hand, put back where it was found (Escape). */
+  /**
+   * A drag still in hand, put back where it was found (Escape). A drag that started mixed has no
+   * value to go back to (`from` is only the placeholder), so nothing is written; whatever its moves
+   * already wrote stands.
+   */
   const abandon = useCallback(() => {
     const held = drag.current;
     if (held === null) return;
     const now = latest.current;
     if (now.onDepth && held.fromDepth !== held.depth) now.onDepth(held.fromDepth);
-    sent.current = Number.NaN;
-    emit(quantize(now.param, held.from));
+    if (!held.mixed) {
+      sent.current = Number.NaN;
+      emit(quantize(now.param, held.from));
+    }
     finish();
   }, [emit, finish]);
 

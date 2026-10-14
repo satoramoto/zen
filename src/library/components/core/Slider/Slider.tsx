@@ -58,7 +58,8 @@ export interface SliderProps {
   /**
    * No single value (several things that differ): no thumb or fill, `data-mixed` on the root, ARIA
    * without `aria-valuenow` and reading `display` (else "Mixed"). `value` is where a drag starts;
-   * the first drag, key or double-click calls `onChange`, even onto `value`.
+   * the first drag, key or double-click calls `onChange`, even onto `value`. A press and release
+   * without moving leaves it mixed, and Escape mid-drag writes nothing back.
    */
   mixed?: boolean;
   /** Values marked on the track with a tick; the one at the default is drawn taller and brighter. */
