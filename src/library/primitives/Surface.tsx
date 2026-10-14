@@ -101,6 +101,8 @@ export function Surface({
  * **Job.** Where translucency can't composite: over a native view the web page can't blur (a
  * video, a GPU preview). Every layer inside draws its opaque `solid` fill and no backdrop, so a
  * panel over the picture never shows a smear. Wrap what sits over a `Hole` in this.
+ * Every theme scope is Opaque already under `prefers-reduced-transparency: reduce`,
+ * `prefers-contrast: more` or `<html data-transparency="reduced">` (library.css).
  */
 export function Opaque({ children, className, style }: { children?: ReactNode; className?: string; style?: CSSProperties }) {
   return (
