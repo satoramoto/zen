@@ -124,6 +124,12 @@ export interface Materials {
   /** How much of the picture's ambient light each layer takes (`LayerAmbient`); a layer left out
    *  takes none. */
   ambient?: Partial<Record<LayerName, LayerAmbient>>;
+  /**
+   * The graph's parts, as layers: `node` a chip's face (`Device`), `zone` the frame grouping chips.
+   * Unset, a node is drawn as `layers.raised` and a zone as a faint tint with no blur. A glass set
+   * gives both a frosted pane.
+   */
+  graph?: { node?: Layer; zone?: Layer };
   /** The one light source every edge and cast shadow agrees on, as a CSS angle (`180deg`: from above). */
   light: string;
   /** Region spacing: `inset` is the padding around a region's body and `gap` the space between
@@ -204,6 +210,19 @@ export interface LayerAmbient {
 
 /** A layer that takes no ambient light. */
 const NO_AMBIENT: LayerAmbient = { fill: '0%', edge: '0%', cast: '0%', lightness: ['0', '1'] };
+
+/** A graph zone without a `graph.zone` of its own: a faint tint of the ink, no blur, edge or cast. */
+const PLAIN_ZONE: Layer = {
+  fill: 'color-mix(in oklab, var(--text-1) 3%, transparent)',
+  solid: 'color-mix(in oklab, var(--text-1) 3%, var(--surface-1))',
+  texture: 'none',
+  backdrop: 'none',
+  cast: '0 0 0 0 transparent',
+  edge: '0 0 0 0 transparent',
+};
+
+/** The graph's own layers (`Materials.graph`), emitted as `--layer-node-*` and `--layer-zone-*`. */
+export const GRAPH_LAYERS = ['node', 'zone'] as const;
 
 export interface Facets {
   palette: Palette;
@@ -375,6 +394,19 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     vars[`--layer-${name}-ambient-cast`] = a.cast;
     vars[`--layer-${name}-ambient-l-min`] = a.lightness[0];
     vars[`--layer-${name}-ambient-l-max`] = a.lightness[1];
+  }
+  const graph: Record<(typeof GRAPH_LAYERS)[number], Layer> = {
+    node: m.graph?.node ?? m.layers.raised,
+    zone: m.graph?.zone ?? PLAIN_ZONE,
+  };
+  for (const name of GRAPH_LAYERS) {
+    const l = graph[name];
+    vars[`--layer-${name}-fill`] = l.fill;
+    vars[`--layer-${name}-solid`] = l.solid;
+    vars[`--layer-${name}-texture`] = l.texture;
+    vars[`--layer-${name}-backdrop`] = l.backdrop;
+    vars[`--layer-${name}-cast`] = l.cast;
+    vars[`--layer-${name}-edge`] = l.edge;
   }
   for (const part of ['track', 'tab', 'chosen'] as const) {
     vars[`--mat-tabs-${part}-fill`] = m.tabs[part].fill;
