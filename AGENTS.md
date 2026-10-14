@@ -4,6 +4,7 @@ Zen: React + TypeScript (TSX), Vite, Vitest, Storybook. Two things live here:
 
 - **The field guide**: six books, eighteen principle demonstrations (`src/catalog.ts`, `src/PrincipleExample.tsx`, `src/App.tsx`, `src/stories/`).
 - **The design OS**: a token contract with mixable theme facets (`src/library/`), and the Yahaha app redesigned on it (`src/library/yahaha/`). `docs/design-os-handoff.md` explains the ideas and where the work stands.
+- **Agent harnesses** (`src/harness/<name>/`, shared parts in `src/harness/shared/`): UI kits for mods of agent apps, coloured by zen's packs. Claude Code is the first (`src/harness/claude-code/`, stories under `Harness/Claude Code/…`); `docs/harness-claude-code.md` is the reference for making a Claude Code mod with zen.
 
 ## Preview
 
@@ -23,7 +24,9 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 
 | Command | When |
 |---|---|
-| `npm run typecheck` | Any TS/TSX change. Fast compile check. |
+| `npm run typecheck` | Any TS/TSX change. Fast compile check. Checks two projects: the root and `src/harness/claude-code/tsconfig.json` (engine JSX against `h`). |
+| `npx vitest run src/harness` | The harness's colour maths and skins (`src/harness/`), or any palette or pack change. |
+| `npx tsx scripts/harness-skins.ts` | Writes `src/harness/claude-code/kit/skins.ts` after a palette, pack or `src/harness/claude-code/skins.ts` change (the harness tests fail until it's run). |
 | `npx vitest run src/library` | Library tokens, themes, layout, components, or anything under `src/library/yahaha/`. |
 | `npx vitest run src/library/tiers.test.ts` | Any CSS or TSX under `src/library/{components,layout,yahaha,primitives}`: the tier rules hold their baseline (`npm run tiers` prints the table; `npm run tiers -- --write` records a lower one). |
 | `npm test` | Anything else under `src/` (it includes the above). |
@@ -50,6 +53,7 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 - The public entries (`package.json` `exports`, built by `vite.lib.config.ts`) are the only way an app reaches zen; nothing imports a deeper path:
   - `@satoramoto/zen` (`src/library/index.ts`): the tokens, themes, primitives, layout and components; its stylesheet is `@satoramoto/zen/zen.css`.
   - `@satoramoto/zen/storybook` (`src/library/storybook.tsx`): the toolbar globals (`libraryGlobalTypes`, `libraryInitialGlobals`) and decorators (`withLibraryTheme`, `withStoryFrame`) for an app's own Storybook. Storybook is never reached from the main entry.
+- The one exception: a harness kit (`src/harness/<name>/kit/`) is reached by path and copied into each plugin at the consumer's build (`@satoramoto/zen/harness/*`, shipped as source in `files`), because the agent engine loads a plugin's own source files only. Keep a kit self-contained: no imports outside its folder, no React.
 - App-specific UI lives in the app's repo, built on these entries; zen holds only generic parts (Yahaha's redesign is the reference exception). visual[flow]'s UI lives in openflowfm/visuals `app/src/ui/`; zen keeps its `visuals` theme pack. When an app needs something zen has but doesn't export, export it (with a one-line doc) rather than reaching in.
 - **Running an app against a local zen** (hot reload of zen's source): every entry has a `zen-source` export condition pointing at the TS/TSX source (the CSS entry at the empty `src/library/source.css`, since in source each component imports its own stylesheet). A plain install ignores it and resolves the built `lib/`. In the app, point the package at the checkout and add the condition first in its Vite config:
 
