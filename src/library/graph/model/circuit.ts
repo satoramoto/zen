@@ -1,9 +1,9 @@
 // The Circuit model (`docs/circuit-model.md`): plain JSON, pure operations, drawn by `Graph`
 // through `useCircuit`. Nothing here knows what a chip is for: `type`, `kind` and `style` are the
 // host's words, carried and never read.
-import type { PortSide } from '../Graph/graphContext';
+import type { PortSide } from '../view/Graph/graphContext';
 
-export type { PortSide } from '../Graph/graphContext';
+export type { PortSide } from '../view/Graph/graphContext';
 
 export type Json = null | boolean | number | string | Json[] | { [k: string]: Json };
 

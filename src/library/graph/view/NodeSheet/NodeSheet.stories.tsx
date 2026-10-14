@@ -2,10 +2,10 @@ import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import type { Param } from '../Param/param';
+import type { Param } from '../../../components/core/Param/param';
 import { Device } from '../Device/Device';
-import { Slider } from '../Slider/Slider';
-import { NumberField } from '../NumberField/NumberField';
+import { Slider } from '../../../components/core/Slider/Slider';
+import { NumberField } from '../../../components/core/NumberField/NumberField';
 import { NodeSheet, NodeSheetRow, NodeSheetSection, type NodeSheetPlace } from './NodeSheet';
 
 const depth: Param = { kind: 'float', min: 0, max: 1, defaultValue: 0.5, name: 'Depth' };
@@ -67,7 +67,7 @@ function Canvas({ onPark, onDismiss }: { onPark(at: NodeSheetPlace | null): void
 }
 
 const meta = {
-  title: 'Design OS/Components/Core/NodeSheet',
+  title: 'Design OS/Graph/NodeSheet',
   component: Canvas,
   decorators: [withLibraryTheme],
   args: { onPark: fn(), onDismiss: fn() },

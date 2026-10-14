@@ -10,7 +10,7 @@ import {
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
 import { Icon } from '../../../primitives/Icon';
-import { ButtonFace } from '../ActionButton/ActionButton';
+import { ButtonFace } from '../../../components/core/ActionButton/ActionButton';
 import './NodeSheet.css';
 
 /** Where a parked sheet stands, in viewport px. */

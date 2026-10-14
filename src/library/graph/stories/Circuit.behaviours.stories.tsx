@@ -4,13 +4,13 @@
 import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { withLibraryTheme } from '../../../storybook';
-import { Surface } from '../../../primitives/Surface';
-import { Text } from '../../../primitives/Text';
-import { Graph, GraphNode } from '../Graph/Graph';
-import { Port } from '../Graph/Port';
-import { pinsOf, type Circuit, type Pin, type Trace } from './circuit';
-import { useCircuit } from './useCircuit';
+import { withLibraryTheme } from '../../storybook';
+import { Surface } from '../../primitives/Surface';
+import { Text } from '../../primitives/Text';
+import { Graph, GraphNode } from '../view/Graph/Graph';
+import { Port } from '../view/Graph/Port';
+import { pinsOf, type Circuit, type Pin, type Trace } from '../model/circuit';
+import { useCircuit } from '../model/useCircuit';
 
 const pin = (id: string, side: Pin['side'], kind?: string): Pin => ({ id, side, ...(kind ? { kind } : {}) });
 
@@ -104,7 +104,7 @@ function Harness({ initial, deletable = true }: { initial: Circuit; deletable?: 
 }
 
 const meta: Meta = {
-  title: 'Design OS/Components/Core/Circuit/Behaviours',
+  title: 'Design OS/Graph/Circuit/Behaviours',
   decorators: [withLibraryTheme],
   parameters: { layout: 'padded' },
 };

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { GraphCord } from '../Graph/Graph';
+import type { GraphCord } from '../view/Graph/Graph';
 import { CircuitError, connect, disconnect, flatten, moveChip, type Circuit, type End, type Trace } from './circuit';
 
 export interface CircuitBinding {

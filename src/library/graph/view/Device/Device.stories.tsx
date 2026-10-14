@@ -38,7 +38,7 @@ const code = (
 const host = { '--lib-device-accent': 'var(--hue-3)', '--lib-device-width': 'calc(var(--space-6) * 7)' } as CSSProperties;
 
 const meta = {
-  title: 'Design OS/Components/Core/Device',
+  title: 'Design OS/Graph/Device',
   component: Device,
   decorators: [
     withLibraryTheme,

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, type KeyboardEvent, type PointerEvent } from 'react';
 import { focusRing } from '../../../primitives/Ring';
 import { Text } from '../../../primitives/Text';
-import type { HueSlot } from '../hue';
+import type { HueSlot } from '../../../components/core/hue';
 import { GraphContext, portKey, type PortSide } from './graphContext';
 import './Graph.css';
 

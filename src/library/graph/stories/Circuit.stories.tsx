@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
-import { withLibraryTheme } from '../../../storybook';
-import { Surface } from '../../../primitives/Surface';
-import { Text } from '../../../primitives/Text';
-import { Device, DeviceMore, DevicePortRow } from '../Device/Device';
-import { Graph, GraphNode, type GraphCord, type GraphView } from '../Graph/Graph';
-import { Port } from '../Graph/Port';
-import { NodeSheet, NodeSheetRow, NodeSheetSection, type NodeSheetPlace } from '../NodeSheet/NodeSheet';
-import { Slider } from '../Slider/Slider';
-import { format } from '../Param/format';
-import type { Param } from '../Param/param';
-import { pinsOf, validate, type Chip, type Circuit, type Json, type Pin, type Trace } from './circuit';
-import { useCircuit, type CircuitBinding } from './useCircuit';
+import { withLibraryTheme } from '../../storybook';
+import { Surface } from '../../primitives/Surface';
+import { Text } from '../../primitives/Text';
+import { Device, DeviceMore, DevicePortRow } from '../view/Device/Device';
+import { Graph, GraphNode, type GraphCord, type GraphView } from '../view/Graph/Graph';
+import { Port } from '../view/Graph/Port';
+import { NodeSheet, NodeSheetRow, NodeSheetSection, type NodeSheetPlace } from '../view/NodeSheet/NodeSheet';
+import { Slider } from '../../components/core/Slider/Slider';
+import { format } from '../../components/core/Param/format';
+import type { Param } from '../../components/core/Param/param';
+import { pinsOf, validate, type Chip, type Circuit, type Json, type Pin, type Trace } from '../model/circuit';
+import { useCircuit, type CircuitBinding } from '../model/useCircuit';
 import { CIRCUITS, KIND_HUE, PARAM_SPECS, SESSION_STATES, TYPE_NAMES, type SessionState } from './Circuit.fixtures';
 
 // ---------------------------------------------------------------------------------------------
@@ -353,7 +353,7 @@ function ChipSheet({ circuit, module, chip, anchor, parked, onPark, onDismiss, o
 // ---------------------------------------------------------------------------------------------
 
 const meta: Meta = {
-  title: 'Design OS/Components/Core/Circuit/Samples',
+  title: 'Design OS/Graph/Circuit/Samples',
   decorators: [withLibraryTheme],
   parameters: { layout: 'padded' },
 };

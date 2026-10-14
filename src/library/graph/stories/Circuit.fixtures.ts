@@ -2,9 +2,9 @@
 // valid (`validate(c)` returns `[]`). No React here. Every field the first pass of the Graph view
 // can't draw yet (buses, pin placement, routing, trace labels, zones, controls, layout) is still
 // written, so the data says what the drawing should one day be.
-import type { HueSlot } from '../hue';
-import type { Param } from '../Param/param';
-import type { Chip, Circuit, Module, Pin, Trace } from './circuit';
+import type { HueSlot } from '../../components/core/hue';
+import type { Param } from '../../components/core/Param/param';
+import type { Chip, Circuit, Module, Pin, Trace } from '../model/circuit';
 
 /** Each pin and trace kind's hue slot (`--hue-n`): the host's choice, not the model's. */
 export const KIND_HUE: Record<string, HueSlot> = {
