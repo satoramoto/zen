@@ -96,6 +96,23 @@
 :where(.lib-surface[data-radius='circle']) { border-radius: 50%; }
 :where(.lib-surface[data-radius='none']) { border-radius: 0; }
 
+/* Shader: a material's canvas over the surface's fill and backdrop, under its content. The surface
+   is a stacking context so the canvas (z -1) stays inside it, above its own background; absolutely
+   placed, it takes no flex slot or grid cell. A component's class may still set its own position. */
+:where(.lib-surface[data-shader]) {
+  isolation: isolate;
+  position: relative;
+}
+:where(.lib-surface__shader) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
 /* Opaque: over a native view every layer inside draws its solid and blurs nothing (the layer
    rules above read these variables). */
 :where(.lib-opaque) {

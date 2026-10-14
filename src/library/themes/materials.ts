@@ -394,14 +394,30 @@ function frostTone(k: number, alpha = 1): string {
 /** stage.css: every panel over the native preview paints opaque --surface-corner (#18181a). */
 const frostSolid = frostTone(1.15);
 
-/** popover.css / home.css: glass on popovers, menus and a dragged tile. */
+/** A hairline on the lit side (the materials' `light`, `--light-angle`), as Surface's ambient edge
+ *  places it: at 180deg the top edge. */
+const litEdge = (colour: string) =>
+  `inset calc(sin(var(--light-angle)) * var(--border-width)) calc(cos(var(--light-angle)) * -1 * var(--border-width)) 0 ${colour}`;
+
+/**
+ * The plain glass (docs/shader-graph.md, "Liquid glass"): popovers, menus, sheets, toasts and a
+ * dragged tile, and the CSS look under the shader glass (frost's `shaders`), so it must look
+ * finished alone. It replaced visual[flow]'s HUD glass (popover.css / home.css: --surface-float
+ * at 0.86–0.9 over `blur(28px) saturate(1.6)`, a 7% white top edge), which read as a dark, heavily
+ * saturated slab. Now: a thinner tint, a softer blur that keeps the colours behind true, a light
+ * rim all round brighter on the lit side, and a soft highlight falling from the lit edge. The
+ * tones turn over with the mode (frostTone, light), so it is dark glass in the dark mode and pale
+ * glass in the light.
+ */
 function glass(alpha: number, lift: string): Layer {
   return {
-    fill: frostTone(1.13, alpha), // home.css --surface-float rgba(20, 20, 24, 0.86)
+    fill: frostTone(1.13, alpha), // home.css --surface-float's tone; alpha thinned (was 0.86–0.9)
     solid: frostSolid, // stage.css: over the preview, opaque --surface-corner and no blur
-    texture: 'none',
-    backdrop: 'blur(28px) saturate(1.6)', // home.css --glass
-    edge: `inset 0 1px 0 ${light(0.07)}`, // home.css --glass-edge: a hint of glass, not a line
+    // added: a soft highlight from the lit edge, gone by mid-pane
+    texture: `linear-gradient(var(--light-angle), ${light(0.12)}, ${light(0.03)} 35%, ${light(0)} 60%)`,
+    backdrop: 'blur(20px) saturate(1.15)', // added: was home.css --glass blur(28px) saturate(1.6)
+    // added: a light rim all round, brighter on the lit side (was home.css --glass-edge, a 7% top line)
+    edge: [litEdge(light(0.22)), hairline(light(0.1))].join(', '),
     cast: lift,
   };
 }
@@ -443,25 +459,28 @@ export const frostMaterials: Materials = {
     base: plain('var(--surface-0)', frostSolid),
     // home.css --surface-2: raised, a chip, a progress track; solid a step lighter than the panel
     raised: plain('var(--surface-2)', `color-mix(in oklab, ${frostSolid}, var(--text-1) 4%)`),
-    float: glass(0.86, '0 10px 24px oklch(0 0 0 / 0.55)'), // popover.css: --lift, --glass-edge
-    overlay: glass(0.9, '0 18px 52px oklch(0 0 0 / 0.55)'), // added: a sheet, a step further (palette.css --shadow-modal)
-    top: glass(0.9, '0 10px 24px oklch(0 0 0 / 0.55)'), // added: a toast, glass like a popover
+    float: glass(0.7, '0 10px 24px oklch(0 0 0 / 0.55)'), // popover.css: --lift; alpha added (was 0.86)
+    overlay: glass(0.76, '0 18px 52px oklch(0 0 0 / 0.55)'), // added: a sheet, a step further (palette.css --shadow-modal); alpha was 0.9
+    top: glass(0.76, '0 10px 24px oklch(0 0 0 / 0.55)'), // added: a toast, glass like a popover; alpha was 0.9
   },
   // added: the graph under frosted glass. A chip is a glass pane lighter than a popover with a
   // shorter lift; a zone a thinner pane with no cast, so the chips on it read in front.
   graph: {
     node: {
-      ...glass(0.72, '0 6px 16px oklch(0 0 0 / 0.35)'), // added
+      ...glass(0.66, '0 6px 16px oklch(0 0 0 / 0.35)'), // added: was 0.72 over the old HUD glass
       solid: `color-mix(in oklab, ${frostSolid}, var(--text-1) 4%)`, // added: raised's solid
     },
     zone: {
       ...glass(0.4, NO_SHADOW), // added
       fill: frostTone(1.05, 0.45), // added: a step deeper than the chips' glass, so the pane reads in the light mode too
       solid: `color-mix(in oklab, ${frostSolid}, var(--text-1) 2%)`, // added: a step under the chips
-      backdrop: 'blur(20px) saturate(1.4)', // added
-      edge: `inset 0 1px 0 ${light(0.05)}`, // added
+      texture: 'none', // added: thin, no highlight, so the chips on it carry the light
+      backdrop: 'blur(16px) saturate(1.1)', // added
+      edge: [litEdge(light(0.1)), hairline(light(0.05))].join(', '), // added: the glass's rim, fainter
     },
   },
+  // added: the plain glass shader over the floating layers, where WebGL allows (glass() is its CSS look)
+  shaders: { float: 'glass', overlay: 'glass', top: 'glass' },
   // design-os decision 85: the page's tints take a little of the picture (a tint only: regions have
   // no edge), the glass more, with a coloured top edge and a glow cast behind it. Ground and top take none.
   ambient: {

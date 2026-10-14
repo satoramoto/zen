@@ -85,7 +85,7 @@ export const packs: ThemePack[] = [
     },
     keep: [
       'Native HUD frost behind a transparent window; the page paints only faint tints over it (decision 69).',
-      'Glass (blur 28px, saturate 1.6, a lit top edge, a lift shadow) only on what floats.',
+      'Plain glass only on what floats: a thin tint over blur 20px (saturate 1.15), a light rim brighter along the top, a soft top highlight, a lift shadow; the shader glass adds light over it where WebGL allows.',
       'Near borderless: areas told apart by space and tone; the only lines are the selection ring, the focus ring and the playing mark (decision 68).',
       'Controls are type; the active one is underlined in the primary.',
       'Never translucency over the native preview: panels there are opaque (stage.css).',
