@@ -32,6 +32,42 @@
 .lib-scope [data-ambient='bottom'] { --ambient-light: var(--ambient-bottom); }
 .lib-scope [data-ambient='centre'] { --ambient-light: var(--ambient-centre); }
 
+/* Less transparency (the person's setting, or more contrast; or the app marks <html> with
+   data-transparency="reduced" for a WebView that doesn't answer the query): the whole scope is an
+   Opaque scope (Surface.css `.lib-opaque`), every layer its solid and no backdrop. The scope sets
+   the layer variables inline on itself, so this goes on its children, which pass it down. No
+   specificity, so an app's own layer rule still wins. */
+:where(:root[data-transparency='reduced'] .lib-scope > *) {
+  --layer-ground-fill: var(--layer-ground-solid);
+  --layer-base-fill: var(--layer-base-solid);
+  --layer-raised-fill: var(--layer-raised-solid);
+  --layer-float-fill: var(--layer-float-solid);
+  --layer-overlay-fill: var(--layer-overlay-solid);
+  --layer-top-fill: var(--layer-top-solid);
+  --layer-ground-backdrop: none;
+  --layer-base-backdrop: none;
+  --layer-raised-backdrop: none;
+  --layer-float-backdrop: none;
+  --layer-overlay-backdrop: none;
+  --layer-top-backdrop: none;
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :where(.lib-scope > *) {
+    --layer-ground-fill: var(--layer-ground-solid);
+    --layer-base-fill: var(--layer-base-solid);
+    --layer-raised-fill: var(--layer-raised-solid);
+    --layer-float-fill: var(--layer-float-solid);
+    --layer-overlay-fill: var(--layer-overlay-solid);
+    --layer-top-fill: var(--layer-top-solid);
+    --layer-ground-backdrop: none;
+    --layer-base-backdrop: none;
+    --layer-raised-backdrop: none;
+    --layer-float-backdrop: none;
+    --layer-overlay-backdrop: none;
+    --layer-top-backdrop: none;
+  }
+}
+
 [data-hue='1'] { --hue: var(--hue-1); }
 [data-hue='2'] { --hue: var(--hue-2); }
 [data-hue='3'] { --hue: var(--hue-3); }
