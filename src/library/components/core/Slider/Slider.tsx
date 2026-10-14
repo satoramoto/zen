@@ -186,7 +186,10 @@ export function Slider({
   const open = useRef(false);
   const wasOpen = useRef(false);
   useEffect(() => {
-    if (entry !== null && !wasOpen.current) entryField.current?.select();
+    if (entry !== null && !wasOpen.current) {
+      entryField.current?.focus();
+      entryField.current?.select();
+    }
     if (entry === null && wasOpen.current) readoutButton.current?.focus();
     wasOpen.current = entry !== null;
   }, [entry]);
