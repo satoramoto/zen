@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
-import { withLibraryTheme } from '../../../storybook';
-import { Button, type ButtonHue } from './Button';
+import { useState } from 'react';
+import { EveryPack, withLibraryTheme } from '../../../storybook';
+import type { ModeChoice } from '../../../theme';
+import { packs } from '../../../themes/packs';
+import { Icon as IconGlyph } from '../../../primitives/Icon';
+import { Button, type ButtonHue, type ButtonProps } from './Button';
 
 const NONE = 'none';
 const SIZES = ['icon', 'md', 'band', 'pair', 'cell', 'caret'];
@@ -358,6 +362,74 @@ export const Quiet: Story = {
     await expect(canvas.getByRole('button', { name: 'JSON chosen' })).toHaveAttribute('data-face', 'chosen');
     await expect(canvas.getByRole('button', { name: 'JSON chosen' })).toHaveAttribute('aria-pressed', 'true');
     await expect(canvas.getByRole('button', { name: 'JSON disabled' })).toHaveAttribute('data-face', 'disabled');
+  },
+};
+
+/** A sidebar glyph: a window with its left pane ruled off (the caller's own icon in an app). */
+const sidebarIcon = (
+  <IconGlyph size="body">
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <line x1="9" y1="5" x2="9" y2="19" />
+  </IconGlyph>
+);
+
+/** A panel's show/hide key: an icon-only quiet toggle with a name and a hover hint; chosen while the panel shows. */
+function PanelToggle(props: Partial<ButtonProps>) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Button
+      {...props}
+      icon={sidebarIcon}
+      size="icon"
+      variant="quiet"
+      name="Inspector"
+      title={`${open ? 'Hide' : 'Show'} the inspector (⌘I)`}
+      pressed={open}
+      chosen={open}
+      onPress={() => {
+        props.onPress?.();
+        setOpen((was) => !was);
+      }}
+    />
+  );
+}
+
+/**
+ * New: `icon` and `title`. An icon-only quiet toggle (visuals' sidebar and inspector keys), off and
+ * chosen, in every pack: at rest a quiet glyph, chosen the pack's chosen-tab face (an underline, a
+ * `--selected` block, a raised chip, or in visuals the ink alone), never the lit accent key. Press
+ * the first to toggle it.
+ */
+export const IconToggle: Story = {
+  render: (args, { globals }) => (
+    <EveryPack mode={globals.mode as ModeChoice}>
+      <div style={row}>
+        <PanelToggle onPress={args.onPress} />
+        <Button icon={sidebarIcon} size="icon" variant="quiet" name="Sources" title="Hide the sources" pressed chosen />
+        <Button icon={sidebarIcon} label="Library" variant="quiet" title="Show the library" pressed={false} />
+        <Button icon={sidebarIcon} size="icon" name="Sources (secondary)" title="Sources" />
+        <Button icon={sidebarIcon} size="icon" variant="quiet" name="Sources (disabled)" disabled />
+      </div>
+    </EveryPack>
+  ),
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const toggles = canvas.getAllByRole('button', { name: 'Inspector' });
+    await expect(toggles).toHaveLength(packs.length);
+    const first = toggles[0];
+    await expect(first).toHaveAttribute('title', 'Show the inspector (⌘I)');
+    await expect(first).toHaveAttribute('data-face', 'off');
+    await expect(first.querySelector('[data-part="icon"]')).toHaveAttribute('aria-hidden', 'true');
+    await expect(first.querySelector('[data-part="label"]')).toBeNull();
+    await userEvent.click(first);
+    await expect(args.onPress).toHaveBeenCalledTimes(1);
+    await expect(first).toHaveAttribute('aria-pressed', 'true');
+    await expect(first).toHaveAttribute('data-face', 'chosen');
+    await expect(first).toHaveAttribute('title', 'Hide the inspector (⌘I)');
+    for (const chosen of canvas.getAllByRole('button', { name: 'Sources' })) {
+      await expect(chosen).toHaveAttribute('data-face', 'chosen');
+      await expect(chosen).toHaveAttribute('data-variant', 'quiet');
+    }
   },
 };
 
