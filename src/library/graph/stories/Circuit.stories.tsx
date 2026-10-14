@@ -181,6 +181,23 @@ function KindMark({ hue }: { hue?: KindInk }) {
   );
 }
 
+/** A merge's mark: its in pins drawn converging into one line out, in the quiet ink. */
+function MergeMark({ inputs }: { inputs: number }) {
+  const n = Math.max(2, inputs);
+  const ys = Array.from({ length: n }, (_, i) => 1 + (10 * i) / (n - 1));
+  return (
+    <svg aria-hidden="true" width="14" height="12" viewBox="0 0 14 12" style={{ flex: 'none', overflow: 'visible', color: 'var(--text-3)' }}>
+      {ys.map((y) => (
+        <path key={y} d={`M1 ${y} C 5 ${y}, 5 6, 9 6`} fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
+      ))}
+      <path d="M9 6 H13" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** The kind a chip is drawn in: its first out pin's, else its first pin's. */
+const kindOfChip = (pins: readonly Pin[]) => pins.find((p) => p.side === 'out')?.kind ?? pins[0]?.kind;
+
 /** One param as an inspector line: its name quiet on the left, its value on the right. */
 function ParamLine({ name, value }: { name: string; value: string }) {
   return (
@@ -241,7 +258,7 @@ function ChipFace({ circuit, module, chip, binding, connected, selected, current
         {more ? 'fewer' : `${hidden.length} more`}
       </DeviceMore>,
     );
-  const firstKind = pins.find((p) => p.side === 'out')?.kind ?? pins[0]?.kind;
+  const isMerge = chip.type === 'merge';
   const kicker = chip.module ? (
     <Text role="caption" tone="muted" truncate>
       module · {chip.module}
@@ -250,6 +267,8 @@ function ChipFace({ circuit, module, chip, binding, connected, selected, current
     <Text role="caption" tone="accent" truncate>
       current state
     </Text>
+  ) : isMerge ? (
+    `${inlets.length} into 1`
   ) : (
     chip.type
   );
@@ -261,7 +280,7 @@ function ChipFace({ circuit, module, chip, binding, connected, selected, current
       selected={selected}
       onSelect={onSelect}
       pins="edge"
-      headerStart={<KindMark hue={hueOf(firstKind)} />}
+      {...(isMerge ? { headerStart: <MergeMark inputs={inlets.length} /> } : {})}
       headerEnd={
         onEnter ? (
           <Button size="icon" variant="quiet" symbol="next" name={`Enter ${nameOf(chip)}`} onPress={onEnter} />
@@ -304,12 +323,11 @@ function ChipFace({ circuit, module, chip, binding, connected, selected, current
 /** A module pin, drawn inside the module at its boundary: where the instance's pin comes in or goes out. */
 function Terminal({ id, side, label, kind }: { id: string; side: 'in' | 'out'; label: string; kind?: string }) {
   return (
-    <div style={{ '--lib-device-width': 'calc(var(--space-6) * 3.5)' } as CSSProperties}>
+    <div style={{ '--lib-device-width': 'calc(var(--space-6) * 3.5)', ...(kind ? { '--lib-device-accent': inkOf(hueOf(kind)) } : {}) } as CSSProperties}>
       <Device
         name={label}
         kicker={side === 'in' ? 'module in' : 'module out'}
         pins="edge"
-        headerStart={<KindMark hue={hueOf(kind)} />}
         {...(side === 'in'
           ? { outlets: <Port id={id} side="out" label={label} showLabel={false} kind={kind} hue={hueOf(kind)} connected /> }
           : { inlets: <Port id={id} side="in" label={label} showLabel={false} kind={kind} hue={hueOf(kind)} connected /> })}
@@ -573,6 +591,15 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
     [binding.cords, traceById, current],
   );
 
+  /** A chip's width (a merge is narrow) and its kind's hue on the head's leading edge. */
+  const chipStyle = (c: Chip) => {
+    const hue = hueOf(kindOfChip(pinsOf(circuit, mod, c.id)));
+    return {
+      '--lib-device-width': c.type === 'merge' ? 'calc(var(--space-6) * 3.5)' : 'calc(var(--space-6) * 5)',
+      ...(hue !== undefined ? { '--lib-device-accent': inkOf(hue) } : {}),
+    } as CSSProperties;
+  };
+
   // Inside a module, its pins stand at the boundary, wired to the inner pins they stand for.
   const terminals = useMemo(() => {
     if (mod === circuit.board || m.chips.length === 0) return [];
@@ -697,7 +724,7 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
                 <GraphNode key={c.id} id={c.id} x={c.x * unit} y={c.y * unit}>
                   <div
                     ref={c.id === selected ? anchor : undefined}
-                    style={{ '--lib-device-width': 'calc(var(--space-6) * 5)' } as CSSProperties}
+                    style={chipStyle(c)}
                     onDoubleClick={c.module ? () => enterChip(c) : undefined}
                   >
                     <ChipFace

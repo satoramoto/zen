@@ -58,6 +58,7 @@ export const TYPE_NAMES: Record<string, string> = {
   assistant: 'Assistant',
   context: 'Context',
   root: 'Root',
+  merge: 'Merge',
 };
 
 /** The range and units of each numeric param, by param name. A param not listed is drawn 0–1. */
@@ -318,11 +319,29 @@ const stage = (
 const failPin = (face: Face) => outPin('fail', 'fail', { label: 'Fail', placement: face });
 
 // A meander four wide: Work runs left to right, Review comes back right to left, Ship runs out
-// again, and Repair stands to the right. Columns leave room for a face at the widest spacing
-// (the samples stretch positions by the pack's step).
+// again, and Repair stands to the right, behind a merge that gathers the four checks' failures
+// into its one in pin. Columns leave room for a face at the widest spacing (the samples stretch
+// positions by the pack's step).
 const COL = 260;
 const ROW = 200;
-const REPAIR = COL * 4 + 40;
+const MERGE = COL * 4;
+const REPAIR = MERGE + 220;
+
+/**
+ * A merge: fan-in made explicit. One in pin per source (named for it, on the faces given) and one
+ * out pin, since an in pin takes one trace (docs/circuit-model.md, behaviour 8).
+ */
+const merge = (id: string, x: number, y: number, ins: { id: string; kind: string; label: string; placement?: Pin['placement'] }[], out: { kind: string; placement?: Pin['placement'] }, zone?: string): Chip => ({
+  id,
+  type: 'merge',
+  x,
+  y,
+  ...(zone ? { zone } : {}),
+  pins: [
+    ...ins.map((i) => inPin(i.id, i.kind, { label: i.label, ...(i.placement ? { placement: i.placement } : {}) })),
+    outPin('out', out.kind, { label: 'Out', ...(out.placement ? { placement: out.placement } : {}) }),
+  ],
+});
 
 export const session: Circuit = {
   version: 1,
@@ -364,21 +383,35 @@ export const session: Circuit = {
           zone: 'repair',
         },
         { ...stage('failed', REPAIR, ROW * 1.6, { in: 'n' }), zone: 'repair' },
+        merge(
+          'failures',
+          MERGE,
+          ROW * 0.5,
+          [
+            { id: 'checked', kind: 'fail', label: 'Check' },
+            { id: 'tested', kind: 'fail', label: 'Test' },
+            { id: 'reviewed', kind: 'fail', label: 'Review' },
+            { id: 'ci', kind: 'fail', label: 'CI' },
+          ],
+          { kind: 'fail' },
+          'repair',
+        ),
       ],
       traces: [
         wire('asked-routed', 'asked.out', 'routed.in', { kind: 'flow' }),
         wire('routed-working', 'routed.out', 'working.in', { kind: 'flow' }),
         wire('working-checked', 'working.out', 'checked.in', { kind: 'flow' }),
         wire('checked-tested', 'checked.out', 'tested.in', { kind: 'flow', label: 'pass' }),
-        wire('checked-fixing', 'checked.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('checked-fail', 'checked.fail', 'failures.checked', { kind: 'fail', label: 'fail' }),
         wire('tested-committed', 'tested.out', 'committed.in', { kind: 'flow', label: 'pass' }),
-        wire('tested-fixing', 'tested.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('tested-fail', 'tested.fail', 'failures.tested', { kind: 'fail', label: 'fail' }),
         wire('committed-reviewed', 'committed.out', 'reviewed.in', { kind: 'flow' }),
         wire('reviewed-pr', 'reviewed.out', 'pr_open.in', { kind: 'flow', label: 'pass' }),
-        wire('reviewed-fixing', 'reviewed.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('reviewed-fail', 'reviewed.fail', 'failures.reviewed', { kind: 'fail', label: 'fail' }),
         wire('pr-ci', 'pr_open.out', 'ci.in', { kind: 'flow' }),
         wire('ci-merged', 'ci.out', 'merged.in', { kind: 'flow', label: 'pass' }),
-        wire('ci-fixing', 'ci.fail', 'fixing.in', { kind: 'fail', label: 'fail' }),
+        wire('ci-fail', 'ci.fail', 'failures.ci', { kind: 'fail', label: 'fail' }),
+        wire('failures-fixing', 'failures.out', 'fixing.in', { kind: 'fail' }),
         wire('merged-pulled', 'merged.out', 'pulled.in', { kind: 'flow' }),
         wire('pulled-done', 'pulled.out', 'done.in', { kind: 'flow' }),
         wire('fixing-working', 'fixing.retry', 'working.retry', { kind: 'flow', label: 'retry' }),
@@ -527,7 +560,19 @@ export const brain: Circuit = {
         thread('zen', 'zen circuit model', 520, 210, 'open', { dogfood: true }),
         thread('visuals', 'visuals', 790, 110, 'waiting'),
         thread('session', 'session machine', 790, 310, 'draft'),
-        thread('awesome', 'awesome-claude', 1060, 210, 'open', { gives: 'n' }),
+        thread('awesome', 'awesome-claude', 1200, 210, 'open', { gives: 'n' }),
+        // awesome-claude needs what the reviewer feeds it and what the session machine blocks: a merge.
+        merge(
+          'awesome-needs',
+          1030,
+          250,
+          [
+            { id: 'feeds', kind: 'thread', label: 'Feeds' },
+            { id: 'blocks', kind: 'blocks', label: 'Blocks' },
+          ],
+          { kind: 'thread' },
+          'threads',
+        ),
       ],
       traces: [
         { id: 'ctx-source', from: { chip: 'lexicon', pin: 'context' }, to: { bus: 'base-context' }, kind: 'context' },
@@ -536,10 +581,11 @@ export const brain: Circuit = {
         { id: 'ctx-reviewer', from: { bus: 'base-context' }, to: { chip: 'reviewer', pin: 'context' }, kind: 'context' },
         wire('runs-syn', 'orchestrator.work', 'syn.needs', { kind: 'thread', label: 'feeds' }),
         wire('builds-zen', 'developer.work', 'zen.needs', { kind: 'thread', label: 'feeds' }),
-        wire('reviews', 'reviewer.work', 'awesome.needs', { kind: 'thread', label: 'feeds' }),
+        wire('reviews', 'reviewer.work', 'awesome-needs.feeds', { kind: 'thread', label: 'feeds' }),
         wire('zen-visuals', 'zen.gives', 'visuals.needs', { kind: 'thread', label: 'feeds' }),
         wire('zen-session', 'zen.gives', 'session.needs', { kind: 'thread', label: 'feeds' }),
-        wire('session-awesome', 'session.gives', 'awesome.needs', { kind: 'blocks', label: 'blocks' }),
+        wire('session-awesome', 'session.gives', 'awesome-needs.blocks', { kind: 'blocks', label: 'blocks' }),
+        wire('needs-awesome', 'awesome-needs.out', 'awesome.needs', { kind: 'thread' }),
         wire('awesome-syn', 'awesome.gives', 'syn.dogfood', { kind: 'thread', label: 'dogfoods' }),
         wire('syn-zen', 'syn.gives', 'zen.dogfood', { kind: 'thread', label: 'dogfoods' }),
       ],

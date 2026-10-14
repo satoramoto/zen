@@ -1,7 +1,8 @@
 /* Device: a raised Surface with a head, a picture, its wiring and a body.
    Reads only contract variables and the knobs declared in Device.tsx:
 
-   --lib-device-accent  the head's leading mark and the ports' ink (none by default)
+   --lib-device-accent  the head's leading edge (a kind's hue, say) and the ink of ports without
+                        a kind hue (none by default)
    --lib-device-width   the width (auto by default, zero specificity)
    --lib-device-more-indent  where DeviceMore's line starts (a row control's indent by default)
 
@@ -16,6 +17,16 @@
 
 :where(.lib-device) {
   width: var(--lib-device-width, auto);
+}
+
+/* The face is the materials' graph node (`--layer-node-*`: the raised layer unless the set gives
+   the graph its own, e.g. frost's glass), composited by Surface. */
+.lib-surface.lib-device {
+  --lib-surface-fill: var(--layer-node-fill);
+  --lib-surface-texture: var(--layer-node-texture);
+  --lib-surface-backdrop: var(--layer-node-backdrop);
+  --lib-surface-edge: var(--layer-node-edge);
+  --lib-surface-cast: var(--layer-node-cast);
 }
 
 .lib-device {
@@ -66,12 +77,22 @@
 .lib-device[data-pins='edge'] .lib-graph__port,
 .lib-device__edge .lib-graph__port {
   border-width: calc(var(--border-width) * 2);
-  background: var(--layer-raised-solid);
-  box-shadow: 0 0 0 calc(var(--border-width) * 2) var(--layer-raised-solid);
+  background: var(--layer-node-solid);
+  box-shadow: 0 0 0 calc(var(--border-width) * 2) var(--layer-node-solid);
 }
-.lib-device[data-pins='edge'] .lib-graph__port[data-connected],
-.lib-device__edge .lib-graph__port[data-connected] {
-  background: var(--lib-graph-port-hue, var(--lib-device-accent, var(--lib-graph-port-ink)));
+/* A pin with no kind hue fills with the device's accent once connected. A kind's pin stays neutral
+   and takes its hue only while lit (Graph.css): the trace carries the kind's colour. */
+.lib-device[data-pins='edge'] .lib-graph__port[data-connected]:not([data-hue]),
+.lib-device__edge .lib-graph__port[data-connected]:not([data-hue]) {
+  background: var(--lib-device-accent, var(--lib-graph-port-ink));
+}
+.lib-device[data-pins='edge'] .lib-graph__port[data-hue][data-connected],
+.lib-device__edge .lib-graph__port[data-hue][data-connected] {
+  background: var(--layer-node-solid);
+}
+.lib-device[data-pins='edge'] .lib-graph__port[data-hue]:is(:hover:not(:disabled), [data-over], [data-reach='open'], [data-pending], [data-lit]):not([data-reach='shut']),
+.lib-device__edge .lib-graph__port[data-hue]:is(:hover:not(:disabled), [data-over], [data-reach='open'], [data-pending], [data-lit]):not([data-reach='shut']) {
+  background: var(--lib-graph-port-hue);
 }
 .lib-device[data-pins='edge'] .lib-graph__port:hover:not(:disabled),
 .lib-device__edge .lib-graph__port:hover:not(:disabled) {

@@ -587,8 +587,15 @@ export function Graph({
   /** Which side the cord in flight is short of, so ports can mark whether they could take it. */
   const wants = drawing ? opposite(drawing.side) : null;
 
+  /** The selected cord's two ends, so its ports light with it. */
+  const lit = useMemo(() => {
+    const cord = chosen === null ? undefined : cords?.find((c) => c.id === chosen);
+    return cord ? new Set([portKey(cord.from, 'out'), portKey(cord.to, 'in')]) : undefined;
+  }, [chosen, cords]);
+
   const surface = useMemo<GraphSurface>(
     () => ({
+      lit,
       register,
       startCord,
       armCord,
@@ -599,7 +606,7 @@ export function Graph({
       scale: () => now.current.view.k,
       moveNode: (id, x, y) => now.current.onMove?.(id, x, y),
     }),
-    [register, startCord, armCord, hoverPort, drawing?.at, wants, over],
+    [register, startCord, armCord, hoverPort, drawing?.at, wants, over, lit],
   );
 
   const selectable = onDisconnect !== undefined;

@@ -447,6 +447,21 @@ export const frostMaterials: Materials = {
     overlay: glass(0.9, '0 18px 52px oklch(0 0 0 / 0.55)'), // added: a sheet, a step further (palette.css --shadow-modal)
     top: glass(0.9, '0 10px 24px oklch(0 0 0 / 0.55)'), // added: a toast, glass like a popover
   },
+  // added: the graph under frosted glass. A chip is a glass pane lighter than a popover with a
+  // shorter lift; a zone a thinner pane with no cast, so the chips on it read in front.
+  graph: {
+    node: {
+      ...glass(0.72, '0 6px 16px oklch(0 0 0 / 0.35)'), // added
+      solid: `color-mix(in oklab, ${frostSolid}, var(--text-1) 4%)`, // added: raised's solid
+    },
+    zone: {
+      ...glass(0.4, NO_SHADOW), // added
+      fill: frostTone(1.05, 0.45), // added: a step deeper than the chips' glass, so the pane reads in the light mode too
+      solid: `color-mix(in oklab, ${frostSolid}, var(--text-1) 2%)`, // added: a step under the chips
+      backdrop: 'blur(20px) saturate(1.4)', // added
+      edge: `inset 0 1px 0 ${light(0.05)}`, // added
+    },
+  },
   // design-os decision 85: the page's tints take a little of the picture (a tint only: regions have
   // no edge), the glass more, with a coloured top edge and a glow cast behind it. Ground and top take none.
   ambient: {

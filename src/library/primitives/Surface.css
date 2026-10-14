@@ -111,6 +111,10 @@
   --layer-float-backdrop: none;
   --layer-overlay-backdrop: none;
   --layer-top-backdrop: none;
+  --layer-node-fill: var(--layer-node-solid);
+  --layer-zone-fill: var(--layer-zone-solid);
+  --layer-node-backdrop: none;
+  --layer-zone-backdrop: none;
 }
 
 /* Hole: a cut-out that paints nothing. */

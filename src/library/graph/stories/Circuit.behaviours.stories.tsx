@@ -165,15 +165,15 @@ export const Connect: StoryObj = {
     const added = held(canvasElement).modules.board.traces.find((t) => t.id === 'new1');
     expect(added).toMatchObject({ from: { chip: 'lfo', pin: 'out' }, to: { chip: 'osc', pin: 'fm' } });
     await waitFor(() => expect(cords(canvasElement)).toHaveLength(2));
-    // Inlet first is normalised by the graph; a second trace into an in pin is allowed (8).
-    await patch(canvasElement, 'vcf in', 'lfo out');
+    // Inlet first is normalised by the graph; an out pin may feed several traces (8).
+    await patch(canvasElement, 'amp in', 'lfo out');
     await waitFor(() => expect(changes(canvasElement)).toBe('Changes: 2'));
     expect(traceIds(canvasElement)).toEqual(['new1', 'new2', 't1']);
     await waitFor(() => expect(cords(canvasElement)).toHaveLength(3));
   },
 };
 
-/** 22: refused connects change nothing: a same-side gesture, and a self-loop that `connect` throws on. */
+/** 22: refused connects change nothing: a same-side gesture, and a self-loop and a taken inlet (8) that `connect` throws on. */
 export const RefusedConnect: StoryObj = {
   name: '22 · refused connect changes nothing',
   render: () => <Harness initial={sample()} />,
@@ -184,6 +184,8 @@ export const RefusedConnect: StoryObj = {
     await patch(canvasElement, 'amp in', 'vcf in');
     // Out pin to an in pin on the same chip: connect throws self-loop, so onChange never fires.
     await patch(canvasElement, 'vcf out', 'vcf cut');
+    // A second trace into vcf's in pin, which t1 already feeds: connect throws inlet-taken.
+    await patch(canvasElement, 'lfo out', 'vcf in');
     expect(changes(canvasElement)).toBe('Changes: 0');
     expect(held(canvasElement)).toEqual(before);
     expect(cords(canvasElement)).toHaveLength(1);

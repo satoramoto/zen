@@ -45,6 +45,8 @@ export interface GraphSurface {
   scale(): number;
   /** A node reports where it was dragged to. The host writes it, or doesn't. */
   moveNode(id: string, x: number, y: number): void;
+  /** The two ends of the selected cord, as `portKey`s, so they can light up with it. */
+  lit?: ReadonlySet<string>;
 }
 
 export const GraphContext = createContext<GraphSurface | null>(null);
