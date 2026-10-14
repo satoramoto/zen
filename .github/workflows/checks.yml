@@ -10,17 +10,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # `checks` is the required status on main, so it always runs and reports.
+  # A PR that only touches docs (any *.md, or docs/) skips the build and
+  # tests and passes in seconds; pushes to main always run everything.
   checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+        with:
+          fetch-depth: 0
+      - name: Docs-only change?
+        id: scope
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != pull_request ]; then
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          code=$(git diff --name-only "$BASE...$HEAD" | grep -vE '(\.md$|^docs/)' || true)
+          if [ -z "$code" ]; then
+            echo "Docs only: skipping build and tests."
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Code changes:"; echo "$code"
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.scope.outputs.docs_only != 'true'
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm test
-      - run: npm run build
-      - run: npm run build:storybook
-      - run: npm run build:lib
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: npm ci
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: npm run typecheck
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: npm test
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: npm run build
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: npm run build:storybook
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: npm run build:lib

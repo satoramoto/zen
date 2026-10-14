@@ -173,6 +173,35 @@
   width: var(--lib-slider-mark);
 }
 
+/* Detents: a quiet tick at each, in line with where the thumb's centre would be; the one at the
+   default full ink and twice as wide. Over the fill, under the thumb. */
+.lib-slider__detent {
+  --lib-slider-detent: 0;
+  --lib-slider-detent-at: calc(
+    var(--lib-slider-thumb) / 2 + var(--lib-slider-detent) * (100% - var(--lib-slider-thumb))
+  );
+  --lib-slider-detent-w: 1px;
+  --lib-slider-detent-inset: 20%;
+  position: absolute;
+  background: var(--text-3);
+  pointer-events: none;
+}
+.lib-slider__detent[data-default] {
+  --lib-slider-detent-w: 2px;
+  --lib-slider-detent-inset: 0%;
+  background: var(--text-1);
+}
+.lib-slider[data-orientation='vertical'] .lib-slider__detent {
+  inset: auto var(--lib-slider-detent-inset);
+  bottom: calc(var(--lib-slider-detent-at) - var(--lib-slider-detent-w) / 2);
+  height: var(--lib-slider-detent-w);
+}
+.lib-slider[data-orientation='horizontal'] .lib-slider__detent {
+  inset: var(--lib-slider-detent-inset) auto;
+  left: calc(var(--lib-slider-detent-at) - var(--lib-slider-detent-w) / 2);
+  width: var(--lib-slider-detent-w);
+}
+
 /* The thumb: a handle across the track at the value; a pill `handle` Surface. */
 .lib-slider__thumb {
   position: absolute;
@@ -282,6 +311,13 @@
 }
 .lib-slider[data-layout='row'] .lib-slider__fill {
   border-radius: var(--radius-pill);
+}
+/* Ticks through the groove: the default's four tenths of the knob's height, the rest six tenths of that. */
+.lib-slider[data-layout='row'] .lib-slider__detent {
+  --lib-slider-detent-inset: 38%;
+}
+.lib-slider[data-layout='row'] .lib-slider__detent[data-default] {
+  --lib-slider-detent-inset: 30%;
 }
 .lib-slider[data-layout='row'] .lib-slider__thumb {
   top: 0;

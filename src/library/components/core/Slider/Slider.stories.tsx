@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import type { Param } from '../Param/param';
+import { stepDetent } from '../Param/useParamGesture';
 import { Slider, type SliderProps } from './Slider';
 
 const volume: Param = { kind: 'float', min: -70, max: 6, defaultValue: 0, unit: 'decibel', name: 'Volume', shortName: 'Vol' };
@@ -123,6 +124,51 @@ export const Stepped: Story = { args: { param: steps, value: 3 } };
 
 /** An authoritative reading and a custom ink. */
 export const DisplayAndInk: Story = { args: { display: '-inf dB', value: -70, ink: 'var(--hue-2)' } };
+
+/** A log rail, ¼× to 4× as doublings (−2 to 2) on twelfths, 1× the default in the middle. */
+const tune: Param = { kind: 'float', min: -2, max: 2, defaultValue: 0, steps: 49, name: 'Speed' };
+const doublings = [-2, -1, 0, 1, 2];
+
+/** `mixed`: several things that differ. No thumb or fill, it reads "Mixed"; any drag, key or double-click sets a value. */
+export const Mixed: Story = {
+  args: { layout: 'row', length: 'auto', param: tune, origin: 'center', value: 0, mixed: true },
+  render: function Render(args) {
+    const [value, setValue] = useState<number | null>(null);
+    return (
+      <div style={{ width: 'calc(var(--control-h) * 7)' }}>
+        <Slider
+          {...args}
+          value={value ?? args.value}
+          mixed={value === null}
+          onChange={(next) => {
+            args.onChange(next);
+            setValue(next);
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+/** `detents`: a tick at each doubling, the default (1×) tallest; with `snap` a drag catches within a sixth of one. */
+export const Detents: Story = {
+  args: { layout: 'row', length: 'auto', param: tune, origin: 'center', value: 0.5, detents: doublings, snap: 1 / 6 },
+  render: Row.render,
+};
+
+/** `keyStep`: the arrows step between detents (`stepDetent`), Shift+arrow a twelfth, Delete back to 1×; the rest default. */
+export const KeySteps: Story = {
+  args: {
+    ...Detents.args,
+    keyStep: ({ key, shiftKey }, value) => {
+      const way = key === 'ArrowRight' || key === 'ArrowUp' ? 1 : key === 'ArrowLeft' || key === 'ArrowDown' ? -1 : 0;
+      if (way !== 0) return shiftKey ? value + way / 12 : stepDetent(doublings, value, way);
+      if (key === 'Delete' || key === 'Backspace') return 0;
+      return undefined;
+    },
+  },
+  render: Row.render,
+};
 
 /** Read-only. */
 export const Disabled: Story = { args: { disabled: true } };

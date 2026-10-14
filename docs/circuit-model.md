@@ -337,6 +337,16 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
     - cycles among modules.
 20. Every circuit produced only by the operations, starting from
     `emptyCircuit`, validates to `[]`.
+20a. Settled during the first build (cases the contract didn't cover):
+    - operations never refuse a malformed hint; only `validate` reports
+      `bad-hint` (17g);
+    - `removeBus` also removes module pins mapped to that bus, and their traces
+      on instances, so rule 20 holds;
+    - a trace created through the binding (rule 22) gets no `kind`; hosts copy
+      the out pin's kind in `onChange` if they want it;
+    - `validate` reports one issue per broken trace, at its first broken end;
+    - a chip with no `pins` array is treated as having none, so a trace naming
+      one of its pins is `unknown-pin`.
 
 ### Binding to Graph (`useCircuit`)
 

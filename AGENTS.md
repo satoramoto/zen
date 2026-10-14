@@ -7,7 +7,9 @@ Zen: React + TypeScript (TSX), Vite, Vitest, Storybook. Two things live here:
 
 ## Preview
 
-Use only the unified launcher:
+**Working on an app and zen together** (on trial as the default, #49): start from the app's repo, not here. In openflowfm/visuals, `npm run dev:app` (the real app window with hot reload) or `npm run dev` (the page in a browser) links this checkout, starts zen's launcher below on 6022/4191 (or `ZEN_STORYBOOK_PORT`/`ZEN_PREVIEW_PORT`), and shows zen's Storybook inside the app's. Zen's source hot-reloads in both. Generic parts still land here first as their own PR.
+
+For zen on its own, use only the unified launcher:
 
 ```sh
 PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6022 npm run dev
@@ -81,4 +83,4 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 
 ## Ownership
 
-Work on a branch in your own worktree. Changes reach `main` only through a PR. `main` is protected: the `checks` job in `.github/workflows/checks.yml` must pass first. It runs every command in the table above except `npx vitest run src/library`, which `npm test` already covers. Lane leads push their branch but don't open the PR. The orchestrator opens it after review and turns on auto-merge.
+Work on a branch in your own worktree. Changes reach `main` only through a PR. `main` is protected: the `checks` job in `.github/workflows/checks.yml` must pass first. It runs every command in the table above except `npx vitest run src/library`, which `npm test` already covers. A PR that changes only docs (`*.md` anywhere, or `docs/`) skips them and passes at once. Lane leads push their branch but don't open the PR. The orchestrator opens it after review and turns on auto-merge.
