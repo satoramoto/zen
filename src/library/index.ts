@@ -24,6 +24,8 @@ export {
   type PackPrinciples,
 } from './contract';
 export { AMBIENT_REGIONS, AMBIENT_VARS, AMBIENT_FALLBACKS, type AmbientRegion } from './contract';
+/** Contract variables built per element by the scope stylesheet (library.css), not by `toCssVars`. */
+export { SCOPE_VARS } from './contract';
 
 // The theme: resolving a choice of facets and scoping its variables.
 export { ThemeScope, useThemeScope, resolveTheme, useSystemMode, FROM_THEME, type ModeChoice, type ThemeChoice } from './theme';

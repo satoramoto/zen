@@ -4,4 +4,4 @@ export type { Units, Length, Need, Form, Forms, Ratio, RegionSpec, Nest, Row, Sc
 export { assemble, fitAspect, DENSITY_AIM } from './assemble';
 export { principlesFor, resolveLength, resolveNeed, stepPx, cssPx, cssBox, rankNumbers, lengthSum, lengthMax, needsAcross, needsDown, combineForms, ROLE_LEADING, CHAR_WIDTH } from './units';
 export { FormProvider, useForm, useChosenForm, type Formed } from './forms';
-export { AssembledScreen, useScopePrinciples, type AssembledScreenProps, type RegionContent } from './AssembledScreen';
+export { AssembledScreen, useScopePrinciples, SLOT_VARS, type AssembledScreenProps, type RegionContent } from './AssembledScreen';

@@ -468,7 +468,7 @@ export const frostMaterials: Materials = {
     track: bare,
     tab: bare,
     chosen: bare,
-    ink: 'var(--text-2)', // the header's panel toggles at rest (HomeLayout .vs-lay-toggle)
+    ink: 'var(--text-2)', // the header's panel toggles at rest
     chosenInk: 'var(--text-1)', // the toggles open or hovered: white in the dark mode
     pad: '0px',
     gap: 'var(--space-3)', // added: tight, about the toolbar glyphs' spacing
