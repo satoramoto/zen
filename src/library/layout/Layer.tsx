@@ -24,7 +24,7 @@ export interface LayerProps {
  * **Job.** A surface at one depth: a region's plate (`base`), a popover (`float`), a sheet
  * (`overlay`). The theme's `layers` decide how it is drawn and how it composites over what's
  * behind. It is a `Surface` with a `layer` and card corners; it keeps the `lib-layer` class so
- * app CSS that names it (`.vs-stagehead .lib-layer.vs-stagehead-cap`) still applies.
+ * app CSS that names it still applies.
  *
  * @deprecated Use `<Surface layer=…>` (primitives/Surface.tsx).
  */
