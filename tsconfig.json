@@ -8,5 +8,5 @@
   },
   "include":["src","scripts",".storybook","vite.config.ts","vitest.config.ts"],
   // The Claude Code harness's engine-JSX files are their own project (src/harness/claude-code/tsconfig.json).
-  "exclude":["src/harness/claude-code/kit","src/harness/claude-code/sample","src/harness/claude-code/stories","src/harness/claude-code/engine.d.ts"]
+  "exclude":["src/harness/claude-code/kit","src/harness/claude-code/sample","src/harness/claude-code/stories","src/harness/claude-code/bench","src/harness/claude-code/engine.d.ts"]
 }

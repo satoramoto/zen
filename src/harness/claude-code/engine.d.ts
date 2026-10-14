@@ -16,6 +16,42 @@ declare module 'claude-code' {
   export type RenderNode = RenderElement | string;
   /** What an element takes as `children`, as JSX passes them. */
   export type RenderChildren = RenderNode | number | boolean | null | undefined | readonly RenderChildren[];
+
+  // What the sample mod uses beyond drawing (in Storybook, `claude-code` is the bench's stand-in, bench/engine.ts).
+
+  /** A piece of the plugin's state: its plugin and key, and what it holds before anything is written. */
+  export type Atom<T> = { plugin: string; key: string; initial: T };
+  /** Names a piece of the plugin's state. */
+  export function atom<T>(ref: { plugin: string; key: string }, initial: T): Atom<T>;
+  /** What the atom holds now. */
+  export function read<T>($: unknown, a: Atom<T>): Promise<T>;
+  /** Writes the atom from what it held; panes that read it draw again. */
+  export function update<T>($: unknown, a: Atom<T>, fn: (old: T) => T): Promise<void>;
+
+  /** The engine as a hook sees it (`$`), loosely: `ui.resolve(e)` hands back the surface's element constructors. */
+  export type EngineInterface = {
+    ui: { resolve(e: unknown): Record<string, (props?: any, ...children: any[]) => RenderElement>; [verb: string]: any };
+    [noun: string]: any;
+  };
+  /** A `ui.render` hook's event for a Pane. */
+  export type RenderEvent = {
+    component: string;
+    requestId: string;
+    surface: RenderSurface;
+    props: { title: string; isFocused: boolean; bodyColumns: number; [prop: string]: any };
+  };
+  /** A hook: the engine, the event, and the rest of the chain. */
+  export type Hook<E = any> = ($: EngineInterface, e: E, next: (e: E) => Promise<unknown>) => unknown;
+  /** What `on` hands back. */
+  export type HookHandle = { catch(fn: (err: unknown) => void): HookHandle };
+  /** Adds a hook for an event, with or without a matcher. */
+  export type On = {
+    (event: 'ui.render', matcher: { component: string; requestId?: string }, hook: Hook<RenderEvent>): HookHandle;
+    (event: string, matcher: Record<string, unknown>, hook: Hook): HookHandle;
+    (event: string, hook: Hook): HookHandle;
+  };
+  /** A hooks module's `register`. */
+  export type Register = (on: On, options?: unknown) => void;
 }
 
 /** What JSX compiles against in a hooks module (the engine's global). */
