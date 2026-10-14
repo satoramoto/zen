@@ -19,7 +19,7 @@
   --lib-graph-rule: transparent;
   --lib-graph-rail-width: calc(var(--lib-graph-cord-width) * 2.5);
   --lib-graph-word-fill: var(--surface-1);
-  --lib-graph-zone-fill: color-mix(in oklab, var(--text-1) 3%, transparent);
+  --lib-graph-zone-fill: var(--layer-zone-fill);
   --lib-graph-zone-edge: var(--border-strong);
 }
 
@@ -170,6 +170,9 @@
   border: var(--border-width) dashed var(--lib-graph-zone-edge);
   border-radius: var(--radius-card);
   background: var(--lib-graph-zone-fill);
+  /* The materials' zone pane: a faint tint by default, frosted glass in a glass set. */
+  backdrop-filter: var(--layer-zone-backdrop);
+  box-shadow: var(--layer-zone-edge), var(--layer-zone-cast);
 }
 .lib-graph__zone-label {
   position: absolute;
@@ -265,11 +268,11 @@
 .lib-graph__port[data-hue='role-2'] {
   --lib-graph-port-hue: var(--role-2);
 }
-.lib-graph__port[data-hue] {
-  border-color: var(--lib-graph-port-hue);
-}
+/* A kind's port is neutral at rest, connected or not (surface fill, muted ring): the trace carries
+   the kind's colour. It takes its hue only while lit, below. */
 .lib-graph__port[data-hue][data-connected] {
-  background: var(--lib-graph-port-hue);
+  border-color: var(--border-strong);
+  background: var(--surface-1);
 }
 .lib-graph__port:hover:not(:disabled):not([data-reach='shut']),
 .lib-graph__port[data-over]:not([data-reach='shut']),
@@ -280,6 +283,15 @@
 .lib-graph__port[data-pending] {
   border-color: var(--accent);
   background: var(--accent);
+}
+/* Lit: hovered, under a cord in flight, able to take it, the cord's own start, or an end of the
+   selected cord (`data-lit`). A kind's port then shows its hue, ring and fill. */
+.lib-graph__port[data-hue]:is(:hover:not(:disabled), [data-over], [data-reach='open'], [data-pending], [data-lit]):not([data-reach='shut']) {
+  border-color: var(--lib-graph-port-hue);
+  background: var(--lib-graph-port-hue);
+}
+.lib-graph__port[data-lit]:not([data-hue]) {
+  border-color: var(--accent);
 }
 .lib-graph__port[data-reach='shut'] {
   opacity: 0.35;
