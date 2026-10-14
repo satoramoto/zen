@@ -29,6 +29,8 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
 | `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/storybook.tsx` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
 
+UI is tested by exercising behaviours in Storybook stories, never by unit tests; pure models and functions get unit tests.
+
 Builds and unit tests are not browser evidence: look at layout and perceptual effects in a browser (the invisible-keyboard bug passed every test).
 
 ## Field guide quality
