@@ -62,3 +62,38 @@ export { Modal, Sheet, type ModalProps, type SheetProps, type SheetSide } from '
 export { Graph, GraphNode, cordPath, cordInk, type GraphProps, type GraphNodeProps, type GraphCord, type GraphView, type PortSide } from './Graph/Graph';
 export { Port, type PortProps } from './Graph/Port';
 export { Device, DevicePortRow, type DeviceProps, type DevicePortRowProps } from './Device/Device';
+
+// The Circuit model (docs/circuit-model.md): one plain-JSON circuit of modules, chips, pins, traces
+// and buses, pure operations on it, and the hook that binds one module to the Graph above.
+export {
+  CircuitError,
+  pinsOf,
+  emptyCircuit,
+  addModule,
+  placeChip,
+  removeChip,
+  moveChip,
+  connect,
+  disconnect,
+  validate,
+  addBus,
+  removeBus,
+  flatten,
+  type Json,
+  type Face,
+  type Pin,
+  type Chip,
+  type PinEnd,
+  type BusEnd,
+  type End,
+  type Bus,
+  type Trace,
+  type ModulePin,
+  type Control,
+  type Zone,
+  type Module,
+  type Circuit,
+  type CircuitErrorCode,
+  type Issue,
+} from './Circuit/circuit';
+export { useCircuit, type CircuitBinding } from './Circuit/useCircuit';
