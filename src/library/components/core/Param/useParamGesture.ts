@@ -421,6 +421,18 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
         frame.current = null;
       }
       pending.current = null;
+      // A key mid-drag ends the drag: its write is the commit, so a later Escape has nothing to
+      // abandon and later moves don't carry on from the old fraction.
+      const dragged = drag.current;
+      if (dragged !== null) {
+        drag.current = null;
+        setDragging(false);
+        try {
+          e.currentTarget.releasePointerCapture(dragged.id);
+        } catch {
+          // jsdom and synthetic events have no pointer capture.
+        }
+      }
       const value = quantize(now.param, clamp(now.param, next));
       sent.current = value;
       keyed.current = { given: now.value, sent: value };
