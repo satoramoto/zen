@@ -281,3 +281,9 @@ every pack, light and dark.
 - Editing a material in place inside an app, saving it to a pack, and a pack's own materials.
 - The visuals engine (its compositor and render graph) on this compiler.
 - Kind-aware connect in the editor (refusing a trace whose kinds differ).
+- A `web` outlet on `caustics` (F2 − F1), which would replace water's five-chip band cut.
+- A `scheme` source node (`uDark`), so glass's outline can darken in the light mode only.
+- Merge chips growing a pin when a trace lands on them in the editor.
+- Surfaces under `<html data-transparency="reduced">` (CSS-only Opaque) still mount a shader; only
+  the media query and the `Opaque` component turn it off.
+- Re-measuring a ShaderCanvas on page zoom (a ResizeObserver doesn't fire for it).

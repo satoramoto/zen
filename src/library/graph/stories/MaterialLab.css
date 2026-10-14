@@ -1,0 +1,222 @@
+/* The material lab (docs/shader-graph.md, "Stories"): a shader material's circuit in the graph
+   editor beside a surface wearing it, over a backdrop busy enough for translucency to read. */
+
+.lib-material-lab {
+  /* Cord inks by pin kind: the kinds' hue slots (MaterialLab.tsx `KIND_HUE`). */
+  --lib-cord-point: var(--hue-1);
+  --lib-cord-number: var(--hue-2);
+  --lib-cord-colour: var(--hue-3);
+  /* The stage: most of the window, never less than a comfortable minimum. */
+  --lib-material-lab-stage: max(calc(var(--space-6) * 16), calc(100vh - var(--space-6) * 6));
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  color: var(--text-1);
+}
+
+.lib-material-lab__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.lib-material-lab__title {
+  display: grid;
+  flex: 1 1 calc(var(--space-6) * 10);
+  min-width: 0;
+}
+
+.lib-material-lab__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* The editor: a ruled board on the base layer. */
+.lib-material-lab__editor {
+  --lib-graph-rule: color-mix(in oklab, var(--border) 60%, transparent);
+  --lib-graph-dot: color-mix(in oklab, var(--border-strong) 70%, transparent);
+  --lib-graph-word-fill: var(--layer-base-solid);
+  position: relative;
+  flex: 999 1 calc(var(--space-6) * 14);
+  min-width: 0;
+  /* On a narrow screen the board is about square: a wide circuit fits its width anyway. */
+  height: min(var(--lib-material-lab-stage), max(calc(var(--space-6) * 12), 110vw));
+  display: grid;
+  grid-template-rows: 1fr auto;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+/* Meta: the board's own backdrop is the material drawn on it, so the rules recede to a hint and
+   the words knock out of the cords in the chips' fill. */
+.lib-material-lab__editor[data-meta] {
+  --lib-graph-ground: transparent;
+  --lib-graph-rule: color-mix(in oklab, var(--border) 25%, transparent);
+  --lib-graph-dot: color-mix(in oklab, var(--border-strong) 35%, transparent);
+  --lib-graph-word-fill: var(--surface-1);
+  height: min(max(calc(var(--space-6) * 18), calc(100vh - var(--space-6) * 4)), max(calc(var(--space-6) * 12), 130vw));
+}
+
+.lib-material-lab__ground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.lib-material-lab__graph {
+  position: relative;
+  min-height: 0;
+}
+
+.lib-material-lab__foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-2);
+  box-shadow: inset 0 var(--border-width) 0 var(--border);
+  min-width: 0;
+}
+
+.lib-material-lab__legend {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.lib-material-lab__legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: none;
+}
+
+.lib-material-lab__swatch {
+  --lib-material-lab-ink: var(--text-3);
+  flex: none;
+  width: var(--space-3);
+  height: calc(var(--border-width) * 2);
+  border-radius: var(--radius-control);
+  background: var(--lib-material-lab-ink);
+}
+
+/* The side: the preview over its backdrop, then the inspector. */
+.lib-material-lab__side {
+  flex: 1 1 calc(var(--space-6) * 9);
+  max-width: calc(var(--space-6) * 13);
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-3);
+  max-height: var(--lib-material-lab-stage);
+}
+
+.lib-material-lab__editor[data-meta] + .lib-material-lab__side {
+  grid-template-rows: 1fr;
+  align-self: start;
+}
+
+/* Something for the surface to be translucent over: the theme's hues in soft pools, a fine
+   diagonal rule, and words in the display face. */
+.lib-material-lab__backdrop {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: calc(var(--space-6) * 9);
+  padding: var(--space-5) var(--space-4);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background-color: var(--surface-0);
+  background-image:
+    radial-gradient(circle at 18% 22%, color-mix(in oklab, var(--hue-1) 75%, transparent), transparent 38%),
+    radial-gradient(circle at 82% 78%, color-mix(in oklab, var(--hue-3) 75%, transparent), transparent 42%),
+    radial-gradient(circle at 76% 14%, color-mix(in oklab, var(--hue-2) 65%, transparent), transparent 30%),
+    radial-gradient(circle at 26% 88%, color-mix(in oklab, var(--hue-4) 60%, transparent), transparent 32%),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--text-1) 9%, transparent) 0 var(--border-width),
+      transparent var(--border-width) var(--space-2)
+    );
+}
+
+.lib-material-lab__words {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: space-around;
+  padding: var(--space-2) var(--space-3);
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+.lib-material-lab__words > :nth-child(2) {
+  justify-self: end;
+}
+
+.lib-material-lab__pane {
+  position: relative;
+  width: min(100%, calc(var(--space-6) * 9));
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  min-width: 0;
+}
+
+.lib-material-lab__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.lib-material-lab__rule {
+  flex: 1;
+  min-width: var(--space-2);
+  align-self: center;
+  border-bottom: var(--border-width) dotted var(--border);
+}
+
+.lib-material-lab__inspector {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  border-radius: var(--radius-card);
+}
+
+.lib-material-lab__section {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.lib-material-lab__section + .lib-material-lab__section {
+  padding-top: var(--space-2);
+  box-shadow: inset 0 var(--border-width) 0 var(--border);
+}
+
+.lib-material-lab__chip {
+  /* A chip is `--space-6` × 5 wide (the materials are laid out for it), its kind's hue on the
+     head's leading edge. */
+  --lib-device-width: calc(var(--space-6) * 5);
+}
