@@ -1,0 +1,81 @@
+/* ThemePicker: a grid of live previews, one per theme pack. Reads only contract variables. The
+   grid and the chrome around each preview are the host's; inside each frame, the pack's own. */
+
+.zen-theme-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--control-h) * 6)), 1fr));
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.zen-theme-picker__entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-1);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  outline: none;
+}
+
+/* The preview: a fixed aspect, so the grid never jumps as packs of different scales draw in it. */
+.zen-theme-picker__frame {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  box-shadow: 0 0 0 1px var(--border);
+  pointer-events: none;
+}
+.zen-theme-picker__entry:hover .zen-theme-picker__frame {
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+/* Chosen: a ring in the host's selected colour around the preview. */
+.zen-theme-picker__entry[aria-checked='true'] .zen-theme-picker__frame {
+  box-shadow: none;
+  outline: 2px solid var(--selected);
+  outline-offset: 2px;
+}
+
+/* The nested scope fills the frame, not the window (`.lib-scope` is a full page by default). */
+.zen-theme-picker__frame > .lib-scope {
+  min-height: 0;
+  height: 100%;
+  padding: var(--space-3);
+}
+
+/* A column that wraps: a row that doesn't fit the frame (a large scale in a small preview) moves
+   to a second column, clipped out of view, rather than showing half of itself. */
+.zen-theme-picker__specimen {
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  align-content: flex-start;
+}
+.zen-theme-picker__specimen > * {
+  width: 100%;
+  min-width: 0;
+}
+
+.zen-theme-picker__swatches {
+  display: flex;
+  gap: var(--space-1);
+}
+.zen-theme-picker__swatch {
+  flex: 1;
+  height: var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--hue-1);
+}
+.zen-theme-picker__swatch[data-hue='2'] { background: var(--hue-2); }
+.zen-theme-picker__swatch[data-hue='3'] { background: var(--hue-3); }
+.zen-theme-picker__swatch[data-hue='4'] { background: var(--hue-4); }
+.zen-theme-picker__swatch[data-hue='accent'] { background: var(--accent); }
+
+.zen-theme-picker__caption {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0 var(--space-1);
+}

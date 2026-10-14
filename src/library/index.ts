@@ -56,6 +56,10 @@ export * from './graph';
 // drawn by one shared WebGL2 context (ShaderCanvas, Surface's `shader`).
 export * from './shader';
 
+// The theme editor (docs/theme-editor.md): skins (a pack as portable JSON) and their helpers,
+// SkinProvider/SkinScope to wear one, ThemePicker, ThemeEditor and ThemeSettings to change it.
+export * from './theme-editor';
+
 // Dialog behaviour for an app's own overlays (a help sheet, a settings dialog) that aren't a Modal.
 /** Esc closes a dialog unless an open menu inside it takes the key first; `useModal` is the whole dialog behaviour. */
 export { closesOnKey, useModal } from './components/core/Modal/useModal';
