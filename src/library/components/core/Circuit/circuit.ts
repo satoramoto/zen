@@ -133,7 +133,11 @@ export type CircuitErrorCode =
   | 'bad-amount'
   | 'unknown-bus'
   | 'bus-has-source'
-  | 'bus-to-bus';
+  | 'bus-to-bus'
+  /** A malformed placement, layout or routing (`validate` only). */
+  | 'bad-hint'
+  /** A `modules` key differs from its module's id (`validate` only). */
+  | 'key-mismatch';
 
 export class CircuitError extends Error {
   readonly code: CircuitErrorCode;
@@ -176,7 +180,7 @@ function modulePinAsPin(p: ModulePin, side: PortSide): Pin {
 }
 
 function pinsOfChip(circuit: Circuit, chip: Chip): Pin[] {
-  if (chip.module === undefined) return chip.pins;
+  if (chip.module === undefined) return chip.pins ?? [];
   const inner = moduleOf(circuit, chip.module);
   return [...inner.inPins.map((p) => modulePinAsPin(p, 'in')), ...inner.outPins.map((p) => modulePinAsPin(p, 'out'))];
 }
@@ -226,7 +230,9 @@ export function addModule(circuit: Circuit, module: Module): Circuit {
     throw new CircuitError('duplicate-id', `module "${module.id}" already exists`);
   const next = withModule(circuit, module);
   // The new module must be as sound as any operation would leave it.
-  const issue = issuesOfModule(next, module.id)[0] ?? cycleIssues(next).find((i) => i.module === module.id);
+  // Hints are presentation: they never refuse an operation (17g), so `bad-hint` stays validate's.
+  const issue =
+    issuesOfModule(next, module.id).find((i) => i.code !== 'bad-hint') ?? cycleIssues(next).find((i) => i.module === module.id);
   if (issue) throw new CircuitError(issue.code, issue.message);
   return next;
 }
@@ -365,6 +371,10 @@ export function removeBus(circuit: Circuit, module: string, bus: string): Circui
  */
 export function flatten(circuit: Circuit, module: string): Trace[] {
   const m = moduleOf(circuit, module);
+  const buses = new Set((m.buses ?? []).map((b) => b.id));
+  for (const t of m.traces)
+    for (const end of [t.from, t.to])
+      if (isBus(end) && !buses.has(end.bus)) throw new CircuitError('unknown-bus', `no bus "${end.bus}" in module "${module}"`);
   const sources = new Map<string, End>();
   for (const t of m.traces) if (isBus(t.to) && !sources.has(t.to.bus)) sources.set(t.to.bus, t.from);
   return m.traces.flatMap((t) => {
@@ -417,6 +427,20 @@ function endIssue(circuit: Circuit, m: Module, end: End, side: PortSide, path: s
   return false;
 }
 
+const LAYOUTS: readonly unknown[] = ['free', 'radial', 'lr', 'tb'];
+const ROUTINGS: readonly unknown[] = ['curve', 'trace'];
+const FACES: readonly unknown[] = ['n', 'e', 's', 'w'];
+const unit = (v: unknown) => typeof v === 'number' && v >= 0 && v <= 1;
+
+/** A listed keyword, a known face, or `at`, `x` and `y` within 0..1. */
+function placementOk(p: unknown): boolean {
+  if (p === 'auto' || FACES.includes(p)) return true;
+  if (typeof p !== 'object' || p === null) return false;
+  const o = p as Record<string, unknown>;
+  if ('face' in o) return FACES.includes(o.face) && unit(o.at);
+  return unit(o.x) && unit(o.y);
+}
+
 function issuesOfModule(circuit: Circuit, id: string): Issue[] {
   const m = circuit.modules[id];
   const out: Issue[] = [];
@@ -424,23 +448,24 @@ function issuesOfModule(circuit: Circuit, id: string): Issue[] {
   const push = (code: CircuitErrorCode, path: string, message: string) => out.push({ code, module: id, path, message });
   const zones = new Set((m.zones ?? []).map((z) => z.id));
 
+  if (m.layout !== undefined && !LAYOUTS.includes(m.layout)) push('bad-hint', 'layout', `layout "${String(m.layout)}" isn't one of ${LAYOUTS.join(', ')}`);
+  if (m.routing !== undefined && !ROUTINGS.includes(m.routing))
+    push('bad-hint', 'routing', `routing "${String(m.routing)}" isn't one of ${ROUTINGS.join(', ')}`);
+
   duplicates(m.chips, 'chips', id, 'chip', out);
   m.chips.forEach((chip, i) => {
+    (chip.pins ?? []).forEach((p, j) => {
+      if (p.placement !== undefined && !placementOk(p.placement))
+        push('bad-hint', `chips[${i}].pins[${j}].placement`, `pin "${chip.id}/${p.id}" has a malformed placement`);
+    });
     if (chip.module === undefined) {
-      duplicates(
-        (chip.pins ?? []).filter((p) => p.side === 'in'),
-        `chips[${i}].pins`,
-        id,
-        'in pin',
-        out,
-      );
-      duplicates(
-        (chip.pins ?? []).filter((p) => p.side === 'out'),
-        `chips[${i}].pins`,
-        id,
-        'out pin',
-        out,
-      );
+      if (!Array.isArray(chip.pins)) push('unknown-pin', `chips[${i}].pins`, `chip "${chip.id}" has no pins array`);
+      const seen = new Set<string>();
+      (chip.pins ?? []).forEach((p, j) => {
+        const key = `${p.side} ${p.id}`;
+        if (seen.has(key)) push('duplicate-id', `chips[${i}].pins[${j}].id`, `chip "${chip.id}" has two ${p.side} pins "${p.id}"`);
+        seen.add(key);
+      });
     } else if (!circuit.modules[chip.module]) push('unknown-module', `chips[${i}].module`, `no module "${chip.module}"`);
     if (chip.zone !== undefined && !zones.has(chip.zone)) push('unknown-zone', `chips[${i}].zone`, `no zone "${chip.zone}"`);
   });
@@ -459,8 +484,9 @@ function issuesOfModule(circuit: Circuit, id: string): Issue[] {
       push('bus-to-bus', path, `trace "${t.id}" has a bus at both ends`);
       return;
     }
+    // One issue per broken trace: once its first end fails, the other isn't judged.
     const a = endIssue(circuit, m, t.from, 'out', `${path}.from`, out);
-    const b = endIssue(circuit, m, t.to, 'in', `${path}.to`, out);
+    const b = a && endIssue(circuit, m, t.to, 'in', `${path}.to`, out);
     if (a && b && !isBus(t.from) && !isBus(t.to) && t.from.chip === t.to.chip)
       push('self-loop', `${path}.to.chip`, `trace "${t.id}" loops on chip "${t.from.chip}"`);
     const bad = amountIssue(t);
@@ -498,7 +524,7 @@ export function validate(circuit: Circuit): Issue[] {
       out.push({ code: 'unknown-module', module: circuit.board, path: 'board', message: `no board module "${circuit.board}"` });
     for (const [key, m] of Object.entries(circuit.modules)) {
       if (m.id !== key)
-        out.push({ code: 'unknown-module', module: key, path: `modules.${key}.id`, message: `module keyed "${key}" says its id is "${m.id}"` });
+        out.push({ code: 'key-mismatch', module: key, path: `modules.${key}.id`, message: `module keyed "${key}" says its id is "${m.id}"` });
       out.push(...issuesOfModule(circuit, key));
     }
     out.push(...cycleIssues(circuit));

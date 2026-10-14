@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { GraphCord } from '../Graph/Graph';
-import { CircuitError, connect, disconnect, flatten, moveChip, type Circuit, type End } from './circuit';
+import { CircuitError, connect, disconnect, flatten, moveChip, type Circuit, type End, type Trace } from './circuit';
 
 export interface CircuitBinding {
   /** For `<Graph cords>`: one per trace of `flatten(circuit, module)`. */
@@ -54,7 +54,14 @@ export function useCircuit(
       }
       onChange(next);
     };
-    const cords = (circuit.modules[module] ? flatten(circuit, module) : []).flatMap((t): GraphCord[] => {
+    let traces: Trace[] = [];
+    try {
+      traces = flatten(circuit, module);
+    } catch (e) {
+      // A circuit `validate` would fault (an unknown module or bus) draws no cords rather than throwing in render.
+      if (!(e instanceof CircuitError)) throw e;
+    }
+    const cords = traces.flatMap((t): GraphCord[] => {
       if ('bus' in t.from || 'bus' in t.to) return [];
       const cord: GraphCord = { id: t.id, from: portKeyOf(t.from.chip, t.from.pin), to: portKeyOf(t.to.chip, t.to.pin) };
       if (t.kind !== undefined) cord.kind = t.kind;
