@@ -165,6 +165,9 @@ export interface Materials {
    *  `--lit` (library.css), because a custom property resolves `var()` where it is declared: the
    *  scope can't hold a glow that reads each lamp's colour. */
   lit: { radius: string; strength: string };
+  /** A shader material (docs/shader-graph.md) drawn over a layer's CSS fill and under its
+   *  content, where WebGL2 allows; the CSS layer is the fallback. A layer left out has none. */
+  shaders?: Partial<Record<LayerName, 'water' | 'ether' | 'glass'>>;
 }
 
 /**

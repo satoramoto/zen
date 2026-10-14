@@ -52,6 +52,10 @@ export * from './components/music';
 // The graph: the node-graph view (Graph, GraphNode, Port, Device, NodeSheet) and the Circuit model it draws.
 export * from './graph';
 
+// The shader graph (docs/shader-graph.md): materials authored as Circuits, compiled to GLSL and
+// drawn by one shared WebGL2 context (ShaderCanvas, Surface's `shader`).
+export * from './shader';
+
 // Dialog behaviour for an app's own overlays (a help sheet, a settings dialog) that aren't a Modal.
 /** Esc closes a dialog unless an open menu inside it takes the key first; `useModal` is the whole dialog behaviour. */
 export { closesOnKey, useModal } from './components/core/Modal/useModal';
