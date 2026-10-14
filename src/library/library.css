@@ -36,8 +36,13 @@
    data-transparency="reduced" for a WebView that doesn't answer the query): the whole scope is an
    Opaque scope (Surface.css `.lib-opaque`), every layer its solid and no backdrop. The scope sets
    the layer variables inline on itself, so this goes on its children, which pass it down. No
-   specificity, so an app's own layer rule still wins. */
+   specificity, so an app's own layer rule still wins. Materials go solid too (`--mat-<role>-solid`,
+   the fill itself where it is already opaque), so a thumb or knob cap stops showing the track. */
 :where(:root[data-transparency='reduced'] .lib-scope > *) {
+  --mat-well-fill: var(--mat-well-solid);
+  --mat-screen-fill: var(--mat-screen-solid);
+  --mat-key-fill: var(--mat-key-solid);
+  --mat-handle-fill: var(--mat-handle-solid);
   --layer-ground-fill: var(--layer-ground-solid);
   --layer-base-fill: var(--layer-base-solid);
   --layer-raised-fill: var(--layer-raised-solid);
@@ -53,6 +58,10 @@
 }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
   :where(.lib-scope > *) {
+    --mat-well-fill: var(--mat-well-solid);
+    --mat-screen-fill: var(--mat-screen-solid);
+    --mat-key-fill: var(--mat-key-solid);
+    --mat-handle-fill: var(--mat-handle-solid);
     --layer-ground-fill: var(--layer-ground-solid);
     --layer-base-fill: var(--layer-base-solid);
     --layer-raised-fill: var(--layer-raised-solid);

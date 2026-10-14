@@ -484,6 +484,8 @@ export const frostMaterials: Materials = {
     // design-os decision 82: Apple's knob (kit --mac-*-knobs-toggle-idle-bg, white 87.5%): a pale cap,
     // its alpha following --surface-3's (0.6 light, 0.05 dark), so ~0.98 on light frost and ~0.83 on dark
     fill: 'oklch(from var(--surface-3) calc(0.8 + l * 0.2) 0 h / calc(0.76 + alpha * 0.36))',
+    // added: under reduced transparency the same pale cap at full alpha, so the groove never shows through
+    solid: 'oklch(from var(--surface-3) calc(0.8 + l * 0.2) 0 h / 1)',
     // kit --mac-*-knobs-toggle-idle-shadow: a specular top edge, a hairline rim, a soft cast (lit from above)
     shadow: [`inset 0 1px 0 ${light(0.6)}`, `0 0 0 0.5px ${shade(0.18)}`, `0 1px 3px ${shade(0.3)}`].join(', '),
     texture: 'none',
