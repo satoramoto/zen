@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
-import { withLibraryTheme } from '../../../storybook';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
+import { EveryPack, withLibraryTheme } from '../../../storybook';
+import type { ModeChoice } from '../../../theme';
+import { packs } from '../../../themes/packs';
 import type { Param } from '../Param/param';
 import { stepDetent } from '../Param/useParamGesture';
 import { Slider, type SliderProps } from './Slider';
@@ -181,4 +183,102 @@ export const AutoLength: Story = {
       <Controlled {...args} />
     </div>
   ),
+};
+
+/** A multiplier as text: 0.5 → "½×", 1.5 → "1.5×". */
+const FRACTIONS: Record<string, string> = { '0.25': '¼', '0.5': '½', '0.75': '¾' };
+const times = (doublings: number) => {
+  const m = Number((2 ** doublings).toPrecision(3));
+  return `${FRACTIONS[String(m)] ?? m}×`;
+};
+/** Typed multipliers ("2", "2x", "½", "1/2") as doublings; null for anything else. */
+const parseTimes = (text: string): number | null => {
+  const t = text.trim().replace(/[x×]$/i, '');
+  const glyph = Object.entries(FRACTIONS).find(([, g]) => g === t)?.[0];
+  const [a, b] = (glyph ?? t).split('/');
+  const m = b === undefined ? Number(a) : Number(a) / Number(b);
+  return Number.isFinite(m) && m > 0 ? Math.log2(m) : null;
+};
+
+/** The inspector's tune slider, built from zen alone: a log rail with labelled doublings and a readout you can type into. */
+function Tune(props: SliderProps) {
+  const [value, setValue] = useState(props.value);
+  return (
+    <div style={{ width: 'calc(var(--control-h) * 7)' }}>
+      <Slider
+        {...props}
+        value={value}
+        display={times(value)}
+        onChange={(next) => {
+          props.onChange(next);
+          setValue(next);
+        }}
+      />
+    </div>
+  );
+}
+
+/**
+ * New: `typed` and `detentLabel`, in every pack. Click a readout (or Enter on it) and type "2",
+ * "1/2" or "½x": Enter sets it, Escape leaves it, clicking away sets it. Under the rail, a word at
+ * each doubling, the default (1×) in full ink.
+ */
+export const TypedAndLabelled: Story = {
+  args: {
+    layout: 'row',
+    length: 'auto',
+    param: tune,
+    origin: 'center',
+    value: 0,
+    detents: doublings,
+    snap: 1 / 6,
+    detentLabel: times,
+    typed: { parse: parseTimes, format: (v) => String(Number((2 ** v).toPrecision(3))) },
+  },
+  render: (args, { globals }) => (
+    <EveryPack mode={globals.mode as ModeChoice}>
+      <Tune {...args} />
+    </EveryPack>
+  ),
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const readouts = canvas.getAllByRole('button', { name: 'Speed 1×, type a value' });
+    await expect(readouts).toHaveLength(packs.length);
+    const first = readouts[0];
+    const root = first.closest('.lib-slider')!;
+    const labels = root.querySelectorAll('[data-part="detent-label"]');
+    await expect([...labels].map((l) => l.textContent)).toEqual(['¼×', '½×', '1×', '2×', '4×']);
+    await expect(labels[2]).toHaveAttribute('data-default');
+
+    // Type, Enter: set.
+    await userEvent.click(first);
+    const entry = within(root as HTMLElement).getByRole('textbox', { name: 'Speed, type a value' });
+    await expect(entry).toHaveValue('1');
+    await userEvent.clear(entry);
+    await userEvent.type(entry, '1/2{Enter}');
+    await expect(args.onChange).toHaveBeenLastCalledWith(-1);
+    await expect(args.onRelease).toHaveBeenCalled();
+    const back = within(root as HTMLElement).getByRole('button', { name: 'Speed ½×, type a value' });
+    await waitFor(() => expect(back).toHaveFocus());
+
+    // Type, Escape: nothing set.
+    const calls = (args.onChange as ReturnType<typeof fn>).mock.calls.length;
+    await userEvent.keyboard('{Enter}');
+    await userEvent.type(within(root as HTMLElement).getByRole('textbox'), '4{Escape}');
+    await expect(args.onChange).toHaveBeenCalledTimes(calls);
+    await expect(within(root as HTMLElement).getByRole('button', { name: 'Speed ½×, type a value' })).toBeInTheDocument();
+  },
+};
+
+/** `typed: true` on a plain parameter: a plain number, clamped to the range (type 500: 100%). */
+export const TypedPlain: Story = {
+  args: { orientation: 'horizontal', param: amount, value: 35, length: 160, typed: true },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: /type a value/ }));
+    const entry = canvas.getByRole('textbox');
+    await userEvent.clear(entry);
+    await userEvent.type(entry, '500{Enter}');
+    await expect(args.onChange).toHaveBeenLastCalledWith(100);
+  },
 };

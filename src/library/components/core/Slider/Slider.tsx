@@ -1,6 +1,6 @@
-import type { CSSProperties } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent, type CSSProperties, type KeyboardEvent } from 'react';
 import { defaultOrigin, fillFrom, hintAttribute, useReserved, type FillOrigin } from '../Param/fill';
-import { fractionOf, type Param } from '../Param/param';
+import { clamp, fractionOf, type Param } from '../Param/param';
 import { useParamGesture, type ParamKeyStep } from '../Param/useParamGesture';
 import { focusRing } from '../../../primitives/Ring';
 import { Surface } from '../../../primitives/Surface';
@@ -15,6 +15,21 @@ import './Slider.css';
 export type SliderLayout = 'stacked' | 'inline' | 'inside' | 'row';
 /** Which side of the control the caption and reading sit on, laid inline. */
 export type SliderSide = 'left' | 'right';
+
+/** How a typed readout reads and writes text, both in the parameter's units. */
+export interface SliderTyping {
+  /** The typed text as a value, or `null` to ignore it (nothing is set). Default: a plain number. */
+  parse?(text: string): number | null;
+  /** The text the field opens with. Default: the value as a plain number. */
+  format?(value: number): string;
+}
+
+/** The default typing: a plain number in, the value's plain number out. */
+const plainNumber = (text: string): number | null => {
+  const n = Number.parseFloat(text.replace('−', '-'));
+  return Number.isFinite(n) ? n : null;
+};
+const plainText = (value: number) => String(Number(value.toPrecision(6)));
 
 /** `live.slider`: the knob's gesture, laid out straight. Mirrors `@openflow/widgets` Slider. */
 export interface SliderProps {
@@ -71,6 +86,14 @@ export interface SliderProps {
   snap?: number;
   /** The keys' own next values, asked before the default steps (`stepDetent` steps through detents). */
   keyStep?: ParamKeyStep;
+  /** A word under each of `detents` (`½×`, `1×`, `2×`), in line with its tick; the default's in full
+   *  ink. Horizontal (`stacked` or `row`) only. */
+  detentLabel?(value: number): string;
+  /** The readout takes a typed value: click it (or Enter / Space on it) to type, Enter sets it,
+   *  Escape leaves it as it was, leaving the field sets it. `true` reads a plain number; pass
+   *  `parse` / `format` for other text (in the parameter's units). The value is clamped to the
+   *  range, set through `onChange` then `onRelease`. Needs `showValue`. */
+  typed?: boolean | SliderTyping;
 }
 
 /**
@@ -82,15 +105,21 @@ export interface SliderProps {
  * step, Page Up / Down ten steps, Home / End the ends; double-click (not after a drag) resets to the
  * default; Escape abandons a drag. `keyStep` supplies the keys' own next values first; a drag
  * within `snap` of one of `detents` lands on it. With `onDepth`, shift-drag sets `depth` and shift-double-click
- * clears it. `role="slider"` with the orientation, named by `label`, else the caption.
+ * clears it. `role="slider"` with the orientation, named by `label`, else the caption. With
+ * `typed`, the readout is a button ("{label} {reading}, type a value") that opens a field in its
+ * place: Enter sets the parsed value, Escape cancels (and goes no further, so a sheet around it
+ * stays open), leaving the field sets it; focus returns to the readout.
  *
+
  * **Parts** (`data-part`). `caption`; `track` the channel, a `well`, carrying the gesture; `fill` the
  * value from `origin`, lit (`--lit`, `--mat-lit-glow`); `span` and `reach` the depth range and its
  * far end; `live` where a driver has it; `detent` a tick at each of `detents` (`data-default` on the
  * one at the default), in line with the thumb's centre; `thumb` (absent while `mixed`) the cap, a `handle` (a thin lit mark when `inside`, a round-ended knob
  * standing proud of a thin groove in a `row`, where the track is the knob's height and the groove
  * is drawn inside it);
- * `readout` the reading, in the readout face with tabular figures; `driver` (inside `caption`, with
+ * `readout` the reading, in the readout face with tabular figures (a button with `typed`); `entry`
+ * the field that replaces it while typing; `labels` the row of `detent-label`s under the track
+ * (`data-default` on the default's); `driver` (inside `caption`, with
  * `driver` set) who is moving it, `← {driver}` in the fill ink (`--lib-slider-ink`).
  */
 export function Slider({
@@ -123,6 +152,8 @@ export function Slider({
   detents,
   snap,
   keyStep,
+  detentLabel,
+  typed,
 }: SliderProps) {
   const reserved = useReserved(param);
   const axis = layout === 'row' ? 'horizontal' : orientation;
@@ -145,6 +176,46 @@ export function Slider({
     snap,
     keyStep,
   });
+
+  // The typed readout: the text being typed, or null while the readout shows.
+  const typing = typed === undefined || typed === false ? null : typed === true ? {} : typed;
+  const [entry, setEntry] = useState<string | null>(null);
+  const readoutButton = useRef<HTMLButtonElement>(null);
+  const entryField = useRef<HTMLInputElement>(null);
+  /** Whether the field is still open: the blur that follows Enter or Escape mustn't set it again. */
+  const open = useRef(false);
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (entry !== null && !wasOpen.current) entryField.current?.select();
+    if (entry === null && wasOpen.current) readoutButton.current?.focus();
+    wasOpen.current = entry !== null;
+  }, [entry]);
+  const startTyping = () => {
+    if (disabled || typing === null) return;
+    open.current = true;
+    setEntry(mixed ? '' : (typing.format ?? plainText)(value));
+  };
+  const commit = () => {
+    if (!open.current || entry === null || typing === null) return;
+    open.current = false;
+    const next = (typing.parse ?? plainNumber)(entry);
+    setEntry(null);
+    if (next === null) return;
+    onChange(clamp(param, next));
+    onRelease?.();
+  };
+  const entryKey = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      commit();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      open.current = false;
+      setEntry(null);
+    }
+  };
+  const labelled = detentLabel !== undefined && detents !== undefined && detents.length > 0;
 
   const reach = depth ?? 0;
   const far = Math.max(0, Math.min(1, gesture.fraction + reach));
@@ -173,6 +244,7 @@ export function Slider({
       data-length={length === 'auto' ? 'auto' : undefined}
       data-disabled={disabled || undefined}
       data-mixed={mixed || undefined}
+      data-labels={labelled || undefined}
       {...hintAttribute(hint)}
       style={style}
     >
@@ -205,10 +277,65 @@ export function Slider({
           {!mixed && <Surface as="span" material="handle" radius="pill" className="lib-slider__thumb" data-part="thumb" aria-hidden="true" />}
         </Surface>
       </div>
-      {showValue && (
-        <Text role="numeral" size="label" className="lib-slider__readout" data-part="readout">
+      {labelled && (
+        <Text as="div" role="body" size="caption" leading="tight" className="lib-slider__labels" data-part="labels" aria-hidden="true">
+          {detents.map((d) => (
+            <Text
+              key={d}
+              role="body"
+              size="caption"
+              leading="tight"
+              tabular
+              className="lib-slider__detent-label"
+              data-part="detent-label"
+              data-default={d === param.defaultValue || undefined}
+              style={{ '--lib-slider-detent': fractionOf(param, d) } as CSSProperties}
+            >
+              {detentLabel(d)}
+            </Text>
+          ))}
+        </Text>
+      )}
+      {showValue && typing !== null && entry !== null ? (
+        <Text
+          as="input"
+          role="numeral"
+          size="label"
+          ref={entryField}
+          type="text"
+          inputMode="decimal"
+          className="lib-slider__readout lib-slider__entry"
+          data-part="entry"
+          aria-label={`${label ?? name}, type a value`}
+          value={entry}
+          autoComplete="off"
+          spellCheck={false}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => setEntry(event.currentTarget.value)}
+          onKeyDown={entryKey}
+          onBlur={commit}
+        />
+      ) : showValue && typing !== null ? (
+        <Text
+          as="button"
+          role="numeral"
+          size="label"
+          ref={readoutButton}
+          type="button"
+          className={`lib-slider__readout lib-slider__typed ${focusRing}`}
+          data-part="readout"
+          disabled={disabled}
+          aria-label={`${label ?? name} ${gesture.text}, type a value`}
+          title="Type a value"
+          onClick={startTyping}
+        >
           {gesture.text}
         </Text>
+      ) : (
+        showValue && (
+          <Text role="numeral" size="label" className="lib-slider__readout" data-part="readout">
+            {gesture.text}
+          </Text>
+        )
       )}
     </div>
   );

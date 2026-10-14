@@ -329,3 +329,80 @@
   cursor: default;
   opacity: 0.45;
 }
+
+/* Detent labels: a row under the track, each word centred on its tick (the same place along the
+   track as the thumb's centre); the default's in full ink. Horizontal stacked and row. */
+.lib-slider[data-labels][data-orientation='horizontal'] {
+  grid-template-areas: 'caption' 'frame' 'labels' 'readout';
+}
+.lib-slider[data-labels][data-layout='row'] {
+  grid-template-areas: 'caption readout' 'frame frame' 'labels labels';
+}
+.lib-slider__labels {
+  grid-area: labels;
+  position: relative;
+  width: var(--lib-slider-length);
+  /* One line of its type: the row is a body Text at caption size, tight leading, as each label is. */
+  min-height: 1lh;
+}
+.lib-slider:is([data-length='auto'], [data-layout='row']) .lib-slider__labels {
+  width: 100%;
+}
+.lib-slider__detent-label {
+  --lib-slider-detent: 0;
+  position: absolute;
+  top: 0;
+  left: calc(var(--lib-slider-thumb) / 2 + var(--lib-slider-detent) * (100% - var(--lib-slider-thumb)));
+  translate: -50% 0;
+  color: var(--text-3);
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* The ends stay inside the track's width rather than hanging past it. */
+.lib-slider__detent-label:first-child { translate: max(-50%, calc(-1 * var(--lib-slider-thumb) / 2)) 0; }
+.lib-slider__detent-label:last-child { translate: min(-50%, calc(var(--lib-slider-thumb) / 2 - 100%)) 0; }
+.lib-slider__detent-label[data-default] {
+  color: var(--text-1);
+}
+
+/* A typed readout: the reading as a button that opens a field in its place. It looks like the
+   reading until pointed at, then shows it can be written to. */
+.lib-slider__typed {
+  margin: 0;
+  padding: 0 var(--space-1);
+  border: 0;
+  border-radius: var(--radius-input);
+  background: transparent;
+  cursor: text;
+}
+.lib-slider[data-layout='inside'] .lib-slider__typed {
+  pointer-events: auto;
+}
+@media (hover: hover) {
+  .lib-slider__typed:hover:not(:disabled) {
+    background: var(--input-fill);
+    color: var(--text-1);
+    box-shadow: inset 0 calc(-1 * var(--border-width)) 0 var(--border-strong);
+  }
+}
+.lib-slider__typed:disabled {
+  cursor: default;
+}
+.lib-slider__entry {
+  box-sizing: content-box;
+  width: calc(var(--lib-param-chars) * 1ch);
+  margin: 0;
+  padding: 0 var(--space-1);
+  border-style: solid;
+  border-color: var(--focus-ring);
+  border-width: 0 var(--input-border-sides) max(var(--input-border-bottom), var(--border-width));
+  border-radius: var(--radius-input);
+  background: var(--input-fill);
+  color: var(--text-1);
+  caret-color: var(--accent);
+  outline: none;
+  appearance: none;
+}
+.lib-slider[data-layout='inside'] .lib-slider__entry {
+  pointer-events: auto;
+}
