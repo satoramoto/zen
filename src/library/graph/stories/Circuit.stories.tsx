@@ -530,12 +530,6 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
   const anchor = useRef<HTMLDivElement | null>(null);
   const view = useRef<GraphView>(null);
   const m = circuit.modules[mod];
-  // The stage changes width when the panel shows or hides: frame it again.
-  useEffect(() => {
-    const id = requestAnimationFrame(() => view.current?.fit(1));
-    return () => cancelAnimationFrame(id);
-  }, [showJson]);
-
   // Module units are drawn at the pack's spacing: a chip is `--space-6` × 5 wide, so positions
   // stretch by the same step and a roomy pack's faces don't run into each other.
   const stage = useRef<HTMLDivElement | null>(null);
@@ -547,25 +541,16 @@ function Workflow({ initial, label, blurb, enter, current }: WorkflowProps) {
     const next = Number.isFinite(step) && step > 0 ? step / BASE_STEP : 1;
     if (Math.abs(next - unit) > 0.001) setUnit(next);
   });
-  useEffect(() => {
-    const id = requestAnimationFrame(() => view.current?.fit(1));
-    return () => cancelAnimationFrame(id);
-  }, [unit]);
   const onMove = useCallback((id: string, x: number, y: number) => binding.onMove(id, Math.round(x / unit), Math.round(y / unit)), [binding, unit]);
 
   // Frame the module once it's drawn (after its faces and frames have measured), and again when
-  // another module is shown.
+  // another module is shown, the pack's step changes or the panel shows or hides. A timer, not a
+  // frame: a window behind others gets no frames.
+  useEffect(() => setSelected(null), [mod]);
   useEffect(() => {
-    setSelected(null);
-    let second = 0;
-    const first = requestAnimationFrame(() => {
-      second = requestAnimationFrame(() => view.current?.fit(1));
-    });
-    return () => {
-      cancelAnimationFrame(first);
-      cancelAnimationFrame(second);
-    };
-  }, [mod]);
+    const id = setTimeout(() => view.current?.fit(1), 80);
+    return () => clearTimeout(id);
+  }, [mod, unit, showJson]);
 
   const traceById = useMemo(() => new Map(m.traces.map((t) => [t.id, t])), [m.traces]);
   const cords: GraphCord[] = useMemo(
