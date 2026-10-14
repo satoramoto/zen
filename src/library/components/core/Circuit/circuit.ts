@@ -265,7 +265,26 @@ export function removeChip(circuit: Circuit, module: string, chip: string): Circ
     outPins: m.outPins.filter((p) => !touches(p.maps, chip)),
   };
   if (m.controls) next.controls = m.controls.filter((c) => c.maps.chip !== chip);
-  return withModule(circuit, next);
+  return dropInstanceTraces(withModule(circuit, next), m, (end) => touches(end, chip));
+}
+
+/**
+ * A module pin that went (its `maps` matched `gone` in the module as it was) goes from every
+ * instance too, so every trace to or from it on an instance is dropped.
+ */
+function dropInstanceTraces(circuit: Circuit, was: Module, gone: (maps: End) => boolean): Circuit {
+  const goneIn = new Set(was.inPins.filter((p) => gone(p.maps)).map((p) => p.id));
+  const goneOut = new Set(was.outPins.filter((p) => gone(p.maps)).map((p) => p.id));
+  if (!goneIn.size && !goneOut.size) return circuit;
+  let out = circuit;
+  for (const host of Object.values(circuit.modules)) {
+    const instances = new Set(host.chips.filter((c) => c.module === was.id).map((c) => c.id));
+    if (!instances.size) continue;
+    const dangles = (end: End, pins: Set<string>) => !isBus(end) && instances.has(end.chip) && pins.has(end.pin);
+    const traces = host.traces.filter((t) => !dangles(t.from, goneOut) && !dangles(t.to, goneIn));
+    if (traces.length !== host.traces.length) out = withModule(out, { ...out.modules[host.id], traces });
+  }
+  return out;
 }
 
 export function moveChip(circuit: Circuit, module: string, chip: string, x: number, y: number): Circuit {
@@ -329,11 +348,14 @@ export function removeBus(circuit: Circuit, module: string, bus: string): Circui
   const buses = m.buses ?? [];
   if (!buses.some((b) => b.id === bus)) throw new CircuitError('unknown-bus', `no bus "${bus}" in module "${module}"`);
   const onBus = (end: End) => isBus(end) && end.bus === bus;
-  return withModule(circuit, {
+  const next = withModule(circuit, {
     ...m,
     buses: buses.filter((b) => b.id !== bus),
     traces: m.traces.filter((t) => !onBus(t.from) && !onBus(t.to)),
+    inPins: m.inPins.filter((p) => !onBus(p.maps)),
+    outPins: m.outPins.filter((p) => !onBus(p.maps)),
   });
+  return dropInstanceTraces(next, m, onBus);
 }
 
 /**
