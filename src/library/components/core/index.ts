@@ -45,6 +45,11 @@ export {
   noteName,
   useParamGesture,
   FINE_KEY,
+  // A keyStep that steps through detents, and a drag's catch on them.
+  stepDetent,
+  snapToDetent,
+  type ParamKey,
+  type ParamKeyStep,
   type Param,
   type ParamKind,
   type UnitStyle,
