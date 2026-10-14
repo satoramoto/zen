@@ -1,0 +1,122 @@
+/* ThemeEditor: one column of rows under Group headers. Reads only contract variables and its own
+   --zen-theme-editor-* (listed under **Tuning knobs** in ThemeEditor.tsx). Type is all Text. */
+
+.zen-theme-editor {
+  --zen-theme-editor-width: calc(var(--space-2) * 64);
+  --zen-theme-editor-label-w: calc(var(--space-6) * 3.5);
+  container: zen-theme-editor / inline-size;
+  inline-size: min(100%, var(--zen-theme-editor-width));
+  min-inline-size: 0;
+  color: var(--text-1);
+}
+
+/* A row: the label column, then the controls, which wrap. */
+.zen-theme-editor__row {
+  display: grid;
+  grid-template-columns: var(--zen-theme-editor-label-w) minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  min-block-size: var(--control-h);
+  min-inline-size: 0;
+}
+
+.zen-theme-editor__row-control {
+  min-inline-size: 0;
+}
+
+/* A Select may shrink with its row rather than push past it. */
+.zen-theme-editor__select {
+  max-inline-size: 100%;
+}
+
+/* The swatch: the colour itself, with the system picker laid invisibly over it. */
+.zen-theme-editor__swatch {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  inline-size: calc(var(--control-h) * 1.25);
+  block-size: calc(var(--control-h) * 0.75);
+  border-radius: var(--radius-input);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
+  cursor: pointer;
+}
+
+.zen-theme-editor__swatch input {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.zen-theme-editor__swatch:has(:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Seven characters, so every hex starts the H/S/L fields at one place. */
+.zen-theme-editor__hex {
+  min-inline-size: 7ch;
+  user-select: all;
+}
+
+/* A value shown as it is (a keyword, an expression, a translucent colour): it may shrink. */
+.zen-theme-editor__raw {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+.zen-theme-editor__changed {
+  color: var(--accent);
+}
+
+.zen-theme-editor__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0 0 0 var(--space-4);
+}
+
+.zen-theme-editor__warning::marker {
+  color: var(--warning);
+}
+
+.zen-theme-editor__error {
+  overflow-wrap: anywhere;
+}
+
+.zen-theme-editor__error::marker {
+  color: var(--danger);
+}
+
+/* The paste area: a field drawn as the pack draws inputs. */
+.zen-theme-editor__textarea {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: calc(var(--control-h) * 4);
+  margin: 0;
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-input);
+  background: var(--input-fill);
+  color: var(--text-1);
+  resize: vertical;
+}
+
+.zen-theme-editor__textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* A narrow container: labels above their controls. */
+@container zen-theme-editor (max-width: 26rem) {
+  .zen-theme-editor__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

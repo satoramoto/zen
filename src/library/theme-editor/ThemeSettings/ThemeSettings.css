@@ -1,0 +1,5 @@
+/* The settings section fills the column it is given; the picker and editor size themselves. */
+.zen-theme-settings {
+  inline-size: 100%;
+  min-inline-size: 0;
+}

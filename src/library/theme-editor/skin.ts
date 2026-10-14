@@ -155,8 +155,10 @@ const RANGES: Record<string, readonly [number, number]> = {
  */
 function cssProblem(v: string): string | undefined {
   if (v.length > MAX_STRING) return `is longer than ${MAX_STRING} characters`;
-  if (/[;{}]/.test(v) || /@import/i.test(v)) return 'may not contain ; { } or @import';
   for (const m of v.matchAll(/url\(\s*(['"]?)\s*([^'")\s]*)/gi)) if (!/^data:/i.test(m[2])) return 'may only use data: URLs';
+  // A data: URL may carry `;base64`; outside one, `;` `{` `}` would end the declaration.
+  const outside = v.replace(/url\(\s*(['"]?)data:[^'")]*\1\s*\)/gi, '');
+  if (/[;{}]/.test(outside) || /@import/i.test(outside)) return 'may not contain ; { } or @import';
   if (/image-set\(|src\(/i.test(v)) return 'may not fetch images';
   return undefined;
 }

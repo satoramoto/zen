@@ -34,3 +34,9 @@ export {
 export { hexToHsl, hslToHex, contrast, distance as colourDistance, paletteWarnings, isHex, type Hsl } from './colour';
 export { loadSkin, saveSkin, forgetSkin, type SkinStorage } from './persist';
 export { SkinScope, SkinProvider, useSkin, type SkinProviderProps, type SkinContextValue } from './SkinScope';
+/** Every pack with a live preview; choosing one hands back its skin. */
+export { ThemePicker } from './ThemePicker';
+/** Edits a skin facet by facet: palette, type, scale, materials, shader. Controlled; the host keeps it. */
+export { ThemeEditor, type ThemeEditorProps } from './ThemeEditor';
+/** The picker and editor as one settings section, bound to the nearest `SkinProvider`. */
+export { ThemeSettings } from './ThemeSettings';
