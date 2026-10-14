@@ -216,7 +216,8 @@
   color: var(--mat-tabs-chosen-ink);
 }
 .yh-button[data-face='chosen'][data-variant='quiet']:not([data-join]) {
-  border-radius: min(var(--radius-control), calc(var(--mat-tabs-pad) * 4));
+  --yh-button-chosen-radius: min(var(--radius-control), calc(var(--mat-tabs-pad) * 4));
+  border-radius: var(--yh-button-chosen-radius);
 }
 
 /* Waiting: queued or armed, the double-weight ring over a faint tint of the key; the label stays legible. */

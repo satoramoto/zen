@@ -104,7 +104,11 @@ export interface GraphProps {
   viewRef?: Ref<GraphView>;
   minZoom?: number;
   maxZoom?: number;
-  /** Re-fit when the viewport's size changes notably (debounced). */
+  /**
+   * Keep the patch fitted (debounced): when the viewport's size changes notably, and when the
+   * nodes' faces settle after the first fit (fonts, faces measuring). Stops once the user pans,
+   * zooms or drags a node, until the next `fit()`.
+   */
   fitOnResize?: boolean;
   /** The canvas's accessible name. */
   label?: string;
@@ -248,8 +252,9 @@ function contentStyle(view: View): CSSProperties {
  * native, non-passive listener, so the page behind doesn't scroll), clamped to
  * `[minZoom, maxZoom]`. Pan and zoom are the graph's own: `viewRef` reads the zoom (`scale()`)
  * and asks for `fit(max?)`, which frames every node top-left with a small margin, zoom clamped to
- * `[minZoom, max ?? 1]`; `fitOnResize` re-fits when the viewport's size changes notably (timer
- * debounced, not frame-driven, so a window behind others still re-fits). A cord drags from either
+ * `[minZoom, max ?? 1]`; `fitOnResize` re-fits when the viewport's size changes notably or the
+ * nodes settle after loading (timer debounced, not frame-driven, so a window behind others still
+ * re-fits), until the user pans, zooms or drags a node; the next `fit()` resumes it. A cord drags from either
  * end and is normalised outlet → inlet on its way out; the release resolves against the measured
  * ports with a little landing room, so a quick drag isn't lost to a hover race. Keyboard: Enter
  * (or Space) on a port arms it, Enter on a port of the other side lands the cord, Escape drops it;
@@ -332,8 +337,21 @@ export function Graph({
   const [, redraw] = useState(0);
 
   /** Current values for handlers that outlive a render. */
-  const now = useRef({ view, drawing, over, onMove, onConnect, minZoom, maxZoom, fitAlign, boxed: false });
+  const now = useRef({ view, drawing, over, onMove, onConnect, minZoom, maxZoom, fitAlign, boxed: false, fitOnResize });
   const boxed = (zones?.length ?? 0) > 0 || (buses?.length ?? 0) > 0;
+  /** The user has panned, zoomed or dragged a node since the last `fit()`: no automatic re-fit. */
+  const handled = useRef(false);
+  /** The pending automatic re-fit, shared by resizes and settling nodes. */
+  const refit = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const fitRef = useRef<(max?: number) => void>(() => {});
+  const fitLater = useCallback(() => {
+    if (!now.current.fitOnResize || handled.current) return;
+    clearTimeout(refit.current);
+    refit.current = setTimeout(() => {
+      if (!handled.current) fitRef.current();
+    }, FIT_DEBOUNCE_MS);
+  }, []);
+  useEffect(() => () => clearTimeout(refit.current), []);
 
   const measure = useCallback(() => {
     const origin = content.current?.getBoundingClientRect();
@@ -362,11 +380,15 @@ export function Graph({
       if (found.size !== boxes.current.size) changed = true;
       boxes.current = found;
     }
-    if (changed) redraw((n) => n + 1);
-  }, []);
+    if (changed) {
+      redraw((n) => n + 1);
+      // Faces that settle after the first fit (a font landing, a face measuring) re-frame it.
+      fitLater();
+    }
+  }, [fitLater]);
 
   useLayoutEffect(() => {
-    now.current = { view, drawing, over, onMove, onConnect, minZoom, maxZoom, fitAlign, boxed };
+    now.current = { view, drawing, over, onMove, onConnect, minZoom, maxZoom, fitAlign, boxed, fitOnResize };
     measure();
   });
 
@@ -434,8 +456,15 @@ export function Graph({
     // Centred: the slack the zoom leaves split either side instead of all on the far edges.
     const slackX = now.current.fitAlign === 'center' ? (w - (right - left) * next) / 2 : 0;
     const slackY = now.current.fitAlign === 'center' ? (h - (bottom - top) * next) / 2 : 0;
-    setView({ k: next, x: FIT_MARGIN + Math.max(0, slackX) - left * next, y: FIT_MARGIN + Math.max(0, slackY) - top * next });
+    const x = FIT_MARGIN + Math.max(0, slackX) - left * next;
+    const y = FIT_MARGIN + Math.max(0, slackY) - top * next;
+    handled.current = false;
+    // Already there: no new view, so a re-fit triggered by measuring can't feed itself.
+    const v = now.current.view;
+    if (Math.abs(v.k - next) < 1e-4 && Math.abs(v.x - x) < 0.5 && Math.abs(v.y - y) < 0.5) return;
+    setView({ k: next, x, y });
   }, []);
+  fitRef.current = fit;
 
   /** Zoom about the viewport's centre. */
   const zoom = useCallback((factor: number) => {
@@ -444,6 +473,7 @@ export function Graph({
     const box = root.getBoundingClientRect();
     const px = box.width / 2;
     const py = box.height / 2;
+    handled.current = true;
     setView((v) => {
       const k = clamp(v.k * factor, now.current.minZoom, now.current.maxZoom);
       if (k === v.k) return v;
@@ -458,20 +488,15 @@ export function Graph({
     const root = viewport.current;
     if (!fitOnResize || !root || typeof ResizeObserver === 'undefined') return;
     let last: { w: number; h: number } | null = null;
-    let timer: ReturnType<typeof setTimeout> | undefined;
     const watch = new ResizeObserver(() => {
       const box = root.getBoundingClientRect();
       if (last && Math.abs(box.width - last.w) < FIT_NOTABLE && Math.abs(box.height - last.h) < FIT_NOTABLE) return;
       last = { w: box.width, h: box.height };
-      clearTimeout(timer);
-      timer = setTimeout(() => fit(), FIT_DEBOUNCE_MS);
+      fitLater();
     });
     watch.observe(root);
-    return () => {
-      clearTimeout(timer);
-      watch.disconnect();
-    };
-  }, [fitOnResize, fit]);
+    return () => watch.disconnect();
+  }, [fitOnResize, fitLater]);
 
   /**
    * Land a cord if the target is the end it's missing. The pair is sorted before the host sees it:
@@ -571,6 +596,7 @@ export function Graph({
       const box = el.getBoundingClientRect();
       const px = e.clientX - box.left;
       const py = e.clientY - box.top;
+      handled.current = true;
       setView((v) => {
         const k = clamp(v.k * Math.exp(-e.deltaY * 0.0015), minZoom, maxZoom);
         if (k === v.k) return v;
@@ -604,7 +630,10 @@ export function Graph({
       cordWants: wants,
       cordOver: over,
       scale: () => now.current.view.k,
-      moveNode: (id, x, y) => now.current.onMove?.(id, x, y),
+      moveNode: (id, x, y) => {
+        handled.current = true;
+        now.current.onMove?.(id, x, y);
+      },
     }),
     [register, startCord, armCord, hoverPort, drawing?.at, wants, over, lit],
   );
@@ -781,6 +810,7 @@ export function Graph({
       onPointerMove={(e) => {
         const held = pan.current;
         if (!held || held.id !== e.pointerId) return;
+        handled.current = true;
         setView((v) => ({ ...v, x: held.atX + (e.clientX - held.fromX), y: held.atY + (e.clientY - held.fromY) }));
       }}
       onPointerUp={(e) => {
