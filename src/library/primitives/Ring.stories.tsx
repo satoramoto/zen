@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { withLibraryTheme } from '../storybook';
+import { expect, userEvent, within } from 'storybook/test';
+import { EveryPack, withLibraryTheme } from '../storybook';
+import type { ModeChoice } from '../theme';
+import { packs } from '../themes/packs';
 import { focusRing, pressRing } from './Ring';
 import { Surface } from './Surface';
 import { Text } from './Text';
@@ -46,4 +49,36 @@ export const FocusAndPress: Story = {
       <Toggle />
     </div>
   ),
+};
+
+/**
+ * The focus ring in every pack: `--focus-ring` and `--focus-ring-offset`, from the materials'
+ * `focus` setting. The accent just outside the edge by default; in visuals the controls' ink
+ * (`--text-2`) on the edge, as visuals' own `--vs-focus-ring` drew it. Tab through to see each.
+ */
+export const FocusInEveryPack: Story = {
+  name: 'Focus in every pack',
+  render: (_args, { globals }) => (
+    <EveryPack mode={globals.mode as ModeChoice}>
+      <Surface
+        as="button"
+        material="key"
+        className={focusRing}
+        style={{ height: 'var(--control-h)', padding: '0 var(--space-3)', border: 0, cursor: 'pointer' }}
+      >
+        <Text role="label">Focus me</Text>
+      </Surface>
+    </EveryPack>
+  ),
+  play: async ({ canvasElement }) => {
+    const buttons = within(canvasElement).getAllByRole('button', { name: 'Focus me' });
+    await expect(buttons).toHaveLength(packs.length);
+    for (const [i, pack] of packs.entries()) {
+      await userEvent.tab();
+      const style = getComputedStyle(buttons[i]);
+      await expect(buttons[i]).toHaveFocus();
+      await expect(style.outlineStyle).toBe('solid');
+      await expect(style.outlineOffset).toBe(pack.facets.materials.focus?.offset ?? '2px');
+    }
+  },
 };
