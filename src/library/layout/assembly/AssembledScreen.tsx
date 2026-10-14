@@ -9,6 +9,9 @@ import type { Placed, Placement, Principles, Rect, ScreenSpec } from './types';
 import { principlesFor } from './units';
 import './Assembly.css';
 
+/** The slot variables an assembled screen sets for app CSS to read: `under` and `over` (unitless px of the slot a pinned region covers at its top or bottom, set inline) and `panelInset` (a floating panel's inset from the room's edges, Assembly.css). */
+export const SLOT_VARS = { under: '--lib-under', over: '--lib-over', panelInset: '--lib-panel-inset' } as const;
+
 /** What the screen draws in a region's place: content, or a function of the chosen form. */
 export type RegionContent = ReactNode | ((form: string, placed: Placed) => ReactNode);
 
@@ -122,8 +125,8 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
     const inset = placed.inset;
     const style = {
       ...at(rect),
-      ...(up ? { '--lib-under': up, '--lib-under-pin': placed.under!.edge } : {}),
-      ...(down ? { '--lib-over': down, '--lib-over-pin': placed.over!.edge } : {}),
+      ...(up ? { [SLOT_VARS.under]: up, '--lib-under-pin': placed.under!.edge } : {}),
+      ...(down ? { [SLOT_VARS.over]: down, '--lib-over-pin': placed.over!.edge } : {}),
       ...(inset ? { '--lib-inset-t': inset.top, '--lib-inset-r': inset.right, '--lib-inset-b': inset.bottom, '--lib-inset-l': inset.left } : {}),
     } as CSSProperties;
     return (
