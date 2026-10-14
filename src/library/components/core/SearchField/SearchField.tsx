@@ -1,4 +1,4 @@
-import { useRef, type ChangeEvent, type KeyboardEvent } from 'react';
+import { useCallback, useRef, type ChangeEvent, type KeyboardEvent, type Ref } from 'react';
 import { Text } from '../../../primitives/Text';
 import './SearchField.css';
 
@@ -17,6 +17,12 @@ export interface SearchFieldProps {
   onInput?: (value: string) => void;
   /** Called on every key the field doesn't handle itself (all but Esc on a non-empty field). */
   onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
+  /** The `<input>` itself, so the page can focus it (a ⌘F shortcut) or read its selection. */
+  ref?: Ref<HTMLInputElement>;
+  /** Shown, not editable: the input is disabled, dimmed, and the clear button goes. */
+  disabled?: boolean;
+  /** The native hover hint on the field, e.g. "Search presets (⌘F)". */
+  title?: string;
 }
 
 /**
@@ -41,9 +47,22 @@ export interface SearchFieldProps {
  * **Kept**: controlled `value` with `onInput` per edit; Esc on a non-empty field clears it and
  * stops there; on an empty field Esc and every other key reach `onKeyDown` and the page;
  * a `searchbox` named by a visually hidden label; no autocomplete or spellcheck.
+ *
+ * **Added**: `ref` reaches the `<input>` (a page focuses it from a shortcut); `disabled` dims the
+ * field to `--text-4` with a dashed edge, as a disabled key reads, takes the input out of reach
+ * and drops the clear button; `title` is the field's hover hint.
  */
-export function SearchField({ value = '', label, placeholder, width, tip, onInput, onKeyDown }: SearchFieldProps) {
-  const input = useRef<HTMLInputElement>(null);
+export function SearchField({ value = '', label, placeholder, width, tip, onInput, onKeyDown, ref, disabled = false, title }: SearchFieldProps) {
+  const input = useRef<HTMLInputElement | null>(null);
+  // The input is ours (the clear button refocuses it) and the caller's (`ref`).
+  const setInput = useCallback(
+    (node: HTMLInputElement | null) => {
+      input.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
   const filled = value !== '';
 
   function keyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -60,6 +79,8 @@ export function SearchField({ value = '', label, placeholder, width, tip, onInpu
     <div
       className="yh-search-field"
       data-filled={filled ? 'true' : undefined}
+      data-disabled={disabled ? 'true' : undefined}
+      title={title}
       style={{ width: width === undefined ? '100%' : `${width}px` }}
     >
       <label className="yh-search-field__label">
@@ -71,10 +92,11 @@ export function SearchField({ value = '', label, placeholder, width, tip, onInpu
         <Text
           as="input"
           role="body"
-          ref={input}
+          ref={setInput}
           type="search"
           className="yh-search-field__input"
           value={value}
+          disabled={disabled}
           placeholder={placeholder}
           autoComplete="off"
           spellCheck={false}
@@ -83,7 +105,7 @@ export function SearchField({ value = '', label, placeholder, width, tip, onInpu
           onKeyDown={keyDown}
         />
       </label>
-      {filled && (
+      {filled && !disabled && (
         <button
           type="button"
           className="yh-search-field__clear"

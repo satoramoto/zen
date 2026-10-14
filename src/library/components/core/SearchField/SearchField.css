@@ -20,14 +20,28 @@
 }
 
 .yh-search-field:focus-within {
-  border-color: var(--accent);
-  outline: 2px solid var(--accent);
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
 .yh-search-field[data-filled] {
   color: var(--text-2);
 }
+
+/* Disabled: shown, not editable. The edge goes dashed and the ink faint, so it reads unavailable
+   by structure as well as tone; no hover or focus change. */
+.yh-search-field[data-disabled] {
+  border-style: dashed;
+  border-color: var(--border);
+  color: var(--text-4);
+}
+.yh-search-field[data-disabled] .yh-search-field__label { cursor: not-allowed; }
+.yh-search-field[data-disabled] .yh-search-field__input {
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+.yh-search-field[data-disabled] .yh-search-field__input::placeholder { color: var(--text-4); }
 
 .yh-search-field__label {
   display: flex;
