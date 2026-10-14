@@ -15,8 +15,8 @@ import { clamp, fractionOf, quantize, stepSize, valueAt, type Param } from './pa
  * `gesture/useParamGesture.ts`: grab where the value is (no jump to the click), drag, hold the fine
  * modifier (⌘ on macOS, Ctrl elsewhere) for a tenth of the speed, let go. Shift drags the depth
  * when `onDepth` is given. Double-click resets to the default (not after a drag); Escape abandons a
- * drag in hand; arrows step, Page Up / Down ten steps, Home / End the ends. At most one write per
- * frame.
+ * drag in hand; arrows step, Page Up / Down ten steps, Home / End the ends. A drag writes at most
+ * once per frame; a key writes at once.
  */
 
 export type ParamAxis = 'vertical' | 'horizontal';
@@ -218,6 +218,8 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
   const pending = useRef<number | null>(null);
   const frame = useRef<number | null>(null);
   const sent = useRef(Number.NaN);
+  /** The last key's write, and the value the control was given when it was made. */
+  const keyed = useRef<{ given: number; sent: number } | null>(null);
 
   const flush = useCallback(() => {
     frame.current = null;
@@ -287,6 +289,7 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
         emit(valueAt(now.param, fraction));
       }
       wandered.current = false;
+      keyed.current = null;
       drag.current = {
         id: e.pointerId,
         x: e.clientX,
@@ -379,6 +382,7 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
         return;
       }
       if (now.mixed) sent.current = Number.NaN;
+      keyed.current = null;
       emit(quantize(now.param, now.param.defaultValue));
       if (drag.current !== null) finish();
       else settle();
@@ -398,17 +402,29 @@ export function useParamGesture(options: ParamGestureOptions): ParamGesture {
         return;
       }
       const fine = isFine(e);
-      const own = now.keyStep?.({ key: e.key, shiftKey: e.shiftKey, fine }, now.value);
-      const next = own ?? defaultKeyStep(now.param, e.key, now.value, fine);
+      // Step from the last key's value while the host hasn't handed back a new one yet, so two
+      // keys before a re-render each count.
+      const held = keyed.current;
+      const from = held !== null && held.given === now.value ? held.sent : now.value;
+      const own = now.keyStep?.({ key: e.key, shiftKey: e.shiftKey, fine }, from);
+      const next = own ?? defaultKeyStep(now.param, e.key, from, fine);
       if (next === undefined) return;
       e.preventDefault();
       // A focused control owns its keystroke; a host listening on the window must not also act.
       e.stopPropagation();
-      sent.current = Number.NaN;
-      emit(quantize(now.param, clamp(now.param, next)));
+      // A key writes now, not on the next frame; anything a drag left waiting is stale.
+      if (frame.current !== null) {
+        cancelAnimationFrame(frame.current);
+        frame.current = null;
+      }
+      pending.current = null;
+      const value = quantize(now.param, clamp(now.param, next));
+      sent.current = value;
+      keyed.current = { given: now.value, sent: value };
+      now.onChange(value);
       now.onRelease?.();
     },
-    [abandon, emit],
+    [abandon],
   );
 
   const text = display ?? (mixed ? MIXED_TEXT : format(param, value));
