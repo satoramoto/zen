@@ -3,12 +3,13 @@
  * `tiers.test.ts` can hold every count to its recorded baseline (`tiers.baseline.json`).
  * Pure node:fs and string work, no React.
  *
- * **What is scanned.** `src/library/{components,graph,layout,yahaha,primitives}`: CSS, TSX and TS
+ * **What is scanned.** `src/library/{components,graph,layout,yahaha,primitives,theme-editor}`: CSS, TSX and TS
  * files, except stories, tests and story/test data (`*.fixtures.ts`). `themes/` is never
  * scanned: values live there. Comments are stripped before matching (line numbers are kept).
  *
  * **Folders** (what counts are per): `components/<core|music>/<Name>`, `graph/<view|model>/<Name>`
- * (`graph` is held to the controls' rules), `yahaha/<Name>`, `layout`, `primitives`. A file directly in a folder keys to that folder
+ * (`graph` is held to the controls' rules), `yahaha/<Name>`, `theme-editor/<Name>` (also held to
+ * the controls' rules), `layout`, `primitives`. A file directly in a folder keys to that folder
  * (`yahaha/tokens.css` → `yahaha`, `components/core/hue.ts` → `components/core`).
  *
  * **pixels** (every folder but `primitives`). CSS: each `px` length in a declaration value
@@ -64,15 +65,16 @@ export const RULES: Record<RuleId, { fix: string }> = {
 export const RULE_IDS = Object.keys(RULES) as RuleId[];
 
 /** The folders scanned, under `src/library`. */
-export const TOP_FOLDERS = ['components', 'graph', 'layout', 'yahaha', 'primitives'] as const;
+export const TOP_FOLDERS = ['components', 'graph', 'layout', 'yahaha', 'primitives', 'theme-editor'] as const;
 
-/** Which top folders each rule applies to. `graph` (the node graph and its faces) is read as controls. */
+/** Which top folders each rule applies to. `graph` (the node graph and its faces) and
+ *  `theme-editor` (the picker and editor) are read as controls. */
 export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
-  pixels: ['components', 'graph', 'layout', 'yahaha'],
-  margins: ['components', 'graph'],
+  pixels: ['components', 'graph', 'layout', 'yahaha', 'theme-editor'],
+  margins: ['components', 'graph', 'theme-editor'],
   painting: ['layout', 'yahaha'],
-  knobs: ['components', 'graph', 'layout', 'yahaha'],
-  type: ['components', 'graph', 'layout', 'yahaha'],
+  knobs: ['components', 'graph', 'layout', 'yahaha', 'theme-editor'],
+  type: ['components', 'graph', 'layout', 'yahaha', 'theme-editor'],
 };
 
 /**
@@ -119,7 +121,7 @@ export function folderOf(file: string): string {
   const parts = file.split('/');
   const t = parts[0];
   if (t === 'components' || t === 'graph') return parts.length >= 4 ? parts.slice(0, 3).join('/') : parts.slice(0, -1).join('/');
-  if (t === 'yahaha') return parts.length >= 3 ? parts.slice(0, 2).join('/') : t;
+  if (t === 'yahaha' || t === 'theme-editor') return parts.length >= 3 ? parts.slice(0, 2).join('/') : t;
   return t;
 }
 

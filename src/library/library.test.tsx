@@ -27,6 +27,7 @@ const COMPONENT_SOURCES = [
   ...filesUnder('graph', /\.(tsx?|css)$/),
   ...filesUnder('layout', /\.(tsx?|css)$/),
   ...filesUnder('yahaha', /\.(tsx?|css)$/),
+  ...filesUnder('theme-editor', /\.(tsx?|css)$/),
 ];
 const MODES: Mode[] = ['light', 'dark'];
 const CONTRACT = new Set([...Object.keys(toCssVars(packs[0].facets, 'dark')), ...SCOPE_VARS]);
