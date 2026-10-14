@@ -283,11 +283,15 @@ describe('7. amount: -1..1, and only on a modulation trace', () => {
   });
 });
 
-describe('8. fan-in and fan-out', () => {
-  it('an in pin takes several traces', () => {
-    let c = connect(circuit(), 'board', trace('a', end('lfo', 'out'), end('vcf', 'in')));
-    c = connect(c, 'board', trace('b', end('amp', 'out'), end('vcf', 'in')));
-    expect(board(c).traces.filter((t) => (t.to as PinEnd).chip === 'vcf' && (t.to as PinEnd).pin === 'in')).toHaveLength(3);
+describe('8. an in pin takes one trace, an out pin feeds many', () => {
+  it('throws inlet-taken for a second trace into the same in pin', () => {
+    expectRefused(circuit(), (c) => connect(c, 'board', trace('a', end('lfo', 'out'), end('vcf', 'in'))), 'inlet-taken');
+  });
+  it('counts a bus tap as the in pin\'s one trace', () => {
+    let c = addBus(circuit(), 'board', { id: 'b' });
+    c = connect(c, 'board', trace('tap', { bus: 'b' }, end('amp', 'in')));
+    expectRefused(c, (x) => connect(x, 'board', trace('a', end('vcf', 'out'), end('amp', 'in'))), 'inlet-taken');
+    expectRefused(c, (x) => connect(x, 'board', trace('tap2', { bus: 'b' }, end('amp', 'in'))), 'inlet-taken');
   });
   it('an out pin feeds several traces', () => {
     let c = connect(circuit(), 'board', trace('a', end('osc', 'out'), end('amp', 'in')));
@@ -763,6 +767,7 @@ describe('19. what validate reports', () => {
     ['looping on one chip', trace('x', end('vcf', 'out'), end('vcf', 'in')), 'self-loop'],
     ['with a bus at both ends', trace('x', { bus: 'main' }, { bus: 'spare' }), 'bus-to-bus'],
     ['as a second bus source', trace('x', end('osc', 'out'), { bus: 'main' }), 'bus-has-source'],
+    ['into an in pin that already has one', trace('x', end('lfo', 'out'), end('vcf', 'in')), 'inlet-taken'],
   ])('a trace %s', (_, t, code) => {
     const issues = planted((c) => board(c).traces.push(t));
     expect(issues).toHaveLength(1);

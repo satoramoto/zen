@@ -192,6 +192,7 @@ export type CircuitErrorCode =
   | 'unknown-module' | 'unknown-chip' | 'unknown-pin' | 'unknown-trace' | 'unknown-zone'
   | 'duplicate-id' | 'wrong-side' | 'self-loop' | 'cycle-in-modules' | 'bad-amount'
   | 'unknown-bus' | 'bus-has-source' | 'bus-to-bus'
+  | 'inlet-taken'   // an in pin already has its one trace (behaviour 8)
   | 'bad-hint'      // malformed placement, layout or routing (validate only)
   | 'key-mismatch'; // a `modules` key differs from its module's id (validate only)
 
@@ -261,8 +262,14 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 6. `connect` throws `self-loop` when `from.chip === to.chip`.
 7. `connect` throws `bad-amount` when `amount` is present and outside -1..1,
    or present on a trace whose `role` isn't `modulation`.
-8. An in pin may take several traces, and an out pin may feed several.
-   `connect` doesn't reject a second trace into an in pin.
+8. An in pin takes at most one trace; an out pin may feed many. `connect`
+   throws `inlet-taken` when the in pin already has a trace, and a bus tap
+   ending at that pin counts as its trace.
+
+   **Merging.** Fan-in goes through a merge chip: any chip whose type the host
+   treats as a merge, with n in pins and one out pin. Each source feeds one of
+   its in pins, and its out pin feeds the destination. The model gives the type
+   no meaning; samples use the conventional `type: 'merge'`.
 9. `removeChip` also removes every trace to or from that chip, and every
    `ModulePin` or `Control` entry that maps to it. Removing a ModulePin this way
    also removes, in every module, each trace that ended at that pin on an
@@ -333,6 +340,8 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
     - `ModulePin` and `Control` entries that don't resolve;
     - `module`, `zone` and bus references that don't resolve;
     - buses with more than one source, and traces with a bus at both ends;
+    - in pins with more than one trace (`inlet-taken`, on each trace after
+      the first);
     - out-of-range amounts;
     - cycles among modules.
 20. Every circuit produced only by the operations, starting from
