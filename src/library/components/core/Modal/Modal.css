@@ -83,6 +83,9 @@
   /* A body Text at the pane's size. */
   --text-leading: 1.45;
 }
+/* The body scrolls, so what it holds keeps its own height: a Group or Stack (min-height: 0) would
+   otherwise shrink to fit the pane and spill over the next. Weightless, so a part's own flex wins. */
+:where(.lib-modal__body) > * { flex-shrink: 0; }
 
 .lib-modal__actions {
   display: flex;
