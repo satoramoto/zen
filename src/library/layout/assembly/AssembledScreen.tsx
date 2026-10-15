@@ -9,8 +9,8 @@ import type { Placed, Placement, Principles, Rect, ScreenSpec } from './types';
 import { principlesFor } from './units';
 import './Assembly.css';
 
-/** The slot variables an assembled screen sets for app CSS to read: `under` and `over` (unitless px of the slot a pinned region covers at its top or bottom, set inline) and `panelInset` (a floating panel's inset from the room's edges, Assembly.css). */
-export const SLOT_VARS = { under: '--lib-under', over: '--lib-over', panelInset: '--lib-panel-inset' } as const;
+/** The slot variables an assembled screen sets for app CSS to read: `under` and `over` (unitless px of the slot a pinned region covers at its top or bottom, set inline), `underEdge` (the knob an app sets on the slot to narrow the clip and fade to what the pinned region above really draws, unitless px; the pinned region's edge by default, Assembly.css) and `panelInset` (a floating panel's inset from the room's edges, Assembly.css). */
+export const SLOT_VARS = { under: '--lib-under', over: '--lib-over', underEdge: '--lib-under-edge', panelInset: '--lib-panel-inset' } as const;
 
 /** What the screen draws in a region's place: content, or a function of the chosen form. */
 export type RegionContent = ReactNode | ((form: string, placed: Placed) => ReactNode);
