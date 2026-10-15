@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, type ReactNode, type R
 import { Layer } from '../../../layout/Layer';
 import { Text } from '../../../primitives/Text';
 import { ControlContext, CONTROL_FIELD } from '../../../primitives/Stack';
+import { focusables, pushTrap, removeTrap, wrapFocus } from '../Modal/focusTrap';
 import './Popover.css';
 
 /** How an open panel was asked to go away. Only `escape` has somewhere obvious to put focus back. */
@@ -23,6 +24,29 @@ export interface PopupBox {
 export type PopupAnchor = RefObject<HTMLElement | null> | PopupBox;
 
 const isLive = (anchor: PopupAnchor): anchor is RefObject<HTMLElement | null> => 'current' in anchor;
+
+/** Input types Esc clears before it closes anything: the ones you type a value into. */
+const TYPED = new Set(['text', 'search', 'email', 'url', 'tel', 'password', 'number']);
+
+/**
+ * The text field `target` is, if it has text Esc should clear first: a typed `input` or a
+ * `textarea`, editable and not empty.
+ */
+function filledField(target: EventTarget | null): HTMLInputElement | HTMLTextAreaElement | null {
+  const field =
+    target instanceof HTMLTextAreaElement || (target instanceof HTMLInputElement && TYPED.has(target.type)) ? target : null;
+  return field && !field.readOnly && !field.disabled && field.value !== '' ? field : null;
+}
+
+/**
+ * Empties `field` the way typing would, so a controlled field's `onChange` hears it: through the
+ * element's own value setter (React's tracker would swallow a plain assignment), then an `input`.
+ */
+function clearField(field: HTMLInputElement | HTMLTextAreaElement) {
+  const proto = field instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+  Object.getOwnPropertyDescriptor(proto, 'value')?.set?.call(field, '');
+  field.dispatchEvent(new Event('input', { bubbles: true }));
+}
 
 export interface PopoverProps {
   /** What it hangs from: a live control, re-measured on every placement, or a box measured once. */
@@ -97,27 +121,52 @@ export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'an
     };
     const pointer = elsewhere('pointer');
     const wheel = elsewhere('wheel');
-    const escape = (e: KeyboardEvent) => {
+    const keys = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        // While focus is in the panel, Tab and ⇧Tab go round its controls, the way a dialog's do.
+        if (!el || e.defaultPrevented || !el.contains(document.activeElement)) return;
+        const active = document.activeElement instanceof HTMLElement && document.activeElement !== el ? document.activeElement : null;
+        const to = wrapFocus(focusables(el), active, e.shiftKey, el);
+        if (!to) return;
+        e.preventDefault();
+        to.focus();
+        return;
+      }
       if (e.key !== 'Escape') return;
       // Stopped as well as defaulted: the host under an open panel often means something by escape.
       e.preventDefault();
       e.stopPropagation();
-      onDismiss('escape');
+      // In a field with text in it, Esc clears the text first; the next one closes the panel.
+      const field = el?.contains(e.target as Node | null) ? filledField(e.target) : null;
+      if (field) clearField(field);
+      else onDismiss('escape');
+    };
+    // Focus in the panel makes it the topmost trap (focusTrap.ts), so a dialog it opened from
+    // leaves Tab and Esc to it until focus leaves.
+    const focusIn = () => el && pushTrap(el);
+    const focusOut = (e: FocusEvent) => {
+      if (el && !(e.relatedTarget instanceof Node && el.contains(e.relatedTarget))) removeTrap(el);
     };
     // Native, on the panel: a canvas underneath zooms on a wheel through a listener of its own.
     const keep = (e: WheelEvent) => e.stopPropagation();
     el?.addEventListener('wheel', keep);
+    el?.addEventListener('focusin', focusIn);
+    el?.addEventListener('focusout', focusOut);
+    if (el?.contains(document.activeElement)) focusIn();
     document.addEventListener('pointerdown', pointer, true);
     window.addEventListener('wheel', wheel, true);
-    window.addEventListener('keydown', escape, true);
+    window.addEventListener('keydown', keys, true);
     const shifted = isLive(anchor) ? place : () => onDismiss('stale');
     window.addEventListener('resize', shifted);
     document.addEventListener('scroll', shifted, true);
     return () => {
       el?.removeEventListener('wheel', keep);
+      el?.removeEventListener('focusin', focusIn);
+      el?.removeEventListener('focusout', focusOut);
+      if (el) removeTrap(el);
       document.removeEventListener('pointerdown', pointer, true);
       window.removeEventListener('wheel', wheel, true);
-      window.removeEventListener('keydown', escape, true);
+      window.removeEventListener('keydown', keys, true);
       window.removeEventListener('resize', shifted);
       document.removeEventListener('scroll', shifted, true);
     };
@@ -140,7 +189,11 @@ export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'an
  * (flip), clamped inside the window; a live anchor is followed through scroll and resize, a box
  * anchor dismisses as `stale`. It dismisses on a pointer or a wheel elsewhere (the anchor and
  * `within` count as inside) and on Escape, which it stops so the host doesn't also act on it;
- * `onDismiss` says which. A wheel over the panel never reaches the page under it. Its own
+ * `onDismiss` says which. Escape in a text field in the panel that has text clears the text
+ * instead (its `onChange` hears it); only the next one closes. While focus is in the panel, Tab
+ * and ⇧Tab go round its controls and never leave it, the way a dialog's do (`focusTrap`), and a
+ * dialog it opened from leaves Tab and Escape to it. Focus on the control it hangs from (a
+ * select's trigger, which keeps focus) is left alone, so Tab there moves on as usual. A wheel over the panel never reaches the page under it. Its own
  * dismissal rather than `popover="auto"`'s light dismiss, which would close on the pointerdown
  * heading for the trigger and let the click behind it reopen the panel.
  *
