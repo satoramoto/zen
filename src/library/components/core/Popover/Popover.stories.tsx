@@ -12,7 +12,22 @@ interface HarnessProps {
   /** Open on first render. */
   open?: boolean;
   rows?: number;
+  /** Put a find box and two buttons in the panel, for the keyboard. */
+  controls?: boolean;
   onDismiss?: (how: Dismissal) => void;
+}
+
+/** A controlled find box and two buttons: what Esc and Tab are tried on. */
+function Controls() {
+  const [find, setFind] = useState('');
+  return (
+    <div style={{ display: 'grid', gap: 'var(--space-2)' }}>
+      <input aria-label="Find" value={find} onChange={(e) => setFind(e.target.value)} />
+      <span>{`Finding: ${find || 'nothing'}`}</span>
+      <button type="button">Apply</button>
+      <button type="button">Reset</button>
+    </div>
+  );
 }
 
 const SPOTS: Record<HarnessProps['place'], CSSProperties> = {
@@ -22,7 +37,7 @@ const SPOTS: Record<HarnessProps['place'], CSSProperties> = {
 };
 
 /** A trigger with a panel hanging off it: the only shape a Popover is used in. */
-function Harness({ place, box = false, open: initial = true, rows = 4, onDismiss }: HarnessProps) {
+function Harness({ place, box = false, open: initial = true, rows = 4, controls = false, onDismiss }: HarnessProps) {
   const trigger = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(initial);
   const [anchor, setAnchor] = useState<PopupBox | null>(null);
@@ -58,9 +73,11 @@ function Harness({ place, box = false, open: initial = true, rows = 4, onDismiss
       {open && hang && (
         <Popover anchor={hang} onDismiss={dismiss} role="dialog" label="Details" id="details">
           <div style={{ padding: 'var(--space-3)', minWidth: 'max(var(--lib-popover-anchor), 180px)', display: 'grid', gap: 'var(--space-2)' }}>
-            {Array.from({ length: rows }, (_, i) => (
-              <div key={i}>Row {i + 1}</div>
-            ))}
+            {controls ? (
+              <Controls />
+            ) : (
+              Array.from({ length: rows }, (_, i) => <div key={i}>Row {i + 1}</div>)
+            )}
           </div>
         </Popover>
       )}
@@ -103,6 +120,48 @@ export const Escape: Story = {
     await waitFor(() => expect(canvas.getByRole('dialog')).toBeInTheDocument());
     await userEvent.keyboard('{Escape}');
     await expect(args.onDismiss).toHaveBeenLastCalledWith('escape');
+  },
+};
+
+/** Esc in the find box clears its text first (the field hears it); only the next Esc closes. */
+export const EscapeClearsField: Story = {
+  args: { controls: true },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const find = canvas.getByRole('textbox', { name: 'Find' });
+    await userEvent.click(find);
+    await userEvent.type(find, 'kick');
+    await expect(canvas.getByText('Finding: kick')).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    await expect(find).toHaveValue('');
+    await expect(canvas.getByText('Finding: nothing')).toBeInTheDocument();
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(args.onDismiss).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Escape}');
+    await expect(args.onDismiss).toHaveBeenLastCalledWith('escape');
+    await waitFor(() => expect(canvas.queryByRole('dialog')).not.toBeInTheDocument());
+  },
+};
+
+/** While focus is in the panel, Tab and ⇧Tab go round its controls and never leave it. */
+export const TabStaysInside: Story = {
+  args: { controls: true },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const find = canvas.getByRole('textbox', { name: 'Find' });
+    const apply = canvas.getByRole('button', { name: 'Apply' });
+    const reset = canvas.getByRole('button', { name: 'Reset' });
+    await userEvent.click(find);
+    await userEvent.tab();
+    await expect(apply).toHaveFocus();
+    await userEvent.tab();
+    await expect(reset).toHaveFocus();
+    await userEvent.tab();
+    await expect(find).toHaveFocus();
+    await userEvent.tab({ shift: true });
+    await expect(reset).toHaveFocus();
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(args.onDismiss).not.toHaveBeenCalled();
   },
 };
 
