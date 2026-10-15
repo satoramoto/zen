@@ -127,6 +127,9 @@ export interface Materials {
   /** How much of the picture's ambient light each layer takes (`LayerAmbient`); a layer left out
    *  takes none. */
   ambient?: Partial<Record<LayerName, LayerAmbient>>;
+  /** The text steps on each layer (`LayerInk`); a layer left out keeps the palette's. Beside
+   *  `ambient` rather than on `Layer`, which holds only CSS strings. */
+  ink?: Partial<Record<LayerName, LayerInk>>;
   /**
    * The graph's parts, as layers: `node` a chip's face (`Device`), `zone` the frame grouping chips.
    * Unset, a node is drawn as `layers.raised` and a zone as a faint tint with no blur. A glass set
@@ -197,6 +200,17 @@ export interface Layer {
   cast: string;
   /** Its edge: hairlines and the specular highlight on its lit side (a box-shadow, inset). */
   edge: string;
+}
+
+/**
+ * The text steps on a layer, where the palette's own would not hold their contrast (glass, whose
+ * tone follows whatever is behind it): `secondary` replaces `--text-3` (captions) and `faint`
+ * `--text-4` (icons, the faintest marks) inside every surface of the layer. Emitted as
+ * `--layer-<name>-text-3` and `-text-4`; `Surface` sets them.
+ */
+export interface LayerInk {
+  secondary: string;
+  faint: string;
 }
 
 /**
@@ -401,6 +415,8 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     vars[`--layer-${name}-backdrop`] = l.backdrop;
     vars[`--layer-${name}-cast`] = l.cast;
     vars[`--layer-${name}-edge`] = l.edge;
+    vars[`--layer-${name}-text-3`] = m.ink?.[name]?.secondary ?? 'var(--text-3)';
+    vars[`--layer-${name}-text-4`] = m.ink?.[name]?.faint ?? 'var(--text-4)';
     const a = m.ambient?.[name] ?? NO_AMBIENT;
     vars[`--layer-${name}-ambient-fill`] = a.fill;
     vars[`--layer-${name}-ambient-edge`] = a.edge;
