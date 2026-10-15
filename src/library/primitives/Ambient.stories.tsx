@@ -28,8 +28,9 @@ interface AmbientArgs {
   strength: number;
 }
 
-// The panels are plain `Surface layer=…`: how much light each takes is the material's (frost's
-// `ambient` shares, decision 85), so the story opens under visual[flow]'s pack. Other packs take none.
+// The panels are plain `Surface layer="raised"`: how much light each takes is the material's (frost's
+// `ambient` shares, decision 85: base and raised; what floats takes none, decision 87), so the story
+// opens under visual[flow]'s pack. Other packs take none.
 const meta: Meta<AmbientArgs> = {
   title: 'Design OS/Primitives/Ambient',
   decorators: [withLibraryTheme],
@@ -92,16 +93,16 @@ const swatch = (region: AmbientRegion): CSSProperties => ({
   background: `var(--ambient-${region})`,
 });
 
-/** A float panel beside the picture: a label in the primary ink and a caption in the muted one (held at 4.5:1). */
-function Panel({ region, layer = 'float', wide }: { region: AmbientRegion; layer?: 'float' | 'overlay'; wide?: boolean }) {
+/** A raised panel beside the picture (what floats takes no light, decision 87): a label in the primary ink and a caption in the muted one (held at 4.5:1). */
+function Panel({ region, wide }: { region: AmbientRegion; wide?: boolean }) {
   return (
     <Surface
-      layer={layer}
+      layer="raised"
       ambient={region}
       style={{ gridColumn: wide ? '1 / -1' : undefined, padding: wide ? 'var(--space-3) var(--space-4)' : 'var(--space-4)', display: 'grid', gap: 'var(--space-2)', alignContent: 'start' }}
     >
       <Text role="label">
-        {layer} · ambient=&quot;{region}&quot;
+        raised · ambient=&quot;{region}&quot;
       </Text>
       <Text role="caption" tone="muted">
         Caption ink, held at 4.5:1
@@ -150,7 +151,7 @@ function Demo({ source, rate, smoothing, reduce, strength }: AmbientArgs) {
         )}
       </Surface>
       <Panel region="right" />
-      <Panel region="bottom" layer="overlay" wide />
+      <Panel region="bottom" wide />
       <div style={{ gridColumn: '1 / -1', display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         {AMBIENT_REGIONS.map((r) => (
           <div key={r} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
