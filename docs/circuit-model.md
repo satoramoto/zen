@@ -278,6 +278,7 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 11. `disconnect` removes only that trace.
 12. `emptyCircuit()` returns `{ version: 1, board: 'board', modules: { board:
     { id: 'board', chips: [], traces: [], inPins: [], outPins: [] } } }`.
+    The root module's default id is `'board'`, matching the lexicon's Board.
 13. A `Circuit` survives `JSON.parse(JSON.stringify(circuit))` deep-equal. The
     model holds no functions, classes or cycles.
 
@@ -410,6 +411,6 @@ import from `@satoramoto/zen` is unchanged. Its stories sit under
 
 1. Should `connect` reject a second trace into an in pin that isn't a `param`
    pin, i.e. single-input signal in pins? The spec currently says no (8).
-2. Should `kind` compatibility (e.g. audio into audio only) be a model rule,
-   or stay the host's concern as in widgets today? The spec currently leaves
-   it to the host.
+2. Settled: `kind` compatibility (e.g. audio into audio only) is left to the
+   app, as in widgets today; the model stays generic and `connect` doesn't
+   check kinds.
