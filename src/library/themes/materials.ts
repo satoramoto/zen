@@ -1,4 +1,4 @@
-import type { Layer, LayerAmbient, LayerName, Material, Materials } from '../contract';
+import type { Layer, LayerAmbient, LayerInk, LayerName, Material, Materials } from '../contract';
 
 // Materials: shape plus what each part is made of. Every value reads palette variables, so a set
 // works with every palette in light and dark.
@@ -376,10 +376,10 @@ export const hardwareMaterials: Materials = {
 
 // ── Frost (visual[flow] 1.0, openflowfm/visuals) ─────────────────────────────────────────────────
 // Native macOS HUD frost behind a transparent window: the page paints only faint tints over it
-// (home.css --surface-0..3, which the frost palette carries), and glass (a darker fill over a blur
-// of what's beneath, popover.css) only on what floats. Near borderless: areas are parted by space
+// (home.css --surface-0..3, which the frost palette carries), and from raised up, sheets of frosted
+// glass, a step more blur per layer (the ramp below). Near borderless: areas are parted by space
 // and tone (decision 68). Over the native preview nothing may be translucent: panels there paint
-// opaque #18181a (stage.css), which is every layer's `solid`. Nothing animates.
+// opaque #18181a (stage.css), the window layers' `solid`, the sheets a step lighter. Nothing animates.
 
 /**
  * The frost's opaque and glass tones, from the palette's ink so they turn over with the mode: the
@@ -400,9 +400,9 @@ const litEdge = (colour: string) =>
   `inset calc(sin(var(--light-angle)) * var(--border-width)) calc(cos(var(--light-angle)) * -1 * var(--border-width)) 0 ${colour}`;
 
 /**
- * The plain glass (docs/shader-graph.md, "Liquid glass"): popovers, menus, sheets, toasts and a
- * dragged tile, and the CSS look under the shader glass (frost's `shaders`), so it must look
- * finished alone. It replaced visual[flow]'s HUD glass (popover.css / home.css: --surface-float
+ * The plain glass (docs/shader-graph.md, "Liquid glass"), now only the graph's chips and zones
+ * (the floating layers are frost's sheets, below). It was popovers', menus', sheets' and toasts'
+ * look, and the CSS look under the shader glass. It replaced visual[flow]'s HUD glass (popover.css / home.css: --surface-float
  * at 0.86–0.9 over `blur(28px) saturate(1.6)`, a 7% white top edge), which read as a dark, heavily
  * saturated slab. Now: a thinner tint, a softer blur that keeps the colours behind true, a light
  * rim all round brighter on the lit side, and a soft highlight falling from the lit edge. The
@@ -423,6 +423,55 @@ function glass(alpha: number, lift: string): Layer {
 }
 
 const quiet = (fill: string): Material => ({ fill, shadow: NO_SHADOW, texture: 'none' });
+
+// ── Frost's layer ramp (visuals' "Glass layers", openflowfm/visuals#289) ────────────────────────
+// Each layer up the stack is another sheet of the same frosted glass over the one under it. The
+// owner's rule: a component placed on a layer takes that layer's material and never sets its own
+// fill, blur, tint, border or text colour. A popover is the sidebars' material (raised) popping
+// over: no border, lit edge or hairline, the same text steps, only a soft elevation shadow and one
+// more step of blur to say "above".
+
+/** frost's raised tone, opaque: a step lighter than the panel's solid. Every sheet's `solid`. */
+const sheetSolid = `color-mix(in oklab, ${frostSolid}, var(--text-1) 4%)`;
+
+/** The share of its solid tone a sheet keeps over whatever is behind it: the floor that lets a
+ *  sidebar read solid and holds its captions' and icons' contrast over any desktop or picture. */
+const SHEET_FLOOR = '62%'; // visuals.css --vs-glass-raised-floor
+
+/** One step of blur (visuals.css --vs-glass-blur, 8px): raised two steps over the window, then
+ *  one more per layer up. Saturation rises a little with it, so colour behind stays alive. */
+const sheetBlur = (steps: number, saturate: number) => `blur(${steps * 8}px) saturate(${saturate})`;
+
+/**
+ * A soft elevation shadow, a wide fall-off and a tight contact shadow, `depth` px long. Softer in
+ * the light mode (`--scheme-light`), where a dark mode's shadow reads as a smudge.
+ */
+function elevation(depth: number, alpha: number): string {
+  const a = (k: number) => `oklch(0 0 0 / calc(${alpha * k} * (1 - var(--scheme-light) * 0.45)))`;
+  return `0 ${depth}px ${depth * 2.5}px ${-depth * 0.6}px ${a(1)}, 0 ${Math.round(depth / 6)}px ${Math.round(depth / 2)}px ${a(0.45)}`;
+}
+
+/**
+ * The captions and icons on frosted glass: the caption a sixth of the way to the ink (visuals.css
+ * --vs-caption-raised, home.css --caption-raised #b0b0b8), and icons on the palette's caption, not
+ * its faint step, which came and went with whatever was behind the glass (InsetSidebar.css).
+ */
+const sheetInk: LayerInk = {
+  secondary: 'color-mix(in oklab, var(--text-3), var(--text-1) 17%)',
+  faint: 'var(--text-3)',
+};
+
+/** A sheet of frosted glass `steps` blur steps up, casting `cast`. */
+function sheet(steps: number, saturate: number, cast: string): Layer {
+  return {
+    fill: `color-mix(in oklab, ${sheetSolid} ${SHEET_FLOOR}, transparent)`,
+    solid: sheetSolid,
+    texture: 'none',
+    backdrop: sheetBlur(steps, saturate),
+    edge: NO_SHADOW,
+    cast,
+  };
+}
 
 /**
  * design-os decision 85: frost takes the preview's ambient light (owner: "the glass material to
@@ -457,18 +506,19 @@ export const frostMaterials: Materials = {
     ground: plain('transparent', frostSolid),
     // home.css --surface-0: the window's areas (header, sidebar, main pane, bar), no edge
     base: plain('var(--surface-0)', frostSolid),
-    // home.css --surface-2: raised, a chip, a progress track; solid a step lighter than the panel
-    raised: plain('var(--surface-2)', `color-mix(in oklab, ${frostSolid}, var(--text-1) 4%)`),
-    float: glass(0.7, '0 10px 24px oklch(0 0 0 / 0.55)'), // popover.css: --lift; alpha added (was 0.86)
-    overlay: glass(0.76, '0 18px 52px oklch(0 0 0 / 0.55)'), // added: a sheet, a step further (palette.css --shadow-modal); alpha was 0.9
-    top: glass(0.76, '0 10px 24px oklch(0 0 0 / 0.55)'), // added: a toast, glass like a popover; alpha was 0.9
+    // The sheets (the ramp above): the inset sidebars and chips, two blur steps over the window, no
+    // cast of their own (a window-edge panel takes the float's, Assembly.css)
+    raised: sheet(2, 1.2, NO_SHADOW), // visuals.css glass layers: blur 16px, saturate(1.2), the 62% floor
+    float: sheet(3, 1.3, elevation(12, 0.4)), // added: a popover or menu, the raised sheet a step up (popover.css --lift, softened)
+    overlay: sheet(4, 1.4, elevation(24, 0.5)), // added: a sheet or modal, a step further (palette.css --shadow-modal, softened)
+    top: sheet(5, 1.4, elevation(16, 0.45)), // added: a toast, nearest the light
   },
   // added: the graph under frosted glass. A chip is a glass pane lighter than a popover with a
   // shorter lift; a zone a thinner pane with no cast, so the chips on it read in front.
   graph: {
     node: {
       ...glass(0.66, '0 6px 16px oklch(0 0 0 / 0.35)'), // added: was 0.72 over the old HUD glass
-      solid: `color-mix(in oklab, ${frostSolid}, var(--text-1) 4%)`, // added: raised's solid
+      solid: sheetSolid, // added: raised's solid
     },
     zone: {
       ...glass(0.4, NO_SHADOW), // added
@@ -479,16 +529,18 @@ export const frostMaterials: Materials = {
       edge: [litEdge(light(0.1)), hairline(light(0.05))].join(', '), // added: the glass's rim, fainter
     },
   },
-  // added: the plain glass shader over the floating layers, where WebGL allows (glass() is its CSS look)
-  shaders: { float: 'glass', overlay: 'glass', top: 'glass' },
+  // No shader glass on the floating layers any more: the glass shader draws a rim, a sheen and an
+  // outline, and a floating sheet is the raised material with only a shadow (the ramp above). An app
+  // can still put it back per layer (`materials.shaders` in a skin, or a Surface's `shader` prop).
   // design-os decision 85: the page's tints take a little of the picture (a tint only: regions have
-  // no edge), the glass more, with a coloured top edge and a glow cast behind it. Ground and top take none.
+  // no edge). The floating sheets take none: held dark, the picture's colour read as an olive slab
+  // (visuals.css glass layers, --layer-float-ambient-fill 0%), and they have no edge to colour.
   ambient: {
     base: frostAmbient('24%', '0%', '0%'),
     raised: frostAmbient('20%', '0%', '0%'),
-    float: frostAmbient('36%', '60%', '35%'),
-    overlay: frostAmbient('32%', '60%', '30%'),
   },
+  // added: every sheet's captions and icons hold their contrast on glass (the ramp above)
+  ink: { raised: sheetInk, float: sheetInk, overlay: sheetInk, top: sheetInk },
   plate: {
     inset: '22px', // home.css --pad: the main column's one padding
     gap: '32px', // layout.css --lay-section-gap

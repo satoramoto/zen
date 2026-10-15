@@ -73,9 +73,9 @@ describe('applyOverrides', () => {
   });
 
   it("drops a layer's shader set to null, keeping the others", () => {
-    expect(facets.materials.shaders?.float).toBe('glass');
-    const out = applyOverrides(facets, { materials: { shaders: { float: null, base: 'water' } } });
-    expect(out.materials.shaders).toEqual({ ...facets.materials.shaders, float: undefined, base: 'water' });
+    const shaded: typeof facets = { ...facets, materials: { ...facets.materials, shaders: { float: 'glass', overlay: 'glass' } } };
+    const out = applyOverrides(shaded, { materials: { shaders: { float: null, base: 'water' } } });
+    expect(out.materials.shaders).toEqual({ ...shaded.materials.shaders, float: undefined, base: 'water' });
     expect('float' in out.materials.shaders!).toBe(false);
   });
 
@@ -285,9 +285,9 @@ describe('editing', () => {
   });
 
   it('rebases a skin with swaps onto a pack that keeps them', () => {
-    const s = setOverride(swapFacet(linear(), 'materials', 'frost'), ['materials', 'shaders', 'float'], null);
+    const s = setOverride(swapFacet(linear(), 'materials', 'frost'), ['materials', 'shaders', 'float'], 'water');
     const moved = rebaseSkin(s, visuals.id);
-    expect(moved).toMatchObject({ id: 'visuals-custom', facets: { materials: 'frost' }, overrides: { materials: { shaders: { float: null } } } });
+    expect(moved).toMatchObject({ id: 'visuals-custom', facets: { materials: 'frost' }, overrides: { materials: { shaders: { float: 'water' } } } });
     expect(validateSkin(moved).ok).toBe(true);
   });
 });

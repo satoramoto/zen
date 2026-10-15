@@ -55,6 +55,15 @@
 :where(.lib-surface[data-layer='overlay']) { --lib-surface-fill: var(--layer-overlay-fill); --lib-surface-texture: var(--layer-overlay-texture); --lib-surface-backdrop: var(--layer-overlay-backdrop); --lib-surface-edge: var(--layer-overlay-edge); --lib-surface-cast: var(--layer-overlay-cast); }
 :where(.lib-surface[data-layer='top']) { --lib-surface-fill: var(--layer-top-fill); --lib-surface-texture: var(--layer-top-texture); --lib-surface-backdrop: var(--layer-top-backdrop); --lib-surface-edge: var(--layer-top-edge); --lib-surface-cast: var(--layer-top-cast); }
 
+/* Layers' text steps (contract `Materials.ink`): a caption and an icon on a layer take its steps, so
+   they stay readable on glass. The palette's own where the layer sets none. */
+:where(.lib-surface[data-layer='ground']) { --text-3: var(--layer-ground-text-3); --text-4: var(--layer-ground-text-4); }
+:where(.lib-surface[data-layer='base']) { --text-3: var(--layer-base-text-3); --text-4: var(--layer-base-text-4); }
+:where(.lib-surface[data-layer='raised']) { --text-3: var(--layer-raised-text-3); --text-4: var(--layer-raised-text-4); }
+:where(.lib-surface[data-layer='float']) { --text-3: var(--layer-float-text-3); --text-4: var(--layer-float-text-4); }
+:where(.lib-surface[data-layer='overlay']) { --text-3: var(--layer-overlay-text-3); --text-4: var(--layer-overlay-text-4); }
+:where(.lib-surface[data-layer='top']) { --text-3: var(--layer-top-text-3); --text-4: var(--layer-top-text-4); }
+
 /* Layers' ambient light: how much of the picture's colour each takes (0% in most packs) and the
    lightness band it is held to. The region (`ambient`, data-ambient) is library.css's. */
 :where(.lib-surface[data-layer='ground']) { --lib-surface-ambient-fill: var(--layer-ground-ambient-fill); --lib-surface-ambient-edge: var(--layer-ground-ambient-edge); --lib-surface-ambient-cast: var(--layer-ground-ambient-cast); --ambient-l-min: var(--layer-ground-ambient-l-min); --ambient-l-max: var(--layer-ground-ambient-l-max); }

@@ -255,6 +255,12 @@ less saturation boost, a fuller rim, a soft highlight), and frost sets
 `shaders: { float: 'glass', overlay: 'glass', top: 'glass' }` so those layers wear the shader glass
 where WebGL allows.
 
+Since then frost's floating layers are its **sheets** (`sheet()` in `themes/materials.ts`): the
+raised layer's frosted material a blur step up per layer, with no rim, edge or highlight, only a
+soft elevation shadow. The glass shader draws a rim, a sheen and an outline, so frost no longer
+sets `shaders`; `glass()` stays the graph's chips and zones, and an app can still put the shader
+glass on a layer through a skin's `materials.shaders` or a Surface's `shader` prop.
+
 ## Stories
 
 `Design OS/Graph/Materials/<Water|Ether|Glass|Meta>` (`graph/stories/Materials.stories.tsx`).
