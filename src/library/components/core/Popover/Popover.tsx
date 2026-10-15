@@ -142,7 +142,7 @@ export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'an
       else onDismiss('escape');
     };
     // Focus in the panel makes it the topmost trap (focusTrap.ts), so a dialog it opened from
-    // leaves Tab and Esc to it until focus leaves.
+    // leaves Tab to it until focus leaves.
     const focusIn = () => el && pushTrap(el);
     const focusOut = (e: FocusEvent) => {
       if (el && !(e.relatedTarget instanceof Node && el.contains(e.relatedTarget))) removeTrap(el);
@@ -189,13 +189,15 @@ export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'an
  * (flip), clamped inside the window; a live anchor is followed through scroll and resize, a box
  * anchor dismisses as `stale`. It dismisses on a pointer or a wheel elsewhere (the anchor and
  * `within` count as inside) and on Escape, which it stops so the host doesn't also act on it;
- * `onDismiss` says which. Escape in a text field in the panel that has text clears the text
- * instead (its `onChange` hears it); only the next one closes. While focus is in the panel, Tab
- * and ⇧Tab go round its controls and never leave it, the way a dialog's do (`focusTrap`), and a
- * dialog it opened from leaves Tab and Escape to it. Focus on the control it hangs from (a
- * select's trigger, which keeps focus) is left alone, so Tab there moves on as usual. A wheel over the panel never reaches the page under it. Its own
+ * `onDismiss` says which. A wheel over the panel never reaches the page under it. Its own
  * dismissal rather than `popover="auto"`'s light dismiss, which would close on the pointerdown
  * heading for the trigger and let the click behind it reopen the panel.
+ *
+ * Escape in a text field in the panel that has text clears the text instead (its `onChange`
+ * hears it); only the next one closes. While focus is in the panel, Tab and ⇧Tab go round its
+ * controls and never leave it, the way a dialog's do (`focusTrap`), and a dialog it opened from
+ * leaves Tab to it. Focus on the control it hangs from (a select's trigger, which keeps focus) is
+ * left alone, so Tab there moves on as usual.
  *
  * **Parts.** `popover`: the positioned box in the top layer, a body `Text` (its content inherits
  * that type), carrying `--lib-popover-anchor`
