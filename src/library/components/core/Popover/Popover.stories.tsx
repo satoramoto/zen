@@ -2,6 +2,9 @@ import { useCallback, useRef, useState, type CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { Icon } from '../../../primitives/Icon';
+import { Surface } from '../../../primitives/Surface';
+import { Text } from '../../../primitives/Text';
 import { Popover, type Dismissal, type PopupBox } from './Popover';
 
 interface HarnessProps {
@@ -182,6 +185,59 @@ export const Clamped: Story = {
 /** Taller than the room: the panel scrolls inside the height left under the trigger. */
 export const Scrolls: Story = {
   args: { rows: 40 },
+};
+
+/** Sidebar rows: an icon in the faint step, a name, a count in the caption step. */
+function Rows({ names }: { names: string[] }) {
+  return (
+    <>
+      {names.map((name, i) => (
+        <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', height: 'var(--control-h)' }}>
+          <Icon tone="faint">
+            <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
+          </Icon>
+          <Text tone="secondary" style={{ flex: 1 }}>{name}</Text>
+          <Text tone="muted" tabular>{(i + 1) * 7}</Text>
+        </div>
+      ))}
+    </>
+  );
+}
+
+/**
+ * A raised sidebar over a busy picture, with a menu open from it hanging out over the picture. The
+ * menu is the sidebar's material, only popping over: the same tint and text steps, a step more
+ * blur, a soft shadow and no edge. The component sets none of it; the layers do.
+ */
+function OverSidebarHarness() {
+  const trigger = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(true);
+  const dismiss = useCallback(() => setOpen(false), []);
+  const picture = 'linear-gradient(120deg, var(--hue-1), var(--hue-2) 35%, var(--role-1) 65%, var(--hue-4))';
+  return (
+    <div style={{ position: 'relative', height: '100vh', minHeight: 420, background: picture, fontFamily: 'var(--font-sans)' }}>
+      <Surface layer="raised" style={{ position: 'absolute', top: 'var(--space-2)', bottom: 'var(--space-2)', left: 'var(--space-2)', width: 240, padding: 'var(--space-3)', display: 'grid', alignContent: 'start', gap: 'var(--space-1)' }}>
+        <Text tone="muted" size="caption" weight="strong">Library</Text>
+        <Rows names={['All presets', 'Favourites', 'Recently played']} />
+        <button ref={trigger} type="button" aria-expanded={open} onClick={() => setOpen((o) => !o)} style={{ justifySelf: 'start', marginLeft: 120, height: 'var(--control-h)', padding: '0 var(--space-3)' }}>
+          More
+        </button>
+      </Surface>
+      {open && (
+        <Popover anchor={trigger} onDismiss={dismiss} role="menu" label="More">
+          <div style={{ padding: 'var(--space-2) var(--space-3)', minWidth: 220, display: 'grid', gap: 'var(--space-1)' }}>
+            <Text tone="muted" size="caption" weight="strong">Playlists</Text>
+            <Rows names={['Warm-up', 'Peak time', 'Closing']} />
+          </div>
+        </Popover>
+      )}
+    </div>
+  );
+}
+
+/** A menu from a sidebar, over the picture: the raised layer's material popping over. */
+export const OverSidebar: Story = {
+  render: () => <OverSidebarHarness />,
 };
 
 /** Hung off a box measured when it opened (press the trigger): a scroll or resize dismisses it as stale. */
