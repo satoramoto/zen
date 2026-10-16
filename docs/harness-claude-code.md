@@ -105,7 +105,7 @@ Read each component's doc comment in `kit/ui.tsx` before using it; this is the m
 | Readings | `reading` (label, gauge, value, unit), `gauge`, `bar` (parts, `room` parts for free space), `capped`, `rounded`, `rail`, `prop` (label and value; `path: true` cuts in the middle), `legend` (`{ bar: true }` to key a bar), `swatch`, `pill` (a label's own colour on one swatch) |
 | Charts | `columns` (counts per bucket), `spark` (a series over time), `scale`, `axis` |
 | Lists | `item` (`[tree][lead] text  note ……… right`, with `after`, `selected`, ranked `RightPart`s that drop in order, `path`), `status` (a status's glyph and word), `tree`, `tile`, `note` (`empty`, `loading`, `error`; `lines: 2` for a message that names the fix) |
-| Controls | `action`, `actions` (plain Buttons, `quiet`, `hotkey`, `autoFocus`, `tone: 'danger'`), `hints` (the terminal's key-hint line, only while focused) |
+| Controls | `action`, `actions` (plain Buttons, `quiet`, `hotkey`, `autoFocus`, `tone: 'danger'`), `tabs` (a pane's tab row; the caller holds the active tab in its state and draws its body under it), `hints` (the terminal's key-hint line, only while focused) |
 | Footer | `perf` (the mod's own timing, from `kit/perf.ts`), `share` |
 | Pieces | `icon(key, color)` (SVG where the surface has it, the glyph on the terminal), `ink(color)` (Text props for a colour on this surface), `space`, `edge`, `width` (the section body's width on the terminal), `terminal` |
 
@@ -114,7 +114,7 @@ Read each component's doc comment in `kit/ui.tsx` before using it; this is the m
 - `holdButtons(els, scope)`: call once per render, after its awaits, and draw every Button of that render with the table it returns (pass it to `kit` too). The engine gives each Button a new handle per drawing and frees the old one when a drawing leaves it out; a press reaches `onPress` by handle alone, so a redraw between drawing and click left the press on a freed handle. `holdButtons` keeps a Button whose key, props and children match the last render's as the same element, so its handle survives and its press runs the latest `onPress`.
 - Grid: `SPACE` (`pair` 0.75, `item` 1.25, `group` 2, `block` 0.8) and `EDGE` (`left` 1.6, `right` 1) for the app surfaces; `CELLS` (`pair` 1, `item` 1, `group` 2, `block` 1) for the terminal; `MIN_COLUMNS` 30; `MEASURE` 72; `BAND_ROWS` 1.3 (a header's or footer's fixed height on the app surfaces); `FLOW_MIN`, `FLOW_MAX`, `flow`, `flowColumns`, `flowSplits`, `rowsOf`.
 - Terminal glyph tables: `METER`, `FOLD`, `MARK`, `SPARK`, `PERF_GLYPH`; `TERM_ROLES` (the text roles); `fold()` (the desktop's ▼ ▶︎); `BLANK` (U+2800).
-- Types: `Els`, `Kit`, `KitOptions`, `FlowSwitch`, `FlowOptions`, `Part`, `RightPart`, `Hint`.
+- Types: `Els`, `Kit`, `KitOptions`, `FlowSwitch`, `FlowOptions`, `Part`, `RightPart`, `Hint`, `Tab`.
 
 **`kit/tokens.ts`:** `C` (`ok`, `warn`, `bad`, `blue`, `purple`, `cyan`, `slate`, `orchid`), `INK`, `RAMP` (`blue`, `slate`: base, darker, lighter, darkest), `TRACK`, `FILL` (`head`, `tile`, `selected`, `selectedBlurred`, `pill`), `MUTED`, `GRAY` (`light`, `mid`, `dark`), `FILE_TYPE`, `levelColor(pct)`, `tint`, `GLYPH`, `STATUS` (each status's glyph and colour), `TREE`/`treePrefix`, `THEME_KEY`, `TERM_TINT`, `termInk` (and `TermInk`), `isKitColor`, `SKIN`, `wear`.
 

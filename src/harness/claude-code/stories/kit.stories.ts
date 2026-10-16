@@ -79,6 +79,36 @@ export const Section: Story = {
     }),
 }
 
+/** A pane's tabs above a section: press a tab to show its body. The story holds the active tab, as a mod holds it in its state. */
+export const Tabs: Story = {
+  args: { active: 'overview', hotkeys: false },
+  argTypes: { active: { control: 'inline-radio', options: ['overview', 'files'] } },
+  render: (args, ctx) =>
+    dom(() => {
+      let active = args.active as string
+      const host = document.createElement('div')
+      const paint = () => {
+        const k = kitFor(ctx)
+        const row = k.tabs(
+          'tabs',
+          [
+            { id: 'overview', label: 'Overview', ...(args.hotkeys ? { hotkey: '1' } : {}) },
+            { id: 'files', label: 'Files', ...(args.hotkeys ? { hotkey: '2' } : {}) },
+          ],
+          active,
+          id => (active = id),
+        )
+        const body =
+          active === 'overview'
+            ? k.section({ id: 'doing', icon: GLYPH.limits, title: 'Doing', right: k.summary([['2', 'prioritised']]), children: [k.item('a', { lead: 'running', text: 'Tabs in the kit' }), k.item('b', { lead: 'pending', text: 'Files tab', dim: true })] })
+            : k.section({ id: 'files', title: 'syns', children: [k.item('f1', { text: 'README.md' }), k.item('f2', { text: 'build.ts' })] })
+        host.replaceChildren(show(h('Box', { flexDirection: 'column' }, row, body), ctx, paint))
+      }
+      paint()
+      return host
+    }),
+}
+
 /** The two ways to round on the desktop; see the notes above `cap` in kit/ui.tsx. */
 export const Rounding: Story = {
   args: { fill: '#272727', height: 0.45 },
