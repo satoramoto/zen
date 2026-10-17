@@ -7,7 +7,7 @@ import type { StoryAnnotations } from 'storybook/internal/types'
 import { tokens } from '../kit/format'
 import { TERM_GLYPH } from '../kit/icons'
 import type { PerfRow } from '../kit/perf'
-import { C, FILE_TYPE, GLYPH, INK, RAMP, STATUS, TRACK, levelColor } from '../kit/tokens'
+import { C, FILE_TYPE, GLYPH, INK, RAMP, STATUS, TRACK, WAYFINDING, levelColor } from '../kit/tokens'
 import type { FileType, StatusKind } from '../kit/tokens'
 import { kit } from '../kit/ui'
 import type { KitOptions } from '../kit/ui'
@@ -455,11 +455,12 @@ export const TerminalLists = sheet(k =>
 )
 
 /**
- * Collapsible lists of list items, on the contrast ladder (TEXT_ROLES): titles primary, subtitles and
- * links secondary, figures, ages, notes and actions meta, icons, fold arrows and ⋮ marks; colour only
- * for status. Each list's header band is its one fill; items sit under it, a step apart. PRs as an app's
- * list (state icon, title, `repo #n` and a CI mark, a ⋮); threads with a text badge, one waiting its turn
- * a step quieter; decisions with the choice after a ✓ and a fold, open and closed; a folded list.
+ * Collapsible lists of list items, on the contrast ladder (TEXT_ROLES) with glance colour: titles primary,
+ * subtitles and links secondary, ages, counts' words and actions meta, fold arrows and ⋮ marks; each item
+ * leads with an icon in its state's colour, each header icon takes an identity hue (`iconColor`), and a
+ * count that signals something is coloured. Each list's header band is its one fill; a hairline under it
+ * and between items. PRs as an app's list (state icon, title, `repo #n` and a CI mark, a ⋮); threads with a
+ * coloured priority badge, one waiting its turn grey; decisions with a green ✓ and a fold; a folded list.
  */
 export const CollapsibleLists = sheet(k => {
   const dots = (key: string) => k.press(key, '⋮', 'mark', () => undefined)
@@ -470,8 +471,9 @@ export const CollapsibleLists = sheet(k => {
     k.collapsibleList({
       id: 'prs',
       icon: 'pr-open',
+      iconColor: WAYFINDING[0],
       title: 'Pull requests',
-      right: k.summary([['3', 'open']]),
+      right: k.summary([['3', 'open'], ['1', 'failing', C.bad]]),
       onToggle: () => undefined,
       items: [
         k.listItem('pr-a', { lead: 'pr-open', leadColor: C.blue, title: 'Reduce flashing: the strobe pulses at a tenth of the rate', subtitle: 'visuals', meta: [link('#285')], mark: 'done', right: [dots('m-a')] }),
@@ -482,24 +484,26 @@ export const CollapsibleLists = sheet(k => {
     k.collapsibleList({
       id: 'doing',
       icon: 'tasklist',
+      iconColor: WAYFINDING[1],
       title: 'Doing',
       right: k.summary([['1', 'prioritised'], ['1', 'next']]),
       onToggle: () => undefined,
       items: [
         k.listItem('thread', {
-          lead: h('Text', { bold: true }, 'P1'),
+          lead: h('Text', { bold: true, ...k.ink(C.warn) }, 'P1'),
           title: 'syn',
           bold: true,
           subtitle: 'next: Dogfood M1 against this file’s inbox; then M2, one line of hidden context per prompt',
           subtitleWrap: true,
         }),
-        k.listItem('waiting', { lead: h('Text', k.role('mark'), '◌'), title: 'Dev-preview ergonomics', dim: true, subtitle: 'next: Register previews in brain.json', subtitleRole: 'meta' }),
+        k.listItem('waiting', { lead: h('Text', k.role('mark'), '◌'), title: 'Dev-preview ergonomics', dim: true, subtitle: 'next: Register previews in brain.json' }),
         k.note('more', '1 decided thread not shown'),
       ],
     }),
     k.collapsibleList({
       id: 'decided',
       icon: 'checklist',
+      iconColor: WAYFINDING[2],
       title: 'Decided',
       right: k.summary([['2', 'recent']]),
       onToggle: () => undefined,
@@ -516,7 +520,7 @@ export const CollapsibleLists = sheet(k => {
         k.listItem('decided-closed', { title: 'Is visuals 1.0 dark-only?', right: ['1d'], subtitle: 'Dark-only for 1.0', subtitleLead: 'done', open: false, onToggle: () => undefined, children: [h('Text', {}, 'hidden')] }),
       ],
     }),
-    k.collapsibleList({ id: 'agents', icon: 'hubot', title: 'Agents', right: k.summary([['1', 'running', C.blue]]), onToggle: () => undefined, items: [k.listItem('agent', { lead: 'running', title: 'Contrast pass', subtitle: 'Edit kit/ui.tsx' })] }),
+    k.collapsibleList({ id: 'agents', icon: 'hubot', iconColor: WAYFINDING[3], title: 'Agents', right: k.summary([['1', 'running', C.blue]]), onToggle: () => undefined, items: [k.listItem('agent', { lead: 'running', title: 'Contrast pass', subtitle: 'Edit kit/ui.tsx' })] }),
     k.collapsibleList({ id: 'folded', icon: 'arrow-up', title: 'Next', collapsed: true, onToggle: () => undefined, items: [k.listItem('next', { title: 'Hidden while folded' })] }),
   )
 })
