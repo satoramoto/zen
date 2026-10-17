@@ -1,14 +1,13 @@
 // Every zen theme pack's skin (kit/skins.ts) on one representative kit section, side by side, so
 // the mapping from a pack's palette to the kit's meanings can be checked: the status marks, a
-// reading at each level (quantity, near a limit, over it), both chart ramps, and the first three
-// accents on the sections' bands.
+// reading at each level (quantity, near a limit, over it), and both chart ramps.
 import type { Meta, ReactRenderer } from '@storybook/react-vite'
 import type { StoryAnnotations } from 'storybook/internal/types'
 
 import type { Skin } from '../kit/skin'
 import { SKINS } from '../kit/skins'
 import type { SkinId } from '../kit/skins'
-import { ACCENT, C, GLYPH, GRAY, MUTED, RAMP, SKIN, STATUS, levelColor, wear } from '../kit/tokens'
+import { C, GLYPH, RAMP, SKIN, STATUS, WORN, levelColor, wear } from '../kit/tokens'
 import type { StatusKind } from '../kit/tokens'
 import { kit } from '../kit/ui'
 import { CELL, draw, h as node } from '../bench/render'
@@ -23,22 +22,7 @@ const meta: Meta<Args> = { title: 'Harness/Claude Code/Skins', parameters: { lay
 export default meta
 
 /** The skin worn now, whole, so the story can put it back after wearing each pack's. */
-const worn = (): Skin => ({
-  label: 'worn',
-  ok: C.ok,
-  warn: C.warn,
-  bad: C.bad,
-  blue: C.blue,
-  purple: C.purple,
-  cyan: C.cyan,
-  slate: C.slate,
-  orchid: C.orchid,
-  ramp: { blue: [...RAMP.blue], slate: [...RAMP.slate] },
-  muted: MUTED,
-  gray: { ...GRAY },
-  hues: ACCENT.slice(0, 5) as unknown as Skin['hues'],
-  roles: ACCENT.slice(5, 7) as unknown as Skin['roles'],
-})
+const worn = (): Skin => WORN ?? SKINS[SKIN as SkinId]
 
 const COLUMNS = 40
 
@@ -52,7 +36,6 @@ const sample = () => {
       id: 'skin',
       icon: GLYPH.limits,
       title: 'Readings',
-      accent: ACCENT[0],
       right: k.summary([['3', 'levels'], ['1', 'over', C.bad]]),
       children: [
         k.reading('q', { label: 'Quantity', value: 42, max: 100, color: levelColor(42), figure: '42%', unit: 'ok' }),
@@ -64,14 +47,12 @@ const sample = () => {
       id: 'status',
       icon: GLYPH.agents,
       title: 'Statuses',
-      accent: ACCENT[1],
       children: [h('Box', { flexDirection: 'row', flexWrap: 'wrap', columnGap: k.space.item }, ...(Object.keys(STATUS) as StatusKind[]).map(s => k.status(s, s, s))) as any],
     }),
     k.section({
       id: 'ramps',
       icon: GLYPH.context,
       title: 'Ramps',
-      accent: ACCENT[2],
       children: [
         k.bar(RAMP.slate.map(color => ({ value: 10, color })), 40),
         k.bar(RAMP.blue.map(color => ({ value: 10, color })), 40),

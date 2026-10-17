@@ -7,7 +7,7 @@ import type { StoryAnnotations } from 'storybook/internal/types'
 import { tokens } from '../kit/format'
 import { TERM_GLYPH } from '../kit/icons'
 import type { PerfRow } from '../kit/perf'
-import { ACCENT, C, FILE_TYPE, GLYPH, INK, RAMP, STATUS, TRACK, levelColor } from '../kit/tokens'
+import { C, FILE_TYPE, GLYPH, INK, RAMP, STATUS, TRACK, levelColor } from '../kit/tokens'
 import type { FileType, StatusKind } from '../kit/tokens'
 import { kit } from '../kit/ui'
 import type { KitOptions } from '../kit/ui'
@@ -53,8 +53,7 @@ export const Bar: Story = {
 
 /** A section with readings: label, gauge, figure, unit, in the kit's fixed columns. */
 export const Section: Story = {
-  args: { title: 'Limits', collapsible: true, collapsed: false, fiveHour: 42, weekly: 81, accent: 1 },
-  argTypes: { accent: { description: 'Which of the seven ACCENT colours (0 for none)', control: { type: 'range', min: 0, max: 7, step: 1 } } },
+  args: { title: 'Limits', collapsible: true, collapsed: false, fiveHour: 42, weekly: 81 },
   render: (args, ctx) =>
     dom(() => {
       let collapsed = args.collapsed as boolean
@@ -64,7 +63,6 @@ export const Section: Story = {
         const tree = k.section({
           id: 'demo',
           icon: GLYPH.limits,
-          accent: args.accent ? ACCENT[args.accent - 1] : undefined,
           title: args.title,
           right: k.summary([['2', 'windows']]),
           collapsed,
@@ -457,51 +455,52 @@ export const TerminalLists = sheet(k =>
 )
 
 /**
- * Collapsible lists of list items: each list one surface, its header and items under one quiet fill with
- * hairlines between. PRs as an app's list (state icon, title, `repo #n` and a CI mark, a ⋮ on the right);
- * threads with a text badge and the next step wrapping; decisions with the choice called out and a fold,
- * open and closed; a folded list.
+ * Collapsible lists of list items, on the contrast ladder (TEXT_ROLES): titles primary, subtitles and
+ * links secondary, figures, ages, notes and actions meta, icons, fold arrows and ⋮ marks; colour only
+ * for status. Each list's header band is its one fill; items sit under it, a step apart. PRs as an app's
+ * list (state icon, title, `repo #n` and a CI mark, a ⋮); threads with a text badge, one waiting its turn
+ * a step quieter; decisions with the choice after a ✓ and a fold, open and closed; a folded list.
  */
-export const CollapsibleLists = sheet(k =>
-  h(
+export const CollapsibleLists = sheet(k => {
+  const dots = (key: string) => k.press(key, '⋮', 'mark', () => undefined)
+  const link = (n: string) => h('Text', k.role('secondary'), n)
+  return h(
     'Box',
-    { flexDirection: 'column' },
+    { flexDirection: 'column', rowGap: 2 },
     k.collapsibleList({
       id: 'prs',
       icon: 'pr-open',
       title: 'Pull requests',
-      accent: ACCENT[0],
       right: k.summary([['3', 'open']]),
       onToggle: () => undefined,
       items: [
-        k.listItem('pr-a', { lead: 'pr-open', leadColor: C.blue, title: 'Reduce flashing: the strobe pulses at a tenth of the rate', subtitle: 'visuals', meta: ['#285'], mark: 'done', right: ['⋮'] }),
-        k.listItem('pr-b', { lead: 'pr-draft', title: 'Onboarding listen step: inputs show their level', subtitle: 'visuals', meta: ['#287'], mark: 'failed', right: ['⋮'] }),
-        k.listItem('pr-c', { lead: 'pr-open', leadColor: C.blue, title: 'Popover: Esc clears a filled text field first', subtitle: 'zen', meta: ['#73'], mark: 'warn', right: ['⋮'] }),
+        k.listItem('pr-a', { lead: 'pr-open', leadColor: C.blue, title: 'Reduce flashing: the strobe pulses at a tenth of the rate', subtitle: 'visuals', meta: [link('#285')], mark: 'done', right: [dots('m-a')] }),
+        k.listItem('pr-b', { lead: 'pr-draft', title: 'Onboarding listen step: inputs show their level', subtitle: 'visuals', meta: [link('#287')], mark: 'failed', right: [dots('m-b')] }),
+        k.listItem('pr-c', { lead: 'pr-open', leadColor: C.blue, title: 'Popover: Esc clears a filled text field first', subtitle: 'zen', meta: [link('#73')], mark: 'warn', right: [dots('m-c')], children: [k.actions('acts', [{ key: 'merge', label: 'Merge', onPress: () => undefined, quiet: true }, { key: 'ignore', label: 'Ignore', onPress: () => undefined, quiet: true }])] }),
       ],
     }),
     k.collapsibleList({
       id: 'doing',
       icon: 'tasklist',
       title: 'Doing',
-      accent: ACCENT[1],
       right: k.summary([['1', 'prioritised'], ['1', 'next']]),
       onToggle: () => undefined,
       items: [
         k.listItem('thread', {
-          lead: h('Text', { bold: true, ...k.ink(C.blue) }, 'P1'),
+          lead: h('Text', { bold: true }, 'P1'),
           title: 'syn',
           bold: true,
           subtitle: 'next: Dogfood M1 against this file’s inbox; then M2, one line of hidden context per prompt',
           subtitleWrap: true,
         }),
-        k.listItem('waiting', { lead: 'pending', title: 'Dev-preview ergonomics', dim: true }),
+        k.listItem('waiting', { lead: h('Text', k.role('mark'), '◌'), title: 'Dev-preview ergonomics', dim: true, subtitle: 'next: Register previews in brain.json', subtitleRole: 'meta' }),
+        k.note('more', '1 decided thread not shown'),
       ],
     }),
     k.collapsibleList({
       id: 'decided',
       icon: 'checklist',
       title: 'Decided',
-      accent: ACCENT[2],
       right: k.summary([['2', 'recent']]),
       onToggle: () => undefined,
       items: [
@@ -510,17 +509,17 @@ export const CollapsibleLists = sheet(k =>
           right: ['2d'],
           subtitle: 'One per inlet',
           subtitleLead: 'done',
-          strong: true,
           open: true,
           onToggle: () => undefined,
-          children: [h('Text', { wrap: 'wrap', dimColor: true }, 'Every in pin takes exactly one trace; fan-in goes through an explicit merge chip.')],
+          children: [h('Text', { wrap: 'wrap', ...k.role('meta') }, 'Every in pin takes exactly one trace; fan-in goes through an explicit merge chip.')],
         }),
-        k.listItem('decided-closed', { title: 'Is visuals 1.0 dark-only?', right: ['1d'], subtitle: 'Dark-only for 1.0', subtitleLead: 'done', strong: true, open: false, onToggle: () => undefined, children: [h('Text', {}, 'hidden')] }),
+        k.listItem('decided-closed', { title: 'Is visuals 1.0 dark-only?', right: ['1d'], subtitle: 'Dark-only for 1.0', subtitleLead: 'done', open: false, onToggle: () => undefined, children: [h('Text', {}, 'hidden')] }),
       ],
     }),
-    k.collapsibleList({ id: 'folded', icon: 'hubot', title: 'Agents', accent: ACCENT[3], right: k.summary([['0', 'running']]), collapsed: true, onToggle: () => undefined, items: [k.note('none', 'No agents running.')] }),
-  ),
-)
+    k.collapsibleList({ id: 'agents', icon: 'hubot', title: 'Agents', right: k.summary([['1', 'running', C.blue]]), onToggle: () => undefined, items: [k.listItem('agent', { lead: 'running', title: 'Contrast pass', subtitle: 'Edit kit/ui.tsx' })] }),
+    k.collapsibleList({ id: 'folded', icon: 'arrow-up', title: 'Next', collapsed: true, onToggle: () => undefined, items: [k.listItem('next', { title: 'Hidden while folded' })] }),
+  )
+})
 
 /** Every status mark and every icon's terminal glyph. */
 export const TerminalGlyphs = sheet(k =>
