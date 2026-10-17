@@ -39,7 +39,7 @@ export interface Scheme {
   /**
    * Two role hues, each for one job an app names (Yahaha: role 1 is the current style, role 2 the
    * controls that move time). They are not categorical, never index a list, and stay perceptually
-   * clear of the four `hues`, of success, warning and danger, and of each other.
+   * clear of the five `hues`, of success, warning and danger, and of each other.
    */
   roles: Two;
   /** Text drawn on a solid role fill; AA against it. */

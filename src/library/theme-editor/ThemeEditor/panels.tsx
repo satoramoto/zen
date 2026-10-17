@@ -57,7 +57,7 @@ const COLOUR_GROUPS: { name: string; roles: { name: string; key: ColourKey }[] }
   },
   {
     name: 'Hues',
-    roles: [...[0, 1, 2, 3].map((i) => ({ name: `Hue ${i + 1}`, key: ['hues', i] as const })), { name: 'On hue', key: ['onHue'] as const }],
+    roles: [...[0, 1, 2, 3, 4].map((i) => ({ name: `Hue ${i + 1}`, key: ['hues', i] as const })), { name: 'On hue', key: ['onHue'] as const }],
   },
   {
     name: 'Roles',
