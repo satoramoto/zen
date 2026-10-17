@@ -129,7 +129,7 @@ export const packs: ThemePack[] = [
     northStar: 'An instrument inspector in the Claude Code pane: header rows, readings under them, one colour per meaning.',
     keep: [
       'One colour, one meaning: green finished, amber near a limit, red failed, blue live, purple merged, slate how much.',
-      'No bubbles, panels or outlines: collapsible header rows with readings indented under them.',
+      'Collapsible header rows with readings indented under them, on quiet rounded fills; an accent stripe tells sections apart. No bubbles or outlines.',
       'Bars are thin and flat, rounded only by their end caps.',
       'The terminal draws each meaning in its theme key, never a fixed colour (docs/harness-claude-code.md).',
     ],

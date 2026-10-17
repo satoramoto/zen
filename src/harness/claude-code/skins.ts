@@ -120,7 +120,7 @@ export function skinOf(palette: Palette, label: string = palette.label): Skin {
   ) as Record<Meaning, string>;
   const gray = { light: hex(s.text[1]), mid: hex(s.text[2]), dark: hex(s.text[3]) };
   const slate = hex(tuned.slate ?? mix(gray.light, blue, 0.25));
-  const derived: Omit<Skin, 'label'> = {
+  const derived: Meanings = {
     ok,
     warn,
     bad,
@@ -133,14 +133,20 @@ export function skinOf(palette: Palette, label: string = palette.label): Skin {
     muted: hex(tuned.muted ?? gray.mid),
     gray: tuned.gray ?? gray,
   };
-  return { label, ...distinct(derived) };
+  // The accents: the palette's own categorical slots, as they are (no meaning to keep apart).
+  const hues = s.hues.map(hex) as unknown as Skin['hues'];
+  const roles = s.roles.map(hex) as unknown as Skin['roles'];
+  return { label, ...distinct(derived), hues, roles };
 }
+
+/** A skin's meanings: everything but its label and accents. */
+type Meanings = Omit<Skin, 'label' | 'hues' | 'roles'>;
 
 /**
  * Each meaning's value its own: statuses first, then the chart shades, then the greys (which may
  * share one another's value, as they all mean "recede").
  */
-function distinct(skin: Omit<Skin, 'label'>): Omit<Skin, 'label'> {
+function distinct(skin: Meanings): Meanings {
   const taken = new Set<string>();
   const own = (c: string) => {
     const v = apart(c, taken);
