@@ -17,11 +17,12 @@
   font-family: var(--font-sans);
 }
 
-/* The hue slot (1–4) onto the contract's four categorical hues. */
+/* The hue slot (1–5) onto the contract's five categorical hues. */
 .yh-sound-cell[data-hue='1'] { --yh-part-hue: var(--hue-1); }
 .yh-sound-cell[data-hue='2'] { --yh-part-hue: var(--hue-2); }
 .yh-sound-cell[data-hue='3'] { --yh-part-hue: var(--hue-3); }
 .yh-sound-cell[data-hue='4'] { --yh-part-hue: var(--hue-4); }
+.yh-sound-cell[data-hue='5'] { --yh-part-hue: var(--hue-5); }
 
 /* Both buttons: flat until touched, a quiet face on hover, a deeper one while pressed. */
 .yh-sound-cell__part,

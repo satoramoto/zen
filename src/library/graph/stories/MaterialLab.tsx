@@ -30,7 +30,7 @@ import './MaterialLab.css';
 /** Each pin kind's hue slot (the cords' inks in MaterialLab.css follow it). */
 export const KIND_HUE: Record<PinKind, HueSlot> = { point: 1, number: 2, colour: 3 };
 const KINDS: PinKind[] = ['point', 'number', 'colour'];
-const HUE_INK: Record<HueSlot, string> = { 1: 'var(--hue-1)', 2: 'var(--hue-2)', 3: 'var(--hue-3)', 4: 'var(--hue-4)' };
+const HUE_INK: Record<HueSlot, string> = { 1: 'var(--hue-1)', 2: 'var(--hue-2)', 3: 'var(--hue-3)', 4: 'var(--hue-4)', 5: 'var(--hue-5)' };
 const hueOf = (kind: string | undefined): HueSlot | undefined => (kind && kind in KIND_HUE ? KIND_HUE[kind as PinKind] : undefined);
 
 /** The `--space-6` the materials' positions were laid out at (a compact pack's); other packs stretch them. */

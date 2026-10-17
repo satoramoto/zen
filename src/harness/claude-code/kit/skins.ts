@@ -12,7 +12,7 @@ export const SKINS = {
     purple: "#a58cff",
     cyan: "#3ff4ff",
     slate: "#afc4e0",
-    orchid: "#f57aff",
+    orchid: "#bd39ec",
     ramp: {
       blue: [
         "#3b8eff",
@@ -39,23 +39,23 @@ export const SKINS = {
     ok: "#02c31e",
     warn: "#ffeb44",
     bad: "#fe4e66",
-    blue: "#4cc2ff",
+    blue: "#4b8efe",
     purple: "#b98cff",
-    cyan: "#08b7aa",
-    slate: "#87aac2",
+    cyan: "#4cc2ff",
+    slate: "#869dc1",
     orchid: "#ff6bd0",
     ramp: {
       blue: [
-        "#4cc2ff",
-        "#3992bf",
-        "#8bd7ff",
-        "#2a6b8c"
+        "#4b8efe",
+        "#386bbf",
+        "#8ab6fe",
+        "#294e8c"
       ],
       slate: [
-        "#87aac2",
-        "#658092",
-        "#b1c8d7",
-        "#4a5e6b"
+        "#869dc1",
+        "#657691",
+        "#b0bfd7",
+        "#4a566a"
       ]
     },
     muted: "#8a929d",
@@ -74,7 +74,7 @@ export const SKINS = {
     purple: "#a58cff",
     cyan: "#3ff4ff",
     slate: "#afc4e0",
-    orchid: "#f57aff",
+    orchid: "#bd39ec",
     ramp: {
       blue: [
         "#3b8eff",
@@ -105,7 +105,7 @@ export const SKINS = {
     purple: "#c86ef0",
     cyan: "#3ff4ff",
     slate: "#a8abce",
-    orchid: "#f2659f",
+    orchid: "#d900af",
     ramp: {
       blue: [
         "#7c86ff",
@@ -136,7 +136,7 @@ export const SKINS = {
     purple: "#b48cff",
     cyan: "#00d1ff",
     slate: "#c2cdf5",
-    orchid: "#ff3dbb",
+    orchid: "#c645f7",
     ramp: {
       blue: [
         "#3d6bff",
@@ -198,7 +198,7 @@ export const SKINS = {
     purple: "#bb87fc",
     cyan: "#02b8cc",
     slate: "#b4bbdd",
-    orchid: "#ff7ad9",
+    orchid: "#d427cd",
     ramp: {
       blue: [
         "#5e6ad2",

@@ -28,7 +28,7 @@ export interface ShaderTarget {
   radius: number;
   /** Pointer x, y (CSS px / 100), the page time of the last press (-1: none), 1 when inside. */
   pointer: [number, number, number, number];
-  /** `uTheme`: 7 × vec3, sRGB 0–1. */
+  /** `uTheme`: 8 × vec3, sRGB 0–1. */
   theme: Float32Array;
   dark: number;
   /** Re-read the theme and radius; true when anything changed. Called about once a second. */

@@ -5,6 +5,7 @@
 
 type Four = readonly [string, string, string, string];
 type Two = readonly [string, string];
+type Five = readonly [string, string, string, string, string];
 
 export type Mode = 'light' | 'dark';
 
@@ -31,8 +32,8 @@ export interface Scheme {
   successText: string;
   warningText: string;
   dangerText: string;
-  /** Categorical hues: parts, tags, groups. */
-  hues: Four;
+  /** Categorical hues: parts, tags, groups. Five slots, `--hue-1` … `--hue-5`. */
+  hues: Five;
   /** Text drawn on a solid hue. */
   onHue: string;
   /**
@@ -67,6 +68,9 @@ export interface Faces {
   mono: string;
   /** Numerals and readouts (tempo, levels). */
   readout: string;
+  /** Mathematics: what MathML (and the `math` text role) is set in. A math face (OpenType MATH
+   *  table) first, ending in the generic `math`. */
+  math: string;
   weightBody: number;
   weightStrong: number;
   weightDisplay: number;
@@ -367,6 +371,7 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--font-display': t.display,
     '--font-mono': t.mono,
     '--font-readout': t.readout,
+    '--font-math': t.math,
     '--weight-body': String(t.weightBody),
     '--weight-strong': String(t.weightStrong),
     '--weight-display': String(t.weightDisplay),

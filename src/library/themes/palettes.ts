@@ -3,7 +3,7 @@ import type { Palette } from '../contract';
 // Values from each Refero style's colour roles (or yahaha's Push boards, or yahaha's old desk UI).
 // Anything the source doesn't define is marked "added". None of the Refero styles defines a
 // second mode, so each missing mode is derived from the source's own colours.
-// In every scheme, every meaning-bearing colour (four part hues, success, warning, danger, both
+// In every scheme, every meaning-bearing colour (five categorical hues, success, warning, danger, both
 // roles, accent, selected) stays at least 0.12 OKLab from every other; library.test.tsx holds it.
 // Where a source colour had to give way, its comment says which pair forced it.
 
@@ -26,7 +26,7 @@ export const push: Palette = {
     successText: '#000000', // the boards' --on-ink
     warningText: '#000000', // the boards' --on-ink
     dangerText: '#000000', // the boards' --solid-ink
-    hues: ['#3b8eff', '#ff4f9e', '#ff9a2e', '#16c7a6'],
+    hues: ['#3b8eff', '#ff4f9e', '#ff9a2e', '#16c7a6', '#bd39ec'], // the fifth added: a violet, between the accent and Right 2's pink
     onHue: '#000000',
     roles: [
       '#f57aff', // added: a magenta, clear of the violet accent and Right 2's pink
@@ -55,7 +55,7 @@ export const push: Palette = {
     successText: '#ffffff', // the boards' --on-ink
     warningText: '#000000', // added: black on the ochre (7.9:1)
     dangerText: '#ffffff', // the boards' --on-ink
-    hues: ['#1257d6', '#d0186f', '#c85f00', '#008f78'],
+    hues: ['#1257d6', '#d0186f', '#c85f00', '#008f78', '#a377c3'], // the fifth added: the dark violet, softened off the purple accent
     onHue: '#ffffff',
     roles: [
       '#932180', // added: a plum magenta, clear of the accent and Right 2's rose
@@ -90,7 +90,7 @@ export const elektron: Palette = {
     warningText: '#000000', // added
     dangerText: '#000000', // added
     // Approximated from the style's imagery notes; Left is an added lime, off the amber accent.
-    hues: ['#00d1ff', '#3d6bff', '#ff3dbb', '#aaff1b'],
+    hues: ['#00d1ff', '#3d6bff', '#ff3dbb', '#aaff1b', '#c645f7'], // the fifth added: a violet, off the violet role
     onHue: '#000000',
     roles: [
       '#b48cff', // added
@@ -121,7 +121,7 @@ export const elektron: Palette = {
     successText: '#ffffff', // added
     warningText: '#000000', // added
     dangerText: '#ffffff', // added
-    hues: ['#0090b8', '#2b52e0', '#d4179c', '#679e01'], // added: the dark hues deepened for a light ground
+    hues: ['#0090b8', '#2b52e0', '#d4179c', '#679e01', '#b47ac1'], // added: the dark hues deepened for a light ground; the violet softened off the violet role
     onHue: '#ffffff', // added
     roles: [
       '#8547d4', // added: the dark violet deepened, purpler off Right 2's blue
@@ -155,7 +155,7 @@ export const ableton: Palette = {
     successText: '#000000', // added
     warningText: '#000000', // added
     dangerText: '#ffffff', // added
-    hues: ['#ff8389', '#00d2be', '#8a8aff', '#ffb347'], // last two added
+    hues: ['#ff8389', '#00d2be', '#8a8aff', '#ffb347', '#f529b5'], // last three added; the fifth a magenta
     onHue: '#000000',
     roles: [
       '#7a3cc8', // added
@@ -186,7 +186,7 @@ export const ableton: Palette = {
     successText: '#000000', // added
     warningText: '#000000', // added
     dangerText: '#000000', // added
-    hues: ['#ff8389', '#00d2be', '#8a8aff', '#ffb347'], // Melody Red, Synth Teal; last two added
+    hues: ['#ff8389', '#00d2be', '#8a8aff', '#ffb347', '#f529b5'], // Melody Red, Synth Teal; last three added
     onHue: '#000000',
     roles: [
       '#db77ff', // added: the light plum lightened, off Left's lavender
@@ -222,7 +222,7 @@ export const linear: Palette = {
     dangerText: '#000000', // added
     // Right 1 was the indigo accent: now an added pale blue. Left is Linear's purple label
     // colour, off the indigo.
-    hues: ['#99bfff', '#27a644', '#02b8cc', '#bb87fc'],
+    hues: ['#99bfff', '#27a644', '#02b8cc', '#bb87fc', '#d427cd'], // the fifth added: a magenta, off the pink role and Left's purple
     onHue: '#08090a',
     roles: [
       '#ff7ad9', // added: lime is the action's alone
@@ -255,7 +255,7 @@ export const linear: Palette = {
     dangerText: '#ffffff', // added
     // Right 1 an added azure, off the Aether Blue accent; Right 2 Emerald; Right 3 Cyan Spark
     // deepened; Left Amethyst, pushed purpler off the accent.
-    hues: ['#009af9', '#27a644', '#0293a3', '#9f51ff'],
+    hues: ['#009af9', '#27a644', '#0293a3', '#9f51ff', '#bf7ab9'], // the fifth added: the dark magenta softened off the pink role
     onHue: '#ffffff', // added
     roles: [
       '#d02e9e', // added: the dark pink deepened
@@ -292,7 +292,7 @@ export const classic: Palette = {
     warningText: '#000000', // added
     dangerText: '#000000', // added
     // --part-r1, --part-r2, --part-r3; Left is --part-left #ff9f4f, deepened off the amber accent.
-    hues: ['#4cc2ff', '#b98cff', '#5fdc92', '#fd7d00'],
+    hues: ['#4cc2ff', '#b98cff', '#5fdc92', '#fd7d00', '#4b8efe'], // the fifth added: a royal blue, deeper than Right 1's sky
     onHue: '#131519', // added: --bg
     roles: [
       '#ff6bd0', // the mixer's part-colour pink (parts.ts)
@@ -322,7 +322,7 @@ export const classic: Palette = {
     warningText: '#000000', // added
     dangerText: '#ffffff', // added
     // --part-r1, --part-r2, --part-r3; Left is --part-left #e0701a, reddened off the amber accent.
-    hues: ['#0a8fd6', '#8750e0', '#1f9e55', '#ed6f1c'],
+    hues: ['#0a8fd6', '#8750e0', '#1f9e55', '#ed6f1c', '#1d4efc'], // the fifth added: the dark royal blue deepened
     onHue: '#ffffff', // added
     roles: [
       '#c0309a', // added: the dark pink deepened
@@ -365,7 +365,7 @@ export const frost: Palette = {
     dangerText: '#000000', // added: 5.2:1
     // Stems drums, bass, other, vocals (theme.ts), each more saturated along its hue, off the
     // neutral primary and off each other: #61b9d6, #888fdd, #bc83d8, #da7ca3.
-    hues: ['#36b8ec', '#7c86ff', '#c86ef0', '#f2659f'],
+    hues: ['#36b8ec', '#7c86ff', '#c86ef0', '#f2659f', '#d900af'], // the fifth added: a magenta, between other and vocals
     onHue: '#000000', // added
     roles: [
       '#c6e34a', // the left decks' green hsl(123 51% 62%), yellowed off the signal green
@@ -396,7 +396,7 @@ export const frost: Palette = {
     successText: '#ffffff', // added
     warningText: '#ffffff', // added: 4.7:1
     dangerText: '#ffffff', // added
-    hues: ['#0080d0', '#5a48f0', '#a43fd0', '#d0187f'], // added: the dark stems deepened
+    hues: ['#0080d0', '#5a48f0', '#a43fd0', '#d0187f', '#893271'], // added: the dark stems deepened; the fifth a plum
     onHue: '#ffffff', // added
     roles: [
       '#6f9a00', // added: the left decks' green deepened
@@ -438,7 +438,7 @@ export const claudeCode: Palette = {
     successText: '#000000', // added
     warningText: '#000000', // added
     dangerText: '#000000', // added: 6.4:1
-    hues: ['#c58ad6', '#2fd0f0', '#d6d65c', '#b0613a'], // the kit's orchid, then added
+    hues: ['#c58ad6', '#2fd0f0', '#d6d65c', '#b0613a', '#ee2dc1'], // the kit's orchid, then added (the fifth a magenta)
     onHue: '#000000', // added
     roles: ['#a35ff0', '#3a5fd0'], // added
     roleText: ['#000000', '#ffffff'], // added: 5.4:1 and 5.6:1
@@ -461,7 +461,7 @@ export const claudeCode: Palette = {
     successText: '#000000',
     warningText: '#000000',
     dangerText: '#000000',
-    hues: ['#c58ad6', '#2fd0f0', '#d6d65c', '#b0613a'],
+    hues: ['#c58ad6', '#2fd0f0', '#d6d65c', '#b0613a', '#ee2dc1'], // added: the fifth as dark
     onHue: '#000000',
     roles: ['#a35ff0', '#3a5fd0'],
     roleText: ['#000000', '#ffffff'],

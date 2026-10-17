@@ -128,7 +128,7 @@ describe('validateSkin', () => {
     ['a type size out of range', withOverrides({ scale: { sizes: { body: 2 } } }), 'overrides.scale.sizes.body: 2 is outside'],
     ['an unknown shader', withOverrides({ materials: { shaders: { float: 'fire' } } }), 'overrides.materials.shaders.float: one of water, ether, glass or null'],
     ['a shader on an unknown layer', withOverrides({ materials: { shaders: { basement: 'glass' } } }), 'overrides.materials.shaders.basement: not a layer'],
-    ['too many hues', withOverrides({ palette: { dark: { hues: ['#000000', '#111111', '#222222', '#333333', '#444444'] } } }), 'overrides.palette.dark.hues: at most 4 entries'],
+    ['too many hues', withOverrides({ palette: { dark: { hues: ['#000000', '#111111', '#222222', '#333333', '#444444', '#555555'] } } }), 'overrides.palette.dark.hues: at most 5 entries'],
     ['a list where an object goes', withOverrides({ scale: { sizes: [10] } }), 'overrides.scale.sizes: expected an object'],
     ['CSS fetching from the network', withOverrides({ faces: { sans: 'x, url(https://example.com/f.woff2)' } }), 'overrides.faces.sans: may only use data: URLs'],
     ['CSS fetching through a quoted url', withOverrides({ faces: { sans: 'x, url( "//example.com/f.woff2")' } }), 'overrides.faces.sans: may only use data: URLs'],

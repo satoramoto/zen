@@ -100,7 +100,7 @@ The first library, the smallest that makes water, ether and glass (`in → out`,
 | `time` | `speed` [0–4] =1 | `n` | | `uTime * speed` |
 | `pointer` | | `p` point, `age`, `inside` | | `uPointer` |
 | `value` | `value` [0–1] =0.5 | `n` | | a knob |
-| `theme` | `alpha` [0–1] =1 | `c` colour | `slot`: ground, ink, accent, hue-1…hue-4 | `uTheme[slot]` premultiplied |
+| `theme` | `alpha` [0–1] =1 | `c` colour | `slot`: ground, ink, accent, hue-1…hue-5 | `uTheme[slot]` premultiplied |
 | `tint` | `r`,`g`,`b` [0–1] =1, `alpha` [0–1] =1 | `c` colour | | a fixed colour |
 | `transform` | `p`, `scale` [0.05–10] =1, `rotate` [-180–180°] =0, `x`,`y` [-10–10] =0 | `p` | | scale, rotate, move |
 | `drift` | `p`, `speed` [0–1] =0.05, `angle` [-180–180°] =0 | `p` | | `p + dir * uTime * speed` |

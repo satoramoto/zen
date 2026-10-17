@@ -5,7 +5,7 @@ import { withLibraryTheme } from '../../../storybook';
 import { Icon } from '../../../primitives/Icon';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
-import { Popover, type Dismissal, type PopupBox } from './Popover';
+import { Popover, useHoverIntent, type Dismissal, type PopupBox } from './Popover';
 
 interface HarnessProps {
   /** Where the trigger sits on the canvas: under it, over it when it's near the bottom, clamped at the right. */
@@ -247,5 +247,66 @@ export const FromBox: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Details' }));
     await expect(await canvas.findByRole('dialog')).toBeInTheDocument();
+  },
+};
+
+/** A word in a paragraph with a preview: a button, `useHoverIntent`, and an `inline`, `portal`led Popover. */
+function PeekWord({ word, summary }: { word: string; summary: string }) {
+  const anchor = useRef<HTMLButtonElement>(null);
+  const { open, setOpen, trigger, panel } = useHoverIntent();
+  const dismiss = useCallback(() => setOpen(false), [setOpen]);
+  return (
+    <>
+      <Text
+        as="button"
+        type="button"
+        size="inherit"
+        tone="accent"
+        ref={anchor}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', textDecoration: 'underline dotted' }}
+        {...trigger}
+      >
+        {word}
+      </Text>
+      {open && (
+        <Popover anchor={anchor} onDismiss={dismiss} role="dialog" label={word} inline portal hover={panel}>
+          <span style={{ display: 'grid', gap: 'var(--space-1)', padding: 'var(--space-3)', maxWidth: 280 }}>
+            <Text role="label" tone="muted">Concept</Text>
+            <Text tone="secondary" size="caption">{summary}</Text>
+          </span>
+        </Popover>
+      )}
+    </>
+  );
+}
+
+/**
+ * Inside running text: rest the mouse on the word and the preview opens after a beat; leave both
+ * the word and the panel and it closes after another. A click toggles it, for touch. The panel is
+ * a `span` rendered into the theme scope, so the paragraph stays valid HTML.
+ */
+export const InText: Story = {
+  name: 'In running text',
+  render: () => (
+    <div style={{ maxWidth: 520, padding: 'var(--space-6)' }}>
+      <Text as="p" tone="primary">
+        A string fixed at both ends vibrates at its{' '}
+        <PeekWord word="fundamental" summary="The lowest frequency a vibrating body sounds; every harmonic is a whole multiple of it." /> and at
+        every whole multiple of it at once.
+      </Text>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(document.body);
+    const word = canvas.getByRole('button', { name: 'fundamental' });
+    await userEvent.hover(word);
+    const panel = await page.findByRole('dialog', { name: 'fundamental' });
+    await expect(panel.tagName).toBe('SPAN');
+    await expect(canvasElement.querySelector('p')?.contains(panel)).toBe(false);
+    await userEvent.unhover(word);
+    await waitFor(() => expect(page.queryByRole('dialog', { name: 'fundamental' })).not.toBeInTheDocument());
   },
 };

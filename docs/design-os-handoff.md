@@ -12,7 +12,7 @@ A design system is four facets, mixed freely (`src/library/themes/`, one file ea
 
 | Facet | What it holds | Sets |
 |---|---|---|
-| Palette | colour roles in light and dark: surfaces, text, action, selected, accent, states with their text, four categorical hues, two role hues, keys | push, elektron, ableton, linear, classic, frost |
+| Palette | colour roles in light and dark: surfaces, text, action, selected, accent, states with their text, five categorical hues, two role hues, keys | push, elektron, ableton, linear, classic, frost |
 | Faces | families, weights, tracking, label case | push, classic, elektron, ableton, linear, instrument |
 | Scale | type sizes, spacing unit, control height | compact, regular, airy, roomy |
 | Materials | radii, borders, fields, region spacing, tabs, part materials (well, screen, key, handle, lit), and the **layers** | push, elektron, ableton, linear, hardware, frost |

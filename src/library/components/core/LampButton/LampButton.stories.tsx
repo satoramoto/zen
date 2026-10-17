@@ -20,7 +20,7 @@ const meta = {
     rec: { control: 'boolean' },
     waiting: { control: 'boolean' },
     size: { control: 'select', options: ['md', 'sm', 'cell'] },
-    hue: { control: 'select', options: ['t', 1, 2, 3, 4, 'ok', 'lamp', 'role-2'] },
+    hue: { control: 'select', options: ['t', 1, 2, 3, 4, 5, 'ok', 'lamp', 'role-2'] },
     join: { control: 'select', options: ['none', 'start', 'end'], mapping: { none: undefined } },
     width: { control: 'number' },
   },
@@ -261,7 +261,7 @@ export const JoinStart: Story = {
   ),
 };
 
-const HUES: LampHue[] = ['t', 1, 2, 3, 4, 'ok', 'lamp', 'role-2'];
+const HUES: LampHue[] = ['t', 1, 2, 3, 4, 5, 'ok', 'lamp', 'role-2'];
 const FACES = [
   { face: 'Off', props: {} },
   { face: 'Armed', props: { waiting: true } },

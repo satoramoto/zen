@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
 import type { HueSlot } from '../../core/hue';
 import {
   BLACK_HEIGHT_RATIO,
@@ -41,8 +41,11 @@ export interface KeysProps {
   rightHue?: HueSlot;
   /** The right zone's name on the ruler. Default "Right". */
   rightName?: string;
-  /** The widget's width in px. */
-  width?: number;
+  /**
+   * The widget's width: px, or `'fill'` to take its container's width and lay the keys out from
+   * the measured width (re-laid on every resize). Default 1392.
+   */
+  width?: number | 'fill';
   /**
    * The zone ruler above the keys: each zone's name, what it holds, the split's name. Default
    * true. Off, it is just the keys (one strip height): held keys still wear their zone's hue, so
@@ -71,6 +74,26 @@ const TIP = 'settings.split_strip';
 const px = (n: number) => `${n}px`;
 
 type Zone = { side: KeyPart; name: string; hue: HueSlot; from: number; to: number; held: string[]; lit: boolean };
+
+/**
+ * The root's own width in layout px (unscaled, so a frame drawn scaled still lays out at design
+ * px), while `on`; 0 until measured. Read before paint, then on every resize.
+ */
+function useFillWidth(on: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [measured, setMeasured] = useState(0);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!on || !el) return;
+    const read = () => setMeasured(Math.max(0, el.clientWidth));
+    read();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(read);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [on]);
+  return [ref, measured] as const;
+}
 
 /**
  * The keyboard strip: the keyboard's range, where the split sits, and what each zone (left and
@@ -106,6 +129,12 @@ type Zone = { side: KeyPart; name: string; hue: HueSlot; from: number; to: numbe
  * underline and ruler already say who owns the range (color.md 60/30/10, anti-ai-slop.md token
  * role drift). *Numerals:* note names are set in `--font-readout` with tabular figures.
  *
+ * **Width.** A fixed `width` in px, or `width="fill"`: the strip takes its container's width
+ * (`width: 100%`), measures itself before paint and on every resize (a `ResizeObserver`), and lays
+ * the keys out from that, so a caller no longer measures for it. Until it has a width (a hidden
+ * container, or no layout yet) it keeps its height and hides its contents rather than drawing
+ * keys at 0 px.
+ *
  * **Kept.** MIDI numbers with C3 = 60 and a name on every C; the split line that steps round a
  * black key the way the keys' own edges do; held right notes drawing over held left ones; the
  * controlled model (the strip only asks through `onSplit`/`onPick`); the slider semantics,
@@ -137,7 +166,7 @@ export function Keys({
   leftName = 'Left',
   rightHue = 1,
   rightName = 'Right',
-  width = 1392,
+  width: widthProp = 1392,
   ruler = true,
   splitMin = 24,
   splitMax = 96,
@@ -147,6 +176,12 @@ export function Keys({
   onSplit,
   onPick,
 }: KeysProps) {
+  const fill = widthProp === 'fill';
+  const [rootRef, measured] = useFillWidth(fill);
+  // Unmeasured (first render without layout, or a hidden container), the layout runs at 0 px: no
+  // division by it, and the root hides its contents until it has a width.
+  const width = fill ? measured : Math.max(0, widthProp);
+  const unmeasured = fill && measured <= 0;
   const keys = useMemo(
     () => layout(range, Math.max(0, width), split, heldLeft, heldRight),
     [range, width, split, heldLeft, heldRight],
@@ -311,7 +346,7 @@ export function Keys({
   }
 
   const rootStyle = {
-    width: px(width),
+    width: fill ? '100%' : px(width),
     '--yh-keys-black-w': px(blackWidth),
     '--yh-keys-split-x': px(keys.splitX ?? 0),
     '--yh-keys-split-step': keys.splitStep,
@@ -323,7 +358,10 @@ export function Keys({
     <div
       className="yh-keys"
       data-part="root"
+      ref={rootRef}
       style={rootStyle}
+      data-width={fill ? 'fill' : undefined}
+      data-unmeasured={unmeasured ? '' : undefined}
       data-picking={armed ? '' : undefined}
       data-locked={splitLocked ? '' : undefined}
       data-ruler={ruler ? undefined : 'off'}

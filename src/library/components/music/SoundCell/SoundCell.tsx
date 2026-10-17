@@ -9,7 +9,7 @@ export interface SoundCellProps {
   part: string;
   /** The part's full name, for the buttons' names and the short name's title ("Right 1"). */
   partName: string;
-  /** The part's categorical hue slot (`--hue-1` … `--hue-4`); an app maps its meaning (e.g. Yahaha's parts). Default 1. */
+  /** The part's categorical hue slot (`--hue-1` … `--hue-5`); an app maps its meaning (e.g. Yahaha's parts). Default 1. */
   hue?: HueSlot;
   /** The sound's number in its list ("41"). Empty: not shown. */
   number?: string;

@@ -13,6 +13,7 @@ export const ROLE_LEADING: Record<TextRole, number> = {
   label: 1.2,
   caption: 1.3,
   code: 1.4,
+  math: 1.4,
 };
 
 /** The average glyph width of UI text, as a fraction of its size: what `chars` counts with. */
@@ -177,7 +178,7 @@ export function rankNumbers(ranks: readonly Rank[] = RANKS): Record<Rank, number
 /** A pack's principles resolved against the facets it is worn with, all in px: the solver's input. */
 export function principlesFor(facets: Facets, pack: PackPrinciples): Principles {
   const { scale, materials } = facets;
-  const sizes: Record<TextRole, number> = { ...scale.sizes, code: scale.sizes.body };
+  const sizes: Record<TextRole, number> = { ...scale.sizes, code: scale.sizes.body, math: scale.sizes.body };
   return {
     scale: { unit: scale.unit, control: scale.control, sizes },
     minTarget: pack.minTarget,

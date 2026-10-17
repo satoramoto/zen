@@ -16,7 +16,7 @@ uniform float uPx;
 uniform float uTime;
 uniform vec4 uPointer;
 uniform float uRadius;
-uniform vec3 uTheme[7];
+uniform vec3 uTheme[8];
 uniform float uDark;
 uniform float uParams[64];
 

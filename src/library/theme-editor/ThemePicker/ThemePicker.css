@@ -71,6 +71,7 @@
 .zen-theme-picker__swatch[data-hue='2'] { background: var(--hue-2); }
 .zen-theme-picker__swatch[data-hue='3'] { background: var(--hue-3); }
 .zen-theme-picker__swatch[data-hue='4'] { background: var(--hue-4); }
+.zen-theme-picker__swatch[data-hue='5'] { background: var(--hue-5); }
 .zen-theme-picker__swatch[data-hue='accent'] { background: var(--accent); }
 
 .zen-theme-picker__caption {

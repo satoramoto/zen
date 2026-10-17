@@ -6,7 +6,7 @@ import { Text } from '../../../primitives/Text';
 import { FADER_MAX as MAX, useFader } from './useFader';
 import './Fader.css';
 
-/** A categorical hue slot (1–4), or one of the neutral strips: `a`, `t2`, `t`. */
+/** A categorical hue slot (1–5), or one of the neutral strips: `a`, `t2`, `t`. */
 export type FaderHue = HueSlot | 'a' | 't2' | 't';
 export type FaderKind = 'part' | 'group' | 'master' | 'off' | 'parked';
 
@@ -28,7 +28,7 @@ export interface FaderProps {
   /** `part`, `group`, `master` live; `off` a part switched off; `parked` an unused fader. */
   kind?: FaderKind;
   /**
-   * The strip's identity: a hue slot (1–4, `--hue-n`; an app maps its meaning, e.g. Yahaha's parts)
+   * The strip's identity: a hue slot (1–5, `--hue-n`; an app maps its meaning, e.g. Yahaha's parts)
    * fills the travel in that hue; `a`, `t2` and `t` are neutral strips (in Yahaha: Style, Multi Pad
    * and Master).
    */

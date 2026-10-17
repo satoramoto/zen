@@ -123,6 +123,7 @@ describe('Pad', () => {
     expect(padTone('util', 'idle', undefined, 2)).toBe('hue-2');
     expect(padTone('util', 'dark', 2, 3)).toBe('hue-3');
     expect(padTone('start', 'running', undefined, 4)).toBe('hue-4');
+    expect(padTone('main', 'playing', 1, 5)).toBe('hue-5');
   });
 
   it('renders the hue slot as data-hue and the hue tone', () => {

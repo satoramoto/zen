@@ -60,7 +60,7 @@ describe('compileCircuit', () => {
     const r = compileCircuit(noiseOverTheme());
     expect(r.errors).toEqual([]);
     expect(r.frag).toMatch(/^#version 300 es\n/);
-    for (const u of ['uRes', 'uPx', 'uTime', 'uPointer', 'uRadius', 'uTheme[7]', 'uDark', 'uParams[64]'])
+    for (const u of ['uRes', 'uPx', 'uTime', 'uPointer', 'uRadius', 'uTheme[8]', 'uDark', 'uParams[64]'])
       expect(r.frag).toContain(u);
     expect(r.params.map((s) => [s.index, s.chip, s.param, s.value])).toEqual([
       [0, 'noise', 'scale', 1],

@@ -67,6 +67,16 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Math: the math face at the body size. A <math> inside takes it too: the UA sheet gives <math>
+   `font-family: math` of its own, so it would not inherit. */
+:where(.lib-text[data-role='math']) {
+  --lib-text-face: var(--font-math);
+  --lib-text-size: var(--size-body);
+}
+:where(.lib-text[data-role='math'] math) {
+  font-family: var(--font-math);
+}
+
 /* Leading: the line height, over the role's. */
 :where(.lib-text[data-text-leading='tight']) { --lib-text-leading: 1; }
 :where(.lib-text[data-text-leading='snug']) { --lib-text-leading: 1.15; }
@@ -121,5 +131,6 @@
 :where(.lib-tone[data-tone='hue-2']) { color: var(--hue-2); }
 :where(.lib-tone[data-tone='hue-3']) { color: var(--hue-3); }
 :where(.lib-tone[data-tone='hue-4']) { color: var(--hue-4); }
+:where(.lib-tone[data-tone='hue-5']) { color: var(--hue-5); }
 :where(.lib-tone[data-tone='role-1']) { color: var(--role-1); }
 :where(.lib-tone[data-tone='role-2']) { color: var(--role-2); }

@@ -16,7 +16,7 @@ export interface PortProps {
   /** The host's own vocabulary, surfaced as `data-kind`. */
   kind?: string;
   /**
-   * The hue slot the host gives this port's kind (`--hue-1` … `--hue-4`, as `data-hue`): the ring
+   * The hue slot the host gives this port's kind (`--hue-1` … `--hue-5`, as `data-hue`): the ring
    * in that hue, and the fill once connected. Unset, the port keeps the graph's neutral ink.
    * `role-1` / `role-2` take a role hue instead, for a host with more kinds than hue slots.
    */

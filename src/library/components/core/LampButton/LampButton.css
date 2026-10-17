@@ -35,13 +35,14 @@
   transition: background-color 80ms ease-out, border-color 80ms ease-out, color 80ms ease-out, transform 60ms ease-out;
 }
 
-/* Identity. Hue slots 1–4 only for identity (an app maps its meaning); running and playback read
+/* Identity. Hue slots 1–5 only for identity (an app maps its meaning); running and playback read
    as success, record as danger; role-2 wears the second role hue. The running and record fills
    take their own ink: the state's text token. */
 .yh-lampbutton[data-hue='1'] { --lamp-hue: var(--hue-1); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='2'] { --lamp-hue: var(--hue-2); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='3'] { --lamp-hue: var(--hue-3); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='4'] { --lamp-hue: var(--hue-4); --lamp-ink: var(--on-hue); }
+.yh-lampbutton[data-hue='5'] { --lamp-hue: var(--hue-5); --lamp-ink: var(--on-hue); }
 .yh-lampbutton[data-hue='ok'],
 .yh-lampbutton[data-hue='lamp'] { --lamp-hue: var(--success); --lamp-ink: var(--success-text); }
 .yh-lampbutton[data-hue='rec'] { --lamp-hue: var(--danger); --lamp-ink: var(--danger-text); }

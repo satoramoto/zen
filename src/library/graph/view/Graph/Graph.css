@@ -262,6 +262,9 @@
 .lib-graph__port[data-hue='4'] {
   --lib-graph-port-hue: var(--hue-4);
 }
+.lib-graph__port[data-hue='5'] {
+  --lib-graph-port-hue: var(--hue-5);
+}
 .lib-graph__port[data-hue='role-1'] {
   --lib-graph-port-hue: var(--role-1);
 }

@@ -52,7 +52,7 @@ describe('LampButton', () => {
     render(<LampButton label="On" hue={3} on />);
     expect(screen.getByRole('button')).toHaveAttribute('data-hue', '3');
     const css = readFileSync(join(process.cwd(), 'src/library/components/core/LampButton/LampButton.css'), 'utf8');
-    for (const slot of [1, 2, 3, 4]) expect(css).toContain(`.yh-lampbutton[data-hue='${slot}'] { --lamp-hue: var(--hue-${slot});`);
+    for (const slot of [1, 2, 3, 4, 5]) expect(css).toContain(`.yh-lampbutton[data-hue='${slot}'] { --lamp-hue: var(--hue-${slot});`);
   });
 
   it('role-2 is its own hue, and each lit fill takes its own ink', () => {

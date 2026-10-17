@@ -26,7 +26,7 @@ export interface KnobProps {
   fraction?: number;
   /** Nothing is mapped to this knob: dim name, an empty ring, no value. */
   unused?: boolean;
-  /** A categorical hue slot (1–4, `--hue-n`) for what owns this knob; an app maps its meaning (e.g. Yahaha's parts). Its arc wears that hue. Default: ink. */
+  /** A categorical hue slot (1–5, `--hue-n`) for what owns this knob; an app maps its meaning (e.g. Yahaha's parts). Its arc wears that hue. Default: ink. */
   hue?: HueSlot;
   /** The accessible name. Default: "{label} ({code}) {value}{unit}", or "unused". */
   name?: string;

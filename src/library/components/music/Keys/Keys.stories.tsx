@@ -26,9 +26,9 @@ const meta = {
     split: { control: { type: 'number', min: 0, max: 127, step: 1 } },
     heldLeft: { control: 'object' },
     heldRight: { control: 'object' },
-    leftHue: { control: 'inline-radio', options: [1, 2, 3, 4] },
+    leftHue: { control: 'inline-radio', options: [1, 2, 3, 4, 5] },
     leftName: { control: 'text' },
-    rightHue: { control: 'inline-radio', options: [1, 2, 3, 4] },
+    rightHue: { control: 'inline-radio', options: [1, 2, 3, 4, 5] },
     rightName: { control: 'text' },
     width: { control: { type: 'number', min: 200, step: 1 } },
     ruler: { control: 'boolean' },
@@ -105,7 +105,7 @@ export const Drag: Story = {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole('slider', { name: /^Split point/ });
     const strip = canvas.getByRole('img', { name: /^Keys:/ });
-    const width = args.width ?? 1392;
+    const width = typeof args.width === 'number' ? args.width : 1392;
     const keys = layout(args.range ?? range61, width, 60, [], []);
     const fs2 = keys.blacks.find((key) => key.note === 54)?.x ?? 0;
     const c3 = keys.splitX ?? 0;
@@ -135,7 +135,7 @@ export const Armed: Story = {
     const pick = canvasElement.querySelector('.yh-keys__pick') as HTMLElement;
     await expect(pick).not.toBeNull();
     await expect(canvas.getByRole('slider', { name: /click a key to set it/ })).toBeInTheDocument();
-    const width = args.width ?? 1392;
+    const width = typeof args.width === 'number' ? args.width : 1392;
     const keys = layout(args.range ?? range61, width, 60, [], []);
     const fs2 = keys.blacks.find((key) => key.note === 54)?.x ?? 0;
     await fireEvent.pointerDown(pick, at(strip, width, fs2, 0.2));
@@ -195,6 +195,34 @@ export const NoRuler: Story = {
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('.yh-keys__ruler')).toBeNull();
     await expect(canvasElement.querySelector(".yh-keys__white[data-held='left']")).toHaveAttribute('data-hue', '4');
+  },
+};
+
+/**
+ * Added: `width="fill"` in a container 80% of the canvas wide, resizable from its corner: the keys
+ * fill it and re-lay on every resize, with nothing measured by the caller. Here in hue 5.
+ */
+export const Fluid: Story = {
+  args: { width: 'fill', rightHue: 5, rightName: 'Right 5' },
+  argTypes: { width: { control: false } },
+  parameters: { layout: 'padded' },
+  decorators: [
+    (Story) => (
+      <div style={{ width: '80%', minWidth: 240, resize: 'horizontal', overflow: 'hidden', paddingBottom: 8 }}>
+        <Story />
+      </div>
+    ),
+  ],
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector('.yh-keys') as HTMLElement;
+    const container = root.parentElement as HTMLElement;
+    await expect(root).toHaveAttribute('data-width', 'fill');
+    await expect(root).not.toHaveAttribute('data-unmeasured');
+    // The keys span the container: the last white key ends at its right edge.
+    const whites = canvasElement.querySelectorAll<HTMLElement>('.yh-keys__white');
+    const last = whites[whites.length - 1].getBoundingClientRect();
+    await expect(Math.abs(last.right - root.getBoundingClientRect().right)).toBeLessThan(2);
+    await expect(Math.abs(root.clientWidth - container.clientWidth)).toBeLessThan(2);
   },
 };
 
