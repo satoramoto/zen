@@ -3,8 +3,8 @@ import { useLayoutEffect, useRef } from 'react';
 import { MAX_PARAMS, type ShaderCanvasProps } from './types';
 import { invalidate, pageTime, register, setFrag, setParams, unregister, type ShaderTarget } from './context';
 
-/** The scope variables `uTheme` reads, in slot order: ground, ink, accent, hue 1–4. */
-const THEME_VARS = ['--surface-0', '--text-1', '--accent', '--hue-1', '--hue-2', '--hue-3', '--hue-4'] as const;
+/** The scope variables `uTheme` reads, in slot order: ground, ink, accent, hue 1–5. */
+const THEME_VARS = ['--surface-0', '--text-1', '--accent', '--hue-1', '--hue-2', '--hue-3', '--hue-4', '--hue-5'] as const;
 
 // Any CSS colour (oklch, color-mix, named) to sRGB 0–1, through a 1×1 2D context. Cached by the
 // string, so the once-a-second theme read is a style lookup and a few map hits.

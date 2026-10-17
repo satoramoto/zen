@@ -92,6 +92,13 @@ export const TUNED: Readonly<Record<string, Tuning>> = {
     },
     muted: '#8e8e93',
   },
+  // The picks from before the contract's fifth hue joined the pool, so existing skins don't move
+  // (the fifth hue sits nearer these meanings than the hue each skin was wearing).
+  push: { orchid: '#f57aff' },
+  classic: { blue: '#4cc2ff', cyan: '#08b7aa', slate: '#87aac2' },
+  frost: { orchid: '#f2659f' },
+  elektron: { orchid: '#ff3dbb' },
+  linear: { orchid: '#ff7ad9' },
 };
 
 /** A base, then darker, lighter and darkest. */

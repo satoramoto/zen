@@ -11,7 +11,7 @@ export type MaterialRole = (typeof MATERIAL_ROLES)[number];
 
 /** A lamp colour: a hue slot, a role hue, the accent or a signal colour. */
 export type LitSlot = HueSlot | 'role-1' | 'role-2' | 'accent' | 'success' | 'warning' | 'danger';
-export const LIT_SLOTS = [1, 2, 3, 4, 'role-1', 'role-2', 'accent', 'success', 'warning', 'danger'] as const;
+export const LIT_SLOTS = [1, 2, 3, 4, 5, 'role-1', 'role-2', 'accent', 'success', 'warning', 'danger'] as const;
 
 /** A corner radius from the materials facet, a circle (`50%`: a round knob, lamp or dot), or none. */
 export type SurfaceRadius = 'control' | 'card' | 'input' | 'pill' | 'circle' | 'none';

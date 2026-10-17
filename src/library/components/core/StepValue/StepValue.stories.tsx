@@ -29,7 +29,7 @@ const meta = {
     defaultValue: { control: 'number' },
     display: { control: 'text' },
     tag: { control: 'text' },
-    hue: { control: 'select', options: ['t', 1, 2, 3, 4] },
+    hue: { control: 'select', options: ['t', 1, 2, 3, 4, 5] },
     ink: { control: 'select', options: ['a', 't'] },
     dim: { control: 'boolean' },
     disabled: { control: 'boolean' },

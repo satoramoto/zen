@@ -13,7 +13,7 @@ export type { TipAction };
 export type PadFamily = 'intro' | 'main' | 'ending' | 'brk' | 'fill' | 'util' | 'start';
 export type PadState = 'idle' | 'dark' | 'playing' | 'next' | 'armed' | 'running';
 /** The colour role a pad draws in: neutral (`--selected`), a hue slot, `--success` or a role hue. */
-export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'success' | 'role-1' | 'role-2';
+export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'hue-5' | 'success' | 'role-1' | 'role-2';
 
 export interface PadProps {
   /** The label, centred in the pad ("Main B", "Sync Start"); wraps at word boundaries, but a short last word (a numeral, a letter) stays with the word before it. */
@@ -23,7 +23,7 @@ export interface PadProps {
   /** The family: a section, `util` or `start` (Start / Stop). */
   family?: PadFamily;
   /**
-   * A categorical hue slot (`--hue-1` … `--hue-4`): the pad draws in it whatever its family. An
+   * A categorical hue slot (`--hue-1` … `--hue-5`): the pad draws in it whatever its family. An
    * app maps its meaning (e.g. Yahaha's parts). Default: none, the family's neutral or role tone.
    */
   hue?: HueSlot;
@@ -96,8 +96,8 @@ export function padTone(family: PadFamily, state: PadState, role?: RoleSlot, hue
  * (color.md 3, "state changes: structure, not circus"; anti-ai-slop.md 8, token role drift): the
  * original gave each of five section families its own hue, which the contract does not have and
  * which competed with state. Sections and utilities are now neutral: identity is the label, and the
- * only fill is "sounding" in `--selected` / `--selected-text`. A categorical hue slot (`hue`, 1–4 →
- * `--hue-1` … `--hue-4`; an app maps its meaning, e.g. Yahaha's parts) stays, because there the
+ * only fill is "sounding" in `--selected` / `--selected-text`. A categorical hue slot (`hue`, 1–5 →
+ * `--hue-1` … `--hue-5`; an app maps its meaning, e.g. Yahaha's parts) stays, because there the
  * colour is the thing the pad stands for. Start / Stop running is `--success` with
  * `--success-text` ink, role or not: running is a state, not the role's identity. A `util` or
  * `start` pad with a `role` slot (e.g. Yahaha's transport keys, the original's "hue of time",

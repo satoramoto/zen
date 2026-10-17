@@ -122,7 +122,7 @@ describe('Button faces and a11y', () => {
 
   it('a hue slot draws its --hue-n', () => {
     const css = readFileSync(join(process.cwd(), 'src/library/components/core/Button/Button.css'), 'utf8');
-    for (const slot of [1, 2, 3, 4] as const) {
+    for (const slot of [1, 2, 3, 4, 5] as const) {
       const { button, unmount } = setup({ label: 'X', hue: slot });
       expect(button).toHaveAttribute('data-hue', String(slot));
       expect(css).toContain(`.yh-button[data-hue='${slot}'] { --yh-button-tone: var(--hue-${slot}); }`);

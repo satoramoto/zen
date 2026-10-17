@@ -42,7 +42,7 @@ function Preview({ skin, mode }: { skin: Skin; mode: ModeChoice }) {
           </Text>
           {/* The colours first: a larger scale clips the last row, never the palette. */}
           <span className="zen-theme-picker__swatches" data-part="swatches">
-            {[1, 2, 3, 4].map((n) => (
+            {[1, 2, 3, 4, 5].map((n) => (
               <span key={n} className="zen-theme-picker__swatch" data-hue={n} />
             ))}
             <span className="zen-theme-picker__swatch" data-hue="accent" />
@@ -81,7 +81,7 @@ function Preview({ skin, mode }: { skin: Skin; mode: ModeChoice }) {
  *
  * **Parts.** `root` (the radiogroup, a grid that fills its width with as many columns as fit),
  * `entry` (each radio, `aria-checked`), `frame` (the preview at a fixed aspect, ringed in
- * `--selected` when chosen), `swatches` (the four hues and the accent), `label`, `note`.
+ * `--selected` when chosen), `swatches` (the five hues and the accent), `label`, `note`.
  */
 export function ThemePicker({ value, onChange, mode, className }: { value: Skin; onChange(skin: Skin): void; mode?: ModeChoice; className?: string }) {
   const root = useRef<HTMLDivElement>(null);

@@ -43,6 +43,7 @@
 .yh-pad[data-tone='hue-2'] { --yh-pad-fill: var(--hue-2); }
 .yh-pad[data-tone='hue-3'] { --yh-pad-fill: var(--hue-3); }
 .yh-pad[data-tone='hue-4'] { --yh-pad-fill: var(--hue-4); }
+.yh-pad[data-tone='hue-5'] { --yh-pad-fill: var(--hue-5); }
 .yh-pad[data-tone^='hue-'] {
   --yh-pad-ink: var(--on-hue);
   --yh-pad-ring: var(--yh-pad-fill);

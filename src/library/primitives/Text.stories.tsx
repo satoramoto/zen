@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 import { withLibraryTheme } from '../storybook';
 import { Text, TEXT_ROLES, TEXT_TONES, type TextRole, type TextTone } from './Text';
 
@@ -11,6 +12,7 @@ const SAMPLE: Record<TextRole, string> = {
   label: 'Tempo',
   caption: 'Bar 12',
   code: 'C#m7 / 0:42',
+  math: 'fₙ = n·f₁',
 };
 
 /** `on-solid` is ink for a solid action fill, so it is shown on `--action`; every other tone on the page. */
@@ -97,3 +99,27 @@ export const AllRolesAndTones: Story = {
     </div>
   ),
 };
+
+/** The `math` role around MathML in running text: the formula takes `--font-math`, not the
+ *  browser's own math face, and sits on the paragraph's baseline. */
+export const MathInText: Story = {
+  name: 'Math in running text',
+  render: () => (
+    <div style={{ maxWidth: 520, padding: 'var(--space-4)' }}>
+      <Text as="p" role="body" tone="primary">
+        The <Text tone="accent">n</Text>th harmonic of a string sounds at{' '}
+        <Text role="math" size="inherit" data-testid="harmonic" dangerouslySetInnerHTML={{ __html: HARMONIC }} />, and the
+        reciprocal squares sum to <Text role="math" size="inherit" dangerouslySetInnerHTML={{ __html: BASEL }} />.
+      </Text>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const math = canvasElement.querySelector('[data-testid="harmonic"] math');
+    await expect(math).not.toBeNull();
+    await expect(getComputedStyle(math!).fontFamily).toContain('Math');
+  },
+};
+
+// React's JSX types have no MathML elements, so the specimens are markup.
+const HARMONIC = '<math><msub><mi>f</mi><mi>n</mi></msub><mo>=</mo><mi>n</mi><msub><mi>f</mi><mn>1</mn></msub></math>';
+const BASEL = '<math><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>6</mn></mfrac></math>';

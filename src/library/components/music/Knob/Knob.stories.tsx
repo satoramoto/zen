@@ -28,7 +28,7 @@ const meta = {
     unit: { control: 'text' },
     fraction: { control: { type: 'range', min: 0, max: 1, step: 0.01 } },
     unused: { control: 'boolean' },
-    hue: { control: 'select', options: [undefined, 1, 2, 3, 4] },
+    hue: { control: 'select', options: [undefined, 1, 2, 3, 4, 5] },
     name: { control: 'text' },
     tip: { control: 'text' },
   },

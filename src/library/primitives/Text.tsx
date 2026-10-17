@@ -3,11 +3,11 @@ import type { HueSlot } from '../components/core/hue';
 import './Text.css';
 
 /** The type roles, each a face, weight, size, tracking and case from the contract. */
-export const TEXT_ROLES = ['display', 'numeral', 'heading', 'body', 'label', 'caption', 'code'] as const;
+export const TEXT_ROLES = ['display', 'numeral', 'heading', 'body', 'label', 'caption', 'code', 'math'] as const;
 export type TextRole = (typeof TEXT_ROLES)[number];
 
 /** The ink tones: the four text levels, the palette's signal colours, ink on a solid action fill,
- *  the four categorical hue slots and the two role hues. */
+ *  the five categorical hue slots and the two role hues. */
 export const TEXT_TONES = [
   'primary',
   'secondary',
@@ -22,6 +22,7 @@ export const TEXT_TONES = [
   2,
   3,
   4,
+  5,
   'role-1',
   'role-2',
 ] as const;
@@ -95,6 +96,9 @@ export interface TextProps extends Omit<AllHTMLAttributes<HTMLElement>, 'role' |
  * `--font-mono`, `--font-readout`), weight, size, tracking, leading and case from the contract;
  * `display` takes `--tracking-display`, `label` takes `--label-case`, `numeral` and `code` set
  * tabular figures. `code` is set in the mono face at `--size-body` (the scale has no code size).
+ * `math` is set in `--font-math` at `--size-body`, and so is any MathML `<math>` inside it (the
+ * browser would otherwise give `<math>` its own face): `<Text role="math"><math>…</math></Text>`,
+ * or `<Text as="math" role="math">` for the element itself.
  * The tone picks the ink: `primary`…`faint` are `--text-1`…`--text-4`, `on-solid` is
  * `--action-text`, hue slots `--hue-N`, role slots `--role-N`; no tone inherits. Margin is always
  * 0: spacing belongs to the group around it.

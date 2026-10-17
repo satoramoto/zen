@@ -187,7 +187,7 @@ const STEP_CSS: Record<Step, string> = {
   5: 'var(--space-5)',
   6: 'var(--space-6)',
 };
-/** Each text role's size as CSS (code is set at body size). */
+/** Each text role's size as CSS (code and math are set at body size). */
 const SIZE_CSS: Record<TextRole, string> = {
   display: 'var(--size-display)',
   numeral: 'var(--size-numeral)',
@@ -196,6 +196,7 @@ const SIZE_CSS: Record<TextRole, string> = {
   label: 'var(--size-label)',
   caption: 'var(--size-caption)',
   code: 'var(--size-body)',
+  math: 'var(--size-body)',
 };
 
 /**

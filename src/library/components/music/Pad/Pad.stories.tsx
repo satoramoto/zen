@@ -27,7 +27,7 @@ const meta = {
     label: { control: 'text' },
     index: { control: 'text' },
     family: { control: 'select', options: ['intro', 'main', 'ending', 'brk', 'fill', 'util', 'start'] },
-    hue: { control: 'select', options: [undefined, 1, 2, 3, 4] },
+    hue: { control: 'select', options: [undefined, 1, 2, 3, 4, 5] },
     state: { control: 'select', options: ['idle', 'dark', 'playing', 'next', 'armed', 'running'] },
     lit: { control: 'boolean' },
     tagCorner: { control: 'boolean' },

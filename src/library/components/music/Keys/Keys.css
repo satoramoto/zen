@@ -49,6 +49,11 @@
 .yh-keys [data-hue='2'] { --yh-keys-hue: var(--hue-2); }
 .yh-keys [data-hue='3'] { --yh-keys-hue: var(--hue-3); }
 .yh-keys [data-hue='4'] { --yh-keys-hue: var(--hue-4); }
+.yh-keys [data-hue='5'] { --yh-keys-hue: var(--hue-5); }
+
+/* `width="fill"`: the container's width; until measured the strip keeps its height, drawing nothing. */
+.yh-keys[data-width='fill'] { min-width: 0; }
+.yh-keys[data-unmeasured] > * { visibility: hidden; }
 
 /* ── The ruler: which zone owns which keys, and what each holds. */
 .yh-keys__ruler {

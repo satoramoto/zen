@@ -23,7 +23,7 @@ const outN = (id = 'n', label = 'Value'): NodeOutput => ({ id, kind: 'number', l
 const outC = (id = 'c', label = 'Colour'): NodeOutput => ({ id, kind: 'colour', label });
 const angle = (def: number) => num('angle', 'Angle', def, -180, 180, 1, '°');
 
-const THEME_SLOTS = ['ground', 'ink', 'accent', 'hue-1', 'hue-2', 'hue-3', 'hue-4'] as const;
+const THEME_SLOTS = ['ground', 'ink', 'accent', 'hue-1', 'hue-2', 'hue-3', 'hue-4', 'hue-5'] as const;
 const MATH_OPS = ['add', 'sub', 'mul', 'div', 'min', 'max', 'pow'] as const;
 const BLEND_MODES = ['over', 'add', 'screen', 'multiply'] as const;
 const BLEND_FN: Record<string, string> = { over: 'zOver', add: 'zAdd', screen: 'zScreen', multiply: 'zMultiply' };
@@ -73,7 +73,7 @@ export const SHADER_NODES: Record<string, NodeSpec> = {
   theme: {
     type: 'theme',
     label: 'Theme',
-    description: "A colour from the scope's theme: the ground, the ink, the accent or one of the four hues.",
+    description: "A colour from the scope's theme: the ground, the ink, the accent or one of the five hues.",
     inputs: [num('alpha', 'Alpha', 1, 0, 1, 0.01)],
     outputs: [outC()],
     options: { slot: { values: THEME_SLOTS, default: 'ground' } },

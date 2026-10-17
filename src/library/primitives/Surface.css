@@ -88,6 +88,7 @@
 :where(.lib-surface[data-lit='hue-2']) { --lit: var(--hue-2); }
 :where(.lib-surface[data-lit='hue-3']) { --lit: var(--hue-3); }
 :where(.lib-surface[data-lit='hue-4']) { --lit: var(--hue-4); }
+:where(.lib-surface[data-lit='hue-5']) { --lit: var(--hue-5); }
 :where(.lib-surface[data-lit='role-1']) { --lit: var(--role-1); }
 :where(.lib-surface[data-lit='role-2']) { --lit: var(--role-2); }
 :where(.lib-surface[data-lit='accent']) { --lit: var(--accent); }

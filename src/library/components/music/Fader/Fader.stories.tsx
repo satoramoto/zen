@@ -46,7 +46,7 @@ const meta = {
       mapping: { [NONE]: undefined },
     },
     kind: { control: 'select', options: ['part', 'group', 'master', 'off', 'parked'] },
-    hue: { control: 'select', options: [1, 2, 3, 4, 'a', 't2', 't'] },
+    hue: { control: 'select', options: [1, 2, 3, 4, 5, 'a', 't2', 't'] },
     layered: { control: 'boolean' },
     width: { control: 'number' },
     fillHeight: { control: 'boolean' },

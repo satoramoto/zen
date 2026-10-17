@@ -1,6 +1,7 @@
-// What colour means across the Yahaha redesigns. The contract's four categorical hues
-// belong to the four keyboard parts, everywhere: a fader, a keyboard zone, a sound name
-// and a knob that belongs to Right 2 all wear the same hue. Nothing else takes a hue.
+// What colour means across the Yahaha redesigns. The first four of the contract's five
+// categorical hues belong to the four keyboard parts, everywhere: a fader, a keyboard zone,
+// a sound name and a knob that belongs to Right 2 all wear the same hue. Nothing else takes
+// a hue; Yahaha gives the fifth no meaning.
 //
 // Song sections (intro, main, fill, break, ending) are not hues: what is playing is
 // `--selected`, what is queued next is `--accent`, the rest is neutral text. A section

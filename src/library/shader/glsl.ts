@@ -21,7 +21,7 @@ uniform float uPx;         // device pixels per CSS pixel
 uniform float uTime;       // seconds, one page-wide clock
 uniform vec4  uPointer;    // x, y (coord units), seconds since the last press (1e3 if none), 1 inside
 uniform float uRadius;     // the box's corner radius in CSS pixels
-uniform vec3  uTheme[7];   // ground, ink, accent, hue-1..hue-4
+uniform vec3  uTheme[8];   // ground, ink, accent, hue-1..hue-5
 uniform float uDark;       // 1 in a dark scheme
 uniform float uParams[64]; // every unwired number inlet
 

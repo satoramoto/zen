@@ -58,15 +58,15 @@
   transition: background-color 80ms ease-out, box-shadow 80ms ease-out, color 80ms ease-out;
 }
 
-/* Tones. Hue slots 1–4 are identity (an app maps its own meaning); sections (intro, main, fill,
-   brk, ending) stay neutral, because four hues can't name five sections without one passing for a
-   slot. ok/rec are state, a is the accent, role-2 the second role hue. Any coloured tone rings,
+/* Tones. Hue slots 1–5 are identity (an app maps its own meaning); sections (intro, main, fill,
+   brk, ending) stay neutral, because a section in a hue would pass for a slot. ok/rec are state, a is the accent, role-2 the second role hue. Any coloured tone rings,
    underlines and dots in its hue when on or chosen, with lamp bloom; slots and the accent take
    --on-hue ink, states and role-2 their own text token. */
 .yh-button[data-hue='1'] { --yh-button-tone: var(--hue-1); }
 .yh-button[data-hue='2'] { --yh-button-tone: var(--hue-2); }
 .yh-button[data-hue='3'] { --yh-button-tone: var(--hue-3); }
 .yh-button[data-hue='4'] { --yh-button-tone: var(--hue-4); }
+.yh-button[data-hue='5'] { --yh-button-tone: var(--hue-5); }
 .yh-button[data-hue='ok'] { --yh-button-tone: var(--success); }
 .yh-button[data-hue='rec'] { --yh-button-tone: var(--danger); }
 .yh-button[data-hue='a'] { --yh-button-tone: var(--accent); }

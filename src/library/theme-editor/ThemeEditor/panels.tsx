@@ -57,7 +57,7 @@ const COLOUR_GROUPS: { name: string; roles: { name: string; key: ColourKey }[] }
   },
   {
     name: 'Hues',
-    roles: [...[0, 1, 2, 3].map((i) => ({ name: `Hue ${i + 1}`, key: ['hues', i] as const })), { name: 'On hue', key: ['onHue'] as const }],
+    roles: [...[0, 1, 2, 3, 4].map((i) => ({ name: `Hue ${i + 1}`, key: ['hues', i] as const })), { name: 'On hue', key: ['onHue'] as const }],
   },
   {
     name: 'Roles',
@@ -147,13 +147,14 @@ const stackName = (stack: string) => {
   return GENERIC[first] ?? first;
 };
 /** Every stack zen's faces use, once each, by name. */
-const STACKS: readonly string[] = [...new Set(FACES.flatMap((f) => [f.sans, f.display, f.mono, f.readout]))].sort((a, b) => stackName(a).localeCompare(stackName(b)));
+const STACKS: readonly string[] = [...new Set(FACES.flatMap((f) => [f.sans, f.display, f.mono, f.readout, f.math]))].sort((a, b) => stackName(a).localeCompare(stackName(b)));
 
 const FACE_ROLES = [
   { key: 'sans', name: 'Sans', role: 'body', sample: 'Sphinx of black quartz, judge my vow' },
   { key: 'display', name: 'Display', role: 'display', sample: 'Theme editor' },
   { key: 'mono', name: 'Mono', role: 'code', sample: '{ "base": "linear" }' },
   { key: 'readout', name: 'Readout', role: 'numeral', sample: '128.00  4/4  −6.0' },
+  { key: 'math', name: 'Math', role: 'math', sample: 'fₙ = n·f₁   ∑ 1/n² = π²/6' },
 ] as const;
 
 const WEIGHTS = [

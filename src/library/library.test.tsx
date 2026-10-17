@@ -76,7 +76,7 @@ const inkPairs = (p: Scheme): [string, string, string][] => [
   ['role-1', p.roles[0], p.roleText[0]],
   ['role-2', p.roles[1], p.roleText[1]],
 ];
-/** Every meaning-bearing colour (yahaha/hues.ts): the four parts, the three states, the two roles,
+/** Every meaning-bearing colour (yahaha/hues.ts): the five categorical hues, the three states, the two roles,
  *  next (--accent) and playing (--selected). */
 const meaningColours = (p: Scheme): [string, string][] => [
   ...p.hues.map((hue, i): [string, string] => [`hue-${i + 1}`, hue]),
@@ -143,8 +143,8 @@ describe('token contract', () => {
     }
   });
 
-  it('palettes keep four distinct categorical hues in each mode', () => {
-    for (const p of palettes) for (const [name, s] of schemes(p)) expect(new Set(s.hues).size, name).toBe(4);
+  it('palettes keep five distinct categorical hues in each mode', () => {
+    for (const p of palettes) for (const [name, s] of schemes(p)) expect(new Set(s.hues).size, name).toBe(5);
   });
 
   it('ink on a solid fill meets WCAG AA against it in both modes of every palette', () => {

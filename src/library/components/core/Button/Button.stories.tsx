@@ -10,7 +10,7 @@ import { Button, type ButtonHue, type ButtonProps } from './Button';
 const NONE = 'none';
 const SIZES = ['icon', 'md', 'band', 'pair', 'cell', 'caret'];
 /** The hues that draw a distinct look (the deprecated `t2` and `m` draw as `t`, so they're left out). */
-const HUES: ButtonHue[] = ['t', 'a', 'lamp', 'rec', 'ok', 'role-2', 1, 2, 3, 4, 'intro', 'main', 'ending', 'brk', 'fill'];
+const HUES: ButtonHue[] = ['t', 'a', 'lamp', 'rec', 'ok', 'role-2', 1, 2, 3, 4, 5, 'intro', 'main', 'ending', 'brk', 'fill'];
 const SYMBOLS = ['prev', 'next', 'up', 'down', 'plus', 'minus', 'caret'];
 /** A select whose first option is `none` (undefined), so the control can go back to "no value". */
 const optional = (options: string[]) => ({ control: 'select' as const, options: [NONE, ...options], mapping: { [NONE]: undefined } });

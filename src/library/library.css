@@ -89,6 +89,7 @@
 [data-hue='2'] { --hue: var(--hue-2); }
 [data-hue='3'] { --hue: var(--hue-3); }
 [data-hue='4'] { --hue: var(--hue-4); }
+[data-hue='5'] { --hue: var(--hue-5); }
 
 .lib-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .lib-specimens { display: grid; gap: var(--space-4); }

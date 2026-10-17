@@ -1,4 +1,15 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { Layer } from '../../../layout/Layer';
 import { Text } from '../../../primitives/Text';
 import { ControlContext, CONTROL_FIELD } from '../../../primitives/Stack';
@@ -64,7 +75,81 @@ export interface PopoverProps {
   id?: string;
   /** On the panel: how wide it is, whether its rows scroll. */
   className?: string;
+  /**
+   * Render the box and the panel as `span`s, so the popover may sit inside running text (a `<p>`
+   * can't hold a `div`). It draws the same: the box is `display: flex` either way. Content inside
+   * must be phrasing content too, unless it is also `portal`led.
+   */
+  inline?: boolean;
+  /**
+   * Render it into the theme scope around a live anchor (its nearest `.lib-scope`, else
+   * `document.body`) instead of where it is mounted: for an anchor whose parent can't hold the
+   * panel's content (a paragraph). The theme's variables still reach it; the tab order no longer
+   * runs control → panel, so use it for a preview, not a menu. A box anchor renders into `body`.
+   */
+  portal?: boolean;
+  /** The panel's half of a hover intent (`useHoverIntent(...).panel`): resting on the panel keeps
+   *  it open, leaving it starts the close delay. */
+  hover?: HoverPanel;
   children?: ReactNode;
+}
+
+/** Pointer handlers for the panel of a hover-opened popover. */
+export interface HoverPanel {
+  onPointerEnter(e: ReactPointerEvent): void;
+  onPointerLeave(e: ReactPointerEvent): void;
+}
+
+export interface HoverIntentOptions {
+  /** How long a mouse rests on the trigger before it opens, in ms. Default 350. */
+  openDelay?: number;
+  /** How long after the mouse leaves trigger and panel before it closes, in ms. Default 200. */
+  closeDelay?: number;
+}
+
+export interface HoverIntent {
+  open: boolean;
+  /** Open or close now, cancelling any pending delay (a click toggles with `setOpen(o => !o)`). */
+  setOpen(open: boolean | ((open: boolean) => boolean)): void;
+  /** Spread on the trigger. */
+  trigger: HoverPanel;
+  /** Pass to the Popover's `hover`. */
+  panel: HoverPanel;
+}
+
+/**
+ * Hover intent for a popover opened by resting on its trigger (a link preview, a peek): a mouse
+ * that rests `openDelay` on the trigger opens it; leaving both trigger and panel for `closeDelay`
+ * closes it, and coming back to either within the delay keeps it. Only a mouse hovers: touch and
+ * pen events are ignored, so a tap goes to the trigger's own click. `setOpen` cancels any pending
+ * delay, so a click or Escape wins over a hover in flight.
+ */
+export function useHoverIntent({ openDelay = 350, closeDelay = 200 }: HoverIntentOptions = {}): HoverIntent {
+  const [open, setOpenState] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  return useMemo(() => {
+    const later = (to: boolean, ms: number) => {
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => setOpenState(to), ms);
+    };
+    const stay = () => window.clearTimeout(timer.current);
+    const leave = (e: ReactPointerEvent) => e.pointerType === 'mouse' && later(false, closeDelay);
+    const setOpen: HoverIntent['setOpen'] = (to) => {
+      window.clearTimeout(timer.current);
+      setOpenState(to);
+    };
+    return {
+      open,
+      setOpen,
+      trigger: {
+        // Back on the trigger while open: just cancel the close.
+        onPointerEnter: (e) => e.pointerType === 'mouse' && (open ? stay() : later(true, openDelay)),
+        onPointerLeave: leave,
+      },
+      panel: { onPointerEnter: (e) => e.pointerType === 'mouse' && stay(), onPointerLeave: leave },
+    };
+  }, [open, openDelay, closeDelay]);
 }
 
 /** Room left between the panel and the edge of the window. */
@@ -80,7 +165,7 @@ const LEAST_ROOM = 64;
  * anchor; a box anchor dismisses as `stale` instead.
  */
 export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'anchor' | 'onDismiss' | 'within'>) {
-  const box = useRef<HTMLDivElement>(null);
+  const box = useRef<HTMLElement>(null);
 
   const place = useCallback(() => {
     const el = box.current;
@@ -199,17 +284,33 @@ export function usePopover({ anchor, onDismiss, within }: Pick<PopoverProps, 'an
  * leaves Tab to it. Focus on the control it hangs from (a select's trigger, which keeps focus) is
  * left alone, so Tab there moves on as usual.
  *
+ * **In running text.** `inline` renders the box and panel as `span`s, `portal` renders them into
+ * the theme scope around the anchor instead of inside a paragraph, and `hover` takes the panel's
+ * half of `useHoverIntent`, which opens and closes it on a resting mouse with delays. A word with
+ * a preview needs those three and a button, nothing more.
+ *
  * **Parts.** `popover`: the positioned box in the top layer, a body `Text` (its content inherits
  * that type), carrying `--lib-popover-anchor`
  * (the anchor's width), `--lib-popover-room` (the height left) and `data-above` when flipped.
  * `panel`: the float `Layer` inside it, with the caller's `role`, `label`, `id` and `className`;
  * it scrolls when its content is taller than the room.
  */
-export function Popover({ anchor, onDismiss, within, role, label, id, className, children }: PopoverProps) {
+export function Popover({ anchor, onDismiss, within, role, label, id, className, inline, portal, hover, children }: PopoverProps) {
   const box = usePopover({ anchor, onDismiss, within });
-  return (
-    <Text as="div" role="body" ref={box} className="lib-popover" popover="manual" data-part="popover">
+  const tag = inline ? 'span' : 'div';
+  const panel = (
+    <Text
+      as={tag}
+      role="body"
+      ref={box}
+      className="lib-popover"
+      popover="manual"
+      data-part="popover"
+      onPointerEnter={hover?.onPointerEnter}
+      onPointerLeave={hover?.onPointerLeave}
+    >
       <Layer
+        as={tag}
         level="float"
         className={`lib-popover__panel${className ? ` ${className}` : ''}`}
         data-part="panel"
@@ -222,6 +323,9 @@ export function Popover({ anchor, onDismiss, within, role, label, id, className,
       </Layer>
     </Text>
   );
+  if (!portal) return panel;
+  const from = isLive(anchor) ? anchor.current : null;
+  return createPortal(panel, from?.closest('.lib-scope') ?? document.body);
 }
 
 /** visual[flow]'s name for it, so its call sites port unchanged. */

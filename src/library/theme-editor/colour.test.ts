@@ -65,8 +65,8 @@ describe('paletteWarnings', () => {
 
   it('names two hues that read alike', () => {
     const p = packs[0].facets.palette;
-    const [h1, , h3, h4] = p.light.hues;
-    const warnings = paletteWarnings(withScheme(p, 'light', { hues: [h1, h1, h3, h4] }), 'light');
+    const [h1, , h3, h4, h5] = p.light.hues;
+    const warnings = paletteWarnings(withScheme(p, 'light', { hues: [h1, h1, h3, h4, h5] }), 'light');
     expect(warnings).toContain('Hue 1 and Hue 2 read alike.');
   });
 

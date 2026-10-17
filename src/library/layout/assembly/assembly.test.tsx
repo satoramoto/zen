@@ -24,7 +24,7 @@ import {
 
 /** Round numbers so the expected placements can be worked by hand (docs/assembly.md). */
 const P: Principles = {
-  scale: { unit: 4, control: 28, sizes: { caption: 11, body: 14, label: 13, heading: 22, display: 44, numeral: 32, code: 14 } },
+  scale: { unit: 4, control: 28, sizes: { caption: 11, body: 14, label: 13, heading: 22, display: 44, numeral: 32, code: 14, math: 14 } },
   minTarget: 24,
   density: 'dense',
   gaps: { body: 2, group: 2 },

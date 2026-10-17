@@ -2,6 +2,10 @@ import type { Faces } from '../contract';
 
 // Proprietary faces are swapped for the substitutes Refero names. Sizes live in scales.ts.
 
+// added: no source style names a math face. Faces with an OpenType MATH table, most to least
+// common across platforms, then the generic `math` (the browser's own MathML face).
+const MATH = "'STIX Two Math', 'Cambria Math', 'Latin Modern Math', 'Noto Sans Math', math";
+
 const push: Faces = {
   id: 'push',
   label: 'yahaha Push (DM Sans)',
@@ -9,6 +13,7 @@ const push: Faces = {
   display: "'DM Sans', system-ui, sans-serif",
   mono: "'JetBrains Mono', ui-monospace, monospace",
   readout: "'JetBrains Mono', ui-monospace, monospace",
+  math: MATH, // added
   weightBody: 400,
   weightStrong: 500,
   weightDisplay: 300,
@@ -28,6 +33,7 @@ const classic: Faces = {
   mono: "ui-monospace, 'SF Mono', Menlo, monospace",
   // The display glass draws its numerals in the condensed display face (tabular figures).
   readout: "'Barlow Condensed', 'Arial Narrow', sans-serif",
+  math: MATH, // added
   weightBody: 400,
   weightStrong: 600,
   weightDisplay: 600,
@@ -44,6 +50,7 @@ const elektron: Faces = {
   display: "'Helvetica Neue', Arial, sans-serif",
   mono: "'Share Tech Mono', ui-monospace, monospace",
   readout: "'Share Tech Mono', ui-monospace, monospace",
+  math: MATH, // added
   weightBody: 400,
   weightStrong: 500,
   weightDisplay: 500,
@@ -60,6 +67,7 @@ const ableton: Faces = {
   display: "'Jost', Futura, sans-serif",
   mono: "'JetBrains Mono', ui-monospace, monospace", // added: the source has no mono
   readout: "'Jost', Futura, sans-serif",
+  math: MATH, // added
   weightBody: 400,
   weightStrong: 400,
   weightDisplay: 700,
@@ -76,6 +84,7 @@ const linear: Faces = {
   display: "'Inter', system-ui, sans-serif",
   mono: "'IBM Plex Mono', ui-monospace, monospace",
   readout: "'Inter', system-ui, sans-serif",
+  math: MATH, // added
   weightBody: 400,
   weightStrong: 510,
   weightDisplay: 590,
@@ -96,6 +105,7 @@ const instrument: Faces = {
   // app.css --code is Recursive (MONO 1); added: a system mono here, so no second webfont loads
   mono: "ui-monospace, 'SF Mono', Menlo, monospace",
   readout: "'Instrument Sans', system-ui, -apple-system, sans-serif", // home.css --font-num, tabular-nums
+  math: MATH, // added
   weightBody: 400,
   weightStrong: 600, // home.css: titles and the chosen row
   weightDisplay: 650, // app.css .vf-mark
