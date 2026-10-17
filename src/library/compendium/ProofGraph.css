@@ -1,0 +1,46 @@
+/* ProofGraph (compendium mockup): rows of chips with the wires drawn over them. */
+
+.cmp-proof {
+  position: relative;
+  min-width: 0;
+}
+
+.cmp-proof__wires {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.cmp-proof__wire {
+  fill: none;
+  stroke: var(--text-4);
+  stroke-width: 1.2;
+}
+.cmp-proof__head {
+  fill: var(--text-4);
+}
+
+.cmp-proof__rows {
+  position: relative;
+}
+
+.cmp-proof__row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cmp-proof__item {
+  min-width: 0;
+  max-inline-size: min(30ch, 100%);
+}
+/* The goal is the one name worth reading whole. */
+.cmp-proof__item:has([data-kind='theorem']) {
+  max-inline-size: 100%;
+}
+
+.cmp-proof__chip {
+  padding: var(--space-2) var(--space-3);
+  min-width: 0;
+}

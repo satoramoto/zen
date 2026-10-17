@@ -1,0 +1,34 @@
+/* Sidenote (compendium mockup): the numbered marker in the line and the note in the margin. */
+
+.cmp-sidenote {
+  counter-increment: cmp-sidenote;
+}
+
+.cmp-sidenote__ref {
+  vertical-align: super;
+  --text-leading: 0;
+}
+.cmp-sidenote__ref::after {
+  content: counter(cmp-sidenote);
+}
+
+.cmp-sidenote__note {
+  float: right;
+  clear: right;
+  display: block;
+  width: var(--cmp-margin);
+  margin-inline-end: calc(-1 * (var(--cmp-margin) + var(--cmp-gutter)));
+  margin-block-end: var(--space-3);
+}
+.cmp-sidenote__note::before {
+  content: counter(cmp-sidenote) '\2002';
+  color: var(--accent);
+}
+
+@container cmp-reading (max-width: 44rem) {
+  .cmp-sidenote__note {
+    float: none;
+    width: auto;
+    margin: var(--space-2) 0 var(--space-2) var(--space-4);
+  }
+}

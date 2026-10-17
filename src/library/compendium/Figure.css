@@ -1,0 +1,22 @@
+/* Figure (compendium mockup): the card, its stage and its notes. */
+
+.cmp-figure {
+  margin: 0;
+  padding: var(--space-4);
+  min-width: 0;
+}
+
+.cmp-figure__stage {
+  padding: var(--space-3);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.cmp-figure__control {
+  min-width: 0;
+}
+
+.cmp-figure__tag {
+  display: inline-block;
+  margin-inline-end: var(--space-2);
+}
