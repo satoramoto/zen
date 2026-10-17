@@ -454,6 +454,69 @@ export const TerminalLists = sheet(k =>
   ),
 )
 
+/**
+ * Collapsible lists of list items: each list one surface, its header and items under one quiet fill with
+ * hairlines between. PRs as an app's list (state icon, title, `repo #n` and a CI mark, a ⋮ on the right);
+ * threads with a text badge and the next step wrapping; decisions with the choice called out and a fold,
+ * open and closed; a folded list.
+ */
+export const CollapsibleLists = sheet(k =>
+  h(
+    'Box',
+    { flexDirection: 'column' },
+    k.collapsibleList({
+      id: 'prs',
+      icon: 'pr-open',
+      title: 'Pull requests',
+      right: k.summary([['3', 'open']]),
+      onToggle: () => undefined,
+      items: [
+        k.listItem('pr-a', { lead: 'pr-open', leadColor: C.blue, title: 'Reduce flashing: the strobe pulses at a tenth of the rate', subtitle: 'visuals', meta: ['#285'], mark: 'done', right: ['⋮'] }),
+        k.listItem('pr-b', { lead: 'pr-draft', title: 'Onboarding listen step: inputs show their level', subtitle: 'visuals', meta: ['#287'], mark: 'failed', right: ['⋮'] }),
+        k.listItem('pr-c', { lead: 'pr-open', leadColor: C.blue, title: 'Popover: Esc clears a filled text field first', subtitle: 'zen', meta: ['#73'], mark: 'warn', right: ['⋮'] }),
+      ],
+    }),
+    k.collapsibleList({
+      id: 'doing',
+      icon: 'tasklist',
+      title: 'Doing',
+      right: k.summary([['1', 'prioritised'], ['1', 'next']]),
+      onToggle: () => undefined,
+      items: [
+        k.listItem('thread', {
+          lead: h('Text', { bold: true, ...k.ink(C.blue) }, 'P1'),
+          title: 'syn',
+          bold: true,
+          subtitle: 'next: Dogfood M1 against this file’s inbox; then M2, one line of hidden context per prompt',
+          subtitleWrap: true,
+        }),
+        k.listItem('waiting', { lead: 'pending', title: 'Dev-preview ergonomics', dim: true }),
+      ],
+    }),
+    k.collapsibleList({
+      id: 'decided',
+      icon: 'checklist',
+      title: 'Decided',
+      right: k.summary([['2', 'recent']]),
+      onToggle: () => undefined,
+      items: [
+        k.listItem('decided-open', {
+          title: 'Should a signal inlet take one trace, or several?',
+          right: ['2d'],
+          subtitle: 'One per inlet',
+          subtitleLead: 'done',
+          strong: true,
+          open: true,
+          onToggle: () => undefined,
+          children: [h('Text', { wrap: 'wrap', dimColor: true }, 'Every in pin takes exactly one trace; fan-in goes through an explicit merge chip.')],
+        }),
+        k.listItem('decided-closed', { title: 'Is visuals 1.0 dark-only?', right: ['1d'], subtitle: 'Dark-only for 1.0', subtitleLead: 'done', strong: true, open: false, onToggle: () => undefined, children: [h('Text', {}, 'hidden')] }),
+      ],
+    }),
+    k.collapsibleList({ id: 'folded', icon: 'hubot', title: 'Agents', right: k.summary([['0', 'running']]), collapsed: true, onToggle: () => undefined, items: [k.note('none', 'No agents running.')] }),
+  ),
+)
+
 /** Every status mark and every icon's terminal glyph. */
 export const TerminalGlyphs = sheet(k =>
   h(
