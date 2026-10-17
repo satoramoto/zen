@@ -484,7 +484,7 @@ export const CollapsibleLists = sheet(k =>
       onToggle: () => undefined,
       items: [
         k.listItem('thread', {
-          lead: h('Text', { bold: true, color: C.blue }, 'P1'),
+          lead: h('Text', { bold: true, ...k.ink(C.blue) }, 'P1'),
           title: 'syn',
           bold: true,
           subtitle: 'next: Dogfood M1 against this file’s inbox; then M2, one line of hidden context per prompt',
