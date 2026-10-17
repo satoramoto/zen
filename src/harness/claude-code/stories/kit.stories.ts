@@ -7,7 +7,7 @@ import type { StoryAnnotations } from 'storybook/internal/types'
 import { tokens } from '../kit/format'
 import { TERM_GLYPH } from '../kit/icons'
 import type { PerfRow } from '../kit/perf'
-import { C, FILE_TYPE, GLYPH, INK, RAMP, STATUS, TRACK, levelColor } from '../kit/tokens'
+import { ACCENT, C, FILE_TYPE, GLYPH, INK, RAMP, STATUS, TRACK, levelColor } from '../kit/tokens'
 import type { FileType, StatusKind } from '../kit/tokens'
 import { kit } from '../kit/ui'
 import type { KitOptions } from '../kit/ui'
@@ -53,7 +53,8 @@ export const Bar: Story = {
 
 /** A section with readings: label, gauge, figure, unit, in the kit's fixed columns. */
 export const Section: Story = {
-  args: { title: 'Limits', collapsible: true, collapsed: false, fiveHour: 42, weekly: 81 },
+  args: { title: 'Limits', collapsible: true, collapsed: false, fiveHour: 42, weekly: 81, accent: 1 },
+  argTypes: { accent: { description: 'Which of the seven ACCENT colours (0 for none)', control: { type: 'range', min: 0, max: 7, step: 1 } } },
   render: (args, ctx) =>
     dom(() => {
       let collapsed = args.collapsed as boolean
@@ -63,6 +64,7 @@ export const Section: Story = {
         const tree = k.section({
           id: 'demo',
           icon: GLYPH.limits,
+          accent: args.accent ? ACCENT[args.accent - 1] : undefined,
           title: args.title,
           right: k.summary([['2', 'windows']]),
           collapsed,
@@ -468,6 +470,7 @@ export const CollapsibleLists = sheet(k =>
       id: 'prs',
       icon: 'pr-open',
       title: 'Pull requests',
+      accent: ACCENT[0],
       right: k.summary([['3', 'open']]),
       onToggle: () => undefined,
       items: [
@@ -480,6 +483,7 @@ export const CollapsibleLists = sheet(k =>
       id: 'doing',
       icon: 'tasklist',
       title: 'Doing',
+      accent: ACCENT[1],
       right: k.summary([['1', 'prioritised'], ['1', 'next']]),
       onToggle: () => undefined,
       items: [
@@ -497,6 +501,7 @@ export const CollapsibleLists = sheet(k =>
       id: 'decided',
       icon: 'checklist',
       title: 'Decided',
+      accent: ACCENT[2],
       right: k.summary([['2', 'recent']]),
       onToggle: () => undefined,
       items: [
@@ -513,7 +518,7 @@ export const CollapsibleLists = sheet(k =>
         k.listItem('decided-closed', { title: 'Is visuals 1.0 dark-only?', right: ['1d'], subtitle: 'Dark-only for 1.0', subtitleLead: 'done', strong: true, open: false, onToggle: () => undefined, children: [h('Text', {}, 'hidden')] }),
       ],
     }),
-    k.collapsibleList({ id: 'folded', icon: 'hubot', title: 'Agents', right: k.summary([['0', 'running']]), collapsed: true, onToggle: () => undefined, items: [k.note('none', 'No agents running.')] }),
+    k.collapsibleList({ id: 'folded', icon: 'hubot', title: 'Agents', accent: ACCENT[3], right: k.summary([['0', 'running']]), collapsed: true, onToggle: () => undefined, items: [k.note('none', 'No agents running.')] }),
   ),
 )
 

@@ -196,7 +196,13 @@ const boxStyle = (surface: Surface, p: Record<string, any>) => {
   return s
 }
 
-const textStyle = (p: Record<string, any>) => {
+/**
+ * A Text's `size` step on the app surfaces, in pixels: approximations of the desktop's type scale
+ * around its 13px body (not measured). The terminal has one size and ignores it.
+ */
+const TEXT_PX: Record<string, string> = { caption: '10px', footnote: '11px', body: '13px', heading: '15px', title: '17px' }
+
+const textStyle = (p: Record<string, any>, surface?: Surface) => {
   // The desktop keeps a Text on one line: it runs past its box rather than wrapping,
   // unless it's told `wrap="wrap"`. Spaces are kept, as in a cell grid.
   const s: Record<string, string> = { whiteSpace: p.wrap === 'wrap' ? 'pre-wrap' : 'pre' }
@@ -209,6 +215,7 @@ const textStyle = (p: Record<string, any>) => {
   else if (p.dimColor === false) s.opacity = '1'
   if (p.bold) s.fontWeight = '600'
   else if (p.bold === false) s.fontWeight = 'normal'
+  if (surface && surface !== 'terminal' && typeof p.size === 'string' && TEXT_PX[p.size]) s.fontSize = TEXT_PX[p.size]!
   if (p.italic) s.fontStyle = 'italic'
   else if (p.italic === false) s.fontStyle = 'normal'
   const lines = [p.underline && 'underline', p.strikethrough && 'line-through'].filter(Boolean)
@@ -691,8 +698,8 @@ const paint = (node: Child, ctx: Ctx): globalThis.Node | null => {
     }
     case 'Text': {
       const middle = surface === 'terminal' && (p.wrap === 'truncate-middle' || p.wrap === 'middle')
-      const el = apply(document.createElement('span'), { display: 'block', ...textStyle(middle ? { ...p, wrap: 'truncate' } : p) })
-      if (hover) join(member(el, () => textStyle({ ...p, ...without(hover, 'scope') })), hover, ctx.scope, ctx.site)
+      const el = apply(document.createElement('span'), { display: 'block', ...textStyle(middle ? { ...p, wrap: 'truncate' } : p, surface) })
+      if (hover) join(member(el, () => textStyle({ ...p, ...without(hover, 'scope') }, surface)), hover, ctx.scope, ctx.site)
       withKids(el, kids(), true)
       // Plain text only: a Text with styled runs inside keeps the end ellipsis.
       if (middle && children.every(c => typeof c === 'string' || typeof c === 'number' || c === null || c === undefined || c === false)) truncateMiddle(el)
