@@ -1,0 +1,9 @@
+/* Math (compendium mockup): a displayed formula gets room and may scroll sideways when it's
+   wider than the column; the math element keeps the browser's math face. */
+
+.cmp-math[data-block] {
+  max-width: min(var(--cmp-measure, 100%), 100%);
+  overflow-x: auto;
+  padding-block: var(--space-1);
+  color: var(--text-1);
+}

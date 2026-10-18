@@ -1,0 +1,41 @@
+/* Mark (compendium mockup): a shape in a colour slot. Its ink is the Text tone (currentColor). */
+
+.cmp-mark {
+  display: inline-block;
+  inline-size: 0.75em;
+  block-size: 0.75em;
+  line-height: 0;
+}
+
+.cmp-mark[data-place='margin'] {
+  float: left;
+  margin-inline-start: calc(-1 * var(--cmp-mark-gutter));
+  margin-block-start: 0.45em;
+}
+
+.cmp-mark__glyph {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.cmp-mark__fill {
+  fill: currentColor;
+}
+
+.cmp-mark__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.cmp-mark__line--dashed {
+  stroke-dasharray: 2.2 1.6;
+}
+
+.cmp-mark-legend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

@@ -1,0 +1,47 @@
+/* Reading (compendium mockup): a measure-wide text column, a margin column beside it, a gutter
+   on the left for marks. Notes and marks float into the margins from inside their paragraph, so
+   they stay on the line they belong to. Below 44rem the margin folds and notes sit inline. */
+
+.cmp-reading {
+  --cmp-margin: 26ch;
+  --cmp-gutter: var(--space-5);
+  --cmp-mark-gutter: var(--space-5);
+  container: cmp-reading / inline-size;
+  min-width: 0;
+}
+
+.cmp-reading__page {
+  counter-reset: cmp-sidenote;
+  max-width: calc(var(--cmp-measure) + var(--cmp-gutter) + var(--cmp-margin) + var(--cmp-mark-gutter));
+  padding-inline-start: var(--cmp-mark-gutter);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.cmp-reading__p,
+.cmp-reading__h {
+  max-width: min(var(--cmp-measure), calc(100% - var(--cmp-gutter) - var(--cmp-margin)));
+}
+
+.cmp-reading__p {
+  --text-leading: 1.6;
+  color: var(--text-1);
+}
+
+.cmp-reading__h {
+  color: var(--text-1);
+  padding-block-start: var(--space-3);
+}
+
+.cmp-reading__wide {
+  min-width: 0;
+}
+
+@container cmp-reading (max-width: 44rem) {
+  .cmp-reading__p,
+  .cmp-reading__h {
+    max-width: var(--cmp-measure);
+  }
+}

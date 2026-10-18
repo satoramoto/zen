@@ -1,0 +1,26 @@
+/* The entry page (compendium mockup story): the page surface and its few blocks. */
+
+.cmp-entry {
+  min-block-size: 100vh;
+  padding: var(--space-6) var(--space-4);
+}
+
+.cmp-entry__head {
+  padding-block-end: var(--space-3);
+}
+
+.cmp-entry__lede {
+  --text-leading: 1.5;
+  max-width: 60ch;
+}
+
+.cmp-entry__code {
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.cmp-entry__pre {
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+}

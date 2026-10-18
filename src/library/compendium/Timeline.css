@@ -1,0 +1,88 @@
+/* Timeline (compendium mockup): a label column and a track per row; spans are thin round-ended
+   bars, points dots with their label hanging under them. */
+
+.cmp-timeline {
+  display: grid;
+  row-gap: var(--space-3);
+  min-width: 0;
+}
+
+.cmp-timeline__row {
+  display: grid;
+  grid-template-columns: minmax(0, 11ch) minmax(0, 1fr);
+  column-gap: var(--space-3);
+  align-items: start;
+}
+
+.cmp-timeline__label {
+  padding-block-start: var(--space-1);
+}
+
+.cmp-timeline__track {
+  position: relative;
+  block-size: calc(var(--space-4) + var(--size-caption) * 1.4);
+}
+/* The baseline of every track. */
+.cmp-timeline__track::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: var(--space-2);
+  block-size: 1px;
+  background: var(--border);
+}
+
+.cmp-timeline__break {
+  position: absolute;
+  inset-block-start: calc(var(--space-2) - 0.7em);
+  translate: -50% 0;
+}
+
+.cmp-timeline__span {
+  position: absolute;
+  inset-block-start: calc(var(--space-2) - var(--space-1) / 2);
+  block-size: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--hue-2);
+  opacity: 0.55;
+}
+.cmp-timeline__span[data-circa] {
+  opacity: 0.35;
+}
+
+.cmp-timeline__point {
+  position: absolute;
+  inset-block-start: 0;
+  inline-size: 0;
+}
+
+.cmp-timeline__dot {
+  position: absolute;
+  inset-block-start: calc(var(--space-2) - var(--space-2) / 2);
+  inset-inline-start: calc(var(--space-2) / -2);
+  inline-size: var(--space-2);
+  block-size: var(--space-2);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.cmp-timeline__what {
+  position: absolute;
+  inset-block-start: var(--space-4);
+  inset-inline-start: 0;
+  white-space: nowrap;
+}
+.cmp-timeline__what[data-end] {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+.cmp-timeline__axis {
+  position: relative;
+  block-size: calc(var(--size-caption) * 1.4);
+}
+.cmp-timeline__tick {
+  position: absolute;
+  translate: -50% 0;
+  white-space: nowrap;
+}

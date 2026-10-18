@@ -1,0 +1,17 @@
+/* Peek (compendium mockup): words that are a button, and the preview's panel. */
+
+.cmp-peek {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.2em;
+}
+
+.cmp-peek__panel {
+  inline-size: min(34ch, calc(100vw - var(--space-6)));
+  padding: var(--space-3);
+}

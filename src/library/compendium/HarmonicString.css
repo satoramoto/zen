@@ -1,0 +1,38 @@
+/* The harmonic string figure (compendium mockup): the wave's strokes, in contract colours. */
+
+.cmp-wave {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.cmp-wave__rest {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.cmp-wave__envelope {
+  fill: none;
+  stroke: var(--text-4);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.cmp-wave__string {
+  fill: none;
+  stroke: var(--hue-1);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cmp-wave__node {
+  fill: var(--text-2);
+}
+.cmp-wave__end {
+  fill: var(--text-1);
+}
+
+.cmp-wave__keys {
+  min-width: 0;
+}
