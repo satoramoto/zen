@@ -521,18 +521,20 @@ export const bigRed: Palette = {
     selectedText: '#ffffff', // added
     accent: '#513217', // added: a dark warm brown, for carets and focus on a pale ground
     success: '#02633c', // added
-    warning: '#daa50b', // added
+    // added: a deep umber-ochre, 3.6:1 on every surface; no ink can be AA on a fill dark enough for 3:1 on
+    // these pale grounds, so its ink is white, and a more saturated amber falls within 0.12 of the orange hue
+    warning: '#6e5542',
     danger: '#8f0246', // added
     successText: '#ffffff', // added
-    warningText: '#1a1006', // added
+    warningText: '#ffffff', // added
     dangerText: '#ffffff', // added
     hues: ['#577d03', '#a86003', '#097689', '#7541b8', '#b33f98'], // added: the dark LEDs deepened
     onHue: '#ffffff', // added
     roles: [
       '#1957bb', // added
-      '#e9f3fe', // added: the ice white
+      '#184568', // added: the ice LED as a deep steel blue, 5.2:1 on every surface
     ],
-    roleText: ['#ffffff', '#2e1010'], // added
+    roleText: ['#ffffff', '#ffffff'], // added
     bloom: '0px', // added
     keys: {
       white: '#fbf6ec', // added
