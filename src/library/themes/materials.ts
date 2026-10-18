@@ -374,6 +374,127 @@ export const hardwareMaterials: Materials = {
   },
 };
 
+// ── Panel (a red stage-keyboard panel, ryangavin/big-red-synth) ─────────────────────────────────
+// The hardware set's light from above, on a printed chassis plate: rubber keys, matte black caps,
+// charcoal grooves and a glass OLED. Parts that carry text (keys, the screen, floating plates) take
+// their tone from the ink turned over, so they are dark under light print and pale under dark print
+// in either mode; parts that carry none (caps, grooves) stay black plastic in both. All added: the
+// photo shows the parts, not their CSS.
+
+/** A tone opposite the ink: `base` lightness under the palest ink, rising by `span` as the ink
+ *  darkens, with a little of the ink's own hue (`chroma`, a share of its chroma). */
+function underInk(base: number, span: number, chroma: number): string {
+  return `oklch(from var(--text-1) calc(${base} + ${span} * (1 - l)) calc(c * ${chroma}) h)`;
+}
+
+/** Dark-grey rubber under the cream print (a pale grey under dark print), lit at the top edge. */
+const rubber = underInk(0.3, 0.62, 0.25);
+const rubberFace = `linear-gradient(180deg, color-mix(in oklab, ${rubber}, ${light(1)} 12%), ${rubber} 45%, color-mix(in oklab, ${rubber}, ${shade(1)} 12%))`;
+
+/** Matte black plastic: the palette's black key, barely lifted at the top. */
+const plastic = `linear-gradient(180deg, color-mix(in oklab, var(--key-black), ${light(1)} 9%), var(--key-black) 60%)`;
+
+/** The opaque dark plate popovers, sheets and toasts are cut from (pale under dark print). */
+const plateTone = underInk(0.22, 0.75, 0.2);
+const plateFace = `linear-gradient(180deg, color-mix(in oklab, ${plateTone}, ${light(1)} 6%), ${plateTone} 40%)`;
+
+/** A plate standing off the chassis: a lit top edge, a seam, and a shadow `drop` px below it. */
+function panelLift(drop: number, blur: number, spread: number, alpha: number): Layer {
+  return {
+    fill: plateFace,
+    solid: plateFace,
+    texture: 'none',
+    backdrop: 'none',
+    edge: `inset 0 1px 0 ${light(0.14)}, inset 0 -1px 0 ${shade(0.4)}`,
+    cast: `0 0 0 1px ${shade(0.6)}, 0 ${drop}px ${blur}px ${spread}px ${shade(alpha)}`,
+  };
+}
+
+export const panelMaterials: Materials = {
+  id: 'panel',
+  label: 'Panel (rubber keys, black caps, glass OLED)',
+  radiusControl: '3px', // added
+  radiusCard: '6px', // added
+  radiusInput: '2px', // added
+  radiusPill: '9999px', // added: LEDs
+  borderWidth: '1px', // added
+  input: 'filled', // added: fields sit in the panel like the screen's surround
+  light: '180deg', // added: lit from above, as hardware
+  layers: {
+    ground: plain('var(--surface-0)'), // added: the red chassis plate
+    base: {
+      // added: a panel region pressed a touch into the chassis, ringed by a dark edge line
+      ...plain(`color-mix(in oklab, var(--surface-1), ${shade(1)} 5%)`),
+      edge: [`inset 0 0 0 1px var(--border)`, `inset 0 2px 3px ${shade(0.22)}`, `inset 0 -1px 0 ${light(0.08)}`].join(', '),
+      cast: `0 1px 0 ${light(0.1)}`, // the chassis lip below the recess catches the light
+    },
+    raised: {
+      // added: a bevelled plate standing on a region
+      ...plain(`linear-gradient(180deg, color-mix(in oklab, var(--surface-2), ${light(1)} 8%), color-mix(in oklab, var(--surface-2), ${shade(1)} 4%))`),
+      edge: `inset 0 1px 0 ${light(0.2)}, inset 0 -1px 0 ${shade(0.3)}`,
+      cast: `0 0 0 1px ${shade(0.4)}, 0 2px 0 ${shade(0.3)}, 0 4px 8px -3px ${shade(0.45)}`,
+    },
+    float: panelLift(14, 32, -10, 0.65), // added
+    overlay: panelLift(24, 52, -14, 0.72), // added
+    top: panelLift(32, 64, -16, 0.78), // added
+  },
+  plate: {
+    inset: 'var(--space-3)', // added
+    gap: 'var(--space-2)', // added: panel sections butt up close
+    head: { inset: 'var(--space-2) var(--space-3) 0', rule: NO_SHADOW }, // added: printed headings, no rule
+  },
+  tabs: {
+    // added: a row of rubber keys set in a recessed strip of the chassis, the chosen one a key
+    track: {
+      fill: `color-mix(in oklab, var(--surface-0), ${shade(1)} 10%)`,
+      shadow: `inset 0 1px 3px ${shade(0.4)}, 0 1px 0 ${light(0.1)}`,
+      texture: 'none',
+    },
+    tab: bare,
+    chosen: { fill: 'var(--mat-key-fill)', shadow: 'var(--mat-key-shadow)', texture: 'none' },
+    ink: 'var(--text-2)',
+    chosenInk: 'var(--text-1)',
+    pad: '3px',
+    gap: '2px',
+    tabPad: '0 var(--space-3)',
+  },
+  well: {
+    // added: a charcoal groove cut into the chassis, shadowed under its top edge
+    fill: `linear-gradient(180deg, color-mix(in oklab, var(--key-black), ${shade(1)} 40%), var(--key-black) 35%)`,
+    shadow: [`inset 0 0 0 1px ${shade(0.55)}`, `inset 0 2px 4px ${shade(0.7)}`, `0 1px 0 ${light(0.1)}`].join(', '),
+    texture: 'none',
+  },
+  screen: {
+    // added: the OLED, near-black glass under the cream print (a pale glass under dark print)
+    fill: underInk(0.13, 0.85, 0.15),
+    shadow: [
+      `inset 0 0 0 1px ${shade(0.8)}`, // the bezel
+      `inset 0 0 0 2px ${light(0.06)}`, // the glass's faint inner edge
+      `inset 0 4px 12px ${shade(0.45)}`,
+      `0 1px 0 ${light(0.12)}`,
+    ].join(', '),
+    texture: `linear-gradient(165deg, ${light(0.09)}, transparent 40%)`, // the gloss
+  },
+  key: {
+    fill: rubberFace, // added: bevelled rubber
+    shadow: [
+      `0 0 0 1px ${shade(0.6)}`,
+      `inset 0 1px 0 ${light(0.22)}`, // the top highlight
+      `inset 0 -2px 0 ${shade(0.3)}`, // the bevel's lower edge
+      `0 2px 0 ${shade(0.5)}`,
+      `0 3px 5px -1px ${shade(0.45)}`,
+    ].join(', '),
+    texture: 'none',
+    pressed: [`0 0 0 1px ${shade(0.6)}`, `inset 0 2px 3px ${shade(0.55)}`, `0 1px 0 ${shade(0.3)}`].join(', '), // added: pushed into the panel
+  },
+  handle: {
+    fill: plastic, // added: matte black fader and knob caps
+    shadow: [`0 0 0 1px ${shade(0.6)}`, `inset 0 1px 0 ${light(0.12)}`, `0 3px 6px -1px ${shade(0.55)}`].join(', '),
+    texture: 'none',
+  },
+  lit: { radius: 'var(--bloom)', strength: '90%' }, // added: the LEDs bloom by the palette's bloom
+};
+
 // ── Frost (visual[flow] 1.0, openflowfm/visuals) ─────────────────────────────────────────────────
 // Native macOS HUD frost behind a transparent window: the page paints only faint tints over it
 // (home.css --surface-0..3, which the frost palette carries), and from raised up, sheets of frosted
@@ -589,4 +710,5 @@ export const materials: Materials[] = [
   linearMaterials,
   hardwareMaterials,
   frostMaterials,
+  panelMaterials,
 ];

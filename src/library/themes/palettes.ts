@@ -470,4 +470,77 @@ export const claudeCode: Palette = {
   },
 };
 
-export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode];
+// Big Red: a red stage-keyboard panel (ryangavin/big-red-synth). Dark mode is the panel itself: a
+// saturated red chassis printed in cream, rubber keys, lit LEDs and a black OLED. The photo gives
+// the chassis, the print, the red LEDs and the keys; everything else is added. On a red ground the
+// red LED and a red danger can't both hold the 0.12 rule, so danger leans crimson-magenta; and the
+// accent and role 2 already take the two whites, so the hues swap white for a pink LED.
+export const bigRed: Palette = {
+  id: 'big-red',
+  label: 'Big Red',
+  dark: {
+    // the red chassis (oklch 0.49 0.19 22), then added steps lifted a touch each
+    surface: ['#b5112c', '#b9142f', '#be1832', '#c41c36'],
+    // the cream panel print (6.2:1 on the ground), then added paler steps, each AA on every surface; the last a faint mark
+    text: ['#fff6e8', '#fdeadf', '#f9dfd4', '#e9a39b'],
+    border: '#650d17', // added: a dark red hairline
+    borderStrong: '#4c060e', // added
+    action: '#f3ead8', // added: a cream key
+    actionText: '#2a0d10', // added
+    selected: '#ff5549', // the lit red LED
+    selectedText: '#1a0608', // added
+    accent: '#fff0d7', // added: a warm white lamp
+    success: '#06da7e', // added: a green LED
+    warning: '#ffce32', // added: an amber LED
+    danger: '#f00580', // added: a bright crimson, pinked off the red LED
+    successText: '#0d1a0f', // added
+    warningText: '#1a1006', // added
+    dangerText: '#14040a', // added
+    hues: ['#abf051', '#ff9b52', '#10e7e7', '#bd96fe', '#fea4cc'], // added: lime, orange, cyan, violet and pink LEDs
+    onHue: '#1a0a0c', // added
+    roles: [
+      '#4a98ff', // added: a cool blue LED
+      '#badbfe', // added: an ice-white LED, cooler than the accent
+    ],
+    roleText: ['#0a1020', '#1a0a0c'], // added
+    bloom: '6px', // added: the lamps glow
+    keys: {
+      white: '#f3ead8', // the cream keys
+      black: '#141212', // the charcoal keys
+    },
+  },
+  // Added: the same panel on a paler, less saturated red, printed dark.
+  light: {
+    surface: ['#e8acaa', '#ecb9b6', '#f3c4c1', '#f7d0cd'], // added
+    text: ['#2e1010', '#4d2525', '#5e3534', '#96615f'], // added: AA on every surface but the faint last
+    border: '#b6706e', // added
+    borderStrong: '#944a49', // added
+    action: '#f6efe2', // added: the cream key
+    actionText: '#2e1010', // added
+    selected: '#c51f1c', // added: the red LED deepened
+    selectedText: '#ffffff', // added
+    accent: '#513217', // added: a dark warm brown, for carets and focus on a pale ground
+    success: '#02633c', // added
+    // added: a deep umber-ochre, 3.6:1 on every surface; no ink can be AA on a fill dark enough for 3:1 on
+    // these pale grounds, so its ink is white, and a more saturated amber falls within 0.12 of the orange hue
+    warning: '#6e5542',
+    danger: '#8f0246', // added
+    successText: '#ffffff', // added
+    warningText: '#ffffff', // added
+    dangerText: '#ffffff', // added
+    hues: ['#577d03', '#a86003', '#097689', '#7541b8', '#b33f98'], // added: the dark LEDs deepened
+    onHue: '#ffffff', // added
+    roles: [
+      '#1957bb', // added
+      '#184568', // added: the ice LED as a deep steel blue, 5.2:1 on every surface
+    ],
+    roleText: ['#ffffff', '#ffffff'], // added
+    bloom: '0px', // added
+    keys: {
+      white: '#fbf6ec', // added
+      black: '#141212', // added
+    },
+  },
+};
+
+export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed];
