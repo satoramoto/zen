@@ -338,6 +338,48 @@ export const SKINS = {
       "#a35ff0",
       "#3a5fd0"
     ]
+  },
+  "big-red": {
+    label: "Big Red (panel)",
+    ok: "#06da7e",
+    warn: "#ffce32",
+    bad: "#f00580",
+    blue: "#4a98ff",
+    purple: "#bd96fe",
+    cyan: "#10e7e7",
+    slate: "#d0d6e7",
+    orchid: "#fea4cc",
+    ramp: {
+      blue: [
+        "#4a98ff",
+        "#3872bf",
+        "#89bcff",
+        "#29548c"
+      ],
+      slate: [
+        "#d0d6e7",
+        "#9ca1ad",
+        "#e0e4ef",
+        "#72767f"
+      ]
+    },
+    muted: "#f9dfd4",
+    gray: {
+      light: "#fdeadf",
+      mid: "#f9dfd4",
+      dark: "#e9a39b"
+    },
+    hues: [
+      "#abf051",
+      "#ff9b52",
+      "#10e7e7",
+      "#bd96fe",
+      "#fea4cc"
+    ],
+    roles: [
+      "#4a98ff",
+      "#badbfe"
+    ]
   }
 } as const satisfies Record<string, Skin>
 

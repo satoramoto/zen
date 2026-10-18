@@ -138,4 +138,19 @@ export const packs: ThemePack[] = [
     facets: facets('claude-code', 'linear', 'compact', 'linear'),
     principles: principles.studio,
   },
+  {
+    id: 'big-red',
+    label: 'Big Red (panel)',
+    source: { name: 'Big Red stage panel', url: 'https://github.com/ryangavin/big-red-synth' },
+    northStar: 'A red stage-keyboard panel: printed labels, rubber keys, lit LEDs, a glass OLED.',
+    keep: [
+      'The chassis is saturated red; labels are printed on it in cream condensed capitals.',
+      'Keys are dark rubber, caps matte black plastic, grooves recessed charcoal: depth from bevels and insets.',
+      'State is a lit LED that blooms; a red LED means selected.',
+      'Readouts sit behind one near-black glass OLED.',
+    ],
+    // Barlow Condensed in spaced bold capitals already reads as panel print.
+    facets: facets('big-red', 'classic', 'compact', 'panel'),
+    principles: principles.studio,
+  },
 ];
