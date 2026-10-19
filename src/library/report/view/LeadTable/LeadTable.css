@@ -1,0 +1,134 @@
+/* LeadTable: the leads grouped by tier. Contract variables only. The root is a size container:
+   under 40rem the rows stack. */
+
+.lib-report-leads {
+  container: lib-report-leads / inline-size;
+  min-width: 0;
+}
+
+.lib-report-leads__table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: start;
+}
+
+.lib-report-leads__cell {
+  padding: var(--space-2) var(--space-3);
+  vertical-align: top;
+  text-align: start;
+}
+
+.lib-report-leads__cell:first-child {
+  padding-inline-start: 0;
+}
+
+.lib-report-leads__cell:last-child {
+  padding-inline-end: 0;
+}
+
+.lib-report-leads__head .lib-report-leads__cell {
+  padding-block: 0 var(--space-2);
+  border-bottom: var(--border-width) solid var(--border-strong);
+  white-space: nowrap;
+}
+
+.lib-report-leads__row > .lib-report-leads__cell {
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+.lib-report-leads__cell[data-col='name'] { width: 18%; }
+.lib-report-leads__cell[data-col='location'] { width: 12%; }
+.lib-report-leads__cell[data-col='when'] { width: 12%; }
+.lib-report-leads__cell[data-col='contact'] { width: 16%; }
+.lib-report-leads__cell[data-col='channel'] { white-space: nowrap; }
+
+.lib-report-leads__group-head > .lib-report-leads__cell {
+  padding-block: var(--space-5) var(--space-2);
+}
+
+.lib-report-leads__group:first-of-type .lib-report-leads__group-head > .lib-report-leads__cell {
+  padding-block-start: var(--space-3);
+}
+
+.lib-report-leads__group-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lib-report-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  white-space: nowrap;
+}
+
+.lib-report-leads__link {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 0.2em;
+}
+
+.lib-report-leads__link:hover {
+  text-decoration-color: currentColor;
+}
+
+.lib-report-leads__contact {
+  overflow-wrap: anywhere;
+}
+
+/* Stacked rows: each lead is a block (name and channel; location and when; angle; contact). */
+@container lib-report-leads (max-width: 40rem) {
+  .lib-report-leads__table,
+  .lib-report-leads__group {
+    display: block;
+  }
+
+  /* Column heads stay for assistive tech only. */
+  .lib-report-leads__head {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .lib-report-leads__group-head,
+  .lib-report-leads__group-head > .lib-report-leads__cell {
+    display: block;
+  }
+
+  .lib-report-leads__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name channel'
+      'location location'
+      'when when'
+      'angle angle'
+      'contact contact';
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    padding-block: var(--space-3);
+    border-bottom: var(--border-width) solid var(--border);
+  }
+
+  .lib-report-leads__row > .lib-report-leads__cell {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .lib-report-leads__row > .lib-report-leads__cell:empty {
+    display: none;
+  }
+
+  .lib-report-leads__cell[data-col='name'] { grid-area: name; }
+  .lib-report-leads__cell[data-col='channel'] { grid-area: channel; }
+  .lib-report-leads__cell[data-col='location'] { grid-area: location; }
+  .lib-report-leads__cell[data-col='when'] { grid-area: when; }
+  .lib-report-leads__cell[data-col='angle'] { grid-area: angle; }
+  .lib-report-leads__cell[data-col='contact'] { grid-area: contact; }
+}
