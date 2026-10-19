@@ -1,0 +1,34 @@
+/* Report: the whole document. Contract variables plus --lib-report-measure (a knob, declared in
+   Report.tsx). Prose keeps the measure; wide sections (the summary row, the lead table) take the
+   document's width. */
+
+.lib-report {
+  --lib-report-measure: 70ch;
+  min-width: 0;
+}
+
+.lib-report[data-measure='narrow'] { --lib-report-measure: 60ch; }
+.lib-report[data-measure='wide'] { --lib-report-measure: 80ch; }
+
+.lib-report__masthead,
+.lib-report__section:not([data-wide]) {
+  max-width: var(--lib-report-measure);
+}
+
+.lib-report__masthead {
+  padding-bottom: var(--space-5);
+  border-bottom: var(--border-width) solid var(--border-strong);
+}
+
+.lib-report__section {
+  min-width: 0;
+}
+
+.lib-report__section-title {
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+.lib-report__section[data-wide] .lib-report__section-title {
+  max-width: var(--lib-report-measure);
+}

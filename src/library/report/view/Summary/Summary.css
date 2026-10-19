@@ -1,0 +1,16 @@
+/* Summary: stat tiles in a wrapping row, a hairline above each. Contract variables only. */
+
+.lib-report-summary {
+  margin: 0;
+}
+
+.lib-report-summary__stat {
+  flex: 1 1 8rem;
+  max-width: 14rem;
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--border);
+}
+
+.lib-report-summary__value {
+  margin: 0;
+}

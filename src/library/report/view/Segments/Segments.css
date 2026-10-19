@@ -1,0 +1,57 @@
+/* Segments: a proportional bar and its legend. Contract variables plus --lib-report-hue (a knob,
+   declared in Segments.tsx). */
+
+.lib-report-segments [data-hue='1'] { --lib-report-hue: var(--hue-1); }
+.lib-report-segments [data-hue='2'] { --lib-report-hue: var(--hue-2); }
+.lib-report-segments [data-hue='3'] { --lib-report-hue: var(--hue-3); }
+.lib-report-segments [data-hue='4'] { --lib-report-hue: var(--hue-4); }
+.lib-report-segments [data-hue='5'] { --lib-report-hue: var(--hue-5); }
+
+.lib-report-segments__bar {
+  display: flex;
+  gap: 2px;
+  height: var(--space-2);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+}
+
+.lib-report-segments__part {
+  flex-basis: 0;
+  min-width: 2px;
+  background: var(--lib-report-hue);
+}
+
+.lib-report-segments__legend {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  align-items: baseline;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each entry's three cells sit in the legend's grid, so names, counts and notes line up. */
+.lib-report-segments__entry {
+  display: contents;
+}
+
+.lib-report-segments__name {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.lib-report-segments__name::before {
+  content: '';
+  width: var(--space-3);
+  height: var(--space-3);
+  align-self: center;
+  border-radius: var(--radius-control);
+  background: var(--lib-report-hue);
+}
+
+.lib-report-segments__count {
+  justify-self: end;
+}

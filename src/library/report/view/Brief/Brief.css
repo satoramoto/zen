@@ -1,0 +1,17 @@
+/* Brief: market and goal as prose, scope and method as lists. Contract variables only. */
+
+.lib-report-brief__list {
+  flex: 1 1 16rem;
+}
+
+.lib-report-brief__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0 0 0 var(--space-4);
+}
+
+.lib-report-brief__item::marker {
+  color: var(--text-4);
+}
