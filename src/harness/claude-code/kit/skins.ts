@@ -341,7 +341,7 @@ export const SKINS = {
   },
   "big-red": {
     label: "Big Red (panel)",
-    ok: "#06da7e",
+    ok: "#9bff3a",
     warn: "#ffce32",
     bad: "#f00580",
     blue: "#4a98ff",
@@ -370,7 +370,7 @@ export const SKINS = {
       dark: "#e9a39b"
     },
     hues: [
-      "#abf051",
+      "#06da7e",
       "#ff9b52",
       "#10e7e7",
       "#bd96fe",

@@ -375,11 +375,13 @@ export const hardwareMaterials: Materials = {
 };
 
 // ── Panel (a red stage-keyboard panel, ryangavin/big-red-synth) ─────────────────────────────────
-// The hardware set's light from above, on a printed chassis plate: rubber keys, matte black caps,
-// charcoal grooves and a glass OLED. Parts that carry text (keys, the screen, floating plates) take
-// their tone from the ink turned over, so they are dark under light print and pale under dark print
-// in either mode; parts that carry none (caps, grooves) stay black plastic in both. All added: the
-// photo shows the parts, not their CSS.
+// The hardware set's light from above, on a red chassis: slate section plates, rubber keys, matte
+// black caps, charcoal grooves and a glass OLED. Parts that carry text (plates, keys, the screen,
+// floating plates) take their tone from the ink turned over, so they are dark under light print and
+// pale under dark print in either mode; parts that carry none (caps, grooves) stay black plastic in
+// both. The key fill is the dark cap as a plain colour: a light or red cap is the consumer's
+// `color-mix` over `--mat-key-fill`, wearing the same `--mat-key-texture` bevel. Values are added:
+// the photo shows the parts, not their CSS.
 
 /** A tone opposite the ink: `base` lightness under the palest ink, rising by `span` as the ink
  *  darkens, with a little of the ink's own hue (`chroma`, a share of its chroma). */
@@ -387,9 +389,19 @@ function underInk(base: number, span: number, chroma: number): string {
   return `oklch(from var(--text-1) calc(${base} + ${span} * (1 - l)) calc(c * ${chroma}) h)`;
 }
 
-/** Dark-grey rubber under the cream print (a pale grey under dark print), lit at the top edge. */
+/** Dark-grey rubber under the cream print (a pale grey under dark print): a plain colour, so a
+ *  consumer can `color-mix` other caps from `--mat-key-fill` (big-red-synth's light cap mixes it
+ *  towards `--key-white`, its red cap towards `--selected`). The bevel is the texture over it. */
 const rubber = underInk(0.3, 0.62, 0.25);
-const rubberFace = `linear-gradient(180deg, color-mix(in oklab, ${rubber}, ${light(1)} 12%), ${rubber} 45%, color-mix(in oklab, ${rubber}, ${shade(1)} 12%))`;
+const rubberBevel = `linear-gradient(180deg, ${light(0.12)}, transparent 45%, ${shade(0.12)})`;
+
+/** The slate plates the panel's sections are printed on: a cool dark grey under the cream print
+ *  (a pale slate under dark print), tinted by role 2's ice. Lifted `lift` above the base plate. */
+function slate(lift: number): string {
+  return `color-mix(in oklab, ${underInk(0.332 + lift, 0.723, 0)}, var(--role-2) 15%)`;
+}
+/** Captions and faint marks on a slate plate: the palette's would carry the chassis's pink. */
+const slateInk: LayerInk = { secondary: 'var(--text-3)', faint: 'color-mix(in oklab, var(--text-3) 70%, transparent)' };
 
 /** Matte black plastic: the palette's black key, barely lifted at the top. */
 const plastic = `linear-gradient(180deg, color-mix(in oklab, var(--key-black), ${light(1)} 9%), var(--key-black) 60%)`;
@@ -412,7 +424,7 @@ function panelLift(drop: number, blur: number, spread: number, alpha: number): L
 
 export const panelMaterials: Materials = {
   id: 'panel',
-  label: 'Panel (rubber keys, black caps, glass OLED)',
+  label: 'Panel (slate plates, rubber keys, black caps, glass OLED)',
   radiusControl: '3px', // added
   radiusCard: '6px', // added
   radiusInput: '2px', // added
@@ -423,21 +435,22 @@ export const panelMaterials: Materials = {
   layers: {
     ground: plain('var(--surface-0)'), // added: the red chassis plate
     base: {
-      // added: a panel region pressed a touch into the chassis, ringed by a dark edge line
-      ...plain(`color-mix(in oklab, var(--surface-1), ${shade(1)} 5%)`),
-      edge: [`inset 0 0 0 1px var(--border)`, `inset 0 2px 3px ${shade(0.22)}`, `inset 0 -1px 0 ${light(0.08)}`].join(', '),
-      cast: `0 1px 0 ${light(0.1)}`, // the chassis lip below the recess catches the light
+      // the photo's slate section plates on the chassis: a pale top edge, a soft inset bottom
+      ...plain(slate(0)),
+      edge: [`inset 0 1px 0 ${light(0.3)}`, `inset 0 -1px 2px ${shade(0.35)}`].join(', '),
+      cast: `0 1px 2px ${shade(0.3)}`, // added
     },
     raised: {
-      // added: a bevelled plate standing on a region
-      ...plain(`linear-gradient(180deg, color-mix(in oklab, var(--surface-2), ${light(1)} 8%), color-mix(in oklab, var(--surface-2), ${shade(1)} 4%))`),
-      edge: `inset 0 1px 0 ${light(0.2)}, inset 0 -1px 0 ${shade(0.3)}`,
+      // added: a lighter slate plate standing on a section plate
+      ...plain(slate(0.08)),
+      edge: `inset 0 1px 0 ${light(0.3)}, inset 0 -1px 0 ${shade(0.3)}`,
       cast: `0 0 0 1px ${shade(0.4)}, 0 2px 0 ${shade(0.3)}, 0 4px 8px -3px ${shade(0.45)}`,
     },
     float: panelLift(14, 32, -10, 0.65), // added
     overlay: panelLift(24, 52, -14, 0.72), // added
     top: panelLift(32, 64, -16, 0.78), // added
   },
+  ink: { base: slateInk, raised: slateInk }, // added
   plate: {
     inset: 'var(--space-3)', // added
     gap: 'var(--space-2)', // added: panel sections butt up close
@@ -451,7 +464,7 @@ export const panelMaterials: Materials = {
       texture: 'none',
     },
     tab: bare,
-    chosen: { fill: 'var(--mat-key-fill)', shadow: 'var(--mat-key-shadow)', texture: 'none' },
+    chosen: { fill: 'var(--mat-key-fill)', shadow: 'var(--mat-key-shadow)', texture: 'var(--mat-key-texture)' },
     ink: 'var(--text-2)',
     chosenInk: 'var(--text-1)',
     pad: '3px',
@@ -476,7 +489,7 @@ export const panelMaterials: Materials = {
     texture: `linear-gradient(165deg, ${light(0.09)}, transparent 40%)`, // the gloss
   },
   key: {
-    fill: rubberFace, // added: bevelled rubber
+    fill: rubber, // added: the dark rubber cap, plain so light and red caps can be mixed from it
     shadow: [
       `0 0 0 1px ${shade(0.6)}`,
       `inset 0 1px 0 ${light(0.22)}`, // the top highlight
@@ -484,7 +497,7 @@ export const panelMaterials: Materials = {
       `0 2px 0 ${shade(0.5)}`,
       `0 3px 5px -1px ${shade(0.45)}`,
     ].join(', '),
-    texture: 'none',
+    texture: rubberBevel, // added: lit at the top edge, shaded at the foot
     pressed: [`0 0 0 1px ${shade(0.6)}`, `inset 0 2px 3px ${shade(0.55)}`, `0 1px 0 ${shade(0.3)}`].join(', '), // added: pushed into the panel
   },
   handle: {
