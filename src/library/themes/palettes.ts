@@ -472,9 +472,11 @@ export const claudeCode: Palette = {
 
 // Big Red: a red stage-keyboard panel (ryangavin/big-red-synth). Dark mode is the panel itself: a
 // saturated red chassis printed in cream, rubber keys, lit LEDs and a black OLED. The photo gives
-// the chassis, the print, the red LEDs and the keys; everything else is added. On a red ground the
-// red LED and a red danger can't both hold the 0.12 rule, so danger leans crimson-magenta; and the
-// accent and role 2 already take the two whites, so the hues swap white for a pink LED.
+// the chassis, the print, the red and lime-green LEDs and the keys; everything else is added. On a
+// red ground the red LED and a red danger can't both hold the 0.12 rule, so danger leans
+// crimson-magenta; the accent and role 2 already take the two whites, so the hues swap white for a
+// pink LED; and success takes the photo's lime, so hue 1 is a mint LED in dark and, where no green
+// stays 0.12 clear of the deepened lime, a blue LED in light.
 export const bigRed: Palette = {
   id: 'big-red',
   label: 'Big Red',
@@ -490,13 +492,13 @@ export const bigRed: Palette = {
     selected: '#ff5549', // the lit red LED
     selectedText: '#1a0608', // added
     accent: '#fff0d7', // added: a warm white lamp
-    success: '#06da7e', // added: a green LED
+    success: '#9bff3a', // the lit lime-green LED
     warning: '#ffce32', // added: an amber LED
     danger: '#f00580', // added: a bright crimson, pinked off the red LED
     successText: '#0d1a0f', // added
     warningText: '#1a1006', // added
     dangerText: '#14040a', // added
-    hues: ['#abf051', '#ff9b52', '#10e7e7', '#bd96fe', '#fea4cc'], // added: lime, orange, cyan, violet and pink LEDs
+    hues: ['#06da7e', '#ff9b52', '#10e7e7', '#bd96fe', '#fea4cc'], // added: mint, orange, cyan, violet and pink LEDs
     onHue: '#1a0a0c', // added
     roles: [
       '#4a98ff', // added: a cool blue LED
@@ -520,7 +522,7 @@ export const bigRed: Palette = {
     selected: '#c51f1c', // added: the red LED deepened
     selectedText: '#ffffff', // added
     accent: '#513217', // added: a dark warm brown, for carets and focus on a pale ground
-    success: '#02633c', // added
+    success: '#3b7000', // added: the lime LED deepened, 3.1:1 on every surface
     // added: a deep umber-ochre, 3.6:1 on every surface; no ink can be AA on a fill dark enough for 3:1 on
     // these pale grounds, so its ink is white, and a more saturated amber falls within 0.12 of the orange hue
     warning: '#6e5542',
@@ -528,7 +530,7 @@ export const bigRed: Palette = {
     successText: '#ffffff', // added
     warningText: '#ffffff', // added
     dangerText: '#ffffff', // added
-    hues: ['#577d03', '#a86003', '#097689', '#7541b8', '#b33f98'], // added: the dark LEDs deepened
+    hues: ['#0a10f0', '#a86003', '#097689', '#7541b8', '#b33f98'], // added: the dark LEDs deepened; hue 1 a blue LED
     onHue: '#ffffff', // added
     roles: [
       '#1957bb', // added
