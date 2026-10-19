@@ -135,7 +135,12 @@ export function readyLeads(report: Pick<Report, 'leads'>): Lead[] {
   return report.leads.filter(isReady);
 }
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** `url` when it is an `http:` or `https:` address (safe to link), otherwise `undefined` (show it as text). */
+export function safeHref(url: string | null | undefined): string | undefined {
+  return typeof url === 'string' && /^https?:\/\//i.test(url.trim()) ? url.trim() : undefined;
+}
+
+const MONTHS =['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 /** A report date for reading: `2026-10-19` → `19 October 2026`, as a calendar date (no time zone). Anything else is returned as written. */
 export function formatReportDate(iso: string): string {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CHANNELS, TIERS, countBy, filterLeads, formatReportDate, isReady, leadsByChannel, leadsByTier, readyLeads, type Lead } from './report';
+import { CHANNELS, TIERS, countBy, filterLeads, formatReportDate, isReady, safeHref, leadsByChannel, leadsByTier, readyLeads, type Lead } from './report';
 import { REPORT } from '../stories/report.fixtures';
 
 const lead = (name: string, over: Partial<Lead> = {}): Lead => ({ name, tier: 'A', location: 'Somewhere', status: 'new', channel: 'email', ...over });
@@ -62,6 +62,18 @@ describe('readyLeads', () => {
     expect(ready).toHaveLength(11);
     expect(countBy(ready, (l) => l.channel)).toEqual({ email: 4, form: 7 });
     expect(ready.every(isReady)).toBe(true);
+  });
+});
+
+describe('safeHref', () => {
+  it('keeps http and https addresses', () => {
+    expect(safeHref('https://example.com/a')).toBe('https://example.com/a');
+    expect(safeHref('http://example.com')).toBe('http://example.com');
+    expect(safeHref('HTTPS://EXAMPLE.COM')).toBe('HTTPS://EXAMPLE.COM');
+  });
+
+  it('drops every other scheme, relative paths and missing values', () => {
+    for (const u of ['javascript:alert(1)', 'data:text/html,x', 'mailto:a@b.c', '//example.com', '/a', 'example.com', 'https:/x', '', null, undefined]) expect(safeHref(u)).toBeUndefined();
   });
 });
 

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Surface } from '../../../primitives/Surface';
 import { Text, type TextTone } from '../../../primitives/Text';
-import { TIERS, filterLeads, type Channel, type Lead, type LeadFilter, type Tier } from '../../model/report';
+import { TIERS, filterLeads, safeHref, type Channel, type Lead, type LeadFilter, type Tier } from '../../model/report';
 import { TIER_HUE } from '../hues';
 import './LeadTable.css';
 
@@ -30,7 +30,7 @@ function Tag({ tone, children }: { tone: TextTone; children: ReactNode }) {
 const CHANNEL_TONE: Record<Channel, TextTone> = { email: 'primary', form: 'primary', invite: 'secondary', agency: 'secondary', unknown: 'faint' };
 
 /** An address with no spaces and an `@` is mailed; anything else is shown as written. */
-const mailable = (contact: string) => /^[^\s@]+@[^\s@]+$/.test(contact);
+const mailable = (contact: string) => /^[^\s@?&#%]+@[^\s@?&#%]+$/.test(contact);
 
 /** An address that may break after its `@` (and nowhere else unless it must). */
 function Address({ text }: { text: string }) {
@@ -47,11 +47,12 @@ function Address({ text }: { text: string }) {
 }
 
 function Row({ lead }: { lead: Lead }) {
+  const href = safeHref(lead.url);
   return (
     <tr className="lib-report-leads__row" data-part="row" data-tier={lead.tier} {...(lead.skip ? { 'data-skip': '' } : {})}>
       <th scope="row" className="lib-report-leads__cell" data-col="name">
-        {lead.url ? (
-          <Text as="a" href={lead.url} role="body" weight="strong" tone="primary" className="lib-report-leads__link" data-part="name">
+        {href ? (
+          <Text as="a" href={href} role="body" weight="strong" tone="primary" className="lib-report-leads__link" data-part="name">
             {lead.name}
           </Text>
         ) : (

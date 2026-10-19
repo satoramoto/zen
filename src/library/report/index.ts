@@ -12,6 +12,7 @@ export {
   readyLeads,
   filterLeads,
   formatReportDate,
+  safeHref,
   type Tier,
   type Channel,
   type Report as ReportData,

@@ -12,6 +12,10 @@
   color: var(--text-4);
 }
 
+.lib-report-sources__url {
+  overflow-wrap: anywhere;
+}
+
 .lib-report-sources__link {
   overflow-wrap: anywhere;
   text-decoration: underline;

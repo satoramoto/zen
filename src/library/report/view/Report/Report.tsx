@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { Stack } from '../../../primitives/Stack';
 import { Text } from '../../../primitives/Text';
 import { formatReportDate, type LeadFilter, type Report as ReportData } from '../../model/report';
@@ -25,10 +25,11 @@ export interface ReportProps {
 }
 
 function Section({ id, title, wide, children }: { id: string; title: string; wide?: boolean; children: ReactNode }) {
+  const headingId = `${useId()}-${id}`;
   return (
-    <section className="lib-report__section" data-part="section" data-section={id} {...(wide ? { 'data-wide': '' } : {})} aria-labelledby={`lib-report-${id}`}>
+    <section className="lib-report__section" data-part="section" data-section={id} {...(wide ? { 'data-wide': '' } : {})} aria-labelledby={headingId}>
       <Stack direction="column" gap={4}>
-        <Text role="heading" as="h2" tone="primary" id={`lib-report-${id}`} className="lib-report__section-title">
+        <Text role="heading" as="h2" tone="primary" id={headingId} className="lib-report__section-title">
           {title}
         </Text>
         {children}
