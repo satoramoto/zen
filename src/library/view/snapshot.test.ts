@@ -49,6 +49,18 @@ import { lineSliderView } from '../components/core/LineSlider/LineSlider.model';
 import { lineSliderStories } from '../components/core/LineSlider/LineSlider.fixtures';
 import { tabsView } from '../layout/Tabs.model';
 import { tabsStories } from '../layout/Tabs.fixtures';
+import { displayView } from '../yahaha/Display/Display.model';
+import { displayStories } from '../yahaha/Display/Display.fixtures';
+import { songFormView } from '../yahaha/SongForm/SongForm.model';
+import { songFormStories } from '../yahaha/SongForm/SongForm.fixtures';
+import { faderBankView, faderBankRegionView, type FaderBankModelProps } from '../yahaha/FaderBank/FaderBank.model';
+import { faderBankStories } from '../yahaha/FaderBank/FaderBank.fixtures';
+import { knobBankView, knobBankRegionView, type KnobBankRegionModelProps } from '../yahaha/KnobBank/KnobBank.model';
+import { knobBankStories } from '../yahaha/KnobBank/KnobBank.fixtures';
+import { padBankRegionView, padBankView, type PadBankProps, type PadBankRegionProps } from '../yahaha/PadBank/PadBank.model';
+import { padBankStories } from '../yahaha/PadBank/PadBank.fixtures';
+import { stageView } from '../yahaha/Stage/Stage.model';
+import { stageStories } from '../yahaha/Stage/Stage.fixtures';
 
 /** A primitive fixture's text children, as the tree builders take them. */
 const kids = (props: unknown): string[] => {
@@ -97,3 +109,14 @@ snapshot('StatusDot', (props) => statusDotView(props), statusDotStories);
 snapshot('Separator', (props) => separatorView(props), separatorStories);
 snapshot('LineSlider', (props) => lineSliderView(props as Parameters<typeof lineSliderView>[0]), lineSliderStories);
 snapshot('Tabs', (props) => tabsView(props), tabsStories);
+snapshot('Display', (props) => displayView(props as Parameters<typeof displayView>[0], { fromScreen: props.form ?? 'compact', chosen: null }, false), displayStories);
+snapshot('SongForm', (props) => songFormView(props, props.formForm ?? 'strip', props.transportForm ?? 'keys'), songFormStories);
+snapshot('FaderBank', (props) => faderBankView(props as FaderBankModelProps, (props as FaderBankModelProps).form ?? 'tall'), faderBankStories);
+// The region composites' roots are component nodes (a Region holding the bank).
+snapshot('FaderBankRegion', (props) => faderBankRegionView(props as Parameters<typeof faderBankRegionView>[0]) as unknown as Node, faderBankStories);
+snapshot('KnobBank', (props) => knobBankView(props as KnobBankRegionModelProps, (props as KnobBankRegionModelProps).form ?? 'labelled'), knobBankStories);
+snapshot('KnobBankRegion', (props) => knobBankRegionView(props as KnobBankRegionModelProps) as unknown as Node, knobBankStories);
+snapshot('PadBank', (props) => padBankView(props as PadBankProps, (props as PadBankProps).form ?? 'two-rows', null), padBankStories);
+snapshot('PadBankRegion', (props) => padBankRegionView(props as PadBankRegionProps) as unknown as Node, padBankStories);
+// The Stage's target tree (the Screen with its regions as slots); its bindings still draw the Screen by hand until the layout lane's Screen takes region slots.
+snapshot('Stage', (props) => stageView(props, {}, { left: 0, right: 0 }), stageStories);

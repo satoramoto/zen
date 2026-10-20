@@ -1,10 +1,17 @@
 import type { ReactNode } from 'react';
-import { Region } from '../../layout/Region';
-import { Tabs } from '../../layout/Tabs';
 import { useForm } from '../../layout/assembly';
 import { Tree } from '../../view/Tree';
+import type { Node } from '../../view/Tree.model';
+import { withRegionViews } from '../regionViews';
 import { FADER_BANK_FORMS } from './FaderBank.forms';
-import { faderBankHandlers, faderBankView, type FaderBankModelProps, type FaderBankRegionModelProps } from './FaderBank.model';
+import {
+  faderBankHandlers,
+  faderBankRegionHandlers,
+  faderBankRegionView,
+  faderBankView,
+  type FaderBankModelProps,
+  type FaderBankRegionModelProps,
+} from './FaderBank.model';
 import '../../primitives/Stack.css';
 import '../../primitives/Text.css';
 import './FaderBank.css';
@@ -111,36 +118,10 @@ export interface FaderBankRegionProps extends FaderBankRegionModelProps<ReactNod
  * page as its body. The page and layer stay the caller's (`page`, `onChoosePage`, `layer`,
  * `onChooseLayer`), so the master fader button can flip the page too.
  */
-export function FaderBankRegion({ name = 'Mixer', area, className, ...bank }: FaderBankRegionProps) {
-  const body = <FaderBank {...bank} />;
-  const aside =
-    bank.layerTabs.length > 0 ? (
-      <Tabs
-        name="Fader layer"
-        items={bank.layerTabs}
-        value={bank.layer}
-        onChange={(id) => bank.onChooseLayer?.(id)}
-        tipAction={bank.tipAction}
-      />
-    ) : undefined;
+export function FaderBankRegion({ className, ...props }: FaderBankRegionProps) {
+  // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
   return (
-    <Region
-      name={name}
-      area={area}
-      className={className}
-      aside={aside}
-      view={bank.page}
-      onView={(id) => bank.onChoosePage?.(id)}
-      tipAction={bank.tipAction}
-    >
-      {bank.pageTabs.length > 0
-        ? bank.pageTabs.map((tab) => (
-            <Region.View key={tab.id} id={tab.id} label={tab.label} name={tab.name} disabled={tab.disabled} tip={tab.tip}>
-              {body}
-            </Region.View>
-          ))
-        : body}
-    </Region>
+    <Tree tree={faderBankRegionView({ ...props, className }) as unknown as Node} handlers={faderBankRegionHandlers(props)} components={withRegionViews} />
   );
 }
 

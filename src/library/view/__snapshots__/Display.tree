@@ -1,0 +1,1475 @@
+## Board
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## Stopped
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"Coastal Highway\",\"Main A\",92,\"C\",\"maj7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="yh-display__queued" data-part="queued" title="Next style: Coastal Highway">
+          <WaitingChip hue="a" label="Coastal Highway" size="line">
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=0 count=3 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Stopped on Main A" class="yh-display__now" data-part="now" role="img">
+          <SectionName idle=true label="Main A" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__status" data-part="status" data-role="body" data-text-size="label">
+            "Stopped"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="C" extension="maj7" fingering="Fingered" held=true notes=[{"note":"C","interval":"R"},{"note":"E","interval":"3"},{"note":"G","interval":"5"},{"note":"B","interval":"7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=92 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=0 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 3 Warm Rhodes. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Warm Rhodes"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 12 Sampler Deluxe, plugin failed. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Sampler Deluxe"
+              <PartMarks failed=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 88 Soft Pad with Slow Attack and Long Release. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Soft Pad with Slow Attack and Long Release"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass, bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "bass"
+
+## SyncStartArmed
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main A\",92,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Stopped on Main A" class="yh-display__now" data-part="now" role="img">
+          <SectionName idle=true label="Main A" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__status" data-part="status" data-role="body" data-text-size="label">
+            "Sync Start armed"
+          <span class="lib-text lib-tone yh-display__then" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Intro II"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=92 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=0 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## LongChord
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"C♯m\",\"maj9(♯11)/G♯\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="C♯m" extension="maj9(♯11)/G♯" fingering="AI Full Keyboard" held=false notes=[{"note":"C♯","interval":"R"},{"note":"E","interval":"m3"},{"note":"G♯","interval":"5"},{"note":"C","interval":"M7"},{"note":"D♯","interval":"9"},{"note":"G","interval":"♯11"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## LongStyleName
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Saturday Night Seventies Disco Funk Extended Mix\",\"Dance · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Saturday Night Seventies Disco Funk Extended Mix">
+          <AccentBlock as="button" chevron=false label="Saturday Night Seventies Disco Funk Extended Mix" name="Saturday Night Seventies Disco Funk Extended Mix: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Dance · 4/4">
+          "Dance · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## LongFingering
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="AI Full Keyboard · played Cm7 (Keyboard transpose −3)" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"},{"note":"B","interval":"9"},{"note":"D","interval":"4"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## PartOff
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand, off. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## ThreeFour
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Moonlight Waltz\",\"Ballroom · 3/4\",\"\",\"Main B\",88,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Moonlight Waltz">
+          <AccentBlock as="button" chevron=false label="Moonlight Waltz" name="Moonlight Waltz: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Ballroom · 3/4">
+          "Ballroom · 3/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=88 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=3 beats=3 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## Looping
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main D\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main D" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main D" size="var(--yh-display-section)">
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## FillToEnding
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Fill\",84,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Fill" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Fill" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Ending II"
+            <span class="yh-display__when" data-part="when">
+              "after bar 1"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=84 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## NoParts
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",false,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+
+## StageColumn
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## StageColumnSmall
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## StageColumnSmallLong
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Ending III\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Ending III" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Ending III" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="AI Full Keyboard · played Cm7 (Keyboard transpose −3)" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"},{"note":"B","interval":"9"},{"note":"D","interval":"4"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## Compact
+<div class="lib-text lib-tone yh-display" data-density="compact" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":false,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## FullInColumn
+<div class="lib-text lib-tone yh-display" data-density="full" data-form="full" data-material="screen" data-part="display" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-2) + var(--space-2)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-2) + var(--space-2) + var(--space-2) + var(--space-2) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-3) + var(--space-3))))); --yh-display-min-h: calc(calc(var(--space-3) + var(--space-3)) + calc(calc(var(--control-h) * 1) + calc(var(--space-3)) + calc(2px)) + calc(var(--space-4)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-3) + var(--space-3)) + calc(calc(var(--space-2)) + calc(var(--space-2)) + calc(var(--space-2))) + calc(var(--control-h) * 1))))" use:displayWide={"on":false,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",false,\"full\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+
+## SmallStage
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## SmallStageLongChord
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"C♯m\",\"maj9(♯11)/G♯\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="C♯m" extension="maj9(♯11)/G♯" fingering="AI Full Keyboard" held=false notes=[{"note":"C♯","interval":"R"},{"note":"E","interval":"m3"},{"note":"G♯","interval":"5"},{"note":"C","interval":"M7"},{"note":"D♯","interval":"9"},{"note":"G","interval":"♯11"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## AtStyleTempo
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-parts="true" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",true,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=true label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+      <ul aria-label="Sounds" class="lib-stack yh-display__parts" data-direction="column" data-gap="0" data-part="parts">
+        <li key=r1>
+          <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-1)" type="button" @click=sound:r1 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Stage Grand"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 1"
+        <li key=r2>
+          <button aria-label="Right 2 sound: 41 Silk Strings, edited. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-2)" type="button" @click=sound:r2 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Silk Strings"
+              <PartMarks edited=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 2"
+        <li key=r3>
+          <button aria-label="Right 3 sound: 57 Brass Section, off, plugin missing. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-off="true" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-3)" type="button" @click=sound:r3 use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Brass Section"
+              <PartMarks missing=true>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Right 3"
+              <span class="yh-display__part-tail" data-part="part-tail">
+                "off"
+        <li key=l>
+          <button aria-label="Left sound: 33 Finger Bass. Opens the quick sound list" class="lib-text lib-tone yh-display__part" data-part="part" data-role="body" data-text-leading="normal" data-text-size="label" data-tip="launchkey.fader_sound" style="--yh-display-part-hue: var(--hue-4)" type="button" @click=sound:l use:tip={"tip":"launchkey.fader_sound","tipAction":"tipAction"}>
+            <span aria-hidden="true" class="yh-display__part-dot" data-lit="true" data-part="part-dot">
+            <span aria-hidden="true" class="lib-stack yh-display__part-sound" data-align="center" data-direction="row" data-gap="2" data-part="part-sound">
+              <span class="yh-display__part-name" data-part="part-name">
+                "Finger Bass"
+              <PartMarks>
+            <span aria-hidden="true" class="lib-text lib-tone yh-display__part-part" data-part="part-part" data-role="body" data-text-case="label" data-text-leading="normal" data-text-size="caption">
+              <span class="yh-display__part-label" data-part="part-label">
+                "Left"
+
+## Forms
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",false,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>
+
+## WithArt
+<div class="lib-text lib-tone yh-display" data-density="auto" data-form="compact" data-material="screen" data-part="display" data-role="body" data-running="true" data-text-size="inherit" style="--yh-display-min-w: calc(calc(var(--space-1) + var(--space-1)) + max(calc(calc(calc(var(--control-h) * 6.5) + calc(var(--space-1) + var(--space-1))) + calc(var(--space-3)) + calc(var(--size-caption) * 6.75) + calc(var(--space-3)) + calc(var(--control-h) * 4)), calc(max(calc(calc(var(--size-numeral) * 4.2) + calc(var(--size-numeral) * 0.4)), calc(calc(var(--space-3) + var(--space-3)) + max(calc(calc(var(--size-label) * 0.5) + calc(var(--space-2)) + calc(var(--size-heading) * 4.2)), calc(var(--size-label) * 9.6)))) + max(calc(var(--size-numeral) * 1.8), calc(var(--size-label) * 9.6), calc(var(--size-label) * 7.8)) + max(calc(calc(var(--size-numeral) * 1.8) + calc(var(--space-2)) + calc(var(--size-caption) * 2.25) + calc(var(--space-3)) + calc(var(--control-h) * 1)), calc(var(--space-6) + var(--space-6) + var(--space-6) + var(--space-6)), calc(calc(var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-label) * 10.5))) + calc(var(--space-2) + var(--space-2))))); --yh-display-min-h: calc(calc(var(--space-2) + var(--space-2)) + calc(calc(var(--control-h) * 1) + calc(var(--space-2)) + calc(2px)) + calc(var(--space-3)) + max(calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1)) + calc(var(--size-heading) * 1.25) + calc(var(--size-body) * 1.4)), calc(calc(var(--size-numeral) * 1.15) + calc(var(--space-1) + var(--space-1) + var(--space-1)) + calc(var(--size-body) * 2.8)), calc(max(calc(var(--size-numeral) * 1.15), calc(var(--size-numeral) * 1.05), calc(var(--control-h) * 2)) + calc(var(--space-2) + var(--space-2)) + calc(calc(var(--space-1)) + calc(var(--space-1)) + calc(var(--space-1))) + calc(var(--control-h) * 1))))" use:displayWide={"on":true,"onWide":"onWide"}>
+  <div class="yh-display__art" data-part="art">
+    <DisplayArt>
+  <div class="yh-display__frame" data-fit="1" data-part="frame" use:displayFit={"key":"[\"Sunday Drive Pop\",\"Pop & Rock · 4/4\",\"\",\"Main B\",104,\"Am\",\"7\",false,\"compact\"]"}>
+    <header class="yh-display__header" data-part="header">
+      <div aria-label="Style" class="lib-stack yh-display__style" data-align="center" data-direction="row" data-gap="1" data-part="style" role="group">
+        <Button name="Previous style (Track left)" size="icon" symbol="prev" tip="style.prev" variant="quiet" @tipAction=tipAction @onPress=prev>
+        <span class="yh-display__style-name" data-part="style-name" title="Sunday Drive Pop">
+          <AccentBlock as="button" chevron=false label="Sunday Drive Pop" name="Sunday Drive Pop: open the Browser" tip="browser.open" @tipAction=tipAction @onPress=browse>
+        <Button name="Next style (Track right)" size="icon" symbol="next" tip="style.next" variant="quiet" @tipAction=tipAction @onPress=next>
+        <span class="lib-text lib-tone yh-display__meta" data-part="meta" data-role="body" data-tabular="" data-text-size="label" title="Pop & Rock · 4/4">
+          "Pop & Rock · 4/4"
+      <div class="yh-display__ots" data-part="one-touch">
+        <OneTouchPicker applied=2 count=4 @tipAction=tipAction @onApply=oneTouch>
+    <div class="yh-display__readouts" data-part="readouts">
+      <div aria-label="Section" class="yh-display__cell yh-display__section" data-part="section" role="group">
+        <div aria-label="Playing Main B" class="yh-display__now" data-live="true" data-part="now" role="img">
+          <SectionName idle=false label="Main B" size="var(--yh-display-section)">
+        <p class="lib-text lib-tone yh-display__next" data-part="next" data-role="body" data-text-size="label">
+          <span class="lib-text lib-tone yh-display__then" data-docked="true" data-part="then" data-role="body" data-text-size="label" style="--yh-display-then-hue: var(--accent)">
+            <span aria-hidden="true" class="yh-display__then-arrow" data-part="then-arrow">
+            <span class="yh-display__then-word" data-part="then-word">
+              "then "
+            <span class="lib-text lib-tone yh-display__then-name" data-part="then-name" data-role="body" data-text-leading="tight" data-text-weight="strong">
+              "Main C"
+            <span class="yh-display__when" data-part="when">
+              "fill after bar 4"
+      <div class="yh-display__cell yh-display__chord" data-part="chord">
+        <ChordReadout chord="Am" extension="7" fingering="Fingered On Bass" held=false notes=[{"note":"A","interval":"R"},{"note":"C","interval":"m3"},{"note":"E","interval":"5"},{"note":"G","interval":"m7"}] size="var(--yh-display-chord)" tip="fingering.select" @tipAction=tipAction>
+      <div aria-label="Tempo and Tap" class="yh-display__cell yh-display__tempo" data-part="tempo" role="group">
+        <TempoReadout bpm=104 size="var(--yh-display-tempo)" @tipAction=tipAction @onTempo=tempo @onPlus=tempoUp @onMinus=tempoDown @onReset=styleTempo>
+        <div class="yh-display__beat" data-part="beat">
+          <BarBeat beat=2 beats=4 thickness="var(--yh-display-beat-line)">
+        <div class="lib-stack yh-display__tempo-keys" data-align="center" data-direction="row" data-gap="1" data-part="tempo-keys">
+          <Button hold=true label="Tap" name="Tap tempo" size="md" tip="tempo.tap" @tipAction=tipAction @onHold=tapHold @onPress=tap>
+          <Button disabled=false label="Style tempo" name="Back to the style's tempo" size="md" tip="tempo.reset" variant="quiet" @tipAction=tipAction @onPress=styleTempo>

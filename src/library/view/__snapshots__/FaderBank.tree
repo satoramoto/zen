@@ -1,0 +1,1039 @@
+## Board
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=false level=90 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, level 90" peak=0.7 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-away="up" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader away=50 empty=false fillHeight=true hue=2 kind="part" layered=false level=72 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0.55 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="part" layered=false level=80 meter2=0.47 meter=0.5 name="Left · Finger Bass, level 80" peak=0.6 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+  <span class="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+    "Soft takeover "
+    <span>
+      "Right 2 move up to 72"
+
+## PageButtonHold
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=false level=90 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, level 90" peak=0.7 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-away="up" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader away=50 empty=false fillHeight=true hue=2 kind="part" layered=false level=72 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0.55 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="part" layered=false level=80 meter2=0.47 meter=0.5 name="Left · Finger Bass, level 80" peak=0.6 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+  <span class="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+    "Soft takeover "
+    <span>
+      "Right 2 move up to 72"
+
+## ReverbLayer
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-layered="true" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=true level=40 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, Reverb 40" peak=0.7 tip="mixer.part.reverb" value="Rev 40" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader empty=false fillHeight=true hue=2 kind="part" layered=true level=12 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, Reverb 12" peak=0.55 tip="mixer.part.reverb" value="Rev 12" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=true level=0 meter2=0 meter=0 name="Right 3 · Brass Section, Reverb 0" peak=0 tip="mixer.part.reverb" value="Rev 0" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="part" layered=true level=20 meter2=0.47 meter=0.5 name="Left · Finger Bass, Reverb 20" peak=0.6 tip="mixer.part.reverb" value="Rev 20" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+
+## SmallStage
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=false level=90 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, level 90" peak=0.7 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-away="up" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader away=50 empty=false fillHeight=true hue=2 kind="part" layered=false level=72 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0.55 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="part" layered=false level=80 meter2=0.47 meter=0.5 name="Left · Finger Bass, level 80" peak=0.6 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+  <span class="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+    "Soft takeover "
+    <span>
+      "Right 2 move up to 72"
+
+## Forms #1
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=false level=90 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, level 90" peak=0.7 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-away="up" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader away=50 empty=false fillHeight=true hue=2 kind="part" layered=false level=72 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0.55 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="part" layered=false level=80 meter2=0.47 meter=0.5 name="Left · Finger Bass, level 80" peak=0.6 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+  <span class="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+    "Soft takeover "
+    <span>
+      "Right 2 move up to 72"
+
+## Forms #2
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="short" data-gap="1" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=false level=90 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, level 90" peak=0.7 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-away="up" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader away=50 empty=false fillHeight=true hue=2 kind="part" layered=false level=72 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0.55 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="part" layered=false level=80 meter2=0.47 meter=0.5 name="Left · Finger Bass, level 80" peak=0.6 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+  <span class="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+    "Soft takeover "
+    <span>
+      "Right 2 move up to 72"
+
+## StylePage
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-9 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 9">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 10">
+    <div key=strip:rhythm1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.28 meter=0.3 name="Style Rhythm 1, level 100" peak=0.5 value="100" @tipAction=tipAction @onlevel=level:rhythm1>
+      <button aria-label="Style Rhythm 1: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:rhythm1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Rhythm 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:rhythm2 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 2">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=92 meter2=0.4 meter=0.42 name="Style Rhythm 2, level 92" peak=0.6 value="92" @tipAction=tipAction @onlevel=level:rhythm2>
+      <button aria-label="Style Rhythm 2: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:rhythm2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Rhythm 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:bass class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=96 meter2=0.52 meter=0.54 name="Style Bass, level 96" peak=0.7 value="96" @tipAction=tipAction @onlevel=level:bass>
+      <button aria-label="Style Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:bass use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Bass"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:chord1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=80 meter2=0.28 meter=0.3 name="Style Chord 1, level 80" peak=0.5 value="80" @tipAction=tipAction @onlevel=level:chord1>
+      <button aria-label="Style Chord 1: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:chord1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Chord 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:chord2 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 5">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=74 meter2=0.4 meter=0.42 name="Style Chord 2, level 74" peak=0.6 value="74" @tipAction=tipAction @onlevel=level:chord2>
+      <button aria-label="Style Chord 2: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:chord2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Chord 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:pad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=64 meter2=0.52 meter=0.54 name="Style Pad, level 64" peak=0.7 value="64" @tipAction=tipAction @onlevel=level:pad>
+      <button aria-label="Style Pad: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:pad use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:phrase1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=70 meter2=0.28 meter=0.3 name="Style Phrase 1, level 70" peak=0.5 value="70" @tipAction=tipAction @onlevel=level:phrase1>
+      <button aria-label="Style Phrase 1: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:phrase1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Phrase 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:phrase2 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 8">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=0 meter2=0 meter=0 name="Style Phrase 2, level 0" peak=0 value="0" @tipAction=tipAction @onlevel=level:phrase2>
+      <button aria-label="Style Phrase 2: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:phrase2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Phrase 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 10">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 10">
+      <Button label="Style" name="Fader page is Style: click for Panel" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+
+## TakeoverBothWays
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=false level=90 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, level 90" peak=0.7 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-away="down" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader away=110 empty=false fillHeight=true hue=2 kind="part" layered=false level=72 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0.55 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-away="up" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader away=20 empty=false fillHeight=true hue=4 kind="part" layered=false level=80 meter2=0.47 meter=0.5 name="Left · Finger Bass, level 80" peak=0.6 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+  <span class="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+    <span>
+      "Right 2 move down to 72, Left move up to 80"
+
+## AllPartsOff
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="off" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="off" layered=false level=90 meter2=0 meter=0 name="Right 1 · Stage Grand, level 90" peak=0 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=true size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="2" data-kind="off" style="grid-column: 2">
+      <Fader empty=false fillHeight=true hue=2 kind="off" layered=false level=72 meter2=0 meter=0 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=true size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="off" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="off" layered=false level=80 meter2=0 meter=0 name="Left · Finger Bass, level 80" peak=0 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=true size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="Off" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="Off" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="Off" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+
+## Live
+<div class="lib-stack yh-faderbank" data-direction="column" data-form="tall" data-gap="4" data-part="root">
+  <div class="yh-faderbank__grid" style="grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(min-content, 1fr) var(--space-1) minmax(min-content, 1fr) minmax(min-content, 1fr) minmax(var(--space-4), 0.75fr) minmax(var(--space-4), 0.75fr) var(--space-1) minmax(min-content, 1.25fr)">
+    <span key=divider-5 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 5">
+    <span key=divider-10 aria-hidden="true" class="yh-faderbank__divider" style="grid-column: 10">
+    <span key=plate aria-hidden="true" class="yh-faderbank__plate" data-part="plate" style="grid-column: 11">
+    <div key=strip:right1 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="1" data-kind="part" style="grid-column: 1">
+      <Fader empty=false fillHeight=true hue=1 kind="part" layered=false level=90 meter2=0.58 meter=0.62 name="Right 1 · Stage Grand, level 90" peak=0.7 tip="mixer.panel.right1" value="90" @tipAction=tipAction @onlevel=level:right1>
+      <button aria-label="Right 1, Stage Grand: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right1 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 1"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Stage Grand"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:right2 class="lib-stack yh-faderbank__strip" data-away="up" data-direction="column" data-gap="1" data-hue="2" data-kind="part" style="grid-column: 2">
+      <Fader away=50 empty=false fillHeight=true hue=2 kind="part" layered=false level=72 meter2=0.42 meter=0.45 name="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" peak=0.55 tip="mixer.panel.right2" value="72" @tipAction=tipAction @onlevel=level:right2>
+      <button aria-label="Right 2, Silk Strings, edited: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right2 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 2"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Silk Strings"
+        <span class="yh-faderbank__marks">
+          <PartMarks edited=true off=false size="strip">
+    <div key=strip:right3 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="3" data-kind="off" style="grid-column: 3">
+      <Fader empty=false fillHeight=true hue=3 kind="off" layered=false level=64 meter2=0 meter=0 name="Right 3 · Brass Section, level 64, off" peak=0 tip="mixer.panel.right3" value="64" @tipAction=tipAction @onlevel=level:right3>
+      <button aria-label="Right 3, Brass Section, plugin missing: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:right3 use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Right 3"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Brass Section"
+        <span class="yh-faderbank__marks">
+          <PartMarks missing=true off=true size="strip">
+    <div key=strip:left class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-hue="4" data-kind="part" style="grid-column: 4">
+      <Fader empty=false fillHeight=true hue=4 kind="part" layered=false level=80 meter2=0.47 meter=0.5 name="Left · Finger Bass, level 80" peak=0.6 tip="mixer.panel.left" value="80" @tipAction=tipAction @onlevel=level:left>
+      <button aria-label="Left, Finger Bass: open Channel" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.strip.select" type="button" @click=open:left use:tip={"tip":"mixer.strip.select","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Left"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          "Finger Bass"
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:style class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 6">
+      <Fader empty=false fillHeight=true hue="a" kind="group" layered=false level=100 meter2=0.65 meter=0.7 name="Style volume, level 100" peak=0.78 tip="mixer.style_level" value="100" @tipAction=tipAction @onlevel=level:style>
+      <button aria-label="Style volume: open the Style fader page" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="mixer.page" type="button" @click=open:style use:tip={"tip":"mixer.page","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Style"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:multiPad class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="group" style="grid-column: 7">
+      <Fader empty=false fillHeight=true hue="t2" kind="group" layered=false level=90 meter2=0 meter=0 name="Multi Pad volume, level 90" peak=0.12 tip="mixer.pad_level" value="90" @tipAction=tipAction @onlevel=level:multiPad>
+      <button aria-label="Multi Pad volume: open Multi Pads" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="nav.multipad" type="button" @click=open:multiPad use:tip={"tip":"nav.multipad","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Multi Pad"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=strip:fader7 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 8">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 7 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader7>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:fader8 class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="parked" style="grid-column: 9">
+      <Fader empty=true fillHeight=true hue="t" kind="parked" layered=false level=0 meter2=0 meter=0 name="Fader 8 unused" peak=0 tip="launchkey.fader_unused" value="" @tipAction=tipAction @onlevel=level:fader8>
+      <span aria-hidden="true" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit">
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          " "
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+    <div key=strip:master class="lib-stack yh-faderbank__strip" data-direction="column" data-gap="1" data-kind="master" style="grid-column: 11">
+      <Fader empty=false fillHeight=true hue="t" kind="master" layered=false level=100 meter2=0.67 meter=0.72 name="Master, level 100" peak=0.8 tip="mixer.master" value="100" @tipAction=tipAction @onlevel=level:master>
+      <button aria-label="Master: open Effects, master compressor and EQ" class="lib-text lib-tone yh-faderbank__name" data-role="body" data-text-leading="snug" data-text-size="inherit" data-tip="fx.master_edit" type="button" @click=open:master use:tip={"tip":"fx.master_edit","tipAction":"tipAction"}>
+        <span class="lib-text lib-tone yh-faderbank__tag-text" data-role="body" data-text-leading="snug" data-text-size="label" data-text-weight="strong">
+          "Master"
+        <span class="lib-text lib-tone yh-faderbank__sound" data-role="body" data-text-leading="snug" data-text-size="caption">
+          " "
+        <span class="yh-faderbank__marks">
+          <PartMarks off=false size="strip">
+    <div key=cell:right1 class="yh-faderbank__lamp" style="grid-column: 1">
+      <LampButton key=lamp:right1 hue=1 label="On" name="Right 1 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right1.on" @tipAction=tipAction @onToggle=lamp:right1 @onLongPress=lampLong:right1 @onLongRelease=lampRelease:right1>
+    <div key=cell:right2 class="yh-faderbank__lamp" style="grid-column: 2">
+      <LampButton key=lamp:right2 hue=2 label="On" name="Right 2 on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.right2.on" @tipAction=tipAction @onToggle=lamp:right2 @onLongPress=lampLong:right2 @onLongRelease=lampRelease:right2>
+    <div key=cell:right3 class="yh-faderbank__lamp" style="grid-column: 3">
+      <LampButton key=lamp:right3 hue=3 label="Off" name="Right 3 off. Long press: swap mode (knobs edit this part). Shift: open Channel" on=false size="cell" tip="part.right3.on" @tipAction=tipAction @onToggle=lamp:right3 @onLongPress=lampLong:right3 @onLongRelease=lampRelease:right3>
+    <div key=cell:left class="yh-faderbank__lamp" style="grid-column: 4">
+      <LampButton key=lamp:left hue=4 label="On" name="Left on. Long press: swap mode (knobs edit this part). Shift: open Channel" on=true size="cell" tip="part.left.on" @tipAction=tipAction @onToggle=lamp:left @onLongPress=lampLong:left @onLongRelease=lampRelease:left>
+    <div key=page class="yh-faderbank__lamp yh-faderbank__lamp--page" style="grid-column: 11">
+      <Button label="Panel" name="Fader page is Panel: click for Style" size="cell" tip="mixer.page" @tipAction=tipAction @onPress=page>
+  <div class="yh-faderbank__foot">
+    <Group class="yh-faderbank__functions" className="yh-faderbank__functions" gap=3 label=false name="Functions">
+      #children
+        <LampButton key=lamp:harmArp hue="t" label="Harm/Arp" name="Harmony/Arpeggio on/off" on=false size="cell" tip="harmony.switch" @tipAction=tipAction @onToggle=lamp:harmArp>
+        <LampButton key=lamp:sound hue="t" label="Sound" name="Sound: hold and the pads become Quick Racks. A click latches it until the next pad tap; click again or press fader button 6 to close" on=true size="cell" tip="launchkey.sound" @tipAction=tipAction @onToggle=lamp:sound @onLongPress=lampLong:sound @onLongRelease=lampRelease:sound>
+        <LampButton key=lamp:leftHold hue="t" label="L Hold" name="Left Hold on/off" on=false size="cell" tip="detection.left_hold" @tipAction=tipAction @onToggle=lamp:leftHold>
+        <LampButton key=lamp:looper hue="t" label="Looper" name="Chord Looper on/off. Long press: Loop rec" on=false size="cell" tip="looper.rec" @tipAction=tipAction @onToggle=lamp:looper @onLongPress=lampLong:looper @onLongRelease=lampRelease:looper>
+  <span class="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
+    "Soft takeover "
+    <span>
+      "Right 2 move up to 72"

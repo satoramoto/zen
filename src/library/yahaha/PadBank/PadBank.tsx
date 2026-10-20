@@ -1,7 +1,16 @@
-import { Region } from '../../layout/Region';
-import { Pad } from '../../components/music/Pad/Pad';
 import { useChosenForm, useForm } from '../../layout/assembly/forms';
-import { PAD_BANK_FORMS, padBankRegionView, padBankView, type PadBankProps, type PadBankRegionProps } from './PadBank.model';
+import { Tree } from '../../view/Tree';
+import type { Node } from '../../view/Tree.model';
+import {
+  PAD_BANK_FORMS,
+  padBankHandlers,
+  padBankRegionHandlers,
+  padBankRegionView,
+  padBankView,
+  type PadBankProps,
+  type PadBankRegionProps,
+} from './PadBank.model';
+import { withRegionViews } from '../regionViews';
 import './PadBank.css';
 
 export {
@@ -14,10 +23,13 @@ export {
   PAD_SMALL_IDEAL_SIDE,
   PAD_SMALL_SIDE,
   bankOnFace,
+  padBankHandlers,
+  padBankRegionHandlers,
   padBankRegionView,
+  padBankTabs,
   padBankView,
 } from './PadBank.model';
-export type { BankPadFamily, PadBankForm, PadBankProps, PadBankRegionProps, PadItem, TipAction } from './PadBank.model';
+export type { BankPadFamily, PadBankForm, PadBankProps, PadBankRegionProps, PadBankTab, PadItem, TipAction } from './PadBank.model';
 
 /**
  * PadBank: the body of the Stage's Pads region: the sixteen Launchkey pads of the chosen bank
@@ -87,31 +99,12 @@ export type { BankPadFamily, PadBankForm, PadBankProps, PadBankRegionProps, PadI
  * square side is fitted to, set from the form or `columns`),
  * `--yh-padbank-cell` (the square pad's side, the tighter of the room's width and height share).
  *
- * Renders `padBankView` (PadBank.model.ts); `PadBank.svelte` draws the same.
+ * Draws `padBankView` (PadBank.model.ts) with React's `Tree`; `PadBank.svelte` draws the same tree.
  */
 export function PadBank(props: PadBankProps) {
   const form = useForm(PAD_BANK_FORMS, props.form);
   const chosen = useChosenForm();
-  const view = padBankView(props, form, chosen);
-  const { tipAction, onPress } = props;
-
-  return (
-    <div className={view.root.className} {...view.root.attrs}>
-      <div className={view.room.className} {...view.room.attrs}>
-        <div className={view.grid.className} {...view.grid.attrs}>
-          {view.cells.map((cell) => (
-            <div key={cell.index} className={cell.className} {...cell.attrs}>
-              {cell.empty ? (
-                <span className={cell.empty.className} {...cell.empty.attrs} />
-              ) : (
-                <Pad {...cell.pad!} tipAction={tipAction} onPress={() => onPress?.(cell.index)} />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return <Tree tree={padBankView(props, form, chosen)} handlers={padBankHandlers(props)} />;
 }
 PadBank.forms = PAD_BANK_FORMS;
 
@@ -122,25 +115,9 @@ PadBank.forms = PAD_BANK_FORMS;
  * bank (or comes from the assembled screen); `PAD_BANK_FORMS` are the body's needs, so the
  * region's spec says `head: true` and the solver adds the tabs' row.
  */
-export function PadBankRegion({ name = 'Pads', area, className, ...pads }: PadBankRegionProps) {
-  const { views, view } = padBankRegionView(pads);
-  const body = <PadBank {...pads} />;
-  return (
-    <Region
-      name={name}
-      area={area}
-      className={className}
-      view={view}
-      onView={(id) => pads.onBank?.(Number(id))}
-      tipAction={pads.tipAction}
-    >
-      {views.map((v) => (
-        <Region.View key={v.id} id={v.id} label={v.label} tip={v.tip}>
-          {body}
-        </Region.View>
-      ))}
-    </Region>
-  );
+export function PadBankRegion(props: PadBankRegionProps) {
+  // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
+  return <Tree tree={padBankRegionView(props) as unknown as Node} handlers={padBankRegionHandlers(props)} components={withRegionViews} />;
 }
 
 export default PadBank;

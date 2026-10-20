@@ -1,0 +1,301 @@
+## Board
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=1 label="Dynamics" name="Knob 1: Dynamics (DynCtrl) 127" tip="knobs.knob" value="127" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.4 label="Retrig rate" name="Knob 2: Retrig rate (RtgRate) 1/8" tip="knobs.knob" value="1/8" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Retrigger" name="Knob 3: Retrigger (RtgOnOff) Off" tip="knobs.knob" value="Off" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute A" name="Knob 4: Mute A (StyMuteA) Off" tip="knobs.knob" value="Off" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute B" name="Knob 5: Mute B (StyMuteB) Off" tip="knobs.knob" value="Off" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Swing" name="Knob 6: Swing (Swing) 0%" tip="knobs.knob" unit="%" value="0" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## ReverbPage
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=1 label="Dynamics" name="Knob 1: Dynamics (DynCtrl) 127" tip="knobs.knob" value="127" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.4 label="Retrig rate" name="Knob 2: Retrig rate (RtgRate) 1/8" tip="knobs.knob" value="1/8" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Retrigger" name="Knob 3: Retrigger (RtgOnOff) Off" tip="knobs.knob" value="Off" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute A" name="Knob 4: Mute A (StyMuteA) Off" tip="knobs.knob" value="Off" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute B" name="Knob 5: Mute B (StyMuteB) Off" tip="knobs.knob" value="Off" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Swing" name="Knob 6: Swing (Swing) 0%" tip="knobs.knob" unit="%" value="0" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## ReverbSends
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.31496062992125984 hue=1 label="Right 1" name="Knob 1: Right 1 (R1Rev) 40" tip="knobs.knob" value="40" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.15748031496062992 hue=2 label="Right 2" name="Knob 2: Right 2 (R2Rev) 20" tip="knobs.knob" value="20" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 hue=3 label="Right 3" name="Knob 3: Right 3 (R3Rev) 0" tip="knobs.knob" value="0" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.09448818897637795 hue=4 label="Left" name="Knob 4: Left (LRev) 12" tip="knobs.knob" value="12" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5511811023622047 label="Time" name="Knob 5: Time (RevTime) 70" tip="knobs.knob" value="70" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.15748031496062992 label="Pre-delay" name="Knob 6: Pre-delay (RevPre) 20" tip="knobs.knob" value="20" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Tone" name="Knob 7: Tone (RevTone) 64" tip="knobs.knob" value="64" @onpress=press6 @onstep=step6 @tipAction=tipAction>
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Reverb rtn" name="Knob 8: Reverb rtn (RevRtn) 64" tip="knobs.knob" value="64" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## RackPage
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7874015748031497 hue=1 label="Right 1" name="Knob 1: Right 1 (R1Vol) 100" tip="knobs.knob" value="100" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7086614173228346 hue=2 label="Right 2" name="Knob 2: Right 2 (R2Vol) 90" tip="knobs.knob" value="90" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.6299212598425197 hue=3 label="Right 3" name="Knob 3: Right 3 (R3Vol) 80" tip="knobs.knob" value="80" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7559055118110236 hue=4 label="Left" name="Knob 4: Left (LVol) 96" tip="knobs.knob" value="96" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5511811023622047 label="Harmony" name="Knob 5: Harmony (HarmVol) 70" tip="knobs.knob" value="70" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Metronome" name="Knob 6: Metronome (MetVol) 64" tip="knobs.knob" value="64" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## PanPage
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5 hue=1 label="Right 1" name="Knob 1: Right 1 (R1Pan) C" tip="knobs.knob" value="C" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.31 hue=2 label="Right 2" name="Knob 2: Right 2 (R2Pan) L24" tip="knobs.knob" value="L24" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.69 hue=3 label="Right 3" name="Knob 3: Right 3 (R3Pan) R24" tip="knobs.knob" value="R24" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5 hue=4 label="Left" name="Knob 4: Left (LPan) C" tip="knobs.knob" value="C" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Reverb rtn" name="Knob 5: Reverb rtn (RevRtn) 64" tip="knobs.knob" value="64" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Chorus rtn" name="Knob 6: Chorus rtn (ChoRtn) 64" tip="knobs.knob" value="64" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Delay rtn" name="Knob 7: Delay rtn (DlyRtn) 64" tip="knobs.knob" value="64" @onpress=press6 @onstep=step6 @tipAction=tipAction>
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## ChorusPage
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.31496062992125984 hue=1 label="Right 1" name="Knob 1: Right 1 (R1Cho) 40" tip="knobs.knob" value="40" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.15748031496062992 hue=2 label="Right 2" name="Knob 2: Right 2 (R2Cho) 20" tip="knobs.knob" value="20" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 hue=3 label="Right 3" name="Knob 3: Right 3 (R3Cho) 0" tip="knobs.knob" value="0" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.09448818897637795 hue=4 label="Left" name="Knob 4: Left (LCho) 12" tip="knobs.knob" value="12" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.31496062992125984 label="Rate" name="Knob 5: Rate (ChoRate) 40" tip="knobs.knob" value="40" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.47244094488188976 label="Depth" name="Knob 6: Depth (ChoDep) 60" tip="knobs.knob" value="60" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Chorus rtn" name="Knob 8: Chorus rtn (ChoRtn) 64" tip="knobs.knob" value="64" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## FewerKnobs
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=1 label="Dynamics" name="Knob 1: Dynamics (DynCtrl) 127" tip="knobs.knob" value="127" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.4 label="Retrig rate" name="Knob 2: Retrig rate (RtgRate) 1/8" tip="knobs.knob" value="1/8" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Retrigger" name="Knob 3: Retrigger (RtgOnOff) Off" tip="knobs.knob" value="Off" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 4: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=4 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 5: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=5 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 6: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 8: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+
+## PageLabelOnly
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=1 label="Dynamics" name="Knob 1: Dynamics (DynCtrl) 127" tip="knobs.knob" value="127" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.4 label="Retrig rate" name="Knob 2: Retrig rate (RtgRate) 1/8" tip="knobs.knob" value="1/8" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Retrigger" name="Knob 3: Retrigger (RtgOnOff) Off" tip="knobs.knob" value="Off" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute A" name="Knob 4: Mute A (StyMuteA) Off" tip="knobs.knob" value="Off" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute B" name="Knob 5: Mute B (StyMuteB) Off" tip="knobs.knob" value="Off" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Swing" name="Knob 6: Swing (Swing) 0%" tip="knobs.knob" unit="%" value="0" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## At1440
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=1 label="Dynamics" name="Knob 1: Dynamics (DynCtrl) 127" tip="knobs.knob" value="127" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.4 label="Retrig rate" name="Knob 2: Retrig rate (RtgRate) 1/8" tip="knobs.knob" value="1/8" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Retrigger" name="Knob 3: Retrigger (RtgOnOff) Off" tip="knobs.knob" value="Off" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute A" name="Knob 4: Mute A (StyMuteA) Off" tip="knobs.knob" value="Off" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute B" name="Knob 5: Mute B (StyMuteB) Off" tip="knobs.knob" value="Off" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Swing" name="Knob 6: Swing (Swing) 0%" tip="knobs.knob" unit="%" value="0" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## At1217
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.31496062992125984 hue=1 label="Right 1" name="Knob 1: Right 1 (R1Rev) 40" tip="knobs.knob" value="40" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.15748031496062992 hue=2 label="Right 2" name="Knob 2: Right 2 (R2Rev) 20" tip="knobs.knob" value="20" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 hue=3 label="Right 3" name="Knob 3: Right 3 (R3Rev) 0" tip="knobs.knob" value="0" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.09448818897637795 hue=4 label="Left" name="Knob 4: Left (LRev) 12" tip="knobs.knob" value="12" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5511811023622047 label="Time" name="Knob 5: Time (RevTime) 70" tip="knobs.knob" value="70" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.15748031496062992 label="Pre-delay" name="Knob 6: Pre-delay (RevPre) 20" tip="knobs.knob" value="20" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Tone" name="Knob 7: Tone (RevTone) 64" tip="knobs.knob" value="64" @onpress=press6 @onstep=step6 @tipAction=tipAction>
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Reverb rtn" name="Knob 8: Reverb rtn (RevRtn) 64" tip="knobs.knob" value="64" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## Forms #1
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7874015748031497 hue=1 label="Right 1" name="Knob 1: Right 1 (R1Vol) 100" tip="knobs.knob" value="100" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7086614173228346 hue=2 label="Right 2" name="Knob 2: Right 2 (R2Vol) 90" tip="knobs.knob" value="90" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.6299212598425197 hue=3 label="Right 3" name="Knob 3: Right 3 (R3Vol) 80" tip="knobs.knob" value="80" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7559055118110236 hue=4 label="Left" name="Knob 4: Left (LVol) 96" tip="knobs.knob" value="96" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5511811023622047 label="Harmony" name="Knob 5: Harmony (HarmVol) 70" tip="knobs.knob" value="70" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Metronome" name="Knob 6: Metronome (MetVol) 64" tip="knobs.knob" value="64" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## Forms #2
+<div class="yh-knobbank" data-form="compact" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7874015748031497 hue=1 label="Right 1" name="Knob 1: Right 1 (R1Vol) 100" tip="knobs.knob" value="100" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7086614173228346 hue=2 label="Right 2" name="Knob 2: Right 2 (R2Vol) 90" tip="knobs.knob" value="90" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.6299212598425197 hue=3 label="Right 3" name="Knob 3: Right 3 (R3Vol) 80" tip="knobs.knob" value="80" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.7559055118110236 hue=4 label="Left" name="Knob 4: Left (LVol) 96" tip="knobs.knob" value="96" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5511811023622047 label="Harmony" name="Knob 5: Harmony (HarmVol) 70" tip="knobs.knob" value="70" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.5039370078740157 label="Metronome" name="Knob 6: Metronome (MetVol) 64" tip="knobs.knob" value="64" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
+
+## Playground
+<div class="yh-knobbank" data-form="labelled" data-part="root" lang="en">
+  <div class="yh-knobbank__knobs" data-part="knobs">
+    <div key=0 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=1 label="Dynamics" name="Knob 1: Dynamics (DynCtrl) 127" tip="knobs.knob" value="127" @onpress=press0 @onstep=step0 @tipAction=tipAction>
+    <div key=1 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.4 label="Retrig rate" name="Knob 2: Retrig rate (RtgRate) 1/8" tip="knobs.knob" value="1/8" @onpress=press1 @onstep=step1 @tipAction=tipAction>
+    <div key=2 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Retrigger" name="Knob 3: Retrigger (RtgOnOff) Off" tip="knobs.knob" value="Off" @onpress=press2 @onstep=step2 @tipAction=tipAction>
+    <div key=3 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute A" name="Knob 4: Mute A (StyMuteA) Off" tip="knobs.knob" value="Off" @onpress=press3 @onstep=step3 @tipAction=tipAction>
+    <div key=4 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Mute B" name="Knob 5: Mute B (StyMuteB) Off" tip="knobs.knob" value="Off" @onpress=press4 @onstep=step4 @tipAction=tipAction>
+    <div key=5 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0 label="Swing" name="Knob 6: Swing (Swing) 0%" tip="knobs.knob" unit="%" value="0" @onpress=press5 @onstep=step5 @tipAction=tipAction>
+    <div key=6 class="yh-knobbank__slot" data-part="slot" data-unused="true">
+      <span aria-label="Knob 7: unused" class="yh-knobbank__empty" data-part="empty" data-tip="knobs.knob" role="img">
+        <span aria-hidden="true" class="yh-knobbank__line">
+        <svg aria-hidden="true" class="yh-knobbank__ring" viewBox="0 0 48 48">
+          <path d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44">
+    <div key=7 class="yh-knobbank__slot" data-part="slot">
+      <Knob code="" fraction=0.27 label="Tempo" name="Knob 8: Tempo (Tempo) 104" tip="knobs.knob" value="104" @onpress=press7 @onstep=step7 @tipAction=tipAction>
