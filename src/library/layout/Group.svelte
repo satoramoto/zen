@@ -1,12 +1,11 @@
 <!--
   Group: the model's tree (`groupView`, Group.model.ts) drawn by the Svelte `Tree`, as `Group.tsx`
   draws it with the React one; see Group.tsx for the job. `label` and `aside` are text or snippets.
-  `toolbar` sets the control context (control.svelte.ts) to the toolbar's for what's inside.
+  `toolbar` sets the control context to the toolbar's for the body's controls (the tree's `Context`).
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import Tree from '../view/Tree.svelte';
-  import { CONTROL_TOOLBAR, getControlContext, setControlContext } from '../primitives/control.svelte';
   import { groupView, type GroupModelProps } from './Group.model';
   import { isSlotContent } from './Region.model';
   import '../primitives/Stack.css';
@@ -24,14 +23,6 @@
   }
 
   let { label, aside, toolbar = false, class: className, style, children, ...props }: Props = $props();
-
-  // A toolbar asks for the quiet look; otherwise the surrounding cluster's look holds.
-  const outer = getControlContext();
-  setControlContext({
-    get quiet() {
-      return toolbar ? CONTROL_TOOLBAR.quiet : outer.quiet;
-    },
-  });
 </script>
 
 <Tree

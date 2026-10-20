@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Step } from '../primitives/step';
-import { CONTROL_TOOLBAR, ControlContext, type StackAlign } from '../primitives/Stack';
+import type { StackAlign } from '../primitives/Stack';
 import { Tree } from '../view/Tree';
 import { groupView } from './Group.model';
 import { cssText, isSlotContent } from './Region.model';
@@ -31,7 +31,8 @@ export interface GroupProps {
   area?: string;
   /**
    * A toolbar (`role="toolbar"`): the controls inside take their quiet look (a Select is text and
-   * a caret, not a field) through `ControlContext`; they never take a per-use style for it.
+   * a caret, not a field) through `ControlContext` (the tree's `Context`); they never take a
+   * per-use style for it.
    */
   toolbar?: boolean;
   className?: string;
@@ -65,7 +66,5 @@ export function Group({ label, aside, style, toolbar = false, children, ...props
     },
     { label: isSlotContent(label), aside: isSlotContent(aside) },
   );
-  // React's context reaches the controls through the slot: only the body's are a toolbar's.
-  const body = toolbar ? <ControlContext.Provider value={CONTROL_TOOLBAR}>{children}</ControlContext.Provider> : children;
-  return <Tree tree={tree} slots={{ label: label === false ? undefined : label, aside, children: body }} />;
+  return <Tree tree={tree} slots={{ label: label === false ? undefined : label, aside, children }} />;
 }

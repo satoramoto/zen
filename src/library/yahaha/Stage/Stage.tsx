@@ -1,10 +1,8 @@
 import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { useScopePrinciples } from '../../layout/assembly/AssembledScreen';
-import { Screen } from '../../layout/Screen';
 import { Tree } from '../../view/Tree';
-import type { Node } from '../../view/Tree.model';
 import type { AppBarProps } from '../AppBar/AppBar';
-import { stageFrame, stageHandlers, stageRegions, stageScreen, type StageModelProps } from './Stage.model';
+import { stageHandlers, stageView, type StageModelProps } from './Stage.model';
 import { createStageState } from './stageState';
 import './Stage.css';
 
@@ -66,11 +64,7 @@ export function Stage(props: StageProps) {
   const [state] = useState(createStageState);
   const current = useSyncExternalStore(state.subscribe, state.get);
   const { inset } = useScopePrinciples().plate;
-  const handlers = stageHandlers(props, state);
-  const regions = Object.entries(stageRegions(props, current, inset)).map(([id, region]) => [id, <Tree tree={region as unknown as Node} handlers={handlers} />]);
-  // The seam: the layout's `Screen` takes a `regions` record, so the screen is drawn here by hand;
-  // once it draws its regions as slots by id, this is `<Tree tree={stageView(props, current, inset)} handlers={handlers} />`.
-  return <Tree tree={stageFrame(props)} slots={{ screen: <Screen name="Stage" className="yh-stage__screen" {...stageScreen(props)} onPlacement={handlers.placement} regions={Object.fromEntries(regions)} /> }} />;
+  return <Tree tree={stageView(props, current, inset)} handlers={stageHandlers(props, state)} />;
 }
 
 export default Stage;

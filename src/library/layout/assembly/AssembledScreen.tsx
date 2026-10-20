@@ -6,8 +6,10 @@ import {
   assembledPlacement,
   assembledScreenHandlers,
   assembledScreenView,
+  regionContent,
   regionFills,
   type AssembledScreenModelProps,
+  type RegionSlotName,
 } from './AssembledScreen.model';
 import { scopePrinciples } from './principles';
 import type { RoomSize } from './room';
@@ -30,7 +32,10 @@ export interface AssembledScreenProps {
   name: string;
   spec: ScreenSpec;
   /** What goes in each region, by id. The chosen form reaches it through `useForm()` as well. */
-  regions: Record<string, RegionContent>;
+  regions?: Record<string, RegionContent>;
+  /** A region's content by its slot's name (`regionSlot(id)`, as a model's tree fills it); it wins
+   *  over `regions[id]`. */
+  [region: RegionSlotName]: RegionContent;
   /** The room in px. Unset, the screen measures its own box (and uses 1440 × 900 where nothing measures, as in jsdom). */
   room?: { w: number; h: number };
   /** The solver's principles. Unset: the nearest ThemeScope's facets and pack principles. */
@@ -88,7 +93,7 @@ export function useScopePrinciples(given?: Principles): Principles {
  * **State.** The measured room is the screen's own (a `localState` the `room` store writes); each
  * new placement reaches `onPlacement` through the `report` store.
  */
-export function AssembledScreen({ regions = {}, onPlacement, ...props }: AssembledScreenProps) {
+export function AssembledScreen({ regions, onPlacement, ...props }: AssembledScreenProps) {
   const [room] = useState(() => localState<RoomSize | null>(null));
   const measured = useSyncExternalStore(room.subscribe, room.get, room.get);
   const principles = useScopePrinciples(props.principles);
@@ -96,7 +101,7 @@ export function AssembledScreen({ regions = {}, onPlacement, ...props }: Assembl
   return (
     <Tree
       tree={assembledScreenView(props as AssembledScreenModelProps, placement)}
-      slots={regionFills(placement, (id) => regions[id] as ReactNode)}
+      slots={regionFills(placement, (id) => regionContent(props, regions, id))}
       handlers={assembledScreenHandlers({ onPlacement }, placement, room)}
     />
   );

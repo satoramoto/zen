@@ -2,10 +2,10 @@
 // (React) and `Screen.svelte` (Svelte) both hand `screenView` to their `Tree`. A grid screen is its
 // root, the header and footer (text, or the `header` / `footer` slots) and the grid holding the
 // `children` slot, its element handed out through the `ref` store (`bindRef`). With a `spec` it is
-// an `AssembledScreen` component node instead, the regions' contents passed through as its
-// `regions` (assembly/AssembledScreen.model.ts).
+// an `AssembledScreen` component node instead, each region's content passed through by its slot
+// (`regionSlot(id)`, assembly/AssembledScreen.model.ts).
 import { component, h, slot, styleText, wire, type ComponentNode, type Handlers, type Node } from '../view/Tree.model';
-import { styleAttr, type StyleInput } from './assembly/AssembledScreen.model';
+import { regionSlot, specRegionIds, styleAttr, type RegionSlotName, type StyleInput } from './assembly/AssembledScreen.model';
 import type { StyleDecls } from './style';
 import type { Placement, Principles, ScreenSpec } from './assembly/types';
 
@@ -42,9 +42,6 @@ export interface ScreenFills {
   footer?: unknown;
 }
 
-/** The slot an assembled screen's region contents pass through, as its `regions` prop. */
-export const REGIONS_SLOT = 'regions';
-
 /** The grid's template: from `areas` (columns and rows defaulting to even columns and `auto` rows), or `columns` and `rows` alone. */
 export function screenGrid({ areas, columns, rows }: Pick<ScreenModelProps, 'areas' | 'columns' | 'rows'>): StyleDecls {
   if (areas)
@@ -64,19 +61,16 @@ const bar = (part: 'header' | 'footer', fill: unknown): Node | null =>
  * The tree Screen draws. A grid screen: its root (`lib-screen` plus the caller's class, a group
  * named `name`), the header, the grid (its template from `screenGrid`, then `gridStyle`; the
  * `children` slot; the `ref` store handing its element to `gridRef`) and the footer. With a
- * `spec`: the `AssembledScreen` component, its `onPlacement` the `placement` handler and its
- * `regions` this tree's `regions` slot passed through.
+ * `spec`: the `AssembledScreen` component, its `onPlacement` the `placement` handler and each of
+ * the spec's regions' slots (`regionSlot(id)`) this tree's slot of that name passed through.
  */
 export function screenView(props: ScreenModelProps & ScreenStyles, fills: ScreenFills = {}): Node | ComponentNode {
   const { name, className, spec, room, principles } = props;
   const style = styleAttr(props.style);
   if (spec) {
     // The tree's root is the component itself, so the DOM is exactly AssembledScreen's.
-    return component(
-      'AssembledScreen',
-      { name, spec, room, principles, className, style },
-      { on: { onPlacement: 'placement' }, slots: { regions: slot(REGIONS_SLOT) } },
-    );
+    const regions = Object.fromEntries(specRegionIds(spec).map((id) => [regionSlot(id), slot(regionSlot(id))]));
+    return component('AssembledScreen', { name, spec, room, principles, className, style }, { on: { onPlacement: 'placement' }, slots: regions });
   }
   const grid = [styleText(screenGrid(props)), styleAttr(props.gridStyle)].filter(Boolean).join('; ') || undefined;
   return h(
@@ -86,6 +80,16 @@ export function screenView(props: ScreenModelProps & ScreenStyles, fills: Screen
     wire(h('div', { class: 'lib-screen__grid', 'data-part': 'grid', style: grid }, slot('children')), { bind: [['ref', { onRef: 'gridRef' }]] }),
     bar('footer', fills.footer),
   );
+}
+
+/** An assembled screen's region contents as Screen's slots, by `regionSlot(id)`: each of `regions`
+ *  (the record direct callers pass), then each region slot given as a prop (`region:<id>`, as a
+ *  model's tree fills it), which wins. */
+export function screenRegionSlots<T>(regions: Record<string, T> | undefined, props: object): Record<RegionSlotName, T> {
+  const slots: Record<RegionSlotName, T> = {};
+  for (const [id, content] of Object.entries(regions ?? {})) slots[regionSlot(id)] = content;
+  for (const [name, content] of Object.entries(props)) if (name.startsWith(regionSlot('')) && content !== undefined) slots[name as RegionSlotName] = content as T;
+  return slots;
 }
 
 /** A ref as a binding has one: a callback, or an object whose `current` is set (React's `Ref<E>`

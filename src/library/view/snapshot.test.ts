@@ -201,7 +201,7 @@ snapshot('KnobBank', (props) => knobBankView(props as KnobBankRegionModelProps, 
 snapshot('KnobBankRegion', (props) => knobBankRegionView(props as KnobBankRegionModelProps), knobBankStories);
 snapshot('PadBank', (props) => padBankView(props as PadBankProps, (props as PadBankProps).form ?? 'two-rows', null), padBankStories);
 snapshot('PadBankRegion', (props) => padBankRegionView(props as PadBankRegionProps), padBankStories);
-// The Stage's target tree (the Screen with its regions as slots); its bindings still draw the Screen by hand until the layout lane's Screen takes region slots.
+// The Stage: the frame holding the Screen, each region's content in its slot by id (`region:<id>`).
 snapshot('Stage', (props) => stageView(props, {}, { left: 0, right: 0 }), stageStories);
 snapshot('PageList', (props) => pageListView(props as Parameters<typeof pageListView>[0]), pageListStories);
 snapshot('FolderList', (props) => folderListView(props as Parameters<typeof folderListView>[0]), folderListStories);

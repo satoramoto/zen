@@ -1,10 +1,12 @@
 // Group's model: the tree a renderer draws (its root Stack with its class, role, name and grid
-// area; the header with the label and aside; the body Stack holding the `children` slot). No
+// area; the header with the label and aside; the body Stack holding the `children` slot, in a
+// toolbar's control context when `toolbar`). No
 // framework: `Group.tsx` (React) and `Group.svelte` (Svelte) each hand `groupView` to their `Tree`.
 import { stackView, type StackAlign, type StackModelProps } from '../primitives/Stack.model';
 import type { Step } from '../primitives/step';
 import { textView } from '../primitives/Text.model';
-import { h, slot, styleText, when, type Node } from '../view/Tree.model';
+import { CONTROL_TOOLBAR } from '../primitives/control';
+import { component, h, slot, styleText, when, type Node } from '../view/Tree.model';
 import { joinStyle } from './Region.model';
 
 /** What Group decides from, in any framework (each renderer adds its label, aside and children). */
@@ -64,6 +66,8 @@ export function groupLabel<L>(name: string, label: L | false | undefined): L | s
  * The tree Group draws: the root (a column Stack, gap step 1, `lib-group` plus the caller's class,
  * a `group` or `toolbar` named by `name`, its grid area), its header when it shows a label or an
  * aside (the label as a caption `Text`), and the body Stack (`lib-group__body`) holding `children`.
+ * A toolbar's body provides the toolbar's control look (the `control` `Context`) to `children`:
+ * only the body's controls are a toolbar's, not the header's.
  */
 export function groupView(props: GroupDrawProps, slots: GroupSlots = {}): Node {
   const { name, label, aside, area, toolbar = false, className, style } = props;
@@ -90,6 +94,10 @@ export function groupView(props: GroupDrawProps, slots: GroupSlots = {}): Node {
         when(hasAside, () => h('span', { class: 'lib-group__aside' }, slots.aside ? slot('aside') : (aside ?? null))),
       ),
     ),
-    h('div', { class: body.className, ...body.attrs, 'data-part': 'body' }, slot('children')),
+    h(
+      'div',
+      { class: body.className, ...body.attrs, 'data-part': 'body' },
+      toolbar ? component('Context', { name: 'control', value: CONTROL_TOOLBAR }, { slots: { children: [slot('children')] } }) : slot('children'),
+    ),
   );
 }
