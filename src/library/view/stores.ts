@@ -7,6 +7,7 @@ import { bindLongPress, type LongPressParams } from '../components/core/Button/l
 import { bindHold, type HoldParams } from '../components/core/Button/hold';
 import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
+import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -61,6 +62,10 @@ export const stores = {
   tip: keyed<TipParams, 'tipAction'>(bindTip, ['tipAction']),
   /** Knob's drag, keys, wheel, press and tooltip (`knobInput.ts`). */
   knob: keyed<KnobParams, 'tipAction' | 'onpress' | 'onstep'>(bindKnob, ['tipAction', 'onpress', 'onstep']),
+  /** MetronomePopover's Esc and press-outside close (`yahaha/AppBar/popover.ts`). */
+  dismiss: keyed<DismissParams, 'onClose'>(bindDismiss, ['onClose']),
+  /** AppBar's focus back to the metronome's opener when its popover closes (`yahaha/AppBar/popover.ts`). */
+  focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;

@@ -61,3 +61,15 @@ export function createFocusReturn(getBox: () => HTMLElement | null | undefined):
     wasOpen = open;
   };
 }
+
+export interface FocusReturnParams {
+  /** Whether the popover is open; turning false with focus on the page gives focus back to the box's button. */
+  open?: boolean;
+}
+
+/** `createFocusReturn` as a store on the opener's box: fed `open` on mount and on every update. */
+export function bindFocusReturn(node: HTMLElement, initial: FocusReturnParams): { update(params: FocusReturnParams): void } {
+  const track = createFocusReturn(() => node);
+  track(initial.open ?? false);
+  return { update: (next) => track(next.open ?? false) };
+}
