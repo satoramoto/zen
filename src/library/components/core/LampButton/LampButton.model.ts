@@ -1,10 +1,12 @@
-// LampButton's model: its props, the face it draws from them (classes, `data-*` and ARIA), and what
-// a press asks for. No framework: `LampButton.tsx` (React) and `LampButton.svelte` (Svelte) both
-// render `lampButtonView`; the long press is Button's store (`../Button/longPress.ts`).
+// LampButton's model: its props, the tree it draws from them (classes, `data-*`, ARIA, the stores it
+// binds), the handlers that tree names, and what a press asks for. No framework: `LampButton.tsx`
+// (React) and `LampButton.svelte` (Svelte) both pass `lampButtonView` and `lampButtonHandlers` to
+// their `Tree`; the long press is Button's store (`../Button/longPress.ts`).
 import type { HueSlot } from '../hue';
 import type { TipAction } from '../Button/Button.model';
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+import { textView } from '../../../primitives/Text.model';
+import { h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 
 export type { TipAction } from '../Button/Button.model';
 
@@ -57,48 +59,43 @@ export interface LampButtonModelProps {
 }
 
 /** What a renderer draws: the face (a `Text` rendered as a `<button>`), its LED, label and code. */
-export interface LampButtonView {
-  /** The face's Text props. */
-  text: TextModelProps;
-  /** The face's class (beside Text's own) and its `type`, `data-*` and ARIA attributes. */
-  face: ElementView;
-  /** The face's `min-width` (from `width`), or undefined for none. */
-  minWidth: string | undefined;
-  /** The label's text. */
-  label: string;
-  /** The code, drawn as a Text with these props, class and attributes; null for none. */
-  code: { value: string; text: TextModelProps; className: string; attrs: Record<string, string | undefined> } | null;
-  /** Whether the long press is on (a pointer hold-to-press or a right-click reach `onLongPress`). */
-  longPress: boolean;
-}
-
-/** The face LampButton draws from its props. */
-export function lampButtonView({
-  label,
-  on = false,
-  hue = 't',
-  code,
-  disabled = false,
-  rec = false,
-  waiting = false,
-  armed = false,
-  size = 'md',
-  width,
-  join,
-  name,
-  tip,
-  onLongPress,
-}: LampButtonModelProps): LampButtonView {
+/**
+ * The tree LampButton draws from its props: the face (a `label` Text as a `<button>`), its lamp,
+ * label and code. A click calls `toggle` (`lampButtonHandlers`); it binds the long press and the
+ * tooltip.
+ */
+export function lampButtonView(props: LampButtonModelProps): Node {
+  const {
+    label,
+    on = false,
+    hue = 't',
+    code,
+    disabled = false,
+    rec = false,
+    waiting = false,
+    armed = false,
+    size = 'md',
+    width,
+    join,
+    name,
+    tip,
+    onLongPress,
+  } = props;
   const face: Exclude<LampFace, 'disabled'> = on ? (armed ? 'armed' : rec ? 'record' : 'on') : waiting ? 'waiting' : 'off';
   const drawn = rec && face !== 'off' ? 'rec' : hue === 'm' ? 't' : hue;
   const classes = ['yh-lampbutton', `yh-lampbutton--${size}`, focusRing];
   if (width !== undefined) classes.push('yh-lampbutton--fixed');
   if (join) classes.push(`yh-lampbutton--join-${join}`);
-  return {
-    text: { role: 'label', leading: 'tight', tabular: true },
-    face: {
-      className: classes.join(' '),
-      attrs: {
+  const text = textView({ role: 'label', leading: 'tight', tabular: true, className: classes.join(' ') });
+  const codeText = textView({ role: 'numeral', size: 'caption', weight: 'body', case: 'none', className: 'yh-lampbutton__code' });
+  const longPress = !disabled && onLongPress !== undefined;
+  return wire(
+    h(
+      'button',
+      {
+        class: text.className,
+        ...text.attrs,
+        style: width === undefined ? undefined : `min-width: ${width}px`,
         type: 'button',
         'data-part': 'face',
         'data-face': disabled ? 'disabled' : face,
@@ -109,18 +106,31 @@ export function lampButtonView({
         'aria-disabled': disabled ? 'true' : undefined,
         'aria-label': name ?? (code ? `${label} ${code}` : label),
       },
+      h('span', { class: 'yh-lampbutton__led', 'data-part': 'lamp', 'aria-hidden': 'true' }),
+      h('span', { class: 'yh-lampbutton__label', 'data-part': 'label' }, label),
+      code ? h('span', { class: codeText.className, ...codeText.attrs, 'data-part': 'code' }, code) : null,
+    ),
+    {
+      on: { click: 'toggle' },
+      bind: [
+        ['longPress', { disabled: !longPress, onLongPress: 'longPress', onLongRelease: 'longRelease' }],
+        ['tip', { tip, tipAction: 'tipAction' }],
+      ],
     },
-    minWidth: width === undefined ? undefined : `${width}px`,
-    label,
-    code: code
-      ? {
-          value: code,
-          text: { role: 'numeral', size: 'caption', weight: 'body', case: 'none' },
-          className: 'yh-lampbutton__code',
-          attrs: { 'data-part': 'code' },
-        }
-      : null,
-    longPress: !disabled && onLongPress !== undefined,
+  );
+}
+
+/** The callbacks `lampButtonView`'s tree names: `toggle` (asks for `lampToggle`'s state), and the
+ *  long press's and the tooltip's. */
+export function lampButtonHandlers(props: LampButtonModelProps): Handlers {
+  return {
+    toggle: () => {
+      const next = lampToggle(props);
+      if (next !== undefined) props.onToggle?.(next);
+    },
+    longPress: props.onLongPress,
+    longRelease: props.onLongRelease,
+    tipAction: props.tipAction,
   };
 }
 

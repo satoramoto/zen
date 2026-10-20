@@ -1,5 +1,6 @@
 // The two Tree renderers, held to each other over one synthetic tree that uses every feature:
-// text, nesting, slots, attributes (boolean, style, SVG), `on` handlers, `bind` stores, keyed lists.
+// text, nesting, slots, attributes (boolean, style, SVG), `on` handlers, `bind` stores, keyed lists,
+// component nodes (props, callbacks by key, slots) and form properties.
 // Converted components then need no DOM parity of their own: their trees are snapshotted
 // (snapshot.test.ts), and this proves both renderers draw any tree the same.
 import { createElement } from 'react';
@@ -10,7 +11,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { serialize } from '../parity';
 import { Tree } from './Tree';
 import TreeSvelte from './Tree.svelte';
-import { each, h, slot, when, wire, type Handlers, type Node } from './Tree.model';
+import { component, each, h, slot, when, wire, type Handlers, type Node } from './Tree.model';
 import type { Store, Stores } from './stores';
 
 /** A store that logs what the renderer does to it, and calls its `ping` handler key on click. */
@@ -137,6 +138,53 @@ describe('Tree: React and Svelte draw any tree the same', () => {
       expect(after.map((li) => li.dataset.id)).toEqual(['c', 'a', 'b']);
       expect({ side, same: after.map((li, i) => li === [before[side][2], before[side][0], before[side][1]][i]) }).toEqual({ side, same: [true, true, true] });
       expect(container.querySelector('i')?.textContent).toBe('extra');
+    }
+    expect(serialize(svelte.container)).toBe(serialize(react.container));
+    react.unmount();
+    svelte.unmount();
+  });
+
+  it('component nodes: registered components, data props, `on` callbacks by key, slots filled with subtrees or passed through; form properties', async () => {
+    const composite = (value: string, checked: boolean): Node =>
+      h(
+        'div',
+        { class: 'page' },
+        component('SettingsRow', { id: 'upper', label: 'Upper', hint: 'Right hand' }, {
+          slots: {
+            children: [
+              component('LampButton', { label: 'On', name: 'Upper', on: true }, { on: { onToggle: 'toggle' } }),
+              h('input', { type: 'range', min: '0', max: '30', value }),
+              h('input', { type: 'checkbox', checked: checked ? '' : undefined }),
+            ],
+          },
+        }),
+        component('SettingsRow', { id: 'pass', label: 'Passed through' }, { slots: { children: slot('icon') } }),
+      );
+    const calls = { react: [] as unknown[], svelte: [] as unknown[] };
+    const react = renderReact(createElement(Tree, { tree: composite('10', true), slots: reactSlots, handlers: { toggle: (on: boolean) => calls.react.push(on) } }));
+    const svelteHandlers = { toggle: (on: boolean) => calls.svelte.push(on) };
+    const svelte = renderSvelte(TreeSvelte, { props: { tree: composite('10', true), slots: svelteSlots, handlers: svelteHandlers } });
+
+    const dom = serialize(react.container);
+    expect(dom).toContain('yh-settings-row');
+    expect(dom).toContain('yh-lampbutton');
+    expect(dom).toContain('<em>');
+    expect(dom).not.toContain('value=');
+    expect(dom).not.toContain('checked=');
+    expect(serialize(svelte.container)).toBe(dom);
+
+    for (const [side, container] of [['react', react.container], ['svelte', svelte.container]] as const) {
+      fireEvent.click(container.querySelector('.yh-lampbutton')!);
+      expect(calls[side]).toEqual([false]);
+      expect((container.querySelector('input[type=range]') as HTMLInputElement).value).toBe('10');
+      expect((container.querySelector('input[type=checkbox]') as HTMLInputElement).checked).toBe(true);
+    }
+
+    react.rerender(createElement(Tree, { tree: composite('12', false), slots: reactSlots, handlers: { toggle: (on: boolean) => calls.react.push(on) } }));
+    await svelte.rerender({ tree: composite('12', false), slots: svelteSlots, handlers: svelteHandlers });
+    for (const container of [react.container, svelte.container]) {
+      expect((container.querySelector('input[type=range]') as HTMLInputElement).value).toBe('12');
+      expect((container.querySelector('input[type=checkbox]') as HTMLInputElement).checked).toBe(false);
     }
     expect(serialize(svelte.container)).toBe(serialize(react.container));
     react.unmount();

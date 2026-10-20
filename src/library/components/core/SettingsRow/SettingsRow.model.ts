@@ -1,7 +1,9 @@
-// SettingsRow's model: its props and the row it draws (the root Text's props, class, ARIA and
-// inline style; the label and hint parts). No framework: `SettingsRow.tsx` (React) and
-// `SettingsRow.svelte` (Svelte) both render `settingsRowView`; each adds the control (its children).
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+// SettingsRow's model: its props and the tree it draws (the root Text's class, ARIA and inline
+// style; the label, the control's box with its `children` slot, the hint). No framework:
+// `SettingsRow.tsx` (React) and `SettingsRow.svelte` (Svelte) both pass `settingsRowView` to their
+// `Tree`, with the control as the `children` slot.
+import { textView } from '../../../primitives/Text.model';
+import { h, slot, styleText, type Node } from '../../../view/Tree.model';
 
 /** Every SettingsRow prop but its control (a React node or a Svelte snippet, so each renderer adds its own). */
 export interface SettingsRowModelProps {
@@ -15,39 +17,29 @@ export interface SettingsRowModelProps {
   id?: string;
 }
 
-/** What a renderer draws: the root (a `Text` rendered as a `div`), its inline style, the label, the control's box and the hint. */
-export interface SettingsRowView {
-  /** The root's Text props. */
-  text: TextModelProps;
-  /** The root's class and its `data-*` and ARIA attributes. */
-  root: ElementView;
-  /** The root's inline style as declarations (`style`, for React) and as text (`styleText`, for Svelte). */
-  style: Record<string, string>;
-  styleText: string;
-  /** The label's text and attributes. */
-  label: { text: string; className: string; attrs: Record<string, string | undefined> };
-  /** The control's box. */
-  control: ElementView;
-  /** The hint's text and attributes, or null for none. */
-  hint: { text: string; className: string; attrs: Record<string, string | undefined> } | null;
-}
-
-/** The row SettingsRow draws from its props; `generatedId` is the renderer's own id, used when `id` is unset. */
-export function settingsRowView({ label, hint = '', labelWidth = 120, id }: SettingsRowModelProps, generatedId: string): SettingsRowView {
+/**
+ * The tree SettingsRow draws from its props: the root (a `body` Text as a `div`, a group named by
+ * its label), the label, the control's box holding the `children` slot, and the hint.
+ * `generatedId` is the renderer's own id (React's `useId`, Svelte's `$props.id()`), used when `id`
+ * is unset.
+ */
+export function settingsRowView({ label, hint = '', labelWidth = 120, id }: SettingsRowModelProps, generatedId: string): Node {
   const base = id ?? generatedId;
   const labelId = `${base}-label`;
   const hintId = `${base}-hint`;
-  const width = `${labelWidth}px`;
-  return {
-    text: { role: 'body', tabular: true, ariaRole: 'group' },
-    root: {
-      className: 'yh-settings-row',
-      attrs: { 'data-part': 'root', 'aria-labelledby': labelId, 'aria-describedby': hint ? hintId : undefined },
+  const text = textView({ role: 'body', tabular: true, ariaRole: 'group', className: 'yh-settings-row' });
+  return h(
+    'div',
+    {
+      class: text.className,
+      ...text.attrs,
+      'data-part': 'root',
+      'aria-labelledby': labelId,
+      'aria-describedby': hint ? hintId : undefined,
+      style: styleText({ '--yh-settings-label-w': `${labelWidth}px` }),
     },
-    style: { '--yh-settings-label-w': width },
-    styleText: `--yh-settings-label-w: ${width}`,
-    label: { text: label, className: 'yh-settings-row__label', attrs: { 'data-part': 'label', id: labelId, title: label } },
-    control: { className: 'yh-settings-row__control', attrs: { 'data-part': 'control' } },
-    hint: hint ? { text: hint, className: 'yh-settings-row__hint', attrs: { 'data-part': 'hint', id: hintId, title: hint } } : null,
-  };
+    h('span', { class: 'yh-settings-row__label', 'data-part': 'label', id: labelId, title: label }, label),
+    h('span', { class: 'yh-settings-row__control', 'data-part': 'control' }, slot('children')),
+    hint ? h('span', { class: 'yh-settings-row__hint', 'data-part': 'hint', id: hintId, title: hint }, hint) : null,
+  );
 }

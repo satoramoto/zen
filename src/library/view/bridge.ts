@@ -1,6 +1,6 @@
-// A bridge for components not yet drawn by `Tree`: a plain `bindX(node, params)` store as a Svelte
-// action (`actionOf`), so no store needs a per-component action file. `useBound.ts` is the React
-// twin. A converted component binds its stores in its tree instead.
+// A plain `bindX(node, params)` store as a Svelte action (`actionOf`), for the actions
+// `svelte.ts` makes public (`longPress`, `knobInput`), so no store needs a per-component action
+// file. A converted component binds its stores in its tree instead.
 import type { StoreBinding } from './stores';
 
 /** A plain store: listens on `node` with `params`, updated with new ones, destroyed at the end. */

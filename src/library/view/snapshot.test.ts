@@ -10,6 +10,10 @@ import { buttonView } from '../components/core/Button/Button.model';
 import { buttonStories } from '../components/core/Button/Button.fixtures';
 import { knobView } from '../components/music/Knob/Knob.model';
 import { knobStories } from '../components/music/Knob/Knob.fixtures';
+import { lampButtonView } from '../components/core/LampButton/LampButton.model';
+import { lampButtonStories } from '../components/core/LampButton/LampButton.fixtures';
+import { settingsRowView } from '../components/core/SettingsRow/SettingsRow.model';
+import { controlArgs, settingsRowSample, settingsRowStories, type SampleArgs } from '../components/core/SettingsRow/SettingsRow.fixtures';
 
 function snapshot<P>(name: string, view: (props: P) => Node, fixtures: Fixtures<P>): void {
   describe(name, () => {
@@ -27,3 +31,7 @@ function snapshot<P>(name: string, view: (props: P) => Node, fixtures: Fixtures<
 
 snapshot('Button', (props) => buttonView(props), buttonStories);
 snapshot('Knob', (props) => knobView(props as Parameters<typeof knobView>[0]), knobStories);
+snapshot('LampButton', (props) => lampButtonView(props as Parameters<typeof lampButtonView>[0]), lampButtonStories);
+snapshot('SettingsRow', (props) => settingsRowView(props as Parameters<typeof settingsRowView>[0], 'uid'), settingsRowStories);
+// A composite: SettingsRow holding a LampButton (component nodes, a callback by key, a filled slot).
+snapshot('SettingsRow sample', (props) => settingsRowSample({ ...controlArgs, ...props } as SampleArgs), settingsRowStories);

@@ -10,8 +10,23 @@ export interface Slot {
   slot: string;
 }
 
-/** A child: an element, text, or a slot. */
-export type Child = Node | string | Slot;
+/** A child: an element, a component, text, or a slot. */
+export type Child = Node | ComponentNode | string | Slot;
+
+/**
+ * A registered component (`reactComponents.ts`, `svelteComponents.ts`), by name: how a composite's
+ * model draws another component without importing a renderer. `props` are plain data; `on` maps a
+ * callback prop to a handler key (`{ onToggle: 'toggle' }` passes `handlers.toggle`); `slots` fill
+ * the component's slots with subtrees (drawn in this tree, with its handlers and slots), or pass one
+ * of this tree's own slots through (`{ children: slot('children') }`).
+ */
+export interface ComponentNode {
+  component: string;
+  props?: Record<string, unknown>;
+  on?: Record<string, string>;
+  slots?: Record<string, (Child | null)[] | Slot>;
+  key?: string;
+}
 
 /** A store applied to the element: its registered name (`stores.ts`) and its params (plain data;
  *  a param naming a callback holds the handler's key). */
@@ -61,6 +76,20 @@ export function h(tag: string, attrs: Record<string, string | undefined> = {}, .
 /** A slot child: `slot('icon')`. */
 export const slot = (name: string): Slot => ({ slot: name });
 
+/** A component child: `component('LampButton', { label: 'On' }, { on: { onToggle: 'toggle' } })`. A
+ *  slot's list flattens and keeps holes, as `h`'s children do. */
+export function component(
+  name: string,
+  props: Record<string, unknown> = {},
+  { on, slots, key }: { on?: Record<string, string>; slots?: Record<string, ChildArg[] | Slot>; key?: string } = {},
+): ComponentNode {
+  const node: ComponentNode = { component: name, props };
+  if (on) node.on = on;
+  if (slots) node.slots = Object.fromEntries(Object.entries(slots).map(([n, fill]) => [n, Array.isArray(fill) ? flatten(fill) : fill]));
+  if (key !== undefined) node.key = key;
+  return node;
+}
+
 /** `then()` when `test` holds, else nothing: `when(view.label !== null, () => h('span', …))`. */
 export function when<T>(test: boolean, then: () => T): T | null {
   return test ? then() : null;
@@ -89,11 +118,29 @@ export function styleText(style: Record<string, string | undefined> | undefined)
 
 export const isSlot = (child: Child): child is Slot => typeof child === 'object' && 'slot' in child;
 export const isNode = (child: Child): child is Node => typeof child === 'object' && 'tag' in child;
+export const isComponent = (child: Child): child is ComponentNode => typeof child === 'object' && 'component' in child;
+/** A component's slot fill: one of the tree's own slots passed through, or a list of children. */
+export const isSlotFill = (fill: (Child | null)[] | Slot): fill is Slot => !Array.isArray(fill);
 
-/** A child's identity among its siblings: its `key`, else its position. */
+/** A child's identity among its siblings: its `key`, else its position (and, for a component, its
+ *  name, so another component in the same place is a new one). */
 export function childKey(child: Child | null, index: number): string {
-  return child !== null && isNode(child) && child.key !== undefined ? `k:${child.key}` : `#${index}`;
+  if (child !== null && (isNode(child) || isComponent(child)) && child.key !== undefined) return `k:${child.key}`;
+  return child !== null && isComponent(child) ? `#${index}:${child.component}` : `#${index}`;
 }
+
+/** A component node's props as a renderer passes them: its data, then each `on` prop as a function
+ *  calling the latest handler for its key. */
+export function componentProps(node: ComponentNode, handler: (key: string) => Handler | undefined): Record<string, unknown> {
+  const props: Record<string, unknown> = { ...node.props };
+  for (const [prop, key] of Object.entries(node.on ?? {})) props[prop] = (...args: unknown[]) => handler(key)?.(...args);
+  return props;
+}
+
+/** Form state both renderers set as element properties, not attributes (so it follows the tree, not
+ *  the first render): `value` (a string), `checked` and `indeterminate` (`''` true, undefined false).
+ *  Listed in `attrs` like any attribute; `mount.ts` sets them, on mount and whenever they change. */
+export const PROPERTIES = new Set(['value', 'checked', 'indeterminate']);
 
 export const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -103,7 +150,6 @@ const BOOLEAN = new Set([
   'async',
   'autofocus',
   'autoplay',
-  'checked',
   'controls',
   'default',
   'defer',
@@ -124,11 +170,12 @@ const BOOLEAN = new Set([
   'selected',
 ]);
 
-/** A node's attributes as both renderers pass them on: undefined dropped, boolean attributes `true`. */
+/** A node's attributes as both renderers pass them on: undefined dropped, boolean attributes `true`,
+ *  form properties (`PROPERTIES`) left to `mount.ts`. */
 export function domAttrs(attrs: Record<string, string | undefined> | undefined): Record<string, string | true> {
   const out: Record<string, string | true> = {};
   for (const [name, value] of Object.entries(attrs ?? {})) {
-    if (value === undefined) continue;
+    if (value === undefined || PROPERTIES.has(name)) continue;
     out[name] = BOOLEAN.has(name.toLowerCase()) ? true : value;
   }
   return out;
@@ -136,12 +183,26 @@ export function domAttrs(attrs: Record<string, string | undefined> | undefined):
 
 /**
  * A tree as canonical text, for snapshots: one line per element (attributes sorted, `on` as
- * `@event=key`, `bind` as `use:store={params}`), text quoted, slots as `{slot}`.
+ * `@event=key`, `bind` as `use:store={params}`), text quoted, slots as `{slot}`. A component is
+ * `<Name prop={json} @onX=key>`, each of its slots a `#name` line over its contents.
  */
 export function printTree(child: Child, depth = 0): string {
   const pad = '  '.repeat(depth);
   if (typeof child === 'string') return `${pad}${JSON.stringify(child)}`;
   if (isSlot(child)) return `${pad}{${child.slot}}`;
+  if (isComponent(child)) {
+    const props = Object.entries(child.props ?? {})
+      .filter(([, value]) => value !== undefined)
+      .map(([name, value]) => `${name}=${JSON.stringify(value)}`)
+      .sort();
+    const on = Object.entries(child.on ?? {}).map(([prop, key]) => `@${prop}=${key}`);
+    const head = [child.component, ...(child.key !== undefined ? [`key=${child.key}`] : []), ...props, ...on].join(' ');
+    const slots = Object.entries(child.slots ?? {}).flatMap(([name, fill]) => [
+      `${pad}  #${name}`,
+      ...(isSlotFill(fill) ? [printTree(fill, depth + 2)] : fill.flatMap((c) => (c === null ? [] : [printTree(c, depth + 2)]))),
+    ]);
+    return [`${pad}<${head}>`, ...slots].join('\n');
+  }
   const attrs = Object.entries(child.attrs ?? {})
     .filter(([, value]) => value !== undefined)
     .map(([name, value]) => `${name}="${value}"`)

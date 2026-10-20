@@ -1,7 +1,7 @@
-// What both renderers do to an element once it exists, framework-free: attach its `on` handlers and
-// apply its `bind` stores. `Tree.tsx` calls it from a layout effect, `Tree.svelte` from an attachment;
+// What both renderers do to an element once it exists, framework-free: attach its `on` handlers,
+// apply its `bind` stores and set its form properties (`value`, `checked`, `indeterminate`). `Tree.tsx` calls it from a layout effect, `Tree.svelte` from an attachment;
 // neither holds any of this logic.
-import type { Handler, Handlers, Node } from './Tree.model';
+import { PROPERTIES, type Handler, type Handlers, type Node } from './Tree.model';
 import type { StoreBinding, Stores } from './stores';
 
 /** What a renderer passes: the callbacks by key and the store registry. */
@@ -65,8 +65,20 @@ export function mountNode(element: Element, node: Node, context: MountContext): 
     }
   };
 
+  // Form state as properties: set when the tree's value differs from the element's, so a user's
+  // edit stands until the tree says otherwise.
+  const properties = () => {
+    const target = element as unknown as Record<string, unknown>;
+    for (const [name, value] of Object.entries(current.attrs ?? {})) {
+      if (!PROPERTIES.has(name)) continue;
+      const next = name === 'value' ? (value ?? '') : value !== undefined;
+      if (target[name] !== next) target[name] = next;
+    }
+  };
+
   bindAll();
   listen();
+  properties();
 
   return {
     update(next, nextContext) {
@@ -87,6 +99,7 @@ export function mountNode(element: Element, node: Node, context: MountContext): 
         });
       }
       listen();
+      properties();
     },
     destroy() {
       unbindAll();

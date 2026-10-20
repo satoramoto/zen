@@ -1,9 +1,10 @@
 // The React renderer of a view tree (`tree.ts`): every converted component's `.tsx` is one
 // `<Tree tree={xView(props)} slots={…} handlers={…} />`. `Tree.svelte` draws the same DOM.
-import { createElement, Fragment, useLayoutEffect, useRef, type CSSProperties, type ReactNode } from 'react';
-import { childKey, domAttrs, isSlot, type Child, type Handlers, type Node } from './Tree.model';
+import { createElement, Fragment, useLayoutEffect, useRef, type ComponentType, type CSSProperties, type ReactNode } from 'react';
+import { childKey, componentProps, domAttrs, isComponent, isSlot, isSlotFill, type Child, type ComponentNode, type Handlers, type Node } from './Tree.model';
 import { mountNode, type MountContext, type Mounted } from './mount';
 import { stores as registry, type Stores } from './stores';
+import { reactComponent } from './reactComponents';
 
 export interface TreeProps {
   /** The view a model returned. */
@@ -14,20 +15,37 @@ export interface TreeProps {
   handlers?: Handlers;
   /** The store registry (default: every registered store, `stores.ts`). */
   stores?: Stores;
+  /** The component registry (default: `reactComponents.ts`). */
+  components?: (name: string) => ComponentType<any>;
 }
 
 interface Context extends MountContext {
   slots: Record<string, ReactNode>;
+  components: (name: string) => ComponentType<any>;
 }
 
-export function Tree({ tree, slots = {}, handlers = {}, stores = registry }: TreeProps) {
-  return draw(tree, { slots, handlers, stores }, '#0');
+export function Tree({ tree, slots = {}, handlers = {}, stores = registry, components = reactComponent }: TreeProps) {
+  return draw(tree, { slots, handlers, stores, components }, '#0');
 }
 
 function draw(child: Child, context: Context, key: string): ReactNode {
   if (typeof child === 'string') return child;
   if (isSlot(child)) return createElement(Fragment, { key }, context.slots[child.slot]);
+  if (isComponent(child)) return drawComponent(child, context, key);
   return createElement(Element, { key, node: child, context });
+}
+
+const drawAll = (children: (Child | null)[], context: Context): ReactNode[] =>
+  children.map((child, i) => (child === null ? null : draw(child, context, childKey(child, i))));
+
+/** A registered component with its props, its `on` callbacks calling this tree's handlers, and its
+ *  slots as React nodes drawn in this tree (a slot named `children` is its children). */
+function drawComponent(node: ComponentNode, context: Context, key: string): ReactNode {
+  const props = componentProps(node, (handlerKey) => context.handlers[handlerKey]);
+  for (const [name, fill] of Object.entries(node.slots ?? {})) {
+    props[name] = isSlotFill(fill) ? context.slots[fill.slot] : createElement(Fragment, null, ...drawAll(fill, context));
+  }
+  return createElement(context.components(node.component), { ...props, key });
 }
 
 /** React names for DOM attributes it spells otherwise. */
@@ -83,6 +101,5 @@ function Element({ node, context }: { node: Node; context: Context }) {
     mounted.current?.update(node, context);
   });
 
-  const children = (node.children ?? []).map((child, i) => (child === null ? null : draw(child, context, childKey(child, i))));
-  return createElement(node.tag, { ...reactProps(node), ref }, ...children);
+  return createElement(node.tag, { ...reactProps(node), ref }, ...drawAll(node.children ?? [], context));
 }

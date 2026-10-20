@@ -1,0 +1,59 @@
+## Board
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="Chords from the right hand" id="upper" label="Upper" labelWidth=120>
+    #children
+      <LampButton disabled=false label="On" name="Upper" on=true @onToggle=toggle>
+
+## DisabledLamp
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="Works with Upper on" id="manual-bass" label="Manual Bass" labelWidth=120>
+    #children
+      <LampButton disabled=false label="On" name="Manual Bass" on=true @onToggle=toggle>
+
+## Tabs
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="" id="main-timing" label="Main timing" labelWidth=120>
+    #children
+      <LampButton disabled=false label="On" name="Main timing" on=true @onToggle=toggle>
+
+## Slider
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="" id="chord-settle" label="Chord settle" labelWidth=120>
+    #children
+      <LampButton disabled=false label="On" name="Chord settle" on=true @onToggle=toggle>
+
+## LongLabel
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="Lowest note of the left hand sets the bass, the rest the chord" id="fingered" label="Fingered on bass with split" labelWidth=120>
+    #children
+      <LampButton disabled=false label="On" name="Fingered on bass with split" on=true @onToggle=toggle>
+
+## Stack #1
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="Chords from the right hand" id="upper" label="Upper">
+    #children
+      <LampButton disabled=false label="On" name="Upper" on=true @onToggle=toggle>
+
+## Stack #2
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="Works with Upper on" id="manual-bass" label="Manual Bass">
+    #children
+      <LampButton disabled=false label="On" name="Manual Bass" on=true @onToggle=toggle>
+
+## Stack #3
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow id="main-timing" label="Main timing">
+    #children
+      <LampButton disabled=false label="On" name="Main timing" on=true @onToggle=toggle>
+
+## Stack #4
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="Wait before reading the chord" id="chord-settle" label="Chord settle">
+    #children
+      <LampButton disabled=false label="On" name="Chord settle" on=true @onToggle=toggle>
+
+## Stack #5
+<div style="max-width: 560px; padding-inline: var(--space-2)">
+  <SettingsRow hint="Fader button 7" id="pedal" label="Pedal">
+    #children
+      <LampButton disabled=false label="On" name="Pedal" on=true @onToggle=toggle>

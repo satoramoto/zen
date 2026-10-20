@@ -10,15 +10,19 @@ import { mount, unmount, type Component } from 'svelte';
 import { instances, type StoryFixture } from '../fixtures';
 import Render from '../svelte/stories/Render.svelte';
 import Row from '../svelte/stories/Row.svelte';
+import { Tree } from '../view/Tree';
+import TreeSvelte from '../view/Tree.svelte';
+import type { Handlers, Node } from '../view/Tree.model';
 
 /** The row a story's `items` draw in, the same as `Row.svelte`'s. */
 const row = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' } as const;
 
-/** What `withRenderer` needs to draw a story in Svelte: the `.svelte` component and the fixture. */
-interface SvelteStory {
-  component: unknown;
-  fixture: StoryFixture<object>;
-}
+/** A story drawn as a view tree: its tree and handlers from the story's args. */
+export type StoryView<A> = (args: A) => { tree: Node; handlers?: Handlers };
+
+/** What `withRenderer` needs to draw a story in Svelte: the `.svelte` component and the fixture, or
+ *  the story's view tree (`treeStory`). */
+type SvelteStory = { component: unknown; fixture: StoryFixture<object> } | { view: StoryView<any> };
 
 /** Mounts a Svelte component into the story (again when its props change), unmounted on the way out. */
 function SvelteMount({ component, props }: { component: unknown; props: Record<string, unknown> }) {
@@ -45,6 +49,7 @@ export const withRenderer: Decorator = (Story, { globals, parameters, args }) =>
       createElement(Story),
     );
   }
+  if ('view' in svelte) return createElement(SvelteMount, { component: TreeSvelte, props: { ...svelte.view(args) } });
   const { component, fixture } = svelte;
   return fixture.items
     ? createElement(SvelteMount, { component: Row, props: { component, args, items: fixture.items } })
@@ -77,4 +82,13 @@ export function fixtureStories<S extends StoryLike>(component: ComponentType<any
     }
     return { ...story, ...extra } as S;
   };
+}
+
+/**
+ * A story drawn as a view tree (a composite's sample: components by name in each other's slots):
+ * React's `Tree` renders `view(args)`, and with Renderer on Svelte, `withRenderer` mounts Svelte's
+ * `Tree` with the same tree and handlers.
+ */
+export function treeStory<A>(view: StoryView<A>): { render: (args: A) => ReturnType<typeof createElement>; parameters: { svelte: SvelteStory } } {
+  return { render: (args) => createElement(Tree, view(args)), parameters: { svelte: { view } } };
 }

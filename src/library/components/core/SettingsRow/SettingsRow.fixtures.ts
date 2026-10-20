@@ -4,6 +4,7 @@
 // beside them, the stand-in control each story puts in it (`controlArgs`, `storyControls`).
 // Every row passes an explicit `id`, so the two renderers' generated ids never differ.
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
+import { component, h, type Child, type Node } from '../../../view/Tree.model';
 import type { SettingsRowModelProps } from './SettingsRow.model';
 
 export type Control = 'lamp' | 'tabs' | 'slider' | 'none';
@@ -99,6 +100,58 @@ export const storyControls: Record<keyof typeof settingsRowStories, Partial<Cont
   LongLabel: {},
   Stack: {},
 };
+
+/* ---------- the stories as view trees (a composite: SettingsRow holding registered components) ---------- */
+
+/** A story's args: a row's props and its stand-in control's. */
+export type SampleArgs = SettingsRowModelProps & ControlArgs;
+
+/** The stand-in control as tree children: a LampButton or layout Tabs (registered components, their
+ *  callbacks the story's `toggle` and `choose` handlers), or a native range (`change`) with its value. */
+function standIn(a: SampleArgs): Child[] {
+  if (a.control === 'lamp') {
+    return [component('LampButton', { label: a.lampLabel, name: a.label, on: a.lampOn, disabled: a.lampDisabled, tip: a.lampTip }, { on: { onToggle: 'toggle' } })];
+  }
+  if (a.control === 'tabs') return [component('Tabs', { name: a.tabsLabel, items: a.tabs, value: a.tabsChosen }, { on: { onChange: 'choose' } })];
+  if (a.control === 'slider') {
+    return [
+      {
+        ...h('input', {
+          type: 'range',
+          'aria-label': a.label,
+          'aria-valuetext': `${a.sliderValue} ${a.sliderUnit}`,
+          min: '0',
+          max: String(a.sliderMax),
+          value: String(a.sliderValue),
+          'data-tip': a.sliderTip,
+          style: 'width: 160px; accent-color: var(--action)',
+        }),
+        on: { change: 'change' },
+      },
+      h('span', { style: 'color: var(--text-2)' }, `${a.sliderValue} ${a.sliderUnit}`),
+    ];
+  }
+  return [];
+}
+
+/** One row: SettingsRow with `props`, and the stand-in for `control` in its `children` slot. */
+const row = (props: SettingsRowModelProps, control: SampleArgs, key?: string): Child =>
+  component('SettingsRow', { ...props }, { slots: { children: standIn(control) }, key });
+
+/** A one-row story's tree. */
+export const settingsRowSample = (a: SampleArgs): Node =>
+  h('div', { style: 'max-width: 560px; padding-inline: var(--space-2)' }, row({ id: a.id, label: a.label, hint: a.hint, labelWidth: a.labelWidth }, a));
+
+/** The Stack story's tree: every row of `settingsRowStories.Stack.items` with its stand-in. */
+export const settingsRowStackSample = (a: SampleArgs): Node =>
+  h(
+    'div',
+    { style: 'max-width: 640px; padding-inline: var(--space-2); --yh-settings-control-w: 200px' },
+    (settingsRowStories.Stack.items ?? []).map((item, i) => {
+      const props = { ...item, label: item.label ?? '' };
+      return row(props, { ...a, ...STACK_CONTROLS[i], ...props } as SampleArgs, item.id);
+    }),
+  );
 
 /** The Stack story's stand-ins, one per row of `settingsRowStories.Stack.items`. */
 export const STACK_CONTROLS: Partial<ControlArgs>[] = [
