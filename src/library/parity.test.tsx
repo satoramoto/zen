@@ -76,6 +76,14 @@ import { settingsRowStories } from './components/core/SettingsRow/SettingsRow.fi
 import { Tabs } from './layout/Tabs';
 import TabsSvelte from './layout/Tabs.svelte';
 import { tabsStories } from './layout/Tabs.fixtures';
+import { HealthSlot } from './yahaha/HealthSlot/HealthSlot';
+import HealthSlotSvelte from './yahaha/HealthSlot/HealthSlot.svelte';
+import { healthSlotStories } from './yahaha/HealthSlot/HealthSlot.fixtures';
+import { MetronomePopover } from './yahaha/AppBar/MetronomePopover';
+import MetronomePopoverSvelte from './yahaha/AppBar/MetronomePopover.svelte';
+import { AppBar } from './yahaha/AppBar/AppBar';
+import AppBarSvelte from './yahaha/AppBar/AppBar.svelte';
+import { appBarStories, metronomePopoverStories } from './yahaha/AppBar/AppBar.fixtures';
 
 parity('Text', Text, TextSvelte, textStories);
 parity('Stack', Stack, StackSvelte, stackStories);
@@ -102,3 +110,6 @@ parity('StatusDot', StatusDot, StatusDotSvelte, statusDotStories);
 parity('Separator', Separator, SeparatorSvelte, separatorStories);
 parity('SettingsRow', SettingsRow, SettingsRowSvelte, settingsRowStories);
 parity('Tabs', Tabs, TabsSvelte, tabsStories);
+parity('HealthSlot', HealthSlot, HealthSlotSvelte, healthSlotStories);
+parity('MetronomePopover', MetronomePopover, MetronomePopoverSvelte, metronomePopoverStories);
+parity('AppBar', AppBar, AppBarSvelte, appBarStories);

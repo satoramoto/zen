@@ -63,6 +63,12 @@ import type { StatusDotModelProps } from './components/core/StatusDot/StatusDot.
 import type { SeparatorModelProps } from './components/core/Separator/Separator.model';
 import type { SettingsRowModelProps } from './components/core/SettingsRow/SettingsRow.model';
 import type { TabsModelProps } from './layout/Tabs.model';
+import HealthSlotSvelte from './yahaha/HealthSlot/HealthSlot.svelte';
+import MetronomePopoverSvelte from './yahaha/AppBar/MetronomePopover.svelte';
+import AppBarSvelte from './yahaha/AppBar/AppBar.svelte';
+import type { HealthSlotModelProps } from './yahaha/HealthSlot/HealthSlot.model';
+import type { MetronomePopoverModelProps } from './yahaha/AppBar/MetronomePopover.model';
+import type { AppBarModelProps } from './yahaha/AppBar/AppBar.model';
 
 // The theme: the `theme` action, the scope, and the system mode.
 export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './svelte/theme.svelte';
@@ -179,3 +185,13 @@ export const SettingsRow = SettingsRowSvelte as unknown as Component<SettingsRow
 export type { TabItemModel as TabItem, TipAction as TabsTipAction } from './layout/Tabs.model';
 export type TabsProps = TabsModelProps<string | Snippet>;
 export const Tabs = TabsSvelte as unknown as Component<TabsProps>;
+// Lane D2: Yahaha's AppBar, MetronomePopover and HealthSlot.
+export type HealthSlotProps = HealthSlotModelProps;
+export const HealthSlot = HealthSlotSvelte as unknown as Component<HealthSlotProps>;
+export type MetronomePopoverProps = MetronomePopoverModelProps;
+export const MetronomePopover = MetronomePopoverSvelte as unknown as Component<MetronomePopoverProps>;
+export interface AppBarProps extends AppBarModelProps<string | Snippet> {
+  end?: Snippet;
+}
+export const AppBar = AppBarSvelte as unknown as Component<AppBarProps>;
+export { dismiss, createFocusReturn, type DismissParams } from './yahaha/AppBar/popover.svelte';

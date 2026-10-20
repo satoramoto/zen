@@ -1,13 +1,15 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { Button } from '../../components/core/Button/Button';
-import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
+import { LampButton } from '../../components/core/LampButton/LampButton';
 import { Separator } from '../../components/core/Separator/Separator';
 import { StatusDot } from '../../components/core/StatusDot/StatusDot';
 import { Stack } from '../../primitives/Stack';
-import { Tabs, type TabItem } from '../../layout/Tabs';
+import { Tabs } from '../../layout/Tabs';
 import { Text } from '../../primitives/Text';
-import { HealthSlot, type HealthTarget } from '../HealthSlot/HealthSlot';
+import { HealthSlot } from '../HealthSlot/HealthSlot';
 import { MetronomePopover } from './MetronomePopover';
+import { appBarView, type AppBarModelProps } from './AppBar.model';
+import { useFocusReturn } from './usePopover';
 import type { Forms } from '../../layout/assembly/types';
 import './AppBar.css';
 
@@ -22,71 +24,10 @@ export const APP_BAR_FORMS: Forms<'bar'> = [
 export type { HealthTarget } from '../HealthSlot/HealthSlot';
 export type { TabItem } from '../../layout/Tabs';
 
-export interface AppBarProps {
-  /** The display pages, left of the hairline (Stage … Harm/Arp). */
-  displayTabs: TabItem[];
-  /** The full pages, right of the hairline (Library, Settings). */
-  fullTabs: TabItem[];
-  /** The `id` of the page shown; null: none. */
-  chosen?: string | null;
-  /** Called with a page's `id` on a click. The parent moves `chosen`. */
-  onChoose?: (id: string) => void;
-  /** The app's tooltip action, applied to every element here that carries a tooltip key. */
-  tipAction?: TipAction;
+// The props and the bar are framework-free, in the model; `AppBar.svelte` renders the same view.
+export type { AppBarModelProps } from './AppBar.model';
 
-  /** True while the Launchkey is connected: a filled dot; otherwise a hollow ring. */
-  launchkey?: boolean;
-  /** HealthSlot: the first keyboard part (0–3: R1 R2 R3 L) whose plugin failed. */
-  failedPart?: 0 | 1 | 2 | 3 | null;
-  /** HealthSlot: false when there is no audio. */
-  synthOn?: boolean;
-  /** HealthSlot: audio dropouts in the last 30 s. */
-  dropouts?: number;
-  /** HealthSlot: the buffer in use, in frames; null when unknown. */
-  bufferFrames?: number | null;
-  /** HealthSlot: the CPU load, 1.0 = the whole buffer; null before the first meters frame. */
-  cpu?: number | null;
-  /** HealthSlot: called with where to fix the trouble. */
-  onHealth?: (target: HealthTarget) => void;
-
-  /** The metronome on. */
-  metronome?: boolean;
-  /** Called with the state asked for when Metronome (or the popover's On/Off) is pressed. */
-  onMetronome?: (on: boolean) => void;
-  /** The metronome's settings popover is open. */
-  metronomeOpen?: boolean;
-  /** Called when the ▾ beside Metronome is pressed (opens or closes its settings). */
-  onMetronomeSettings?: () => void;
-  /** Called on Esc or a press outside the open popover: the parent closes it. */
-  onMetronomeClose?: () => void;
-  /** The popover's id, for the ▾'s `aria-controls`. */
-  metronomeId?: string;
-  /** The click's volume, 0–127. */
-  metronomeVolume?: number;
-  /** Called with the volume asked for (0–127). */
-  onMetronomeVolume?: (volume: number) => void;
-  /** A bell on the first beat of each bar. */
-  metronomeBell?: boolean;
-  /** Called with the state asked for when the bell's On/Off is pressed. */
-  onMetronomeBell?: (on: boolean) => void;
-  /** The click can sound (the built-in synth is running). */
-  metronomeAudible?: boolean;
-
-  /** Unison on. */
-  unison?: boolean;
-  /** Called with the state asked for when Unison is pressed. */
-  onUnison?: (on: boolean) => void;
-  /** Help mode on: the ? is lit. */
-  help?: boolean;
-  /** Called with the state asked for when ? is pressed. */
-  onHelp?: (on: boolean) => void;
-  /** Called when Panic is pressed (all notes off). */
-  onPanic?: () => void;
-
-  /** Off the Stage: the style and its tempo ("Sunday Drive Pop 104 BPM"). Omit on the Stage. */
-  nowPlaying?: { style: string; tempo: number };
-  /** The bar's width in px. Default: fills its container. */
-  width?: number;
+export interface AppBarProps extends AppBarModelProps<ReactNode> {
   /** Extra controls after the page nav, before the switches, behind a hairline of their own. */
   end?: ReactNode;
 }
@@ -141,55 +82,32 @@ export interface AppBarProps {
  * gap between the global switches, a step wider than Metronome▾'s 0 join; tightened at the
  * narrowest widths).
  */
-export function AppBar({
-  displayTabs,
-  fullTabs,
-  chosen = null,
-  onChoose,
-  tipAction,
-  launchkey = true,
-  failedPart = null,
-  synthOn = true,
-  dropouts = 0,
-  bufferFrames = null,
-  cpu = null,
-  onHealth,
-  metronome = false,
-  onMetronome,
-  metronomeOpen = false,
-  onMetronomeSettings,
-  onMetronomeClose,
-  metronomeId = 'metronome-settings',
-  metronomeVolume = 100,
-  onMetronomeVolume,
-  metronomeBell = false,
-  onMetronomeBell,
-  metronomeAudible = true,
-  unison = false,
-  onUnison,
-  help = false,
-  onHelp,
-  onPanic,
-  nowPlaying,
-  width,
-  end,
-}: AppBarProps) {
+export function AppBar(props: AppBarProps) {
+  const {
+    displayTabs,
+    fullTabs,
+    onChoose,
+    tipAction,
+    onHealth,
+    onMetronome,
+    onMetronomeSettings,
+    onMetronomeClose,
+    onMetronomeVolume,
+    onMetronomeBell,
+    onUnison,
+    onHelp,
+    onPanic,
+    end,
+  } = props;
+  const view = appBarView(props);
+  const { chosen, nowPlaying, metronome, launchkey } = view;
   const caretBox = useRef<HTMLSpanElement>(null);
 
   // When the popover closes with focus inside it, focus would fall to the page: give it back to ▾.
-  const wasOpen = useRef(metronomeOpen);
-  useEffect(() => {
-    if (wasOpen.current && !metronomeOpen) {
-      const active = document.activeElement;
-      if (active === null || active === document.body) caretBox.current?.querySelector('button')?.focus();
-    }
-    wasOpen.current = metronomeOpen;
-  }, [metronomeOpen]);
-
-  const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
+  useFocusReturn(caretBox, metronome.open);
 
   return (
-    <Text as="header" size="label" className="yh-appbar" data-part="root" style={style}>
+    <Text as="header" size="label" className="yh-appbar" data-part="root" style={view.style}>
       <Stack direction="row" align="center" className="yh-appbar__row" data-part="row">
         <Text size="label" weight="strong" className="yh-appbar__name" data-part="name">yahaha</Text>
 
@@ -203,7 +121,7 @@ export function AppBar({
 
         <span className="yh-appbar__middle" data-part="middle">
           {nowPlaying && (
-            <span className="yh-appbar__playing" data-part="playing" aria-label={`Style ${nowPlaying.style}, ${nowPlaying.tempo} BPM`}>
+            <span className="yh-appbar__playing" data-part="playing" aria-label={nowPlaying.label}>
               <Text size="label" weight="strong" tabular className="yh-appbar__style" data-part="style">{nowPlaying.style}</Text>
               <Text role="numeral" size="label" className="yh-appbar__tempo" data-part="tempo">{nowPlaying.tempo}</Text>
               <span className="yh-appbar__unit" data-part="unit">BPM</span>
@@ -222,8 +140,8 @@ export function AppBar({
           <Stack as="span" direction="row" gap={0} align="center" className="yh-appbar__metronome" data-part="metronome" role="group" aria-label="Metronome">
             <LampButton
               label="Metronome"
-              on={metronome}
-              hue={metronome ? 'role-2' : 't'}
+              on={metronome.on}
+              hue={metronome.hue}
               join="start"
               name="Metronome"
               tip="metronome.on"
@@ -236,22 +154,22 @@ export function AppBar({
                 size="caret"
                 join="end"
                 popup="dialog"
-                expanded={metronomeOpen}
-                controls={metronomeId}
+                expanded={metronome.open}
+                controls={metronome.id}
                 name="Metronome settings: on/off, volume, bell on beat 1"
                 tip="metronome.settings"
                 tipAction={tipAction}
                 onPress={() => onMetronomeSettings?.()}
               />
             </span>
-            {metronomeOpen && (
+            {metronome.open && (
               <span className="yh-appbar__popover" data-part="popover">
                 <MetronomePopover
-                  id={metronomeId}
-                  on={metronome}
-                  volume={metronomeVolume}
-                  bell={metronomeBell}
-                  audible={metronomeAudible}
+                  id={metronome.id}
+                  on={metronome.on}
+                  volume={metronome.volume}
+                  bell={metronome.bell}
+                  audible={metronome.audible}
                   tipAction={tipAction}
                   onOn={(next) => onMetronome?.(next)}
                   onVolume={(v) => onMetronomeVolume?.(v)}
@@ -263,7 +181,7 @@ export function AppBar({
           </Stack>
           <LampButton
             label="Unison"
-            on={unison}
+            on={view.unison}
             name="Unison"
             tip="transport.unison"
             tipAction={tipAction}
@@ -272,12 +190,12 @@ export function AppBar({
           <Button
             label="?"
             size="icon"
-            on={help}
-            pressed={help}
+            on={view.help}
+            pressed={view.help}
             name="Help mode: point at any control to learn what it does"
             tip="app.help"
             tipAction={tipAction}
-            onPress={() => onHelp?.(!help)}
+            onPress={() => onHelp?.(!view.help)}
           />
         </Stack>
 
@@ -291,20 +209,16 @@ export function AppBar({
             className="yh-appbar__launchkey"
             data-part="launchkey"
             role="status"
-            title={launchkey ? 'Launchkey connected' : 'Launchkey not connected'}
-            data-connected={launchkey ? 'true' : 'false'}
-            aria-label={launchkey ? 'Launchkey connected' : 'Launchkey not connected'}
+            title={launchkey.label}
+            data-connected={launchkey.connected}
+            aria-label={launchkey.label}
           >
-            <StatusDot hue={launchkey ? 'ok' : 'd'} hollow={!launchkey} />
+            <StatusDot hue={launchkey.dot.hue} hollow={launchkey.dot.hollow} />
             <Text size="label" case="label" className="yh-appbar__launchkey-word" data-part="launchkey-word">Launchkey</Text>
           </Stack>
           <span className="yh-appbar__health" data-part="health">
             <HealthSlot
-              failedPart={failedPart}
-              synthOn={synthOn}
-              dropouts={dropouts}
-              bufferFrames={bufferFrames}
-              cpu={cpu}
+              {...view.health}
               tipAction={tipAction}
               onOpen={onHealth}
             />
