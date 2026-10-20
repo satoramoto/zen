@@ -1,15 +1,16 @@
 <!--
-  Group: the Svelte renderer of `groupView` (Group.model.ts), the same Stacks, header and body as
-  `Group.tsx`; see Group.tsx for the job. `label` and `aside` are text or snippets. `toolbar` sets
-  the control context (control.svelte.ts) to the toolbar's for what's inside.
+  Group: the model's tree (`groupView`, Group.model.ts) drawn by the Svelte `Tree`, as `Group.tsx`
+  draws it with the React one; see Group.tsx for the job. `label` and `aside` are text or snippets.
+  `toolbar` sets the control context (control.svelte.ts) to the toolbar's for what's inside.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import Stack from '../primitives/Stack.svelte';
-  import Text from '../primitives/Text.svelte';
+  import Tree from '../view/Tree.svelte';
   import { CONTROL_TOOLBAR, getControlContext, setControlContext } from '../primitives/control.svelte';
-  import { GROUP_BODY_CLASS, GROUP_ROOT_STACK, groupBodyStack, groupLabel, groupView, type GroupModelProps } from './Group.model';
-  import { styleString } from './style';
+  import { groupView, type GroupModelProps } from './Group.model';
+  import { isSlotContent } from './Region.model';
+  import '../primitives/Stack.css';
+  import '../primitives/Text.css';
   import './Group.css';
 
   interface Props extends Omit<GroupModelProps, 'className'> {
@@ -22,7 +23,7 @@
     children?: Snippet;
   }
 
-  let { name, label, aside, direction, wrap, gap, align, area, toolbar = false, class: className, style, children }: Props = $props();
+  let { label, aside, toolbar = false, class: className, style, children, ...props }: Props = $props();
 
   // A toolbar asks for the quiet look; otherwise the surrounding cluster's look holds.
   const outer = getControlContext();
@@ -31,10 +32,19 @@
       return toolbar ? CONTROL_TOOLBAR.quiet : outer.quiet;
     },
   });
-
-  const root = $derived(groupView({ name, area, toolbar, className }));
-  const body = $derived(groupBodyStack({ direction, wrap, gap, align }));
-  const shown = $derived(groupLabel(name, label));
 </script>
 
-<Stack {...GROUP_ROOT_STACK} class={root.className} {...root.attrs} style={styleString(root.style, style)}>{#if shown || aside}<div class="lib-group__head" data-part="head">{#if shown}<Text size="caption" weight="strong" case="label" class="lib-group__label">{#if typeof shown === 'string'}{shown}{:else}{@render shown()}{/if}</Text>{/if}{#if aside}<span class="lib-group__aside">{#if typeof aside === 'string'}{aside}{:else}{@render aside()}{/if}</span>{/if}</div>{/if}<Stack {...body} class={GROUP_BODY_CLASS} data-part="body">{@render children?.()}</Stack></Stack>
+<Tree
+  tree={groupView(
+    {
+      ...props,
+      toolbar,
+      className,
+      style,
+      label: typeof label === 'string' || label === false ? label : undefined,
+      aside: typeof aside === 'string' ? aside : undefined,
+    },
+    { label: isSlotContent(label), aside: isSlotContent(aside) },
+  )}
+  slots={{ label: typeof label === 'function' ? label : undefined, aside: typeof aside === 'function' ? aside : undefined, children }}
+/>

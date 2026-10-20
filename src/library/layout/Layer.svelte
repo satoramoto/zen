@@ -1,14 +1,16 @@
 <!--
-  Layer: the Svelte renderer of `layerSurface` (Layer.model.ts), the same Surface as `Layer.tsx`
-  (deprecated there in favour of `<Surface layer=…>`; see it for the job). Every other prop
-  (`ambient`, `as`, native attributes, handlers) goes to the Surface.
+  Layer: the model's tree (`layerView`, Layer.model.ts) drawn by the Svelte `Tree`, the same
+  Surface element as `Layer.tsx` (deprecated there in favour of `<Surface layer=…>`; see it for the
+  job). Every other prop (`ambient`, `as`, native attributes) lands on the element; event props
+  (`onclick`) reach it through the tree's handlers (`layerHandlers`).
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
   import type { AmbientRegion } from '../contract';
-  import Surface from '../primitives/Surface.svelte';
-  import { layerSurface, type LayerModelProps } from './Layer.model';
+  import Tree from '../view/Tree.svelte';
+  import { layerHandlers, layerView, type LayerModelProps } from './Layer.model';
+  import '../primitives/Surface.css';
 
   interface Props extends HTMLAttributes<HTMLElement>, Omit<LayerModelProps, 'className'> {
     /** Which region's ambient light it takes (`Surface`'s `ambient`). */
@@ -20,8 +22,6 @@
   }
 
   let { level, class: className, children, ...rest }: Props = $props();
-
-  const surface = $derived(layerSurface({ level, className }));
 </script>
 
-<Surface {...rest} layer={surface.layer} radius={surface.radius} class={surface.className}>{@render children?.()}</Surface>
+<Tree tree={layerView({ ...rest, level, className }, false, layerHandlers(rest))} slots={{ children }} handlers={layerHandlers(rest)} />

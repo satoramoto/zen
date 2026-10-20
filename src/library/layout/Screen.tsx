@@ -1,11 +1,13 @@
 import type { CSSProperties, ReactNode, Ref } from 'react';
-import { AssembledScreen, type RegionContent } from './assembly/AssembledScreen';
+import { Tree } from '../view/Tree';
+import type { RegionContent } from './assembly/AssembledScreen';
 import type { Placement, Principles, ScreenSpec } from './assembly/types';
-import { screenGrid, screenView } from './Screen.model';
-import { reactStyle } from './style';
+import { REGIONS_SLOT, screenHandlers, screenView } from './Screen.model';
 import './Screen.css';
 
-// The root and the grid's template are framework-free (Screen.model.ts); `Screen.svelte` renders the same view.
+// The tree and its handlers are framework-free (Screen.model.ts); this file and `Screen.svelte`
+// only hand them to their `Tree`, with the header, footer, children and the regions' contents as
+// slots.
 export { screenGrid, screenView, type ScreenModelProps } from './Screen.model';
 
 export interface ScreenProps {
@@ -51,29 +53,16 @@ export interface ScreenProps {
  * footer, so a screen that fits or zooms itself does it to the grid alone.
  *
  * **Assembled.** Given a `spec` instead, the screen assembles itself (`AssembledScreen`,
- * docs/assembly.md): no grid, no ratios, each region in the form the solver chose.
+ * docs/assembly.md): no grid, no ratios, each region in the form the solver chose. The regions'
+ * contents pass through the tree to it as its `regions`.
  */
-export function Screen({ name, header, footer, areas, columns, rows, gridRef, gridStyle, className, style, children, spec, regions, room, principles, onPlacement }: ScreenProps) {
-  if (spec)
-    return (
-      <AssembledScreen name={name} spec={spec} regions={regions ?? {}} room={room} principles={principles} onPlacement={onPlacement} className={className} style={style} />
-    );
-  const view = screenView(name, className);
+export function Screen({ header, footer, gridRef, children, regions, onPlacement, ...props }: ScreenProps) {
+  // The regions are no React node: their slot passes them through, untouched, as AssembledScreen's `regions`.
   return (
-    <div className={view.className} {...view.attrs} style={style}>
-      {header && (
-        <div className="lib-screen__header" data-part="header">
-          {header}
-        </div>
-      )}
-      <div className="lib-screen__grid" data-part="grid" ref={gridRef} style={reactStyle(screenGrid({ areas, columns, rows }), gridStyle)}>
-        {children}
-      </div>
-      {footer && (
-        <div className="lib-screen__footer" data-part="footer">
-          {footer}
-        </div>
-      )}
-    </div>
+    <Tree
+      tree={screenView(props as Parameters<typeof screenView>[0], { header, footer })}
+      slots={{ header, footer, children, [REGIONS_SLOT]: (regions ?? {}) as unknown as ReactNode }}
+      handlers={screenHandlers({ gridRef, onPlacement })}
+    />
   );
 }

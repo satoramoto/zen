@@ -10,7 +10,6 @@ import {
   type KnobBankProps,
   type KnobBankRegionModelProps,
 } from './KnobBank.model';
-import { withRegionViews } from '../regionViews';
 import './KnobBank.css';
 
 export {
@@ -117,7 +116,7 @@ export function KnobBankRegion({ className, ...props }: KnobBankRegionProps) {
   // The region fills its box and the bank its body: the bank sets its own height when the box has
   // none (`--yh-knobbank-h`), so an `auto` or `min-content` row still can't squeeze it.
   // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
-  return <Tree tree={knobBankRegionView(props, className) as unknown as Node} handlers={knobBankRegionHandlers(props)} components={withRegionViews} />;
+  return <Tree tree={knobBankRegionView(props, className) as unknown as Node} handlers={knobBankRegionHandlers(props)} />;
 }
 
 export default KnobBank;

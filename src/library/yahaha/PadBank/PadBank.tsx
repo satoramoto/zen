@@ -10,7 +10,6 @@ import {
   type PadBankProps,
   type PadBankRegionProps,
 } from './PadBank.model';
-import { withRegionViews } from '../regionViews';
 import './PadBank.css';
 
 export {
@@ -117,7 +116,7 @@ PadBank.forms = PAD_BANK_FORMS;
  */
 export function PadBankRegion(props: PadBankRegionProps) {
   // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
-  return <Tree tree={padBankRegionView(props) as unknown as Node} handlers={padBankRegionHandlers(props)} components={withRegionViews} />;
+  return <Tree tree={padBankRegionView(props) as unknown as Node} handlers={padBankRegionHandlers(props)} />;
 }
 
 export default PadBank;

@@ -9,6 +9,9 @@ import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
 import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
 import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
+import { bindRoom, type RoomParams } from '../layout/assembly/room';
+import { bindReport, type ReportParams } from '../layout/assembly/report';
+import { bindRef, type RefParams } from '../layout/Screen.model';
 import { bindDisplayFit, bindDisplayWide, type DisplayFitParams, type DisplayWideParams } from '../yahaha/Display/fit';
 import { bindPad, type PadParams } from '../components/music/Pad/padPress';
 import { bindFader, type FaderParams } from '../components/music/Fader/faderInput';
@@ -77,6 +80,12 @@ export const stores = {
   focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
   /** LineSlider's keys and drag (`slide.ts`). */
   lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
+  /** An assembled screen's measured room (`layout/assembly/room.ts`). */
+  room: keyed<RoomParams, 'onRoom'>(bindRoom, ['onRoom']),
+  /** An assembled screen's placement, reported once per change (`layout/assembly/report.ts`). */
+  report: keyed<ReportParams, 'onReport'>(bindReport, ['onReport']),
+  /** Screen's `gridRef`: the element on mount, null on unmount (`layout/Screen.model.ts`). */
+  ref: keyed<RefParams, 'onRef'>(bindRef, ['onRef']),
   /** Display's readouts fitting their row, again when the key changes (`yahaha/Display/fit.ts`). */
   displayFit: keyed<DisplayFitParams, never>(bindDisplayFit, []),
   /** Display's auto form: whether the hero is wide enough for `full` (`yahaha/Display/fit.ts`). */

@@ -1,0 +1,33 @@
+## Default
+<div aria-label="Stage" class="lib-screen" data-part="screen" role="group">
+  <div class="lib-screen__header" data-part="header">
+    "Header: fixed, never scrolls with the grid"
+  <div class="lib-screen__grid" data-part="grid" style="grid-template-areas: "hero hero" "mixer pads"; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr)" use:ref={"onRef":"gridRef"}>
+    {children}
+  <div class="lib-screen__footer" data-part="footer">
+    "Footer: fixed at the bottom"
+
+## GridOnly
+<div aria-label="Stage" class="lib-screen" data-part="screen" role="group">
+  <div class="lib-screen__grid" data-part="grid" style="grid-template-areas: "hero hero" "mixer pads"; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr)" use:ref={"onRef":"gridRef"}>
+    {children}
+
+## Arrangements #1
+<div aria-label="Stage" class="lib-screen" data-part="screen" role="group">
+  <div class="lib-screen__grid" data-part="grid" style="grid-template-areas: "hero hero" "mixer pads"; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr)" use:ref={"onRef":"gridRef"}>
+    {children}
+
+## Arrangements #2
+<div aria-label="Stage" class="lib-screen" data-part="screen" role="group">
+  <div class="lib-screen__grid" data-part="grid" style="grid-template-areas: "hero mixer pads"; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(1, auto)" use:ref={"onRef":"gridRef"}>
+    {children}
+
+## Arrangements #3
+<div aria-label="Stage" class="lib-screen" data-part="screen" role="group">
+  <div class="lib-screen__grid" data-part="grid" style="grid-template-areas: "pads hero" "pads mixer"; grid-template-columns: minmax(180px, 1fr) minmax(0, 3fr); grid-template-rows: auto minmax(0, 1fr)" use:ref={"onRef":"gridRef"}>
+    {children}
+
+## Arrangements #4
+<div aria-label="Stage" class="lib-screen" data-part="screen" role="group">
+  <div class="lib-screen__grid" data-part="grid" style="grid-template-areas: "hero" "mixer" "pads"; grid-template-columns: repeat(1, minmax(0, 1fr)); grid-template-rows: repeat(3, auto)" use:ref={"onRef":"gridRef"}>
+    {children}

@@ -1,0 +1,44 @@
+## Groups
+<div style="max-width: 560px">
+  <Region gap=3 label="Pads" name="Pads">
+    #children
+      <Group key=Sections name="Sections">
+        #children
+          <Button key=Intro label="Intro">
+          <Button key=Main A label="Main A">
+          <Button key=Main B label="Main B">
+          <Button key=Ending label="Ending">
+      <Group key=Transport name="Transport">
+        #children
+          <Button key=Sync Start label="Sync Start">
+          <Button key=Start / Stop label="Start / Stop" variant="primary">
+
+## Plain
+<div style="max-width: 560px">
+  <Region aside="8 strips" label="Mixer" name="Mixer">
+    #children
+      <p style="margin: 0; color: var(--text-2)">
+        "The region body: groups of controls go here."
+
+## Headless
+<div style="max-width: 560px">
+  <Region name="Mixer">
+    #children
+      <p style="margin: 0; color: var(--text-2)">
+        "A region with nothing in its header draws no header strip."
+
+## WithViews
+<div style="max-width: 560px">
+  <Region name="Mixer" view="faders" views=[{"id":"faders","label":"Faders"},{"id":"sends","label":"Sends"},{"id":"parts","label":"Parts"}] @onView=view>
+    #children
+      <p style="margin: 0; color: var(--text-2)">
+        "Faders: one strip per part."
+
+## AsideSwitch
+<div style="max-width: 560px">
+  <Region label="Mixer" name="Mixer">
+    #aside
+      <Tabs items=[{"id":"a","label":"A"},{"id":"b","label":"B"}] name="Layer" value="a" @onChange=layer>
+    #children
+      <p style="margin: 0; color: var(--text-2)">
+        "Layer A: a second switch in the aside is the same object as the views' tabs."

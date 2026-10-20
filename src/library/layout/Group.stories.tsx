@@ -1,26 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Pad } from '../components/music';
 import { withLibraryTheme } from '../storybook';
-import { Group } from './Group';
-import { LABELS, UTILITY_GROUP, aligned, groupArgTypes, groupArgs, groupProps, groupStoryArgs, type GroupArgs } from './Group.fixtures';
-import { Region } from './Region';
+import { treeStory, withRenderer, type StoryView } from '../stories/story';
+import { groupArgTypes, groupArgs, groupSample, groupStoryArgs, type GroupArgs, type GroupStory } from './Group.fixtures';
 
-// Every story's args come from Group.fixtures.ts, which the Svelte stories and the parity test share.
+// Every story is a view tree built in Group.fixtures.ts (`groupSample`, Buttons standing in for
+// the controls), which the tree snapshot shares; the toolbar's Renderer draws it with React's or
+// Svelte's `Tree`.
+const sample =
+  (story: GroupStory): StoryView<GroupArgs> =>
+  (args) => ({ tree: groupSample({ ...args, story }) });
+
 const meta: Meta<GroupArgs> = {
   title: 'Design OS/Layout/Group',
-  decorators: [withLibraryTheme],
-  parameters: { layout: 'fullscreen' },
+  decorators: [withRenderer, withLibraryTheme],
+  render: treeStory(sample('Default')).render,
+  parameters: { layout: 'fullscreen', ...treeStory(sample('Default')).parameters },
   args: groupArgs,
   argTypes: groupArgTypes,
-  render: (args) => (
-    <div style={{ width: args.width }}>
-      <Group {...groupProps(args)}>
-        {LABELS.slice(0, args.count).map((label, i) => (
-          <Pad key={label} label={label} family="main" state={i === 1 ? 'playing' : 'idle'} />
-        ))}
-      </Group>
-    </div>
-  ),
 };
 export default meta;
 type Story = StoryObj<GroupArgs>;
@@ -38,21 +34,4 @@ export const Wrapping: Story = { args: groupStoryArgs.Wrapping };
 export const ColumnUnlabelled: Story = { args: groupStoryArgs.ColumnUnlabelled };
 
 /** Groups inside a region: how they sit on a plate. */
-export const InRegion: Story = {
-  args: groupStoryArgs.InRegion,
-  render: ({ direction, wrap, gap, align, count, width }) => (
-    <div style={{ width }}>
-      <Region name="Pads" label="Pads" gap={4}>
-        <Group name="Sections" direction={direction} wrap={wrap} gap={gap} align={aligned(align)}>
-          {LABELS.slice(0, count).map((label, i) => (
-            <Pad key={label} label={label} family="main" state={i === 1 ? 'playing' : 'idle'} />
-          ))}
-        </Group>
-        <Group name={UTILITY_GROUP.name} aside={UTILITY_GROUP.aside} gap={gap} align={aligned(align)}>
-          <Pad label={UTILITY_GROUP.labels[0]} family="util" role={2} />
-          <Pad label={UTILITY_GROUP.labels[1]} family="start" />
-        </Group>
-      </Region>
-    </div>
-  ),
-};
+export const InRegion: Story = { ...treeStory(sample('InRegion')), args: groupStoryArgs.InRegion };
