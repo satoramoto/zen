@@ -5,12 +5,16 @@
 //   stylesheet in `lib/zen.css`.
 // - `storybook` (`src/library/storybook.tsx`, `./storybook`: toolbar globals and decorators for an
 //   app's own Storybook) → `lib/storybook.js`. Its own entry, so the main one never reaches it.
+// - `svelte` (`src/library/svelte.ts`, `./svelte`: the Svelte 5 renderers and the theme action) →
+//   `lib/svelte.js`, compiled here by vite-plugin-svelte against `svelte` (external, a peer at the
+//   compiler's minor or later), and `storybook-svelte` (`./storybook-svelte`) → `lib/storybook-svelte.js`.
 //
 // Code the entries share is in shared chunks, `lib/chunks/zen-*.js`, so an app importing both
 // gets one copy. CSS is split per chunk (`cssCodeSplit`), and `joinStyles` then gathers every
 // chunk's stylesheet into `zen.css`.
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 /** Gathers every chunk's stylesheet into `zen.css`, shared chunks first. */
 function joinStyles(): Plugin {
@@ -42,7 +46,7 @@ function joinStyles(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), joinStyles()],
+  plugins: [react(), svelte(), joinStyles()],
   publicDir: false,
   build: {
     outDir: 'lib',
@@ -51,12 +55,17 @@ export default defineConfig({
     cssCodeSplit: true,
     sourcemap: true,
     lib: {
-      entry: { index: 'src/library/index.ts', storybook: 'src/library/storybook.tsx' },
+      entry: {
+        index: 'src/library/index.ts',
+        storybook: 'src/library/storybook.tsx',
+        svelte: 'src/library/svelte.ts',
+        'storybook-svelte': 'src/library/storybook-svelte.ts',
+      },
       formats: ['es'],
       fileName: (_format, name) => `${name}.js`,
     },
     rollupOptions: {
-      external: [/^react(\/.*)?$/, /^react-dom(\/.*)?$/, /^storybook(\/.*)?$/, /^@storybook\//],
+      external: [/^react(\/.*)?$/, /^react-dom(\/.*)?$/, /^svelte(\/.*)?$/, /^storybook(\/.*)?$/, /^@storybook\//],
       output: { chunkFileNames: 'chunks/zen-[hash].js', assetFileNames: '[name][extname]' },
     },
   },

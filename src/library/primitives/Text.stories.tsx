@@ -2,18 +2,8 @@ import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 import { withLibraryTheme } from '../storybook';
-import { Text, TEXT_ROLES, TEXT_TONES, type TextRole, type TextTone } from './Text';
-
-const SAMPLE: Record<TextRole, string> = {
-  display: 'Stage',
-  numeral: '128.0',
-  heading: 'Sections',
-  body: 'Intro A',
-  label: 'Tempo',
-  caption: 'Bar 12',
-  code: 'C#m7 / 0:42',
-  math: 'fₙ = n·f₁',
-};
+import { Text, TEXT_ROLES, TEXT_TONES, type TextTone } from './Text';
+import { BASEL, HARMONIC, SAMPLE, textArgTypes, textArgs, textProps, type TextArgs } from './Text.fixtures';
 
 /** `on-solid` is ink for a solid action fill, so it is shown on `--action`; every other tone on the page. */
 const ground = (tone: TextTone | 'inherit'): CSSProperties =>
@@ -21,39 +11,17 @@ const ground = (tone: TextTone | 'inherit'): CSSProperties =>
     ? { background: 'var(--action)', borderRadius: 'var(--radius-control)', padding: 'var(--space-1) var(--space-2)' }
     : {};
 
-interface TextArgs {
-  role: TextRole;
-  tone: TextTone | 'inherit';
-  truncate: boolean;
-  tabular: boolean;
-  text: string;
-  width: number;
-}
-
+// The args, controls and specimens come from Text.fixtures.ts, which the Svelte stories and the parity test share.
 const meta: Meta<TextArgs> = {
   title: 'Design OS/Primitives/Text',
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
-  args: { role: 'heading', tone: 'primary', truncate: false, tabular: false, text: 'Main B into Fill A, then the ending', width: 360 },
-  argTypes: {
-    role: { control: 'select', options: TEXT_ROLES },
-    tone: { control: 'select', options: ['inherit', ...TEXT_TONES] },
-    truncate: { control: 'boolean' },
-    tabular: { control: 'boolean' },
-    text: { control: 'text' },
-    width: { control: { type: 'range', min: 80, max: 900, step: 10 } },
-  },
-  render: ({ role, tone, truncate, tabular, text, width }) => (
-    <div style={{ width, padding: 'var(--space-4)' }}>
-      <Text
-        role={role}
-        tone={tone === 'inherit' ? undefined : tone}
-        truncate={truncate}
-        tabular={tabular}
-        as="p"
-        style={ground(tone)}
-      >
-        {text}
+  args: textArgs,
+  argTypes: textArgTypes,
+  render: (args) => (
+    <div style={{ width: args.width, padding: 'var(--space-4)' }}>
+      <Text {...textProps(args)} as="p" style={ground(args.tone)}>
+        {args.text}
       </Text>
     </div>
   ),
@@ -119,7 +87,3 @@ export const MathInText: Story = {
     await expect(getComputedStyle(math!).fontFamily).toContain('Math');
   },
 };
-
-// React's JSX types have no MathML elements, so the specimens are markup.
-const HARMONIC = '<math><msub><mi>f</mi><mi>n</mi></msub><mo>=</mo><mi>n</mi><msub><mi>f</mi><mn>1</mn></msub></math>';
-const BASEL = '<math><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>6</mn></mfrac></math>';
