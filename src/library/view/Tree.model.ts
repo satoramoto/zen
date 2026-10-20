@@ -129,11 +129,13 @@ export function childKey(child: Child | null, index: number): string {
   return child !== null && isComponent(child) ? `#${index}:${child.component}` : `#${index}`;
 }
 
-/** A component node's props as a renderer passes them: its data, then each `on` prop as a function
- *  calling the latest handler for its key. */
+/** A component node's props as a renderer passes them: its data, then each `on` prop as the handler
+ *  its key names (undefined when there is none). The handler itself, not a new wrapper per render,
+ *  so a child sees a new callback only when the handler is a new function: a child's store bound
+ *  to it (a `tipAction`) isn't reapplied on every render. */
 export function componentProps(node: ComponentNode, handler: (key: string) => Handler | undefined): Record<string, unknown> {
   const props: Record<string, unknown> = { ...node.props };
-  for (const [prop, key] of Object.entries(node.on ?? {})) props[prop] = (...args: unknown[]) => handler(key)?.(...args);
+  for (const [prop, key] of Object.entries(node.on ?? {})) props[prop] = handler(key);
   return props;
 }
 
