@@ -1,85 +1,15 @@
-import { useEffect, useRef, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent, type RefObject } from 'react';
-import type { TipAction } from '../Pad/Pad';
-import { focusRing } from '../../../primitives/Ring';
+import { useRef, type CSSProperties } from 'react';
 import { Text } from '../../../primitives/Text';
+import { tempoReadoutView, type TempoReadoutModelProps } from './TempoReadout.model';
+import { bindTempoNumber, bindTempoStep } from './tempoGestures';
+import { useBinding, useTip } from './useTempoGestures';
 import './TempoReadout.css';
 
-export interface TempoReadoutProps {
-  /** Beats per minute. */
-  bpm: number;
-  /** The unit after the number. */
-  unit?: string;
-  /** The lowest tempo a drag, scroll or key asks for. */
-  min?: number;
-  /** The highest tempo a drag, scroll or key asks for. */
-  max?: number;
-  /** Called with the tempo a drag, scroll or key on the number asks for (within `min`–`max`). */
-  onTempo?: (bpm: number) => void;
-  /** Tempo + held (`true`) and released (`false`). */
-  onPlus?: (down: boolean) => void;
-  /** Tempo − held and released, as `onPlus`. */
-  onMinus?: (down: boolean) => void;
-  /** The number double-clicked: back to the style's own tempo. */
-  onReset?: () => void;
-  /** Fill the size container it sits in: the number on its foot, + over − as one column beside it. */
-  cells?: boolean;
-  /** With `cells`: the unit set large, in the numeral's ink, rather than as a small label. */
-  unitLarge?: boolean;
-  /** The number's tooltip key, rendered as its `data-tip`. Default `display.tempo`. */
-  tip?: string;
-  /**
-   * The app's tooltip action (`use:tip`), applied to the number with `tip` and to + and − with
-   * their own keys (`tempo.up`, `tempo.down`), as the original does.
-   */
-  tipAction?: TipAction;
-  /**
-   * The numeral's size, a CSS length ("96px", "var(--size-display)"), set as
-   * `--yh-tempo-readout-size` on the root; it wins over the `cells` fit. Default: that property's
-   * value, `--size-numeral` (or the container fit with `cells`).
-   */
-  size?: string;
-}
+// The props and the view are framework-free, in the model; the gestures are the `tempoGestures.ts`
+// store; `TempoReadout.svelte` renders the same view.
+export type { TipAction, TempoReadoutModelProps } from './TempoReadout.model';
 
-/** Applies the app's tooltip action to a node while `tipAction` is set; destroyed on unmount or key change. */
-function useTip(ref: RefObject<HTMLElement | null>, tipAction: TipAction | undefined, key: string) {
-  useEffect(() => {
-    const node = ref.current;
-    if (!node || !tipAction) return;
-    const handle = tipAction(node, key);
-    return () => handle?.destroy?.();
-  }, [ref, tipAction, key]);
-}
-
-/** Pixels of drag per BPM. */
-const DRAG_PX = 4;
-
-const STEP_KEYS: Record<string, number> = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1, PageUp: 10, PageDown: -10 };
-
-/** A glyph's pointer and keyboard presses as a hold. */
-function useHold(report: ((down: boolean) => void) | undefined) {
-  const held = useRef(false);
-  const release = () => {
-    if (!held.current) return;
-    held.current = false;
-    report?.(false);
-  };
-  return {
-    onPointerDown: (e: PointerEvent) => {
-      if (e.button !== 0) return;
-      held.current = true;
-      report?.(true);
-    },
-    onPointerUp: release,
-    onPointerLeave: release,
-    onPointerCancel: release,
-    // A click with no pointer detail is the keyboard's (Enter or Space): one step.
-    onClick: (e: MouseEvent) => {
-      if (e.detail !== 0) return;
-      report?.(true);
-      report?.(false);
-    },
-  };
-}
+export type TempoReadoutProps = TempoReadoutModelProps;
 
 /**
  * TempoReadout: the display's tempo block, "104 BPM" with Tempo + and − stacked at its right.
@@ -124,140 +54,38 @@ function useHold(report: ((down: boolean) => void) | undefined) {
  * - `--yh-tempo-readout-digits`: the widest value's digit count, set inline, so the number's
  *   slot never jitters.
  */
-export function TempoReadout({
-  bpm,
-  unit = 'BPM',
-  min = 5,
-  max = 500,
-  onTempo,
-  onPlus,
-  onMinus,
-  onReset,
-  cells = false,
-  unitLarge = false,
-  tip = 'display.tempo',
-  tipAction,
-  size,
-}: TempoReadoutProps) {
+export function TempoReadout(props: TempoReadoutProps) {
+  const { bpm, min, max, onTempo, onReset, onPlus, onMinus, tipAction } = props;
+  const view = tempoReadoutView(props);
+
   const number = useRef<HTMLSpanElement>(null);
   const upButton = useRef<HTMLButtonElement>(null);
   const downButton = useRef<HTMLButtonElement>(null);
-  useTip(number, tipAction, tip);
-  useTip(upButton, tipAction, 'tempo.up');
-  useTip(downButton, tipAction, 'tempo.down');
-  const drag = useRef<{ id: number; y: number; from: number; last: number } | null>(null);
+  useTip(number, tipAction, view.value.tip);
+  useTip(upButton, tipAction, view.plus.tip);
+  useTip(downButton, tipAction, view.minus.tip);
+  useBinding(number, bindTempoNumber, { bpm, min, max, onTempo, onReset });
+  useBinding(upButton, bindTempoStep, { report: onPlus });
+  useBinding(downButton, bindTempoStep, { report: onMinus });
 
-  const clamp = (n: number) => Math.min(max, Math.max(min, Math.round(n)));
-  const ask = (next: number) => {
-    const v = clamp(next);
-    if (v !== Math.round(bpm)) onTempo?.(v);
-  };
-
-  // The latest `ask` for the wheel listener, which is attached once.
-  const askRef = useRef(ask);
-  askRef.current = ask;
-  const bpmRef = useRef(bpm);
-  bpmRef.current = bpm;
-
-  // Scroll: one BPM per wheel step. Not passive, so the page doesn't scroll under it.
-  useEffect(() => {
-    const node = number.current;
-    if (!node) return;
-    const wheel = (e: WheelEvent) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      askRef.current(bpmRef.current + (e.deltaY < 0 ? 1 : -1));
-    };
-    node.addEventListener('wheel', wheel, { passive: false });
-    return () => node.removeEventListener('wheel', wheel);
-  }, []);
-
-  const down = (e: PointerEvent<HTMLSpanElement>) => {
-    if (e.button !== 0) return;
-    drag.current = { id: e.pointerId, y: e.clientY, from: bpm, last: bpm };
-    e.currentTarget.setPointerCapture?.(e.pointerId);
-  };
-  const move = (e: PointerEvent<HTMLSpanElement>) => {
-    const d = drag.current;
-    if (!d || e.pointerId !== d.id) return;
-    const next = clamp(d.from + Math.trunc((d.y - e.clientY) / DRAG_PX));
-    if (next === d.last) return;
-    d.last = next;
-    onTempo?.(next);
-  };
-  const up = (e: PointerEvent<HTMLSpanElement>) => {
-    const d = drag.current;
-    if (!d || e.pointerId !== d.id) return;
-    e.currentTarget.releasePointerCapture?.(e.pointerId);
-    drag.current = null;
-  };
-  const key = (e: KeyboardEvent) => {
-    const step = STEP_KEYS[e.key];
-    if (step === undefined) return;
-    e.preventDefault();
-    ask(bpm + step);
-  };
-
-  const plus = useHold(onPlus);
-  const minus = useHold(onMinus);
-
-  /** unitLarge only applies with `cells`. */
-  const large = cells && unitLarge;
-  const digits = Math.max(String(Math.round(max)).length, String(Math.round(bpm)).length);
-  const classes = ['yh-tempo-readout', cells && 'yh-tempo-readout--cells', cells && unitLarge && 'yh-tempo-readout--unit-large']
-    .filter(Boolean)
-    .join(' ');
+  const { tabindex, ...valueAttrs } = view.value.attrs;
 
   return (
-    <div className={classes} data-part="root" data-cells={cells || undefined} style={
-        {
-          '--yh-tempo-readout-digits': digits,
-          ...(size === undefined ? {} : { '--yh-tempo-readout-size': size }),
-        } as CSSProperties
-      }
-    >
-      <span className="yh-tempo-readout__reading" data-part="window" data-material="screen">
-        <Text
-          role="numeral"
-          ref={number}
-          className={`yh-tempo-readout__bpm ${focusRing}`}
-          data-part="value"
-          ariaRole="spinbutton"
-          tabIndex={0}
-          aria-label={`Tempo, ${unit}. Drag, scroll or use the arrow keys; double-click for the style's tempo`}
-          aria-valuenow={bpm}
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-valuetext={`${bpm} ${unit}`}
-          data-tip={tip}
-          onPointerDown={down}
-          onPointerMove={move}
-          onPointerUp={up}
-          onPointerCancel={up}
-          onKeyDown={key}
-          onDoubleClick={() => onReset?.()}
-        >
-          {bpm}
+    <div className={view.root.className} {...view.root.attrs} style={view.root.style as CSSProperties}>
+      <span className={view.window.className} {...view.window.attrs}>
+        <Text {...view.value.text} ref={number} className={view.value.className} tabIndex={Number(tabindex)} {...valueAttrs}>
+          {view.value.label}
         </Text>
-        <Text
-          role="label"
-          size={large ? 'display' : 'caption'}
-          weight={large ? 'display' : 'body'}
-          case={large ? 'none' : undefined}
-          leading="tight"
-          className="yh-tempo-readout__unit"
-          data-part="unit"
-          aria-hidden="true"
-        >
-          {unit}
+        <Text {...view.unit.text} className={view.unit.className} {...view.unit.attrs}>
+          {view.unit.label}
         </Text>
       </span>
-      <Text role="numeral" className="yh-tempo-readout__steps" data-part="steps" ariaRole="group" aria-label="Tempo">
-        <Text as="button" role="numeral" size="heading" tabular={false} ref={upButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo up (Scene Launch)" data-tip="tempo.up" {...plus}>
-          <span aria-hidden="true">+</span>
+      <Text {...view.steps.text} className={view.steps.className} {...view.steps.attrs}>
+        <Text as="button" {...view.plus.text} ref={upButton} className={view.plus.className} {...view.plus.attrs}>
+          <span aria-hidden="true">{view.plus.glyph}</span>
         </Text>
-        <Text as="button" role="numeral" size="heading" tabular={false} ref={downButton} type="button" className="yh-tempo-readout__step" data-part="step" data-material="key" aria-label="Tempo down (Function)" data-tip="tempo.down" {...minus}>
-          <span aria-hidden="true">−</span>
+        <Text as="button" {...view.minus.text} ref={downButton} className={view.minus.className} {...view.minus.attrs}>
+          <span aria-hidden="true">{view.minus.glyph}</span>
         </Text>
       </Text>
     </div>

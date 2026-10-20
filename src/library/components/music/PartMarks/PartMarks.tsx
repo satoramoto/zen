@@ -1,36 +1,12 @@
 import { useEffect, useState } from 'react';
-import type { TipAction } from '../Pad/Pad';
 import { Text } from '../../../primitives/Text';
-import { visibleMarks, type Mark } from './marks';
+import { partMarksView, type PartMarksModelProps } from './PartMarks.model';
 import './PartMarks.css';
 
-export interface PartMarksProps {
-  /** The part's sound was changed since it was loaded: the dot. */
-  edited?: boolean;
-  /** The part's plugin isn't installed: the warning triangle. Wins over `failed`. */
-  missing?: boolean;
-  /** The part's plugin failed to load or crashed: the danger cross, drawn only when `missing` is false. */
-  failed?: boolean;
-  /** The part is off and silent: the word "off". Not drawn when `bass` is true. */
-  off?: boolean;
-  /** The part plays the bass line (in Yahaha, the Style's bass under Manual Bass): the word "bass". */
-  bass?: boolean;
-  /** The gap between marks: `cell` (the sound cell) or `strip` (the tighter fader strip name). */
-  size?: 'cell' | 'strip';
-  /** The tooltip key, rendered as `data-tip` on the marks while any show. */
-  tip?: string;
-  /** The app's tooltip action, applied with `tip` when both are set and a mark shows. */
-  tipAction?: TipAction;
-}
+// The props and what they draw are framework-free, in the model; `PartMarks.svelte` renders the same view.
+export type { PartMarksModelProps, TipAction } from './PartMarks.model';
 
-/** Which contract role each mark draws in; kept as `data-tone` so tests and parents can read it. */
-const TONE: Record<Mark, string> = {
-  edited: 'text',
-  missing: 'warning',
-  failed: 'danger',
-  off: 'faint',
-  bass: 'muted',
-};
+export type PartMarksProps = PartMarksModelProps;
 
 /**
  * PartMarks: the small marks after a part's sound name.
@@ -60,64 +36,32 @@ const TONE: Record<Mark, string> = {
  * the drawing order, `marksText` for the parent's `aria-label`, hidden from assistive tech, and
  * rendering nothing when no mark shows.
  */
-export function PartMarks({
-  edited = false,
-  missing = false,
-  failed = false,
-  off = false,
-  bass = false,
-  size = 'cell',
-  tip,
-  tipAction,
-}: PartMarksProps) {
-  const marks = visibleMarks({ edited, missing, failed, off, bass });
+export function PartMarks(props: PartMarksProps) {
+  const { tip, tipAction } = props;
+  const view = partMarksView(props);
   const [node, setNode] = useState<HTMLSpanElement | null>(null);
   useEffect(() => {
     if (!node || !tipAction || tip === undefined) return;
     const handle = tipAction(node, tip);
     return () => handle?.destroy?.();
   }, [node, tip, tipAction]);
-  if (marks.length === 0) return null;
+  if (view === null) return null;
   return (
-    <Text
-      ref={setNode}
-      size="caption"
-      weight="strong"
-      leading="tight"
-      className="yh-partmarks"
-      data-part="root"
-      data-size={size}
-      data-tip={tip}
-      aria-hidden="true"
-    >
-      {marks.map((mark) => {
-        if (mark === 'edited') return <span key={mark} className="yh-partmarks__dot" data-part="dot" data-mark={mark} data-tone={TONE[mark]} />;
-        if (mark === 'missing')
+    <Text ref={setNode} size="caption" weight="strong" leading="tight" className={view.root.className} {...view.root.attrs}>
+      {view.marks.map((m) => {
+        if (m.kind === 'dot') return <span key={m.mark} className={m.className} {...m.attrs} />;
+        if (m.kind === 'icon')
           return (
-            <svg key={mark} className="yh-partmarks__icon" data-part="icon" data-mark={mark} data-tone={TONE[mark]} viewBox="0 0 12 12">
-              <path d="M6 1.25 11 10.25H1Z" />
-              <path d="M6 4.75v2.5" />
-              <circle cx="6" cy="8.6" r="0.5" />
-            </svg>
-          );
-        if (mark === 'failed')
-          return (
-            <svg key={mark} className="yh-partmarks__icon" data-part="icon" data-mark={mark} data-tone={TONE[mark]} viewBox="0 0 12 12">
-              <path d="M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25" />
+            <svg key={m.mark} className={m.className} {...m.attrs}>
+              {m.paths.map((d) => (
+                <path key={d} d={d} />
+              ))}
+              {m.dot && <circle {...m.dot} />}
             </svg>
           );
         return (
-          <Text
-            key={mark}
-            size="inherit"
-            leading="tight"
-            case="label"
-            className="yh-partmarks__word"
-            data-part="word"
-            data-mark={mark}
-            data-tone={TONE[mark]}
-          >
-            {mark}
+          <Text key={m.mark} size="inherit" leading="tight" case="label" className={m.className} {...m.attrs}>
+            {m.word}
           </Text>
         );
       })}

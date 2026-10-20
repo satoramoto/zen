@@ -2,7 +2,12 @@ import { Children, isValidElement, useId, useState, type CSSProperties, type Rea
 import type { Step } from '../primitives/step';
 import { Text } from '../primitives/Text';
 import { Tabs, type TipAction } from './Tabs';
+import { chosenView, regionBodyView, regionHasHead, regionIds, regionView } from './Region.model';
+import { reactStyle } from './style';
 import './Region.css';
+
+// The elements and choices are framework-free, in the model; `Region.svelte` renders the same view.
+export { regionView, regionBodyView, regionIds, regionHasHead, chosenView, type RegionModelProps } from './Region.model';
 
 export interface RegionViewProps {
   /** The view's id, as `view` / `onView` name it. */
@@ -76,10 +81,13 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAc
     (c): c is ReactElement<RegionViewProps> => isValidElement(c) && c.type === RegionView,
   );
   const [own, setOwn] = useState(defaultView ?? views[0]?.props.id);
-  const chosenId = view ?? own;
-  const chosen = views.find((v) => v.props.id === chosenId) ?? views[0];
-  const uid = useId();
-  const tabId = (id: string) => `${uid}-tab-${id}`;
+  const chosen = chosenView(
+    views.map((v) => ({ id: v.props.id, element: v })),
+    view,
+    own,
+  )?.element;
+  const ids = regionIds(useId());
+  const tabId = ids.tab;
 
   const choose = (id: string) => {
     if (view === undefined) setOwn(id);
@@ -87,16 +95,11 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAc
   };
 
   const tabbed = views.length > 0;
+  const root = regionView({ name, area, fit, className }, tabbed);
+  const body = regionBodyView(gap, tabbed ? { panelId: ids.panel, tabId: chosen ? tabId(chosen.props.id) : undefined } : undefined);
   return (
-    <section
-      className={`lib-region${className ? ` ${className}` : ''}`}
-      aria-label={name}
-      data-part="region"
-      data-tabbed={tabbed || undefined}
-      data-fit={fit === 'content' ? 'content' : undefined}
-      style={area ? { gridArea: area, ...style } : style}
-    >
-      {(label || aside || tabbed) && (
+    <section className={root.className} {...root.attrs} style={reactStyle(root.style, style)}>
+      {regionHasHead(label, aside, tabbed) && (
         <header className="lib-region__head" data-part="head">
           {label && (
             <Text size="caption" weight="strong" case="label" className="lib-region__label">
@@ -109,7 +112,7 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAc
               items={views.map(({ props: v }) => ({ id: v.id, label: v.label, name: v.name, disabled: v.disabled, tip: v.tip }))}
               value={chosen.props.id}
               onChange={choose}
-              panelId={`${uid}-panel`}
+              panelId={ids.panel}
               tabId={tabId}
               tipAction={tipAction}
             />
@@ -117,14 +120,7 @@ function RegionRoot({ name, label, aside, view, defaultView, onView, area, tipAc
           {aside && <span className="lib-region__aside">{aside}</span>}
         </header>
       )}
-      <div
-        className="lib-region__body"
-        data-part="body"
-        data-gap={gap}
-        id={tabbed ? `${uid}-panel` : undefined}
-        role={tabbed ? 'tabpanel' : undefined}
-        aria-labelledby={tabbed && chosen ? tabId(chosen.props.id) : undefined}
-      >
+      <div className={body.className} {...body.attrs}>
         {tabbed ? chosen?.props.children : children}
       </div>
     </section>

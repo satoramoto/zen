@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { TempoReadout } from './TempoReadout';
+import { CELLS_BOX, tempoReadoutArgTypes, tempoReadoutStories as s } from './TempoReadout.fixtures';
 
 /**
  * The display's tempo block: the number in the readout face (drag it, scroll on it, or use the
@@ -14,15 +15,7 @@ const meta = {
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },
   args: { bpm: 104, onTempo: fn(), onPlus: fn(), onMinus: fn(), onReset: fn() },
-  argTypes: {
-    bpm: { control: { type: 'number', min: 5, max: 500, step: 1 } },
-    unit: { control: 'text' },
-    min: { control: { type: 'number', min: 5, max: 500, step: 1 } },
-    max: { control: { type: 'number', min: 5, max: 500, step: 1 } },
-    cells: { control: 'boolean' },
-    unitLarge: { control: 'boolean' },
-    size: { control: 'text' },
-  },
+  argTypes: tempoReadoutArgTypes,
 } satisfies Meta<typeof TempoReadout>;
 
 export default meta;
@@ -30,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 
 /** The board: 104 BPM. Dragging up 8px asks for 106; − held calls with `true`, released with `false`. */
 export const Board: Story = {
-  args: { bpm: 104, unit: 'BPM', min: 5, max: 500 },
+  args: s.Board.args,
   play: async ({ canvasElement, args }) => {
     const c = within(canvasElement);
     const number = c.getByRole('spinbutton');
@@ -48,7 +41,7 @@ export const Board: Story = {
 
 /** At the top of its range: ↑ asks for nothing more. */
 export const AtMax: Story = {
-  args: { bpm: 500, unit: 'BPM', min: 5, max: 500 },
+  args: s.AtMax.args,
   play: async ({ canvasElement, args }) => {
     await fireEvent.keyDown(within(canvasElement).getByRole('spinbutton'), { key: 'ArrowUp' });
     await expect(args.onTempo).not.toHaveBeenCalled();
@@ -57,12 +50,12 @@ export const AtMax: Story = {
 
 /** A two-digit tempo keeps the same width as 500, so the unit and keys don't move. */
 export const Slow: Story = {
-  args: { bpm: 68, unit: 'BPM', min: 5, max: 500 },
+  args: s.Slow.args,
 };
 
 /** New: a hero-sized numeral by `size` (set as `--yh-tempo-readout-size`); + and − scale with it. */
 export const HeroSize: Story = {
-  args: { bpm: 104, unit: 'BPM', min: 5, max: 500, size: 'var(--size-display)' },
+  args: s.HeroSize.args,
   play: async ({ canvasElement }) => {
     const tempo = canvasElement.querySelector<HTMLElement>('.yh-tempo-readout')!;
     await expect(tempo.style.getPropertyValue('--yh-tempo-readout-size')).toBe('var(--size-display)');
@@ -71,10 +64,10 @@ export const HeroSize: Story = {
 
 /** In cells: it fills a 360 × 80 size container; the reading on its foot, + over − beside it. */
 export const Cells: Story = {
-  args: { bpm: 104, unit: 'BPM', min: 5, max: 500, cells: true },
-  parameters: { sample: { width: 360, height: 80 } },
+  args: s.Cells.args,
+  parameters: { sample: CELLS_BOX },
   render: (args) => (
-    <div style={{ containerType: 'size', width: 360, height: 80 }}>
+    <div style={{ containerType: 'size', ...CELLS_BOX }}>
       <TempoReadout {...args} />
     </div>
   ),
@@ -101,6 +94,6 @@ export const Cells: Story = {
 /** In cells with the unit set large, in the numeral's ink. */
 export const CellsUnitLarge: Story = {
   ...Cells,
-  args: { bpm: 104, unit: 'BPM', min: 5, max: 500, cells: true, unitLarge: true },
+  args: s.CellsUnitLarge.args,
   play: undefined,
 };

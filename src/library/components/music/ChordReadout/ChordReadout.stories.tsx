@@ -1,63 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { ChordReadout, type ChordReadoutProps } from './ChordReadout';
+import { ChordReadout } from './ChordReadout';
+import { chordReadoutArgTypes, chordReadoutArgs, chordReadoutStories as s } from './ChordReadout.fixtures';
 
-// The original's fixtures (yahaha/src/ui/NowPlaying/NowPlaying.fixtures.ts), copied so the pairs compare one to one.
-const chordBoard = {
-  chord: 'Am',
-  extension: '7',
-  notes: [
-    { note: 'A', interval: 'R' },
-    { note: 'C', interval: 'm3' },
-    { note: 'E', interval: '5' },
-    { note: 'G', interval: 'm7' },
-  ],
-  fingering: 'Fingered On Bass',
-  held: false,
-} satisfies ChordReadoutProps;
-
-const chordStopped = {
-  chord: 'C',
-  extension: 'maj7',
-  notes: [
-    { note: 'C', interval: 'R' },
-    { note: 'E', interval: '3' },
-    { note: 'G', interval: '5' },
-    { note: 'B', interval: '7' },
-  ],
-  fingering: 'Fingered',
-  held: true,
-} satisfies ChordReadoutProps;
-
-const chordLong = {
-  chord: 'C♯m',
-  extension: 'maj9(♯11)/G♯',
-  notes: [
-    { note: 'C♯', interval: 'R' },
-    { note: 'E', interval: 'm3' },
-    { note: 'G♯', interval: '5' },
-    { note: 'C', interval: 'M7' },
-    { note: 'D♯', interval: '9' },
-    { note: 'G', interval: '♯11' },
-  ],
-  fingering: 'AI Full Keyboard',
-  held: false,
-} satisfies ChordReadoutProps;
-
-const chordLongFingering = {
-  ...chordBoard,
-  notes: [
-    { note: 'A', interval: 'R' },
-    { note: 'C', interval: 'm3' },
-    { note: 'E', interval: '5' },
-    { note: 'G', interval: 'm7' },
-    { note: 'B', interval: '9' },
-    { note: 'D', interval: '4' },
-  ],
-  fingering: 'AI Full Keyboard · played Cm7 (Keyboard transpose −3)',
-} satisfies ChordReadoutProps;
-
+// Every story's args come from ChordReadout.fixtures.ts, which the Svelte stories and the parity test share.
 const meta = {
   title: 'Design OS/Components/Music/ChordReadout',
   component: ChordReadout,
@@ -71,16 +18,8 @@ const meta = {
     withLibraryTheme,
   ],
   parameters: { layout: 'centered' },
-  args: { chord: '', tip: 'fingering.select' },
-  argTypes: {
-    chord: { control: 'text' },
-    extension: { control: 'text' },
-    notes: { control: 'object' },
-    fingering: { control: 'text' },
-    held: { control: 'boolean' },
-    label: { control: 'text' },
-    size: { control: 'text' },
-  },
+  args: chordReadoutArgs,
+  argTypes: chordReadoutArgTypes,
 } satisfies Meta<typeof ChordReadout>;
 
 export default meta;
@@ -88,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 /** The board: Am7, A · C · E · G, Fingered On Bass. */
 export const Board: Story = {
-  args: { ...chordBoard, label: 'Chord' },
+  args: s.Board.args,
   play: async ({ canvasElement }) => {
     const readout = within(canvasElement).getByRole('img', { name: 'Chord Am7: A C E G, Fingered On Bass' });
     await expect(readout).toHaveAttribute('data-held', 'false');
@@ -97,21 +36,21 @@ export const Board: Story = {
 
 /** Held: detection is unsure, so the last chord stays, a dashed rule under it, with a "held" tag on the small line. */
 export const Held: Story = {
-  args: { ...chordStopped },
+  args: s.Held.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('img', { name: 'Chord Cmaj7, held: C E G B, Fingered' })).toHaveAttribute('data-held', 'true');
   },
 };
 
 /** A long chord (C♯mmaj9(♯11)/G♯) steps down the hero sizes until it fits. */
-export const Long: Story = { args: { ...chordLong } };
+export const Long: Story = { args: s.Long.args };
 
 /** A long fingering with Keyboard transpose: the small line wraps to a second line. */
-export const LongFingering: Story = { args: { ...chordLongFingering } };
+export const LongFingering: Story = { args: s.LongFingering.args };
 
 /** New: a larger hero by `size` (set as `--yh-chord-readout-hero`); the fit steps scale from it. */
 export const HeroSize: Story = {
-  args: { ...chordBoard, size: 'calc(var(--size-display) * 1.4)' },
+  args: s.HeroSize.args,
   play: async ({ canvasElement }) => {
     const readout = canvasElement.querySelector<HTMLElement>('.yh-chord-readout')!;
     await expect(readout.style.getPropertyValue('--yh-chord-readout-hero')).toBe('calc(var(--size-display) * 1.4)');
@@ -120,7 +59,7 @@ export const HeroSize: Story = {
 
 /** No chord yet: a dim dash, no notes. */
 export const Empty: Story = {
-  args: { chord: '', notes: [], fingering: 'Fingered' },
+  args: s.Empty.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('img', { name: 'Chord none, Fingered' })).toHaveTextContent('—');
   },
