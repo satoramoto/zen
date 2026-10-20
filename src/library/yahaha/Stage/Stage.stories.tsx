@@ -5,7 +5,7 @@ import { fixtureStories, withRenderer } from '../../stories/story';
 import { Stage } from './Stage';
 import StageSvelte from './Stage.svelte';
 import { stageBoard, stageStories as s } from './Stage.fixtures';
-import { StagePlayground } from './StagePlayground';
+import { StagePlayground } from './StagePlayground.story';
 
 // Every story but the Playground is built from Stage.fixtures.ts (`story(s.Name)`); the toolbar's
 // Renderer draws it with React's or Svelte's Stage.

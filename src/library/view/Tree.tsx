@@ -69,15 +69,78 @@ function drawComponent(node: ComponentNode, context: Context, key: string, extra
   return createElement(context.components(node.component), { ...props, ...extra?.props, ...(extra?.ref ? { ref: extra.ref } : {}), key });
 }
 
-/** React names for DOM attributes it spells otherwise. */
-const RENAMED: Record<string, string> = { class: 'className', for: 'htmlFor', tabindex: 'tabIndex', readonly: 'readOnly', autofocus: 'autoFocus' };
+/** React names for DOM attributes it spells otherwise (a hyphenated or namespaced name is
+ *  camel-cased on its own: `accept-charset` → `acceptCharset`, `stroke-width` → `strokeWidth`). */
+const RENAMED: Record<string, string> = {
+  class: 'className',
+  for: 'htmlFor',
+  tabindex: 'tabIndex',
+  readonly: 'readOnly',
+  autofocus: 'autoFocus',
+  autocomplete: 'autoComplete',
+  autocapitalize: 'autoCapitalize',
+  autoplay: 'autoPlay',
+  allowfullscreen: 'allowFullScreen',
+  accesskey: 'accessKey',
+  cellpadding: 'cellPadding',
+  cellspacing: 'cellSpacing',
+  colspan: 'colSpan',
+  rowspan: 'rowSpan',
+  contenteditable: 'contentEditable',
+  crossorigin: 'crossOrigin',
+  datetime: 'dateTime',
+  enctype: 'encType',
+  enterkeyhint: 'enterKeyHint',
+  formaction: 'formAction',
+  formenctype: 'formEncType',
+  formmethod: 'formMethod',
+  formnovalidate: 'formNoValidate',
+  formtarget: 'formTarget',
+  frameborder: 'frameBorder',
+  hreflang: 'hrefLang',
+  inputmode: 'inputMode',
+  maxlength: 'maxLength',
+  minlength: 'minLength',
+  novalidate: 'noValidate',
+  playsinline: 'playsInline',
+  referrerpolicy: 'referrerPolicy',
+  spellcheck: 'spellCheck',
+  srcdoc: 'srcDoc',
+  srclang: 'srcLang',
+  srcset: 'srcSet',
+  usemap: 'useMap',
+};
 
 const camel = (name: string) => name.replace(/[-:]([a-z])/g, (_, c: string) => c.toUpperCase());
+
+/** A style string's declarations: split at `;` outside quotes and brackets, so a value may hold
+ *  one (`url("data:image/svg+xml;utf8,…")`). */
+function declarations(text: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let quote = '';
+  let start = 0;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quote) {
+      if (c === '\\') i++;
+      else if (c === quote) quote = '';
+    } else if (c === '"' || c === "'") quote = c;
+    else if (c === '(' || c === '[') depth++;
+    else if ((c === ')' || c === ']') && depth > 0) depth--;
+    else if (c === ';' && depth === 0) {
+      out.push(text.slice(start, i));
+      start = i + 1;
+    }
+  }
+  out.push(text.slice(start));
+  return out;
+}
 
 /** A `style` string as React's style object (`min-width` → `minWidth`; custom properties as is). */
 export function styleObject(text: string): CSSProperties {
   const style: Record<string, string> = {};
-  for (const declaration of text.split(';')) {
+  for (const declaration of declarations(text)) {
     const colon = declaration.indexOf(':');
     if (colon < 0) continue;
     const name = declaration.slice(0, colon).trim();

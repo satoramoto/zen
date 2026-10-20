@@ -78,7 +78,11 @@ const flatten = (children: ChildArg[]): (Child | null)[] =>
  * so give a list of varying length its own parent (or keys) rather than unkeyed siblings after it.
  */
 export function h(tag: string, attrs: Record<string, string | undefined> = {}, ...children: ChildArg[]): Node {
-  const node: Node = { tag, attrs };
+  // An enumerated attribute (`draggable`, `aria-*`) keeps `'true'`, never the boolean `''`.
+  const kept = Object.keys(attrs).some((name) => attrs[name] === '' && isEnumerated(name))
+    ? Object.fromEntries(Object.entries(attrs).map(([name, value]) => [name, attrValue(name, value)]))
+    : attrs;
+  const node: Node = { tag, attrs: kept };
   const flat = flatten(children);
   if (flat.some((child) => child !== null)) node.children = flat;
   return node;
@@ -187,13 +191,25 @@ const BOOLEAN = new Set([
   'selected',
 ]);
 
+/** Enumerated attributes whose values are the words `true` / `false` (an empty value is not
+ *  "true" for them, unlike a boolean attribute): `draggable`, `contenteditable`, `spellcheck`, and
+ *  every `aria-*` state. */
+const ENUMERATED = new Set(['draggable', 'contenteditable', 'spellcheck']);
+const isEnumerated = (name: string) => ENUMERATED.has(name.toLowerCase()) || name.startsWith('aria-');
+
+/** An enumerated attribute's value from a test: `'true'` or `'false'` (`aria-pressed: flag(on)`). */
+export const flag = (test: boolean): 'true' | 'false' => (test ? 'true' : 'false');
+
+/** An attribute's value as the tree keeps it: an enumerated attribute's `''` is `'true'`. */
+const attrValue = (name: string, value: string | undefined): string | undefined => (value === '' && isEnumerated(name) ? 'true' : value);
+
 /** A node's attributes as both renderers pass them on: undefined dropped, boolean attributes `true`,
- *  form properties (`PROPERTIES`) left to `mount.ts`. */
+ *  enumerated ones `'true'` / `'false'` (never `''`), form properties (`PROPERTIES`) left to `mount.ts`. */
 export function domAttrs(attrs: Record<string, string | undefined> | undefined): Record<string, string | true> {
   const out: Record<string, string | true> = {};
   for (const [name, value] of Object.entries(attrs ?? {})) {
     if (value === undefined || PROPERTIES.has(name)) continue;
-    out[name] = BOOLEAN.has(name.toLowerCase()) ? true : value;
+    out[name] = BOOLEAN.has(name.toLowerCase()) ? true : attrValue(name, value)!;
   }
   return out;
 }
