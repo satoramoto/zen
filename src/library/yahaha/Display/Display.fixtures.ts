@@ -1,8 +1,11 @@
-import type { ChordReadoutProps } from '../../components/music/ChordReadout/ChordReadout';
-import type { DisplayPart, DisplayProps } from './Display';
+// Display's sample data and its stories as plain props: Display.stories.tsx (React) and
+// Display.stories.svelte.ts (Svelte) both draw them, and the parity test renders every one in both.
+import type { ChordReadoutModelProps as ChordReadoutProps } from '../../components/music/ChordReadout/ChordReadout.model';
+import { defineFixtures } from '../../fixtures';
+import type { DisplayModelProps, DisplayPart } from './Display.model';
 
 /** The display's data: its props without the callbacks. */
-export type DisplayData = Pick<DisplayProps, 'style' | 'nowPlaying' | 'parts'>;
+export type DisplayData = Pick<DisplayModelProps, 'style' | 'nowPlaying' | 'parts'>;
 
 // Ported from yahaha/src/ui/NowPlaying, StyleLine and SoundRow fixtures: the same sample data.
 
@@ -172,3 +175,65 @@ export const displayFillToEnding: DisplayData = {
 
 /** No parts given: the Stage shows sounds on the mixer, so the hero drops its parts column. */
 export const displayNoParts: DisplayData = { ...displayBoard, parts: undefined };
+
+/** The controls, the same in both Storybooks. */
+export const displayArgTypes = {
+  style: { control: 'object' },
+  nowPlaying: { control: 'object' },
+  parts: { control: 'object' },
+  art: { control: 'boolean' },
+  density: { control: 'inline-radio', options: ['auto', 'full', 'compact'] },
+  form: { control: 'inline-radio', options: [undefined, 'full', 'compact', 'minimal'] },
+} as const;
+
+/**
+ * The original's hero regions on a 1440×900 Stage (1392 × 288) and a 1217×752 one; the redesigned
+ * Stage's hero column beside the song form at 1440×900 (about 660 × 250); the column a 1217×752
+ * Stage has once it isn't zoomed (436 × 200 there; here 454, the compact form's least); and a
+ * short, wide region.
+ */
+export const DISPLAY_REGIONS = {
+  large: { width: 1392, height: 288 },
+  small: { width: 1169, height: 241 },
+  column: { width: 660, height: 250 },
+  columnSmall: { width: 454, height: 200 },
+  short: { width: 1169, height: 200 },
+} as const;
+
+export type DisplayRegion = keyof typeof DISPLAY_REGIONS;
+
+/** Each story's args (the region it is drawn in is `displayStoryRegions`, `large` otherwise). */
+export const displayStories = defineFixtures<DisplayModelProps>()({
+  Board: { args: displayBoard },
+  Stopped: { args: displayStopped },
+  SyncStartArmed: { args: displaySyncStart },
+  LongChord: { args: displayLongChord },
+  LongStyleName: { args: displayLongStyle },
+  LongFingering: { args: displayLongFingering },
+  PartOff: { args: displayPartOff },
+  ThreeFour: { args: displayThreeFour },
+  Looping: { args: displayLooping },
+  FillToEnding: { args: displayFillToEnding },
+  NoParts: { args: displayNoParts },
+  StageColumn: { args: displayBoard },
+  StageColumnSmall: { args: displayBoard },
+  StageColumnSmallLong: { args: { ...displayLongFingering, nowPlaying: { ...displayLongFingering.nowPlaying, playing: 'Ending III' } } },
+  Compact: { args: { ...displayBoard, density: 'compact' } },
+  FullInColumn: { args: { ...displayNoParts, density: 'full' } },
+  SmallStage: { args: displayBoard },
+  SmallStageLongChord: { args: displayLongChord },
+  AtStyleTempo: { args: { ...displayBoard, nowPlaying: { ...displayBoard.nowPlaying, styleTempo: displayBoard.nowPlaying.bpm } } },
+  Forms: { args: displayNoParts },
+  WithArt: { args: { ...displayNoParts, art: true } },
+});
+
+/** The region each story is drawn in, where it isn't `large`. */
+export const displayStoryRegions: Partial<Record<keyof typeof displayStories, DisplayRegion>> = {
+  StageColumn: 'column',
+  StageColumnSmall: 'columnSmall',
+  StageColumnSmallLong: 'columnSmall',
+  Compact: 'short',
+  FullInColumn: 'column',
+  SmallStage: 'small',
+  SmallStageLongChord: 'small',
+};

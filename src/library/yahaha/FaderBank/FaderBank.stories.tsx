@@ -2,17 +2,19 @@ import { useState } from 'react';
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { FaderBankRegion, type BankLamp, type FaderStrip } from './FaderBank';
-import { faderPageTabs, functionLamps, layerTabs, panelStrips, partLamps, reverbStrips, styleStrips } from './FaderBank.fixtures';
-
-/** The mixer's region on a 1440×900 Stage (the board's band: 702×368). */
-const BOARD = { width: 702, height: 368 };
-/** The same region on a 1217×752 Stage. */
-const SMALL = { width: 593, height: 311 };
+import { FaderBankRegion } from './FaderBank';
+import {
+  BOARD_REGION,
+  FORM_BOXES,
+  SMALL_REGION,
+  faderBankArgTypes,
+  faderBankStories as s,
+  styleStrips,
+} from './FaderBank.fixtures';
 
 /** The region's box: `parameters.region` (default the board's), or `'none'` for a story that sizes its own. */
 const inRegion: Decorator = (Story, { parameters }) => {
-  const size = (parameters.region ?? BOARD) as { width: number; height: number } | 'none';
+  const size = (parameters.region ?? BOARD_REGION) as { width: number; height: number } | 'none';
   if (size === 'none') return <Story />;
   return (
     <div style={{ display: 'grid', width: size.width, height: size.height }}>
@@ -35,13 +37,13 @@ const meta = {
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
   args: {
-    strips: panelStrips,
-    pageTabs: faderPageTabs,
-    page: 'panel',
-    layerTabs,
-    layer: 'volume',
-    partLamps,
-    functionLamps,
+    strips: s.Board.args!.strips!,
+    pageTabs: s.Board.args!.pageTabs!,
+    page: s.Board.args!.page!,
+    layerTabs: s.Board.args!.layerTabs!,
+    layer: s.Board.args!.layer!,
+    partLamps: s.Board.args!.partLamps!,
+    functionLamps: s.Board.args!.functionLamps!,
     tipAction: fn(),
     onChoosePage: fn(),
     onChooseLayer: fn(),
@@ -54,28 +56,21 @@ const meta = {
     onPageLong: fn(),
     onPageRelease: fn(),
   },
-  argTypes: {
-    strips: { control: 'object' },
-    pageTabs: { control: 'object' },
-    page: { control: 'select', options: faderPageTabs.map((tab) => tab.id) },
-    layerTabs: { control: 'object' },
-    layer: { control: 'select', options: layerTabs.map((tab) => tab.id) },
-    partLamps: { control: 'object' },
-    functionLamps: { control: 'object' },
-  },
+  argTypes: faderBankArgTypes,
 } satisfies Meta<typeof FaderBankRegion>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** The board: Panel page, Vol layer, Right 2 away, Right 3 off and missing, faders 7 and 8 parked. */
-export const Board: Story = {};
+export const Board: Story = { args: s.Board.args };
 
 /**
  * The page button under Master: a click flips the page (`onPageButton`); a hold (or right-click)
  * calls `onPageLong` and its release `onPageRelease`, never `onPageButton`.
  */
 export const PageButtonHold: Story = {
+  args: s.PageButtonHold.args,
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: /^Fader page is Panel/ });
     await userEvent.click(button);
@@ -89,12 +84,13 @@ export const PageButtonHold: Story = {
 
 /** The Reverb layer: "Faders · Reverb", the part strips in the neutral layer look with "Rev" over each value, no meters. */
 export const ReverbLayer: Story = {
-  args: { layer: 'reverb', strips: reverbStrips },
+  args: s.ReverbLayer.args,
 };
 
 /** Added: the region a 1217×752 Stage gives the mixer (593×311). */
 export const SmallStage: Story = {
-  parameters: { region: SMALL },
+  args: s.SmallStage.args,
+  parameters: { region: SMALL_REGION },
 };
 
 /**
@@ -104,15 +100,15 @@ export const SmallStage: Story = {
  * mark and tab is in both.
  */
 export const Forms: Story = {
+  args: s.Forms.args,
   parameters: { region: 'none' },
   render: (args) => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-5)', alignItems: 'flex-start' }}>
-      <div style={{ display: 'grid', width: 565, height: 354 }}>
-        <FaderBankRegion {...args} name="Mixer, tall" form="tall" />
-      </div>
-      <div style={{ display: 'grid', width: 549, height: 266 }}>
-        <FaderBankRegion {...args} name="Mixer, short" form="short" />
-      </div>
+      {s.Forms.items!.map((item) => (
+        <div key={item.form} style={{ display: 'grid', ...FORM_BOXES[item.form!] }}>
+          <FaderBankRegion {...args} {...item} />
+        </div>
+      ))}
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -128,30 +124,22 @@ export const Forms: Story = {
 
 /** Added: the Style page: faders 1–8 are the style's parts, all neutral (no keyboard part, no hue); 9 stays Master. */
 export const StylePage: Story = {
-  args: { page: 'style', strips: styleStrips },
+  args: s.StylePage.args,
 };
 
 /** Added: the hardware fader above the level, so Right 2 reads "↓ 72", and Left away below at the same time. */
 export const TakeoverBothWays: Story = {
-  args: {
-    strips: panelStrips.map((strip) =>
-      strip.id === 'right2' ? { ...strip, away: 110 } : strip.id === 'left' ? { ...strip, away: 20 } : strip,
-    ),
-  },
+  args: s.TakeoverBothWays.args,
 };
 
 /** Added: every part off; the On lamps unlit, each name faded in its own hue with "off". */
 export const AllPartsOff: Story = {
-  args: {
-    strips: panelStrips.map((strip): FaderStrip =>
-      strip.kind === 'part' || strip.kind === 'off' ? { ...strip, kind: 'off', away: undefined, meter: 0, meter2: 0, peak: 0 } : strip,
-    ),
-    partLamps: partLamps.map((lamp): BankLamp => ({ ...lamp, on: false, label: 'Off' })),
-  },
+  args: s.AllPartsOff.args,
 };
 
 /** Added: wired to state, so faders, tabs and lamps move. */
 export const Live: Story = {
+  args: s.Live.args,
   render: function Live(args) {
     const [strips, setStrips] = useState(args.strips);
     const [page, setPage] = useState(args.page);

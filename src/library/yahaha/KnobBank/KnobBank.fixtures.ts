@@ -1,4 +1,8 @@
-import type { KnobItem } from './KnobBank';
+// KnobBank's stories as plain props: KnobBank.stories.tsx (React) and KnobBank.stories.svelte.ts
+// (Svelte) both draw them as the Knobs region, and the parity test renders every instance with
+// both banks. The page data below is also the Stage's (Stage.fixtures.ts).
+import { defineFixtures } from '../../fixtures';
+import { KNOB_BANK_FORMS, type KnobBankRegionModelProps, type KnobItem } from './KnobBank.model';
 
 /** The board's knob page 1 of 6, Style (Stage-Dark.dc.html). No knob here belongs to a part. */
 export const styleKnobs: KnobItem[] = [
@@ -83,3 +87,45 @@ export const delayKnobs = sends(
 
 /** Every page's eight knobs, in `knobPages` order. */
 export const knobsByPage: KnobItem[][] = [styleKnobs, rackKnobs, panKnobs, reverbKnobs, chorusKnobs, delayKnobs];
+
+/* ---------- the stories ---------- */
+
+/** The region's width on the board's Stage (about a 1440 × 900 Stage's); a story may set its own. */
+export const KNOB_BANK_WIDTH = 552;
+
+/** The region's width on a 1217 × 752 Stage (the At1217 story). */
+export const KNOB_BANK_WIDTH_1217 = 464;
+
+/** The Forms story: each form at about its least width at the compact scale (plus the region's plate). */
+export const KNOB_BANK_FORM_WIDTHS: Record<string, number> = { labelled: 640, compact: 424 };
+
+/** The controls, the same in both Storybooks. */
+export const knobBankArgTypes = {
+  knobs: { control: 'object' },
+  pages: { control: 'object' },
+  page: { control: { type: 'number', min: 0, max: knobPages.length - 1, step: 1 } },
+  pageLabel: { control: 'text' },
+  form: { control: 'inline-radio', options: KNOB_BANK_FORMS.map((f) => f.id) },
+} as const;
+
+/** Every story's base: the board's Style page, every page as a tab. */
+export const knobBankBoard: KnobBankRegionModelProps = { knobs: styleKnobs, pages: knobPages, page: 0 };
+const board = knobBankBoard;
+
+export const knobBankStories = defineFixtures<KnobBankRegionModelProps>()({
+  Board: { args: board },
+  ReverbPage: { args: { ...board, page: 3 } },
+  ReverbSends: { args: { ...board, page: 3, knobs: reverbKnobs } },
+  RackPage: { args: { ...board, page: 1, knobs: rackKnobs } },
+  PanPage: { args: { ...board, page: 2, knobs: panKnobs } },
+  ChorusPage: { args: { ...board, page: 4, knobs: chorusKnobs } },
+  FewerKnobs: { args: { ...board, knobs: styleKnobs.slice(0, 3) } },
+  PageLabelOnly: { args: { ...board, pages: [], pageLabel: 'Swap R1' } },
+  At1440: { args: board },
+  At1217: { args: { ...board, page: 3, knobs: reverbKnobs } },
+  Forms: {
+    args: { ...board, page: 1, knobs: rackKnobs },
+    items: KNOB_BANK_FORMS.map((f) => ({ form: f.id })),
+  },
+  Playground: { args: board },
+});

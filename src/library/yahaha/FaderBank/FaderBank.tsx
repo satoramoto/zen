@@ -1,229 +1,50 @@
-import { Fragment, useEffect, useRef, type CSSProperties } from 'react';
+import { Fragment, useRef, type ReactNode } from 'react';
 import { Group } from '../../layout/Group';
 import { Region } from '../../layout/Region';
 import { Stack } from '../../primitives/Stack';
-import { Tabs, type TabItem } from '../../layout/Tabs';
+import { Tabs } from '../../layout/Tabs';
 import { Text } from '../../primitives/Text';
-import { PART_HUE_INDEX, type Part } from '../hues';
 import { Button } from '../../components/core/Button/Button';
-import { Fader, type FaderHue } from '../../components/music/Fader/Fader';
-import { LampButton, type LampHue } from '../../components/core/LampButton/LampButton';
+import { Fader } from '../../components/music/Fader/Fader';
+import { LampButton } from '../../components/core/LampButton/LampButton';
 import { PartMarks } from '../../components/music/PartMarks/PartMarks';
-import { visibleMarks } from '../../components/music/PartMarks/marks';
 import { useForm } from '../../layout/assembly';
-import { FADER_BANK_FORMS, type FaderBankForm } from './FaderBank.forms';
+import { reactStyle } from '../../layout/style';
+import { FADER_BANK_FORMS } from './FaderBank.forms';
+import {
+  faderBankView,
+  type BankLampView,
+  type FaderBankModelProps,
+  type FaderBankRegionModelProps,
+  type FaderStripView,
+  type TipAction,
+} from './FaderBank.model';
+import { useTip } from './useTip';
 import './FaderBank.css';
 
 export { FADER_BANK_FORMS, type FaderBankForm } from './FaderBank.forms';
+// The props and the view are framework-free, in the model; `FaderBank.svelte` renders the same view.
+export type { TipAction, FaderStrip, BankLamp, FaderBankModelProps, FaderBankRegionModelProps } from './FaderBank.model';
 
-/** The app's tooltip hook (the original's Svelte `use:tip`): called with the node and the key. */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => void | { update?: (key: string) => void; destroy?: () => void };
+/** FaderBank's props, with React tab labels (see `FaderBankModelProps`). */
+export type FaderBankProps = FaderBankModelProps<ReactNode>;
 
-/** One of the strips: its Fader and the name button under it. */
-export interface FaderStrip {
-  /** What the callbacks carry ("right1", "style", "fader7", "master"). Unique in the bank. */
-  id: string;
-  /** The name under the fader ("Right 1", "Style", "—"). */
-  tag: string;
-  /** The sound or what the strip scales, under the name ("Stage Grand"). Optional. */
-  sound?: string;
-  /** The strip's identity: a part (`r1` `r2` `r3` `l`) wears its part hue; `a` (Style), `t2` (Multi Pad) and `t` (Master) are neutral. */
-  hue: 'r1' | 'r2' | 'r3' | 'l' | 'a' | 't2' | 't';
-  /** `part`, `group`, `master` live; `off` a part switched off; `parked` an unused fader. */
-  kind: 'part' | 'group' | 'master' | 'off' | 'parked';
-  /** The text at the top of the fader: the level ("90"), or the layer and value ("Rev 40"). */
-  value: string;
-  /** The set level, 0–127. */
-  level: number;
-  /** The meters and the peak line, 0–1 of the travel. */
-  meter: number;
-  meter2: number;
-  peak: number;
-  /** Where the hardware fader is (0–127) while it's away from the level (soft takeover). */
-  away?: number;
-  /** The marks after the name. */
-  edited?: boolean;
-  missing?: boolean;
-  failed?: boolean;
-  /** The fader's accessible name ("Right 1 · Stage Grand, level 90"). */
-  faderName: string;
-  /** The name button's accessible name ("Right 1, Stage Grand: open Channel"). Parked: none, not pressable. */
-  openName?: string;
-  /** The fader's tooltip key. */
-  tip?: string;
-  /** The name button's tooltip key (not for a parked strip, whose name is not a button). */
-  openTip?: string;
-}
-
-/** One lamp: a part's on/off, or a Launchkey function. */
-export interface BankLamp {
-  /** What the callbacks carry ("right1", "harmArp"). A part lamp's id names the strip it sits under. */
-  id: string;
-  /** The word on the face ("On", "Harm/Arp"). */
-  label: string;
-  /** Lit. */
-  on: boolean;
-  /** The part for a part lamp (it wears that part's hue), `t` (neutral) for a function, `lamp` the Looper looping. */
-  hue?: Part | 't' | 'lamp';
-  /** Record lamp: lit and waiting draw in the record colour. */
-  rec?: boolean;
-  /** The waiting (armed) face while not lit. */
-  waiting?: boolean;
-  /** The accessible name ("Right 1 on. Long press: swap mode …"). */
-  name?: string;
-  /** The tooltip key. */
-  tip?: string;
-  /** It has a long press (swap mode, Loop rec, Sound held): `onLampLong` and `onLampRelease` are wired. */
-  long?: boolean;
-}
-
-export interface FaderBankProps {
-  /** The strips, left to right (the board's nine). */
-  strips: FaderStrip[];
-  /** The fader pages (Panel, Style): the views of the mixer's Region (`FaderBankRegion`). */
-  pageTabs: TabItem[];
-  /** The chosen page's id; `strips` are that page's. */
-  page: string;
-  /** The fader layers (Vol, Pan, Reverb, Chorus, Delay): the switch in the Region's `aside`. */
-  layerTabs: TabItem[];
-  /** The chosen layer's id; any but the first gives the part strips the layer look and the header its word. */
-  layer: string;
-  /** The part lamps, each under the strip with its id (else under strips 1–4 in order). */
-  partLamps: BankLamp[];
-  /** The Launchkey function lamps (fader buttons 5–8). */
-  functionLamps: BankLamp[];
-  /** The app's tooltip hook, passed to every control that has a tooltip key. */
-  tipAction?: TipAction;
-  /** A page tab was chosen. */
-  onChoosePage?: (id: string) => void;
-  /** A layer tab was chosen. */
-  onChooseLayer?: (id: string) => void;
-  /** A fader asked for a level (0–127). */
-  onLevel?: (id: string, level: number) => void;
-  /** A strip's name was pressed (open Channel, Effects, …). */
-  onOpen?: (id: string) => void;
-  /** A lamp asked to be switched to `on`. */
-  onLamp?: (id: string, on: boolean) => void;
-  /** A lamp with `long` was held. */
-  onLampLong?: (id: string) => void;
-  /** The hold on a `long` lamp ended. */
-  onLampRelease?: (id: string) => void;
-  /** The fader page button (the Launchkey's master fader button) was pressed: flip the page. */
-  onPageButton?: () => void;
-  /** The page button was held (the fader picker on the pads). */
-  onPageLong?: () => void;
-  /** The hold on the page button ended. */
-  onPageRelease?: () => void;
-  /**
-   * The form (`FADER_BANK_FORMS`): `tall` (the board's strips) or `short` (much less height, every
-   * control kept). Default: the form the assembled screen chose for the region, else `tall`.
-   */
-  form?: FaderBankForm;
-}
-
-type Cluster = 'parts' | 'groups' | 'empty' | 'master';
-
-const clusterOf = (strip: FaderStrip): Cluster =>
-  strip.kind === 'part' || strip.kind === 'off'
-    ? 'parts'
-    : strip.kind === 'parked'
-      ? 'empty'
-      : strip.kind === 'master'
-        ? 'master'
-        : 'groups';
-
-const isPartHue = (hue: string | undefined): hue is Part => hue === 'r1' || hue === 'r2' || hue === 'r3' || hue === 'l';
-
-/** A Yahaha strip or lamp identity on the library's slots: a part becomes its hue slot (`hues.ts`). */
-const faderHue = (hue: FaderStrip['hue']): FaderHue => (isPartHue(hue) ? PART_HUE_INDEX[hue] : hue);
-const lampHue = (hue: BankLamp['hue']): LampHue | undefined => (isPartHue(hue) ? PART_HUE_INDEX[hue] : hue);
-
-/** Which way the hardware fader must travel to pick the level up. */
-const takeoverWay = (strip: FaderStrip) =>
-  strip.away === undefined ? undefined : strip.away < strip.level ? 'up' : strip.away > strip.level ? 'down' : 'at';
-
-/** The grid's tracks: one per strip, plus a divider track where a new cluster (other than the empty slots) begins. */
-function layout(strips: FaderStrip[]) {
-  const tracks: string[] = [];
-  const columns: number[] = [];
-  const dividers: number[] = [];
-  strips.forEach((strip, i) => {
-    const cluster = clusterOf(strip);
-    if (i > 0 && cluster !== 'empty' && cluster !== clusterOf(strips[i - 1])) {
-      tracks.push('var(--space-1)');
-      dividers.push(tracks.length);
-    }
-    // Master is a little wider. A parked fader keeps a real strip's place and full height, like the
-    // hardware fader it mirrors, at three quarters of a strip's width, so live names ("Multi Pad")
-    // and keys keep theirs. A live strip never goes below its content (its name, its key; the
-    // sound ellipsizes), so the least width FADER_BANK_FORMS declares is the least it takes.
-    tracks.push(
-      cluster === 'master'
-        ? 'minmax(min-content, 1.25fr)'
-        : cluster === 'empty'
-          ? 'minmax(var(--space-4), 0.75fr)'
-          : 'minmax(min-content, 1fr)',
-    );
-    columns.push(tracks.length);
-  });
-  return { template: tracks.join(' '), columns, dividers };
-}
-
-function useTip(tipAction: TipAction | undefined, key: string | undefined) {
+function StripName({ strip, tipAction, onOpen }: { strip: FaderStripView; tipAction?: TipAction; onOpen?: (id: string) => void }) {
   const ref = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    const node = ref.current;
-    if (!node || !tipAction || key === undefined) return;
-    const handle = tipAction(node, key);
-    return () => handle?.destroy?.();
-  }, [tipAction, key]);
-  return ref;
-}
-
-/** Whether the strip draws any PartMarks (edited, missing, failed, off). */
-const hasMarks = (strip: FaderStrip) =>
-  strip.kind !== 'parked' &&
-  visibleMarks({ edited: strip.edited, missing: strip.missing, failed: strip.failed, off: strip.kind === 'off' }).length > 0;
-
-function StripName({
-  strip,
-  marksLine,
-  tipAction,
-  onOpen,
-}: {
-  strip: FaderStrip;
-  marksLine: boolean;
-  tipAction?: TipAction;
-  onOpen?: (id: string) => void;
-}) {
-  const ref = useTip(tipAction, strip.openTip);
-  const off = strip.kind === 'off';
-  // No native `title`: the app's tooltip (tipAction with openTip) explains the button, and a
-  // title would show a second, browser tooltip over it.
+  useTip(ref, { tip: strip.name.tip, tipAction });
   return (
     <Text
       as="button"
       size="inherit"
       leading="snug"
       ref={ref}
-      type="button"
-      className="yh-faderbank__name"
-      aria-label={strip.openName ?? strip.tag}
-      data-tip={strip.openTip}
+      className={strip.name.className}
+      {...strip.name.attrs}
       onClick={() => onOpen?.(strip.id)}
     >
-      <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{strip.tag}</Text>
-      <Text size="caption" leading="snug" className="yh-faderbank__sound">{strip.sound ?? ' '}</Text>
-      {/* The marks take their own line under the sound, so they never take its width. While any
-          strip in the bank has marks, every strip keeps the line, so the faders above end level. */}
-      {marksLine && (
-        <span className="yh-faderbank__marks">
-          <PartMarks size="strip" edited={strip.edited} missing={strip.missing} failed={strip.failed} off={off} />
-        </span>
-      )}
+      <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{strip.name.tag}</Text>
+      <Text size="caption" leading="snug" className="yh-faderbank__sound">{strip.name.sound}</Text>
+      {strip.marks && <span className={strip.marks.className}>{strip.marks.props && <PartMarks {...strip.marks.props} />}</span>}
     </Text>
   );
 }
@@ -302,54 +123,18 @@ function StripName({
  * column, row and foot gap. Both fill the box they are given; the travel takes what is left. Each
  * strip track is at least its content (`minmax(min-content, …)`), and the sound line has no
  * inline size of its own (it ellipsizes to the strip), so the least width is the names' and keys'.
+ *
+ * **Model** (2026-10, Svelte bindings): what it draws is `faderBankView` (`FaderBank.model.ts`);
+ * `FaderBank.svelte` renders the same view, and the name button's tooltip is the `tip.ts` store.
  */
-export function FaderBank({
-  strips,
-  pageTabs,
-  page,
-  layerTabs,
-  layer,
-  partLamps,
-  functionLamps,
-  tipAction,
-  onLevel,
-  onOpen,
-  onLamp,
-  onLampLong,
-  onLampRelease,
-  onPageButton,
-  onPageLong,
-  onPageRelease,
-  form: given,
-}: FaderBankProps) {
-  const form = useForm(FADER_BANK_FORMS, given);
-  const layered = layerTabs.length > 0 && layer !== layerTabs[0].id;
-  const word = (tab: TabItem | undefined) => (typeof tab?.label === 'string' ? tab.label : (tab?.name ?? ''));
-  const pageLabel = word(pageTabs.find((tab) => tab.id === page));
-  const otherLabel = word(pageTabs.find((tab) => tab.id !== page));
+export function FaderBank(props: FaderBankProps) {
+  const { tipAction, onLevel, onOpen, onLamp, onLampLong, onLampRelease, onPageButton, onPageLong, onPageRelease } = props;
+  const form = useForm(FADER_BANK_FORMS, props.form);
+  const view = faderBankView(props, form);
 
-  const { template, columns, dividers } = layout(strips);
-  const partStrips = strips.flatMap((strip, i) => (clusterOf(strip) === 'parts' ? [i] : []));
-  const masterAt = strips.findIndex((strip) => strip.kind === 'master');
-  const pageColumn = columns[masterAt >= 0 ? masterAt : strips.length - 1] ?? 1;
-  const away = strips.filter((strip) => strip.kind !== 'parked' && strip.away !== undefined);
-  const marksLine = strips.some(hasMarks);
-
-  const lampColumn = (lamp: BankLamp, i: number) => {
-    const at = strips.findIndex((strip) => strip.id === lamp.id);
-    return columns[at >= 0 ? at : (partStrips[i] ?? i)] ?? i + 1;
-  };
-
-  const lamp = (item: BankLamp) => (
+  const lamp = (item: BankLampView) => (
     <LampButton
-      label={item.label}
-      on={item.on}
-      hue={lampHue(item.hue)}
-      rec={item.rec}
-      waiting={item.waiting}
-      size="cell"
-      name={item.name}
-      tip={item.tip}
+      {...item.lamp}
       tipAction={tipAction}
       onToggle={(on) => onLamp?.(item.id, on)}
       onLongPress={item.long ? () => onLampLong?.(item.id) : undefined}
@@ -357,89 +142,37 @@ export function FaderBank({
     />
   );
 
-  // Soft takeover in words, for assistive tech only: on screen the strip's dashed outline and the
-  // Fader's ghost cap and arrow already say it, in the column itself.
-  const note =
-    away.length > 0 ? (
-      <span className="yh-faderbank__takeover yh-faderbank__visually-hidden" role="status">
-        {away.length === 1 && 'Soft takeover '}
-        <span>
-          {away.map((strip, i) => {
-            const way = takeoverWay(strip);
-            return (
-              <Fragment key={strip.id}>
-                {i > 0 && ', '}
-                {strip.tag}
-                {way === 'up' ? ' move up to' : way === 'down' ? ' move down to' : ' at'} {strip.value}
-              </Fragment>
-            );
-          })}
-        </span>
-      </span>
-    ) : undefined;
-
   return (
-    <Stack gap={form === 'short' ? 1 : 4} className="yh-faderbank" data-part="root" data-form={form} data-layered={layered || undefined}>
-      <div className="yh-faderbank__grid" style={{ gridTemplateColumns: template } as CSSProperties}>
-        {dividers.map((column) => (
-          <span key={`divider-${column}`} className="yh-faderbank__divider" style={{ gridColumn: column }} aria-hidden="true" />
+    <Stack gap={view.root.gap} className={view.root.className} {...view.root.attrs}>
+      <div className={view.grid.className} style={reactStyle(view.grid.style)}>
+        {view.dividers.map((divider) => (
+          <span key={divider.key} className={divider.className} style={reactStyle(divider.style)} {...divider.attrs} />
         ))}
-        {masterAt >= 0 && <span className="yh-faderbank__plate" data-part="plate" style={{ gridColumn: columns[masterAt] }} aria-hidden="true" />}
+        {view.plate && <span className={view.plate.className} style={reactStyle(view.plate.style)} {...view.plate.attrs} />}
 
-        {strips.map((strip, i) => {
-          const parked = strip.kind === 'parked';
-          const part = clusterOf(strip) === 'parts';
-          return (
-            <Stack
-              key={strip.id}
-              gap={1}
-              className="yh-faderbank__strip"
-              style={{ gridColumn: columns[i] }}
-              data-kind={strip.kind}
-              data-hue={isPartHue(strip.hue) ? PART_HUE_INDEX[strip.hue] : undefined}
-              data-away={!parked ? takeoverWay(strip) : undefined}
-            >
-              <Fader
-                name={strip.faderName}
-                value={strip.value}
-                level={strip.level}
-                meter={strip.meter}
-                meter2={strip.meter2}
-                peak={strip.peak}
-                away={strip.away}
-                kind={strip.kind}
-                hue={faderHue(strip.hue)}
-                layered={layered && part}
-                empty={parked}
-                fillHeight
-                tip={strip.tip}
-                tipAction={tipAction}
-                onlevel={(level) => onLevel?.(strip.id, level)}
-              />
-              {parked ? (
-                <Text size="inherit" leading="snug" className="yh-faderbank__name" aria-hidden="true">
-                  <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{' '}</Text>
-                  <Text size="caption" leading="snug" className="yh-faderbank__sound">{' '}</Text>
-                  {marksLine && <span className="yh-faderbank__marks" />}
-                </Text>
-              ) : (
-                <StripName strip={strip} marksLine={marksLine} tipAction={tipAction} onOpen={onOpen} />
-              )}
-            </Stack>
-          );
-        })}
+        {view.strips.map((strip) => (
+          <Stack key={strip.id} gap={1} className={strip.className} style={reactStyle(strip.style)} {...strip.attrs}>
+            <Fader {...strip.fader} tipAction={tipAction} onlevel={(level) => onLevel?.(strip.id, level)} />
+            {strip.parked ? (
+              <Text size="inherit" leading="snug" className={strip.name.className} {...strip.name.attrs}>
+                <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{strip.name.tag}</Text>
+                <Text size="caption" leading="snug" className="yh-faderbank__sound">{strip.name.sound}</Text>
+                {strip.marks && <span className={strip.marks.className} />}
+              </Text>
+            ) : (
+              <StripName strip={strip} tipAction={tipAction} onOpen={onOpen} />
+            )}
+          </Stack>
+        ))}
 
-        {partLamps.map((item, i) => (
-          <div key={item.id} className="yh-faderbank__lamp" style={{ gridColumn: lampColumn(item, i) }}>
+        {view.partLamps.map((item) => (
+          <div key={item.id} className={item.cell.className} style={reactStyle(item.cell.style)} {...item.cell.attrs}>
             {lamp(item)}
           </div>
         ))}
-        <div className="yh-faderbank__lamp yh-faderbank__lamp--page" style={{ gridColumn: pageColumn }}>
+        <div className={view.page.cell.className} style={reactStyle(view.page.cell.style)} {...view.page.cell.attrs}>
           <Button
-            label={pageLabel}
-            size="cell"
-            name={`Fader page is ${pageLabel}: click for ${otherLabel}`}
-            tip="mixer.page"
+            {...view.page.button}
             tipAction={tipAction}
             onPress={onPageButton}
             onLongPress={onPageLong}
@@ -448,25 +181,26 @@ export function FaderBank({
         </div>
       </div>
 
-      {functionLamps.length > 0 && (
-        <div className="yh-faderbank__foot">
-          <Group name="Functions" label={false} gap={3} className="yh-faderbank__functions">
-            {functionLamps.map((item) => (
+      {view.functions && (
+        <div className={view.functions.className}>
+          <Group name={view.functions.group.name} label={false} gap={view.functions.group.gap} className={view.functions.group.className}>
+            {view.functions.lamps.map((item) => (
               <Fragment key={item.id}>{lamp(item)}</Fragment>
             ))}
           </Group>
         </div>
       )}
-      {note}
+      {view.note && (
+        <span className={view.note.className} {...view.note.attrs}>
+          {view.note.lead}
+          <span>{view.note.text}</span>
+        </span>
+      )}
     </Stack>
   );
 }
 
-export interface FaderBankRegionProps extends FaderBankProps {
-  /** The region's name. Default "Mixer". */
-  name?: string;
-  /** The grid area the region fills in its screen. */
-  area?: string;
+export interface FaderBankRegionProps extends FaderBankRegionModelProps<ReactNode> {
   className?: string;
 }
 
