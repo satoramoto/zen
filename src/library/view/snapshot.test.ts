@@ -46,7 +46,7 @@ import { groupSample, groupSampleStories, groupStories, type GroupSampleArgs } f
 import { layerView, type LayerViewProps } from '../layout/Layer.model';
 import { layerStories } from '../layout/Layer.fixtures';
 import { screenView } from '../layout/Screen.model';
-import { screenArgs, screenSample, screenStories, screenStoryArgs } from '../layout/Screen.fixtures';
+import { screenArgs, screenSample, screenStories, screenStoryArgs, type ScreenArgs } from '../layout/Screen.fixtures';
 import { assembledPlacement, assembledScreenView } from '../layout/assembly/AssembledScreen.model';
 import { assemblyStories } from '../layout/assembly/Assembly.fixtures';
 import { scopePrinciples } from '../layout/assembly/principles';
@@ -90,5 +90,5 @@ snapshot('Group sample', (props) => groupSample(props as GroupSampleArgs), group
 snapshot('Layer', (props) => layerView(props as LayerViewProps), layerStories);
 snapshot('Screen', (props) => screenView(props, props), screenStories);
 snapshot('Screen (assembled)', (props) => screenView(props), assemblyStories);
-snapshot('Screen sample', (args) => screenSample({ ...screenArgs, ...args }), { Default: { args: screenStoryArgs.Default }, GridOnly: { args: screenStoryArgs.GridOnly } });
+snapshot('Screen sample', (args: Partial<ScreenArgs>) => screenSample({ ...screenArgs, ...args }),{ Default: { args: screenStoryArgs.Default }, GridOnly: { args: screenStoryArgs.GridOnly } });
 snapshot('AssembledScreen', (props) => assembledScreenView(props, assembledPlacement(props, { room: null, principles: scopePrinciples(null) })), assemblyStories as Fixtures<Parameters<typeof assembledScreenView>[0]>);
