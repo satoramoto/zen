@@ -1,23 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { CONTROL_SIZES } from '../Toggle/useToggle';
-import type { ToggleValue } from '../Checkbox/Checkbox';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { Radio } from './Radio';
+import RadioSvelte from './Radio.svelte';
+import { radioArgTypes, radioStories as s } from './Radio.fixtures';
 
-/** Every size, enabled and disabled, at one value; each its own (no shared name), so none unchecks another. */
-const sheet = (value: ToggleValue) => () => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', gap: 12, alignItems: 'center' }}>
-    {CONTROL_SIZES.map((size) => [
-      <Radio key={`${size}-idle`} size={size} defaultChecked={value}>
-        {`${size}, idle`}
-      </Radio>,
-      <Radio key={`${size}-disabled`} size={size} defaultChecked={value} disabled>
-        {`${size}, disabled`}
-      </Radio>,
-    ])}
-  </div>
-);
+// Every story is built from Radio.fixtures.ts (`story(s.Name)`), which the tree snapshot shares;
+// the toolbar's Renderer draws it with React's or Svelte's `Tree`. The plays are the behaviours.
+// The sheets' radios are each their own (no shared name), so none unchecks another.
 
 /**
  * A radio button: Checkbox's well made round, filled and lit with a dot when on. A real radio input
@@ -26,30 +17,20 @@ const sheet = (value: ToggleValue) => () => (
 const meta = {
   title: 'Design OS/Components/Core/Radio',
   component: Radio,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  argTypes: {
-    size: { control: 'select', options: CONTROL_SIZES },
-    disabled: { control: 'boolean' },
-  },
+  args: { onChange: fn() },
+  argTypes: radioArgTypes,
 } satisfies Meta<typeof Radio>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Radio, RadioSvelte);
 
 /** A group of three sharing a name. The arrows move the choice along it. */
 export const Group: Story = {
-  args: { onChange: fn() },
-  render: (args) => (
-    <div role="radiogroup" aria-label="Fit" style={{ display: 'grid', gap: 4 }}>
-      {['Fill', 'Fit', 'Stretch'].map((name, i) => (
-        <Radio key={name} {...args} name="fit" value={name} defaultChecked={i === 0}>
-          {name}
-        </Radio>
-      ))}
-    </div>
-  ),
+  ...story(s.Group),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const [fill, fit, stretch] = ['Fill', 'Fit', 'Stretch'].map((name) => canvas.getByRole('radio', { name }));
@@ -70,7 +51,7 @@ export const Group: Story = {
 
 /** On: filled and lit, with a dot. Picking it again keeps it checked. */
 export const Checked: Story = {
-  render: sheet(true),
+  ...story(s.Checked),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const disabled = canvas.getByRole('radio', { name: 'regular, disabled' });
@@ -85,7 +66,7 @@ export const Checked: Story = {
 
 /** Off: the empty well. Picking it checks it. */
 export const Unchecked: Story = {
-  render: sheet(false),
+  ...story(s.Unchecked),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const idle = canvas.getByRole('radio', { name: 'large, idle' });
@@ -101,7 +82,7 @@ export const Unchecked: Story = {
 
 /** Mixed: a dash, drawn only (HTML's radios have none): the input reads as unchecked, and picking it checks it. */
 export const Mixed: Story = {
-  render: sheet('mixed'),
+  ...story(s.Mixed),
   play: async ({ canvasElement }) => {
     const idle = within(canvasElement).getByRole('radio', { name: 'regular, idle' });
     await expect(idle).not.toBeChecked();

@@ -73,6 +73,24 @@ import { separatorView } from '../components/core/Separator/Separator.model';
 import { separatorStories } from '../components/core/Separator/Separator.fixtures';
 import { lineSliderView } from '../components/core/LineSlider/LineSlider.model';
 import { lineSliderStories } from '../components/core/LineSlider/LineSlider.fixtures';
+import { segmentedView } from '../components/core/Segmented/Segmented.model';
+import { segmentedStories } from '../components/core/Segmented/Segmented.fixtures';
+import { selectView } from '../components/core/Select/Select.model';
+import { selectStories } from '../components/core/Select/Select.fixtures';
+import { switchView, toggleView, type SwitchModelProps, type ToggleModelProps } from '../components/core/Toggle/Toggle.model';
+import { switchStories, toggleStories } from '../components/core/Toggle/Toggle.fixtures';
+import { disclosureView, type DisclosureModelProps } from '../components/core/Disclosure/Disclosure.model';
+import { disclosureStories } from '../components/core/Disclosure/Disclosure.fixtures';
+import { stepValueView } from '../components/core/StepValue/StepValue.model';
+import { stepValueStories } from '../components/core/StepValue/StepValue.fixtures';
+import { readoutView } from '../components/core/Readout/Readout.model';
+import { readoutStories } from '../components/core/Readout/Readout.fixtures';
+import { numberFieldView } from '../components/core/NumberField/NumberField.model';
+import { numberFieldStories } from '../components/core/NumberField/NumberField.fixtures';
+import { checkboxView } from '../components/core/Checkbox/Checkbox.model';
+import { checkboxStories } from '../components/core/Checkbox/Checkbox.fixtures';
+import { radioView } from '../components/core/Radio/Radio.model';
+import { radioStories } from '../components/core/Radio/Radio.fixtures';
 import { tabsView } from '../layout/Tabs.model';
 import { tabsStories } from '../layout/Tabs.fixtures';
 import { displayView } from '../yahaha/Display/Display.model';
@@ -159,6 +177,18 @@ snapshot('Hole', (props) => holeNode(undefined, (props as { name?: string }).nam
 snapshot('StatusDot', (props) => statusDotView(props), statusDotStories);
 snapshot('Separator', (props) => separatorView(props), separatorStories);
 snapshot('LineSlider', (props) => lineSliderView(props as Parameters<typeof lineSliderView>[0]), lineSliderStories);
+snapshot('Segmented', (props) => segmentedView(props as Parameters<typeof segmentedView>[0]), segmentedStories);
+// Select open (unless disabled), the held member highlighted: the menu is the part only a tree shows.
+snapshot('Select', (props) => selectView(props as Parameters<typeof selectView>[0], { open: !props.disabled, active: props.index ?? 0, quiet: false, id: 'uid' }), selectStories);
+// Toggle and Switch: the face, reading or name is the `children` slot; Switch and Disclosure drawn at their starting own value.
+snapshot('Toggle', (props: ToggleModelProps) => toggleView(props, kids(props).length > 0), toggleStories);
+snapshot('Switch', (props: SwitchModelProps) => switchView(props, props.defaultChecked ?? false, kids(props).length > 0), switchStories);
+snapshot('Disclosure', (props: DisclosureModelProps) => disclosureView(props, props.defaultExpanded ?? false), disclosureStories);
+snapshot('StepValue', (props) => stepValueView(props as Parameters<typeof stepValueView>[0]), stepValueStories);
+snapshot('Readout', (props) => readoutView(props as Parameters<typeof readoutView>[0]), readoutStories);
+snapshot('NumberField', (props) => numberFieldView(props as Parameters<typeof numberFieldView>[0]), numberFieldStories);
+snapshot('Checkbox', (props) => checkboxView(props, { label: 'children' in props }), checkboxStories);
+snapshot('Radio', (props) => radioView(props, { label: 'children' in props }, props.defaultChecked === 'mixed'), radioStories);
 snapshot('Tabs', (props) => tabsView(props), tabsStories);
 snapshot('Region',(props) => regionView(props as RegionDrawProps, {}, { uid: 'uid' }), regionStories);
 // A composite: Regions holding Groups of Buttons, and Regions with views (Tabs by name).

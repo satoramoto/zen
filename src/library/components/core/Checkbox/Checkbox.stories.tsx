@@ -1,22 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { CONTROL_SIZES } from '../Toggle/useToggle';
-import { Checkbox, type ToggleValue } from './Checkbox';
+import { fixtureStories, withRenderer } from '../../../stories/story';
+import { Checkbox } from './Checkbox';
+import CheckboxSvelte from './Checkbox.svelte';
+import { checkArgTypes, checkboxStories as s } from './Checkbox.fixtures';
 
-/** Every size, enabled and disabled, at one value. */
-const sheet = (value: ToggleValue) => () => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', gap: 12, alignItems: 'center' }}>
-    {CONTROL_SIZES.map((size) => [
-      <Checkbox key={`${size}-idle`} size={size} defaultChecked={value}>
-        {`${size}, idle`}
-      </Checkbox>,
-      <Checkbox key={`${size}-disabled`} size={size} defaultChecked={value} disabled>
-        {`${size}, disabled`}
-      </Checkbox>,
-    ])}
-  </div>
-);
+// Every story is built from Checkbox.fixtures.ts (`story(s.Name)`), which the tree snapshot shares;
+// the toolbar's Renderer draws it with React's or Svelte's `Tree`. The plays are the behaviours.
 
 /**
  * A checkbox on the theme's materials: a `well` box, filled and lit with a check when on. A real
@@ -25,22 +16,20 @@ const sheet = (value: ToggleValue) => () => (
 const meta = {
   title: 'Design OS/Components/Core/Checkbox',
   component: Checkbox,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  argTypes: {
-    size: { control: 'select', options: CONTROL_SIZES },
-    disabled: { control: 'boolean' },
-    defaultChecked: { control: 'select', options: [false, true, 'mixed'] },
-  },
+  args: { onChange: fn() },
+  argTypes: { ...checkArgTypes, defaultChecked: { control: 'select', options: [false, true, 'mixed'] } },
 } satisfies Meta<typeof Checkbox>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Checkbox, CheckboxSvelte);
 
 /** One checkbox to try. */
 export const Playground: Story = {
-  args: { children: 'Show the frame rate', size: 'regular', defaultChecked: false, disabled: false, onChange: fn() },
+  ...story(s.Playground),
   play: async ({ canvasElement, args }) => {
     const box = within(canvasElement).getByRole('checkbox', { name: 'Show the frame rate' });
     await userEvent.click(box);
@@ -53,9 +42,9 @@ export const Playground: Story = {
   },
 };
 
-/** On: the box filled and lit, with a check. */
+/** On: the box filled and lit, with a check. Every size, enabled and disabled. */
 export const Checked: Story = {
-  render: sheet(true),
+  ...story(s.Checked),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const disabled = canvas.getByRole('checkbox', { name: 'regular, disabled' });
@@ -73,7 +62,7 @@ export const Checked: Story = {
 
 /** Off: the empty well. Clicking the label checks it. */
 export const Unchecked: Story = {
-  render: sheet(false),
+  ...story(s.Unchecked),
   play: async ({ canvasElement }) => {
     const idle = within(canvasElement).getByRole('checkbox', { name: 'regular, idle' });
     await expect(idle).not.toBeChecked();
@@ -87,7 +76,7 @@ export const Unchecked: Story = {
 
 /** Mixed: a dash, for a box standing for things some of which are on. Clicking it checks it. */
 export const Mixed: Story = {
-  render: sheet('mixed'),
+  ...story(s.Mixed),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const idle = canvas.getByRole('checkbox', { name: 'regular, idle' });

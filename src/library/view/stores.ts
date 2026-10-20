@@ -9,6 +9,12 @@ import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
 import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
 import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
+import { bindSegmented, type SegmentedParams } from '../components/core/Segmented/segmentedInput';
+import { bindSelect, bindSelectMenu, type SelectMenuParams, type SelectParams } from '../components/core/Select/selectInput';
+import { bindStepAdjust, type StepAdjustParams } from '../components/core/StepValue/adjust';
+import { bindReadoutAdjust, type ReadoutAdjustParams } from '../components/core/Readout/adjust';
+import { bindNumberField, bindNumberFieldEditor, type NumberFieldEditorParams, type NumberFieldParams } from '../components/core/NumberField/numberFieldInput';
+import { bindCheckDefault, type CheckDefaultParams } from '../components/core/Checkbox/checkDefault';
 import { bindRoom, type RoomParams } from '../layout/assembly/room';
 import { bindReport, type ReportParams } from '../layout/assembly/report';
 import { bindRef, type RefParams } from '../layout/Screen.model';
@@ -80,6 +86,22 @@ export const stores = {
   focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
   /** LineSlider's keys and drag (`slide.ts`). */
   lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
+  /** Segmented's arrows, clicks and focus following the choice (`segmentedInput.ts`). */
+  segmented: keyed<SegmentedParams, 'onChange'>(bindSegmented, ['onChange']),
+  /** Select's trigger: keys, type-ahead, open and close (`selectInput.ts`). */
+  select: keyed<SelectParams, 'onState' | 'onChange'>(bindSelect, ['onState', 'onChange']),
+  /** Select's open menu: placement, rows and dismissal (`selectInput.ts`). */
+  selectMenu: keyed<SelectMenuParams, 'onState' | 'onChange'>(bindSelectMenu, ['onState', 'onChange']),
+  /** StepValue's drag, wheel, keys and double-click (`StepValue/adjust.ts`). */
+  stepAdjust: keyed<StepAdjustParams, 'onchange'>(bindStepAdjust, ['onchange']),
+  /** Readout's drag, wheel, keys and double-click (`Readout/adjust.ts`). */
+  readoutAdjust: keyed<ReadoutAdjustParams, 'onChange'>(bindReadoutAdjust, ['onChange']),
+  /** NumberField's drag, keys and double-click (`numberFieldInput.ts`). */
+  numberField: keyed<NumberFieldParams, 'onChange' | 'onRelease' | 'onEdit'>(bindNumberField, ['onChange', 'onRelease', 'onEdit']),
+  /** NumberField's editor while typing (`numberFieldInput.ts`). */
+  numberFieldEditor: keyed<NumberFieldEditorParams, 'onDraft' | 'onCommit' | 'onCancel'>(bindNumberFieldEditor, ['onDraft', 'onCommit', 'onCancel']),
+  /** An uncontrolled Checkbox's or Radio's starting state, set once (`checkDefault.ts`). */
+  checkDefault: keyed<CheckDefaultParams, never>(bindCheckDefault, []),
   /** An assembled screen's measured room (`layout/assembly/room.ts`). */
   room: keyed<RoomParams, 'onRoom'>(bindRoom, ['onRoom']),
   /** An assembled screen's placement, reported once per change (`layout/assembly/report.ts`). */

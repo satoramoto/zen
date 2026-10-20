@@ -8,9 +8,11 @@ import {
   type PointerEvent,
 } from 'react';
 import type { Dismissal } from '../Popover/Popover';
+import { TYPING_WINDOW } from './Select.model';
 
-/** How long a type-ahead keeps collecting before the next key starts a new word. */
-export const TYPING_WINDOW = 700;
+// Select itself now runs on the `select` and `selectMenu` stores (`selectInput.ts`); this hook stays
+// for AxisPicker, a React-only select-only combobox drawn by hand.
+export { TYPING_WINDOW };
 
 export interface UseSelectOptions {
   items: readonly string[];

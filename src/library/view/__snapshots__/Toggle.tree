@@ -1,0 +1,42 @@
+## Stacked
+<div class="lib-toggle" data-hint="Follow the link’s tempo" data-layout="stacked" data-part="root">
+  <span class="lib-text lib-tone lib-toggle__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "sync"
+  <button aria-label="sync" aria-pressed="false" class="lib-text lib-tone lib-toggle__key lib-focus-ring" data-part="key" data-role="label" data-tabular="" data-text-leading="tight" title="Sync to Link" type="button" @click=flip>
+    {children}
+
+## On
+<div class="lib-toggle" data-layout="stacked" data-on="true" data-part="root" style="--lib-toggle-ink: var(--hue-2)">
+  <span class="lib-text lib-tone lib-toggle__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "sync"
+  <button aria-label="sync" aria-pressed="true" class="lib-text lib-tone lib-toggle__key lib-focus-ring" data-on="true" data-part="key" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=flip>
+    {children}
+
+## Inside
+<div class="lib-toggle" data-layout="inside" data-part="root">
+  <span class="lib-text lib-tone lib-toggle__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="label">
+    "invert"
+  <button aria-label="invert" aria-pressed="false" class="lib-text lib-tone lib-toggle__key lib-focus-ring" data-part="key" data-role="label" data-tabular="" data-text-leading="tight" title="Flip the colours (I)" type="button" @click=flip>
+  <span class="lib-text lib-tone lib-toggle__readout" data-part="readout" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+    {children}
+
+## Momentary
+<div class="lib-toggle" data-layout="stacked" data-part="root">
+  <span class="lib-text lib-tone lib-toggle__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "tap"
+  <button aria-label="tap" class="lib-text lib-tone lib-toggle__key lib-focus-ring" data-part="key" data-role="label" data-tabular="" data-text-leading="tight" type="button" @pointerdown=down @pointerup=up @keydown=keyDown @keyup=keyUp>
+    {children}
+
+## Disabled #1
+<div class="lib-toggle" data-disabled="true" data-layout="stacked" data-part="root">
+  <span class="lib-text lib-tone lib-toggle__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "sync"
+  <button aria-label="sync" aria-pressed="false" class="lib-text lib-tone lib-toggle__key lib-focus-ring" data-part="key" data-role="label" data-tabular="" data-text-leading="tight" disabled="" type="button" @click=flip>
+    {children}
+
+## Disabled #2
+<div class="lib-toggle" data-disabled="true" data-layout="stacked" data-on="true" data-part="root">
+  <span class="lib-text lib-tone lib-toggle__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "sync"
+  <button aria-label="sync" aria-pressed="true" class="lib-text lib-tone lib-toggle__key lib-focus-ring" data-on="true" data-part="key" data-role="label" data-tabular="" data-text-leading="tight" disabled="" type="button" @click=flip>
+    {children}

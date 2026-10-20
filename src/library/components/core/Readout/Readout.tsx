@@ -1,30 +1,11 @@
-import { useRef } from 'react';
-import { Text } from '../../../primitives/Text';
-import { fraction, splitUnit, useAdjust } from './adjust';
+import { Tree } from '../../../view/Tree';
+import { readoutHandlers, readoutView, type ReadoutModelProps } from './Readout.model';
+import '../../../primitives/Text.css';
 import './Readout.css';
 
-export interface ReadoutProps {
-  /** The word at the left ("Feedback"); also the slider's accessible name. */
-  label: string;
-  /** The value, in `min`–`max`. */
-  value: number;
-  min?: number;
-  max?: number;
-  /** Where a double-click puts it; none: a double-click does nothing. */
-  defaultValue?: number;
-  /** The value as shown, unit included ("38%", "5.0 kHz", "1/8"); the unit is drawn smaller. Default: the number. */
-  display?: string;
-  /** The Launchkey knob that moves it ("K6"); empty: none. */
-  code?: string;
-  /** Shown, not settable: the label and value fade, the bar empties, nothing is sent. Stays focusable. */
-  disabled?: boolean;
-  /** The accessible name when the label alone isn't enough ("Delay feedback"). Default: the label. */
-  name?: string;
-  /** The tooltip key, rendered as `data-tip`. */
-  tip?: string;
-  /** A new whole value, from a drag, a wheel notch, a key or a double-click. */
-  onChange?: (value: number) => void;
-}
+// The props, the tree and the behaviour are framework-free, in the model and its `adjust.ts` store;
+// this file and `Readout.svelte` only hand the model's tree to their `Tree`.
+export type ReadoutProps = ReadoutModelProps;
 
 /**
  * Readout: the Effects page's parameter control, a labelled value with a bar.
@@ -50,76 +31,13 @@ export interface ReadoutProps {
  * and the knob code is a small framed key cap rather than loose text. *State clarity:* disabled
  * draws the bar and key cap dashed and its text in `--text-3`, never the faint `--text-4`.
  * *Contrast:* the track is a tint of the text colour, so it shows on light and dark palettes alike;
- * focus is a `:focus-visible` ring in the accent (craft-details.md, "Focus States").
+ * focus is a `:focus-visible` ring in the accent (craft-details.md, "Focus States"). *Headless*
+ * (the view tree): the drag, wheel and keys are the `readoutAdjust` store (`adjust.ts`).
  *
  * **Kept.** One compact hairline row per parameter with an empty code column when no knob moves it,
  * so rows line up; the unit split off the number and drawn smaller; every input and the slider's
  * role, name, `aria-valuetext` ("Feedback 38%") and disabled-but-focusable behaviour.
  */
-export function Readout({
-  label,
-  value,
-  min = 0,
-  max = 127,
-  defaultValue,
-  display,
-  code = '',
-  disabled = false,
-  name,
-  tip,
-  onChange,
-}: ReadoutProps) {
-  const bar = useRef<HTMLSpanElement>(null);
-  const ref = useAdjust<HTMLDivElement>({
-    value,
-    min,
-    max,
-    defaultValue,
-    disabled,
-    span: () => bar.current?.getBoundingClientRect().width || 96,
-    onChange,
-  });
-
-  const shown = display ?? String(value);
-  const [number, unit] = splitUnit(shown);
-  const fill = disabled ? 0 : fraction(value, min, max);
-
-  return (
-    <div
-      ref={ref}
-      className={disabled ? 'yh-readout yh-readout--disabled' : 'yh-readout'}
-      role="slider"
-      tabIndex={0}
-      aria-label={name ?? label}
-      aria-valuemin={min}
-      aria-valuemax={max}
-      aria-valuenow={value}
-      aria-valuetext={`${label} ${shown}`}
-      aria-disabled={disabled ? 'true' : undefined}
-      data-tip={tip}
-    >
-      <Text role="body" size="caption" case="label" className="yh-readout-label">
-        {label}
-      </Text>
-      <span className="yh-readout-value">
-        <Text role="numeral" size="body" className="yh-readout-number">
-          {number}
-        </Text>
-        {/* Always drawn, empty when there's no unit, so every row's last digit lines up. */}
-        <Text role="body" size="caption" className="yh-readout-unit">
-          {unit}
-        </Text>
-      </span>
-      <span className="yh-readout-code">
-        {code && (
-          <Text as="kbd" role="numeral" size="caption" weight="body">
-            {code}
-          </Text>
-        )}
-      </span>
-      <span ref={bar} className="yh-readout-bar" data-part="bar" aria-hidden="true">
-        <span className="yh-readout-fill" style={{ width: `${fill * 100}%` }} />
-      </span>
-    </div>
-  );
+export function Readout(props: ReadoutProps) {
+  return <Tree tree={readoutView(props)} handlers={readoutHandlers(props)} />;
 }
