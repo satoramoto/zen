@@ -1,43 +1,52 @@
-import { useEffect, useState, type ButtonHTMLAttributes } from 'react';
-import type { TipAction } from '../../components/music/Pad/Pad';
+import { useEffect, useState } from 'react';
 import { Text } from '../../primitives/Text';
+import type { TextModelProps } from '../../primitives/Text.model';
+import { oneTouchPickerView, type OneTouchNumberView, type OneTouchPickerProps, type TipAction } from './OneTouchPicker.model';
 import './OneTouchPicker.css';
 
-/** A number's button: a `numeral` Text at label size; renders `data-tip` and runs the tooltip action with its own key. */
-function NumberButton({ tip, tipAction, role, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { tip: string; tipAction?: TipAction }) {
+export {
+  oneTouchPickerView,
+  oneTouchGroupName,
+  oneTouchNumberName,
+  oneTouchFace,
+  type OneTouchFace,
+  type OneTouchNumberView,
+  type OneTouchPickerProps,
+  type OneTouchPickerView,
+} from './OneTouchPicker.model';
+
+/** A number's button: a `numeral` Text drawn from its view; runs the tooltip action with its own key. */
+function NumberButton({
+  number,
+  text,
+  tipAction,
+  onApply,
+}: {
+  number: OneTouchNumberView;
+  text: TextModelProps;
+  tipAction?: TipAction;
+  onApply?: (n: number) => void;
+}) {
   const [node, setNode] = useState<HTMLButtonElement | null>(null);
+  const { tip, n } = number;
   useEffect(() => {
     if (!node || !tipAction) return;
     const handle = tipAction(node, tip);
     return () => handle?.destroy?.();
   }, [node, tip, tipAction]);
-  return <Text {...rest} as="button" role="numeral" size="label" ariaRole={role} ref={setNode} type="button" data-tip={tip} />;
-}
-
-export interface OneTouchPickerProps {
-  /** The applied One Touch, 1 to `numbers`; 0 when none is. */
-  applied?: number;
-  /** How many One Touch settings the style has: numbers past it are disabled. */
-  count?: number;
-  /** How many numbers to draw. */
-  numbers?: number;
-  /** The words before the numbers. */
-  label?: string;
-  /** `horizontal`: label then one strip of numbers. `vertical`: the label on top, the strip under it. */
-  orientation?: 'horizontal' | 'vertical';
-  /**
-   * Cells: no wrapper. The label and each number are top-level elements, 1 + `numbers` of them,
-   * each filling its parent's cell; the parent supplies the group role and name.
-   */
-  cells?: boolean;
-  /** Cells: the outlines' and the applied mark's colour, `neutral` or `a` (the style's own colour: a One Touch is a setting of the style). */
-  hue?: 'neutral' | 'a';
-  /** The group's accessible name. Default: says which is applied and the Launchkey's Shift + pads 9 to 12. */
-  name?: string;
-  /** Called with 1 to `count` when a number is pressed (applies it at once). */
-  onApply?: (n: number) => void;
-  /** The app's tooltip action, applied to each number with its own key (`ots.<n>`). */
-  tipAction?: TipAction;
+  return (
+    <Text
+      {...text}
+      as="button"
+      ref={setNode}
+      className={number.className}
+      {...number.attrs}
+      disabled={number.disabled}
+      onClick={() => onApply?.(n)}
+    >
+      {n}
+    </Text>
+  );
 }
 
 /**
@@ -69,63 +78,34 @@ export interface OneTouchPickerProps {
  * the group's default name says which is applied; `cells` still renders without a wrapper for a
  * parent grid; `data-face` and `data-tip` (`ots.<n>`) are unchanged.
  */
-export function OneTouchPicker({
-  applied = 0,
-  count = 4,
-  numbers = 4,
-  label = 'One Touch',
-  orientation = 'horizontal',
-  cells = false,
-  hue = 'neutral',
-  name,
-  onApply,
-  tipAction,
-}: OneTouchPickerProps) {
-  const list = Array.from({ length: Math.max(0, numbers) }, (_, i) => i + 1);
-  const spoken =
-    name ??
-    `One Touch Setting (OTS): ${applied ? `${applied} applied` : 'none applied'}. ` +
-      'Click to apply; on the Launchkey, Shift + pads 9 to 12';
+export function OneTouchPicker(props: OneTouchPickerProps) {
+  const { onApply, tipAction } = props;
+  const view = oneTouchPickerView(props);
 
-  const buttons = list.map((n) => {
-    const on = n === applied;
-    const disabled = n > count;
-    const face = cells ? (disabled ? 'disabled' : on ? 'on' : 'off') : on ? 'chosen' : 'off';
-    return (
-      <NumberButton
-        key={n}
-        className={`yh-onetouchpicker__number${cells ? ' yh-onetouchpicker__cell' : ''}`}
-        data-part="number"
-        data-material="key"
-        disabled={disabled}
-        aria-pressed={on}
-        aria-label={on ? `One Touch ${n}, applied (Shift + pad ${n + 8})` : `Apply One Touch ${n} (Shift + pad ${n + 8})`}
-        data-face={face}
-        data-ink={cells ? hue : undefined}
-        tip={`ots.${n}`}
-        tipAction={tipAction}
-        onClick={() => onApply?.(n)}
-      >
-        {n}
-      </NumberButton>
-    );
-  });
+  const buttons = view.numbers.map((number) => (
+    <NumberButton key={number.n} number={number} text={view.numberText} tipAction={tipAction} onApply={onApply} />
+  ));
+  const label = (
+    <Text {...view.label.text} className={view.label.className} {...view.label.attrs}>
+      {view.label.word}
+    </Text>
+  );
 
-  if (cells) {
+  if (view.cells) {
     return (
       <>
-        <Text role="caption" case="label" className="yh-onetouchpicker__label yh-onetouchpicker__cell" data-part="label">{label}</Text>
+        {label}
         {buttons}
       </>
     );
   }
 
   return (
-    <div className="yh-onetouchpicker" data-part="root" data-orientation={orientation} role="group" aria-label={spoken}>
-      <Text role="caption" case="label" className="yh-onetouchpicker__label" data-part="label" aria-hidden="true">
-        {label}
-      </Text>
-      <span className="yh-onetouchpicker__strip" data-part="strip">{buttons}</span>
+    <div className={view.root.className} {...view.root.attrs}>
+      {label}
+      <span className={view.strip.className} {...view.strip.attrs}>
+        {buttons}
+      </span>
     </div>
   );
 }

@@ -1,38 +1,13 @@
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { Text } from '../../primitives/Text';
+import { accentBlockView, type AccentBlockModelProps } from './AccentBlock.model';
+import { useTip } from './useTip';
 import './AccentBlock.css';
 
-/** The app's tooltip hook (a Svelte action): given the element and a tooltip key; may return a handle. */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => { update?: (key: string) => void; destroy?: () => void } | void;
+// The props and the block are framework-free, in the model; `AccentBlock.svelte` renders the same view.
+export type { TipAction, AccentBlockModelProps } from './AccentBlock.model';
 
-export interface AccentBlockProps {
-  /** The text in the block ("Sunday Drive Pop", "Style", "Swap R1"). */
-  label: string;
-  /** Shown when the label is empty or whitespace only. */
-  empty?: string;
-  /** `button` calls `onPress` (the style name); `span` is a plain label (the knob page). */
-  as?: 'span' | 'button';
-  /** `line`: a control's height (the style line); `knob`: three quarters of it (a band header row). */
-  size?: 'line' | 'knob';
-  /** A fixed width in px; a longer label ends in an ellipsis. Default: as wide as the label. */
-  width?: number;
-  /** The button's accessible name when the label alone isn't enough ("Sunday Drive Pop: open the Browser"). */
-  name?: string;
-  /** The tooltip key, set as `data-tip` on the button. Ignored for `span`. */
-  tip?: string;
-  /** The app's tooltip hook, applied to the button when `tip` is set. Ignored for `span`. */
-  tipAction?: TipAction;
-  /** Called on a click, Space or Enter (`button` only). */
-  onPress?: () => void;
-  /**
-   * The button's trailing chevron. Default `true`; `false` where the block already sits between
-   * step keys (‹ name ›), so the line doesn't carry three arrows. Ignored for `span`.
-   */
-  chevron?: boolean;
-}
+export type AccentBlockProps = AccentBlockModelProps;
 
 /**
  * AccentBlock: "the device", named in a block marked with the style's hue.
@@ -67,49 +42,31 @@ export interface AccentBlockProps {
  * tooltip key and hook on the button only; Space and Enter press it (a native button); focus
  * ring only on keyboard focus.
  */
-export function AccentBlock({ label, empty = '—', as = 'span', size = 'line', width, name, tip, tipAction, onPress, chevron = true }: AccentBlockProps) {
-  const shown = label.trim() === '' ? empty : label;
-  const style: CSSProperties | undefined = width === undefined ? undefined : { width: `${width}px` };
-  const ref = useRef<HTMLButtonElement>(null);
+export function AccentBlock(props: AccentBlockProps) {
+  const { tip, tipAction, onPress } = props;
+  const view = accentBlockView(props);
+  const ref = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    if (as !== 'button' || !tip || !tipAction || !ref.current) return;
-    const handle = tipAction(ref.current, tip);
-    return () => handle?.destroy?.();
-  }, [as, tip, tipAction]);
+  useTip(ref, { tip, tipAction, enabled: view.tip });
 
-  if (as === 'button') {
-    return (
-      <Text
-        as="button"
-        role="label"
-        size="body"
-        leading="tight"
-        tabular
-        ref={ref}
-        type="button"
-        className="yh-accentblock"
-        style={style}
-        aria-label={name}
-        data-part="block"
-        data-material="key"
-        data-face="accent"
-        data-size={size}
-        data-tip={tip}
-        onClick={() => onPress?.()}
-      >
-        <span className="yh-accentblock__text" data-part="text">{shown}</span>
-        {chevron && (
-          <svg className="yh-accentblock__chevron" data-part="chevron" viewBox="0 0 12 12" aria-hidden="true">
-            <path d="M4.5 2.5 8 6l-3.5 3.5" />
-          </svg>
-        )}
-      </Text>
-    );
-  }
   return (
-    <Text role="label" size="body" leading="tight" tabular className="yh-accentblock" style={style} data-part="block" data-face="accent" data-size={size}>
-      <span className="yh-accentblock__text" data-part="text">{shown}</span>
+    <Text
+      as={view.as}
+      {...view.text}
+      ref={ref}
+      className={view.block.className}
+      style={view.style as CSSProperties | undefined}
+      {...view.block.attrs}
+      onClick={view.as === 'button' ? () => onPress?.() : undefined}
+    >
+      <span className="yh-accentblock__text" data-part="text">
+        {view.shown}
+      </span>
+      {view.chevron && (
+        <svg className="yh-accentblock__chevron" data-part="chevron" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M4.5 2.5 8 6l-3.5 3.5" />
+        </svg>
+      )}
     </Text>
   );
 }

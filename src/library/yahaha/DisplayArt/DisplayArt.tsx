@@ -1,9 +1,10 @@
+import { displayArtView, type DisplayArtModelProps } from './DisplayArt.model';
 import './DisplayArt.css';
 
-export interface DisplayArtProps {
-  /** The fade from the ground on the left, which keeps the readouts over the art brighter. */
-  fade?: boolean;
-}
+// The props and the view are framework-free, in the model; `DisplayArt.svelte` renders the same view.
+export { displayArtView, type DisplayArtModelProps } from './DisplayArt.model';
+
+export type DisplayArtProps = DisplayArtModelProps;
 
 /**
  * DisplayArt: the display's background picture at its right edge.
@@ -38,9 +39,10 @@ export interface DisplayArtProps {
  * `--yh-displayart-sun` (the picture's four colours: the sky, the far and near hills and the sun,
  * each a theme mix that switches on `--scheme-light`).
  */
-export function DisplayArt({ fade = true }: DisplayArtProps) {
+export function DisplayArt(props: DisplayArtProps) {
+  const { attrs, fade } = displayArtView(props);
   return (
-    <div className="yh-displayart" data-part="art" data-fade={fade} aria-hidden="true">
+    <div className="yh-displayart" {...attrs}>
       <div className="yh-displayart__sun" data-part="sun">
         <div className="yh-displayart__disc" data-part="disc" />
       </div>
