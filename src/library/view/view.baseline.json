@@ -1,13 +1,4 @@
 {
   "components/core/AxisPicker/AxisPicker.tsx": 8,
-  "components/core/Checkbox/Checkbox.tsx": 11,
-  "components/core/Disclosure/Disclosure.tsx": 3,
-  "components/core/NumberField/NumberField.tsx": 7,
-  "components/core/Popover/Popover.tsx": 1,
-  "components/core/Radio/Radio.tsx": 7,
-  "components/core/Readout/Readout.tsx": 9,
-  "components/core/Segmented/Segmented.tsx": 4,
-  "components/core/Select/Select.tsx": 8,
-  "components/core/StepValue/StepValue.tsx": 5,
-  "components/core/Toggle/Toggle.tsx": 8
+  "components/core/Popover/Popover.tsx": 1
 }

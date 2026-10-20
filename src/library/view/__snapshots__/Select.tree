@@ -1,0 +1,183 @@
+## Closed
+<div class="lib-select" data-open="true" data-part="root" style="--lib-select-chars: 4">
+  <button aria-activedescendant="uid-option-0" aria-controls="uid-menu" aria-expanded="true" aria-haspopup="listbox" aria-label="Mode" class="lib-text lib-tone lib-select__trigger" data-part="trigger" data-role="body" data-text-size="label" data-text-weight="strong" role="combobox" type="button" use:select={"items":["neon","soft","band"],"index":0,"open":true,"active":0,"disabled":false,"onState":"state","onChange":"change"}>
+    <span class="lib-select__value" data-part="value">
+      "neon"
+    <span aria-hidden="true" class="lib-select__caret" data-part="caret">
+  <div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:selectMenu={"items":["neon","soft","band"],"index":0,"active":0,"onState":"state","onChange":"change"}>
+    <Surface aria-label="Mode" as="div" className="lib-layer lib-popover__panel lib-select__menu" data-part="panel" id="uid-menu" layer="float" radius="card" role="listbox">
+      #children
+        <div key=neon-0 aria-selected="true" class="lib-text lib-tone lib-select__option" data-active="" data-chosen="" data-part="option" data-role="body" data-text-size="label" id="uid-option-0" role="option">
+          <span class="lib-select__value">
+            "neon"
+        <div key=soft-1 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-1" role="option">
+          <span class="lib-select__value">
+            "soft"
+        <div key=band-2 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-2" role="option">
+          <span class="lib-select__value">
+            "band"
+
+## Open
+<div class="lib-select" data-open="true" data-part="root" style="--lib-select-chars: 4">
+  <button aria-activedescendant="uid-option-1" aria-controls="uid-menu" aria-expanded="true" aria-haspopup="listbox" aria-label="Mode" class="lib-text lib-tone lib-select__trigger" data-part="trigger" data-role="body" data-text-size="label" data-text-weight="strong" role="combobox" type="button" use:select={"items":["neon","soft","band"],"index":1,"open":true,"active":1,"disabled":false,"onState":"state","onChange":"change"}>
+    <span class="lib-select__value" data-part="value">
+      "soft"
+    <span aria-hidden="true" class="lib-select__caret" data-part="caret">
+  <div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:selectMenu={"items":["neon","soft","band"],"index":1,"active":1,"onState":"state","onChange":"change"}>
+    <Surface aria-label="Mode" as="div" className="lib-layer lib-popover__panel lib-select__menu" data-part="panel" id="uid-menu" layer="float" radius="card" role="listbox">
+      #children
+        <div key=neon-0 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-0" role="option">
+          <span class="lib-select__value">
+            "neon"
+        <div key=soft-1 aria-selected="true" class="lib-text lib-tone lib-select__option" data-active="" data-chosen="" data-part="option" data-role="body" data-text-size="label" id="uid-option-1" role="option">
+          <span class="lib-select__value">
+            "soft"
+        <div key=band-2 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-2" role="option">
+          <span class="lib-select__value">
+            "band"
+
+## Captioned
+<div class="lib-select" data-open="true" data-part="root" style="--lib-select-chars: 4">
+  <span class="lib-text lib-tone lib-select__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="label">
+    "Mode"
+  <button aria-activedescendant="uid-option-0" aria-controls="uid-menu" aria-expanded="true" aria-haspopup="listbox" aria-label="Mode" class="lib-text lib-tone lib-select__trigger" data-part="trigger" data-role="body" data-text-size="label" data-text-weight="strong" role="combobox" type="button" use:select={"items":["neon","soft","band"],"index":0,"open":true,"active":0,"disabled":false,"onState":"state","onChange":"change"}>
+    <span class="lib-select__value" data-part="value">
+      "neon"
+    <span aria-hidden="true" class="lib-select__caret" data-part="caret">
+  <div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:selectMenu={"items":["neon","soft","band"],"index":0,"active":0,"onState":"state","onChange":"change"}>
+    <Surface aria-label="Mode" as="div" className="lib-layer lib-popover__panel lib-select__menu" data-part="panel" id="uid-menu" layer="float" radius="card" role="listbox">
+      #children
+        <div key=neon-0 aria-selected="true" class="lib-text lib-tone lib-select__option" data-active="" data-chosen="" data-part="option" data-role="body" data-text-size="label" id="uid-option-0" role="option">
+          <span class="lib-select__value">
+            "neon"
+        <div key=soft-1 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-1" role="option">
+          <span class="lib-select__value">
+            "soft"
+        <div key=band-2 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-2" role="option">
+          <span class="lib-select__value">
+            "band"
+
+## LongList
+<div class="lib-select" data-open="true" data-part="root" style="--lib-select-chars: 11">
+  <span class="lib-text lib-tone lib-select__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="label">
+    "Blend"
+  <button aria-activedescendant="uid-option-11" aria-controls="uid-menu" aria-expanded="true" aria-haspopup="listbox" aria-label="Blend" class="lib-text lib-tone lib-select__trigger" data-part="trigger" data-role="body" data-text-size="label" data-text-weight="strong" role="combobox" type="button" use:select={"items":["normal","multiply","screen","overlay","darken","lighten","color dodge","color burn","hard light","soft light","difference","exclusion","hue","saturation","color","luminosity"],"index":11,"open":true,"active":11,"disabled":false,"onState":"state","onChange":"change"}>
+    <span class="lib-select__value" data-part="value">
+      "exclusion"
+    <span aria-hidden="true" class="lib-select__caret" data-part="caret">
+  <div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:selectMenu={"items":["normal","multiply","screen","overlay","darken","lighten","color dodge","color burn","hard light","soft light","difference","exclusion","hue","saturation","color","luminosity"],"index":11,"active":11,"onState":"state","onChange":"change"}>
+    <Surface aria-label="Blend" as="div" className="lib-layer lib-popover__panel lib-select__menu" data-part="panel" id="uid-menu" layer="float" radius="card" role="listbox">
+      #children
+        <div key=normal-0 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-0" role="option">
+          <span class="lib-select__value">
+            "normal"
+        <div key=multiply-1 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-1" role="option">
+          <span class="lib-select__value">
+            "multiply"
+        <div key=screen-2 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-2" role="option">
+          <span class="lib-select__value">
+            "screen"
+        <div key=overlay-3 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-3" role="option">
+          <span class="lib-select__value">
+            "overlay"
+        <div key=darken-4 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-4" role="option">
+          <span class="lib-select__value">
+            "darken"
+        <div key=lighten-5 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-5" role="option">
+          <span class="lib-select__value">
+            "lighten"
+        <div key=color dodge-6 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-6" role="option">
+          <span class="lib-select__value">
+            "color dodge"
+        <div key=color burn-7 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-7" role="option">
+          <span class="lib-select__value">
+            "color burn"
+        <div key=hard light-8 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-8" role="option">
+          <span class="lib-select__value">
+            "hard light"
+        <div key=soft light-9 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-9" role="option">
+          <span class="lib-select__value">
+            "soft light"
+        <div key=difference-10 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-10" role="option">
+          <span class="lib-select__value">
+            "difference"
+        <div key=exclusion-11 aria-selected="true" class="lib-text lib-tone lib-select__option" data-active="" data-chosen="" data-part="option" data-role="body" data-text-size="label" id="uid-option-11" role="option">
+          <span class="lib-select__value">
+            "exclusion"
+        <div key=hue-12 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-12" role="option">
+          <span class="lib-select__value">
+            "hue"
+        <div key=saturation-13 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-13" role="option">
+          <span class="lib-select__value">
+            "saturation"
+        <div key=color-14 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-14" role="option">
+          <span class="lib-select__value">
+            "color"
+        <div key=luminosity-15 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-15" role="option">
+          <span class="lib-select__value">
+            "luminosity"
+
+## FixedWidth
+<div class="lib-select" data-open="true" data-part="root" style="--lib-select-chars: 11; --lib-select-width: 96px">
+  <button aria-activedescendant="uid-option-6" aria-controls="uid-menu" aria-expanded="true" aria-haspopup="listbox" aria-label="Blend" class="lib-text lib-tone lib-select__trigger" data-part="trigger" data-role="body" data-text-size="label" data-text-weight="strong" role="combobox" type="button" use:select={"items":["normal","multiply","screen","overlay","darken","lighten","color dodge","color burn","hard light","soft light","difference","exclusion","hue","saturation","color","luminosity"],"index":6,"open":true,"active":6,"disabled":false,"onState":"state","onChange":"change"}>
+    <span class="lib-select__value" data-part="value">
+      "color dodge"
+    <span aria-hidden="true" class="lib-select__caret" data-part="caret">
+  <div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:selectMenu={"items":["normal","multiply","screen","overlay","darken","lighten","color dodge","color burn","hard light","soft light","difference","exclusion","hue","saturation","color","luminosity"],"index":6,"active":6,"onState":"state","onChange":"change"}>
+    <Surface aria-label="Blend" as="div" className="lib-layer lib-popover__panel lib-select__menu" data-part="panel" id="uid-menu" layer="float" radius="card" role="listbox">
+      #children
+        <div key=normal-0 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-0" role="option">
+          <span class="lib-select__value">
+            "normal"
+        <div key=multiply-1 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-1" role="option">
+          <span class="lib-select__value">
+            "multiply"
+        <div key=screen-2 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-2" role="option">
+          <span class="lib-select__value">
+            "screen"
+        <div key=overlay-3 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-3" role="option">
+          <span class="lib-select__value">
+            "overlay"
+        <div key=darken-4 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-4" role="option">
+          <span class="lib-select__value">
+            "darken"
+        <div key=lighten-5 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-5" role="option">
+          <span class="lib-select__value">
+            "lighten"
+        <div key=color dodge-6 aria-selected="true" class="lib-text lib-tone lib-select__option" data-active="" data-chosen="" data-part="option" data-role="body" data-text-size="label" id="uid-option-6" role="option">
+          <span class="lib-select__value">
+            "color dodge"
+        <div key=color burn-7 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-7" role="option">
+          <span class="lib-select__value">
+            "color burn"
+        <div key=hard light-8 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-8" role="option">
+          <span class="lib-select__value">
+            "hard light"
+        <div key=soft light-9 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-9" role="option">
+          <span class="lib-select__value">
+            "soft light"
+        <div key=difference-10 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-10" role="option">
+          <span class="lib-select__value">
+            "difference"
+        <div key=exclusion-11 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-11" role="option">
+          <span class="lib-select__value">
+            "exclusion"
+        <div key=hue-12 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-12" role="option">
+          <span class="lib-select__value">
+            "hue"
+        <div key=saturation-13 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-13" role="option">
+          <span class="lib-select__value">
+            "saturation"
+        <div key=color-14 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-14" role="option">
+          <span class="lib-select__value">
+            "color"
+        <div key=luminosity-15 aria-selected="false" class="lib-text lib-tone lib-select__option" data-part="option" data-role="body" data-text-size="label" id="uid-option-15" role="option">
+          <span class="lib-select__value">
+            "luminosity"
+
+## Disabled
+<div class="lib-select" data-disabled="true" data-part="root" style="--lib-select-chars: 4">
+  <button aria-controls="uid-menu" aria-expanded="false" aria-haspopup="listbox" aria-label="Mode" class="lib-text lib-tone lib-select__trigger" data-part="trigger" data-role="body" data-text-size="label" data-text-weight="strong" disabled="" role="combobox" type="button" use:select={"items":["neon","soft","band"],"index":0,"open":false,"active":0,"disabled":true,"onState":"state","onChange":"change"}>
+    <span class="lib-select__value" data-part="value">
+      "neon"
+    <span aria-hidden="true" class="lib-select__caret" data-part="caret">

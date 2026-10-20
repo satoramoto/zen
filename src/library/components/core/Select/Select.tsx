@@ -1,27 +1,20 @@
-import type { CSSProperties } from 'react';
-import { Text } from '../../../primitives/Text';
+import { useId, useState, useSyncExternalStore } from 'react';
+import { Tree } from '../../../view/Tree';
 import { useControlContext } from '../../../primitives/Stack';
-import { Popover } from '../Popover/Popover';
+import { viewState } from '../../../view/viewState';
+import { SELECT_CLOSED, selectHandlers, selectView, type SelectModelProps } from './Select.model';
 import { TYPING_WINDOW, useSelect, type UseSelectOptions } from './useSelect';
+import '../../../primitives/Text.css';
+import '../../../primitives/Surface.css';
+import '../Popover/Popover.css';
 import './Select.css';
 
+// The props and the tree are framework-free, in the model; the behaviour is the `select` and
+// `selectMenu` stores (`selectInput.ts`). `Select.svelte` draws the same tree.
 export { TYPING_WINDOW, useSelect, type UseSelectOptions };
 
-export interface SelectProps {
-  items: readonly string[];
-  index: number;
+export interface SelectProps extends SelectModelProps {
   onChange(next: number): void;
-  disabled?: boolean;
-  /** The accessible name; falls back to `name`. */
-  label?: string;
-  /** A visible caption before the field. */
-  name?: string;
-  /** In px. Settle caller-owned labels so changing the selection can't resize a panel. */
-  width?: number;
-  className?: string;
-  title?: string;
-  /** A sentence for the host's hint strip, on the root as `data-hint`. */
-  hint?: string;
 }
 
 /**
@@ -32,7 +25,8 @@ export interface SelectProps {
  * sits in. The open menu is ours, not the system's, so it wears the same theme as everything
  * around it.
  *
- * **Behaviour.** An ARIA select-only combobox (behaviour in `useSelect`). Click, Enter or Space
+ * **Behaviour.** An ARIA select-only combobox (behaviour in the `select` and `selectMenu` stores,
+ * `selectInput.ts`). Click, Enter or Space
  * opens; closed, the arrows, Home, End and type-ahead pick straight away; open, they move the
  * highlight and Enter takes it. A letter repeated walks the members starting with it; a word
  * searches. `onChange` fires only on a change. Focus never leaves the trigger. Escape, a pointer
@@ -46,79 +40,18 @@ export interface SelectProps {
  * context changes the look, never a per-use style.
  *
  * **Parts.** `root` (`--lib-select-chars`, the longest member; `--lib-select-width` when `width`
- * is set), `caption` (the `name`), `trigger` (a `key`), `value`, `caret`, `menu` (a `Popover`,
- * so a float `Layer`, at least the trigger's width), `option` (`data-active` while highlighted,
- * `data-chosen` for the held member).
+ * is set), `caption` (the `name`), `trigger` (a `key`), `value`, `caret`, `menu` (drawn as a
+ * `Popover` is, so a float `Layer` in the top layer, at least the trigger's width), `option`
+ * (`data-active` while highlighted, `data-chosen` for the held member).
  */
-export function Select({ items, index, onChange, disabled = false, label, name, width, className, title, hint }: SelectProps) {
-  const chars = Math.max(0, ...items.map((item) => item.length));
-  const s = useSelect({ items, index, onChange, disabled });
+export function Select(props: SelectProps) {
+  // Open and the highlighted row: view state the stores set through `state`.
+  const [state] = useState(() => viewState(SELECT_CLOSED));
+  const view = useSyncExternalStore(state.subscribe, state.get);
   // In a toolbar Group the trigger is quiet: the context decides the look, not the caller.
   const { quiet } = useControlContext();
-  // `role` is the ARIA role here; on a Text that prop is the type role.
-  const { role: triggerRole, ...trigger } = s.triggerProps;
-
-  return (
-    <div
-      className={`lib-select${className ? ` ${className}` : ''}`}
-      data-part="root"
-      data-disabled={disabled || undefined}
-      data-open={s.open || undefined}
-      data-quiet={quiet || undefined}
-      data-hint={hint}
-      style={
-        {
-          '--lib-select-chars': chars,
-          ...(width === undefined ? {} : { '--lib-select-width': `${width}px` }),
-        } as CSSProperties
-      }
-    >
-      {name && (
-        <Text role="body" size="label" case="label" className="lib-select__caption" data-part="caption">
-          {name}
-        </Text>
-      )}
-      <Text
-        as="button"
-        role="body"
-        size="label"
-        weight="strong"
-        ariaRole={triggerRole}
-        {...trigger}
-        className="lib-select__trigger"
-        data-part="trigger"
-        aria-label={label ?? name}
-        title={title}
-      >
-        <span className="lib-select__value" data-part="value">
-          {items[s.at] ?? ''}
-        </span>
-        <span className="lib-select__caret" data-part="caret" aria-hidden="true" />
-      </Text>
-      {s.open && (
-        <Popover anchor={s.trigger} onDismiss={s.dismiss} id={s.menuId} className="lib-select__menu" role="listbox" label={label ?? name}>
-          {items.map((item, which) => {
-            // `role` is the ARIA role here; on a Text that prop is the type role.
-            const { role, ...option } = s.optionProps(which);
-            return (
-              <Text
-                as="div"
-                role="body"
-                size="label"
-                ariaRole={role}
-                key={`${item}-${which}`}
-                {...option}
-                className="lib-select__option"
-                data-part="option"
-              >
-                <span className="lib-select__value">{item}</span>
-              </Text>
-            );
-          })}
-        </Popover>
-      )}
-    </div>
-  );
+  const id = useId();
+  return <Tree tree={selectView(props, { ...view, quiet, id })} handlers={selectHandlers(props, state.set)} />;
 }
 
 export default Select;

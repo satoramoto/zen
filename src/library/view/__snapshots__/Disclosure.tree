@@ -1,0 +1,104 @@
+## Playground
+<button aria-controls="advanced-panel" aria-expanded="false" aria-label="Advanced" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="regular" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #1
+<button aria-expanded="false" aria-label="mini, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="mini" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #2
+<button aria-expanded="false" aria-label="mini, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="mini" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #3
+<button aria-expanded="false" aria-label="small, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="small" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #4
+<button aria-expanded="false" aria-label="small, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="small" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #5
+<button aria-expanded="false" aria-label="regular, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="regular" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #6
+<button aria-expanded="false" aria-label="regular, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="regular" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #7
+<button aria-expanded="false" aria-label="large, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="large" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #8
+<button aria-expanded="false" aria-label="large, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="large" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #9
+<button aria-expanded="false" aria-label="xlarge, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="xlarge" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Closed #10
+<button aria-expanded="false" aria-label="xlarge, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="xlarge" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #1
+<button aria-expanded="true" aria-label="mini, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="mini" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #2
+<button aria-expanded="true" aria-label="mini, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="mini" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #3
+<button aria-expanded="true" aria-label="small, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="small" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #4
+<button aria-expanded="true" aria-label="small, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="small" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #5
+<button aria-expanded="true" aria-label="regular, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="regular" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #6
+<button aria-expanded="true" aria-label="regular, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="regular" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #7
+<button aria-expanded="true" aria-label="large, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="large" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #8
+<button aria-expanded="true" aria-label="large, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="large" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #9
+<button aria-expanded="true" aria-label="xlarge, idle" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="xlarge" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">
+
+## Open #10
+<button aria-expanded="true" aria-label="xlarge, disabled" class="lib-disclosure lib-sized lib-focus-ring" data-part="root" data-size="xlarge" disabled="" type="button" @click=flip>
+  <svg aria-hidden="true" class="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" stroke="currentColor">

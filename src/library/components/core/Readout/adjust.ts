@@ -1,9 +1,8 @@
 // A Readout's maths and its press-drag-wheel-key handling, ported from the original's readout.ts
-// (yahaha/src/ui/Readout). Pure functions, and one React hook, `useAdjust`, in place of the
-// original's Svelte action `adjust`. Named adjust.ts, not readout.ts: on a case-insensitive file
-// system `./readout` and `./Readout` (the .tsx) resolve to the same file.
-
-import { useEffect, useRef, type RefObject } from 'react';
+// (yahaha/src/ui/Readout). Pure functions, then `bindReadoutAdjust`, a plain store registered as
+// `readoutAdjust` in `src/library/view/stores.ts` (in place of the original's Svelte action
+// `adjust`): Readout's tree binds it by name. Named adjust.ts, not readout.ts: on a
+// case-insensitive file system `./readout` and `./Readout` (the .tsx) resolve to the same file.
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
@@ -40,8 +39,8 @@ export function splitUnit(value: string): [string, string] {
   return [value, ''];
 }
 
-/** What `useAdjust` needs: the value, its range, and where a change goes. */
-export interface AdjustParams {
+/** What `bindReadoutAdjust` needs: the value, its range, and where a change goes. */
+export interface ReadoutAdjustParams {
   value: number;
   min: number;
   max: number;
@@ -49,8 +48,6 @@ export interface AdjustParams {
   defaultValue?: number;
   /** Shown, not settable: nothing is sent. */
   disabled?: boolean;
-  /** The px a drag across the whole range takes (a Readout's bar width). */
-  span: () => number;
   /** A new whole value, different from the one shown. */
   onChange?: (value: number) => void;
 }
@@ -58,110 +55,110 @@ export interface AdjustParams {
 /** The keys a focused control handles: none of them reach the window's shortcuts. */
 const KEYS = new Set(['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Enter']);
 
+/** The drag span when the bar can't be measured. */
+const FALLBACK_SPAN = 96;
+
 /**
- * Press anywhere on the element and drag sideways (relative to the press, like a fader: the span
- * stands for the whole range); a wheel notch or an arrow key steps it, Page Up / Down by ten steps,
- * Home and End to the ends; a double-click puts it back to its default. A press without movement
- * sends nothing; while dragging, at most one change per animation frame, and the last one on release.
+ * Press anywhere on the node and drag sideways (relative to the press, like a fader: the width of
+ * its `[data-part="bar"]`, measured at the press, stands for the whole range); a wheel notch or an
+ * arrow key steps it, Page Up / Down by ten steps, Home and End to the ends; a double-click puts it
+ * back to its default. A press without movement sends nothing; while dragging, at most one change
+ * per animation frame, and the last one on release; the node is marked `data-dragging` meanwhile.
  *
- * Listeners are native, not React props: the wheel must be non-passive to keep the page from
- * scrolling, and the keys must stop at the element so the window's shortcuts never see them.
+ * Listeners are native: the wheel must be non-passive to keep the page from scrolling, and the keys
+ * must stop at the node so the window's shortcuts never see them.
  */
-export function useAdjust<T extends HTMLElement>(params: AdjustParams): RefObject<T | null> {
-  const ref = useRef<T>(null);
-  const latest = useRef(params);
-  latest.current = params;
+export function bindReadoutAdjust(node: HTMLElement, initial: ReadoutAdjustParams): { update(params: ReadoutAdjustParams): void; destroy(): void } {
+  let p = initial;
+  let drag: { id: number; x0: number; v0: number; width: number; sent: number } | null = null;
+  let pending: number | null = null;
+  let frame = 0;
 
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    let drag: { id: number; x0: number; v0: number; width: number; sent: number } | null = null;
-    let pending: number | null = null;
-    let frame = 0;
+  const span = () => node.querySelector<HTMLElement>('[data-part="bar"]')?.getBoundingClientRect().width || FALLBACK_SPAN;
 
-    function send(v: number) {
-      const p = latest.current;
-      if (p.disabled || v === p.value) return;
+  function send(v: number) {
+    if (p.disabled || v === p.value) return;
+    p.onChange?.(v);
+  }
+  function flush() {
+    frame = 0;
+    if (pending === null || !drag) return;
+    const v = pending;
+    pending = null;
+    if (v !== drag.sent) {
+      drag.sent = v;
       p.onChange?.(v);
     }
-    function flush() {
-      frame = 0;
-      if (pending === null || !drag) return;
-      const v = pending;
-      pending = null;
-      if (v !== drag.sent) {
-        drag.sent = v;
-        latest.current.onChange?.(v);
+  }
+  function down(e: PointerEvent) {
+    if (p.disabled || e.button !== 0) return;
+    drag = { id: e.pointerId, x0: e.clientX, v0: p.value, width: span(), sent: p.value };
+    if (typeof node.setPointerCapture === 'function') {
+      try {
+        node.setPointerCapture(e.pointerId);
+      } catch {
+        // A synthetic pointer (tests) can't be captured; the drag still works.
       }
     }
-    function down(e: PointerEvent) {
-      const p = latest.current;
-      if (p.disabled || e.button !== 0) return;
-      drag = { id: e.pointerId, x0: e.clientX, v0: p.value, width: p.span(), sent: p.value };
-      if (typeof node!.setPointerCapture === 'function') {
-        try {
-          node!.setPointerCapture(e.pointerId);
-        } catch {
-          // A synthetic pointer (tests) can't be captured; the drag still works.
-        }
-      }
-      node!.dataset.dragging = '';
-    }
-    function move(e: PointerEvent) {
-      if (!drag || e.pointerId !== drag.id) return;
-      const p = latest.current;
-      const v = dragValue(drag.v0, e.clientX - drag.x0, drag.width, p.min, p.max);
-      if (v === drag.sent && pending === null) return;
-      pending = v;
-      if (typeof requestAnimationFrame !== 'function') flush();
-      else if (!frame) frame = requestAnimationFrame(flush);
-    }
-    function up(e: PointerEvent) {
-      if (!drag || e.pointerId !== drag.id) return;
-      if (frame) cancelAnimationFrame(frame);
-      flush();
-      drag = null;
-      delete node!.dataset.dragging;
-    }
-    function wheel(e: WheelEvent) {
-      const p = latest.current;
-      if (p.disabled) return;
-      e.preventDefault();
-      const dir = e.deltaY < 0 || e.deltaX > 0 ? 1 : -1;
-      send(clamp(p.value + dir * stepOf(p.min, p.max), p.min, p.max));
-    }
-    function key(e: KeyboardEvent) {
-      if (!KEYS.has(e.key)) return;
-      e.preventDefault();
-      e.stopPropagation();
-      const p = latest.current;
-      const step = stepOf(p.min, p.max);
-      const to: Record<string, number> = {
-        ArrowRight: p.value + step,
-        ArrowUp: p.value + step,
-        ArrowLeft: p.value - step,
-        ArrowDown: p.value - step,
-        PageUp: p.value + 10 * step,
-        PageDown: p.value - 10 * step,
-        Home: p.min,
-        End: p.max,
-      };
-      if (e.key in to) send(clamp(to[e.key], p.min, p.max));
-    }
-    function dblclick() {
-      const p = latest.current;
-      if (p.defaultValue !== undefined) send(p.defaultValue);
-    }
+    node.dataset.dragging = '';
+  }
+  function move(e: PointerEvent) {
+    if (!drag || e.pointerId !== drag.id) return;
+    const v = dragValue(drag.v0, e.clientX - drag.x0, drag.width, p.min, p.max);
+    if (v === drag.sent && pending === null) return;
+    pending = v;
+    if (typeof requestAnimationFrame !== 'function') flush();
+    else if (!frame) frame = requestAnimationFrame(flush);
+  }
+  function up(e: PointerEvent) {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (frame) cancelAnimationFrame(frame);
+    flush();
+    drag = null;
+    delete node.dataset.dragging;
+  }
+  function wheel(e: WheelEvent) {
+    if (p.disabled) return;
+    e.preventDefault();
+    const dir = e.deltaY < 0 || e.deltaX > 0 ? 1 : -1;
+    send(clamp(p.value + dir * stepOf(p.min, p.max), p.min, p.max));
+  }
+  function key(e: KeyboardEvent) {
+    if (!KEYS.has(e.key)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const step = stepOf(p.min, p.max);
+    const to: Record<string, number> = {
+      ArrowRight: p.value + step,
+      ArrowUp: p.value + step,
+      ArrowLeft: p.value - step,
+      ArrowDown: p.value - step,
+      PageUp: p.value + 10 * step,
+      PageDown: p.value - 10 * step,
+      Home: p.min,
+      End: p.max,
+    };
+    if (e.key in to) send(clamp(to[e.key], p.min, p.max));
+  }
+  function dblclick() {
+    if (p.defaultValue !== undefined) send(p.defaultValue);
+  }
 
-    node.addEventListener('pointerdown', down);
-    node.addEventListener('pointermove', move);
-    node.addEventListener('pointerup', up);
-    node.addEventListener('pointercancel', up);
-    node.addEventListener('wheel', wheel, { passive: false });
-    node.addEventListener('keydown', key);
-    node.addEventListener('dblclick', dblclick);
-    return () => {
+  node.addEventListener('pointerdown', down);
+  node.addEventListener('pointermove', move);
+  node.addEventListener('pointerup', up);
+  node.addEventListener('pointercancel', up);
+  node.addEventListener('wheel', wheel, { passive: false });
+  node.addEventListener('keydown', key);
+  node.addEventListener('dblclick', dblclick);
+  return {
+    update(next) {
+      p = next;
+    },
+    destroy() {
       if (frame) cancelAnimationFrame(frame);
+      drag = null;
+      delete node.dataset.dragging;
       node.removeEventListener('pointerdown', down);
       node.removeEventListener('pointermove', move);
       node.removeEventListener('pointerup', up);
@@ -169,8 +166,6 @@ export function useAdjust<T extends HTMLElement>(params: AdjustParams): RefObjec
       node.removeEventListener('wheel', wheel);
       node.removeEventListener('keydown', key);
       node.removeEventListener('dblclick', dblclick);
-    };
-  }, []);
-
-  return ref;
+    },
+  };
 }

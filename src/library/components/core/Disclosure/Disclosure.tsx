@@ -1,20 +1,15 @@
-import { useToggle, type ControlSize } from '../Toggle/useToggle';
+import { useState, useSyncExternalStore } from 'react';
+import { Tree } from '../../../view/Tree';
+import { viewState } from '../../../view/viewState';
+import { disclosureHandlers, disclosureView, type DisclosureModelProps } from './Disclosure.model';
 import '../Toggle/size.css';
-import { focusRing } from '../../../primitives/Ring';
 import './Disclosure.css';
 
-export interface DisclosureProps {
-  /** What it shows or hides. */
-  'aria-label': string;
-  size?: ControlSize;
-  disabled?: boolean;
-  /** Controlled; leave it out to let it keep its own state from `defaultExpanded`. */
-  expanded?: boolean;
-  defaultExpanded?: boolean;
-  onChange?: (expanded: boolean) => void;
-  /** The id of what it shows or hides. */
-  controls?: string;
-}
+// The props and the tree are framework-free, in the model; this file and `Disclosure.svelte` only
+// hand its tree to their `Tree`, with its own value as their view state.
+export type { DisclosureModelProps } from './Disclosure.model';
+
+export type DisclosureProps = DisclosureModelProps;
 
 /**
  * A disclosure button: shows or hides what it names.
@@ -29,33 +24,11 @@ export interface DisclosureProps {
  * **Parts** (`data-part`): `root` (the button: a square of the size's height, the theme's `key`
  * material, its pressed shadow while held), `chevron`.
  */
-export function Disclosure({
-  size = 'regular',
-  disabled,
-  expanded,
-  defaultExpanded = false,
-  onChange,
-  controls,
-  'aria-label': ariaLabel,
-}: DisclosureProps) {
-  const [open, set] = useToggle(expanded, defaultExpanded, onChange);
-  return (
-    <button
-      type="button"
-      className={`lib-disclosure lib-sized ${focusRing}`}
-      data-part="root"
-      data-size={size}
-      aria-label={ariaLabel}
-      aria-expanded={open}
-      aria-controls={controls}
-      disabled={disabled}
-      onClick={() => set(!open)}
-    >
-      <svg className="lib-disclosure__chevron" data-part="chevron" viewBox="0 0 12 12" aria-hidden="true">
-        <path d="M2.4 4.4 6 8 9.6 4.4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </button>
-  );
+export function Disclosure(props: DisclosureProps) {
+  // Its own value (unless `expanded` owns it): view state the flip sets.
+  const [own] = useState(() => viewState(props.defaultExpanded ?? false));
+  const value = useSyncExternalStore(own.subscribe, own.get);
+  return <Tree tree={disclosureView(props, value)} handlers={disclosureHandlers(props, value, own.set)} />;
 }
 
 export default Disclosure;
