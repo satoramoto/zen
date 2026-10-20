@@ -1,8 +1,10 @@
 export * from './param';
 export { format, noteName, widestText } from './format';
-export { defaultOrigin, originFraction, fillFrom, useReserved, hintAttribute, type FillOrigin, type ParamVars } from './fill';
+export { defaultOrigin, originFraction, fillFrom, reservedVars, useReserved, hintAttribute, type FillOrigin, type ParamVars } from './fill';
 export {
-  useParamGesture,
+  bindParamGesture,
+  paramGesture,
+  gestureText,
   isFine,
   FINE_KEY,
   stepDetent,
@@ -11,7 +13,6 @@ export {
   type ParamKeyStep,
   type ParamAxis,
   type ParamAnchor,
-  type ParamGestureOptions,
-  type ParamGesture,
-  type ParamSurfaceProps,
-} from './useParamGesture';
+  type ParamGestureParams,
+} from './paramGesture';
+export { useParamGesture, type ParamGestureOptions, type ParamGesture, type ParamSurfaceProps } from './useParamGesture';

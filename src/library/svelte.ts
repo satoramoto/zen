@@ -122,6 +122,12 @@ import type { SongFormProps as SongFormModelProps } from './yahaha/SongForm/Song
 import type { FaderBankModelProps, FaderBankRegionModelProps } from './yahaha/FaderBank/FaderBank.model';
 import type { KnobBankProps as KnobBankModelProps, KnobBankRegionModelProps } from './yahaha/KnobBank/KnobBank.model';
 import type { PadBankProps as PadBankModelProps, PadBankRegionProps as PadBankRegionModelProps } from './yahaha/PadBank/PadBank.model';
+import PageListSvelte from './components/core/PageList/PageList.svelte';
+import SliderSvelte from './components/core/Slider/Slider.svelte';
+import type { SliderModelProps } from './components/core/Slider/Slider.model';
+import FolderListSvelte from './components/core/FolderList/FolderList.svelte';
+import type { PageListModelProps } from './components/core/PageList/PageList.model';
+import type { FolderListModelProps } from './components/core/FolderList/FolderList.model';
 
 // The theme: the `theme` action, the scope, and the system mode.
 export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './svelte/theme.svelte';
@@ -298,6 +304,47 @@ export type LineSliderProps = LineSliderModelProps;
 export const LineSlider = LineSliderSvelte as unknown as Component<LineSliderProps>;
 export const lineSlider = actionOf(bindLineSlider);
 
+// Lane S1-B: Modal and its Sheet form (body and actions as snippets).
+import ModalSvelte from './components/core/Modal/Modal.svelte';
+import SheetSvelte from './components/core/Modal/Sheet.svelte';
+import type { ModalModelProps, SheetModelProps } from './components/core/Modal/Modal.model';
+export type { SheetSide } from './components/core/Modal/Modal.model';
+export interface ModalProps extends ModalModelProps {
+  actions?: Snippet;
+  children?: Snippet;
+}
+export const Modal = ModalSvelte as unknown as Component<ModalProps>;
+export interface SheetProps extends SheetModelProps {
+  actions?: Snippet;
+  children?: Snippet;
+}
+export const Sheet = SheetSvelte as unknown as Component<SheetProps>;
+
+// Lane S1-B: ActionButton (its face's content as a snippet) and SearchField (`bind:ref` is the input).
+import ActionButtonSvelte from './components/core/ActionButton/ActionButton.svelte';
+import SearchFieldSvelte from './components/core/SearchField/SearchField.svelte';
+import type { ActionButtonModelProps } from './components/core/ActionButton/ActionButton.model';
+import type { SearchFieldModelProps } from './components/core/SearchField/SearchField.model';
+export type { ActionTone } from './components/core/ActionButton/ActionButton.model';
+export interface ActionButtonProps extends ActionButtonModelProps {
+  children?: Snippet;
+}
+export const ActionButton = ActionButtonSvelte as unknown as Component<ActionButtonProps>;
+export interface SearchFieldProps extends SearchFieldModelProps {
+  ref?: HTMLInputElement | null;
+}
+export const SearchField = SearchFieldSvelte as unknown as Component<SearchFieldProps, {}, 'ref'>;
+
+// Lane S1-B: Popover (the panel as a snippet; `createHoverIntent` for a hover-opened one).
+import PopoverSvelte from './components/core/Popover/Popover.svelte';
+import type { PopoverBindingProps } from './components/core/Popover/Popover.model';
+export type { Dismissal, PopupBox, PopoverAnchor } from './components/core/Popover/placement';
+export { createHoverIntent, type HoverIntentStore, type HoverIntentOptions, type HoverPanel } from './components/core/Popover/hoverIntent';
+export interface PopoverProps extends PopoverBindingProps {
+  children?: Snippet;
+}
+export const Popover = PopoverSvelte as unknown as Component<PopoverProps>;
+
 export type StatusDotProps = StatusDotModelProps;
 export const StatusDot = StatusDotSvelte as unknown as Component<StatusDotProps>;
 
@@ -312,6 +359,17 @@ export const SettingsRow = SettingsRowSvelte as unknown as Component<SettingsRow
 export type { TabItemModel as TabItem, TipAction as TabsTipAction } from './layout/Tabs.model';
 export type TabsProps = TabsModelProps<string | Snippet>;
 export const Tabs = TabsSvelte as unknown as Component<TabsProps>;
+// Lane S1-B: Slider (the Param gesture and the typed readout are stores its tree binds).
+export type { SliderLayout, SliderSide, SliderTyping } from './components/core/Slider/Slider.model';
+export type SliderProps = SliderModelProps;
+export const Slider = SliderSvelte as unknown as Component<SliderProps>;
+// Lane S1-B: PageList and FolderList.
+export type { PageItem } from './components/core/PageList/PageList.model';
+export type PageListProps = PageListModelProps;
+export const PageList = PageListSvelte as unknown as Component<PageListProps>;
+export type { FolderItem } from './components/core/FolderList/FolderList.model';
+export type FolderListProps = FolderListModelProps;
+export const FolderList = FolderListSvelte as unknown as Component<FolderListProps>;
 // Lane D2: Yahaha's AppBar, MetronomePopover and HealthSlot.
 export type HealthSlotProps = HealthSlotModelProps;
 export const HealthSlot = HealthSlotSvelte as unknown as Component<HealthSlotProps>;

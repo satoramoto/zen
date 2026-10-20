@@ -3,8 +3,14 @@
 // first use, as the React side is.
 import type { Component } from 'svelte';
 import Button from '../components/core/Button/Button.svelte';
+import ActionButton from '../components/core/ActionButton/ActionButton.svelte';
+import SearchField from '../components/core/SearchField/SearchField.svelte';
 import LampButton from '../components/core/LampButton/LampButton.svelte';
 import LineSlider from '../components/core/LineSlider/LineSlider.svelte';
+import Slider from '../components/core/Slider/Slider.svelte';
+import Popover from '../components/core/Popover/Popover.svelte';
+import Modal from '../components/core/Modal/Modal.svelte';
+import Sheet from '../components/core/Modal/Sheet.svelte';
 import Separator from '../components/core/Separator/Separator.svelte';
 import SettingsRow from '../components/core/SettingsRow/SettingsRow.svelte';
 import StatusDot from '../components/core/StatusDot/StatusDot.svelte';
@@ -22,6 +28,8 @@ import BarReadout from '../components/music/BarReadout/BarReadout.svelte';
 import SendReadout from '../components/music/SendReadout/SendReadout.svelte';
 import SoundCell from '../components/music/SoundCell/SoundCell.svelte';
 import RackCell from '../components/music/RackCell/RackCell.svelte';
+import PageList from '../components/core/PageList/PageList.svelte';
+import FolderList from '../components/core/FolderList/FolderList.svelte';
 import Group from '../layout/Group.svelte';
 import Region from '../layout/Region.svelte';
 import Tabs from '../layout/Tabs.svelte';
@@ -63,9 +71,15 @@ export function svelteComponent(name: string): Component<any> {
     SlotCall,
     Surface,
     Button,
+    ActionButton,
+    SearchField,
     Knob,
     LampButton,
     LineSlider,
+    Slider,
+    Popover,
+    Modal,
+    Sheet,
     Separator,
     SettingsRow,
     Stack,
@@ -104,6 +118,8 @@ export function svelteComponent(name: string): Component<any> {
     SendReadout,
     SoundCell,
     RackCell,
+    PageList,
+    FolderList,
   } as Record<string, Component<any>>;
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);

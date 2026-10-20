@@ -1,29 +1,13 @@
-import { useRef, type KeyboardEvent } from 'react';
-import { Text } from '../../../primitives/Text';
+import { Tree } from '../../../view/Tree';
+import { pageListHandlers, pageListView, type PageListModelProps } from './PageList.model';
+import '../../../primitives/Text.css';
 import './PageList.css';
 
-/** One page in a PageList. */
-export interface PageItem {
-  /** What `onChoose` carries and `chosen` names. */
-  id: string;
-  /** The page's name ("Chord & Split"). */
-  label: string;
-  /** The tooltip key, set as `data-tip`. */
-  tip?: string;
-}
+// The props, the tree and the behaviour are framework-free, in the model and its `pageListKeys.ts`
+// store; this file and `PageList.svelte` only hand the model's tree to their `Tree`.
+export type { PageItem } from './PageList.model';
 
-export interface PageListProps {
-  /** The pages, top to bottom. */
-  pages: PageItem[];
-  /** The open page's `id`; `null`: none. */
-  chosen?: string | null;
-  /** The list's accessible name ("Settings pages"). */
-  label?: string;
-  /** Called with a page's `id` on a click, or when ↑ ↓ Home End move to it. */
-  onChoose?: (id: string) => void;
-}
-
-const KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'] as const;
+export type PageListProps = PageListModelProps;
 
 /**
  * A vertical list of pages, one row each, with the page's name alone: the Settings screen's left
@@ -54,41 +38,6 @@ const KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'] as const;
  * `aria-current="page"`; ↑ ↓ wrap, Home and End jump, each move focusing the row and calling
  * `onChoose`. Controlled: a click never moves `chosen` itself; the parent does.
  */
-export function PageList({ pages, chosen = null, label = 'Pages', onChoose }: PageListProps) {
-  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
-
-  function onKeyDown(event: KeyboardEvent<HTMLElement>, index: number) {
-    const key = event.key as (typeof KEYS)[number];
-    if (!KEYS.includes(key) || pages.length === 0) return;
-    event.preventDefault();
-    const to = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: pages.length - 1 }[key];
-    const target = (to + pages.length) % pages.length;
-    buttons.current[target]?.focus();
-    onChoose?.(pages[target].id);
-  }
-
-  return (
-    <nav className="yh-page-list" aria-label={label}>
-      {pages.map((page, i) => (
-        <Text
-          as="button"
-          role="body"
-          weight="strong"
-          tabular
-          key={page.id}
-          ref={(node) => {
-            buttons.current[i] = node;
-          }}
-          type="button"
-          className="yh-page-list__row"
-          aria-current={page.id === chosen ? 'page' : undefined}
-          data-tip={page.tip}
-          onClick={() => onChoose?.(page.id)}
-          onKeyDown={(event) => onKeyDown(event, i)}
-        >
-          <span className="yh-page-list__name">{page.label}</span>
-        </Text>
-      ))}
-    </nav>
-  );
+export function PageList(props: PageListProps) {
+  return <Tree tree={pageListView(props)} handlers={pageListHandlers(props)} />;
 }

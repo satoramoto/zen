@@ -1,0 +1,59 @@
+## WithActions
+<div class="lib-text lib-tone lib-modal" data-kind="modal" data-modal="" data-role="body">
+  <div aria-hidden="true" class="lib-modal__scrim" data-part="scrim" @click=close>
+  <div aria-label="Delete take" aria-modal="true" class="lib-modal__dialog" data-part="dialog" role="dialog" tabindex="-1" use:focusTrap={} use:dialogEscape={"onClose":"close"}>
+    <Surface as="div" className="lib-layer lib-modal__pane" data-part="pane" layer="overlay" radius="card">
+      #children
+        <div class="lib-modal__head" data-part="head">
+          <h2 class="lib-text lib-tone lib-modal__title" data-part="title" data-role="display" data-text-size="heading">
+            "Delete take"
+          <button aria-label="Close" class="lib-text lib-tone lib-action-button-face lib-focus-ring lib-modal__close" data-kind="button" data-part="close" data-role="label" data-size="medium" data-text-case="none" data-text-leading="tight" data-tone="quiet" type="button" @click=close>
+            <svg aria-hidden="true" height="9" viewBox="0 0 9 9" width="9">
+              <path d="M1 1l7 7M8 1l-7 7" fill="none" stroke-width="1.2" stroke="currentColor">
+        <div class="lib-text lib-tone lib-modal__body" data-part="body" data-role="body" data-text-size="inherit">
+          {children}
+
+## NoActions
+<div class="lib-text lib-tone lib-modal" data-kind="modal" data-modal="" data-role="body">
+  <div aria-hidden="true" class="lib-modal__scrim" data-part="scrim" @click=close>
+  <div aria-label="Delete take" aria-modal="true" class="lib-modal__dialog" data-part="dialog" role="dialog" tabindex="-1" use:focusTrap={} use:dialogEscape={"onClose":"close"}>
+    <Surface as="div" className="lib-layer lib-modal__pane" data-part="pane" layer="overlay" radius="card">
+      #children
+        <div class="lib-modal__head" data-part="head">
+          <h2 class="lib-text lib-tone lib-modal__title" data-part="title" data-role="display" data-text-size="heading">
+            "Delete take"
+          <button aria-label="Close" class="lib-text lib-tone lib-action-button-face lib-focus-ring lib-modal__close" data-kind="button" data-part="close" data-role="label" data-size="medium" data-text-case="none" data-text-leading="tight" data-tone="quiet" type="button" @click=close>
+            <svg aria-hidden="true" height="9" viewBox="0 0 9 9" width="9">
+              <path d="M1 1l7 7M8 1l-7 7" fill="none" stroke-width="1.2" stroke="currentColor">
+        <div class="lib-text lib-tone lib-modal__body" data-part="body" data-role="body" data-text-size="inherit">
+          {children}
+
+## Labelled
+<div class="lib-text lib-tone lib-modal" data-kind="modal" data-modal="" data-role="body">
+  <div aria-hidden="true" class="lib-modal__scrim" data-part="scrim" @click=close>
+  <div aria-label="Export stems" aria-modal="true" class="lib-modal__dialog" data-part="dialog" role="dialog" tabindex="-1" use:focusTrap={} use:dialogEscape={"onClose":"close"}>
+    <Surface as="div" className="lib-layer lib-modal__pane" data-part="pane" layer="overlay" radius="card">
+      #children
+        <div class="lib-modal__head" data-part="head">
+          <h2 class="lib-text lib-tone lib-modal__title" data-part="title" data-role="display" data-text-size="heading">
+            "Export"
+          <button aria-label="Close" class="lib-text lib-tone lib-action-button-face lib-focus-ring lib-modal__close" data-kind="button" data-part="close" data-role="label" data-size="medium" data-text-case="none" data-text-leading="tight" data-tone="quiet" type="button" @click=close>
+            <svg aria-hidden="true" height="9" viewBox="0 0 9 9" width="9">
+              <path d="M1 1l7 7M8 1l-7 7" fill="none" stroke-width="1.2" stroke="currentColor">
+        <div class="lib-text lib-tone lib-modal__body" data-part="body" data-role="body" data-text-size="inherit">
+          {children}
+
+## Wide
+<div class="lib-text lib-tone lib-modal" data-kind="modal" data-modal="" data-role="body">
+  <div aria-hidden="true" class="lib-modal__scrim" data-part="scrim" @click=close>
+  <div aria-label="Delete take" aria-modal="true" class="lib-modal__dialog" data-part="dialog" role="dialog" style="--lib-modal-width: 620px" tabindex="-1" use:focusTrap={} use:dialogEscape={"onClose":"close"}>
+    <Surface as="div" className="lib-layer lib-modal__pane" data-part="pane" layer="overlay" radius="card">
+      #children
+        <div class="lib-modal__head" data-part="head">
+          <h2 class="lib-text lib-tone lib-modal__title" data-part="title" data-role="display" data-text-size="heading">
+            "Delete take"
+          <button aria-label="Close" class="lib-text lib-tone lib-action-button-face lib-focus-ring lib-modal__close" data-kind="button" data-part="close" data-role="label" data-size="medium" data-text-case="none" data-text-leading="tight" data-tone="quiet" type="button" @click=close>
+            <svg aria-hidden="true" height="9" viewBox="0 0 9 9" width="9">
+              <path d="M1 1l7 7M8 1l-7 7" fill="none" stroke-width="1.2" stroke="currentColor">
+        <div class="lib-text lib-tone lib-modal__body" data-part="body" data-role="body" data-text-size="inherit">
+          {children}

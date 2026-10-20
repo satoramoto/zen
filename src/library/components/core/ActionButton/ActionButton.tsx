@@ -1,9 +1,13 @@
-import type { ComponentPropsWithRef, CSSProperties, MouseEvent, ReactNode } from 'react';
-import { focusRing } from '../../../primitives/Ring';
-import { Text } from '../../../primitives/Text';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
+import { Tree } from '../../../view/Tree';
+import { slot, wire } from '../../../view/Tree.model';
+import { actionButtonHandlers, actionButtonView, buttonFaceView, faceWiring, type ActionButtonModelProps, type ActionTone } from './ActionButton.model';
+import '../../../primitives/Text.css';
 import './ActionButton.css';
 
-export type ActionTone = 'normal' | 'quiet' | 'danger';
+// The props, the faces and the press are framework-free, in the model; this file and
+// `ActionButton.svelte` only hand the model's tree to their `Tree`.
+export type { ActionTone, ActionButtonModelProps, ButtonFaceModelProps } from './ActionButton.model';
 
 export type ButtonFaceProps = ComponentPropsWithRef<'button'> & {
   /** On or off, for a face that is a switch. Set (true or false), the face is a toggle. */
@@ -28,48 +32,26 @@ export type ButtonFaceProps = ComponentPropsWithRef<'button'> & {
  *
  * **Parts.** `face` (the button; a caller may rename it with its own `data-part`; `data-tone`, `data-size`, `data-on`, `data-kind` button|toggle).
  */
-export function ButtonFace({ lit, size, tone = 'normal', className = '', children, role, 'aria-pressed': pressed, ...props }: ButtonFaceProps) {
-  const toggle = lit !== undefined || pressed !== undefined;
-  const on = lit ?? (pressed === true || pressed === 'true');
-  // The face is a label Text (tight leading, no case, as a button's own type had); `data-tone`
-  // here is the action tone, which replaces Text's ink tone (none is set, the class sets the ink).
+export function ButtonFace({ lit, size, tone, className, children, role, 'aria-pressed': pressed, type, ref, ...props }: ButtonFaceProps) {
+  // The native props are attributes and events on the face; the event callbacks get the DOM event.
+  const { attrs, on, handlers } = faceWiring(props);
+  const face = buttonFaceView({ lit, size, tone, className, ariaRole: role, pressed, type }, attrs, slot('children'));
   return (
-    <Text
-      as="button"
-      role="label"
-      leading="tight"
-      case="none"
-      ariaRole={role}
-      data-part="face"
-      {...props}
-      type={props.type ?? 'button'}
-      aria-pressed={pressed}
-      className={`lib-action-button-face ${focusRing}${className ? ` ${className}` : ''}`}
-      data-kind={toggle ? 'toggle' : 'button'}
-      data-tone={tone}
-      data-size={size}
-      data-on={on ? '' : undefined}
-    >
-      {children}
-    </Text>
+    <Tree
+      tree={wire(face, { on, bind: [['ref', { onRef: 'ref' }]] })}
+      slots={{ children }}
+      handlers={{
+        ...handlers,
+        ref: (element: HTMLButtonElement | null) => {
+          if (typeof ref === 'function') ref(element);
+          else if (ref) ref.current = element;
+        },
+      }}
+    />
   );
 }
 
-export interface ActionButtonProps {
-  /** It happened. The event carries the modifiers held while it did. */
-  onPress(event: MouseEvent<HTMLButtonElement>): void;
-  disabled?: boolean;
-  /** For assistive technology. Defaults to the caption, then to the children. */
-  label?: string;
-  /** Printed caption above, for a button that sits in a row beside captioned controls. */
-  name?: string;
-  tone?: ActionTone;
-  /** In px. The children are the caller's and can be any length. */
-  width?: number;
-  className?: string;
-  title?: string;
-  /** A sentence for a hint strip, on the root as `data-hint`. Left out, a strip falls back to `title`. */
-  hint?: string;
+export interface ActionButtonProps extends ActionButtonModelProps {
   children?: ReactNode;
 }
 
@@ -85,21 +67,6 @@ export interface ActionButtonProps {
  * **Parts.** root (`lib-action-button`, `data-hint`), `caption` (the `name`, when given), `face`
  * (the `ButtonFace`).
  */
-export function ActionButton({ onPress, disabled = false, label, name, tone = 'normal', width, className, title, hint, children }: ActionButtonProps) {
-  return (
-    <div
-      className={`lib-action-button${className ? ` ${className}` : ''}`}
-      data-hint={hint}
-      style={(width === undefined ? {} : { '--lib-action-button-width': `${width}px` }) as CSSProperties}
-    >
-      {name && (
-        <Text role="caption" leading="tight" case="label" className="lib-action-button__caption" data-part="caption">
-          {name}
-        </Text>
-      )}
-      <ButtonFace type="button" tone={tone} aria-label={label ?? name} disabled={disabled} title={title} onClick={onPress}>
-        {children}
-      </ButtonFace>
-    </div>
-  );
+export function ActionButton({ children, ...props }: ActionButtonProps) {
+  return <Tree tree={actionButtonView(props)} slots={{ children }} handlers={actionButtonHandlers(props)} />;
 }

@@ -1,0 +1,24 @@
+## Under
+<div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:popover={"anchor":"anchor","within":"within","onDismiss":"dismiss"}>
+  <Surface aria-label="Details" as="div" className="lib-layer lib-popover__panel" data-part="panel" id="details" layer="float" radius="card" role="dialog">
+    #children
+      {children}
+
+## OverSidebar
+<div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:popover={"anchor":"anchor","within":"within","onDismiss":"dismiss"}>
+  <Surface aria-label="More" as="div" className="lib-layer lib-popover__panel" data-part="panel" layer="float" radius="card" role="menu">
+    #children
+      {children}
+
+## Listbox
+<div class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" use:popover={"anchor":"anchor","within":"within","onDismiss":"dismiss"}>
+  <Surface aria-label="Style" as="div" className="lib-layer lib-popover__panel lib-select__menu" data-part="panel" id="style-menu" layer="float" radius="card" role="listbox">
+    #children
+      {children}
+
+## InText
+<span data-part="portal" style="display: contents">
+  <span class="lib-text lib-tone lib-popover" data-part="popover" data-role="body" popover="manual" @pointerenter=hoverEnter @pointerleave=hoverLeave use:portal={"into":"portalTarget"} use:popover={"anchor":"anchor","within":"within","onDismiss":"dismiss"}>
+    <Surface aria-label="fundamental" as="span" className="lib-layer lib-popover__panel" data-part="panel" layer="float" radius="card" role="dialog">
+      #children
+        {children}

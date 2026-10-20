@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { widestText } from './format';
 import { fractionOf, type Param } from './param';
 
@@ -35,10 +34,23 @@ export function fillFrom(param: Param, origin: FillOrigin, fraction: number): Pa
   };
 }
 
-/** `--lib-param-chars`: room for the parameter's longest reading, recomputed only when it changes. */
-export function useReserved(param?: Param): ParamVars {
-  return useMemo((): ParamVars => (param ? { '--lib-param-chars': widestText(param) } : {}), [param]);
+/** Each parameter's longest reading, worked out once per parameter object. */
+const widest = new WeakMap<Param, number>();
+
+/** `--lib-param-chars`: room for the parameter's longest reading, worked out once per parameter.
+ *  Framework-free (a view model calls it); NumberField still calls it by its old name, `useReserved`. */
+export function reservedVars(param?: Param): ParamVars {
+  if (!param) return {};
+  let chars = widest.get(param);
+  if (chars === undefined) {
+    chars = widestText(param);
+    widest.set(param, chars);
+  }
+  return { '--lib-param-chars': chars };
 }
+
+/** `reservedVars` under its old name (no longer a hook: it holds no React state). */
+export const useReserved = reservedVars;
 
 /** The `data-hint` attribute a control spreads on its root; absent when there is no hint. */
 export function hintAttribute(hint: string | undefined): Record<string, string> {

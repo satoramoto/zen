@@ -4,8 +4,11 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { EveryPack, withLibraryTheme } from '../../../storybook';
 import type { ModeChoice } from '../../../theme';
 import { packs } from '../../../themes/packs';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { Button } from '../Button/Button';
 import { SearchField, type SearchFieldProps } from './SearchField';
+import SearchFieldSvelte from './SearchField.svelte';
+import { searchFieldArgTypes, searchFieldArgs, searchFieldStories as s } from './SearchField.fixtures';
 
 /** Plays the parent: typing moves `value`, and the story's action logs each edit. */
 function Live(args: SearchFieldProps) {
@@ -27,50 +30,35 @@ function Live(args: SearchFieldProps) {
  * `onInput`, the parent moves `value`. Esc clears a non-empty field and stops there; every other
  * key reaches `onKeyDown`, so a page can drive its list from the field.
  */
+// Every story is built from SearchField.fixtures.ts (`story(s.Name)`), which the tree snapshot
+// shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`. React draws each inside
+// `Live` (the parent moving `value`); Svelte draws the field alone, where a typed edit stands until
+// the args move `value`. RefDisabledTitle (its own layout, a `ref`) stays React.
 const meta = {
   title: 'Design OS/Components/Core/SearchField',
   component: SearchField,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'centered' },
-  args: {
-    value: '',
-    label: 'Search styles',
-    placeholder: 'Search',
-    width: 280,
-    tip: 'library.search',
-    onInput: fn(),
-    onKeyDown: fn(),
-  },
-  argTypes: {
-    value: { control: 'text' },
-    label: { control: 'text' },
-    placeholder: { control: 'text' },
-    width: { control: { type: 'number', min: 80, step: 10 } },
-    tip: { control: 'text' },
-  },
+  args: { ...searchFieldArgs, onInput: fn(), onKeyDown: fn() },
+  argTypes: searchFieldArgTypes,
   render: (args) => <Live key={args.value} {...args} />,
 } satisfies Meta<typeof SearchField>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(SearchField, SearchFieldSvelte);
 
 /** Empty: the placeholder in muted text. Typing calls `onInput`; other keys reach `onKeyDown`. */
-export const Empty: Story = {};
+export const Empty: Story = story(s.Empty);
 
 /** With text: the magnifier steps up and a clear button appears; Esc clears it. */
-export const Filled: Story = {
-  args: { value: 'coastal' },
-};
+export const Filled: Story = story(s.Filled);
 
 /** Esc on an empty field calls nothing of its own and bubbles on to the page. */
-export const EscapeBubbles: Story = {
-  args: { label: 'Search sounds', placeholder: 'Search sounds', width: 240 },
-};
+export const EscapeBubbles: Story = story(s.EscapeBubbles);
 
 /** A long query in a narrow field: the text scrolls, the clear button stays reachable. */
-export const LongQuery: Story = {
-  args: { value: 'user styles on the external drive', width: 180 },
-};
+export const LongQuery: Story = story(s.LongQuery);
 
 /** A page focusing the field from its own key (a ⌘F shortcut) through `ref`. */
 function Focusable(args: SearchFieldProps) {
@@ -89,7 +77,7 @@ function Focusable(args: SearchFieldProps) {
  * no clear button).
  */
 export const RefDisabledTitle: Story = {
-  args: { title: 'Search presets (⌘F)', label: 'Search presets', width: 200 },
+  args: s.RefDisabledTitle.args,
   render: (args, { globals }) => (
     <EveryPack mode={globals.mode as ModeChoice}>
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-4)' }}>

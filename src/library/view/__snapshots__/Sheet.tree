@@ -1,0 +1,28 @@
+## Right
+<div class="lib-text lib-tone lib-modal" data-kind="sheet" data-modal="" data-role="body" data-side="right">
+  <div aria-hidden="true" class="lib-modal__scrim" data-part="scrim" @click=close>
+  <div aria-label="Settings" aria-modal="true" class="lib-modal__dialog" data-part="dialog" role="dialog" tabindex="-1" use:focusTrap={} use:dialogEscape={"onClose":"close"}>
+    <Surface as="div" className="lib-layer lib-modal__pane" data-part="pane" layer="overlay" radius="card">
+      #children
+        <div class="lib-modal__head" data-part="head">
+          <h2 class="lib-text lib-tone lib-modal__title" data-part="title" data-role="display" data-text-size="heading">
+            "Settings"
+          <button aria-label="Close settings" class="lib-text lib-tone lib-action-button-face lib-focus-ring lib-modal__close" data-kind="button" data-part="close" data-role="label" data-size="medium" data-text-case="none" data-text-leading="tight" data-tone="quiet" title="Close (Esc)" type="button" @click=close>
+            <svg aria-hidden="true" height="9" viewBox="0 0 9 9" width="9">
+              <path d="M1 1l7 7M8 1l-7 7" fill="none" stroke-width="1.2" stroke="currentColor">
+        <div class="lib-text lib-tone lib-modal__body" data-part="body" data-role="body" data-text-size="inherit">
+          {children}
+
+## Bottom
+<div class="lib-text lib-tone lib-modal" data-kind="sheet" data-role="body" data-side="bottom">
+  <div aria-label="More effects" class="lib-modal__dialog" data-part="dialog" role="dialog" tabindex="-1" use:focusTrap={} use:dialogEscape={"onClose":"close"}>
+    <Surface as="div" className="lib-layer lib-modal__pane" data-part="pane" layer="overlay" radius="card">
+      #children
+        <div class="lib-modal__head" data-part="head">
+          <h2 class="lib-text lib-tone lib-modal__title" data-part="title" data-role="display" data-text-size="heading">
+            "More effects"
+          <button aria-label="Close more effects" class="lib-text lib-tone lib-action-button-face lib-focus-ring lib-modal__close" data-kind="button" data-part="close" data-role="label" data-size="medium" data-text-case="none" data-text-leading="tight" data-tone="quiet" title="Close (Esc)" type="button" @click=close>
+            <svg aria-hidden="true" height="9" viewBox="0 0 9 9" width="9">
+              <path d="M1 1l7 7M8 1l-7 7" fill="none" stroke-width="1.2" stroke="currentColor">
+        <div class="lib-text lib-tone lib-modal__body" data-part="body" data-role="body" data-text-size="inherit">
+          {children}

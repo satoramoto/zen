@@ -9,6 +9,11 @@ import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
 import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
 import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
+import { bindPopover, type PopoverParams } from '../components/core/Popover/placement';
+import { bindPortal, type PortalParams } from '../components/core/Popover/portal';
+import { bindParamGesture, type ParamGestureParams } from '../components/core/Param/paramGesture';
+import { bindSliderEntry, type SliderEntryParams } from '../components/core/Slider/sliderEntry';
+import { bindDialogEscape, bindFocusTrap, type DialogEscapeParams, type FocusTrapParams } from '../components/core/Modal/dialog';
 import { bindRoom, type RoomParams } from '../layout/assembly/room';
 import { bindReport, type ReportParams } from './report';
 import { bindRef, type RefParams } from './ref';
@@ -21,6 +26,9 @@ import { bindFit, type ChordFitParams } from '../components/music/ChordReadout/f
 import { bindBarInput, type BarBindParams } from '../components/music/BarReadout/barInput';
 import { bindTempoNumber, bindTempoStep, type TempoNumberParams, type TempoStepParams } from '../components/music/TempoReadout/tempoGestures';
 import { bindShader, type ShaderParams } from '../shader/bindShader';
+import { bindSearchClear, type SearchClearParams } from '../components/core/SearchField/clear';
+import { bindPageList, type PageListParams } from '../components/core/PageList/pageListKeys';
+import { bindFolderList, type FolderListParams } from '../components/core/FolderList/folderListKeys';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -81,6 +89,18 @@ export const stores = {
   focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
   /** LineSlider's keys and drag (`slide.ts`). */
   lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
+  /** Popover's placement and dismissal (`components/core/Popover/placement.ts`). */
+  popover: keyed<PopoverParams, 'anchor' | 'within' | 'onDismiss'>(bindPopover, ['anchor', 'within', 'onDismiss']),
+  /** An element moved elsewhere in the document while bound: Popover's `portal` (`components/core/Popover/portal.ts`). */
+  portal: keyed<PortalParams, 'into'>(bindPortal, ['into']),
+  /** A Param control's drag, double-click and keys (Slider's track; `Param/paramGesture.ts`). */
+  paramGesture: keyed<ParamGestureParams, 'onChange' | 'onRelease' | 'onDepth' | 'keyStep'>(bindParamGesture, ['onChange', 'onRelease', 'onDepth', 'keyStep']),
+  /** Slider's typed readout: open, type, Enter / Escape / leave, focus (`Slider/sliderEntry.ts`). */
+  sliderEntry: keyed<SliderEntryParams, 'onEntry' | 'onCommit'>(bindSliderEntry, ['onEntry', 'onCommit']),
+  /** Modal's focus in, trapped, and back to the opener (`components/core/Modal/dialog.ts`). */
+  focusTrap: keyed<FocusTrapParams, never>(bindFocusTrap, []),
+  /** Modal's Esc close, topmost dialog only (`components/core/Modal/dialog.ts`). */
+  dialogEscape: keyed<DialogEscapeParams, 'onClose'>(bindDialogEscape, ['onClose']),
   /** An assembled screen's measured room (`layout/assembly/room.ts`). */
   room: keyed<RoomParams, 'onRoom'>(bindRoom, ['onRoom']),
   /** An assembled screen's placement, reported once per change (`report.ts`). */
@@ -109,6 +129,12 @@ export const stores = {
   tempoStep: keyed<TempoStepParams, 'report'>(bindTempoStep, ['report']),
   /** A Surface's shader canvas: the page's shared WebGL2 context draws into it (`shader/bindShader.ts`). */
   shader: keyed<ShaderParams, 'onError'>(bindShader, ['onError']),
+  /** SearchField's clear button: keeps focus in the field, clears, refocuses the input (`SearchField/clear.ts`). */
+  searchClear: keyed<SearchClearParams, 'onClear'>(bindSearchClear, ['onClear']),
+  /** PageList's clicks and ↑ ↓ Home End (`pageListKeys.ts`). */
+  pageList: keyed<PageListParams, 'onChoose'>(bindPageList, ['onChoose']),
+  /** FolderList's clicks, ↑ ↓ Home End and roving tab stop (`folderListKeys.ts`). */
+  folderList: keyed<FolderListParams, 'onChoose' | 'onActive'>(bindFolderList, ['onChoose', 'onActive']),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;
