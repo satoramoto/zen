@@ -2,8 +2,16 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { fixtureStories, treeStory, withRenderer, type StoryView } from '../../../stories/story';
 import { ActionButton } from '../ActionButton/ActionButton';
-import { Modal, Sheet, type SheetSide } from './Modal';
+import { Modal, Sheet, type ModalProps, type SheetSide } from './Modal';
+import ModalSvelte from './Modal.svelte';
+import { modalArgTypes, modalSample, modalStories as s } from './Modal.fixtures';
+
+// The Modal stories are built from Modal.fixtures.ts (`story(s.Name)`), which the tree snapshot
+// shares; the toolbar's Renderer draws them with React's or Svelte's `Tree` (in Svelte, without the
+// page behind). WithActions is a view tree (a Modal with buttons in its `actions` slot). The stories
+// with live state (OpenAndClose, the Sheets) have their own React `render`, so they stay React-only.
 
 const Page = () => (
   <div style={{ display: 'grid', gap: 'var(--space-2)', color: 'var(--text-2)' }}>
@@ -28,14 +36,10 @@ const Rows = ({ n = 6 }: { n?: number }) => (
 const meta = {
   title: 'Design OS/Components/Core/Modal',
   component: Modal,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'fullscreen' },
-  args: {
-    title: 'Delete take',
-    onClose: fn(),
-    children: 'The take and its stems are deleted for good. Anything that plays it stops.',
-  },
-  argTypes: { width: { control: { type: 'number', min: 200, max: 900 } } },
+  args: { ...(s.NoActions.args as ModalProps), onClose: fn() },
+  argTypes: modalArgTypes,
   render: (args) => (
     <div style={{ minHeight: '100vh', padding: 'var(--space-4)' }}>
       <Page />
@@ -46,19 +50,15 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Modal, ModalSvelte);
+
+/** WithActions' tree: the Modal with Delete and Keep (`modalSample`); the buttons do nothing. */
+const withActions: StoryView<ModalProps> = (args) => ({ tree: modalSample(args as never), handlers: { close: () => args.onClose(), act: () => {} } });
 
 /** A question with its actions; the one that does the thing goes first. */
 export const WithActions: Story = {
-  args: {
-    actions: (
-      <>
-        <ActionButton tone="danger" onPress={() => {}}>
-          Delete
-        </ActionButton>
-        <ActionButton onPress={() => {}}>Keep</ActionButton>
-      </>
-    ),
-  },
+  ...story(s.WithActions),
+  ...treeStory(withActions),
   play: async ({ canvasElement, args }) => {
     const dialog = within(canvasElement).getByRole('dialog', { name: 'Delete take' });
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
@@ -77,6 +77,7 @@ export const WithActions: Story = {
 
 /** No `actions`: the row is left out; the × is always there. */
 export const NoActions: Story = {
+  ...story(s.NoActions),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await expect(canvasElement.querySelector('[data-part="actions"]')).toBeNull();
@@ -90,14 +91,14 @@ export const NoActions: Story = {
 
 /** `label` names it for assistive technology where the title isn't the whole story. */
 export const Labelled: Story = {
-  args: { title: 'Export', label: 'Export stems', children: 'Each part to its own file.' },
+  ...story(s.Labelled),
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('dialog', { name: 'Export stems' })).toBeInTheDocument();
   },
 };
 
 /** `width` in px. */
-export const Wide: Story = { args: { width: 620 } };
+export const Wide: Story = story(s.Wide);
 
 function Asking() {
   const [asking, setAsking] = useState(false);
@@ -121,7 +122,8 @@ function Asking() {
   );
 }
 
-/** Open by being mounted: closing unmounts it and focus goes back to the button that opened it. */
+/** Open by being mounted: closing unmounts it and focus goes back to the button that opened it.
+ *  Live state of its own (React `render`), so it stays React-only. */
 export const OpenAndClose: Story = {
   render: () => <Asking />,
   play: async ({ canvasElement }) => {
@@ -150,7 +152,8 @@ function SheetDemo({ side, modal, rows }: { side: SheetSide; modal: boolean; row
   );
 }
 
-/** Settings: down the right, full height, over a scrim; the head stays while the body scrolls. */
+/** Settings: down the right, full height, over a scrim; the head stays while the body scrolls.
+ *  Live state of its own (React `render`), so it stays React-only. */
 export const SheetRight: StoryObj<typeof Sheet> = {
   render: () => <SheetDemo side="right" modal rows={24} />,
   play: async ({ canvasElement }) => {
@@ -162,7 +165,8 @@ export const SheetRight: StoryObj<typeof Sheet> = {
   },
 };
 
-/** More effects: a drawer along the bottom, non-modal, so the page behind stays usable. */
+/** More effects: a drawer along the bottom, non-modal, so the page behind stays usable.
+ *  Live state of its own (React `render`), so it stays React-only. */
 export const SheetBottom: StoryObj<typeof Sheet> = {
   render: () => <SheetDemo side="bottom" modal={false} rows={3} />,
   play: async ({ canvasElement }) => {

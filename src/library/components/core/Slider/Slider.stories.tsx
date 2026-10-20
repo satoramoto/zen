@@ -2,16 +2,18 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { EveryPack, withLibraryTheme } from '../../../storybook';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import type { ModeChoice } from '../../../theme';
 import { packs } from '../../../themes/packs';
-import type { Param } from '../Param/param';
-import { stepDetent } from '../Param/useParamGesture';
+import { stepDetent } from '../Param/paramGesture';
 import { Slider, type SliderProps } from './Slider';
+import SliderSvelte from './Slider.svelte';
+import { doublings, sliderArgTypes, sliderStories as s } from './Slider.fixtures';
 
-const volume: Param = { kind: 'float', min: -70, max: 6, defaultValue: 0, unit: 'decibel', name: 'Volume', shortName: 'Vol' };
-const pan: Param = { kind: 'float', min: -1, max: 1, defaultValue: 0, unit: 'pan', name: 'Pan' };
-const amount: Param = { kind: 'float', min: 0, max: 100, defaultValue: 50, unit: 'percent', name: 'Amount' };
-const steps: Param = { kind: 'int', min: 0, max: 7, defaultValue: 0, steps: 8, name: 'Step' };
+// Every story is built from Slider.fixtures.ts (`story(s.Name)`), which the tree snapshot shares; the
+// toolbar's Renderer draws it with React's or Svelte's `Tree`. Those are controlled and stay where
+// they are (the spies hear the drag, the keys and the typing). The stories with a `render` of their
+// own (a width to fill, or wired to state so the control moves) stay React, with a note.
 
 /** Wired to state, so a drag, the keys, a double-click and shift-drag (depth) all move it. */
 function Controlled(props: SliderProps) {
@@ -37,6 +39,13 @@ function Controlled(props: SliderProps) {
   );
 }
 
+/** A row the width of seven controls, the slider wired to state inside it. */
+const Wide = (args: SliderProps) => (
+  <div style={{ width: 'calc(var(--control-h) * 7)' }}>
+    <Controlled {...args} />
+  </div>
+);
+
 /**
  * `live.slider`: drag along the track (⌘/Ctrl for fine), arrows / Page / Home / End, double-click
  * resets to the default. The track is a `well`, the fill lit, the thumb a `handle`.
@@ -44,96 +53,55 @@ function Controlled(props: SliderProps) {
 const meta = {
   title: 'Design OS/Components/Core/Slider',
   component: Slider,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  args: { param: volume, value: -6, length: 120, onChange: fn(), onRelease: fn() },
-  argTypes: {
-    orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
-    layout: { control: 'inline-radio', options: ['stacked', 'inline', 'inside', 'row'] },
-    side: { control: 'inline-radio', options: ['left', 'right'] },
-    origin: { control: 'inline-radio', options: ['min', 'center'] },
-    fill: { control: 'boolean' },
-    showValue: { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    length: { control: 'number' },
-    width: { control: 'number' },
-    live: { control: { type: 'range', min: 0, max: 1, step: 0.01 } },
-    display: { control: 'text' },
-    ink: { control: 'text' },
-  },
-  render: (args) => <Controlled {...args} />,
+  args: { ...(s.Vertical.args as SliderProps), onChange: fn(), onRelease: fn() },
+  argTypes: sliderArgTypes,
 } satisfies Meta<typeof Slider>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Slider, SliderSvelte);
 
 /** A vertical fader: caption, track, reading. */
-export const Vertical: Story = {};
+export const Vertical: Story = story(s.Vertical);
 
 /** The widget's own default length, 27px. */
-export const Compact: Story = { args: { length: undefined } };
+export const Compact: Story = story(s.Compact);
 
 /** Horizontal, stacked. */
-export const Horizontal: Story = { args: { orientation: 'horizontal', param: amount, value: 35 } };
+export const Horizontal: Story = story(s.Horizontal);
 
 /** Pan: zero is the middle, so the fill grows from the centre. */
-export const CenterOrigin: Story = { args: { orientation: 'horizontal', param: pan, value: 0.3 } };
+export const CenterOrigin: Story = story(s.CenterOrigin);
 
 /** Inline: caption over reading beside the track, on the left or the right. */
-export const Inline: Story = {
-  render: (args) => (
-    <div className="lib-specimens">
-      <Controlled {...args} orientation="horizontal" layout="inline" side="left" param={amount} value={60} />
-      <Controlled {...args} orientation="horizontal" layout="inline" side="right" param={amount} value={20} />
-    </div>
-  ),
-};
+export const Inline: Story = story(s.Inline);
 
-/** A row: caption and reading inside a full-width track, the value a thin lit mark (no fill). */
-export const Inside: Story = {
-  args: { orientation: 'horizontal', layout: 'inside', param: amount, value: 42 },
-  render: (args) => (
-    <div style={{ width: 'calc(var(--control-h) * 7)' }}>
-      <Controlled {...args} />
-    </div>
-  ),
-};
+/** A row: caption and reading inside a full-width track, the value a thin lit mark (no fill). React only: a width to fill, wired to state. */
+export const Inside: Story = story(s.Inside, { render: Wide });
 
-/** A row that asks for its fill back. */
-export const InsideFilled: Story = { ...Inside, args: { ...Inside.args, fill: true } };
+/** A row that asks for its fill back. React only, as Inside. */
+export const InsideFilled: Story = story(s.InsideFilled, { render: Wide });
 
-/** Apple's slider: the name leading and the reading trailing above a thin groove, a knob proud of it. */
-export const Row: Story = {
-  args: { layout: 'row', length: 'auto', param: amount, value: 42 },
-  render: (args) => (
-    <div style={{ width: 'calc(var(--control-h) * 7)' }}>
-      <Controlled {...args} />
-    </div>
-  ),
-};
+/** Apple's slider: the name leading and the reading trailing above a thin groove, a knob proud of it. React only, as Inside. */
+export const Row: Story = story(s.Row, { render: Wide });
 
-/** A row filled from the middle, as the inspector's tune sliders are (1× in the middle). */
-export const RowCenter: Story = { ...Row, args: { ...Row.args, param: pan, value: 0.3 } };
+/** A row filled from the middle, as the inspector's tune sliders are (1× in the middle). React only, as Inside. */
+export const RowCenter: Story = story(s.RowCenter, { render: Wide });
 
 /** Depth: shift-drag sets how far a modulator may carry it; the span runs the sign's way, `live` marks where it is. */
-export const Depth: Story = {
-  args: { orientation: 'horizontal', param: amount, value: 40, depth: 0.3, onDepth: fn(), live: 0.55, length: 160 },
-};
+export const Depth: Story = { ...story(s.Depth), args: { ...s.Depth.args, onDepth: fn() } };
 
 /** Stepped: eight reachable values, one per arrow key. */
-export const Stepped: Story = { args: { param: steps, value: 3 } };
+export const Stepped: Story = story(s.Stepped);
 
 /** An authoritative reading and a custom ink. */
-export const DisplayAndInk: Story = { args: { display: '-inf dB', value: -70, ink: 'var(--hue-2)' } };
+export const DisplayAndInk: Story = story(s.DisplayAndInk);
 
-/** A log rail, ¼× to 4× as doublings (−2 to 2) on twelfths, 1× the default in the middle. */
-const tune: Param = { kind: 'float', min: -2, max: 2, defaultValue: 0, steps: 49, name: 'Speed' };
-const doublings = [-2, -1, 0, 1, 2];
-
-/** `mixed`: several things that differ. No thumb or fill, it reads "Mixed"; any drag, key or double-click sets a value. */
-export const Mixed: Story = {
-  args: { layout: 'row', length: 'auto', param: tune, origin: 'center', value: 0, mixed: true },
+/** `mixed`: several things that differ. No thumb or fill, it reads "Mixed"; any drag, key or double-click sets a value. React only: wired to state. */
+export const Mixed: Story = story(s.Mixed, {
   render: function Render(args) {
     const [value, setValue] = useState<number | null>(null);
     return (
@@ -150,18 +118,16 @@ export const Mixed: Story = {
       </div>
     );
   },
-};
+});
 
-/** `detents`: a tick at each doubling, the default (1×) tallest; with `snap` a drag catches within a sixth of one. */
-export const Detents: Story = {
-  args: { layout: 'row', length: 'auto', param: tune, origin: 'center', value: 0.5, detents: doublings, snap: 1 / 6 },
-  render: Row.render,
-};
+/** `detents`: a tick at each doubling, the default (1×) tallest; with `snap` a drag catches within a sixth of one. React only, as Inside. */
+export const Detents: Story = story(s.Detents, { render: Wide });
 
-/** `keyStep`: the arrows step between detents (`stepDetent`), Shift+arrow a twelfth, Delete back to 1×; the rest default. */
+/** `keyStep`: the arrows step between detents (`stepDetent`), Shift+arrow a twelfth, Delete back to 1×; the rest default. React only, as Inside. */
 export const KeySteps: Story = {
+  ...story(s.KeySteps, { render: Wide }),
   args: {
-    ...Detents.args,
+    ...s.KeySteps.args,
     keyStep: ({ key, shiftKey }, value) => {
       const way = key === 'ArrowRight' || key === 'ArrowUp' ? 1 : key === 'ArrowLeft' || key === 'ArrowDown' ? -1 : 0;
       if (way !== 0) return shiftKey ? value + way / 12 : stepDetent(doublings, value, way);
@@ -169,21 +135,19 @@ export const KeySteps: Story = {
       return undefined;
     },
   },
-  render: Row.render,
 };
 
 /** Read-only. */
-export const Disabled: Story = { args: { disabled: true } };
+export const Disabled: Story = story(s.Disabled);
 
-/** `length="auto"`: fills its container along the axis; the drag gears to the measured length. */
-export const AutoLength: Story = {
-  args: { orientation: 'horizontal', length: 'auto', param: amount, value: 70 },
+/** `length="auto"`: fills its container along the axis; the drag gears to the measured length. React only: a width to fill, wired to state. */
+export const AutoLength: Story = story(s.AutoLength, {
   render: (args) => (
     <div style={{ width: 'calc(var(--control-h) * 8)' }}>
       <Controlled {...args} />
     </div>
   ),
-};
+});
 
 /** A multiplier as text: 0.5 → "½×", 1.5 → "1.5×". */
 const FRACTIONS: Record<string, string> = { '0.25': '¼', '0.5': '½', '0.75': '¾' };
@@ -221,25 +185,21 @@ function Tune(props: SliderProps) {
 /**
  * New: `typed` and `detentLabel`, in every pack. Click a readout (or Enter on it) and type "2",
  * "1/2" or "½x": Enter sets it, Escape leaves it, clicking away sets it. Under the rail, a word at
- * each doubling, the default (1×) in full ink.
+ * each doubling, the default (1×) in full ink. React only: every pack, wired to state.
  */
 export const TypedAndLabelled: Story = {
+  ...story(s.TypedAndLabelled, {
+    render: (args, { globals }) => (
+      <EveryPack mode={globals.mode as ModeChoice}>
+        <Tune {...args} />
+      </EveryPack>
+    ),
+  }),
   args: {
-    layout: 'row',
-    length: 'auto',
-    param: tune,
-    origin: 'center',
-    value: 0,
-    detents: doublings,
-    snap: 1 / 6,
+    ...s.TypedAndLabelled.args,
     detentLabel: times,
     typed: { parse: parseTimes, format: (v) => String(Number((2 ** v).toPrecision(3))) },
   },
-  render: (args, { globals }) => (
-    <EveryPack mode={globals.mode as ModeChoice}>
-      <Tune {...args} />
-    </EveryPack>
-  ),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const readouts = canvas.getAllByRole('button', { name: 'Speed 1×, type a value' });
@@ -272,7 +232,7 @@ export const TypedAndLabelled: Story = {
 
 /** `typed: true` on a plain parameter: a plain number, clamped to the range (type 500: 100%). */
 export const TypedPlain: Story = {
-  args: { orientation: 'horizontal', param: amount, value: 35, length: 160, typed: true },
+  ...story(s.TypedPlain),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: /type a value/ }));
