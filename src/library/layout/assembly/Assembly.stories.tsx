@@ -5,9 +5,9 @@ import { Text } from '../../primitives/Text';
 import { Stack } from '../../primitives/Stack';
 import { Region } from '../Region';
 import { Screen } from '../Screen';
-import { DEMO_SPEC, NOW_FORMS, PAD_FORMS, SIDE_FORMS } from './Assembly.fixtures';
+import { DEMO_NAME, DEMO_SPECS, NOW_FORMS, PAD_FORMS, SIDE_FORMS, demoArgTypes, demoArgs, demoStoryArgs, type DemoAspect } from './Assembly.fixtures';
 import { useForm } from './forms';
-import type { Placement, ScreenSpec } from './types';
+import type { Placement } from './types';
 
 // Each demo part declares its forms (Assembly.fixtures.ts) and reads the chosen one with
 // useForm(); the screen is only DEMO_SPEC. There is no screen CSS: drag the frame's corner.
@@ -53,14 +53,7 @@ function Pads() {
   );
 }
 
-/** The demo screen with no aspect, or locked to 16:9 (`contain` steps forms down; `scale` draws the 1600 × 900 design smaller). */
-const SPECS: Record<DemoAspect, ScreenSpec> = {
-  none: DEMO_SPEC,
-  contain: { ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'contain' } },
-  scale: { ...DEMO_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: { w: 1600, h: 900 } } },
-};
-type DemoAspect = 'none' | 'contain' | 'scale';
-
+/** The demo screen with no aspect, or locked to 16:9 (`DEMO_SPECS`, Assembly.fixtures.ts). */
 function Demo({ width, height, aspect = 'none' }: { width: number; height: number; aspect?: DemoAspect }) {
   const [placement, setPlacement] = useState<Placement | null>(null);
   return (
@@ -75,8 +68,8 @@ function Demo({ width, height, aspect = 'none' }: { width: number; height: numbe
       {/* The frame is the room: resize it by its corner, or with the width and height controls. */}
       <div key={`${width}x${height}`} style={{ width, height, resize: 'both', overflow: 'hidden', outline: '1px dashed var(--border)' }}>
         <Screen
-          name="Assembly demo"
-          spec={SPECS[aspect]}
+          name={DEMO_NAME}
+          spec={DEMO_SPECS[aspect]}
           onPlacement={setPlacement}
           regions={{
             bar: <Text role="label">Bar</Text>,
@@ -107,33 +100,29 @@ const meta: Meta<typeof Demo> = {
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   component: Demo,
-  args: { width: 900, height: 420, aspect: 'none' },
-  argTypes: {
-    width: { control: { type: 'range', min: 320, max: 1600, step: 10 } },
-    height: { control: { type: 'range', min: 140, max: 1000, step: 10 } },
-    aspect: { control: 'inline-radio', options: ['none', 'contain', 'scale'] },
-  },
+  args: demoArgs,
+  argTypes: demoArgTypes,
 };
 export default meta;
 
 type Story = StoryObj<typeof Demo>;
 
 /** One spec, three forms per part, any room: the screen assembles itself. Drag the frame's corner. */
-export const Resizable: Story = {};
+export const Resizable: Story = { args: demoStoryArgs.Resizable };
 /** The 1440 × 900 board: every part at its richest form. */
-export const Board: Story = { args: { width: 1440, height: 900 } };
+export const Board: Story = { args: demoStoryArgs.Board };
 /** A short room: the pads go to one row before anything else. */
-export const Short: Story = { args: { width: 900, height: 330 } };
+export const Short: Story = { args: demoStoryArgs.Short };
 /** Tighter still: every part at its last form; what's playing goes last. */
-export const Small: Story = { args: { width: 600, height: 240 } };
+export const Small: Story = { args: demoStoryArgs.Small };
 /**
  * Locked to 16:9 (`aspect: { ratio: 16 / 9, fit: 'contain' }`): drag the frame's corner and the
  * screen keeps its shape, laid out in the largest 16:9 room inside, the rest ground bands. A
  * smaller room steps forms down, as an app does.
  */
-export const AspectLocked: Story = { args: { width: 1100, height: 420, aspect: 'contain' } };
+export const AspectLocked: Story = { args: demoStoryArgs.AspectLocked };
 /**
  * Scaled (`fit: 'scale'`, design 1600 × 900): the screen is laid out once at its design room and
  * drawn smaller to the largest 16:9 box in the frame. Drag the corner: the forms never change.
  */
-export const AspectScaled: Story = { args: { width: 700, height: 600, aspect: 'scale' } };
+export const AspectScaled: Story = { args: demoStoryArgs.AspectScaled };

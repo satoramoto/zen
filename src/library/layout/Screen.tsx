@@ -1,7 +1,12 @@
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import { AssembledScreen, type RegionContent } from './assembly/AssembledScreen';
 import type { Placement, Principles, ScreenSpec } from './assembly/types';
+import { screenGrid, screenView } from './Screen.model';
+import { reactStyle } from './style';
 import './Screen.css';
+
+// The root and the grid's template are framework-free (Screen.model.ts); `Screen.svelte` renders the same view.
+export { screenGrid, screenView, type ScreenModelProps } from './Screen.model';
 
 export interface ScreenProps {
   /** The screen's accessible name ("Stage"). */
@@ -53,23 +58,15 @@ export function Screen({ name, header, footer, areas, columns, rows, gridRef, gr
     return (
       <AssembledScreen name={name} spec={spec} regions={regions ?? {}} room={room} principles={principles} onPlacement={onPlacement} className={className} style={style} />
     );
-  const grid: CSSProperties = {};
-  if (areas) {
-    grid.gridTemplateAreas = areas.map((row) => `"${row}"`).join(' ');
-    grid.gridTemplateColumns = columns ?? `repeat(${areas[0].trim().split(/\s+/).length}, minmax(0, 1fr))`;
-    grid.gridTemplateRows = rows ?? `repeat(${areas.length}, auto)`;
-  } else {
-    if (columns) grid.gridTemplateColumns = columns;
-    if (rows) grid.gridTemplateRows = rows;
-  }
+  const view = screenView(name, className);
   return (
-    <div className={`lib-screen${className ? ` ${className}` : ''}`} role="group" aria-label={name} data-part="screen" style={style}>
+    <div className={view.className} {...view.attrs} style={style}>
       {header && (
         <div className="lib-screen__header" data-part="header">
           {header}
         </div>
       )}
-      <div className="lib-screen__grid" data-part="grid" ref={gridRef} style={{ ...grid, ...gridStyle }}>
+      <div className="lib-screen__grid" data-part="grid" ref={gridRef} style={reactStyle(screenGrid({ areas, columns, rows }), gridStyle)}>
         {children}
       </div>
       {footer && (
