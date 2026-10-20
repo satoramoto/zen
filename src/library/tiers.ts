@@ -3,8 +3,10 @@
  * `tiers.test.ts` can hold every count to its recorded baseline (`tiers.baseline.json`).
  * Pure node:fs and string work, no React.
  *
- * **What is scanned.** `src/library/{components,graph,layout,yahaha,primitives,theme-editor,report}`: CSS, TSX and TS
- * files, except stories, tests and story/test data (`*.fixtures.ts`). `themes/` is never
+ * **What is scanned.** `src/library/{components,graph,layout,yahaha,primitives,theme-editor,report}`: CSS, TSX, TS
+ * and Svelte files, except stories, tests and story/test data (`*.fixtures.ts`, `*.stories.svelte.ts`,
+ * `*.story.svelte`). A `.svelte` file is read as its parts (`scanSvelte`): `<script>` as TS,
+ * `<style>` as CSS, and its markup's `style="…"` and `style:prop` as `style={{}}`. `themes/` is never
  * scanned: values live there. Comments are stripped before matching (line numbers are kept).
  *
  * **Folders** (what counts are per): `components/<core|music>/<Name>`, `graph/<view|model>/<Name>`
@@ -553,11 +555,70 @@ export function scanTsx(path: string, source: string): Finding[] {
   return out.sort((a, b) => a.line - b.line);
 }
 
+/** `source` with everything outside the matches of `block` (their inner group 1) blanked, offsets kept. */
+function keepOnly(source: string, block: RegExp): string {
+  let out = '';
+  let last = 0;
+  for (const m of source.matchAll(block)) {
+    const inner = (m.index ?? 0) + m[0].indexOf(m[1]);
+    out += blank(source.slice(last, inner)) + m[1];
+    last = inner + m[1].length;
+  }
+  return out + blank(source.slice(last));
+}
+
+const SCRIPT = /<script\b[^>]*>([\s\S]*?)<\/script>/g;
+const STYLE_BLOCK = /<style\b[^>]*>([\s\S]*?)<\/style>/g;
+/** A markup `style="…"` attribute (or `style='…'`): its declarations. */
+const STYLE_ATTR = /(?<![\w:-])style\s*=\s*(["'])([\s\S]*?)\1/g;
+/** A `style:prop` directive and its value, if quoted. */
+const STYLE_DIRECTIVE = /(?<![\w-])style:(--[\w-]+|[a-z-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|\{[^}]*\}))?/g;
+
+/**
+ * Findings in one Svelte component, `path` relative to `src/library`: its `<script>` as TS
+ * (`scanTsx`), its `<style>` as CSS (`scanCss`), and its markup's inline styles (`style="…"`
+ * declarations and `style:prop` directives) by the same pixels and type rules as `style={{}}`.
+ */
+export function scanSvelte(path: string, source: string, options: CssOptions = {}): Finding[] {
+  const src = source.replace(/<!--[\s\S]*?-->/g, blank);
+  const out = [...scanTsx(path, keepOnly(src, SCRIPT)), ...scanCss(path, keepOnly(src, STYLE_BLOCK), options)];
+  const markup = src.replace(SCRIPT, blank).replace(STYLE_BLOCK, blank);
+  const px = applies('pixels', path);
+  const type = applies('type', path);
+  const line = lineAt(source);
+  const lines = source.split('\n');
+  const at = (offset: number, rule: RuleId): Finding => {
+    const n = line(offset);
+    return { file: path, line: n, rule, snippet: short(lines[n - 1] ?? '') };
+  };
+  for (const m of markup.matchAll(STYLE_ATTR)) {
+    const begin = (m.index ?? 0) + m[0].indexOf(m[2]);
+    let offset = begin;
+    for (const decl of m[2].split(';')) {
+      const colon = decl.indexOf(':');
+      if (colon > 0) {
+        const prop = decl.slice(0, colon).trim().toLowerCase();
+        const value = decl.slice(colon + 1);
+        if (px) for (const p of pxLengths(value)) out.push(at(offset + colon + 1 + p.at, 'pixels'));
+        if (type && isTypeDecl(prop, value)) out.push(at(offset, 'type'));
+      }
+      offset += decl.length + 1;
+    }
+  }
+  for (const m of markup.matchAll(STYLE_DIRECTIVE)) {
+    const value = m[2] ?? m[3];
+    if (type && isTypeDecl(m[1], value ?? '')) out.push(at(m.index ?? 0, 'type'));
+    if (px && value !== undefined) for (const p of pxLengths(value)) out.push(at((m.index ?? 0) + m[0].indexOf(value) + p.at, 'pixels'));
+  }
+  return out.sort((a, b) => a.line - b.line);
+}
+
 /* ---------- the library ---------- */
 
 export type LibraryScan = Finding[] & { folders: string[] };
 
-const SKIP = /\.(?:stories|test|fixtures)\.tsx?$/;
+/** Stories, tests and their data aren't scanned: React's and Svelte's (`*.stories.svelte.ts`, `*.story.svelte`). */
+const SKIP = /\.(?:stories|test|fixtures)\.(?:svelte\.)?tsx?$|\.story\.svelte$/;
 const excluded = (rel: string) => SKIP.test(rel);
 
 /** Every finding under `root` (the `src/library` directory), with every scanned folder. */
@@ -568,7 +629,7 @@ export function scanLibrary(root: string): LibraryScan {
     if (!existsSync(base)) continue;
     for (const f of readdirSync(base, { recursive: true, encoding: 'utf8' })) {
       const rel = `${t}/${f.split('\\').join('/')}`;
-      if (!/\.(?:css|tsx?)$/.test(rel) || /\.d\.ts$/.test(rel) || excluded(rel)) continue;
+      if (!/\.(?:css|tsx?|svelte)$/.test(rel) || /\.d\.ts$/.test(rel) || excluded(rel)) continue;
       if (statSync(join(root, rel)).isFile()) files.push(rel);
     }
   }
@@ -585,6 +646,10 @@ export function scanLibrary(root: string): LibraryScan {
   const seenKnobs = new Set<string>();
   for (const rel of files) {
     const src = read(rel);
+    if (rel.endsWith('.svelte')) {
+      findings.push(...scanSvelte(rel, src, { knobs: knobsByDir.get(dirname(rel)) }));
+      continue;
+    }
     if (!rel.endsWith('.css')) {
       findings.push(...scanTsx(rel, src));
       continue;

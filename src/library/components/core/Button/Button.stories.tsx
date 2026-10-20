@@ -5,22 +5,11 @@ import { EveryPack, withLibraryTheme } from '../../../storybook';
 import type { ModeChoice } from '../../../theme';
 import { packs } from '../../../themes/packs';
 import { Icon as IconGlyph } from '../../../primitives/Icon';
-import { Button, type ButtonHue, type ButtonProps } from './Button';
+import { Button, type ButtonProps } from './Button';
+import { FACE_HUES, buttonArgTypes, buttonStories as s, faceRow, sizeRows } from './Button.fixtures';
+import { instances } from '../../../fixtures';
 
-const NONE = 'none';
-const SIZES = ['icon', 'md', 'band', 'pair', 'cell', 'caret'];
-/** The hues that draw a distinct look (the deprecated `t2` and `m` draw as `t`, so they're left out). */
-const HUES: ButtonHue[] = ['t', 'a', 'lamp', 'rec', 'ok', 'role-2', 1, 2, 3, 4, 5, 'intro', 'main', 'ending', 'brk', 'fill'];
-const SYMBOLS = ['prev', 'next', 'up', 'down', 'plus', 'minus', 'caret'];
-/** A select whose first option is `none` (undefined), so the control can go back to "no value". */
-const optional = (options: string[]) => ({ control: 'select' as const, options: [NONE, ...options], mapping: { [NONE]: undefined } });
-/** none / false / true, for a boolean whose undefined means "no attribute". */
-const threeWay = {
-  control: 'select' as const,
-  options: [NONE, 'false', 'true'],
-  mapping: { [NONE]: undefined, false: false, true: true },
-};
-
+// Every story's args come from Button.fixtures.ts, which the Svelte stories and the parity test share.
 const meta = {
   title: 'Design OS/Components/Core/Button',
   component: Button,
@@ -28,30 +17,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: { onPress: fn(), onHold: fn(), onLongPress: fn(), onLongRelease: fn(), tipAction: fn() },
-  argTypes: {
-    label: { control: 'text' },
-    name: { control: 'text' },
-    controls: { control: 'text' },
-    tip: { control: 'text' },
-    compact: { control: 'boolean' },
-    strong: { control: 'boolean' },
-    on: { control: 'boolean' },
-    chosen: { control: 'boolean' },
-    waiting: { control: 'boolean' },
-    lit: { control: 'boolean' },
-    tall: { control: 'boolean' },
-    expanded: { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    hold: { control: 'boolean' },
-    size: { control: 'select', options: SIZES },
-    variant: { control: 'inline-radio', options: ['primary', 'secondary', 'quiet'] },
-    hue: { control: 'select', options: HUES },
-    symbol: optional(SYMBOLS),
-    join: optional(['start', 'end']),
-    popup: optional(['dialog', 'menu']),
-    bar: threeWay,
-    pressed: threeWay,
-  },
+  argTypes: buttonArgTypes,
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -64,15 +30,7 @@ const pastLongPress = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 /** The first Button on the Stage board: the Metronome ▾ caret, joined to its lamp, closed. */
 export const Board: Story = {
-  args: {
-    symbol: 'caret',
-    size: 'caret',
-    join: 'end',
-    popup: 'dialog',
-    expanded: false,
-    name: 'Metronome settings',
-    tip: 'metronome.settings',
-  },
+  args: s.Board.args,
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Metronome settings' });
     await expect(button).toHaveAttribute('aria-haspopup', 'dialog');
@@ -89,7 +47,7 @@ export const Board: Story = {
 
 /** Help mode's ?: a square key at rest (hairline outline, ink label), a switch that is off. */
 export const Icon: Story = {
-  args: { label: '?', size: 'icon', pressed: false, name: 'Help mode' },
+  args: s.Icon.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Help mode' });
     await expect(button).toHaveAttribute('aria-pressed', 'false');
@@ -99,12 +57,12 @@ export const Icon: Story = {
 
 /** A band button switched on: Fade while fading, a ring and a lit dot in `--selected` (no fill: fading isn't sounding). */
 export const BandOn: Story = {
-  args: { label: 'Fade', size: 'band', on: true, pressed: true },
+  args: s.BandOn.args,
 };
 
 /** The on face: help mode switched on, a ring and a lit dot in `--selected`. */
 export const On: Story = {
-  args: { label: '?', size: 'icon', on: true, pressed: true, name: 'Help mode' },
+  args: s.On.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Help mode' });
     await expect(button).toHaveAttribute('aria-pressed', 'true');
@@ -114,7 +72,7 @@ export const On: Story = {
 
 /** The chosen face: the applied One Touch, ink and a `--selected` rule along the bottom on the rest outline. */
 export const Chosen: Story = {
-  args: { label: '2', size: 'icon', chosen: true, pressed: true, name: 'One Touch 2, applied' },
+  args: s.Chosen.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'One Touch 2, applied' });
     await expect(button).toHaveAttribute('data-face', 'chosen');
@@ -124,21 +82,12 @@ export const Chosen: Story = {
 
 /** A band button: a wide transport key, the label left-aligned (Stop). */
 export const Band: Story = {
-  args: { label: 'Stop', size: 'band', name: 'Stop (fade with hold)' },
+  args: s.Band.args,
 };
 
 /** Start / Stop running (`bar`): the on face in `--success`, lit with the palette's bloom. */
 export const Running: Story = {
-  args: {
-    label: 'Start / Stop',
-    size: 'band',
-    compact: true,
-    strong: true,
-    bar: true,
-    pressed: true,
-    name: 'Start / Stop, running',
-    tip: 'transport.start_stop',
-  },
+  args: s.Running.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Start / Stop, running' });
     await expect(button).toHaveAttribute('data-bar');
@@ -150,7 +99,7 @@ export const Running: Story = {
 
 /** Start / Stop stopped (`bar: false`): the rest face. */
 export const Stopped: Story = {
-  args: { ...Running.args, bar: false, pressed: false, name: 'Start / Stop' },
+  args: s.Stopped.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Start / Stop' });
     await expect(button).not.toHaveAttribute('data-bar');
@@ -162,14 +111,7 @@ export const Stopped: Story = {
 
 /** The waiting face: Fade armed, a double-weight ring over a faint tint, the label in ink. */
 export const Waiting: Story = {
-  args: {
-    label: 'Fade',
-    size: 'pair',
-    waiting: true,
-    pressed: false,
-    name: 'Fade, armed',
-    tip: 'transport.fade',
-  },
+  args: s.Waiting.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Fade, armed' });
     await expect(button).toHaveAttribute('data-face', 'waiting');
@@ -181,10 +123,9 @@ export const Waiting: Story = {
 export const WaitingFlash: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-      <Button {...args} label="Fade" size="pair" waiting lit name="Fade, armed, lit" />
-      <Button {...args} label="Fade" size="pair" waiting lit={false} name="Fade, armed, unlit" />
-      <Button {...args} label="On" size="pair" hue={1} waiting lit name="Hue 1, armed, lit" />
-      <Button {...args} label="On" size="pair" hue={1} waiting lit={false} name="Hue 1, armed, unlit" />
+      {instances(s.WaitingFlash).map((item, i) => (
+        <Button key={i} {...args} {...item} />
+      ))}
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -204,13 +145,9 @@ export const WaitingFlash: Story = {
 export const Role2: Story = {
   render: (args) => (
     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' }}>
-      <Button {...args} label="Start" size="band" variant="primary" hue="role-2" tall name="Start / Stop, stopped" />
-      <Button {...args} label="Stop" size="band" hue="role-2" bar tall name="Start / Stop, running" />
-      <Button {...args} label="Sync Start" size="md" hue="role-2" name="Sync Start" />
-      <Button {...args} label="Sync Start" size="md" hue="role-2" waiting name="Sync Start, armed" />
-      <Button {...args} label="Fill" symbol="up" size="md" hue="role-2" waiting lit={false} name="Fill up, queued, unlit" />
-      <Button {...args} label="Tap" size="pair" hue="role-2" on name="Tap, on" />
-      <Button {...args} symbol="plus" size="icon" hue="role-2" name="Tempo up" />
+      {instances(s.Role2).map((item, i) => (
+        <Button key={i} {...args} {...item} />
+      ))}
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -233,7 +170,7 @@ export const Role2: Story = {
 
 /** New: a tall primary key, Start / Stop leading the transport: two control rows high, the label at heading size. */
 export const Tall: Story = {
-  args: { label: 'Start', size: 'band', variant: 'primary', tall: true, name: 'Start / Stop' },
+  args: s.Tall.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Start / Stop' });
     await expect(button).toHaveAttribute('data-tall', '');
@@ -242,7 +179,7 @@ export const Tall: Story = {
 
 /** Shown, not pressable: a dashed edge and a `--text-3` label, a not-allowed cursor. No press, hold or long press. */
 export const Disabled: Story = {
-  args: { label: 'Audition', size: 'md', compact: true, disabled: true, name: 'Audition (stop the band first)' },
+  args: s.Disabled.args,
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Audition (stop the band first)' });
     await expect(button).toHaveAttribute('aria-disabled', 'true');
@@ -262,7 +199,7 @@ export const Disabled: Story = {
 
 /** A section button, absent: the same dashed edge and `--text-3` label as every disabled key; the label still names the Fill key. */
 export const DisabledHue: Story = {
-  args: { label: 'Fill', symbol: 'up', size: 'pair', hue: 'fill', disabled: true, name: 'Fill up (none in this style)' },
+  args: s.DisabledHue.args,
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Fill up (none in this style)' });
     await expect(button).toHaveAttribute('data-face', 'disabled');
@@ -276,7 +213,7 @@ export const DisabledHue: Story = {
  * started the hold; a pointer click doesn't press, a keyboard click does; no long press.
  */
 export const Hold: Story = {
-  args: { label: 'Tempo', symbol: 'plus', size: 'band', hold: true, name: 'Tempo up (Scene Launch)', tip: 'tempo.up' },
+  args: s.Hold.args,
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Tempo up (Scene Launch)' });
     await fireEvent.pointerDown(button, pointer(1));
@@ -314,7 +251,7 @@ export const Hold: Story = {
  * click that ends it is swallowed. A short click still presses; a right-click long-presses.
  */
 export const LongPress: Story = {
-  args: { label: 'Stop', size: 'band', tip: 'transport.stop' },
+  args: s.LongPress.args,
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Stop' });
     await fireEvent.pointerDown(button, pointer(1));
@@ -338,11 +275,9 @@ const grid = { display: 'grid', gap: 'var(--space-3)' } as const;
 export const Hierarchy: Story = {
   render: (args) => (
     <div style={row}>
-      <Button {...args} label="Start" size="band" variant="primary" />
-      <Button {...args} label="Stop" size="band" />
-      <Button {...args} label="Reset" size="md" variant="quiet" />
-      <Button {...args} symbol="prev" size="icon" variant="quiet" name="Previous style" />
-      <Button {...args} symbol="next" size="icon" variant="quiet" name="Next style" />
+      {instances(s.Hierarchy).map((item, i) => (
+        <Button key={i} {...args} {...item} />
+      ))}
     </div>
   ),
 };
@@ -351,9 +286,9 @@ export const Hierarchy: Story = {
 export const Quiet: Story = {
   render: (args) => (
     <div style={row}>
-      <Button {...args} label="JSON" variant="quiet" pressed={false} name="JSON off" />
-      <Button {...args} label="JSON" variant="quiet" pressed chosen name="JSON chosen" />
-      <Button {...args} label="JSON" variant="quiet" disabled name="JSON disabled" />
+      {instances(s.Quiet).map((item, i) => (
+        <Button key={i} {...args} {...item} />
+      ))}
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -405,10 +340,9 @@ export const IconToggle: Story = {
     <EveryPack mode={globals.mode as ModeChoice}>
       <div style={row}>
         <PanelToggle onPress={args.onPress} />
-        <Button icon={sidebarIcon} size="icon" variant="quiet" name="Sources" title="Hide the sources" pressed chosen />
-        <Button icon={sidebarIcon} label="Library" variant="quiet" title="Show the library" pressed={false} />
-        <Button icon={sidebarIcon} size="icon" name="Sources (secondary)" title="Sources" />
-        <Button icon={sidebarIcon} size="icon" variant="quiet" name="Sources (disabled)" disabled />
+        {instances(s.IconToggle).slice(1).map((item, i) => (
+          <Button key={i} icon={sidebarIcon} {...item} />
+        ))}
       </div>
     </EveryPack>
   ),
@@ -437,13 +371,11 @@ export const IconToggle: Story = {
 export const Faces: Story = {
   render: (args) => (
     <div style={grid}>
-      {HUES.filter((h) => h !== 'lamp').map((hue) => (
+      {FACE_HUES.map((hue) => (
         <div key={hue} style={row}>
-          <Button {...args} hue={hue} label={String(hue)} size="pair" />
-          <Button {...args} hue={hue} label={String(hue)} size="pair" waiting />
-          <Button {...args} hue={hue} label={String(hue)} size="pair" on />
-          <Button {...args} hue={hue} label={String(hue)} size="pair" chosen />
-          <Button {...args} hue={hue} label={String(hue)} size="pair" disabled />
+          {faceRow(hue).map((item, i) => (
+            <Button key={i} {...args} {...item} />
+          ))}
         </div>
       ))}
     </div>
@@ -454,20 +386,13 @@ export const Faces: Story = {
 export const Sizes: Story = {
   render: (args) => (
     <div style={grid}>
-      <div style={row}>
-        <Button {...args} label="?" size="icon" name="Help mode" />
-        <Button {...args} label="Panic" size="md" />
-        <Button {...args} label="Stop" size="band" />
-        <Button {...args} label="Fill" symbol="up" size="pair" />
-        <Button {...args} label="Fill" symbol="down" size="pair" />
-      </div>
-      <div style={{ ...row, gap: 0 }}>
-        <Button {...args} label="Metronome" size="md" join="start" />
-        <Button {...args} symbol="caret" size="caret" join="end" popup="dialog" name="Metronome settings" />
-      </div>
-      <div style={{ display: 'flex', width: 240 }}>
-        <Button {...args} label="Audition" size="cell" />
-      </div>
+      {sizeRows.map((items, r) => (
+        <div key={r} style={r === 0 ? row : r === 1 ? { ...row, gap: 0 } : { display: 'flex', width: 240 }}>
+          {items.map((item, i) => (
+            <Button key={i} {...args} {...item} />
+          ))}
+        </div>
+      ))}
     </div>
   ),
 };

@@ -32,7 +32,9 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The field guide app. |
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
-| `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/storybook.tsx` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
+| `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/storybook.tsx`, `src/library/svelte.ts`, `src/library/storybook-svelte.ts` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
+| `npx vitest run src/library/parity.test.tsx` | Any component's model, React or Svelte renderer, or fixtures: both renderers draw the same DOM for every story. |
+| `npm run build:storybook:svelte` | Any `*.stories.svelte.ts`, `*.story.svelte`, `.storybook-svelte/`, `src/library/storybook-svelte.ts`. |
 
 UI is tested by exercising behaviours in Storybook stories, never by unit tests; pure models and functions get unit tests.
 
@@ -82,6 +84,18 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 - The theme editor is its own area, `src/library/theme-editor/` (`docs/theme-editor.md`): skins (a pack as portable JSON) in `skin.ts`, `colour.ts` and `persist.ts`, which never import React (a Vue or Svelte binding wraps them), and the React parts `SkinScope`/`SkinProvider`, `ThemePicker/`, `ThemeEditor/` and `ThemeSettings/`, all exported from `theme-editor/index.ts`, which the package root re-exports. Stories are titled `Design OS/Theme Editor/<Name>`. The tier rules and `library.test.tsx` hold it to the controls' rules.
 - A theme pack (`themes/packs.ts`) names its Refero style id and the source rules it keeps.
 - Shared files: `contract.ts`, `themes/`, `storybook.tsx`, `.storybook/`, `library.test.tsx`, `index.ts`, `components/core/index.ts`, `components/music/index.ts`, `graph/index.ts`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.
+
+## Svelte bindings
+
+Zen's components also render in Svelte 5 (`@satoramoto/zen/svelte`, `@satoramoto/zen/storybook-svelte`). `docs/svelte-bindings.md` is the how-to for a lane, with Button as the worked example.
+
+- **Model.** Each component's decisions live in a framework-free `<Name>.model.ts` beside it: a pure function from props to a view (class, `data-*`, ARIA, text, inline custom properties; every attribute a string or undefined) plus pure helpers. `<Name>.tsx` and `<Name>.svelte` both render that view with the same markup; the `.css` is shared as is.
+- **State.** Stateful logic (long press, hold, size observation, stepping) is a framework-free store in a plain `.ts` (`bindX(node, params)` returning `update`/`destroy`, or `createX()` with methods and `subscribe`/`get`). React wraps it in a hook (`useX.ts`), Svelte in an action or rune module (`x.svelte.ts`). Neither renderer holds logic the other would copy.
+- **Fixtures.** `<Name>.fixtures.ts` holds every story's args (and controls) as plain data; `<Name>.stories.tsx` and `<Name>.stories.svelte.ts` (same story names) both draw them. A Svelte story that needs markup renders a `<Name>.story.svelte`.
+- **Parity.** `src/library/parity.test.tsx` renders every fixture instance with both renderers and compares the DOM (`src/library/parity.ts`); a component is one line there. No story tests for the Svelte side: behaviours are exercised on the React stories.
+- **Two Storybooks.** `.storybook/` (React) and `.storybook-svelte/` (`npm run storybook:svelte`, port 6023). The React one composes the Svelte one as a ref while it runs; `SVELTE_STORYBOOK_PORT=6023 npm run dev` starts it with the launcher's group.
+- **Shared files** (besides those above): `src/library/svelte.ts`, `src/library/fixtures.ts`, `src/library/parity.ts`, `src/library/parity.test.tsx`, `src/library/storybook.globals.ts`, `src/library/theme.model.ts`, `src/library/svelte/`, `.storybook-svelte/`.
+- Checks: `npm run typecheck`, `npx vitest run src/library/parity.test.tsx`, `npx vitest run src/library/tiers.test.ts` (it scans `.svelte` too), `npm run build:storybook:svelte`, `npm run build:lib`. `.svelte` files aren't type-checked (svelte-check doesn't support TypeScript 7 yet).
 
 ## Yahaha redesigns
 

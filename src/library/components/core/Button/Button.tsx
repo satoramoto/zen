@@ -1,110 +1,19 @@
-import { useCallback, useEffect, useRef, type MouseEvent, type PointerEvent, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { useLongPress } from './useLongPress';
-import type { HueSlot } from '../hue';
-import { focusRing } from '../../../primitives/Ring';
+import { buttonView, clickPresses, type ButtonModelProps } from './Button.model';
+import { createHold } from './hold';
 import { Text } from '../../../primitives/Text';
 import './Button.css';
 
-export type ButtonGlyph = 'prev' | 'next' | 'up' | 'down' | 'plus' | 'minus' | 'caret';
-export type ButtonHue =
-  | 't'
-  | 't2'
-  | 'm'
-  | 'a'
-  | 'lamp'
-  | 'rec'
-  | 'ok'
-  | HueSlot
-  | 'intro'
-  | 'main'
-  | 'ending'
-  | 'role-2'
-  | 'brk'
-  | 'fill';
-export type ButtonSize = 'icon' | 'md' | 'band' | 'pair' | 'cell' | 'caret';
-export type ButtonVariant = 'primary' | 'secondary' | 'quiet';
-export type ButtonFace = 'off' | 'on' | 'chosen' | 'waiting' | 'disabled';
+// The props, faces and accessible name are framework-free, in the model; `Button.svelte` renders the same view.
+export type { ButtonGlyph, ButtonHue, ButtonSize, ButtonVariant, ButtonFace, TipAction, ButtonModelProps } from './Button.model';
 
-/** The parent's tooltip action (a Svelte-style `use:tip`): called with the node and the key. */
-export type TipAction = (node: HTMLElement, key: string) => { update?: (key: string) => void; destroy?: () => void } | void;
-
-export interface ButtonProps {
-  /** The word or character on the face ("Panic", "Stop", "1", "?"). May be empty when `symbol` is set. */
-  label?: string;
-  /** A glyph after the label, or alone: ◀ ▶ ▲ ▼ + − ▾. Hidden from assistive tech. */
-  symbol?: ButtonGlyph;
+export interface ButtonProps extends ButtonModelProps {
   /** An icon before the label, or alone (an `Icon`, an SVG), drawn in the face's ink and hidden
    *  from assistive tech. Alone (no `label`), give the button a `name` for its accessible name and
    *  a `title` for its hover hint: an icon-only key, such as a panel's show/hide toggle. */
   icon?: ReactNode;
-  /** The native hover hint (`title`), e.g. "Hide the inspector (⌘I)". */
-  title?: string;
-  /** `icon` square; `md` width from the label; `band` a wide, left-aligned transport key; `pair` one of two; `cell` fills its container; `caret` the narrow ▾. All heights are `--control-h`. */
-  size?: ButtonSize;
-  /** Rank at rest. `primary`: the one filled call to action on the screen (`--action`). `secondary` (default): an outlined key. `quiet`: no outline, for low-stakes steps. The on, chosen, waiting and disabled faces override it. */
-  variant?: ButtonVariant;
-  /** Kept for compatibility; changes nothing. */
-  compact?: boolean;
-  /** Kept for compatibility; changes nothing. */
-  strong?: boolean;
-  /** Start / Stop running, `band` only. `true`: the on face in `--success`, solid, marked `data-bar`. */
-  bar?: boolean;
-  /** The on face: switched on (help mode's ?, Fade while fading). A ring and a lit dot; solid only in `ok` (running) and `rec` (recording). */
-  on?: boolean;
-  /** The chosen face: the one picked from a set (the applied One Touch). Ink and a rule along the bottom; a `quiet` key (a toggle such as a panel's JSON switch) takes the pack's chosen-tab face instead. */
-  chosen?: boolean;
-  /** The waiting face: queued or armed, a double-weight ring over a faint tint. */
-  waiting?: boolean;
-  /** The flash phase of the waiting face, driven by the parent (as on the Pad): `false` drops the tint and thins the ring to the rest outline in the tone; the label stays. Default `true`, the steady waiting face. Ignored by every other face. */
-  lit?: boolean;
-  /** A tall key, two control rows and the gap between them, its label at heading size: the primary key of a transport (Start / Stop). Default `false`. Works with any `size`. */
-  tall?: boolean;
-  /** What the button belongs to. `t` (and deprecated `t2`, `m`, `lamp`) neutral; `1`–`4` a categorical hue slot (`--hue-1..4`; an app maps its own meaning, e.g. Yahaha's parts); `intro` `main` `fill` `brk` `ending` sections (neutral: the label names the section); `rec` danger; `ok` success; `a` the accent; `role-2` the second role hue (`--role-2`; e.g. Yahaha's keys that move time), neutral at rest and in the hue only while waiting, on, or as the primary fill. */
-  hue?: ButtonHue;
-  /** Sets `aria-pressed` for a switch or a choice. Undefined: no `aria-pressed`. Never changes the look. */
-  pressed?: boolean;
-  /** Sets `aria-haspopup` (the caret opens a dialog). */
-  popup?: 'dialog' | 'menu';
-  /** With `popup`: `aria-expanded`, and the on face while open. */
-  expanded?: boolean;
-  /** Sets `aria-controls`: the id of the popover this button opens. */
-  controls?: string;
-  /** Joined to a neighbour: `start` on its right, `end` on its left (the shared corners go square). */
-  join?: 'start' | 'end';
-  /** Shown, not pressable: no press, hold or long press. Stays focusable (`aria-disabled`). */
-  disabled?: boolean;
-  /** Repeat-while-held (Tempo ±): pointer down and up call `onHold`; a pointer click doesn't press; no long press. */
-  hold?: boolean;
-  /** The accessible name. Default: the label, then the symbol's word ("Fill up"). */
-  name?: string;
-  /** The tooltip key (e.g. `transport.panic`), rendered as `data-tip`. */
-  tip?: string;
-  /** The app's tooltip action, passed in by the wiring; applied with `tip` when both are set. */
-  tipAction?: TipAction;
-  /** Called on a click, Space or Enter; not for the click that ends a long press; with `hold`, only from the keyboard. */
-  onPress?: () => void;
-  /** With `hold`: `true` when a primary pointer goes down, `false` once when that hold ends. */
-  onHold?: (down: boolean) => void;
-  /** Called when the button is held for the long-press time, or right-clicked. */
-  onLongPress?: () => void;
-  /** Called when the press that fired `onLongPress` ends. */
-  onLongRelease?: () => void;
 }
-
-const GLYPHS: Record<ButtonGlyph, string> = { prev: '◀', next: '▶', up: '▲', down: '▼', plus: '+', minus: '−', caret: '▾' };
-const WORDS: Record<ButtonGlyph, string> = {
-  prev: 'previous',
-  next: 'next',
-  up: 'up',
-  down: 'down',
-  plus: 'plus',
-  minus: 'minus',
-  caret: 'options',
-};
-/** Deprecated greys and the lamp line all draw as the neutral `t`. */
-const NEUTRAL = new Set<ButtonHue>(['t', 't2', 'm', 'lamp']);
-/** The tones whose on face is solid: running (Start / Stop) and recording. A solid fill means sounding or running. */
-const SOLID = new Set<ButtonHue>(['ok', 'rec']);
 
 /**
  * **Job.** Does one thing when pressed (Panic, Stop, a page step, a One Touch) and shows, at a
@@ -166,69 +75,23 @@ const SOLID = new Set<ButtonHue>(['ok', 'rec']);
  *   `cta-ink` (the primary fill and its label), `tint` (the hover, press and waiting wash).
  * - `--yh-wait-ring`: the waiting and on ring's weight, one weight across Button, LampButton and Pad.
  */
-export function Button({
-  label = '',
-  symbol,
-  icon,
-  title,
-  size = 'md',
-  variant = 'secondary',
-  bar,
-  on = false,
-  chosen = false,
-  waiting = false,
-  lit = true,
-  tall = false,
-  hue = 't',
-  pressed,
-  popup,
-  expanded = false,
-  controls,
-  join,
-  disabled = false,
-  hold = false,
-  name,
-  tip,
-  tipAction,
-  onPress,
-  onHold,
-  onLongPress,
-  onLongRelease,
-}: ButtonProps) {
-  const running = size === 'band' && bar === true;
-  const open = popup !== undefined && expanded;
-  const face: Exclude<ButtonFace, 'disabled'> = chosen ? 'chosen' : on || running || open ? 'on' : waiting ? 'waiting' : 'off';
-  const drawn: ButtonHue = running && !chosen ? 'ok' : NEUTRAL.has(hue) ? 't' : hue;
-  const accessibleName = name ?? [label, symbol ? WORDS[symbol] : ''].filter(Boolean).join(' ');
+export function Button(props: ButtonProps) {
+  const { icon, disabled = false, hold = false, tip, tipAction, onPress, onHold, onLongPress, onLongRelease } = props;
+  const view = buttonView(props);
 
   const node = useRef<HTMLButtonElement>(null);
   const onHoldRef = useRef(onHold);
   onHoldRef.current = onHold;
-  /** The pointer of the hold in progress. */
-  const holdId = useRef<number | null>(null);
-
-  const endHold = useCallback((release: boolean) => {
-    const id = holdId.current;
-    if (id === null) return;
-    holdId.current = null;
-    if (release) {
-      try {
-        node.current?.releasePointerCapture?.(id);
-      } catch {
-        // No capture to release (jsdom, a pointer already gone).
-      }
-    }
-    onHoldRef.current?.(false);
-  }, []);
+  const holding = useRef(createHold(() => node.current, () => onHoldRef.current)).current;
 
   // A hold ends at once when it can't continue: disabled, or no longer a hold button...
   useEffect(() => {
-    if (disabled || !hold) endHold(true);
-  }, [disabled, hold, endHold]);
+    if (disabled || !hold) holding.stop(true);
+  }, [disabled, hold, holding]);
   // ...or when the button goes away while held.
-  useEffect(() => () => endHold(false), [endHold]);
+  useEffect(() => () => holding.stop(false), [holding]);
 
-  useLongPress(node, { onLongPress, onLongRelease, disabled: disabled || hold || onLongPress === undefined });
+  useLongPress(node, { onLongPress, onLongRelease, disabled: !view.longPress });
 
   useEffect(() => {
     const target = node.current;
@@ -237,75 +100,34 @@ export function Button({
     return () => handle?.destroy?.();
   }, [tip, tipAction]);
 
-  function pointerDown(event: PointerEvent<HTMLButtonElement>) {
-    if (!hold || disabled || event.button !== 0 || holdId.current !== null) return;
-    holdId.current = event.pointerId;
-    try {
-      node.current?.setPointerCapture?.(event.pointerId);
-    } catch {
-      // jsdom and synthetic events have no pointer capture.
-    }
-    onHoldRef.current?.(true);
-  }
-
-  function pointerEnd(event: PointerEvent<HTMLButtonElement>) {
-    if (holdId.current !== null && event.pointerId === holdId.current) endHold(false);
-  }
-
-  function click(event: MouseEvent<HTMLButtonElement>) {
-    if (disabled) return;
-    if (hold && event.detail !== 0) return;
-    onPress?.();
-  }
-
   return (
     <Text
       as="button"
-      role="label"
-      leading="tight"
-      tabular
+      {...view.text}
       ref={node}
-      type="button"
-      className={`yh-button ${focusRing}`}
-      data-part="face"
-      data-size={size}
-      data-variant={variant}
-      data-face={disabled ? 'disabled' : face}
-      data-hue={drawn}
-      data-join={join}
-      data-tall={tall ? '' : undefined}
-      data-lit={!disabled && face === 'waiting' && !lit ? 'false' : undefined}
-      data-alone={label === '' ? '' : undefined}
-      data-bar={running ? '' : undefined}
-      data-solid={!disabled && face === 'on' && SOLID.has(drawn) ? '' : undefined}
-      data-contrast={disabled ? 'dim' : undefined}
-      data-tip={tip}
-      title={title}
-      aria-label={accessibleName}
-      aria-pressed={pressed}
-      aria-haspopup={popup}
-      aria-expanded={popup !== undefined ? expanded : undefined}
-      aria-controls={controls}
-      aria-disabled={disabled ? 'true' : undefined}
-      onClick={click}
-      onPointerDown={pointerDown}
-      onPointerUp={pointerEnd}
-      onPointerCancel={pointerEnd}
-      onLostPointerCapture={pointerEnd}
+      className={view.face.className}
+      {...view.face.attrs}
+      onClick={(event) => {
+        if (clickPresses({ disabled, hold }, event.detail)) onPress?.();
+      }}
+      onPointerDown={(event) => holding.down(event, hold && !disabled)}
+      onPointerUp={(event) => holding.end(event)}
+      onPointerCancel={(event) => holding.end(event)}
+      onLostPointerCapture={(event) => holding.end(event)}
     >
       {icon !== undefined && (
         <span className="yh-button__icon" data-part="icon" aria-hidden="true">
           {icon}
         </span>
       )}
-      {label !== '' && (
+      {view.label !== null && (
         <span className="yh-button__label" data-part="label">
-          {label}
+          {view.label}
         </span>
       )}
-      {symbol && (
-        <Text role="label" leading="tight" className="yh-button__glyph" data-part="glyph" data-glyph={symbol} aria-hidden="true">
-          {GLYPHS[symbol]}
+      {view.glyph && (
+        <Text role="label" leading="tight" className={view.glyph.className} {...view.glyph.attrs}>
+          {view.glyph.char}
         </Text>
       )}
     </Text>
