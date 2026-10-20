@@ -1,4 +1,5 @@
-import { defineFixtures } from '../../fixtures';
+import { defineFixtures, instances } from '../../fixtures';
+import { component, h, type Node } from '../../view/Tree.model';
 import { PAD_BANK_FORMS, type PadBankRegionProps, type PadItem } from './PadBank.model';
 
 // Ported from the baseline's `sectionPads` (yahaha/src/ui/PadBank/PadBank.fixtures.ts) and the
@@ -133,7 +134,7 @@ export const allPadsByBank: PadItem[][] = [sectionPads, ...padsByBank];
 /** The board's bank name and its old counter (PadBank no longer draws the counter). */
 export const quickRackBank = { name: 'Quick Racks', count: '1/4' };
 
-/* ---------- stories: PadBank.stories.tsx and PadBank.stories.svelte.ts draw these ---------- */
+/* ---------- stories: PadBank.stories.tsx draws these, as the Pads region, with React's or Svelte's `Tree` ---------- */
 
 /** The bank indexes in `allPadBanks`. */
 export const BANK = { Sections: 0, QuickRacks: 1, Chord: 2, MultiPads: 3, Setup: 4 } as const;
@@ -199,3 +200,21 @@ export const padBankStories = defineFixtures<PadBankRegionProps>()({
   },
   Playground: { args: board },
 });
+
+/**
+ * The Forms story as a view tree: one Pads region per item of `padBankStories.Forms` (one per
+ * form), in a column 24px apart. The regions' callbacks are the handlers `bank`, `press` and
+ * `tipAction`.
+ */
+export const padBankFormsSample = ({ pads, banks, bank, bankTips, bankName, lit, columns, area }: Partial<PadBankRegionProps>): Node =>
+  h(
+    'div',
+    { style: 'display: grid; gap: 24px' },
+    instances({ items: padBankStories.Forms.items }).map(({ form, name }) =>
+      component(
+        'PadBankRegion',
+        { pads, banks, bank, bankTips, bankName, lit, columns, area, form, name },
+        { on: { onBank: 'bank', onPress: 'press', tipAction: 'tipAction' }, key: form },
+      ),
+    ),
+  );

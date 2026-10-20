@@ -1,44 +1,32 @@
 <!--
-  Stage: the Svelte renderer of `stageView` and the Stage's derivations (Stage.model.ts), the same
-  frame and assembled screen as `Stage.tsx`; see Stage.tsx for the job. The principles come from
-  the nearest ThemeScope (`scopePrinciples`), the screen measures its own room (Screen.svelte), and
-  the taps are one `createTapTempo` store per mounted screen.
+  Stage: the model's tree (Stage.model.ts) drawn by the Svelte `Tree`, as `Stage.tsx` draws it with
+  the React one; see Stage.tsx for the job. The plate's inset comes from the nearest ThemeScope
+  (`scopePrinciples`), and the Stage's own state (the last placement, the taps) is one
+  `createStageState` per mounted screen (`stageState.ts`).
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import Keys from '../../components/music/Keys/Keys.svelte';
+  import { fromStore } from 'svelte/store';
   import { scopePrinciples } from '../../layout/assembly/principles.svelte';
   import type { Placed } from '../../layout/assembly/types';
-  import Region from '../../layout/Region.svelte';
   import Screen from '../../layout/Screen.svelte';
-  import { styleString } from '../../layout/style';
-  import AppBar from '../AppBar/AppBar.svelte';
-  import Display from '../Display/Display.svelte';
-  import FaderBankRegion from '../FaderBank/FaderBankRegion.svelte';
-  import KnobBankRegion from '../KnobBank/KnobBankRegion.svelte';
-  import PadBankRegion from '../PadBank/PadBankRegion.svelte';
-  import SongForm from '../SongForm/SongForm.svelte';
-  import StatusLine from '../StatusLine/StatusLine.svelte';
-  import { stageKeysWidth, stagePads, stageTap, stageView, type StageModelProps } from './Stage.model';
-  import { createTapTempo } from './tapTempo';
+  import Tree from '../../view/Tree.svelte';
+  import { stageFrame, stageHandlers, stageRegions, stageScreen, type StageModelProps } from './Stage.model';
+  import { createStageState } from './stageState';
   import './Stage.css';
 
   let props: StageModelProps<string | Snippet> = $props();
 
-  const tapper = createTapTempo();
+  const state = createStageState();
+  const current = fromStore(state);
   const p = scopePrinciples();
-  const view = $derived(stageView(props));
-  const onTap = () => stageTap(props.display, tapper, performance.now());
-  const shownPads = $derived(stagePads(props.pads, props.songForm, onTap));
+  const handlers = $derived(stageHandlers(props, state));
+  const regions = $derived(stageRegions(props, current.current, p.current.plate.inset));
+  const screen = $derived(stageScreen(props));
 </script>
 
-{#snippet bar()}<AppBar {...props.appBar} tipAction={props.tipAction} />{/snippet}
-{#snippet hero()}<Region name="Hero"><Display {...props.display} parts={undefined} tipAction={props.tipAction} {onTap} /></Region>{/snippet}
-{#snippet transport()}<Region name="Transport"><SongForm {...props.songForm} part="transport" tipAction={props.tipAction} /></Region>{/snippet}
-{#snippet mixer()}<FaderBankRegion {...props.faders} tipAction={props.tipAction} />{/snippet}
-{#snippet knobs()}<KnobBankRegion {...props.knobs} tipAction={props.tipAction} />{/snippet}
-{#snippet pads()}<PadBankRegion {...shownPads} tipAction={props.tipAction} />{/snippet}
-{#snippet keys(_form: string, placed: Placed)}<Region name="Keyboard"><Keys {...props.keys} ruler={false} width={stageKeysWidth(placed, p.current.plate.inset)} tipAction={props.tipAction} /></Region>{/snippet}
-{#snippet status()}<StatusLine {...props.status} />{/snippet}
-
-<div class={view.className} {...view.attrs} style={styleString(view.style)}><Screen name="Stage" class="yh-stage__screen" spec={view.spec} room={view.room} onPlacement={props.onPlacement} regions={{ bar, hero, transport, mixer, knobs, pads, keys, status }} /></div>
+<!-- The seam: the layout's `Screen` takes a `regions` record, so the screen is drawn here by hand;
+     once it draws its regions as slots by id, this is `<Tree tree={stageView(props, current.current, inset)} {handlers} />`. -->
+{#snippet region(_form: string, placed: Placed)}<Tree tree={regions[placed.id as keyof typeof regions]} {handlers} />{/snippet}
+{#snippet drawn()}<Screen name="Stage" class="yh-stage__screen" spec={screen.spec} room={screen.room} onPlacement={handlers.placement} regions={Object.fromEntries(Object.keys(regions).map((id) => [id, region]))} />{/snippet}
+<Tree tree={stageFrame(props)} slots={{ screen: drawn }} />

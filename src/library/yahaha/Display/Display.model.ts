@@ -1,13 +1,17 @@
-// Display's model: its props and what the hero draws from them (the root's classes, `data-*` and
-// inline style, the header's text, the section's "then" line, the part rows). No framework:
-// `Display.tsx` (React) and `Display.svelte` (Svelte) both render `displayView`; the fit and the
-// auto form's measuring are the store beside it (`fit.ts`).
+// Display's model: its props and the tree the hero draws from them (the root's classes, `data-*`
+// and inline style, the header, the readouts, the section's "then" line, the part rows), and the
+// handlers that tree names. No framework: `Display.tsx` (React) and `Display.svelte` (Svelte) both
+// pass `displayView` to their `Tree`; the fit and the auto form's measuring are the stores beside
+// it (`fit.ts`), the measured width the binding's `wideState` (`wide.ts`).
 import type { TipAction } from '../../components/core/Button/Button.model';
 import type { ChordReadoutModelProps } from '../../components/music/ChordReadout/ChordReadout.model';
 import { marksText } from '../../components/music/PartMarks/marks';
-import type { ElementView } from '../../primitives/Text.model';
-import { PART_HUE, SECTION_STATE_COLOUR, type Part } from '../hues';
+import { stackView, type StackModelProps } from '../../primitives/Stack.model';
+import { textView, type ElementView, type TextModelProps } from '../../primitives/Text.model';
+import { component, each, h, styleText, when, wire, type Handlers, type Node } from '../../view/Tree.model';
+import { PARTS, PART_HUE, SECTION_STATE_COLOUR, type Part } from '../hues';
 import { DISPLAY_FORMS, displayLengthCss, type DisplayForm } from './Display.forms';
+import type { WideState } from './wide';
 
 export type { TipAction };
 
@@ -143,11 +147,6 @@ export interface DisplayModelProps {
 /** Inline style declarations, property to value (custom properties included). */
 export type StyleMap = Record<string, string>;
 
-/** A style map as an inline `style` string, or undefined for none. */
-export function styleText(style: StyleMap | undefined): string | undefined {
-  return style === undefined ? undefined : Object.entries(style).map(([property, value]) => `${property}: ${value}`).join('; ');
-}
-
 /** Each form's least as the CSS the readouts scale from (`--yh-display-min-w`, `-min-h`). */
 const LEAST_CSS = Object.fromEntries(
   DISPLAY_FORMS.map((f): [DisplayForm, StyleMap] => [f.id, { '--yh-display-min-w': displayLengthCss(f.min.w), '--yh-display-min-h': displayLengthCss(f.min.h) }]),
@@ -223,8 +222,8 @@ export function displayPartView(p: DisplayPart): DisplayPartView {
   };
 }
 
-/** What a renderer draws. */
-export interface DisplayView {
+/** What the tree draws, worked out from the props in the form picked. */
+export interface DisplayData {
   /** The form drawn. */
   form: DisplayForm;
   /** The root (a `Text`, `size="inherit"`): its class and `data-*`. */
@@ -277,8 +276,8 @@ function thenLine(n: DisplayNowPlaying): { status: string; next: string; when: s
   return { status: '', next, when: fill };
 }
 
-/** The hero Display draws from its props, in the form `displayForm` picked. */
-export function displayView(props: DisplayModelProps, form: DisplayForm, byDensity: boolean): DisplayView {
+/** What the hero draws from its props, in the form `displayForm` picked. */
+export function displayData(props: DisplayModelProps, form: DisplayForm, byDensity: boolean): DisplayData {
   const { style, nowPlaying, parts, density = 'auto' } = props;
   const name = style.name.trim() || 'No style';
   const queued = (style.queued ?? '').trim();
@@ -320,4 +319,214 @@ export function displayView(props: DisplayModelProps, form: DisplayForm, byDensi
     parts: rows,
     fitKey: JSON.stringify([name, meta, queued, nowPlaying.playing, nowPlaying.bpm, chord.chord, chord.extension, hasParts, form]),
   };
+}
+
+/** The assembled screen's say in the form, as each binding reads it (`useForm(DISPLAY_FORMS,
+ *  props.form)` and `useChosenForm()` in React, `getForm`/`getChosenForm` in Svelte). */
+export interface DisplayScreenForm {
+  /** The form `useForm` picked: the `form` prop, else the screen's choice. */
+  fromScreen: DisplayForm;
+  /** The screen's chosen form, `null` outside an assembled screen. */
+  chosen: string | null;
+}
+
+type Kid = Parameters<typeof h>[2];
+
+/** A `Text` as its element: Text's class and attributes, then `attrs` (as `Text.tsx` orders them). */
+function text(tag: string, model: TextModelProps, attrs: Record<string, string | undefined>, ...children: Kid[]): Node {
+  const view = textView(model);
+  return h(tag, { class: view.className, ...view.attrs, ...attrs }, ...children);
+}
+
+/** A `Stack` as its element: `attrs`, then Stack's class and attributes (as `Stack.tsx` orders them). */
+function stack(tag: string, model: StackModelProps, attrs: Record<string, string | undefined>, ...children: Kid[]): Node {
+  const view = stackView(model);
+  return h(tag, { ...attrs, class: view.className, ...view.attrs }, ...children);
+}
+
+/** The handler key of a part row's press. */
+const soundKey = (part: Part) => `sound:${part}`;
+
+/** The app's tooltip action, passed on to every child by its handler key. */
+const TIP = { tipAction: 'tipAction' };
+
+/** Tap and Style tempo: under the tempo, or in the header (minimal). */
+function tempoKeys(d: DisplayData): Node {
+  return stack(
+    'div',
+    { direction: 'row', gap: 1, align: 'center', className: 'yh-display__tempo-keys' },
+    { 'data-part': 'tempo-keys' },
+    component('Button', { label: 'Tap', size: 'md', hold: true, name: 'Tap tempo', tip: 'tempo.tap' }, { on: { ...TIP, onHold: 'tapHold', onPress: 'tap' } }),
+    component(
+      'Button',
+      { label: 'Style tempo', size: 'md', variant: 'quiet', disabled: d.atStyleTempo, name: "Back to the style's tempo", tip: 'tempo.reset' },
+      { on: { ...TIP, onPress: 'styleTempo' } },
+    ),
+  );
+}
+
+/** One part's row: its dot, its sound (with the marks) and its name. The " · " before the tail is
+ *  CSS, so a one-row parts strip can drop the name and keep "off". */
+function partRow(p: DisplayPartView): Node {
+  const button = text(
+    'button',
+    { size: 'label', leading: 'normal', className: 'yh-display__part' },
+    { ...p.attrs, style: styleText(p.style) },
+    h('span', { class: 'yh-display__part-dot', 'data-part': 'part-dot', 'data-lit': p.lit, 'aria-hidden': 'true' }),
+    stack(
+      'span',
+      { direction: 'row', gap: 2, align: 'center', className: 'yh-display__part-sound' },
+      { 'data-part': 'part-sound', 'aria-hidden': 'true' },
+      h('span', { class: 'yh-display__part-name', 'data-part': 'part-name' }, p.sound),
+      component('PartMarks', { edited: p.edited, missing: p.missing, failed: p.failed }),
+    ),
+    text(
+      'span',
+      { size: 'caption', leading: 'normal', case: 'label', className: 'yh-display__part-part' },
+      { 'data-part': 'part-part', 'aria-hidden': 'true' },
+      h('span', { class: 'yh-display__part-label', 'data-part': 'part-label' }, p.name),
+      p.tail ? h('span', { class: 'yh-display__part-tail', 'data-part': 'part-tail' }, p.tail) : null,
+    ),
+  );
+  return h('li', {}, wire(button, { on: { click: soundKey(p.id) }, bind: [['tip', { tip: PART_TIP, ...TIP }]] }));
+}
+
+/**
+ * The tree Display draws: the form from the props, the screen's say (`screen`) and, for
+ * `density="auto"`, the measured width (`wide`, the binding's `wideState`). The root binds
+ * `displayWide` (reporting through `onWide`) and the frame `displayFit` (fitting again when the
+ * fit key changes); every child component is drawn by name, its callbacks by handler key.
+ */
+export function displayView(props: DisplayModelProps, screen: DisplayScreenForm, wide: boolean): Node {
+  const { style, nowPlaying } = props;
+  const { form, byDensity } = displayForm(props, screen.fromScreen, screen.chosen, wide);
+  const d = displayData(props, form, byDensity);
+  const { line } = d;
+  const root = textView({ size: 'inherit', className: d.root.className });
+
+  const header = h(
+    'header',
+    { class: 'yh-display__header', 'data-part': 'header' },
+    stack(
+      'div',
+      { direction: 'row', gap: 1, align: 'center', className: 'yh-display__style' },
+      { 'data-part': 'style', role: 'group', 'aria-label': 'Style' },
+      component('Button', { symbol: 'prev', size: 'icon', variant: 'quiet', name: 'Previous style (Track left)', tip: 'style.prev' }, { on: { ...TIP, onPress: 'prev' } }),
+      h(
+        'span',
+        { class: 'yh-display__style-name', 'data-part': 'style-name', title: d.name },
+        component('AccentBlock', { as: 'button', label: d.name, name: `${d.name}: open the Browser`, chevron: false, tip: 'browser.open' }, { on: { ...TIP, onPress: 'browse' } }),
+      ),
+      component('Button', { symbol: 'next', size: 'icon', variant: 'quiet', name: 'Next style (Track right)', tip: 'style.next' }, { on: { ...TIP, onPress: 'next' } }),
+      d.queued
+        ? h('span', { class: 'yh-display__queued', 'data-part': 'queued', title: `Next style: ${d.queued}` }, component('WaitingChip', { label: d.queued, hue: 'a', size: 'line' }))
+        : d.meta
+          ? text('span', { size: 'label', tabular: true, className: 'yh-display__meta' }, { 'data-part': 'meta', title: d.meta }, d.meta)
+          : null,
+    ),
+    h(
+      'div',
+      { class: 'yh-display__ots', 'data-part': 'one-touch' },
+      component('OneTouchPicker', { applied: style.oneTouch ?? 0, count: style.oneTouchCount ?? 4 }, { on: { ...TIP, onApply: 'oneTouch' } }),
+    ),
+    when(d.tempoKeysInHeader, () => tempoKeys(d)),
+  );
+
+  const section = h(
+    'div',
+    { class: 'yh-display__cell yh-display__section', 'data-part': 'section', role: 'group', 'aria-label': 'Section' },
+    h(
+      'div',
+      { class: 'yh-display__now', 'data-part': 'now', role: 'img', 'aria-label': d.nowLabel, 'data-live': d.nowLive },
+      component('SectionName', { label: nowPlaying.playing, idle: !d.running, size: DISPLAY_SIZES.section }),
+    ),
+    when(d.hasLine, () =>
+      text(
+        'p',
+        { size: 'label', className: 'yh-display__next' },
+        { 'data-part': 'next' },
+        line.status ? text('span', { size: 'label', className: 'yh-display__status' }, { 'data-part': 'status' }, line.status) : null,
+        when(d.hasThen, () =>
+          text(
+            'span',
+            { size: 'label', className: 'yh-display__then' },
+            { 'data-part': 'then', 'data-docked': d.thenDocked, style: styleText(d.thenStyle) },
+            h('span', { class: 'yh-display__then-arrow', 'data-part': 'then-arrow', 'aria-hidden': 'true' }),
+            h('span', { class: 'yh-display__then-word', 'data-part': 'then-word' }, 'then '),
+            line.next ? text('span', { weight: 'strong', leading: 'tight', className: 'yh-display__then-name' }, { 'data-part': 'then-name' }, line.next) : null,
+            line.when ? h('span', { class: 'yh-display__when', 'data-part': 'when' }, line.when) : null,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  const readouts = h(
+    'div',
+    { class: 'yh-display__readouts', 'data-part': 'readouts' },
+    section,
+    h(
+      'div',
+      { class: 'yh-display__cell yh-display__chord', 'data-part': 'chord' },
+      component('ChordReadout', { ...nowPlaying.chord, tip: 'fingering.select', size: DISPLAY_SIZES.chord }, { on: TIP }),
+    ),
+    h(
+      'div',
+      { class: 'yh-display__cell yh-display__tempo', 'data-part': 'tempo', role: 'group', 'aria-label': 'Tempo and Tap' },
+      component(
+        'TempoReadout',
+        { bpm: nowPlaying.bpm, size: DISPLAY_SIZES.tempo },
+        { on: { ...TIP, onTempo: 'tempo', onPlus: 'tempoUp', onMinus: 'tempoDown', onReset: 'styleTempo' } },
+      ),
+      h('div', { class: 'yh-display__beat', 'data-part': 'beat' }, component('BarBeat', { beat: d.beat, beats: d.beats, thickness: DISPLAY_SIZES.beat })),
+      when(!d.tempoKeysInHeader, () => tempoKeys(d)),
+    ),
+    when(d.parts.length > 0, () =>
+      stack(
+        'ul',
+        { gap: 0, className: 'yh-display__parts' },
+        { 'data-part': 'parts', 'aria-label': 'Sounds' },
+        each(d.parts, (p) => p.id, partRow),
+      ),
+    ),
+  );
+
+  return wire(
+    h(
+      'div',
+      { class: root.className, ...root.attrs, ...d.root.attrs, style: styleText(d.rootStyle) },
+      when(!!props.art, () => h('div', { class: 'yh-display__art', 'data-part': 'art' }, component('DisplayArt'))),
+      // The frame holds the sizes: a container query styles only what is inside the container.
+      wire(h('div', { class: 'yh-display__frame', 'data-part': 'frame', 'data-fit': '1' }, header, readouts), {
+        bind: [['displayFit', { key: d.fitKey }]],
+      }),
+    ),
+    { bind: [['displayWide', { on: displayMeasuresWidth(props, screen.chosen), onWide: 'onWide' }]] },
+  );
+}
+
+/**
+ * The callbacks `displayView`'s tree names: the app's, by handler key (`tapHold` taps on the hold's
+ * press only; `sound:<part>` opens that part's sound list), and `onWide`, which the `displayWide`
+ * store calls and which alone writes the binding's `wide` state.
+ */
+export function displayHandlers(props: DisplayModelProps, wide: WideState): Handlers {
+  const handlers: Handlers = {
+    tipAction: props.tipAction,
+    prev: props.onPrev,
+    next: props.onNext,
+    browse: props.onBrowse,
+    oneTouch: props.onOneTouch,
+    tempo: props.onTempo,
+    tempoUp: props.onTempoUp,
+    tempoDown: props.onTempoDown,
+    styleTempo: props.onStyleTempo,
+    tap: props.onTap,
+    tapHold: (down: boolean) => {
+      if (down) props.onTap?.();
+    },
+    onWide: (next: boolean) => wide.set(next),
+  };
+  for (const part of PARTS) handlers[soundKey(part)] = () => props.onSound?.(part);
+  return handlers;
 }

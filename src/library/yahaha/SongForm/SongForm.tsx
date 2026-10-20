@@ -1,11 +1,9 @@
-import { Button } from '../../components/core/Button/Button';
-import { LampButton } from '../../components/core/LampButton/LampButton';
-import { Pad } from '../../components/music/Pad/Pad';
-import { Stack } from '../../primitives/Stack';
-import { Text } from '../../primitives/Text';
+import { Tree } from '../../view/Tree';
 import { useForm } from '../../layout/assembly';
 import { FORM_FORMS, TRANSPORT_FORMS } from './SongForm.forms';
-import { songFormView, type SongFormProps, type StepView } from './SongForm.model';
+import { songFormHandlers, songFormView, type SongFormProps } from './SongForm.model';
+import '../../primitives/Stack.css';
+import '../../primitives/Text.css';
 import './SongForm.css';
 
 export { FORM_FORMS, TRANSPORT_FORMS, SONG_FORM_FORMS, BOTH_GAP, BREAKS } from './SongForm.forms';
@@ -15,6 +13,7 @@ export {
   BREAK,
   SECTION_LABEL,
   songFormView,
+  songFormHandlers,
   type SectionId,
   type SectionDef,
   type SongFormPart,
@@ -22,15 +21,6 @@ export {
   type SongFormSectionPart,
   type SongFormView,
 } from './SongForm.model';
-
-/** One step: its wrapping `div` and the Pad inside. */
-function Step({ step }: { step: StepView }) {
-  return (
-    <div className={step.className} {...step.attrs}>
-      <Pad {...step.pad} />
-    </div>
-  );
-}
 
 /**
  * SongForm: the Stage's song form and transport, one region for every control that moves the band
@@ -100,65 +90,14 @@ function Step({ step }: { step: StepView }) {
  * **Tuning knobs.** `--yh-sf-step-font` (the steps' letter and numeral size: body, switched up to
  * heading and numeral by the width container queries as the strip widens; `BREAKS`).
  *
- * The decisions live in `songFormView` (SongForm.model.ts); this renders it, as `SongForm.svelte` does.
+ * The decisions live in `songFormView` (SongForm.model.ts); this hands its tree to `Tree`, as `SongForm.svelte` does.
  */
 export function SongForm(props: SongFormProps) {
   // Each half reads its own form: by its part name inside a region whose form names its parts
   // (`both` on an assembled screen), else the region's form.
   const formId = useForm(FORM_FORMS, props.formForm, 'form');
   const transportId = useForm(TRANSPORT_FORMS, props.transportForm, 'transport');
-  const { root, inner, form, transport } = songFormView(props, formId, transportId);
-
-  return (
-    <Text as="div" className={root.className} {...root.attrs}>
-      <Text as="div" className={inner.className} {...inner.attrs}>
-        {form && (
-          <Stack {...form.stack} className={form.className} {...form.attrs}>
-            <span className={form.cue.className} {...form.cue.attrs}>
-              {form.cue.word}
-            </span>
-            <Stack {...form.parts.stack} className={form.parts.className} {...form.parts.attrs}>
-              {form.items.map((p) => (
-                <Stack key={p.part} {...p.stack} className={p.className} {...p.attrs}>
-                  {p.arrow && (
-                    <Text {...p.arrow.text} className={p.arrow.className} {...p.arrow.attrs}>
-                      {p.arrow.word}
-                    </Text>
-                  )}
-                  <Text {...p.caption.text} className={p.caption.className} {...p.caption.attrs}>
-                    {p.caption.word}
-                  </Text>
-                  <div className={p.steps.className} {...p.steps.attrs}>
-                    {p.items.map((s) => (
-                      <Step key={s.id} step={s} />
-                    ))}
-                  </div>
-                </Stack>
-              ))}
-            </Stack>
-            <Stack {...form.mods.stack} className={form.mods.className} {...form.mods.attrs}>
-              <div className={form.modSteps.className} {...form.modSteps.attrs}>
-                <Step step={form.brk} />
-              </div>
-            </Stack>
-          </Stack>
-        )}
-
-        {transport && (
-          <div className={transport.className} {...transport.attrs}>
-            <div className={transport.start.className} {...transport.start.attrs}>
-              <Button {...transport.startButton} />
-            </div>
-            {transport.keys.map((k) => (
-              <div key={k.key} className={k.className} {...k.attrs}>
-                {k.kind === 'button' ? <Button {...k.button} /> : <LampButton {...k.lamp} />}
-              </div>
-            ))}
-          </div>
-        )}
-      </Text>
-    </Text>
-  );
+  return <Tree tree={songFormView(props, formId, transportId)} handlers={songFormHandlers(props)} />;
 }
 
 export default SongForm;

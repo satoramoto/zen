@@ -4,11 +4,14 @@ import { expect, fn } from 'storybook/test';
 import { useScopePrinciples } from '../../layout/assembly/AssembledScreen';
 import { resolveNeed } from '../../layout/assembly/units';
 import { withLibraryTheme } from '../../storybook';
+import { fixtureStories, withRenderer } from '../../stories/story';
 import { DISPLAY_FORMS, Display, type DisplayProps } from './Display';
+import DisplaySvelte from './Display.svelte';
 import { DISPLAY_REGIONS, displayArgTypes, displayStories as s, displayStoryRegions as regions, type DisplayRegion } from './Display.fixtures';
 
-// Every story's args come from Display.fixtures.ts, which the Svelte stories and the parity test
-// share; so does the region each is drawn in (`DISPLAY_REGIONS`).
+// Every story is built from Display.fixtures.ts (`story('Name')`), which the tree snapshot shares;
+// so is the region each is drawn in (`DISPLAY_REGIONS`). The toolbar's Renderer draws it with
+// React's or Svelte's `Tree`.
 
 /**
  * Draws the story in its Stage region, `parameters.region` (`large` by default). The region's
@@ -35,7 +38,7 @@ const inRegion: Decorator = (Story, { parameters }) => {
 const meta = {
   title: 'Yahaha/Components/Display',
   component: Display,
-  decorators: [inRegion, withLibraryTheme],
+  decorators: [withRenderer, inRegion, withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   args: {
     ...s.Board.args!,
@@ -56,11 +59,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** A story from its fixture, in its region. */
-const story = (name: keyof typeof s): Story => ({
-  args: s[name].args as Story['args'],
-  ...(regions[name] ? { parameters: { region: regions[name] } } : {}),
-});
+const fromFixture = fixtureStories<Story>(Display, DisplaySvelte);
+
+/** A story from its fixture, in its region (`extra`: a `play`, or a `render` of its own, which stays React). */
+const story = (name: keyof typeof s, extra: Partial<Story> = {}): Story => {
+  const built = fromFixture(s[name], extra);
+  return regions[name] ? { ...built, parameters: { ...built.parameters, region: regions[name] } } : built;
+};
 
 /** The board: Am7 in Main B, Main C next with the fill after bar 4, 104 BPM on beat 2, One Touch 2. */
 export const Board: Story = story('Board');
@@ -152,8 +157,8 @@ function FormsAtLeast(args: DisplayProps) {
  * Full, compact and minimal at their least: every concept drawn, nothing cut off (the needs are
  * Display.forms.ts's, resolved against this pack's scale). Without parts, as the Stage draws it.
  */
-export const Forms: Story = {
-  ...story('Forms'),
+// A layout of its own (three frames sized from the worn pack's principles), so it stays React.
+export const Forms: Story = story('Forms', {
   render: (args) => <FormsAtLeast {...args} />,
   play: async ({ canvasElement }) => {
     for (const id of ['full', 'compact', 'minimal']) {
@@ -170,7 +175,7 @@ export const Forms: Story = {
       }
     }
   },
-};
+});
 
 /** With the background art at the right edge, without parts. */
 export const WithArt: Story = story('WithArt');

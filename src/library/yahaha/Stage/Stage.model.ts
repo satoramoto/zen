@@ -1,8 +1,8 @@
-// Stage's model: its props and what it derives from them (the frame, the spec, the room, the
-// Sections bank's pads, the tap, the keys' width). No framework: `Stage.tsx` (React) and
-// `Stage.svelte` (Svelte) both render it; see Stage.tsx for the job.
+// Stage's model: its props and its view tree (the frame, the assembled screen, each region drawn by
+// name), with the handlers the tree names (`stageHandlers`). No framework: `Stage.tsx` (React) and
+// `Stage.svelte` (Svelte) both draw it; see Stage.tsx for the job.
 import type { Placed, Placement, ScreenSpec } from '../../layout/assembly/types';
-import type { StyleDecls } from '../../layout/style';
+import { component, slot, styleText, type ComponentNode, type Handler, type Handlers, type Node } from '../../view/Tree.model';
 import type { AppBarModelProps } from '../AppBar/AppBar.model';
 import type { DisplayModelProps } from '../Display/Display.model';
 import type { FaderBankModelProps } from '../FaderBank/FaderBank.model';
@@ -13,6 +13,7 @@ import type { SongFormProps } from '../SongForm/SongForm.model';
 import type { StatusLineModelProps } from '../StatusLine/StatusLine.model';
 import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
 import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
+import type { StageState, StageViewState } from './stageState';
 import type { TapTempo } from './tapTempo';
 
 /** The app's tooltip action, handed to every region. */
@@ -86,21 +87,125 @@ export const STAGE_SPECS: Record<StageLayout, Record<StageFit, ScreenSpec>> = {
   split: { contain: STAGE_SPLIT_SPEC, scale: STAGE_SPLIT_SCALED_SPEC },
 };
 
-/** The frame: its class and data attributes, its size, the spec it assembles and the room (both sizes set) it gives the screen. */
-export function stageView({ width, height, layout = 'stacked', fit = 'contain' }: Pick<StageModelProps, 'width' | 'height' | 'layout' | 'fit'>): {
-  className: string;
-  attrs: Record<string, string>;
-  style: StyleDecls;
-  spec: ScreenSpec;
-  room: { w: number; h: number } | undefined;
-} {
+type Frame = Pick<StageModelProps<unknown>, 'width' | 'height' | 'layout' | 'fit'>;
+
+/** The spec the screen assembles and the room it is given (both sizes set), else it measures its own. */
+export function stageScreen({ width, height, layout = 'stacked', fit = 'contain' }: Frame): { spec: ScreenSpec; room: { w: number; h: number } | undefined } {
+  return { spec: STAGE_SPECS[layout][fit], room: width !== undefined && height !== undefined ? { w: width, h: height } : undefined };
+}
+
+/** The root: its class and data attributes and its size, holding `screen`. */
+function frame({ width, height, layout = 'stacked', fit = 'contain' }: Frame, screen: Node['children']): Node {
+  const style = styleText({ width: width !== undefined ? `${width}px` : undefined, height: height !== undefined ? `${height}px` : undefined });
+  return { tag: 'div', attrs: { class: 'yh-stage', 'data-part': 'root', 'data-layout': layout, 'data-fit': fit, style }, children: screen };
+}
+
+/**
+ * The frame with a `screen` slot where the assembled screen goes: the bindings' seam until the
+ * layout's `Screen` draws its regions as slots by id (then `stageView` draws it whole).
+ */
+export const stageFrame = (props: Frame): Node => frame(props, [slot('screen')]);
+
+/** The regions in reading order, each with the Stage prop that holds its data. */
+const REGIONS = [
+  ['bar', 'appBar'],
+  ['hero', 'display'],
+  ['transport', 'songForm'],
+  ['mixer', 'faders'],
+  ['knobs', 'knobs'],
+  ['pads', 'pads'],
+  ['keys', 'keys'],
+  ['status', 'status'],
+] as const;
+
+/** The Stage's region ids, in reading order. */
+export type StageRegion = (typeof REGIONS)[number][0];
+
+/**
+ * A region's props split into data and callbacks: each callback that is set becomes a handler key
+ * (`<region>.<prop>`, held by `stageHandlers`), so a child sees exactly the callbacks it was given;
+ * and the tooltip action (`tip`), when the app gives one.
+ */
+function split(region: StageRegion, data: object, tip: boolean): { props: Record<string, unknown>; on: Record<string, string> } {
+  const plain: Record<string, unknown> = {};
+  const on: Record<string, string> = {};
+  for (const [name, value] of Object.entries(data)) {
+    if (typeof value === 'function') on[name] = `${region}.${name}`;
+    else plain[name] = value;
+  }
+  if (tip) on.tipAction = 'tipAction';
+  return { props: plain, on };
+}
+
+/** Whether the Pads region shows the Sections bank (drawn from the song form, `stagePads`). */
+const showsSections = (pads: StageModelProps<unknown>['pads']) => pads.banks?.[pads.bank ?? 0] === SECTIONS_BANK;
+
+/**
+ * Each region's content, by region id: the AppBar; the Display in the Hero region (no parts
+ * column, its Tap timed by the Stage); the transport in its region; the mixer, knobs and pads
+ * regions (the pads on Sections drawn from the song form, a press doing what that step or key
+ * does); the keys in the Keyboard region at the width the last placement gave them, less the
+ * plate (`inset`; none before the first placement); the status line.
+ */
+export function stageRegions<L>(props: StageModelProps<L>, state: StageViewState, inset: { left: number; right: number }): Record<StageRegion, ComponentNode> {
+  const region = (name: string, child: ComponentNode) => component('Region', { name }, { slots: { children: [child] } });
+  const tip = props.tipAction !== undefined;
+  const bar = split('bar', props.appBar, tip);
+  const hero = split('hero', props.display, tip);
+  const transport = split('transport', props.songForm, tip);
+  const mixer = split('mixer', props.faders, tip);
+  const knobs = split('knobs', props.knobs, tip);
+  const sections = showsSections(props.pads);
+  const pads = split('pads', stagePads(props.pads, props.songForm), tip);
+  const keys = split('keys', props.keys, tip);
+  // The status line takes no tooltip action.
+  const status = split('status', props.status, false);
+  const placed = state.placement?.regions.keys;
   return {
-    className: 'yh-stage',
-    attrs: { 'data-part': 'root', 'data-layout': layout, 'data-fit': fit },
-    style: { width: width !== undefined ? `${width}px` : undefined, height: height !== undefined ? `${height}px` : undefined },
-    spec: STAGE_SPECS[layout][fit],
-    room: width !== undefined && height !== undefined ? { w: width, h: height } : undefined,
+    bar: component('AppBar', bar.props, { on: bar.on }),
+    hero: region('Hero', component('Display', { ...hero.props, parts: undefined }, { on: { ...hero.on, onTap: 'tap' } })),
+    transport: region('Transport', component('SongForm', { ...transport.props, part: 'transport' }, { on: transport.on })),
+    mixer: component('FaderBankRegion', mixer.props, { on: mixer.on }),
+    knobs: component('KnobBankRegion', knobs.props, { on: knobs.on }),
+    pads: component('PadBankRegion', pads.props, { on: sections ? { ...pads.on, onPress: 'sectionPad' } : pads.on }),
+    keys: region('Keyboard', component('Keys', { ...keys.props, ruler: false, width: placed ? stageKeysWidth(placed, inset) : undefined }, { on: keys.on })),
+    status: component('StatusLine', status.props, { on: status.on }),
   };
+}
+
+/**
+ * The Stage: the frame holding the assembled screen (`STAGE_SPECS`, the layout's `Screen`), each
+ * region a slot by its id. `state` is the Stage's own (`stageState.ts`: the last placement), and
+ * `inset` the plate's, from the nearest ThemeScope's principles.
+ */
+export function stageView<L>(props: StageModelProps<L>, state: StageViewState, inset: { left: number; right: number }): Node {
+  const { spec, room } = stageScreen(props);
+  const screen = component(
+    'Screen',
+    { name: 'Stage', className: 'yh-stage__screen', class: 'yh-stage__screen', spec, room },
+    { on: { onPlacement: 'placement' }, slots: Object.fromEntries(Object.entries(stageRegions(props, state, inset)).map(([id, node]) => [id, [node]])) },
+  );
+  return frame(props, [screen]);
+}
+
+/**
+ * Every callback the Stage's tree names: the tooltip action, each region's own callbacks
+ * (`<region>.<prop>`), the hero's Tap (`tap`, timed by the state's taps), a Sections pad's press
+ * (`sectionPad`) and the screen's placement (`placement`: kept in the state when it changed, and
+ * then passed to `onPlacement`).
+ */
+export function stageHandlers<L>(props: StageModelProps<L>, state: Pick<StageState, 'place' | 'tapper'>): Handlers {
+  const handlers: Handlers = { tipAction: props.tipAction };
+  for (const [id, prop] of REGIONS) {
+    for (const [name, value] of Object.entries(props[prop])) if (typeof value === 'function') handlers[`${id}.${name}`] = value as Handler;
+  }
+  const tap = () => stageTap(props.display, state.tapper, performance.now());
+  handlers.tap = tap;
+  handlers.sectionPad = (index: number) => pressSectionPad(index, { ...props.songForm, onTap: tap });
+  handlers.placement = (placement: Placement) => {
+    if (state.place(placement)) props.onPlacement?.(placement);
+  };
+  return handlers;
 }
 
 /** A tapped tempo held to `TEMPO_MIN`–`TEMPO_MAX`. */
@@ -115,12 +220,13 @@ export function stageTap(display: Pick<DisplayModelProps, 'onTap' | 'onTempo'>, 
 
 /**
  * The pads the Pads region shows. The Sections bank mirrors the hardware: its pads are drawn from
- * the song form's props (never from `pads.pads`), and a press does what that step or key does in
- * the transport (Tap is `onTap`, the hero's). Any other bank: `pads` as given.
+ * the song form's props (never from `pads.pads`); a press there is the `sectionPad` handler
+ * (`stageHandlers`), what that step or key does in the transport (Tap is the hero's). Any other
+ * bank: `pads` as given.
  */
-export function stagePads(pads: StageModelProps['pads'], songForm: StageModelProps['songForm'], onTap: () => void): StageModelProps['pads'] {
-  if (pads.banks?.[pads.bank ?? 0] !== SECTIONS_BANK) return pads;
-  return { ...pads, pads: sectionPads(songForm), lit: songForm.lit ?? pads.lit, onPress: (i) => pressSectionPad(i, { ...songForm, onTap }) };
+export function stagePads(pads: StageModelProps['pads'], songForm: StageModelProps['songForm']): StageModelProps['pads'] {
+  if (!showsSections(pads)) return pads;
+  return { ...pads, pads: sectionPads(songForm), lit: songForm.lit ?? pads.lit };
 }
 
 /** The keys take the width the solver gave their region, less its plate. */

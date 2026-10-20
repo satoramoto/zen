@@ -1,9 +1,9 @@
-// PadBank's model: its props, its forms and the view a renderer draws (the root, the room, the
-// grid, each cell and its Pad's props or empty mark), and the Pads region's views (one tab per
-// bank). No framework: `PadBank.tsx` (React) and `PadBank.svelte` / `PadBankRegion.svelte`
-// (Svelte) all render these.
+// PadBank's model: its props, its forms and the trees a renderer draws: the bank (the root, the
+// room, the grid, each cell with its Pad or its empty mark) and the Pads region (a Region, one tab
+// per bank, the bank as its body). No framework: `PadBank.tsx` (React) and `PadBank.svelte` /
+// `PadBankRegion.svelte` (Svelte) each hand one of these to their `Tree`.
 import type { PadFamily, PadModelProps, PadOnFace, PadState, TipAction } from '../../components/music/Pad/Pad.model';
-import type { ElementView } from '../../primitives/Text.model';
+import { component, each, h, type ComponentNode, type Handlers, type Node } from '../../view/Tree.model';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import { lengthMax, needsAcross, needsDown } from '../../layout/assembly/units';
 import type { Forms, Length, Need } from '../../layout/assembly/types';
@@ -203,73 +203,72 @@ export interface PadBankRegionProps extends PadBankProps {
   className?: string;
 }
 
-/** One cell: its wrapper, and either the empty mark or the Pad's props (without the press and the tooltip hook). */
-export interface PadBankCellView extends ElementView {
-  /** The pad's index, 0–15. */
-  index: number;
-  /** Nothing assigned: the quiet mark (a `span`). */
-  empty?: ElementView;
-  /** A pad: the library Pad's props; the renderer adds `tipAction` and `onPress`. */
-  pad?: Omit<PadModelProps, 'tipAction' | 'onPress'>;
-}
-
-/** What a renderer draws. */
-export interface PadBankView {
-  root: ElementView;
-  room: ElementView;
-  grid: ElementView;
-  cells: PadBankCellView[];
+/** A pad's data props: the library Pad's, without its press and the tooltip hook (this tree's handlers). */
+function padProps(pad: PadItem, i: number, lit: boolean): Omit<PadModelProps, 'tipAction' | 'onPress'> {
+  return {
+    label: pad.label,
+    index: String(i + 1),
+    family: isPart(pad.family) ? 'util' : pad.family,
+    hue: isPart(pad.family) ? PART_HUE_INDEX[pad.family] : undefined,
+    state: pad.state,
+    lit,
+    name: pad.name,
+    tip: pad.tip,
+    role: pad.transport ? 2 : undefined,
+    fillCell: true,
+    onFace: bankOnFace(pad.family),
+  };
 }
 
 /**
- * The bank's view. `form` is the form `useForm` / `getForm` picked (the prop, else the screen's
- * choice, else the first); `chosen` is the screen's choice (`useChosenForm` / `getChosenForm`).
+ * The bank's tree: the root, the room, the grid and the sixteen cells, each a `Pad` (drawn by name,
+ * its press the handler `press<i>`) or the empty mark. `form` is the form `useForm` / `getForm`
+ * picked (the prop, else the screen's choice, else the first); `chosen` is the screen's choice
+ * (`useChosenForm` / `getChosenForm`).
  */
-export function padBankView({ pads, form: given, columns, lit = true }: PadBankProps, form: PadBankForm, chosen: string | null): PadBankView {
+export function padBankView({ pads, form: given, columns, lit = true }: PadBankProps, form: PadBankForm, chosen: string | null): Node {
   // `columns` 4 is the bank outside the forms: only when neither the prop nor a screen names a form.
   const fourByFour = columns === 4 && given === undefined && !PAD_BANK_FORMS.some((f) => f.id === chosen);
   const shown = String(fourByFour ? 4 : form === 'one-row' ? 16 : 8);
   const items = Array.from({ length: PAD_SLOTS }, (_, i) => pads[i] ?? EMPTY);
   const armed = items.filter((pad) => !pad.empty && pad.state === 'armed').length;
-  return {
-    root: {
-      className: 'yh-padbank',
-      attrs: {
-        'data-part': 'root',
-        lang: 'en',
-        'data-form': fourByFour ? undefined : form,
-        'data-armed': armed > ARMED_CHIPS ? 'many' : undefined,
-      },
+  return h(
+    'div',
+    {
+      class: 'yh-padbank',
+      'data-part': 'root',
+      lang: 'en',
+      'data-form': fourByFour ? undefined : form,
+      'data-armed': armed > ARMED_CHIPS ? 'many' : undefined,
     },
-    room: { className: 'yh-padbank__room', attrs: { 'data-part': 'room', 'data-columns': shown } },
-    grid: { className: 'yh-padbank__pads', attrs: { 'data-part': 'grid', 'data-columns': shown } },
-    cells: items.map((pad, i) => ({
-      index: i,
-      className: 'yh-padbank__cell',
-      attrs: { 'data-part': 'cell', 'data-empty': pad.empty ? 'true' : undefined },
-      empty: pad.empty
-        ? {
-            className: 'yh-padbank__empty',
-            attrs: { 'data-part': 'empty', role: 'img', 'aria-label': pad.name ?? `Pad ${i + 1}: empty` },
-          }
-        : undefined,
-      pad: pad.empty
-        ? undefined
-        : {
-            label: pad.label,
-            index: String(i + 1),
-            family: isPart(pad.family) ? 'util' : pad.family,
-            hue: isPart(pad.family) ? PART_HUE_INDEX[pad.family] : undefined,
-            state: pad.state,
-            lit,
-            name: pad.name,
-            tip: pad.tip,
-            role: pad.transport ? 2 : undefined,
-            fillCell: true,
-            onFace: bankOnFace(pad.family),
-          },
-    })),
-  };
+    h(
+      'div',
+      { class: 'yh-padbank__room', 'data-part': 'room', 'data-columns': shown },
+      h(
+        'div',
+        { class: 'yh-padbank__pads', 'data-part': 'grid', 'data-columns': shown },
+        each(
+          items,
+          (_, i) => String(i),
+          (pad, i) =>
+            h(
+              'div',
+              { class: 'yh-padbank__cell', 'data-part': 'cell', 'data-empty': pad.empty ? 'true' : undefined },
+              pad.empty
+                ? h('span', { class: 'yh-padbank__empty', 'data-part': 'empty', role: 'img', 'aria-label': pad.name ?? `Pad ${i + 1}: empty` })
+                : component('Pad', padProps(pad, i, lit), { on: { onPress: `press${i}`, tipAction: 'tipAction' } }),
+            ),
+        ),
+      ),
+    ),
+  );
+}
+
+/** The bank's handlers: each pad's press with its index (`press<i>`), and the tooltip action. */
+export function padBankHandlers({ onPress, tipAction }: Pick<PadBankProps, 'onPress' | 'tipAction'>): Handlers {
+  const handlers: Handlers = { tipAction };
+  for (let i = 0; i < PAD_SLOTS; i++) handlers[`press${i}`] = () => onPress?.(i);
+  return handlers;
 }
 
 /** One bank tab: the region's view. */
@@ -280,10 +279,33 @@ export interface PadBankTab {
 }
 
 /** The Pads region's views (one per bank, or the one `bankName` view) and the chosen one's id. */
-export function padBankRegionView({ banks = [], bank = 0, bankTips = [], bankName = '' }: PadBankProps): { views: PadBankTab[]; view: string } {
+export function padBankTabs({ banks = [], bank = 0, bankTips = [], bankName = '' }: PadBankProps): { views: PadBankTab[]; view: string } {
   const names = banks.length > 0 ? banks : [bankName];
   return {
     views: names.map((label, i) => ({ id: String(i), label, tip: bankTips[i] ?? BANK_TIP[label] })),
     view: String(banks.length > 0 ? bank : 0),
   };
+}
+
+/**
+ * The Pads region's tree: a library `Region` (drawn by name; its class as both `className` and
+ * `class`, React's and Svelte's names) whose views are the banks (`padBankTabs`), with the PadBank
+ * as its body. A tab choice is the handler `view` (the bank's id), a pad's press `press`, the
+ * tooltip action `tipAction`. `form` goes to the bank, which reads the screen's otherwise.
+ */
+export function padBankRegionView({ name = 'Pads', area, className, pads, form, columns, lit, ...tabs }: PadBankRegionProps): ComponentNode {
+  const { views, view } = padBankTabs({ pads, ...tabs });
+  return component(
+    'Region',
+    { name, area, className, class: className, views, view },
+    {
+      on: { onView: 'view', tipAction: 'tipAction' },
+      slots: { children: [component('PadBank', { pads, form, columns, lit }, { on: { onPress: 'press', tipAction: 'tipAction' } })] },
+    },
+  );
+}
+
+/** The region's handlers: a tab choice as the bank's index, a pad's press, the tooltip action. */
+export function padBankRegionHandlers({ onBank, onPress, tipAction }: PadBankProps): Handlers {
+  return { view: (id: string) => onBank?.(Number(id)), press: onPress, tipAction };
 }

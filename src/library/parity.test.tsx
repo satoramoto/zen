@@ -57,21 +57,6 @@ import { surfaceStories } from './primitives/Surface.fixtures';
 import { Icon } from './primitives/Icon';
 import IconSvelte from './primitives/Icon.svelte';
 import { iconStories } from './primitives/Icon.fixtures';
-import { Display } from './yahaha/Display/Display';
-import DisplaySvelte from './yahaha/Display/Display.svelte';
-import { displayStories } from './yahaha/Display/Display.fixtures';
-import { SongForm } from './yahaha/SongForm/SongForm';
-import SongFormSvelte from './yahaha/SongForm/SongForm.svelte';
-import { songFormStories } from './yahaha/SongForm/SongForm.fixtures';
-import { FaderBank } from './yahaha/FaderBank/FaderBank';
-import FaderBankSvelte from './yahaha/FaderBank/FaderBank.svelte';
-import { faderBankStories } from './yahaha/FaderBank/FaderBank.fixtures';
-import { KnobBank } from './yahaha/KnobBank/KnobBank';
-import KnobBankSvelte from './yahaha/KnobBank/KnobBank.svelte';
-import { knobBankStories } from './yahaha/KnobBank/KnobBank.fixtures';
-import { PadBank } from './yahaha/PadBank/PadBank';
-import PadBankSvelte from './yahaha/PadBank/PadBank.svelte';
-import { padBankStories } from './yahaha/PadBank/PadBank.fixtures';
 import { describe, expect, it } from 'vitest';
 import { reactDom, svelteDom } from './parity';
 import { Stage } from './yahaha/Stage/Stage';
@@ -97,11 +82,6 @@ parity('SoundCell', SoundCell, SoundCellSvelte, soundCellStories);
 parity('RackCell', RackCell, RackCellSvelte, rackCellStories);
 parity('Surface', Surface, SurfaceSvelte, surfaceStories);
 parity('Icon', Icon, IconSvelte, iconStories);
-parity('Display', Display, DisplaySvelte, displayStories);
-parity('SongForm', SongForm, SongFormSvelte, songFormStories);
-parity('FaderBank', FaderBank, FaderBankSvelte, faderBankStories);
-parity('KnobBank', KnobBank, KnobBankSvelte, knobBankStories);
-parity('PadBank', PadBank, PadBankSvelte, padBankStories);
 
 // The Stage holds Regions with views, whose ids are React's `useId` and Svelte's `$props.id`: each
 // distinct id is masked by its order of first appearance, so the references still have to agree.

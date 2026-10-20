@@ -1,0 +1,665 @@
+## Board
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="6" label="Rack 6" lit=true onFace="ring" state="dark" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="7" label="Rack 7" lit=true onFace="ring" state="dark" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Rack 8" lit=true onFace="ring" state="dark" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="OTS 1" lit=true onFace="ring" state="playing" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="OTS 2" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="OTS 3" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="OTS 4" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Bank −" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Bank +" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Store" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## Sections
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="1" label="Intro I" lit=true onFace="fill" state="idle" tip="section.intro1" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="2" label="Intro II" lit=true onFace="fill" state="idle" tip="section.intro2" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="3" label="Intro III" lit=true name="Intro III (not in this style)" onFace="fill" state="dark" tip="section.intro3" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Sync Start" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_start" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="5" label="Ending I" lit=true onFace="fill" state="idle" tip="section.ending1" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="6" label="Ending II" lit=true onFace="fill" state="idle" tip="section.ending2" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="7" label="Ending III" lit=true name="Ending III (not in this style)" onFace="fill" state="dark" tip="section.ending3" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Auto Fill" lit=true onFace="ring" role=2 state="idle" tip="transport.auto_fill" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="9" label="Main A" lit=true onFace="fill" state="idle" tip="section.main_a" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="10" label="Main B" lit=true name="Main B, playing" onFace="fill" state="playing" tip="section.main_b" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="11" label="Main C" lit=true name="Main C, queued after bar 4 (flashing)" onFace="fill" state="next" tip="section.main_c" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="12" label="Main D" lit=true onFace="fill" state="idle" tip="section.main_d" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="brk" fillCell=true index="13" label="Break" lit=true onFace="fill" state="idle" tip="section.break" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Tap" lit=true onFace="ring" role=2 state="idle" tip="tempo.tap" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Sync Stop" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_stop" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="start" fillCell=true index="16" label="Start / Stop" lit=true name="Start / Stop, running (pad 16; the transport Start / Stop is the same control)" onFace="ring" role=2 state="running" tip="transport.start_stop" @onPress=press15 @tipAction=tipAction>
+
+## FourByFour
+<div class="yh-padbank" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="4" data-part="room">
+    <div class="yh-padbank__pads" data-columns="4" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="6" label="Rack 6" lit=true onFace="ring" state="dark" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="7" label="Rack 7" lit=true onFace="ring" state="dark" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Rack 8" lit=true onFace="ring" state="dark" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="OTS 1" lit=true onFace="ring" state="playing" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="OTS 2" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="OTS 3" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="OTS 4" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Bank −" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Bank +" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Store" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## FlashOff
+<div class="yh-padbank" data-armed="many" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=false onFace="ring" state="armed" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=false onFace="ring" state="armed" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=false onFace="ring" state="armed" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=false onFace="ring" state="armed" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=false onFace="ring" state="armed" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="6" label="Rack 6" lit=false onFace="ring" state="armed" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="7" label="Rack 7" lit=false onFace="ring" state="armed" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Rack 8" lit=false onFace="ring" state="armed" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="OTS 1" lit=false onFace="ring" state="playing" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="OTS 2" lit=false onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="OTS 3" lit=false onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="OTS 4" lit=false onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Bank −" lit=false onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Bank +" lit=false onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Store" lit=false onFace="ring" state="armed" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## StoreArmed
+<div class="yh-padbank" data-armed="many" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=true onFace="ring" state="armed" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=true onFace="ring" state="armed" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=true onFace="ring" state="armed" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=true onFace="ring" state="armed" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=true onFace="ring" state="armed" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="6" label="Rack 6" lit=true onFace="ring" state="armed" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="7" label="Rack 7" lit=true onFace="ring" state="armed" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Rack 8" lit=true onFace="ring" state="armed" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="OTS 1" lit=true onFace="ring" state="playing" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="OTS 2" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="OTS 3" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="OTS 4" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Bank −" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Bank +" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Store" lit=true onFace="ring" state="armed" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## ChordBank
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 1: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=1 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 2: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=2 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 3: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=3 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 4: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=4 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 5: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=5 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 6: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=6 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 7: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=7 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 8: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="Manual Bass" lit=true onFace="ring" state="idle" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="Stop ACMP" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="Split −" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="Split +" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Transp −" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Transp +" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Transp 0" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="16" label="Retrig­ger" lit=true name="Retrigger (pad 16)" onFace="ring" state="idle" @onPress=press15 @tipAction=tipAction>
+
+## FewerPads
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 6: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=6 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 7: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=7 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 8: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=8 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 9: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=9 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 10: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=10 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 11: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=11 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 12: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=12 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 13: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=13 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 14: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=14 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 15: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## FewerPadsFourByFour
+<div class="yh-padbank" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="4" data-part="room">
+    <div class="yh-padbank__pads" data-columns="4" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 6: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=6 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 7: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=7 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 8: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=8 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 9: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=9 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 10: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=10 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 11: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=11 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 12: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=12 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 13: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=13 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 14: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=14 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 15: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## MultiPadsBank
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Pad 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Pad 2" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Pad 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Pad 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Stop" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 6: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=6 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 7: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=7 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 8: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="Sync 1" lit=true onFace="ring" state="idle" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="Sync 2" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="Sync 3" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="Sync 4" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Stop 1" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Stop 2" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Stop 3" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="16" label="Stop 4" lit=true onFace="ring" state="idle" @onPress=press15 @tipAction=tipAction>
+
+## SetupBank
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Single" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Fingered" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="On Bass" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Multi" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="AI Full" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="6" label="Upper" lit=true onFace="ring" state="idle" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 7: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=7 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 8: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="OTS Link" lit=true onFace="ring" state="idle" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="Stop Style" lit=true onFace="ring" state="playing" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="Stop Fixed" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 12: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=12 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 13: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=13 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 14: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=14 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 15: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## PartLit
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Pad 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true hue=2 index="2" label="Pad 2" lit=true onFace="ring" state="playing" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Pad 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Pad 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Stop" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 6: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=6 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 7: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=7 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 8: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="Sync 1" lit=true onFace="ring" state="idle" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="Sync 2" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="Sync 3" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="Sync 4" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Stop 1" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Stop 2" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Stop 3" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="16" label="Stop 4" lit=true onFace="ring" state="idle" @onPress=press15 @tipAction=tipAction>
+
+## At1440
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="6" label="Rack 6" lit=true onFace="ring" state="dark" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="7" label="Rack 7" lit=true onFace="ring" state="dark" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Rack 8" lit=true onFace="ring" state="dark" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="OTS 1" lit=true onFace="ring" state="playing" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="OTS 2" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="OTS 3" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="OTS 4" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Bank −" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Bank +" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Store" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">
+
+## At1217
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 1: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=1 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 2: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=2 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 3: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=3 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 4: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=4 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 5: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=5 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 6: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=6 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 7: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=7 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 8: empty" class="yh-padbank__empty" data-part="empty" role="img">
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="Manual Bass" lit=true onFace="ring" state="idle" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="Stop ACMP" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="Split −" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="Split +" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Transp −" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Transp +" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Transp 0" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="16" label="Retrig­ger" lit=true name="Retrigger (pad 16)" onFace="ring" state="idle" @onPress=press15 @tipAction=tipAction>
+
+## ShortRegion
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="1" label="Intro I" lit=true onFace="fill" state="idle" tip="section.intro1" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="2" label="Intro II" lit=true onFace="fill" state="idle" tip="section.intro2" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="3" label="Intro III" lit=true name="Intro III (not in this style)" onFace="fill" state="dark" tip="section.intro3" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Sync Start" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_start" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="5" label="Ending I" lit=true onFace="fill" state="idle" tip="section.ending1" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="6" label="Ending II" lit=true onFace="fill" state="idle" tip="section.ending2" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="7" label="Ending III" lit=true name="Ending III (not in this style)" onFace="fill" state="dark" tip="section.ending3" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Auto Fill" lit=true onFace="ring" role=2 state="idle" tip="transport.auto_fill" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="9" label="Main A" lit=true onFace="fill" state="idle" tip="section.main_a" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="10" label="Main B" lit=true name="Main B, playing" onFace="fill" state="playing" tip="section.main_b" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="11" label="Main C" lit=true name="Main C, queued after bar 4 (flashing)" onFace="fill" state="next" tip="section.main_c" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="12" label="Main D" lit=true onFace="fill" state="idle" tip="section.main_d" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="brk" fillCell=true index="13" label="Break" lit=true onFace="fill" state="idle" tip="section.break" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Tap" lit=true onFace="ring" role=2 state="idle" tip="tempo.tap" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Sync Stop" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_stop" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="start" fillCell=true index="16" label="Start / Stop" lit=true name="Start / Stop, running (pad 16; the transport Start / Stop is the same control)" onFace="ring" role=2 state="running" tip="transport.start_stop" @onPress=press15 @tipAction=tipAction>
+
+## Forms #1
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="1" label="Intro I" lit=true onFace="fill" state="idle" tip="section.intro1" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="2" label="Intro II" lit=true onFace="fill" state="idle" tip="section.intro2" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="3" label="Intro III" lit=true name="Intro III (not in this style)" onFace="fill" state="dark" tip="section.intro3" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Sync Start" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_start" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="5" label="Ending I" lit=true onFace="fill" state="idle" tip="section.ending1" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="6" label="Ending II" lit=true onFace="fill" state="idle" tip="section.ending2" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="7" label="Ending III" lit=true name="Ending III (not in this style)" onFace="fill" state="dark" tip="section.ending3" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Auto Fill" lit=true onFace="ring" role=2 state="idle" tip="transport.auto_fill" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="9" label="Main A" lit=true onFace="fill" state="idle" tip="section.main_a" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="10" label="Main B" lit=true name="Main B, playing" onFace="fill" state="playing" tip="section.main_b" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="11" label="Main C" lit=true name="Main C, queued after bar 4 (flashing)" onFace="fill" state="next" tip="section.main_c" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="12" label="Main D" lit=true onFace="fill" state="idle" tip="section.main_d" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="brk" fillCell=true index="13" label="Break" lit=true onFace="fill" state="idle" tip="section.break" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Tap" lit=true onFace="ring" role=2 state="idle" tip="tempo.tap" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Sync Stop" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_stop" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="start" fillCell=true index="16" label="Start / Stop" lit=true name="Start / Stop, running (pad 16; the transport Start / Stop is the same control)" onFace="ring" role=2 state="running" tip="transport.start_stop" @onPress=press15 @tipAction=tipAction>
+
+## Forms #2
+<div class="yh-padbank" data-form="small" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="1" label="Intro I" lit=true onFace="fill" state="idle" tip="section.intro1" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="2" label="Intro II" lit=true onFace="fill" state="idle" tip="section.intro2" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="3" label="Intro III" lit=true name="Intro III (not in this style)" onFace="fill" state="dark" tip="section.intro3" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Sync Start" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_start" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="5" label="Ending I" lit=true onFace="fill" state="idle" tip="section.ending1" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="6" label="Ending II" lit=true onFace="fill" state="idle" tip="section.ending2" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="7" label="Ending III" lit=true name="Ending III (not in this style)" onFace="fill" state="dark" tip="section.ending3" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Auto Fill" lit=true onFace="ring" role=2 state="idle" tip="transport.auto_fill" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="9" label="Main A" lit=true onFace="fill" state="idle" tip="section.main_a" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="10" label="Main B" lit=true name="Main B, playing" onFace="fill" state="playing" tip="section.main_b" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="11" label="Main C" lit=true name="Main C, queued after bar 4 (flashing)" onFace="fill" state="next" tip="section.main_c" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="12" label="Main D" lit=true onFace="fill" state="idle" tip="section.main_d" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="brk" fillCell=true index="13" label="Break" lit=true onFace="fill" state="idle" tip="section.break" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Tap" lit=true onFace="ring" role=2 state="idle" tip="tempo.tap" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Sync Stop" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_stop" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="start" fillCell=true index="16" label="Start / Stop" lit=true name="Start / Stop, running (pad 16; the transport Start / Stop is the same control)" onFace="ring" role=2 state="running" tip="transport.start_stop" @onPress=press15 @tipAction=tipAction>
+
+## Forms #3
+<div class="yh-padbank" data-form="one-row" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="16" data-part="room">
+    <div class="yh-padbank__pads" data-columns="16" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="1" label="Intro I" lit=true onFace="fill" state="idle" tip="section.intro1" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="2" label="Intro II" lit=true onFace="fill" state="idle" tip="section.intro2" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="intro" fillCell=true index="3" label="Intro III" lit=true name="Intro III (not in this style)" onFace="fill" state="dark" tip="section.intro3" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Sync Start" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_start" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="5" label="Ending I" lit=true onFace="fill" state="idle" tip="section.ending1" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="6" label="Ending II" lit=true onFace="fill" state="idle" tip="section.ending2" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="ending" fillCell=true index="7" label="Ending III" lit=true name="Ending III (not in this style)" onFace="fill" state="dark" tip="section.ending3" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Auto Fill" lit=true onFace="ring" role=2 state="idle" tip="transport.auto_fill" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="9" label="Main A" lit=true onFace="fill" state="idle" tip="section.main_a" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="10" label="Main B" lit=true name="Main B, playing" onFace="fill" state="playing" tip="section.main_b" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="11" label="Main C" lit=true name="Main C, queued after bar 4 (flashing)" onFace="fill" state="next" tip="section.main_c" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="main" fillCell=true index="12" label="Main D" lit=true onFace="fill" state="idle" tip="section.main_d" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="brk" fillCell=true index="13" label="Break" lit=true onFace="fill" state="idle" tip="section.break" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Tap" lit=true onFace="ring" role=2 state="idle" tip="tempo.tap" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Sync Stop" lit=true onFace="ring" role=2 state="idle" tip="transport.sync_stop" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-part="cell">
+        <Pad family="start" fillCell=true index="16" label="Start / Stop" lit=true name="Start / Stop, running (pad 16; the transport Start / Stop is the same control)" onFace="ring" role=2 state="running" tip="transport.start_stop" @onPress=press15 @tipAction=tipAction>
+
+## Playground
+<div class="yh-padbank" data-form="two-rows" data-part="root" lang="en">
+  <div class="yh-padbank__room" data-columns="8" data-part="room">
+    <div class="yh-padbank__pads" data-columns="8" data-part="grid">
+      <div key=0 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="1" label="Rack 1" lit=true onFace="ring" state="playing" @onPress=press0 @tipAction=tipAction>
+      <div key=1 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="2" label="Rack 2" lit=true onFace="ring" state="idle" @onPress=press1 @tipAction=tipAction>
+      <div key=2 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="3" label="Rack 3" lit=true onFace="ring" state="idle" @onPress=press2 @tipAction=tipAction>
+      <div key=3 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="4" label="Rack 4" lit=true onFace="ring" state="idle" @onPress=press3 @tipAction=tipAction>
+      <div key=4 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="5" label="Rack 5" lit=true onFace="ring" state="idle" @onPress=press4 @tipAction=tipAction>
+      <div key=5 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="6" label="Rack 6" lit=true onFace="ring" state="dark" @onPress=press5 @tipAction=tipAction>
+      <div key=6 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="7" label="Rack 7" lit=true onFace="ring" state="dark" @onPress=press6 @tipAction=tipAction>
+      <div key=7 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="8" label="Rack 8" lit=true onFace="ring" state="dark" @onPress=press7 @tipAction=tipAction>
+      <div key=8 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="9" label="OTS 1" lit=true onFace="ring" state="playing" @onPress=press8 @tipAction=tipAction>
+      <div key=9 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="10" label="OTS 2" lit=true onFace="ring" state="idle" @onPress=press9 @tipAction=tipAction>
+      <div key=10 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="11" label="OTS 3" lit=true onFace="ring" state="idle" @onPress=press10 @tipAction=tipAction>
+      <div key=11 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="12" label="OTS 4" lit=true onFace="ring" state="idle" @onPress=press11 @tipAction=tipAction>
+      <div key=12 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="13" label="Bank −" lit=true onFace="ring" state="idle" @onPress=press12 @tipAction=tipAction>
+      <div key=13 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="14" label="Bank +" lit=true onFace="ring" state="idle" @onPress=press13 @tipAction=tipAction>
+      <div key=14 class="yh-padbank__cell" data-part="cell">
+        <Pad family="util" fillCell=true index="15" label="Store" lit=true onFace="ring" state="idle" @onPress=press14 @tipAction=tipAction>
+      <div key=15 class="yh-padbank__cell" data-empty="true" data-part="cell">
+        <span aria-label="Pad 16: empty" class="yh-padbank__empty" data-part="empty" role="img">

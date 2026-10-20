@@ -10,28 +10,90 @@ import { LineSlider } from '../components/core/LineSlider/LineSlider';
 import { Separator } from '../components/core/Separator/Separator';
 import { SettingsRow } from '../components/core/SettingsRow/SettingsRow';
 import { StatusDot } from '../components/core/StatusDot/StatusDot';
+import { BarBeat } from '../components/music/BarBeat/BarBeat';
+import { ChordReadout } from '../components/music/ChordReadout/ChordReadout';
+import { Fader } from '../components/music/Fader/Fader';
+import { Keys } from '../components/music/Keys/Keys';
 import { Knob } from '../components/music/Knob/Knob';
+import { Pad } from '../components/music/Pad/Pad';
+import { PartMarks } from '../components/music/PartMarks/PartMarks';
+import { SectionName } from '../components/music/SectionName/SectionName';
+import { TempoReadout } from '../components/music/TempoReadout/TempoReadout';
+import { Group } from '../layout/Group';
+import { Region } from '../layout/Region';
 import { Tabs } from '../layout/Tabs';
 import { Stack } from '../primitives/Stack';
 import { Text } from '../primitives/Text';
-import { Region } from '../layout/Region';
-import { Group } from '../layout/Group';
 import { Layer } from '../layout/Layer';
 import { Screen } from '../layout/Screen';
 import { SlotCall } from '../layout/SlotCall';
 import { Surface } from '../primitives/Surface';
 import { AssembledScreen } from '../layout/assembly/AssembledScreen';
 import { FormProvider as FormScope } from '../layout/assembly/forms';
-import { HealthSlot } from '../yahaha/HealthSlot/HealthSlot';
+import { AccentBlock } from '../yahaha/AccentBlock/AccentBlock';
+import { AppBar } from '../yahaha/AppBar/AppBar';
 import { MetronomePopover } from '../yahaha/AppBar/MetronomePopover';
-import { ChordReadout } from '../components/music/ChordReadout/ChordReadout';
-import { TempoReadout } from '../components/music/TempoReadout/TempoReadout';
+import { Display } from '../yahaha/Display/Display';
+import { DisplayArt } from '../yahaha/DisplayArt/DisplayArt';
+import { FaderBank, FaderBankRegion } from '../yahaha/FaderBank/FaderBank';
+import { HealthSlot } from '../yahaha/HealthSlot/HealthSlot';
+import { KnobBank, KnobBankRegion } from '../yahaha/KnobBank/KnobBank';
+import { OneTouchPicker } from '../yahaha/OneTouchPicker/OneTouchPicker';
+import { PadBank, PadBankRegion } from '../yahaha/PadBank/PadBank';
+import { SongForm } from '../yahaha/SongForm/SongForm';
+import { Stage } from '../yahaha/Stage/Stage';
+import { StatusLine } from '../yahaha/StatusLine/StatusLine';
+import { WaitingChip } from '../yahaha/WaitingChip/WaitingChip';
 
 let registry: Record<string, ComponentType<any>> | undefined;
 
 /** The React component registered as `name`; throws for an unknown name. */
 export function reactComponent(name: string): ComponentType<any> {
-  registry ??= { Button, Knob, LampButton, LineSlider, Separator, SettingsRow, Stack, StatusDot, Tabs, Text, HealthSlot, MetronomePopover, ChordReadout, TempoReadout, AssembledScreen, FormScope, Group, Layer, Region, Screen, SlotCall, Surface };
+  registry ??= {
+    AssembledScreen,
+    FormScope,
+    Layer,
+    Screen,
+    SlotCall,
+    Surface,
+    Button,
+    Knob,
+    LampButton,
+    LineSlider,
+    Separator,
+    SettingsRow,
+    Stack,
+    StatusDot,
+    Tabs,
+    Text,
+    HealthSlot,
+    MetronomePopover,
+    ChordReadout,
+    TempoReadout,
+    AccentBlock,
+    AppBar,
+    BarBeat,
+    Display,
+    DisplayArt,
+    Fader,
+    FaderBank,
+    FaderBankRegion,
+    Group,
+    Keys,
+    KnobBank,
+    KnobBankRegion,
+    OneTouchPicker,
+    Pad,
+    PadBank,
+    PadBankRegion,
+    PartMarks,
+    Region,
+    SectionName,
+    SongForm,
+    Stage,
+    StatusLine,
+    WaitingChip,
+  };
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;

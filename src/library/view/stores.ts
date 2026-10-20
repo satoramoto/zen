@@ -12,6 +12,7 @@ import { bindLineSlider, type LineSliderParams } from '../components/core/LineSl
 import { bindRoom, type RoomParams } from '../layout/assembly/room';
 import { bindReport, type ReportParams } from '../layout/assembly/report';
 import { bindRef, type RefParams } from '../layout/Screen.model';
+import { bindDisplayFit, bindDisplayWide, type DisplayFitParams, type DisplayWideParams } from '../yahaha/Display/fit';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -78,6 +79,10 @@ export const stores = {
   report: keyed<ReportParams, 'onReport'>(bindReport, ['onReport']),
   /** Screen's `gridRef`: the element on mount, null on unmount (`layout/Screen.model.ts`). */
   ref: keyed<RefParams, 'onRef'>(bindRef, ['onRef']),
+  /** Display's readouts fitting their row, again when the key changes (`yahaha/Display/fit.ts`). */
+  displayFit: keyed<DisplayFitParams, never>(bindDisplayFit, []),
+  /** Display's auto form: whether the hero is wide enough for `full` (`yahaha/Display/fit.ts`). */
+  displayWide: keyed<DisplayWideParams, 'onWide'>(bindDisplayWide, ['onWide']),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;
