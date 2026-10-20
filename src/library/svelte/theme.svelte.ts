@@ -1,11 +1,20 @@
 // The Svelte theme binding: the `theme` action, the system mode as a reactive value, and the scope
-// context `ThemeScope.svelte` provides. Everything it decides comes from theme.model.ts, which
+// context `ThemeScope.svelte` provides. Everything it decides comes from the framework-free themes
+// entry (themes.ts, over theme.model.ts), which
 // React's `ThemeScope` (theme.tsx) draws too: the same `.lib-scope` element, mode and variables.
 import { getContext, setContext } from 'svelte';
 import type { Action } from 'svelte/action';
 import { createSubscriber } from 'svelte/reactivity';
-import type { Facets, Mode, PackPrinciples } from '../contract';
-import { getSystemMode, resolveMode, scopeView, subscribeSystemMode, type ModeChoice } from '../theme.model';
+import {
+  getSystemMode,
+  resolveMode,
+  scopeView,
+  subscribeSystemMode,
+  type Facets,
+  type Mode,
+  type ModeChoice,
+  type PackPrinciples,
+} from '../themes';
 import '../library.css';
 import '../yahaha/tokens.css';
 
@@ -70,6 +79,10 @@ const SCOPE = Symbol('zen.themeScope');
 
 /** Provides a scope to the components inside (`ThemeScope.svelte` calls it; pass getters to keep it current). */
 export const setThemeScope = (scope: ThemeScopeValue): ThemeScopeValue => setContext(SCOPE, scope);
+
+/** A scope as a `mount()` context, for Svelte mounted inside a React `ThemeScope` (Storybook's
+ *  `withRenderer`): `mount(C, { target, props, context: themeScopeContext(scope) })`. */
+export const themeScopeContext = (scope: ThemeScopeValue | null): Map<symbol, ThemeScopeValue> => new Map(scope ? [[SCOPE, scope]] : []);
 
 /** The nearest `ThemeScope`'s facets and principles, or `null` outside one (React's `useThemeScope`). */
 export const getThemeScope = (): ThemeScopeValue | null => getContext<ThemeScopeValue | undefined>(SCOPE) ?? null;

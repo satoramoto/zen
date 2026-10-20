@@ -5,8 +5,8 @@
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import type { Facets, PackPrinciples } from '../contract';
-  import { resolveMode, scopeView, styleText, type ModeChoice } from '../theme.model';
+  import { resolveMode, scopeView, type Facets, type ModeChoice, type PackPrinciples } from '../themes';
+  import { styleText } from '../view/Tree.model';
   import { setThemeScope, systemMode } from './theme.svelte';
 
   interface Props {
