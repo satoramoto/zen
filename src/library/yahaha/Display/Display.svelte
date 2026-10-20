@@ -8,7 +8,7 @@
   import { fromStore } from 'svelte/store';
   import { getChosenForm, getForm } from '../../layout/assembly/forms.svelte';
   import Tree from '../../view/Tree.svelte';
-  import { DISPLAY_FORMS } from './Display.forms';
+  import { DISPLAY_FORMS, DISPLAY_PART } from './Display.forms';
   import { displayHandlers, displayView, type DisplayModelProps } from './Display.model';
   import { wideState } from './wide';
   import '../../primitives/Stack.css';
@@ -17,8 +17,9 @@
 
   let props: DisplayModelProps = $props();
 
-  // The form: the `form` prop, then the assembled screen's choice, then `density` (auto: the width).
-  const fromScreen = getForm(DISPLAY_FORMS, () => props.form);
+  // The form: the `form` prop, then the assembled screen's choice (its `display` part's, in a hero
+  // shared with a side panel), then `density` (auto: the width).
+  const fromScreen = getForm(DISPLAY_FORMS, () => props.form, DISPLAY_PART);
   const chosen = getChosenForm();
   const wide = wideState();
   const isWide = fromStore(wide);

@@ -147,8 +147,36 @@ button.yh-faderbank__name:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-span.yh-faderbank__name {
+span.yh-faderbank__name,
+div.yh-faderbank__name {
   cursor: default;
+}
+
+/* A pressable sound (`onSound`): the block holds two buttons, the name (opens the part) over the
+   sound (opens its sound list), each its own press with the name button's give. */
+.yh-faderbank__press {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 120ms ease-out;
+}
+.yh-faderbank__press:hover { background: var(--surface-2); }
+.yh-faderbank__press:active { background: var(--surface-3); }
+.yh-faderbank__press:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .yh-faderbank[data-form='short'] .yh-faderbank__name {
   padding: 0;
@@ -244,7 +272,8 @@ span.yh-faderbank__name {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .yh-faderbank__name {
+  .yh-faderbank__name,
+  .yh-faderbank__press {
     transition: none;
   }
 }

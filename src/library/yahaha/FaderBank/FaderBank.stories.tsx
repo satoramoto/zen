@@ -96,6 +96,26 @@ export const PageButtonHold: Story = {
   },
 };
 
+/**
+ * Added: the sound names pressable (`onSound`), for an app whose Display shows no parts column: each
+ * part's sound under its name is its own button (tooltip key `soundTip`) calling `onSound(part)`;
+ * the name still opens the part (`onOpen`).
+ */
+export const SoundPress: Story = {
+  ...story(s.Board),
+  args: { ...s.Board.args, onSound: fn() },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Right 1 sound: Stage Grand, choose a sound' }));
+    await expect(args.onSound).toHaveBeenCalledWith('r1');
+    await userEvent.click(canvas.getByRole('button', { name: 'Left sound: Finger Bass, choose a sound' }));
+    await expect(args.onSound).toHaveBeenLastCalledWith('l');
+    await userEvent.click(canvas.getByRole('button', { name: 'Right 1, Stage Grand: open Channel' }));
+    await expect(args.onOpen).toHaveBeenCalledWith('right1');
+    await expect(args.onSound).toHaveBeenCalledTimes(2);
+  },
+};
+
 /** The Reverb layer: "Faders · Reverb", the part strips in the neutral layer look with "Rev" over each value, no meters. */
 export const ReverbLayer: Story = story(s.ReverbLayer);
 

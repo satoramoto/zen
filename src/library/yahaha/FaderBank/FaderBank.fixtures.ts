@@ -42,6 +42,8 @@ export const panelStrips: FaderStrip[] = [
     openName: 'Right 1, Stage Grand: open Channel',
     tip: 'mixer.panel.right1',
     openTip: 'mixer.strip.select',
+    soundName: 'Right 1 sound: Stage Grand, choose a sound',
+    soundTip: 'mixer.strip.sound',
   },
   {
     id: 'right2',
@@ -60,6 +62,7 @@ export const panelStrips: FaderStrip[] = [
     openName: 'Right 2, Silk Strings, edited: open Channel',
     tip: 'mixer.panel.right2',
     openTip: 'mixer.strip.select',
+    soundTip: 'mixer.strip.sound',
   },
   {
     id: 'right3',
@@ -77,6 +80,7 @@ export const panelStrips: FaderStrip[] = [
     openName: 'Right 3, Brass Section, plugin missing: open Channel',
     tip: 'mixer.panel.right3',
     openTip: 'mixer.strip.select',
+    soundTip: 'mixer.strip.sound',
   },
   {
     id: 'left',
@@ -93,6 +97,7 @@ export const panelStrips: FaderStrip[] = [
     openName: 'Left, Finger Bass: open Channel',
     tip: 'mixer.panel.left',
     openTip: 'mixer.strip.select',
+    soundTip: 'mixer.strip.sound',
   },
   {
     id: 'style',

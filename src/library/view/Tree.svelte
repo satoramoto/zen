@@ -6,7 +6,9 @@
   the registered Svelte component through `TreeSlots`, which makes its slots snippets drawn in this
   tree. A fragment (a list of roots) draws each. `ref` binds the root element, and any other prop
   (native attributes, handlers, attachments) lands on it after the tree's own attributes (on a
-  component root: its props).
+  component root: its props). Inside a branch every read of `node` is null-safe: a tree that
+  changes in the same flush as the first mount (a store setting state as it mounts) can run the
+  element's expressions once more after `node` went before the branch is torn down.
 -->
 <script lang="ts">
   import { untrack, type Component, type Snippet } from 'svelte';
@@ -88,13 +90,13 @@
         {components}
         {svg}
       />{/if}{/each}{:else if typeof one === 'string'}{one}{:else if node}<svelte:element
-    this={node.tag}
+    this={node?.tag}
     xmlns={inSvg ? SVG_NS : undefined}
     {...attrs}
     {...native}
     bind:this={ref}
     {@attach attach}
-    >{#each VOID.has(node.tag) ? [] : (node.children ?? []) as child, i (childKey(child, i))}{#if child !== null}<Self
+    >{#each !node || VOID.has(node.tag) ? [] : (node.children ?? []) as child, i (childKey(child, i))}{#if child !== null}<Self
           tree={child}
           {slots}
           {handlers}

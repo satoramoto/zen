@@ -1,7 +1,7 @@
 // Display's forms (docs/assembly.md): what each one needs, in scale units, worked out from the
 // same parts and steps Display.css draws with, so the CSS honours the numbers. `displayLengthCss`
 // turns a need into the CSS the hero's readouts scale from (`--yh-display-min-w`, `-min-h`).
-import { CHAR_WIDTH, ROLE_LEADING, lengthMax, lengthSum } from '../../layout/assembly/units';
+import { CHAR_WIDTH, ROLE_LEADING, combineForms, lengthMax, lengthSum } from '../../layout/assembly/units';
 import type { Form, Forms, Length, Need, Units } from '../../layout/assembly/types';
 import type { Step } from '../../primitives/step';
 import type { TextRole } from '../../primitives/Text';
@@ -176,6 +176,62 @@ function form(id: DisplayForm): Form<DisplayForm> {
  * names the sounds); the Region's plate is added by the solver.
  */
 export const DISPLAY_FORMS: Forms<DisplayForm> = [form('full'), form('compact'), form('minimal')];
+
+/* ---------- the hero shared: a page in its place, or a side panel beside it ---------- */
+
+/** The part name the Display reads its form by in a hero region that holds more than it (`Form.parts`). */
+export const DISPLAY_PART = 'display';
+
+/** The hero's form while it shows an app's page in the Display's place. */
+export type DisplayPageForm = 'page' | 'page-short';
+
+/** A page's height: nine and a half control heights and a `--space-3` (278 px at a 28 px control). */
+const PAGE_H = sum(control(9.5), space(3));
+/** A short page's: seven control heights and a `--space-3` (208 px at 28). */
+const PAGE_SHORT_H = sum(control(7), space(3));
+
+/**
+ * A page in the hero (the Stage's `page` slot): the hero's whole box. `page`, a strip about
+ * 1392 × 288 inside the plate at 1440 × 900 (the split layout's full width, `PAGE_H` high): its
+ * least is its height too, so the controls step down to make that room (as they do for the full
+ * Display) rather than the page shrinking. `page-short`, the same strip lower, only where the
+ * controls' least forms still leave too little (the 1217 × 752 screen). Both take spare width
+ * only. The page's content fills whatever box it is given at least its least.
+ */
+export const DISPLAY_PAGE_FORMS: Forms<DisplayPageForm> = [
+  { id: 'page', min: { w: control(16), h: PAGE_H }, ideal: { w: control(16), h: PAGE_H }, grow: { w: true } },
+  { id: 'page-short', min: { w: control(16), h: PAGE_SHORT_H }, ideal: { w: control(16), h: PAGE_SHORT_H }, grow: { w: true } },
+];
+
+/** The side panel's own need (the Stage's `side` slot: a help card, a swap panel, first run). */
+export type DisplaySidePanelForm = 'panel';
+
+/**
+ * The side panel: at least six control heights wide (a card's title and a line of its text, a
+ * button), ideally ten, as tall as the Display beside it. It takes the hero's right third when
+ * that is more (`Stage.css`), never squeezing the Display below its own least.
+ */
+export const DISPLAY_SIDE_PANEL_FORMS: Forms<DisplaySidePanelForm> = [
+  { id: 'panel', min: { w: control(6), h: control(2) }, ideal: { w: control(10), h: control(2) }, grow: { w: true } },
+];
+
+/** The gap between the Display and the side panel: the full form's column step. */
+export const DISPLAY_SIDE_GAP: Step = 3;
+
+/** The hero's forms with a side panel: each Display form beside the panel. */
+export type DisplaySideForm = 'side-full' | 'side-compact' | 'side-minimal';
+
+/**
+ * The hero with a side panel (the Stage's `side` slot): the Display's own forms, each with the
+ * panel beside it (`parts`: `display` and `panel`), most room first, so the solver steps the
+ * Display down (`full → compact → minimal`) to make room, as it would for anything else. The
+ * Display reads its part (`DISPLAY_PART`).
+ */
+export const DISPLAY_SIDE_FORMS: Forms<DisplaySideForm> = combineForms('across', DISPLAY_SIDE_GAP, { [DISPLAY_PART]: DISPLAY_FORMS, panel: DISPLAY_SIDE_PANEL_FORMS }, [
+  { id: 'side-full', parts: { [DISPLAY_PART]: 'full', panel: 'panel' } },
+  { id: 'side-compact', parts: { [DISPLAY_PART]: 'compact', panel: 'panel' } },
+  { id: 'side-minimal', parts: { [DISPLAY_PART]: 'minimal', panel: 'panel' } },
+]);
 
 /** Each spacing step as CSS. */
 const STEP_CSS: Record<Step, string> = {

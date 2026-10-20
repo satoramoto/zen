@@ -3,10 +3,11 @@
 // component nodes (props, callbacks by key, slots) and form properties.
 // Converted components then need no DOM parity of their own: their trees are snapshotted
 // (snapshot.test.ts), and this proves both renderers draw any tree the same.
-import { createElement } from 'react';
+import { createElement, useState } from 'react';
 import { act, fireEvent, render as renderReact } from '@testing-library/react';
 import { render as renderSvelte } from '@testing-library/svelte';
-import { createRawSnippet, flushSync } from 'svelte';
+import { createRawSnippet, flushSync, mount, unmount } from 'svelte';
+import { fromStore, writable } from 'svelte/store';
 import { describe, expect, it, vi } from 'vitest';
 import { serialize } from '../parity';
 import { Tree } from './Tree';
@@ -225,6 +226,55 @@ describe('Tree: React and Svelte draw any tree the same', () => {
     }
     react.unmount();
     svelte.unmount();
+  });
+
+  it('a tree that changes in the same flush as the first mount (a store sets state as it mounts): an element replaced by text or a component draws', () => {
+    // A store that, as its element mounts, asks the owner for the next tree (an app attaching
+    // state during mount): the element it sits on is replaced before the first flush ends.
+    const kick: (next: () => void) => Stores = (next) => ({
+      kick: () => {
+        next();
+        return {};
+      },
+    });
+    const first = h('div', { class: 'host' }, wire(h('span', { class: 'kicked' }, 'first'), { bind: [['kick', {}]] }), h('b', {}, 'stays'));
+    const nexts: Node[] = [
+      h('div', { class: 'host' }, 'replaced', h('b', {}, 'stays')),
+      h('div', { class: 'host' }, component('LampButton', { label: 'On', name: 'Upper', on: true }), h('b', {}, 'stays')),
+      h('section', { class: 'other' }, 'root replaced'),
+    ];
+    for (const next of nexts) {
+      // React: the owner's state, set from the store's mount (a layout effect).
+      function Owner() {
+        const [tree, setTree] = useState<Node>(first);
+        return createElement(Tree, { tree, stores: kick(() => setTree(next)) });
+      }
+      const react = renderReact(createElement(Owner));
+      // Svelte: the owner's state a store the props read (`fromStore`), set from the attachment.
+      const state = writable<Node>(first);
+      const tree = fromStore(state);
+      const target = document.createElement('div');
+      document.body.append(target);
+      let app: ReturnType<typeof mount> | undefined;
+      expect(() => {
+        app = mount(TreeSvelte, {
+          target,
+          props: {
+            get tree() {
+              return tree.current;
+            },
+            stores: kick(() => state.set(next)),
+          },
+        });
+        flushSync();
+      }).not.toThrow();
+      expect(serialize(react.container)).not.toContain('kicked');
+      expect(serialize(react.container)).toContain(next === nexts[2] ? 'root replaced' : '"stays"');
+      expect(serialize(target)).toBe(serialize(react.container));
+      if (app) unmount(app);
+      target.remove();
+      react.unmount();
+    }
   });
 
   it('an unknown store name throws, naming the registry', () => {

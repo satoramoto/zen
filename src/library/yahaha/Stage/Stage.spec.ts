@@ -1,10 +1,10 @@
 // The Stage's intent (docs/assembly.md, STAGE.md › Assembly): what it holds and what matters.
 // No grid, no ratios, no sizes: each region's forms are its component's own, and `assemble()`
 // decides forms, sizes and zoom under the pack's principles.
-import type { Forms, RegionSpec, ScreenSpec } from '../../layout/assembly/types';
+import type { Forms, RegionSpec, Row, ScreenSpec } from '../../layout/assembly/types';
 // Every form from a framework-free file, never a `.tsx`: Svelte reaches this spec too.
 import { APP_BAR_FORMS } from '../AppBar/AppBar.model';
-import { DISPLAY_FORMS } from '../Display/Display.forms';
+import { DISPLAY_FORMS, DISPLAY_PAGE_FORMS, DISPLAY_SIDE_FORMS } from '../Display/Display.forms';
 import { FADER_BANK_FORMS } from '../FaderBank/FaderBank.forms';
 import { KNOB_BANK_FORMS } from '../KnobBank/KnobBank.model';
 import { PAD_BANK_FORMS } from '../PadBank/PadBank.model';
@@ -86,3 +86,20 @@ export const STAGE_DESIGN = { w: 1920, h: 1080 } as const;
  */
 export const STAGE_SCALED_SPEC: ScreenSpec = { ...STAGE_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: STAGE_DESIGN } };
 export const STAGE_SPLIT_SCALED_SPEC: ScreenSpec = { ...STAGE_SPLIT_SPEC, aspect: { ratio: 16 / 9, fit: 'scale', design: STAGE_DESIGN } };
+
+/**
+ * What the hero region holds: `display` (the Display alone, its forms `full → compact →
+ * minimal`), `page` (an app's page in the Display's place: `DISPLAY_PAGE_FORMS`, the hero's whole
+ * box) or `side` (the Display with a side panel in its right third: `DISPLAY_SIDE_FORMS`, the
+ * Display stepping down to make room). Still `now`: it steps down last.
+ */
+export type StageHero = 'display' | 'page' | 'side';
+
+const HERO_FORMS: Record<StageHero, Forms> = { display: DISPLAY_FORMS, page: DISPLAY_PAGE_FORMS, side: DISPLAY_SIDE_FORMS };
+
+/** `spec` with the hero region holding `hero`'s forms; every other region as it is. */
+export function withHero(spec: ScreenSpec, hero: StageHero): ScreenSpec {
+  if (hero === 'display') return spec;
+  const swap = (rows: readonly Row[]): Row[] => rows.map((row) => row.map((x) => ('rows' in x ? { ...x, rows: swap(x.rows) } : x.id === 'hero' ? { ...x, forms: HERO_FORMS[hero] } : x)));
+  return { ...spec, rows: swap(spec.rows) };
+}

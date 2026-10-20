@@ -3,8 +3,9 @@
 // `Stage.tsx` (React) and `Stage.svelte` (Svelte) both hand it to their `Tree`; see Stage.tsx for the job.
 import type { Placed, Placement, ScreenSpec } from '../../layout/assembly/types';
 import { regionSlot } from '../../layout/assembly/AssembledScreen.model';
-import { component, h, styleText, type ComponentNode, type Handler, type Handlers, type Node } from '../../view/Tree.model';
+import { component, h, slot, styleText, type ComponentNode, type Handler, type Handlers, type Node } from '../../view/Tree.model';
 import type { AppBarModelProps } from '../AppBar/AppBar.model';
+import { DISPLAY_FORMS, DISPLAY_PART, DISPLAY_SIDE_PANEL_FORMS, displayLengthCss, type DisplayForm } from '../Display/Display.forms';
 import type { DisplayModelProps } from '../Display/Display.model';
 import type { FaderBankModelProps } from '../FaderBank/FaderBank.model';
 import type { KeysModelProps } from '../../components/music/Keys/Keys.model';
@@ -13,7 +14,9 @@ import type { PadBankProps } from '../PadBank/PadBank.model';
 import type { SongFormProps } from '../SongForm/SongForm.model';
 import type { StatusLineModelProps } from '../StatusLine/StatusLine.model';
 import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
-import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
+import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC, withHero, type StageHero } from './Stage.spec';
+
+export type { StageHero } from './Stage.spec';
 import type { StageState, StageViewState } from './stageState';
 import type { TapTempo } from './tapTempo';
 import type { TipAction } from '../../view/tip';
@@ -81,7 +84,30 @@ export interface StageModelProps<L = string> {
   fit?: StageFit;
   /** Called with each new placement (the solver's forms, sizes and zoom), for tests and inspectors. */
   onPlacement?: (placement: Placement) => void;
+  /**
+   * What the screen stands on. `ground` (the default): the theme's ground, painted by the Stage
+   * and its letterbox bands. `transparent`: nothing painted round the regions, so the app's own
+   * backdrop shows through the gaps and the bands; the regions' plates are unchanged.
+   */
+  backdrop?: StageBackdrop;
 }
+
+/** What the Stage stands on: see `StageModelProps.backdrop`. */
+export type StageBackdrop = 'ground' | 'transparent';
+
+/**
+ * Which of the Stage's slots the binding fills (the model can't see a React node or a snippet):
+ * `page`, an app's display page in the Display's place, the hero's whole box; `side`, a panel in
+ * the hero's right third beside the Display (a help card, a swap panel, first run). With both,
+ * the page wins and the side panel is not drawn.
+ */
+export interface StageSlots {
+  page?: boolean;
+  side?: boolean;
+}
+
+/** What the hero holds for the slots filled: the page wins over the side panel. */
+export const stageHero = (slots: StageSlots = {}): StageHero => (slots.page ? 'page' : slots.side ? 'side' : 'display');
 
 /** The spec each layout and fit assembles (`Stage.spec.ts`). */
 export const STAGE_SPECS: Record<StageLayout, Record<StageFit, ScreenSpec>> = {
@@ -89,17 +115,34 @@ export const STAGE_SPECS: Record<StageLayout, Record<StageFit, ScreenSpec>> = {
   split: { contain: STAGE_SPLIT_SPEC, scale: STAGE_SPLIT_SCALED_SPEC },
 };
 
-type Frame = Pick<StageModelProps<unknown>, 'width' | 'height' | 'layout' | 'fit'>;
+/** Every spec, by what the hero holds (`withHero`), then layout and fit; built once, so a spec keeps its identity across renders. */
+export const STAGE_HERO_SPECS: Record<StageHero, Record<StageLayout, Record<StageFit, ScreenSpec>>> = Object.fromEntries(
+  (['display', 'page', 'side'] as const).map((hero) => [
+    hero,
+    Object.fromEntries(
+      Object.entries(STAGE_SPECS).map(([layout, fits]) => [layout, Object.fromEntries(Object.entries(fits).map(([fit, spec]) => [fit, withHero(spec, hero)]))]),
+    ),
+  ]),
+) as Record<StageHero, Record<StageLayout, Record<StageFit, ScreenSpec>>>;
 
-/** The spec the screen assembles and the room it is given (both sizes set), else it measures its own. */
-export function stageScreen({ width, height, layout = 'stacked', fit = 'contain' }: Frame): { spec: ScreenSpec; room: { w: number; h: number } | undefined } {
-  return { spec: STAGE_SPECS[layout][fit], room: width !== undefined && height !== undefined ? { w: width, h: height } : undefined };
+type Frame = Pick<StageModelProps<unknown>, 'width' | 'height' | 'layout' | 'fit' | 'backdrop'>;
+
+/** The spec the screen assembles (for the hero's contents) and the room it is given (both sizes set), else it measures its own. */
+export function stageScreen(
+  { width, height, layout = 'stacked', fit = 'contain' }: Frame,
+  hero: StageHero = 'display',
+): { spec: ScreenSpec; room: { w: number; h: number } | undefined } {
+  return { spec: STAGE_HERO_SPECS[hero][layout][fit], room: width !== undefined && height !== undefined ? { w: width, h: height } : undefined };
 }
 
 /** The root: its class and data attributes and its size, holding `screen`. */
-function frame({ width, height, layout = 'stacked', fit = 'contain' }: Frame, screen: ComponentNode): Node {
+function frame({ width, height, layout = 'stacked', fit = 'contain', backdrop = 'ground' }: Frame, hero: StageHero, screen: ComponentNode): Node {
   const style = styleText({ width: width !== undefined ? `${width}px` : undefined, height: height !== undefined ? `${height}px` : undefined });
-  return h('div', { class: 'yh-stage', 'data-part': 'root', 'data-layout': layout, 'data-fit': fit, style }, screen);
+  return h(
+    'div',
+    { class: 'yh-stage', 'data-part': 'root', 'data-layout': layout, 'data-fit': fit, 'data-hero': hero, 'data-backdrop': backdrop, style },
+    screen,
+  );
 }
 
 /** The regions in reading order, each with the Stage prop that holds its data. */
@@ -143,7 +186,12 @@ const showsSections = (pads: StageModelProps<unknown>['pads']) => pads.banks?.[p
  * does); the keys in the Keyboard region at the width the last placement gave them, less the
  * plate (`inset`; none before the first placement); the status line.
  */
-export function stageRegions<L>(props: StageModelProps<L>, state: StageViewState, inset: { left: number; right: number }): Record<StageRegion, ComponentNode> {
+export function stageRegions<L>(
+  props: StageModelProps<L>,
+  state: StageViewState,
+  inset: { left: number; right: number },
+  slots: StageSlots = {},
+): Record<StageRegion, ComponentNode> {
   const region = (name: string, child: ComponentNode) => component('Region', { name }, { slots: { children: [child] } });
   const tip = props.tipAction !== undefined;
   const bar = split('bar', props.appBar, tip);
@@ -157,9 +205,10 @@ export function stageRegions<L>(props: StageModelProps<L>, state: StageViewState
   // The status line takes no tooltip action.
   const status = split('status', props.status, false);
   const placed = state.placement?.regions.keys;
+  const display = component('Display', { ...hero.props, parts: undefined }, { on: { ...hero.on, onTap: 'tap' } });
   return {
     bar: component('AppBar', bar.props, { on: bar.on }),
-    hero: region('Hero', component('Display', { ...hero.props, parts: undefined }, { on: { ...hero.on, onTap: 'tap' } })),
+    hero: stageHeroContent(stageHero(slots), display, state.placement?.regions.hero),
     transport: region('Transport', component('SongForm', { ...transport.props, part: 'transport' }, { on: transport.on })),
     mixer: component('FaderBankRegion', mixer.props, { on: mixer.on }),
     knobs: component('KnobBankRegion', knobs.props, { on: knobs.on }),
@@ -170,19 +219,52 @@ export function stageRegions<L>(props: StageModelProps<L>, state: StageViewState
 }
 
 /**
- * The Stage: the frame holding the assembled screen (`STAGE_SPECS`, the layout's `Screen`), each
- * region's content in its slot by id (`regionSlot(id)`). `state` is the Stage's own
- * (`stageState.ts`: the last placement), and `inset` the plate's, from the nearest ThemeScope's
- * principles.
+ * The Hero region's content for what it holds: the Display; the `page` slot in its place, filling
+ * the region; or the Display with the `side` slot in the right third. The side panel takes a third
+ * of the region (less the gap) when that is more than its own least, and never squeezes the
+ * Display below the least of the form the solver chose for it (`placed`'s `display` part; before
+ * the first placement, its least form's).
  */
-export function stageView<L>(props: StageModelProps<L>, state: StageViewState, inset: { left: number; right: number }): Node {
-  const { spec, room } = stageScreen(props);
+export function stageHeroContent(hero: StageHero, display: ComponentNode, placed?: Placed): ComponentNode {
+  const region = (name: string, ...children: Node[]) => component('Region', { name }, { slots: { children } });
+  if (hero === 'page') return region('Page', h('div', { class: 'yh-stage__page', 'data-part': 'page' }, slot('page')));
+  if (hero === 'display') return component('Region', { name: 'Hero' }, { slots: { children: [display] } });
+  const chosen = (placed?.parts?.[DISPLAY_PART] ?? 'minimal') as DisplayForm;
+  const least = (DISPLAY_FORMS.find((f) => f.id === chosen) ?? DISPLAY_FORMS[DISPLAY_FORMS.length - 1]).min.w;
+  const style = styleText({
+    '--yh-stage-display-min': displayLengthCss(least),
+    '--yh-stage-side-min': displayLengthCss(DISPLAY_SIDE_PANEL_FORMS[0].min.w),
+  });
+  return region(
+    'Hero',
+    h(
+      'div',
+      { class: 'yh-stage__hero', 'data-part': 'hero', 'data-side': '', style },
+      h('div', { class: 'yh-stage__main', 'data-part': 'main' }, display),
+      h('div', { class: 'yh-stage__side', 'data-part': 'side' }, slot('side')),
+    ),
+  );
+}
+
+/**
+ * The Stage: the frame holding the assembled screen (`STAGE_HERO_SPECS`, the layout's `Screen`),
+ * each region's content in its slot by id (`regionSlot(id)`). `state` is the Stage's own
+ * (`stageState.ts`: the last placement), and `inset` the plate's, from the nearest ThemeScope's
+ * principles. `slots` says which of the Stage's slots (`page`, `side`) the binding fills: the hero
+ * holds what they say (`stageHero`), and the spec gives it that room.
+ */
+export function stageView<L>(props: StageModelProps<L>, state: StageViewState, inset: { left: number; right: number }, slots: StageSlots = {}): Node {
+  const hero = stageHero(slots);
+  const { spec, room } = stageScreen(props, hero);
   const screen = component(
     'Screen',
     { name: 'Stage', className: 'yh-stage__screen', class: 'yh-stage__screen', spec, room },
-    { on: { onPlacement: 'placement' }, slots: Object.fromEntries(Object.entries(stageRegions(props, state, inset)).map(([id, node]) => [regionSlot(id), [node]])) },
+    {
+      on: { onPlacement: 'placement' },
+      slots: Object.fromEntries(Object.entries(stageRegions(props, state, inset, slots)).map(([id, node]) => [regionSlot(id), [node]])),
+    },
   );
-  return frame(props, screen);
+  return frame(props, hero, screen);
 }
 
 /**

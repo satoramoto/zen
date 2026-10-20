@@ -13,6 +13,74 @@
   font-family: var(--font-sans);
 }
 
+/* backdrop="transparent": nothing painted round the regions, so the app's own backdrop shows
+   through the gaps and the letterbox bands (the screen's ground Surfaces, hidden: they hold
+   nothing). The regions' plates are unchanged. */
+.yh-stage[data-backdrop='transparent'] {
+  background: none;
+}
+.yh-stage[data-backdrop='transparent'] .lib-assembled__band {
+  visibility: hidden;
+}
+
+/* The page slot: an app's display page in the Display's place, filling the Hero region's body. */
+.yh-stage__page {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+/* The hero with a side panel: the Display, then the panel in the right third (less the gap), or
+   its own least when a third is less, never squeezing the Display below the least of its chosen
+   form (`--yh-stage-display-min`, `--yh-stage-side-min`: set inline by the model from
+   Display.forms.ts). */
+.yh-stage__hero {
+  --yh-stage-display-min: 0px;
+  --yh-stage-side-min: 0px;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    max(var(--yh-stage-side-min), min((100% - var(--space-3)) / 3, 100% - var(--space-3) - var(--yh-stage-display-min)));
+  grid-template-rows: minmax(0, 1fr);
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+.yh-stage__main,
+.yh-stage__side {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The slot stories' fixture content (Stage.fixtures.ts, `stagePageSample`, `stageSideSample`): a
+   heading over its body, a step apart; the page's sounds in a wrapping row of keys. */
+.yh-stage-sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: 0;
+}
+.yh-stage-sample__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+/* The Transparent story's backdrop: two blooms in the part hues over the ground, standing in for
+   an app's own (Yahaha's blooms), so the gaps and bands show it through. */
+.yh-stage-sample-backdrop {
+  background:
+    radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--hue-1) 45%, transparent), transparent 45%),
+    radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--hue-2) 45%, transparent), transparent 45%),
+    var(--surface-0);
+}
+
 /* A story frame: the screen sits at the window's corner. Full-screen stories bleed (ThemeScope
    `bleed`), so the frame needs no margin of its own. */
 .yh-stage-frame {

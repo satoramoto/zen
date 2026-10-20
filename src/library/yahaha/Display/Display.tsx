@@ -1,7 +1,7 @@
 import { useState, useSyncExternalStore } from 'react';
 import { useChosenForm, useForm } from '../../layout/assembly/forms';
 import { Tree } from '../../view/Tree';
-import { DISPLAY_FORMS } from './Display.forms';
+import { DISPLAY_FORMS, DISPLAY_PART } from './Display.forms';
 import { displayHandlers, displayView, type DisplayModelProps, type TipAction } from './Display.model';
 import { wideState } from './wide';
 import '../../primitives/Stack.css';
@@ -103,8 +103,9 @@ export type DisplayProps = DisplayModelProps;
  * dot, its hue from `hues.ts`).
  */
 export function Display(props: DisplayProps) {
-  // The form: the `form` prop, then the assembled screen's choice, then `density` (auto: the width).
-  const form = { fromScreen: useForm(DISPLAY_FORMS, props.form), chosen: useChosenForm() };
+  // The form: the `form` prop, then the assembled screen's choice (its `display` part's, in a hero
+  // shared with a side panel), then `density` (auto: the width).
+  const form = { fromScreen: useForm(DISPLAY_FORMS, props.form, DISPLAY_PART), chosen: useChosenForm() };
   const [wide] = useState(wideState);
   return <Tree tree={displayView(props, form, useSyncExternalStore(wide.subscribe, wide.get))} handlers={displayHandlers(props, wide)} />;
 }

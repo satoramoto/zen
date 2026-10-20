@@ -114,7 +114,7 @@ import { knobBankStories } from '../yahaha/KnobBank/KnobBank.fixtures';
 import { padBankRegionView, padBankView, type PadBankProps, type PadBankRegionProps } from '../yahaha/PadBank/PadBank.model';
 import { padBankStories } from '../yahaha/PadBank/PadBank.fixtures';
 import { stageView } from '../yahaha/Stage/Stage.model';
-import { stageStories } from '../yahaha/Stage/Stage.fixtures';
+import { stageSample, stageSlotStories, stageStories } from '../yahaha/Stage/Stage.fixtures';
 import { pageListView } from '../components/core/PageList/PageList.model';
 import { pageListStories } from '../components/core/PageList/PageList.fixtures';
 import { folderListView } from '../components/core/FolderList/FolderList.model';
@@ -233,5 +233,7 @@ snapshot('PadBank', (props) => padBankView(props as PadBankProps, (props as PadB
 snapshot('PadBankRegion', (props) => padBankRegionView(props as PadBankRegionProps), padBankStories);
 // The Stage: the frame holding the Screen, each region's content in its slot by id (`region:<id>`).
 snapshot('Stage', (props) => stageView(props, {}, { left: 0, right: 0 }), stageStories);
+// Its `page` and `side` slots: the Stage's tree with that slot filled, then the story's sample (the slot's fixture content).
+snapshot('Stage slots', (props) => [stageView(props, {}, { left: 0, right: 0 }, { [props.slot]: true }), stageSample(props)], stageSlotStories);
 snapshot('PageList', (props) => pageListView(props as Parameters<typeof pageListView>[0]), pageListStories);
 snapshot('FolderList', (props) => folderListView(props as Parameters<typeof folderListView>[0]), folderListStories);
