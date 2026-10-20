@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../viewState';
+import { viewState } from '../../../view/viewState';
 import { chordReadoutHandlers, chordReadoutView, type ChordReadoutModelProps } from './ChordReadout.model';
 import type { Fit } from './fit';
 import '../../../primitives/Text.css';

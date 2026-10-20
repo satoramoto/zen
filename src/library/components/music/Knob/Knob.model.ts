@@ -7,7 +7,8 @@ import { focusRing } from '../../../primitives/Ring';
 import { textView, type ElementView, type TextModelProps } from '../../../primitives/Text.model';
 import { h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import { BOX, R, START, arc, point, sweepOf } from './geometry';
-import { knobRootAttrs, type TipAction } from './knobInput';
+import type { TipAction } from '../../../view/tip';
+import { knobRootAttrs } from './knobInput';
 
 export type { TipAction };
 

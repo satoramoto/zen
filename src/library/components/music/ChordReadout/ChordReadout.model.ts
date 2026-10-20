@@ -3,7 +3,7 @@
 // name). No framework: `ChordReadout.tsx` (React) and `ChordReadout.svelte` (Svelte) both pass
 // `chordReadoutView` and `chordReadoutHandlers` to their `Tree`. The hero's fit is the `chordFit`
 // store (`fit.ts`), reporting its step to the binding's view state, which passes it back as `fit`.
-import type { TipAction } from '../../core/Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 import { textView, type TextModelProps } from '../../../primitives/Text.model';
 import { each, h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import type { Fit } from './fit';

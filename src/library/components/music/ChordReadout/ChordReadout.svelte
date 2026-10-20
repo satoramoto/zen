@@ -7,7 +7,7 @@
 <script lang="ts">
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
-  import { viewState } from '../viewState';
+  import { viewState } from '../../../view/viewState';
   import { chordReadoutHandlers, chordReadoutView, type ChordReadoutModelProps } from './ChordReadout.model';
   import type { Fit } from './fit';
   import '../../../primitives/Text.css';

@@ -5,8 +5,7 @@
 // an `AssembledScreen` component node instead, the regions' contents passed through as its
 // `regions` (assembly/AssembledScreen.model.ts).
 import { component, h, slot, styleText, wire, type Handlers, type Node } from '../view/Tree.model';
-import { styleAttr, type StyleInput } from './assembly/AssembledScreen.model';
-import type { StyleDecls } from './style';
+import { styleAttr, type StyleDecls, type StyleInput } from '../view/style';
 import type { Placement, Principles, ScreenSpec } from './assembly/types';
 
 /** What Screen decides from, in any framework (each binding adds its header, footer, children, regions and refs). */
@@ -104,16 +103,4 @@ export function screenHandlers({ gridRef, onPlacement }: { gridRef?: ElementRef;
     },
     placement: onPlacement,
   };
-}
-
-export interface RefParams {
-  /** Called with the element when it mounts, and with null when it goes. */
-  onRef?: (element: HTMLElement | null) => void;
-}
-
-/** An element ref as a store (registered as `ref`): hands the element to `onRef` on mount and null
- *  on unmount. */
-export function bindRef(node: HTMLElement, params: RefParams): { destroy(): void } {
-  params.onRef?.(node);
-  return { destroy: () => params.onRef?.(null) };
 }

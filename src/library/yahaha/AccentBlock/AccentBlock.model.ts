@@ -5,7 +5,7 @@
 // store (`src/library/view/tip.ts`).
 import { textView } from '../../primitives/Text.model';
 import { h, styleText, when, wire, type Handlers, type Node } from '../../view/Tree.model';
-import type { TipAction } from '../../components/core/Button/Button.model';
+import type { TipAction } from '../../view/tip';
 
 export type { TipAction };
 
