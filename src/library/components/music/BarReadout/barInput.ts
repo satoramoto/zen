@@ -3,8 +3,8 @@
  * one per animation frame), the wheel (one step, a non-passive listener so the page doesn't
  * scroll), the keys (arrows one, Page Up / Page Down ten, Home and End the ends), the double-click
  * reset, and the local value a live edit shows until the state reports the value last sent or
- * 500 ms pass. `useBarInput` (React) and the `barInput` action (`barInput.svelte.ts`) both wrap
- * `bindBarInput`; neither holds any of this logic.
+ * 500 ms pass. Registered as the `barInput` store (`src/library/view/stores.ts`); BarReadout's tree
+ * binds it in both renderers, and its state goes to the binding's view state through `onState`.
  */
 import { step } from './bar';
 

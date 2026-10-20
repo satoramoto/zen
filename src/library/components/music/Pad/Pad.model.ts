@@ -1,10 +1,12 @@
-// Pad's model: its props, the tone it wears, and the face it draws (classes, `data-*` and ARIA).
-// No framework: `Pad.tsx` (React) and `Pad.svelte` (Svelte) both render `padView`; the press and
-// the tooltip are the `padPress.ts` store beside it.
+// Pad's model: its props, the tone it wears, and the tree both renderers draw from them (classes,
+// `data-*`, ARIA, the `padPress` store it binds). No framework: `Pad.tsx` (React) and `Pad.svelte`
+// (Svelte) both pass `padView` and `padHandlers` to their `Tree`; the press and the tooltip are the
+// `padPress.ts` store beside it, registered as `padPress` in `src/library/view/stores.ts`.
 import type { HueSlot, RoleSlot } from '../../core/hue';
+import type { TipAction } from '../../core/Button/Button.model';
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
-import type { TipAction } from './padPress';
+import { textView } from '../../../primitives/Text.model';
+import { h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 
 export type { TipAction };
 
@@ -83,19 +85,11 @@ export function padTone(family: PadFamily, state: PadState, role?: RoleSlot, hue
   return 'neutral';
 }
 
-/** What a renderer draws: the face (a `Text` rendered as a `<button>`), the chip and the label. */
-export interface PadView {
-  /** The face's Text props. */
-  text: TextModelProps;
-  /** The face's class (beside Text's own; a Surface's too) and its `type`, `data-*` and ARIA attributes. */
-  face: ElementView;
-  /** The NEXT / ARMED chip: its Text props, class, attributes and word; null for none. */
-  chip: { text: TextModelProps; className: string; attrs: Record<string, string | undefined>; word: string } | null;
-  /** The label's text, its short last word tied. */
-  label: string;
-}
-
-/** The face Pad draws from its props. */
+/**
+ * The tree Pad draws: the face (a label `Text` drawn as a `<button>`, and a `key` Surface through
+ * its class and data), binding the `padPress` store; the NEXT / ARMED chip (a caption `Text`); the
+ * label, its short last word tied.
+ */
 export function padView({
   label,
   index = '',
@@ -111,15 +105,18 @@ export function padView({
   disabled = false,
   fillCell = false,
   onFace = 'fill',
-}: PadModelProps): PadView {
+}: PadModelProps): Node {
   const tone = padTone(family, state, role, hue);
   const tag = state === 'next' ? 'NEXT' : state === 'armed' ? 'ARMED' : '';
   const util = family === 'util' || family === 'start';
-  return {
-    text: { role: 'label', leading: 'snug' },
-    face: {
-      className: `yh-pad lib-surface ${focusRing}`,
-      attrs: {
+  const face = textView({ role: 'label', leading: 'snug', className: `yh-pad lib-surface ${focusRing}` });
+  const chip = textView({ size: 'caption', weight: 'strong', case: 'upper', className: `yh-pad__tag${tagCorner ? ' yh-pad__tag--corner' : ''}` });
+  return wire(
+    h(
+      'button',
+      {
+        class: face.className,
+        ...face.attrs,
         type: 'button',
         'data-material': 'key',
         'data-radius': 'control',
@@ -139,15 +136,14 @@ export function padView({
         'aria-pressed': String(state === 'playing' || state === 'running'),
         'aria-disabled': disabled ? 'true' : undefined,
       },
-    },
-    chip: tag
-      ? {
-          text: { size: 'caption', weight: 'strong', case: 'upper' },
-          className: `yh-pad__tag${tagCorner ? ' yh-pad__tag--corner' : ''}`,
-          attrs: { 'data-part': 'chip', 'aria-hidden': 'true' },
-          word: tag,
-        }
-      : null,
-    label: tieLastWord(label),
-  };
+      tag ? h('span', { class: chip.className, ...chip.attrs, 'data-part': 'chip', 'aria-hidden': 'true' }, tag) : null,
+      h('span', { class: 'yh-pad__label', 'data-part': 'label' }, tieLastWord(label)),
+    ),
+    { bind: [['padPress', { disabled, tip, tipAction: 'tipAction', onPress: 'press' }]] },
+  );
+}
+
+/** The callbacks `padView`'s tree names: the press and the app's tooltip action. */
+export function padHandlers(props: PadModelProps): Handlers {
+  return { press: props.onPress, tipAction: props.tipAction };
 }

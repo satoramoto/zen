@@ -1,14 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { BarReadout, type BarReadoutProps } from './BarReadout';
-import { barReadoutArgTypes, barReadoutArgs, barReadoutStories as s } from './BarReadout.fixtures';
+import { fixtureStories, treeStory, withRenderer } from '../../../stories/story';
+import { BarReadout } from './BarReadout';
+import BarReadoutSvelte from './BarReadout.svelte';
+import { barReadoutArgTypes, barReadoutArgs, barReadoutGroupSample, barReadoutStories as s } from './BarReadout.fixtures';
 
-// Every story's args come from BarReadout.fixtures.ts, which the Svelte stories and the parity test share.
+// Every story is built from BarReadout.fixtures.ts (`story(s.Name)`), which the tree snapshot
+// shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`. Group is a view tree from
+// the fixtures (`treeStory`), its rows stacked.
 const meta = {
   title: 'Design OS/Components/Music/BarReadout',
   component: BarReadout,
   decorators: [
+    withRenderer,
     (Story) => (
       <div style={{ width: 320 }}>
         <Story />
@@ -23,10 +28,11 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(BarReadout, BarReadoutSvelte);
 
 /** Level 90 of 0–127: → sends 91. */
 export const Level: Story = {
-  args: s.Level.args,
+  ...story(s.Level),
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider', { name: 'Level' });
     await expect(slider).toHaveAttribute('aria-valuenow', '90');
@@ -40,7 +46,7 @@ export const Level: Story = {
 
 /** Pan right of centre, filled from the centre: "R6". */
 export const Pan: Story = {
-  args: s.Pan.args,
+  ...story(s.Pan),
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('slider')).toHaveAttribute('aria-valuetext', 'Pan R6');
   },
@@ -48,7 +54,7 @@ export const Pan: Story = {
 
 /** The low EQ frequency at 120 Hz: the bar sits at its nearest step of the XG table. */
 export const LowFreq: Story = {
-  args: s.LowFreq.args,
+  ...story(s.LowFreq),
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('slider')).toHaveAttribute('aria-valuetext', 'Low freq 120 Hz');
   },
@@ -56,7 +62,7 @@ export const LowFreq: Story = {
 
 /** An insert setting with the state's own text: "0.50" with "Hz" small after it. */
 export const Display: Story = {
-  args: s.Display.args,
+  ...story(s.Display),
   play: async ({ canvasElement }) => {
     await expect(canvasElement).toHaveTextContent('0.50Hz');
   },
@@ -64,7 +70,7 @@ export const Display: Story = {
 
 /** The compressor's ratio in tenths: "3:1". */
 export const Ratio: Story = {
-  args: s.Ratio.args,
+  ...story(s.Ratio),
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('slider')).toHaveAttribute('aria-valuetext', 'Ratio 3:1');
   },
@@ -72,7 +78,7 @@ export const Ratio: Story = {
 
 /** The hardware fader hasn't reached the level yet: "Level ↕". */
 export const Waiting: Story = {
-  args: s.Waiting.args,
+  ...story(s.Waiting),
   play: async ({ canvasElement }) => {
     const slider = within(canvasElement).getByRole('slider', { name: 'Level' });
     await expect(slider).toHaveAttribute('aria-valuetext', 'Level 90, hardware fader away');
@@ -81,7 +87,7 @@ export const Waiting: Story = {
 
 /** A send that isn't there: "—", faint, a dashed track, focusable, sends nothing. */
 export const Disabled: Story = {
-  args: s.Disabled.args,
+  ...story(s.Disabled),
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider');
     await expect(slider).toHaveAttribute('aria-disabled', 'true');
@@ -93,12 +99,4 @@ export const Disabled: Story = {
 };
 
 /** Added: a group as the Channel page stacks it, so the values line up on their last digit. */
-export const Group: Story = {
-  render: () => (
-    <div>
-      {s.Group.items!.map((row) => (
-        <BarReadout key={row.label} {...(row as BarReadoutProps)} />
-      ))}
-    </div>
-  ),
-};
+export const Group: Story = treeStory(() => ({ tree: barReadoutGroupSample(s.Group.items!) }));

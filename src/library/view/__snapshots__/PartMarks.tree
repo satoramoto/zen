@@ -1,0 +1,57 @@
+## Board
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <span key=edited class="yh-partmarks__dot" data-mark="edited" data-part="dot" data-tone="text">
+
+## Missing
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <svg key=missing class="yh-partmarks__icon" data-mark="missing" data-part="icon" data-tone="warning" viewBox="0 0 12 12">
+    <path key=M6 1.25 11 10.25H1Z d="M6 1.25 11 10.25H1Z">
+    <path key=M6 4.75v2.5 d="M6 4.75v2.5">
+    <circle cx="6" cy="8.6" r="0.5">
+
+## Failed
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <svg key=failed class="yh-partmarks__icon" data-mark="failed" data-part="icon" data-tone="danger" viewBox="0 0 12 12">
+    <path key=M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25 d="M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25">
+
+## Off
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <span key=off class="lib-text lib-tone yh-partmarks__word" data-mark="off" data-part="word" data-role="body" data-text-case="label" data-text-leading="tight" data-text-size="inherit" data-tone="faint">
+    "off"
+
+## Bass
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <span key=bass class="lib-text lib-tone yh-partmarks__word" data-mark="bass" data-part="word" data-role="body" data-text-case="label" data-text-leading="tight" data-text-size="inherit" data-tone="muted">
+    "bass"
+
+## Strip
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="strip" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <span key=edited class="yh-partmarks__dot" data-mark="edited" data-part="dot" data-tone="text">
+  <svg key=failed class="yh-partmarks__icon" data-mark="failed" data-part="icon" data-tone="danger" viewBox="0 0 12 12">
+    <path key=M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25 d="M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25">
+  <span key=bass class="lib-text lib-tone yh-partmarks__word" data-mark="bass" data-part="word" data-role="body" data-text-case="label" data-text-leading="tight" data-text-size="inherit" data-tone="muted">
+    "bass"
+
+## InSoundCells #1
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <span key=edited class="yh-partmarks__dot" data-mark="edited" data-part="dot" data-tone="text">
+
+## InSoundCells #2
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <svg key=missing class="yh-partmarks__icon" data-mark="missing" data-part="icon" data-tone="warning" viewBox="0 0 12 12">
+    <path key=M6 1.25 11 10.25H1Z d="M6 1.25 11 10.25H1Z">
+    <path key=M6 4.75v2.5 d="M6 4.75v2.5">
+    <circle cx="6" cy="8.6" r="0.5">
+
+## InSoundCells #3
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <span key=edited class="yh-partmarks__dot" data-mark="edited" data-part="dot" data-tone="text">
+  <svg key=failed class="yh-partmarks__icon" data-mark="failed" data-part="icon" data-tone="danger" viewBox="0 0 12 12">
+    <path key=M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25 d="M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25">
+  <span key=bass class="lib-text lib-tone yh-partmarks__word" data-mark="bass" data-part="word" data-role="body" data-text-case="label" data-text-leading="tight" data-text-size="inherit" data-tone="muted">
+    "bass"
+
+## InSoundCells #4
+<span aria-hidden="true" class="lib-text lib-tone yh-partmarks" data-part="root" data-role="body" data-size="cell" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" use:tip={"tipAction":"tipAction"}>
+  <span key=off class="lib-text lib-tone yh-partmarks__word" data-mark="off" data-part="word" data-role="body" data-text-case="label" data-text-leading="tight" data-text-size="inherit" data-tone="faint">
+    "off"

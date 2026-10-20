@@ -1,10 +1,10 @@
-import type { CSSProperties } from 'react';
-import { Text } from '../../../primitives/Text';
+import { Tree } from '../../../view/Tree';
 import { meterView, type MeterModelProps } from './Meter.model';
+import '../../../primitives/Text.css';
 import '../../../primitives/Surface.css';
 import './Meter.css';
 
-// The props and the view are framework-free, in the model; `Meter.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; `Meter.svelte` draws the same tree.
 export type { MeterLayout, MeterSide, MeterModelProps } from './Meter.model';
 
 /** `live.meter~`: a level, read-only. Mirrors `@openflow/widgets` Meter. */
@@ -26,26 +26,5 @@ export type MeterProps = MeterModelProps;
  * with tabular figures (laid over the bar when `inside`).
  */
 export function Meter(props: MeterProps) {
-  const view = meterView(props);
-  const style = view.style as CSSProperties;
-  return (
-    <div className={view.root.className} {...view.root.attrs} style={style}>
-      {view.caption && (
-        <Text {...view.caption.text} className={view.caption.className} {...view.caption.attrs}>
-          {view.caption.content}
-        </Text>
-      )}
-      <div className={view.frame.className} {...view.frame.attrs}>
-        <div className={view.channel.className} {...view.channel.attrs}>
-          <i className={view.level.className} {...view.level.attrs} />
-          {view.hold && <i className={view.hold.className} {...view.hold.attrs} />}
-        </div>
-      </div>
-      {view.readout && (
-        <Text {...view.readout.text} className={view.readout.className} {...view.readout.attrs}>
-          {view.readout.content}
-        </Text>
-      )}
-    </div>
-  );
+  return <Tree tree={meterView(props)} />;
 }

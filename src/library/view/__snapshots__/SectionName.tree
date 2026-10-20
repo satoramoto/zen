@@ -1,0 +1,88 @@
+## Board
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "Main"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "B"
+
+## Idle
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-idle="true" data-part="name" data-role="display" data-state="idle" data-text-leading="tight">
+  "Main"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "A"
+
+## Intro
+<span class="lib-text lib-tone yh-section-name" data-hue="intro" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "Intro"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "II"
+
+## AllKinds #1
+<span class="lib-text lib-tone yh-section-name" data-hue="intro" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "Intro"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "I"
+
+## AllKinds #2
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "Main"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "A"
+
+## AllKinds #3
+<span class="lib-text lib-tone yh-section-name" data-hue="brk" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "Break"
+
+## AllKinds #4
+<span class="lib-text lib-tone yh-section-name" data-hue="fill" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "Fill"
+
+## AllKinds #5
+<span class="lib-text lib-tone yh-section-name" data-hue="ending" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "Ending"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "II"
+
+## AllKinds #6
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-part="name" data-role="display" data-state="next" data-text-leading="tight">
+  "Main"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "C"
+
+## AllKinds #7
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-idle="true" data-part="name" data-role="display" data-state="idle" data-text-leading="tight">
+  "Main"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "B"
+
+## AllKinds #8
+<span class="lib-text lib-tone yh-section-name" data-hue="ending" data-part="name" data-role="display" data-state="absent" data-text-leading="tight">
+  "Ending"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "III"
+
+## Empty
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-part="name" data-role="display" data-state="playing" data-text-leading="tight">
+  "—"
+
+## Next
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-part="name" data-role="display" data-state="next" data-text-leading="tight">
+  "Main"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "C"
+
+## HeroSize
+<span class="lib-text lib-tone yh-section-name" data-hue="main" data-part="name" data-role="display" data-state="playing" data-text-leading="tight" style="--yh-section-name-size: var(--size-display)">
+  "Main"
+  " "
+  <span class="lib-text lib-tone yh-section-name__variant" data-part="variant" data-role="display" data-tabular="" data-text-leading="tight" data-text-size="inherit">
+    "B"

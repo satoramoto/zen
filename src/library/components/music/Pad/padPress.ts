@@ -1,15 +1,14 @@
 /**
  * The Pad's behaviour, framework-free: the press (a click, Space or Enter, which a `<button>` turns
  * into a click) that a disabled pad ignores, and the tooltip action's lifetime on the face.
- * `usePad` (React) and the `padPress` action (`padPress.svelte.ts`) both wrap `bindPad`; neither holds any of
- * this logic. The markup and its look stay in the renderers and `Pad.css`.
+ * Registered as `padPress` in `src/library/view/stores.ts`; Pad's tree binds it, and
+ * `src/library/svelte.ts` exports it as an action (`actionOf(bindPad)`). The markup is `padView`
+ * (Pad.model.ts), its look `Pad.css`.
  */
+import type { TipAction } from '../../core/Button/Button.model';
 
 /** A tooltip action in the shape of the app's `use:tip`: called with the node and the key. */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => { update?: (key: string) => void; destroy?: () => void } | void;
+export type { TipAction };
 
 export interface PadParams {
   /** Called on a click, Space or Enter, unless `disabled`. */

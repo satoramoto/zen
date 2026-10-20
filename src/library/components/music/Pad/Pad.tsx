@@ -1,12 +1,12 @@
-import { Text } from '../../../primitives/Text';
-import { padView, type PadModelProps } from './Pad.model';
-import { usePad } from './usePad';
+import { Tree } from '../../../view/Tree';
+import { padHandlers, padView, type PadModelProps } from './Pad.model';
 // The face is a Text (the label type) and a Surface (material key) through its class and data
 // attributes, since one element can't render both. Before Pad.css, so the states win.
+import '../../../primitives/Text.css';
 import '../../../primitives/Surface.css';
 import './Pad.css';
 
-// The props, tones and face are framework-free, in the model; `Pad.svelte` renders the same view.
+// The props, tones and tree are framework-free, in the model; `Pad.svelte` draws the same tree.
 export type { TipAction, PadFamily, PadState, PadTone, PadOnFace, PadModelProps } from './Pad.model';
 export { tieLastWord, padTone } from './Pad.model';
 
@@ -57,7 +57,7 @@ export type PadProps = PadModelProps;
  * says): at the top, the pad keeps the chip's row clear and centres the label below it; with
  * `tagCorner` the chip hangs on the top edge, mostly outside the pad, so a one-letter song-form
  * step keeps its letter centred and in line with its neighbours. *Headless*: the press and the
- * tooltip live in the `padPress.ts` store (`usePad` in React, the `padPress` action in Svelte); the markup
+ * tooltip live in the `padPress.ts` store (bound by the tree, `padView`, in both renderers); the markup
  * is named parts (`face`, `chip`, `label`), and the face is
  * made of the theme's `key` material at rest and `--mat-key-pressed` while sounding, on or held,
  * its lit dot `--mat-lit-glow`, so a material set restyles the pad without touching it. State
@@ -82,22 +82,7 @@ export type PadProps = PadModelProps;
  * - `--yh-wait-ring`: the waiting and on ring's weight, border included (shared with Button and LampButton).
  */
 export function Pad(props: PadProps) {
-  const { onPress, disabled = false, tip, tipAction } = props;
-  const { ref } = usePad({ onPress, disabled, tip, tipAction });
-  const view = padView(props);
-
-  return (
-    <Text as="button" {...view.text} ref={ref} className={view.face.className} {...view.face.attrs}>
-      {view.chip && (
-        <Text {...view.chip.text} className={view.chip.className} {...view.chip.attrs}>
-          {view.chip.word}
-        </Text>
-      )}
-      <span className="yh-pad__label" data-part="label">
-        {view.label}
-      </span>
-    </Text>
-  );
+  return <Tree tree={padView(props)} handlers={padHandlers(props)} />;
 }
 
 export default Pad;

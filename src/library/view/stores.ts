@@ -13,6 +13,13 @@ import { bindRoom, type RoomParams } from '../layout/assembly/room';
 import { bindReport, type ReportParams } from '../layout/assembly/report';
 import { bindRef, type RefParams } from '../layout/Screen.model';
 import { bindDisplayFit, bindDisplayWide, type DisplayFitParams, type DisplayWideParams } from '../yahaha/Display/fit';
+import { bindPad, type PadParams } from '../components/music/Pad/padPress';
+import { bindFader, type FaderParams } from '../components/music/Fader/faderInput';
+import { bindKeysInput, type KeysBindParams } from '../components/music/Keys/keysInput';
+import { bindFillWidth, type FillWidthParams } from '../components/music/Keys/fillWidth';
+import { bindFit, type ChordFitParams } from '../components/music/ChordReadout/fit';
+import { bindBarInput, type BarBindParams } from '../components/music/BarReadout/barInput';
+import { bindTempoNumber, bindTempoStep, type TempoNumberParams, type TempoStepParams } from '../components/music/TempoReadout/tempoGestures';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -83,6 +90,22 @@ export const stores = {
   displayFit: keyed<DisplayFitParams, never>(bindDisplayFit, []),
   /** Display's auto form: whether the hero is wide enough for `full` (`yahaha/Display/fit.ts`). */
   displayWide: keyed<DisplayWideParams, 'onWide'>(bindDisplayWide, ['onWide']),
+  /** Pad's press and tooltip (`padPress.ts`). */
+  padPress: keyed<PadParams, 'onPress' | 'tipAction'>(bindPad, ['onPress', 'tipAction']),
+  /** Fader's drag, keys and wheel (`faderInput.ts`). */
+  faderInput: keyed<FaderParams, 'onlevel'>(bindFader, ['onlevel']),
+  /** Keys' split handle, pick surface and Esc (`keysInput.ts`). */
+  keysInput: keyed<KeysBindParams, 'onSplit' | 'onPick'>(bindKeysInput, ['onSplit', 'onPick']),
+  /** Keys' measured width (`fillWidth.ts`). */
+  fillWidth: keyed<FillWidthParams, 'onWidth'>(bindFillWidth, ['onWidth']),
+  /** ChordReadout's fit (`fit.ts`). */
+  chordFit: keyed<ChordFitParams, 'onFit'>(bindFit, ['onFit']),
+  /** BarReadout's drag, keys, hold and reset (`barInput.ts`). */
+  barInput: keyed<BarBindParams, 'onChange' | 'onState'>(bindBarInput, ['onChange', 'onState']),
+  /** TempoReadout's number gestures (`tempoGestures.ts`). */
+  tempoNumber: keyed<TempoNumberParams, 'onTempo' | 'onReset'>(bindTempoNumber, ['onTempo', 'onReset']),
+  /** TempoReadout's + / − hold reporting (`tempoGestures.ts`). */
+  tempoStep: keyed<TempoStepParams, 'report'>(bindTempoStep, ['report']),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;

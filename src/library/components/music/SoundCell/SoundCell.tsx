@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
-import { Text } from '../../../primitives/Text';
-import { soundCellView, type SoundCellModelProps } from './SoundCell.model';
+import { Tree } from '../../../view/Tree';
+import { soundCellHandlers, soundCellView, type SoundCellModelProps } from './SoundCell.model';
+import '../../../primitives/Text.css';
 import './SoundCell.css';
 
-// The props and the view are framework-free, in the model; `SoundCell.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; this file and `SoundCell.svelte` only
+// hand its tree to their `Tree`, with the marks as the `marks` slot.
 export type { SoundCellModelProps } from './SoundCell.model';
 
 export interface SoundCellProps extends SoundCellModelProps {
@@ -39,23 +41,6 @@ export interface SoundCellProps extends SoundCellModelProps {
  * - `--yh-part-hue`: the part's ink, `--hue-N` from `hue`; the short name wears it (faded when off).
  * - `--yh-sound-cell-width`: the cell's width on the row (default `14em`); the row may set it.
  */
-export function SoundCell(props: SoundCellProps) {
-  const { marks, onPart, onSound } = props;
-  const view = soundCellView(props);
-  return (
-    <div className={view.root.className} {...view.root.attrs}>
-      <Text as="button" {...view.part.text} className={view.part.className} {...view.part.attrs} onClick={() => onPart?.()}>
-        {view.part.label}
-      </Text>
-      <Text as="button" {...view.sound.text} className={view.sound.className} {...view.sound.attrs} onClick={() => onSound?.()}>
-        <span className={view.title.className}>{view.title.label}</span>
-        {view.number && (
-          <Text {...view.number.text} className={view.number.className} {...view.number.attrs}>
-            {view.number.label}
-          </Text>
-        )}
-        {marks != null && <span className={view.marksClassName}>{marks}</span>}
-      </Text>
-    </div>
-  );
+export function SoundCell({ marks, ...props }: SoundCellProps) {
+  return <Tree tree={soundCellView(props, { marks: marks != null })} slots={{ marks }} handlers={soundCellHandlers(props)} />;
 }

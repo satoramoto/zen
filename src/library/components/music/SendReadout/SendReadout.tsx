@@ -1,8 +1,9 @@
-import { Text } from '../../../primitives/Text';
-import { sendReadoutView, type SendReadoutModelProps } from './SendReadout.model';
+import { Tree } from '../../../view/Tree';
+import { sendReadoutHandlers, sendReadoutView, type SendReadoutModelProps } from './SendReadout.model';
+import '../../../primitives/Text.css';
 import './SendReadout.css';
 
-// The props and the view are framework-free, in the model; `SendReadout.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; `SendReadout.svelte` draws the same tree.
 export type { SendReadoutModelProps } from './SendReadout.model';
 
 export type SendReadoutProps = SendReadoutModelProps;
@@ -31,19 +32,5 @@ export type SendReadoutProps = SendReadoutModelProps;
  * "Band sends: reverb 40, chorus 12, delay 0. Opens Effects"; click, Space and Enter all press it.
  */
 export function SendReadout(props: SendReadoutProps) {
-  const view = sendReadoutView(props);
-  return (
-    <button className={view.button.className} {...view.button.attrs} onClick={() => props.onPress?.()}>
-      {view.sends.map((send) => (
-        <span key={send.word.content} className={send.className} {...send.attrs}>
-          <Text {...send.word.text} className={send.word.className}>
-            {send.word.content}
-          </Text>
-          <Text {...send.level.text} className={send.level.className}>
-            {send.level.content}
-          </Text>
-        </span>
-      ))}
-    </button>
-  );
+  return <Tree tree={sendReadoutView(props)} handlers={sendReadoutHandlers(props)} />;
 }

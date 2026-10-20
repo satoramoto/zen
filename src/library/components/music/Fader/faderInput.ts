@@ -2,8 +2,8 @@
  * The Fader's behaviour, framework-free and fully controlled. A drag (pointer capture, each level
  * once), ↑ ↓ → ← ±1, Page Up / Down ±10, Home, End and the wheel (±2 a notch, trackpad deltas
  * summed) ask through `onlevel` and move nothing themselves; quick repeats count from the level last
- * asked for until `level` catches up, or until a short settle pause passes. `useFader` (React) and
- * the `faderInput` action (`faderInput.svelte.ts`) both wrap `bindFader`; neither holds any of this logic.
+ * asked for until `level` catches up, or until a short settle pause passes. Fader's tree binds it as
+ * the `faderInput` store (`src/library/view/stores.ts`); `src/library/svelte.ts` exports it as an action.
  */
 import { FADER_MAX, clamp } from './Fader.model';
 
@@ -21,7 +21,8 @@ export interface FaderParams {
   level: number;
   /** A parked fader is shown but not usable: no asks. */
   parked?: boolean;
-  /** The rail a drag measures: the pointer maps onto its height. */
+  /** The rail a drag measures: the pointer maps onto its height. Default: the node's own rail
+   *  (`[data-part="rail"]` or `.yh-fader__rail` inside it), as Fader draws it. */
   rail?: () => HTMLElement | null;
   /** Called with the level asked for (0–127, whole). */
   onlevel?: (level: number) => void;
@@ -59,7 +60,8 @@ export function bindFader(node: HTMLElement, initial: FaderParams): FaderBinding
   };
 
   const levelAt = (clientY: number) => {
-    const box = params.rail?.()?.getBoundingClientRect();
+    const rail = params.rail ? params.rail() : node.querySelector<HTMLElement>('[data-part="rail"], .yh-fader__rail');
+    const box = rail?.getBoundingClientRect();
     if (!box || box.height === 0) return params.level;
     return Math.round(clamp(1 - (clientY - box.top) / box.height, 0, 1) * FADER_MAX);
   };

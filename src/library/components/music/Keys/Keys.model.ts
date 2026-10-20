@@ -1,9 +1,12 @@
-// Keys' model: its props, the strip it draws from them (classes, `data-*`, ARIA, inline lengths,
-// text), and the pure steps of setting the split. No framework: `Keys.tsx` (React) and
-// `Keys.svelte` (Svelte) both render `keysView`; the pointer and keyboard input is the
-// `keysInput.ts` store and the measured width the `fillWidth.ts` store, beside it.
+// Keys' model: its props, the tree both renderers draw from them (classes, `data-*`, ARIA, inline
+// lengths, text, the stores it binds), the handlers that tree names, and the pure steps of setting
+// the split. No framework: `Keys.tsx` (React) and `Keys.svelte` (Svelte) both pass `keysView` and
+// `keysHandlers` to their `Tree`; the pointer and keyboard input is the `keysInput.ts` store and the
+// measured width the `fillWidth.ts` store, beside it, registered in `src/library/view/stores.ts`.
 import type { HueSlot } from '../../core/hue';
-import type { TextModelProps } from '../../../primitives/Text.model';
+import type { TipAction } from '../../core/Button/Button.model';
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { each, h, styleText, when, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import {
   BLACK_HEIGHT_RATIO,
   BLACK_WIDTH_RATIO,
@@ -19,7 +22,7 @@ import {
 } from './keyLayout';
 
 /** The app's tooltip hook, applied to the split handle (the original's `use:tip` action). */
-export type TipAction = (node: HTMLElement, key: string) => { destroy?: () => void } | void;
+export type { TipAction };
 
 /** Every Keys prop (it takes no children). */
 export interface KeysModelProps {
@@ -79,38 +82,6 @@ export const DRAG_SLOP = 3;
 
 const px = (n: number) => `${n}px`;
 
-/** Attributes: every value a string, or undefined for none. */
-type Attrs = Record<string, string | undefined>;
-/** Inline style declarations by CSS property name (custom properties included). */
-type Style = Record<string, string>;
-
-/** One zone on the ruler: its name, then the pick hint or what it holds. */
-export interface KeysZoneView {
-  side: KeyPart;
-  attrs: Attrs;
-  style: Style;
-  name: string;
-  /** The armed hint replaces what it holds (the right zone, or the only one). */
-  hint: boolean;
-  /** What it holds, joined ("G A C E"); null when nothing. */
-  held: string | null;
-}
-
-/** One white key: a caption `Text` rendered as a `div`, its C name as its text. */
-export interface KeysWhiteView {
-  note: number;
-  text: TextModelProps;
-  attrs: Attrs;
-  style: Style;
-  label: string;
-}
-
-export interface KeysBlackView {
-  note: number;
-  attrs: Attrs;
-  style: Style;
-}
-
 /** What the input store reads: the split's settings and the geometry the pointer maps through. */
 export interface KeysSettings {
   split: number | null;
@@ -124,30 +95,38 @@ export interface KeysSettings {
   blackWidth: number;
 }
 
-/** What a renderer draws. */
-export interface KeysView {
-  root: { className: string; attrs: Attrs; style: Style };
-  /** Whether the root measures its own width (`width="fill"`). */
-  fill: boolean;
-  /** The ruler's zones and, without a handle, the split's name on it; null with `ruler={false}`. */
-  ruler: { zones: KeysZoneView[]; marker: { style: Style; text: string } | null } | null;
-  strip: { attrs: Attrs };
-  whites: KeysWhiteView[];
-  blacks: KeysBlackView[];
-  /** The split line; `join` draws its step round a black key. Null without a split on the keys. */
-  split: { attrs: Attrs; join: boolean } | null;
-  /** Armed: the pick surface over the keys. */
-  pick: boolean;
-  /** Armed, for the Esc that disarms. */
+/** The plain data the input store is bound with (`keysInput` in the tree): enough to lay the keys out again. */
+export interface KeysInputData {
+  range: KeyRange;
+  split: number | null;
+  splitMin: number;
+  splitMax: number;
+  splitLocked: boolean;
+  picking: boolean;
+  /** Armed (interactive, picking, unlocked): the Esc that disarms listens. */
   armed: boolean;
-  /** The split handle (with `onSplit` and a split on the keys), focusable (`tabindex` 0, set by each renderer); its text is the split's name. */
-  handle: { attrs: Attrs; style: Style; text: string } | null;
-  settings: KeysSettings;
+  /** The layout width, px (the measured width with `width="fill"`). */
+  width: number;
+}
+
+/** The settings the input reads, from the store's plain data: the keys laid out at `width`. */
+export function keysSettings({ range, split, splitMin, splitMax, splitLocked, picking, width }: KeysInputData): KeysSettings {
+  const keys = layout(range, width, split, [], []);
+  return { split, splitMin, splitMax, splitLocked, picking, width, keys, blackWidth: keys.whiteWidth * BLACK_WIDTH_RATIO };
+}
+
+/** A Text's attributes (its class and `data-*`) plus the part's name. */
+function text(props: TextModelProps, part: string): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs, 'data-part': part };
 }
 
 /**
- * The strip Keys draws from its props. `measured` is the root's own width, px, read by the
- * renderer with `width="fill"` (0 until measured); ignored for a fixed width.
+ * The tree Keys draws: the ruler (zones, the pick hint or what each holds, the split's name), the
+ * strip (white and black keys, the split line), the pick surface while armed, and the split handle
+ * (with `onSplit`), binding the `keysInput` and `fillWidth` stores on the root and `tip` on the
+ * handle. `measured` is the root's own width, px, from the `fillWidth` store with `width="fill"`
+ * (0 until measured); ignored for a fixed width.
  */
 export function keysView(
   {
@@ -168,7 +147,7 @@ export function keysView(
     onSplit,
   }: KeysModelProps,
   measured = 0,
-): KeysView {
+): Node {
   const fill = widthProp === 'fill';
   // Unmeasured (first render without layout, or a hidden container), the layout runs at 0 px: no
   // division by it, and the root hides its contents until it has a width.
@@ -183,100 +162,170 @@ export function keysView(
   const topX = keys.splitX === null ? null : keys.splitX + (keys.splitStep * blackWidth) / 2;
   const splitName = split === null ? '' : noteName(split);
 
-  const zone = (side: KeyPart): KeysZoneView => {
+  const zone = (side: KeyPart): Node => {
     const right = side === 'right';
     const from = right ? (topX ?? 0) : 0;
     const to = right ? width : (topX ?? width);
     const held = right ? heldNames(split === null ? [...heldLeft, ...heldRight] : heldRight) : chordNames(heldLeft);
     const lit = right ? heldRight.length > 0 || (split === null && heldLeft.length > 0) : heldLeft.length > 0;
-    return {
-      side,
-      attrs: {
+    return h(
+      'div',
+      {
+        class: 'yh-keys__zone',
         'data-part': 'zone',
         'data-side': side,
         'data-hue': String(right ? rightHue : leftHue),
         'data-split': topX !== null ? '' : undefined,
         'data-on': lit ? 'true' : 'false',
+        style: styleText({ left: px(from), width: px(Math.max(0, to - from)) }),
       },
-      style: { left: px(from), width: px(Math.max(0, to - from)) },
-      name: right ? rightName : leftName,
-      hint: armed && right,
-      held: held.length > 0 ? held.join(' ') : null,
-    };
+      h('span', text({ role: 'body', size: 'label', case: 'label', className: 'yh-keys__part' }, 'zone-name'), right ? rightName : leftName),
+      // The armed hint replaces what it holds (the right zone, or the only one).
+      armed && right
+        ? h('span', text({ role: 'body', size: 'label', className: 'yh-keys__hint' }, 'hint'), 'Press a key to set the split · Esc cancels')
+        : when(held.length > 0, () => h('span', text({ role: 'body', weight: 'strong', tabular: true, className: 'yh-keys__held' }, 'held'), held.join(' '))),
+    );
   };
-  const zones =
-    topX !== null ? [zone('left'), zone('right')] : split !== null && split >= range.high ? [zone('left')] : [zone('right')];
+  const zones: KeyPart[] = topX !== null ? ['left', 'right'] : split !== null && split >= range.high ? ['left'] : ['right'];
 
-  const handle =
-    interactive && topX !== null
-      ? {
-          attrs: {
-            'data-part': 'handle',
-            role: 'slider',
-            'aria-label': splitLocked
-              ? 'Split point (locked)'
-              : armed
-                ? 'Split point: click a key to set it, Esc cancels'
-                : 'Split point: drag, or click then click a key',
-            'aria-orientation': 'horizontal',
-            'aria-valuemin': String(splitMin),
-            'aria-valuemax': String(splitMax),
-            'aria-valuenow': String(split),
-            'aria-valuetext': splitName,
-            'aria-disabled': splitLocked ? 'true' : undefined,
-            'data-tip': KEYS_TIP,
+  const rulerNode = when(ruler, () =>
+    h(
+      'div',
+      { class: 'yh-keys__ruler', 'data-part': 'ruler', 'aria-hidden': 'true' },
+      each(zones, (side) => side, zone),
+      // Without a handle, the split's name sits on the ruler.
+      when(!interactive && topX !== null, () =>
+        h(
+          'span',
+          {
+            ...text({ role: 'body', size: 'label', weight: 'strong', tabular: true, className: 'yh-keys__marker' }, 'marker'),
+            style: styleText({ left: px(topX ?? 0) }),
           },
-          style: { left: px(topX) },
-          text: splitName,
-        }
-      : null;
+          splitName,
+        ),
+      ),
+    ),
+  );
 
-  return {
-    root: {
-      className: 'yh-keys',
-      attrs: {
+  const strip = h(
+    'div',
+    { class: 'yh-keys__strip', 'data-part': 'strip', role: 'img', 'aria-label': keysLabel(range, split, heldLeft, heldRight) },
+    each(
+      keys.whites,
+      (key) => `w${key.note}`,
+      (key) =>
+        h(
+          'div',
+          {
+            ...text({ role: 'body', size: 'caption', leading: 'tight', weight: key.held ? 'strong' : undefined, tabular: true, className: 'yh-keys__white' }, 'white'),
+            'data-held': key.held ?? undefined,
+            'data-hue': hueOf(key.held),
+            'data-c': key.label ? '' : undefined,
+            style: styleText({ left: px(key.x), width: px(keys.whiteWidth) }),
+          },
+          key.label || null,
+        ),
+    ),
+    each(
+      keys.blacks,
+      (key) => `b${key.note}`,
+      (key) =>
+        h('div', {
+          class: 'yh-keys__black',
+          'data-part': 'black',
+          'data-held': key.held ?? undefined,
+          'data-hue': hueOf(key.held),
+          style: styleText({ left: px(key.x) }),
+        }),
+    ),
+    when(keys.splitX !== null, () =>
+      h(
+        'div',
+        { class: 'yh-keys__split', 'data-part': 'split', 'data-step': String(keys.splitStep) },
+        h('span', { class: 'yh-keys__split-top', 'data-part': 'split-top' }),
+        when(keys.splitStep !== 0, () => h('span', { class: 'yh-keys__split-join', 'data-part': 'split-join' })),
+        h('span', { class: 'yh-keys__split-bottom', 'data-part': 'split-bottom' }),
+      ),
+    ),
+  );
+
+  // The handle (with `onSplit` and a split on the keys), focusable; its text is the split's name.
+  const handle = when(interactive && topX !== null, () =>
+    wire(
+      h(
+        'span',
+        {
+          class: 'yh-keys__handle',
+          tabindex: '0',
+          'data-part': 'handle',
+          role: 'slider',
+          'aria-label': splitLocked
+            ? 'Split point (locked)'
+            : armed
+              ? 'Split point: click a key to set it, Esc cancels'
+              : 'Split point: drag, or click then click a key',
+          'aria-orientation': 'horizontal',
+          'aria-valuemin': String(splitMin),
+          'aria-valuemax': String(splitMax),
+          'aria-valuenow': String(split),
+          'aria-valuetext': splitName,
+          'aria-disabled': splitLocked ? 'true' : undefined,
+          'data-tip': KEYS_TIP,
+          style: styleText({ left: px(topX ?? 0) }),
+        },
+        h(
+          'span',
+          text({ role: 'body', size: 'label', weight: 'strong', leading: 'tight', tabular: true, className: 'yh-keys__flag' }, 'flag'),
+          h('span', { class: 'yh-keys__grip', 'data-part': 'grip', 'aria-hidden': 'true' }),
+          splitName,
+        ),
+      ),
+      { bind: [['tip', { tip: KEYS_TIP, tipAction: 'tipAction' }]] },
+    ),
+  );
+
+  const input: KeysInputData = { range, split, splitMin, splitMax, splitLocked, picking, armed, width };
+  return wire(
+    h(
+      'div',
+      {
+        class: 'yh-keys',
         'data-part': 'root',
         'data-width': fill ? 'fill' : undefined,
         'data-unmeasured': unmeasured ? '' : undefined,
         'data-picking': armed ? '' : undefined,
         'data-locked': splitLocked ? '' : undefined,
         'data-ruler': ruler ? undefined : 'off',
+        style: styleText({
+          width: fill ? '100%' : px(width),
+          '--yh-keys-black-w': px(blackWidth),
+          '--yh-keys-split-x': px(keys.splitX ?? 0),
+          '--yh-keys-split-step': String(keys.splitStep),
+        }),
       },
-      style: {
-        width: fill ? '100%' : px(width),
-        '--yh-keys-black-w': px(blackWidth),
-        '--yh-keys-split-x': px(keys.splitX ?? 0),
-        '--yh-keys-split-step': String(keys.splitStep),
-      },
+      rulerNode,
+      h(
+        'div',
+        { class: 'yh-keys__body', 'data-part': 'body' },
+        strip,
+        // The pick surface while armed: pointer only (the handle's arrows are the keyboard's way).
+        when(armed, () => h('div', { class: 'yh-keys__pick', 'data-part': 'pick', 'aria-hidden': 'true' })),
+      ),
+      handle,
+    ),
+    {
+      bind: [
+        ['keysInput', { ...input, onSplit: 'split', onPick: 'pick' }],
+        ['fillWidth', { on: fill, onWidth: 'width' }],
+      ],
     },
-    fill,
-    ruler: ruler
-      ? { zones, marker: !interactive && topX !== null ? { style: { left: px(topX) }, text: splitName } : null }
-      : null,
-    strip: { attrs: { 'data-part': 'strip', role: 'img', 'aria-label': keysLabel(range, split, heldLeft, heldRight) } },
-    whites: keys.whites.map((key) => ({
-      note: key.note,
-      text: { role: 'body', size: 'caption', leading: 'tight', weight: key.held ? 'strong' : undefined, tabular: true },
-      attrs: {
-        'data-part': 'white',
-        'data-held': key.held ?? undefined,
-        'data-hue': hueOf(key.held),
-        'data-c': key.label ? '' : undefined,
-      },
-      style: { left: px(key.x), width: px(keys.whiteWidth) },
-      label: key.label,
-    })),
-    blacks: keys.blacks.map((key) => ({
-      note: key.note,
-      attrs: { 'data-part': 'black', 'data-held': key.held ?? undefined, 'data-hue': hueOf(key.held) },
-      style: { left: px(key.x) },
-    })),
-    split: keys.splitX !== null ? { attrs: { 'data-part': 'split', 'data-step': String(keys.splitStep) }, join: keys.splitStep !== 0 } : null,
-    pick: armed,
-    armed,
-    handle,
-    settings: { split, splitMin, splitMax, splitLocked, picking, width, keys, blackWidth },
-  };
+  );
+}
+
+/** The callbacks `keysView`'s tree names: the split and pick asks, the app's tooltip, and the
+ *  measured width's setter (`setWidth`, the binding's view state). */
+export function keysHandlers(props: KeysModelProps, setWidth?: (width: number) => void): Handlers {
+  return { split: props.onSplit, pick: props.onPick, tipAction: props.tipAction, width: setWidth };
 }
 
 /** The split note asked for `note`: clamped to the limits and rounded; null when locked, without a split, or already there. */

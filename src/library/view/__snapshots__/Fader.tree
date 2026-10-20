@@ -1,0 +1,230 @@
+## Board
+<div aria-label="Right 1 · Stage Grand, level 90" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="90" aria-valuetext="90" class="yh-fader lib-focus-ring" data-hue="1" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7086614173228346; width: 66px" tabindex="0" use:faderInput={"level":90,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "90"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.62">
+
+## Away
+<div aria-label="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="72" aria-valuetext="72" class="yh-fader lib-focus-ring" data-away="up" data-hue="2" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.5669291338582677; width: 66px" tabindex="0" use:faderInput={"level":72,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "72"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__ghost" data-part="ghost" style="--yh-fader-away: 0.3937007874015748">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.45">
+  <svg aria-hidden="true" class="yh-fader__takeover" viewBox="0 0 10 10">
+    <path d="M5 1 9 8H1z">
+
+## Off
+<div aria-label="Right 3 · Brass Section, level 64" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="64" aria-valuetext="64" class="yh-fader lib-focus-ring" data-hue="3" data-kind="off" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.5039370078740157; width: 66px" tabindex="0" use:faderInput={"level":64,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="label">
+      "64"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0">
+
+## Group
+<div aria-label="Style volume, level 100" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="100" aria-valuetext="100" class="yh-fader lib-focus-ring" data-kind="group" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7874015748031497; width: 66px" tabindex="0" use:faderInput={"level":100,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "100"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.7">
+
+## Master
+<div aria-label="Master, level 100" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="100" aria-valuetext="100" class="yh-fader lib-focus-ring" data-kind="master" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7874015748031497; width: 66px" tabindex="0" use:faderInput={"level":100,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "100"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.72">
+
+## Parked
+<div aria-disabled="true" aria-label="Fader 7 unused" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="0" class="yh-fader lib-focus-ring" data-kind="parked" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0; width: 66px" tabindex="0" use:faderInput={"level":0,"parked":true,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      ""
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+
+## Layered
+<div aria-label="Right 1 · Stage Grand, Rev 40" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="40" aria-valuetext="Rev 40" class="yh-fader lib-focus-ring" data-kind="part" data-layered="true" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.31496062992125984; width: 66px" tabindex="0" use:faderInput={"level":40,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__word" data-role="label" data-text-leading="tight" data-text-size="caption">
+      "Rev"
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "40"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+
+## Empty
+<div aria-disabled="true" aria-label="Left · no voice" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="0" class="yh-fader lib-focus-ring" data-empty="true" data-hue="4" data-kind="parked" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0; width: 66px" tabindex="0" use:faderInput={"level":0,"parked":true,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      ""
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+
+## AwayAbove
+<div aria-label="Right 2 · Silk Strings, level 72, hardware fader away above" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="72" aria-valuetext="72" class="yh-fader lib-focus-ring" data-away="down" data-hue="2" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.5669291338582677; width: 66px" tabindex="0" use:faderInput={"level":72,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "72"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__ghost" data-part="ghost" style="--yh-fader-away: 0.8661417322834646">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.45">
+  <svg aria-hidden="true" class="yh-fader__takeover" viewBox="0 0 10 10">
+    <path d="M5 9 1 2h8z">
+
+## Strip #1
+<div aria-label="Right 1 · Stage Grand, level 90" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="90" aria-valuetext="90" class="yh-fader lib-focus-ring" data-hue="1" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7086614173228346; width: 66px" tabindex="0" use:faderInput={"level":90,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "90"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.62">
+
+## Strip #2
+<div aria-label="Right 2 · Silk Strings, level 72, hardware fader away (soft takeover)" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="72" aria-valuetext="72" class="yh-fader lib-focus-ring" data-away="up" data-hue="2" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.5669291338582677; width: 66px" tabindex="0" use:faderInput={"level":72,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "72"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__ghost" data-part="ghost" style="--yh-fader-away: 0.3937007874015748">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.45">
+  <svg aria-hidden="true" class="yh-fader__takeover" viewBox="0 0 10 10">
+    <path d="M5 1 9 8H1z">
+
+## Strip #3
+<div aria-label="Right 3 · Brass Section, level 64" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="64" aria-valuetext="64" class="yh-fader lib-focus-ring" data-hue="3" data-kind="off" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.5039370078740157; width: 66px" tabindex="0" use:faderInput={"level":64,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="label">
+      "64"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0">
+
+## Strip #4
+<div aria-label="Left · Bass, level 80" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="80" aria-valuetext="80" class="yh-fader lib-focus-ring" data-hue="4" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.6299212598425197; width: 66px" tabindex="0" use:faderInput={"level":80,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "80"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.5">
+
+## Strip #5
+<div aria-label="Style volume, level 100" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="100" aria-valuetext="100" class="yh-fader lib-focus-ring" data-kind="group" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7874015748031497; width: 66px" tabindex="0" use:faderInput={"level":100,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "100"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.7">
+
+## Strip #6
+<div aria-label="Master, level 100" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="100" aria-valuetext="100" class="yh-fader lib-focus-ring" data-kind="master" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7874015748031497; width: 66px" tabindex="0" use:faderInput={"level":100,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "100"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.72">
+
+## Strip #7
+<div aria-disabled="true" aria-label="Fader 7 unused" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="0" class="yh-fader lib-focus-ring" data-kind="parked" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0; width: 66px" tabindex="0" use:faderInput={"level":0,"parked":true,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      ""
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+
+## FillHeight
+<div aria-label="Right 1 · Stage Grand, level 90" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="90" aria-valuetext="90" class="yh-fader lib-focus-ring" data-fill-height="true" data-hue="1" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7086614173228346; width: 66px" tabindex="0" use:faderInput={"level":90,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "90"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.62">
+
+## Live
+<div aria-label="Right 1 · Stage Grand, level 90" aria-orientation="vertical" aria-valuemax="127" aria-valuemin="0" aria-valuenow="90" aria-valuetext="90" class="yh-fader lib-focus-ring" data-hue="1" data-kind="part" data-tip="mixer.panel.right1" role="slider" style="--yh-fader-level: 0.7086614173228346; width: 66px" tabindex="0" use:faderInput={"level":90,"parked":false,"onlevel":"level"} use:tip={"tip":"mixer.panel.right1","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-fader__head" data-part="head">
+    <span class="lib-text lib-tone yh-fader__value" data-part="value" data-role="numeral" data-text-size="heading">
+      "90"
+  <span aria-hidden="true" class="yh-fader__travel" data-part="travel">
+    <span class="yh-fader__rail">
+      <span class="lib-surface yh-fader__groove" data-material="well" data-part="groove" data-radius="none">
+      <span class="yh-fader__fill" data-part="fill">
+      <span class="yh-fader__cap" data-part="cap">
+    <span class="yh-fader__meters">
+      <span class="lib-surface yh-fader__meter" data-material="well" data-part="meter" data-radius="none" style="--yh-fader-m: 0.62">

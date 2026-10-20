@@ -1,7 +1,8 @@
-// BarBeat's model: its props, where each beat stands, and the view it draws (classes, `data-*`,
-// ARIA and the inline custom properties). No framework: `BarBeat.tsx` (React) and
-// `BarBeat.svelte` (Svelte) both render `barBeatView`.
-import type { ElementView } from '../../../primitives/Text.model';
+// BarBeat's model: its props, where each beat stands, and the tree both renderers draw from them
+// (classes, `data-*`, ARIA and the inline custom properties). No framework: `BarBeat.tsx` (React)
+// and `BarBeat.svelte` (Svelte) both pass `barBeatView` to their `Tree`. A readout: it binds no
+// store and names no handler.
+import { h, styleText, type Node } from '../../../view/Tree.model';
 
 /** The playing section. Kept for older callers; it no longer changes the colour. */
 export type BarBeatHue = 'intro' | 'main' | 'ending' | 'brk' | 'fill';
@@ -32,45 +33,30 @@ export function beatState(n: number, beat: number): BeatState {
   return n < beat ? 'past' : 'future';
 }
 
-/** What a renderer draws: the window and one cell per beat. */
-export interface BarBeatView {
-  /** The window `div`. */
-  root: ElementView;
-  /** The window's inline custom properties, each value a string. */
-  style: Record<string, string>;
-  /** The cells, in order (`span`s). */
-  cells: ElementView[];
-}
-
-/** The bar BarBeat draws from its props. */
-export function barBeatView({ beat = 0, beats = 4, thickness }: BarBeatModelProps): BarBeatView {
+/** The tree BarBeat draws: the window `div` (its cell count and line inline) and one `span` cell per beat. */
+export function barBeatView({ beat = 0, beats = 4, thickness }: BarBeatModelProps): Node {
   const count = Math.max(1, Math.floor(beats));
-  const style: Record<string, string> = { '--yh-bar-beat-count': String(count) };
-  if (thickness !== undefined) style['--yh-bar-beat-line'] = thickness;
-  return {
-    root: {
-      className: 'yh-bar-beat',
-      attrs: {
-        'data-part': 'window',
-        'data-material': 'screen',
-        role: 'img',
-        'aria-label': beat > 0 ? `Beat ${beat} of ${beats}` : 'Stopped',
-        'data-playing': beat > 0 ? 'true' : undefined,
-      },
+  return h(
+    'div',
+    {
+      class: 'yh-bar-beat',
+      'data-part': 'window',
+      'data-material': 'screen',
+      role: 'img',
+      'aria-label': beat > 0 ? `Beat ${beat} of ${beats}` : 'Stopped',
+      'data-playing': beat > 0 ? 'true' : undefined,
+      style: styleText({ '--yh-bar-beat-count': String(count), '--yh-bar-beat-line': thickness }),
     },
-    style,
-    cells: Array.from({ length: count }, (_, i) => {
+    Array.from({ length: count }, (_, i) => {
       const state = beatState(i + 1, beat);
-      return {
-        className: `yh-bar-beat__segment yh-bar-beat__segment--${state}`,
-        attrs: {
-          'data-part': 'cell',
-          'data-state': state,
-          'data-lit': state === 'current' ? 'true' : undefined,
-          'data-downbeat': i === 0 ? 'true' : undefined,
-          'aria-hidden': 'true',
-        },
-      };
+      return h('span', {
+        class: `yh-bar-beat__segment yh-bar-beat__segment--${state}`,
+        'data-part': 'cell',
+        'data-state': state,
+        'data-lit': state === 'current' ? 'true' : undefined,
+        'data-downbeat': i === 0 ? 'true' : undefined,
+        'aria-hidden': 'true',
+      });
     }),
-  };
+  );
 }

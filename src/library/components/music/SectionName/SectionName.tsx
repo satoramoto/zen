@@ -1,9 +1,9 @@
-import type { CSSProperties } from 'react';
-import { Text } from '../../../primitives/Text';
+import { Tree } from '../../../view/Tree';
 import { sectionNameView, type SectionNameModelProps } from './SectionName.model';
+import '../../../primitives/Text.css';
 import './SectionName.css';
 
-// The props and the view are framework-free, in the model; `SectionName.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; `SectionName.svelte` draws the same tree.
 export type { SectionState, SectionHue, SectionNameModelProps } from './SectionName.model';
 
 export type SectionNameProps = SectionNameModelProps;
@@ -37,18 +37,5 @@ export type SectionNameProps = SectionNameModelProps;
  *   the element, or `size` inline.
  */
 export function SectionName(props: SectionNameProps) {
-  const { name, style, word, variant } = sectionNameView(props);
-  return (
-    <Text {...name.text} className={name.className} {...name.attrs} style={style as CSSProperties | undefined}>
-      {word}
-      {variant && (
-        <>
-          {' '}
-          <Text {...variant.text} className={variant.className} {...variant.attrs}>
-            {variant.content}
-          </Text>
-        </>
-      )}
-    </Text>
-  );
+  return <Tree tree={sectionNameView(props)} />;
 }

@@ -1,0 +1,89 @@
+## Board
+<div class="yh-tempo-readout" data-part="root" style="--yh-tempo-readout-digits: 3">
+  <span class="yh-tempo-readout__reading" data-material="screen" data-part="window">
+    <span aria-label="Tempo, BPM. Drag, scroll or use the arrow keys; double-click for the style's tempo" aria-valuemax="500" aria-valuemin="5" aria-valuenow="104" aria-valuetext="104 BPM" class="lib-text lib-tone yh-tempo-readout__bpm lib-focus-ring" data-part="value" data-role="numeral" data-tip="display.tempo" role="spinbutton" tabindex="0" use:tip={"tip":"display.tempo","tipAction":"tipAction"} use:tempoNumber={"bpm":104,"min":5,"max":500,"onTempo":"tempo","onReset":"reset"}>
+      "104"
+    <span aria-hidden="true" class="lib-text lib-tone yh-tempo-readout__unit" data-part="unit" data-role="label" data-text-leading="tight" data-text-size="caption" data-text-weight="body">
+      "BPM"
+  <span aria-label="Tempo" class="lib-text lib-tone yh-tempo-readout__steps" data-part="steps" data-role="numeral" role="group">
+    <button aria-label="Tempo up (Scene Launch)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.up" type="button" use:tip={"tip":"tempo.up","tipAction":"tipAction"} use:tempoStep={"report":"plus"}>
+      <span aria-hidden="true">
+        "+"
+    <button aria-label="Tempo down (Function)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.down" type="button" use:tip={"tip":"tempo.down","tipAction":"tipAction"} use:tempoStep={"report":"minus"}>
+      <span aria-hidden="true">
+        "−"
+
+## AtMax
+<div class="yh-tempo-readout" data-part="root" style="--yh-tempo-readout-digits: 3">
+  <span class="yh-tempo-readout__reading" data-material="screen" data-part="window">
+    <span aria-label="Tempo, BPM. Drag, scroll or use the arrow keys; double-click for the style's tempo" aria-valuemax="500" aria-valuemin="5" aria-valuenow="500" aria-valuetext="500 BPM" class="lib-text lib-tone yh-tempo-readout__bpm lib-focus-ring" data-part="value" data-role="numeral" data-tip="display.tempo" role="spinbutton" tabindex="0" use:tip={"tip":"display.tempo","tipAction":"tipAction"} use:tempoNumber={"bpm":500,"min":5,"max":500,"onTempo":"tempo","onReset":"reset"}>
+      "500"
+    <span aria-hidden="true" class="lib-text lib-tone yh-tempo-readout__unit" data-part="unit" data-role="label" data-text-leading="tight" data-text-size="caption" data-text-weight="body">
+      "BPM"
+  <span aria-label="Tempo" class="lib-text lib-tone yh-tempo-readout__steps" data-part="steps" data-role="numeral" role="group">
+    <button aria-label="Tempo up (Scene Launch)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.up" type="button" use:tip={"tip":"tempo.up","tipAction":"tipAction"} use:tempoStep={"report":"plus"}>
+      <span aria-hidden="true">
+        "+"
+    <button aria-label="Tempo down (Function)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.down" type="button" use:tip={"tip":"tempo.down","tipAction":"tipAction"} use:tempoStep={"report":"minus"}>
+      <span aria-hidden="true">
+        "−"
+
+## Slow
+<div class="yh-tempo-readout" data-part="root" style="--yh-tempo-readout-digits: 3">
+  <span class="yh-tempo-readout__reading" data-material="screen" data-part="window">
+    <span aria-label="Tempo, BPM. Drag, scroll or use the arrow keys; double-click for the style's tempo" aria-valuemax="500" aria-valuemin="5" aria-valuenow="68" aria-valuetext="68 BPM" class="lib-text lib-tone yh-tempo-readout__bpm lib-focus-ring" data-part="value" data-role="numeral" data-tip="display.tempo" role="spinbutton" tabindex="0" use:tip={"tip":"display.tempo","tipAction":"tipAction"} use:tempoNumber={"bpm":68,"min":5,"max":500,"onTempo":"tempo","onReset":"reset"}>
+      "68"
+    <span aria-hidden="true" class="lib-text lib-tone yh-tempo-readout__unit" data-part="unit" data-role="label" data-text-leading="tight" data-text-size="caption" data-text-weight="body">
+      "BPM"
+  <span aria-label="Tempo" class="lib-text lib-tone yh-tempo-readout__steps" data-part="steps" data-role="numeral" role="group">
+    <button aria-label="Tempo up (Scene Launch)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.up" type="button" use:tip={"tip":"tempo.up","tipAction":"tipAction"} use:tempoStep={"report":"plus"}>
+      <span aria-hidden="true">
+        "+"
+    <button aria-label="Tempo down (Function)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.down" type="button" use:tip={"tip":"tempo.down","tipAction":"tipAction"} use:tempoStep={"report":"minus"}>
+      <span aria-hidden="true">
+        "−"
+
+## HeroSize
+<div class="yh-tempo-readout" data-part="root" style="--yh-tempo-readout-digits: 3; --yh-tempo-readout-size: var(--size-display)">
+  <span class="yh-tempo-readout__reading" data-material="screen" data-part="window">
+    <span aria-label="Tempo, BPM. Drag, scroll or use the arrow keys; double-click for the style's tempo" aria-valuemax="500" aria-valuemin="5" aria-valuenow="104" aria-valuetext="104 BPM" class="lib-text lib-tone yh-tempo-readout__bpm lib-focus-ring" data-part="value" data-role="numeral" data-tip="display.tempo" role="spinbutton" tabindex="0" use:tip={"tip":"display.tempo","tipAction":"tipAction"} use:tempoNumber={"bpm":104,"min":5,"max":500,"onTempo":"tempo","onReset":"reset"}>
+      "104"
+    <span aria-hidden="true" class="lib-text lib-tone yh-tempo-readout__unit" data-part="unit" data-role="label" data-text-leading="tight" data-text-size="caption" data-text-weight="body">
+      "BPM"
+  <span aria-label="Tempo" class="lib-text lib-tone yh-tempo-readout__steps" data-part="steps" data-role="numeral" role="group">
+    <button aria-label="Tempo up (Scene Launch)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.up" type="button" use:tip={"tip":"tempo.up","tipAction":"tipAction"} use:tempoStep={"report":"plus"}>
+      <span aria-hidden="true">
+        "+"
+    <button aria-label="Tempo down (Function)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.down" type="button" use:tip={"tip":"tempo.down","tipAction":"tipAction"} use:tempoStep={"report":"minus"}>
+      <span aria-hidden="true">
+        "−"
+
+## Cells
+<div class="yh-tempo-readout yh-tempo-readout--cells" data-cells="true" data-part="root" style="--yh-tempo-readout-digits: 3">
+  <span class="yh-tempo-readout__reading" data-material="screen" data-part="window">
+    <span aria-label="Tempo, BPM. Drag, scroll or use the arrow keys; double-click for the style's tempo" aria-valuemax="500" aria-valuemin="5" aria-valuenow="104" aria-valuetext="104 BPM" class="lib-text lib-tone yh-tempo-readout__bpm lib-focus-ring" data-part="value" data-role="numeral" data-tip="display.tempo" role="spinbutton" tabindex="0" use:tip={"tip":"display.tempo","tipAction":"tipAction"} use:tempoNumber={"bpm":104,"min":5,"max":500,"onTempo":"tempo","onReset":"reset"}>
+      "104"
+    <span aria-hidden="true" class="lib-text lib-tone yh-tempo-readout__unit" data-part="unit" data-role="label" data-text-leading="tight" data-text-size="caption" data-text-weight="body">
+      "BPM"
+  <span aria-label="Tempo" class="lib-text lib-tone yh-tempo-readout__steps" data-part="steps" data-role="numeral" role="group">
+    <button aria-label="Tempo up (Scene Launch)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.up" type="button" use:tip={"tip":"tempo.up","tipAction":"tipAction"} use:tempoStep={"report":"plus"}>
+      <span aria-hidden="true">
+        "+"
+    <button aria-label="Tempo down (Function)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.down" type="button" use:tip={"tip":"tempo.down","tipAction":"tipAction"} use:tempoStep={"report":"minus"}>
+      <span aria-hidden="true">
+        "−"
+
+## CellsUnitLarge
+<div class="yh-tempo-readout yh-tempo-readout--cells yh-tempo-readout--unit-large" data-cells="true" data-part="root" style="--yh-tempo-readout-digits: 3">
+  <span class="yh-tempo-readout__reading" data-material="screen" data-part="window">
+    <span aria-label="Tempo, BPM. Drag, scroll or use the arrow keys; double-click for the style's tempo" aria-valuemax="500" aria-valuemin="5" aria-valuenow="104" aria-valuetext="104 BPM" class="lib-text lib-tone yh-tempo-readout__bpm lib-focus-ring" data-part="value" data-role="numeral" data-tip="display.tempo" role="spinbutton" tabindex="0" use:tip={"tip":"display.tempo","tipAction":"tipAction"} use:tempoNumber={"bpm":104,"min":5,"max":500,"onTempo":"tempo","onReset":"reset"}>
+      "104"
+    <span aria-hidden="true" class="lib-text lib-tone yh-tempo-readout__unit" data-part="unit" data-role="label" data-text-case="none" data-text-leading="tight" data-text-size="display" data-text-weight="display">
+      "BPM"
+  <span aria-label="Tempo" class="lib-text lib-tone yh-tempo-readout__steps" data-part="steps" data-role="numeral" role="group">
+    <button aria-label="Tempo up (Scene Launch)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.up" type="button" use:tip={"tip":"tempo.up","tipAction":"tipAction"} use:tempoStep={"report":"plus"}>
+      <span aria-hidden="true">
+        "+"
+    <button aria-label="Tempo down (Function)" class="lib-text lib-tone yh-tempo-readout__step" data-material="key" data-part="step" data-role="numeral" data-tabular="false" data-text-size="heading" data-tip="tempo.down" type="button" use:tip={"tip":"tempo.down","tipAction":"tipAction"} use:tempoStep={"report":"minus"}>
+      <span aria-hidden="true">
+        "−"

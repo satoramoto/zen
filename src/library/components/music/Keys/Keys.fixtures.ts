@@ -1,6 +1,6 @@
-// Keys' stories as plain props: Keys.stories.tsx (React) and Keys.stories.svelte.ts (Svelte) both
-// draw them, and parity.test.tsx renders every instance in both. No callbacks: each Storybook adds
-// its own `onSplit`, `onPick` and `tipAction` spies (and drops `onSplit` for the pictures).
+// Keys' stories as plain props: Keys.stories.tsx draws them (with either renderer) and the tree
+// snapshot prints every instance. No callbacks: the stories add their own `onSplit`, `onPick` and
+// `tipAction` spies (and drop `onSplit` for the pictures).
 import type { HueSlot } from '../../core/hue';
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
 import type { KeysModelProps } from './Keys.model';

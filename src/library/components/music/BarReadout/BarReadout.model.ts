@@ -1,10 +1,13 @@
-// BarReadout's model: its props and the row it draws from them and the input's state (the slider's
+// BarReadout's model: its props and the tree it draws from them and the input's state (the slider's
 // ARIA, the fill and cap, the value and its unit). No framework: `BarReadout.tsx` (React) and
-// `BarReadout.svelte` (Svelte) both render `barReadoutView`; the input is a store beside it
-// (`barInput.ts`), the maths `bar.ts`.
+// `BarReadout.svelte` (Svelte) both pass `barReadoutView` and `barReadoutHandlers` to their `Tree`;
+// the input is the `barInput` store the tree binds (`barInput.ts`), reporting its state to the
+// binding's view state, which passes it back; the maths is `bar.ts`.
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import type { BarKind } from './bar';
 import { fillBox, formatValue, fraction } from './bar';
-import type { BarParams, BarState } from './barInput';
+import type { BarState } from './barInput';
 
 export type { BarKind } from './bar';
 
@@ -44,26 +47,21 @@ export interface BarReadoutModelProps {
   onChange?: (value: number) => void;
 }
 
-/** What a renderer draws. */
-export interface BarReadoutView {
-  /** The row's class. */
-  className: string;
-  /** The label's text. */
-  label: string;
-  /** Whether the soft-takeover "↕" shows. */
-  waiting: boolean;
-  /** The slider's ARIA and `data-*` (beside its class and `tabindex="0"`). */
-  slider: Record<string, string | undefined>;
-  /** Whether the bipolar centre tick shows. */
-  centre: boolean;
-  /** The fill's and cap's inline `left` / `width`, or null when disabled (no fill). */
-  fill: { left: string; width: string; cap: string } | null;
-  /** The value's text and its unit (empty: none, the column still drawn). */
-  value: string;
-  unit: string;
+/** The input's state before any edit: no local value, no drag. */
+export const BAR_IDLE: BarState = { local: null, dragging: false };
+
+/** A Text's attributes (its class and `data-*`). */
+function text(props: TextModelProps): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs };
 }
 
-/** The row BarReadout draws from its props and the input's state. */
+/**
+ * The row BarReadout draws from its props and the input's state (`bar`, the binding's view state):
+ * the label (a caption Text, with the soft-takeover "↕"), the slider (binding the `barInput` store,
+ * which reports its state to `state` and each value sent to `change`) with its track, centre tick,
+ * fill and cap, and the value with its unit column (always drawn, empty when there's no unit).
+ */
 export function barReadoutView(
   {
     label,
@@ -74,6 +72,7 @@ export function barReadoutView(
     kind = 'number',
     display,
     bipolar = false,
+    default: reset,
     disabled = false,
     absent = 'not available',
     waiting = false,
@@ -81,8 +80,8 @@ export function barReadoutView(
     name,
     tip,
   }: BarReadoutModelProps,
-  { local, dragging }: BarState,
-): BarReadoutView {
+  { local, dragging }: BarState = BAR_IDLE,
+): Node {
   const shown = local ?? value;
   const stepped = steps !== undefined && steps.length > 0;
   const lo = stepped ? steps[0] : min;
@@ -100,30 +99,53 @@ export function barReadoutView(
   const classes = ['yh-bar-readout'];
   if (disabled) classes.push('yh-bar-readout--disabled');
   if (bipolar) classes.push('yh-bar-readout--bipolar');
-  return {
-    className: classes.join(' '),
-    label,
-    waiting,
-    slider: {
-      role: 'slider',
-      'aria-label': ariaName,
-      'aria-valuemin': String(lo),
-      'aria-valuemax': String(hi),
-      'aria-valuenow': disabled ? undefined : String(shown),
-      'aria-valuetext': `${base}${waiting ? ', hardware fader away' : ''}${suffix}`,
-      'aria-disabled': disabled ? 'true' : undefined,
-      'data-face': disabled ? 'disabled' : 'off',
-      'data-dragging': dragging ? 'true' : undefined,
-      'data-tip': tip,
-    },
-    centre: bipolar,
-    fill: disabled ? null : { left: `${box.fl}%`, width: `${box.fw}%`, cap: `${pct}%` },
-    value: v,
-    unit,
-  };
+  return h(
+    'div',
+    { class: classes.join(' ') },
+    h(
+      'span',
+      text({ role: 'body', size: 'caption', case: 'label', className: 'yh-bar-readout__label' }),
+      h('span', { class: 'yh-bar-readout__label-text' }, label),
+      waiting
+        ? h('span', { ...text({ role: 'body', size: 'inherit', weight: 'strong', className: 'yh-bar-readout__away' }), 'aria-hidden': 'true' }, '↕')
+        : null,
+    ),
+    wire(
+      h(
+        'span',
+        {
+          class: 'yh-bar-readout__bar',
+          tabindex: '0',
+          role: 'slider',
+          'aria-label': ariaName,
+          'aria-valuemin': String(lo),
+          'aria-valuemax': String(hi),
+          'aria-valuenow': disabled ? undefined : String(shown),
+          'aria-valuetext': `${base}${waiting ? ', hardware fader away' : ''}${suffix}`,
+          'aria-disabled': disabled ? 'true' : undefined,
+          'data-face': disabled ? 'disabled' : 'off',
+          'data-dragging': dragging ? 'true' : undefined,
+          'data-tip': tip,
+        },
+        h('span', { class: 'yh-bar-readout__track' }),
+        bipolar ? h('span', { class: 'yh-bar-readout__centre' }) : null,
+        disabled ? null : h('span', { class: 'yh-bar-readout__fill', style: styleText({ left: `${box.fl}%`, width: `${box.fw}%` }) }),
+        disabled ? null : h('span', { class: 'yh-bar-readout__cap', style: styleText({ left: `${pct}%` }) }),
+      ),
+      { bind: [['barInput', { value, min, max, steps, disabled, reset, onChange: 'change', onState: 'state' }]] },
+    ),
+    h(
+      'span',
+      { class: 'yh-bar-readout__slot', 'aria-hidden': 'true' },
+      h('span', text({ role: 'numeral', size: 'body', className: 'yh-bar-readout__value' }), v),
+      // Always drawn, empty when there's no unit, so every row's last digit lines up.
+      h('span', text({ role: 'body', size: 'caption', className: 'yh-bar-readout__unit' }), unit),
+    ),
+  );
 }
 
-/** What the input store reads from the props. */
-export function barParams({ value, min, max, steps, disabled = false, default: reset, onChange }: BarReadoutModelProps): BarParams {
-  return { value, min, max, steps, disabled, reset, onChange };
+/** The callbacks `barReadoutView`'s tree names: each value sent (`change`), and `state`, where the
+ *  `barInput` store reports its state (the binding's view state's `set`). */
+export function barReadoutHandlers(props: BarReadoutModelProps, onState: (state: BarState) => void): Handlers {
+  return { change: props.onChange, state: onState };
 }

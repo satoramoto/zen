@@ -1,5 +1,5 @@
-// PartMarks' stories as plain props: PartMarks.stories.tsx (React) and PartMarks.stories.svelte.ts
-// (Svelte) both draw them, and parity.test.tsx renders every instance in both.
+// PartMarks' stories as plain props: PartMarks.stories.tsx draws them in either renderer, and the
+// tree snapshot records every instance.
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
 import type { PartMarksModelProps } from './PartMarks.model';
 

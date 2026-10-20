@@ -1,10 +1,12 @@
-// TempoReadout's model: its props, the view it draws from them (classes, `data-*`, ARIA and the
-// root's custom properties), and the pure tempo arithmetic. No framework: `TempoReadout.tsx`
-// (React) and `TempoReadout.svelte` (Svelte) both render `tempoReadoutView`; the drag, wheel, keys
-// and the + / − holds are the store beside it (`tempoGestures.ts`).
+// TempoReadout's model: its props, the tree both renderers draw from them (classes, `data-*`, ARIA
+// and the root's custom properties), and the pure tempo arithmetic. No framework: `TempoReadout.tsx`
+// (React) and `TempoReadout.svelte` (Svelte) both pass `tempoReadoutView` and
+// `tempoReadoutHandlers` to their `Tree`; the drag, wheel, keys and the + / − holds are the
+// `tempoNumber` and `tempoStep` stores beside it (`tempoGestures.ts`), the tooltips the kernel `tip`.
 import type { TipAction } from '../../core/Button/Button.model';
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';
 
 export type { TipAction };
 
@@ -53,43 +55,42 @@ export const STEP_KEYS: Record<string, number> = { ArrowUp: 1, ArrowRight: 1, Ar
 /** A tempo rounded and held within `min`–`max`. */
 export const clampTempo = (n: number, min: number, max: number) => Math.min(max, Math.max(min, Math.round(n)));
 
-/** A Text element's view: its Text props, its class and its other attributes. */
-export interface TextPartView extends ElementView {
-  text: TextModelProps;
+/** A Text's attributes (its class and `data-*`). */
+function text(props: TextModelProps): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs };
 }
 
-/** One of the + / − keys: its element view, its glyph and its tooltip key. */
-export interface TempoStepView extends TextPartView {
-  glyph: string;
-  tip: string;
-}
+/** One of the + / − keys: a numeral Text drawn as a `<button>`, binding `tempoStep` (reporting to
+ *  the handler `report`) and the app's `tip` with its own key. */
+const step = (glyph: string, name: string, tip: string, report: string): Node =>
+  wire(
+    h(
+      'button',
+      {
+        ...text({ role: 'numeral', size: 'heading', tabular: false, className: 'yh-tempo-readout__step' }),
+        type: 'button',
+        'data-part': 'step',
+        'data-material': 'key',
+        'aria-label': name,
+        'data-tip': tip,
+      },
+      h('span', { 'aria-hidden': 'true' }, glyph),
+    ),
+    {
+      bind: [
+        ['tip', { tip, tipAction: 'tipAction' }],
+        ['tempoStep', { report }],
+      ],
+    },
+  );
 
-/** What a renderer draws. */
-export interface TempoReadoutView {
-  /** The root `<div>`: class, `data-*`, and its custom properties (`style`). */
-  root: ElementView & { style: Record<string, string> };
-  /** The reading window `<span>`. */
-  window: ElementView;
-  /** The number (a numeral Text, the spinbutton) and its text. */
-  value: TextPartView & { label: string; tip: string };
-  /** The unit (a label Text). */
-  unit: TextPartView & { label: string };
-  /** The + / − group (a numeral Text). */
-  steps: TextPartView;
-  /** Tempo + then Tempo − (numeral Texts rendered as `<button>`). */
-  plus: TempoStepView;
-  minus: TempoStepView;
-}
-
-const step = (glyph: string, name: string, tip: string): TempoStepView => ({
-  text: { role: 'numeral', size: 'heading', tabular: false },
-  className: 'yh-tempo-readout__step',
-  attrs: { type: 'button', 'data-part': 'step', 'data-material': 'key', 'aria-label': name, 'data-tip': tip },
-  glyph,
-  tip,
-});
-
-/** The readout TempoReadout draws from its props. */
+/**
+ * The tree TempoReadout draws: the root (its digit count and size as custom properties), the
+ * reading window (a `screen`) with the number (a numeral Text, the spinbutton, binding
+ * `tempoNumber` and the app's `tip`) and the unit (a label Text), then the + / − group (a numeral
+ * Text) with its two keys.
+ */
 export function tempoReadoutView({
   bpm,
   unit = 'BPM',
@@ -99,58 +100,73 @@ export function tempoReadoutView({
   unitLarge = false,
   tip = 'display.tempo',
   size,
-}: TempoReadoutModelProps): TempoReadoutView {
+}: TempoReadoutModelProps): Node {
   /** unitLarge only applies with `cells`. */
   const large = cells && unitLarge;
   const digits = Math.max(String(Math.round(max)).length, String(Math.round(bpm)).length);
   const className = ['yh-tempo-readout', cells && 'yh-tempo-readout--cells', large && 'yh-tempo-readout--unit-large'].filter(Boolean).join(' ');
-  return {
-    root: {
-      className,
-      attrs: { 'data-part': 'root', 'data-cells': cells ? 'true' : undefined },
-      style: { '--yh-tempo-readout-digits': String(digits), ...(size === undefined ? {} : { '--yh-tempo-readout-size': size }) },
+  return h(
+    'div',
+    {
+      class: className,
+      'data-part': 'root',
+      'data-cells': cells ? 'true' : undefined,
+      style: styleText({ '--yh-tempo-readout-digits': String(digits), '--yh-tempo-readout-size': size }),
     },
-    window: { className: 'yh-tempo-readout__reading', attrs: { 'data-part': 'window', 'data-material': 'screen' } },
-    value: {
-      text: { role: 'numeral', ariaRole: 'spinbutton' },
-      className: `yh-tempo-readout__bpm ${focusRing}`,
-      attrs: {
-        'data-part': 'value',
-        tabindex: '0',
-        'aria-label': `Tempo, ${unit}. Drag, scroll or use the arrow keys; double-click for the style's tempo`,
-        'aria-valuenow': String(bpm),
-        'aria-valuemin': String(min),
-        'aria-valuemax': String(max),
-        'aria-valuetext': `${bpm} ${unit}`,
-        'data-tip': tip,
-      },
-      label: String(bpm),
-      tip,
-    },
-    unit: {
-      text: {
-        role: 'label',
-        size: large ? 'display' : 'caption',
-        weight: large ? 'display' : 'body',
-        case: large ? 'none' : undefined,
-        leading: 'tight',
-      },
-      className: 'yh-tempo-readout__unit',
-      attrs: { 'data-part': 'unit', 'aria-hidden': 'true' },
-      label: unit,
-    },
-    steps: {
-      text: { role: 'numeral', ariaRole: 'group' },
-      className: 'yh-tempo-readout__steps',
-      attrs: { 'data-part': 'steps', 'aria-label': 'Tempo' },
-    },
-    plus: step('+', 'Tempo up (Scene Launch)', 'tempo.up'),
-    minus: step('−', 'Tempo down (Function)', 'tempo.down'),
-  };
+    h(
+      'span',
+      { class: 'yh-tempo-readout__reading', 'data-part': 'window', 'data-material': 'screen' },
+      wire(
+        h(
+          'span',
+          {
+            ...text({ role: 'numeral', ariaRole: 'spinbutton', className: `yh-tempo-readout__bpm ${focusRing}` }),
+            'data-part': 'value',
+            tabindex: '0',
+            'aria-label': `Tempo, ${unit}. Drag, scroll or use the arrow keys; double-click for the style's tempo`,
+            'aria-valuenow': String(bpm),
+            'aria-valuemin': String(min),
+            'aria-valuemax': String(max),
+            'aria-valuetext': `${bpm} ${unit}`,
+            'data-tip': tip,
+          },
+          String(bpm),
+        ),
+        {
+          bind: [
+            ['tip', { tip, tipAction: 'tipAction' }],
+            ['tempoNumber', { bpm, min, max, onTempo: 'tempo', onReset: 'reset' }],
+          ],
+        },
+      ),
+      h(
+        'span',
+        {
+          ...text({
+            role: 'label',
+            size: large ? 'display' : 'caption',
+            weight: large ? 'display' : 'body',
+            case: large ? 'none' : undefined,
+            leading: 'tight',
+            className: 'yh-tempo-readout__unit',
+          }),
+          'data-part': 'unit',
+          'aria-hidden': 'true',
+        },
+        unit,
+      ),
+    ),
+    h(
+      'span',
+      { ...text({ role: 'numeral', ariaRole: 'group', className: 'yh-tempo-readout__steps' }), 'data-part': 'steps', 'aria-label': 'Tempo' },
+      step('+', 'Tempo up (Scene Launch)', 'tempo.up', 'plus'),
+      step('−', 'Tempo down (Function)', 'tempo.down', 'minus'),
+    ),
+  );
 }
 
-/** Custom properties as an inline `style` string (`--a: 1; --b: 2`), for renderers that take one. */
-export const styleText = (style: Record<string, string>) =>
-  Object.entries(style)
-    .map(([name, value]) => `${name}: ${value}`)
-    .join('; ');
+/** The callbacks `tempoReadoutView`'s tree names: the number's asks, the + / − holds and the app's
+ *  tooltip action. */
+export function tempoReadoutHandlers(props: TempoReadoutModelProps): Handlers {
+  return { tempo: props.onTempo, reset: props.onReset, plus: props.onPlus, minus: props.onMinus, tipAction: props.tipAction };
+}

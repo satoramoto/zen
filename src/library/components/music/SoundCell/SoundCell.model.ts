@@ -1,9 +1,12 @@
-// SoundCell's model: its props (all but the marks, a React node or a Svelte snippet) and the view
-// it draws from them. No framework: `SoundCell.tsx` (React) and `SoundCell.svelte` (Svelte) both
-// render `soundCellView`.
+// SoundCell's model: its props (all but the marks, a React node or a Svelte snippet) and the tree
+// both renderers draw from them (the cell, the short name's button, the sound's button with its
+// name, number and the `marks` slot). No framework: `SoundCell.tsx` (React) and `SoundCell.svelte`
+// (Svelte) both pass `soundCellView` and `soundCellHandlers` to their `Tree`, with the marks as the
+// `marks` slot.
 import type { HueSlot } from '../../core/hue';
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { h, slot, when, wire, type Handlers, type Node } from '../../../view/Tree.model';
 
 export interface SoundCellModelProps {
   /** The part's short name ("R1", "L"). */
@@ -30,58 +33,63 @@ export interface SoundCellModelProps {
   onSound?: () => void;
 }
 
-/** A Text element's view: its Text props, its class and its other attributes. */
-export interface TextPartView extends ElementView {
-  text: TextModelProps;
+/** Which of SoundCell's slots the caller filled: an empty slot draws no wrapper. */
+export interface SoundCellSlots {
+  /** `marks` were given (a React node, a Svelte snippet). */
+  marks?: boolean;
 }
 
-/** What a renderer draws. */
-export interface SoundCellView {
-  /** The cell `<div>`. */
-  root: ElementView;
-  /** The short name's button (a label Text) and its text. */
-  part: TextPartView & { label: string };
-  /** The sound's button (a caption Text). */
-  sound: TextPartView;
-  /** The sound's name `<span>`. */
-  title: { className: string; label: string };
-  /** The sound's number (a caption Text), or null for none. */
-  number: (TextPartView & { label: string }) | null;
-  /** The marks' `<span>` class (drawn only when there are marks). */
-  marksClassName: string;
+/** A Text's attributes (its class and `data-*`). */
+function text(props: TextModelProps): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs };
 }
 
-/** The cell SoundCell draws from its props. */
-export function soundCellView({
-  part,
-  partName,
-  hue = 1,
-  number = '',
-  sound,
-  off = false,
-  soundName,
-  partTip,
-  soundTip,
-}: SoundCellModelProps): SoundCellView {
-  return {
-    root: { className: 'yh-sound-cell', attrs: { 'data-hue': String(hue), 'data-off': off ? 'true' : undefined } },
-    part: {
-      text: { role: 'label', tabular: true },
-      className: `yh-sound-cell__part ${focusRing}`,
-      attrs: { type: 'button', title: partName, 'aria-label': `${partName}: open Channel`, 'data-tip': partTip },
-      label: part,
-    },
-    sound: {
-      text: { role: 'caption', size: 'body', tabular: true },
-      className: `yh-sound-cell__sound ${focusRing}`,
-      attrs: {
-        type: 'button',
-        'aria-label': soundName ?? `${partName} sound: ${[number, sound].filter(Boolean).join(' ')}. Opens the quick sound list`,
-        'data-tip': soundTip,
-      },
-    },
-    title: { className: 'yh-sound-cell__title', label: sound },
-    number: number ? { text: { role: 'caption', tabular: true }, className: 'yh-sound-cell__number', attrs: {}, label: number } : null,
-    marksClassName: 'yh-sound-cell__marks',
-  };
+/**
+ * The tree SoundCell draws from its props: the cell, the short name (a label Text as a button,
+ * `part` on click), then the sound (a caption Text as a button, `sound` on click) holding the name,
+ * the number (a caption Text, when set) and the `marks` slot (when filled).
+ */
+export function soundCellView(
+  { part, partName, hue = 1, number = '', sound, off = false, soundName, partTip, soundTip }: SoundCellModelProps,
+  slots: SoundCellSlots = {},
+): Node {
+  return h(
+    'div',
+    { class: 'yh-sound-cell', 'data-hue': String(hue), 'data-off': off ? 'true' : undefined },
+    wire(
+      h(
+        'button',
+        {
+          ...text({ role: 'label', tabular: true, className: `yh-sound-cell__part ${focusRing}` }),
+          type: 'button',
+          title: partName,
+          'aria-label': `${partName}: open Channel`,
+          'data-tip': partTip,
+        },
+        part,
+      ),
+      { on: { click: 'part' } },
+    ),
+    wire(
+      h(
+        'button',
+        {
+          ...text({ role: 'caption', size: 'body', tabular: true, className: `yh-sound-cell__sound ${focusRing}` }),
+          type: 'button',
+          'aria-label': soundName ?? `${partName} sound: ${[number, sound].filter(Boolean).join(' ')}. Opens the quick sound list`,
+          'data-tip': soundTip,
+        },
+        h('span', { class: 'yh-sound-cell__title' }, sound),
+        when(number !== '', () => h('span', text({ role: 'caption', tabular: true, className: 'yh-sound-cell__number' }), number)),
+        when(slots.marks === true, () => h('span', { class: 'yh-sound-cell__marks' }, slot('marks'))),
+      ),
+      { on: { click: 'sound' } },
+    ),
+  );
+}
+
+/** The callbacks `soundCellView`'s tree names: a press on the short name and on the sound. */
+export function soundCellHandlers(props: SoundCellModelProps): Handlers {
+  return { part: () => props.onPart?.(), sound: () => props.onSound?.() };
 }

@@ -1,17 +1,15 @@
-import { useEffect, useRef, type CSSProperties } from 'react';
-import { KEYS_TIP, keysView, type KeysModelProps } from './Keys.model';
-import { useFillWidth } from './useFillWidth';
-import { useKeysInput } from './useKeysInput';
-import { Text } from '../../../primitives/Text';
+import { useState, useSyncExternalStore } from 'react';
+import { Tree } from '../../../view/Tree';
+import { viewState } from '../viewState';
+import { keysHandlers, keysView, type KeysModelProps } from './Keys.model';
+import '../../../primitives/Text.css';
 import './Keys.css';
 
-// The props and the strip are framework-free, in the model; `Keys.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; `Keys.svelte` draws the same tree.
 export type { TipAction, KeysModelProps } from './Keys.model';
 
 /** Keys takes no children: its props are the model's. */
 export type KeysProps = KeysModelProps;
-
-const css = (style: Record<string, string>) => style as CSSProperties;
 
 /**
  * The keyboard strip: the keyboard's range, where the split sits, and what each zone (left and
@@ -62,8 +60,9 @@ const css = (style: Record<string, string>) => style as CSSProperties;
  * `--key-white` / `--key-black`, not the `key` material, so a Surface would change them; the
  * ruler's type mixes weights the text roles don't pair (a label at body weight, readout figures
  * at label size); and focus lands on the handle while its ring is drawn on the flag inside it.
- * The strip is `keysView` (Keys.model.ts); the pointer and keyboard input is the `keysInput.ts`
- * store and the measured width the `fillWidth.ts` store, so `Keys.svelte` draws the same.
+ * The strip is `keysView` (Keys.model.ts, the tree both renderers draw); the pointer and keyboard
+ * input is the `keysInput.ts` store and the measured width the `fillWidth.ts` store, bound on the
+ * root, the width kept as this binding's view state (`viewState.ts`).
  *
  * **Tuning knobs.**
  * - `--yh-keys-black-w`, `--yh-keys-split-x`, `--yh-keys-split-step`: the layout's geometry (a
@@ -78,113 +77,10 @@ const css = (style: Record<string, string>) => style as CSSProperties;
  * - `--yh-keys-hue`: a zone's hue slot, for its lamp and held keys.
  */
 export function Keys(props: KeysProps) {
-  const { tipAction, onSplit, onPick } = props;
-  const [rootRef, measured] = useFillWidth<HTMLDivElement>(props.width === 'fill');
-  const view = keysView(props, measured);
-
-  const strip = useRef<HTMLDivElement>(null);
-  const handle = useRef<HTMLSpanElement>(null);
-  const input = useKeysInput({ settings: view.settings, onSplit, onPick }, view.armed, strip);
-
-  // The app's tooltip, on the handle.
-  const hasHandle = view.handle !== null;
-  useEffect(() => {
-    if (!tipAction || !handle.current) return;
-    const result = tipAction(handle.current, KEYS_TIP);
-    return () => result?.destroy?.();
-  }, [tipAction, hasHandle]);
-
-  return (
-    <div className={view.root.className} ref={rootRef} style={css(view.root.style)} {...view.root.attrs}>
-      {view.ruler && (
-        <div className="yh-keys__ruler" data-part="ruler" aria-hidden="true">
-          {view.ruler.zones.map((zone) => (
-            <div key={zone.side} className="yh-keys__zone" {...zone.attrs} style={css(zone.style)}>
-              <Text role="body" size="label" case="label" className="yh-keys__part" data-part="zone-name">
-                {zone.name}
-              </Text>
-              {zone.hint ? (
-                <Text role="body" size="label" className="yh-keys__hint" data-part="hint">
-                  Press a key to set the split · Esc cancels
-                </Text>
-              ) : (
-                zone.held !== null && (
-                  <Text role="body" weight="strong" tabular className="yh-keys__held" data-part="held">
-                    {zone.held}
-                  </Text>
-                )
-              )}
-            </div>
-          ))}
-          {view.ruler.marker && (
-            <Text
-              role="body"
-              size="label"
-              weight="strong"
-              tabular
-              className="yh-keys__marker"
-              data-part="marker"
-              style={css(view.ruler.marker.style)}
-            >
-              {view.ruler.marker.text}
-            </Text>
-          )}
-        </div>
-      )}
-
-      <div className="yh-keys__body" data-part="body">
-        <div className="yh-keys__strip" {...view.strip.attrs} ref={strip}>
-          {view.whites.map((key) => (
-            <Text as="div" {...key.text} key={key.note} className="yh-keys__white" {...key.attrs} style={css(key.style)}>
-              {key.label}
-            </Text>
-          ))}
-          {view.blacks.map((key) => (
-            <div key={key.note} className="yh-keys__black" {...key.attrs} style={css(key.style)} />
-          ))}
-          {view.split && (
-            <div className="yh-keys__split" {...view.split.attrs}>
-              <span className="yh-keys__split-top" data-part="split-top" />
-              {view.split.join && <span className="yh-keys__split-join" data-part="split-join" />}
-              <span className="yh-keys__split-bottom" data-part="split-bottom" />
-            </div>
-          )}
-        </div>
-        {view.pick && (
-          // The pick surface: pointer only (the handle's arrows are the keyboard's way).
-          <div
-            className="yh-keys__pick"
-            data-part="pick"
-            aria-hidden="true"
-            onPointerDown={input.pickDown}
-            onPointerMove={input.pickMove}
-            onPointerUp={input.pickUp}
-            onPointerCancel={input.pickCancel}
-          />
-        )}
-      </div>
-
-      {view.handle && (
-        <span
-          ref={handle}
-          className="yh-keys__handle"
-          tabIndex={0}
-          {...view.handle.attrs}
-          style={css(view.handle.style)}
-          onKeyDown={input.handleKey}
-          onPointerDown={input.handleDown}
-          onPointerMove={input.handleMove}
-          onPointerUp={input.handleUp}
-          onPointerCancel={input.handleCancel}
-        >
-          <Text role="body" size="label" weight="strong" leading="tight" tabular className="yh-keys__flag" data-part="flag">
-            <span className="yh-keys__grip" data-part="grip" aria-hidden="true" />
-            {view.handle.text}
-          </Text>
-        </span>
-      )}
-    </div>
-  );
+  // The measured width (`width="fill"`): view state the `fillWidth` store sets through `width`.
+  const [width] = useState(() => viewState(0));
+  const measured = useSyncExternalStore(width.subscribe, width.get);
+  return <Tree tree={keysView(props, measured)} handlers={keysHandlers(props, width.set)} />;
 }
 
 export default Keys;

@@ -1,5 +1,5 @@
-// Fader's stories as plain props: Fader.stories.tsx (React) and Fader.stories.svelte.ts (Svelte)
-// both draw them, and parity.test.tsx renders every instance in both.
+// Fader's stories as plain props: Fader.stories.tsx draws them (React or Svelte, by the toolbar's
+// Renderer), and the tree snapshot records `faderView` for every instance.
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
 import type { FaderModelProps } from './Fader.model';
 

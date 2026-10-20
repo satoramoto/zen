@@ -1,6 +1,8 @@
-// BarReadout's stories as plain props: BarReadout.stories.tsx (React) and BarReadout.stories.svelte.ts
-// (Svelte) both draw them, and parity.test.tsx renders every instance in both.
+// BarReadout's stories as plain props: BarReadout.stories.tsx draws them with either renderer's
+// `Tree`, and the tree snapshot renders every instance. The Group story is a view tree built here
+// (`barReadoutGroupSample`), drawn with `treeStory`.
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
+import { component, h, type Node } from '../../../view/Tree.model';
 import type { BarReadoutModelProps } from './BarReadout.model';
 import { HIGH_STEPS, LOW_STEPS } from './bar';
 
@@ -59,3 +61,11 @@ export const barReadoutStories = defineFixtures<BarReadoutModelProps>()({
     ],
   },
 });
+
+/** The Group story: its rows stacked, as the Channel page stacks a group. */
+export const barReadoutGroupSample = (rows: P[]): Node =>
+  h(
+    'div',
+    {},
+    rows.map((row) => component('BarReadout', { ...row }, { key: row.label })),
+  );

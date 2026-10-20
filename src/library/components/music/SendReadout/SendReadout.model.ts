@@ -1,7 +1,8 @@
-// SendReadout's model: its props and the view it draws (the button's attributes, its spoken name
-// and the three sends). No framework: `SendReadout.tsx` (React) and `SendReadout.svelte` (Svelte)
-// both render `sendReadoutView`.
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+// SendReadout's model: its props and the tree both renderers draw from them (the button's
+// attributes, its spoken name and the three sends). No framework: `SendReadout.tsx` (React) and
+// `SendReadout.svelte` (Svelte) both pass `sendReadoutView` and `sendReadoutHandlers` to their `Tree`.
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { each, h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 
 export interface SendReadoutModelProps {
   /** The reverb send, 0-127. */
@@ -20,46 +21,46 @@ export interface SendReadoutModelProps {
   onPress?: () => void;
 }
 
-/** A Text part: its Text props (no class), its class and its words. */
-export interface SendReadoutTextPart {
-  text: TextModelProps;
-  className: string;
-  content: string;
+/** A Text span: its class and `data-*`, and its words. */
+function text(props: TextModelProps, content: string): Node {
+  const view = textView(props);
+  return h('span', { class: view.className, ...view.attrs }, content);
 }
 
-/** One send: its `span`, its name and its level. */
-export interface SendReadoutSend extends ElementView {
-  word: SendReadoutTextPart;
-  level: SendReadoutTextPart;
-}
-
-/** What a renderer draws: the button and its three sends. */
-export interface SendReadoutView {
-  button: ElementView;
-  sends: SendReadoutSend[];
-}
-
-/** The readout SendReadout draws from its props. */
-export function sendReadoutView({ reverb, chorus, delay, label = 'Band', name, tip }: SendReadoutModelProps): SendReadoutView {
+/** The tree SendReadout draws: the button (its click is `press`) and its three sends, each a name
+ *  and a level, a send at 0 marked `data-off`. */
+export function sendReadoutView({ reverb, chorus, delay, label = 'Band', name, tip }: SendReadoutModelProps): Node {
   const sends = [
     ['Reverb', reverb],
     ['Chorus', chorus],
     ['Delay', delay],
   ] as const;
-  return {
-    button: {
-      className: 'yh-send-readout',
-      attrs: {
+  return wire(
+    h(
+      'button',
+      {
+        class: 'yh-send-readout',
         type: 'button',
         'aria-label': name ?? `${label} sends: reverb ${reverb}, chorus ${chorus}, delay ${delay}. Opens Effects`,
         'data-tip': tip,
       },
-    },
-    sends: sends.map(([word, level]) => ({
-      className: 'yh-send-readout-send',
-      attrs: { 'data-off': level === 0 ? '' : undefined },
-      word: { text: { size: 'label', case: 'label' }, className: 'yh-send-readout-name', content: word },
-      level: { text: { role: 'numeral', size: 'label' }, className: 'yh-send-readout-level', content: String(level) },
-    })),
-  };
+      each(
+        sends,
+        ([word]) => word,
+        ([word, level]) =>
+          h(
+            'span',
+            { class: 'yh-send-readout-send', 'data-off': level === 0 ? '' : undefined },
+            text({ size: 'label', case: 'label', className: 'yh-send-readout-name' }, word),
+            text({ role: 'numeral', size: 'label', className: 'yh-send-readout-level' }, String(level)),
+          ),
+      ),
+    ),
+    { on: { click: 'press' } },
+  );
+}
+
+/** The callback `sendReadoutView`'s tree names: the press. */
+export function sendReadoutHandlers(props: SendReadoutModelProps): Handlers {
+  return { press: () => props.onPress?.() };
 }

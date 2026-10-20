@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Text } from '../../../primitives/Text';
-import { partMarksView, type PartMarksModelProps } from './PartMarks.model';
+import { Tree } from '../../../view/Tree';
+import { partMarksHandlers, partMarksView, type PartMarksModelProps } from './PartMarks.model';
+import '../../../primitives/Text.css';
 import './PartMarks.css';
 
-// The props and what they draw are framework-free, in the model; `PartMarks.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; `PartMarks.svelte` draws the same tree
+// (nothing when no mark shows). The tooltip is the `tip` store the tree binds.
 export type { PartMarksModelProps, TipAction } from './PartMarks.model';
 
 export type PartMarksProps = PartMarksModelProps;
@@ -37,34 +38,6 @@ export type PartMarksProps = PartMarksModelProps;
  * rendering nothing when no mark shows.
  */
 export function PartMarks(props: PartMarksProps) {
-  const { tip, tipAction } = props;
-  const view = partMarksView(props);
-  const [node, setNode] = useState<HTMLSpanElement | null>(null);
-  useEffect(() => {
-    if (!node || !tipAction || tip === undefined) return;
-    const handle = tipAction(node, tip);
-    return () => handle?.destroy?.();
-  }, [node, tip, tipAction]);
-  if (view === null) return null;
-  return (
-    <Text ref={setNode} size="caption" weight="strong" leading="tight" className={view.root.className} {...view.root.attrs}>
-      {view.marks.map((m) => {
-        if (m.kind === 'dot') return <span key={m.mark} className={m.className} {...m.attrs} />;
-        if (m.kind === 'icon')
-          return (
-            <svg key={m.mark} className={m.className} {...m.attrs}>
-              {m.paths.map((d) => (
-                <path key={d} d={d} />
-              ))}
-              {m.dot && <circle {...m.dot} />}
-            </svg>
-          );
-        return (
-          <Text key={m.mark} size="inherit" leading="tight" case="label" className={m.className} {...m.attrs}>
-            {m.word}
-          </Text>
-        );
-      })}
-    </Text>
-  );
+  const tree = partMarksView(props);
+  return tree && <Tree tree={tree} handlers={partMarksHandlers(props)} />;
 }

@@ -1,6 +1,8 @@
-// Pad's stories as plain props: Pad.stories.tsx (React) and Pad.stories.svelte.ts (Svelte) both
-// draw them, and parity.test.tsx renders every instance in both.
+// Pad's stories as plain props: Pad.stories.tsx draws them with React's or Svelte's `Tree`, and
+// the tree snapshot renders every instance. The stories laid out in a grid or a cell are view
+// trees built here (`padBankSample`, …), drawn with `treeStory`.
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
+import { component, h, styleText, type Node } from '../../../view/Tree.model';
 import type { PadModelProps, PadState } from './Pad.model';
 
 type P = FixtureProps<PadModelProps>;
@@ -115,3 +117,45 @@ export const padStories = defineFixtures<PadModelProps>()({
   },
   BankRing: { items: BANK_RING },
 });
+
+/** A 4 × 4 grid of pads (the Bank and BankRing stories). */
+export const padBankSample = (pads: (P & { label: string })[]): Node =>
+  h(
+    'div',
+    { style: 'display: grid; grid-template-columns: repeat(4, max-content); gap: var(--space-2)' },
+    pads.map((p) => component('Pad', { ...p }, { key: p.index })),
+  );
+
+/** The TagClearance story: NEXT and ARMED in every cell the Stage puts a pad in, a row per state. */
+export const padTagClearanceSample = (): Node =>
+  h(
+    'div',
+    { style: 'display: grid; gap: var(--space-6); padding-top: var(--space-3)' },
+    // The regions set the pad's type size on the pad itself; this stands in for them.
+    // The cell carries the size (`font-size`), and the pad inherits it.
+    h('style', {}, '.yh-pad-cell .yh-pad { font-size: inherit; }'),
+    TAG_STATES.map((state) =>
+      h(
+        'div',
+        { style: 'display: flex; gap: var(--space-3); align-items: end' },
+        CELLS.map((cell) =>
+          h(
+            'div',
+            {
+              class: 'yh-pad-cell',
+              style: styleText({ display: 'grid', width: cell.width, height: cell.height, 'font-size': cell.font ?? 'var(--size-label)' }),
+            },
+            component('Pad', { ...tagPad(cell, state) }),
+          ),
+        ),
+      ),
+    ),
+  );
+
+/** The FillCell story: one pad (the story's args, its press as `press`) filling a wide, short cell. */
+export const padFillCellSample = (args: P & { label: string }): Node =>
+  h(
+    'div',
+    { style: 'display: grid; width: calc(var(--control-h) * 5); height: calc(var(--control-h) * 1.5)' },
+    component('Pad', { ...args }, { on: { onPress: 'press' } }),
+  );

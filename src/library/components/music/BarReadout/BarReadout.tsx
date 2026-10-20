@@ -1,11 +1,14 @@
-import { useRef } from 'react';
-import { Text } from '../../../primitives/Text';
-import { barParams, barReadoutView, type BarReadoutModelProps } from './BarReadout.model';
-import { useBarInput } from './useBarInput';
+import { useState, useSyncExternalStore } from 'react';
+import { Tree } from '../../../view/Tree';
+import { viewState } from '../viewState';
+import { BAR_IDLE, barReadoutHandlers, barReadoutView, type BarReadoutModelProps } from './BarReadout.model';
+import type { BarState } from './barInput';
+// The label, the value and the unit are Texts, drawn with Text's class and data attributes.
+import '../../../primitives/Text.css';
 import './BarReadout.css';
 
-// The props and what they draw are framework-free, in the model; the input is `barInput.ts`;
-// `BarReadout.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; the input is the `barInput` store
+// (`barInput.ts`) the tree binds, reporting to this view state; `BarReadout.svelte` draws the same tree.
 export type { BarKind, BarReadoutModelProps } from './BarReadout.model';
 
 export type BarReadoutProps = BarReadoutModelProps;
@@ -49,39 +52,7 @@ export type BarReadoutProps = BarReadoutModelProps;
  *   pointer or while dragging.
  */
 export function BarReadout(props: BarReadoutProps) {
-  const barRef = useRef<HTMLSpanElement>(null);
-  const state = useBarInput(barRef, barParams(props));
-  const view = barReadoutView(props, state);
-
-  return (
-    <div className={view.className}>
-      <Text role="body" size="caption" case="label" className="yh-bar-readout__label">
-        <span className="yh-bar-readout__label-text">{view.label}</span>
-        {view.waiting && (
-          <Text role="body" size="inherit" weight="strong" className="yh-bar-readout__away" aria-hidden="true">
-            ↕
-          </Text>
-        )}
-      </Text>
-      <span ref={barRef} className="yh-bar-readout__bar" tabIndex={0} {...view.slider}>
-        <span className="yh-bar-readout__track" />
-        {view.centre && <span className="yh-bar-readout__centre" />}
-        {view.fill && (
-          <>
-            <span className="yh-bar-readout__fill" style={{ left: view.fill.left, width: view.fill.width }} />
-            <span className="yh-bar-readout__cap" style={{ left: view.fill.cap }} />
-          </>
-        )}
-      </span>
-      <span className="yh-bar-readout__slot" aria-hidden="true">
-        <Text role="numeral" size="body" className="yh-bar-readout__value">
-          {view.value}
-        </Text>
-        {/* Always drawn, empty when there's no unit, so every row's last digit lines up. */}
-        <Text role="body" size="caption" className="yh-bar-readout__unit">
-          {view.unit}
-        </Text>
-      </span>
-    </div>
-  );
+  const [bar] = useState(() => viewState<BarState>(BAR_IDLE));
+  const state = useSyncExternalStore(bar.subscribe, bar.get);
+  return <Tree tree={barReadoutView(props, state)} handlers={barReadoutHandlers(props, bar.set)} />;
 }

@@ -1,12 +1,13 @@
 <!--
-  SoundCell: the Svelte renderer of `soundCellView` (SoundCell.model.ts), the same markup, classes
-  and attributes as `SoundCell.tsx`; see SoundCell.tsx for the job and the tuning knobs. `marks`
-  is a snippet.
+  SoundCell: the model's tree (`soundCellView`, SoundCell.model.ts) drawn by the Svelte `Tree`, as
+  `SoundCell.tsx` draws it with the React one; see SoundCell.tsx for the job and the tuning knobs.
+  `marks` is a snippet, the tree's `marks` slot.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import Text from '../../../primitives/Text.svelte';
-  import { soundCellView, type SoundCellModelProps } from './SoundCell.model';
+  import Tree from '../../../view/Tree.svelte';
+  import { soundCellHandlers, soundCellView, type SoundCellModelProps } from './SoundCell.model';
+  import '../../../primitives/Text.css';
   import './SoundCell.css';
 
   interface Props extends SoundCellModelProps {
@@ -14,15 +15,7 @@
     marks?: Snippet;
   }
 
-  let props: Props = $props();
-  const view = $derived(soundCellView(props));
+  let { marks, ...props }: Props = $props();
 </script>
 
-<div class={view.root.className} {...view.root.attrs}
-  ><Text as="button" {...view.part.text} class={view.part.className} {...view.part.attrs} onclick={() => props.onPart?.()}
-    >{view.part.label}</Text
-  ><Text as="button" {...view.sound.text} class={view.sound.className} {...view.sound.attrs} onclick={() => props.onSound?.()}
-    ><span class={view.title.className}>{view.title.label}</span
-    >{#if view.number}<Text {...view.number.text} class={view.number.className} {...view.number.attrs}>{view.number.label}</Text
-      >{/if}{#if props.marks}<span class={view.marksClassName}>{@render props.marks()}</span>{/if}</Text
-  ></div>
+<Tree tree={soundCellView(props, { marks: marks !== undefined })} slots={{ marks }} handlers={soundCellHandlers(props)} />

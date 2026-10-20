@@ -1,9 +1,11 @@
-// PartMarks' model: its props and what it draws from them (the root Text's attributes and one
-// view per visible mark: the edited ring, the warning and danger icons, the words). No framework:
-// `PartMarks.tsx` (React) and `PartMarks.svelte` (Svelte) both render `partMarksView`. The facts
-// and their precedence are `marks.ts`.
+// PartMarks' model: its props and the tree both renderers draw from them (the root Text, binding
+// the app's tooltip through the `tip` store, and one node per visible mark: the edited ring, the
+// warning and danger icons, the words). No framework: `PartMarks.tsx` (React) and `PartMarks.svelte`
+// (Svelte) both pass `partMarksView` and `partMarksHandlers` to their `Tree`. The facts and their
+// precedence are `marks.ts`.
 import type { TipAction } from '../../core/Button/Button.model';
-import type { ElementView } from '../../../primitives/Text.model';
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { each, h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import { visibleMarks, type Mark } from './marks';
 
 export type { TipAction };
@@ -43,26 +45,29 @@ const ICONS: Partial<Record<Mark, { paths: string[]; dot?: { cx: string; cy: str
   failed: { paths: ['M2.75 2.75 9.25 9.25M9.25 2.75 2.75 9.25'] },
 };
 
-/** One drawn mark: the edited ring, an icon (an `svg` of `paths` and `dot`), or a word (a Text). */
-export type MarkView =
-  | { kind: 'dot'; mark: Mark; className: string; attrs: Record<string, string | undefined> }
-  | {
-      kind: 'icon';
-      mark: Mark;
-      className: string;
-      attrs: Record<string, string | undefined>;
-      paths: string[];
-      dot: { cx: string; cy: string; r: string } | null;
-    }
-  | { kind: 'word'; mark: Mark; className: string; attrs: Record<string, string | undefined>; word: string };
-
-/** What a renderer draws: the root (a caption Text, strong, tight) and its marks; null when none show. */
-export interface PartMarksView {
-  root: ElementView;
-  marks: MarkView[];
+/** A Text's attributes (its class and `data-*`). */
+function text(props: TextModelProps): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs };
 }
 
-/** The marks PartMarks draws from its props, or null for nothing. */
+/** One mark: the edited ring, an icon (an `svg` of its paths and dot), or a word (a Text). */
+function markView(mark: Mark): Node {
+  const attrs = { 'data-mark': mark, 'data-tone': TONE[mark] };
+  if (mark === 'edited') return h('span', { class: 'yh-partmarks__dot', 'data-part': 'dot', ...attrs });
+  const icon = ICONS[mark];
+  if (icon)
+    return h(
+      'svg',
+      { class: 'yh-partmarks__icon', 'data-part': 'icon', ...attrs, viewBox: '0 0 12 12' },
+      each(icon.paths, (d) => d, (d) => h('path', { d })),
+      icon.dot ? h('circle', icon.dot) : null,
+    );
+  return h('span', { ...text({ size: 'inherit', leading: 'tight', case: 'label', className: 'yh-partmarks__word' }), 'data-part': 'word', ...attrs }, mark);
+}
+
+/** The tree PartMarks draws (the root caption Text, strong and tight, binding `tip`, and its
+ *  marks), or null when no mark shows. */
 export function partMarksView({
   edited = false,
   missing = false,
@@ -71,24 +76,26 @@ export function partMarksView({
   bass = false,
   size = 'cell',
   tip,
-}: PartMarksModelProps): PartMarksView | null {
+}: PartMarksModelProps): Node | null {
   const shown = visibleMarks({ edited, missing, failed, off, bass });
   if (shown.length === 0) return null;
-  return {
-    root: { className: 'yh-partmarks', attrs: { 'data-part': 'root', 'data-size': size, 'data-tip': tip, 'aria-hidden': 'true' } },
-    marks: shown.map((mark): MarkView => {
-      if (mark === 'edited') return { kind: 'dot', mark, className: 'yh-partmarks__dot', attrs: { 'data-part': 'dot', 'data-mark': mark, 'data-tone': TONE[mark] } };
-      const icon = ICONS[mark];
-      if (icon)
-        return {
-          kind: 'icon',
-          mark,
-          className: 'yh-partmarks__icon',
-          attrs: { 'data-part': 'icon', 'data-mark': mark, 'data-tone': TONE[mark], viewBox: '0 0 12 12' },
-          paths: icon.paths,
-          dot: icon.dot ?? null,
-        };
-      return { kind: 'word', mark, className: 'yh-partmarks__word', attrs: { 'data-part': 'word', 'data-mark': mark, 'data-tone': TONE[mark] }, word: mark };
-    }),
-  };
+  return wire(
+    h(
+      'span',
+      {
+        ...text({ size: 'caption', weight: 'strong', leading: 'tight', className: 'yh-partmarks' }),
+        'data-part': 'root',
+        'data-size': size,
+        'data-tip': tip,
+        'aria-hidden': 'true',
+      },
+      each(shown, (mark) => mark, markView),
+    ),
+    { bind: [['tip', { tip, tipAction: 'tipAction' }]] },
+  );
+}
+
+/** The callbacks `partMarksView`'s tree names: the app's tooltip action. */
+export function partMarksHandlers(props: PartMarksModelProps): Handlers {
+  return { tipAction: props.tipAction };
 }

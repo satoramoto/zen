@@ -1,8 +1,8 @@
 /**
  * An element's own width, framework-free: while `on`, reads `node.clientWidth` (layout px,
  * unscaled, so a frame drawn scaled still lays out at design px) at once and on every resize (a
- * `ResizeObserver`), and hands it to `onWidth`. `useFillWidth` (React) and the `fillWidth` action
- * (`fillWidth.svelte.ts`) both wrap it.
+ * `ResizeObserver`), and hands it to `onWidth`. Registered as `fillWidth` in
+ * `src/library/view/stores.ts`; Keys binds it on its root and keeps the width as view state.
  */
 export interface FillWidthParams {
   /** Measure; off, nothing is read (the last width stays with the caller). */
