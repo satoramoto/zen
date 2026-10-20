@@ -1,10 +1,11 @@
+// The rings are class names, framework-free: React passes them as `className`, Svelte as `class`.
 import './Ring.css';
 
 /**
  * **Job.** The focus ring every control uses: a `--focus-ring` outline (the accent, unless the
  * pack's materials set `focus.ink`) `--focus-ring-offset` outside the edge while focused from the
  * keyboard (`:focus-visible`), nothing else changes. Add the class to the
- * focusable element: `className={focusRing}`.
+ * focusable element: `className={focusRing}` (React), `class={focusRing}` (Svelte).
  */
 export const focusRing = 'lib-focus-ring';
 

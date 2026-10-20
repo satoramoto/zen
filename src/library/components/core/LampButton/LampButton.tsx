@@ -1,62 +1,13 @@
-import { useEffect, useRef, type CSSProperties } from 'react';
-import { useLongPress } from './useLongPress';
-import type { HueSlot } from '../hue';
-import { focusRing } from '../../../primitives/Ring';
+import { useEffect, useRef } from 'react';
+import { useLongPress } from '../Button/useLongPress';
+import { lampButtonView, lampToggle, type LampButtonModelProps } from './LampButton.model';
 import { Text } from '../../../primitives/Text';
 import './LampButton.css';
 
-/** The hues a lamp can wear. `m` is the original's deprecated alias of `t` and draws exactly as it. */
-export type LampHue = 't' | HueSlot | 'ok' | 'lamp' | 'role-2' | 'm';
+// The props, faces and accessible name are framework-free, in the model; `LampButton.svelte` renders the same view.
+export type { LampHue, LampFace, TipAction } from './LampButton.model';
 
-/** The face as drawn. */
-export type LampFace = 'off' | 'on' | 'record' | 'waiting' | 'armed' | 'disabled';
-
-/** The app's tooltip hook, passed in by the wiring (the original's Svelte `tipAction`). */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => void | { update?: (key: string) => void; destroy?: () => void };
-
-export interface LampButtonProps {
-  /** The word on the face. */
-  label: string;
-  /** Lit or off. Controlled: a press asks for `!on` through `onToggle` and changes nothing itself. */
-  on?: boolean;
-  /** Identity: `t` neutral (function lamps), `1`–`4` a categorical hue slot (`--hue-1..4`; an app maps its own meaning, e.g. Yahaha's parts), `ok` running, `lamp` playback (e.g. a looper looping), `role-2` the second role hue (`--role-2`; e.g. Yahaha's keys that move time), neutral while off. On is an outline and a lit LED; only `ok`, `lamp` and record fill solid. */
-  hue?: LampHue;
-  /** Small code after the label, e.g. `ACMP`. */
-  code?: string;
-  /** Shown, not pressable: no toggle and no long press. Stays focusable. */
-  disabled?: boolean;
-  /** Record lamp: lit and waiting draw in the danger (record) colour instead of `hue`. */
-  rec?: boolean;
-  /** The waiting (armed) face while not on. */
-  waiting?: boolean;
-  /**
-   * Armed and pressed: engaged but waiting for its cue (Sync Start on, waiting for the first chord).
-   * With `on`, draws the `armed` face (the on outline with its LED blinking) instead of the steady
-   * lit one; `aria-pressed` stays true. Without `on` it changes nothing. Default false.
-   */
-  armed?: boolean;
-  /** `md` a section-row key, `sm` a settings-row key, `cell` fills its container (the band's lamp row). */
-  size?: 'md' | 'sm' | 'cell';
-  /** The narrowest width in px, label centred (e.g. 64 for a settings row's On/Off); the key grows when its label needs more, so it never clips. Wins over the size's width. */
-  width?: number;
-  /** Joined to a neighbour: `start` has one on its right, `end` on its left; the shared corners go square. */
-  join?: 'start' | 'end';
-  /** The accessible name when the label alone isn't enough ("Channel 1 on"). Default: label and code. */
-  name?: string;
-  /** Tooltip key, rendered as `data-tip`. */
-  tip?: string;
-  /** The app's tooltip hook; applied with `tip` when both are set. */
-  tipAction?: TipAction;
-  /** Called with the state asked for (`!on`) after a click, Space or Enter; not after a long press. */
-  onToggle?: (on: boolean) => void;
-  /** Called when the key is held for the long-press time, or right-clicked. */
-  onLongPress?: () => void;
-  /** Called when the press that fired `onLongPress` ends. */
-  onLongRelease?: () => void;
-}
+export type LampButtonProps = LampButtonModelProps;
 
 /**
  * **Job.** The on/off key the whole canvas uses (in Yahaha: Accomp, Metronome, a part's On, Sound,
@@ -106,74 +57,40 @@ export interface LampButtonProps {
  * **Tuning knobs**
  * - `--yh-wait-ring`: the on, armed and waiting ring's weight, one weight across Button, LampButton and Pad.
  */
-export function LampButton({
-  label,
-  on = false,
-  hue = 't',
-  code,
-  disabled = false,
-  rec = false,
-  waiting = false,
-  armed = false,
-  size = 'md',
-  width,
-  join,
-  name,
-  tip,
-  tipAction,
-  onToggle,
-  onLongPress,
-  onLongRelease,
-}: LampButtonProps) {
+export function LampButton(props: LampButtonProps) {
+  const { tip, tipAction, onToggle, onLongPress, onLongRelease } = props;
+  const view = lampButtonView(props);
   const ref = useRef<HTMLButtonElement>(null);
-  const face: Exclude<LampFace, 'disabled'> = on ? (armed ? 'armed' : rec ? 'record' : 'on') : waiting ? 'waiting' : 'off';
-  const drawn = rec && face !== 'off' ? 'rec' : hue === 'm' ? 't' : hue;
 
-  useLongPress(ref, { onLongPress, onLongRelease, disabled: disabled || onLongPress === undefined });
+  useLongPress(ref, { onLongPress, onLongRelease, disabled: !view.longPress });
 
   useEffect(() => {
     const node = ref.current;
     if (!node || !tipAction || tip === undefined) return;
     const handle = tipAction(node, tip);
-    return () => {
-      if (handle) handle.destroy?.();
-    };
+    return () => handle?.destroy?.();
   }, [tipAction, tip]);
-
-  const style: CSSProperties | undefined = width === undefined ? undefined : { minWidth: `${width}px` };
-  const classes = ['yh-lampbutton', `yh-lampbutton--${size}`, focusRing];
-  if (width !== undefined) classes.push('yh-lampbutton--fixed');
-  if (join) classes.push(`yh-lampbutton--join-${join}`);
 
   return (
     <Text
       as="button"
-      role="label"
-      leading="tight"
-      tabular
+      {...view.text}
       ref={ref}
-      type="button"
-      className={classes.join(' ')}
-      data-part="face"
-      style={style}
-      data-face={disabled ? 'disabled' : face}
-      data-hue={drawn}
-      data-contrast={disabled ? 'dim' : undefined}
-      data-tip={tip}
-      aria-pressed={on}
-      aria-disabled={disabled ? 'true' : undefined}
-      aria-label={name ?? (code ? `${label} ${code}` : label)}
+      className={view.face.className}
+      style={view.minWidth === undefined ? undefined : { minWidth: view.minWidth }}
+      {...view.face.attrs}
       onClick={() => {
-        if (!disabled) onToggle?.(!on);
+        const next = lampToggle(props);
+        if (next !== undefined) onToggle?.(next);
       }}
     >
       <span className="yh-lampbutton__led" data-part="lamp" aria-hidden="true" />
       <span className="yh-lampbutton__label" data-part="label">
-        {label}
+        {view.label}
       </span>
-      {code && (
-        <Text role="numeral" size="caption" weight="body" case="none" className="yh-lampbutton__code" data-part="code">
-          {code}
+      {view.code && (
+        <Text {...view.code.text} className={view.code.className} {...view.code.attrs}>
+          {view.code.value}
         </Text>
       )}
     </Text>
