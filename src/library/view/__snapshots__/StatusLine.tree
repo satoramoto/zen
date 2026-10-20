@@ -1,0 +1,129 @@
+## Board
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 1392px">
+
+## Error
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 1392px">
+  <button class="yh-status-line-button" data-part="button" data-tip="display.status" type="button" @click=clear>
+    <span key=tag-4 aria-hidden="true" class="lib-text lib-tone yh-status-line-tag" data-part="tag" data-role="label" data-tabular="" data-text-leading="tight">
+      <svg class="yh-status-line-mark" data-hue="warn" data-part="mark" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+      "Error"
+    <span key=text-4 class="yh-status-line-text" data-part="text">
+      <span class="yh-status-line-hidden" data-part="hidden">
+        "Error:"
+      " Can't delete Sunday drive: it's the loaded rack."
+    <svg aria-hidden="true" class="yh-status-line-clear" data-part="clear" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M2 2 L8 8 M8 2 L2 8">
+
+## Notice
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 1392px">
+  <button class="yh-status-line-button" data-part="button" data-tip="display.status" type="button" @click=clear>
+    <span key=text-5 class="yh-status-line-text" data-part="text">
+      "Added SlowWalker.T552 to the library and loaded it."
+    <svg aria-hidden="true" class="yh-status-line-clear" data-part="clear" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M2 2 L8 8 M8 2 L2 8">
+
+## Clears
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 1392px">
+  <button class="yh-status-line-button" data-part="button" data-tip="display.status" type="button" @click=clear>
+    <span key=text-6 class="yh-status-line-text" data-part="text">
+      "One Touch 3 applied · Recovered: Sunday drive"
+    <svg aria-hidden="true" class="yh-status-line-clear" data-part="clear" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M2 2 L8 8 M8 2 L2 8">
+
+## Hint
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 1392px">
+  <span aria-hidden="true" class="yh-status-line-hint" data-part="hint">
+    <span class="lib-text lib-tone yh-status-line-hint-title" data-part="hint-title" data-role="body" data-tabular="" data-text-weight="strong">
+      "Sync Start"
+    <span class="yh-status-line-hint-body" data-part="hint-body">
+      "Arms the band to start on the first chord you play with your left hand."
+    <span class="yh-status-line-hint-meta" data-part="hint-meta">
+      <span key=Key class="yh-status-line-hint-place" data-part="hint-place">
+        <span class="lib-text lib-tone yh-status-line-hint-label" data-part="hint-label" data-role="caption" data-tabular="" data-text-case="label">
+          "Key"
+        " "
+        <kbd class="lib-text lib-tone yh-status-line-key" data-part="key" data-role="caption" data-tabular="">
+          "Y"
+      <span key=Launchkey class="yh-status-line-hint-place" data-part="hint-place">
+        <span class="lib-text lib-tone yh-status-line-hint-label" data-part="hint-label" data-role="caption" data-tabular="" data-text-case="label">
+          "Launchkey"
+        " "
+        <kbd class="lib-text lib-tone yh-status-line-key" data-part="key" data-role="caption" data-tabular="">
+          "Shift + Play"
+
+## HintOverMessage
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 1392px">
+  <span aria-hidden="true" class="yh-status-line-hint" data-part="hint">
+    <span class="lib-text lib-tone yh-status-line-hint-title" data-part="hint-title" data-role="body" data-tabular="" data-text-weight="strong">
+      "Accomp"
+    <span class="yh-status-line-hint-body" data-part="hint-body">
+      "Turns the accompaniment on or off."
+  <button class="yh-status-line-button yh-status-line-under" data-part="button" data-tip="display.status" type="button" @click=clear>
+    <span key=tag-4 aria-hidden="true" class="lib-text lib-tone yh-status-line-tag" data-part="tag" data-role="label" data-tabular="" data-text-leading="tight">
+      <svg class="yh-status-line-mark" data-hue="warn" data-part="mark" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+      "Error"
+    <span key=text-4 class="yh-status-line-text" data-part="text">
+      <span class="yh-status-line-hidden" data-part="hidden">
+        "Error:"
+      " Can't delete Sunday drive: it's the loaded rack."
+    <svg aria-hidden="true" class="yh-status-line-clear" data-part="clear" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M2 2 L8 8 M8 2 L2 8">
+
+## LongText
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 600px">
+  <button class="yh-status-line-button" data-part="button" data-tip="display.status" type="button" @click=clear>
+    <span key=tag-7 aria-hidden="true" class="lib-text lib-tone yh-status-line-tag" data-part="tag" data-role="label" data-tabular="" data-text-leading="tight">
+      <svg class="yh-status-line-mark" data-hue="warn" data-part="mark" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+      "Error"
+    <span key=text-7 class="yh-status-line-text" data-part="text">
+      <span class="yh-status-line-hidden" data-part="hidden">
+        "Error:"
+      " Rhodes Soft + Strings could not load: the plugin Sampler Deluxe is missing, so Right 1 plays its SoundFont voice until the plugin is installed and scanned again."
+    <svg aria-hidden="true" class="yh-status-line-clear" data-part="clear" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M2 2 L8 8 M8 2 L2 8">
+
+## Focused
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 1392px">
+  <button class="yh-status-line-button" data-part="button" data-tip="display.status" type="button" @click=clear>
+    <span key=tag-4 aria-hidden="true" class="lib-text lib-tone yh-status-line-tag" data-part="tag" data-role="label" data-tabular="" data-text-leading="tight">
+      <svg class="yh-status-line-mark" data-hue="warn" data-part="mark" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+      "Error"
+    <span key=text-4 class="yh-status-line-text" data-part="text">
+      <span class="yh-status-line-hidden" data-part="hidden">
+        "Error:"
+      " Can't delete Sunday drive: it's the loaded rack."
+    <svg aria-hidden="true" class="yh-status-line-clear" data-part="clear" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M2 2 L8 8 M8 2 L2 8">
+
+## HintNarrow
+<p aria-live="polite" class="lib-text lib-tone yh-status-line" data-part="root" data-role="body" data-tabular="" role="status" style="width: 420px">
+  <span aria-hidden="true" class="yh-status-line-hint" data-part="hint">
+    <span class="lib-text lib-tone yh-status-line-hint-title" data-part="hint-title" data-role="body" data-tabular="" data-text-weight="strong">
+      "Sync Start"
+    <span class="yh-status-line-hint-body" data-part="hint-body">
+      "Arms the band to start on the first chord you play with your left hand."
+    <span class="yh-status-line-hint-meta" data-part="hint-meta">
+      <span key=Key class="yh-status-line-hint-place" data-part="hint-place">
+        <span class="lib-text lib-tone yh-status-line-hint-label" data-part="hint-label" data-role="caption" data-tabular="" data-text-case="label">
+          "Key"
+        " "
+        <kbd class="lib-text lib-tone yh-status-line-key" data-part="key" data-role="caption" data-tabular="">
+          "Y"
+      <span key=Launchkey class="yh-status-line-hint-place" data-part="hint-place">
+        <span class="lib-text lib-tone yh-status-line-hint-label" data-part="hint-label" data-role="caption" data-tabular="" data-text-case="label">
+          "Launchkey"
+        " "
+        <kbd class="lib-text lib-tone yh-status-line-key" data-part="key" data-role="caption" data-tabular="">
+          "Shift + Play"

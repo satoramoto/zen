@@ -20,12 +20,16 @@ import { Layer } from '../layout/Layer';
 import { Screen } from '../layout/Screen';
 import { AssembledScreen } from '../layout/assembly/AssembledScreen';
 import { FormProvider as FormScope } from '../layout/assembly/forms';
+import { HealthSlot } from '../yahaha/HealthSlot/HealthSlot';
+import { MetronomePopover } from '../yahaha/AppBar/MetronomePopover';
+import { ChordReadout } from '../components/music/ChordReadout/ChordReadout';
+import { TempoReadout } from '../components/music/TempoReadout/TempoReadout';
 
 let registry: Record<string, ComponentType<any>> | undefined;
 
 /** The React component registered as `name`; throws for an unknown name. */
 export function reactComponent(name: string): ComponentType<any> {
-  registry ??= { AssembledScreen, Button, FormScope, Group, Knob, LampButton, Layer, LineSlider, Region, Screen, Separator, SettingsRow, Stack, StatusDot, Tabs, Text };
+  registry ??= { Button, Knob, LampButton, LineSlider, Separator, SettingsRow, Stack, StatusDot, Tabs, Text, HealthSlot, MetronomePopover, ChordReadout, TempoReadout, AssembledScreen, FormScope, Group, Layer, Region, Screen };
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;

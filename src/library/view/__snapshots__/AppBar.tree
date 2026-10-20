@@ -1,0 +1,347 @@
+## Board
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## Library
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="library" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="library" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## OffStage
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="settings" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="settings" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+      <span aria-label="Style Sunday Drive Pop, 104 BPM" class="yh-appbar__playing" data-part="playing">
+        <span class="lib-text lib-tone yh-appbar__style" data-part="style" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+          "Sunday Drive Pop"
+        <span class="lib-text lib-tone yh-appbar__tempo" data-part="tempo" data-role="numeral" data-text-size="label">
+          "104"
+        <span class="yh-appbar__unit" data-part="unit">
+          "BPM"
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## NoLaunchkey
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey not connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="false" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey not connected">
+        <StatusDot hollow=true hue="d">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## Trouble
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=2 synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## Helpers
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="role-2" join="start" label="Metronome" name="Metronome" on=true tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## AllOn
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="role-2" join="start" label="Metronome" name="Metronome" on=true tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":true}>
+          <Button controls="metronome-settings" expanded=true join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+        <span class="yh-appbar__popover" data-part="popover">
+          <MetronomePopover audible=true bell=true id="metronome-settings" on=true volume=90 @onOn=metronome @onVolume=volume @onBell=bell @onClose=close>
+      <LampButton label="Unison" name="Unison" on=true tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=true pressed=true size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## MetronomeNotAudible
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="role-2" join="start" label="Metronome" name="Metronome" on=true tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":true}>
+          <Button controls="metronome-settings" expanded=true join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+        <span class="yh-appbar__popover" data-part="popover">
+          <MetronomePopover audible=false bell=false id="metronome-settings" on=true volume=100 @onOn=metronome @onVolume=volume @onBell=bell @onClose=close>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=false @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## Narrow
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1217px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="settings" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="settings" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+      <span aria-label="Style Sunday Drive Pop, 104 BPM" class="yh-appbar__playing" data-part="playing">
+        <span class="lib-text lib-tone yh-appbar__style" data-part="style" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+          "Sunday Drive Pop"
+        <span class="lib-text lib-tone yh-appbar__tempo" data-part="tempo" data-role="numeral" data-text-size="label">
+          "104"
+        <span class="yh-appbar__unit" data-part="unit">
+          "BPM"
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=4 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## Wide
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1440px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>
+
+## Live
+<header class="lib-text lib-tone yh-appbar" data-part="root" data-role="body" data-text-size="label" style="width: 1392px">
+  <div class="lib-stack yh-appbar__row" data-align="center" data-direction="row" data-gap="2" data-part="row">
+    <span class="lib-text lib-tone yh-appbar__name" data-part="name" data-role="body" data-text-size="label" data-text-weight="strong">
+      "yahaha"
+    <nav aria-label="Pages" class="lib-stack yh-appbar__nav" data-align="center" data-direction="row" data-gap="0" data-part="nav">
+      <Tabs items=[{"id":"stage","label":"Stage","tip":"view.stage"},{"id":"channel","label":"Channel","tip":"nav.channel"},{"id":"effects","label":"Effects","tip":"nav.effects"},{"id":"quickRacks","label":"Quick Racks","tip":"nav.quick"},{"id":"multiPads","label":"Multi Pads","tip":"nav.multipad"},{"id":"looper","label":"Looper","tip":"nav.looper"},{"id":"harmArp","label":"Harm/Arp","tip":"nav.harmony"}] name="Display pages" value="stage" @onChange=choose>
+      <span class="yh-appbar__runs-gap" data-part="runs-gap">
+        <Separator>
+      <Tabs items=[{"id":"library","label":"Library","tip":"view.library"},{"id":"settings","label":"Settings","tip":"nav.settings"}] name="Full pages" value="stage" @onChange=choose>
+    <span class="yh-appbar__middle" data-part="middle">
+    <span aria-label="Global switches" class="lib-stack yh-appbar__switches" data-align="center" data-direction="row" data-gap="2" data-part="switches" role="group">
+      <span aria-label="Metronome" class="lib-stack yh-appbar__metronome" data-align="center" data-direction="row" data-gap="0" data-part="metronome" role="group">
+        <LampButton hue="t" join="start" label="Metronome" name="Metronome" on=false tip="metronome.on" @onToggle=metronome>
+        <span class="yh-appbar__caret" data-part="caret" use:focusReturn={"open":false}>
+          <Button controls="metronome-settings" expanded=false join="end" name="Metronome settings: on/off, volume, bell on beat 1" popup="dialog" size="caret" symbol="caret" tip="metronome.settings" @onPress=settings>
+      <LampButton label="Unison" name="Unison" on=false tip="transport.unison" @onToggle=unison>
+      <Button label="?" name="Help mode: point at any control to learn what it does" on=false pressed=false size="icon" tip="app.help" @onPress=help>
+    <span aria-label="Connections" class="lib-stack yh-appbar__status" data-align="center" data-direction="row" data-gap="2" data-part="status" role="group">
+      <Separator>
+      <span aria-label="Launchkey connected" class="lib-stack yh-appbar__launchkey" data-align="center" data-connected="true" data-direction="row" data-gap="2" data-part="launchkey" role="status" title="Launchkey connected">
+        <StatusDot hollow=false hue="ok">
+        <span class="lib-text lib-tone yh-appbar__launchkey-word" data-part="launchkey-word" data-role="body" data-text-case="label" data-text-size="label">
+          "Launchkey"
+      <span class="yh-appbar__health" data-part="health">
+        <HealthSlot bufferFrames=256 cpu=0.2 dropouts=0 failedPart=null synthOn=true @onOpen=health>
+    <span class="lib-stack yh-appbar__panic" data-align="center" data-direction="row" data-gap="2" data-part="panic">
+      <Separator>
+      <Button hue="rec" label="Panic" name="Panic: all notes off" tip="transport.panic" @onPress=panic>

@@ -1,10 +1,10 @@
-// WaitingChip's stories as plain props: WaitingChip.stories.tsx (React) and
-// WaitingChip.stories.svelte.ts (Svelte) both draw them, and the parity test renders every one that
-// draws something in both (`waitingChipDrawn`: every story but Empty, which renders nothing).
+// WaitingChip's stories as plain props: WaitingChip.stories.tsx draws them (in either renderer), and
+// the tree snapshot records every one that draws something (`waitingChipDrawn`: every story but
+// Empty, which renders nothing).
 import { defineFixtures } from '../../fixtures';
 import type { WaitingChipModelProps, WaitingHue } from './WaitingChip.model';
 
-/** The controls, the same in both Storybooks. */
+/** The story controls. */
 export const waitingChipArgTypes = {
   label: { control: 'text' },
   hue: { control: 'select', options: ['intro', 'main', 'ending', 'brk', 'fill', 'a', 't'] },

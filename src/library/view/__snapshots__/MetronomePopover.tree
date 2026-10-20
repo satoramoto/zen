@@ -1,0 +1,43 @@
+## Board
+<div aria-label="Metronome settings" class="lib-text lib-tone yh-metronome-popover" data-part="root" data-role="body" id="metronome-settings" role="dialog" tabindex="-1" @keydown=keydown use:dismiss={"id":"metronome-settings","onClose":"close"}>
+  <span class="lib-text lib-tone yh-metronome-popover__title" data-part="title" data-role="label" data-tone="primary">
+    "Metronome"
+  <SettingsRow id="metronome-settings-on" label="On/off" labelWidth=104>
+    #children
+      <LampButton label="On" name="Metronome on/off" on=true size="sm" tip="metronome.on" @onToggle=on>
+  <SettingsRow id="metronome-settings-volume" label="Volume" labelWidth=104>
+    #children
+      <LineSlider max=127 min=0 name="Metronome volume" tip="metronome.volume" value=90 width=120 @onchange=volume>
+  <SettingsRow id="metronome-settings-bell" label="Bell on beat 1" labelWidth=104>
+    #children
+      <LampButton label="On" name="Bell on beat 1" on=true size="sm" tip="metronome.bell" @onToggle=bell>
+
+## Off
+<div aria-label="Metronome settings" class="lib-text lib-tone yh-metronome-popover" data-part="root" data-role="body" id="metronome-settings" role="dialog" tabindex="-1" @keydown=keydown use:dismiss={"id":"metronome-settings","onClose":"close"}>
+  <span class="lib-text lib-tone yh-metronome-popover__title" data-part="title" data-role="label" data-tone="primary">
+    "Metronome"
+  <SettingsRow id="metronome-settings-on" label="On/off" labelWidth=104>
+    #children
+      <LampButton label="Off" name="Metronome on/off" on=false size="sm" tip="metronome.on" @onToggle=on>
+  <SettingsRow id="metronome-settings-volume" label="Volume" labelWidth=104>
+    #children
+      <LineSlider max=127 min=0 name="Metronome volume" tip="metronome.volume" value=20 width=120 @onchange=volume>
+  <SettingsRow id="metronome-settings-bell" label="Bell on beat 1" labelWidth=104>
+    #children
+      <LampButton label="Off" name="Bell on beat 1" on=false size="sm" tip="metronome.bell" @onToggle=bell>
+
+## NotAudible
+<div aria-label="Metronome settings" class="lib-text lib-tone yh-metronome-popover" data-part="root" data-role="body" id="metronome-settings" role="dialog" tabindex="-1" @keydown=keydown use:dismiss={"id":"metronome-settings","onClose":"close"}>
+  <span class="lib-text lib-tone yh-metronome-popover__title" data-part="title" data-role="label" data-tone="primary">
+    "Metronome"
+  <SettingsRow id="metronome-settings-on" label="On/off" labelWidth=104>
+    #children
+      <LampButton label="On" name="Metronome on/off" on=true size="sm" tip="metronome.on" @onToggle=on>
+  <SettingsRow id="metronome-settings-volume" label="Volume" labelWidth=104>
+    #children
+      <LineSlider max=127 min=0 name="Metronome volume" tip="metronome.volume" value=90 width=120 @onchange=volume>
+  <SettingsRow id="metronome-settings-bell" label="Bell on beat 1" labelWidth=104>
+    #children
+      <LampButton label="On" name="Bell on beat 1" on=true size="sm" tip="metronome.bell" @onToggle=bell>
+  <p class="lib-text lib-tone yh-metronome-popover__note" data-part="note" data-role="body" data-text-size="caption">
+    "The built-in synth isn't running: the click can't sound."

@@ -1,37 +1,15 @@
 <!--
-  OneTouchPicker: the Svelte renderer of `oneTouchPickerView` (OneTouchPicker.model.ts), the same
-  markup, classes and attributes as `OneTouchPicker.tsx`; see OneTouchPicker.tsx for the job. In
-  `cells` the caption and the numbers are top-level siblings, no wrapper. Each number runs the
-  tooltip action with its own key through an attachment.
+  OneTouchPicker: the model's roots (`oneTouchPickerView`, OneTouchPicker.model.ts) drawn by the
+  Svelte `Tree`, as `OneTouchPicker.tsx` draws them with the React one; see OneTouchPicker.tsx for
+  the job. In `cells` the caption and the numbers are top-level siblings, no wrapper.
 -->
 <script lang="ts">
-  import Text from '../../primitives/Text.svelte';
-  import { oneTouchPickerView, type OneTouchPickerProps } from './OneTouchPicker.model';
+  import Tree from '../../view/Tree.svelte';
+  import { oneTouchPickerHandlers, oneTouchPickerView, type OneTouchPickerProps } from './OneTouchPicker.model';
+  import '../../primitives/Text.css';
   import './OneTouchPicker.css';
 
   let props: OneTouchPickerProps = $props();
-  const view = $derived(oneTouchPickerView(props));
-
-  /** The app's tooltip action on one number, with that number's key. */
-  const tip = (key: string) => (target: HTMLElement) => {
-    const { tipAction } = props;
-    if (!tipAction) return;
-    const handle = tipAction(target, key);
-    return () => handle?.destroy?.();
-  };
 </script>
 
-{#snippet label()}<Text {...view.label.text} class={view.label.className} {...view.label.attrs}>{view.label.word}</Text>{/snippet}
-{#snippet buttons()}{#each view.numbers as number (number.n)}<Text
-      {...view.numberText}
-      as="button"
-      class={number.className}
-      {...number.attrs}
-      disabled={number.disabled}
-      onclick={() => props.onApply?.(number.n)}
-      {@attach tip(number.tip)}>{number.n}</Text
-    >{/each}{/snippet}
-
-{#if view.cells}{@render label()}{@render buttons()}{:else}<div class={view.root.className} {...view.root.attrs}
-    >{@render label()}<span class={view.strip.className} {...view.strip.attrs}>{@render buttons()}</span></div
-  >{/if}
+{#each oneTouchPickerView(props) as tree (tree.key)}<Tree {tree} handlers={oneTouchPickerHandlers(props)} />{/each}

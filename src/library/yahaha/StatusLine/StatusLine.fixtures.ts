@@ -1,5 +1,5 @@
-// StatusLine's stories as plain props: StatusLine.stories.tsx (React) and StatusLine.stories.svelte.ts
-// (Svelte) both draw them, and the parity test renders every one in both.
+// StatusLine's stories as plain props: StatusLine.stories.tsx draws them with either renderer, and
+// the tree snapshot records every one.
 import { defineFixtures } from '../../fixtures';
 import type { StatusHint, StatusLineModelProps } from './StatusLine.model';
 

@@ -1,10 +1,10 @@
-import { useRef, type CSSProperties } from 'react';
-import { Text } from '../../primitives/Text';
-import { accentBlockView, type AccentBlockModelProps } from './AccentBlock.model';
-import { useTip } from './useTip';
+import { Tree } from '../../view/Tree';
+import { accentBlockHandlers, accentBlockView, type AccentBlockModelProps } from './AccentBlock.model';
+import '../../primitives/Text.css';
 import './AccentBlock.css';
 
-// The props and the block are framework-free, in the model; `AccentBlock.svelte` renders the same view.
+// The props, the block and its behaviour are framework-free, in the model and the kernel's `tip`
+// store; this file and `AccentBlock.svelte` only hand the model's tree to their `Tree`.
 export type { TipAction, AccentBlockModelProps } from './AccentBlock.model';
 
 export type AccentBlockProps = AccentBlockModelProps;
@@ -43,30 +43,5 @@ export type AccentBlockProps = AccentBlockModelProps;
  * ring only on keyboard focus.
  */
 export function AccentBlock(props: AccentBlockProps) {
-  const { tip, tipAction, onPress } = props;
-  const view = accentBlockView(props);
-  const ref = useRef<HTMLElement>(null);
-
-  useTip(ref, { tip, tipAction, enabled: view.tip });
-
-  return (
-    <Text
-      as={view.as}
-      {...view.text}
-      ref={ref}
-      className={view.block.className}
-      style={view.style as CSSProperties | undefined}
-      {...view.block.attrs}
-      onClick={view.as === 'button' ? () => onPress?.() : undefined}
-    >
-      <span className="yh-accentblock__text" data-part="text">
-        {view.shown}
-      </span>
-      {view.chevron && (
-        <svg className="yh-accentblock__chevron" data-part="chevron" viewBox="0 0 12 12" aria-hidden="true">
-          <path d="M4.5 2.5 8 6l-3.5 3.5" />
-        </svg>
-      )}
-    </Text>
-  );
+  return <Tree tree={accentBlockView(props)} handlers={accentBlockHandlers(props)} />;
 }

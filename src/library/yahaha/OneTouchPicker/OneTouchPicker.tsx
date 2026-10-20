@@ -1,53 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Text } from '../../primitives/Text';
-import type { TextModelProps } from '../../primitives/Text.model';
-import { oneTouchPickerView, type OneTouchNumberView, type OneTouchPickerProps, type TipAction } from './OneTouchPicker.model';
+import { Tree } from '../../view/Tree';
+import { oneTouchPickerHandlers, oneTouchPickerView, type OneTouchPickerProps } from './OneTouchPicker.model';
+import '../../primitives/Text.css';
 import './OneTouchPicker.css';
 
+// The props, faces, names and tooltip are framework-free, in the model; this file and
+// `OneTouchPicker.svelte` only draw the model's roots (one, or several in `cells`) with their `Tree`.
 export {
   oneTouchPickerView,
+  oneTouchPickerHandlers,
   oneTouchGroupName,
   oneTouchNumberName,
   oneTouchFace,
   type OneTouchFace,
-  type OneTouchNumberView,
   type OneTouchPickerProps,
-  type OneTouchPickerView,
+  type TipAction,
 } from './OneTouchPicker.model';
-
-/** A number's button: a `numeral` Text drawn from its view; runs the tooltip action with its own key. */
-function NumberButton({
-  number,
-  text,
-  tipAction,
-  onApply,
-}: {
-  number: OneTouchNumberView;
-  text: TextModelProps;
-  tipAction?: TipAction;
-  onApply?: (n: number) => void;
-}) {
-  const [node, setNode] = useState<HTMLButtonElement | null>(null);
-  const { tip, n } = number;
-  useEffect(() => {
-    if (!node || !tipAction) return;
-    const handle = tipAction(node, tip);
-    return () => handle?.destroy?.();
-  }, [node, tip, tipAction]);
-  return (
-    <Text
-      {...text}
-      as="button"
-      ref={setNode}
-      className={number.className}
-      {...number.attrs}
-      disabled={number.disabled}
-      onClick={() => onApply?.(n)}
-    >
-      {n}
-    </Text>
-  );
-}
 
 /**
  * **Job.** Shows which of the style's One Touch Settings is applied and applies another with one
@@ -79,33 +46,6 @@ function NumberButton({
  * parent grid; `data-face` and `data-tip` (`ots.<n>`) are unchanged.
  */
 export function OneTouchPicker(props: OneTouchPickerProps) {
-  const { onApply, tipAction } = props;
-  const view = oneTouchPickerView(props);
-
-  const buttons = view.numbers.map((number) => (
-    <NumberButton key={number.n} number={number} text={view.numberText} tipAction={tipAction} onApply={onApply} />
-  ));
-  const label = (
-    <Text {...view.label.text} className={view.label.className} {...view.label.attrs}>
-      {view.label.word}
-    </Text>
-  );
-
-  if (view.cells) {
-    return (
-      <>
-        {label}
-        {buttons}
-      </>
-    );
-  }
-
-  return (
-    <div className={view.root.className} {...view.root.attrs}>
-      {label}
-      <span className={view.strip.className} {...view.strip.attrs}>
-        {buttons}
-      </span>
-    </div>
-  );
+  const handlers = oneTouchPickerHandlers(props);
+  return oneTouchPickerView(props).map((tree) => <Tree key={tree.key} tree={tree} handlers={handlers} />);
 }

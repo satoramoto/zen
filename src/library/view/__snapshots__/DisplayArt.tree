@@ -1,0 +1,22 @@
+## Board
+<div aria-hidden="true" class="yh-displayart" data-fade="true" data-part="art">
+  <div class="yh-displayart__sun" data-part="sun">
+    <div class="yh-displayart__disc" data-part="disc">
+  <div class="yh-displayart__hill" data-hill="far" data-part="hill">
+  <div class="yh-displayart__hill" data-hill="near" data-part="hill">
+  <div class="yh-displayart__fade" data-part="fade">
+
+## Bare
+<div aria-hidden="true" class="yh-displayart" data-fade="false" data-part="art">
+  <div class="yh-displayart__sun" data-part="sun">
+    <div class="yh-displayart__disc" data-part="disc">
+  <div class="yh-displayart__hill" data-hill="far" data-part="hill">
+  <div class="yh-displayart__hill" data-hill="near" data-part="hill">
+
+## UnderReadouts
+<div aria-hidden="true" class="yh-displayart" data-fade="true" data-part="art">
+  <div class="yh-displayart__sun" data-part="sun">
+    <div class="yh-displayart__disc" data-part="disc">
+  <div class="yh-displayart__hill" data-hill="far" data-part="hill">
+  <div class="yh-displayart__hill" data-hill="near" data-part="hill">
+  <div class="yh-displayart__fade" data-part="fade">

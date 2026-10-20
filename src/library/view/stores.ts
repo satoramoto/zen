@@ -7,6 +7,7 @@ import { bindLongPress, type LongPressParams } from '../components/core/Button/l
 import { bindHold, type HoldParams } from '../components/core/Button/hold';
 import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
+import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
 import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
 import { bindRoom, type RoomParams } from '../layout/assembly/room';
 import { bindReport, type ReportParams } from '../layout/assembly/report';
@@ -65,6 +66,10 @@ export const stores = {
   tip: keyed<TipParams, 'tipAction'>(bindTip, ['tipAction']),
   /** Knob's drag, keys, wheel, press and tooltip (`knobInput.ts`). */
   knob: keyed<KnobParams, 'tipAction' | 'onpress' | 'onstep'>(bindKnob, ['tipAction', 'onpress', 'onstep']),
+  /** MetronomePopover's Esc and press-outside close (`yahaha/AppBar/popover.ts`). */
+  dismiss: keyed<DismissParams, 'onClose'>(bindDismiss, ['onClose']),
+  /** AppBar's focus back to the metronome's opener when its popover closes (`yahaha/AppBar/popover.ts`). */
+  focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
   /** LineSlider's keys and drag (`slide.ts`). */
   lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
   /** An assembled screen's measured room (`layout/assembly/room.ts`). */

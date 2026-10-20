@@ -1,0 +1,35 @@
+## Board
+<button aria-label="Sunday Drive Pop: open the Browser" class="lib-text lib-tone yh-accentblock" data-face="accent" data-material="key" data-part="block" data-role="label" data-size="line" data-tabular="" data-text-leading="tight" data-text-size="body" data-tip="browser.open" type="button" @click=press use:tip={"tip":"browser.open","tipAction":"tipAction"}>
+  <span class="yh-accentblock__text" data-part="text">
+    "Sunday Drive Pop"
+  <svg aria-hidden="true" class="yh-accentblock__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M4.5 2.5 8 6l-3.5 3.5">
+
+## LongName
+<button aria-label="Bossa Nova Lounge Session With Strings And Brushes Deluxe 2: open the Browser" class="lib-text lib-tone yh-accentblock" data-face="accent" data-material="key" data-part="block" data-role="label" data-size="line" data-tabular="" data-text-leading="tight" data-text-size="body" style="width: 240px" type="button" @click=press>
+  <span class="yh-accentblock__text" data-part="text">
+    "Bossa Nova Lounge Session With Strings And Brushes Deluxe 2"
+  <svg aria-hidden="true" class="yh-accentblock__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M4.5 2.5 8 6l-3.5 3.5">
+
+## Empty
+<button class="lib-text lib-tone yh-accentblock" data-face="accent" data-material="key" data-part="block" data-role="label" data-size="line" data-tabular="" data-text-leading="tight" data-text-size="body" type="button" @click=press>
+  <span class="yh-accentblock__text" data-part="text">
+    "No style"
+  <svg aria-hidden="true" class="yh-accentblock__chevron" data-part="chevron" viewBox="0 0 12 12">
+    <path d="M4.5 2.5 8 6l-3.5 3.5">
+
+## BetweenSteps
+<button aria-label="Sunday Drive Pop: open the Browser" class="lib-text lib-tone yh-accentblock" data-face="accent" data-material="key" data-part="block" data-role="label" data-size="line" data-tabular="" data-text-leading="tight" data-text-size="body" type="button" @click=press>
+  <span class="yh-accentblock__text" data-part="text">
+    "Sunday Drive Pop"
+
+## KnobPage
+<span class="lib-text lib-tone yh-accentblock" data-face="accent" data-part="block" data-role="label" data-size="knob" data-tabular="" data-text-leading="tight" data-text-size="body">
+  <span class="yh-accentblock__text" data-part="text">
+    "Style"
+
+## SwapR1
+<span class="lib-text lib-tone yh-accentblock" data-face="accent" data-part="block" data-role="label" data-size="knob" data-tabular="" data-text-leading="tight" data-text-size="body">
+  <span class="yh-accentblock__text" data-part="text">
+    "Swap R1"
