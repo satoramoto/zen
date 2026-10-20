@@ -478,8 +478,9 @@ export interface PadBankRegionProps extends Omit<PadBankRegionModelProps, 'class
 export const PadBankRegion = PadBankRegionSvelte as unknown as Component<PadBankRegionProps>;
 
 // Yahaha's Stage: the whole app on one assembled screen, and its shared logic.
-export type StageProps = StageModelProps<string | Snippet>;
+/** The Stage's props: the model's, and its two slots as snippets (`page`: a display page in the Display's place; `side`: a panel in the hero's right third). */
+export type StageProps = StageModelProps<string | Snippet> & { page?: Snippet; side?: Snippet };
 export const Stage = StageSvelte as unknown as Component<StageProps>;
-export { TEMPO_MAX, TEMPO_MIN, STAGE_SPECS, type StageFit, type StageLayout, type StageTipAction } from './yahaha/Stage/Stage.model';
+export { TEMPO_MAX, TEMPO_MIN, STAGE_SPECS, STAGE_HERO_SPECS, type StageBackdrop, type StageFit, type StageHero, type StageLayout, type StageTipAction } from './yahaha/Stage/Stage.model';
 export { tapTempo, createTapTempo, TAP_COUNT, TAP_RESET_MS, type TapTempo } from './yahaha/Stage/tapTempo';
 export { sectionPads, pressSectionPad, SECTIONS_BANK, SECTION_PAD_LAYOUT, type SectionPadAction, type SectionPadHandlers } from './yahaha/Stage/sectionPads';
