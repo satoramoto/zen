@@ -191,6 +191,24 @@ export const padBankStories = defineFixtures<PadBankRegionProps>()({
       pads: multiPadPads.map((pad, i): PadItem => (i === 1 ? { ...pad, family: 'r2', state: 'playing' } : pad)),
     },
   },
+  // The engine's own faces: Setup with the picked fingering and Stop ACMP mode chosen, Upper and OTS
+  // Link lit as lamps; Chord with Manual Bass unavailable.
+  SetupFaces: {
+    args: {
+      ...board,
+      bank: BANK.Setup,
+      pads: setupPads.map((pad): PadItem =>
+        pad.state === 'playing' ? { ...pad, state: 'chosen' } : pad.label === 'Upper' || pad.label === 'OTS Link' ? { ...pad, state: 'lamp' } : pad,
+      ),
+    },
+  },
+  ChordUnavailable: {
+    args: {
+      ...board,
+      bank: BANK.Chord,
+      pads: chordPads.map((pad): PadItem => (pad.label === 'Manual Bass' ? { ...pad, state: 'unavailable', name: 'Manual Bass, unavailable (pad 9)' } : pad)),
+    },
+  },
   At1440: { args: board },
   At1217: { args: { ...board, bank: BANK.Chord, pads: chordPads } },
   ShortRegion: { args: { ...board, pads: sectionPads, bank: BANK.Sections } },

@@ -12,7 +12,13 @@ export type { TipAction };
 
 /** Section families, utilities and Start / Stop. A categorical colour is `hue`, not a family. */
 export type PadFamily = 'intro' | 'main' | 'ending' | 'brk' | 'fill' | 'util' | 'start';
-export type PadState = 'idle' | 'dark' | 'playing' | 'next' | 'armed' | 'running';
+/**
+ * The face. Beside the section states: `chosen` is a picked option (a fingering, a mode), the solid
+ * `--selected` block without the sounding bloom; `lamp` is a switch that is on, its lit `--success`
+ * ring and dot; `unavailable` is a pad that can't apply now, the rest face dimmed, visible but not
+ * pressable (`aria-disabled`). None of the three wears a hue: a state has no hue.
+ */
+export type PadState = 'idle' | 'dark' | 'playing' | 'next' | 'armed' | 'running' | 'chosen' | 'lamp' | 'unavailable';
 /** The colour role a pad draws in: neutral (`--selected`), a hue slot, `--success` or a role hue. */
 export type PadTone = 'neutral' | 'hue-1' | 'hue-2' | 'hue-3' | 'hue-4' | 'hue-5' | 'success' | 'role-1' | 'role-2';
 /** How an on pad shows it: see `PadModelProps.onFace`. */
@@ -31,7 +37,7 @@ export interface PadModelProps {
    * app maps its meaning (e.g. Yahaha's parts). Default: none, the family's neutral or role tone.
    */
   hue?: HueSlot;
-  /** The face. `dark` means the pad is absent from this style or unavailable. */
+  /** The face. `dark` means the pad is absent from this style; `unavailable` that it is here but can't apply now. */
   state?: PadState;
   /** The flash phase of `next` and `armed`: false drops the fill and thins the ring. */
   lit?: boolean;
@@ -77,6 +83,9 @@ export function tieLastWord(label: string): string {
 
 /** Which colour role a pad wears, from its family, state, role slot and hue slot (a hue wins). */
 export function padTone(family: PadFamily, state: PadState, role?: RoleSlot, hue?: HueSlot): PadTone {
+  // Chosen and lamp are states with their own role, never a hue's.
+  if (state === 'chosen') return 'neutral';
+  if (state === 'lamp') return 'success';
   if (hue) return `hue-${hue}`;
   // Running is a state, not the role's identity, so it wins over the role hue.
   if (family === 'start' && state === 'running') return 'success';
@@ -107,6 +116,7 @@ export function padView({
   onFace = 'fill',
 }: PadModelProps): Node {
   const tone = padTone(family, state, role, hue);
+  const off = disabled || state === 'unavailable';
   const tag = state === 'next' ? 'NEXT' : state === 'armed' ? 'ARMED' : '';
   const util = family === 'util' || family === 'start';
   const face = textView({ role: 'label', leading: 'snug', className: `yh-pad lib-surface ${focusRing}` });
@@ -133,13 +143,13 @@ export function padView({
         'data-fill': fillCell ? 'true' : undefined,
         'data-on-face': onFace,
         'aria-label': name ?? `${label}${index ? ` (pad ${index})` : ''}`,
-        'aria-pressed': String(state === 'playing' || state === 'running'),
-        'aria-disabled': disabled ? 'true' : undefined,
+        'aria-pressed': String(state === 'playing' || state === 'running' || state === 'chosen' || state === 'lamp'),
+        'aria-disabled': off ? 'true' : undefined,
       },
       tag ? h('span', { class: chip.className, ...chip.attrs, 'data-part': 'chip', 'aria-hidden': 'true' }, tag) : null,
       h('span', { class: 'yh-pad__label', 'data-part': 'label' }, tieLastWord(label)),
     ),
-    { bind: [['padPress', { disabled, tip, tipAction: 'tipAction', onPress: 'press' }]] },
+    { bind: [['padPress', { disabled: off, tip, tipAction: 'tipAction', onPress: 'press' }]] },
   );
 }
 

@@ -13,7 +13,7 @@ export const padArgTypes = {
   index: { control: 'text' },
   family: { control: 'select', options: ['intro', 'main', 'ending', 'brk', 'fill', 'util', 'start'] },
   hue: { control: 'select', options: [undefined, 1, 2, 3, 4, 5] },
-  state: { control: 'select', options: ['idle', 'dark', 'playing', 'next', 'armed', 'running'] },
+  state: { control: 'select', options: ['idle', 'dark', 'playing', 'next', 'armed', 'running', 'chosen', 'lamp', 'unavailable'] },
   lit: { control: 'boolean' },
   tagCorner: { control: 'boolean' },
   role: { control: 'select', options: [undefined, 1, 2] },
@@ -76,7 +76,22 @@ export const BANK: (P & { label: string })[] = [
 /** The BankRing story: every pad but the sections on `onFace="ring"`. */
 export const BANK_RING: (P & { label: string })[] = BANK.map((p) => ({ ...p, onFace: p.family === 'main' ? 'fill' : 'ring' }));
 
-export const padStories = defineFixtures<PadModelProps>()({
+/**
+ * The Faces story: chosen, lamp and unavailable beside the idle and ring-on faces they sit among,
+ * then a hued pad in each (the state wins: no hue shows).
+ */
+export const FACES: (P & { label: string })[] = [
+  { label: 'Fingered', index: '2', family: 'util', state: 'idle', name: 'Fingered, idle' },
+  { label: 'Single', index: '1', family: 'util', state: 'chosen', name: 'Single, chosen' },
+  { label: 'Upper', index: '6', family: 'util', state: 'lamp', name: 'Upper, on (lamp)' },
+  { label: 'Manual Bass', index: '9', family: 'util', state: 'unavailable', name: 'Manual Bass, unavailable' },
+  { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', onFace: 'ring', name: 'Auto Fill, on (ring)' },
+  { label: 'QUICK 1', index: '13', family: 'util', hue: 1, state: 'chosen', name: 'Quick 1, chosen (hue 1)' },
+  { label: 'QUICK 2', index: '14', family: 'util', hue: 2, state: 'lamp', name: 'Quick 2, on (lamp, hue 2)' },
+  { label: 'QUICK 3', index: '15', family: 'util', hue: 3, state: 'unavailable', name: 'Quick 3, unavailable (hue 3)' },
+];
+
+export const padStories =defineFixtures<PadModelProps>()({
   Board: { args: { ...padBase, name: 'Main B, playing' } },
   Idle: { args: { ...padBase, label: 'Intro I', index: '1', family: 'intro', state: 'idle' } },
   Dark: { args: { ...padBase, label: 'Intro III', index: '3', family: 'intro', state: 'dark', name: 'Intro III (not in this style)' } },
@@ -116,6 +131,12 @@ export const padStories = defineFixtures<PadModelProps>()({
     ],
   },
   BankRing: { items: BANK_RING },
+  Chosen: { args: { ...padBase, label: 'Single', index: '1', family: 'util', state: 'chosen', tip: undefined, name: 'Single, chosen (pad 1)' } },
+  Lamp: { args: { ...padBase, label: 'OTS Link', index: '9', family: 'util', state: 'lamp', tip: undefined, name: 'OTS Link, on (pad 9)' } },
+  Unavailable: {
+    args: { ...padBase, label: 'Manual Bass', index: '9', family: 'util', state: 'unavailable', tip: undefined, name: 'Manual Bass, unavailable (pad 9)' },
+  },
+  Faces: { items: FACES },
 });
 
 /** A 4 × 4 grid of pads (the Bank and BankRing stories). */

@@ -133,6 +133,14 @@ export const TakeoverBothWays: Story = story(s.TakeoverBothWays);
 /** Added: every part off; the On lamps unlit, each name faded in its own hue with "off". */
 export const AllPartsOff: Story = story(s.AllPartsOff);
 
+/** Added: a function lamp in the `ok` hue (running / success): Harm/Arp lit in `--success`. */
+export const LampOk: Story = {
+  ...story(s.LampOk),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('button', { name: 'Harmony/Arpeggio on (running)' })).toHaveAttribute('data-hue', 'ok');
+  },
+};
+
 /** Added: wired to state, so faders, tabs and lamps move. Drawn by React only (its state is a React
  *  `useState`; the Renderer toolbar says so). */
 export const Live: Story = {

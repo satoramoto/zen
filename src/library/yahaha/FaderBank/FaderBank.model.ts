@@ -60,8 +60,8 @@ export interface BankLamp {
   label: string;
   /** Lit. */
   on: boolean;
-  /** The part for a part lamp (it wears that part's hue), `t` (neutral) for a function, `lamp` the Looper looping. */
-  hue?: Part | 't' | 'lamp';
+  /** The part for a part lamp (it wears that part's hue), `t` (neutral) for a function, `lamp` the Looper looping, `ok` running / success (`--success`). */
+  hue?: Part | 't' | 'lamp' | 'ok';
   /** Record lamp: lit and waiting draw in the record colour. */
   rec?: boolean;
   /** The waiting (armed) face while not lit. */

@@ -155,6 +155,24 @@ export const SetupBank: Story = story(s.SetupBank);
 /** New: a pad the engine lights for a part wears that part's hue (Right 2 here); nothing else does. */
 export const PartLit: Story = story(s.PartLit);
 
+/** New: the Setup bank as the engine draws it: the fingering and Stop ACMP mode `chosen`, Upper and OTS Link lit as `lamp`s. */
+export const SetupFaces: Story = {
+  ...story(s.SetupFaces),
+  play: async ({ canvasElement }) => {
+    const pads = [...canvasElement.querySelectorAll<HTMLElement>('.yh-pad')];
+    await expect(pads.filter((pad) => pad.dataset.state === 'chosen')).toHaveLength(2);
+    await expect(pads.filter((pad) => pad.dataset.state === 'lamp')).toHaveLength(2);
+  },
+};
+
+/** New: the Chord bank with Manual Bass `unavailable`: dimmed, still in its place, and a press does nothing. */
+export const ChordUnavailable: Story = {
+  ...story(s.ChordUnavailable),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('button', { name: 'Manual Bass, unavailable (pad 9)' })).toHaveAttribute('aria-disabled', 'true');
+  },
+};
+
 /** New: the region at a 1440 × 900 Stage (about 552px wide), two rows of eight. */
 export const At1440: Story = story(s.At1440);
 
