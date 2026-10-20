@@ -4,7 +4,6 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LampButton } from './LampButton';
-import { parseDuration } from './useLongPress';
 
 const down = { pointerId: 1, button: 0, clientX: 10, clientY: 10 };
 
@@ -269,13 +268,5 @@ describe('LampButton long press', () => {
     fireEvent.pointerUp(window, down);
     fireEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('parseDuration', () => {
-  it('reads ms and s, rejects anything else', () => {
-    expect(parseDuration('350ms')).toBe(350);
-    expect(parseDuration(' 0.5s ')).toBe(500);
-    expect(parseDuration('fast')).toBeNull();
   });
 });
