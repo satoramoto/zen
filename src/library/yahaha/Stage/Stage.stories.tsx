@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { Stage } from './Stage';
-import { stageBoard, stageQuickRacks, stageStopped } from './Stage.fixtures';
+import { stageBoard, stageStories as s } from './Stage.fixtures';
 import { StagePlayground } from './StagePlayground';
 
 /**
@@ -49,51 +49,51 @@ type Story = StoryObj<typeof meta>;
  * transport beside it, then the mixer and the knobs over the pads (on Sections) on the same
  * column seam.
  */
-export const Board: Story = {};
+export const Board: Story = { args: s.Board.args };
 
 /** The board with the pads on Quick Racks: the bank's own pads, not the song's sections. */
 export const QuickRacks: Story = {
-  args: { ...stageQuickRacks },
+  args: s.QuickRacks.args,
 };
 
 /** Stopped on Main A at 92 with Coastal Highway queued, the faders on the Reverb layer, a message on the status line. */
 export const Stopped: Story = {
-  args: { ...stageStopped },
+  args: s.Stopped.args,
 };
 
 /** A 16:10 laptop, 1440 × 900: the Stage stays 16:9, a 1440 × 810 room with a ground band above and below. */
 export const Letterboxed: Story = {
-  args: { fit: 'contain', width: 1440, height: 900 },
+  args: s.Letterboxed.args,
 };
 
 /** An ultrawide, 2560 × 1080: the board's 1920 × 1080 room, centred, with a ground band each side. */
 export const Pillarboxed: Story = {
-  args: { fit: 'contain', width: 2560, height: 1080 },
+  args: s.Pillarboxed.args,
 };
 
 /** The smallest screen, 1217 × 752: a 1217 × 684.6 room between ground bands; the solver steps the controls, then the hero, down before it zooms; nothing cut off. */
 export const Small: Story = {
-  args: { fit: 'contain', width: 1217, height: 752 },
+  args: s.Small.args,
 };
 
 /** 900 × 700: a 900 × 506 room, below the Stage's least: every region at a lean form, the body held at the 24 px target, and it scrolls. */
 export const Narrow: Story = {
-  args: { fit: 'contain', width: 900, height: 700 },
+  args: s.Narrow.args,
 };
 
 /** The same 900 × 700 frame scaled: the whole 1920 × 1080 board drawn at 0.469, the forms the board's. */
 export const NarrowScaled: Story = {
-  args: { fit: 'scale', width: 900, height: 700 },
+  args: s.NarrowScaled.args,
 };
 
 /** The alternative `split` layout on the board: the hero across the top, the transport down the right beside the pads. */
 export const SplitBoard: Story = {
-  args: { layout: 'split' },
+  args: s.SplitBoard.args,
 };
 
 /** The `split` layout on the smallest screen, 1217 × 752. */
 export const SplitSmall: Story = {
-  args: { layout: 'split', fit: 'contain', width: 1217, height: 752 },
+  args: s.SplitSmall.args,
 };
 
 /**

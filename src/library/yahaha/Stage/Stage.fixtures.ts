@@ -5,8 +5,11 @@ import { boardKeys } from '../../components/music/Keys/Keys.fixtures';
 import { chorusKnobs, delayKnobs, knobPages, panKnobs, rackKnobs, reverbKnobs, styleKnobs } from '../KnobBank/KnobBank.fixtures';
 import { allPadBanks, allPadsByBank, quickRackPads } from '../PadBank/PadBank.fixtures';
 import { songFormBoard, songFormStopped } from '../SongForm/SongForm.fixtures';
-import type { KnobItem } from '../KnobBank/KnobBank';
-import { TEMPO_MAX, TEMPO_MIN, type StageProps } from './Stage';
+import { defineFixtures } from '../../fixtures';
+import type { KnobItem } from '../KnobBank/KnobBank.model';
+import { TEMPO_MAX, TEMPO_MIN, type StageModelProps } from './Stage.model';
+
+type StageProps = StageModelProps;
 
 // Composed from the regions' own fixtures, as the original's Stage.fixtures.ts composes its
 // regions'. Each region's board is the Stage board's; nothing here restates a region's data,
@@ -76,6 +79,23 @@ export const stageQuickRacks = {
   ...stageBoard,
   pads: { ...stageBoard.pads, bank: QUICK_RACKS },
 } satisfies StageProps;
+
+/**
+ * Every story's args, by the story names of `Stage.stories.tsx` and `Stage.stories.svelte.ts`
+ * (the Playground is React's alone). Scaled by default: the 1920 × 1080 board drawn to fit.
+ */
+export const stageStories = defineFixtures<StageProps>()({
+  Board: { args: { ...stageBoard, fit: 'scale' } },
+  QuickRacks: { args: { ...stageQuickRacks, fit: 'scale' } },
+  Stopped: { args: { ...stageStopped, fit: 'scale' } },
+  Letterboxed: { args: { ...stageBoard, fit: 'contain', width: 1440, height: 900 } },
+  Pillarboxed: { args: { ...stageBoard, fit: 'contain', width: 2560, height: 1080 } },
+  Small: { args: { ...stageBoard, fit: 'contain', width: 1217, height: 752 } },
+  Narrow: { args: { ...stageBoard, fit: 'contain', width: 900, height: 700 } },
+  NarrowScaled: { args: { ...stageBoard, fit: 'scale', width: 900, height: 700 } },
+  SplitBoard: { args: { ...stageBoard, fit: 'scale', layout: 'split' } },
+  SplitSmall: { args: { ...stageBoard, layout: 'split', fit: 'contain', width: 1217, height: 752 } },
+});
 
 /** The knob pages' eight knobs, in `knobPages` order (Style, Rack, Pan, Reverb, Chorus, Delay). */
 export const stageKnobPages = [styleKnobs, rackKnobs, panKnobs, reverbKnobs, chorusKnobs, delayKnobs];

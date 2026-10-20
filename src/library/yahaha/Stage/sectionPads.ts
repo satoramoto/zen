@@ -1,6 +1,6 @@
-import type { PadItem } from '../PadBank/PadBank';
-import type { PadFamily } from '../../components/music/Pad/Pad';
-import { SECTION_LABEL, type SectionId, type SongFormProps } from '../SongForm/SongForm';
+import type { PadItem } from '../PadBank/PadBank.model';
+import type { PadFamily } from '../../components/music/Pad/Pad.model';
+import { SECTION_LABEL, type SectionId, type SongFormProps } from '../SongForm/SongForm.model';
 
 /** The Sections bank's name, as PadBank's tabs and the Launchkey call it. */
 export const SECTIONS_BANK = 'Sections';
