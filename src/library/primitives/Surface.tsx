@@ -1,11 +1,13 @@
-import { createContext, useContext, useState, type AllHTMLAttributes, type CSSProperties, type ElementType, type ReactNode, type Ref } from 'react';
+import { useContext, useState, type AllHTMLAttributes, type CSSProperties, type ReactNode, type Ref } from 'react';
 import type { AmbientRegion, LayerName } from '../contract';
 import { useShaderSupport, type ShaderMaterialName, type ShaderSource } from '../shader';
 import { useThemeScope } from '../theme';
 import { Tree } from '../view/Tree';
-import { styleObject } from '../view/style';
-import { surfaceView, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
-import { SHADER_ERROR, chosenShader, surfaceShader, surfaceShaderNode } from './surfaceShader';
+import { slot } from '../view/Tree.model';
+import { holeNode, opaqueTree } from './Hole.model';
+import { OpaqueContext } from './opaque';
+import { surfaceTree, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
+import { SHADER_ERROR, chosenShader, surfaceShader } from './surfaceShader';
 import './Surface.css';
 
 // The materials, lamps and corners are framework-free, in the model; `Surface.svelte` renders the same view.
@@ -44,8 +46,8 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as' 
    *  `materials.shaders[layer]`. Drawn only where `useShaderSupport()` allows and outside `Opaque`;
    *  otherwise (or if it fails) the layer's CSS material is all there is. */
   shader?: ShaderMaterialName | ShaderSource | false;
-  /** The element to render; default `div`. */
-  as?: ElementType;
+  /** The element to render (a tag); default `div`. */
+  as?: string;
   className?: string;
   /** Inline style: an object, or a `style` string (as a view tree's `component('Surface', …)` passes it). */
   style?: CSSProperties | string;
@@ -86,21 +88,7 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as' 
  * the layer's ambient shares `--lib-surface-ambient-fill`, `-edge`, `-cast`; `--lit` is the lamp
  * colour `--mat-lit-glow` reads.
  */
-export function Surface({
-  layer,
-  material,
-  radius,
-  pressed,
-  lit,
-  border,
-  ambient,
-  shader,
-  as: Tag = 'div',
-  className,
-  style,
-  children,
-  ...rest
-}: SurfaceProps) {
+export function Surface({ layer, material, radius, pressed, lit, border, ambient, shader, as, className, children, ref, ...rest }: SurfaceProps) {
   const scope = useThemeScope();
   const supported = useShaderSupport();
   const opaque = useContext(OpaqueContext);
@@ -109,17 +97,16 @@ export function Surface({
   const shaders = scope?.facets.materials.shaders;
   const source = surfaceShader({ shader, layer, shaders, supported, opaque, failed });
   const handlers = { [SHADER_ERROR]: () => setFailed(chosenShader({ shader, layer, shaders })) };
-  const view = surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }, source !== null);
   return (
-    <Tag className={view.className} {...view.attrs} {...rest} style={typeof style === 'string' ? (styleObject(style) as CSSProperties) : style}>
-      {source && <Tree tree={surfaceShaderNode(source)} handlers={handlers} />}
-      {children}
-    </Tag>
+    <Tree
+      tree={surfaceTree({ layer, material, radius, pressed, lit, border, ambient, className, as }, source)}
+      slots={{ children }}
+      handlers={handlers}
+      ref={ref}
+      {...rest}
+    />
   );
 }
-
-/** True inside an `Opaque` scope: no surface there draws a shader (nothing translucent over a native view). */
-const OpaqueContext = createContext(false);
 
 /**
  * **Job.** Where translucency can't composite: over a native view the web page can't blur (a
@@ -131,13 +118,7 @@ const OpaqueContext = createContext(false);
  * `prefers-contrast: more` or `<html data-transparency="reduced">` (library.css).
  */
 export function Opaque({ children, className, style }: { children?: ReactNode; className?: string; style?: CSSProperties }) {
-  return (
-    <OpaqueContext.Provider value={true}>
-      <div className={`lib-opaque${className ? ` ${className}` : ''}`} style={style}>
-        {children}
-      </div>
-    </OpaqueContext.Provider>
-  );
+  return <Tree tree={opaqueTree(className, style)} slots={{ children }} />;
 }
 
 /**
@@ -145,9 +126,5 @@ export function Opaque({ children, className, style }: { children?: ReactNode; c
  * ground shows through. It paints nothing; panels over it go in an `Opaque` scope.
  */
 export function Hole({ className, style, children, name }: { className?: string; style?: CSSProperties; children?: ReactNode; name?: string }) {
-  return (
-    <div className={`lib-hole${className ? ` ${className}` : ''}`} data-part="hole" aria-label={name} role={name ? 'img' : undefined} style={style}>
-      {children}
-    </div>
-  );
+  return <Tree tree={holeNode(className, name, {}, slot('children'))} slots={{ children }} style={style} />;
 }

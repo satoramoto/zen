@@ -1,29 +1,65 @@
 ## Resizable
 <AssembledScreen name="Assembly demo" room={"w":900,"h":420} spec={"header":[{"id":"bar","plate":false,"priority":"chrome","forms":[{"id":"bar","min":{"w":0,"h":{"control":1}},"ideal":{"w":0,"h":{"control":1}}}]}],"rows":[[{"id":"now","priority":"now","forms":[{"id":"full","min":{"w":{"control":10},"h":{"control":6}},"ideal":{"w":{"control":14},"h":{"control":7}},"grow":{"w":true}},{"id":"compact","min":{"w":{"control":8},"h":{"control":3}},"ideal":{"w":{"control":10},"h":{"control":4}},"grow":{"w":true}}]},{"id":"side","priority":"context","forms":[{"id":"docked","min":{"w":{"control":8},"h":{"control":4}},"ideal":{"w":{"control":10},"h":{"control":6}}},{"id":"rail","min":{"w":{"control":2},"h":{"control":2}},"ideal":{"w":{"control":2},"h":{"control":2}}}]}],[{"id":"pads","priority":"controls","forms":[{"id":"two-rows","min":{"w":{"control":8},"h":{"control":4,"space":2}},"ideal":{"w":{"control":16},"h":{"control":5}},"grow":{"w":true,"h":true}},{"id":"one-row","min":{"w":{"control":8},"h":{"control":2}},"ideal":{"w":{"control":16},"h":{"control":2.5}},"grow":{"w":true}}]}]]} @onPlacement=placement>
-  #regions
-    {regions}
+  #region:bar
+    {region:bar}
+  #region:now
+    {region:now}
+  #region:side
+    {region:side}
+  #region:pads
+    {region:pads}
 
 ## Board
 <AssembledScreen name="Assembly demo" room={"w":1440,"h":900} spec={"header":[{"id":"bar","plate":false,"priority":"chrome","forms":[{"id":"bar","min":{"w":0,"h":{"control":1}},"ideal":{"w":0,"h":{"control":1}}}]}],"rows":[[{"id":"now","priority":"now","forms":[{"id":"full","min":{"w":{"control":10},"h":{"control":6}},"ideal":{"w":{"control":14},"h":{"control":7}},"grow":{"w":true}},{"id":"compact","min":{"w":{"control":8},"h":{"control":3}},"ideal":{"w":{"control":10},"h":{"control":4}},"grow":{"w":true}}]},{"id":"side","priority":"context","forms":[{"id":"docked","min":{"w":{"control":8},"h":{"control":4}},"ideal":{"w":{"control":10},"h":{"control":6}}},{"id":"rail","min":{"w":{"control":2},"h":{"control":2}},"ideal":{"w":{"control":2},"h":{"control":2}}}]}],[{"id":"pads","priority":"controls","forms":[{"id":"two-rows","min":{"w":{"control":8},"h":{"control":4,"space":2}},"ideal":{"w":{"control":16},"h":{"control":5}},"grow":{"w":true,"h":true}},{"id":"one-row","min":{"w":{"control":8},"h":{"control":2}},"ideal":{"w":{"control":16},"h":{"control":2.5}},"grow":{"w":true}}]}]]} @onPlacement=placement>
-  #regions
-    {regions}
+  #region:bar
+    {region:bar}
+  #region:now
+    {region:now}
+  #region:side
+    {region:side}
+  #region:pads
+    {region:pads}
 
 ## Short
 <AssembledScreen name="Assembly demo" room={"w":900,"h":330} spec={"header":[{"id":"bar","plate":false,"priority":"chrome","forms":[{"id":"bar","min":{"w":0,"h":{"control":1}},"ideal":{"w":0,"h":{"control":1}}}]}],"rows":[[{"id":"now","priority":"now","forms":[{"id":"full","min":{"w":{"control":10},"h":{"control":6}},"ideal":{"w":{"control":14},"h":{"control":7}},"grow":{"w":true}},{"id":"compact","min":{"w":{"control":8},"h":{"control":3}},"ideal":{"w":{"control":10},"h":{"control":4}},"grow":{"w":true}}]},{"id":"side","priority":"context","forms":[{"id":"docked","min":{"w":{"control":8},"h":{"control":4}},"ideal":{"w":{"control":10},"h":{"control":6}}},{"id":"rail","min":{"w":{"control":2},"h":{"control":2}},"ideal":{"w":{"control":2},"h":{"control":2}}}]}],[{"id":"pads","priority":"controls","forms":[{"id":"two-rows","min":{"w":{"control":8},"h":{"control":4,"space":2}},"ideal":{"w":{"control":16},"h":{"control":5}},"grow":{"w":true,"h":true}},{"id":"one-row","min":{"w":{"control":8},"h":{"control":2}},"ideal":{"w":{"control":16},"h":{"control":2.5}},"grow":{"w":true}}]}]]} @onPlacement=placement>
-  #regions
-    {regions}
+  #region:bar
+    {region:bar}
+  #region:now
+    {region:now}
+  #region:side
+    {region:side}
+  #region:pads
+    {region:pads}
 
 ## Small
 <AssembledScreen name="Assembly demo" room={"w":600,"h":240} spec={"header":[{"id":"bar","plate":false,"priority":"chrome","forms":[{"id":"bar","min":{"w":0,"h":{"control":1}},"ideal":{"w":0,"h":{"control":1}}}]}],"rows":[[{"id":"now","priority":"now","forms":[{"id":"full","min":{"w":{"control":10},"h":{"control":6}},"ideal":{"w":{"control":14},"h":{"control":7}},"grow":{"w":true}},{"id":"compact","min":{"w":{"control":8},"h":{"control":3}},"ideal":{"w":{"control":10},"h":{"control":4}},"grow":{"w":true}}]},{"id":"side","priority":"context","forms":[{"id":"docked","min":{"w":{"control":8},"h":{"control":4}},"ideal":{"w":{"control":10},"h":{"control":6}}},{"id":"rail","min":{"w":{"control":2},"h":{"control":2}},"ideal":{"w":{"control":2},"h":{"control":2}}}]}],[{"id":"pads","priority":"controls","forms":[{"id":"two-rows","min":{"w":{"control":8},"h":{"control":4,"space":2}},"ideal":{"w":{"control":16},"h":{"control":5}},"grow":{"w":true,"h":true}},{"id":"one-row","min":{"w":{"control":8},"h":{"control":2}},"ideal":{"w":{"control":16},"h":{"control":2.5}},"grow":{"w":true}}]}]]} @onPlacement=placement>
-  #regions
-    {regions}
+  #region:bar
+    {region:bar}
+  #region:now
+    {region:now}
+  #region:side
+    {region:side}
+  #region:pads
+    {region:pads}
 
 ## AspectLocked
 <AssembledScreen name="Assembly demo" room={"w":1100,"h":420} spec={"header":[{"id":"bar","plate":false,"priority":"chrome","forms":[{"id":"bar","min":{"w":0,"h":{"control":1}},"ideal":{"w":0,"h":{"control":1}}}]}],"rows":[[{"id":"now","priority":"now","forms":[{"id":"full","min":{"w":{"control":10},"h":{"control":6}},"ideal":{"w":{"control":14},"h":{"control":7}},"grow":{"w":true}},{"id":"compact","min":{"w":{"control":8},"h":{"control":3}},"ideal":{"w":{"control":10},"h":{"control":4}},"grow":{"w":true}}]},{"id":"side","priority":"context","forms":[{"id":"docked","min":{"w":{"control":8},"h":{"control":4}},"ideal":{"w":{"control":10},"h":{"control":6}}},{"id":"rail","min":{"w":{"control":2},"h":{"control":2}},"ideal":{"w":{"control":2},"h":{"control":2}}}]}],[{"id":"pads","priority":"controls","forms":[{"id":"two-rows","min":{"w":{"control":8},"h":{"control":4,"space":2}},"ideal":{"w":{"control":16},"h":{"control":5}},"grow":{"w":true,"h":true}},{"id":"one-row","min":{"w":{"control":8},"h":{"control":2}},"ideal":{"w":{"control":16},"h":{"control":2.5}},"grow":{"w":true}}]}]],"aspect":{"ratio":1.7777777777777777,"fit":"contain"}} @onPlacement=placement>
-  #regions
-    {regions}
+  #region:bar
+    {region:bar}
+  #region:now
+    {region:now}
+  #region:side
+    {region:side}
+  #region:pads
+    {region:pads}
 
 ## AspectScaled
 <AssembledScreen name="Assembly demo" room={"w":700,"h":600} spec={"header":[{"id":"bar","plate":false,"priority":"chrome","forms":[{"id":"bar","min":{"w":0,"h":{"control":1}},"ideal":{"w":0,"h":{"control":1}}}]}],"rows":[[{"id":"now","priority":"now","forms":[{"id":"full","min":{"w":{"control":10},"h":{"control":6}},"ideal":{"w":{"control":14},"h":{"control":7}},"grow":{"w":true}},{"id":"compact","min":{"w":{"control":8},"h":{"control":3}},"ideal":{"w":{"control":10},"h":{"control":4}},"grow":{"w":true}}]},{"id":"side","priority":"context","forms":[{"id":"docked","min":{"w":{"control":8},"h":{"control":4}},"ideal":{"w":{"control":10},"h":{"control":6}}},{"id":"rail","min":{"w":{"control":2},"h":{"control":2}},"ideal":{"w":{"control":2},"h":{"control":2}}}]}],[{"id":"pads","priority":"controls","forms":[{"id":"two-rows","min":{"w":{"control":8},"h":{"control":4,"space":2}},"ideal":{"w":{"control":16},"h":{"control":5}},"grow":{"w":true,"h":true}},{"id":"one-row","min":{"w":{"control":8},"h":{"control":2}},"ideal":{"w":{"control":16},"h":{"control":2.5}},"grow":{"w":true}}]}]],"aspect":{"ratio":1.7777777777777777,"fit":"scale","design":{"w":1600,"h":900}}} @onPlacement=placement>
-  #regions
-    {regions}
+  #region:bar
+    {region:bar}
+  #region:now
+    {region:now}
+  #region:side
+    {region:side}
+  #region:pads
+    {region:pads}

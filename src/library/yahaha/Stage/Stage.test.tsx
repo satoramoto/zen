@@ -6,7 +6,7 @@ import { sectionPads as padBankSections } from '../PadBank/PadBank.fixtures';
 import { songFormBoard } from '../SongForm/SongForm.fixtures';
 import { stageBoard, stageQuickRacks, stageStopped } from './Stage.fixtures';
 import { pressSectionPad, SECTION_PAD_LAYOUT, sectionPads } from './sectionPads';
-import { StagePlayground } from './StagePlayground';
+import { StagePlayground } from './StagePlayground.story';
 import type { Placement } from '../../layout/assembly/types';
 import { principlesFor } from '../../layout/assembly/units';
 import { packs } from '../../themes/packs';

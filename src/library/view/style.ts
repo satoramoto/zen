@@ -60,11 +60,36 @@ export function styleAttr(style: StyleInput | object | undefined): string | unde
   return styleText(decls);
 }
 
+/** A style string's declarations: split at `;` outside quotes and brackets, so a value may hold
+ *  one (`url("data:image/svg+xml;utf8,…")`). */
+function declarations(text: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let quote = '';
+  let start = 0;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quote) {
+      if (c === '\\') i++;
+      else if (c === quote) quote = '';
+    } else if (c === '"' || c === "'") quote = c;
+    else if (c === '(' || c === '[') depth++;
+    else if ((c === ')' || c === ']') && depth > 0) depth--;
+    else if (c === ';' && depth === 0) {
+      out.push(text.slice(start, i));
+      start = i + 1;
+    }
+  }
+  out.push(text.slice(start));
+  return out;
+}
+
 /** A `style` string as a style object (`min-width` → `minWidth`, `-ms-x` → `msX`, `-webkit-x` →
- *  `WebkitX`; custom properties as is): React's `style` prop from a tree's attribute. */
+ *  `WebkitX`; custom properties as is): React's `style` prop from a tree's attribute. A `;` inside
+ *  quotes or brackets stays in its value. */
 export function styleObject(text: string): Record<string, string> {
   const style: Record<string, string> = {};
-  for (const declaration of text.split(';')) {
+  for (const declaration of declarations(text)) {
     const colon = declaration.indexOf(':');
     if (colon < 0) continue;
     const name = declaration.slice(0, colon).trim();

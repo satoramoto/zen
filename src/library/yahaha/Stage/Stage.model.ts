@@ -1,8 +1,9 @@
-// Stage's model: its props and its view tree (the frame, the assembled screen, each region drawn by
-// name), with the handlers the tree names (`stageHandlers`). No framework: `Stage.tsx` (React) and
-// `Stage.svelte` (Svelte) both draw it; see Stage.tsx for the job.
+// Stage's model: its props and its view tree (the frame, the assembled screen, each region's
+// content in its slot by id), with the handlers the tree names (`stageHandlers`). No framework:
+// `Stage.tsx` (React) and `Stage.svelte` (Svelte) both hand it to their `Tree`; see Stage.tsx for the job.
 import type { Placed, Placement, ScreenSpec } from '../../layout/assembly/types';
-import { component, slot, styleText, type ComponentNode, type Handler, type Handlers, type Node } from '../../view/Tree.model';
+import { regionSlot } from '../../layout/assembly/AssembledScreen.model';
+import { component, h, styleText, type ComponentNode, type Handler, type Handlers, type Node } from '../../view/Tree.model';
 import type { AppBarModelProps } from '../AppBar/AppBar.model';
 import type { DisplayModelProps } from '../Display/Display.model';
 import type { FaderBankModelProps } from '../FaderBank/FaderBank.model';
@@ -96,16 +97,10 @@ export function stageScreen({ width, height, layout = 'stacked', fit = 'contain'
 }
 
 /** The root: its class and data attributes and its size, holding `screen`. */
-function frame({ width, height, layout = 'stacked', fit = 'contain' }: Frame, screen: Node['children']): Node {
+function frame({ width, height, layout = 'stacked', fit = 'contain' }: Frame, screen: ComponentNode): Node {
   const style = styleText({ width: width !== undefined ? `${width}px` : undefined, height: height !== undefined ? `${height}px` : undefined });
-  return { tag: 'div', attrs: { class: 'yh-stage', 'data-part': 'root', 'data-layout': layout, 'data-fit': fit, style }, children: screen };
+  return h('div', { class: 'yh-stage', 'data-part': 'root', 'data-layout': layout, 'data-fit': fit, style }, screen);
 }
-
-/**
- * The frame with a `screen` slot where the assembled screen goes: the bindings' seam until the
- * layout's `Screen` draws its regions as slots by id (then `stageView` draws it whole).
- */
-export const stageFrame = (props: Frame): Node => frame(props, [slot('screen')]);
 
 /** The regions in reading order, each with the Stage prop that holds its data. */
 const REGIONS = [
@@ -176,17 +171,18 @@ export function stageRegions<L>(props: StageModelProps<L>, state: StageViewState
 
 /**
  * The Stage: the frame holding the assembled screen (`STAGE_SPECS`, the layout's `Screen`), each
- * region a slot by its id. `state` is the Stage's own (`stageState.ts`: the last placement), and
- * `inset` the plate's, from the nearest ThemeScope's principles.
+ * region's content in its slot by id (`regionSlot(id)`). `state` is the Stage's own
+ * (`stageState.ts`: the last placement), and `inset` the plate's, from the nearest ThemeScope's
+ * principles.
  */
 export function stageView<L>(props: StageModelProps<L>, state: StageViewState, inset: { left: number; right: number }): Node {
   const { spec, room } = stageScreen(props);
   const screen = component(
     'Screen',
     { name: 'Stage', className: 'yh-stage__screen', class: 'yh-stage__screen', spec, room },
-    { on: { onPlacement: 'placement' }, slots: Object.fromEntries(Object.entries(stageRegions(props, state, inset)).map(([id, node]) => [id, [node]])) },
+    { on: { onPlacement: 'placement' }, slots: Object.fromEntries(Object.entries(stageRegions(props, state, inset)).map(([id, node]) => [regionSlot(id), [node]])) },
   );
-  return frame(props, [screen]);
+  return frame(props, screen);
 }
 
 /**

@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { useForm } from '../../layout/assembly';
 import { Tree } from '../../view/Tree';
-import type { Node } from '../../view/Tree.model';
 import { FADER_BANK_FORMS } from './FaderBank.forms';
 import {
   faderBankHandlers,
@@ -118,10 +117,7 @@ export interface FaderBankRegionProps extends FaderBankRegionModelProps<ReactNod
  * `onChooseLayer`), so the master fader button can flip the page too.
  */
 export function FaderBankRegion({ className, ...props }: FaderBankRegionProps) {
-  // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
-  return (
-    <Tree tree={faderBankRegionView({ ...props, className }) as unknown as Node} handlers={faderBankRegionHandlers(props)} />
-  );
+  return <Tree tree={faderBankRegionView({ ...props, className })} handlers={faderBankRegionHandlers(props)} />;
 }
 
 /** The forms, for a region to add up (`docs/assembly.md`). */

@@ -41,19 +41,25 @@ export function surfaceShader(input: SurfaceShaderInput): ShaderSource | null {
   return typeof chosen === 'string' ? compiledMaterial(chosen) : chosen;
 }
 
+/** Each source's params as a plain array, made once per source (a compiled material is one object
+ *  per page), so a render doesn't build a new array for the canvas to compare. */
+const paramsOf = new WeakMap<ShaderSource, number[]>();
+
 /**
  * The shader canvas as a view-tree node, Surface's first child: a `lib-surface__shader` canvas,
  * hidden from assistive technology, bound to the `shader` store (`bindShader`), whose `onError`
  * calls the `SHADER_ERROR` handler. Params are plain arrays (the tree compares them as JSON).
  */
 export function surfaceShaderNode(source: ShaderSource): Node {
+  let params = paramsOf.get(source);
+  if (!params) paramsOf.set(source, (params = Array.from(source.params)));
   return wire(h('canvas', { class: 'lib-surface__shader', 'aria-hidden': 'true' }), {
     bind: [
       [
         'shader',
         {
           frag: source.frag,
-          params: Array.from(source.params),
+          params,
           scale: source.scale,
           animate: source.animate,
           interactive: source.interactive,

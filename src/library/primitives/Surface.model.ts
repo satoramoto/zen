@@ -1,9 +1,11 @@
 // Surface's model: the materials, lamps and corners, and the view a renderer draws (its class and
 // `data-*` attributes). No framework: `Surface.tsx` (React) and `Surface.svelte` (Svelte) both
-// render `surfaceView`. The shader canvas both draw comes from `surfaceShader.ts`.
+// hand `surfaceTree` to their `Tree`. The shader canvas both draw comes from `surfaceShader.ts`.
 import type { AmbientRegion, LayerName } from '../contract';
 import type { HueSlot } from '../components/core/hue';
-import { h, type Node } from '../view/Tree.model';
+import type { ShaderSource } from '../shader/types';
+import { h, slot, when, type Node } from '../view/Tree.model';
+import { surfaceShaderNode } from './surfaceShader';
 import type { ElementView, TreeChildren } from './Text.model';
 
 /** What a part is made of: the contract's four materials. */
@@ -66,4 +68,20 @@ export function surfaceView({ layer, material, radius, pressed, lit, border, amb
 export function surfaceNode(props: SurfaceModelProps & { as?: string }, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
   const view = surfaceView(props);
   return h(props.as ?? 'div', { class: view.className, ...view.attrs, ...attrs }, ...children);
+}
+
+/**
+ * The tree a `Surface` draws: its element (`as`, default `div`) with Surface's class and attributes,
+ * the shader canvas first when there is a source (`surfaceShader` in surfaceShader.ts; the canvas
+ * node binds the `shader` store, its `onError` the `SHADER_ERROR` handler), then the `children`
+ * slot. Without a shader, a hole where the canvas goes, so the children keep their place.
+ */
+export function surfaceTree(props: SurfaceModelProps & { as?: string }, source: ShaderSource | null = null): Node {
+  const view = surfaceView(props, source !== null);
+  return h(
+    props.as ?? 'div',
+    { class: view.className, ...view.attrs },
+    when(source !== null, () => surfaceShaderNode(source!)),
+    slot('children'),
+  );
 }

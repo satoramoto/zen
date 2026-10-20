@@ -1,6 +1,7 @@
-// Opaque's and Hole's elements, framework-free: `Opaque.svelte` and `Hole.svelte` render them, and
-// they match React's `Opaque` and `Hole` (Surface.tsx), which draw the same class and attributes.
-import { h, type Node } from '../view/Tree.model';
+// Opaque's and Hole's elements, framework-free: `Opaque.svelte` and `Hole.svelte` hand them to their
+// `Tree`, and so do React's `Opaque` and `Hole` (Surface.tsx).
+import { styleAttr } from '../view/style';
+import { component, h, slot, type ComponentNode, type Node } from '../view/Tree.model';
 import type { ElementView, TreeChildren } from './Text.model';
 
 /** Opaque's element: `lib-opaque` plus the caller's class. */
@@ -19,6 +20,14 @@ export const holeView = (className?: string, name?: string): ElementView => ({
 export function opaqueNode(className?: string, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
   const view = opaqueView(className);
   return h('div', { class: view.className, ...view.attrs, ...attrs }, ...children);
+}
+
+/** The tree `Opaque` draws: the registered `Context` providing `opaque` (true: React's surfaces
+ *  inside draw no shader; Svelte's has nothing to set) around Opaque's `div`, its `style` (a string,
+ *  or a React style object) on the div, the `children` slot inside. */
+export function opaqueTree(className?: string, style?: string | object): ComponentNode {
+  const div = opaqueNode(className, { style: styleAttr(style) }, slot('children'));
+  return component('Context', { name: 'opaque', value: true }, { slots: { children: [div] } });
 }
 
 /** Hole as a view-tree element, for a model to inline: the `div` `<Hole name>` draws, its attributes

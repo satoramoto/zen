@@ -1,19 +1,4 @@
 {
   "components/core/AxisPicker/AxisPicker.tsx": 8,
-  "components/core/Popover/Popover.tsx": 1,
-  "layout/Group.tsx": 1,
-  "primitives/Ambient.tsx": 1,
-  "primitives/Hole.svelte": 1,
-  "primitives/Icon.svelte": 2,
-  "primitives/Icon.tsx": 2,
-  "primitives/Opaque.svelte": 1,
-  "primitives/Stack.svelte": 1,
-  "primitives/Stack.tsx": 1,
-  "primitives/Surface.svelte": 1,
-  "primitives/Surface.tsx": 5,
-  "primitives/Text.svelte": 1,
-  "primitives/Text.tsx": 1,
-  "yahaha/Stage/Stage.svelte": 1,
-  "yahaha/Stage/Stage.tsx": 1,
-  "yahaha/Stage/StagePlayground.tsx": 1
+  "components/core/Popover/Popover.tsx": 1
 }

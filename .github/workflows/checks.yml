@@ -52,6 +52,6 @@ jobs:
       - if: steps.scope.outputs.docs_only != 'true'
         run: npm run build:storybook
       - if: steps.scope.outputs.docs_only != 'true'
-        run: npm run build:storybook:svelte
-      - if: steps.scope.outputs.docs_only != 'true'
         run: npm run build:lib
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: npm run check:lib

@@ -11,7 +11,7 @@ import { ThemeScope, resolveTheme, useSystemMode, type ModeChoice } from './them
 import { packs } from './themes/packs';
 import { toCssVars } from './contract';
 
-// The toolbar is framework-free, shared with the Svelte Storybook entry (`storybook-svelte.ts`).
+// The toolbar is framework-free (`storybook.globals.ts`).
 export { libraryGlobalTypes, libraryInitialGlobals } from './storybook.globals';
 
 /** A translucent ground needs something behind it: the pack's stand-in desktop, per mode. */

@@ -70,7 +70,7 @@
   const chosen = fromStore(own);
   const text = (value: string | Snippet | undefined) => (typeof value === 'string' ? value : undefined);
   const snippet = (value: string | Snippet | undefined) => (typeof value === 'string' ? undefined : value);
-  // Every view's body is `children`: the tree's `SlotCall` renders it with the chosen view's id.
+  // Every view's body is `children`: the tree's slot renders it with the chosen view's id.
   const slots = $derived({
     label: snippet(label),
     aside: snippet(aside),

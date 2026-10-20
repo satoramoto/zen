@@ -3,22 +3,25 @@
   `<Tree tree={xView(props)} slots={…} handlers={…} />`. Recursive over `svelte:element`; the same
   DOM as Tree.tsx. An attachment mounts each element's `on` handlers, `bind` stores and form
   properties (mount.ts) and an effect gives them every new node and handlers. A component node draws
-  the registered Svelte component through `TreeSlots`, which makes its slots snippets drawn in this tree.
+  the registered Svelte component through `TreeSlots`, which makes its slots snippets drawn in this
+  tree. A fragment (a list of roots) draws each. `ref` binds the root element, and any other prop
+  (native attributes, handlers, attachments) lands on it after the tree's own attributes (on a
+  component root: its props).
 -->
 <script lang="ts">
   import { untrack, type Component, type Snippet } from 'svelte';
   import Self from './Tree.svelte';
   import TreeSlots from './TreeSlots.svelte';
-  import { SVG_NS, childKey, componentProps, domAttrs, isComponent, isNode, isSlotFill, type Child, type Handlers, type Slot } from './Tree.model';
+  import { SVG_NS, VOID, childKey, componentProps, domAttrs, isComponent, isNode, isSlotFill, type Child, type Handlers, type Root, type Slot } from './Tree.model';
   import { mountNode, type Mounted } from './mount';
   import { stores as registry, type Stores } from './stores';
   import { svelteComponent } from './svelteComponents';
 
   interface Props {
-    /** The view a model returned (or, inside, one of its children). */
-    tree: Child;
-    /** What fills each `slot(name)`: snippets. An unfilled slot draws nothing. */
-    slots?: Record<string, Snippet | undefined>;
+    /** The view a model returned (or, inside, one of its children): any child, or a fragment. */
+    tree: Root;
+    /** What fills each `slot(name)`: snippets, rendered with the slot's arguments. An unfilled slot draws nothing. */
+    slots?: Record<string, Snippet<any> | undefined>;
     /** The callbacks `on` and the store params name, by key. */
     handlers?: Handlers;
     /** The store registry (default: every registered store, `stores.ts`). */
@@ -27,27 +30,36 @@
     components?: (name: string) => Component<any>;
     /** Inside an `svg`: elements take the SVG namespace. */
     svg?: boolean;
+    /** The root element (`bind:ref`). */
+    ref?: Element | null;
+    /** Anything else lands on the root. */
+    [native: string]: unknown;
   }
 
-  let { tree, slots = {}, handlers = {}, stores = registry, components = svelteComponent, svg = false }: Props = $props();
+  let { tree, slots = {}, handlers = {}, stores = registry, components = svelteComponent, svg = false, ref = $bindable(null), ...native }: Props = $props();
 
-  const node = $derived(typeof tree === 'object' && isNode(tree) ? tree : null);
-  const part = $derived(typeof tree === 'object' && isComponent(tree) ? tree : null);
+  const many = $derived(Array.isArray(tree) ? tree : null);
+  const one = $derived(Array.isArray(tree) ? null : (tree as Child));
+  const node = $derived(one !== null && typeof one === 'object' && isNode(one) ? one : null);
+  const part = $derived(one !== null && typeof one === 'object' && isComponent(one) ? one : null);
+  const hole = $derived(one !== null && typeof one === 'object' && !node && !part ? (one as Slot) : null);
   const inSvg = $derived(svg || node?.tag === 'svg');
   const attrs = $derived(domAttrs(node?.attrs));
 
-  /** A component node's props: its data, its `on` callbacks (the latest handler for each key) and
-   *  any of this tree's own slots passed through. */
+  /** A component node's props: its data, its `on` callbacks (the handler for each key), any of this
+   *  tree's own slots passed through, and, at the root, the props given to `Tree`. */
   const partProps = $derived.by(() => {
     if (!part) return {};
     const props = componentProps(part, (key) => handlers[key]);
     for (const [name, fill] of Object.entries(part.slots ?? {})) if (isSlotFill(fill)) props[name] = slots[fill.slot];
-    return props;
+    return { ...props, ...native };
   });
   /** Its slots filled with subtrees: `TreeSlots` makes each a snippet drawing it with this tree's context. */
   const partFills = $derived(
     Object.fromEntries(Object.entries(part?.slots ?? {}).filter((entry): entry is [string, (Child | null)[]] => !isSlotFill(entry[1]))),
   );
+  /** A slot's arguments (`slot(name, args)`), rendered with its snippet. */
+  const args = $derived(hole?.args ?? []);
 
   let mounted: Mounted | null = null;
   const attach = (element: Element) => {
@@ -68,8 +80,21 @@
   });
 </script>
 
-{#if typeof tree === 'string'}{tree}{:else if node}<svelte:element this={node.tag} xmlns={inSvg ? SVG_NS : undefined} {...attrs} {@attach attach}
-    >{#each node.children ?? [] as child, i (childKey(child, i))}{#if child !== null}<Self
+{#if many}{#each many as child, i (childKey(child, i))}{#if child !== null}<Self
+        tree={child}
+        {slots}
+        {handlers}
+        {stores}
+        {components}
+        {svg}
+      />{/if}{/each}{:else if typeof one === 'string'}{one}{:else if node}<svelte:element
+    this={node.tag}
+    xmlns={inSvg ? SVG_NS : undefined}
+    {...attrs}
+    {...native}
+    bind:this={ref}
+    {@attach attach}
+    >{#each VOID.has(node.tag) ? [] : (node.children ?? []) as child, i (childKey(child, i))}{#if child !== null}<Self
           tree={child}
           {slots}
           {handlers}
@@ -87,4 +112,4 @@
     {stores}
     {components}
     svg={inSvg}
-  />{:else}{@render slots[(tree as Slot).slot]?.()}{/if}
+  />{:else if hole}{@render slots[hole.slot]?.(args[0], args[1], args[2])}{/if}

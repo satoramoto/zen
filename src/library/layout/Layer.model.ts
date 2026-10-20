@@ -3,7 +3,7 @@
 // (Svelte) each hand `layerView` to their `Tree`.
 import type { AmbientRegion, LayerName } from '../contract';
 import { surfaceView, type SurfaceModelProps } from '../primitives/Surface.model';
-import { component, slot, type Handlers, type Node } from '../view/Tree.model';
+import { component, slot, type ComponentNode, type Handlers } from '../view/Tree.model';
 import { styleAttr } from '../view/style';
 
 /** What Layer decides from, in any framework. */
@@ -53,14 +53,13 @@ export function layerHandlers(props: Record<string, unknown>): Handlers {
  * under its own name. `custom`: React's `as` is a component, drawn as `LAYER_AS` with Surface's
  * class and attributes.
  */
-export function layerView({ level, className, ambient, as = 'div', ...rest }: LayerViewProps, custom = false, handlers: Handlers = {}): Node {
+export function layerView({ level, className, ambient, as = 'div', ...rest }: LayerViewProps, custom = false, handlers: Handlers = {}): ComponentNode {
   const surface = layerSurface({ level, className });
   const on = Object.keys(handlers).length ? Object.fromEntries(Object.keys(handlers).map((name) => [name, name])) : undefined;
   const slots = { children: slot('children') };
-  // Both `Tree`s draw a component node at the root as they do anywhere (typed as their `Node`).
   if (custom) {
     const view = surfaceView({ ...surface, ambient });
-    return component(LAYER_AS, { className: view.className, ...view.attrs, ...passAttrs(rest) }, { on, slots }) as unknown as Node;
+    return component(LAYER_AS, { className: view.className, ...view.attrs, ...passAttrs(rest) }, { on, slots });
   }
-  return component('Surface', { ...surface, ambient, as, ...passAttrs(rest) }, { on, slots }) as unknown as Node;
+  return component('Surface', { ...surface, ambient, as, ...passAttrs(rest) }, { on, slots });
 }

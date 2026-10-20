@@ -7,7 +7,7 @@
 //   app's own Storybook) → `lib/storybook.js`. Its own entry, so the main one never reaches it.
 // - `svelte` (`src/library/svelte.ts`, `./svelte`: the Svelte 5 renderers and the theme action) →
 //   `lib/svelte.js`, compiled here by vite-plugin-svelte against `svelte` (external, a peer at the
-//   compiler's minor or later), and `storybook-svelte` (`./storybook-svelte`) → `lib/storybook-svelte.js`.
+//   compiler's minor or later).
 // - `themes` (`src/library/themes.ts`, `./themes`: the packs, facets, `toCssVars`, `resolveTheme` and
 //   the theme scope's model) → `lib/themes.js`. Framework-free: it and its chunks reach neither
 //   React nor Svelte.
@@ -62,7 +62,6 @@ export default defineConfig({
         index: 'src/library/index.ts',
         storybook: 'src/library/storybook.tsx',
         svelte: 'src/library/svelte.ts',
-        'storybook-svelte': 'src/library/storybook-svelte.ts',
         themes: 'src/library/themes.ts',
       },
       formats: ['es'],

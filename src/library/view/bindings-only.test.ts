@@ -16,12 +16,26 @@ export const Y = () => <><span>{x}</span><Text role="label" /></>;`;
     expect(markupCount('components/core/X/X.tsx', tsx)).toBe(3);
   });
 
+  it('does not count a generic arrow, but counts createElement( and h( calls', () => {
+    const tsx = `const pick = <T,>(x: T) => x;
+const keep = <Tab extends string>(x: Tab) => x;
+const canvas = document.createElement('canvas');
+export const X = () => createElement('div', null, h('span'));`;
+    expect(markupCount('components/core/X/X.tsx', tsx)).toBe(2);
+  });
+
   it('counts Svelte markup but not <Tree, the script, the style or comments', () => {
     const svelte = `<!-- <div> -->
 <script lang="ts">const a: Array<string> = []; if (a.length < 2) {}</script>
 <Tree {tree} {handlers} />
 {#if x}<span class="a"><Text>b</Text></span>{/if}
 <style>.a > .b {}</style>`;
+    expect(markupCount('components/core/X/X.svelte', svelte)).toBe(2);
+  });
+
+  it('counts {@html} in Svelte markup and element-building calls in its script', () => {
+    const svelte = `<script lang="ts">const node = h('b'); const el = document.createElement('i');</script>
+<Tree {tree} />{@html raw}`;
     expect(markupCount('components/core/X/X.svelte', svelte)).toBe(2);
   });
 });

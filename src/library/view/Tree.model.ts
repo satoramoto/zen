@@ -5,13 +5,24 @@
 // by name. No framework here, and no functions in a tree: callbacks reach it through `handlers`,
 // stateful behaviour through the stores in `stores.ts`, so a tree snapshots as text.
 
-/** A hole the renderer fills: a React node or a Svelte snippet, passed to `Tree` as `slots[name]`. */
+/** A hole the renderer fills: a React node or a Svelte snippet, passed to `Tree` as `slots[name]`.
+ *  With `args` (plain data), the fill takes arguments: React calls a function fill with them,
+ *  Svelte renders the snippet with them (up to three), so a slot's content can depend on what the
+ *  model decided (an assembled region's chosen form and placement, a region's chosen view). */
 export interface Slot {
   slot: string;
+  args?: unknown[];
 }
 
 /** A child: an element, a component, text, or a slot. */
 export type Child = Node | ComponentNode | string | Slot;
+
+/** What a `Tree` draws: any child (an element, a component, text or a slot), or a fragment (a list
+ *  of them, drawn side by side with no wrapper, `null` a hole as among children). */
+export type Root = Child | (Child | null)[];
+
+/** The most arguments a slot passes (Svelte's `{@render}` takes no spread). */
+export const SLOT_ARGS_MAX = 3;
 
 /**
  * A registered component (`reactComponents.ts`, `svelteComponents.ts`), by name: how a composite's
@@ -67,14 +78,22 @@ const flatten = (children: ChildArg[]): (Child | null)[] =>
  * so give a list of varying length its own parent (or keys) rather than unkeyed siblings after it.
  */
 export function h(tag: string, attrs: Record<string, string | undefined> = {}, ...children: ChildArg[]): Node {
-  const node: Node = { tag, attrs };
+  // An enumerated attribute (`draggable`, `aria-*`) keeps `'true'`, never the boolean `''`.
+  const kept = Object.keys(attrs).some((name) => attrs[name] === '' && isEnumerated(name))
+    ? Object.fromEntries(Object.entries(attrs).map(([name, value]) => [name, attrValue(name, value)]))
+    : attrs;
+  const node: Node = { tag, attrs: kept };
   const flat = flatten(children);
   if (flat.some((child) => child !== null)) node.children = flat;
   return node;
 }
 
-/** A slot child: `slot('icon')`. */
-export const slot = (name: string): Slot => ({ slot: name });
+/** A slot child: `slot('icon')`; with arguments, `slot('region:hero', [form, placed])` (plain data,
+ *  at most `SLOT_ARGS_MAX`) draws the fill called (React) or rendered (Svelte) with them. */
+export function slot(name: string, args?: unknown[]): Slot {
+  if (args && args.length > SLOT_ARGS_MAX) throw new Error(`view: slot "${name}" takes at most ${SLOT_ARGS_MAX} arguments`);
+  return args ? { slot: name, args } : { slot: name };
+}
 
 /** A component child: `component('LampButton', { label: 'On' }, { on: { onToggle: 'toggle' } })`. A
  *  slot's list flattens and keeps holes, as `h`'s children do. */
@@ -129,11 +148,13 @@ export function childKey(child: Child | null, index: number): string {
   return child !== null && isComponent(child) ? `#${index}:${child.component}` : `#${index}`;
 }
 
-/** A component node's props as a renderer passes them: its data, then each `on` prop as a function
- *  calling the latest handler for its key. */
+/** A component node's props as a renderer passes them: its data, then each `on` prop as the handler
+ *  its key names (undefined when there is none). The handler itself, not a new wrapper per render,
+ *  so a child sees a new callback only when the handler is a new function: a child's store bound
+ *  to it (a `tipAction`) isn't reapplied on every render. */
 export function componentProps(node: ComponentNode, handler: (key: string) => Handler | undefined): Record<string, unknown> {
   const props: Record<string, unknown> = { ...node.props };
-  for (const [prop, key] of Object.entries(node.on ?? {})) props[prop] = (...args: unknown[]) => handler(key)?.(...args);
+  for (const [prop, key] of Object.entries(node.on ?? {})) props[prop] = handler(key);
   return props;
 }
 
@@ -143,6 +164,10 @@ export function componentProps(node: ComponentNode, handler: (key: string) => Ha
 export const PROPERTIES = new Set(['value', 'checked', 'indeterminate']);
 
 export const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/** Void elements: they take no children, so both renderers draw none for them (a polymorphic
+ *  primitive's `children` slot under `as: 'input'` is simply not drawn). */
+export const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
 
 /** Attributes both renderers set as boolean properties: `''` (present) becomes `true`. */
 const BOOLEAN = new Set([
@@ -170,26 +195,62 @@ const BOOLEAN = new Set([
   'selected',
 ]);
 
+/** Enumerated attributes whose values are the words `true` / `false` (an empty value is not
+ *  "true" for them, unlike a boolean attribute): `draggable`, `contenteditable`, `spellcheck`, and
+ *  the ARIA states and properties that take true/false. A string-valued ARIA attribute
+ *  (`aria-label`, `aria-valuetext`, `aria-description`, …) keeps an empty value as it is. */
+const ENUMERATED = new Set([
+  'draggable',
+  'contenteditable',
+  'spellcheck',
+  'aria-atomic',
+  'aria-busy',
+  'aria-checked',
+  'aria-current',
+  'aria-disabled',
+  'aria-expanded',
+  'aria-grabbed',
+  'aria-haspopup',
+  'aria-hidden',
+  'aria-invalid',
+  'aria-modal',
+  'aria-multiline',
+  'aria-multiselectable',
+  'aria-pressed',
+  'aria-readonly',
+  'aria-required',
+  'aria-selected',
+]);
+const isEnumerated = (name: string) => ENUMERATED.has(name.toLowerCase());
+
+/** An enumerated attribute's value from a test: `'true'` or `'false'` (`aria-pressed: flag(on)`). */
+export const flag = (test: boolean): 'true' | 'false' => (test ? 'true' : 'false');
+
+/** An attribute's value as the tree keeps it: an enumerated attribute's `''` is `'true'`. */
+const attrValue = (name: string, value: string | undefined): string | undefined => (value === '' && isEnumerated(name) ? 'true' : value);
+
 /** A node's attributes as both renderers pass them on: undefined dropped, boolean attributes `true`,
- *  form properties (`PROPERTIES`) left to `mount.ts`. */
+ *  enumerated ones `'true'` / `'false'` (never `''`), form properties (`PROPERTIES`) left to `mount.ts`. */
 export function domAttrs(attrs: Record<string, string | undefined> | undefined): Record<string, string | true> {
   const out: Record<string, string | true> = {};
   for (const [name, value] of Object.entries(attrs ?? {})) {
     if (value === undefined || PROPERTIES.has(name)) continue;
-    out[name] = BOOLEAN.has(name.toLowerCase()) ? true : value;
+    out[name] = BOOLEAN.has(name.toLowerCase()) ? true : attrValue(name, value)!;
   }
   return out;
 }
 
 /**
  * A tree as canonical text, for snapshots: one line per element (attributes sorted, `on` as
- * `@event=key`, `bind` as `use:store={params}`), text quoted, slots as `{slot}`. A component is
- * `<Name prop={json} @onX=key>`, each of its slots a `#name` line over its contents.
+ * `@event=key`, `bind` as `use:store={params}`), text quoted, slots as `{slot}` (`{slot(args)}`
+ * with arguments). A component is `<Name prop={json} @onX=key>`, each of its slots a `#name` line
+ * over its contents. A fragment is its roots one after another.
  */
-export function printTree(child: Child, depth = 0): string {
+export function printTree(child: Root, depth = 0): string {
   const pad = '  '.repeat(depth);
+  if (Array.isArray(child)) return child.flatMap((c) => (c === null ? [] : [printTree(c, depth)])).join('\n');
   if (typeof child === 'string') return `${pad}${JSON.stringify(child)}`;
-  if (isSlot(child)) return `${pad}{${child.slot}}`;
+  if (isSlot(child)) return `${pad}{${child.slot}${child.args ? `(${child.args.map((a) => JSON.stringify(a)).join(', ')})` : ''}}`;
   if (isComponent(child)) {
     const props = Object.entries(child.props ?? {})
       .filter(([, value]) => value !== undefined)

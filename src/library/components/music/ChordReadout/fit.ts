@@ -32,7 +32,7 @@ export interface FitParams {
  *  whose change measures again (the chord, its extension, held and size, as one string). */
 export type ChordFitParams = FitParams & { key?: string };
 
-/** A bound fit: measure again (the chord or its size changed), or unbind. */
+/** A bound fit: measure again when the key changed (the chord or its size), or unbind. */
 export interface FitBinding {
   update(params?: ChordFitParams): void;
   destroy(): void;
@@ -41,6 +41,7 @@ export interface FitBinding {
 /** Measures `node` now, once the fonts are ready and on every resize, until destroyed. */
 export function bindFit(node: HTMLElement, initial: ChordFitParams): FitBinding {
   let params = initial;
+  let key = initial.key;
   let live = true;
   const fit = () => {
     if (live) params.onFit(measureFit(node));
@@ -51,7 +52,12 @@ export function bindFit(node: HTMLElement, initial: ChordFitParams): FitBinding 
   observer?.observe(node);
   return {
     update(next) {
+      // Only a new key (the chord, its extension, held or size) changes the width: a render
+      // that changes nothing else measures nothing (each measure is a reflow per step). The key
+      // is kept apart, since `params` may be a live view of the latest (`keyed`).
       if (next) params = next;
+      if (params.key === key) return;
+      key = params.key;
       fit();
     },
     destroy() {

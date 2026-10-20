@@ -1,6 +1,8 @@
-import { createContext, useContext, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode } from 'react';
+import { createContext, useContext, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import { Tree } from '../view/Tree';
+import { slot } from '../view/Tree.model';
 import { CONTROL_FIELD, type ControlContextValue } from './control';
-import { stackView, type StackModelProps } from './Stack.model';
+import { stackNode, type StackModelProps } from './Stack.model';
 import './Stack.css';
 
 /**
@@ -21,8 +23,8 @@ export function useControlContext(): ControlContextValue {
 export { stackView, type StackAlign, type StackJustify, type StackModelProps } from './Stack.model';
 
 export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'className' | 'style' | 'children'>, Omit<StackModelProps, 'className'> {
-  /** The element to render; default `div`. */
-  as?: ElementType;
+  /** The element to render (a tag); default `div`. */
+  as?: string;
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
@@ -34,11 +36,6 @@ export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'className
  * sets no lengths of its own; its attributes (`data-direction`, `data-gap`, `data-align`,
  * `data-justify`, `data-wrap`) pick the rules in `Stack.css`. Groups are made of it.
  */
-export function Stack({ direction, gap, align, justify, wrap, as: As = 'div', className, style, children, ...rest }: StackProps) {
-  const view = stackView({ direction, gap, align, justify, wrap, className });
-  return (
-    <As {...rest} className={view.className} style={style} {...view.attrs}>
-      {children}
-    </As>
-  );
+export function Stack({ direction, gap, align, justify, wrap, as, className, children, ...rest }: StackProps) {
+  return <Tree tree={stackNode({ direction, gap, align, justify, wrap, className, as }, {}, slot('children'))} slots={{ children }} {...rest} />;
 }

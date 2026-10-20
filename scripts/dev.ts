@@ -35,14 +35,6 @@ function start(binary: string, args: string[]) {
 }
 process.once('SIGINT', () => stop(0));
 process.once('SIGTERM', () => stop(0));
-// The Svelte Storybook joins the group only when asked for (SVELTE_STORYBOOK_PORT); the React one composes it as a ref.
-const svelteStoryPort = process.env.SVELTE_STORYBOOK_PORT === undefined ? undefined : port(process.env.SVELTE_STORYBOOK_PORT, 6023);
-if (svelteStoryPort !== undefined) {
-  if (svelteStoryPort === webPort || svelteStoryPort === storyPort) throw new Error('The Svelte Storybook needs its own port.');
-  await available(svelteStoryPort);
-  process.env.SVELTE_STORYBOOK_URL = `http://127.0.0.1:${svelteStoryPort}`;
-}
-console.log(`[${label}] App http://127.0.0.1:${webPort} | Storybook http://127.0.0.1:${storyPort}${svelteStoryPort ? ` | Svelte Storybook http://127.0.0.1:${svelteStoryPort}` : ''}`);
+console.log(`[${label}] App http://127.0.0.1:${webPort} | Storybook http://127.0.0.1:${storyPort}`);
 start('vite', ['--host', '127.0.0.1', '--port', String(webPort), '--strictPort']);
 start('storybook', ['dev', '--host', '127.0.0.1', '--port', String(storyPort), '--ci', '--no-open', '--disable-telemetry']);
-if (svelteStoryPort !== undefined) start('storybook', ['dev', '-c', '.storybook-svelte', '--host', '127.0.0.1', '--port', String(svelteStoryPort), '--ci', '--no-open', '--disable-telemetry']);

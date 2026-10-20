@@ -1,6 +1,5 @@
 import { useChosenForm, useForm } from '../../layout/assembly/forms';
 import { Tree } from '../../view/Tree';
-import type { Node } from '../../view/Tree.model';
 import {
   PAD_BANK_FORMS,
   padBankHandlers,
@@ -115,8 +114,7 @@ PadBank.forms = PAD_BANK_FORMS;
  * region's spec says `head: true` and the solver adds the tabs' row.
  */
 export function PadBankRegion(props: PadBankRegionProps) {
-  // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
-  return <Tree tree={padBankRegionView(props) as unknown as Node} handlers={padBankRegionHandlers(props)} />;
+  return <Tree tree={padBankRegionView(props)} handlers={padBankRegionHandlers(props)} />;
 }
 
 export default PadBank;

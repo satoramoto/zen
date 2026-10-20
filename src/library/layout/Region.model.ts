@@ -130,7 +130,7 @@ export function regionView<L>(props: RegionDrawProps<L>, slots: RegionSlots, { u
         'aria-labelledby': tabbed && chosen ? ids.tab(chosen.id) : undefined,
       },
       // The chosen view's body, given its id (Svelte's `children(id)`; React's view children as they are).
-      tabbed ? (chosen ? component('SlotCall', { args: [chosen.id] }, { slots: { content: slot(regionViewSlot(chosen.id)) } }) : null) : slot('children'),
+      tabbed ? (chosen ? slot(regionViewSlot(chosen.id), [chosen.id]) : null) : slot('children'),
     ),
   );
 }

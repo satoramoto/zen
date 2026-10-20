@@ -3,13 +3,15 @@
   `Screen.tsx` draws it with the React one; see Screen.tsx for the job. `header` and `footer` are
   text or snippets, `gridRef` binds the grid (the `ref` store, through the `gridRef` handler). With a
   `spec` the tree is the `AssembledScreen` component, each region's content a snippet given the
-  chosen form and the placed region, passed through as its `regions`.
+  chosen form and the placed region, passed through by its slot (`region:<id>`): from `regions`, or
+  a `region:<id>` prop (a model's tree passes it so), which wins.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import Tree from '../view/Tree.svelte';
+  import type { RegionSlotName } from './assembly/AssembledScreen.model';
   import type { Placed, Placement } from './assembly/types';
-  import { REGIONS_SLOT, screenHandlers, screenView, type ScreenModelProps } from './Screen.model';
+  import { screenHandlers, screenRegionSlots, screenView, type ScreenModelProps } from './Screen.model';
   import './Screen.css';
 
   interface Props extends Omit<ScreenModelProps, 'className'> {
@@ -28,16 +30,17 @@
     regions?: Record<string, Snippet<[string, Placed]>>;
     /** With `spec`: called with each new placement. */
     onPlacement?: (placement: Placement) => void;
+    /** With `spec`: a region's content by its slot's name (`regionSlot(id)`); it wins over `regions[id]`. */
+    [region: RegionSlotName]: Snippet<[string, Placed]> | undefined;
   }
 
   let { header, footer, gridRef = $bindable(null), class: className, children, regions, onPlacement, ...props }: Props = $props();
 
-  // `regions` is no snippet: its slot passes it through, untouched, as AssembledScreen's `regions`.
   const slots = $derived({
     header: typeof header === 'string' ? undefined : header,
     footer: typeof footer === 'string' ? undefined : footer,
     children,
-    [REGIONS_SLOT]: (regions ?? {}) as unknown as Snippet,
+    ...screenRegionSlots(regions, props),
   });
   const handlers = $derived(screenHandlers({ gridRef: (element: HTMLElement | null) => (gridRef = element), onPlacement }));
 </script>

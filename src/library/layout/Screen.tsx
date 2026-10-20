@@ -1,8 +1,9 @@
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import { Tree } from '../view/Tree';
 import type { RegionContent } from './assembly/AssembledScreen';
+import type { RegionSlotName } from './assembly/AssembledScreen.model';
 import type { Placement, Principles, ScreenSpec } from './assembly/types';
-import { REGIONS_SLOT, screenHandlers, screenView } from './Screen.model';
+import { screenHandlers, screenRegionSlots, screenView } from './Screen.model';
 import './Screen.css';
 
 // The tree and its handlers are framework-free (Screen.model.ts); this file and `Screen.svelte`
@@ -44,6 +45,8 @@ export interface ScreenProps {
   principles?: Principles;
   /** With `spec`: called with each new placement. */
   onPlacement?: (placement: Placement) => void;
+  /** With `spec`: a region's content by its slot's name (`regionSlot(id)`); it wins over `regions[id]`. */
+  [region: RegionSlotName]: RegionContent;
 }
 
 /**
@@ -53,15 +56,15 @@ export interface ScreenProps {
  * footer, so a screen that fits or zooms itself does it to the grid alone.
  *
  * **Assembled.** Given a `spec` instead, the screen assembles itself (`AssembledScreen`,
- * docs/assembly.md): no grid, no ratios, each region in the form the solver chose. The regions'
- * contents pass through the tree to it as its `regions`.
+ * docs/assembly.md): no grid, no ratios, each region in the form the solver chose. Each region's
+ * content passes through the tree to it by its slot (`regionSlot(id)`, `region:<id>`): from
+ * `regions`, or from a `region:<id>` prop (a model's tree fills it so), which wins.
  */
 export function Screen({ header, footer, gridRef, children, regions, onPlacement, ...props }: ScreenProps) {
-  // The regions are no React node: their slot passes them through, untouched, as AssembledScreen's `regions`.
   return (
     <Tree
       tree={screenView(props as Parameters<typeof screenView>[0], { header, footer })}
-      slots={{ header, footer, children, [REGIONS_SLOT]: (regions ?? {}) as unknown as ReactNode }}
+      slots={{ header, footer, children, ...screenRegionSlots(regions, props) }}
       handlers={screenHandlers({ gridRef, onPlacement })}
     />
   );

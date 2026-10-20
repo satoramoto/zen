@@ -2,6 +2,11 @@
 // sample. Pixels are averaged in linear light (the physics of light from a screen), each region's
 // mean is turned into OKLab, and the colours ease in OKLab (perceptually even steps).
 import { AMBIENT_REGIONS } from '../contract';
+import { h, slot, type Node } from '../view/Tree.model';
+
+/** Ambient's element: `lib-ambient` plus the caller's class, holding its children (the `children`
+ *  slot). The `--ambient-*` variables are written on it by the sampler, not drawn. */
+export const ambientView = (className?: string): Node => h('div', { class: `lib-ambient${className ? ` ${className}` : ''}` }, slot('children'));
 
 /** The regions, in buffer order: `out[i * 3 + 0..2]` is region `i`'s OKLab L, a, b. */
 export const REGIONS = AMBIENT_REGIONS;

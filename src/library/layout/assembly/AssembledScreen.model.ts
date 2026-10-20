@@ -10,7 +10,7 @@ import { component, each, h, slot, styleText, when, wire, type Bind, type Compon
 import { styleAttr, type StyleDecls, type StyleInput } from '../../view/style';
 import { assemble } from './assemble';
 import { FALLBACK_ROOM, type RoomSize } from './room';
-import type { Placed, Placement, Principles, Rect, ScreenSpec } from './types';
+import type { Placed, Placement, Principles, Rect, Row, ScreenSpec } from './types';
 
 /** The slot variables an assembled screen sets for app CSS to read: `under` and `over` (unitless px of the slot a pinned region covers at its top or bottom, set inline), `underEdge` (the knob an app sets on the slot to narrow the clip and fade to what the pinned region above really draws, unitless px; the pinned region's edge by default, Assembly.css) and `panelInset` (a floating panel's inset from the room's edges, Assembly.css). */
 export const SLOT_VARS = { under: '--lib-under', over: '--lib-over', underEdge: '--lib-under-edge', panelInset: '--lib-panel-inset' } as const;
@@ -144,12 +144,28 @@ export function assembledPlacement({ spec, room }: Pick<AssembledScreenModelProp
   return assemble(spec, room ?? state.room ?? FALLBACK_ROOM, state.principles);
 }
 
-/** The slot a region's content fills, by the region's id. */
-export const regionSlot = (id: string): string => `region:${id}`;
+/** The slot a region's content fills, by the region's id: `region:<id>`. */
+export const regionSlot = <I extends string>(id: I): RegionSlotName<I> => `region:${id}`;
+
+/** A region slot's name (`regionSlot`); a binding takes each region's content as the prop of that
+ *  name, as a model's component node fills it (`{ slots: { [regionSlot('hero')]: [node] } }`). */
+export type RegionSlotName<I extends string = string> = `region:${I}`;
+
+/** Every region id in `spec` (header, body rows and their nests, footer), in reading order. */
+export function specRegionIds(spec: ScreenSpec): string[] {
+  const rows = (list: readonly Row[]): string[] => list.flatMap((row) => row.flatMap((item) => ('rows' in item ? rows(item.rows) : [item.id])));
+  return [...(spec.header ?? []).map((r) => r.id), ...rows(spec.rows), ...(spec.footer ?? []).map((r) => r.id)];
+}
 
 /** Each placed region's slot fill, by slot name: `fill(id, placed)` (the binding's content for it). */
 export function regionFills<T>(placement: Placement, fill: (id: string, placed: Placed) => T): Record<string, T> {
   return Object.fromEntries(placement.order.map((id) => [regionSlot(id), fill(id, placement.regions[id])]));
+}
+
+/** A region's content as a binding has it: its region slot's prop (`region:<id>`) when given, else
+ *  `regions[id]` (the record direct callers pass). */
+export function regionContent<T>(props: Partial<Record<RegionSlotName, T>>, regions: Record<string, T> | undefined, id: string): T | undefined {
+  return props[regionSlot(id)] ?? regions?.[id];
 }
 
 /** A short, stable signature of a placement: the `report` store calls `onPlacement` when it changes. */
@@ -164,8 +180,8 @@ export function placementKey(placement: Placement): string {
 const surface = (props: SurfaceModelProps, attrs: Record<string, string | undefined>, key?: string): ComponentNode =>
   component('Surface', { ...props, ...attrs }, { key });
 
-/** A region's slot: the glass first when it has one, then its content (`regionSlot(id)`, called
- *  with the chosen form and the placed region by `SlotCall`) in a `FormScope` handing it the
+/** A region's slot: the glass first when it has one, then its content (`regionSlot(id)`, given the
+ *  chosen form and the placed region as the slot's arguments) in a `FormScope` handing it the
  *  chosen form and its parts' forms. */
 const slotNode = ({ id, placed, attrs, style, glass }: SlotView): Node =>
   h(
@@ -175,7 +191,7 @@ const slotNode = ({ id, placed, attrs, style, glass }: SlotView): Node =>
     component(
       'FormScope',
       { form: placed.form, parts: placed.parts },
-      { slots: { children: [component('SlotCall', { args: [placed.form, placed] }, { slots: { content: slot(regionSlot(id)) } })] } },
+      { slots: { children: [slot(regionSlot(id), [placed.form, placed])] } },
     ),
   );
 
