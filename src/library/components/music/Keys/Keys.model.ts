@@ -4,7 +4,7 @@
 // `keysHandlers` to their `Tree`; the pointer and keyboard input is the `keysInput.ts` store and the
 // measured width the `fillWidth.ts` store, beside it, registered in `src/library/view/stores.ts`.
 import type { HueSlot } from '../../core/hue';
-import type { TipAction } from '../../core/Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 import { textView, type TextModelProps } from '../../../primitives/Text.model';
 import { each, h, styleText, when, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import {

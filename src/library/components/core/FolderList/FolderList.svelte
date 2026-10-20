@@ -7,7 +7,7 @@
 <script lang="ts">
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
-  import { viewState } from '../../music/viewState';
+  import { viewState } from '../../../view/viewState';
   import { folderListHandlers, folderListView, type FolderListLocal, type FolderListModelProps } from './FolderList.model';
   import '../../../primitives/Text.css';
   import './FolderList.css';

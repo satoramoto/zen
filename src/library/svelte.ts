@@ -38,7 +38,9 @@ import ScreenSvelte from './layout/Screen.svelte';
 import AssembledScreenSvelte from './layout/assembly/AssembledScreen.svelte';
 import type { AmbientRegion } from './contract';
 import type { RegionModelProps } from './layout/Region.model';
-import type { TabItemModel, TipAction } from './layout/Tabs.model';
+import type { TabItemModel } from './layout/Tabs.model';
+import type { TipAction } from './view/tip';
+import type { SurfaceShader } from './primitives/surfaceShader';
 import type { GroupModelProps } from './layout/Group.model';
 import type { LayerModelProps } from './layout/Layer.model';
 import type { ScreenModelProps } from './layout/Screen.model';
@@ -277,8 +279,9 @@ export interface RackCellProps extends RackCellModelProps {
 export const RackCell = RackCellSvelte as unknown as Component<RackCellProps>;
 // Lane A: primitives and core controls.
 export interface SurfaceProps extends HTMLAttributes<HTMLElement>, Omit<SurfaceModelProps, 'className'> {
-  /** Accepted for React parity; the Svelte Surface draws no shader yet (its CSS layer only). */
-  shader?: string | false;
+  /** A shader material drawn under its content (a name, a compiled source, or `false`); default the
+   *  scope's pack's `materials.shaders[layer]`. As React's Surface. */
+  shader?: SurfaceShader;
   as?: string;
   class?: string;
   ref?: HTMLElement | null;

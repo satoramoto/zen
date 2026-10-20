@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../../music/viewState';
+import { viewState } from '../../../view/viewState';
 import { sliderHandlers, sliderView, type SliderEntry, type SliderModelProps } from './Slider.model';
 // The caption, labels and readout are Texts, the track and thumb Surfaces, drawn with their classes.
 import '../../../primitives/Text.css';

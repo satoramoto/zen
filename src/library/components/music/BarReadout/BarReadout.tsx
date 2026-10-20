@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../viewState';
+import { viewState } from '../../../view/viewState';
 import { BAR_IDLE, barReadoutHandlers, barReadoutView, type BarReadoutModelProps } from './BarReadout.model';
 import type { BarState } from './barInput';
 // The label, the value and the unit are Texts, drawn with Text's class and data attributes.

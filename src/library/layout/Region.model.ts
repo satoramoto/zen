@@ -6,7 +6,8 @@
 import type { Step } from '../primitives/step';
 import { textView } from '../primitives/Text.model';
 import { component, h, slot, styleText, when, type Handlers, type Node } from '../view/Tree.model';
-import type { TipAction } from '../components/core/Button/Button.model';
+import { joinStyle } from '../view/style';
+import type { TipAction } from '../view/tip';
 import type { LocalState } from './local';
 import type { TabItemModel } from './Tabs.model';
 
@@ -73,56 +74,6 @@ export const regionInitialView = (views: readonly { id: string }[], defaultView?
 
 /** The slot a view's body fills: `view:<id>`. */
 export const regionViewSlot = (id: string): string => `view:${id}`;
-
-/** React properties that take a bare number (the rest get `px`). */
-const UNITLESS = new Set([
-  'animationIterationCount',
-  'aspectRatio',
-  'columnCount',
-  'columns',
-  'flex',
-  'flexGrow',
-  'flexShrink',
-  'fontWeight',
-  'gridArea',
-  'gridColumn',
-  'gridColumnEnd',
-  'gridColumnStart',
-  'gridRow',
-  'gridRowEnd',
-  'gridRowStart',
-  'lineHeight',
-  'opacity',
-  'order',
-  'orphans',
-  'scale',
-  'tabSize',
-  'widows',
-  'zIndex',
-  'zoom',
-  'fillOpacity',
-  'strokeOpacity',
-  'strokeWidth',
-]);
-
-/** A React style object as a `style` string (`minWidth: 2` → `min-width: 2px`), for a tree. */
-export function cssText(style: object | undefined): string | undefined {
-  if (!style) return undefined;
-  const decls: Record<string, string | undefined> = {};
-  for (const [key, value] of Object.entries(style)) {
-    if (value === undefined || value === null || value === '' || typeof value === 'boolean') continue;
-    const name = key.startsWith('--') ? key : key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`).replace(/^ms-/, '-ms-');
-    decls[name] = typeof value === 'number' && value !== 0 && !key.startsWith('--') && !UNITLESS.has(key) ? `${value}px` : String(value);
-  }
-  return styleText(decls);
-}
-
-/** Inline styles joined in order (the caller's after the component's own); undefined when empty. */
-export const joinStyle = (...parts: (string | undefined)[]): string | undefined =>
-  parts
-    .map((part) => part?.trim().replace(/;$/, ''))
-    .filter(Boolean)
-    .join('; ') || undefined;
 
 /**
  * The tree Region draws: the `section` (`lib-region` plus the caller's class, its name, whether it

@@ -13,7 +13,10 @@ Button (`src/library/components/core/Button/`) is the worked example; Knob, Lamp
 | `mount.ts` | What both renderers do to an element once it exists: apply its `bind` stores, then attach its `on` listeners. Framework-free. |
 | `stores.ts` | The registry: every store a tree can bind, by name (`longPress`, `hold`, `tip`, `knob`). `keyed(bindX, ['onFoo'])` adapts a plain `bindX(node, params)` store. |
 | `reactComponents.ts`, `svelteComponents.ts` | The component registry, one per renderer, the same names: what a `component('Name', …)` node draws. One line per component in each; a model names a component and never imports a renderer. |
-| `tip.ts` | The app's tooltip action as a store (`tip`). |
+| `tip.ts` | The one `TipAction` type (every model imports it from here) and the app's tooltip action as a store (`tip`). |
+| `style.ts` | Inline style helpers: a style object as a `style` string (`styleAttr`), a `style` string as React's object (`styleObject`), `joinStyle`. `styleText` (a declarations map as a string) is in `Tree.model.ts`. |
+| `viewState.ts` | A component's local view state as a tiny readable (`viewState`), which a store sets and a binding reads. |
+| `report.ts`, `ref.ts` | The `report` store (calls back once per changed key) and the `ref` store (hands out the element). |
 | `bridge.ts` | `actionOf(bindX)`: a plain store as a Svelte action, for `svelte.ts`'s public actions (`longPress`, `knobInput`) and any unconverted component. |
 | `bindings.ts`, `bindings-only.test.ts`, `view.baseline.json` | The rule, enforced (below). |
 | `snapshot.test.ts`, `__snapshots__/<Name>.tree` | Each converted component's tree for every fixture. |

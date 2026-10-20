@@ -3,7 +3,7 @@
 // (React) and `TempoReadout.svelte` (Svelte) both pass `tempoReadoutView` and
 // `tempoReadoutHandlers` to their `Tree`; the drag, wheel, keys and the + / − holds are the
 // `tempoNumber` and `tempoStep` stores beside it (`tempoGestures.ts`), the tooltips the kernel `tip`.
-import type { TipAction } from '../../core/Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 import { focusRing } from '../../../primitives/Ring';
 import { textView, type TextModelProps } from '../../../primitives/Text.model';
 import { h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';

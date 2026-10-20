@@ -13,8 +13,9 @@ export const holeView = (className?: string, name?: string): ElementView => ({
 });
 
 /** Opaque as a view-tree element, for a model to inline: the `div` `<Opaque>` draws, its attributes
- *  (`attrs`) and children added. Only the element: React's `Opaque` also turns off the shaders of
- *  the `Surface` components inside (a context), which tree surfaces (`surfaceNode`) never draw. */
+ *  (`attrs`) and children added. Only the element: the `Opaque` components (React and Svelte) also
+ *  turn off the shaders of the `Surface` components inside (a context), which tree surfaces
+ *  (`surfaceNode`) never draw. */
 export function opaqueNode(className?: string, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
   const view = opaqueView(className);
   return h('div', { class: view.className, ...view.attrs, ...attrs }, ...children);

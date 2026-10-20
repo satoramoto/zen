@@ -3,7 +3,7 @@
 // (Svelte) both pass `padView` and `padHandlers` to their `Tree`; the press and the tooltip are the
 // `padPress.ts` store beside it, registered as `padPress` in `src/library/view/stores.ts`.
 import type { HueSlot, RoleSlot } from '../../core/hue';
-import type { TipAction } from '../../core/Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 import { focusRing } from '../../../primitives/Ring';
 import { textView } from '../../../primitives/Text.model';
 import { h, wire, type Handlers, type Node } from '../../../view/Tree.model';

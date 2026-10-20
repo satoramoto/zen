@@ -15,8 +15,8 @@ import { bindParamGesture, type ParamGestureParams } from '../components/core/Pa
 import { bindSliderEntry, type SliderEntryParams } from '../components/core/Slider/sliderEntry';
 import { bindDialogEscape, bindFocusTrap, type DialogEscapeParams, type FocusTrapParams } from '../components/core/Modal/dialog';
 import { bindRoom, type RoomParams } from '../layout/assembly/room';
-import { bindReport, type ReportParams } from '../layout/assembly/report';
-import { bindRef, type RefParams } from '../layout/Screen.model';
+import { bindReport, type ReportParams } from './report';
+import { bindRef, type RefParams } from './ref';
 import { bindDisplayFit, bindDisplayWide, type DisplayFitParams, type DisplayWideParams } from '../yahaha/Display/fit';
 import { bindPad, type PadParams } from '../components/music/Pad/padPress';
 import { bindFader, type FaderParams } from '../components/music/Fader/faderInput';
@@ -25,6 +25,7 @@ import { bindFillWidth, type FillWidthParams } from '../components/music/Keys/fi
 import { bindFit, type ChordFitParams } from '../components/music/ChordReadout/fit';
 import { bindBarInput, type BarBindParams } from '../components/music/BarReadout/barInput';
 import { bindTempoNumber, bindTempoStep, type TempoNumberParams, type TempoStepParams } from '../components/music/TempoReadout/tempoGestures';
+import { bindShader, type ShaderParams } from '../shader/bindShader';
 import { bindSearchClear, type SearchClearParams } from '../components/core/SearchField/clear';
 import { bindPageList, type PageListParams } from '../components/core/PageList/pageListKeys';
 import { bindFolderList, type FolderListParams } from '../components/core/FolderList/folderListKeys';
@@ -102,9 +103,9 @@ export const stores = {
   dialogEscape: keyed<DialogEscapeParams, 'onClose'>(bindDialogEscape, ['onClose']),
   /** An assembled screen's measured room (`layout/assembly/room.ts`). */
   room: keyed<RoomParams, 'onRoom'>(bindRoom, ['onRoom']),
-  /** An assembled screen's placement, reported once per change (`layout/assembly/report.ts`). */
+  /** An assembled screen's placement, reported once per change (`report.ts`). */
   report: keyed<ReportParams, 'onReport'>(bindReport, ['onReport']),
-  /** Screen's `gridRef`: the element on mount, null on unmount (`layout/Screen.model.ts`). */
+  /** Screen's `gridRef`: the element on mount, null on unmount (`ref.ts`). */
   ref: keyed<RefParams, 'onRef'>(bindRef, ['onRef']),
   /** Display's readouts fitting their row, again when the key changes (`yahaha/Display/fit.ts`). */
   displayFit: keyed<DisplayFitParams, never>(bindDisplayFit, []),
@@ -126,6 +127,8 @@ export const stores = {
   tempoNumber: keyed<TempoNumberParams, 'onTempo' | 'onReset'>(bindTempoNumber, ['onTempo', 'onReset']),
   /** TempoReadout's + / − hold reporting (`tempoGestures.ts`). */
   tempoStep: keyed<TempoStepParams, 'report'>(bindTempoStep, ['report']),
+  /** A Surface's shader canvas: the page's shared WebGL2 context draws into it (`shader/bindShader.ts`). */
+  shader: keyed<ShaderParams, 'onError'>(bindShader, ['onError']),
   /** SearchField's clear button: keeps focus in the field, clears, refocuses the input (`SearchField/clear.ts`). */
   searchClear: keyed<SearchClearParams, 'onClear'>(bindSearchClear, ['onClear']),
   /** PageList's clicks and ↑ ↓ Home End (`pageListKeys.ts`). */

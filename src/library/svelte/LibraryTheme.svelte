@@ -5,8 +5,7 @@
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { resolveTheme, type ThemeChoice } from '../resolve';
-  import { resolveMode, type ModeChoice } from '../theme.model';
+  import { resolveMode, resolveTheme, type ModeChoice, type ThemeChoice } from '../themes';
   import ThemeScope from './ThemeScope.svelte';
   import { systemMode } from './theme.svelte';
 

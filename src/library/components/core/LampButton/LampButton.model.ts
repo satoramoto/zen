@@ -3,12 +3,12 @@
 // (React) and `LampButton.svelte` (Svelte) both pass `lampButtonView` and `lampButtonHandlers` to
 // their `Tree`; the long press is Button's store (`../Button/longPress.ts`).
 import type { HueSlot } from '../hue';
-import type { TipAction } from '../Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 import { focusRing } from '../../../primitives/Ring';
 import { textView } from '../../../primitives/Text.model';
 import { h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 
-export type { TipAction } from '../Button/Button.model';
+export type { TipAction };
 
 /** The hues a lamp can wear. `m` is the original's deprecated alias of `t` and draws exactly as it. */
 export type LampHue = 't' | HueSlot | 'ok' | 'lamp' | 'role-2' | 'm';

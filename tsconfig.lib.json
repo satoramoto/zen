@@ -8,6 +8,6 @@
     "outDir": "lib",
     "types": ["vite/client"]
   },
-  "include": ["src/library/index.ts", "src/library/storybook.tsx", "src/library/svelte.ts", "src/library/storybook-svelte.ts"],
+  "include": ["src/library/index.ts", "src/library/storybook.tsx", "src/library/svelte.ts", "src/library/storybook-svelte.ts", "src/library/themes.ts"],
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx", "src/**/*.stories.svelte.ts"]
 }

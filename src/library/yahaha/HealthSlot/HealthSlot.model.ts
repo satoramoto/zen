@@ -2,7 +2,7 @@
 // words, the button or the calm text, the mark, the text split into words and numerals) and the
 // handlers that tree names. No framework: `HealthSlot.tsx` (React) and `HealthSlot.svelte` (Svelte)
 // both pass `healthSlotView` and `healthSlotHandlers` to their `Tree`.
-import type { TipAction } from '../../components/core/Button/Button.model';
+import type { TipAction } from '../../view/tip';
 import { textView } from '../../primitives/Text.model';
 import { component, h, styleText, wire, type Bind, type Handlers, type Node } from '../../view/Tree.model';
 import { health, type HealthTarget } from './health';

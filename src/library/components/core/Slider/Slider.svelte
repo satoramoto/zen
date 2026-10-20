@@ -7,7 +7,7 @@
 <script lang="ts">
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
-  import { viewState } from '../../music/viewState';
+  import { viewState } from '../../../view/viewState';
   import { sliderHandlers, sliderView, type SliderEntry, type SliderModelProps } from './Slider.model';
   import '../../../primitives/Text.css';
   import '../../../primitives/Surface.css';
