@@ -1,5 +1,5 @@
-// LineSlider's stories as plain props: LineSlider.stories.tsx (React) and
-// LineSlider.stories.svelte.ts (Svelte) both draw them, and the parity test renders every instance in both.
+// LineSlider's stories as plain props: LineSlider.stories.tsx draws them (with either renderer's
+// `Tree`), and the tree snapshot (`src/library/view/snapshot.test.ts`) prints every instance.
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
 import type { LineSliderModelProps } from './LineSlider.model';
 

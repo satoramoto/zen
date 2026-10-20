@@ -1,23 +1,29 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { fixtureStories, treeStory, withRenderer } from '../../../stories/story';
 import { StatusDot } from './StatusDot';
-import { faceWord, statusDotArgTypes, statusDotStories as s } from './StatusDot.fixtures';
+import StatusDotSvelte from './StatusDot.svelte';
+import { statusDotArgTypes, statusDotFaces, statusDotStories as s } from './StatusDot.fixtures';
 
+// Every story is built from StatusDot.fixtures.ts (`story(s.Name)`), which the tree snapshot
+// shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`. Faces is a view tree
+// (`statusDotFaces`), drawn by either `Tree` too.
 const meta = {
   title: 'Design OS/Components/Core/StatusDot',
   component: StatusDot,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'centered' },
   argTypes: statusDotArgTypes,
 } satisfies Meta<typeof StatusDot>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(StatusDot, StatusDotSvelte);
 
 /** The Launchkey status on the Stage board, connected: solid in the success role, with the palette's bloom. */
 export const Board: Story = {
-  args: s.Board.args,
+  ...story(s.Board),
   play: async ({ canvasElement }) => {
     const dot = canvasElement.querySelector('[data-hue]');
     await expect(dot).toHaveAttribute('aria-hidden', 'true');
@@ -31,7 +37,7 @@ export const Board: Story = {
 
 /** The dot before "Section" while Main B plays: the playing role (`--selected`) with its bloom; sections take no hue. */
 export const Section: Story = {
-  args: s.Section.args,
+  ...story(s.Section),
   play: async ({ canvasElement }) => {
     const dot = canvasElement.querySelector<HTMLElement>('[data-hue]');
     await expect(dot).toHaveAttribute('data-hue', 'main');
@@ -43,7 +49,7 @@ export const Section: Story = {
 
 /** The section dot during an intro: the same playing role as Main, since a section is named by its word, not a colour. */
 export const Intro: Story = {
-  args: s.Intro.args,
+  ...story(s.Intro),
   play: async ({ canvasElement }) => {
     const dot = canvasElement.querySelector<HTMLElement>('[data-hue]');
     await expect(dot).toHaveAttribute('data-hue', 'intro');
@@ -54,7 +60,7 @@ export const Intro: Story = {
 
 /** The section dot while stopped: nothing visible, but its box stays so the text after it doesn't move. */
 export const Stopped: Story = {
-  args: s.Stopped.args,
+  ...story(s.Stopped),
   play: async ({ canvasElement }) => {
     const dot = canvasElement.querySelector<HTMLElement>('[data-hue="main"]');
     await expect(dot).toBeInTheDocument();
@@ -64,7 +70,7 @@ export const Stopped: Story = {
 
 /** The Launchkey not connected: a `--text-3` ring, empty inside, no bloom (absent is always the ring). */
 export const Disconnected: Story = {
-  args: s.Disconnected.args,
+  ...story(s.Disconnected),
   play: async ({ canvasElement }) => {
     const dot = canvasElement.querySelector('[data-hue]');
     await expect(dot).toHaveAttribute('data-face', 'hollow');
@@ -75,7 +81,7 @@ export const Disconnected: Story = {
 
 /** Sync start armed: a ring in the success role, empty inside, no bloom. */
 export const SyncStart: Story = {
-  args: s.SyncStart.args,
+  ...story(s.SyncStart),
   play: async ({ canvasElement }) => {
     const dot = canvasElement.querySelector('[data-hue]');
     await expect(dot).toHaveAttribute('data-face', 'hollow');
@@ -86,7 +92,7 @@ export const SyncStart: Story = {
 
 /** The rack readout's modified dot: smaller, in the primary text role, no bloom. */
 export const Small: Story = {
-  args: s.Small.args,
+  ...story(s.Small),
   play: async ({ canvasElement }) => {
     const dot = canvasElement.querySelector('[data-hue]');
     await expect(dot).toHaveAttribute('data-size', 'sm');
@@ -97,7 +103,7 @@ export const Small: Story = {
 
 /** The Channel's compact running dot, read out on its own. */
 export const Named: Story = {
-  args: s.Named.args,
+  ...story(s.Named),
   play: async ({ canvasElement }) => {
     const dot = within(canvasElement).getByRole('img', { name: 'Running' });
     await expect(dot).toHaveAttribute('data-hue', 'ok');
@@ -107,7 +113,7 @@ export const Named: Story = {
 
 /** A named hollow ring. */
 export const NamedHollow: Story = {
-  args: s.NamedHollow.args,
+  ...story(s.NamedHollow),
   play: async ({ canvasElement }) => {
     const dot = within(canvasElement).getByRole('img', { name: 'Sync start armed' });
     await expect(dot).toHaveAttribute('data-face', 'hollow');
@@ -116,7 +122,7 @@ export const NamedHollow: Story = {
 
 /** A named dot while hidden: silent to screen readers too. */
 export const NamedHidden: Story = {
-  args: s.NamedHidden.args,
+  ...story(s.NamedHidden),
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).queryByRole('img')).toBeNull();
     const dot = canvasElement.querySelector<HTMLElement>('[data-hue="ok"]');
@@ -130,24 +136,4 @@ export const NamedHidden: Story = {
  * Every hue, solid and hollow, beside the word it marks: the dot scales with the label's size.
  * The five section values all read the one playing role.
  */
-export const Faces: Story = {
-  render: () => (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, auto)',
-        gap: 'var(--space-2) var(--space-5)',
-        fontFamily: 'var(--font-sans)',
-        fontSize: 'var(--size-label)',
-        color: 'var(--text-2)',
-      }}
-    >
-      {(s.Faces.items ?? []).map((dot) => (
-        <span key={faceWord(dot)} style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-          <StatusDot {...dot} />
-          {faceWord(dot)}
-        </span>
-      ))}
-    </div>
-  ),
-};
+export const Faces: Story = treeStory(() => ({ tree: statusDotFaces() })) as Story;

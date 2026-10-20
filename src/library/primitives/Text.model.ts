@@ -1,6 +1,11 @@
 // Text's model: the roles, tones and refinements, and the view a renderer draws (its classes and
 // attributes). No framework: `Text.tsx` (React) and `Text.svelte` (Svelte) both render `textView`.
 import type { HueSlot } from '../components/core/hue';
+import { h, type Node } from '../view/Tree.model';
+
+/** What `h` takes after its attributes (elements, text, slots, components, lists, holes): what a
+ *  primitive's tree builder (`textNode`, `stackNode`, …) passes on as the element's children. */
+export type TreeChildren = Parameters<typeof h> extends [unknown, unknown?, ...infer C] ? C : never;
 
 /** The type roles, each a face, weight, size, tracking and case from the contract. */
 export const TEXT_ROLES = ['display', 'numeral', 'heading', 'body', 'label', 'caption', 'code', 'math'] as const;
@@ -119,4 +124,15 @@ export function textView({
       'data-text-case': textCase,
     },
   };
+}
+
+/**
+ * Text as a view-tree element, for a model to inline: `textNode({ role: 'label', as: 'button' },
+ * { 'data-part': 'face' }, 'Play')` is the element `<Text as="button" role="label" data-part="face">`
+ * draws, its attributes (`attrs`, after Text's own) and children added. The same DOM as the `Text`
+ * component, with no component in between.
+ */
+export function textNode(props: TextModelProps & { as?: string }, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
+  const view = textView(props);
+  return h(props.as ?? 'span', { class: view.className, ...view.attrs, ...attrs }, ...children);
 }

@@ -1,7 +1,9 @@
-// Text's stories as plain data: Text.stories.tsx (React) and Text.stories.svelte.ts (Svelte) both
-// draw them, and parity.test.tsx renders every instance in `textStories` in both.
+// Text's stories as plain data: Text.stories.tsx draws them as view trees (`textPlayground`,
+// `textGrid`) in either renderer, parity.test.tsx renders every instance in `textStories` with both
+// Text components, and the tree snapshot draws each with `textNode`.
 import { defineFixtures } from '../fixtures';
-import { TEXT_ROLES, TEXT_TONES, type TextModelProps, type TextRole, type TextTone } from './Text.model';
+import { h, styleText, type Node } from '../view/Tree.model';
+import { TEXT_ROLES, TEXT_TONES, textNode, type TextModelProps, type TextRole, type TextTone } from './Text.model';
 
 export const SAMPLE: Record<TextRole, string> = {
   display: 'Stage',
@@ -42,6 +44,46 @@ export const textProps = ({ role, tone, truncate, tabular }: TextArgs): TextMode
   truncate,
   tabular,
 });
+
+/** `on-solid` is ink for a solid action fill, so it is shown on `--action`; every other tone on the page. */
+export const ground = (tone: TextTone | 'inherit'): string | undefined =>
+  tone === 'on-solid' ? 'background: var(--action); border-radius: var(--radius-control); padding: var(--space-1) var(--space-2)' : undefined;
+
+/** The Playground's tree: one paragraph Text in a box of the args' width. */
+export const textPlayground = (args: TextArgs): Node =>
+  h(
+    'div',
+    { style: styleText({ width: `${args.width}px`, padding: 'var(--space-4)' }) },
+    textNode({ ...textProps(args), as: 'p' }, { style: ground(args.tone) }, args.text),
+  );
+
+/** Every role (rows) in every tone (columns), as one tree. */
+export const textGrid = (): Node =>
+  h(
+    'div',
+    { style: 'padding: var(--space-4); overflow-x: auto' },
+    h(
+      'div',
+      {
+        style: styleText({
+          display: 'grid',
+          'grid-template-columns': `auto repeat(${TEXT_TONES.length}, auto)`,
+          gap: 'var(--space-2) var(--space-3)',
+          'align-items': 'baseline',
+        }),
+      },
+      h('span'),
+      ...TEXT_TONES.map((tone) => textNode({ role: 'caption', tone: 'muted' }, {}, String(tone))),
+      ...TEXT_ROLES.map((role) =>
+        h(
+          'div',
+          { style: 'display: contents' },
+          textNode({ role: 'caption', tone: 'muted' }, {}, role),
+          ...TEXT_TONES.map((tone) => textNode({ role, tone }, { style: ground(tone) }, SAMPLE[role])),
+        ),
+      ),
+    ),
+  );
 
 // MathML specimens (React's JSX types have no MathML elements, so they are markup).
 export const HARMONIC = '<math><msub><mi>f</mi><mi>n</mi></msub><mo>=</mo><mi>n</mi><msub><mi>f</mi><mn>1</mn></msub></math>';

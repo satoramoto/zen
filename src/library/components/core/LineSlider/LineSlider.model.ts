@@ -1,15 +1,15 @@
-// LineSlider's model: its props, the view it draws from them (classes, `data-*`, ARIA and the
-// lengths its inline styles carry), and `snap`. No framework: `LineSlider.tsx` (React) and
-// `LineSlider.svelte` (Svelte) both render `lineSliderView`; the drag and the keys are the
-// `slide.ts` store beside it.
+// LineSlider's model: its props, the tree it draws from them (classes, `data-*`, ARIA, the lengths
+// its inline styles carry, the stores it binds) and the handlers that tree names, and `snap`. No
+// framework: `LineSlider.tsx` (React) and `LineSlider.svelte` (Svelte) both pass `lineSliderView`
+// and `lineSliderHandlers` to their `Tree`; the drag and the keys are the `slide.ts` store beside
+// it, registered as `lineSlider` in `src/library/view/stores.ts`.
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+import { textNode } from '../../../primitives/Text.model';
+import { h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';
+import type { TipAction } from '../Button/Button.model';
 
 /** The app's tooltip action, applied to the slider with its key (same shape as a Svelte action). */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => void | { update?: (key: string) => void; destroy?: () => void };
+export type { TipAction };
 
 export interface LineSliderModelProps {
   /** The value, between `min` and `max`. */
@@ -44,79 +44,78 @@ export function snap(v: number, min: number, max: number, step: number): number 
   return Math.max(min, Math.min(max, Number(stepped.toFixed(6))));
 }
 
-/** What a renderer draws. Each `style` field is one inline length (a CSS string). */
-export interface LineSliderView {
-  /** 0–1: where the value sits in the range. */
-  fraction: number;
-  root: ElementView;
-  /** The slider element (the hit area): its class, role, ARIA, tabindex, `data-*`; its width. */
-  slider: ElementView & { width: string };
-  track: ElementView;
-  /** The fill's width and the thumb's left, both the fraction as a percent. */
-  fill: ElementView & { width: string };
-  thumb: ElementView & { left: string };
-  readout: ElementView;
-  /** The value: a `numeral` Text, its min-width reserving the widest value the range can show. */
-  value: ElementView & { text: TextModelProps; minWidth: string; shown: string };
-  /** The unit: a `caption` Text with tight leading; null for none. */
-  unit: (ElementView & { text: TextModelProps; shown: string }) | null;
-}
-
-/** The view LineSlider draws from its props; `held` is the store's (a pointer is dragging). */
-export function lineSliderView(
-  {
-    value,
-    min = LINE_SLIDER_DEFAULTS.min,
-    max = LINE_SLIDER_DEFAULTS.max,
-    step = LINE_SLIDER_DEFAULTS.step,
-    name,
-    valueText,
-    unit = '',
-    width = LINE_SLIDER_DEFAULTS.width,
-    disabled = false,
-    tip,
-  }: LineSliderModelProps,
-  held = false,
-): LineSliderView {
+/**
+ * The tree LineSlider draws from its props: the root, the slider (the hit area, binding the
+ * `lineSlider` store and the tooltip) holding the track, its fill and its thumb, then the readout:
+ * the value a `numeral` Text, its min-width reserving the widest value the range can show, and the
+ * unit a `caption` one. While a pointer drags, the store marks the slider `data-held`.
+ */
+export function lineSliderView({
+  value,
+  min = LINE_SLIDER_DEFAULTS.min,
+  max = LINE_SLIDER_DEFAULTS.max,
+  step = LINE_SLIDER_DEFAULTS.step,
+  name,
+  valueText,
+  unit = '',
+  width = LINE_SLIDER_DEFAULTS.width,
+  disabled = false,
+  tip,
+}: LineSliderModelProps): Node {
   const shown = valueText ?? String(value);
   // Reserve room for the widest value the range can show, so the line never moves.
   const digits = Math.max(shown.length, String(min).length, String(max).length);
   const span = Math.max(step, max - min);
   const fraction = Math.max(0, Math.min(1, (value - min) / span));
   const percent = `${fraction * 100}%`;
-  return {
-    fraction,
-    root: { className: 'yh-lineslider', attrs: { 'data-part': 'root', 'data-disabled': disabled ? 'true' : undefined } },
-    slider: {
-      className: `yh-lineslider__hit ${focusRing}`,
-      attrs: {
-        role: 'slider',
-        tabindex: '0',
-        'aria-label': name,
-        'aria-valuemin': String(min),
-        'aria-valuemax': String(max),
-        'aria-valuenow': String(value),
-        'aria-valuetext': unit ? `${shown} ${unit}` : shown,
-        'aria-disabled': disabled ? 'true' : undefined,
-        'data-held': held ? 'true' : undefined,
-        'data-part': 'slider',
-        'data-tip': tip,
+  return h(
+    'span',
+    { class: 'yh-lineslider', 'data-part': 'root', 'data-disabled': disabled ? 'true' : undefined },
+    wire(
+      h(
+        'span',
+        {
+          class: `yh-lineslider__hit ${focusRing}`,
+          role: 'slider',
+          tabindex: '0',
+          'aria-label': name,
+          'aria-valuemin': String(min),
+          'aria-valuemax': String(max),
+          'aria-valuenow': String(value),
+          'aria-valuetext': unit ? `${shown} ${unit}` : shown,
+          'aria-disabled': disabled ? 'true' : undefined,
+          'data-part': 'slider',
+          'data-tip': tip,
+          style: styleText({ width: `${width}px` }),
+        },
+        h(
+          'span',
+          { class: 'yh-lineslider__track', 'data-part': 'track' },
+          h('span', { class: 'yh-lineslider__fill', 'data-part': 'fill', style: styleText({ width: percent }) }),
+          h('span', { class: 'yh-lineslider__thumb', 'data-part': 'thumb', style: styleText({ left: percent }) }),
+        ),
+      ),
+      {
+        bind: [
+          ['lineSlider', { value, min, max, step, disabled, onchange: 'change' }],
+          ['tip', { tip, tipAction: 'tipAction' }],
+        ],
       },
-      width: `${width}px`,
-    },
-    track: { className: 'yh-lineslider__track', attrs: { 'data-part': 'track' } },
-    fill: { className: 'yh-lineslider__fill', attrs: { 'data-part': 'fill' }, width: percent },
-    thumb: { className: 'yh-lineslider__thumb', attrs: { 'data-part': 'thumb' }, left: percent },
-    readout: { className: 'yh-lineslider__readout', attrs: { 'data-part': 'readout', 'aria-hidden': 'true' } },
-    value: {
-      className: 'yh-lineslider__value',
-      attrs: { 'data-part': 'value' },
-      text: { role: 'numeral' },
-      minWidth: `${digits}ch`,
-      shown,
-    },
-    unit: unit
-      ? { className: 'yh-lineslider__unit', attrs: { 'data-part': 'unit' }, text: { role: 'caption', leading: 'tight' }, shown: unit }
-      : null,
-  };
+    ),
+    h(
+      'span',
+      { class: 'yh-lineslider__readout', 'data-part': 'readout', 'aria-hidden': 'true' },
+      textNode(
+        { role: 'numeral', className: 'yh-lineslider__value' },
+        { 'data-part': 'value', style: styleText({ 'min-width': `${digits}ch` }) },
+        shown,
+      ),
+      unit ? textNode({ role: 'caption', leading: 'tight', className: 'yh-lineslider__unit' }, { 'data-part': 'unit' }, unit) : null,
+    ),
+  );
+}
+
+/** The callbacks `lineSliderView`'s tree names: the value asked for, and the app's tooltip action. */
+export function lineSliderHandlers(props: LineSliderModelProps): Handlers {
+  return { change: props.onchange, tipAction: props.tipAction };
 }

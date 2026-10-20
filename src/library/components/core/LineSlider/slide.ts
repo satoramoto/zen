@@ -2,8 +2,10 @@
  * The line slider's behaviour, framework-free: controlled (asks through `onchange`), clamped and
  * snapped to the step; arrows one step, Page Up / Page Down ten, Home and End; a primary-button
  * drag with pointer capture maps the pointer onto the track (the `[data-part="track"]` inside the
- * node); disabled stays focusable and asks nothing. `useLineSlider` (React) and the `lineSlider`
- * action (`slide.svelte.ts`) both wrap `bindLineSlider`; neither holds any of this logic.
+ * node); disabled stays focusable and asks nothing. While a pointer drags, the node is marked
+ * `data-held` (the thumb's held look). Registered as the `lineSlider` store
+ * (`src/library/view/stores.ts`): LineSlider's tree binds it by name and both renderers apply it;
+ * `svelte.ts` exports it as the `lineSlider` action (`actionOf`).
  */
 import { LINE_SLIDER_DEFAULTS, snap } from './LineSlider.model';
 
@@ -15,7 +17,7 @@ export interface LineSliderParams {
   disabled?: boolean;
   /** Called with the value asked for, only when it differs from `value`. */
   onchange?: (value: number) => void;
-  /** Called with `true` when a drag starts and `false` when it ends: the `held` the view draws. */
+  /** Called with `true` when a drag starts and `false` when it ends (the node's `data-held`). */
   onheld?: (held: boolean) => void;
 }
 
@@ -49,16 +51,23 @@ export function bindLineSlider(node: HTMLElement, initial: LineSliderParams): Li
     ask(min + ((clientX - box.left) / box.width) * (max - min));
   }
 
+  /** Marks the node held (or not) and tells `onheld`. */
+  function hold(held: boolean) {
+    if (held) node.setAttribute('data-held', 'true');
+    else node.removeAttribute('data-held');
+    params.onheld?.(held);
+  }
+
   function release() {
     if (dragging === null) return;
     dragging = null;
-    params.onheld?.(false);
+    hold(false);
   }
 
   function onPointerDown(event: PointerEvent) {
     if (params.disabled || event.button !== 0) return;
     dragging = event.pointerId;
-    params.onheld?.(true);
+    hold(true);
     try {
       node.setPointerCapture?.(event.pointerId);
     } catch {
@@ -104,6 +113,7 @@ export function bindLineSlider(node: HTMLElement, initial: LineSliderParams): Li
     },
     destroy() {
       dragging = null;
+      node.removeAttribute('data-held');
       node.removeEventListener('pointerdown', onPointerDown);
       node.removeEventListener('pointermove', onPointerMove);
       node.removeEventListener('pointerup', onPointerEnd);

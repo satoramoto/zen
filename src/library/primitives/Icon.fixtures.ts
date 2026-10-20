@@ -1,6 +1,6 @@
-// Icon's stories as plain data: Icon.stories.tsx (React) and Icon.stories.svelte.ts (Svelte) both
-// draw them, and the parity test renders every story's Icon in both. The glyphs (a play triangle, a
-// stop square) are SVG markup each Storybook draws itself, so the Icons are compared without them.
+// Icon's stories as plain data: Icon.stories.tsx draws them as view trees (in React or Svelte), and
+// the parity test renders every story's Icon in both. The glyphs (a play triangle, a stop square)
+// are SVG markup the stories add, so the Icons are compared without them.
 import { defineFixtures } from '../fixtures';
 import { ICON_SIZES, type IconModelProps, type IconSize } from './Icon.model';
 import { TEXT_TONES, type TextTone } from './Text.model';
