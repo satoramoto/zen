@@ -1,24 +1,15 @@
-import { useRef, type CSSProperties } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useChosenForm, useForm } from '../../layout/assembly/forms';
-import { AccentBlock } from '../AccentBlock/AccentBlock';
-import { useTip } from '../AccentBlock/useTip';
-import { Button } from '../../components/core/Button/Button';
-import { BarBeat } from '../../components/music/BarBeat/BarBeat';
-import { ChordReadout } from '../../components/music/ChordReadout/ChordReadout';
-import { PartMarks } from '../../components/music/PartMarks/PartMarks';
-import { SectionName } from '../../components/music/SectionName/SectionName';
-import { TempoReadout } from '../../components/music/TempoReadout/TempoReadout';
-import { Stack } from '../../primitives/Stack';
-import { Text } from '../../primitives/Text';
-import { DisplayArt } from '../DisplayArt/DisplayArt';
-import { OneTouchPicker } from '../OneTouchPicker/OneTouchPicker';
-import { WaitingChip } from '../WaitingChip/WaitingChip';
+import { Tree } from '../../view/Tree';
 import { DISPLAY_FORMS } from './Display.forms';
-import { DISPLAY_SIZES, PART_TIP, displayForm, displayMeasuresWidth, displayView, type DisplayModelProps, type DisplayPartView, type TipAction } from './Display.model';
-import { useFit, useWide } from './useFit';
+import { displayHandlers, displayView, type DisplayModelProps, type TipAction } from './Display.model';
+import { wideState } from './wide';
+import '../../primitives/Stack.css';
+import '../../primitives/Text.css';
 import './Display.css';
 
-// The props and the view are framework-free, in the model; `Display.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; this file and `Display.svelte` only
+// read the assembled screen's form and the measured width, and hand the tree to their `Tree`.
 export type { TipAction };
 export { DISPLAY_FORMS, DISPLAY_CAPS, DISPLAY_GROWTH, DISPLAY_CHROME, DISPLAY_CONTENT, displayLengthCss, type DisplayForm } from './Display.forms';
 export {
@@ -112,178 +103,13 @@ export type DisplayProps = DisplayModelProps;
  * dot, its hue from `hues.ts`).
  */
 export function Display(props: DisplayProps) {
-  const { style, nowPlaying, art = false, tipAction, onPrev, onNext, onBrowse, onOneTouch, onSound, onTempoUp, onTempoDown, onTempo, onTap, onStyleTempo } = props;
-  // The form: the `form` prop, then the assembled screen's choice, then `density`.
-  const root = useRef<HTMLDivElement>(null);
-  const frame = useRef<HTMLDivElement>(null);
-  const fromScreen = useForm(DISPLAY_FORMS, props.form);
-  const chosen = useChosenForm();
-  const wide = useWide(root, displayMeasuresWidth(props, chosen));
-  const { form, byDensity } = displayForm(props, fromScreen, chosen, wide);
-  const view = displayView(props, form, byDensity);
-  useFit(frame, view.fitKey);
-  const { line } = view;
-
-  const tempoKeys = (
-    <Stack direction="row" gap={1} align="center" className="yh-display__tempo-keys" data-part="tempo-keys">
-      <Button
-        label="Tap"
-        size="md"
-        hold
-        name="Tap tempo"
-        tip="tempo.tap"
-        tipAction={tipAction}
-        onHold={(down) => down && onTap?.()}
-        onPress={onTap}
-      />
-      <Button
-        label="Style tempo"
-        size="md"
-        variant="quiet"
-        disabled={view.atStyleTempo}
-        name="Back to the style's tempo"
-        tip="tempo.reset"
-        tipAction={tipAction}
-        onPress={onStyleTempo}
-      />
-    </Stack>
-  );
-
-  return (
-    <Text as="div" size="inherit" ref={root} className={view.root.className} {...view.root.attrs} style={view.rootStyle as CSSProperties}>
-      {art && (
-        <div className="yh-display__art" data-part="art">
-          <DisplayArt />
-        </div>
-      )}
-
-      {/* The frame holds the sizes: a container query styles only what is inside the container. */}
-      <div ref={frame} className="yh-display__frame" data-part="frame" data-fit="1">
-        <header className="yh-display__header" data-part="header">
-          <Stack direction="row" gap={1} align="center" className="yh-display__style" data-part="style" role="group" aria-label="Style">
-            <Button symbol="prev" size="icon" variant="quiet" name="Previous style (Track left)" tip="style.prev" tipAction={tipAction} onPress={onPrev} />
-            <span className="yh-display__style-name" data-part="style-name" title={view.name}>
-              <AccentBlock
-                as="button"
-                label={view.name}
-                name={`${view.name}: open the Browser`}
-                chevron={false}
-                tip="browser.open"
-                tipAction={tipAction}
-                onPress={onBrowse}
-              />
-            </span>
-            <Button symbol="next" size="icon" variant="quiet" name="Next style (Track right)" tip="style.next" tipAction={tipAction} onPress={onNext} />
-            {view.queued ? (
-              <span className="yh-display__queued" data-part="queued" title={`Next style: ${view.queued}`}>
-                <WaitingChip label={view.queued} hue="a" size="line" />
-              </span>
-            ) : (
-              view.meta && (
-                <Text size="label" tabular className="yh-display__meta" data-part="meta" title={view.meta}>
-                  {view.meta}
-                </Text>
-              )
-            )}
-          </Stack>
-          <div className="yh-display__ots" data-part="one-touch">
-            <OneTouchPicker applied={style.oneTouch ?? 0} count={style.oneTouchCount ?? 4} tipAction={tipAction} onApply={onOneTouch} />
-          </div>
-          {view.tempoKeysInHeader && tempoKeys}
-        </header>
-
-        <div className="yh-display__readouts" data-part="readouts">
-          <div className="yh-display__cell yh-display__section" data-part="section" role="group" aria-label="Section">
-            <div className="yh-display__now" data-part="now" role="img" aria-label={view.nowLabel} data-live={view.nowLive}>
-              <SectionName label={nowPlaying.playing} idle={!view.running} size={DISPLAY_SIZES.section} />
-            </div>
-            {view.hasLine && (
-              <Text as="p" size="label" className="yh-display__next" data-part="next">
-                {line.status && (
-                  <Text size="label" className="yh-display__status" data-part="status">
-                    {line.status}
-                  </Text>
-                )}
-                {view.hasThen && (
-                  <Text size="label" className="yh-display__then" data-part="then" data-docked={view.thenDocked} style={view.thenStyle as CSSProperties}>
-                    <span className="yh-display__then-arrow" data-part="then-arrow" aria-hidden="true" />
-                    <span className="yh-display__then-word" data-part="then-word">then </span>
-                    {line.next && (
-                      <Text weight="strong" leading="tight" className="yh-display__then-name" data-part="then-name">
-                        {line.next}
-                      </Text>
-                    )}
-                    {line.when && <span className="yh-display__when" data-part="when">{line.when}</span>}
-                  </Text>
-                )}
-              </Text>
-            )}
-          </div>
-
-          <div className="yh-display__cell yh-display__chord" data-part="chord">
-            <ChordReadout {...nowPlaying.chord} tip="fingering.select" tipAction={tipAction} size={DISPLAY_SIZES.chord} />
-          </div>
-
-          <div className="yh-display__cell yh-display__tempo" data-part="tempo" role="group" aria-label="Tempo and Tap">
-            <TempoReadout
-              bpm={nowPlaying.bpm}
-              size={DISPLAY_SIZES.tempo}
-              tipAction={tipAction}
-              onTempo={onTempo}
-              onPlus={onTempoUp}
-              onMinus={onTempoDown}
-              onReset={onStyleTempo}
-            />
-            <div className="yh-display__beat" data-part="beat">
-              <BarBeat beat={view.beat} beats={view.beats} thickness={DISPLAY_SIZES.beat} />
-            </div>
-            {!view.tempoKeysInHeader && tempoKeys}
-          </div>
-
-          {view.parts.length > 0 && (
-            <Stack as="ul" gap={0} className="yh-display__parts" data-part="parts" aria-label="Sounds">
-              {view.parts.map((p) => (
-                <PartRow key={p.id} part={p} tipAction={tipAction} onSound={onSound} />
-              ))}
-            </Stack>
-          )}
-        </div>
-      </div>
-    </Text>
-  );
+  // The form: the `form` prop, then the assembled screen's choice, then `density` (auto: the width).
+  const form = { fromScreen: useForm(DISPLAY_FORMS, props.form), chosen: useChosenForm() };
+  const [wide] = useState(wideState);
+  return <Tree tree={displayView(props, form, useSyncExternalStore(wide.subscribe, wide.get))} handlers={displayHandlers(props, wide)} />;
 }
 
 /** The forms, for a region to add up (`Display.forms`). */
 Display.forms = DISPLAY_FORMS;
 
 export default Display;
-
-function PartRow({ part: p, tipAction, onSound }: { part: DisplayPartView; tipAction?: TipAction; onSound?: DisplayProps['onSound'] }) {
-  const ref = useRef<HTMLButtonElement>(null);
-  useTip(ref, { tip: PART_TIP, tipAction });
-  // The " · " before the tail is CSS, so a one-row parts strip can drop the name and keep "off".
-  return (
-    <li>
-      <Text
-        as="button"
-        size="label"
-        leading="normal"
-        ref={ref}
-        className="yh-display__part"
-        {...p.attrs}
-        style={p.style as CSSProperties}
-        onClick={() => onSound?.(p.id)}
-      >
-        <span className="yh-display__part-dot" data-part="part-dot" data-lit={p.lit} aria-hidden="true" />
-        <Stack as="span" direction="row" gap={2} align="center" className="yh-display__part-sound" data-part="part-sound" aria-hidden="true">
-          <span className="yh-display__part-name" data-part="part-name">{p.sound}</span>
-          <PartMarks edited={p.edited} missing={p.missing} failed={p.failed} />
-        </Stack>
-        <Text size="caption" leading="normal" case="label" className="yh-display__part-part" data-part="part-part" aria-hidden="true">
-          <span className="yh-display__part-label" data-part="part-label">{p.name}</span>
-          {p.tail && <span className="yh-display__part-tail" data-part="part-tail">{p.tail}</span>}
-        </Text>
-      </Text>
-    </li>
-  );
-}

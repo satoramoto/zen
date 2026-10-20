@@ -9,6 +9,7 @@ import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
 import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
 import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
+import { bindDisplayFit, bindDisplayWide, type DisplayFitParams, type DisplayWideParams } from '../yahaha/Display/fit';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -69,6 +70,10 @@ export const stores = {
   focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
   /** LineSlider's keys and drag (`slide.ts`). */
   lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
+  /** Display's readouts fitting their row, again when the key changes (`yahaha/Display/fit.ts`). */
+  displayFit: keyed<DisplayFitParams, never>(bindDisplayFit, []),
+  /** Display's auto form: whether the hero is wide enough for `full` (`yahaha/Display/fit.ts`). */
+  displayWide: keyed<DisplayWideParams, 'onWide'>(bindDisplayWide, ['onWide']),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;

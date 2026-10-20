@@ -1,13 +1,16 @@
-import { Region } from '../../layout/Region';
-import { Knob } from '../../components/music/Knob/Knob';
 import { useForm } from '../../layout/assembly';
+import { Tree } from '../../view/Tree';
+import type { Node } from '../../view/Tree.model';
 import {
   KNOB_BANK_FORMS,
+  knobBankHandlers,
+  knobBankRegionHandlers,
   knobBankRegionView,
   knobBankView,
   type KnobBankProps,
   type KnobBankRegionModelProps,
 } from './KnobBank.model';
+import { withRegionViews } from '../regionViews';
 import './KnobBank.css';
 
 export {
@@ -16,7 +19,10 @@ export {
   KNOB_SLOTS,
   knobName,
   knobBankView,
+  knobBankHandlers,
+  knobBankPages,
   knobBankRegionView,
+  knobBankRegionHandlers,
   type KnobBankForm,
   type KnobItem,
   type KnobBankProps,
@@ -90,35 +96,9 @@ export {
  * - `--yh-knobbank-h`: the bank's own height when nothing gives it one (the form's ideal); in a
  *   box with a height the bank grows or shrinks to fill it.
  */
-export function KnobBank({ knobs, tipAction, onPress, onStep, form: given }: KnobBankProps) {
-  const form = useForm(KNOB_BANK_FORMS, given);
-  const view = knobBankView({ knobs }, form);
-
-  return (
-    <div className={view.root.className} {...view.root.attrs}>
-      <div className={view.knobs.className} {...view.knobs.attrs}>
-        {view.slots.map((slot) => (
-          <div key={slot.index} className={slot.className} {...slot.attrs}>
-            {slot.empty ? (
-              <span className={slot.empty.className} {...slot.empty.attrs}>
-                <span className={slot.empty.line.className} {...slot.empty.line.attrs} />
-                <svg className={slot.empty.ring.className} viewBox={slot.empty.ring.viewBox} aria-hidden="true">
-                  <path d={slot.empty.ring.d} />
-                </svg>
-              </span>
-            ) : slot.knob ? (
-              <Knob
-                {...slot.knob}
-                tipAction={tipAction}
-                onpress={() => onPress?.(slot.index)}
-                onstep={(delta) => onStep?.(slot.index, delta)}
-              />
-            ) : null}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+export function KnobBank(props: KnobBankProps) {
+  const form = useForm(KNOB_BANK_FORMS, props.form);
+  return <Tree tree={knobBankView(props, form)} handlers={knobBankHandlers(props)} />;
 }
 KnobBank.forms = KNOB_BANK_FORMS;
 
@@ -133,27 +113,11 @@ export interface KnobBankRegionProps extends KnobBankRegionModelProps {
  * form an assembled screen chose for this region. The region fills the box it is given and the
  * bank fills its body; with no height given, the bank is its form's ideal height.
  */
-export function KnobBankRegion({ name = 'Knobs', area, className, ...bank }: KnobBankRegionProps) {
-  const { views, view } = knobBankRegionView(bank);
-  const body = <KnobBank {...bank} />;
-  return (
-    <Region
-      name={name}
-      area={area}
-      className={className}
-      // The region fills its box and the bank its body: the bank sets its own height when the box
-      // has none (`--yh-knobbank-h`), so an `auto` or `min-content` row still can't squeeze it.
-      view={view}
-      onView={(id) => bank.onPage?.(Number(id))}
-      tipAction={bank.tipAction}
-    >
-      {views.map((v) => (
-        <Region.View key={v.id} id={v.id} label={v.label} tip={v.tip}>
-          {body}
-        </Region.View>
-      ))}
-    </Region>
-  );
+export function KnobBankRegion({ className, ...props }: KnobBankRegionProps) {
+  // The region fills its box and the bank its body: the bank sets its own height when the box has
+  // none (`--yh-knobbank-h`), so an `auto` or `min-content` row still can't squeeze it.
+  // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
+  return <Tree tree={knobBankRegionView(props, className) as unknown as Node} handlers={knobBankRegionHandlers(props)} components={withRegionViews} />;
 }
 
 export default KnobBank;

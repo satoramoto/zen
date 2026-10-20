@@ -1,5 +1,5 @@
-// Display's sample data and its stories as plain props: Display.stories.tsx (React) and
-// Display.stories.svelte.ts (Svelte) both draw them, and the parity test renders every one in both.
+// Display's sample data and its stories as plain props: Display.stories.tsx builds every story from
+// them (drawn by React's or Svelte's `Tree`), and the tree snapshot prints `displayView` for each.
 import type { ChordReadoutModelProps as ChordReadoutProps } from '../../components/music/ChordReadout/ChordReadout.model';
 import { defineFixtures } from '../../fixtures';
 import type { DisplayModelProps, DisplayPart } from './Display.model';

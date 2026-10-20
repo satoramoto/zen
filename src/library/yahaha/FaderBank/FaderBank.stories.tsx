@@ -2,15 +2,21 @@ import { useState } from 'react';
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { FaderBankRegion } from './FaderBank';
+import { fixtureStories, treeStory, withRenderer } from '../../stories/story';
+import type { Handlers } from '../../view/Tree.model';
+import { FaderBankRegion, type FaderBankRegionProps } from './FaderBank';
+import FaderBankRegionSvelte from './FaderBankRegion.svelte';
 import {
   BOARD_REGION,
-  FORM_BOXES,
   SMALL_REGION,
   faderBankArgTypes,
+  faderBankFormsSample,
   faderBankStories as s,
   styleStrips,
 } from './FaderBank.fixtures';
+
+// Every story but Live is built from FaderBank.fixtures.ts (`story(s.Name)`, the Forms story a view
+// tree), which the tree snapshot shares; the toolbar's Renderer draws it with React or Svelte.
 
 /** The region's box: `parameters.region` (default the board's), or `'none'` for a story that sizes its own. */
 const inRegion: Decorator = (Story, { parameters }) => {
@@ -33,7 +39,7 @@ const inRegion: Decorator = (Story, { parameters }) => {
 const meta = {
   title: 'Yahaha/Components/FaderBank',
   component: FaderBankRegion,
-  decorators: [inRegion, withLibraryTheme],
+  decorators: [withRenderer, inRegion, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
   args: {
@@ -62,15 +68,23 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const story = fixtureStories<Story>(FaderBankRegion, FaderBankRegionSvelte);
+
+/** The Forms tree, its callbacks the story's spies by their own names. */
+const forms = treeStory((args: FaderBankRegionProps) => ({
+  tree: faderBankFormsSample(args),
+  handlers: Object.fromEntries(Object.entries(args).filter(([, value]) => typeof value === 'function')) as Handlers,
+}));
+
 /** The board: Panel page, Vol layer, Right 2 away, Right 3 off and missing, faders 7 and 8 parked. */
-export const Board: Story = { args: s.Board.args };
+export const Board: Story = story(s.Board);
 
 /**
  * The page button under Master: a click flips the page (`onPageButton`); a hold (or right-click)
  * calls `onPageLong` and its release `onPageRelease`, never `onPageButton`.
  */
 export const PageButtonHold: Story = {
-  args: s.PageButtonHold.args,
+  ...story(s.PageButtonHold),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: /^Fader page is Panel/ });
     await userEvent.click(button);
@@ -83,15 +97,11 @@ export const PageButtonHold: Story = {
 };
 
 /** The Reverb layer: "Faders · Reverb", the part strips in the neutral layer look with "Rev" over each value, no meters. */
-export const ReverbLayer: Story = {
-  args: s.ReverbLayer.args,
-};
+export const ReverbLayer: Story = story(s.ReverbLayer);
 
+const small = story(s.SmallStage);
 /** Added: the region a 1217×752 Stage gives the mixer (593×311). */
-export const SmallStage: Story = {
-  args: s.SmallStage.args,
-  parameters: { region: SMALL_REGION },
-};
+export const SmallStage: Story = { ...small, parameters: { ...small.parameters, region: SMALL_REGION } };
 
 /**
  * Added: the two forms (`FaderBank.forms`), each in a region the size of its least at the compact
@@ -101,16 +111,8 @@ export const SmallStage: Story = {
  */
 export const Forms: Story = {
   args: s.Forms.args,
-  parameters: { region: 'none' },
-  render: (args) => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-5)', alignItems: 'flex-start' }}>
-      {s.Forms.items!.map((item) => (
-        <div key={item.form} style={{ display: 'grid', ...FORM_BOXES[item.form!] }}>
-          <FaderBankRegion {...args} {...item} />
-        </div>
-      ))}
-    </div>
-  ),
+  parameters: { region: 'none', ...forms.parameters },
+  render: forms.render,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const form of ['tall', 'short']) {
@@ -123,21 +125,16 @@ export const Forms: Story = {
 };
 
 /** Added: the Style page: faders 1–8 are the style's parts, all neutral (no keyboard part, no hue); 9 stays Master. */
-export const StylePage: Story = {
-  args: s.StylePage.args,
-};
+export const StylePage: Story = story(s.StylePage);
 
 /** Added: the hardware fader above the level, so Right 2 reads "↓ 72", and Left away below at the same time. */
-export const TakeoverBothWays: Story = {
-  args: s.TakeoverBothWays.args,
-};
+export const TakeoverBothWays: Story = story(s.TakeoverBothWays);
 
 /** Added: every part off; the On lamps unlit, each name faded in its own hue with "off". */
-export const AllPartsOff: Story = {
-  args: s.AllPartsOff.args,
-};
+export const AllPartsOff: Story = story(s.AllPartsOff);
 
-/** Added: wired to state, so faders, tabs and lamps move. */
+/** Added: wired to state, so faders, tabs and lamps move. Drawn by React only (its state is a React
+ *  `useState`; the Renderer toolbar says so). */
 export const Live: Story = {
   args: s.Live.args,
   render: function Live(args) {

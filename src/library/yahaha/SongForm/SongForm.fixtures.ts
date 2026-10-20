@@ -1,5 +1,5 @@
-// SongForm's stories as plain props: SongForm.stories.tsx (React) and SongForm.stories.svelte.ts
-// (Svelte) both draw them, and the parity test renders every instance in both.
+// SongForm's stories as plain props: SongForm.stories.tsx draws them (React or Svelte, by the
+// toolbar's Renderer), and the tree snapshot prints `songFormView` for every instance.
 import { defineFixtures } from '../../fixtures';
 import type { SongFormProps } from './SongForm.model';
 
