@@ -1,38 +1,19 @@
 <!--
-  FaderBankRegion: the Svelte twin of `FaderBankRegion` (FaderBank.tsx), the same Region, views,
-  aside and body. The fader pages are the Region's `views`, the layer `Tabs` its `aside`, and the
-  FaderBank for the chosen page its body; the page and layer stay the caller's.
+  FaderBankRegion: the model's tree (`faderBankRegionView`, FaderBank.model.ts) drawn by the Svelte
+  `Tree`: the mixer's Region whose views are the fader pages, the layer `Tabs` in its `aside`, and
+  the FaderBank for the chosen page as its body; the page and layer stay the caller's. See
+  `FaderBankRegion` in FaderBank.tsx.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import Region from '../../layout/Region.svelte';
-  import Tabs from '../../layout/Tabs.svelte';
-  import FaderBank from './FaderBank.svelte';
-  import type { FaderBankRegionModelProps } from './FaderBank.model';
+  import Tree from '../../view/Tree.svelte';
+  import { faderBankRegionHandlers, faderBankRegionView, type FaderBankRegionModelProps } from './FaderBank.model';
 
   interface Props extends FaderBankRegionModelProps<string | Snippet> {
     class?: string;
   }
 
-  let { name = 'Mixer', area, class: className, ...bank }: Props = $props();
+  let { class: className, ...props }: Props = $props();
 </script>
 
-{#snippet layers()}<Tabs
-    name="Fader layer"
-    items={bank.layerTabs}
-    value={bank.layer}
-    onChange={(id: string) => bank.onChooseLayer?.(id)}
-    tipAction={bank.tipAction}
-  />{/snippet}
-
-<Region
-  {name}
-  {area}
-  class={className}
-  aside={bank.layerTabs.length > 0 ? layers : undefined}
-  views={bank.pageTabs}
-  view={bank.page}
-  onView={(id: string) => bank.onChoosePage?.(id)}
-  tipAction={bank.tipAction}
-  >{#snippet children()}<FaderBank {...bank} />{/snippet}</Region
->
+<Tree tree={faderBankRegionView({ ...props, className })} handlers={faderBankRegionHandlers(props)} />

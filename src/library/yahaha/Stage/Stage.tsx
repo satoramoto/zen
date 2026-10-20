@@ -1,19 +1,11 @@
-import { useState, type ReactNode } from 'react';
-import type { Placed } from '../../layout/assembly/types';
+import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { useScopePrinciples } from '../../layout/assembly/AssembledScreen';
-import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
-import { reactStyle } from '../../layout/style';
-import { AppBar, type AppBarProps } from '../AppBar/AppBar';
-import { Display } from '../Display/Display';
-import { FaderBankRegion } from '../FaderBank/FaderBank';
-import { Keys } from '../../components/music/Keys/Keys';
-import { KnobBankRegion } from '../KnobBank/KnobBank';
-import { PadBankRegion } from '../PadBank/PadBank';
-import { SongForm } from '../SongForm/SongForm';
-import { StatusLine } from '../StatusLine/StatusLine';
-import { stageKeysWidth, stagePads, stageTap, stageView, type StageModelProps } from './Stage.model';
-import { createTapTempo } from './tapTempo';
+import { Tree } from '../../view/Tree';
+import type { Node } from '../../view/Tree.model';
+import type { AppBarProps } from '../AppBar/AppBar';
+import { stageFrame, stageHandlers, stageRegions, stageScreen, type StageModelProps } from './Stage.model';
+import { createStageState } from './stageState';
 import './Stage.css';
 
 export { TEMPO_MAX, TEMPO_MIN, type StageFit, type StageLayout, type StageModelProps, type StageTipAction } from './Stage.model';
@@ -67,48 +59,18 @@ export interface StageProps extends Omit<StageModelProps<ReactNode>, 'appBar'> {
  * the 1217 × 752 small screen (now a 16:9 room inside it; the board is 1920 × 1080); the keys
  * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
  *
- * The derivations are `Stage.model.ts`'s (`Stage.svelte` draws the same); this renders them.
+ * The tree and its handlers are `Stage.model.ts`'s (`Stage.svelte` draws the same); the Stage's
+ * own state (the last placement, for the keys' width, and the taps) is `stageState.ts`.
  */
-export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout, fit, onPlacement }: StageProps) {
-  const [tapper] = useState(createTapTempo);
+export function Stage(props: StageProps) {
+  const [state] = useState(createStageState);
+  const current = useSyncExternalStore(state.subscribe, state.get);
   const { inset } = useScopePrinciples().plate;
-  const view = stageView({ width, height, layout, fit });
-  const onTap = () => stageTap(display, tapper, performance.now());
-  const shownPads = stagePads(pads, songForm, onTap);
-
-  return (
-    <div className={view.className} {...view.attrs} style={reactStyle(view.style)}>
-      <Screen
-        name="Stage"
-        className="yh-stage__screen"
-        spec={view.spec}
-        room={view.room}
-        onPlacement={onPlacement}
-        regions={{
-          bar: <AppBar {...appBar} tipAction={tipAction} />,
-          hero: (
-            <Region name="Hero">
-              <Display {...display} parts={undefined} tipAction={tipAction} onTap={onTap} />
-            </Region>
-          ),
-          transport: (
-            <Region name="Transport">
-              <SongForm {...songForm} part="transport" tipAction={tipAction} />
-            </Region>
-          ),
-          mixer: <FaderBankRegion {...faders} tipAction={tipAction} />,
-          knobs: <KnobBankRegion {...knobs} tipAction={tipAction} />,
-          pads: <PadBankRegion {...shownPads} tipAction={tipAction} />,
-          keys: (_form: string, placed: Placed) => (
-            <Region name="Keyboard">
-              <Keys {...keys} ruler={false} width={stageKeysWidth(placed, inset)} tipAction={tipAction} />
-            </Region>
-          ),
-          status: <StatusLine {...status} />,
-        }}
-      />
-    </div>
-  );
+  const handlers = stageHandlers(props, state);
+  const regions = Object.entries(stageRegions(props, current, inset)).map(([id, region]) => [id, <Tree tree={region as unknown as Node} handlers={handlers} />]);
+  // The seam: the layout's `Screen` takes a `regions` record, so the screen is drawn here by hand;
+  // once it draws its regions as slots by id, this is `<Tree tree={stageView(props, current, inset)} handlers={handlers} />`.
+  return <Tree tree={stageFrame(props)} slots={{ screen: <Screen name="Stage" className="yh-stage__screen" {...stageScreen(props)} onPlacement={handlers.placement} regions={Object.fromEntries(regions)} /> }} />;
 }
 
 export default Stage;

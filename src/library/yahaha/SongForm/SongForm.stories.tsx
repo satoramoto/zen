@@ -4,6 +4,7 @@ import { withLibraryTheme } from '../../storybook';
 import { resolveNeed, useScopePrinciples, type Forms as FormList } from '../../layout/assembly';
 import { Stack } from '../../primitives/Stack';
 import { Text } from '../../primitives/Text';
+import { fixtureStories, withRenderer } from '../../stories/story';
 import {
   FORM_FORMS,
   SONG_FORM_FORMS,
@@ -14,12 +15,11 @@ import {
   type SongFormProps,
   type TransportFormId,
 } from './SongForm';
+import SongFormSvelte from './SongForm.svelte';
 import { SONG_FORM_WIDTH, songFormArgTypes, songFormArgs, songFormBoxes, songFormStories as s } from './SongForm.fixtures';
 
-// Every story's args come from SongForm.fixtures.ts, which the Svelte stories and the parity test share.
-
-/** A story's region box from the fixtures, as its parameters. */
-const box = (name: keyof typeof s) => ({ regionWidth: songFormBoxes[name]?.width, regionHeight: songFormBoxes[name]?.height });
+// Every story's args come from SongForm.fixtures.ts, which the tree snapshot shares; the toolbar's
+// Renderer draws each with React's or Svelte's `Tree` (Forms, a layout of its own, stays React).
 
 /**
  * The region's box on the Stage: `regionWidth` in a story's parameters sets its width, and
@@ -44,7 +44,7 @@ const atWidth: Decorator = (Story, context) => {
 const meta = {
   title: 'Yahaha/Components/SongForm',
   component: SongForm,
-  decorators: [atWidth, withLibraryTheme],
+  decorators: [withRenderer, atWidth, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'padded' },
   args: {
@@ -68,9 +68,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const story = fixtureStories<Story>(SongForm, SongFormSvelte);
+
+/** A story drawn in its region box from the fixtures (`regionWidth`, `regionHeight` in its parameters). */
+const boxed = (name: keyof typeof s, extra: Partial<Story> = {}): Story => {
+  const st = story(s[name], extra);
+  return { ...st, parameters: { ...st.parameters, regionWidth: songFormBoxes[name]?.width, regionHeight: songFormBoxes[name]?.height } };
+};
+
 /** Stopped (SectionRow's board): Main A chosen to start, underlined rather than filled (nothing sounds); Start on the `--transport` fill, the one saturated key; Accomp on as an outline with its LED lit; the sync and fill keys neutral until armed or queued. */
 export const Stopped: Story = {
-  args: s.Stopped.args,
+  ...story(s.Stopped),
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     const start = canvas.getByRole('button', { name: 'Start / Stop, stopped' });
@@ -83,7 +91,7 @@ export const Stopped: Story = {
 
 /** Running in Main B with Main C next after bar 4 (PadBank's board). A press on a section queues it. */
 export const Board: Story = {
-  args: s.Board.args,
+  ...story(s.Board),
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Main B, playing' })).toHaveAttribute('aria-pressed', 'true');
@@ -95,11 +103,11 @@ export const Board: Story = {
 };
 
 /** The flash's off phase: Main C keeps its NEXT tag; its accent wash goes. */
-export const FlashOff: Story = { args: s.FlashOff.args };
+export const FlashOff: Story = story(s.FlashOff);
 
 /** Fill ▲ queued: the key waits, and the spoken cue says "Fill, then Main C, after bar 4". */
 export const FillPending: Story = {
-  args: s.FillPending.args,
+  ...story(s.FillPending),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Fill, then Main C, after bar 4');
@@ -111,7 +119,7 @@ export const FillPending: Story = {
 
 /** Sync Start armed on Intro I: its key waits, the only transport-hue ring in the cluster, and the spoken cue says the band starts with the first chord. */
 export const SyncStartArmed: Story = {
-  args: s.SyncStartArmed.args,
+  ...story(s.SyncStartArmed),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('aria-pressed', 'true');
@@ -121,7 +129,7 @@ export const SyncStartArmed: Story = {
 
 /** A style missing sections: one Intro, two Mains, one Ending, no Break; Auto Fill on. Absent steps keep their place. */
 export const MissingSections: Story = {
-  args: s.MissingSections.args,
+  ...story(s.MissingSections),
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Main D, not in this style' }));
@@ -131,13 +139,13 @@ export const MissingSections: Story = {
 };
 
 /** A fade-out under way while running: Fade rings in the ink colour, not a fill (a fill means sounding). */
-export const Fading: Story = { args: s.Fading.args };
+export const Fading: Story = story(s.Fading);
 
 /** The 1217 × 752 Stage: the region 1169 wide, the form over the transport (as `both` always is), its steps at numeral size. */
-export const At1217: Story = { args: s.At1217.args, parameters: box('At1217') };
+export const At1217: Story = boxed('At1217');
 
 /** A narrow column (720): the transport under the form, in two rows sharing its width; the steps at body size so the form stays one row. */
-export const Narrow: Story = { args: s.Narrow.args, parameters: box('Narrow') };
+export const Narrow: Story = boxed('Narrow');
 
 /**
  * The form alone (`part="form"`), as the stacked Stage's strip on the 1440 × 900 board: the
@@ -145,8 +153,7 @@ export const Narrow: Story = { args: s.Narrow.args, parameters: box('Narrow') };
  * own variables.
  */
 export const FormPart: Story = {
-  args: s.FormPart.args,
-  parameters: box('FormPart'),
+  ...boxed('FormPart'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('group', { name: 'Sections' })).toBeInTheDocument();
@@ -162,8 +169,7 @@ export const FormPart: Story = {
  * them), here 67; still one row.
  */
 export const FormPartSmall: Story = {
-  args: s.FormPartSmall.args,
-  parameters: box('FormPartSmall'),
+  ...boxed('FormPartSmall'),
   play: async ({ canvasElement }) => {
     const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
     await expect(Math.round(form.getBoundingClientRect().height)).toBe(67);
@@ -171,12 +177,11 @@ export const FormPartSmall: Story = {
 };
 
 /** The form alone with no height given: the steps take their default, two control heights. */
-export const FormPartAuto: Story = { args: s.FormPartAuto.args };
+export const FormPartAuto: Story = story(s.FormPartAuto);
 
 /** The transport alone (`part="transport"`), as the stacked Stage sets it beside the hero; running. */
 export const TransportPart: Story = {
-  args: s.TransportPart.args,
-  parameters: box('TransportPart'),
+  ...boxed('TransportPart'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('group', { name: 'Transport' })).toBeInTheDocument();
@@ -190,21 +195,18 @@ export const TransportPart: Story = {
  * past five control heights tall and 25 wide (700 at the compact density) the labels grow with
  * the keys (body size, Start / Stop at display).
  */
-export const TransportPartTall: Story = {
-  args: s.TransportPartTall.args,
-  parameters: box('TransportPartTall'),
-};
+export const TransportPartTall: Story = boxed('TransportPartTall');
 
 /**
  * Every form of each half, drawn in a box exactly its declared least (`min`) and its `ideal`, at
  * the theme's scale (the toolbar's pack): nothing may be cut off at its least, and at its ideal it
  * looks as designed. The dashed edge is the box; it clips, so a need that lied would show. The
  * transport runs `keys` (two rows) → `tight` (three rows, no taller than the hero's least) →
- * `compact` (four rows, the narrowest), each narrower than the one before.
+ * `compact` (four rows, the narrowest), each narrower than the one before. A layout of its own,
+ * so React draws it whatever the Renderer.
  */
 export const Forms: Story = {
-  args: s.Forms.args,
-  render: (args) => <FormsSheet {...args} />,
+  ...story(s.Forms, { render: (args) => <FormsSheet {...args} /> }),
   play: async ({ canvasElement }) => {
     const boxes = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-specimen]'));
     await expect(boxes.length).toBe((TRANSPORT_FORMS.length + FORM_FORMS.length + SONG_FORM_FORMS.length) * 2);
@@ -257,7 +259,4 @@ function FormsSheet(args: SongFormProps) {
 }
 
 /** The transport alone while stopped with Sync Start armed: Start the one fill, Sync Start the one transport-hue ring. */
-export const TransportPartStopped: Story = {
-  args: s.TransportPartStopped.args,
-  parameters: box('TransportPartStopped'),
-};
+export const TransportPartStopped: Story = boxed('TransportPartStopped');

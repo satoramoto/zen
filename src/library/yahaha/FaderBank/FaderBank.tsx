@@ -1,53 +1,28 @@
-import { Fragment, useRef, type ReactNode } from 'react';
-import { Group } from '../../layout/Group';
-import { Region } from '../../layout/Region';
-import { Stack } from '../../primitives/Stack';
-import { Tabs } from '../../layout/Tabs';
-import { Text } from '../../primitives/Text';
-import { Button } from '../../components/core/Button/Button';
-import { Fader } from '../../components/music/Fader/Fader';
-import { LampButton } from '../../components/core/LampButton/LampButton';
-import { PartMarks } from '../../components/music/PartMarks/PartMarks';
+import type { ReactNode } from 'react';
 import { useForm } from '../../layout/assembly';
-import { reactStyle } from '../../layout/style';
+import { Tree } from '../../view/Tree';
+import type { Node } from '../../view/Tree.model';
+import { withRegionViews } from '../regionViews';
 import { FADER_BANK_FORMS } from './FaderBank.forms';
 import {
+  faderBankHandlers,
+  faderBankRegionHandlers,
+  faderBankRegionView,
   faderBankView,
-  type BankLampView,
   type FaderBankModelProps,
   type FaderBankRegionModelProps,
-  type FaderStripView,
-  type TipAction,
 } from './FaderBank.model';
-import { useTip } from './useTip';
+import '../../primitives/Stack.css';
+import '../../primitives/Text.css';
 import './FaderBank.css';
 
 export { FADER_BANK_FORMS, type FaderBankForm } from './FaderBank.forms';
-// The props and the view are framework-free, in the model; `FaderBank.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; this file and `FaderBank.svelte` only
+// hand the model's tree to their `Tree`, with the form the assembled screen chose.
 export type { TipAction, FaderStrip, BankLamp, FaderBankModelProps, FaderBankRegionModelProps } from './FaderBank.model';
 
 /** FaderBank's props, with React tab labels (see `FaderBankModelProps`). */
 export type FaderBankProps = FaderBankModelProps<ReactNode>;
-
-function StripName({ strip, tipAction, onOpen }: { strip: FaderStripView; tipAction?: TipAction; onOpen?: (id: string) => void }) {
-  const ref = useRef<HTMLButtonElement>(null);
-  useTip(ref, { tip: strip.name.tip, tipAction });
-  return (
-    <Text
-      as="button"
-      size="inherit"
-      leading="snug"
-      ref={ref}
-      className={strip.name.className}
-      {...strip.name.attrs}
-      onClick={() => onOpen?.(strip.id)}
-    >
-      <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{strip.name.tag}</Text>
-      <Text size="caption" leading="snug" className="yh-faderbank__sound">{strip.name.sound}</Text>
-      {strip.marks && <span className={strip.marks.className}>{strip.marks.props && <PartMarks {...strip.marks.props} />}</span>}
-    </Text>
-  );
-}
 
 /**
  * FaderBank: the Stage's mixer.
@@ -124,80 +99,13 @@ function StripName({ strip, tipAction, onOpen }: { strip: FaderStripView; tipAct
  * strip track is at least its content (`minmax(min-content, …)`), and the sound line has no
  * inline size of its own (it ellipsizes to the strip), so the least width is the names' and keys'.
  *
- * **Model** (2026-10, Svelte bindings): what it draws is `faderBankView` (`FaderBank.model.ts`);
- * `FaderBank.svelte` renders the same view, and the name button's tooltip is the `tip.ts` store.
+ * **Model** (2026-10, Svelte bindings): what it draws is the tree `faderBankView` returns
+ * (`FaderBank.model.ts`), drawn by React's and Svelte's `Tree`; the name button's tooltip is the
+ * kernel's `tip` store.
  */
 export function FaderBank(props: FaderBankProps) {
-  const { tipAction, onLevel, onOpen, onLamp, onLampLong, onLampRelease, onPageButton, onPageLong, onPageRelease } = props;
   const form = useForm(FADER_BANK_FORMS, props.form);
-  const view = faderBankView(props, form);
-
-  const lamp = (item: BankLampView) => (
-    <LampButton
-      {...item.lamp}
-      tipAction={tipAction}
-      onToggle={(on) => onLamp?.(item.id, on)}
-      onLongPress={item.long ? () => onLampLong?.(item.id) : undefined}
-      onLongRelease={item.long ? () => onLampRelease?.(item.id) : undefined}
-    />
-  );
-
-  return (
-    <Stack gap={view.root.gap} className={view.root.className} {...view.root.attrs}>
-      <div className={view.grid.className} style={reactStyle(view.grid.style)}>
-        {view.dividers.map((divider) => (
-          <span key={divider.key} className={divider.className} style={reactStyle(divider.style)} {...divider.attrs} />
-        ))}
-        {view.plate && <span className={view.plate.className} style={reactStyle(view.plate.style)} {...view.plate.attrs} />}
-
-        {view.strips.map((strip) => (
-          <Stack key={strip.id} gap={1} className={strip.className} style={reactStyle(strip.style)} {...strip.attrs}>
-            <Fader {...strip.fader} tipAction={tipAction} onlevel={(level) => onLevel?.(strip.id, level)} />
-            {strip.parked ? (
-              <Text size="inherit" leading="snug" className={strip.name.className} {...strip.name.attrs}>
-                <Text size="label" weight="strong" leading="snug" className="yh-faderbank__tag-text">{strip.name.tag}</Text>
-                <Text size="caption" leading="snug" className="yh-faderbank__sound">{strip.name.sound}</Text>
-                {strip.marks && <span className={strip.marks.className} />}
-              </Text>
-            ) : (
-              <StripName strip={strip} tipAction={tipAction} onOpen={onOpen} />
-            )}
-          </Stack>
-        ))}
-
-        {view.partLamps.map((item) => (
-          <div key={item.id} className={item.cell.className} style={reactStyle(item.cell.style)} {...item.cell.attrs}>
-            {lamp(item)}
-          </div>
-        ))}
-        <div className={view.page.cell.className} style={reactStyle(view.page.cell.style)} {...view.page.cell.attrs}>
-          <Button
-            {...view.page.button}
-            tipAction={tipAction}
-            onPress={onPageButton}
-            onLongPress={onPageLong}
-            onLongRelease={onPageRelease}
-          />
-        </div>
-      </div>
-
-      {view.functions && (
-        <div className={view.functions.className}>
-          <Group name={view.functions.group.name} label={false} gap={view.functions.group.gap} className={view.functions.group.className}>
-            {view.functions.lamps.map((item) => (
-              <Fragment key={item.id}>{lamp(item)}</Fragment>
-            ))}
-          </Group>
-        </div>
-      )}
-      {view.note && (
-        <span className={view.note.className} {...view.note.attrs}>
-          {view.note.lead}
-          <span>{view.note.text}</span>
-        </span>
-      )}
-    </Stack>
-  );
+  return <Tree tree={faderBankView(props, form)} handlers={faderBankHandlers(props)} />;
 }
 
 export interface FaderBankRegionProps extends FaderBankRegionModelProps<ReactNode> {
@@ -210,36 +118,10 @@ export interface FaderBankRegionProps extends FaderBankRegionModelProps<ReactNod
  * page as its body. The page and layer stay the caller's (`page`, `onChoosePage`, `layer`,
  * `onChooseLayer`), so the master fader button can flip the page too.
  */
-export function FaderBankRegion({ name = 'Mixer', area, className, ...bank }: FaderBankRegionProps) {
-  const body = <FaderBank {...bank} />;
-  const aside =
-    bank.layerTabs.length > 0 ? (
-      <Tabs
-        name="Fader layer"
-        items={bank.layerTabs}
-        value={bank.layer}
-        onChange={(id) => bank.onChooseLayer?.(id)}
-        tipAction={bank.tipAction}
-      />
-    ) : undefined;
+export function FaderBankRegion({ className, ...props }: FaderBankRegionProps) {
+  // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
   return (
-    <Region
-      name={name}
-      area={area}
-      className={className}
-      aside={aside}
-      view={bank.page}
-      onView={(id) => bank.onChoosePage?.(id)}
-      tipAction={bank.tipAction}
-    >
-      {bank.pageTabs.length > 0
-        ? bank.pageTabs.map((tab) => (
-            <Region.View key={tab.id} id={tab.id} label={tab.label} name={tab.name} disabled={tab.disabled} tip={tab.tip}>
-              {body}
-            </Region.View>
-          ))
-        : body}
-    </Region>
+    <Tree tree={faderBankRegionView({ ...props, className }) as unknown as Node} handlers={faderBankRegionHandlers(props)} components={withRegionViews} />
   );
 }
 

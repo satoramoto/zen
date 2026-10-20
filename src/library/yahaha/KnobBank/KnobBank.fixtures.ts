@@ -1,7 +1,8 @@
-// KnobBank's stories as plain props: KnobBank.stories.tsx (React) and KnobBank.stories.svelte.ts
-// (Svelte) both draw them as the Knobs region, and the parity test renders every instance with
-// both banks. The page data below is also the Stage's (Stage.fixtures.ts).
-import { defineFixtures } from '../../fixtures';
+// KnobBank's stories as plain props: KnobBank.stories.tsx draws them as the Knobs region with
+// React's or Svelte's `Tree`, and the tree snapshot draws every instance. The page data below is
+// also the Stage's (Stage.fixtures.ts).
+import { defineFixtures, instances } from '../../fixtures';
+import { component, h, type Node } from '../../view/Tree.model';
 import { KNOB_BANK_FORMS, type KnobBankRegionModelProps, type KnobItem } from './KnobBank.model';
 
 /** The board's knob page 1 of 6, Style (Stage-Dark.dc.html). No knob here belongs to a part. */
@@ -129,3 +130,25 @@ export const knobBankStories = defineFixtures<KnobBankRegionModelProps>()({
   },
   Playground: { args: board },
 });
+
+/**
+ * The Forms story as a view tree: one Knobs region per form of `knobBankStories.Forms.items`, each
+ * at its form's width, in a column. The regions' callbacks are the handlers `page`, `press`, `step`
+ * and `tipAction`.
+ */
+export const knobBankFormsSample = ({ name, area, knobs, pages, page, pageLabel }: KnobBankRegionModelProps): Node =>
+  h(
+    'div',
+    { style: 'display: grid; gap: 24px; justify-items: start' },
+    instances(knobBankStories.Forms).map(({ form }) =>
+      h(
+        'div',
+        { style: `width: ${KNOB_BANK_FORM_WIDTHS[form ?? ''] ?? KNOB_BANK_WIDTH}px`, 'data-testid': `form-${form}` },
+        component(
+          'KnobBankRegion',
+          { name, area, knobs, pages, page, pageLabel, form },
+          { on: { onPage: 'page', onPress: 'press', onStep: 'step', tipAction: 'tipAction' } },
+        ),
+      ),
+    ),
+  );

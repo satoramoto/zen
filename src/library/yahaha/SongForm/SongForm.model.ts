@@ -1,12 +1,12 @@
-// SongForm's model: its props, the song's form, and the view a renderer draws (the root, the form
-// with its parts, steps and spoken cue, and the transport's keys, each with the props its control
-// takes). No framework: `SongForm.tsx` (React) and `SongForm.svelte` (Svelte) both render
-// `songFormView`, after reading each half's form (`useForm` / `getForm`).
+// SongForm's model: its props, the song's form, and the tree a renderer draws (the root, the form
+// with its parts, steps and spoken cue, and the transport's keys, each control a Pad, Button or
+// LampButton drawn by name). No framework: `SongForm.tsx` (React) and `SongForm.svelte` (Svelte)
+// both pass `songFormView` to their `Tree`, after reading each half's form (`useForm` / `getForm`).
 import type { ButtonModelProps } from '../../components/core/Button/Button.model';
-import type { LampButtonModelProps } from '../../components/core/LampButton/LampButton.model';
-import type { PadModelProps, PadState, TipAction } from '../../components/music/Pad/Pad.model';
-import type { StackModelProps } from '../../primitives/Stack.model';
-import type { ElementView, TextModelProps } from '../../primitives/Text.model';
+import type { PadState, TipAction } from '../../components/music/Pad/Pad.model';
+import { stackView, type StackModelProps } from '../../primitives/Stack.model';
+import { textView, type TextModelProps } from '../../primitives/Text.model';
+import { component, each, h, type Child, type Handlers, type Node } from '../../view/Tree.model';
 import type { SectionState } from '../hues';
 import type { FormFormId, TransportFormId } from './SongForm.forms';
 
@@ -74,10 +74,11 @@ export const FORM: readonly { part: SongFormSectionPart; caption: string; steps:
 
 export const BREAK: SectionDef = { id: 'break', step: 'Break', label: 'Break', tip: 'section.break' };
 
+/** Every section, in the form's order, then Break. */
+const SECTIONS: readonly SectionDef[] = [...FORM.flatMap((p) => p.steps), BREAK];
+
 /** Every section's full name, by id. */
-export const SECTION_LABEL: Record<SectionId, string> = Object.fromEntries(
-  [...FORM.flatMap((p) => p.steps), BREAK].map((s) => [s.id, s.label]),
-) as Record<SectionId, string>;
+export const SECTION_LABEL: Record<SectionId, string> = Object.fromEntries(SECTIONS.map((s) => [s.id, s.label])) as Record<SectionId, string>;
 
 /** Which half of the region a SongForm draws. */
 export type SongFormPart = 'both' | 'form' | 'transport';
@@ -152,73 +153,34 @@ export interface SongFormProps {
   formForm?: FormFormId;
 }
 
-/** A Stack the renderer draws: its own props, its class and attributes. */
-export interface StackView extends ElementView {
-  stack: Omit<StackModelProps, 'className'> & { as?: 'ol' | 'li' };
-}
+/** What SongForm draws: its tree. */
+export type SongFormView = Node;
 
-/** A Text the renderer draws: its props, class, attributes and words. */
-export interface TextView extends ElementView {
-  text: TextModelProps;
-  word: string;
-}
+type Attrs = Record<string, string | undefined>;
 
-/** One step: its wrapping `div` and the Pad inside. */
-export interface StepView extends ElementView {
-  id: SectionId;
-  pad: PadModelProps;
-}
+/** A Stack element: the caller's attributes, then the Stack's class and `data-*` (as `Stack.tsx` orders them). */
+const stack = (tag: 'div' | 'ol' | 'li', props: StackModelProps, attrs: Attrs, ...children: (Child | null)[]): Node => {
+  const view = stackView(props);
+  return h(tag, { ...attrs, class: view.className, ...view.attrs }, ...children);
+};
 
-/** One part of the form: its `li` Stack, the arrow before it (none for the first), its caption and steps. */
-export interface PartView extends StackView {
-  part: SongFormSectionPart;
-  arrow?: TextView;
-  caption: TextView;
-  steps: ElementView;
-  items: StepView[];
-}
+/** A Text element: the Text's class and `data-*`, then the caller's attributes (as `Text.tsx` orders them). */
+const text = (tag: 'div' | 'span', props: TextModelProps, attrs: Attrs, ...children: (Child | null)[]): Node => {
+  const view = textView(props);
+  return h(tag, { class: view.className, ...view.attrs, ...attrs }, ...children);
+};
 
-/** The form half. */
-export interface FormView extends StackView {
-  /** The spoken cue: a visually hidden status `span`. */
-  cue: ElementView & { word: string };
-  /** The `ol` of parts. */
-  parts: StackView;
-  items: PartView[];
-  /** The insert group (Break), its steps `div` and Break's step. */
-  mods: StackView;
-  modSteps: ElementView;
-  brk: StepView;
-}
+/** A section's handler key (its Pad's `onPress`). */
+const sectionKey = (id: SectionId) => `section:${id}`;
 
-/** One transport key: its wrapping `div`, and a Button's or a LampButton's props. */
-export type KeyView = ElementView & { key: string } & (
-    | { kind: 'button'; button: ButtonModelProps }
-    | { kind: 'lamp'; lamp: LampButtonModelProps }
-  );
-
-/** The transport half: its group `div`, Start / Stop's cell and the other keys. */
-export interface TransportView extends ElementView {
-  start: ElementView;
-  startButton: ButtonModelProps;
-  keys: KeyView[];
-}
-
-/** What a renderer draws: two Texts (root, inner) around the halves it draws. */
-export interface SongFormView {
-  root: ElementView;
-  inner: ElementView;
-  form?: FormView;
-  transport?: TransportView;
-}
-
-const key = (name: string): ElementView => ({ className: 'yh-songform__key', attrs: { 'data-part': 'key', 'data-key': name } });
+/** Every child control's tooltip goes through `handlers.tipAction`. */
+const TIP = { tipAction: 'tipAction' } as const;
 
 /**
- * The view. `formId` and `transportId` are each half's form, as `useForm` / `getForm` read them
+ * The tree. `formId` and `transportId` are each half's form, as `useForm` / `getForm` read them
  * (by part name: `form`, `transport`).
  */
-export function songFormView(props: SongFormProps, formId: FormFormId, transportId: TransportFormId): SongFormView {
+export function songFormView(props: SongFormProps, formId: FormFormId, transportId: TransportFormId): Node {
   const {
     running = false,
     playing,
@@ -232,18 +194,7 @@ export function songFormView(props: SongFormProps, formId: FormFormId, transport
     autoFill = false,
     fading = false,
     lit = true,
-    tipAction,
-    onSection,
-    onStartStop,
     onStopWithFade,
-    onAccomp,
-    onSyncStart,
-    onSyncStop,
-    onAutoFill,
-    onFillUp,
-    onFillDown,
-    onFade,
-    onReset,
     part = 'both',
   } = props;
   const rootForm = part === 'form' ? formId : part === 'transport' ? transportId : undefined;
@@ -275,32 +226,37 @@ export function songFormView(props: SongFormProps, formId: FormFormId, transport
     }
   };
 
-  const step = (s: SectionDef): StepView => {
+  /** One step: its wrapping `div` and the Pad inside. */
+  const step = (s: SectionDef): Node => {
     const state = stateOf(s.id);
-    return {
-      id: s.id,
-      className: 'yh-songform__step',
-      attrs: {
+    return h(
+      'div',
+      {
+        class: 'yh-songform__step',
         'data-part': 'step',
         'data-section': s.id,
         'data-state': state,
         'data-start': state === 'playing' && !running ? 'true' : undefined,
       },
-      pad: {
-        label: s.step,
-        state: padState(s.id),
-        lit,
-        tagCorner: true,
-        accentNext: true,
-        fillCell: true,
-        disabled: missing.has(s.id),
-        name: nameOf(s),
-        tip: s.tip,
-        tipAction,
-        onPress: () => onSection?.(s.id),
-      },
-    };
+      component(
+        'Pad',
+        {
+          label: s.step,
+          state: padState(s.id),
+          lit,
+          tagCorner: true,
+          accentNext: true,
+          fillCell: true,
+          disabled: missing.has(s.id),
+          name: nameOf(s),
+          tip: s.tip,
+        },
+        { on: { onPress: sectionKey(s.id), ...TIP } },
+      ),
+    );
   };
+
+  const steps = (...children: Node[]) => h('div', { class: 'yh-songform__steps', 'data-part': 'steps' }, ...children);
 
   // The cue: spoken only. "Next" is drawn once on screen, in the hero, and on the form's NEXT tag.
   const nextLabel = next && !missing.has(next) ? SECTION_LABEL[next].replace(NB, ' ') : '';
@@ -310,209 +266,186 @@ export function songFormView(props: SongFormProps, formId: FormFormId, transport
   else if (nextLabel) cues.push(`Next: ${nextLabel}${when}`);
   if (!running && syncStart) cues.push('Starts with the first chord');
 
-  const stepsView: ElementView = { className: 'yh-songform__steps', attrs: { 'data-part': 'steps' } };
-
-  const form: FormView | undefined =
+  const form =
     part === 'transport'
-      ? undefined
-      : {
-          stack: { direction: 'row', gap: 6, align: 'stretch' },
-          className: 'yh-songform__form',
-          attrs: { 'data-part': 'form', 'data-form': formId, role: 'group', 'aria-label': 'Sections' },
-          cue: { className: 'yh-songform__cue', attrs: { 'data-part': 'cue', role: 'status' }, word: cues.join('. ') },
-          parts: {
-            stack: { as: 'ol', direction: 'row', gap: 6, align: 'stretch' },
-            className: 'yh-songform__parts',
-            attrs: { 'data-part': 'groups' },
-          },
-          items: FORM.map(({ part: p, caption, steps }, i) => ({
-            part: p,
-            stack: { as: 'li', direction: 'column', gap: 0 },
-            className: 'yh-songform__part',
-            attrs: { 'data-part': 'group', 'data-group': p },
-            // The arrow between parts: the song runs left to right.
-            arrow:
-              i > 0
-                ? {
-                    text: { tone: 'muted', leading: 'tight' },
-                    className: 'yh-songform__arrow',
-                    attrs: { 'data-part': 'arrow', 'aria-hidden': 'true' },
-                    word: '→',
-                  }
-                : undefined,
-            caption: {
-              text: { role: 'caption', tone: 'muted', case: 'label' },
-              className: 'yh-songform__caption',
-              attrs: { 'data-part': 'caption', 'aria-hidden': 'true' },
-              word: caption,
-            },
-            steps: stepsView,
-            items: steps.map(step),
-          })),
-          mods: {
-            stack: { direction: 'column', gap: 0 },
-            className: 'yh-songform__mods',
-            attrs: { 'data-part': 'mods', role: 'group', 'aria-label': 'Insert' },
-          },
-          modSteps: stepsView,
-          brk: step(BREAK),
-        };
+      ? null
+      : stack(
+          'div',
+          { direction: 'row', gap: 6, align: 'stretch', className: 'yh-songform__form' },
+          { 'data-part': 'form', 'data-form': formId, role: 'group', 'aria-label': 'Sections' },
+          h('span', { class: 'yh-songform__cue', 'data-part': 'cue', role: 'status' }, cues.join('. ')),
+          stack(
+            'ol',
+            { direction: 'row', gap: 6, align: 'stretch', className: 'yh-songform__parts' },
+            { 'data-part': 'groups' },
+            ...each(
+              FORM,
+              (p) => p.part,
+              ({ part: p, caption, steps: defs }, i) =>
+                stack(
+                  'li',
+                  { direction: 'column', gap: 0, className: 'yh-songform__part' },
+                  { 'data-part': 'group', 'data-group': p },
+                  // The arrow between parts: the song runs left to right.
+                  i > 0
+                    ? text('span', { tone: 'muted', leading: 'tight', className: 'yh-songform__arrow' }, { 'data-part': 'arrow', 'aria-hidden': 'true' }, '→')
+                    : null,
+                  text(
+                    'span',
+                    { role: 'caption', tone: 'muted', case: 'label', className: 'yh-songform__caption' },
+                    { 'data-part': 'caption', 'aria-hidden': 'true' },
+                    caption,
+                  ),
+                  steps(...each(defs, (s) => s.id, step)),
+                ),
+            ),
+          ),
+          stack(
+            'div',
+            { direction: 'column', gap: 0, className: 'yh-songform__mods' },
+            { 'data-part': 'mods', role: 'group', 'aria-label': 'Insert' },
+            steps(step(BREAK)),
+          ),
+        );
 
   const fadeFace: Pick<ButtonModelProps, 'on' | 'waiting'> = fading ? (running ? { on: true } : { waiting: true }) : {};
 
-  const transport: TransportView | undefined =
-    part === 'form'
-      ? undefined
-      : {
-          className: 'yh-songform__transport',
-          attrs: { 'data-part': 'transport', 'data-form': transportId, role: 'group', 'aria-label': 'Transport' },
-          start: { className: 'yh-songform__start', attrs: { 'data-part': 'start' } },
-          startButton: {
-            label: running ? 'Stop' : 'Start',
-            size: 'cell',
-            tall: true,
-            variant: running ? 'secondary' : 'primary',
-            hue: running ? 'ok' : 'role-2',
-            pressed: running,
-            name: running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped',
-            tip: 'transport.start_stop',
-            tipAction,
-            onPress: onStartStop,
-            onLongPress: running ? onStopWithFade : undefined,
-          },
-          keys: [
-            {
-              ...key('sync-start'),
-              key: 'sync-start',
-              kind: 'button',
-              button: {
-                label: 'Sync Start',
-                size: 'cell',
-                hue: 'role-2',
-                waiting: syncStart,
-                lit,
-                pressed: syncStart,
-                name: syncStart ? 'Sync Start, armed' : 'Sync Start',
-                tip: 'transport.sync_start',
-                tipAction,
-                onPress: () => onSyncStart?.(!syncStart),
-              },
-            },
-            {
-              ...key('sync-stop'),
-              key: 'sync-stop',
-              kind: 'button',
-              button: {
-                label: 'Sync Stop',
-                size: 'cell',
-                hue: 'role-2',
-                waiting: syncStop,
-                pressed: syncStop,
-                tip: 'transport.sync_stop',
-                tipAction,
-                onPress: () => onSyncStop?.(!syncStop),
-              },
-            },
-            {
-              ...key('fill-up'),
-              key: 'fill-up',
-              kind: 'button',
-              button: {
-                label: 'Fill',
-                symbol: 'up',
-                size: 'cell',
-                hue: 'role-2',
-                waiting: fillPending === 'up',
-                lit,
-                name: `Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`,
-                tip: 'transport.fill_up',
-                tipAction,
-                onPress: onFillUp,
-              },
-            },
-            {
-              ...key('fill-down'),
-              key: 'fill-down',
-              kind: 'button',
-              button: {
-                label: 'Fill',
-                symbol: 'down',
-                size: 'cell',
-                hue: 'role-2',
-                waiting: fillPending === 'down',
-                lit,
-                name: `Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`,
-                tip: 'transport.fill_down',
-                tipAction,
-                onPress: onFillDown,
-              },
-            },
-            {
-              ...key('fade'),
-              key: 'fade',
-              kind: 'button',
-              button: {
-                label: 'Fade',
-                size: 'cell',
-                ...fadeFace,
-                lit,
-                pressed: fading,
-                name: fading ? (running ? 'Fade, fading' : 'Fade in, waiting for Start') : running ? 'Fade out' : 'Fade in',
-                tip: 'transport.fade',
-                tipAction,
-                onPress: onFade,
-              },
-            },
-            {
-              ...key('reset'),
-              key: 'reset',
-              kind: 'button',
-              button: {
-                label: 'Reset',
-                size: 'cell',
-                name: 'Section reset: restart the section from its first bar',
-                tip: 'transport.section_reset',
-                tipAction,
-                onPress: onReset,
-              },
-            },
-            {
-              ...key('accomp'),
-              key: 'accomp',
-              kind: 'lamp',
-              lamp: {
-                label: 'Accomp',
-                name: 'Accomp (ACMP)',
-                size: 'cell',
-                on: accomp,
-                tip: 'transport.acmp',
-                tipAction,
-                onToggle: onAccomp,
-              },
-            },
-            {
-              ...key('auto-fill'),
-              key: 'auto-fill',
-              kind: 'lamp',
-              lamp: {
-                label: 'Auto Fill',
-                size: 'cell',
-                hue: 'role-2',
-                on: autoFill,
-                tip: 'transport.auto_fill',
-                tipAction,
-                onToggle: onAutoFill,
-              },
-            },
-          ],
-        };
+  /** One transport key: its wrapping `div` and its Button or LampButton, `press` its handler key. */
+  const key = (name: string, kind: 'Button' | 'LampButton', control: Record<string, unknown>, press: string): Node => ({
+    ...h(
+      'div',
+      { class: 'yh-songform__key', 'data-part': 'key', 'data-key': name },
+      component(kind, control, { on: { [kind === 'Button' ? 'onPress' : 'onToggle']: press, ...TIP } }),
+    ),
+    key: name,
+  });
 
+  const transport =
+    part === 'form'
+      ? null
+      : h(
+          'div',
+          { class: 'yh-songform__transport', 'data-part': 'transport', 'data-form': transportId, role: 'group', 'aria-label': 'Transport' },
+          h(
+            'div',
+            { class: 'yh-songform__start', 'data-part': 'start' },
+            component(
+              'Button',
+              {
+                label: running ? 'Stop' : 'Start',
+                size: 'cell',
+                tall: true,
+                variant: running ? 'secondary' : 'primary',
+                hue: running ? 'ok' : 'role-2',
+                pressed: running,
+                name: running ? 'Start / Stop, running (hold to stop with a fade)' : 'Start / Stop, stopped',
+                tip: 'transport.start_stop',
+              },
+              // Held while running: stop with a fade (a Button with no `onLongPress` has no long press).
+              { on: { onPress: 'startStop', ...(running && onStopWithFade !== undefined ? { onLongPress: 'stopWithFade' } : {}), ...TIP } },
+            ),
+          ),
+          key(
+            'sync-start',
+            'Button',
+            {
+              label: 'Sync Start',
+              size: 'cell',
+              hue: 'role-2',
+              waiting: syncStart,
+              lit,
+              pressed: syncStart,
+              name: syncStart ? 'Sync Start, armed' : 'Sync Start',
+              tip: 'transport.sync_start',
+            },
+            'syncStart',
+          ),
+          key(
+            'sync-stop',
+            'Button',
+            { label: 'Sync Stop', size: 'cell', hue: 'role-2', waiting: syncStop, pressed: syncStop, tip: 'transport.sync_stop' },
+            'syncStop',
+          ),
+          key(
+            'fill-up',
+            'Button',
+            {
+              label: 'Fill',
+              symbol: 'up',
+              size: 'cell',
+              hue: 'role-2',
+              waiting: fillPending === 'up',
+              lit,
+              name: `Fill Up: a fill, then the next Main up${fillPending === 'up' ? ', queued' : ''}`,
+              tip: 'transport.fill_up',
+            },
+            'fillUp',
+          ),
+          key(
+            'fill-down',
+            'Button',
+            {
+              label: 'Fill',
+              symbol: 'down',
+              size: 'cell',
+              hue: 'role-2',
+              waiting: fillPending === 'down',
+              lit,
+              name: `Fill Down: a fill, then the next Main down${fillPending === 'down' ? ', queued' : ''}`,
+              tip: 'transport.fill_down',
+            },
+            'fillDown',
+          ),
+          key(
+            'fade',
+            'Button',
+            {
+              label: 'Fade',
+              size: 'cell',
+              ...fadeFace,
+              lit,
+              pressed: fading,
+              name: fading ? (running ? 'Fade, fading' : 'Fade in, waiting for Start') : running ? 'Fade out' : 'Fade in',
+              tip: 'transport.fade',
+            },
+            'fade',
+          ),
+          key(
+            'reset',
+            'Button',
+            { label: 'Reset', size: 'cell', name: 'Section reset: restart the section from its first bar', tip: 'transport.section_reset' },
+            'reset',
+          ),
+          key('accomp', 'LampButton', { label: 'Accomp', name: 'Accomp (ACMP)', size: 'cell', on: accomp, tip: 'transport.acmp' }, 'accomp'),
+          key('auto-fill', 'LampButton', { label: 'Auto Fill', size: 'cell', hue: 'role-2', on: autoFill, tip: 'transport.auto_fill' }, 'autoFill'),
+        );
+
+  // The root is a Text only for its size (one control height, the container queries' em); the
+  // inner body Text sets the real type back to the body recipe.
+  return text(
+    'div',
+    { className: 'yh-songform' },
+    { 'data-part': 'root', 'data-half': part, 'data-form': rootForm },
+    text('div', { className: 'yh-songform__inner' }, { 'data-part': 'inner' }, form, transport),
+  );
+}
+
+/** The callbacks `songFormView`'s tree names: each section's press (`section:<id>`), the transport's
+ *  keys (a switch asks for the state it doesn't have) and the tooltip action. */
+export function songFormHandlers(props: SongFormProps): Handlers {
+  const { syncStart = false, syncStop = false } = props;
   return {
-    // The root is a Text only for its size (one control height, the container queries' em); the
-    // inner body Text sets the real type back to the body recipe.
-    root: { className: 'yh-songform', attrs: { 'data-part': 'root', 'data-half': part, 'data-form': rootForm } },
-    inner: { className: 'yh-songform__inner', attrs: { 'data-part': 'inner' } },
-    form,
-    transport,
+    ...Object.fromEntries(SECTIONS.map((s) => [sectionKey(s.id), () => props.onSection?.(s.id)])),
+    startStop: props.onStartStop,
+    stopWithFade: props.onStopWithFade,
+    syncStart: () => props.onSyncStart?.(!syncStart),
+    syncStop: () => props.onSyncStop?.(!syncStop),
+    fillUp: props.onFillUp,
+    fillDown: props.onFillDown,
+    fade: props.onFade,
+    reset: props.onReset,
+    accomp: props.onAccomp,
+    autoFill: props.onAutoFill,
+    tipAction: props.tipAction,
   };
 }

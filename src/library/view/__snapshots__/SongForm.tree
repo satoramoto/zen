@@ -1,0 +1,882 @@
+## Stopped
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        ""
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-start="true" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A, starts here" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B" state="idle" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C" state="idle" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="role-2" label="Start" name="Start / Stop, stopped" pressed=false size="cell" tall=true tip="transport.start_stop" variant="primary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade in" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## Board
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## FlashOff
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=false name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=false name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=false name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=false name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=false name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=false name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=false name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=false name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=false name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=false name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=false name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=false name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=false name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=false name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=false name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## FillPending
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Fill, then Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up, queued" size="cell" symbol="up" tip="transport.fill_up" waiting=true @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## SyncStartArmed
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Starts with the first chord"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-start="true" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I, starts here" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B" state="idle" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C" state="idle" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="role-2" label="Start" name="Start / Stop, stopped" pressed=false size="cell" tall=true tip="transport.start_stop" variant="primary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start, armed" pressed=true size="cell" tip="transport.sync_start" waiting=true @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade in" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## MissingSections
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main B, after bar 2"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="II" lit=true name="Intro II, not in this style" state="dark" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A, playing" state="playing" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, next, after bar 2" state="next" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="C" lit=true name="Main C, not in this style" state="dark" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="D" lit=true name="Main D, not in this style" state="dark" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="II" lit=true name="Ending II, not in this style" state="dark" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="absent">
+            <Pad accentNext=true disabled=true fillCell=true label="Break" lit=true name="Break, not in this style" state="dark" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=true size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## Fading
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade, fading" on=true pressed=true size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## At1217
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## Narrow
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## FormPart
+<div class="lib-text lib-tone yh-songform" data-form="strip" data-half="form" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+
+## FormPartSmall
+<div class="lib-text lib-tone yh-songform" data-form="strip" data-half="form" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+
+## FormPartAuto
+<div class="lib-text lib-tone yh-songform" data-form="strip" data-half="form" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+
+## TransportPart
+<div class="lib-text lib-tone yh-songform" data-form="keys" data-half="transport" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## TransportPartTall
+<div class="lib-text lib-tone yh-songform" data-form="keys" data-half="transport" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## Forms
+<div class="lib-text lib-tone yh-songform" data-half="both" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Sections" class="lib-stack yh-songform__form" data-align="stretch" data-direction="row" data-form="strip" data-gap="6" data-part="form" role="group">
+      <span class="yh-songform__cue" data-part="cue" role="status">
+        "Next: Main C, after bar 4"
+      <ol class="lib-stack yh-songform__parts" data-align="stretch" data-direction="row" data-gap="6" data-part="groups">
+        <li key=intro class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="intro" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Intro"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=intro1 class="yh-songform__step" data-part="step" data-section="intro1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Intro I" state="idle" tagCorner=true tip="section.intro1" @onPress=section:intro1 @tipAction=tipAction>
+            <div key=intro2 class="yh-songform__step" data-part="step" data-section="intro2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Intro II" state="idle" tagCorner=true tip="section.intro2" @onPress=section:intro2 @tipAction=tipAction>
+            <div key=intro3 class="yh-songform__step" data-part="step" data-section="intro3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Intro III, not in this style" state="dark" tagCorner=true tip="section.intro3" @onPress=section:intro3 @tipAction=tipAction>
+        <li key=main class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="main" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Main"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=mainA class="yh-songform__step" data-part="step" data-section="mainA" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="A" lit=true name="Main A" state="idle" tagCorner=true tip="section.main_a" @onPress=section:mainA @tipAction=tipAction>
+            <div key=mainB class="yh-songform__step" data-part="step" data-section="mainB" data-state="playing">
+              <Pad accentNext=true disabled=false fillCell=true label="B" lit=true name="Main B, playing" state="playing" tagCorner=true tip="section.main_b" @onPress=section:mainB @tipAction=tipAction>
+            <div key=mainC class="yh-songform__step" data-part="step" data-section="mainC" data-state="next">
+              <Pad accentNext=true disabled=false fillCell=true label="C" lit=true name="Main C, next, after bar 4" state="next" tagCorner=true tip="section.main_c" @onPress=section:mainC @tipAction=tipAction>
+            <div key=mainD class="yh-songform__step" data-part="step" data-section="mainD" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="D" lit=true name="Main D" state="idle" tagCorner=true tip="section.main_d" @onPress=section:mainD @tipAction=tipAction>
+        <li key=ending class="lib-stack yh-songform__part" data-direction="column" data-gap="0" data-group="ending" data-part="group">
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__arrow" data-part="arrow" data-role="body" data-text-leading="tight" data-tone="muted">
+            "→"
+          <span aria-hidden="true" class="lib-text lib-tone yh-songform__caption" data-part="caption" data-role="caption" data-text-case="label" data-tone="muted">
+            "Ending"
+          <div class="yh-songform__steps" data-part="steps">
+            <div key=ending1 class="yh-songform__step" data-part="step" data-section="ending1" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="I" lit=true name="Ending I" state="idle" tagCorner=true tip="section.ending1" @onPress=section:ending1 @tipAction=tipAction>
+            <div key=ending2 class="yh-songform__step" data-part="step" data-section="ending2" data-state="idle">
+              <Pad accentNext=true disabled=false fillCell=true label="II" lit=true name="Ending II" state="idle" tagCorner=true tip="section.ending2" @onPress=section:ending2 @tipAction=tipAction>
+            <div key=ending3 class="yh-songform__step" data-part="step" data-section="ending3" data-state="absent">
+              <Pad accentNext=true disabled=true fillCell=true label="III" lit=true name="Ending III, not in this style" state="dark" tagCorner=true tip="section.ending3" @onPress=section:ending3 @tipAction=tipAction>
+      <div aria-label="Insert" class="lib-stack yh-songform__mods" data-direction="column" data-gap="0" data-part="mods" role="group">
+        <div class="yh-songform__steps" data-part="steps">
+          <div class="yh-songform__step" data-part="step" data-section="break" data-state="idle">
+            <Pad accentNext=true disabled=false fillCell=true label="Break" lit=true name="Break" state="idle" tagCorner=true tip="section.break" @onPress=section:break @tipAction=tipAction>
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="ok" label="Stop" name="Start / Stop, running (hold to stop with a fade)" pressed=true size="cell" tall=true tip="transport.start_stop" variant="secondary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start" pressed=false size="cell" tip="transport.sync_start" waiting=false @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade out" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>
+
+## TransportPartStopped
+<div class="lib-text lib-tone yh-songform" data-form="keys" data-half="transport" data-part="root" data-role="body">
+  <div class="lib-text lib-tone yh-songform__inner" data-part="inner" data-role="body">
+    <div aria-label="Transport" class="yh-songform__transport" data-form="keys" data-part="transport" role="group">
+      <div class="yh-songform__start" data-part="start">
+        <Button hue="role-2" label="Start" name="Start / Stop, stopped" pressed=false size="cell" tall=true tip="transport.start_stop" variant="primary" @onPress=startStop @tipAction=tipAction>
+      <div key=sync-start class="yh-songform__key" data-key="sync-start" data-part="key">
+        <Button hue="role-2" label="Sync Start" lit=true name="Sync Start, armed" pressed=true size="cell" tip="transport.sync_start" waiting=true @onPress=syncStart @tipAction=tipAction>
+      <div key=sync-stop class="yh-songform__key" data-key="sync-stop" data-part="key">
+        <Button hue="role-2" label="Sync Stop" pressed=false size="cell" tip="transport.sync_stop" waiting=false @onPress=syncStop @tipAction=tipAction>
+      <div key=fill-up class="yh-songform__key" data-key="fill-up" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Up: a fill, then the next Main up" size="cell" symbol="up" tip="transport.fill_up" waiting=false @onPress=fillUp @tipAction=tipAction>
+      <div key=fill-down class="yh-songform__key" data-key="fill-down" data-part="key">
+        <Button hue="role-2" label="Fill" lit=true name="Fill Down: a fill, then the next Main down" size="cell" symbol="down" tip="transport.fill_down" waiting=false @onPress=fillDown @tipAction=tipAction>
+      <div key=fade class="yh-songform__key" data-key="fade" data-part="key">
+        <Button label="Fade" lit=true name="Fade in" pressed=false size="cell" tip="transport.fade" @onPress=fade @tipAction=tipAction>
+      <div key=reset class="yh-songform__key" data-key="reset" data-part="key">
+        <Button label="Reset" name="Section reset: restart the section from its first bar" size="cell" tip="transport.section_reset" @onPress=reset @tipAction=tipAction>
+      <div key=accomp class="yh-songform__key" data-key="accomp" data-part="key">
+        <LampButton label="Accomp" name="Accomp (ACMP)" on=true size="cell" tip="transport.acmp" @onToggle=accomp @tipAction=tipAction>
+      <div key=auto-fill class="yh-songform__key" data-key="auto-fill" data-part="key">
+        <LampButton hue="role-2" label="Auto Fill" on=false size="cell" tip="transport.auto_fill" @onToggle=autoFill @tipAction=tipAction>

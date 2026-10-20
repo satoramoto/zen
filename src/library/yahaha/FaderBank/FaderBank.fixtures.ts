@@ -1,10 +1,11 @@
 // Ported from yahaha/src/ui/FaderBank/FaderBank.fixtures.ts. Added: each live strip's `sound`.
 // Changed: Left plays Finger Bass, as the board shows (the original's fixture repeated Silk Strings).
-// The stories as plain props (`faderBankStories`): FaderBank.stories.tsx (React) and
-// FaderBank.stories.svelte.ts (Svelte) both draw them, and the parity test renders every instance
-// of the bank in both.
-import { defineFixtures, type FixtureProps } from '../../fixtures'
+// The stories as plain props (`faderBankStories`): FaderBank.stories.tsx draws them with React's or
+// Svelte's renderer, and the tree snapshot draws every instance; the Forms story is a view tree
+// (`faderBankFormsSample`).
+import { defineFixtures, instances, type FixtureProps } from '../../fixtures'
 import type { TabItemModel } from '../../layout/Tabs.model'
+import { component, h, styleText, type Node } from '../../view/Tree.model'
 import type { BankLamp, FaderBankRegionModelProps, FaderStrip } from './FaderBank.model'
 
 type TabItem = TabItemModel<string>
@@ -298,3 +299,40 @@ export const faderBankStories = defineFixtures<FaderBankRegionModelProps>()({
   },
   Live: { args: boardArgs },
 })
+
+/** The region's callbacks, each passed as the story arg of the same name (`handlers` = the args). */
+const REGION_CALLBACKS = [
+  'onChoosePage',
+  'onChooseLayer',
+  'onLevel',
+  'onOpen',
+  'onLamp',
+  'onLampLong',
+  'onLampRelease',
+  'onPageButton',
+  'onPageLong',
+  'onPageRelease',
+  'tipAction',
+] as const
+
+/**
+ * The Forms story as a view tree: one FaderBankRegion per form (the Forms items), each in a box the
+ * size of its form's least (`FORM_BOXES`), in a wrapping row. Its callbacks are the story's args by
+ * name.
+ */
+export const faderBankFormsSample = <L>({ strips, pageTabs, page, layerTabs, layer, partLamps, functionLamps }: FaderBankRegionModelProps<L>): Node =>
+  h(
+    'div',
+    { style: styleText({ display: 'flex', 'flex-wrap': 'wrap', gap: 'var(--space-5)', 'align-items': 'flex-start' }) },
+    instances(faderBankStories.Forms).map(({ name, form = 'tall' }) =>
+      h(
+        'div',
+        { style: styleText({ display: 'grid', width: `${FORM_BOXES[form].width}px`, height: `${FORM_BOXES[form].height}px` }) },
+        component(
+          'FaderBankRegion',
+          { strips, pageTabs, page, layerTabs, layer, partLamps, functionLamps, name, form },
+          { on: Object.fromEntries(REGION_CALLBACKS.map((key) => [key, key])) },
+        ),
+      ),
+    ),
+  )

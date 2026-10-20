@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
+import { fixtureStories, withRenderer } from '../../stories/story';
 import { Stage } from './Stage';
+import StageSvelte from './Stage.svelte';
 import { stageBoard, stageStories as s } from './Stage.fixtures';
 import { StagePlayground } from './StagePlayground';
+
+// Every story but the Playground is built from Stage.fixtures.ts (`story(s.Name)`); the toolbar's
+// Renderer draws it with React's or Svelte's Stage.
 
 /**
  * The whole app on one screen: the AppBar, the Display (the hero), the transport, the mixer, the
@@ -14,6 +19,7 @@ const meta = {
   title: 'Yahaha/Screens/Stage',
   component: Stage,
   decorators: [
+    withRenderer,
     (Story) => (
       <div className="yh-stage-frame">
         <Story />
@@ -42,6 +48,7 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Stage, StageSvelte);
 
 /**
  * The 1920 × 1080 board, scaled to the canvas (16:9, ground bands round it): Am7 in Main B, Main C next
@@ -49,52 +56,34 @@ type Story = StoryObj<typeof meta>;
  * transport beside it, then the mixer and the knobs over the pads (on Sections) on the same
  * column seam.
  */
-export const Board: Story = { args: s.Board.args };
+export const Board: Story = story(s.Board);
 
 /** The board with the pads on Quick Racks: the bank's own pads, not the song's sections. */
-export const QuickRacks: Story = {
-  args: s.QuickRacks.args,
-};
+export const QuickRacks: Story = story(s.QuickRacks);
 
 /** Stopped on Main A at 92 with Coastal Highway queued, the faders on the Reverb layer, a message on the status line. */
-export const Stopped: Story = {
-  args: s.Stopped.args,
-};
+export const Stopped: Story = story(s.Stopped);
 
 /** A 16:10 laptop, 1440 × 900: the Stage stays 16:9, a 1440 × 810 room with a ground band above and below. */
-export const Letterboxed: Story = {
-  args: s.Letterboxed.args,
-};
+export const Letterboxed: Story = story(s.Letterboxed);
 
 /** An ultrawide, 2560 × 1080: the board's 1920 × 1080 room, centred, with a ground band each side. */
-export const Pillarboxed: Story = {
-  args: s.Pillarboxed.args,
-};
+export const Pillarboxed: Story = story(s.Pillarboxed);
 
 /** The smallest screen, 1217 × 752: a 1217 × 684.6 room between ground bands; the solver steps the controls, then the hero, down before it zooms; nothing cut off. */
-export const Small: Story = {
-  args: s.Small.args,
-};
+export const Small: Story = story(s.Small);
 
 /** 900 × 700: a 900 × 506 room, below the Stage's least: every region at a lean form, the body held at the 24 px target, and it scrolls. */
-export const Narrow: Story = {
-  args: s.Narrow.args,
-};
+export const Narrow: Story = story(s.Narrow);
 
 /** The same 900 × 700 frame scaled: the whole 1920 × 1080 board drawn at 0.469, the forms the board's. */
-export const NarrowScaled: Story = {
-  args: s.NarrowScaled.args,
-};
+export const NarrowScaled: Story = story(s.NarrowScaled);
 
 /** The alternative `split` layout on the board: the hero across the top, the transport down the right beside the pads. */
-export const SplitBoard: Story = {
-  args: s.SplitBoard.args,
-};
+export const SplitBoard: Story = story(s.SplitBoard);
 
 /** The `split` layout on the smallest screen, 1217 × 752. */
-export const SplitSmall: Story = {
-  args: s.SplitSmall.args,
-};
+export const SplitSmall: Story = story(s.SplitSmall);
 
 /**
  * Play with the screen: a story-only wrapper (`StagePlayground`) keeps what you change. Pages,
@@ -102,7 +91,8 @@ export const SplitSmall: Story = {
  * of the phrase (or on a second press); Start / Stop runs the band and the beat moves; − + and
  * Tap change the tempo; faders move; the metronome's ▾ opens and closes its popover; One Touch
  * applies, from the hero or the OTS pads. It fills the window, so resize the window to see the
- * fit. Every press logs in the Actions panel.
+ * fit. Every press logs in the Actions panel. React only: a stateful wrapper, with no fixture to
+ * draw in Svelte.
  */
 export const Playground: Story = {
   args: { tipAction: undefined, width: undefined, height: undefined },

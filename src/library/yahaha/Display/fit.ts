@@ -1,6 +1,8 @@
-// Display's measuring, framework-free: the readouts' fit and the auto form's width. `useFit.ts`
-// binds them in React, `fit.svelte.ts` in Svelte. Nothing here is state: the fit's results are data
-// attributes the CSS reads; the auto form reports `wide` to the renderer.
+// Display's measuring, framework-free: the readouts' fit (`bindDisplayFit`, on the frame) and the
+// auto form's width (`bindDisplayWide`, on the root), registered as the `displayFit` and
+// `displayWide` stores (`view/stores.ts`) and bound from `displayView`'s tree. Nothing here is
+// state: the fit's results are data attributes the CSS reads; the width is reported through the
+// `onWide` handler, which writes the binding's `wideState` (`wide.ts`).
 import { AUTO_FULL_WIDTH, DISPLAY_FITS } from './Display.model';
 
 /**
@@ -30,15 +32,16 @@ export function fitDisplay(frame: HTMLElement): void {
   }
 }
 
-export interface FitBinding {
-  /** Measures again (the content changed). */
-  refit(): void;
-  destroy(): void;
+export interface DisplayFitParams {
+  /** Changes whenever what the fit measures may have changed (`displayView`'s fit key): it fits again. */
+  key: string;
 }
 
-/** Fits `frame` now, once the fonts are ready, and whenever it resizes, until `destroy`. */
-export function bindFit(frame: HTMLElement): FitBinding {
+/** The `displayFit` store: fits `frame` now, once the fonts are ready, whenever it resizes, and
+ *  again when `key` changes, until `destroy`. */
+export function bindDisplayFit(frame: HTMLElement, params: DisplayFitParams): { update(params: DisplayFitParams): void; destroy(): void } {
   let live = true;
+  let key = params.key;
   const fit = () => {
     if (live) fitDisplay(frame);
   };
@@ -47,7 +50,11 @@ export function bindFit(frame: HTMLElement): FitBinding {
   const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(fit);
   observer?.observe(frame);
   return {
-    refit: fit,
+    update(next) {
+      if (next.key === key) return;
+      key = next.key;
+      fit();
+    },
     destroy() {
       live = false;
       observer?.disconnect();
@@ -55,14 +62,41 @@ export function bindFit(frame: HTMLElement): FitBinding {
   };
 }
 
+export interface DisplayWideParams {
+  /** Measure only while this holds (`density="auto"` with nothing else picking the form). */
+  on: boolean;
+  /** Whether the element is at least `AUTO_FULL_WIDTH` wide: now, and whenever it resizes. */
+  onWide?: (wide: boolean) => void;
+}
+
 /**
- * `density="auto"`: reports whether `root`'s own box is at least `AUTO_FULL_WIDTH` wide, now and
- * whenever it resizes (where nothing measures, it stays narrow). Returns the teardown.
+ * The `displayWide` store, for `density="auto"`: while `on`, reports whether `root`'s own box is
+ * at least `AUTO_FULL_WIDTH` wide, now and whenever it resizes (where nothing measures, it stays
+ * narrow). Turning `on` off stops watching and leaves the last report standing.
  */
-export function observeWide(root: HTMLElement, onWide: (wide: boolean) => void): () => void {
-  const read = () => onWide(root.clientWidth >= AUTO_FULL_WIDTH);
-  read();
-  const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(read);
-  observer?.observe(root);
-  return () => observer?.disconnect();
+export function bindDisplayWide(root: HTMLElement, params: DisplayWideParams): { update(params: DisplayWideParams): void; destroy(): void } {
+  let current = params;
+  let stop: (() => void) | null = null;
+  const start = () => {
+    const read = () => current.onWide?.(root.clientWidth >= AUTO_FULL_WIDTH);
+    read();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(read);
+    observer?.observe(root);
+    stop = () => observer?.disconnect();
+  };
+  if (params.on) start();
+  return {
+    update(next) {
+      current = next;
+      if (next.on && !stop) start();
+      else if (!next.on && stop) {
+        stop();
+        stop = null;
+      }
+    },
+    destroy() {
+      stop?.();
+      stop = null;
+    },
+  };
 }

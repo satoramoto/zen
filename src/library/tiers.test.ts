@@ -146,7 +146,7 @@ describe('tiers adoption', () => {
     expect(a.components).toContain('components/core/Button');
     expect(a.components).toContain('yahaha/Stage');
     expect(a.components.some((f) => f === 'components/core' || f === 'yahaha')).toBe(false);
-    expect(a.text).toContain('yahaha/SongForm');
+    expect(a.text).toContain('components/music/Fader');
     expect(a.surface).toContain('components/music/Fader');
     for (const f of [...a.text, ...a.surface]) expect(a.components).toContain(f);
   });

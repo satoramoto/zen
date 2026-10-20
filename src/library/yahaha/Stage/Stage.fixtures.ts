@@ -81,8 +81,7 @@ export const stageQuickRacks = {
 } satisfies StageProps;
 
 /**
- * Every story's args, by the story names of `Stage.stories.tsx` and `Stage.stories.svelte.ts`
- * (the Playground is React's alone). Scaled by default: the 1920 × 1080 board drawn to fit.
+ * Every story's args, by the story names of `Stage.stories.tsx` (the Playground is React's alone). Scaled by default: the 1920 × 1080 board drawn to fit.
  */
 export const stageStories = defineFixtures<StageProps>()({
   Board: { args: { ...stageBoard, fit: 'scale' } },
