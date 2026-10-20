@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { assemble, principlesFor, resolveLength, resolveNeed, type Placement, type Principles, type RegionSpec, type ScreenSpec } from '../../layout/assembly';
 import { packs } from '../../themes/packs';
 import { scales } from '../../themes/scales';
-import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
+import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC, withHero } from './Stage.spec';
 
 const SIZES = [
   [1440, 1200],
@@ -222,6 +222,40 @@ describe('the Stage assembles itself', () => {
           expect(p.scale).toBeCloseTo(p.room.w / BOARD.w, 12);
         }
       }
+  });
+
+  it('a page in the hero: about 1392 × 288 inside the plate at 1440 × 900 (split), the controls stepping down for it; viable down to the small screen in both layouts', () => {
+    for (const pack of packs.filter((p) => p.id.startsWith('yahaha'))) {
+      const pr = principlesFor(pack.facets, pack.principles);
+      for (const layout of ['split', 'stacked'] as const)
+        for (const win of [BOARD, { w: 1440, h: 900 }, { w: 1217, h: 752 }]) {
+          const spec = withHero(layout === 'split' ? STAGE_SPLIT_SPEC : STAGE_SPEC, 'page');
+          const p = assemble(spec, win, pr);
+          const label = `page ${layout} ${pack.id} ${win.w}x${win.h}`;
+          expectViable(spec, p, pr, label);
+          expect(p.regions.hero.form, label).toBe(win.w === 1217 ? 'page-short' : 'page');
+        }
+      const p = assemble(withHero(STAGE_SPLIT_SPEC, 'page'), { w: 1440, h: 900 }, pr);
+      const { inset } = pr.plate;
+      expect(p.regions.hero.rect.w - inset.left - inset.right, pack.id).toBeGreaterThanOrEqual(1392);
+      expect(p.regions.hero.rect.h - inset.top - inset.bottom, pack.id).toBeGreaterThanOrEqual(270);
+    }
+  });
+
+  it('a side panel in the hero: the Display steps down to make room, never below the controls, viable down to the small screen', () => {
+    for (const pack of packs.filter((p) => p.id.startsWith('yahaha'))) {
+      const pr = principlesFor(pack.facets, pack.principles);
+      for (const layout of ['split', 'stacked'] as const)
+        for (const win of [BOARD, { w: 1440, h: 900 }, { w: 1217, h: 752 }]) {
+          const spec = withHero(layout === 'split' ? STAGE_SPLIT_SPEC : STAGE_SPEC, 'side');
+          const p = assemble(spec, win, pr);
+          const label = `side ${layout} ${pack.id} ${win.w}x${win.h}`;
+          expectViable(spec, p, pr, label);
+          expectHeroLast(p, label);
+          expect(p.regions.hero.parts?.display, label).toBe(p.regions.hero.form.replace('side-', ''));
+          expect(p.regions.hero.parts?.panel, label).toBe('panel');
+        }
+    }
   });
 
   it('has no song form region: the sections live in the Pads region, in both specs', () => {

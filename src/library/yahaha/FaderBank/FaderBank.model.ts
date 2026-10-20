@@ -50,6 +50,10 @@ export interface FaderStrip {
   tip?: string;
   /** The name button's tooltip key (not for a parked strip, whose name is not a button). */
   openTip?: string;
+  /** The sound button's accessible name, when the sound is pressable (`onSound`). Default "<tag> sound: <sound>, choose a sound". */
+  soundName?: string;
+  /** The sound button's tooltip key, when the sound is pressable (`onSound`). */
+  soundTip?: string;
 }
 
 /** One lamp: a part's on/off, or a Launchkey function. */
@@ -100,6 +104,12 @@ export interface FaderBankModelProps<L = string> {
   onLevel?: (id: string, level: number) => void;
   /** A strip's name was pressed (open Channel, Effects, …). */
   onOpen?: (id: string) => void;
+  /**
+   * A part strip's sound name was pressed (open that part's sound list). Set, each part strip's
+   * sound is its own button under the name (`soundTip`, `soundName`), and the name opens as before;
+   * unset, the name and sound are one button, `onOpen`'s.
+   */
+  onSound?: (part: Part) => void;
   /** A lamp asked to be switched to `on`. */
   onLamp?: (id: string, on: boolean) => void;
   /** A lamp with `long` was held. */
@@ -212,9 +222,15 @@ function text(tag: string, model: Parameters<typeof textView>[0], attrs: Record<
 
 const word = <L>(tab: TabItemModel<L> | undefined) => (typeof tab?.label === 'string' ? tab.label : (tab?.name ?? ''));
 
+/** Whether a strip's sound is its own button: a live part strip with a sound, in a bank given `onSound`. */
+const soundPresses = (strip: FaderStrip, pressable: boolean): strip is FaderStrip & { hue: Part; sound: string } =>
+  pressable && isPartHue(strip.hue) && strip.kind !== 'parked' && strip.sound !== undefined && strip.sound !== '';
+
 /** One strip: a Stack holding its Fader (`level:<id>`) and the name under it (a button opening
- *  `open:<id>`, with the `tip` store; a parked strip's is a blank, hidden placeholder). */
-function stripNode(strip: FaderStrip, at: number, layered: boolean, marksLine: boolean): Node {
+ *  `open:<id>`, with the `tip` store; a parked strip's is a blank, hidden placeholder). With
+ *  `soundPress`, a part strip's name block holds two buttons: the name (`open:<id>`) and the sound
+ *  (`sound:<id>`, its own `tip`). */
+function stripNode(strip: FaderStrip, at: number, layered: boolean, marksLine: boolean, soundPress: boolean): Node {
   const parked = strip.kind === 'parked';
   const part = clusterOf(strip) === 'parts';
   const stack = stackView({ gap: 1, className: 'yh-faderbank__strip' });
@@ -253,9 +269,23 @@ function stripNode(strip: FaderStrip, at: number, layered: boolean, marksLine: b
   const nameModel = { size: 'inherit', leading: 'snug', className: 'yh-faderbank__name' } as const;
   // No native `title`: the app's tooltip (tipAction with openTip) explains the button, and a title
   // would show a second, browser tooltip over it.
+  const press = (className: string, label: string, tip: string | undefined, handler: string, child: Node) =>
+    wire(h('button', { type: 'button', class: `yh-faderbank__press ${className}`, 'aria-label': label, 'data-tip': tip }, child), {
+      on: { click: handler },
+      bind: [['tip', { tip, tipAction: 'tipAction' }]],
+    });
   const name = parked
     ? text('span', nameModel, { 'aria-hidden': 'true' }, tag, sound, marks)
-    : wire(text('button', nameModel, { type: 'button', 'aria-label': strip.openName ?? strip.tag, 'data-tip': strip.openTip }, tag, sound, marks), {
+    : soundPresses(strip, soundPress)
+      ? text(
+          'div',
+          nameModel,
+          { 'data-sound-press': '' },
+          press('yh-faderbank__press--open', strip.openName ?? strip.tag, strip.openTip, `open:${strip.id}`, tag),
+          press('yh-faderbank__press--sound', strip.soundName ?? `${strip.tag} sound: ${strip.sound}, choose a sound`, strip.soundTip, `sound:${strip.id}`, sound),
+          marks,
+        )
+      : wire(text('button', nameModel, { type: 'button', 'aria-label': strip.openName ?? strip.tag, 'data-tip': strip.openTip }, tag, sound, marks), {
         on: { click: `open:${strip.id}` },
         bind: [['tip', { tip: strip.openTip, tipAction: 'tipAction' }]],
       });
@@ -277,7 +307,7 @@ function stripNode(strip: FaderStrip, at: number, layered: boolean, marksLine: b
 /**
  * The tree FaderBank draws in the chosen `form`: the root Stack; the grid of dividers, Master's
  * plate, the strips, the part lamps in their cells and the page button under Master; the function
- * row; the soft-takeover status. Callbacks are by key: `level:<id>`, `open:<id>`, `lamp:<id>`,
+ * row; the soft-takeover status. Callbacks are by key: `level:<id>`, `open:<id>`, `sound:<id>`, `lamp:<id>`,
  * `lampLong:<id>`, `lampRelease:<id>`, `page`, `pageLong`, `pageRelease`, `tipAction`
  * (`faderBankHandlers`). `form` is the binding's (`useForm` / `getForm`).
  */
@@ -309,7 +339,7 @@ export function faderBankView<L>(props: FaderBankModelProps<L>, form: FaderBankF
     masterAt >= 0
       ? keyed(h('span', { class: 'yh-faderbank__plate', style: column(columns[masterAt]), 'data-part': 'plate', 'aria-hidden': 'true' }), 'plate')
       : null,
-    each(strips, (strip) => `strip:${strip.id}`, (strip, i) => stripNode(strip, columns[i], layered, marksLine)),
+    each(strips, (strip) => `strip:${strip.id}`, (strip, i) => stripNode(strip, columns[i], layered, marksLine, props.onSound !== undefined)),
     each(partLamps, (item) => `cell:${item.id}`, (item, i) => h('div', { class: 'yh-faderbank__lamp', style: column(lampColumn(item, i)) }, lampNode(item))),
     keyed(
       h(
@@ -380,6 +410,10 @@ export function faderBankHandlers<L>(props: FaderBankModelProps<L>): Handlers {
   for (const strip of props.strips) {
     handlers[`level:${strip.id}`] = (level: number) => props.onLevel?.(strip.id, level);
     handlers[`open:${strip.id}`] = () => props.onOpen?.(strip.id);
+    if (isPartHue(strip.hue)) {
+      const part = strip.hue;
+      handlers[`sound:${strip.id}`] = () => props.onSound?.(part);
+    }
   }
   for (const lamp of [...props.partLamps, ...props.functionLamps]) {
     handlers[`lamp:${lamp.id}`] = (on: boolean) => props.onLamp?.(lamp.id, on);
@@ -393,6 +427,7 @@ export function faderBankHandlers<L>(props: FaderBankModelProps<L>): Handlers {
 const BANK_CALLBACKS = [
   'onLevel',
   'onOpen',
+  'onSound',
   'onLamp',
   'onLampLong',
   'onLampRelease',

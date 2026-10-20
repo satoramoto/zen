@@ -6,6 +6,7 @@ import { chorusKnobs, delayKnobs, knobPages, panKnobs, rackKnobs, reverbKnobs, s
 import { allPadBanks, allPadsByBank, quickRackPads } from '../PadBank/PadBank.fixtures';
 import { songFormBoard, songFormStopped } from '../SongForm/SongForm.fixtures';
 import { defineFixtures } from '../../fixtures';
+import { component, h, type Node } from '../../view/Tree.model';
 import type { KnobItem } from '../KnobBank/KnobBank.model';
 import { TEMPO_MAX, TEMPO_MIN, type StageModelProps } from './Stage.model';
 
@@ -94,7 +95,58 @@ export const stageStories = defineFixtures<StageProps>()({
   NarrowScaled: { args: { ...stageBoard, fit: 'scale', width: 900, height: 700 } },
   SplitBoard: { args: { ...stageBoard, fit: 'scale', layout: 'split' } },
   SplitSmall: { args: { ...stageBoard, layout: 'split', fit: 'contain', width: 1217, height: 752 } },
+  Transparent: { args: { ...stageBoard, fit: 'contain', width: 1440, height: 900, backdrop: 'transparent' } },
 });
+
+/** A slot story's args: the Stage's, and which of its slots the sample fills. */
+export interface StageSampleArgs extends StageProps {
+  slot: 'page' | 'side';
+}
+
+/**
+ * The slot stories (`WithPage`, `WithSide`), drawn as view trees (`stageSample`). WithPage: the
+ * board split (the hero across the top, as the app's pages want), a sound list in the Display's
+ * place at the 1440 × 900 window it is designed for. WithSide: the board with a help card in the
+ * hero's right third, scaled.
+ */
+export const stageSlotStories = defineFixtures<StageSampleArgs>()({
+  WithPage: { args: { ...stageBoard, layout: 'split', fit: 'contain', width: 1440, height: 900, slot: 'page' } },
+  WithSide: { args: { ...stageBoard, fit: 'scale', slot: 'side' } },
+});
+
+/** Fixture content for the `page` slot: Right 1's sound list, a page the app shows in the Display's place. */
+export const stagePageSample: Node = h(
+  'div',
+  { class: 'yh-stage-sample', 'data-part': 'sample-page' },
+  component('Text', { role: 'heading', weight: 'strong' }, { slots: { children: ['Right 1 · Sounds'] } }),
+  h(
+    'div',
+    { class: 'yh-stage-sample__grid' },
+    ...['Stage Grand', 'Bright Grand', 'Mellow Grand', 'Upright', 'Rhodes', 'Wurli', 'Clav', 'Organ'].map((sound, i) =>
+      component('Button', { label: sound, name: `${sound} (sound ${i + 1})`, chosen: i === 0, pressed: i === 0 }, { key: sound }),
+    ),
+  ),
+);
+
+/** Fixture content for the `side` slot: a help card, as the app's help, swap panel and first run use it. */
+export const stageSideSample: Node = h(
+  'div',
+  { class: 'yh-stage-sample', 'data-part': 'sample-side' },
+  component('Text', { role: 'heading', weight: 'strong' }, { slots: { children: ['Help · Sections'] } }),
+  component('Text', { role: 'body', tone: 'muted' }, { slots: { children: ['Press a section pad to queue it; it lands at the end of the phrase.'] } }),
+  component('Button', { label: 'Got it' }),
+);
+
+/** A slot story's tree: the Stage with that slot filled by its sample (the tooltip action by key, when the story has one), in a plain block. */
+export const stageSample = ({ slot: name, tipAction, ...props }: StageSampleArgs): Node =>
+  h(
+    'div',
+    {},
+    component('Stage', props, {
+      on: tipAction ? { tipAction: 'tipAction' } : {},
+      slots: { [name]: [name === 'page' ? stagePageSample : stageSideSample] },
+    }),
+  );
 
 /** The knob pages' eight knobs, in `knobPages` order (Style, Rack, Pan, Reverb, Chorus, Delay). */
 export const stageKnobPages = [styleKnobs, rackKnobs, panKnobs, reverbKnobs, chorusKnobs, delayKnobs];

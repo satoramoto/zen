@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
-import { fixtureStories, withRenderer } from '../../stories/story';
+import { fixtureStories, treeStory, withRenderer } from '../../stories/story';
 import { Stage } from './Stage';
 import StageSvelte from './Stage.svelte';
-import { stageBoard, stageStories as s } from './Stage.fixtures';
+import { stageBoard, stageSample, stageSlotStories as slots, stageStories as s, type StageSampleArgs } from './Stage.fixtures';
 import { StagePlayground } from './StagePlayground.story';
 
 // Every story but the Playground is built from Stage.fixtures.ts (`story(s.Name)`); the toolbar's
@@ -43,6 +43,7 @@ const meta = {
     height: { control: { type: 'number', min: 0, step: 1 }, table: { category: 'Layout' } },
     layout: { control: 'inline-radio', options: ['stacked', 'split'], table: { category: 'Layout' } },
     fit: { control: 'inline-radio', options: ['scale', 'contain'], table: { category: 'Layout' } },
+    backdrop: { control: 'inline-radio', options: ['ground', 'transparent'], table: { category: 'Layout' } },
   },
 } satisfies Meta<typeof Stage>;
 
@@ -84,6 +85,59 @@ export const SplitBoard: Story = story(s.SplitBoard);
 
 /** The `split` layout on the smallest screen, 1217 × 752. */
 export const SplitSmall: Story = story(s.SplitSmall);
+
+/** The slot stories' trees (`stageSample`): the Stage with its `page` or `side` slot filled by fixture content. */
+const sample = treeStory((args: StageSampleArgs) => ({
+  tree: stageSample(args),
+  handlers: args.tipAction ? { tipAction: args.tipAction } : {},
+}));
+
+/**
+ * The `page` slot at 1440 × 900, split: an app's page (Right 1's sound list) in the Display's
+ * place, across the hero's whole box, which takes its `page` form (about 1392 × 288 inside the
+ * plate); the controls below keep theirs.
+ */
+export const WithPage: Story = {
+  args: slots.WithPage.args as Story['args'],
+  render: sample.render as unknown as Story['render'],
+  parameters: sample.parameters,
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement).getByRole('region', { name: 'Page' });
+    await expect(within(page).getByRole('button', { name: /^Stage Grand/ })).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-region="hero"]')).toHaveAttribute('data-form', 'page');
+  },
+};
+
+/**
+ * The `side` slot on the board: a help card in the hero's right third; the Display beside it
+ * steps down to make room (the hero's `side-*` forms).
+ */
+export const WithSide: Story = {
+  args: slots.WithSide.args as Story['args'],
+  render: sample.render as unknown as Story['render'],
+  parameters: sample.parameters,
+  play: async ({ canvasElement }) => {
+    const hero = within(canvasElement).getByRole('region', { name: 'Hero' });
+    await expect(within(hero).getByRole('button', { name: 'Got it' })).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-region="hero"]')?.getAttribute('data-form')).toMatch(/^side-/);
+  },
+};
+
+/**
+ * `backdrop="transparent"` at 1440 × 900: nothing painted round the regions, so what is behind
+ * the Stage (here a story backdrop of two blooms in the part hues) shows through the gaps and the
+ * letterbox bands.
+ */
+export const Transparent: Story = {
+  ...story(s.Transparent),
+  decorators: [
+    (Story) => (
+      <div className="yh-stage-sample-backdrop">
+        <Story />
+      </div>
+    ),
+  ],
+};
 
 /**
  * Play with the screen: a story-only wrapper (`StagePlayground`) keeps what you change. Pages,
