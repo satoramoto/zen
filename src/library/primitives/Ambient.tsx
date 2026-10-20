@@ -1,6 +1,7 @@
 import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { AMBIENT_VARS } from '../contract';
-import { easeFactor, oklabCss, regionBuffer, REGION_COUNT, sampleRegions, scratchBuffer, smoothToward, type Pixels } from './Ambient.model';
+import { Tree } from '../view/Tree';
+import { ambientView, easeFactor, oklabCss, regionBuffer, REGION_COUNT, sampleRegions, scratchBuffer, smoothToward, type Pixels } from './Ambient.model';
 
 /** What an Ambient samples: a playing video, a canvas, an image, an image URL, or a function returning pixels (or null: no picture). */
 export type AmbientSource = HTMLVideoElement | HTMLCanvasElement | HTMLImageElement | string | (() => Pixels | null) | null | undefined;
@@ -163,9 +164,5 @@ export function Ambient({ source, rate = 10, smoothing = 600, reduce = false, st
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof source === 'function' ? 'function' : source]);
 
-  return (
-    <div ref={ref} className={`lib-ambient${className ? ` ${className}` : ''}`} {...rest}>
-      {children}
-    </div>
-  );
+  return <Tree tree={ambientView(className)} slots={{ children }} ref={ref} {...rest} />;
 }

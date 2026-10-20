@@ -1,6 +1,8 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import type { TextTone } from './Text';
-import { iconView, type IconSize } from './Icon.model';
+import { Tree } from '../view/Tree';
+import { slot } from '../view/Tree.model';
+import { iconNode, type IconSize } from './Icon.model';
 import './Text.css';
 import './Icon.css';
 
@@ -31,10 +33,5 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'childr
  * viewBox units).
  */
 export function Icon({ size, tone, label, viewBox, className, children, ...rest }: IconProps) {
-  const view = iconView({ size, tone, label, viewBox, className });
-  return (
-    <span className={view.slot.className} {...view.slot.attrs} {...rest}>
-      <svg {...view.svg}>{children}</svg>
-    </span>
-  );
+  return <Tree tree={iconNode({ size, tone, label, viewBox, className }, {}, slot('children'))} slots={{ children }} {...rest} />;
 }

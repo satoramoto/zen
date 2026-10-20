@@ -38,6 +38,7 @@ import Text from '../primitives/Text.svelte';
 import Layer from '../layout/Layer.svelte';
 import Screen from '../layout/Screen.svelte';
 import Surface from '../primitives/Surface.svelte';
+import Context from './Context.svelte';
 import AssembledScreen from '../layout/assembly/AssembledScreen.svelte';
 import FormScope from '../layout/assembly/FormScope.svelte';
 import AccentBlock from '../yahaha/AccentBlock/AccentBlock.svelte';
@@ -68,6 +69,7 @@ export function svelteComponent(name: string): Component<any> {
     Layer,
     Screen,
     Surface,
+    Context,
     Button,
     ActionButton,
     SearchField,

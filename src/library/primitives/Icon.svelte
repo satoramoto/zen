@@ -1,12 +1,14 @@
 <!--
-  Icon: the Svelte renderer of `iconView` (Icon.model.ts), the same slot and SVG as `Icon.tsx`.
-  See Icon.tsx for the job and the tuning knobs. `children` is the SVG content (paths, shapes),
-  drawn with `currentColor`; every other prop lands on the slot.
+  Icon: the model's tree (`iconNode`, Icon.model.ts) drawn by the Svelte `Tree`, the same slot and
+  SVG as `Icon.tsx`. See Icon.tsx for the job and the tuning knobs. `children` is the SVG content
+  (paths, shapes), drawn with `currentColor`; every other prop lands on the slot.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
-  import { iconView, type IconModelProps } from './Icon.model';
+  import Tree from '../view/Tree.svelte';
+  import { slot } from '../view/Tree.model';
+  import { iconNode, type IconModelProps } from './Icon.model';
   import './Text.css';
   import './Icon.css';
 
@@ -17,8 +19,6 @@
   }
 
   let { size, tone, label, viewBox, class: className, children, ...rest }: Props = $props();
-
-  const view = $derived(iconView({ size, tone, label, viewBox, className }));
 </script>
 
-<span class={view.slot.className} {...view.slot.attrs} {...rest}><svg {...view.svg}>{@render children?.()}</svg></span>
+<Tree tree={iconNode({ size, tone, label, viewBox, className }, {}, slot('children'))} slots={{ children }} {...rest} />

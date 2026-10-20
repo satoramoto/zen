@@ -1,5 +1,7 @@
-import type { AllHTMLAttributes, AriaRole, CSSProperties, ElementType, ReactNode, Ref } from 'react';
-import { textView, type TextModelProps } from './Text.model';
+import type { AllHTMLAttributes, AriaRole, CSSProperties, ReactNode, Ref } from 'react';
+import { Tree } from '../view/Tree';
+import { slot } from '../view/Tree.model';
+import { textNode, type TextModelProps } from './Text.model';
 import './Text.css';
 
 // The roles, tones and refinements are framework-free, in the model; `Text.svelte` renders the same view.
@@ -23,8 +25,8 @@ export {
 export interface TextProps extends Omit<AllHTMLAttributes<HTMLElement>, 'role' | 'size' | 'as'>, Omit<TextModelProps, 'ariaRole' | 'className'> {
   /** The ARIA role, since `role` is the type role. */
   ariaRole?: AriaRole;
-  /** The element to render; default `span`. */
-  as?: ElementType;
+  /** The element to render (a tag); default `span`. */
+  as?: string;
   /** Forwarded to the rendered element (`any`: the element is whatever `as` names). */
   ref?: Ref<any>;
   className?: string;
@@ -63,15 +65,16 @@ export function Text({
   size,
   weight,
   case: textCase,
-  as: Tag = 'span',
+  as,
   className,
   children,
   ...rest
 }: TextProps) {
-  const view = textView({ role, ariaRole, tone, tabular, truncate, leading, size, weight, case: textCase, className });
   return (
-    <Tag className={view.className} {...view.attrs} {...rest}>
-      {children}
-    </Tag>
+    <Tree
+      tree={textNode({ role, ariaRole, tone, tabular, truncate, leading, size, weight, case: textCase, className, as }, {}, slot('children'))}
+      slots={{ children }}
+      {...rest}
+    />
   );
 }

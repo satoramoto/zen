@@ -1,4 +1,5 @@
-import { createContext, createElement, useContext, useMemo, useSyncExternalStore, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from 'react';
+import { Context } from '../../view/Context';
 import { NO_FORM, fixedForm, pickForm, type FormStore } from './forms.model';
 import type { Forms } from './types';
 
@@ -8,12 +9,13 @@ import type { Forms } from './types';
 export { pickForm, type FormContextValue } from './forms.model';
 
 /** The form store of the region a component sits in: the solver's choice and its parts' forms. */
-const FormContext = createContext<FormStore>(NO_FORM);
+export const FormContext = createContext<FormStore>(NO_FORM);
 
-/** Hands `form` (and each part's form) to every component inside (the assembled Screen wraps each region in one). */
+/** Hands `form` (and each part's form) to every component inside (the assembled Screen wraps each
+ *  region in one). The provider is the view's `Context` (name `form`), so this file draws nothing. */
 export function FormProvider({ form, parts, children }: { form: string; parts?: Readonly<Record<string, string>>; children?: ReactNode }) {
   const store = useMemo(() => fixedForm({ form, parts }), [form, parts]);
-  return createElement(FormContext.Provider, { value: store }, children);
+  return Context({ name: 'form', value: store, children });
 }
 
 /** The chosen form as it stands in the nearest scope, or `null` outside one. */

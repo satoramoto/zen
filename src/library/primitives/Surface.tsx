@@ -1,8 +1,12 @@
-import { createContext, useContext, useState, type AllHTMLAttributes, type CSSProperties, type ElementType, type ReactNode, type Ref } from 'react';
+import { useContext, useState, type AllHTMLAttributes, type CSSProperties, type ReactNode, type Ref } from 'react';
 import type { AmbientRegion, LayerName } from '../contract';
-import { ShaderCanvas, compiledMaterial, useShaderSupport, type ShaderMaterialName, type ShaderSource } from '../shader';
+import { useShaderSupport, type ShaderMaterialName, type ShaderSource } from '../shader';
 import { useThemeScope } from '../theme';
-import { surfaceView, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
+import { Tree } from '../view/Tree';
+import { slot } from '../view/Tree.model';
+import { holeNode, opaqueTree } from './Hole.model';
+import { OpaqueContext } from './opaque';
+import { surfaceShader, surfaceTree, type LitSlot, type MaterialRole, type SurfaceRadius, type SurfaceShaderChoice } from './Surface.model';
 import './Surface.css';
 
 // The materials, lamps and corners are framework-free, in the model; `Surface.svelte` renders the same view.
@@ -41,24 +45,12 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as' 
    *  `materials.shaders[layer]`. Drawn only where `useShaderSupport()` allows and outside `Opaque`;
    *  otherwise (or if it fails) the layer's CSS material is all there is. */
   shader?: ShaderMaterialName | ShaderSource | false;
-  /** The element to render; default `div`. */
-  as?: ElementType;
+  /** The element to render (a tag); default `div`. */
+  as?: string;
   className?: string;
   /** Inline style: an object, or a `style` string (as a view tree's `component('Surface', …)` passes it). */
   style?: CSSProperties | string;
   children?: ReactNode;
-}
-
-/** A `style` string as React's style object (`min-width` → `minWidth`; custom properties as is). */
-function styleObject(text: string): CSSProperties {
-  const style: Record<string, string> = {};
-  for (const declaration of text.split(';')) {
-    const colon = declaration.indexOf(':');
-    const name = declaration.slice(0, colon).trim();
-    if (colon < 0 || !name) continue;
-    style[name.startsWith('--') ? name : name.replace(/^-ms-/, 'ms-').replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())] = declaration.slice(colon + 1).trim();
-  }
-  return style as CSSProperties;
 }
 
 /**
@@ -95,49 +87,23 @@ function styleObject(text: string): CSSProperties {
  * the layer's ambient shares `--lib-surface-ambient-fill`, `-edge`, `-cast`; `--lit` is the lamp
  * colour `--mat-lit-glow` reads.
  */
-export function Surface({
-  layer,
-  material,
-  radius,
-  pressed,
-  lit,
-  border,
-  ambient,
-  shader,
-  as: Tag = 'div',
-  className,
-  style,
-  children,
-  ...rest
-}: SurfaceProps) {
+export function Surface({ layer, material, radius, pressed, lit, border, ambient, shader, as, className, children, ref, ...rest }: SurfaceProps) {
   const scope = useThemeScope();
   const supported = useShaderSupport();
   const opaque = useContext(OpaqueContext);
   // The canvas reported a failure: drop it for the source that failed, so the CSS layer remains.
-  const [failed, setFailed] = useState<ShaderMaterialName | ShaderSource | null>(null);
-  const chosen = shader === false ? undefined : (shader ?? (layer ? scope?.facets.materials.shaders?.[layer] : undefined));
-  const source = chosen && supported && !opaque && chosen !== failed ? (typeof chosen === 'string' ? compiledMaterial(chosen) : chosen) : null;
-  const view = surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }, source !== null);
+  const [failed, setFailed] = useState<SurfaceShaderChoice | null>(null);
+  const { chosen, source } = surfaceShader(shader, layer, { packShaders: scope?.facets.materials.shaders, supported, opaque, failed });
   return (
-    <Tag className={view.className} {...view.attrs} {...rest} style={typeof style === 'string' ? styleObject(style) : style}>
-      {source && chosen && (
-        <ShaderCanvas
-          className="lib-surface__shader"
-          frag={source.frag}
-          params={source.params}
-          scale={source.scale}
-          animate={source.animate}
-          interactive={source.interactive}
-          onError={() => setFailed(chosen)}
-        />
-      )}
-      {children}
-    </Tag>
+    <Tree
+      tree={surfaceTree({ layer, material, radius, pressed, lit, border, ambient, className, as }, source)}
+      slots={{ children }}
+      handlers={{ shaderError: () => setFailed(chosen ?? null) }}
+      ref={ref}
+      {...rest}
+    />
   );
 }
-
-/** True inside an `Opaque` scope: no surface there draws a shader (nothing translucent over a native view). */
-const OpaqueContext = createContext(false);
 
 /**
  * **Job.** Where translucency can't composite: over a native view the web page can't blur (a
@@ -149,13 +115,7 @@ const OpaqueContext = createContext(false);
  * `prefers-contrast: more` or `<html data-transparency="reduced">` (library.css).
  */
 export function Opaque({ children, className, style }: { children?: ReactNode; className?: string; style?: CSSProperties }) {
-  return (
-    <OpaqueContext.Provider value={true}>
-      <div className={`lib-opaque${className ? ` ${className}` : ''}`} style={style}>
-        {children}
-      </div>
-    </OpaqueContext.Provider>
-  );
+  return <Tree tree={opaqueTree(className, style)} slots={{ children }} />;
 }
 
 /**
@@ -163,9 +123,5 @@ export function Opaque({ children, className, style }: { children?: ReactNode; c
  * ground shows through. It paints nothing; panels over it go in an `Opaque` scope.
  */
 export function Hole({ className, style, children, name }: { className?: string; style?: CSSProperties; children?: ReactNode; name?: string }) {
-  return (
-    <div className={`lib-hole${className ? ` ${className}` : ''}`} data-part="hole" aria-label={name} role={name ? 'img' : undefined} style={style}>
-      {children}
-    </div>
-  );
+  return <Tree tree={holeNode(className, name, {}, slot('children'))} slots={{ children }} style={style} />;
 }
