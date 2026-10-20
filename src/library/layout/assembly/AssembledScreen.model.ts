@@ -213,8 +213,8 @@ export function placementKey(placement: Placement): string {
 const surface = (props: SurfaceModelProps, attrs: Record<string, string | undefined>, key?: string): ComponentNode =>
   component('Surface', { ...props, ...attrs }, { key });
 
-/** A region's slot: the glass first when it has one, then its content (`regionSlot(id)`, called
- *  with the chosen form and the placed region by `SlotCall`) in a `FormScope` handing it the
+/** A region's slot: the glass first when it has one, then its content (`regionSlot(id)`, given the
+ *  chosen form and the placed region as the slot's arguments) in a `FormScope` handing it the
  *  chosen form and its parts' forms. */
 const slotNode = ({ id, placed, attrs, style, glass }: SlotView): Node =>
   h(
@@ -224,7 +224,7 @@ const slotNode = ({ id, placed, attrs, style, glass }: SlotView): Node =>
     component(
       'FormScope',
       { form: placed.form, parts: placed.parts },
-      { slots: { children: [component('SlotCall', { args: [placed.form, placed] }, { slots: { content: slot(regionSlot(id)) } })] } },
+      { slots: { children: [slot(regionSlot(id), [placed.form, placed])] } },
     ),
   );
 

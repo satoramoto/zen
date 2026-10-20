@@ -5,7 +5,7 @@
 // `npx vitest run src/library/view/snapshot.test.ts -u` records a deliberate change.
 import { describe, expect, it } from 'vitest';
 import { instances, type Fixtures } from '../fixtures';
-import { h, printTree, type Node } from './Tree.model';
+import { printTree, type Root } from './Tree.model';
 import { buttonView } from '../components/core/Button/Button.model';
 import { buttonStories } from '../components/core/Button/Button.fixtures';
 import { actionButtonView } from '../components/core/ActionButton/ActionButton.model';
@@ -120,7 +120,7 @@ import { assembledPlacement, assembledScreenView } from '../layout/assembly/Asse
 import { assemblyStories } from '../layout/assembly/Assembly.fixtures';
 import { scopePrinciples } from '../layout/assembly/principles';
 
-function snapshot<P>(name: string, view: (props: P) => Node, fixtures: Fixtures<P>): void {
+function snapshot<P>(name: string, view: (props: P) => Root, fixtures: Fixtures<P>): void {
   describe(name, () => {
     it('draws the same tree for every fixture', async () => {
       const text = Object.entries(fixtures)
@@ -160,8 +160,8 @@ snapshot('WaitingChip', (props) => waitingChipView(props as Parameters<typeof wa
 snapshot('StatusLine', (props) => statusLineView(props), statusLineStories);
 snapshot('DisplayArt', (props) => displayArtView(props), displayArtStories);
 snapshot('HueLegend', (props) => hueLegendView(props), hueLegendStories);
-// OneTouchPicker draws several roots in its `cells` mode (one `Tree` each); printed under a `#roots` marker.
-snapshot('OneTouchPicker', (props) => h('#roots', {}, ...oneTouchPickerView(props)), oneTouchPickerStories);
+// OneTouchPicker draws several roots in its `cells` mode: a fragment, printed one root after another.
+snapshot('OneTouchPicker', (props) => oneTouchPickerView(props), oneTouchPickerStories);
 snapshot('HealthSlot', (props) => healthSlotView(props), healthSlotStories);
 snapshot('AppBar', (props) => appBarView(props), appBarStories);
 snapshot('MetronomePopover', (props) => metronomePopoverView(props), metronomePopoverStories);
@@ -196,11 +196,11 @@ snapshot('Display', (props) => displayView(props as Parameters<typeof displayVie
 snapshot('SongForm', (props) => songFormView(props, props.formForm ?? 'strip', props.transportForm ?? 'keys'), songFormStories);
 snapshot('FaderBank', (props) => faderBankView(props as FaderBankModelProps, (props as FaderBankModelProps).form ?? 'tall'), faderBankStories);
 // The region composites' roots are component nodes (a Region holding the bank).
-snapshot('FaderBankRegion', (props) => faderBankRegionView(props as Parameters<typeof faderBankRegionView>[0]) as unknown as Node, faderBankStories);
+snapshot('FaderBankRegion', (props) => faderBankRegionView(props as Parameters<typeof faderBankRegionView>[0]), faderBankStories);
 snapshot('KnobBank', (props) => knobBankView(props as KnobBankRegionModelProps, (props as KnobBankRegionModelProps).form ?? 'labelled'), knobBankStories);
-snapshot('KnobBankRegion', (props) => knobBankRegionView(props as KnobBankRegionModelProps) as unknown as Node, knobBankStories);
+snapshot('KnobBankRegion', (props) => knobBankRegionView(props as KnobBankRegionModelProps), knobBankStories);
 snapshot('PadBank', (props) => padBankView(props as PadBankProps, (props as PadBankProps).form ?? 'two-rows', null), padBankStories);
-snapshot('PadBankRegion', (props) => padBankRegionView(props as PadBankRegionProps) as unknown as Node, padBankStories);
+snapshot('PadBankRegion', (props) => padBankRegionView(props as PadBankRegionProps), padBankStories);
 // The Stage's target tree (the Screen with its regions as slots); its bindings still draw the Screen by hand until the layout lane's Screen takes region slots.
 snapshot('Stage', (props) => stageView(props, {}, { left: 0, right: 0 }), stageStories);
 snapshot('PageList', (props) => pageListView(props as Parameters<typeof pageListView>[0]), pageListStories);

@@ -38,7 +38,6 @@ import { Stack } from '../primitives/Stack';
 import { Text } from '../primitives/Text';
 import { Layer } from '../layout/Layer';
 import { Screen } from '../layout/Screen';
-import { SlotCall } from '../layout/SlotCall';
 import { Surface } from '../primitives/Surface';
 import { AssembledScreen } from '../layout/assembly/AssembledScreen';
 import { FormProvider as FormScope } from '../layout/assembly/forms';
@@ -66,7 +65,6 @@ export function reactComponent(name: string): ComponentType<any> {
     FormScope,
     Layer,
     Screen,
-    SlotCall,
     Surface,
     Button,
     ActionButton,

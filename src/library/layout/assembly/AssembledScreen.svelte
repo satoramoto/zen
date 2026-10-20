@@ -4,7 +4,7 @@
   the job. The measured room is a local state (`localState`) the `room` store writes, read with
   `fromStore`; the principles come from the nearest ThemeScope (`scopePrinciples`,
   principles.svelte.ts). Each region's content is a snippet given the chosen form and the placed
-  region, rendered with them by the tree's `SlotCall`, inside the `FormScope` the tree wraps it in.
+  region, rendered with them by the tree's slot (its arguments), inside the `FormScope` the tree wraps it in.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
@@ -43,7 +43,7 @@
   const scope = scopePrinciples(() => principles);
   const model = $derived({ name, spec, room: given, className: cls ?? className, style });
   const placement = $derived(assembledPlacement(model, { room: measured.current, principles: scope.current }));
-  // Each region's snippet as is: the tree's `SlotCall` renders it with the form and the placed region.
+  // Each region's snippet as is: the tree's slot renders it with the form and the placed region.
   const slots = $derived(regionFills(placement, (id) => regions[id] as Snippet | undefined));
 </script>
 

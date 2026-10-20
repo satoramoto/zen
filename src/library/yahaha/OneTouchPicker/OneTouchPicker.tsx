@@ -4,7 +4,7 @@ import '../../primitives/Text.css';
 import './OneTouchPicker.css';
 
 // The props, faces, names and tooltip are framework-free, in the model; this file and
-// `OneTouchPicker.svelte` only draw the model's roots (one, or several in `cells`) with their `Tree`.
+// `OneTouchPicker.svelte` only draw the model's roots (one, or a fragment of several in `cells`) with their `Tree`.
 export {
   oneTouchPickerView,
   oneTouchPickerHandlers,
@@ -46,6 +46,5 @@ export {
  * parent grid; `data-face` and `data-tip` (`ots.<n>`) are unchanged.
  */
 export function OneTouchPicker(props: OneTouchPickerProps) {
-  const handlers = oneTouchPickerHandlers(props);
-  return oneTouchPickerView(props).map((tree) => <Tree key={tree.key} tree={tree} handlers={handlers} />);
+  return <Tree tree={oneTouchPickerView(props)} handlers={oneTouchPickerHandlers(props)} />;
 }

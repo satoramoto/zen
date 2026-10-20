@@ -1,51 +1,72 @@
-// The React renderer of a view tree (`tree.ts`): every converted component's `.tsx` is one
+// The React renderer of a view tree (`Tree.model.ts`): every converted component's `.tsx` is one
 // `<Tree tree={xView(props)} slots={…} handlers={…} />`. `Tree.svelte` draws the same DOM.
-import { createElement, Fragment, useLayoutEffect, useRef, type ComponentType, type CSSProperties, type ReactNode } from 'react';
-import { childKey, componentProps, domAttrs, isComponent, isSlot, isSlotFill, type Child, type ComponentNode, type Handlers, type Node } from './Tree.model';
+import { createElement, Fragment, useLayoutEffect, useRef, type ComponentType, type CSSProperties, type ReactNode, type Ref } from 'react';
+import { childKey, componentProps, domAttrs, isComponent, isSlot, isSlotFill, type Child, type ComponentNode, type Handlers, type Node, type Root } from './Tree.model';
 import { mountNode, type MountContext, type Mounted } from './mount';
 import { stores as registry, type Stores } from './stores';
 import { reactComponent } from './reactComponents';
 
+/** What fills a slot: a React node, or a function of the slot's `args` (`slot(name, args)`). */
+export type SlotFill = ReactNode | ((...args: any[]) => ReactNode);
+
 export interface TreeProps {
-  /** The view a model returned. */
-  tree: Node;
-  /** What fills each `slot(name)`: React nodes. An unfilled slot draws nothing. */
-  slots?: Record<string, ReactNode>;
+  /** The view a model returned: an element, a component, text, a slot, or a fragment (a list of them). */
+  tree: Root;
+  /** What fills each `slot(name)`: React nodes, or functions of the slot's arguments. An unfilled slot draws nothing. */
+  slots?: Record<string, SlotFill>;
   /** The callbacks `on` and the store params name, by key. */
   handlers?: Handlers;
   /** The store registry (default: every registered store, `stores.ts`). */
   stores?: Stores;
   /** The component registry (default: `reactComponents.ts`). */
   components?: (name: string) => ComponentType<any>;
+  /** The root element (or, for a component root, handed to it as its `ref`). */
+  ref?: Ref<any>;
+  /** Any other prop lands on the root, after the tree's own attributes: native attributes and
+   *  React listeners on an element root (a `style` string becomes an object), props on a component
+   *  root. A fragment, text or slot root takes none. */
+  [native: string]: unknown;
 }
 
 interface Context extends MountContext {
-  slots: Record<string, ReactNode>;
+  slots: Record<string, SlotFill>;
   components: (name: string) => ComponentType<any>;
 }
 
-export function Tree({ tree, slots = {}, handlers = {}, stores = registry, components = reactComponent }: TreeProps) {
-  return draw(tree, { slots, handlers, stores, components }, '#0');
+/** What the root takes from `Tree`'s own props: its ref and the rest. */
+interface Extra {
+  ref?: Ref<any>;
+  props: Record<string, unknown>;
 }
 
-function draw(child: Child, context: Context, key: string): ReactNode {
-  if (typeof child === 'string') return child;
-  if (isSlot(child)) return createElement(Fragment, { key }, context.slots[child.slot]);
-  if (isComponent(child)) return drawComponent(child, context, key);
-  return createElement(Element, { key, node: child, context });
+export function Tree({ tree, slots = {}, handlers = {}, stores = registry, components = reactComponent, ref, ...native }: TreeProps) {
+  const context: Context = { slots, handlers, stores, components };
+  if (Array.isArray(tree)) return createElement(Fragment, null, ...drawAll(tree, context));
+  return draw(tree, context, '#0', { ref, props: native });
 }
+
+function draw(child: Child, context: Context, key: string, extra?: Extra): ReactNode {
+  if (typeof child === 'string') return child;
+  if (isSlot(child)) return createElement(Fragment, { key }, fillSlot(context.slots[child.slot], child.args));
+  if (isComponent(child)) return drawComponent(child, context, key, extra);
+  return createElement(Element, { key, node: child, context, extra });
+}
+
+/** A slot's fill: a function is called with the slot's arguments, anything else drawn as is. */
+const fillSlot = (fill: SlotFill, args: unknown[] = []): ReactNode => (typeof fill === 'function' ? fill(...args) : fill);
 
 const drawAll = (children: (Child | null)[], context: Context): ReactNode[] =>
   children.map((child, i) => (child === null ? null : draw(child, context, childKey(child, i))));
 
-/** A registered component with its props, its `on` callbacks calling this tree's handlers, and its
- *  slots as React nodes drawn in this tree (a slot named `children` is its children). */
-function drawComponent(node: ComponentNode, context: Context, key: string): ReactNode {
+/** A registered component with its props, its `on` callbacks (this tree's handlers), and its
+ *  slots as React nodes drawn in this tree (a slot named `children` is its children) or this
+ *  tree's own fills passed through as they are. At the root, `Tree`'s ref and other props too. */
+function drawComponent(node: ComponentNode, context: Context, key: string, extra?: Extra): ReactNode {
   const props = componentProps(node, (handlerKey) => context.handlers[handlerKey]);
   for (const [name, fill] of Object.entries(node.slots ?? {})) {
     props[name] = isSlotFill(fill) ? context.slots[fill.slot] : createElement(Fragment, null, ...drawAll(fill, context));
   }
-  return createElement(context.components(node.component), { ...props, key });
+  return createElement(context.components(node.component), { ...props, ...extra?.props, ...(extra?.ref ? { ref: extra.ref } : {}), key });
 }
 
 /** React names for DOM attributes it spells otherwise. */
@@ -54,7 +75,7 @@ const RENAMED: Record<string, string> = { class: 'className', for: 'htmlFor', ta
 const camel = (name: string) => name.replace(/[-:]([a-z])/g, (_, c: string) => c.toUpperCase());
 
 /** A `style` string as React's style object (`min-width` → `minWidth`; custom properties as is). */
-function styleObject(text: string): CSSProperties {
+export function styleObject(text: string): CSSProperties {
   const style: Record<string, string> = {};
   for (const declaration of text.split(';')) {
     const colon = declaration.indexOf(':');
@@ -81,11 +102,25 @@ function reactProps(node: Node): Record<string, unknown> {
   return props;
 }
 
-function Element({ node, context }: { node: Node; context: Context }) {
-  const ref = useRef<globalThis.Element>(null);
+/** Sets a React ref (a callback or an object) to `value`. */
+function setRef(ref: Ref<any> | undefined, value: globalThis.Element | null) {
+  if (typeof ref === 'function') ref(value);
+  else if (ref) (ref as { current: unknown }).current = value;
+}
+
+function Element({ node, context, extra }: { node: Node; context: Context; extra?: Extra }) {
+  const ref = useRef<globalThis.Element | null>(null);
   const mounted = useRef<Mounted | null>(null);
   const latest = useRef({ node, context });
   latest.current = { node, context };
+  // The element goes to `Tree`'s ref as well (the root only): set again for a new ref or element,
+  // null when it goes.
+  const outer = extra?.ref;
+  useLayoutEffect(() => {
+    if (!outer) return;
+    setRef(outer, ref.current);
+    return () => setRef(outer, null);
+  }, [outer, node.tag]);
 
   // Mount the handlers and stores on the element (again if the tag, so the element, changes)...
   useLayoutEffect(() => {
@@ -96,10 +131,12 @@ function Element({ node, context }: { node: Node; context: Context }) {
       mounted.current = null;
     };
   }, [node.tag]);
-  // ...and give them every render's node and handlers.
+  // ...and give them every render's node and handlers (each store updates only when its params or handlers changed).
   useLayoutEffect(() => {
     mounted.current?.update(node, context);
   });
 
-  return createElement(node.tag, { ...reactProps(node), ref }, ...drawAll(node.children ?? [], context));
+  const native = extra?.props ?? {};
+  const style = typeof native.style === 'string' ? { style: styleObject(native.style) } : {};
+  return createElement(node.tag, { ...reactProps(node), ...native, ...style, ref }, ...drawAll(node.children ?? [], context));
 }

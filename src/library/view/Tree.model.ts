@@ -5,13 +5,24 @@
 // by name. No framework here, and no functions in a tree: callbacks reach it through `handlers`,
 // stateful behaviour through the stores in `stores.ts`, so a tree snapshots as text.
 
-/** A hole the renderer fills: a React node or a Svelte snippet, passed to `Tree` as `slots[name]`. */
+/** A hole the renderer fills: a React node or a Svelte snippet, passed to `Tree` as `slots[name]`.
+ *  With `args` (plain data), the fill takes arguments: React calls a function fill with them,
+ *  Svelte renders the snippet with them (up to three), so a slot's content can depend on what the
+ *  model decided (an assembled region's chosen form and placement, a region's chosen view). */
 export interface Slot {
   slot: string;
+  args?: unknown[];
 }
 
 /** A child: an element, a component, text, or a slot. */
 export type Child = Node | ComponentNode | string | Slot;
+
+/** What a `Tree` draws: any child (an element, a component, text or a slot), or a fragment (a list
+ *  of them, drawn side by side with no wrapper, `null` a hole as among children). */
+export type Root = Child | (Child | null)[];
+
+/** The most arguments a slot passes (Svelte's `{@render}` takes no spread). */
+export const SLOT_ARGS_MAX = 3;
 
 /**
  * A registered component (`reactComponents.ts`, `svelteComponents.ts`), by name: how a composite's
@@ -73,8 +84,12 @@ export function h(tag: string, attrs: Record<string, string | undefined> = {}, .
   return node;
 }
 
-/** A slot child: `slot('icon')`. */
-export const slot = (name: string): Slot => ({ slot: name });
+/** A slot child: `slot('icon')`; with arguments, `slot('region:hero', [form, placed])` (plain data,
+ *  at most `SLOT_ARGS_MAX`) draws the fill called (React) or rendered (Svelte) with them. */
+export function slot(name: string, args?: unknown[]): Slot {
+  if (args && args.length > SLOT_ARGS_MAX) throw new Error(`view: slot "${name}" takes at most ${SLOT_ARGS_MAX} arguments`);
+  return args ? { slot: name, args } : { slot: name };
+}
 
 /** A component child: `component('LampButton', { label: 'On' }, { on: { onToggle: 'toggle' } })`. A
  *  slot's list flattens and keeps holes, as `h`'s children do. */
@@ -185,13 +200,15 @@ export function domAttrs(attrs: Record<string, string | undefined> | undefined):
 
 /**
  * A tree as canonical text, for snapshots: one line per element (attributes sorted, `on` as
- * `@event=key`, `bind` as `use:store={params}`), text quoted, slots as `{slot}`. A component is
- * `<Name prop={json} @onX=key>`, each of its slots a `#name` line over its contents.
+ * `@event=key`, `bind` as `use:store={params}`), text quoted, slots as `{slot}` (`{slot(args)}`
+ * with arguments). A component is `<Name prop={json} @onX=key>`, each of its slots a `#name` line
+ * over its contents. A fragment is its roots one after another.
  */
-export function printTree(child: Child, depth = 0): string {
+export function printTree(child: Root, depth = 0): string {
   const pad = '  '.repeat(depth);
+  if (Array.isArray(child)) return child.flatMap((c) => (c === null ? [] : [printTree(c, depth)])).join('\n');
   if (typeof child === 'string') return `${pad}${JSON.stringify(child)}`;
-  if (isSlot(child)) return `${pad}{${child.slot}}`;
+  if (isSlot(child)) return `${pad}{${child.slot}${child.args ? `(${child.args.map((a) => JSON.stringify(a)).join(', ')})` : ''}}`;
   if (isComponent(child)) {
     const props = Object.entries(child.props ?? {})
       .filter(([, value]) => value !== undefined)

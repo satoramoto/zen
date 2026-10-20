@@ -4,7 +4,7 @@
 // `children` slot, its element handed out through the `ref` store (`bindRef`). With a `spec` it is
 // an `AssembledScreen` component node instead, the regions' contents passed through as its
 // `regions` (assembly/AssembledScreen.model.ts).
-import { component, h, slot, styleText, wire, type Handlers, type Node } from '../view/Tree.model';
+import { component, h, slot, styleText, wire, type ComponentNode, type Handlers, type Node } from '../view/Tree.model';
 import { styleAttr, type StyleInput } from './assembly/AssembledScreen.model';
 import type { StyleDecls } from './style';
 import type { Placement, Principles, ScreenSpec } from './assembly/types';
@@ -67,17 +67,16 @@ const bar = (part: 'header' | 'footer', fill: unknown): Node | null =>
  * `spec`: the `AssembledScreen` component, its `onPlacement` the `placement` handler and its
  * `regions` this tree's `regions` slot passed through.
  */
-export function screenView(props: ScreenModelProps & ScreenStyles, fills: ScreenFills = {}): Node {
+export function screenView(props: ScreenModelProps & ScreenStyles, fills: ScreenFills = {}): Node | ComponentNode {
   const { name, className, spec, room, principles } = props;
   const style = styleAttr(props.style);
   if (spec) {
-    // The tree's root is the component itself (both `Tree`s draw a component root; React's
-    // `TreeProps.tree` is typed `Node`, hence the cast), so the DOM is exactly AssembledScreen's.
+    // The tree's root is the component itself, so the DOM is exactly AssembledScreen's.
     return component(
       'AssembledScreen',
       { name, spec, room, principles, className, style },
       { on: { onPlacement: 'placement' }, slots: { regions: slot(REGIONS_SLOT) } },
-    ) as unknown as Node;
+    );
   }
   const grid = [styleText(screenGrid(props)), styleAttr(props.gridStyle)].filter(Boolean).join('; ') || undefined;
   return h(

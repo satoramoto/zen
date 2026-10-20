@@ -12,4 +12,4 @@
   let props: OneTouchPickerProps = $props();
 </script>
 
-{#each oneTouchPickerView(props) as tree (tree.key)}<Tree {tree} handlers={oneTouchPickerHandlers(props)} />{/each}
+<Tree tree={oneTouchPickerView(props)} handlers={oneTouchPickerHandlers(props)} />
