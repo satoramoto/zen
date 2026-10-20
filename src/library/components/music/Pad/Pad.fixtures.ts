@@ -132,7 +132,8 @@ export const padTagClearanceSample = (): Node =>
     'div',
     { style: 'display: grid; gap: var(--space-6); padding-top: var(--space-3)' },
     // The regions set the pad's type size on the pad itself; this stands in for them.
-    h('style', {}, '.yh-pad-cell .yh-pad { font-size: var(--yh-pad-cell-font, var(--size-label)); }'),
+    // The cell carries the size (`font-size`), and the pad inherits it.
+    h('style', {}, '.yh-pad-cell .yh-pad { font-size: inherit; }'),
     TAG_STATES.map((state) =>
       h(
         'div',
@@ -142,7 +143,7 @@ export const padTagClearanceSample = (): Node =>
             'div',
             {
               class: 'yh-pad-cell',
-              style: styleText({ display: 'grid', width: cell.width, height: cell.height, '--yh-pad-cell-font': cell.font }),
+              style: styleText({ display: 'grid', width: cell.width, height: cell.height, 'font-size': cell.font ?? 'var(--size-label)' }),
             },
             component('Pad', { ...tagPad(cell, state) }),
           ),
