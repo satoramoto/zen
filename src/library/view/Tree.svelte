@@ -12,7 +12,7 @@
   import { untrack, type Component, type Snippet } from 'svelte';
   import Self from './Tree.svelte';
   import TreeSlots from './TreeSlots.svelte';
-  import { SVG_NS, childKey, componentProps, domAttrs, isComponent, isNode, isSlotFill, type Child, type Handlers, type Root, type Slot } from './Tree.model';
+  import { SVG_NS, VOID, childKey, componentProps, domAttrs, isComponent, isNode, isSlotFill, type Child, type Handlers, type Root, type Slot } from './Tree.model';
   import { mountNode, type Mounted } from './mount';
   import { stores as registry, type Stores } from './stores';
   import { svelteComponent } from './svelteComponents';
@@ -94,7 +94,7 @@
     {...native}
     bind:this={ref}
     {@attach attach}
-    >{#each node.children ?? [] as child, i (childKey(child, i))}{#if child !== null}<Self
+    >{#each VOID.has(node.tag) ? [] : (node.children ?? []) as child, i (childKey(child, i))}{#if child !== null}<Self
           tree={child}
           {slots}
           {handlers}

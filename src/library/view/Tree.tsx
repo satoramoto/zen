@@ -1,7 +1,7 @@
 // The React renderer of a view tree (`Tree.model.ts`): every converted component's `.tsx` is one
 // `<Tree tree={xView(props)} slots={…} handlers={…} />`. `Tree.svelte` draws the same DOM.
 import { createElement, Fragment, useLayoutEffect, useRef, type ComponentType, type CSSProperties, type ReactNode, type Ref } from 'react';
-import { childKey, componentProps, domAttrs, isComponent, isSlot, isSlotFill, type Child, type ComponentNode, type Handlers, type Node, type Root } from './Tree.model';
+import { VOID, childKey, componentProps, domAttrs, isComponent, isSlot, isSlotFill, type Child, type ComponentNode, type Handlers, type Node, type Root } from './Tree.model';
 import { mountNode, type MountContext, type Mounted } from './mount';
 import { stores as registry, type Stores } from './stores';
 import { reactComponent } from './reactComponents';
@@ -201,5 +201,6 @@ function Element({ node, context, extra }: { node: Node; context: Context; extra
 
   const native = extra?.props ?? {};
   const style = typeof native.style === 'string' ? { style: styleObject(native.style) } : {};
-  return createElement(node.tag, { ...reactProps(node), ...native, ...style, ref }, ...drawAll(node.children ?? [], context));
+  const children = VOID.has(node.tag) ? [] : drawAll(node.children ?? [], context);
+  return createElement(node.tag, { ...reactProps(node), ...native, ...style, ref }, ...children);
 }

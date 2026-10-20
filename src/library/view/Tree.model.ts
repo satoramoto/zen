@@ -165,6 +165,10 @@ export const PROPERTIES = new Set(['value', 'checked', 'indeterminate']);
 
 export const SVG_NS = 'http://www.w3.org/2000/svg';
 
+/** Void elements: they take no children, so both renderers draw none for them (a polymorphic
+ *  primitive's `children` slot under `as: 'input'` is simply not drawn). */
+export const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+
 /** Attributes both renderers set as boolean properties: `''` (present) becomes `true`. */
 const BOOLEAN = new Set([
   'allowfullscreen',
