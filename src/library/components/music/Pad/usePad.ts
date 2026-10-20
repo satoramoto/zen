@@ -1,47 +1,37 @@
 import { useEffect, useRef, type RefObject } from 'react';
+import { bindPad, type PadBinding, type PadParams } from './padPress';
 
-/** A tooltip action in the shape of the app's `use:tip`: called with the node and the key. */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => { update?: (key: string) => void; destroy?: () => void } | void;
+// The press and the tooltip are framework-free (`padPress.ts`); this hook binds them to a React ref.
+export type { TipAction } from './padPress';
 
-export interface UsePadOptions {
-  /** Called on a click, Space or Enter, unless `disabled`. */
-  onPress?: () => void;
-  /** Unavailable: the press does nothing (the pad stays focusable). */
-  disabled?: boolean;
-  /** The tooltip key. */
-  tip?: string;
-  /** The app's tooltip action, applied with `tip` when both are set. */
-  tipAction?: TipAction;
-}
+export type UsePadOptions = PadParams;
 
 export interface UsePad {
-  /** The face's ref: the node the tooltip action runs on. */
+  /** The face's ref: the node the press and the tooltip action are bound to. */
   ref: RefObject<HTMLButtonElement | null>;
-  /** The face's click handler: a press, unless disabled. */
-  onClick: () => void;
 }
 
-/**
- * The Pad's behaviour, headless: the press (a click, Space or Enter, which a `<button>` turns into a
- * click) that a disabled pad ignores, and the tooltip action's lifetime on the face. The markup and
- * its look stay in `Pad.tsx` and `Pad.css`, so a theme can restyle the pad without touching this.
- */
-export function usePad({ onPress, disabled = false, tip, tipAction }: UsePadOptions): UsePad {
+/** Binds the pad (`padPress.ts`) to the face, with the latest options on every render. */
+export function usePad(options: UsePadOptions): UsePad {
   const ref = useRef<HTMLButtonElement>(null);
+  const binding = useRef<PadBinding | null>(null);
+  const latest = useRef(options);
+  latest.current = options;
+
+  // Bound once per node; every render's options reach it through `update` below.
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    binding.current = bindPad(node, latest.current);
+    return () => {
+      binding.current?.destroy();
+      binding.current = null;
+    };
+  }, [ref]);
 
   useEffect(() => {
-    if (!ref.current || !tipAction || tip === undefined) return;
-    const handle = tipAction(ref.current, tip);
-    return () => handle?.destroy?.();
-  }, [tip, tipAction]);
+    binding.current?.update(options);
+  });
 
-  return {
-    ref,
-    onClick: () => {
-      if (!disabled) onPress?.();
-    },
-  };
+  return { ref };
 }

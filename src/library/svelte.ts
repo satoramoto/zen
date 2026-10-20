@@ -19,6 +19,34 @@ import ButtonSvelte from './components/core/Button/Button.svelte';
 import type { TextModelProps } from './primitives/Text.model';
 import type { StackModelProps } from './primitives/Stack.model';
 import type { ButtonModelProps } from './components/core/Button/Button.model';
+import PadSvelte from './components/music/Pad/Pad.svelte';
+import KnobSvelte from './components/music/Knob/Knob.svelte';
+import FaderSvelte from './components/music/Fader/Fader.svelte';
+import KeysSvelte from './components/music/Keys/Keys.svelte';
+import MeterSvelte from './components/music/Meter/Meter.svelte';
+import BarBeatSvelte from './components/music/BarBeat/BarBeat.svelte';
+import ChordReadoutSvelte from './components/music/ChordReadout/ChordReadout.svelte';
+import PartMarksSvelte from './components/music/PartMarks/PartMarks.svelte';
+import SectionNameSvelte from './components/music/SectionName/SectionName.svelte';
+import TempoReadoutSvelte from './components/music/TempoReadout/TempoReadout.svelte';
+import BarReadoutSvelte from './components/music/BarReadout/BarReadout.svelte';
+import SendReadoutSvelte from './components/music/SendReadout/SendReadout.svelte';
+import SoundCellSvelte from './components/music/SoundCell/SoundCell.svelte';
+import RackCellSvelte from './components/music/RackCell/RackCell.svelte';
+import type { PadModelProps } from './components/music/Pad/Pad.model';
+import type { KnobModelProps } from './components/music/Knob/Knob.model';
+import type { FaderModelProps } from './components/music/Fader/Fader.model';
+import type { KeysModelProps } from './components/music/Keys/Keys.model';
+import type { MeterModelProps } from './components/music/Meter/Meter.model';
+import type { BarBeatModelProps } from './components/music/BarBeat/BarBeat.model';
+import type { ChordReadoutModelProps } from './components/music/ChordReadout/ChordReadout.model';
+import type { PartMarksModelProps } from './components/music/PartMarks/PartMarks.model';
+import type { SectionNameModelProps } from './components/music/SectionName/SectionName.model';
+import type { TempoReadoutModelProps } from './components/music/TempoReadout/TempoReadout.model';
+import type { BarReadoutModelProps } from './components/music/BarReadout/BarReadout.model';
+import type { SendReadoutModelProps } from './components/music/SendReadout/SendReadout.model';
+import type { SoundCellModelProps } from './components/music/SoundCell/SoundCell.model';
+import type { RackCellModelProps } from './components/music/RackCell/RackCell.model';
 
 // The theme: the `theme` action, the scope, and the system mode.
 export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './svelte/theme.svelte';
@@ -53,3 +81,45 @@ export interface ButtonProps extends ButtonModelProps {
 }
 export const Button = ButtonSvelte as unknown as Component<ButtonProps>;
 export { longPress } from './components/core/Button/longPress.svelte';
+
+// Music controls.
+export interface PadProps extends PadModelProps {}
+export const Pad = PadSvelte as unknown as Component<PadProps>;
+export { padPress } from './components/music/Pad/padPress.svelte';
+export interface KnobProps extends KnobModelProps {}
+export const Knob = KnobSvelte as unknown as Component<KnobProps>;
+export { knobInput } from './components/music/Knob/knobInput.svelte';
+export interface FaderProps extends FaderModelProps {}
+export const Fader = FaderSvelte as unknown as Component<FaderProps>;
+export { faderInput } from './components/music/Fader/faderInput.svelte';
+export type KeysProps = KeysModelProps;
+export const Keys = KeysSvelte as unknown as Component<KeysProps>;
+export interface MeterProps extends Omit<MeterModelProps, 'className'> {
+  class?: string;
+}
+export const Meter = MeterSvelte as unknown as Component<MeterProps>;
+export interface BarBeatProps extends BarBeatModelProps {}
+export const BarBeat = BarBeatSvelte as unknown as Component<BarBeatProps>;
+export interface ChordReadoutProps extends ChordReadoutModelProps {}
+export const ChordReadout = ChordReadoutSvelte as unknown as Component<ChordReadoutProps>;
+export { chordFit } from './components/music/ChordReadout/fit.svelte';
+export interface PartMarksProps extends PartMarksModelProps {}
+export const PartMarks = PartMarksSvelte as unknown as Component<PartMarksProps>;
+export interface SectionNameProps extends SectionNameModelProps {}
+export const SectionName = SectionNameSvelte as unknown as Component<SectionNameProps>;
+export type TempoReadoutProps = TempoReadoutModelProps;
+export const TempoReadout = TempoReadoutSvelte as unknown as Component<TempoReadoutProps>;
+export { tempoNumber, tempoStep } from './components/music/TempoReadout/tempoGestures.svelte';
+export interface BarReadoutProps extends BarReadoutModelProps {}
+export const BarReadout = BarReadoutSvelte as unknown as Component<BarReadoutProps>;
+export { barInput } from './components/music/BarReadout/barInput.svelte';
+export interface SendReadoutProps extends SendReadoutModelProps {}
+export const SendReadout = SendReadoutSvelte as unknown as Component<SendReadoutProps>;
+export interface SoundCellProps extends SoundCellModelProps {
+  marks?: Snippet;
+}
+export const SoundCell = SoundCellSvelte as unknown as Component<SoundCellProps>;
+export interface RackCellProps extends RackCellModelProps {
+  mark?: Snippet;
+}
+export const RackCell = RackCellSvelte as unknown as Component<RackCellProps>;

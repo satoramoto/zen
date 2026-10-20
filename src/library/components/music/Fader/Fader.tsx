@@ -1,64 +1,14 @@
 import type { CSSProperties } from 'react';
-import type { HueSlot } from '../../core/hue';
-import { focusRing } from '../../../primitives/Ring';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
-import { FADER_MAX as MAX, useFader } from './useFader';
+import { faderView, type FaderModelProps } from './Fader.model';
+import { useFader } from './useFader';
 import './Fader.css';
 
-/** A categorical hue slot (1–5), or one of the neutral strips: `a`, `t2`, `t`. */
-export type FaderHue = HueSlot | 'a' | 't2' | 't';
-export type FaderKind = 'part' | 'group' | 'master' | 'off' | 'parked';
+// The props and the strip they draw are framework-free, in the model; `Fader.svelte` renders the same view.
+export type { FaderHue, FaderKind, FaderModelProps, FaderTipAction } from './Fader.model';
 
-export interface FaderProps {
-  /** The accessible name ("Right 1 · Stage Grand, level 90"). */
-  name: string;
-  /** The text at the top: the level ("90") or the layer and its value ("Rev 40"). Empty when parked. */
-  value?: string;
-  /** The set level, 0–127: where the cap sits. */
-  level?: number;
-  /** The left meter, 0–1 of the travel. The one meter drawn shows the louder of the two. */
-  meter?: number;
-  /** The right meter, 0–1 of the travel. */
-  meter2?: number;
-  /** The peak hold, 0–1 of the travel. Kept for the original's data; not drawn at Stage scale. */
-  peak?: number;
-  /** Where the hardware fader is, 0–127, while it's away from the level (soft takeover). Undefined: not away. */
-  away?: number;
-  /** `part`, `group`, `master` live; `off` a part switched off; `parked` an unused fader. */
-  kind?: FaderKind;
-  /**
-   * The strip's identity: a hue slot (1–5, `--hue-n`; an app maps its meaning, e.g. Yahaha's parts)
-   * fills the travel in that hue; `a`, `t2` and `t` are neutral strips (in Yahaha: Style, Multi Pad
-   * and Master).
-   */
-  hue?: FaderHue;
-  /** The non-Vol layer look (Pan, Reverb, Chorus, Delay): no meters, a neutral fill, the layer word as a label. */
-  layered?: boolean;
-  /** A fixed width in px. Default: fills its container. */
-  width?: number;
-  /** Fill the container's height instead of the fixed six-control-heights travel; a drag still measures the rail. Default false. */
-  fillHeight?: boolean;
-  /** With `kind="parked"`: an empty hardware slot, a faint solid groove (the banks' empty-slot look) instead of the dashed groove. */
-  empty?: boolean;
-  /** The tooltip key, rendered as `data-tip`. */
-  tip?: string;
-  /** The app's tooltip hook, called with the node and `tip` when both are set; may return a handle whose `destroy` cleans up. */
-  tipAction?: (
-    node: HTMLElement,
-    key: string,
-  ) => { update?: (key: string) => void; destroy?: () => void } | void;
-  /** Called with the level asked for (0–127, whole) on a drag (each level once), a key or the wheel. Not when parked. */
-  onlevel?: (level: number) => void;
-}
-
-const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
-
-/** "Rev 40" → a layer word and its number; "90" stays a number. */
-function splitValue(value: string): { word: string; num: string } {
-  const m = /^(\D+?)\s+(\S.*)$/.exec(value);
-  return m ? { word: m[1], num: m[2] } : { word: '', num: value };
-}
+export type FaderProps = FaderModelProps;
 
 /**
  * **Job.** One mixer strip's level. At a glance a player needs the set level as a number, where the
@@ -87,7 +37,8 @@ function splitValue(value: string): { word: string; num: string } {
  * with no peak line, so it no longer reads as a second, thinner fader; an off part's number drops
  * to `--size-label`, so a silent "64" doesn't compete with the live levels. *Empty slot*: `empty`
  * draws the banks' one empty look, a faint solid groove (`--text-1` at 10%) with no cap, value or
- * edge, instead of a dotted thread. *Headless* (2026-10): the behaviour lives in `useFader`; the
+ * edge, instead of a dotted thread. *Headless* (2026-10): the behaviour lives in the `faderInput.ts`
+ * store (`useFader` binds it here, the `faderInput` action in Svelte), the strip in `Fader.model.ts`; the
  * markup is named parts (`data-part`: head, value, travel, groove, fill, ghost, cap, meter), and the
  * look comes from the theme's Materials: the groove and meter channel are `well`, the cap a
  * `handle` (its grip line stays the Fader's own, in ink), the fill is lit in the strip ink
@@ -104,90 +55,56 @@ function splitValue(value: string): { word: string; num: string } {
  *   `-cap-r`, `-line`), the groove and meter widths (`-groove-w`, `-meter-w`), and the 0–1
  *   positions the component sets inline (`-level`, `-away`, `-m`).
  */
-export function Fader({
-  name,
-  value = '',
-  level = 0,
-  meter = 0,
-  meter2 = 0,
-  away,
-  kind = 'part',
-  hue = 't',
-  layered = false,
-  width,
-  fillHeight = false,
-  empty = false,
-  tip,
-  tipAction,
-  onlevel,
-}: FaderProps) {
-  const parked = kind === 'parked';
-  const off = kind === 'off';
-  const live = !parked && !off;
-  const showMeters = !parked && !layered;
-  const isAway = away !== undefined && !parked;
-  const frac = clamp(level, 0, MAX) / MAX;
-  const { word, num } = splitValue(parked ? '' : value);
-
-  const { rootProps, railRef } = useFader({ name, value, level, parked, tip, tipAction, onlevel });
-
-  const style = { '--yh-fader-level': frac, width: width === undefined ? undefined : `${width}px` } as CSSProperties;
-  const partHue = layered || typeof hue !== 'number' ? undefined : String(hue);
+export function Fader(props: FaderProps) {
+  const view = faderView(props);
+  const { rootRef, railRef } = useFader({
+    level: props.level ?? 0,
+    parked: view.parked,
+    tip: props.tip,
+    tipAction: props.tipAction,
+    onlevel: props.onlevel,
+  });
 
   return (
     <div
-      {...rootProps}
-      className={`yh-fader ${focusRing}`}
-      data-kind={kind}
-      data-hue={partHue}
-      data-layered={layered || undefined}
-      data-fill-height={fillHeight || undefined}
-      data-empty={parked && empty ? true : undefined}
-      data-away={isAway ? (away! < level ? 'up' : away! > level ? 'down' : 'at') : undefined}
-      data-tip={tip}
-      style={style}
+      ref={rootRef}
+      className={view.root.className}
+      tabIndex={view.root.tabIndex}
+      {...view.root.attrs}
+      style={view.root.style as CSSProperties}
     >
       <span className="yh-fader__head" data-part="head" aria-hidden="true">
-        {word && (
+        {view.word && (
           <Text role="label" size="caption" leading="tight" className="yh-fader__word">
-            {word}
+            {view.word}
           </Text>
         )}
-        {/* Off, the number steps down a size as well as a shade, so it never competes with a live level. */}
-        <Text role="numeral" size={off ? 'label' : 'heading'} className="yh-fader__value" data-part="value">
-          {num}
+        <Text role="numeral" size={view.numSize} className="yh-fader__value" data-part="value">
+          {view.num}
         </Text>
       </span>
       <span className="yh-fader__travel" data-part="travel" aria-hidden="true">
         <span className="yh-fader__rail" ref={railRef}>
-          <Surface as="span" material="well" radius="none" className="yh-fader__groove" data-part="groove" />
-          {!parked && <span className="yh-fader__fill" data-part="fill" />}
-          {isAway && (
-            <span
-              className="yh-fader__ghost"
-              data-part="ghost"
-              style={{ '--yh-fader-away': clamp(away!, 0, MAX) / MAX } as CSSProperties}
-            />
-          )}
-          {!parked && <span className="yh-fader__cap" data-part="cap" />}
+          <Surface as="span" {...view.groove.surface} className={view.groove.className} {...view.groove.attrs} />
+          {view.fill && <span className="yh-fader__fill" data-part="fill" />}
+          {view.ghost && <span className="yh-fader__ghost" data-part="ghost" style={view.ghost as CSSProperties} />}
+          {view.fill && <span className="yh-fader__cap" data-part="cap" />}
         </span>
-        {showMeters && (
+        {view.meter && (
           <span className="yh-fader__meters">
-            {/* One meter, the louder side: two read as a second, thinner fader at Stage scale. */}
             <Surface
               as="span"
-              material="well"
-              radius="none"
-              className="yh-fader__meter"
-              data-part="meter"
-              style={{ '--yh-fader-m': live ? clamp(Math.max(meter, meter2), 0, 1) : 0 } as CSSProperties}
+              {...view.meter.surface}
+              className={view.meter.className}
+              {...view.meter.attrs}
+              style={view.meter.style as CSSProperties}
             />
           </span>
         )}
       </span>
-      {isAway && (
+      {view.takeover && (
         <svg className="yh-fader__takeover" viewBox="0 0 10 10" aria-hidden="true">
-          {away! < level ? <path d="M5 1 9 8H1z" /> : away! > level ? <path d="M5 9 1 2h8z" /> : <path d="M1 4h8v2H1z" />}
+          <path d={view.takeover} />
         </svg>
       )}
     </div>

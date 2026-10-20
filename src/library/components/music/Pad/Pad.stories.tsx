@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { Pad, type PadProps } from './Pad';
+import { Pad } from './Pad';
+import { BANK, BANK_RING, CELLS, TAG_STATES, padArgTypes, padBase, padStories as s, tagPad } from './Pad.fixtures';
+
+// Every story's args come from Pad.fixtures.ts, which the Svelte stories and the parity test share.
 
 /**
  * One bank pad, a library music component (redesigned from Yahaha's band pad; compare each story
@@ -13,32 +16,8 @@ const meta = {
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  args: {
-    label: 'Main B',
-    index: '10',
-    family: 'main',
-    state: 'playing',
-    lit: true,
-    tip: 'section.lamps',
-    onPress: fn(),
-    tipAction: fn(),
-  },
-  argTypes: {
-    label: { control: 'text' },
-    index: { control: 'text' },
-    family: { control: 'select', options: ['intro', 'main', 'ending', 'brk', 'fill', 'util', 'start'] },
-    hue: { control: 'select', options: [undefined, 1, 2, 3, 4, 5] },
-    state: { control: 'select', options: ['idle', 'dark', 'playing', 'next', 'armed', 'running'] },
-    lit: { control: 'boolean' },
-    tagCorner: { control: 'boolean' },
-    role: { control: 'select', options: [undefined, 1, 2] },
-    accentNext: { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    fillCell: { control: 'boolean' },
-    onFace: { control: 'inline-radio', options: ['fill', 'ring'] },
-    name: { control: 'text' },
-    tip: { control: 'text' },
-  },
+  args: { ...padBase, onPress: fn(), tipAction: fn() },
+  argTypes: padArgTypes,
 } satisfies Meta<typeof Pad>;
 
 export default meta;
@@ -46,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 /** Main B playing: the solid `--selected` fill, pressed. */
 export const Board: Story = {
-  args: { name: 'Main B, playing' },
+  args: s.Board.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('Main B')).toBeInTheDocument();
@@ -56,11 +35,11 @@ export const Board: Story = {
 };
 
 /** An idle section pad: a raised face with an edge, the label in primary text. */
-export const Idle: Story = { args: { label: 'Intro I', index: '1', family: 'intro', state: 'idle' } };
+export const Idle: Story = { args: s.Idle.args };
 
 /** A pad the style lacks: a dashed edge, no face, a muted label. */
 export const Dark: Story = {
-  args: { label: 'Intro III', index: '3', family: 'intro', state: 'dark', name: 'Intro III (not in this style)' },
+  args: s.Dark.args,
   play: async ({ canvasElement }) => {
     const pad = within(canvasElement).getByRole('button', { name: 'Intro III (not in this style)' });
     await expect(pad).toHaveAttribute('data-state', 'dark');
@@ -69,12 +48,12 @@ export const Dark: Story = {
 
 /** An absent utility pad: the same dashed, faceless structure. */
 export const DarkUtility: Story = {
-  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'dark', name: 'Auto Fill (unavailable)' },
+  args: s.DarkUtility.args,
 };
 
 /** Queued: Main C, the wait ring and a faint wash in `--accent` (next, by default), a NEXT chip above the centred label. */
 export const Next: Story = {
-  args: { label: 'Main C', index: '11', state: 'next', name: 'Main C, queued after bar 4 (flashing)' },
+  args: s.Next.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText('NEXT')).toBeInTheDocument();
@@ -84,20 +63,12 @@ export const Next: Story = {
 
 /** Queued with `tagCorner`: NEXT hangs on the top edge at the right, so the label stays centred. */
 export const NextCorner: Story = {
-  args: { label: 'Main C', index: '11', state: 'next', tagCorner: true, name: 'Main C, queued after bar 4 (flashing)' },
+  args: s.NextCorner.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByText('NEXT')).toHaveClass('yh-pad__tag--corner');
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tag', 'corner');
   },
 };
-
-/** The cells the Stage puts pads in: a song-form step, 4 × 4 and 2 × 8 bank cells, a narrow eight-a-row cell. */
-const CELLS: { name: string; width: string; height: string; label: string; font?: string; tagCorner?: boolean }[] = [
-  { name: 'Song-form step', width: 'calc(var(--control-h) * 1.1)', height: 'calc(var(--control-h) * 1.3)', label: 'C', font: 'var(--size-heading)', tagCorner: true },
-  { name: '4 × 4 cell', width: 'calc(var(--control-h) * 2.6)', height: 'calc(var(--control-h) * 1.25)', label: 'Main A' },
-  { name: '2 × 8 cell', width: 'calc(var(--control-h) * 1.95)', height: 'calc(var(--control-h) * 1.5)', label: 'Rack 4' },
-  { name: 'Narrow cell', width: 'calc(var(--control-h) * 1.6)', height: 'calc(var(--control-h) * 1.5)', label: 'Bank +', font: 'var(--size-caption)' },
-];
 
 /** Two boxes overlap (both laid out: jsdom lays nothing out, so there it checks nothing). */
 const overlaps = (a: DOMRect, b: DOMRect) =>
@@ -113,7 +84,7 @@ export const TagClearance: Story = {
     <div style={{ display: 'grid', gap: 'var(--space-6)', paddingTop: 'var(--space-3)' }}>
       {/* The regions set the pad's type size on the pad itself; this stands in for them. */}
       <style>{'.yh-pad-cell .yh-pad { font-size: var(--yh-pad-cell-font, var(--size-label)); }'}</style>
-      {(['next', 'armed'] as const).map((state) => (
+      {TAG_STATES.map((state) => (
         <div key={state} style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'end' }}>
           {CELLS.map((cell) => (
             <div
@@ -121,7 +92,7 @@ export const TagClearance: Story = {
               className="yh-pad-cell"
               style={{ display: 'grid', width: cell.width, height: cell.height, ['--yh-pad-cell-font' as string]: cell.font }}
             >
-              <Pad label={cell.label} state={state} tagCorner={cell.tagCorner} fillCell name={`${cell.label}, ${state}, ${cell.name}`} />
+              <Pad {...tagPad(cell, state)} />
             </div>
           ))}
         </div>
@@ -139,7 +110,7 @@ export const TagClearance: Story = {
 
 /** Queued, the flash's off phase: the idle face with a thin ring; the words stay. */
 export const NextUnlit: Story = {
-  args: { label: 'Main C', index: '11', state: 'next', lit: false, name: 'Main C, queued after bar 4 (flashing)' },
+  args: s.NextUnlit.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByText('NEXT')).toBeInTheDocument();
   },
@@ -147,23 +118,23 @@ export const NextUnlit: Story = {
 
 /** Armed: Ending I, a `--warning` ring and ARMED chip. */
 export const Armed: Story = {
-  args: { label: 'Ending I', index: '5', family: 'ending', state: 'armed', name: 'Ending I, armed (pulsing)' },
+  args: s.Armed.args,
 };
 
 /** A utility pad: Sync Start, neutral, its label one step quieter than a section's. */
 export const Utility: Story = {
-  args: { label: 'Sync Start', index: '4', family: 'util', state: 'idle' },
+  args: s.Utility.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'neutral');
   },
 };
 
 /** A lit utility pad: Auto Fill on, the `--selected` fill (the default `onFace`; see `OnRing` for a bank's quieter on). */
-export const UtilityOn: Story = { args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing' } };
+export const UtilityOn: Story = { args: s.UtilityOn.args };
 
 /** Start / Stop running: a solid `--success` fill. */
 export const Running: Story = {
-  args: { label: 'Start / Stop', index: '16', family: 'start', state: 'running', name: 'Start / Stop, running (pad 16)' },
+  args: s.Running.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'success');
   },
@@ -171,14 +142,7 @@ export const Running: Story = {
 
 /** A role pad running (Yahaha's transport: role 2): still `--success`, because running is a state, not the role's identity. */
 export const RoleRunning: Story = {
-  args: {
-    label: 'Start / Stop',
-    index: '16',
-    family: 'start',
-    state: 'running',
-    role: 2,
-    name: 'Start / Stop, running (pad 16)',
-  },
+  args: s.RoleRunning.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'success');
   },
@@ -186,7 +150,7 @@ export const RoleRunning: Story = {
 
 /** A role pad stopped: a neutral edge. A role key wears `--role-n` only while active. */
 export const RoleStopped: Story = {
-  args: { label: 'Start / Stop', index: '16', family: 'start', state: 'idle', role: 2, name: 'Start / Stop, stopped (pad 16)' },
+  args: s.RoleStopped.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'role-2');
   },
@@ -194,7 +158,7 @@ export const RoleStopped: Story = {
 
 /** A lit role pad (Auto Fill on): the solid `--role-2` fill with `--role-2-text`. */
 export const RoleOn: Story = {
-  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', role: 2, name: 'Auto Fill, on (pad 12)' },
+  args: s.RoleOn.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'role-2');
   },
@@ -202,7 +166,7 @@ export const RoleOn: Story = {
 
 /** Sync Start armed on a role pad: the `--warning` armed ring and `--warning-text` chip. */
 export const RoleArmed: Story = {
-  args: { label: 'Sync Start', index: '4', family: 'util', state: 'armed', role: 2, name: 'Sync Start, armed' },
+  args: s.RoleArmed.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'role-2');
   },
@@ -210,7 +174,7 @@ export const RoleArmed: Story = {
 
 /** A pad in hue slot 1 (in Yahaha, a stored Quick Rack lit in its part's hue): `--hue-1`, solid when on. */
 export const Hue: Story = {
-  args: { label: 'QUICK 1', index: '1', family: 'util', hue: 1, state: 'playing', tip: 'padpage.racks' },
+  args: s.Hue.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'hue-1');
   },
@@ -218,7 +182,7 @@ export const Hue: Story = {
 
 /** A hue-slot pad that isn't available: a dashed edge in its hue, muted label. */
 export const HueDark: Story = {
-  args: { label: 'BANK -', index: '13', family: 'util', hue: 3, state: 'dark', tip: 'padpage.racks' },
+  args: s.HueDark.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-tone', 'hue-3');
   },
@@ -226,7 +190,7 @@ export const HueDark: Story = {
 
 /** New: `accentNext`, queued in `--accent` (the contract's "next" role) instead of the pad's own colour, as the song form shows it. Now the default. */
 export const NextAccent: Story = {
-  args: { label: 'Main C', index: '11', state: 'next', accentNext: true, name: 'Main C, queued after bar 4' },
+  args: s.NextAccent.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-next', 'accent');
   },
@@ -234,7 +198,7 @@ export const NextAccent: Story = {
 
 /** New: `disabled`, still focusable but marked unavailable (a dashed edge, a `--text-3` label); a press does nothing. */
 export const Disabled: Story = {
-  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'idle', disabled: true, onPress: fn() },
+  args: { ...s.Disabled.args, onPress: fn() },
   play: async ({ canvasElement, args }) => {
     const pad = within(canvasElement).getByRole('button');
     await expect(pad).toHaveAttribute('aria-disabled', 'true');
@@ -245,7 +209,7 @@ export const Disabled: Story = {
 
 /** New: `fillCell`, the pad filling a wide, short cell instead of its fixed square. */
 export const FillCell: Story = {
-  args: { label: 'Main B', index: '10', state: 'playing', fillCell: true },
+  args: s.FillCell.args,
   render: (args) => (
     <div style={{ display: 'grid', width: 'calc(var(--control-h) * 5)', height: 'calc(var(--control-h) * 1.5)' }}>
       <Pad {...args} />
@@ -255,25 +219,6 @@ export const FillCell: Story = {
     await expect(within(canvasElement).getByRole('button')).toHaveAttribute('data-fill', 'true');
   },
 };
-
-const BANK: PadProps[] = [
-  { label: 'Intro I', index: '1', family: 'intro', state: 'idle' },
-  { label: 'Intro II', index: '2', family: 'intro', state: 'idle' },
-  { label: 'Intro III', index: '3', family: 'intro', state: 'dark' },
-  { label: 'Sync Start', index: '4', family: 'util', state: 'armed', role: 2 },
-  { label: 'Ending I', index: '5', family: 'ending', state: 'idle' },
-  { label: 'Ending II', index: '6', family: 'ending', state: 'idle' },
-  { label: 'Fill', index: '7', family: 'fill', state: 'idle' },
-  { label: 'Break', index: '8', family: 'brk', state: 'idle' },
-  { label: 'Main A', index: '9', family: 'main', state: 'idle' },
-  { label: 'Main B', index: '10', family: 'main', state: 'playing' },
-  { label: 'Main C', index: '11', family: 'main', state: 'next', tagCorner: true },
-  { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', role: 2 },
-  { label: 'QUICK 1', index: '13', family: 'util', hue: 1, state: 'playing' },
-  { label: 'QUICK 2', index: '14', family: 'util', hue: 2, state: 'idle' },
-  { label: 'BANK -', index: '15', family: 'util', hue: 3, state: 'dark' },
-  { label: 'Start / Stop', index: '16', family: 'start', state: 'running', role: 2 },
-];
 
 /** New: a whole 4 × 4 bank, every face at once, to judge hierarchy under each theme pack. */
 export const Bank: Story = {
@@ -292,13 +237,12 @@ export const Bank: Story = {
  * plays. Shown beside a role pad, a hue slot and the default fill.
  */
 export const OnRing: Story = {
-  args: { label: 'Auto Fill', index: '12', family: 'util', state: 'playing', onFace: 'ring', name: 'Auto Fill, on (ring)' },
+  args: s.OnRing.args,
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-      <Pad {...args} />
-      <Pad {...args} role={2} name="Auto Fill, on (ring, role 2)" />
-      <Pad label="QUICK 1" index="13" family="util" hue={1} state="playing" onFace="ring" name="Quick 1, on (ring)" />
-      <Pad label="Main B" index="10" state="playing" name="Main B, playing (fill)" />
+      {(s.OnRing.items ?? []).map((item, i) => (
+        <Pad key={i} {...args} {...item} />
+      ))}
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -315,8 +259,8 @@ export const OnRing: Story = {
 export const BankRing: Story = {
   render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, max-content)', gap: 'var(--space-2)' }}>
-      {BANK.map((p) => (
-        <Pad key={p.index} {...p} onFace={p.family === 'main' ? 'fill' : 'ring'} />
+      {BANK_RING.map((p) => (
+        <Pad key={p.index} {...p} />
       ))}
     </div>
   ),

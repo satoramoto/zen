@@ -1,49 +1,14 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
-import type { TipAction } from '../Pad/Pad';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
+import { chordReadoutView, MATERIAL, type ChordReadoutModelProps } from './ChordReadout.model';
+import { useFit } from './useFit';
 import './ChordReadout.css';
 
-export interface ChordNote {
-  /** The note's name ("A", "C", "F♯"). */
-  note: string;
-  /** Its interval from the root ("R", "m3", "5", "m7"). Not drawn; kept for callers. */
-  interval?: string;
-}
+// The props and what they draw are framework-free, in the model; `ChordReadout.svelte` renders the same view.
+export type { ChordNote, ChordReadoutModelProps, TipAction } from './ChordReadout.model';
 
-export interface ChordReadoutProps {
-  /** The chord before its extension ("Am", "C", "F♯m"). Empty: "—". */
-  chord: string;
-  /** The extension, drawn after the chord, raised and smaller ("7", "maj7", "sus4"); a "/bass" stays on the line. */
-  extension?: string;
-  /** The chord's notes, root first. */
-  notes?: ChordNote[];
-  /** The fingering mode's word ("Fingered", "Fingered On Bass", "AI Full Keyboard · played Gm7"). */
-  fingering?: string;
-  /** Detection is unsure and the last chord is held: muted, with a "held" tag. */
-  held?: boolean;
-  /** The readout's name, spoken before the chord ("Chord"). Not drawn: a chord symbol names itself. */
-  label?: string;
-  /** The fingering's tooltip key ("fingering.select"), set as `data-tip`, with the whole fingering as `data-tip-text`. */
-  tip?: string;
-  /** The app's tooltip action (`use:tip`), applied to the fingering with `tip` when both are set. */
-  tipAction?: TipAction;
-  /**
-   * The hero's full size, a CSS length ("96px", "var(--size-display)"), set as
-   * `--yh-chord-readout-hero` on the root. Default: that property's value, `--size-display`.
-   */
-  size?: string;
-}
-
-/** Hero sizes, largest first: the chord takes the first at which it fits its column. */
-const FITS = ['full', '4', '5', '6', '8'] as const;
-type Fit = (typeof FITS)[number];
-
-/** The extension split at its slash bass: "maj9(♯11)/G♯" → ["maj9(♯11)", "/G♯"]. */
-function splitBass(extension: string): [string, string] {
-  const i = extension.lastIndexOf('/');
-  return i < 0 ? [extension, ''] : [extension.slice(0, i), extension.slice(i)];
-}
+export type ChordReadoutProps = ChordReadoutModelProps;
 
 /**
  * ChordReadout: the display's chord, the thing a player looks up to read mid-song.
@@ -83,21 +48,12 @@ function splitBass(extension: string): [string, string] {
  * - `--yh-chord-readout-hero`: the chord's full size (default `--size-display`, or `size`); the
  *   fit steps and the fixed line box scale from it.
  */
-export function ChordReadout({
-  chord,
-  extension = '',
-  notes = [],
-  fingering = '',
-  held = false,
-  label = 'Chord',
-  tip,
-  tipAction,
-  size,
-}: ChordReadoutProps) {
+export function ChordReadout(props: ChordReadoutProps) {
+  const { chord, extension, held, size, tip, tipAction } = props;
+  const view = chordReadoutView(props);
   const hero = useRef<HTMLDivElement>(null);
   const fingeringRef = useRef<HTMLSpanElement>(null);
-  const [fit, setFit] = useState<Fit>('full');
-  const hasFingering = fingering !== '';
+  const hasFingering = view.fingering !== null;
 
   // The app's tooltip on the fingering, the readout's one hover target.
   useEffect(() => {
@@ -107,94 +63,42 @@ export function ChordReadout({
     return () => handle?.destroy?.();
   }, [tip, tipAction, hasFingering]);
 
-  const none = chord.trim() === '';
-  const [raised, bass] = splitBass(none ? '' : extension);
-  const spoken =
-    `${label} ${none ? 'none' : chord + extension}${held ? ', held' : ''}` +
-    (notes.length ? `: ${notes.map((n) => n.note).join(' ')}` : '') +
-    (fingering ? `, ${fingering}` : '');
+  // The largest hero step at which the chord fits its column (`fit.ts`), measured again on each change.
+  const fit = useFit(hero, [chord, extension, held, size]);
 
-  // The largest hero step at which the chord fits its column (the last step when none does).
-  useLayoutEffect(() => {
-    const el = hero.current;
-    if (!el) return;
-    let live = true;
-    const fit = () => {
-      if (!live) return;
-      let chosen: Fit = FITS[FITS.length - 1];
-      for (const step of FITS) {
-        el.dataset.fit = step;
-        if (el.scrollWidth <= el.clientWidth) {
-          chosen = step;
-          break;
-        }
-      }
-      setFit(chosen);
-    };
-    fit();
-    // Measured again once the web font has loaded (the fallback is a different width) and when the column resizes.
-    document.fonts?.ready.then(fit);
-    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(fit);
-    observer?.observe(el);
-    return () => {
-      live = false;
-      observer?.disconnect();
-    };
-  }, [chord, extension, held, size]);
-
-  const classes = ['yh-chord-readout'];
-  if (held) classes.push('yh-chord-readout--held');
-  const style = size === undefined ? undefined : ({ '--yh-chord-readout-hero': size } as CSSProperties);
-
+  const style = view.heroSize === undefined ? undefined : ({ '--yh-chord-readout-hero': view.heroSize } as CSSProperties);
   return (
-    <Surface
-      material="screen"
-      className={classes.join(' ')}
-      data-part="window"
-      role="img"
-      aria-label={spoken}
-      data-held={held ? 'true' : 'false'}
-      style={style}
-    >
-      <Text
-        as="div"
-        role="display"
-        leading="snug"
-        ref={hero}
-        className={`yh-chord-readout__chord${none ? ' yh-chord-readout__chord--none' : ''}`}
-        data-part="chord"
-        data-fit={fit}
-        aria-hidden="true"
-      >
-        {none ? '—' : chord}
-        {raised && (
+    <Surface material={MATERIAL} className={view.root.className} {...view.root.attrs} style={style}>
+      <Text as="div" role="display" leading="snug" ref={hero} className={view.hero.className} {...view.hero.attrs} data-fit={fit}>
+        {view.chord}
+        {view.raised !== null && (
           <Text role="display" leading="tight" className="yh-chord-readout__ext" data-part="extension">
-            {raised}
+            {view.raised}
           </Text>
         )}
-        {bass && (
+        {view.bass !== null && (
           <Text role="display" leading="snug" className="yh-chord-readout__bass" data-part="bass">
-            {bass}
+            {view.bass}
           </Text>
         )}
       </Text>
       {/* Drawn only: the readout's spoken name already says it whole. */}
       <Text as="p" role="body" size="label" className="yh-chord-readout__line" data-part="line" aria-hidden="true">
-        {notes.length > 0 && (
+        {view.tones !== null && (
           <Text role="body" size="inherit" weight="numeral" className="yh-chord-readout__tones" data-part="tones">
-            {notes.map((n, i) => (
+            {view.tones.map((note, i) => (
               <span key={i} className="yh-chord-readout__tone" data-part="tone">
-                {n.note}
+                {note}
               </span>
             ))}
           </Text>
         )}
-        {fingering && (
-          <span ref={fingeringRef} className="yh-chord-readout__fingering" data-part="fingering" data-tip={tip} data-tip-text={tip ? fingering : undefined}>
-            {fingering}
+        {view.fingering !== null && (
+          <span ref={fingeringRef} className="yh-chord-readout__fingering" {...view.fingering.attrs}>
+            {view.fingering.text}
           </span>
         )}
-        {held && (
+        {view.held && (
           <Text role="body" size="caption" case="label" className="yh-chord-readout__held" data-part="held">
             held
           </Text>
