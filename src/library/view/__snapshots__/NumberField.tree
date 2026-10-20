@@ -1,0 +1,128 @@
+## Default
+<div class="lib-number-field" style="--lib-param-chars: 9; --lib-param-fraction: 0.36605262924050264; --lib-param-fill-start: 0; --lib-param-fill-size: 0.36605262924050264">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Freq"
+  <div key=body aria-label="Freq" aria-orientation="horizontal" aria-valuemax="20000" aria-valuemin="20" aria-valuenow="1000" aria-valuetext="1.00 kHz" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"float","min":20,"max":20000,"defaultValue":1000,"unit":"hertz","exponent":3,"name":"Cutoff","shortName":"Freq"},"value":1000,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "1.00 kHz"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "1.00 kHz"
+
+## CenterOrigin
+<div class="lib-number-field" style="--lib-param-chars: 3; --lib-param-fraction: 0.3; --lib-param-fill-start: 0.3; --lib-param-fill-size: 0.2">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Pan"
+  <div key=body aria-label="Pan" aria-orientation="horizontal" aria-valuemax="1" aria-valuemin="-1" aria-valuenow="-0.4" aria-valuetext="20L" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"float","min":-1,"max":1,"defaultValue":0,"unit":"pan","name":"Pan"},"value":-0.4,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "20L"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "20L"
+
+## Integer
+<div class="lib-number-field" style="--lib-param-chars: 2; --lib-param-fraction: 0.3333333333333333; --lib-param-fill-start: 0; --lib-param-fill-size: 0.3333333333333333">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Voices"
+  <div key=body aria-label="Voices" aria-orientation="horizontal" aria-valuemax="16" aria-valuemin="1" aria-valuenow="6" aria-valuetext="6" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"int","min":1,"max":16,"defaultValue":4,"unit":"int","name":"Voices"},"value":6,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "6"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "6"
+
+## Enum
+<div class="lib-number-field" style="--lib-param-chars: 8; --lib-param-fraction: 0.6666666666666666; --lib-param-fill-start: 0; --lib-param-fill-size: 0.6666666666666666">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Shape"
+  <div key=body aria-label="Shape" aria-orientation="horizontal" aria-valuemax="3" aria-valuemin="0" aria-valuenow="2" aria-valuetext="Saw" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"enum","min":0,"max":3,"defaultValue":0,"items":["Sine","Triangle","Saw","Square"],"name":"Shape"},"value":2,"disabled":false,"typeable":false,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "Saw"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "Saw"
+
+## NoFill
+<div class="lib-number-field" style="--lib-param-chars: 8; --lib-param-fraction: 0.7631578947368421; --lib-param-fill-start: 0; --lib-param-fill-size: 0.7631578947368421">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Gain"
+  <div key=body aria-label="Gain" aria-orientation="horizontal" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="-12" aria-valuetext="-12.0 dB" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Gain"},"value":-12,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span class="lib-number-field__text" data-part="text">
+      "-12.0 dB"
+
+## Display
+<div class="lib-number-field" style="--lib-param-chars: 8; --lib-param-fraction: 0; --lib-param-fill-start: 0; --lib-param-fill-size: 0">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Gain"
+  <div key=body aria-label="Gain" aria-orientation="horizontal" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="-70" aria-valuetext="-inf dB" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Gain"},"value":-70,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "-inf dB"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "-inf dB"
+
+## Disabled
+<div class="lib-number-field" data-disabled="true" style="--lib-param-chars: 8; --lib-param-fraction: 0.8421052631578947; --lib-param-fill-start: 0; --lib-param-fill-size: 0.8421052631578947">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Gain"
+  <div key=body aria-disabled="true" aria-label="Gain" aria-orientation="horizontal" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="-6" aria-valuetext="-6.0 dB" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="-1" use:numberField={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Gain"},"value":-6,"disabled":true,"typeable":false,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "-6.0 dB"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "-6.0 dB"
+
+## Row #1
+<div class="lib-number-field" style="--lib-param-chars: 9; --lib-param-fraction: 0.36605262924050264; --lib-param-fill-start: 0; --lib-param-fill-size: 0.36605262924050264">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Freq"
+  <div key=body aria-label="Freq" aria-orientation="horizontal" aria-valuemax="20000" aria-valuemin="20" aria-valuenow="1000" aria-valuetext="1.00 kHz" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"float","min":20,"max":20000,"defaultValue":1000,"unit":"hertz","exponent":3,"name":"Cutoff","shortName":"Freq"},"value":1000,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "1.00 kHz"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "1.00 kHz"
+
+## Row #2
+<div class="lib-number-field" style="--lib-param-chars: 3; --lib-param-fraction: 0.75; --lib-param-fill-start: 0.5; --lib-param-fill-size: 0.25">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Pan"
+  <div key=body aria-label="Pan" aria-orientation="horizontal" aria-valuemax="1" aria-valuemin="-1" aria-valuenow="0.5" aria-valuetext="25R" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"float","min":-1,"max":1,"defaultValue":0,"unit":"pan","name":"Pan"},"value":0.5,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "25R"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "25R"
+
+## Row #3
+<div class="lib-number-field" style="--lib-param-chars: 2; --lib-param-fraction: 0.2; --lib-param-fill-start: 0; --lib-param-fill-size: 0.2">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Voices"
+  <div key=body aria-label="Voices" aria-orientation="horizontal" aria-valuemax="16" aria-valuemin="1" aria-valuenow="4" aria-valuetext="4" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"int","min":1,"max":16,"defaultValue":4,"unit":"int","name":"Voices"},"value":4,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "4"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "4"
+
+## Row #4
+<div class="lib-number-field" style="--lib-param-chars: 8; --lib-param-fraction: 0; --lib-param-fill-start: 0; --lib-param-fill-size: 0">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Shape"
+  <div key=body aria-label="Shape" aria-orientation="horizontal" aria-valuemax="3" aria-valuemin="0" aria-valuenow="0" aria-valuetext="Sine" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"enum","min":0,"max":3,"defaultValue":0,"items":["Sine","Triangle","Saw","Square"],"name":"Shape"},"value":0,"disabled":false,"typeable":false,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "Sine"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "Sine"
+
+## Row #5
+<div class="lib-number-field" style="--lib-param-chars: 8; --lib-param-fraction: 0.9210526315789473; --lib-param-fill-start: 0; --lib-param-fill-size: 0.9210526315789473; --lib-number-field-width: 72px">
+  <span class="lib-text lib-tone lib-number-field__caption" data-part="caption" data-role="caption" data-text-case="label">
+    "Gain"
+  <div key=body aria-label="Gain" aria-orientation="horizontal" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="0" aria-valuetext="0.0 dB" class="lib-text lib-tone lib-number-field__body lib-focus-ring" data-part="body" data-role="numeral" data-text-size="label" role="slider" tabindex="0" use:numberField={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Gain"},"value":0,"disabled":false,"typeable":true,"onChange":"change","onRelease":"release","onEdit":"edit"}>
+    <span aria-hidden="true" class="lib-number-field__fill" data-part="fill">
+    <span class="lib-number-field__text" data-part="text">
+      "0.0 dB"
+    <span aria-hidden="true" class="lib-number-field__ink" data-part="ink">
+      "0.0 dB"

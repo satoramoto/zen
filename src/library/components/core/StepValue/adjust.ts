@@ -1,8 +1,6 @@
 // StepValue's maths and its press-drag-wheel-key handling, ported from the original's `adjust`
-// action (yahaha/src/ui/Readout/readout.ts) as a React hook. Pure functions first.
-
-import { useEffect, useRef } from 'react';
-import type { KeyboardEvent, PointerEvent } from 'react';
+// action (yahaha/src/ui/Readout/readout.ts). Pure functions first, then `bindStepAdjust`, a plain
+// store registered as `stepAdjust` in `src/library/view/stores.ts`: StepValue's tree binds it by name.
 
 export const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
@@ -42,7 +40,7 @@ export function keyValue(key: string, value: number, min: number, max: number): 
 /** The keys a focused StepValue handles: none of them reach the window's shortcuts. */
 const KEYS = new Set(['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Enter']);
 
-export interface AdjustParams {
+export interface StepAdjustParams {
   value: number;
   min: number;
   max: number;
@@ -57,99 +55,96 @@ export interface AdjustParams {
  * Press and drag sideways (relative to the press, the span standing for the whole range); a wheel
  * notch or an arrow key steps it, Page Up / Down by ten steps, Home and End to the ends; a
  * double-click puts it back to its default. A press without movement sends nothing; while
- * dragging, at most one change per animation frame, and the last one on release.
+ * dragging, at most one change per animation frame, and the last one on release; the node is
+ * marked `data-dragging` meanwhile. Native listeners: the wheel is non-passive to keep the page
+ * from scrolling, and the keys stop at the node so the window's shortcuts never see them.
  */
-export function useAdjust<T extends HTMLElement>(params: AdjustParams) {
-  const ref = useRef<T>(null);
-  const p = useRef(params);
-  p.current = params;
-  const drag = useRef<{ id: number; x0: number; v0: number; sent: number } | null>(null);
-  const pending = useRef<number | null>(null);
-  const frame = useRef(0);
+export function bindStepAdjust(node: HTMLElement, initial: StepAdjustParams): { update(params: StepAdjustParams): void; destroy(): void } {
+  let p = initial;
+  let drag: { id: number; x0: number; v0: number; sent: number } | null = null;
+  let pending: number | null = null;
+  let frame = 0;
 
-  const send = (v: number) => {
-    const { disabled, value, onchange } = p.current;
-    if (disabled || v === value) return;
-    onchange?.(v);
-  };
-  const flush = () => {
-    frame.current = 0;
-    const d = drag.current;
-    if (pending.current === null || !d) return;
-    const v = pending.current;
-    pending.current = null;
-    if (v !== d.sent) {
-      d.sent = v;
-      p.current.onchange?.(v);
+  function send(v: number) {
+    if (p.disabled || v === p.value) return;
+    p.onchange?.(v);
+  }
+  function flush() {
+    frame = 0;
+    if (pending === null || !drag) return;
+    const v = pending;
+    pending = null;
+    if (v !== drag.sent) {
+      drag.sent = v;
+      p.onchange?.(v);
     }
-  };
-
-  // Wheel needs a non-passive listener to keep the page from scrolling.
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const wheel = (e: WheelEvent) => {
-      const { disabled, value, min, max } = p.current;
-      if (disabled) return;
-      e.preventDefault();
-      const dir = e.deltaY < 0 || e.deltaX > 0 ? 1 : -1;
-      send(clamp(value + dir * stepOf(min, max), min, max));
-    };
-    node.addEventListener('wheel', wheel, { passive: false });
-    return () => {
-      node.removeEventListener('wheel', wheel);
-      if (frame.current) cancelAnimationFrame(frame.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const end = (e: PointerEvent<T>) => {
-    if (!drag.current || e.pointerId !== drag.current.id) return;
-    if (frame.current) cancelAnimationFrame(frame.current);
-    flush();
-    drag.current = null;
-    delete e.currentTarget.dataset.dragging;
-  };
-
-  const handlers = {
-    onPointerDown(e: PointerEvent<T>) {
-      if (p.current.disabled || e.button !== 0) return;
-      drag.current = { id: e.pointerId, x0: e.clientX, v0: p.current.value, sent: p.current.value };
-      const node = e.currentTarget;
-      if (typeof node.setPointerCapture === 'function') {
-        try {
-          node.setPointerCapture(e.pointerId);
-        } catch {
-          // A synthetic pointer (tests) can't be captured; the drag still works.
-        }
+  }
+  function down(e: PointerEvent) {
+    if (p.disabled || e.button !== 0) return;
+    drag = { id: e.pointerId, x0: e.clientX, v0: p.value, sent: p.value };
+    if (typeof node.setPointerCapture === 'function') {
+      try {
+        node.setPointerCapture(e.pointerId);
+      } catch {
+        // A synthetic pointer (tests) can't be captured; the drag still works.
       }
-      node.dataset.dragging = '';
+    }
+    node.dataset.dragging = '';
+  }
+  function move(e: PointerEvent) {
+    if (!drag || e.pointerId !== drag.id) return;
+    const v = dragValue(drag.v0, e.clientX - drag.x0, p.span, p.min, p.max);
+    if (v === drag.sent && pending === null) return;
+    pending = v;
+    if (typeof requestAnimationFrame !== 'function') flush();
+    else if (!frame) frame = requestAnimationFrame(flush);
+  }
+  function up(e: PointerEvent) {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (frame) cancelAnimationFrame(frame);
+    flush();
+    drag = null;
+    delete node.dataset.dragging;
+  }
+  function wheel(e: WheelEvent) {
+    if (p.disabled) return;
+    e.preventDefault();
+    const dir = e.deltaY < 0 || e.deltaX > 0 ? 1 : -1;
+    send(clamp(p.value + dir * stepOf(p.min, p.max), p.min, p.max));
+  }
+  function key(e: KeyboardEvent) {
+    if (!KEYS.has(e.key)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const v = keyValue(e.key, p.value, p.min, p.max);
+    if (v !== null) send(v);
+  }
+  function dblclick() {
+    if (p.defaultValue !== undefined) send(p.defaultValue);
+  }
+
+  node.addEventListener('pointerdown', down);
+  node.addEventListener('pointermove', move);
+  node.addEventListener('pointerup', up);
+  node.addEventListener('pointercancel', up);
+  node.addEventListener('wheel', wheel, { passive: false });
+  node.addEventListener('keydown', key);
+  node.addEventListener('dblclick', dblclick);
+  return {
+    update(next) {
+      p = next;
     },
-    onPointerMove(e: PointerEvent<T>) {
-      const d = drag.current;
-      if (!d || e.pointerId !== d.id) return;
-      const { min, max, span } = p.current;
-      const v = dragValue(d.v0, e.clientX - d.x0, span, min, max);
-      if (v === d.sent && pending.current === null) return;
-      pending.current = v;
-      if (typeof requestAnimationFrame !== 'function') flush();
-      else if (!frame.current) frame.current = requestAnimationFrame(flush);
-    },
-    onPointerUp: end,
-    onPointerCancel: end,
-    onKeyDown(e: KeyboardEvent<T>) {
-      if (!KEYS.has(e.key)) return;
-      e.preventDefault();
-      e.stopPropagation();
-      const { value, min, max } = p.current;
-      const v = keyValue(e.key, value, min, max);
-      if (v !== null) send(v);
-    },
-    onDoubleClick() {
-      const { defaultValue } = p.current;
-      if (defaultValue !== undefined) send(defaultValue);
+    destroy() {
+      if (frame) cancelAnimationFrame(frame);
+      drag = null;
+      delete node.dataset.dragging;
+      node.removeEventListener('pointerdown', down);
+      node.removeEventListener('pointermove', move);
+      node.removeEventListener('pointerup', up);
+      node.removeEventListener('pointercancel', up);
+      node.removeEventListener('wheel', wheel);
+      node.removeEventListener('keydown', key);
+      node.removeEventListener('dblclick', dblclick);
     },
   };
-
-  return { ref, handlers };
 }

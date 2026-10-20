@@ -2,7 +2,14 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { CONTROL_SIZES, Switch, Toggle, type ToggleProps } from './Toggle';
+import { fixtureStories, withRenderer } from '../../../stories/story';
+import { Toggle, type ToggleProps } from './Toggle';
+import ToggleSvelte from './Toggle.svelte';
+import { toggleArgTypes, toggleBase, toggleStories as s } from './Toggle.fixtures';
+
+// Every story is built from Toggle.fixtures.ts (`story(s.Name)`), which the tree snapshot shares;
+// the toolbar's Renderer draws it with React's or Svelte's `Tree`. The plays are the behaviours.
+// The Switch's stories are in Switch.stories.tsx.
 
 /** A Toggle that keeps its own `on`, so the story can be played with; `onChange` still hears each ask. */
 function Live({ on: initial, onChange, ...props }: ToggleProps) {
@@ -26,31 +33,21 @@ function Live({ on: initial, onChange, ...props }: ToggleProps) {
 const meta = {
   title: 'Design OS/Components/Core/Toggle',
   component: Toggle,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  args: { on: false, onChange: fn(), name: 'sync', children: 'On' },
-  argTypes: {
-    on: { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    momentary: { control: 'boolean' },
-    label: { control: 'text' },
-    name: { control: 'text' },
-    width: { control: 'number' },
-    layout: { control: 'inline-radio', options: ['stacked', 'inside'] },
-    title: { control: 'text' },
-    hint: { control: 'text' },
-    ink: { control: 'text' },
-  },
+  args: { ...(toggleBase as ToggleProps), onChange: fn() },
+  argTypes: toggleArgTypes,
 } satisfies Meta<typeof Toggle>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Toggle, ToggleSvelte);
 
-/** Stacked: a caption over a key. A press asks for the other state; the key latches. */
+/** Stacked: a caption over a key. A press asks for the other state; the key latches. Live (its own
+ *  React `render` keeps `on`), so it stays React-only. */
 export const Stacked: Story = {
-  args: { hint: 'Follow the link’s tempo', title: 'Sync to Link' },
-  render: (args) => <Live {...args} />,
+  ...story(s.Stacked, { render: (args) => <Live {...args} /> }),
   play: async ({ canvasElement, args }) => {
     const key = within(canvasElement).getByRole('button', { name: 'sync' });
     await expect(key).toHaveAttribute('aria-pressed', 'false');
@@ -66,19 +63,18 @@ export const Stacked: Story = {
 };
 
 /** On, in another ink: the key pressed and lit. */
-export const On: Story = {
-  args: { on: true, ink: 'var(--hue-2)' },
-  render: (args) => <Live {...args} />,
-};
+export const On: Story = story(s.On);
 
-/** Inside a row: the name at the left, the state at the right; on, the reading lights. */
+/** Inside a row: the name at the left, the state at the right; on, the reading lights. Live, in a
+ *  240px row (its own React `render`), so it stays React-only. */
 export const Inside: Story = {
-  args: { layout: 'inside', name: 'invert', label: 'invert', title: 'Flip the colours (I)', children: 'Off' },
-  render: (args) => (
-    <div style={{ width: 240 }}>
-      <Live {...args} />
-    </div>
-  ),
+  ...story(s.Inside, {
+    render: (args) => (
+      <div style={{ width: 240 }}>
+        <Live {...args} />
+      </div>
+    ),
+  }),
   play: async ({ canvasElement, args }) => {
     const key = within(canvasElement).getByRole('button', { name: 'invert' });
     // Inside, the face is empty; the reading sits beside it.
@@ -91,10 +87,10 @@ export const Inside: Story = {
   },
 };
 
-/** Momentary: on while held, off on release or when the pointer leaves; no pressed state. */
+/** Momentary: on while held, off on release or when the pointer leaves; no pressed state. Live
+ *  (its own React `render`), so it stays React-only. */
 export const Momentary: Story = {
-  args: { momentary: true, name: 'tap', children: 'Tap' },
-  render: (args) => <Live {...args} />,
+  ...story(s.Momentary, { render: (args) => <Live {...args} /> }),
   play: async ({ canvasElement, args }) => {
     const key = within(canvasElement).getByRole('button', { name: 'tap' });
     await expect(key).not.toHaveAttribute('aria-pressed');
@@ -111,106 +107,11 @@ export const Momentary: Story = {
 
 /** Disabled, off and on: shown, asks nothing. */
 export const Disabled: Story = {
-  args: { disabled: true },
-  render: (args) => (
-    <div style={{ display: 'flex', gap: 16 }}>
-      <Toggle {...args} on={false} />
-      <Toggle {...args} on />
-    </div>
-  ),
+  ...story(s.Disabled),
   play: async ({ canvasElement, args }) => {
     const [off] = within(canvasElement).getAllByRole('button', { name: 'sync' });
     await expect(off).toBeDisabled();
     await userEvent.click(off, { pointerEventsCheck: 0 });
     await expect(args.onChange).not.toHaveBeenCalled();
-  },
-};
-
-const switchMeta = { decorators: [withLibraryTheme], parameters: { layout: 'centered' } };
-
-/** Switch: one to try. A click, Space or Enter flips it. */
-export const SwitchPlayground: StoryObj<typeof Switch> = {
-  ...switchMeta,
-  name: 'Switch / Playground',
-  args: { 'aria-label': 'Follow the beat', size: 'regular', defaultChecked: false, disabled: false, onChange: fn() },
-  // Only the switch's own args: the file's meta args are the Toggle's.
-  render: ({ 'aria-label': label, size, defaultChecked, disabled, onChange }) => (
-    <Switch aria-label={label} size={size} defaultChecked={defaultChecked} disabled={disabled} onChange={onChange} />
-  ),
-  play: async ({ canvasElement, args }) => {
-    const sw = within(canvasElement).getByRole('switch', { name: 'Follow the beat' });
-    await expect(sw).toHaveAttribute('aria-checked', 'false');
-    await userEvent.click(sw);
-    await expect(sw).toHaveAttribute('aria-checked', 'true');
-    await expect(args.onChange).toHaveBeenLastCalledWith(true);
-    await userEvent.keyboard(' ');
-    await expect(sw).toHaveAttribute('aria-checked', 'false');
-    await userEvent.keyboard('{Enter}');
-    await expect(sw).toHaveAttribute('aria-checked', 'true');
-    await userEvent.keyboard(' ');
-    await expect(sw).toHaveAttribute('aria-checked', 'false');
-  },
-};
-
-/** Every size, enabled and disabled, at one value. */
-const sheet = (on: boolean) => () => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', gap: 16, alignItems: 'center' }}>
-    {CONTROL_SIZES.map((size) => [
-      <Switch key={`${size}-idle`} aria-label={`${size}, idle`} size={size} defaultChecked={on} />,
-      <Switch key={`${size}-disabled`} aria-label={`${size}, disabled`} size={size} defaultChecked={on} disabled />,
-    ])}
-  </div>
-);
-
-/** On: the track lit, the thumb at the trailing end. */
-export const SwitchOn: StoryObj<typeof Switch> = {
-  ...switchMeta,
-  name: 'Switch / On',
-  render: sheet(true),
-  play: async ({ canvasElement }) => {
-    const sw = within(canvasElement).getByRole('switch', { name: 'regular, idle' });
-    await expect(sw).toHaveAttribute('aria-checked', 'true');
-    await userEvent.click(sw);
-    await expect(sw).toHaveAttribute('aria-checked', 'false');
-    await userEvent.click(sw);
-    await expect(sw).toHaveAttribute('aria-checked', 'true');
-  },
-};
-
-/** Off: the track a well, the thumb at the leading end. A disabled one doesn't flip. */
-export const SwitchOff: StoryObj<typeof Switch> = {
-  ...switchMeta,
-  name: 'Switch / Off',
-  render: sheet(false),
-  play: async ({ canvasElement }) => {
-    const disabled = within(canvasElement).getByRole('switch', { name: 'regular, disabled' });
-    await expect(disabled).toBeDisabled();
-    await userEvent.click(disabled, { pointerEventsCheck: 0 });
-    await expect(disabled).toHaveAttribute('aria-checked', 'false');
-  },
-};
-
-/** Labelled (the app's `SwitchRow`): the name at the start of the line labels the switch at the end. */
-export const SwitchLabelled: StoryObj<typeof Switch> = {
-  ...switchMeta,
-  name: 'Switch / Labelled',
-  args: { size: 'small', onChange: fn(), title: 'Turns the motion down' },
-  render: ({ size, onChange, title }) => (
-    <div style={{ width: 280, display: 'grid', gap: 8 }}>
-      <Switch size={size} onChange={onChange} title={title}>
-        Reduced motion
-      </Switch>
-      <Switch size={size} title={title} disabled>
-        Follow the system
-      </Switch>
-    </div>
-  ),
-  play: async ({ canvasElement, args }) => {
-    const sw = within(canvasElement).getByRole('switch', { name: 'Reduced motion' });
-    await userEvent.click(within(canvasElement).getByText('Reduced motion'));
-    await expect(sw).toHaveAttribute('aria-checked', 'true');
-    await expect(args.onChange).toHaveBeenLastCalledWith(true);
-    await userEvent.click(sw);
-    await expect(sw).toHaveAttribute('aria-checked', 'false');
   },
 };

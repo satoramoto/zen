@@ -1,0 +1,97 @@
+## Playground
+<button aria-checked="false" aria-label="Follow the beat" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="regular" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #1
+<button aria-checked="true" aria-label="mini, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="mini" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #2
+<button aria-checked="true" aria-label="mini, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="mini" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #3
+<button aria-checked="true" aria-label="small, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="small" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #4
+<button aria-checked="true" aria-label="small, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="small" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #5
+<button aria-checked="true" aria-label="regular, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="regular" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #6
+<button aria-checked="true" aria-label="regular, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="regular" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #7
+<button aria-checked="true" aria-label="large, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="large" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #8
+<button aria-checked="true" aria-label="large, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="large" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #9
+<button aria-checked="true" aria-label="xlarge, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="xlarge" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## On #10
+<button aria-checked="true" aria-label="xlarge, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="xlarge" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #1
+<button aria-checked="false" aria-label="mini, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="mini" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #2
+<button aria-checked="false" aria-label="mini, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="mini" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #3
+<button aria-checked="false" aria-label="small, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="small" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #4
+<button aria-checked="false" aria-label="small, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="small" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #5
+<button aria-checked="false" aria-label="regular, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="regular" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #6
+<button aria-checked="false" aria-label="regular, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="regular" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #7
+<button aria-checked="false" aria-label="large, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="large" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #8
+<button aria-checked="false" aria-label="large, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="large" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #9
+<button aria-checked="false" aria-label="xlarge, idle" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="xlarge" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Off #10
+<button aria-checked="false" aria-label="xlarge, disabled" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="xlarge" disabled="" role="switch" type="button" @click=flip>
+  <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Labelled #1
+<label class="lib-text lib-tone lib-switch-row" data-part="row" data-role="body" data-size="small" title="Turns the motion down">
+  <span class="lib-switch-row__name" data-part="name">
+    {children}
+  <button aria-checked="false" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="small" role="switch" type="button" @click=flip>
+    <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+
+## Labelled #2
+<label class="lib-text lib-tone lib-switch-row" data-disabled="true" data-part="row" data-role="body" data-size="small" title="Turns the motion down">
+  <span class="lib-switch-row__name" data-part="name">
+    {children}
+  <button aria-checked="false" class="lib-switch lib-sized lib-focus-ring" data-part="switch" data-size="small" disabled="" role="switch" type="button" @click=flip>
+    <span aria-hidden="true" class="lib-surface lib-switch__thumb" data-material="handle" data-part="thumb" data-radius="pill">

@@ -1,0 +1,73 @@
+## Horizontal
+<div class="lib-segmented" data-orientation="horizontal" data-part="root">
+  <div aria-label="Filter" aria-orientation="horizontal" class="lib-segmented__track" data-part="track" role="radiogroup" use:segmented={"items":["LP","BP","HP"],"index":0,"disabled":false,"onChange":"change"}>
+    <button key=LP-0 aria-checked="true" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="0" type="button">
+      "LP"
+    <button key=BP-1 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "BP"
+    <button key=HP-2 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "HP"
+
+## Vertical
+<div class="lib-segmented" data-orientation="vertical" data-part="root">
+  <span class="lib-text lib-tone lib-segmented__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="label">
+    "Direction"
+  <div aria-label="Direction" aria-orientation="vertical" class="lib-segmented__track" data-part="track" role="radiogroup" use:segmented={"items":["up","down","up-down","random"],"index":2,"disabled":false,"onChange":"change"}>
+    <button key=up-0 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "up"
+    <button key=down-1 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "down"
+    <button key=up-down-2 aria-checked="true" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="0" type="button">
+      "up-down"
+    <button key=random-3 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "random"
+
+## ItemLabels
+<div class="lib-segmented" data-orientation="horizontal" data-part="root">
+  <div aria-label="Unit" aria-orientation="horizontal" class="lib-segmented__track" data-part="track" role="radiogroup" use:segmented={"items":["s","bar","beat"],"index":1,"disabled":false,"onChange":"change"}>
+    <button key=s-0 aria-checked="false" aria-label="seconds" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "s"
+    <button key=bar-1 aria-checked="true" aria-label="bars" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="0" type="button">
+      "bar"
+    <button key=beat-2 aria-checked="false" aria-label="beats" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "beat"
+
+## Captioned
+<div class="lib-segmented" data-orientation="horizontal" data-part="root">
+  <span class="lib-text lib-tone lib-segmented__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="label">
+    "Filter"
+  <div aria-label="Filter" aria-orientation="horizontal" class="lib-segmented__track" data-part="track" role="radiogroup" use:segmented={"items":["LP","BP","HP"],"index":0,"disabled":false,"onChange":"change"}>
+    <button key=LP-0 aria-checked="true" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="0" type="button">
+      "LP"
+    <button key=BP-1 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "BP"
+    <button key=HP-2 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "HP"
+
+## Disabled
+<div class="lib-segmented" data-disabled="true" data-orientation="horizontal" data-part="root">
+  <div aria-disabled="true" aria-label="Filter" aria-orientation="horizontal" class="lib-segmented__track" data-part="track" role="radiogroup" use:segmented={"items":["LP","BP","HP"],"index":1,"disabled":true,"onChange":"change"}>
+    <button key=LP-0 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" disabled="" role="radio" tabindex="-1" type="button">
+      "LP"
+    <button key=BP-1 aria-checked="true" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" disabled="" role="radio" tabindex="0" type="button">
+      "BP"
+    <button key=HP-2 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" disabled="" role="radio" tabindex="-1" type="button">
+      "HP"
+
+## Themed
+<div class="lib-segmented" data-orientation="horizontal" data-part="root">
+  <div aria-label="Filter" aria-orientation="horizontal" class="lib-segmented__track" data-part="track" role="radiogroup" use:segmented={"items":["LP","BP","HP"],"index":0,"disabled":false,"onChange":"change"}>
+    <button key=LP-0 aria-checked="true" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="0" type="button">
+      "LP"
+    <button key=BP-1 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "BP"
+    <button key=HP-2 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "HP"
+
+## VisualsUnderline
+<div class="lib-segmented" data-orientation="horizontal" data-part="root">
+  <div aria-label="View" aria-orientation="horizontal" class="lib-segmented__track" data-part="track" role="radiogroup" use:segmented={"items":["Home","Live"],"index":0,"disabled":false,"onChange":"change"}>
+    <button key=Home-0 aria-checked="true" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="0" type="button">
+      "Home"
+    <button key=Live-1 aria-checked="false" class="lib-text lib-tone lib-segmented__segment" data-part="segment" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" role="radio" tabindex="-1" type="button">
+      "Live"

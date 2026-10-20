@@ -19,6 +19,11 @@ import ButtonSvelte from './components/core/Button/Button.svelte';
 import { actionOf } from './view/bridge';
 import { bindDismiss } from './yahaha/AppBar/popover';
 import { bindLineSlider } from './components/core/LineSlider/slide';
+import { bindSegmented } from './components/core/Segmented/segmentedInput';
+import SegmentedSvelte from './components/core/Segmented/Segmented.svelte';
+import type { SegmentedModelProps } from './components/core/Segmented/Segmented.model';
+import SelectSvelte from './components/core/Select/Select.svelte';
+import type { SelectModelProps } from './components/core/Select/Select.model';
 import { bindLongPress } from './components/core/Button/longPress';
 import { bindKnob } from './components/music/Knob/knobInput';
 import { bindPad } from './components/music/Pad/padPress';
@@ -75,6 +80,18 @@ import SurfaceSvelte from './primitives/Surface.svelte';
 import IconSvelte from './primitives/Icon.svelte';
 import LampButtonSvelte from './components/core/LampButton/LampButton.svelte';
 import LineSliderSvelte from './components/core/LineSlider/LineSlider.svelte';
+import ToggleSvelte from './components/core/Toggle/Toggle.svelte';
+import SwitchSvelte from './components/core/Toggle/Switch.svelte';
+import DisclosureSvelte from './components/core/Disclosure/Disclosure.svelte';
+import StepValueSvelte from './components/core/StepValue/StepValue.svelte';
+import ReadoutSvelte from './components/core/Readout/Readout.svelte';
+import type { StepValueModelProps } from './components/core/StepValue/StepValue.model';
+import type { ReadoutModelProps } from './components/core/Readout/Readout.model';
+import NumberFieldSvelte from './components/core/NumberField/NumberField.svelte';
+import type { NumberFieldModelProps } from './components/core/NumberField/NumberField.model';
+import CheckboxSvelte from './components/core/Checkbox/Checkbox.svelte';
+import RadioSvelte from './components/core/Radio/Radio.svelte';
+import type { CheckModelProps } from './components/core/Checkbox/Checkbox.model';
 import StatusDotSvelte from './components/core/StatusDot/StatusDot.svelte';
 import SeparatorSvelte from './components/core/Separator/Separator.svelte';
 import SettingsRowSvelte from './components/core/SettingsRow/SettingsRow.svelte';
@@ -83,6 +100,8 @@ import type { SurfaceModelProps } from './primitives/Surface.model';
 import type { IconModelProps } from './primitives/Icon.model';
 import type { LampButtonModelProps } from './components/core/LampButton/LampButton.model';
 import type { LineSliderModelProps } from './components/core/LineSlider/LineSlider.model';
+import type { SwitchModelProps, ToggleModelProps } from './components/core/Toggle/Toggle.model';
+import type { DisclosureModelProps } from './components/core/Disclosure/Disclosure.model';
 import type { StatusDotModelProps } from './components/core/StatusDot/StatusDot.model';
 import type { SeparatorModelProps } from './components/core/Separator/Separator.model';
 import type { SettingsRowModelProps } from './components/core/SettingsRow/SettingsRow.model';
@@ -294,6 +313,44 @@ export const LampButton = LampButtonSvelte as unknown as Component<LampButtonPro
 export type LineSliderProps = LineSliderModelProps;
 export const LineSlider = LineSliderSvelte as unknown as Component<LineSliderProps>;
 export const lineSlider = actionOf(bindLineSlider);
+
+export type SegmentedProps = SegmentedModelProps;
+export const Segmented = SegmentedSvelte as unknown as Component<SegmentedProps>;
+export const segmented = actionOf(bindSegmented);
+
+export type SelectProps = SelectModelProps;
+export const Select = SelectSvelte as unknown as Component<SelectProps>;
+
+export interface ToggleProps extends ToggleModelProps {
+  /** The face (stacked) or the reading (inside). */
+  children?: Snippet;
+}
+export const Toggle = ToggleSvelte as unknown as Component<ToggleProps>;
+export interface SwitchProps extends SwitchModelProps {
+  /** A name beside it: the switch at the end of a line that labels it. */
+  children?: Snippet;
+}
+export const Switch = SwitchSvelte as unknown as Component<SwitchProps>;
+export type DisclosureProps = DisclosureModelProps;
+export const Disclosure = DisclosureSvelte as unknown as Component<DisclosureProps>;
+export { CONTROL_SIZES, type ControlSize } from './components/core/Toggle/sizes';
+
+export type StepValueProps = StepValueModelProps;
+export const StepValue = StepValueSvelte as unknown as Component<StepValueProps>;
+
+export type ReadoutProps = ReadoutModelProps;
+export const Readout = ReadoutSvelte as unknown as Component<ReadoutProps>;
+
+export type NumberFieldProps = NumberFieldModelProps;
+export const NumberField = NumberFieldSvelte as unknown as Component<NumberFieldProps>;
+
+export interface CheckboxProps extends CheckModelProps {
+  /** The label beside the box; without one, give `aria-label`. */
+  children?: Snippet;
+}
+export const Checkbox = CheckboxSvelte as unknown as Component<CheckboxProps>;
+export type RadioProps = CheckboxProps;
+export const Radio = RadioSvelte as unknown as Component<RadioProps>;
 
 export type StatusDotProps = StatusDotModelProps;
 export const StatusDot = StatusDotSvelte as unknown as Component<StatusDotProps>;

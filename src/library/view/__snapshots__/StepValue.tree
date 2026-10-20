@@ -1,0 +1,31 @@
+## Default
+<span aria-label="Right 2 delay send" aria-valuemax="127" aria-valuemin="0" aria-valuenow="16" aria-valuetext="16" class="yh-stepvalue lib-focus-ring" data-hue="2" data-ink="a" data-tip="fx.send_param" role="slider" style="--yh-stepvalue-fill: 0.12598425196850394" tabindex="0" use:stepAdjust={"value":16,"min":0,"max":127,"defaultValue":0,"disabled":false,"span":128,"onchange":"change"} use:tip={"tip":"fx.send_param","tipAction":"tipAction"}>
+  <span class="lib-text lib-tone yh-stepvalue__tag" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+    <span aria-hidden="true" class="yh-stepvalue__swatch">
+    "R2"
+  <span class="lib-text lib-tone yh-stepvalue__value" data-role="numeral" data-text-size="label">
+    "16"
+  <span aria-hidden="true" class="yh-stepvalue__lamp">
+
+## Dim
+<span aria-label="Right 3 delay send" aria-valuemax="127" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0" class="yh-stepvalue lib-focus-ring" data-dim="true" data-hue="3" data-ink="a" data-tip="fx.send_param" role="slider" style="--yh-stepvalue-fill: 0" tabindex="0" use:stepAdjust={"value":0,"min":0,"max":127,"defaultValue":0,"disabled":false,"span":128,"onchange":"change"} use:tip={"tip":"fx.send_param","tipAction":"tipAction"}>
+  <span class="lib-text lib-tone yh-stepvalue__tag" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+    <span aria-hidden="true" class="yh-stepvalue__swatch">
+    "R3"
+  <span class="lib-text lib-tone yh-stepvalue__value" data-role="numeral" data-text-size="label">
+    "0"
+  <span aria-hidden="true" class="yh-stepvalue__lamp">
+
+## TableCell
+<span aria-label="Band 1 gain" aria-valuemax="12" aria-valuemin="-12" aria-valuenow="4" aria-valuetext="+4 dB" class="yh-stepvalue lib-focus-ring" data-hue="2" data-ink="t" data-tip="fx.master_eq_gain" role="slider" style="--yh-stepvalue-fill: 0.6666666666666666" tabindex="0" use:stepAdjust={"value":4,"min":-12,"max":12,"defaultValue":0,"disabled":false,"span":128,"onchange":"change"} use:tip={"tip":"fx.master_eq_gain","tipAction":"tipAction"}>
+  <span class="lib-text lib-tone yh-stepvalue__value" data-role="numeral" data-text-size="label" data-text-weight="body">
+    "+4"
+
+## Disabled
+<span aria-disabled="true" aria-label="Right 2 delay send" aria-valuemax="127" aria-valuemin="0" aria-valuenow="16" aria-valuetext="16" class="yh-stepvalue lib-focus-ring" data-disabled="true" data-hue="2" data-ink="a" data-tip="fx.send_param" role="slider" style="--yh-stepvalue-fill: 0.12598425196850394" tabindex="0" use:stepAdjust={"value":16,"min":0,"max":127,"defaultValue":0,"disabled":true,"span":128,"onchange":"change"} use:tip={"tip":"fx.send_param","tipAction":"tipAction"}>
+  <span class="lib-text lib-tone yh-stepvalue__tag" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+    <span aria-hidden="true" class="yh-stepvalue__swatch">
+    "R2"
+  <span class="lib-text lib-tone yh-stepvalue__value" data-role="numeral" data-text-size="label">
+    "16"
+  <span aria-hidden="true" class="yh-stepvalue__lamp">
