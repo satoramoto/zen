@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../../music/viewState';
+import { viewState } from '../../../view/viewState';
 import { disclosureHandlers, disclosureView, type DisclosureModelProps } from './Disclosure.model';
 import '../Toggle/size.css';
 import './Disclosure.css';

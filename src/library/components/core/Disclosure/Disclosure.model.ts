@@ -1,7 +1,7 @@
 // Disclosure's model: its props, the tree it draws (the button's class, `data-*`, ARIA, the
 // chevron) and the handler that tree names. No framework: `Disclosure.tsx` (React) and
 // `Disclosure.svelte` (Svelte) both pass `disclosureView` and `disclosureHandlers` to their `Tree`,
-// with its own value as their view state (`music/viewState.ts`), flipped through `Toggle/ownToggle.ts`.
+// with its own value as their view state (`view/viewState.ts`), flipped through `Toggle/ownToggle.ts`.
 import { focusRing } from '../../../primitives/Ring';
 import { h, type Handlers, type Node } from '../../../view/Tree.model';
 import { ownToggle } from '../Toggle/ownToggle';

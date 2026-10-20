@@ -2,7 +2,7 @@
 // row with its split name and count) and the handlers that tree names. No framework:
 // `FolderList.tsx` (React) and `FolderList.svelte` (Svelte) both pass `folderListView` and
 // `folderListHandlers` to their `Tree`, keeping the roving tab stop as view state
-// (`components/music/viewState.ts`); the clicks, keys and focus are the `folderList` store beside
+// (`view/viewState.ts`); the clicks, keys and focus are the `folderList` store beside
 // it (`folderListKeys.ts`), registered in `src/library/view/stores.ts`.
 import { textNode } from '../../../primitives/Text.model';
 import { each, h, styleText, when, wire, type Handlers, type Node } from '../../../view/Tree.model';

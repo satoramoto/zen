@@ -1,13 +1,13 @@
 <!--
   Radio: the model's tree (`radioView`, Radio.model.ts) drawn by the Svelte `Tree`, as `Radio.tsx`
   draws it with the React one; see Radio.tsx for the job and the parts. The label is the `children`
-  snippet; the uncontrolled radio's own mixed state is view state (`music/viewState.ts`).
+  snippet; the uncontrolled radio's own mixed state is view state (`view/viewState.ts`).
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
-  import { viewState } from '../../music/viewState';
+  import { viewState } from '../../../view/viewState';
   import { radioHandlers, radioView, type RadioModelProps } from './Radio.model';
   import '../../../primitives/Text.css';
   import '../Toggle/size.css';

@@ -27,5 +27,9 @@ export { useShaderMaterial, type ShaderMaterial } from './useShaderMaterial';
 export { ShaderCanvas } from './ShaderCanvas';
 /** Whether a shader material should draw here (WebGL2, no reduced motion or transparency). */
 export { useShaderSupport } from './support';
+/** The same, framework-free: the current answer and a change subscription (Svelte reads these). */
+export { shaderSupported, subscribeShaderSupport } from './supported';
+/** The runner as a framework-free store: a canvas bound to the shared context (the tree's `shader` store). */
+export { bindShader, type ShaderParams, type ShaderBinding } from './bindShader';
 /** The three materials, as Circuits, and a named material compiled once per page. */
 export { SHADER_MATERIALS, compiledMaterial } from './materials';

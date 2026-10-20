@@ -3,7 +3,7 @@
 // popover, the connections and Panic) and the handlers that tree names. No framework: `AppBar.tsx`
 // (React) and `AppBar.svelte` (Svelte) both pass `appBarView` and `appBarHandlers` to their `Tree`;
 // focus back to the ▾ is the `focusReturn` store (`popover.ts`, registered in `view/stores.ts`).
-import type { TipAction } from '../../components/core/Button/Button.model';
+import type { TipAction } from '../../view/tip';
 import type { TabItemModel } from '../../layout/Tabs.model';
 import { stackView, type StackModelProps } from '../../primitives/Stack.model';
 import { textView, type TextModelProps } from '../../primitives/Text.model';

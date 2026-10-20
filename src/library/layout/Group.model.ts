@@ -5,7 +5,7 @@ import { stackView, type StackAlign, type StackModelProps } from '../primitives/
 import type { Step } from '../primitives/step';
 import { textView } from '../primitives/Text.model';
 import { h, slot, styleText, when, type Node } from '../view/Tree.model';
-import { joinStyle } from './Region.model';
+import { joinStyle } from '../view/style';
 
 /** What Group decides from, in any framework (each renderer adds its label, aside and children). */
 export interface GroupModelProps {

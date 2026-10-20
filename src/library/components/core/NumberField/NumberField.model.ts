@@ -2,7 +2,7 @@
 // `data-*`, ARIA, the `--lib-param-*` its inline style carries, the stores it binds) and the
 // handlers that tree names. No framework: `NumberField.tsx` (React) and `NumberField.svelte`
 // (Svelte) both pass `numberFieldView` and `numberFieldHandlers` to their `Tree`, keeping the draft
-// text as view state (`music/viewState.ts`); the drag, keys and editor are the `numberField` and
+// text as view state (`view/viewState.ts`); the drag, keys and editor are the `numberField` and
 // `numberFieldEditor` stores (`numberFieldInput.ts`).
 import { focusRing } from '../../../primitives/Ring';
 import { textNode } from '../../../primitives/Text.model';

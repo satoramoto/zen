@@ -2,13 +2,13 @@
   Switch: the model's tree (`switchView`, Toggle.model.ts) drawn by the Svelte `Tree`, as `Switch`
   in `Toggle.tsx` draws it with the React one; see there for the job and the parts. The name beside
   it is the `children` snippet; its own value (unless `checked` owns it) is view state here
-  (`music/viewState.ts`).
+  (`view/viewState.ts`).
 -->
 <script lang="ts">
   import { untrack, type Snippet } from 'svelte';
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
-  import { viewState } from '../../music/viewState';
+  import { viewState } from '../../../view/viewState';
   import { switchHandlers, switchView, type SwitchModelProps } from './Toggle.model';
   import '../../../primitives/Text.css';
   import '../../../primitives/Surface.css';

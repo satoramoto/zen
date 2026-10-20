@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../../music/viewState';
+import { viewState } from '../../../view/viewState';
 import { numberFieldHandlers, numberFieldView, type NumberFieldModelProps } from './NumberField.model';
 import '../../../primitives/Text.css';
 import './NumberField.css';

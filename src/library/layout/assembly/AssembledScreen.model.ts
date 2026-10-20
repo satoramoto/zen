@@ -7,7 +7,7 @@
 // its own slot (`regionSlot(id)`), inside a `FormScope` that hands it the chosen form.
 import type { SurfaceModelProps } from '../../primitives/Surface.model';
 import { component, each, h, slot, styleText, when, wire, type Bind, type ComponentNode, type Handlers, type Node } from '../../view/Tree.model';
-import type { StyleDecls } from '../style';
+import { styleAttr, type StyleDecls, type StyleInput } from '../../view/style';
 import { assemble } from './assemble';
 import { FALLBACK_ROOM, type RoomSize } from './room';
 import type { Placed, Placement, Principles, Rect, ScreenSpec } from './types';
@@ -117,55 +117,6 @@ export function assembledView(name: string, spec: ScreenSpec, placement: Placeme
 }
 
 /* ---------- the view tree ---------- */
-
-/** An inline style as a binding gets it: a `style` string (Svelte), or a style object (React's
- *  `CSSProperties`: camel-cased names, numbers in px where React adds them). */
-export type StyleInput = string | Readonly<Record<string, string | number | null | undefined>>;
-
-/** Properties React draws a bare number for (no `px`). */
-const UNITLESS = new Set([
-  'animationIterationCount',
-  'aspectRatio',
-  'columnCount',
-  'columns',
-  'fillOpacity',
-  'flex',
-  'flexGrow',
-  'flexShrink',
-  'fontWeight',
-  'gridArea',
-  'gridColumn',
-  'gridColumnEnd',
-  'gridColumnStart',
-  'gridRow',
-  'gridRowEnd',
-  'gridRowStart',
-  'lineClamp',
-  'lineHeight',
-  'opacity',
-  'order',
-  'orphans',
-  'scale',
-  'strokeOpacity',
-  'strokeWidth',
-  'tabSize',
-  'widows',
-  'zIndex',
-  'zoom',
-]);
-
-/** A style as the tree's `style` attribute: a string as is (trimmed), an object's declarations by
- *  their CSS names; undefined when there is nothing to set. */
-export function styleAttr(style: StyleInput | undefined): string | undefined {
-  if (style === undefined || typeof style === 'string') return style?.trim() || undefined;
-  const decls: StyleDecls = {};
-  for (const [name, value] of Object.entries(style)) {
-    if (value === null || value === undefined || value === '') continue;
-    const css = name.startsWith('--') ? name : name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`).replace(/^ms-/, '-ms-');
-    decls[css] = typeof value === 'number' && value !== 0 && !name.startsWith('--') && !UNITLESS.has(name) ? `${value}px` : String(value);
-  }
-  return styleText(decls);
-}
 
 /** What the assembled screen decides from, in any framework (each binding adds the regions' content). */
 export interface AssembledScreenModelProps {

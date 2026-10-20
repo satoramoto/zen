@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../../music/viewState';
+import { viewState } from '../../../view/viewState';
 import { folderListHandlers, folderListView, type FolderListLocal, type FolderListModelProps } from './FolderList.model';
 import '../../../primitives/Text.css';
 import './FolderList.css';

@@ -1,8 +1,11 @@
 import { createContext, useContext, useState, type AllHTMLAttributes, type CSSProperties, type ElementType, type ReactNode, type Ref } from 'react';
 import type { AmbientRegion, LayerName } from '../contract';
-import { ShaderCanvas, compiledMaterial, useShaderSupport, type ShaderMaterialName, type ShaderSource } from '../shader';
+import { useShaderSupport, type ShaderMaterialName, type ShaderSource } from '../shader';
 import { useThemeScope } from '../theme';
+import { Tree } from '../view/Tree';
+import { styleObject } from '../view/style';
 import { surfaceView, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
+import { SHADER_ERROR, chosenShader, surfaceShader, surfaceShaderNode } from './surfaceShader';
 import './Surface.css';
 
 // The materials, lamps and corners are framework-free, in the model; `Surface.svelte` renders the same view.
@@ -49,18 +52,6 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as' 
   children?: ReactNode;
 }
 
-/** A `style` string as React's style object (`min-width` → `minWidth`; custom properties as is). */
-function styleObject(text: string): CSSProperties {
-  const style: Record<string, string> = {};
-  for (const declaration of text.split(';')) {
-    const colon = declaration.indexOf(':');
-    const name = declaration.slice(0, colon).trim();
-    if (colon < 0 || !name) continue;
-    style[name.startsWith('--') ? name : name.replace(/^-ms-/, 'ms-').replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())] = declaration.slice(colon + 1).trim();
-  }
-  return style as CSSProperties;
-}
-
 /**
  * **Job.** The one place that paints backgrounds, shadows, backdrops and borders from the
  * contract. A `layer` gives a depth (its fill, backdrop, edge and cast shadow); a `material` says
@@ -80,8 +71,8 @@ function styleObject(text: string): CSSProperties {
  * `ambient` picks the region (`left` for a panel at the picture's left).
  *
  * **Shader.** A surface can wear a shader material (`shader`, else the pack's
- * `materials.shaders[layer]`; `false` turns it off): it sets `data-shader` and draws a
- * `ShaderCanvas` (`lib-surface__shader`) as its first child, absolutely over the whole box with
+ * `materials.shaders[layer]`; `false` turns it off): it sets `data-shader` and draws a shader
+ * canvas (`lib-surface__shader`, `surfaceShader.ts`, the `shader` store) as its first child, absolutely over the whole box with
  * its corners, under the content (the surface becomes a stacking context). It takes no layout
  * slot, so flex and grid children and their gaps are unchanged. **Fallback**: without WebGL2,
  * under reduced motion or transparency, inside `Opaque`, or when the shader fails to compile, no
@@ -115,22 +106,13 @@ export function Surface({
   const opaque = useContext(OpaqueContext);
   // The canvas reported a failure: drop it for the source that failed, so the CSS layer remains.
   const [failed, setFailed] = useState<ShaderMaterialName | ShaderSource | null>(null);
-  const chosen = shader === false ? undefined : (shader ?? (layer ? scope?.facets.materials.shaders?.[layer] : undefined));
-  const source = chosen && supported && !opaque && chosen !== failed ? (typeof chosen === 'string' ? compiledMaterial(chosen) : chosen) : null;
+  const shaders = scope?.facets.materials.shaders;
+  const source = surfaceShader({ shader, layer, shaders, supported, opaque, failed });
+  const handlers = { [SHADER_ERROR]: () => setFailed(chosenShader({ shader, layer, shaders })) };
   const view = surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }, source !== null);
   return (
-    <Tag className={view.className} {...view.attrs} {...rest} style={typeof style === 'string' ? styleObject(style) : style}>
-      {source && chosen && (
-        <ShaderCanvas
-          className="lib-surface__shader"
-          frag={source.frag}
-          params={source.params}
-          scale={source.scale}
-          animate={source.animate}
-          interactive={source.interactive}
-          onError={() => setFailed(chosen)}
-        />
-      )}
+    <Tag className={view.className} {...view.attrs} {...rest} style={typeof style === 'string' ? (styleObject(style) as CSSProperties) : style}>
+      {source && <Tree tree={surfaceShaderNode(source)} handlers={handlers} />}
       {children}
     </Tag>
   );

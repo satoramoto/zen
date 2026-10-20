@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../../music/viewState';
+import { viewState } from '../../../view/viewState';
 import { CONTROL_SIZES, type ControlSize } from './sizes';
 import { switchHandlers, switchView, toggleHandlers, toggleView, type SwitchModelProps, type ToggleModelProps } from './Toggle.model';
 import '../../../primitives/Text.css';

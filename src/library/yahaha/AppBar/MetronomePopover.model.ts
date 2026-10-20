@@ -3,7 +3,7 @@
 // `MetronomePopover.tsx` (React) and `MetronomePopover.svelte` (Svelte) both pass
 // `metronomePopoverView` and `metronomePopoverHandlers` to their `Tree`; Esc and a press outside are
 // the `dismiss` store (`popover.ts`, registered in `src/library/view/stores.ts`).
-import type { TipAction } from '../../components/core/Button/Button.model';
+import type { TipAction } from '../../view/tip';
 import { textView } from '../../primitives/Text.model';
 import { component, h, when, wire, type ComponentNode, type Handlers, type Node } from '../../view/Tree.model';
 

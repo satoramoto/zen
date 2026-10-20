@@ -3,7 +3,7 @@
 // warning and danger icons, the words). No framework: `PartMarks.tsx` (React) and `PartMarks.svelte`
 // (Svelte) both pass `partMarksView` and `partMarksHandlers` to their `Tree`. The facts and their
 // precedence are `marks.ts`.
-import type { TipAction } from '../../core/Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 import { textView, type TextModelProps } from '../../../primitives/Text.model';
 import { each, h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import { visibleMarks, type Mark } from './marks';

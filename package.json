@@ -28,6 +28,11 @@
       "types": "./lib/storybook-svelte.d.ts",
       "import": "./lib/storybook-svelte.js"
     },
+    "./themes": {
+      "zen-source": "./src/library/themes.ts",
+      "types": "./lib/themes.d.ts",
+      "import": "./lib/themes.js"
+    },
     "./harness/*": "./src/harness/*",
     "./package.json": "./package.json"
   },

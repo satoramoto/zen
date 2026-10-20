@@ -1,8 +1,9 @@
-// The control context's values, framework-free, for the Svelte renderers (control.svelte.ts).
-// They mirror `ControlContextValue`, `CONTROL_FIELD` and `CONTROL_TOOLBAR` in Stack.tsx (which
-// imports React, so Svelte code can't take them from there); keep the two in step.
+// The control context's values, framework-free: the one definition. Stack.tsx imports and
+// re-exports them for its React `ControlContext`; the Svelte renderers take them from here
+// (control.svelte.ts).
 
-/** What the controls inside a cluster should look like (see Stack.tsx). */
+/** What the controls inside a cluster should look like: set by where they sit (a toolbar asks for
+ *  `quiet`), read by a control that has a quiet look (see Stack.tsx's `ControlContext`). */
 export interface ControlContextValue {
   /** In a toolbar: drop field chrome, keep the hit target and the behaviour. */
   readonly quiet: boolean;

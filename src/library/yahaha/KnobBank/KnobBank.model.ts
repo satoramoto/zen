@@ -2,7 +2,7 @@
 // each slot with its Knob or its empty ring) and the Knobs region (a Region, one tab per page, the
 // bank as its body). No framework: `KnobBank.tsx` (React) and `KnobBank.svelte` /
 // `KnobBankRegion.svelte` (Svelte) each hand one of these to their `Tree`.
-import type { TipAction } from '../../components/music/Knob/Knob.model';
+import type { TipAction } from '../../view/tip';
 import type { KnobModelProps } from '../../components/music/Knob/Knob.model';
 import { BOX, START, SWEEP, arc } from '../../components/music/Knob/geometry';
 import { lengthMax, lengthSum } from '../../layout/assembly/units';

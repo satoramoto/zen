@@ -3,7 +3,7 @@
 // handlers that tree names. No framework: `Display.tsx` (React) and `Display.svelte` (Svelte) both
 // pass `displayView` to their `Tree`; the fit and the auto form's measuring are the stores beside
 // it (`fit.ts`), the measured width the binding's `wideState` (`wide.ts`).
-import type { TipAction } from '../../components/core/Button/Button.model';
+import type { TipAction } from '../../view/tip';
 import type { ChordReadoutModelProps } from '../../components/music/ChordReadout/ChordReadout.model';
 import { marksText } from '../../components/music/PartMarks/marks';
 import { stackView, type StackModelProps } from '../../primitives/Stack.model';

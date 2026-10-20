@@ -1,7 +1,7 @@
 // Radio's model: the tree it draws from its props (Checkbox's root, box and input, with a dot and
 // Checkbox's dash) and the handlers that tree names. No framework: `Radio.tsx` (React) and
 // `Radio.svelte` (Svelte) both pass `radioView` and `radioHandlers` to their `Tree`, with the
-// uncontrolled radio's own mixed state as their view state (`music/viewState.ts`).
+// uncontrolled radio's own mixed state as their view state (`view/viewState.ts`).
 import { h, type Handlers, type Node } from '../../../view/Tree.model';
 import { checkInputNode, checkRootNode, dashMarkNode, type CheckModelProps, type CheckSlots } from '../Checkbox/Checkbox.model';
 

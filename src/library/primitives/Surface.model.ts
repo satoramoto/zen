@@ -1,6 +1,6 @@
 // Surface's model: the materials, lamps and corners, and the view a renderer draws (its class and
 // `data-*` attributes). No framework: `Surface.tsx` (React) and `Surface.svelte` (Svelte) both
-// render `surfaceView`. The shader canvas is React's alone for now (Surface.tsx).
+// render `surfaceView`. The shader canvas both draw comes from `surfaceShader.ts`.
 import type { AmbientRegion, LayerName } from '../contract';
 import type { HueSlot } from '../components/core/hue';
 import { h, type Node } from '../view/Tree.model';
@@ -61,7 +61,7 @@ export function surfaceView({ layer, material, radius, pressed, lit, border, amb
  * Surface as a view-tree element, for a model to inline: `surfaceNode({ material: 'key', as:
  * 'button' }, { type: 'button' }, 'Play')` is the element `<Surface as="button" material="key">`
  * draws, its attributes (`attrs`, after Surface's own) and children added. No shader: the CSS layer
- * alone, as `Surface.svelte` draws it (and React's `Surface` without WebGL2).
+ * alone, as either `Surface` draws it without WebGL2.
  */
 export function surfaceNode(props: SurfaceModelProps & { as?: string }, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
   const view = surfaceView(props);

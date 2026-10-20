@@ -9,7 +9,7 @@
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
   import { getControlContext } from '../../../primitives/control.svelte';
-  import { viewState } from '../../music/viewState';
+  import { viewState } from '../../../view/viewState';
   import { SELECT_CLOSED, selectHandlers, selectView, type SelectModelProps } from './Select.model';
   import '../../../primitives/Text.css';
   import '../../../primitives/Surface.css';

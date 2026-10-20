@@ -1,7 +1,7 @@
 import { useId, useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
 import { useControlContext } from '../../../primitives/Stack';
-import { viewState } from '../../music/viewState';
+import { viewState } from '../../../view/viewState';
 import { SELECT_CLOSED, selectHandlers, selectView, type SelectModelProps } from './Select.model';
 import { TYPING_WINDOW, useSelect, type UseSelectOptions } from './useSelect';
 import '../../../primitives/Text.css';

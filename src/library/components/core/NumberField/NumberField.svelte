@@ -7,7 +7,7 @@
 <script lang="ts">
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
-  import { viewState } from '../../music/viewState';
+  import { viewState } from '../../../view/viewState';
   import { numberFieldHandlers, numberFieldView, type NumberFieldModelProps } from './NumberField.model';
   import '../../../primitives/Text.css';
   import './NumberField.css';

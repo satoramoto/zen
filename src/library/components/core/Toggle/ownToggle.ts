@@ -1,5 +1,5 @@
 // An on/off value, controlled or the control's own, framework-free: shared by `Switch` and
-// `Disclosure`. The binding keeps the own value as view state (`music/viewState.ts`) and passes it
+// `Disclosure`. The binding keeps the own value as view state (`view/viewState.ts`) and passes it
 // in with its setter; the model's handlers ask through `set`.
 
 /** The value a control shows, and how a flip reaches it. */

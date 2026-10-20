@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../../music/viewState';
+import { viewState } from '../../../view/viewState';
 import type { CheckProps } from '../Checkbox/Checkbox';
 import { radioHandlers, radioView } from './Radio.model';
 import '../../../primitives/Text.css';

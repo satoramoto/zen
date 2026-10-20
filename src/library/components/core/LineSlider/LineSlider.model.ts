@@ -6,7 +6,7 @@
 import { focusRing } from '../../../primitives/Ring';
 import { textNode } from '../../../primitives/Text.model';
 import { h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';
-import type { TipAction } from '../Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 
 /** The app's tooltip action, applied to the slider with its key (same shape as a Svelte action). */
 export type { TipAction };

@@ -5,7 +5,7 @@
  * `src/library/svelte.ts` exports it as an action (`actionOf(bindPad)`). The markup is `padView`
  * (Pad.model.ts), its look `Pad.css`.
  */
-import type { TipAction } from '../../core/Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 
 /** A tooltip action in the shape of the app's `use:tip`: called with the node and the key. */
 export type { TipAction };

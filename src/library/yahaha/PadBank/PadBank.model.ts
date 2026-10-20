@@ -2,7 +2,8 @@
 // room, the grid, each cell with its Pad or its empty mark) and the Pads region (a Region, one tab
 // per bank, the bank as its body). No framework: `PadBank.tsx` (React) and `PadBank.svelte` /
 // `PadBankRegion.svelte` (Svelte) each hand one of these to their `Tree`.
-import type { PadFamily, PadModelProps, PadOnFace, PadState, TipAction } from '../../components/music/Pad/Pad.model';
+import type { PadFamily, PadModelProps, PadOnFace, PadState } from '../../components/music/Pad/Pad.model';
+import type { TipAction } from '../../view/tip';
 import { component, each, h, type ComponentNode, type Handlers, type Node } from '../../view/Tree.model';
 import { PART_HUE_INDEX, type Part } from '../hues';
 import { lengthMax, needsAcross, needsDown } from '../../layout/assembly/units';
