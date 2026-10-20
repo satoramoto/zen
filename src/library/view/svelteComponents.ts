@@ -12,12 +12,18 @@ import Knob from '../components/music/Knob/Knob.svelte';
 import Tabs from '../layout/Tabs.svelte';
 import Stack from '../primitives/Stack.svelte';
 import Text from '../primitives/Text.svelte';
+import Region from '../layout/Region.svelte';
+import Group from '../layout/Group.svelte';
+import Layer from '../layout/Layer.svelte';
+import Screen from '../layout/Screen.svelte';
+import AssembledScreen from '../layout/assembly/AssembledScreen.svelte';
+import FormScope from '../layout/assembly/FormScope.svelte';
 
 let registry: Record<string, Component<any>> | undefined;
 
 /** The Svelte component registered as `name`; throws for an unknown name. */
 export function svelteComponent(name: string): Component<any> {
-  registry ??= { Button, Knob, LampButton, LineSlider, Separator, SettingsRow, Stack, StatusDot, Tabs, Text } as Record<string, Component<any>>;
+  registry ??= { AssembledScreen, Button, FormScope, Group, Knob, LampButton, Layer, LineSlider, Region, Screen, Separator, SettingsRow, Stack, StatusDot, Tabs, Text } as Record<string, Component<any>>;
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;

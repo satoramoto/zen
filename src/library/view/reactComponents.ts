@@ -14,12 +14,18 @@ import { Knob } from '../components/music/Knob/Knob';
 import { Tabs } from '../layout/Tabs';
 import { Stack } from '../primitives/Stack';
 import { Text } from '../primitives/Text';
+import { Region } from '../layout/Region';
+import { Group } from '../layout/Group';
+import { Layer } from '../layout/Layer';
+import { Screen } from '../layout/Screen';
+import { AssembledScreen } from '../layout/assembly/AssembledScreen';
+import { FormProvider as FormScope } from '../layout/assembly/forms';
 
 let registry: Record<string, ComponentType<any>> | undefined;
 
 /** The React component registered as `name`; throws for an unknown name. */
 export function reactComponent(name: string): ComponentType<any> {
-  registry ??= { Button, Knob, LampButton, LineSlider, Separator, SettingsRow, Stack, StatusDot, Tabs, Text };
+  registry ??= { AssembledScreen, Button, FormScope, Group, Knob, LampButton, Layer, LineSlider, Region, Screen, Separator, SettingsRow, Stack, StatusDot, Tabs, Text };
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;
