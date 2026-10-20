@@ -7,6 +7,16 @@ import ActionButton from '../components/core/ActionButton/ActionButton.svelte';
 import SearchField from '../components/core/SearchField/SearchField.svelte';
 import LampButton from '../components/core/LampButton/LampButton.svelte';
 import LineSlider from '../components/core/LineSlider/LineSlider.svelte';
+import Segmented from '../components/core/Segmented/Segmented.svelte';
+import Select from '../components/core/Select/Select.svelte';
+import Toggle from '../components/core/Toggle/Toggle.svelte';
+import Switch from '../components/core/Toggle/Switch.svelte';
+import Disclosure from '../components/core/Disclosure/Disclosure.svelte';
+import StepValue from '../components/core/StepValue/StepValue.svelte';
+import Readout from '../components/core/Readout/Readout.svelte';
+import NumberField from '../components/core/NumberField/NumberField.svelte';
+import Checkbox from '../components/core/Checkbox/Checkbox.svelte';
+import Radio from '../components/core/Radio/Radio.svelte';
 import Slider from '../components/core/Slider/Slider.svelte';
 import Popover from '../components/core/Popover/Popover.svelte';
 import Modal from '../components/core/Modal/Modal.svelte';
@@ -76,6 +86,16 @@ export function svelteComponent(name: string): Component<any> {
     Knob,
     LampButton,
     LineSlider,
+    Segmented,
+    Select,
+    Toggle,
+    Switch,
+    Disclosure,
+    StepValue,
+    Readout,
+    NumberField,
+    Checkbox,
+    Radio,
     Slider,
     Popover,
     Modal,

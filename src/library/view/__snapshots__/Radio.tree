@@ -1,0 +1,362 @@
+## Group #1
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" name="fit" type="radio" value="Fill" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Group #2
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" name="fit" type="radio" value="Fit" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Group #3
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" name="fit" type="radio" value="Stretch" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #1
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="mini">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #2
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="mini">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #3
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="small">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #4
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="small">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #5
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #6
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #7
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="large">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #8
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="large">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #9
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="xlarge">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Checked #10
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="xlarge">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":true,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #1
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="mini">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #2
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="mini">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #3
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="small">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #4
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="small">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #5
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #6
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #7
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="large">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #8
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="large">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #9
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-part="root" data-role="body" data-size="xlarge">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Unchecked #10
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-part="root" data-role="body" data-size="xlarge">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #1
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-mixed="" data-part="root" data-role="body" data-size="mini">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #2
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-mixed="" data-part="root" data-role="body" data-size="mini">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #3
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-mixed="" data-part="root" data-role="body" data-size="small">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #4
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-mixed="" data-part="root" data-role="body" data-size="small">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #5
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-mixed="" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #6
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-mixed="" data-part="root" data-role="body" data-size="regular">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #7
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-mixed="" data-part="root" data-role="body" data-size="large">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #8
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-mixed="" data-part="root" data-role="body" data-size="large">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #9
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-mixed="" data-part="root" data-role="body" data-size="xlarge">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}
+
+## Mixed #10
+<label class="lib-text lib-tone lib-check lib-radio lib-sized" data-disabled="" data-mixed="" data-part="root" data-role="body" data-size="xlarge">
+  <span class="lib-check__box" data-part="box">
+    <input class="lib-check__input" data-part="input" disabled="" type="radio" @change=change use:checkDefault={"checked":false,"mixed":false}>
+    <span aria-hidden="true" class="lib-check__face" data-part="face">
+    <span aria-hidden="true" class="lib-radio__dot" data-part="dot">
+    <svg aria-hidden="true" class="lib-check__mark lib-check__dash" data-part="dash" viewBox="0 0 16 16">
+      <rect fill="currentColor" height="2" rx="1" width="6.5" x="4.75" y="7">
+  <span class="lib-check__label" data-part="label">
+    {children}

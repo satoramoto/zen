@@ -9,6 +9,15 @@ import { ActionButton } from '../components/core/ActionButton/ActionButton';
 import { SearchField } from '../components/core/SearchField/SearchField';
 import { LampButton } from '../components/core/LampButton/LampButton';
 import { LineSlider } from '../components/core/LineSlider/LineSlider';
+import { Segmented } from '../components/core/Segmented/Segmented';
+import { Select } from '../components/core/Select/Select';
+import { Switch, Toggle } from '../components/core/Toggle/Toggle';
+import { Disclosure } from '../components/core/Disclosure/Disclosure';
+import { StepValue } from '../components/core/StepValue/StepValue';
+import { Readout } from '../components/core/Readout/Readout';
+import { NumberField } from '../components/core/NumberField/NumberField';
+import { Checkbox } from '../components/core/Checkbox/Checkbox';
+import { Radio } from '../components/core/Radio/Radio';
 import { Slider } from '../components/core/Slider/Slider';
 import { Popover } from '../components/core/Popover/Popover';
 import { Modal, Sheet } from '../components/core/Modal/Modal';
@@ -74,6 +83,16 @@ export function reactComponent(name: string): ComponentType<any> {
     Knob,
     LampButton,
     LineSlider,
+    Segmented,
+    Select,
+    Toggle,
+    Switch,
+    Disclosure,
+    StepValue,
+    Readout,
+    NumberField,
+    Checkbox,
+    Radio,
     Slider,
     Popover,
     Modal,

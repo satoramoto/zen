@@ -9,6 +9,12 @@ import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
 import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
 import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
+import { bindSegmented, type SegmentedParams } from '../components/core/Segmented/segmentedInput';
+import { bindSelect, bindSelectMenu, type SelectMenuParams, type SelectParams } from '../components/core/Select/selectInput';
+import { bindStepAdjust, type StepAdjustParams } from '../components/core/StepValue/adjust';
+import { bindReadoutAdjust, type ReadoutAdjustParams } from '../components/core/Readout/adjust';
+import { bindNumberField, bindNumberFieldEditor, type NumberFieldEditorParams, type NumberFieldParams } from '../components/core/NumberField/numberFieldInput';
+import { bindCheckControlled, bindCheckDefault, type CheckControlledParams, type CheckDefaultParams } from '../components/core/Checkbox/checkDefault';
 import { bindPopover, type PopoverParams } from '../components/core/Popover/placement';
 import { bindPortal, type PortalParams } from '../components/core/Popover/portal';
 import { bindParamGesture, type ParamGestureParams } from '../components/core/Param/paramGesture';
@@ -89,6 +95,24 @@ export const stores = {
   focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
   /** LineSlider's keys and drag (`slide.ts`). */
   lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
+  /** Segmented's arrows, clicks and focus following the choice (`segmentedInput.ts`). */
+  segmented: keyed<SegmentedParams, 'onChange'>(bindSegmented, ['onChange']),
+  /** Select's trigger: keys, type-ahead, open and close (`selectInput.ts`). */
+  select: keyed<SelectParams, 'onState' | 'onChange'>(bindSelect, ['onState', 'onChange']),
+  /** Select's open menu: placement, rows and dismissal (`selectInput.ts`). */
+  selectMenu: keyed<SelectMenuParams, 'onState' | 'onChange'>(bindSelectMenu, ['onState', 'onChange']),
+  /** StepValue's drag, wheel, keys and double-click (`StepValue/adjust.ts`). */
+  stepAdjust: keyed<StepAdjustParams, 'onchange'>(bindStepAdjust, ['onchange']),
+  /** Readout's drag, wheel, keys and double-click (`Readout/adjust.ts`). */
+  readoutAdjust: keyed<ReadoutAdjustParams, 'onChange'>(bindReadoutAdjust, ['onChange']),
+  /** NumberField's drag, keys and double-click (`numberFieldInput.ts`). */
+  numberField: keyed<NumberFieldParams, 'onChange' | 'onRelease' | 'onEdit'>(bindNumberField, ['onChange', 'onRelease', 'onEdit']),
+  /** NumberField's editor while typing (`numberFieldInput.ts`). */
+  numberFieldEditor: keyed<NumberFieldEditorParams, 'onDraft' | 'onCommit' | 'onCancel'>(bindNumberFieldEditor, ['onDraft', 'onCommit', 'onCancel']),
+  /** An uncontrolled Checkbox's or Radio's starting state, set once (`checkDefault.ts`). */
+  checkDefault: keyed<CheckDefaultParams, never>(bindCheckDefault, []),
+  /** A controlled Checkbox's or Radio's state put back after a change its parent rejects (`checkDefault.ts`). */
+  checkControlled: keyed<CheckControlledParams, never>(bindCheckControlled, []),
   /** Popover's placement and dismissal (`components/core/Popover/placement.ts`). */
   popover: keyed<PopoverParams, 'anchor' | 'within' | 'onDismiss'>(bindPopover, ['anchor', 'within', 'onDismiss']),
   /** An element moved elsewhere in the document while bound: Popover's `portal` (`components/core/Popover/portal.ts`). */

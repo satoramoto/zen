@@ -2,13 +2,20 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { Readout, type ReadoutProps } from './Readout';
+import ReadoutSvelte from './Readout.svelte';
+import { readoutArgTypes, readoutStories as s } from './Readout.fixtures';
 import { splitUnit } from './adjust';
+
+// Every story but the live ones is built from Readout.fixtures.ts (`story(s.Name)`), which the tree
+// snapshot shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`.
 
 const meta = {
   title: 'Design OS/Components/Core/Readout',
   component: Readout,
   decorators: [
+    withRenderer,
     (Story) => (
       <div style={{ maxWidth: 360 }}>
         <Story />
@@ -17,36 +24,17 @@ const meta = {
     withLibraryTheme,
   ],
   parameters: { layout: 'fullscreen' },
-  args: {
-    label: 'Feedback',
-    value: 38,
-    min: 0,
-    max: 90,
-    defaultValue: 38,
-    display: '38%',
-    code: 'K6',
-    tip: 'fx.param.delay_feedback',
-    onChange: fn(),
-  },
-  argTypes: {
-    label: { control: 'text' },
-    value: { control: 'number' },
-    min: { control: 'number' },
-    max: { control: 'number' },
-    defaultValue: { control: 'number' },
-    display: { control: 'text' },
-    code: { control: 'text' },
-    disabled: { control: 'boolean' },
-    name: { control: 'text' },
-    tip: { control: 'text' },
-  },
+  args: { ...(s.Default.args as ReadoutProps), onChange: fn() },
+  argTypes: readoutArgTypes,
 } satisfies Meta<typeof Readout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Readout, ReadoutSvelte);
 
 /** The board's Delay Feedback: 38% of 0–90, on K6. The arrows, End and Space. */
 export const Default: Story = {
+  ...story(s.Default),
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider', { name: 'Feedback' });
     await expect(slider).toHaveAttribute('aria-valuetext', 'Feedback 38%');
@@ -64,18 +52,14 @@ export const Default: Story = {
 };
 
 /** A value with a unit: the number large, "kHz" smaller after it (Delay Tone). */
-export const WithUnit: Story = {
-  args: { label: 'Tone', value: 50, min: 10, max: 200, defaultValue: 50, display: '5.0 kHz', code: 'K7', tip: 'fx.param.delay_tone' },
-};
+export const WithUnit: Story = story(s.WithUnit);
 
 /** No Launchkey knob moves it: the code column stays, empty, so the rows still line up. */
-export const NoCode: Story = {
-  args: { label: 'Band send', value: 0, min: 0, max: 127, defaultValue: 0, display: '0%', code: '', tip: 'fx.variation_band' },
-};
+export const NoCode: Story = story(s.NoCode);
 
 /** Shown, not settable: the label and value fade, the bar empties, nothing is sent. */
 export const Disabled: Story = {
-  args: { disabled: true },
+  ...story(s.Disabled),
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider', { name: 'Feedback' });
     await expect(slider).toHaveAttribute('aria-disabled', 'true');
@@ -109,7 +93,7 @@ function ReadoutPlayground(props: ReadoutProps) {
   );
 }
 
-/** Play with it: a story-only wrapper keeps the value you set; each change still logs as an action. */
+/** Play with it: a story-only wrapper keeps the value you set; each change still logs as an action. Its own React `render` (live state), so it stays React-only. */
 export const Playground: Story = {
   render: (args) => <ReadoutPlayground {...args} />,
   play: async ({ canvasElement }) => {
@@ -120,14 +104,18 @@ export const Playground: Story = {
   },
 };
 
-/** A page of parameters: the knob codes, bars and numbers line up down the column. */
+/**
+ * A page of parameters: the knob codes, bars and numbers line up down the column. The fixture's
+ * rows stacked in a block (a fixture's items draw in a row), so it keeps its own React `render`.
+ */
 export const Column: Story = {
-  render: (args) => (
-    <div>
-      <Readout {...args} />
-      <Readout {...args} label="Tone" value={50} min={10} max={200} display="5.0 kHz" code="K7" />
-      <Readout {...args} label="Time" value={9} min={0} max={20} display="1/8" code="K8" />
-      <Readout {...args} label="Band send" value={0} display="0%" code="" />
-    </div>
-  ),
+  ...story(s.Column, {
+    render: (args) => (
+      <div>
+        {(s.Column.items ?? []).map((item, i) => (
+          <Readout key={i} {...args} {...(item as Partial<ReadoutProps>)} />
+        ))}
+      </div>
+    ),
+  }),
 };

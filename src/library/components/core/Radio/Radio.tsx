@@ -1,10 +1,15 @@
-import { useState } from 'react';
-import { DashMark, type CheckProps } from '../Checkbox/Checkbox';
-import { Text } from '../../../primitives/Text';
+import { useState, useSyncExternalStore } from 'react';
+import { Tree } from '../../../view/Tree';
+import { viewState } from '../../../view/viewState';
+import type { CheckProps } from '../Checkbox/Checkbox';
+import { radioHandlers, radioView } from './Radio.model';
+import '../../../primitives/Text.css';
 import '../Toggle/size.css';
 import '../Checkbox/Checkbox.css';
 import './Radio.css';
 
+// The tree and the handlers are framework-free, in the model; this file and `Radio.svelte` only
+// hand it to their `Tree`, with the uncontrolled radio's own mixed state as view state.
 export type RadioProps = CheckProps;
 
 /**
@@ -21,56 +26,11 @@ export type RadioProps = CheckProps;
  * **Parts** (`data-part`): `root` (the label), `box`, `input`, `face` (Checkbox's `well` face,
  * round), `dot` and `dash` (in `--selected-text`), `label`.
  */
-export function Radio({
-  children,
-  size = 'regular',
-  disabled,
-  checked,
-  defaultChecked = false,
-  onChange,
-  name,
-  value,
-  'aria-label': ariaLabel,
-}: RadioProps) {
-  const controlled = checked !== undefined;
-  const [ownMixed, setOwnMixed] = useState(defaultChecked === 'mixed');
-  const mixed = controlled ? checked === 'mixed' : ownMixed;
-  return (
-    <Text
-      as="label"
-      role="body"
-      className="lib-check lib-radio lib-sized"
-      data-part="root"
-      data-size={size}
-      data-mixed={mixed ? '' : undefined}
-      data-disabled={disabled ? '' : undefined}
-    >
-      <span className="lib-check__box" data-part="box">
-        <input
-          className="lib-check__input"
-          data-part="input"
-          type="radio"
-          name={name}
-          value={value}
-          aria-label={ariaLabel}
-          disabled={disabled}
-          {...(controlled ? { checked: checked === true } : { defaultChecked: defaultChecked === true })}
-          onChange={(e) => {
-            setOwnMixed(false);
-            onChange?.(e.currentTarget.checked);
-          }}
-        />
-        <span className="lib-check__face" data-part="face" aria-hidden="true" />
-        <span className="lib-radio__dot" data-part="dot" aria-hidden="true" />
-        <DashMark />
-      </span>
-      {children !== undefined && (
-        <span className="lib-check__label" data-part="label">
-          {children}
-        </span>
-      )}
-    </Text>
-  );
+export function Radio({ children, ...props }: RadioProps) {
+  // Its own mixed state (uncontrolled): from `defaultChecked`, ended by the first pick.
+  const [ownMixed] = useState(() => viewState(props.defaultChecked === 'mixed'));
+  const mixed = useSyncExternalStore(ownMixed.subscribe, ownMixed.get);
+  return <Tree tree={radioView(props, { label: children !== undefined }, mixed)} slots={{ children }} handlers={radioHandlers(props, ownMixed.set)} />;
 }
 
 export default Radio;

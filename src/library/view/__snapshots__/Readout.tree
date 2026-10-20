@@ -1,0 +1,114 @@
+## Default
+<div aria-label="Feedback" aria-valuemax="90" aria-valuemin="0" aria-valuenow="38" aria-valuetext="Feedback 38%" class="yh-readout" data-tip="fx.param.delay_feedback" role="slider" tabindex="0" use:readoutAdjust={"value":38,"min":0,"max":90,"defaultValue":38,"disabled":false,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Feedback"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "38"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+      "%"
+  <span class="yh-readout-code">
+    <kbd class="lib-text lib-tone" data-role="numeral" data-text-size="caption" data-text-weight="body">
+      "K6"
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 42.22222222222222%">
+
+## WithUnit
+<div aria-label="Tone" aria-valuemax="200" aria-valuemin="10" aria-valuenow="50" aria-valuetext="Tone 5.0 kHz" class="yh-readout" data-tip="fx.param.delay_tone" role="slider" tabindex="0" use:readoutAdjust={"value":50,"min":10,"max":200,"defaultValue":50,"disabled":false,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Tone"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "5.0"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+      "kHz"
+  <span class="yh-readout-code">
+    <kbd class="lib-text lib-tone" data-role="numeral" data-text-size="caption" data-text-weight="body">
+      "K7"
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 21.052631578947366%">
+
+## NoCode
+<div aria-label="Band send" aria-valuemax="127" aria-valuemin="0" aria-valuenow="0" aria-valuetext="Band send 0%" class="yh-readout" data-tip="fx.variation_band" role="slider" tabindex="0" use:readoutAdjust={"value":0,"min":0,"max":127,"defaultValue":0,"disabled":false,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Band send"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "0"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+      "%"
+  <span class="yh-readout-code">
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 0%">
+
+## Disabled
+<div aria-disabled="true" aria-label="Feedback" aria-valuemax="90" aria-valuemin="0" aria-valuenow="38" aria-valuetext="Feedback 38%" class="yh-readout yh-readout--disabled" data-tip="fx.param.delay_feedback" role="slider" tabindex="0" use:readoutAdjust={"value":38,"min":0,"max":90,"defaultValue":38,"disabled":true,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Feedback"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "38"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+      "%"
+  <span class="yh-readout-code">
+    <kbd class="lib-text lib-tone" data-role="numeral" data-text-size="caption" data-text-weight="body">
+      "K6"
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 0%">
+
+## Column #1
+<div aria-label="Feedback" aria-valuemax="90" aria-valuemin="0" aria-valuenow="38" aria-valuetext="Feedback 38%" class="yh-readout" data-tip="fx.param.delay_feedback" role="slider" tabindex="0" use:readoutAdjust={"value":38,"min":0,"max":90,"defaultValue":38,"disabled":false,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Feedback"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "38"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+      "%"
+  <span class="yh-readout-code">
+    <kbd class="lib-text lib-tone" data-role="numeral" data-text-size="caption" data-text-weight="body">
+      "K6"
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 42.22222222222222%">
+
+## Column #2
+<div aria-label="Tone" aria-valuemax="200" aria-valuemin="10" aria-valuenow="50" aria-valuetext="Tone 5.0 kHz" class="yh-readout" data-tip="fx.param.delay_feedback" role="slider" tabindex="0" use:readoutAdjust={"value":50,"min":10,"max":200,"defaultValue":38,"disabled":false,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Tone"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "5.0"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+      "kHz"
+  <span class="yh-readout-code">
+    <kbd class="lib-text lib-tone" data-role="numeral" data-text-size="caption" data-text-weight="body">
+      "K7"
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 21.052631578947366%">
+
+## Column #3
+<div aria-label="Time" aria-valuemax="20" aria-valuemin="0" aria-valuenow="9" aria-valuetext="Time 1/8" class="yh-readout" data-tip="fx.param.delay_feedback" role="slider" tabindex="0" use:readoutAdjust={"value":9,"min":0,"max":20,"defaultValue":38,"disabled":false,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Time"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "1/8"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+  <span class="yh-readout-code">
+    <kbd class="lib-text lib-tone" data-role="numeral" data-text-size="caption" data-text-weight="body">
+      "K8"
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 45%">
+
+## Column #4
+<div aria-label="Band send" aria-valuemax="90" aria-valuemin="0" aria-valuenow="0" aria-valuetext="Band send 0%" class="yh-readout" data-tip="fx.param.delay_feedback" role="slider" tabindex="0" use:readoutAdjust={"value":0,"min":0,"max":90,"defaultValue":38,"disabled":false,"onChange":"change"}>
+  <span class="lib-text lib-tone yh-readout-label" data-role="body" data-text-case="label" data-text-size="caption">
+    "Band send"
+  <span class="yh-readout-value">
+    <span class="lib-text lib-tone yh-readout-number" data-role="numeral" data-text-size="body">
+      "0"
+    <span class="lib-text lib-tone yh-readout-unit" data-role="body" data-text-size="caption">
+      "%"
+  <span class="yh-readout-code">
+  <span aria-hidden="true" class="yh-readout-bar" data-part="bar">
+    <span class="yh-readout-fill" style="width: 0%">

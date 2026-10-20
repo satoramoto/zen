@@ -2,49 +2,31 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { StepValue } from './StepValue';
+import { fixtureStories, withRenderer } from '../../../stories/story';
+import { StepValue, type StepValueProps } from './StepValue';
+import StepValueSvelte from './StepValue.svelte';
+import { stepValueArgTypes, stepValueStories as s } from './StepValue.fixtures';
+
+// Every story but the live ones is built from StepValue.fixtures.ts (`story(s.Name)`), which the
+// tree snapshot shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`.
 
 const meta = {
   title: 'Design OS/Components/Core/StepValue',
   component: StepValue,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
-  args: {
-    value: 16,
-    min: 0,
-    max: 127,
-    defaultValue: 0,
-    tag: 'R2',
-    hue: 2,
-    name: 'Right 2 delay send',
-    tip: 'fx.send_param',
-    tipAction: fn(),
-    onchange: fn(),
-  },
-  argTypes: {
-    value: { control: 'number' },
-    min: { control: 'number' },
-    max: { control: 'number' },
-    defaultValue: { control: 'number' },
-    display: { control: 'text' },
-    tag: { control: 'text' },
-    hue: { control: 'select', options: ['t', 1, 2, 3, 4, 5] },
-    ink: { control: 'select', options: ['a', 't'] },
-    dim: { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    span: { control: 'number' },
-    name: { control: 'text' },
-    valuetext: { control: 'text' },
-    tip: { control: 'text' },
-  },
+  args: { ...(s.Default.args as StepValueProps), tipAction: fn(), onchange: fn() },
+  argTypes: stepValueArgTypes,
 } satisfies Meta<typeof StepValue>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(StepValue, StepValueSvelte);
 
 /** Right 2's send to the Delay: a pink swatch by the tag, 16 in full ink. Keys step it. */
 export const Default: Story = {
+  ...story(s.Default),
   play: async ({ canvasElement, args }) => {
     const step = within(canvasElement).getByRole('slider', { name: 'Right 2 delay send' });
     await expect(step).toHaveAttribute('aria-valuetext', '16');
@@ -58,18 +40,14 @@ export const Default: Story = {
 };
 
 /** A part that doesn't sound: the tag and value faded, still settable. */
-export const Dim: Story = {
-  args: { tag: 'R3', hue: 3, value: 0, dim: true, name: 'Right 3 delay send' },
-};
+export const Dim: Story = story(s.Dim);
 
 /** A table cell: plain text ink, no tag (a Master EQ band's gain). */
-export const TableCell: Story = {
-  args: { tag: undefined, value: 4, min: -12, max: 12, display: '+4', ink: 't', name: 'Band 1 gain', valuetext: '+4 dB', tip: 'fx.master_eq_gain' },
-};
+export const TableCell: Story = story(s.TableCell);
 
 /** Shown, not settable: faded, nothing is sent. */
 export const Disabled: Story = {
-  args: { disabled: true },
+  ...story(s.Disabled),
   play: async ({ canvasElement, args }) => {
     const step = within(canvasElement).getByRole('slider', { name: 'Right 2 delay send' });
     await expect(step).toHaveAttribute('aria-disabled', 'true');
@@ -79,7 +57,10 @@ export const Disabled: Story = {
   },
 };
 
-/** Added: a column of sends, one per part, held in state so drag, wheel and keys move it. */
+/**
+ * Added: a column of sends, one per part, held in state so drag, wheel and keys move it. Its own
+ * React `render` (live state), so it stays React-only.
+ */
 export const SendColumn: Story = {
   render: function SendColumn() {
     const parts = [
@@ -106,7 +87,7 @@ export const SendColumn: Story = {
   },
 };
 
-/** Added: Master EQ gains as table cells, signed, held in state. */
+/** Added: Master EQ gains as table cells, signed, held in state. Its own React `render` (live state), so it stays React-only. */
 export const GainRow: Story = {
   render: function GainRow() {
     const [gains, setGains] = useState<number[]>([4, 0, -3, -12]);
