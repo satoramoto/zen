@@ -1,0 +1,35 @@
+## Default
+<div aria-label="Mixer view" class="lib-tabs" data-part="tabs" role="tablist" @keydown=key>
+  <button key=faders aria-selected="true" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-faders" role="tab" tabindex="0" type="button" @click=choose:faders use:tip={"tipAction":"tipAction"}>
+    "Faders"
+  <button key=sends aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-sends" role="tab" tabindex="-1" type="button" @click=choose:sends use:tip={"tipAction":"tipAction"}>
+    "Sends"
+  <button key=parts aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-parts" role="tab" tabindex="-1" type="button" @click=choose:parts use:tip={"tipAction":"tipAction"}>
+    "Parts"
+
+## Two
+<div aria-label="Layer" class="lib-tabs" data-part="tabs" role="tablist" @keydown=key>
+  <button key=faders aria-selected="true" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-layer-faders" role="tab" tabindex="0" type="button" @click=choose:faders use:tip={"tipAction":"tipAction"}>
+    "Faders"
+  <button key=sends aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-layer-sends" role="tab" tabindex="-1" type="button" @click=choose:sends use:tip={"tipAction":"tipAction"}>
+    "Sends"
+
+## WithDisabled
+<div aria-label="Mixer view" class="lib-tabs" data-part="tabs" role="tablist" @keydown=key>
+  <button key=faders aria-selected="true" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-faders" role="tab" tabindex="0" type="button" @click=choose:faders use:tip={"tipAction":"tipAction"}>
+    "Faders"
+  <button key=sends aria-disabled="true" aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-sends" role="tab" tabindex="-1" type="button" @click=choose:sends use:tip={"tipAction":"tipAction"}>
+    "Sends"
+  <button key=parts aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-parts" role="tab" tabindex="-1" type="button" @click=choose:parts use:tip={"tipAction":"tipAction"}>
+    "Parts"
+  <button key=fx aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-fx" role="tab" tabindex="-1" type="button" @click=choose:fx use:tip={"tipAction":"tipAction"}>
+    "Effects"
+
+## NoneChosen
+<div aria-label="Mixer view" class="lib-tabs" data-part="tabs" role="tablist" @keydown=key>
+  <button key=faders aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-faders" role="tab" tabindex="0" type="button" @click=choose:faders use:tip={"tipAction":"tipAction"}>
+    "Faders"
+  <button key=sends aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-sends" role="tab" tabindex="-1" type="button" @click=choose:sends use:tip={"tipAction":"tipAction"}>
+    "Sends"
+  <button key=parts aria-selected="false" class="lib-text lib-tone lib-tabs__tab" data-part="tab" data-role="body" data-text-case="label" data-text-size="label" data-text-weight="strong" id="tabs-mixer-view-parts" role="tab" tabindex="-1" type="button" @click=choose:parts use:tip={"tipAction":"tipAction"}>
+    "Parts"

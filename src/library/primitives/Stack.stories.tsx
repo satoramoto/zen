@@ -1,25 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from '../components/core';
 import { withLibraryTheme } from '../storybook';
-import { Stack } from './Stack';
-import { LABELS, stackArgTypes, stackArgs, stackProps, stackStoryArgs, type StackArgs } from './Stack.fixtures';
+import { treeStory, withRenderer } from '../stories/story';
+import { stackArgTypes, stackArgs, stackSample, stackStoryArgs, type StackArgs } from './Stack.fixtures';
 
-// The args and controls come from Stack.fixtures.ts, which the Svelte stories and the parity test share.
+// The args, controls and story tree come from Stack.fixtures.ts (`stackNode` holding registered
+// Buttons); the toolbar's Renderer draws it with React's or Svelte's `Tree`.
+const sample = treeStory<StackArgs>((args) => ({ tree: stackSample(args) }));
+
 const meta: Meta<StackArgs> = {
   title: 'Design OS/Primitives/Stack',
-  decorators: [withLibraryTheme],
-  parameters: { layout: 'fullscreen' },
+  decorators: [withRenderer, withLibraryTheme],
+  parameters: { layout: 'fullscreen', ...sample.parameters },
   args: stackArgs,
   argTypes: stackArgTypes,
-  render: (args) => (
-    <div style={{ width: args.width }}>
-      <Stack {...stackProps(args)}>
-        {LABELS.slice(0, args.count).map((label, i) => (
-          <Button key={label} label={label} variant={i === 0 ? 'primary' : 'secondary'} />
-        ))}
-      </Stack>
-    </div>
-  ),
+  render: sample.render,
 };
 export default meta;
 type Story = StoryObj<StackArgs>;

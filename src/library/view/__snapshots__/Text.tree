@@ -1,0 +1,622 @@
+## Playground
+<p class="lib-text lib-tone" data-role="heading" data-tabular="false" data-tone="primary">
+  "Main B into Fill A, then the ending"
+
+## AllRolesAndTones #1
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "primary"
+
+## AllRolesAndTones #2
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "secondary"
+
+## AllRolesAndTones #3
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "muted"
+
+## AllRolesAndTones #4
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "faint"
+
+## AllRolesAndTones #5
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "accent"
+
+## AllRolesAndTones #6
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "success"
+
+## AllRolesAndTones #7
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "warning"
+
+## AllRolesAndTones #8
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "danger"
+
+## AllRolesAndTones #9
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "on-solid"
+
+## AllRolesAndTones #10
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "1"
+
+## AllRolesAndTones #11
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "2"
+
+## AllRolesAndTones #12
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "3"
+
+## AllRolesAndTones #13
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "4"
+
+## AllRolesAndTones #14
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "5"
+
+## AllRolesAndTones #15
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "role-1"
+
+## AllRolesAndTones #16
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "role-2"
+
+## AllRolesAndTones #17
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "display"
+
+## AllRolesAndTones #18
+<span class="lib-text lib-tone" data-role="display" data-tone="primary">
+  "Stage"
+
+## AllRolesAndTones #19
+<span class="lib-text lib-tone" data-role="display" data-tone="secondary">
+  "Stage"
+
+## AllRolesAndTones #20
+<span class="lib-text lib-tone" data-role="display" data-tone="muted">
+  "Stage"
+
+## AllRolesAndTones #21
+<span class="lib-text lib-tone" data-role="display" data-tone="faint">
+  "Stage"
+
+## AllRolesAndTones #22
+<span class="lib-text lib-tone" data-role="display" data-tone="accent">
+  "Stage"
+
+## AllRolesAndTones #23
+<span class="lib-text lib-tone" data-role="display" data-tone="success">
+  "Stage"
+
+## AllRolesAndTones #24
+<span class="lib-text lib-tone" data-role="display" data-tone="warning">
+  "Stage"
+
+## AllRolesAndTones #25
+<span class="lib-text lib-tone" data-role="display" data-tone="danger">
+  "Stage"
+
+## AllRolesAndTones #26
+<span class="lib-text lib-tone" data-role="display" data-tone="on-solid">
+  "Stage"
+
+## AllRolesAndTones #27
+<span class="lib-text lib-tone" data-role="display" data-tone="hue-1">
+  "Stage"
+
+## AllRolesAndTones #28
+<span class="lib-text lib-tone" data-role="display" data-tone="hue-2">
+  "Stage"
+
+## AllRolesAndTones #29
+<span class="lib-text lib-tone" data-role="display" data-tone="hue-3">
+  "Stage"
+
+## AllRolesAndTones #30
+<span class="lib-text lib-tone" data-role="display" data-tone="hue-4">
+  "Stage"
+
+## AllRolesAndTones #31
+<span class="lib-text lib-tone" data-role="display" data-tone="hue-5">
+  "Stage"
+
+## AllRolesAndTones #32
+<span class="lib-text lib-tone" data-role="display" data-tone="role-1">
+  "Stage"
+
+## AllRolesAndTones #33
+<span class="lib-text lib-tone" data-role="display" data-tone="role-2">
+  "Stage"
+
+## AllRolesAndTones #34
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "numeral"
+
+## AllRolesAndTones #35
+<span class="lib-text lib-tone" data-role="numeral" data-tone="primary">
+  "128.0"
+
+## AllRolesAndTones #36
+<span class="lib-text lib-tone" data-role="numeral" data-tone="secondary">
+  "128.0"
+
+## AllRolesAndTones #37
+<span class="lib-text lib-tone" data-role="numeral" data-tone="muted">
+  "128.0"
+
+## AllRolesAndTones #38
+<span class="lib-text lib-tone" data-role="numeral" data-tone="faint">
+  "128.0"
+
+## AllRolesAndTones #39
+<span class="lib-text lib-tone" data-role="numeral" data-tone="accent">
+  "128.0"
+
+## AllRolesAndTones #40
+<span class="lib-text lib-tone" data-role="numeral" data-tone="success">
+  "128.0"
+
+## AllRolesAndTones #41
+<span class="lib-text lib-tone" data-role="numeral" data-tone="warning">
+  "128.0"
+
+## AllRolesAndTones #42
+<span class="lib-text lib-tone" data-role="numeral" data-tone="danger">
+  "128.0"
+
+## AllRolesAndTones #43
+<span class="lib-text lib-tone" data-role="numeral" data-tone="on-solid">
+  "128.0"
+
+## AllRolesAndTones #44
+<span class="lib-text lib-tone" data-role="numeral" data-tone="hue-1">
+  "128.0"
+
+## AllRolesAndTones #45
+<span class="lib-text lib-tone" data-role="numeral" data-tone="hue-2">
+  "128.0"
+
+## AllRolesAndTones #46
+<span class="lib-text lib-tone" data-role="numeral" data-tone="hue-3">
+  "128.0"
+
+## AllRolesAndTones #47
+<span class="lib-text lib-tone" data-role="numeral" data-tone="hue-4">
+  "128.0"
+
+## AllRolesAndTones #48
+<span class="lib-text lib-tone" data-role="numeral" data-tone="hue-5">
+  "128.0"
+
+## AllRolesAndTones #49
+<span class="lib-text lib-tone" data-role="numeral" data-tone="role-1">
+  "128.0"
+
+## AllRolesAndTones #50
+<span class="lib-text lib-tone" data-role="numeral" data-tone="role-2">
+  "128.0"
+
+## AllRolesAndTones #51
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "heading"
+
+## AllRolesAndTones #52
+<span class="lib-text lib-tone" data-role="heading" data-tone="primary">
+  "Sections"
+
+## AllRolesAndTones #53
+<span class="lib-text lib-tone" data-role="heading" data-tone="secondary">
+  "Sections"
+
+## AllRolesAndTones #54
+<span class="lib-text lib-tone" data-role="heading" data-tone="muted">
+  "Sections"
+
+## AllRolesAndTones #55
+<span class="lib-text lib-tone" data-role="heading" data-tone="faint">
+  "Sections"
+
+## AllRolesAndTones #56
+<span class="lib-text lib-tone" data-role="heading" data-tone="accent">
+  "Sections"
+
+## AllRolesAndTones #57
+<span class="lib-text lib-tone" data-role="heading" data-tone="success">
+  "Sections"
+
+## AllRolesAndTones #58
+<span class="lib-text lib-tone" data-role="heading" data-tone="warning">
+  "Sections"
+
+## AllRolesAndTones #59
+<span class="lib-text lib-tone" data-role="heading" data-tone="danger">
+  "Sections"
+
+## AllRolesAndTones #60
+<span class="lib-text lib-tone" data-role="heading" data-tone="on-solid">
+  "Sections"
+
+## AllRolesAndTones #61
+<span class="lib-text lib-tone" data-role="heading" data-tone="hue-1">
+  "Sections"
+
+## AllRolesAndTones #62
+<span class="lib-text lib-tone" data-role="heading" data-tone="hue-2">
+  "Sections"
+
+## AllRolesAndTones #63
+<span class="lib-text lib-tone" data-role="heading" data-tone="hue-3">
+  "Sections"
+
+## AllRolesAndTones #64
+<span class="lib-text lib-tone" data-role="heading" data-tone="hue-4">
+  "Sections"
+
+## AllRolesAndTones #65
+<span class="lib-text lib-tone" data-role="heading" data-tone="hue-5">
+  "Sections"
+
+## AllRolesAndTones #66
+<span class="lib-text lib-tone" data-role="heading" data-tone="role-1">
+  "Sections"
+
+## AllRolesAndTones #67
+<span class="lib-text lib-tone" data-role="heading" data-tone="role-2">
+  "Sections"
+
+## AllRolesAndTones #68
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "body"
+
+## AllRolesAndTones #69
+<span class="lib-text lib-tone" data-role="body" data-tone="primary">
+  "Intro A"
+
+## AllRolesAndTones #70
+<span class="lib-text lib-tone" data-role="body" data-tone="secondary">
+  "Intro A"
+
+## AllRolesAndTones #71
+<span class="lib-text lib-tone" data-role="body" data-tone="muted">
+  "Intro A"
+
+## AllRolesAndTones #72
+<span class="lib-text lib-tone" data-role="body" data-tone="faint">
+  "Intro A"
+
+## AllRolesAndTones #73
+<span class="lib-text lib-tone" data-role="body" data-tone="accent">
+  "Intro A"
+
+## AllRolesAndTones #74
+<span class="lib-text lib-tone" data-role="body" data-tone="success">
+  "Intro A"
+
+## AllRolesAndTones #75
+<span class="lib-text lib-tone" data-role="body" data-tone="warning">
+  "Intro A"
+
+## AllRolesAndTones #76
+<span class="lib-text lib-tone" data-role="body" data-tone="danger">
+  "Intro A"
+
+## AllRolesAndTones #77
+<span class="lib-text lib-tone" data-role="body" data-tone="on-solid">
+  "Intro A"
+
+## AllRolesAndTones #78
+<span class="lib-text lib-tone" data-role="body" data-tone="hue-1">
+  "Intro A"
+
+## AllRolesAndTones #79
+<span class="lib-text lib-tone" data-role="body" data-tone="hue-2">
+  "Intro A"
+
+## AllRolesAndTones #80
+<span class="lib-text lib-tone" data-role="body" data-tone="hue-3">
+  "Intro A"
+
+## AllRolesAndTones #81
+<span class="lib-text lib-tone" data-role="body" data-tone="hue-4">
+  "Intro A"
+
+## AllRolesAndTones #82
+<span class="lib-text lib-tone" data-role="body" data-tone="hue-5">
+  "Intro A"
+
+## AllRolesAndTones #83
+<span class="lib-text lib-tone" data-role="body" data-tone="role-1">
+  "Intro A"
+
+## AllRolesAndTones #84
+<span class="lib-text lib-tone" data-role="body" data-tone="role-2">
+  "Intro A"
+
+## AllRolesAndTones #85
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "label"
+
+## AllRolesAndTones #86
+<span class="lib-text lib-tone" data-role="label" data-tone="primary">
+  "Tempo"
+
+## AllRolesAndTones #87
+<span class="lib-text lib-tone" data-role="label" data-tone="secondary">
+  "Tempo"
+
+## AllRolesAndTones #88
+<span class="lib-text lib-tone" data-role="label" data-tone="muted">
+  "Tempo"
+
+## AllRolesAndTones #89
+<span class="lib-text lib-tone" data-role="label" data-tone="faint">
+  "Tempo"
+
+## AllRolesAndTones #90
+<span class="lib-text lib-tone" data-role="label" data-tone="accent">
+  "Tempo"
+
+## AllRolesAndTones #91
+<span class="lib-text lib-tone" data-role="label" data-tone="success">
+  "Tempo"
+
+## AllRolesAndTones #92
+<span class="lib-text lib-tone" data-role="label" data-tone="warning">
+  "Tempo"
+
+## AllRolesAndTones #93
+<span class="lib-text lib-tone" data-role="label" data-tone="danger">
+  "Tempo"
+
+## AllRolesAndTones #94
+<span class="lib-text lib-tone" data-role="label" data-tone="on-solid">
+  "Tempo"
+
+## AllRolesAndTones #95
+<span class="lib-text lib-tone" data-role="label" data-tone="hue-1">
+  "Tempo"
+
+## AllRolesAndTones #96
+<span class="lib-text lib-tone" data-role="label" data-tone="hue-2">
+  "Tempo"
+
+## AllRolesAndTones #97
+<span class="lib-text lib-tone" data-role="label" data-tone="hue-3">
+  "Tempo"
+
+## AllRolesAndTones #98
+<span class="lib-text lib-tone" data-role="label" data-tone="hue-4">
+  "Tempo"
+
+## AllRolesAndTones #99
+<span class="lib-text lib-tone" data-role="label" data-tone="hue-5">
+  "Tempo"
+
+## AllRolesAndTones #100
+<span class="lib-text lib-tone" data-role="label" data-tone="role-1">
+  "Tempo"
+
+## AllRolesAndTones #101
+<span class="lib-text lib-tone" data-role="label" data-tone="role-2">
+  "Tempo"
+
+## AllRolesAndTones #102
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "caption"
+
+## AllRolesAndTones #103
+<span class="lib-text lib-tone" data-role="caption" data-tone="primary">
+  "Bar 12"
+
+## AllRolesAndTones #104
+<span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+  "Bar 12"
+
+## AllRolesAndTones #105
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "Bar 12"
+
+## AllRolesAndTones #106
+<span class="lib-text lib-tone" data-role="caption" data-tone="faint">
+  "Bar 12"
+
+## AllRolesAndTones #107
+<span class="lib-text lib-tone" data-role="caption" data-tone="accent">
+  "Bar 12"
+
+## AllRolesAndTones #108
+<span class="lib-text lib-tone" data-role="caption" data-tone="success">
+  "Bar 12"
+
+## AllRolesAndTones #109
+<span class="lib-text lib-tone" data-role="caption" data-tone="warning">
+  "Bar 12"
+
+## AllRolesAndTones #110
+<span class="lib-text lib-tone" data-role="caption" data-tone="danger">
+  "Bar 12"
+
+## AllRolesAndTones #111
+<span class="lib-text lib-tone" data-role="caption" data-tone="on-solid">
+  "Bar 12"
+
+## AllRolesAndTones #112
+<span class="lib-text lib-tone" data-role="caption" data-tone="hue-1">
+  "Bar 12"
+
+## AllRolesAndTones #113
+<span class="lib-text lib-tone" data-role="caption" data-tone="hue-2">
+  "Bar 12"
+
+## AllRolesAndTones #114
+<span class="lib-text lib-tone" data-role="caption" data-tone="hue-3">
+  "Bar 12"
+
+## AllRolesAndTones #115
+<span class="lib-text lib-tone" data-role="caption" data-tone="hue-4">
+  "Bar 12"
+
+## AllRolesAndTones #116
+<span class="lib-text lib-tone" data-role="caption" data-tone="hue-5">
+  "Bar 12"
+
+## AllRolesAndTones #117
+<span class="lib-text lib-tone" data-role="caption" data-tone="role-1">
+  "Bar 12"
+
+## AllRolesAndTones #118
+<span class="lib-text lib-tone" data-role="caption" data-tone="role-2">
+  "Bar 12"
+
+## AllRolesAndTones #119
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "code"
+
+## AllRolesAndTones #120
+<span class="lib-text lib-tone" data-role="code" data-tone="primary">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #121
+<span class="lib-text lib-tone" data-role="code" data-tone="secondary">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #122
+<span class="lib-text lib-tone" data-role="code" data-tone="muted">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #123
+<span class="lib-text lib-tone" data-role="code" data-tone="faint">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #124
+<span class="lib-text lib-tone" data-role="code" data-tone="accent">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #125
+<span class="lib-text lib-tone" data-role="code" data-tone="success">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #126
+<span class="lib-text lib-tone" data-role="code" data-tone="warning">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #127
+<span class="lib-text lib-tone" data-role="code" data-tone="danger">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #128
+<span class="lib-text lib-tone" data-role="code" data-tone="on-solid">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #129
+<span class="lib-text lib-tone" data-role="code" data-tone="hue-1">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #130
+<span class="lib-text lib-tone" data-role="code" data-tone="hue-2">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #131
+<span class="lib-text lib-tone" data-role="code" data-tone="hue-3">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #132
+<span class="lib-text lib-tone" data-role="code" data-tone="hue-4">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #133
+<span class="lib-text lib-tone" data-role="code" data-tone="hue-5">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #134
+<span class="lib-text lib-tone" data-role="code" data-tone="role-1">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #135
+<span class="lib-text lib-tone" data-role="code" data-tone="role-2">
+  "C#m7 / 0:42"
+
+## AllRolesAndTones #136
+<span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+  "math"
+
+## AllRolesAndTones #137
+<span class="lib-text lib-tone" data-role="math" data-tone="primary">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #138
+<span class="lib-text lib-tone" data-role="math" data-tone="secondary">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #139
+<span class="lib-text lib-tone" data-role="math" data-tone="muted">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #140
+<span class="lib-text lib-tone" data-role="math" data-tone="faint">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #141
+<span class="lib-text lib-tone" data-role="math" data-tone="accent">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #142
+<span class="lib-text lib-tone" data-role="math" data-tone="success">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #143
+<span class="lib-text lib-tone" data-role="math" data-tone="warning">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #144
+<span class="lib-text lib-tone" data-role="math" data-tone="danger">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #145
+<span class="lib-text lib-tone" data-role="math" data-tone="on-solid">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #146
+<span class="lib-text lib-tone" data-role="math" data-tone="hue-1">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #147
+<span class="lib-text lib-tone" data-role="math" data-tone="hue-2">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #148
+<span class="lib-text lib-tone" data-role="math" data-tone="hue-3">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #149
+<span class="lib-text lib-tone" data-role="math" data-tone="hue-4">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #150
+<span class="lib-text lib-tone" data-role="math" data-tone="hue-5">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #151
+<span class="lib-text lib-tone" data-role="math" data-tone="role-1">
+  "fₙ = n·f₁"
+
+## AllRolesAndTones #152
+<span class="lib-text lib-tone" data-role="math" data-tone="role-2">
+  "fₙ = n·f₁"
+
+## MathInText #1
+<p class="lib-text lib-tone" data-role="body" data-tone="primary">
+  "The nth harmonic of a string sounds at"
+
+## MathInText #2
+<span class="lib-text lib-tone" data-role="body" data-tone="accent">
+  "n"
+
+## MathInText #3
+<span class="lib-text lib-tone" data-role="math" data-text-size="inherit">

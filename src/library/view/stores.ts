@@ -8,6 +8,7 @@ import { bindHold, type HoldParams } from '../components/core/Button/hold';
 import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
 import { bindDismiss, bindFocusReturn, type DismissParams, type FocusReturnParams } from '../yahaha/AppBar/popover';
+import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -66,6 +67,8 @@ export const stores = {
   dismiss: keyed<DismissParams, 'onClose'>(bindDismiss, ['onClose']),
   /** AppBar's focus back to the metronome's opener when its popover closes (`yahaha/AppBar/popover.ts`). */
   focusReturn: keyed<FocusReturnParams, never>(bindFocusReturn, []),
+  /** LineSlider's keys and drag (`slide.ts`). */
+  lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;

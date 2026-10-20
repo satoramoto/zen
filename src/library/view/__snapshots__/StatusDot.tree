@@ -1,0 +1,77 @@
+## Board
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="ok" data-part="root" data-size="md">
+
+## Section
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="main" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Intro
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="intro" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Stopped
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="main" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected); visibility: hidden">
+
+## Disconnected
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="d" data-part="root" data-size="md">
+
+## SyncStart
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="ok" data-part="root" data-size="md">
+
+## Small
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="false" data-hue="t" data-part="root" data-size="sm">
+
+## Named
+<span aria-label="Running" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="ok" data-part="root" data-size="md" role="img">
+
+## NamedHollow
+<span aria-label="Sync start armed" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="ok" data-part="root" data-size="md" role="img">
+
+## NamedHidden
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="ok" data-part="root" data-size="md" style="visibility: hidden">
+
+## Faces #1
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="ok" data-part="root" data-size="md">
+
+## Faces #2
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="ok" data-part="root" data-size="md">
+
+## Faces #3
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="d" data-part="root" data-size="md">
+
+## Faces #4
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="d" data-part="root" data-size="md">
+
+## Faces #5
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="t" data-part="root" data-size="md">
+
+## Faces #6
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="t" data-part="root" data-size="md">
+
+## Faces #7
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="intro" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #8
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="intro" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #9
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="main" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #10
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="main" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #11
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="ending" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #12
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="ending" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #13
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="brk" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #14
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="brk" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #15
+<span aria-hidden="true" class="yh-status-dot" data-face="solid" data-glow="true" data-hue="fill" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">
+
+## Faces #16
+<span aria-hidden="true" class="yh-status-dot" data-face="hollow" data-glow="false" data-hue="fill" data-part="root" data-size="md" style="--yh-status-dot-hue: var(--selected)">

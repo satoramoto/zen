@@ -3,7 +3,8 @@
 // render `surfaceView`. The shader canvas is React's alone for now (Surface.tsx).
 import type { AmbientRegion, LayerName } from '../contract';
 import type { HueSlot } from '../components/core/hue';
-import type { ElementView } from './Text.model';
+import { h, type Node } from '../view/Tree.model';
+import type { ElementView, TreeChildren } from './Text.model';
 
 /** What a part is made of: the contract's four materials. */
 export const MATERIAL_ROLES = ['well', 'screen', 'key', 'handle'] as const;
@@ -54,4 +55,15 @@ export function surfaceView({ layer, material, radius, pressed, lit, border, amb
       'data-shader': shaded ? '' : undefined,
     },
   };
+}
+
+/**
+ * Surface as a view-tree element, for a model to inline: `surfaceNode({ material: 'key', as:
+ * 'button' }, { type: 'button' }, 'Play')` is the element `<Surface as="button" material="key">`
+ * draws, its attributes (`attrs`, after Surface's own) and children added. No shader: the CSS layer
+ * alone, as `Surface.svelte` draws it (and React's `Surface` without WebGL2).
+ */
+export function surfaceNode(props: SurfaceModelProps & { as?: string }, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
+  const view = surfaceView(props);
+  return h(props.as ?? 'div', { class: view.className, ...view.attrs, ...attrs }, ...children);
 }

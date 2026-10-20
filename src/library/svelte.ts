@@ -18,6 +18,7 @@ import StackSvelte from './primitives/Stack.svelte';
 import ButtonSvelte from './components/core/Button/Button.svelte';
 import { actionOf } from './view/bridge';
 import { bindDismiss } from './yahaha/AppBar/popover';
+import { bindLineSlider } from './components/core/LineSlider/slide';
 import { bindLongPress } from './components/core/Button/longPress';
 import { bindKnob } from './components/music/Knob/knobInput';
 import type { TextModelProps } from './primitives/Text.model';
@@ -280,7 +281,7 @@ export const LampButton = LampButtonSvelte as unknown as Component<LampButtonPro
 
 export type LineSliderProps = LineSliderModelProps;
 export const LineSlider = LineSliderSvelte as unknown as Component<LineSliderProps>;
-export { lineSlider } from './components/core/LineSlider/slide.svelte';
+export const lineSlider = actionOf(bindLineSlider);
 
 export type StatusDotProps = StatusDotModelProps;
 export const StatusDot = StatusDotSvelte as unknown as Component<StatusDotProps>;

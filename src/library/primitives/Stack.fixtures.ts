@@ -1,7 +1,9 @@
-// Stack's stories as plain data: Stack.stories.tsx (React) and Stack.stories.svelte.ts (Svelte)
-// both draw them, and parity.test.tsx renders every story's Stack in both.
+// Stack's stories as plain data: Stack.stories.tsx draws them as view trees (`stackSample`) in
+// either renderer, parity.test.tsx renders every story's Stack with both Stack components, and the
+// tree snapshot draws each with `stackNode`.
 import type { Fixtures } from '../fixtures';
-import type { StackAlign, StackJustify, StackModelProps } from './Stack.model';
+import { component, h, type Node } from '../view/Tree.model';
+import { stackNode, type StackAlign, type StackJustify, type StackModelProps } from './Stack.model';
 import type { Step } from './step';
 
 export const LABELS = ['Intro', 'Main A', 'Main B', 'Fill', 'Break', 'Ending', 'Sync', 'Start / Stop'];
@@ -45,6 +47,18 @@ export const stackProps = ({ direction, gap, align, justify, wrap }: StackArgs):
   justify: justify === 'unset' ? undefined : justify,
   wrap,
 });
+
+/** A story's tree: a Stack of registered Buttons (the first primary) in a box of the args' width. */
+export const stackSample = (args: StackArgs): Node =>
+  h(
+    'div',
+    { style: `width: ${args.width}px` },
+    stackNode(
+      stackProps(args),
+      {},
+      LABELS.slice(0, args.count).map((label, i) => component('Button', { label, variant: i === 0 ? 'primary' : 'secondary' }, { key: label })),
+    ),
+  );
 
 /** The parity fixtures: each story's Stack, its buttons' labels standing in as text. */
 export const stackStories: Fixtures<StackModelProps> = Object.fromEntries(

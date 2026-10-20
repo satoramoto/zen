@@ -1,5 +1,5 @@
-// Tabs' stories as plain props: Tabs.stories.tsx (React) and Tabs.stories.svelte.ts (Svelte) both
-// draw them, and the parity test renders every one in both.
+// Tabs' stories as plain props: Tabs.stories.tsx draws them (with React's or Svelte's `Tree`), and
+// the tree snapshot (`view/snapshot.test.ts`) prints every one.
 import { defineFixtures } from '../fixtures';
 import type { TabItemModel, TabsModelProps } from './Tabs.model';
 
