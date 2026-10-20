@@ -1,18 +1,12 @@
 import type { ReactNode } from 'react';
 import { Tree } from '../../view/Tree';
 import { appBarHandlers, appBarView, type AppBarModelProps } from './AppBar.model';
-import type { Forms } from '../../layout/assembly/types';
 import '../../primitives/Text.css';
 import '../../primitives/Stack.css';
 import './AppBar.css';
 
-/**
- * The bar's one form, for an assembled screen's header: one row, a control height between
- * `--space-2` above and the tabs' room below (AppBar.css's row). Full width; it never steps.
- */
-export const APP_BAR_FORMS: Forms<'bar'> = [
-  { id: 'bar', min: { w: 0, h: { control: 1, space: [2, 2] } }, ideal: { w: 0, h: { control: 1, space: [2, 2] } }, grow: { w: true } },
-];
+// The bar's one form is the model's (framework-free, so the Stage's spec reads it without React).
+export { APP_BAR_FORMS } from './AppBar.model';
 
 export type { HealthTarget } from '../HealthSlot/HealthSlot';
 export type { TabItem } from '../../layout/Tabs';

@@ -33,6 +33,7 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npm run build` | The field guide app. |
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
 | `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/storybook.tsx`, `src/library/svelte.ts` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
+| `npm run check:lib` (after `build:lib`) | The same: `lib/svelte.js`, `lib/themes.js` and every chunk they import never import React (`scripts/check-lib-entries.ts`). A model or other framework-free file never imports a value from a `.tsx`. |
 | `npx vitest run src/library/parity.test.tsx` | Any unconverted component's model, React or Svelte renderer, or fixtures: both renderers draw the same DOM for every story. |
 | `npx vitest run src/library/view` | The view tree (`src/library/view/`), the store registry, any converted component's model or fixtures (its tree snapshot), or any `.tsx`/`.svelte` under `src/library/{primitives,components,layout,yahaha}` (the bindings-only rule). |
 

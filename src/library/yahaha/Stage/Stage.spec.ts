@@ -2,13 +2,14 @@
 // No grid, no ratios, no sizes: each region's forms are its component's own, and `assemble()`
 // decides forms, sizes and zoom under the pack's principles.
 import type { Forms, RegionSpec, ScreenSpec } from '../../layout/assembly/types';
-import { APP_BAR_FORMS } from '../AppBar/AppBar';
+// Every form from a framework-free file, never a `.tsx`: Svelte reaches this spec too.
+import { APP_BAR_FORMS } from '../AppBar/AppBar.model';
 import { DISPLAY_FORMS } from '../Display/Display.forms';
 import { FADER_BANK_FORMS } from '../FaderBank/FaderBank.forms';
-import { KNOB_BANK_FORMS } from '../KnobBank/KnobBank';
-import { PAD_BANK_FORMS } from '../PadBank/PadBank';
+import { KNOB_BANK_FORMS } from '../KnobBank/KnobBank.model';
+import { PAD_BANK_FORMS } from '../PadBank/PadBank.model';
 import { TRANSPORT_FORMS } from '../SongForm/SongForm.forms';
-import { STATUS_LINE_FORMS } from '../StatusLine/StatusLine';
+import { STATUS_LINE_FORMS } from '../StatusLine/StatusLine.model';
 
 /**
  * The keyboard's one form: just the keys (`ruler={false}`, no zone readout above them), a strip
