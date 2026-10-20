@@ -64,6 +64,17 @@ export interface StageProps extends Omit<StageModelProps<ReactNode>, 'appBar'> {
  * the 1217 × 752 small screen (now a 16:9 room inside it; the board is 1920 × 1080); the keys
  * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
  *
+ * **Slots.** `page`: an app's display page in the Display's place, the hero's whole box (its
+ * `page` forms, about 1392 × 278 at 1440 × 900 split; the controls step down for it). `side`: a
+ * panel in the hero's right third (a help card, a swap panel, first run); the hero's `side-*`
+ * forms put the Display beside it, stepping it down to make room. With both, the page wins.
+ * `backdrop="transparent"` leaves the ground and the letterbox bands unpainted, so the app's own
+ * backdrop shows through.
+ *
+ * **Tuning knobs.** `--yh-stage-display-min`, `--yh-stage-side-min` (with a side panel: the
+ * Display's least for its chosen form and the panel's least, set inline from `Display.forms.ts`;
+ * the panel takes a third, never squeezing the Display below its least).
+ *
  * The tree and its handlers are `Stage.model.ts`'s (`Stage.svelte` draws the same); the Stage's
  * own state (the last placement, for the keys' width, and the taps) is `stageState.ts`.
  */
