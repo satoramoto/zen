@@ -2,6 +2,7 @@ import { useCallback, useRef, useState, type CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { withRenderer } from '../../../stories/story';
 import { Icon } from '../../../primitives/Icon';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
@@ -88,10 +89,13 @@ function Harness({ place, box = false, open: initial = true, rows = 4, controls 
   );
 }
 
+// Every story is a trigger with live state of its own (a harness) around the Popover, so they stay
+// React: the Renderer toolbar's Svelte draws them with React and says so. Their Popovers' props are
+// Popover.fixtures.ts, which the tree snapshot prints.
 const meta = {
   title: 'Design OS/Components/Core/Popover',
   component: Harness,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   args: { place: 'top-left', onDismiss: fn() },
   argTypes: {

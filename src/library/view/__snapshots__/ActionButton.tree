@@ -1,0 +1,31 @@
+## Normal
+<div class="lib-action-button">
+  <button class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="normal" type="button" @click=press>
+    {children}
+
+## IconOnly
+<div class="lib-action-button">
+  <button aria-label="Close" class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="quiet" title="Close (Esc)" type="button" @click=press>
+    {children}
+
+## Captioned
+<div class="lib-action-button" data-hint="Writes each part to its own file">
+  <span class="lib-text lib-tone lib-action-button__caption" data-part="caption" data-role="caption" data-text-case="label" data-text-leading="tight">
+    "Stems"
+  <button aria-label="Stems" class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="normal" type="button" @click=press>
+    {children}
+
+## Danger
+<div class="lib-action-button">
+  <button class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="danger" type="button" @click=press>
+    {children}
+
+## FixedWidth
+<div class="lib-action-button" style="--lib-action-button-width: 160px">
+  <button class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="normal" type="button" @click=press>
+    {children}
+
+## Disabled
+<div class="lib-action-button">
+  <button class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="normal" disabled="" type="button" @click=press>
+    {children}

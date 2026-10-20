@@ -1,0 +1,231 @@
+## Vertical
+<div class="lib-slider" data-layout="stacked" data-orientation="vertical" style="--lib-param-chars: 8; --lib-param-fraction: 0.8421052631578947; --lib-param-fill-start: 0; --lib-param-fill-size: 0.8421052631578947; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Vol"
+  <div class="lib-slider__frame">
+    <div aria-label="Vol" aria-orientation="vertical" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="-6" aria-valuetext="-6.0 dB" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Volume","shortName":"Vol"},"value":-6,"disabled":false,"axis":"vertical","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "-6.0 dB"
+
+## Compact
+<div class="lib-slider" data-layout="stacked" data-orientation="vertical" style="--lib-param-chars: 8; --lib-param-fraction: 0.8421052631578947; --lib-param-fill-start: 0; --lib-param-fill-size: 0.8421052631578947; --lib-slider-length: 27px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Vol"
+  <div class="lib-slider__frame">
+    <div aria-label="Vol" aria-orientation="vertical" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="-6" aria-valuetext="-6.0 dB" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Volume","shortName":"Vol"},"value":-6,"disabled":false,"axis":"vertical","travel":27,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "-6.0 dB"
+
+## Horizontal
+<div class="lib-slider" data-layout="stacked" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.35; --lib-param-fill-start: 0; --lib-param-fill-size: 0.35; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="35" aria-valuetext="35 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":35,"disabled":false,"axis":"horizontal","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "35 %"
+
+## CenterOrigin
+<div class="lib-slider" data-layout="stacked" data-orientation="horizontal" style="--lib-param-chars: 3; --lib-param-fraction: 0.65; --lib-param-fill-start: 0.5; --lib-param-fill-size: 0.15000000000000002; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Pan"
+  <div class="lib-slider__frame">
+    <div aria-label="Pan" aria-orientation="horizontal" aria-valuemax="1" aria-valuemin="-1" aria-valuenow="0.3" aria-valuetext="15R" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-1,"max":1,"defaultValue":0,"unit":"pan","name":"Pan"},"value":0.3,"disabled":false,"axis":"horizontal","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "15R"
+
+## Inline #1
+<div class="lib-slider" data-layout="inline" data-orientation="horizontal" data-side="left" style="--lib-param-chars: 5; --lib-param-fraction: 0.6; --lib-param-fill-start: 0; --lib-param-fill-size: 0.6; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" aria-valuetext="60 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":60,"disabled":false,"axis":"horizontal","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "60 %"
+
+## Inline #2
+<div class="lib-slider" data-layout="inline" data-orientation="horizontal" data-side="right" style="--lib-param-chars: 5; --lib-param-fraction: 0.2; --lib-param-fill-start: 0; --lib-param-fill-size: 0.2; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="20" aria-valuetext="20 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":20,"disabled":false,"axis":"horizontal","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "20 %"
+
+## Inside
+<div class="lib-slider" data-layout="inside" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.42; --lib-param-fill-start: 0; --lib-param-fill-size: 0.42; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="42" aria-valuetext="42 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":42,"disabled":false,"axis":"horizontal","mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "42 %"
+
+## InsideFilled
+<div class="lib-slider" data-layout="inside" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.42; --lib-param-fill-start: 0; --lib-param-fill-size: 0.42; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="42" aria-valuetext="42 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":42,"disabled":false,"axis":"horizontal","mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "42 %"
+
+## Row
+<div class="lib-slider" data-layout="row" data-length="auto" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.42; --lib-param-fill-start: 0; --lib-param-fill-size: 0.42; --lib-slider-length: auto">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="42" aria-valuetext="42 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":42,"disabled":false,"axis":"horizontal","travel":"element","mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "42 %"
+
+## RowCenter
+<div class="lib-slider" data-layout="row" data-length="auto" data-orientation="horizontal" style="--lib-param-chars: 3; --lib-param-fraction: 0.65; --lib-param-fill-start: 0.5; --lib-param-fill-size: 0.15000000000000002; --lib-slider-length: auto">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Pan"
+  <div class="lib-slider__frame">
+    <div aria-label="Pan" aria-orientation="horizontal" aria-valuemax="1" aria-valuemin="-1" aria-valuenow="0.3" aria-valuetext="15R" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-1,"max":1,"defaultValue":0,"unit":"pan","name":"Pan"},"value":0.3,"disabled":false,"axis":"horizontal","travel":"element","mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "15R"
+
+## Depth
+<div class="lib-slider" data-layout="stacked" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.4; --lib-param-fill-start: 0; --lib-param-fill-size: 0.4; --lib-slider-length: 160px; --lib-slider-live: 0.55">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" aria-valuetext="40 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":40,"depth":0.3,"disabled":false,"axis":"horizontal","travel":160,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "40 %"
+
+## Stepped
+<div class="lib-slider" data-layout="stacked" data-orientation="vertical" style="--lib-param-chars: 1; --lib-param-fraction: 0.42857142857142855; --lib-param-fill-start: 0; --lib-param-fill-size: 0.42857142857142855; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Step"
+  <div class="lib-slider__frame">
+    <div aria-label="Step" aria-orientation="vertical" aria-valuemax="7" aria-valuemin="0" aria-valuenow="3" aria-valuetext="3" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"int","min":0,"max":7,"defaultValue":0,"steps":8,"name":"Step"},"value":3,"disabled":false,"axis":"vertical","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "3"
+
+## DisplayAndInk
+<div class="lib-slider" data-layout="stacked" data-orientation="vertical" style="--lib-param-chars: 8; --lib-param-fraction: 0; --lib-param-fill-start: 0; --lib-param-fill-size: 0; --lib-slider-length: 120px; --lib-slider-ink: var(--hue-2)">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Vol"
+  <div class="lib-slider__frame">
+    <div aria-label="Vol" aria-orientation="vertical" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="-70" aria-valuetext="-inf dB" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Volume","shortName":"Vol"},"value":-70,"disabled":false,"axis":"vertical","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "-inf dB"
+
+## Mixed
+<div class="lib-slider" data-layout="row" data-length="auto" data-mixed="true" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.5; --lib-param-fill-start: 0.5; --lib-param-fill-size: 0; --lib-slider-length: auto">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Speed"
+  <div class="lib-slider__frame">
+    <div aria-label="Speed" aria-orientation="horizontal" aria-valuemax="2" aria-valuemin="-2" aria-valuetext="Mixed" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-2,"max":2,"defaultValue":0,"steps":49,"name":"Speed"},"value":0,"disabled":false,"axis":"horizontal","travel":"element","mixed":true,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "Mixed"
+
+## Detents
+<div class="lib-slider" data-layout="row" data-length="auto" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.625; --lib-param-fill-start: 0.5; --lib-param-fill-size: 0.125; --lib-slider-length: auto">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Speed"
+  <div class="lib-slider__frame">
+    <div aria-label="Speed" aria-orientation="horizontal" aria-valuemax="2" aria-valuemin="-2" aria-valuenow="0.5" aria-valuetext="0.50" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-2,"max":2,"defaultValue":0,"steps":49,"name":"Speed"},"value":0.5,"disabled":false,"axis":"horizontal","travel":"element","mixed":false,"detents":[-2,-1,0,1,2],"snap":0.16666666666666666,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=-2 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0">
+      <span key=-1 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0.25">
+      <span key=0 aria-hidden="true" class="lib-slider__detent" data-default="true" data-part="detent" style="--lib-slider-detent: 0.5">
+      <span key=1 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0.75">
+      <span key=2 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 1">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "0.50"
+
+## KeySteps
+<div class="lib-slider" data-layout="row" data-length="auto" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.625; --lib-param-fill-start: 0.5; --lib-param-fill-size: 0.125; --lib-slider-length: auto">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Speed"
+  <div class="lib-slider__frame">
+    <div aria-label="Speed" aria-orientation="horizontal" aria-valuemax="2" aria-valuemin="-2" aria-valuenow="0.5" aria-valuetext="0.50" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-2,"max":2,"defaultValue":0,"steps":49,"name":"Speed"},"value":0.5,"disabled":false,"axis":"horizontal","travel":"element","mixed":false,"detents":[-2,-1,0,1,2],"snap":0.16666666666666666,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=-2 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0">
+      <span key=-1 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0.25">
+      <span key=0 aria-hidden="true" class="lib-slider__detent" data-default="true" data-part="detent" style="--lib-slider-detent: 0.5">
+      <span key=1 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0.75">
+      <span key=2 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 1">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "0.50"
+
+## Disabled
+<div class="lib-slider" data-disabled="true" data-layout="stacked" data-orientation="vertical" style="--lib-param-chars: 8; --lib-param-fraction: 0.8421052631578947; --lib-param-fill-start: 0; --lib-param-fill-size: 0.8421052631578947; --lib-slider-length: 120px">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Vol"
+  <div class="lib-slider__frame">
+    <div aria-disabled="true" aria-label="Vol" aria-orientation="vertical" aria-valuemax="6" aria-valuemin="-70" aria-valuenow="-6" aria-valuetext="-6.0 dB" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="-1" use:paramGesture={"param":{"kind":"float","min":-70,"max":6,"defaultValue":0,"unit":"decibel","name":"Volume","shortName":"Vol"},"value":-6,"disabled":true,"axis":"vertical","travel":120,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "-6.0 dB"
+
+## AutoLength
+<div class="lib-slider" data-layout="stacked" data-length="auto" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.7; --lib-param-fill-start: 0; --lib-param-fill-size: 0.7; --lib-slider-length: auto">
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" aria-valuetext="70 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":70,"disabled":false,"axis":"horizontal","travel":"element","mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <span class="lib-text lib-tone lib-slider__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "70 %"
+
+## TypedAndLabelled
+<div class="lib-slider" data-layout="row" data-length="auto" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.5; --lib-param-fill-start: 0.5; --lib-param-fill-size: 0; --lib-slider-length: auto" use:sliderEntry={"open":false,"disabled":false,"start":"0","onEntry":"entry","onCommit":"commit"}>
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Speed"
+  <div class="lib-slider__frame">
+    <div aria-label="Speed" aria-orientation="horizontal" aria-valuemax="2" aria-valuemin="-2" aria-valuenow="0" aria-valuetext="0.00" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":-2,"max":2,"defaultValue":0,"steps":49,"name":"Speed"},"value":0,"disabled":false,"axis":"horizontal","travel":"element","mixed":false,"detents":[-2,-1,0,1,2],"snap":0.16666666666666666,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=-2 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0">
+      <span key=-1 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0.25">
+      <span key=0 aria-hidden="true" class="lib-slider__detent" data-default="true" data-part="detent" style="--lib-slider-detent: 0.5">
+      <span key=1 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 0.75">
+      <span key=2 aria-hidden="true" class="lib-slider__detent" data-part="detent" style="--lib-slider-detent: 1">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <button aria-label="Speed 0.00, type a value" class="lib-text lib-tone lib-slider__readout lib-slider__typed lib-focus-ring" data-part="readout" data-role="numeral" data-text-size="label" title="Type a value" type="button">
+    "0.00"
+
+## TypedPlain
+<div class="lib-slider" data-layout="stacked" data-orientation="horizontal" style="--lib-param-chars: 5; --lib-param-fraction: 0.35; --lib-param-fill-start: 0; --lib-param-fill-size: 0.35; --lib-slider-length: 160px" use:sliderEntry={"open":false,"disabled":false,"start":"35","onEntry":"entry","onCommit":"commit"}>
+  <span class="lib-text lib-tone lib-slider__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Amount"
+  <div class="lib-slider__frame">
+    <div aria-label="Amount" aria-orientation="horizontal" aria-valuemax="100" aria-valuemin="0" aria-valuenow="35" aria-valuetext="35 %" class="lib-surface lib-slider__track lib-focus-ring" data-material="well" data-part="track" data-radius="pill" role="slider" tabindex="0" use:paramGesture={"param":{"kind":"float","min":0,"max":100,"defaultValue":50,"unit":"percent","name":"Amount"},"value":35,"disabled":false,"axis":"horizontal","travel":160,"mixed":false,"onChange":"change","onRelease":"release","onDepth":"depth","keyStep":"keyStep"}>
+      <span aria-hidden="true" class="lib-slider__fill" data-part="fill">
+      <span key=thumb aria-hidden="true" class="lib-surface lib-slider__thumb" data-material="handle" data-part="thumb" data-radius="pill">
+  <button aria-label="Amount 35 %, type a value" class="lib-text lib-tone lib-slider__readout lib-slider__typed lib-focus-ring" data-part="readout" data-role="numeral" data-text-size="label" title="Type a value" type="button">
+    "35 %"

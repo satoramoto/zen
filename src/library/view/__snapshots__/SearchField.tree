@@ -1,0 +1,65 @@
+## Empty
+<div class="yh-search-field" style="width: 280px">
+  <label class="yh-search-field__label">
+    <svg aria-hidden="true" class="yh-search-field__glass" height="14" viewBox="0 0 14 14" width="14">
+      <circle cx="6" cy="6" fill="none" r="4.5" stroke-width="1.5" stroke="currentColor">
+      <line stroke-linecap="round" stroke-width="1.5" stroke="currentColor" x1="9.4" x2="13" y1="9.4" y2="13">
+    <span class="yh-search-field__name">
+      "Search styles"
+    <input autocomplete="off" class="lib-text lib-tone yh-search-field__input" data-role="body" data-tip="library.search" placeholder="Search" spellcheck="false" type="search" value="" @input=input @keydown=keydown use:ref={"onRef":"ref"}>
+
+## Filled
+<div class="yh-search-field" data-filled="true" style="width: 280px">
+  <label class="yh-search-field__label">
+    <svg aria-hidden="true" class="yh-search-field__glass" height="14" viewBox="0 0 14 14" width="14">
+      <circle cx="6" cy="6" fill="none" r="4.5" stroke-width="1.5" stroke="currentColor">
+      <line stroke-linecap="round" stroke-width="1.5" stroke="currentColor" x1="9.4" x2="13" y1="9.4" y2="13">
+    <span class="yh-search-field__name">
+      "Search styles"
+    <input autocomplete="off" class="lib-text lib-tone yh-search-field__input" data-role="body" data-tip="library.search" placeholder="Search" spellcheck="false" type="search" value="coastal" @input=input @keydown=keydown use:ref={"onRef":"ref"}>
+  <button aria-label="Clear search" class="yh-search-field__clear" tabindex="-1" type="button" use:searchClear={"onClear":"clear"}>
+    <svg aria-hidden="true" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke-linecap="round" stroke-width="1.5" stroke="currentColor">
+
+## EscapeBubbles
+<div class="yh-search-field" style="width: 240px">
+  <label class="yh-search-field__label">
+    <svg aria-hidden="true" class="yh-search-field__glass" height="14" viewBox="0 0 14 14" width="14">
+      <circle cx="6" cy="6" fill="none" r="4.5" stroke-width="1.5" stroke="currentColor">
+      <line stroke-linecap="round" stroke-width="1.5" stroke="currentColor" x1="9.4" x2="13" y1="9.4" y2="13">
+    <span class="yh-search-field__name">
+      "Search sounds"
+    <input autocomplete="off" class="lib-text lib-tone yh-search-field__input" data-role="body" data-tip="library.search" placeholder="Search sounds" spellcheck="false" type="search" value="" @input=input @keydown=keydown use:ref={"onRef":"ref"}>
+
+## LongQuery
+<div class="yh-search-field" data-filled="true" style="width: 180px">
+  <label class="yh-search-field__label">
+    <svg aria-hidden="true" class="yh-search-field__glass" height="14" viewBox="0 0 14 14" width="14">
+      <circle cx="6" cy="6" fill="none" r="4.5" stroke-width="1.5" stroke="currentColor">
+      <line stroke-linecap="round" stroke-width="1.5" stroke="currentColor" x1="9.4" x2="13" y1="9.4" y2="13">
+    <span class="yh-search-field__name">
+      "Search styles"
+    <input autocomplete="off" class="lib-text lib-tone yh-search-field__input" data-role="body" data-tip="library.search" placeholder="Search" spellcheck="false" type="search" value="user styles on the external drive" @input=input @keydown=keydown use:ref={"onRef":"ref"}>
+  <button aria-label="Clear search" class="yh-search-field__clear" tabindex="-1" type="button" use:searchClear={"onClear":"clear"}>
+    <svg aria-hidden="true" height="10" viewBox="0 0 10 10" width="10">
+      <path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke-linecap="round" stroke-width="1.5" stroke="currentColor">
+
+## RefDisabledTitle #1
+<div class="yh-search-field" style="width: 200px" title="Search presets (⌘F)">
+  <label class="yh-search-field__label">
+    <svg aria-hidden="true" class="yh-search-field__glass" height="14" viewBox="0 0 14 14" width="14">
+      <circle cx="6" cy="6" fill="none" r="4.5" stroke-width="1.5" stroke="currentColor">
+      <line stroke-linecap="round" stroke-width="1.5" stroke="currentColor" x1="9.4" x2="13" y1="9.4" y2="13">
+    <span class="yh-search-field__name">
+      "Search presets"
+    <input autocomplete="off" class="lib-text lib-tone yh-search-field__input" data-role="body" data-tip="library.search" placeholder="Search" spellcheck="false" type="search" value="" @input=input @keydown=keydown use:ref={"onRef":"ref"}>
+
+## RefDisabledTitle #2
+<div class="yh-search-field" data-disabled="true" data-filled="true" style="width: 200px" title="Nothing to search">
+  <label class="yh-search-field__label">
+    <svg aria-hidden="true" class="yh-search-field__glass" height="14" viewBox="0 0 14 14" width="14">
+      <circle cx="6" cy="6" fill="none" r="4.5" stroke-width="1.5" stroke="currentColor">
+      <line stroke-linecap="round" stroke-width="1.5" stroke="currentColor" x1="9.4" x2="13" y1="9.4" y2="13">
+    <span class="yh-search-field__name">
+      "Search presets (disabled)"
+    <input autocomplete="off" class="lib-text lib-tone yh-search-field__input" data-role="body" data-tip="library.search" disabled="" placeholder="Search" spellcheck="false" type="search" value="coastal" @input=input @keydown=keydown use:ref={"onRef":"ref"}>

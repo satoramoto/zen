@@ -1,0 +1,11 @@
+## WithActions
+<Modal title="Delete take" @onClose=close>
+  #children
+    "The take and its stems are deleted for good. Anything that plays it stops."
+  #actions
+    <div class="lib-action-button">
+      <button class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="danger" type="button" @click=act>
+        "Delete"
+    <div class="lib-action-button">
+      <button class="lib-text lib-tone lib-action-button-face lib-focus-ring" data-kind="button" data-part="face" data-role="label" data-text-case="none" data-text-leading="tight" data-tone="normal" type="button" @click=act>
+        "Keep"
