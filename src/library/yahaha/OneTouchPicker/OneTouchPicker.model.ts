@@ -2,7 +2,7 @@
 // each number's face, spoken name and tooltip). No framework: `OneTouchPicker.tsx` (React) and
 // `OneTouchPicker.svelte` (Svelte) both draw `oneTouchPickerView`'s roots with `Tree`, and
 // `oneTouchPickerHandlers` for the callbacks they name.
-import type { TipAction } from '../../components/core/Button/Button.model';
+import type { TipAction } from '../../view/tip';
 import { textView } from '../../primitives/Text.model';
 import { each, h, wire, type Handlers, type Node } from '../../view/Tree.model';
 

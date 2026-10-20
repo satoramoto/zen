@@ -4,6 +4,11 @@
 // Compared: tag names; every attribute (class as a sorted set of tokens, `style` as a sorted set of
 // declarations, the rest by value: `data-*`, ARIA, `role`, `type`, `title`, …); text, with
 // adjacent text joined. Not compared: comment nodes (Svelte's anchors), attribute order.
+//
+// Generated ids differ by renderer (React's `useId`: `:r0:`, `«r0»`, `_r_0_`; Svelte's `$props.id()`:
+// `c1` in the browser, `s1` on the server), so `maskIds` replaces each distinct one, wherever it sits
+// in `id`, `for`, `aria-controls`, `aria-labelledby` or `aria-describedby` (`:r0:-panel` too), by its
+// order of first appearance: references still have to agree. Authored ids (`tab-foo`) compare as is.
 import { createElement, type ComponentType } from 'react';
 import { render as renderReact } from '@testing-library/react';
 import { render as renderSvelte } from '@testing-library/svelte';
@@ -52,6 +57,20 @@ export function serialize(node: Node, depth = 0): string {
   return lines.join('\n');
 }
 
+/** A generated id: React's `useId` forms whole, or Svelte's `c1`/`s1` as an id or a `-`-separated part of one. */
+const GENERATED_ID = /:[rR][0-9a-zA-Z]*:|«[rR][0-9a-zA-Z]*»|_[rR]_[0-9a-zA-Z]*_|(?<![^\s"-])[cs]\d+(?![^\s"-])/g;
+const ID_REFERENCE = / (id|for|aria-controls|aria-labelledby|aria-describedby)="([^"]*)"/g;
+
+/** `dom` (serialized) with each distinct generated id replaced by `id<n>`, n its order of first appearance. */
+export function maskIds(dom: string): string {
+  const seen = new Map<string, string>();
+  const mask = (id: string) => {
+    if (!seen.has(id)) seen.set(id, `id${seen.size}`);
+    return seen.get(id)!;
+  };
+  return dom.replace(ID_REFERENCE, (_, name: string, value: string) => ` ${name}="${value.replace(GENERATED_ID, mask)}"`);
+}
+
 /** Renders `props` with the React component and returns its DOM, serialized. */
 export function reactDom(component: ComponentType<any>, props: object): string {
   const { container, unmount } = renderReact(createElement(component, props));
@@ -70,7 +89,8 @@ export function svelteDom(component: unknown, props: object): string {
 }
 
 /**
- * One test per fixture instance: `react` and `svelte` render it to the same DOM. `fixtures` is the
+ * One test per fixture instance: `react` and `svelte` render it to the same DOM, generated ids
+ * masked (`maskIds`). `fixtures` is the
  * component's `<Name>.fixtures.ts` stories (every story's args, or its items over them).
  */
 export function parity(name: string, react: ComponentType<any>, svelte: unknown, fixtures: Fixtures<object>): void {
@@ -79,9 +99,9 @@ export function parity(name: string, react: ComponentType<any>, svelte: unknown,
       const all = instances(fixture);
       all.forEach((props, i) => {
         it(all.length > 1 ? `${story} #${i + 1}` : story, () => {
-          const expected = reactDom(react, props);
+          const expected = maskIds(reactDom(react, props));
           expect(expected).not.toBe('');
-          expect(svelteDom(svelte, props)).toBe(expected);
+          expect(maskIds(svelteDom(svelte, props))).toBe(expected);
         });
       });
     }

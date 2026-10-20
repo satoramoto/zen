@@ -1,6 +1,6 @@
 // Opaque's and Hole's elements, framework-free: `Opaque.svelte` and `Hole.svelte` hand them to their
 // `Tree`, and so do React's `Opaque` and `Hole` (Surface.tsx).
-import { cssText } from '../layout/Region.model';
+import { styleAttr } from '../view/style';
 import { component, h, slot, type ComponentNode, type Node } from '../view/Tree.model';
 import type { ElementView, TreeChildren } from './Text.model';
 
@@ -14,8 +14,9 @@ export const holeView = (className?: string, name?: string): ElementView => ({
 });
 
 /** Opaque as a view-tree element, for a model to inline: the `div` `<Opaque>` draws, its attributes
- *  (`attrs`) and children added. Only the element: React's `Opaque` also turns off the shaders of
- *  the `Surface` components inside (a context), which tree surfaces (`surfaceNode`) never draw. */
+ *  (`attrs`) and children added. Only the element: the `Opaque` components (React and Svelte) also
+ *  turn off the shaders of the `Surface` components inside (a context), which tree surfaces
+ *  (`surfaceNode`) never draw. */
 export function opaqueNode(className?: string, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
   const view = opaqueView(className);
   return h('div', { class: view.className, ...view.attrs, ...attrs }, ...children);
@@ -25,7 +26,7 @@ export function opaqueNode(className?: string, attrs: Record<string, string | un
  *  inside draw no shader; Svelte's has nothing to set) around Opaque's `div`, its `style` (a string,
  *  or a React style object) on the div, the `children` slot inside. */
 export function opaqueTree(className?: string, style?: string | object): ComponentNode {
-  const div = opaqueNode(className, { style: typeof style === 'string' ? style : cssText(style) }, slot('children'));
+  const div = opaqueNode(className, { style: styleAttr(style) }, slot('children'));
   return component('Context', { name: 'opaque', value: true }, { slots: { children: [div] } });
 }
 

@@ -4,7 +4,7 @@
 import type { AmbientRegion, LayerName } from '../contract';
 import { surfaceView, type SurfaceModelProps } from '../primitives/Surface.model';
 import { component, slot, type ComponentNode, type Handlers } from '../view/Tree.model';
-import { cssText } from './Region.model';
+import { styleAttr } from '../view/style';
 
 /** What Layer decides from, in any framework. */
 export interface LayerModelProps {
@@ -33,7 +33,7 @@ export function passAttrs(props: Record<string, unknown>): Record<string, string
   const attrs: Record<string, string | undefined> = {};
   for (const [name, value] of Object.entries(props)) {
     if (name === 'children' || value === undefined || value === null || typeof value === 'function') continue;
-    if (name === 'style') attrs.style = typeof value === 'string' ? value : cssText(value as object);
+    if (name === 'style') attrs.style = typeof value === 'string' ? value : styleAttr(value as object);
     else if (typeof value === 'boolean') attrs[name] = name.startsWith('aria-') || name.startsWith('data-') ? String(value) : value ? '' : undefined;
     else if (typeof value === 'string' || typeof value === 'number') attrs[name] = String(value);
   }

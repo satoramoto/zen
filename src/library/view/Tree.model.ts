@@ -197,9 +197,31 @@ const BOOLEAN = new Set([
 
 /** Enumerated attributes whose values are the words `true` / `false` (an empty value is not
  *  "true" for them, unlike a boolean attribute): `draggable`, `contenteditable`, `spellcheck`, and
- *  every `aria-*` state. */
-const ENUMERATED = new Set(['draggable', 'contenteditable', 'spellcheck']);
-const isEnumerated = (name: string) => ENUMERATED.has(name.toLowerCase()) || name.startsWith('aria-');
+ *  the ARIA states and properties that take true/false. A string-valued ARIA attribute
+ *  (`aria-label`, `aria-valuetext`, `aria-description`, …) keeps an empty value as it is. */
+const ENUMERATED = new Set([
+  'draggable',
+  'contenteditable',
+  'spellcheck',
+  'aria-atomic',
+  'aria-busy',
+  'aria-checked',
+  'aria-current',
+  'aria-disabled',
+  'aria-expanded',
+  'aria-grabbed',
+  'aria-haspopup',
+  'aria-hidden',
+  'aria-invalid',
+  'aria-modal',
+  'aria-multiline',
+  'aria-multiselectable',
+  'aria-pressed',
+  'aria-readonly',
+  'aria-required',
+  'aria-selected',
+]);
+const isEnumerated = (name: string) => ENUMERATED.has(name.toLowerCase());
 
 /** An enumerated attribute's value from a test: `'true'` or `'false'` (`aria-pressed: flag(on)`). */
 export const flag = (test: boolean): 'true' | 'false' => (test ? 'true' : 'false');

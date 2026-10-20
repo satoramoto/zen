@@ -1,9 +1,10 @@
 import { Children, isValidElement, useId, useState, useSyncExternalStore, type CSSProperties, type ReactElement, type ReactNode } from 'react';
-import type { TipAction } from '../components/core/Button/Button.model';
+import type { TipAction } from '../view/tip';
 import type { Step } from '../primitives/step';
 import { Tree } from '../view/Tree';
 import { localState } from './local';
-import { cssText, isSlotContent, regionHandlers, regionInitialView, regionView, regionViewSlot, type RegionViewItem } from './Region.model';
+import { styleAttr } from '../view/style';
+import { isSlotContent, regionHandlers, regionInitialView, regionView, regionViewSlot, type RegionViewItem } from './Region.model';
 import '../primitives/Text.css';
 import './Region.css';
 
@@ -105,7 +106,7 @@ function RegionRoot({ name, label, aside, views: given, view, defaultView, onVie
       gap,
       fit,
       className,
-      style: cssText(style),
+      style: styleAttr(style),
       views,
       view,
       tipAction,

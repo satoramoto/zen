@@ -32,7 +32,7 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The field guide app. |
 | `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
-| `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/storybook.tsx`, `src/library/svelte.ts` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
+| `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/themes.ts`, `src/library/storybook.tsx`, `src/library/svelte.ts` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
 | `npm run check:lib` (after `build:lib`) | The same: `lib/svelte.js`, `lib/themes.js` and every chunk they import never import React (`scripts/check-lib-entries.ts`). A model or other framework-free file never imports a value from a `.tsx`. |
 | `npx vitest run src/library/parity.test.tsx` | Any unconverted component's model, React or Svelte renderer, or fixtures: both renderers draw the same DOM for every story. |
 | `npx vitest run src/library/view` | The view tree (`src/library/view/`), the store registry, any converted component's model or fixtures (its tree snapshot), or any `.tsx`/`.svelte` under `src/library/{primitives,components,layout,yahaha}` (the bindings-only rule). |
@@ -55,6 +55,8 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 - Apps consume zen from GitHub: `"@satoramoto/zen": "github:satoramoto/zen#<sha>"`; npm runs `prepare` (`build:lib`) on install, then `import { ThemeScope } from '@satoramoto/zen'` and `import '@satoramoto/zen/zen.css'`.
 - The public entries (`package.json` `exports`, built by `vite.lib.config.ts`) are the only way an app reaches zen; nothing imports a deeper path:
   - `@satoramoto/zen` (`src/library/index.ts`): the tokens, themes, primitives, layout and components; its stylesheet is `@satoramoto/zen/zen.css`.
+  - `@satoramoto/zen/themes` (`src/library/themes.ts`): the packs and facet lists (`packs`, `palettes`, `faces`, `scales`, `materials`), `toCssVars`, `resolveTheme`, `scopeView`, mode resolution and their types, importing no React and no Svelte, for code that needs a theme without a renderer.
+  - `@satoramoto/zen/svelte` (`src/library/svelte.ts`): the Svelte 5 renderers and theme scope (see "Svelte bindings").
   - `@satoramoto/zen/storybook` (`src/library/storybook.tsx`): the toolbar globals (`libraryGlobalTypes`, `libraryInitialGlobals`) and decorators (`withLibraryTheme`, `withStoryFrame`) for an app's own Storybook. Storybook is never reached from the main entry.
 - The one exception: a harness kit (`src/harness/<name>/kit/`) is reached by path and copied into each plugin at the consumer's build (`@satoramoto/zen/harness/*`, shipped as source in `files`), because the agent engine loads a plugin's own source files only. Keep a kit self-contained: no imports outside its folder, no React.
 - App-specific UI lives in the app's repo, built on these entries; zen holds only generic parts (Yahaha's redesign is the reference exception). visual[flow]'s UI lives in openflowfm/visuals `app/src/ui/`; zen keeps its `visuals` theme pack. When an app needs something zen has but doesn't export, export it (with a one-line doc) rather than reaching in.

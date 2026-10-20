@@ -4,7 +4,7 @@
 // and keys are the `faderInput.ts` store beside it (registered as `faderInput` in
 // `src/library/view/stores.ts`), the tooltip the kernel's `tip` store.
 import type { HueSlot } from '../../core/hue';
-import type { TipAction } from '../../core/Button/Button.model';
+import type { TipAction } from '../../../view/tip';
 import { focusRing } from '../../../primitives/Ring';
 import { surfaceView } from '../../../primitives/Surface.model';
 import { textView, type TextModelProps } from '../../../primitives/Text.model';
@@ -15,7 +15,7 @@ export type FaderHue = HueSlot | 'a' | 't2' | 't';
 export type FaderKind = 'part' | 'group' | 'master' | 'off' | 'parked';
 
 /** The parent's tooltip action: called with the node and the key; may return a handle whose `destroy` cleans up. */
-export type FaderTipAction = TipAction;
+export type { TipAction as FaderTipAction } from '../../../view/tip';
 
 /** The top of the travel: levels are 0–127, whole. */
 export const FADER_MAX = 127;
@@ -55,7 +55,7 @@ export interface FaderModelProps {
   /** The tooltip key, rendered as `data-tip`. */
   tip?: string;
   /** The app's tooltip hook, called with the node and `tip` when both are set; may return a handle whose `destroy` cleans up. */
-  tipAction?: FaderTipAction;
+  tipAction?: TipAction;
   /** Called with the level asked for (0–127, whole) on a drag (each level once), a key or the wheel. Not when parked. */
   onlevel?: (level: number) => void;
 }

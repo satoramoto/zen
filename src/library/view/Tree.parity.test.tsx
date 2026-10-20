@@ -205,16 +205,16 @@ describe('Tree: React and Svelte draw any tree the same', () => {
     svelte.unmount();
   });
 
-  it('enumerated attributes are "true" / "false", never empty; renamed attributes and a style holding `;` land the same', () => {
+  it('enumerated attributes are "true" / "false", never empty (string ARIA attributes keep ""); renamed attributes and a style holding `;` land the same', () => {
     const tree = h(
       'div',
-      { draggable: '', contenteditable: 'false', spellcheck: '', 'aria-pressed': '', 'aria-hidden': 'false', style: 'background: url("data:image/svg+xml;utf8,<svg/>"); --x: 1' },
+      { draggable: '', contenteditable: 'false', spellcheck: '', 'aria-pressed': '', 'aria-hidden': 'false', 'aria-label': '', 'aria-valuetext': '', style: 'background: url("data:image/svg+xml;utf8,<svg/>"); --x: 1' },
       h('input', { inputmode: 'numeric', autocomplete: 'off', maxlength: '4', spellcheck: 'false' }),
       h('table', {}, h('tbody', {}, h('tr', {}, h('td', { colspan: '2' }, 'x')))),
     );
     const { react, svelte } = both(tree, {}, {});
     const dom = serialize(react.container);
-    for (const expected of ['draggable="true"', 'contenteditable="false"', 'spellcheck="true"', 'aria-pressed="true"', 'aria-hidden="false"', 'inputmode="numeric"', 'autocomplete="off"', 'maxlength="4"', 'colspan="2"']) {
+    for (const expected of ['draggable="true"', 'contenteditable="false"', 'spellcheck="true"', 'aria-pressed="true"', 'aria-hidden="false"', 'aria-label=""', 'aria-valuetext=""', 'inputmode="numeric"', 'autocomplete="off"', 'maxlength="4"', 'colspan="2"']) {
       expect(dom).toContain(expected);
     }
     expect(serialize(svelte.container)).toBe(dom);

@@ -1,22 +1,18 @@
 import { createContext, useContext, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { Tree } from '../view/Tree';
 import { slot } from '../view/Tree.model';
+import { CONTROL_FIELD, type ControlContextValue } from './control';
 import { stackNode, type StackModelProps } from './Stack.model';
 import './Stack.css';
 
 /**
- * What the controls inside a cluster should look like, set by where they sit rather than by a
- * per-use style: a toolbar `Group` provides `{ quiet: true }`, and a control that has a quiet
- * look (Select's trigger: text and a caret, no field) reads it. Anything that floats out of a
- * toolbar (a popover's panel) provides `CONTROL_FIELD` again, so its controls are fields.
+ * What the controls inside a cluster should look like, as React context (the values are
+ * framework-free, `control.ts`): a toolbar `Group` provides `CONTROL_TOOLBAR`, and a control that
+ * has a quiet look (Select's trigger: text and a caret, no field) reads it. Anything that floats
+ * out of a toolbar (a popover's panel) provides `CONTROL_FIELD` again, so its controls are fields.
  * It lives here, with the Stack, so controls (which build from primitives) can read it.
  */
-export interface ControlContextValue {
-  /** In a toolbar: drop field chrome, keep the hit target and the behaviour. */
-  quiet: boolean;
-}
-export const CONTROL_FIELD: ControlContextValue = { quiet: false };
-export const CONTROL_TOOLBAR: ControlContextValue = { quiet: true };
+export { CONTROL_FIELD, CONTROL_TOOLBAR, type ControlContextValue } from './control';
 export const ControlContext = createContext<ControlContextValue>(CONTROL_FIELD);
 /** The look the surrounding cluster asks of a control. */
 export function useControlContext(): ControlContextValue {

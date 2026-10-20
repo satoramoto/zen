@@ -39,7 +39,6 @@ import { Text } from '../primitives/Text';
 import { Layer } from '../layout/Layer';
 import { Screen } from '../layout/Screen';
 import { Surface } from '../primitives/Surface';
-import { ShaderCanvas } from '../shader/ShaderCanvas';
 import { Context } from './Context';
 import { AssembledScreen } from '../layout/assembly/AssembledScreen';
 import { FormProvider as FormScope } from '../layout/assembly/forms';
@@ -69,8 +68,6 @@ export function reactComponent(name: string): ComponentType<any> {
     Screen,
     Surface,
     Context,
-    /** React only: Svelte surfaces draw no shader yet, so no Svelte tree draws it. */
-    ShaderCanvas,
     Button,
     ActionButton,
     SearchField,

@@ -3,7 +3,8 @@ import type { Step } from '../primitives/step';
 import type { StackAlign } from '../primitives/Stack';
 import { Tree } from '../view/Tree';
 import { groupView } from './Group.model';
-import { cssText, isSlotContent } from './Region.model';
+import { styleAttr } from '../view/style';
+import { isSlotContent } from './Region.model';
 import '../primitives/Stack.css';
 import '../primitives/Text.css';
 import './Group.css';
@@ -62,7 +63,7 @@ export function Group({ label, aside, style, toolbar = false, children, ...props
       toolbar,
       label: typeof label === 'string' || label === false ? label : undefined,
       aside: typeof aside === 'string' ? aside : undefined,
-      style: cssText(style),
+      style: styleAttr(style),
     },
     { label: isSlotContent(label), aside: isSlotContent(aside) },
   );

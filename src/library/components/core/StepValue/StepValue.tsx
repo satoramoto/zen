@@ -4,16 +4,13 @@ import { fraction, useAdjust } from './adjust';
 import type { HueSlot } from '../hue';
 import { focusRing } from '../../../primitives/Ring';
 import { Text } from '../../../primitives/Text';
+import type { TipAction } from '../../../view/tip';
 import './StepValue.css';
+
+export type { TipAction };
 
 /** A categorical hue slot (an app maps its own meaning, e.g. Yahaha's parts), or `t` neutral. */
 export type StepHue = 't' | HueSlot;
-
-/** The app's tooltip hook-up: called with the element and the tip key; may return an updater and a cleanup. */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => void | { update?: (key: string) => void; destroy?: () => void };
 
 export interface StepValueProps {
   /** The value, in `min`–`max`. */

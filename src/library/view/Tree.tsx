@@ -3,6 +3,7 @@
 import { createElement, Fragment, useLayoutEffect, useRef, type ComponentType, type CSSProperties, type ReactNode, type Ref } from 'react';
 import { VOID, childKey, componentProps, domAttrs, isComponent, isSlot, isSlotFill, type Child, type ComponentNode, type Handlers, type Node, type Root } from './Tree.model';
 import { mountNode, type MountContext, type Mounted } from './mount';
+import { styleObject as styleRecord } from './style';
 import { stores as registry, type Stores } from './stores';
 import { reactComponent } from './reactComponents';
 
@@ -113,44 +114,8 @@ const RENAMED: Record<string, string> = {
 
 const camel = (name: string) => name.replace(/[-:]([a-z])/g, (_, c: string) => c.toUpperCase());
 
-/** A style string's declarations: split at `;` outside quotes and brackets, so a value may hold
- *  one (`url("data:image/svg+xml;utf8,…")`). */
-function declarations(text: string): string[] {
-  const out: string[] = [];
-  let depth = 0;
-  let quote = '';
-  let start = 0;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (quote) {
-      if (c === '\\') i++;
-      else if (c === quote) quote = '';
-    } else if (c === '"' || c === "'") quote = c;
-    else if (c === '(' || c === '[') depth++;
-    else if ((c === ')' || c === ']') && depth > 0) depth--;
-    else if (c === ';' && depth === 0) {
-      out.push(text.slice(start, i));
-      start = i + 1;
-    }
-  }
-  out.push(text.slice(start));
-  return out;
-}
-
-/** A `style` string as React's style object (`min-width` → `minWidth`; custom properties as is). */
-export function styleObject(text: string): CSSProperties {
-  const style: Record<string, string> = {};
-  for (const declaration of declarations(text)) {
-    const colon = declaration.indexOf(':');
-    if (colon < 0) continue;
-    const name = declaration.slice(0, colon).trim();
-    const value = declaration.slice(colon + 1).trim();
-    if (!name) continue;
-    // `--x` as is; `-webkit-x` → `WebkitX`, `-ms-x` → `msX`, `min-width` → `minWidth`.
-    style[name.startsWith('--') ? name : camel(name.startsWith('-ms-') ? name.slice(1) : name)] = value;
-  }
-  return style as CSSProperties;
-}
+/** A `style` string as React's style object (`view/style.ts`, which keeps a `;` inside a value). */
+const styleObject = (text: string): CSSProperties => styleRecord(text) as CSSProperties;
 
 /** A node's attributes as React props: `class` → `className`, `style` → an object, other
  *  hyphenated names (SVG's `stroke-width`) camel-cased; `data-*` and `aria-*` as is. */

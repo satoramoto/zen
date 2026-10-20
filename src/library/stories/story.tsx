@@ -12,6 +12,8 @@ import Render from '../svelte/stories/Render.svelte';
 import Row from '../svelte/stories/Row.svelte';
 import { Tree } from '../view/Tree';
 import TreeSvelte from '../view/Tree.svelte';
+import { useThemeScope } from '../theme';
+import { themeScopeContext } from '../svelte/theme.svelte';
 import type { Handlers, Node } from '../view/Tree.model';
 
 /** The row a story's `items` draw in, the same as `Row.svelte`'s. */
@@ -24,15 +26,22 @@ export type StoryView<A> = (args: A) => { tree: Node; handlers?: Handlers };
  *  the story's view tree (`treeStory`). */
 type SvelteStory = { component: unknown; fixture: StoryFixture<object> } | { view: StoryView<any> };
 
-/** Mounts a Svelte component into the story (again when its props change), unmounted on the way out. */
+/** Mounts a Svelte component into the story (again when its props or the theme scope change),
+ *  unmounted on the way out. The React scope's facets and principles reach it as Svelte's scope
+ *  context, so `getThemeScope()` (a Surface's pack shaders, an assembled screen's principles) reads
+ *  what React's `useThemeScope()` does. */
 function SvelteMount({ component, props }: { component: unknown; props: Record<string, unknown> }) {
   const host = useRef<HTMLDivElement>(null);
+  const scope = useThemeScope();
+  const facets = scope?.facets;
+  const principles = scope?.principles;
   useLayoutEffect(() => {
-    const app = mount(component as Component<Record<string, unknown>>, { target: host.current!, props });
+    const context = themeScopeContext(facets ? { facets, principles } : null);
+    const app = mount(component as Component<Record<string, unknown>>, { target: host.current!, props, context });
     return () => {
       void unmount(app);
     };
-  }, [component, props]);
+  }, [component, props, facets, principles]);
   return createElement('div', { ref: host, style: { display: 'contents' } });
 }
 

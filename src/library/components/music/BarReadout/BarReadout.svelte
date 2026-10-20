@@ -7,7 +7,7 @@
 <script lang="ts">
   import { fromStore } from 'svelte/store';
   import Tree from '../../../view/Tree.svelte';
-  import { viewState } from '../viewState';
+  import { viewState } from '../../../view/viewState';
   import { BAR_IDLE, barReadoutHandlers, barReadoutView, type BarReadoutModelProps } from './BarReadout.model';
   import type { BarState } from './barInput';
   import '../../../primitives/Text.css';

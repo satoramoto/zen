@@ -20,7 +20,7 @@
 <script lang="ts">
   import { fromStore } from 'svelte/store';
   import Tree from '../view/Tree.svelte';
-  import type { TipAction } from '../components/core/Button/Button.model';
+  import type { TipAction } from '../view/tip';
   import { localState } from './local';
   import { isSlotContent, regionHandlers, regionInitialView, regionView, regionViewSlot, type RegionModelProps } from './Region.model';
   import '../primitives/Text.css';

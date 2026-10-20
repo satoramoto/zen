@@ -16,9 +16,10 @@ import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
 import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
 import type { StageState, StageViewState } from './stageState';
 import type { TapTempo } from './tapTempo';
+import type { TipAction } from '../../view/tip';
 
 /** The app's tooltip action, handed to every region. */
-export type StageTipAction = (node: HTMLElement, key: string) => void | { update?: (key: string) => void; destroy?: () => void };
+export type { TipAction as StageTipAction } from '../../view/tip';
 
 /** The slowest and fastest tempo a tap may set. */
 export const TEMPO_MIN = 40;
@@ -62,7 +63,7 @@ export interface StageModelProps<L = string> {
   /** The status line: in the screen's fixed footer, under the keys, in every layout. */
   status: Omit<StatusLineModelProps, 'width'>;
   /** The app's tooltip action, passed to every region. */
-  tipAction?: StageTipAction;
+  tipAction?: TipAction;
   /** The screen's size in px. Unset, it fills its container's width and the viewport's height. */
   width?: number;
   height?: number;

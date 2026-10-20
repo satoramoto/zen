@@ -6,7 +6,8 @@ import { Tree } from '../view/Tree';
 import { slot } from '../view/Tree.model';
 import { holeNode, opaqueTree } from './Hole.model';
 import { OpaqueContext } from './opaque';
-import { surfaceShader, surfaceTree, type LitSlot, type MaterialRole, type SurfaceRadius, type SurfaceShaderChoice } from './Surface.model';
+import { surfaceTree, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
+import { SHADER_ERROR, chosenShader, surfaceShader } from './surfaceShader';
 import './Surface.css';
 
 // The materials, lamps and corners are framework-free, in the model; `Surface.svelte` renders the same view.
@@ -72,8 +73,8 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as' 
  * `ambient` picks the region (`left` for a panel at the picture's left).
  *
  * **Shader.** A surface can wear a shader material (`shader`, else the pack's
- * `materials.shaders[layer]`; `false` turns it off): it sets `data-shader` and draws a
- * `ShaderCanvas` (`lib-surface__shader`) as its first child, absolutely over the whole box with
+ * `materials.shaders[layer]`; `false` turns it off): it sets `data-shader` and draws a shader
+ * canvas (`lib-surface__shader`, `surfaceShader.ts`, the `shader` store) as its first child, absolutely over the whole box with
  * its corners, under the content (the surface becomes a stacking context). It takes no layout
  * slot, so flex and grid children and their gaps are unchanged. **Fallback**: without WebGL2,
  * under reduced motion or transparency, inside `Opaque`, or when the shader fails to compile, no
@@ -92,13 +93,15 @@ export function Surface({ layer, material, radius, pressed, lit, border, ambient
   const supported = useShaderSupport();
   const opaque = useContext(OpaqueContext);
   // The canvas reported a failure: drop it for the source that failed, so the CSS layer remains.
-  const [failed, setFailed] = useState<SurfaceShaderChoice | null>(null);
-  const { chosen, source } = surfaceShader(shader, layer, { packShaders: scope?.facets.materials.shaders, supported, opaque, failed });
+  const [failed, setFailed] = useState<ShaderMaterialName | ShaderSource | null>(null);
+  const shaders = scope?.facets.materials.shaders;
+  const source = surfaceShader({ shader, layer, shaders, supported, opaque, failed });
+  const handlers = { [SHADER_ERROR]: () => setFailed(chosenShader({ shader, layer, shaders })) };
   return (
     <Tree
       tree={surfaceTree({ layer, material, radius, pressed, lit, border, ambient, className, as }, source)}
       slots={{ children }}
-      handlers={{ shaderError: () => setFailed(chosen ?? null) }}
+      handlers={handlers}
       ref={ref}
       {...rest}
     />

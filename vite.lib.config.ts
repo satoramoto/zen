@@ -1,5 +1,5 @@
-// The library build: two ES-module entries in `lib/`, React and Storybook left to the app. Types
-// come from tsconfig.lib.json.
+// The library build: five ES-module entries in `lib/`, React, Svelte and Storybook left to the app.
+// Types come from tsconfig.lib.json.
 //
 // - `index` (`src/library/index.ts`, the package's `.`) → `lib/index.js`, and every library
 //   stylesheet in `lib/zen.css`.
@@ -8,6 +8,9 @@
 // - `svelte` (`src/library/svelte.ts`, `./svelte`: the Svelte 5 renderers and the theme action) →
 //   `lib/svelte.js`, compiled here by vite-plugin-svelte against `svelte` (external, a peer at the
 //   compiler's minor or later).
+// - `themes` (`src/library/themes.ts`, `./themes`: the packs, facets, `toCssVars`, `resolveTheme` and
+//   the theme scope's model) → `lib/themes.js`. Framework-free: it and its chunks reach neither
+//   React nor Svelte.
 //
 // Code the entries share is in shared chunks, `lib/chunks/zen-*.js`, so an app importing both
 // gets one copy. CSS is split per chunk (`cssCodeSplit`), and `joinStyles` then gathers every
@@ -59,6 +62,7 @@ export default defineConfig({
         index: 'src/library/index.ts',
         storybook: 'src/library/storybook.tsx',
         svelte: 'src/library/svelte.ts',
+        themes: 'src/library/themes.ts',
       },
       formats: ['es'],
       fileName: (_format, name) => `${name}.js`,

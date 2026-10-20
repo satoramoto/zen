@@ -1,7 +1,8 @@
 <!--
   Opaque: the Svelte binding of `opaqueTree` (Hole.model.ts), the same tree as React's `Opaque`
   (Surface.tsx, which says what it is for). Every layer inside draws its opaque fill and no backdrop
-  (library.css). Svelte surfaces draw no shader yet, so its `opaque` context has nothing to set.
+  (library.css), and no Surface inside draws a shader material: the tree's `Context` (`opaque`)
+  sets `setOpaque` (opaqueScope.svelte.ts), as React's `OpaqueContext`.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';

@@ -1,12 +1,13 @@
 <!--
   A context a tree provides to what it draws inside, by name, as `Context.tsx` does in React: the
   registered `Context` component. `control` sets the controls' look (control.svelte.ts), followed
-  live; `opaque` has nothing to set yet (Svelte surfaces draw no shader). (React's `form` is
+  live; `opaque` marks an Opaque scope (opaqueScope.svelte.ts: no Surface inside draws a shader). (React's `form` is
   `FormScope.svelte` here.) Draws no element.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { setControlContext, type ControlContextValue } from '../primitives/control.svelte';
+  import { setOpaque } from '../primitives/opaqueScope.svelte';
 
   interface Props {
     /** The context's name (`control`, `opaque`). */
@@ -25,7 +26,9 @@
         return (value as ControlContextValue).quiet;
       },
     });
-  } else if (name !== 'opaque') {
+  } else if (name === 'opaque') {
+    if (value) setOpaque();
+  } else {
     throw new Error(`view: no context named "${name}" (add it to src/library/view/Context.tsx and Context.svelte)`);
   }
 </script>

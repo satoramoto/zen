@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
 import { Tree } from '../../../view/Tree';
-import { viewState } from '../viewState';
+import { viewState } from '../../../view/viewState';
 import { keysHandlers, keysView, type KeysModelProps } from './Keys.model';
 import '../../../primitives/Text.css';
 import './Keys.css';

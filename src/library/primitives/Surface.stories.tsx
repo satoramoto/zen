@@ -1,17 +1,15 @@
-import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../storybook';
 import { treeStory, withRenderer } from '../stories/story';
-import { h, styleText } from '../view/Tree.model';
-import { Surface } from './Surface';
+import { component, h, styleText } from '../view/Tree.model';
 import { surfaceNode } from './Surface.model';
-import { Text } from './Text';
 import { textNode } from './Text.model';
 import { GRID_LAYERS, GRID_MATERIALS, surfaceArgTypes, surfaceArgs, surfaceCaption, surfaceProps, surfaceStories as s, type SurfaceArgs } from './Surface.fixtures';
 
 // The args, controls and each story's surfaces come from Surface.fixtures.ts, which the parity test
 // shares. Each story is a view tree (`surfaceNode`, `textNode`), so the toolbar's Renderer draws it
-// in React or Svelte; a tree surface draws its CSS layer, no shader. Only Shader is React's own.
+// in React or Svelte; a tree surface draws its CSS layer, no shader. Shader draws `Surface` components,
+// which draw the shader in either renderer.
 const specimen = {
   width: 'calc(var(--control-h) * 3)',
   height: 'calc(var(--control-h) * 2)',
@@ -72,7 +70,7 @@ export const LayersByMaterials: Story = {
 
 /** Something with texture behind the panes, so their blur and tint read: the palette's hues as
  *  bands and dots. */
-const busy: CSSProperties = {
+const busy = {
   padding: 'var(--space-6)',
   background: [
     'radial-gradient(circle at 20% 30%, var(--hue-1) 0 12%, transparent 13%)',
@@ -85,44 +83,30 @@ const busy: CSSProperties = {
 /** A float and an overlay pane wearing each shader material, and `false` (the CSS layer alone),
  *  over a busy ground. Where the shader can't draw (no WebGL2, reduced motion or transparency) or
  *  a material is still empty, every pane shows its layer's CSS look: that must already be finished.
- *  React draws the shaders (its own render); with Renderer on Svelte, the same panes as a view tree
- *  show every pane's CSS layer, since Svelte draws no shader material yet. */
-export const Shader: Story = {
-  ...treeStory(() => ({
-    tree: h(
+ *  The panes are `Surface` components in the tree, so the toolbar's Renderer draws them with React's
+ *  or Svelte's Surface, and both draw the shader canvas. */
+export const Shader: Story = treeStory(() => ({
+  tree: h(
+    'div',
+    { style: `padding: ${busy.padding}; background: ${busy.background}` },
+    h(
       'div',
-      { style: `padding: ${busy.padding}; background: ${busy.background}` },
-      h(
-        'div',
-        { style: 'display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--control-h) * 4), 1fr)); gap: var(--space-4)' },
-        (s.Shader.items ?? []).map(({ children, ...props }) =>
-          surfaceNode(
-            props,
-            { style: styleText({ ...specimen, width: 'auto', 'flex-direction': 'column' }) },
-            textNode({ role: 'label' }, {}, children ?? ''),
-            textNode({ role: 'caption', tone: 'muted' }, {}, props.layer ?? ''),
-          ),
+      { style: 'display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--control-h) * 4), 1fr)); gap: var(--space-4)' },
+      (s.Shader.items ?? []).map(({ children, ...props }) =>
+        component(
+          'Surface',
+          { ...props, style: styleText({ ...specimen, width: 'auto', 'flex-direction': 'column' }) },
+          {
+            key: `${props.layer}-${String(props.shader)}`,
+            slots: {
+              children: [textNode({ role: 'label' }, {}, children ?? ''), textNode({ role: 'caption', tone: 'muted' }, {}, props.layer ?? '')],
+            },
+          },
         ),
       ),
     ),
-  })),
-  render: () => (
-    <div style={busy}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(calc(var(--control-h) * 4), 1fr))', gap: 'var(--space-4)' }}>
-        {(s.Shader.items ?? []).map(({ children, ...props }) => (
-          <Surface
-            key={`${props.layer}-${String(props.shader)}`}
-            {...props}
-            style={{ height: 'calc(var(--control-h) * 2)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'auto', flexDirection: 'column' }}
-          >
-            <Text role="label">{children}</Text>
-            <Text role="caption" tone="muted">{props.layer}</Text>
-          </Surface>
-        ))}
-      </div>
-    </div>
   ),
-};
+}));
 
 /** Keys at rest, pressed, lit in each slot, and bordered. */
 export const States: Story = treeStory(() => ({

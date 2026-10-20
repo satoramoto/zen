@@ -5,13 +5,8 @@
  * the app's tooltip action. Registered as the `knob` store (`src/library/view/stores.ts`): Knob's
  * tree binds it by name and both renderers apply it; neither holds any of this logic.
  */
+import type { TipAction } from '../../../view/tip';
 import { DRAG_PX, FINE_PX, WHEEL_PX, wheelPx } from './geometry';
-
-/** The app's tooltip hook: given the node and its tip key, it may return an updater and a teardown. */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => { update?: (key: string) => void; destroy?: () => void } | void;
 
 export interface KnobParams {
   /** Nothing is mapped: no turning (a press still fires, as the original's). */
