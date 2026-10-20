@@ -105,18 +105,32 @@ describe('Tree: React and Svelte draw any tree the same', () => {
     expect(calls.react).toEqual(['ping 1', 'press']);
     expect(calls.svelte).toEqual(calls.react);
 
-    // New params: one update each.
+    // New params and new handlers: one update each, and a click reaches the latest handlers.
+    const latest = (side: 'react' | 'svelte'): Handlers => ({
+      press: () => calls[side].push('press v2'),
+      ping: (what: string) => calls[side].push(`${what} v2`),
+    });
     const reactStores = recorder(logs.react);
-    react.rerender(createElement(Tree, { tree: sample(['a'], 2), slots: reactSlots, handlers: handlersFor('react'), stores: reactStores }));
-    await svelte.rerender({ tree: sample(['a'], 2), slots: svelteSlots, handlers: svelteHandlers, stores: svelteStores });
+    react.rerender(createElement(Tree, { tree: sample(['a'], 2), slots: reactSlots, handlers: latest('react'), stores: reactStores }));
+    await svelte.rerender({ tree: sample(['a'], 2), slots: svelteSlots, handlers: latest('svelte'), stores: svelteStores });
     expect(logs.react.filter((l) => l === 'update 2').length).toBeGreaterThanOrEqual(1);
     expect(logs.svelte.filter((l) => l === 'update 2').length).toBeGreaterThanOrEqual(1);
     expect(logs.react[0]).toBe('mount button 1');
     expect(logs.svelte[0]).toBe('mount button 1');
+    const buttons = { react: react.container.querySelector('button')!, svelte: svelte.container.querySelector('button')! };
+    fireEvent.click(buttons.react);
+    fireEvent.click(buttons.svelte);
+    expect(calls.react).toEqual(['ping 1', 'press', 'ping 2 v2', 'press v2']);
+    expect(calls.svelte).toEqual(calls.react);
 
     act(() => react.unmount());
     svelte.unmount();
     flushSync();
+    // Unmounted: the `on` listeners (and the store's) are gone from the element.
+    fireEvent.click(buttons.react);
+    fireEvent.click(buttons.svelte);
+    expect(calls.react).toHaveLength(4);
+    expect(calls.svelte).toHaveLength(4);
     expect(logs.react.at(-1)).toBe('destroy');
     expect(logs.svelte.at(-1)).toBe('destroy');
     expect(logs.react.filter((l) => l.startsWith('mount'))).toHaveLength(1);
