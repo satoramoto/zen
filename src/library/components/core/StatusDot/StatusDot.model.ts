@@ -1,6 +1,7 @@
-// StatusDot's model: its props and the dot it draws from them (class, `data-*`, ARIA and the inline
-// style). No framework: `StatusDot.tsx` (React) and `StatusDot.svelte` (Svelte) both render `statusDotView`.
-import type { ElementView } from '../../../primitives/Text.model';
+// StatusDot's model: its props and the tree it draws from them (class, `data-*`, ARIA and the inline
+// style). No framework: `StatusDot.tsx` (React) and `StatusDot.svelte` (Svelte) both pass
+// `statusDotView` to their `Tree`.
+import { h, styleText, type Node } from '../../../view/Tree.model';
 
 /** What a deprecated section value draws: the playing (selected) role, whichever section it is. */
 const SECTION_COLOUR = 'var(--selected)';
@@ -36,35 +37,25 @@ export interface StatusDotModelProps {
   name?: string;
 }
 
-/** The dot's element, plus its inline style as declarations (`style`, for React) and as text (`styleText`, for Svelte). */
-export interface StatusDotView extends ElementView {
-  style: Record<string, string> | undefined;
-  styleText: string | undefined;
-}
-
-/** The dot StatusDot draws from its props. */
-export function statusDotView({ hue = 'ok', hollow = false, glow = true, size = 'md', visible = true, name }: StatusDotModelProps): StatusDotView {
+/** The tree StatusDot draws from its props: one empty `span` (class, `data-*`, ARIA, inline style). */
+export function statusDotView({ hue = 'ok', hollow = false, glow = true, size = 'md', visible = true, name }: StatusDotModelProps): Node {
   // Absent is always the "not there" ring: a faint solid dot was invisible from a metre.
   const ring = hollow || hue === 'd';
   const glows = glow && !ring;
   const named = visible && name !== undefined;
-  const style: Record<string, string> = {};
-  if (SECTIONS.has(hue)) style['--yh-status-dot-hue'] = SECTION_COLOUR;
-  if (!visible) style.visibility = 'hidden';
-  const declarations = Object.entries(style);
-  return {
-    className: 'yh-status-dot',
-    attrs: {
-      'data-part': 'root',
-      'data-hue': hue,
-      'data-face': ring ? 'hollow' : 'solid',
-      'data-glow': glows ? 'true' : 'false',
-      'data-size': size,
-      role: named ? 'img' : undefined,
-      'aria-label': named ? name : undefined,
-      'aria-hidden': named ? undefined : 'true',
-    },
-    style: declarations.length ? style : undefined,
-    styleText: declarations.length ? declarations.map(([property, value]) => `${property}: ${value}`).join('; ') : undefined,
-  };
+  return h('span', {
+    class: 'yh-status-dot',
+    'data-part': 'root',
+    'data-hue': hue,
+    'data-face': ring ? 'hollow' : 'solid',
+    'data-glow': glows ? 'true' : 'false',
+    'data-size': size,
+    role: named ? 'img' : undefined,
+    'aria-label': named ? name : undefined,
+    'aria-hidden': named ? undefined : 'true',
+    style: styleText({
+      '--yh-status-dot-hue': SECTIONS.has(hue) ? SECTION_COLOUR : undefined,
+      visibility: visible ? undefined : 'hidden',
+    }),
+  });
 }

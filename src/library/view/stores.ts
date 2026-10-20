@@ -7,6 +7,7 @@ import { bindLongPress, type LongPressParams } from '../components/core/Button/l
 import { bindHold, type HoldParams } from '../components/core/Button/hold';
 import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
+import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -61,6 +62,8 @@ export const stores = {
   tip: keyed<TipParams, 'tipAction'>(bindTip, ['tipAction']),
   /** Knob's drag, keys, wheel, press and tooltip (`knobInput.ts`). */
   knob: keyed<KnobParams, 'tipAction' | 'onpress' | 'onstep'>(bindKnob, ['tipAction', 'onpress', 'onstep']),
+  /** LineSlider's keys and drag (`slide.ts`). */
+  lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;

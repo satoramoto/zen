@@ -1,7 +1,8 @@
 // Stack's model: the view a renderer draws (its class and `data-*` attributes). No framework:
 // `Stack.tsx` (React) and `Stack.svelte` (Svelte) both render `stackView`.
 import type { Step } from './step';
-import type { ElementView } from './Text.model';
+import type { ElementView, TreeChildren } from './Text.model';
+import { h, type Node } from '../view/Tree.model';
 
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around';
@@ -34,4 +35,14 @@ export function stackView({ direction = 'column', gap = 2, align, justify, wrap 
       'data-wrap': wrap ? 'true' : undefined,
     },
   };
+}
+
+/**
+ * Stack as a view-tree element, for a model to inline: `stackNode({ direction: 'row' }, {},
+ * ...children)` is the element `<Stack direction="row">` draws, its attributes (`attrs`, after
+ * Stack's own) and children added. The same DOM as the `Stack` component, with no component in between.
+ */
+export function stackNode(props: StackModelProps & { as?: string }, attrs: Record<string, string | undefined> = {}, ...children: TreeChildren): Node {
+  const view = stackView(props);
+  return h(props.as ?? 'div', { class: view.className, ...view.attrs, ...attrs }, ...children);
 }

@@ -1,8 +1,9 @@
-import type { CSSProperties } from 'react';
+import { Tree } from '../../../view/Tree';
 import { statusDotView, type StatusDotModelProps } from './StatusDot.model';
 import './StatusDot.css';
 
-// The props and the face are framework-free, in the model; `StatusDot.svelte` renders the same view.
+// The props and the face are framework-free, in the model; this file and `StatusDot.svelte` only
+// hand the model's tree to their `Tree`.
 export type { StatusDotSection, StatusDotHue, StatusDotModelProps } from './StatusDot.model';
 
 export type StatusDotProps = StatusDotModelProps;
@@ -37,6 +38,5 @@ export type StatusDotProps = StatusDotModelProps;
  *   (its diameter in `em`, per `size`) and `-round` (its corner radius, round on every pack).
  */
 export function StatusDot(props: StatusDotProps) {
-  const view = statusDotView(props);
-  return <span className={view.className} {...view.attrs} style={view.style as CSSProperties | undefined} />;
+  return <Tree tree={statusDotView(props)} />;
 }

@@ -4,15 +4,20 @@
 import type { Component } from 'svelte';
 import Button from '../components/core/Button/Button.svelte';
 import LampButton from '../components/core/LampButton/LampButton.svelte';
+import LineSlider from '../components/core/LineSlider/LineSlider.svelte';
+import Separator from '../components/core/Separator/Separator.svelte';
 import SettingsRow from '../components/core/SettingsRow/SettingsRow.svelte';
+import StatusDot from '../components/core/StatusDot/StatusDot.svelte';
 import Knob from '../components/music/Knob/Knob.svelte';
 import Tabs from '../layout/Tabs.svelte';
+import Stack from '../primitives/Stack.svelte';
+import Text from '../primitives/Text.svelte';
 
 let registry: Record<string, Component<any>> | undefined;
 
 /** The Svelte component registered as `name`; throws for an unknown name. */
 export function svelteComponent(name: string): Component<any> {
-  registry ??= { Button, Knob, LampButton, SettingsRow, Tabs } as Record<string, Component<any>>;
+  registry ??= { Button, Knob, LampButton, LineSlider, Separator, SettingsRow, Stack, StatusDot, Tabs, Text } as Record<string, Component<any>>;
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;

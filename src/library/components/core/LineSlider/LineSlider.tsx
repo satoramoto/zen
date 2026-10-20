@@ -1,12 +1,12 @@
-import { useEffect, useRef } from 'react';
-import { useLineSlider } from './useLineSlider';
-import { lineSliderView, snap, type LineSliderModelProps } from './LineSlider.model';
-import { Text } from '../../../primitives/Text';
+import { Tree } from '../../../view/Tree';
+import { lineSliderHandlers, lineSliderView, snap, type LineSliderModelProps } from './LineSlider.model';
+import '../../../primitives/Text.css';
 import './LineSlider.css';
 
-// The props and the view are framework-free, in the model; `LineSlider.svelte` renders the same view.
+// The props, the tree and the behaviour are framework-free, in the model and its `slide.ts` store;
+// this file and `LineSlider.svelte` only hand the model's tree to their `Tree`.
 export type { TipAction } from './LineSlider.model';
-export { snap, useLineSlider };
+export { snap };
 
 export type LineSliderProps = LineSliderModelProps;
 
@@ -18,7 +18,7 @@ export type LineSliderProps = LineSliderModelProps;
  * number is what a player looks at, the line says roughly
  * where in the range it sits and that it can be dragged.
  *
- * **Changed.** *Headless* (the materials pass): behaviour lives in the `slide.ts` store (`useLineSlider` in React), and the
+ * **Changed.** *Headless* (the materials pass): behaviour lives in the `lineSlider` store (`slide.ts`), and the
  * markup is named parts (`data-part`: root, slider, track, fill, thumb, readout, value, unit)
  * whose look comes from the theme's Materials: the track is a `well`, the thumb a `handle`, and
  * the fill is lit (`--lit`, with `--mat-lit-glow`), so a design system can be tried on without
@@ -47,39 +47,7 @@ export type LineSliderProps = LineSliderModelProps;
  * - `--yh-lineslider-thumb-*` (`-w`, `-h`, `-radius`): the thumb's width, resting height and corner; the track's corner and the hit area's side padding follow them.
  */
 export function LineSlider(props: LineSliderProps) {
-  const { value, min, max, step, disabled, tip, tipAction, onchange } = props;
-  const node = useRef<HTMLSpanElement>(null);
-  const held = useLineSlider(node, { value, min, max, step, disabled, onchange });
-  const view = lineSliderView(props, held);
-  const { tabindex, ...sliderAttrs } = view.slider.attrs;
-
-  useEffect(() => {
-    const target = node.current;
-    if (!tipAction || tip === undefined || !target) return;
-    const handle = tipAction(target, tip);
-    return () => handle?.destroy?.();
-  }, [tip, tipAction]);
-
-  return (
-    <span className={view.root.className} {...view.root.attrs}>
-      <span ref={node} className={view.slider.className} {...sliderAttrs} tabIndex={Number(tabindex)} style={{ width: view.slider.width }}>
-        <span className={view.track.className} {...view.track.attrs}>
-          <span className={view.fill.className} {...view.fill.attrs} style={{ width: view.fill.width }} />
-          <span className={view.thumb.className} {...view.thumb.attrs} style={{ left: view.thumb.left }} />
-        </span>
-      </span>
-      <span className={view.readout.className} {...view.readout.attrs}>
-        <Text {...view.value.text} className={view.value.className} {...view.value.attrs} style={{ minWidth: view.value.minWidth }}>
-          {view.value.shown}
-        </Text>
-        {view.unit && (
-          <Text {...view.unit.text} className={view.unit.className} {...view.unit.attrs}>
-            {view.unit.shown}
-          </Text>
-        )}
-      </span>
-    </span>
-  );
+  return <Tree tree={lineSliderView(props)} handlers={lineSliderHandlers(props)} />;
 }
 
 export default LineSlider;

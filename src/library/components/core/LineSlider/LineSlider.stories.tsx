@@ -2,15 +2,18 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { LineSlider, type LineSliderProps } from './LineSlider';
+import LineSliderSvelte from './LineSlider.svelte';
 import { lineSliderArgTypes, lineSliderStories as s } from './LineSlider.fixtures';
 
-// Every story's args come from LineSlider.fixtures.ts, which the Svelte stories and the parity test share.
+// Every story is built from LineSlider.fixtures.ts (`story(s.Name)`), which the tree snapshot shares;
+// the toolbar's Renderer draws it with React's or Svelte's `Tree`. The plays are the behaviours.
 
 const meta = {
   title: 'Design OS/Components/Core/LineSlider',
   component: LineSlider,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
   args: { ...(s.Board.args as LineSliderProps), onchange: fn(), tipAction: fn() },
@@ -19,12 +22,14 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(LineSlider, LineSliderSvelte);
 
 /**
  * The Chord page's Chord settle: 10 ms of 0–30. → asks for 11, End for 30, Home for 0, Page Up for
  * 20; the value text carries the unit. A press at the line's middle asks for 15.
  */
 export const Board: Story = {
+  ...story(s.Board),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const slider = canvas.getByRole('slider', { name: 'Chord settle' });
@@ -61,7 +66,7 @@ export const Board: Story = {
 
 /** At the top: End and → ask for nothing, since the value is already the most it can be. */
 export const AtMax: Story = {
-  args: s.AtMax.args,
+  ...story(s.AtMax),
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider');
     slider.focus();
@@ -73,7 +78,7 @@ export const AtMax: Story = {
 
 /** A value shown as a word with a fractional step: "5.0 s" of a 0–10 s fade, a step of 0.5. */
 export const ValueText: Story = {
-  args: s.ValueText.args,
+  ...story(s.ValueText),
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider', { name: 'Fade in' });
     await expect(slider).toHaveAttribute('aria-valuetext', '5.0 s');
@@ -88,7 +93,7 @@ export const ValueText: Story = {
  * announced as disabled; keys and presses ask for nothing.
  */
 export const Disabled: Story = {
-  args: s.Disabled.args,
+  ...story(s.Disabled),
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider');
     await expect(slider).toHaveAttribute('aria-disabled', 'true');
@@ -102,11 +107,12 @@ export const Disabled: Story = {
 };
 
 /** At the bottom of the range: the rail still shows the whole line, so the range reads when empty. */
-export const AtMin: Story = {
-  args: s.AtMin.args,
-};
+export const AtMin: Story = story(s.AtMin);
 
-/** New: a column of Settings rows, live. The numerals right-align and the lines never shift as digits change. */
+/**
+ * New: a column of Settings rows, live. The numerals right-align and the lines never shift as digits
+ * change. Its own React `render` (live state and a labelled grid), so it stays React-only.
+ */
 export const SettingsColumn: Story = {
   render: function Column() {
     const [settleRow, fadeRow, swingRow] = s.SettingsColumn.items as LineSliderProps[];

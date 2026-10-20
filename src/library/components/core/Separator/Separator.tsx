@@ -1,7 +1,9 @@
+import { Tree } from '../../../view/Tree';
 import { separatorView, type SeparatorModelProps } from './Separator.model';
 import './Separator.css';
 
-// The props and the line are framework-free, in the model; `Separator.svelte` renders the same view.
+// The props and the line are framework-free, in the model; this file and `Separator.svelte` only
+// hand the model's tree to their `Tree`.
 export type { SeparatorModelProps } from './Separator.model';
 
 export type SeparatorProps = SeparatorModelProps;
@@ -27,6 +29,5 @@ export type SeparatorProps = SeparatorModelProps;
  * assistive tech (the groups it splits are announced by their own roles); the parent spaces it.
  */
 export function Separator(props: SeparatorProps) {
-  const view = separatorView(props);
-  return <span className={view.className} {...view.attrs} />;
+  return <Tree tree={separatorView(props)} />;
 }

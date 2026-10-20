@@ -1,6 +1,6 @@
-// Surface's stories as plain data: Surface.stories.tsx (React) and Surface.stories.svelte.ts
-// (Svelte) both draw them, and the parity test renders every story's Surface in both (each one's
-// caption standing in as its text; the stories draw it as a `Text`).
+// Surface's stories as plain data: Surface.stories.tsx draws them as view trees (in React or
+// Svelte), and the parity test renders every story's Surface in both (each one's caption standing
+// in as its text; the stories draw it as a `Text`).
 import { LAYERS, type LayerName } from '../contract';
 import { defineFixtures } from '../fixtures';
 import { LIT_SLOTS, MATERIAL_ROLES, SURFACE_RADII, type LitSlot, type MaterialRole, type SurfaceModelProps, type SurfaceRadius } from './Surface.model';

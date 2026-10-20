@@ -1,7 +1,10 @@
-// Tabs' model: its props, the tablist and tabs it draws from them (classes, `data-*`, ARIA, the
-// roving tab stop), and the keyboard's next choice. No framework: `Tabs.tsx` (React) and
-// `Tabs.svelte` (Svelte) both render `tabsView` and move with `nextTab`.
-import type { ElementView, TextModelProps } from '../primitives/Text.model';
+// Tabs' model: its props, the tree it draws from them (the tablist and its tabs: classes, `data-*`,
+// ARIA, the roving tab stop, each tab's tooltip store) and the handlers that tree names (a click
+// chooses, the keyboard moves). No framework: `Tabs.tsx` (React) and `Tabs.svelte` (Svelte) both
+// pass `tabsView`, `tabsSlots` and `tabsHandlers` to their `Tree`.
+import { textNode } from '../primitives/Text.model';
+import { each, h, slot, wire, type Handlers, type Node } from '../view/Tree.model';
+import type { TipAction } from '../view/tip';
 
 /** One tab. `L` is the label: a string here, a React node or a Svelte snippet in a renderer. */
 export interface TabItemModel<L = string> {
@@ -17,9 +20,9 @@ export interface TabItemModel<L = string> {
 /**
  * The app's tooltip hook (Svelte's `use:tip` shape): called with a tab's node and its `tip` key;
  * the handle it returns is destroyed when the key changes or the tab unmounts. The same signature
- * the library's controls take.
+ * the library's controls take (the `tip` store's, `view/tip.ts`).
  */
-export type TipAction = (node: HTMLElement, key: string) => void | { update?: (key: string) => void; destroy?: () => void };
+export type { TipAction };
 
 /** Every Tabs prop but the callbacks' frameworks: `L` is the label type. */
 export interface TabsModelProps<L = string> {
@@ -38,28 +41,6 @@ export interface TabsModelProps<L = string> {
   onChange?: (id: string) => void;
 }
 
-/** One tab as drawn: a `Text` rendered as a `<button>`. */
-export interface TabView<L = string> {
-  /** The item's id (the key in a list, and what `onChange` gets). */
-  id: string;
-  /** The tab's Text props (its ARIA role is `tab`). */
-  text: Omit<TextModelProps, 'ariaRole'> & { ariaRole: 'tab' };
-  /** The tab's class (beside Text's own) and its `id`, `type`, `data-*` and ARIA. */
-  face: ElementView;
-  /** The roving tab stop: 0 for the one stop, -1 for the rest. */
-  tabIndex: 0 | -1;
-  label: L;
-  /** The tooltip key, for the app's `tipAction`. */
-  tip: string | undefined;
-  /** Whether a click on it chooses it: not disabled and not already chosen. */
-  choosable: boolean;
-}
-
-export interface TabsView<L = string> {
-  list: ElementView;
-  tabs: TabView<L>[];
-}
-
 /** The default DOM id of a tab: from the tablist's name and the tab's id, so both renderers agree. */
 export function tabDomId(name: string, id: string): string {
   const slug = name
@@ -75,37 +56,65 @@ export function stopTab<L>(items: TabItemModel<L>[], value: string | null): stri
   return live.some((t) => t.id === value) ? (value ?? undefined) : live[0]?.id;
 }
 
-/** The tablist and its tabs, drawn from the props. */
-export function tabsView<L>({ name, items, value, panelId, tabId }: TabsModelProps<L>): TabsView<L> {
-  const domId = tabId ?? ((id: string) => tabDomId(name, id));
+/** The slot a tab's label fills when it isn't plain text (a React node, a Svelte snippet). */
+export const tabLabelSlot = (id: string): string => `label:${id}`;
+
+/** The labels that aren't plain text, by their slot (`tabLabelSlot`): what a binding passes as
+ *  `slots`. A string label is drawn in the tree itself. */
+export function tabsSlots<L>(items: TabItemModel<L>[]): Record<string, Exclude<L, string>> {
+  const slots: Record<string, Exclude<L, string>> = {};
+  for (const t of items) if (typeof t.label !== 'string') slots[tabLabelSlot(t.id)] = t.label as Exclude<L, string>;
+  return slots;
+}
+
+/** A tab's DOM id, from `tabId` or the default. */
+const domIdOf =
+  ({ name, tabId }: Pick<TabsModelProps<unknown>, 'name' | 'tabId'>) =>
+  (id: string): string =>
+    tabId ? tabId(id) : tabDomId(name, id);
+
+/** The handler key of a click on tab `id`. */
+const chooseKey = (id: string) => `choose:${id}`;
+
+/**
+ * The tree Tabs draws: a `tablist` (keys call `key`) holding a keyed list of `label` Texts as
+ * `<button>`s, each with its id, ARIA, roving tab stop, a click (`choose:<id>`) and the `tip` store.
+ * A string label is text; any other label is the slot `label:<id>` (`tabsSlots`).
+ */
+export function tabsView<L>(props: TabsModelProps<L>): Node {
+  const { name, items, value, panelId } = props;
+  const domId = domIdOf(props);
   const stop = stopTab(items, value);
-  return {
-    list: { className: 'lib-tabs', attrs: { role: 'tablist', 'aria-label': name, 'data-part': 'tabs' } },
-    tabs: items.map((t) => {
-      const on = t.id === value;
-      return {
-        id: t.id,
-        text: { size: 'label', weight: 'strong', case: 'label', ariaRole: 'tab' },
-        face: {
-          className: 'lib-tabs__tab',
-          attrs: {
-            id: domId(t.id),
-            type: 'button',
-            'data-part': 'tab',
-            'aria-selected': String(on),
-            'aria-controls': panelId,
-            'aria-label': t.name,
-            'aria-disabled': t.disabled ? 'true' : undefined,
-            'data-tip': t.tip,
-          },
-        },
-        tabIndex: t.id === stop ? 0 : -1,
-        label: t.label,
-        tip: t.tip,
-        choosable: !t.disabled && !on,
-      };
-    }),
-  };
+  return wire(
+    h(
+      'div',
+      { class: 'lib-tabs', role: 'tablist', 'aria-label': name, 'data-part': 'tabs' },
+      each(
+        items,
+        (t) => t.id,
+        (t) =>
+          wire(
+            textNode(
+              { as: 'button', size: 'label', weight: 'strong', case: 'label', ariaRole: 'tab', className: 'lib-tabs__tab' },
+              {
+                id: domId(t.id),
+                type: 'button',
+                'data-part': 'tab',
+                'aria-selected': String(t.id === value),
+                'aria-controls': panelId,
+                'aria-label': t.name,
+                'aria-disabled': t.disabled ? 'true' : undefined,
+                'data-tip': t.tip,
+                tabindex: t.id === stop ? '0' : '-1',
+              },
+              typeof t.label === 'string' ? t.label : slot(tabLabelSlot(t.id)),
+            ),
+            { on: { click: chooseKey(t.id) }, bind: [['tip', { tip: t.tip, tipAction: 'tipAction' }]] },
+          ),
+      ),
+    ),
+    { on: { keydown: 'key' } },
+  );
 }
 
 /** The tab a key moves the choice to: ← → step through the enabled tabs (wrapping), Home / End
@@ -122,10 +131,34 @@ export function nextTab<L>(items: TabItemModel<L>[], value: string | null, key: 
   return next < 0 ? null : live[next].id;
 }
 
-/** Tab `id`'s element inside `list`, found among the list's own children (so two lists with the
- *  same name, and so the same default ids, never reach each other's tabs). */
-export function tabNode<L>(list: HTMLElement | null, view: TabsView<L>, id: string): HTMLElement | undefined {
-  const domId = view.tabs.find((t) => t.id === id)?.face.attrs.id;
-  if (!list || domId === undefined) return undefined;
-  return Array.from(list.children).find((el): el is HTMLElement => el.id === domId);
+/**
+ * The callbacks `tabsView`'s tree names: `key` (the keyboard: `nextTab`, then focus follows to that
+ * tab among the tablist's own children, so two lists with the same name never reach each other's
+ * tabs), `choose:<id>` per tab (a click on a tab that is neither disabled nor chosen) and the
+ * tooltip's `tipAction`.
+ */
+export function tabsHandlers<L>(props: TabsModelProps<L>): Handlers {
+  const { items, value, onChange, tipAction } = props;
+  const domId = domIdOf(props);
+  const handlers: Handlers = {
+    key: (event: KeyboardEvent) => {
+      const next = nextTab(items, value, event.key);
+      if (next === null) return;
+      event.preventDefault();
+      event.stopPropagation();
+      onChange?.(next);
+      const id = domId(next);
+      const list = event.currentTarget as HTMLElement | null;
+      Array.from(list?.children ?? [])
+        .find((el): el is HTMLElement => el.id === id)
+        ?.focus();
+    },
+    tipAction,
+  };
+  for (const t of items) {
+    handlers[chooseKey(t.id)] = () => {
+      if (!t.disabled && t.id !== value) onChange?.(t.id);
+    };
+  }
+  return handlers;
 }

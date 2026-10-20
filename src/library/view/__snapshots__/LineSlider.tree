@@ -1,0 +1,95 @@
+## Board
+<span class="yh-lineslider" data-part="root">
+  <span aria-label="Chord settle" aria-valuemax="30" aria-valuemin="0" aria-valuenow="10" aria-valuetext="10 ms" class="yh-lineslider__hit lib-focus-ring" data-part="slider" data-tip="settings.chord_settle" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":10,"min":0,"max":30,"step":1,"disabled":false,"onchange":"change"} use:tip={"tip":"settings.chord_settle","tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 33.33333333333333%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 33.33333333333333%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 2ch">
+      "10"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "ms"
+
+## AtMax
+<span class="yh-lineslider" data-part="root">
+  <span aria-label="Chord settle" aria-valuemax="30" aria-valuemin="0" aria-valuenow="30" aria-valuetext="30 ms" class="yh-lineslider__hit lib-focus-ring" data-part="slider" data-tip="settings.chord_settle" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":30,"min":0,"max":30,"step":1,"disabled":false,"onchange":"change"} use:tip={"tip":"settings.chord_settle","tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 100%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 100%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 2ch">
+      "30"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "ms"
+
+## ValueText
+<span class="yh-lineslider" data-part="root">
+  <span aria-label="Fade in" aria-valuemax="10" aria-valuemin="0" aria-valuenow="5" aria-valuetext="5.0 s" class="yh-lineslider__hit lib-focus-ring" data-part="slider" data-tip="settings.fade_in" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":5,"min":0,"max":10,"step":0.5,"disabled":false,"onchange":"change"} use:tip={"tip":"settings.fade_in","tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 50%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 50%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 3ch">
+      "5.0"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "s"
+
+## Disabled
+<span class="yh-lineslider" data-disabled="true" data-part="root">
+  <span aria-disabled="true" aria-label="Chord settle" aria-valuemax="30" aria-valuemin="0" aria-valuenow="10" aria-valuetext="10 ms" class="yh-lineslider__hit lib-focus-ring" data-part="slider" data-tip="settings.chord_settle" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":10,"min":0,"max":30,"step":1,"disabled":true,"onchange":"change"} use:tip={"tip":"settings.chord_settle","tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 33.33333333333333%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 33.33333333333333%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 2ch">
+      "10"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "ms"
+
+## AtMin
+<span class="yh-lineslider" data-part="root">
+  <span aria-label="Chord settle" aria-valuemax="30" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 ms" class="yh-lineslider__hit lib-focus-ring" data-part="slider" data-tip="settings.chord_settle" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":0,"min":0,"max":30,"step":1,"disabled":false,"onchange":"change"} use:tip={"tip":"settings.chord_settle","tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 0%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 0%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 2ch">
+      "0"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "ms"
+
+## SettingsColumn #1
+<span class="yh-lineslider" data-part="root">
+  <span aria-label="Chord settle" aria-valuemax="30" aria-valuemin="0" aria-valuenow="10" aria-valuetext="10 ms" class="yh-lineslider__hit lib-focus-ring" data-part="slider" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":10,"min":0,"max":30,"step":1,"disabled":false,"onchange":"change"} use:tip={"tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 33.33333333333333%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 33.33333333333333%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 2ch">
+      "10"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "ms"
+
+## SettingsColumn #2
+<span class="yh-lineslider" data-part="root">
+  <span aria-label="Fade in" aria-valuemax="10" aria-valuemin="0" aria-valuenow="5" aria-valuetext="5.0 s" class="yh-lineslider__hit lib-focus-ring" data-part="slider" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":5,"min":0,"max":10,"step":0.5,"disabled":false,"onchange":"change"} use:tip={"tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 50%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 50%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 3ch">
+      "5.0"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "s"
+
+## SettingsColumn #3
+<span class="yh-lineslider" data-part="root">
+  <span aria-label="Swing" aria-valuemax="75" aria-valuemin="50" aria-valuenow="54" aria-valuetext="54 %" class="yh-lineslider__hit lib-focus-ring" data-part="slider" role="slider" style="width: 160px" tabindex="0" use:lineSlider={"value":54,"min":50,"max":75,"step":1,"disabled":false,"onchange":"change"} use:tip={"tipAction":"tipAction"}>
+    <span class="yh-lineslider__track" data-part="track">
+      <span class="yh-lineslider__fill" data-part="fill" style="width: 16%">
+      <span class="yh-lineslider__thumb" data-part="thumb" style="left: 16%">
+  <span aria-hidden="true" class="yh-lineslider__readout" data-part="readout">
+    <span class="lib-text lib-tone yh-lineslider__value" data-part="value" data-role="numeral" style="min-width: 2ch">
+      "54"
+    <span class="lib-text lib-tone yh-lineslider__unit" data-part="unit" data-role="caption" data-text-leading="tight">
+      "%"
