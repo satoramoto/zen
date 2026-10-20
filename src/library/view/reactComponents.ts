@@ -5,6 +5,8 @@
 // draws a `Tree`, which reads this) never sees a half-loaded module.
 import type { ComponentType } from 'react';
 import { Button } from '../components/core/Button/Button';
+import { ActionButton } from '../components/core/ActionButton/ActionButton';
+import { SearchField } from '../components/core/SearchField/SearchField';
 import { LampButton } from '../components/core/LampButton/LampButton';
 import { LineSlider } from '../components/core/LineSlider/LineSlider';
 import { Segmented } from '../components/core/Segmented/Segmented';
@@ -16,6 +18,9 @@ import { Readout } from '../components/core/Readout/Readout';
 import { NumberField } from '../components/core/NumberField/NumberField';
 import { Checkbox } from '../components/core/Checkbox/Checkbox';
 import { Radio } from '../components/core/Radio/Radio';
+import { Slider } from '../components/core/Slider/Slider';
+import { Popover } from '../components/core/Popover/Popover';
+import { Modal, Sheet } from '../components/core/Modal/Modal';
 import { Separator } from '../components/core/Separator/Separator';
 import { SettingsRow } from '../components/core/SettingsRow/SettingsRow';
 import { StatusDot } from '../components/core/StatusDot/StatusDot';
@@ -33,6 +38,8 @@ import { BarReadout } from '../components/music/BarReadout/BarReadout';
 import { SendReadout } from '../components/music/SendReadout/SendReadout';
 import { SoundCell } from '../components/music/SoundCell/SoundCell';
 import { RackCell } from '../components/music/RackCell/RackCell';
+import { PageList } from '../components/core/PageList/PageList';
+import { FolderList } from '../components/core/FolderList/FolderList';
 import { Group } from '../layout/Group';
 import { Region } from '../layout/Region';
 import { Tabs } from '../layout/Tabs';
@@ -71,6 +78,8 @@ export function reactComponent(name: string): ComponentType<any> {
     SlotCall,
     Surface,
     Button,
+    ActionButton,
+    SearchField,
     Knob,
     LampButton,
     LineSlider,
@@ -84,6 +93,10 @@ export function reactComponent(name: string): ComponentType<any> {
     NumberField,
     Checkbox,
     Radio,
+    Slider,
+    Popover,
+    Modal,
+    Sheet,
     Separator,
     SettingsRow,
     Stack,
@@ -122,6 +135,8 @@ export function reactComponent(name: string): ComponentType<any> {
     SendReadout,
     SoundCell,
     RackCell,
+    PageList,
+    FolderList,
   };
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);

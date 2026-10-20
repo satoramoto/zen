@@ -1,12 +1,6 @@
 {
-  "components/core/ActionButton/ActionButton.tsx": 4,
   "components/core/AxisPicker/AxisPicker.tsx": 8,
-  "components/core/FolderList/FolderList.tsx": 7,
-  "components/core/Modal/Modal.tsx": 14,
-  "components/core/PageList/PageList.tsx": 3,
-  "components/core/Popover/Popover.tsx": 3,
-  "components/core/SearchField/SearchField.tsx": 10,
-  "components/core/Slider/Slider.tsx": 16,
+  "components/core/Popover/Popover.tsx": 1,
   "layout/Group.tsx": 1,
   "primitives/Ambient.tsx": 1,
   "primitives/Hole.svelte": 1,

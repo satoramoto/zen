@@ -1,0 +1,332 @@
+## Styles
+<nav aria-label="Style folders" class="yh-folder-list" style="width: 220px; height: 280px" use:folderList={"rows":[{"id":"all","disabled":false},{"id":"favourites","disabled":false},{"id":"pop","disabled":false},{"id":"ballad","disabled":false},{"id":"dance","disabled":false},{"id":"swing","disabled":false},{"id":"rnb","disabled":false},{"id":"country","disabled":false},{"id":"latin","disabled":false},{"id":"world","disabled":false},{"id":"user","disabled":false},{"id":"empty","disabled":true}],"chosen":"pop","onChoose":"choose","onActive":"activate"}>
+  <button key=all class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "All styles"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "412"
+  <button key=favourites class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Favourites"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "18"
+  <button key=pop aria-current="true" class="lib-text lib-tone yh-folder-list__row" data-role="body" data-text-weight="strong" data-tip="library.folder" tabindex="0" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Pop & Rock"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "86"
+  <button key=ballad class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Ballad"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "41"
+  <button key=dance class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Dance"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "57"
+  <button key=swing class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Swing & Jazz"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "49"
+  <button key=rnb class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "R&B"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "33"
+  <button key=country class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Country"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "28"
+  <button key=latin class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Latin"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "52"
+  <button key=world class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "World"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "37"
+  <button key=user aria-label="User styles on the external drive with a long name 11" class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "User styles on the external drive with a long "
+      <span class="yh-folder-list__tail">
+        "name"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "11"
+  <button key=empty class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" disabled="" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Imported (empty)"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "0"
+
+## Keys
+<nav aria-label="Style folders" class="yh-folder-list" style="width: 220px; height: 280px" use:folderList={"rows":[{"id":"all","disabled":false},{"id":"favourites","disabled":false},{"id":"pop","disabled":false},{"id":"ballad","disabled":false},{"id":"dance","disabled":false},{"id":"swing","disabled":false},{"id":"rnb","disabled":false},{"id":"country","disabled":false},{"id":"latin","disabled":false},{"id":"world","disabled":false},{"id":"user","disabled":false},{"id":"empty","disabled":true}],"chosen":"pop","onChoose":"choose","onActive":"activate"}>
+  <button key=all class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "All styles"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "412"
+  <button key=favourites class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Favourites"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "18"
+  <button key=pop aria-current="true" class="lib-text lib-tone yh-folder-list__row" data-role="body" data-text-weight="strong" data-tip="library.folder" tabindex="0" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Pop & Rock"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "86"
+  <button key=ballad class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Ballad"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "41"
+  <button key=dance class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Dance"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "57"
+  <button key=swing class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Swing & Jazz"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "49"
+  <button key=rnb class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "R&B"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "33"
+  <button key=country class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Country"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "28"
+  <button key=latin class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Latin"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "52"
+  <button key=world class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "World"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "37"
+  <button key=user aria-label="User styles on the external drive with a long name 11" class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "User styles on the external drive with a long "
+      <span class="yh-folder-list__tail">
+        "name"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "11"
+  <button key=empty class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" disabled="" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Imported (empty)"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "0"
+
+## Sounds
+<nav aria-label="Sound categories" class="yh-folder-list" style="width: 220px; height: 252px" use:folderList={"rows":[{"id":"piano","disabled":false},{"id":"organ","disabled":false},{"id":"guitar","disabled":false},{"id":"bass","disabled":false},{"id":"strings","disabled":false},{"id":"brass","disabled":false},{"id":"synth","disabled":false},{"id":"drums","disabled":false},{"id":"plugins","disabled":false}],"chosen":null,"onChoose":"choose","onActive":"activate"}>
+  <button key=piano class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="0" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Piano"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "24"
+  <button key=organ class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Organ"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "19"
+  <button key=guitar class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Guitar"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "31"
+  <button key=bass class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Bass"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "22"
+  <button key=strings class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Strings"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "27"
+  <button key=brass class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Brass"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "18"
+  <button key=synth class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Synth"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "44"
+  <button key=drums class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Drum kits"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "16"
+  <button key=plugins class="lib-text lib-tone yh-folder-list__row" data-role="body" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Sampler Deluxe"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "8"
+
+## Narrow
+<nav aria-label="Style folders" class="yh-folder-list" style="width: 160px; height: 280px" use:folderList={"rows":[{"id":"all","disabled":false},{"id":"favourites","disabled":false},{"id":"pop","disabled":false},{"id":"ballad","disabled":false},{"id":"dance","disabled":false},{"id":"swing","disabled":false},{"id":"rnb","disabled":false},{"id":"country","disabled":false},{"id":"latin","disabled":false},{"id":"world","disabled":false},{"id":"user","disabled":false},{"id":"empty","disabled":true}],"chosen":"user","onChoose":"choose","onActive":"activate"}>
+  <button key=all class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "All styles"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "412"
+  <button key=favourites class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Favourites"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "18"
+  <button key=pop class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Pop & Rock"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "86"
+  <button key=ballad class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Ballad"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "41"
+  <button key=dance class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Dance"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "57"
+  <button key=swing class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Swing & Jazz"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "49"
+  <button key=rnb class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "R&B"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "33"
+  <button key=country class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Country"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "28"
+  <button key=latin class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Latin"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "52"
+  <button key=world class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "World"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "37"
+  <button key=user aria-current="true" aria-label="User styles on the external drive with a long name 11" class="lib-text lib-tone yh-folder-list__row" data-role="body" data-text-weight="strong" data-tip="library.folder" tabindex="0" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "User styles on the external drive with a long "
+      <span class="yh-folder-list__tail">
+        "name"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "11"
+  <button key=empty class="lib-text lib-tone yh-folder-list__row" data-role="body" data-tip="library.folder" disabled="" tabindex="-1" type="button">
+    <span class="yh-folder-list__label">
+      <span class="yh-folder-list__head">
+        "Imported (empty)"
+    " "
+    <span class="lib-text lib-tone yh-folder-list__count" data-role="caption" data-tabular="">
+      "0"

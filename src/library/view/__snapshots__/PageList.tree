@@ -1,0 +1,98 @@
+## Board
+<nav aria-label="Settings pages" class="yh-page-list" use:pageList={"ids":["chord","style","keyboard","pedals","system","launchkey"],"onChoose":"choose"}>
+  <button key=chord aria-current="page" class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.chord" type="button">
+    <span class="yh-page-list__name">
+      "Chord & Split"
+  <button key=style class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.style" type="button">
+    <span class="yh-page-list__name">
+      "Style"
+  <button key=keyboard class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.keyboard" type="button">
+    <span class="yh-page-list__name">
+      "Keyboard"
+  <button key=pedals class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.controllers" type="button">
+    <span class="yh-page-list__name">
+      "Pedals"
+  <button key=system class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.system" type="button">
+    <span class="yh-page-list__name">
+      "System"
+  <button key=launchkey class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.launchkey" type="button">
+    <span class="yh-page-list__name">
+      "Controller"
+
+## Keys
+<nav aria-label="Settings pages" class="yh-page-list" use:pageList={"ids":["chord","style","keyboard","pedals","system","launchkey"],"onChoose":"choose"}>
+  <button key=chord aria-current="page" class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.chord" type="button">
+    <span class="yh-page-list__name">
+      "Chord & Split"
+  <button key=style class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.style" type="button">
+    <span class="yh-page-list__name">
+      "Style"
+  <button key=keyboard class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.keyboard" type="button">
+    <span class="yh-page-list__name">
+      "Keyboard"
+  <button key=pedals class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.controllers" type="button">
+    <span class="yh-page-list__name">
+      "Pedals"
+  <button key=system class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.system" type="button">
+    <span class="yh-page-list__name">
+      "System"
+  <button key=launchkey class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.launchkey" type="button">
+    <span class="yh-page-list__name">
+      "Controller"
+
+## SystemOpen
+<nav aria-label="Settings pages" class="yh-page-list" use:pageList={"ids":["chord","style","keyboard","pedals","system","launchkey"],"onChoose":"choose"}>
+  <button key=chord class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.chord" type="button">
+    <span class="yh-page-list__name">
+      "Chord & Split"
+  <button key=style class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.style" type="button">
+    <span class="yh-page-list__name">
+      "Style"
+  <button key=keyboard class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.keyboard" type="button">
+    <span class="yh-page-list__name">
+      "Keyboard"
+  <button key=pedals class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.controllers" type="button">
+    <span class="yh-page-list__name">
+      "Pedals"
+  <button key=system aria-current="page" class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.system" type="button">
+    <span class="yh-page-list__name">
+      "System"
+  <button key=launchkey class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.launchkey" type="button">
+    <span class="yh-page-list__name">
+      "Controller"
+
+## NoneOpen
+<nav aria-label="Settings pages" class="yh-page-list" use:pageList={"ids":["chord","style","keyboard","pedals","system","launchkey"],"onChoose":"choose"}>
+  <button key=chord class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.chord" type="button">
+    <span class="yh-page-list__name">
+      "Chord & Split"
+  <button key=style class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.style" type="button">
+    <span class="yh-page-list__name">
+      "Style"
+  <button key=keyboard class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.keyboard" type="button">
+    <span class="yh-page-list__name">
+      "Keyboard"
+  <button key=pedals class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.controllers" type="button">
+    <span class="yh-page-list__name">
+      "Pedals"
+  <button key=system class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.system" type="button">
+    <span class="yh-page-list__name">
+      "System"
+  <button key=launchkey class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.launchkey" type="button">
+    <span class="yh-page-list__name">
+      "Controller"
+
+## LongNames
+<nav aria-label="Settings pages" class="yh-page-list" use:pageList={"ids":["chord","style","midi","backup"],"onChoose":"choose"}>
+  <button key=chord class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.chord" type="button">
+    <span class="yh-page-list__name">
+      "Chord & Split"
+  <button key=style class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.style" type="button">
+    <span class="yh-page-list__name">
+      "Style"
+  <button key=midi aria-current="page" class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.midi" type="button">
+    <span class="yh-page-list__name">
+      "MIDI Input & Output Routing"
+  <button key=backup class="lib-text lib-tone yh-page-list__row" data-role="body" data-tabular="" data-text-weight="strong" data-tip="settings.tab.backup" type="button">
+    <span class="yh-page-list__name">
+      "Backup, Restore and Factory Reset"

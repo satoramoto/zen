@@ -2,7 +2,10 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { ActionButton, ButtonFace } from './ActionButton';
+import ActionButtonSvelte from './ActionButton.svelte';
+import { actionButtonArgTypes, actionButtonStories as s } from './ActionButton.fixtures';
 
 const Cross = () => (
   <svg width="10" height="10" viewBox="0 0 9 9" aria-hidden="true">
@@ -22,22 +25,24 @@ const Trash = () => (
 
 const row = { display: 'flex', gap: 'var(--space-3)', alignItems: 'end', flexWrap: 'wrap' } as const;
 
+// The stories with text children are built from ActionButton.fixtures.ts (`story(s.Name)`), which
+// the tree snapshot shares; the toolbar's Renderer draws them with React's or Svelte's `Tree`. The
+// stories whose children are icons (React nodes), Tones and Face stay React.
 const meta = {
   title: 'Design OS/Components/Core/ActionButton',
   component: ActionButton,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   args: { onPress: fn(), children: 'Export' },
-  argTypes: {
-    tone: { control: 'inline-radio', options: ['normal', 'quiet', 'danger'] },
-    width: { control: { type: 'number', min: 24, max: 320 } },
-  },
+  argTypes: actionButtonArgTypes,
 } satisfies Meta<typeof ActionButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(ActionButton, ActionButtonSvelte);
 
 /** A word on a key; a press reports the event. */
 export const Normal: Story = {
+  ...story(s.Normal),
   play: async ({ canvasElement, args }) => {
     await userEvent.click(within(canvasElement).getByRole('button', { name: 'Export' }));
     await expect(args.onPress).toHaveBeenCalledTimes(1);
@@ -57,7 +62,7 @@ export const IconAndWord: Story = {
 
 /** Icon only: `label` names it for assistive technology. */
 export const IconOnly: Story = {
-  args: { tone: 'quiet', label: 'Close', title: 'Close (Esc)', children: <Cross /> },
+  args: { ...s.IconOnly.args, children: <Cross /> },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button', { name: 'Close' })).toBeInTheDocument();
   },
@@ -65,7 +70,7 @@ export const IconOnly: Story = {
 
 /** A caption above names it too, when no `label` is given. */
 export const Captioned: Story = {
-  args: { name: 'Stems', children: 'Write', hint: 'Writes each part to its own file' },
+  ...story(s.Captioned),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Stems' });
     await expect(button.closest('[data-hint]')).toHaveAttribute('data-hint', 'Writes each part to its own file');
@@ -75,7 +80,7 @@ export const Captioned: Story = {
 /** Danger is ordinary until pointed at. */
 export const Danger: Story = {
   args: {
-    tone: 'danger',
+    ...s.Danger.args,
     children: (
       <>
         <Trash /> Delete
@@ -85,10 +90,10 @@ export const Danger: Story = {
 };
 
 /** A fixed width in px. */
-export const FixedWidth: Story = { args: { width: 160, children: 'Replace' } };
+export const FixedWidth: Story = story(s.FixedWidth);
 
 /** Disabled: no press reaches `onPress`. */
-export const Disabled: Story = { args: { disabled: true, children: 'Export' } };
+export const Disabled: Story = story(s.Disabled);
 
 /** Every tone at rest, and disabled. */
 export const Tones: Story = {

@@ -1,28 +1,16 @@
-import { useCallback, useRef, type ChangeEvent, type KeyboardEvent, type Ref } from 'react';
-import { Text } from '../../../primitives/Text';
+import type { Ref } from 'react';
+import { Tree } from '../../../view/Tree';
+import { searchFieldHandlers, searchFieldView, type SearchFieldModelProps } from './SearchField.model';
+import '../../../primitives/Text.css';
 import './SearchField.css';
 
-export interface SearchFieldProps {
-  /** The text in the field. The parent owns it: typing only calls `onInput`. */
-  value?: string;
-  /** The field's accessible name, visually hidden ("Search styles"). */
-  label: string;
-  /** The hint shown while the field is empty ("Search"). */
-  placeholder?: string;
-  /** A fixed width in px. Default: fills its container. */
-  width?: number;
-  /** The tooltip key, set as `data-tip` on the input for the app's tooltip layer. */
-  tip?: string;
-  /** Called with the field's text on every edit, and with '' when Esc or the clear button clears it. */
-  onInput?: (value: string) => void;
-  /** Called on every key the field doesn't handle itself (all but Esc on a non-empty field). */
-  onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
+// The props, the field and its keys are framework-free, in the model and its stores; this file and
+// `SearchField.svelte` only hand the model's tree to their `Tree`.
+export type { SearchFieldModelProps } from './SearchField.model';
+
+export interface SearchFieldProps extends SearchFieldModelProps {
   /** The `<input>` itself, so the page can focus it (a ⌘F shortcut) or read its selection. */
   ref?: Ref<HTMLInputElement>;
-  /** Shown, not editable: the input is disabled, dimmed, and the clear button goes. */
-  disabled?: boolean;
-  /** The native hover hint on the field, e.g. "Search presets (⌘F)". */
-  title?: string;
 }
 
 /**
@@ -52,76 +40,6 @@ export interface SearchFieldProps {
  * field to `--text-4` with a dashed edge, as a disabled key reads, takes the input out of reach
  * and drops the clear button; `title` is the field's hover hint.
  */
-export function SearchField({ value = '', label, placeholder, width, tip, onInput, onKeyDown, ref, disabled = false, title }: SearchFieldProps) {
-  const input = useRef<HTMLInputElement | null>(null);
-  // The input is ours (the clear button refocuses it) and the caller's (`ref`).
-  const setInput = useCallback(
-    (node: HTMLInputElement | null) => {
-      input.current = node;
-      if (typeof ref === 'function') ref(node);
-      else if (ref) ref.current = node;
-    },
-    [ref],
-  );
-  const filled = value !== '';
-
-  function keyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Escape' && filled) {
-      event.preventDefault();
-      event.stopPropagation();
-      onInput?.('');
-      return;
-    }
-    onKeyDown?.(event);
-  }
-
-  return (
-    <div
-      className="yh-search-field"
-      data-filled={filled ? 'true' : undefined}
-      data-disabled={disabled ? 'true' : undefined}
-      title={title}
-      style={{ width: width === undefined ? '100%' : `${width}px` }}
-    >
-      <label className="yh-search-field__label">
-        <svg className="yh-search-field__glass" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-          <circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          <line x1="9.4" y1="9.4" x2="13" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-        <span className="yh-search-field__name">{label}</span>
-        <Text
-          as="input"
-          role="body"
-          ref={setInput}
-          type="search"
-          className="yh-search-field__input"
-          value={value}
-          disabled={disabled}
-          placeholder={placeholder}
-          autoComplete="off"
-          spellCheck={false}
-          data-tip={tip}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => onInput?.(event.currentTarget.value)}
-          onKeyDown={keyDown}
-        />
-      </label>
-      {filled && !disabled && (
-        <button
-          type="button"
-          className="yh-search-field__clear"
-          aria-label="Clear search"
-          tabIndex={-1}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => {
-            onInput?.('');
-            input.current?.focus();
-          }}
-        >
-          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-            <path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </button>
-      )}
-    </div>
-  );
+export function SearchField({ ref, ...props }: SearchFieldProps) {
+  return <Tree tree={searchFieldView(props)} handlers={searchFieldHandlers({ ...props, ref })} />;
 }
