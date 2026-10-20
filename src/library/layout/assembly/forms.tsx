@@ -1,8 +1,12 @@
 import { createContext, useContext, type ReactNode } from 'react';
+import { pickForm, type FormContextValue } from './forms.model';
 import type { Forms } from './types';
 
+// Picking a form is framework-free (forms.model.ts); this binds it to a React context.
+export { pickForm, type FormContextValue } from './forms.model';
+
 /** The form the solver chose for the region a component sits in, and its parts' forms. */
-const FormContext = createContext<{ form: string; parts?: Readonly<Record<string, string>> } | null>(null);
+const FormContext = createContext<FormContextValue | null>(null);
 
 /** Hands `form` (and each part's form) to every component inside (the assembled Screen wraps each region in one). */
 export function FormProvider({ form, parts, children }: { form: string; parts?: Readonly<Record<string, string>>; children?: ReactNode }) {
@@ -25,11 +29,7 @@ export function FormProvider({ form, parts, children }: { form: string; parts?: 
  * TRANSPORT_FORMS, given, 'transport')` reads `parts.transport`.
  */
 export function useForm<Id extends string>(forms: Forms<Id>, given?: Id, part?: string): Id {
-  const chosen = useContext(FormContext);
-  if (given !== undefined) return given;
-  const id = part !== undefined && chosen?.parts?.[part] !== undefined ? chosen.parts[part] : chosen?.form;
-  const hit = forms.find((f) => f.id === id);
-  return hit ? hit.id : forms[0].id;
+  return pickForm(forms, useContext(FormContext), given, part);
 }
 
 /** The chosen form's id as it stands, or `null` outside an assembled screen. */

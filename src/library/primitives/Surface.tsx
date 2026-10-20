@@ -1,21 +1,12 @@
 import { createContext, useContext, useState, type AllHTMLAttributes, type CSSProperties, type ElementType, type ReactNode, type Ref } from 'react';
 import type { AmbientRegion, LayerName } from '../contract';
-import type { HueSlot } from '../components/core/hue';
 import { ShaderCanvas, compiledMaterial, useShaderSupport, type ShaderMaterialName, type ShaderSource } from '../shader';
 import { useThemeScope } from '../theme';
+import { holeView, opaqueView, surfaceView, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
 import './Surface.css';
 
-/** What a part is made of: the contract's four materials. */
-export const MATERIAL_ROLES = ['well', 'screen', 'key', 'handle'] as const;
-export type MaterialRole = (typeof MATERIAL_ROLES)[number];
-
-/** A lamp colour: a hue slot, a role hue, the accent or a signal colour. */
-export type LitSlot = HueSlot | 'role-1' | 'role-2' | 'accent' | 'success' | 'warning' | 'danger';
-export const LIT_SLOTS = [1, 2, 3, 4, 5, 'role-1', 'role-2', 'accent', 'success', 'warning', 'danger'] as const;
-
-/** A corner radius from the materials facet, a circle (`50%`: a round knob, lamp or dot), or none. */
-export type SurfaceRadius = 'control' | 'card' | 'input' | 'pill' | 'circle' | 'none';
-export const SURFACE_RADII = ['control', 'card', 'input', 'pill', 'circle', 'none'] as const;
+// The element's class and attributes are framework-free, in the model; `Surface.svelte` renders the same view.
+export { MATERIAL_ROLES, LIT_SLOTS, SURFACE_RADII, surfaceView, type MaterialRole, type LitSlot, type SurfaceRadius, type SurfaceModelProps } from './Surface.model';
 
 export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as'> {
   /** Forwarded to the rendered element (`any`: the element is whatever `as` names). */
@@ -96,7 +87,6 @@ export function Surface({
   children,
   ...rest
 }: SurfaceProps) {
-  const corners: SurfaceRadius = radius ?? (layer && !material ? 'card' : 'control');
   const scope = useThemeScope();
   const supported = useShaderSupport();
   const opaque = useContext(OpaqueContext);
@@ -104,19 +94,9 @@ export function Surface({
   const [failed, setFailed] = useState<ShaderMaterialName | ShaderSource | null>(null);
   const chosen = shader === false ? undefined : (shader ?? (layer ? scope?.facets.materials.shaders?.[layer] : undefined));
   const source = chosen && supported && !opaque && chosen !== failed ? (typeof chosen === 'string' ? compiledMaterial(chosen) : chosen) : null;
+  const view = surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }, source !== null);
   return (
-    <Tag
-      className={`lib-surface${className ? ` ${className}` : ''}`}
-      data-layer={layer}
-      data-material={material}
-      data-radius={corners}
-      data-pressed={pressed ? '' : undefined}
-      data-lit={lit === undefined ? undefined : typeof lit === 'number' ? `hue-${lit}` : lit}
-      data-border={border === 'strong' ? 'strong' : border ? 'true' : undefined}
-      data-ambient={ambient}
-      data-shader={source ? '' : undefined}
-      {...rest}
-    >
+    <Tag className={view.className} {...view.attrs} {...rest}>
       {source && chosen && (
         <ShaderCanvas
           className="lib-surface__shader"
@@ -148,7 +128,7 @@ const OpaqueContext = createContext(false);
 export function Opaque({ children, className, style }: { children?: ReactNode; className?: string; style?: CSSProperties }) {
   return (
     <OpaqueContext.Provider value={true}>
-      <div className={`lib-opaque${className ? ` ${className}` : ''}`} style={style}>
+      <div className={opaqueView(className).className} style={style}>
         {children}
       </div>
     </OpaqueContext.Provider>
@@ -160,8 +140,9 @@ export function Opaque({ children, className, style }: { children?: ReactNode; c
  * ground shows through. It paints nothing; panels over it go in an `Opaque` scope.
  */
 export function Hole({ className, style, children, name }: { className?: string; style?: CSSProperties; children?: ReactNode; name?: string }) {
+  const view = holeView(className, name);
   return (
-    <div className={`lib-hole${className ? ` ${className}` : ''}`} data-part="hole" aria-label={name} role={name ? 'img' : undefined} style={style}>
+    <div className={view.className} {...view.attrs} style={style}>
       {children}
     </div>
   );

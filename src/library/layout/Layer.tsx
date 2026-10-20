@@ -1,6 +1,7 @@
 import type { CSSProperties, ElementType, ReactNode } from 'react';
 import type { AmbientRegion, LayerName } from '../contract';
 import { Surface, type SurfaceProps } from '../primitives/Surface';
+import { layerSurface } from './Layer.model';
 
 // Opaque and Hole are primitives now (primitives/Surface.tsx); re-exported so imports from here keep working.
 export { Opaque, Hole } from '../primitives/Surface';
@@ -29,5 +30,5 @@ export interface LayerProps {
  * @deprecated Use `<Surface layer=…>` (primitives/Surface.tsx).
  */
 export function Layer({ level, className, ...rest }: LayerProps) {
-  return <Surface layer={level} radius="card" className={`lib-layer${className ? ` ${className}` : ''}`} {...(rest as Omit<SurfaceProps, 'layer' | 'className'>)} />;
+  return <Surface {...layerSurface({ level, className })} {...(rest as Omit<SurfaceProps, 'layer' | 'className'>)} />;
 }
