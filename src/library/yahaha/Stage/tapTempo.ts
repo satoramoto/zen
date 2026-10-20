@@ -22,3 +22,20 @@ export function tapTempo(taps: readonly number[], now: number): { taps: number[]
   const mean = (kept[kept.length - 1] - kept[0]) / (kept.length - 1);
   return { taps: kept, bpm: Math.round(60000 / mean) };
 }
+
+/** A run of taps as a store: `tap(now)` adds one and returns the tempo the taps give, if any. */
+export interface TapTempo {
+  tap(now: number): number | undefined;
+}
+
+/** A tap store, framework-free: the Stage keeps one per mounted screen (a ref in React, a constant in Svelte). */
+export function createTapTempo(): TapTempo {
+  let taps: number[] = [];
+  return {
+    tap(now) {
+      const next = tapTempo(taps, now);
+      taps = next.taps;
+      return next.bpm;
+    },
+  };
+}

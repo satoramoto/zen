@@ -1,89 +1,28 @@
-import { useRef, type CSSProperties } from 'react';
-import type { Placed, Placement } from '../../layout/assembly/types';
+import { useState, type ReactNode } from 'react';
+import type { Placed } from '../../layout/assembly/types';
 import { useScopePrinciples } from '../../layout/assembly/AssembledScreen';
 import { Region } from '../../layout/Region';
 import { Screen } from '../../layout/Screen';
+import { reactStyle } from '../../layout/style';
 import { AppBar, type AppBarProps } from '../AppBar/AppBar';
-import { Display, type DisplayProps } from '../Display/Display';
-import { FaderBankRegion, type FaderBankProps } from '../FaderBank/FaderBank';
-import { Keys, type KeysProps } from '../../components/music/Keys/Keys';
-import { KnobBankRegion, type KnobBankProps } from '../KnobBank/KnobBank';
-import { PadBankRegion, type PadBankProps } from '../PadBank/PadBank';
-import { SongForm, type SongFormProps } from '../SongForm/SongForm';
-import { StatusLine, type StatusLineProps } from '../StatusLine/StatusLine';
-import { pressSectionPad, sectionPads, SECTIONS_BANK } from './sectionPads';
-import { STAGE_SCALED_SPEC, STAGE_SPEC, STAGE_SPLIT_SCALED_SPEC, STAGE_SPLIT_SPEC } from './Stage.spec';
-import { tapTempo } from './tapTempo';
+import { Display } from '../Display/Display';
+import { FaderBankRegion } from '../FaderBank/FaderBank';
+import { Keys } from '../../components/music/Keys/Keys';
+import { KnobBankRegion } from '../KnobBank/KnobBank';
+import { PadBankRegion } from '../PadBank/PadBank';
+import { SongForm } from '../SongForm/SongForm';
+import { StatusLine } from '../StatusLine/StatusLine';
+import { stageKeysWidth, stagePads, stageTap, stageView, type StageModelProps } from './Stage.model';
+import { createTapTempo } from './tapTempo';
 import './Stage.css';
 
-/** The app's tooltip action, handed to every region. */
-export type StageTipAction = (node: HTMLElement, key: string) => void | { update?: (key: string) => void; destroy?: () => void };
+export { TEMPO_MAX, TEMPO_MIN, type StageFit, type StageLayout, type StageModelProps, type StageTipAction } from './Stage.model';
 
-/** The slowest and fastest tempo a tap may set. */
-export const TEMPO_MIN = 40;
-export const TEMPO_MAX = 280;
-
-export interface StageProps {
+/** The Stage's props (`StageModelProps`, labels as React nodes); the app bar may add its `end` controls. */
+export interface StageProps extends Omit<StageModelProps<ReactNode>, 'appBar'> {
   /** The top bar: pages, the global switches (Metronome and its settings, Unison, Help, Panic), health. */
   appBar: Omit<AppBarProps, 'width' | 'nowPlaying' | 'tipAction'>;
-  /**
-   * The hero: style, One Touch, section now and next, chord, tempo and the screen's one Tap, beat.
-   * Its `parts` column is never shown here (the mixer names every part's sound). `onTap` is
-   * called on each tap; once two or more taps are in time the Stage asks `onTempo` for their tempo.
-   * Its form (`full`, `compact`, `minimal`) is the screen's choice.
-   */
-  display: Omit<DisplayProps, 'parts' | 'tipAction' | 'density' | 'form'>;
-  /**
-   * The song's state and the screen's one transport cluster. The Stage draws no song form strip:
-   * the transport region reads it, and the Pads region's Sections bank draws the sections from it.
-   */
-  songForm: Omit<SongFormProps, 'tipAction'>;
-  /** The mixer. */
-  faders: Omit<FaderBankProps, 'tipAction'>;
-  /** The eight knobs and their pages. */
-  knobs: Omit<KnobBankProps, 'tipAction'>;
-  /**
-   * The sixteen pads and their banks; their form (two rows of eight, or one of sixteen) is the
-   * screen's. While the chosen bank is `Sections`, its pads come from `songForm` (`sectionPads`)
-   * and their presses go to `songForm`'s callbacks and the hero's Tap; `pads` and `onPress` are
-   * used only for the other banks.
-   */
-  pads: Omit<PadBankProps, 'tipAction' | 'columns'>;
-  /** The keyboard: range, split, held notes. Its width follows the screen. */
-  keys: Omit<KeysProps, 'width' | 'tipAction'>;
-  /** The status line: in the screen's fixed footer, under the keys, in every layout. */
-  status: Omit<StatusLineProps, 'width'>;
-  /** The app's tooltip action, passed to every region. */
-  tipAction?: StageTipAction;
-  /** The screen's size in px. Unset, it fills its container's width and the viewport's height. */
-  width?: number;
-  height?: number;
-  /**
-   * Which spec the screen assembles (`Stage.spec.ts`). `stacked` (the default): the hero with the
-   * transport beside it, then the mixer beside the knobs over the pads. `split`: the hero across
-   * the top, and the transport down the right-hand side beside the knobs and pads.
-   */
-  layout?: StageLayout;
-  /**
-   * How the 16:9 screen meets the window. `contain` (the default, the app): it is laid out in the
-   * largest 16:9 room inside the window, stepping forms down as it shrinks. `scale` (previews and
-   * stories): it is laid out once at the 1920 × 1080 board and drawn scaled to that room.
-   */
-  fit?: StageFit;
-  /** Called with each new placement (the solver's forms, sizes and zoom), for tests and inspectors. */
-  onPlacement?: (placement: Placement) => void;
 }
-
-/** The Stage's top arrangements: see `StageProps.layout`. */
-export type StageLayout = 'split' | 'stacked';
-
-/** How the Stage meets the window: see `StageProps.fit`. */
-export type StageFit = 'contain' | 'scale';
-
-const SPECS = {
-  stacked: { contain: STAGE_SPEC, scale: STAGE_SCALED_SPEC },
-  split: { contain: STAGE_SPLIT_SPEC, scale: STAGE_SPLIT_SCALED_SPEC },
-} as const;
 
 /**
  * Stage: the whole app on one screen, what a player looks at while playing live.
@@ -127,37 +66,23 @@ const SPECS = {
  * **Kept.** The original's regions and every one of their callbacks, passed straight through;
  * the 1217 × 752 small screen (now a 16:9 room inside it; the board is 1920 × 1080); the keys
  * spanning the full width; the tap tempo rule (two or more taps in time, the last four count).
+ *
+ * The derivations are `Stage.model.ts`'s (`Stage.svelte` draws the same); this renders them.
  */
-export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout = 'stacked', fit = 'contain', onPlacement }: StageProps) {
-  const taps = useRef<number[]>([]);
+export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, status, tipAction, width, height, layout, fit, onPlacement }: StageProps) {
+  const [tapper] = useState(createTapTempo);
   const { inset } = useScopePrinciples().plate;
-
-  const onTap = () => {
-    display.onTap?.();
-    const next = tapTempo(taps.current, performance.now());
-    taps.current = next.taps;
-    if (next.bpm !== undefined) display.onTempo?.(Math.min(TEMPO_MAX, Math.max(TEMPO_MIN, next.bpm)));
-  };
-
-  // The Sections bank mirrors the hardware: its pads are drawn from the song form's props (never
-  // from `pads.pads`), and a press does what that step or key does in the strip and the transport.
-  const onSections = pads.banks?.[pads.bank ?? 0] === SECTIONS_BANK;
-  const shownPads: StageProps['pads'] = onSections
-    ? { ...pads, pads: sectionPads(songForm), lit: songForm.lit ?? pads.lit, onPress: (i) => pressSectionPad(i, { ...songForm, onTap }) }
-    : pads;
-
-  const size: CSSProperties = {};
-  if (width !== undefined) size.width = `${width}px`;
-  if (height !== undefined) size.height = `${height}px`;
-  const room = width !== undefined && height !== undefined ? { w: width, h: height } : undefined;
+  const view = stageView({ width, height, layout, fit });
+  const onTap = () => stageTap(display, tapper, performance.now());
+  const shownPads = stagePads(pads, songForm, onTap);
 
   return (
-    <div className="yh-stage" data-part="root" style={size} data-layout={layout} data-fit={fit}>
+    <div className={view.className} {...view.attrs} style={reactStyle(view.style)}>
       <Screen
         name="Stage"
         className="yh-stage__screen"
-        spec={SPECS[layout][fit]}
-        room={room}
+        spec={view.spec}
+        room={view.room}
         onPlacement={onPlacement}
         regions={{
           bar: <AppBar {...appBar} tipAction={tipAction} />,
@@ -174,10 +99,9 @@ export function Stage({ appBar, display, songForm, faders, knobs, pads, keys, st
           mixer: <FaderBankRegion {...faders} tipAction={tipAction} />,
           knobs: <KnobBankRegion {...knobs} tipAction={tipAction} />,
           pads: <PadBankRegion {...shownPads} tipAction={tipAction} />,
-          // The keys take the width the solver gave their region, less its plate.
           keys: (_form: string, placed: Placed) => (
             <Region name="Keyboard">
-              <Keys {...keys} ruler={false} width={Math.max(0, placed.rect.w - inset.left - inset.right)} tipAction={tipAction} />
+              <Keys {...keys} ruler={false} width={stageKeysWidth(placed, inset)} tipAction={tipAction} />
             </Region>
           ),
           status: <StatusLine {...status} />,
