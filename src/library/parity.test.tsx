@@ -133,6 +133,11 @@ import { knobBankStories } from './yahaha/KnobBank/KnobBank.fixtures';
 import { PadBank } from './yahaha/PadBank/PadBank';
 import PadBankSvelte from './yahaha/PadBank/PadBank.svelte';
 import { padBankStories } from './yahaha/PadBank/PadBank.fixtures';
+import { describe, expect, it } from 'vitest';
+import { reactDom, svelteDom } from './parity';
+import { Stage } from './yahaha/Stage/Stage';
+import StageSvelte from './yahaha/Stage/Stage.svelte';
+import { stageStories } from './yahaha/Stage/Stage.fixtures';
 
 parity('Text', Text, TextSvelte, textStories);
 parity('Stack', Stack, StackSvelte, stackStories);
@@ -180,3 +185,25 @@ parity('SongForm', SongForm, SongFormSvelte, songFormStories);
 parity('FaderBank', FaderBank, FaderBankSvelte, faderBankStories);
 parity('KnobBank', KnobBank, KnobBankSvelte, knobBankStories);
 parity('PadBank', PadBank, PadBankSvelte, padBankStories);
+
+// The Stage holds Regions with views, whose ids are React's `useId` and Svelte's `$props.id`: each
+// distinct id is masked by its order of first appearance, so the references still have to agree.
+const maskIds = (dom: string) => {
+  const seen = new Map<string, string>();
+  return dom.replace(/ (id|aria-controls|aria-labelledby|aria-describedby|for)="([^"]*)"/g, (_, name: string, value: string) => {
+    const ids = value.split(' ').map((id) => {
+      if (!seen.has(id)) seen.set(id, `id${seen.size}`);
+      return seen.get(id);
+    });
+    return ` ${name}="${ids.join(' ')}"`;
+  });
+};
+describe('Stage: React and Svelte draw the same DOM (ids masked)', () => {
+  for (const [story, fixture] of Object.entries(stageStories)) {
+    it(story, () => {
+      const expected = maskIds(reactDom(Stage, fixture.args ?? {}));
+      expect(expected).not.toBe('');
+      expect(maskIds(svelteDom(StageSvelte, fixture.args ?? {}))).toBe(expected);
+    });
+  }
+});

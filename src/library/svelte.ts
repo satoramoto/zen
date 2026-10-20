@@ -103,6 +103,8 @@ import KnobBankSvelte from './yahaha/KnobBank/KnobBank.svelte';
 import KnobBankRegionSvelte from './yahaha/KnobBank/KnobBankRegion.svelte';
 import PadBankSvelte from './yahaha/PadBank/PadBank.svelte';
 import PadBankRegionSvelte from './yahaha/PadBank/PadBankRegion.svelte';
+import StageSvelte from './yahaha/Stage/Stage.svelte';
+import type { StageModelProps } from './yahaha/Stage/Stage.model';
 import type { DisplayModelProps } from './yahaha/Display/Display.model';
 import type { SongFormProps as SongFormModelProps } from './yahaha/SongForm/SongForm.model';
 import type { FaderBankModelProps, FaderBankRegionModelProps } from './yahaha/FaderBank/FaderBank.model';
@@ -336,3 +338,10 @@ export interface PadBankRegionProps extends Omit<PadBankRegionModelProps, 'class
   class?: string;
 }
 export const PadBankRegion = PadBankRegionSvelte as unknown as Component<PadBankRegionProps>;
+
+// Yahaha's Stage: the whole app on one assembled screen, and its shared logic.
+export type StageProps = StageModelProps<string | Snippet>;
+export const Stage = StageSvelte as unknown as Component<StageProps>;
+export { TEMPO_MAX, TEMPO_MIN, STAGE_SPECS, type StageFit, type StageLayout, type StageTipAction } from './yahaha/Stage/Stage.model';
+export { tapTempo, createTapTempo, TAP_COUNT, TAP_RESET_MS, type TapTempo } from './yahaha/Stage/tapTempo';
+export { sectionPads, pressSectionPad, SECTIONS_BANK, SECTION_PAD_LAYOUT, type SectionPadAction, type SectionPadHandlers } from './yahaha/Stage/sectionPads';
