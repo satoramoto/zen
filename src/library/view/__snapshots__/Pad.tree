@@ -353,3 +353,58 @@
 <button aria-label="Start / Stop (pad 16)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="start" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="running" data-text-leading="snug" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
   <span class="yh-pad__label" data-part="label">
     "Start / Stop"
+
+## Chosen
+<button aria-label="Single, chosen (pad 1)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="chosen" data-text-leading="snug" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Single"
+
+## Lamp
+<button aria-label="OTS Link, on (pad 9)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="lamp" data-text-leading="snug" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "OTS Link"
+
+## Unavailable
+<button aria-disabled="true" aria-label="Manual Bass, unavailable (pad 9)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="unavailable" data-text-leading="snug" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":true,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Manual Bass"
+
+## Faces #1
+<button aria-label="Fingered, idle" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Fingered"
+
+## Faces #2
+<button aria-label="Single, chosen" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="chosen" data-text-leading="snug" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Single"
+
+## Faces #3
+<button aria-label="Upper, on (lamp)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="lamp" data-text-leading="snug" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Upper"
+
+## Faces #4
+<button aria-disabled="true" aria-label="Manual Bass, unavailable" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="unavailable" data-text-leading="snug" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":true,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Manual Bass"
+
+## Faces #5
+<button aria-label="Auto Fill, on (ring)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## Faces #6
+<button aria-label="Quick 1, chosen (hue 1)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="1" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="chosen" data-text-leading="snug" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 1"
+
+## Faces #7
+<button aria-label="Quick 2, on (lamp, hue 2)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="2" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="lamp" data-text-leading="snug" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 2"
+
+## Faces #8
+<button aria-disabled="true" aria-label="Quick 3, unavailable (hue 3)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="3" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="unavailable" data-text-leading="snug" data-tone="hue-3" data-util="true" type="button" use:padPress={"disabled":true,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 3"

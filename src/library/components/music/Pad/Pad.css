@@ -16,6 +16,8 @@
   --yh-pad-edge: var(--border-strong);
   /* The waiting and on ring's weight, border included: one weight across Button, LampButton and Pad. */
   --yh-wait-ring: calc(var(--border-width) * 2);
+  /* How far an unavailable pad dims its whole rest face. */
+  --yh-pad-dim: 0.45;
 
   position: relative;
   display: flex;
@@ -152,6 +154,43 @@
   pointer-events: none;
 }
 
+/* Chosen: the picked option (a fingering, a mode). The solid `--selected` block with its text, the
+   key pressed in, but no bloom: it is set, not sounding. Its tone is always neutral (no hue). */
+.yh-pad[data-state='chosen'] {
+  border-color: var(--selected);
+  background: var(--selected);
+  color: var(--selected-text);
+  box-shadow: var(--mat-key-pressed);
+}
+
+/* Lamp: a switch that is on (Kbd Transpose, OTS Link, Upper). The key face stays, pressed in; the
+   edge, a ring and a lit dot top-left take `--success` (the lamp's lit colour, its tone). */
+.yh-pad[data-state='lamp'] {
+  border-color: var(--yh-pad-fill);
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  color: var(--text-1);
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-wait-ring) - var(--border-width)) var(--yh-pad-fill),
+    var(--mat-key-pressed);
+}
+.yh-pad[data-state='lamp']::after {
+  content: '';
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-1);
+  width: calc(var(--space-1) * 1.5);
+  height: calc(var(--space-1) * 1.5);
+  border-radius: var(--radius-pill);
+  --lit: var(--yh-pad-fill);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+  pointer-events: none;
+}
+
+/* Unavailable: here but can't apply now (Manual Bass off its fingering). The resting key, solid
+   edge, dimmed whole: visible, plainly not pressable (it is `aria-disabled`, so no hover or press). */
+.yh-pad[data-state='unavailable'] { opacity: var(--yh-pad-dim); }
+
 /* Waiting (next, armed): the wait ring and a faint wash of it; the label stays primary text. */
 .yh-pad[data-state='next'],
 .yh-pad[data-state='armed'] {
@@ -191,6 +230,13 @@
   border-style: dashed;
   color: var(--text-3);
 }
+/* Unavailable keeps its rest face (solid edge, its label colour) under the dimming, so it reads as
+   "here, not now" rather than the dashed "not here". */
+.yh-pad[aria-disabled='true'][data-state='unavailable'] {
+  border-style: solid;
+  color: var(--text-1);
+}
+.yh-pad[aria-disabled='true'][data-state='unavailable'][data-util] { color: var(--text-2); }
 
 /* NEXT / ARMED: a small solid chip out of the label's flow, never over the label.
    --yh-pad-tag-h is the chip's height (its caption line). */

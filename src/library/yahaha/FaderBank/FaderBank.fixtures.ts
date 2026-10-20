@@ -297,6 +297,13 @@ export const faderBankStories = defineFixtures<FaderBankRegionModelProps>()({
       partLamps: partLamps.map((lamp): BankLamp => ({ ...lamp, on: false, label: 'Off' })),
     },
   },
+  // A function lamp in the `ok` hue (running / success): Harm/Arp lit in `--success`.
+  LampOk: {
+    args: {
+      ...boardArgs,
+      functionLamps: functionLamps.map((lamp): BankLamp => (lamp.id === 'harmArp' ? { ...lamp, on: true, hue: 'ok', name: 'Harmony/Arpeggio on (running)' } : lamp)),
+    },
+  },
   Live: { args: boardArgs },
 })
 

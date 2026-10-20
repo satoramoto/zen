@@ -7,6 +7,7 @@ import PadSvelte from './Pad.svelte';
 import {
   BANK,
   BANK_RING,
+  FACES,
   padArgTypes,
   padBankSample,
   padBase,
@@ -231,3 +232,46 @@ export const OnRing: Story = {
 
 /** New: the Bank's sixteen pads with every pad but the sections on `onFace="ring"`: the playing section and Start / Stop are the only fills. */
 export const BankRing: Story = treeStory(() => ({ tree: padBankSample(BANK_RING) }));
+
+/** New: `chosen`, the picked option (a fingering, Stop ACMP's mode): the solid `--selected` block, no bloom, pressed. */
+export const Chosen: Story = {
+  ...story(s.Chosen),
+  play: async ({ canvasElement }) => {
+    const pad = within(canvasElement).getByRole('button', { name: 'Single, chosen (pad 1)' });
+    await expect(pad).toHaveAttribute('aria-pressed', 'true');
+    await expect(pad).toHaveAttribute('data-tone', 'neutral');
+  },
+};
+
+/** New: `lamp`, a switch that is on (Kbd Transpose, OTS Link, Upper): a lit `--success` ring and dot on the key face. */
+export const Lamp: Story = {
+  ...story(s.Lamp),
+  play: async ({ canvasElement }) => {
+    const pad = within(canvasElement).getByRole('button', { name: 'OTS Link, on (pad 9)' });
+    await expect(pad).toHaveAttribute('aria-pressed', 'true');
+    await expect(pad).toHaveAttribute('data-tone', 'success');
+  },
+};
+
+/** New: `unavailable`, here but unable to apply now (Manual Bass): the rest face dimmed, still focusable, a press does nothing. */
+export const Unavailable: Story = {
+  ...story(s.Unavailable),
+  args: { ...s.Unavailable.args, onPress: fn() },
+  play: async ({ canvasElement, args }) => {
+    const pad = within(canvasElement).getByRole('button', { name: 'Manual Bass, unavailable (pad 9)' });
+    await expect(pad).toHaveAttribute('aria-disabled', 'true');
+    await expect(pad).toHaveAttribute('aria-pressed', 'false');
+    pad.click();
+    await expect(args.onPress).not.toHaveBeenCalled();
+  },
+};
+
+/** New: chosen, lamp and unavailable beside idle and a ring-on pad, then each on a hued pad: the state wins, no hue shows. */
+export const Faces: Story = {
+  ...treeStory(() => ({ tree: padBankSample(FACES) })),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('button', { name: 'Quick 1, chosen (hue 1)' })).toHaveAttribute('data-tone', 'neutral');
+    await expect(canvas.getByRole('button', { name: 'Quick 2, on (lamp, hue 2)' })).toHaveAttribute('data-tone', 'success');
+  },
+};

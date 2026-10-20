@@ -33,7 +33,11 @@ export interface PadItem {
   family: BankPadFamily;
   /** A transport pad (Sync Start, Auto Fill, Tap, Sync Stop, Start / Stop): `--transport` (the Pad's role 2) while active, neutral at rest. */
   transport?: boolean;
-  /** The face: `playing` is on / loaded / chosen, `dark` is absent or an empty slot, `armed` / `next` wait. */
+  /**
+   * The face: `playing` is on / loaded, `chosen` a picked option (a fingering, Stop ACMP's mode),
+   * `lamp` a switch that is on (Upper, OTS Link), `unavailable` here but unable to apply (not
+   * pressable), `dark` absent or an empty slot, `armed` / `next` wait.
+   */
   state: PadState;
   /** Nothing is assigned to this pad on this bank: drawn as a quiet mark, not a key, and not pressable. */
   empty?: boolean;
