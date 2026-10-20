@@ -1,0 +1,83 @@
+## Board
+<div aria-describedby="upper-hint" aria-labelledby="upper-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="upper-label" title="Upper">
+    "Upper"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+  <span class="yh-settings-row__hint" data-part="hint" id="upper-hint" title="Chords from the right hand">
+    "Chords from the right hand"
+
+## DisabledLamp
+<div aria-describedby="manual-bass-hint" aria-labelledby="manual-bass-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="manual-bass-label" title="Manual Bass">
+    "Manual Bass"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+  <span class="yh-settings-row__hint" data-part="hint" id="manual-bass-hint" title="Works with Upper on">
+    "Works with Upper on"
+
+## Tabs
+<div aria-labelledby="main-timing-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="main-timing-label" title="Main timing">
+    "Main timing"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+
+## Slider
+<div aria-labelledby="chord-settle-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="chord-settle-label" title="Chord settle">
+    "Chord settle"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+
+## LongLabel
+<div aria-describedby="fingered-hint" aria-labelledby="fingered-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="fingered-label" title="Fingered on bass with split">
+    "Fingered on bass with split"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+  <span class="yh-settings-row__hint" data-part="hint" id="fingered-hint" title="Lowest note of the left hand sets the bass, the rest the chord">
+    "Lowest note of the left hand sets the bass, the rest the chord"
+
+## Stack #1
+<div aria-describedby="upper-hint" aria-labelledby="upper-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="upper-label" title="Upper">
+    "Upper"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+  <span class="yh-settings-row__hint" data-part="hint" id="upper-hint" title="Chords from the right hand">
+    "Chords from the right hand"
+
+## Stack #2
+<div aria-describedby="manual-bass-hint" aria-labelledby="manual-bass-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="manual-bass-label" title="Manual Bass">
+    "Manual Bass"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+  <span class="yh-settings-row__hint" data-part="hint" id="manual-bass-hint" title="Works with Upper on">
+    "Works with Upper on"
+
+## Stack #3
+<div aria-labelledby="main-timing-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="main-timing-label" title="Main timing">
+    "Main timing"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+
+## Stack #4
+<div aria-describedby="chord-settle-hint" aria-labelledby="chord-settle-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="chord-settle-label" title="Chord settle">
+    "Chord settle"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+  <span class="yh-settings-row__hint" data-part="hint" id="chord-settle-hint" title="Wait before reading the chord">
+    "Wait before reading the chord"
+
+## Stack #5
+<div aria-describedby="pedal-hint" aria-labelledby="pedal-label" class="lib-text lib-tone yh-settings-row" data-part="root" data-role="body" data-tabular="" role="group" style="--yh-settings-label-w: 120px">
+  <span class="yh-settings-row__label" data-part="label" id="pedal-label" title="Pedal">
+    "Pedal"
+  <span class="yh-settings-row__control" data-part="control">
+    {children}
+  <span class="yh-settings-row__hint" data-part="hint" id="pedal-hint" title="Fader button 7">
+    "Fader button 7"

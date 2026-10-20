@@ -1,10 +1,12 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useId } from 'react';
-import { Text } from '../../../primitives/Text';
+import { Tree } from '../../../view/Tree';
 import { settingsRowView, type SettingsRowModelProps } from './SettingsRow.model';
+import '../../../primitives/Text.css';
 import './SettingsRow.css';
 
-// The props and the row are framework-free, in the model; `SettingsRow.svelte` renders the same view.
+// The props and the row are framework-free, in the model; this file and `SettingsRow.svelte` only
+// hand its tree to their `Tree`, with the control as the `children` slot and their own generated id.
 export type { SettingsRowModelProps } from './SettingsRow.model';
 
 export interface SettingsRowProps extends SettingsRowModelProps {
@@ -42,20 +44,5 @@ export interface SettingsRowProps extends SettingsRowModelProps {
  * - `--yh-settings-control-w`: the control column's minimum; a page sets it once on the stack so every hint starts on one line.
  */
 export function SettingsRow({ children, ...props }: SettingsRowProps) {
-  const view = settingsRowView(props, useId());
-  return (
-    <Text as="div" {...view.text} className={view.root.className} {...view.root.attrs} style={view.style as CSSProperties}>
-      <span className={view.label.className} {...view.label.attrs}>
-        {view.label.text}
-      </span>
-      <span className={view.control.className} {...view.control.attrs}>
-        {children}
-      </span>
-      {view.hint && (
-        <span className={view.hint.className} {...view.hint.attrs}>
-          {view.hint.text}
-        </span>
-      )}
-    </Text>
-  );
+  return <Tree tree={settingsRowView(props, useId())} slots={{ children }} />;
 }

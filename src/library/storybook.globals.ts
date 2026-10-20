@@ -42,6 +42,25 @@ export const libraryGlobalTypes = {
   materials: facetMenu('Materials', 'component', materials),
 };
 
+/** Zen's own Storybook only (not in `libraryGlobalTypes`, so an app's Storybook doesn't get it): which
+ *  renderer draws a component converted to a view tree, React's `Tree` or Svelte's (`withRenderer`,
+ *  `src/library/stories/story.tsx`). Other stories draw in React either way. */
+export const rendererGlobalTypes = {
+  renderer: {
+    description: 'Which renderer draws the components drawn by a view tree',
+    toolbar: {
+      title: 'Renderer',
+      icon: 'transfer',
+      dynamicTitle: true,
+      items: [
+        { value: 'react', title: 'Renderer: React' },
+        { value: 'svelte', title: 'Renderer: Svelte' },
+      ],
+    },
+  },
+};
+export const rendererInitialGlobals = { renderer: 'react' };
+
 /** The toolbar's starting choice: the first pack, the system's mode, every facet from the pack. */
 export const libraryInitialGlobals = {
   theme: packs[0].id,

@@ -5,15 +5,18 @@ import { EveryPack, withLibraryTheme } from '../../../storybook';
 import type { ModeChoice } from '../../../theme';
 import { packs } from '../../../themes/packs';
 import { Icon as IconGlyph } from '../../../primitives/Icon';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { Button, type ButtonProps } from './Button';
+import ButtonSvelte from './Button.svelte';
 import { FACE_HUES, buttonArgTypes, buttonStories as s, faceRow, sizeRows } from './Button.fixtures';
 import { instances } from '../../../fixtures';
 
-// Every story's args come from Button.fixtures.ts, which the Svelte stories and the parity test share.
+// Every story is built from Button.fixtures.ts (`story(s.Name)`), which the tree snapshot shares;
+// the toolbar's Renderer draws it with React's or Svelte's `Tree`. The plays are the behaviours.
 const meta = {
   title: 'Design OS/Components/Core/Button',
   component: Button,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: { onPress: fn(), onHold: fn(), onLongPress: fn(), onLongRelease: fn(), tipAction: fn() },
@@ -22,6 +25,7 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Button, ButtonSvelte);
 
 /** A primary-button pointer event's init (jsdom has no pointer capture). */
 const pointer = (pointerId: number) => ({ pointerId, button: 0, clientX: 0, clientY: 0 });
@@ -30,7 +34,7 @@ const pastLongPress = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 /** The first Button on the Stage board: the Metronome ▾ caret, joined to its lamp, closed. */
 export const Board: Story = {
-  args: s.Board.args,
+  ...story(s.Board),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Metronome settings' });
     await expect(button).toHaveAttribute('aria-haspopup', 'dialog');
@@ -47,7 +51,7 @@ export const Board: Story = {
 
 /** Help mode's ?: a square key at rest (hairline outline, ink label), a switch that is off. */
 export const Icon: Story = {
-  args: s.Icon.args,
+  ...story(s.Icon),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Help mode' });
     await expect(button).toHaveAttribute('aria-pressed', 'false');
@@ -56,13 +60,11 @@ export const Icon: Story = {
 };
 
 /** A band button switched on: Fade while fading, a ring and a lit dot in `--selected` (no fill: fading isn't sounding). */
-export const BandOn: Story = {
-  args: s.BandOn.args,
-};
+export const BandOn: Story = story(s.BandOn);
 
 /** The on face: help mode switched on, a ring and a lit dot in `--selected`. */
 export const On: Story = {
-  args: s.On.args,
+  ...story(s.On),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Help mode' });
     await expect(button).toHaveAttribute('aria-pressed', 'true');
@@ -72,7 +74,7 @@ export const On: Story = {
 
 /** The chosen face: the applied One Touch, ink and a `--selected` rule along the bottom on the rest outline. */
 export const Chosen: Story = {
-  args: s.Chosen.args,
+  ...story(s.Chosen),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'One Touch 2, applied' });
     await expect(button).toHaveAttribute('data-face', 'chosen');
@@ -81,13 +83,11 @@ export const Chosen: Story = {
 };
 
 /** A band button: a wide transport key, the label left-aligned (Stop). */
-export const Band: Story = {
-  args: s.Band.args,
-};
+export const Band: Story = story(s.Band);
 
 /** Start / Stop running (`bar`): the on face in `--success`, lit with the palette's bloom. */
 export const Running: Story = {
-  args: s.Running.args,
+  ...story(s.Running),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Start / Stop, running' });
     await expect(button).toHaveAttribute('data-bar');
@@ -99,7 +99,7 @@ export const Running: Story = {
 
 /** Start / Stop stopped (`bar: false`): the rest face. */
 export const Stopped: Story = {
-  args: s.Stopped.args,
+  ...story(s.Stopped),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Start / Stop' });
     await expect(button).not.toHaveAttribute('data-bar');
@@ -111,7 +111,7 @@ export const Stopped: Story = {
 
 /** The waiting face: Fade armed, a double-weight ring over a faint tint, the label in ink. */
 export const Waiting: Story = {
-  args: s.Waiting.args,
+  ...story(s.Waiting),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Fade, armed' });
     await expect(button).toHaveAttribute('data-face', 'waiting');
@@ -121,13 +121,7 @@ export const Waiting: Story = {
 
 /** New: the waiting face's flash, both phases side by side; the parent drives `lit`, the label stays. */
 export const WaitingFlash: Story = {
-  render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-      {instances(s.WaitingFlash).map((item, i) => (
-        <Button key={i} {...args} {...item} />
-      ))}
-    </div>
-  ),
+  ...story(s.WaitingFlash),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Fade, armed, unlit' })).toHaveAttribute('data-lit', 'false');
@@ -143,13 +137,7 @@ export const WaitingFlash: Story = {
  * because running is a state.
  */
 export const Role2: Story = {
-  render: (args) => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' }}>
-      {instances(s.Role2).map((item, i) => (
-        <Button key={i} {...args} {...item} />
-      ))}
-    </div>
-  ),
+  ...story(s.Role2),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Start / Stop, stopped' })).toHaveAttribute('data-hue', 'role-2');
@@ -170,7 +158,7 @@ export const Role2: Story = {
 
 /** New: a tall primary key, Start / Stop leading the transport: two control rows high, the label at heading size. */
 export const Tall: Story = {
-  args: s.Tall.args,
+  ...story(s.Tall),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Start / Stop' });
     await expect(button).toHaveAttribute('data-tall', '');
@@ -179,7 +167,7 @@ export const Tall: Story = {
 
 /** Shown, not pressable: a dashed edge and a `--text-3` label, a not-allowed cursor. No press, hold or long press. */
 export const Disabled: Story = {
-  args: s.Disabled.args,
+  ...story(s.Disabled),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Audition (stop the band first)' });
     await expect(button).toHaveAttribute('aria-disabled', 'true');
@@ -199,7 +187,7 @@ export const Disabled: Story = {
 
 /** A section button, absent: the same dashed edge and `--text-3` label as every disabled key; the label still names the Fill key. */
 export const DisabledHue: Story = {
-  args: s.DisabledHue.args,
+  ...story(s.DisabledHue),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Fill up (none in this style)' });
     await expect(button).toHaveAttribute('data-face', 'disabled');
@@ -213,7 +201,7 @@ export const DisabledHue: Story = {
  * started the hold; a pointer click doesn't press, a keyboard click does; no long press.
  */
 export const Hold: Story = {
-  args: s.Hold.args,
+  ...story(s.Hold),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Tempo up (Scene Launch)' });
     await fireEvent.pointerDown(button, pointer(1));
@@ -251,7 +239,7 @@ export const Hold: Story = {
  * click that ends it is swallowed. A short click still presses; a right-click long-presses.
  */
 export const LongPress: Story = {
-  args: s.LongPress.args,
+  ...story(s.LongPress),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Stop' });
     await fireEvent.pointerDown(button, pointer(1));
@@ -272,25 +260,11 @@ const row = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var
 const grid = { display: 'grid', gap: 'var(--space-3)' } as const;
 
 /** New: the three ranks side by side. One primary per screen; secondary keys; quiet steps. */
-export const Hierarchy: Story = {
-  render: (args) => (
-    <div style={row}>
-      {instances(s.Hierarchy).map((item, i) => (
-        <Button key={i} {...args} {...item} />
-      ))}
-    </div>
-  ),
-};
+export const Hierarchy: Story = story(s.Hierarchy);
 
 /** New: the quiet toggle (a panel's JSON switch) off, chosen and disabled. Chosen, it takes the pack's chosen-tab face. */
 export const Quiet: Story = {
-  render: (args) => (
-    <div style={row}>
-      {instances(s.Quiet).map((item, i) => (
-        <Button key={i} {...args} {...item} />
-      ))}
-    </div>
-  ),
+  ...story(s.Quiet),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'JSON off' })).toHaveAttribute('data-face', 'off');

@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
-import { useLongPress } from '../Button/useLongPress';
-import { lampButtonView, lampToggle, type LampButtonModelProps } from './LampButton.model';
-import { Text } from '../../../primitives/Text';
+import { Tree } from '../../../view/Tree';
+import { lampButtonHandlers, lampButtonView, type LampButtonModelProps } from './LampButton.model';
+import '../../../primitives/Text.css';
 import './LampButton.css';
 
-// The props, faces and accessible name are framework-free, in the model; `LampButton.svelte` renders the same view.
+// The props, faces, accessible name and behaviour are framework-free, in the model and its stores;
+// this file and `LampButton.svelte` only hand the model's tree to their `Tree`.
 export type { LampHue, LampFace, TipAction } from './LampButton.model';
 
 export type LampButtonProps = LampButtonModelProps;
@@ -58,43 +58,7 @@ export type LampButtonProps = LampButtonModelProps;
  * - `--yh-wait-ring`: the on, armed and waiting ring's weight, one weight across Button, LampButton and Pad.
  */
 export function LampButton(props: LampButtonProps) {
-  const { tip, tipAction, onToggle, onLongPress, onLongRelease } = props;
-  const view = lampButtonView(props);
-  const ref = useRef<HTMLButtonElement>(null);
-
-  useLongPress(ref, { onLongPress, onLongRelease, disabled: !view.longPress });
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node || !tipAction || tip === undefined) return;
-    const handle = tipAction(node, tip);
-    return () => handle?.destroy?.();
-  }, [tipAction, tip]);
-
-  return (
-    <Text
-      as="button"
-      {...view.text}
-      ref={ref}
-      className={view.face.className}
-      style={view.minWidth === undefined ? undefined : { minWidth: view.minWidth }}
-      {...view.face.attrs}
-      onClick={() => {
-        const next = lampToggle(props);
-        if (next !== undefined) onToggle?.(next);
-      }}
-    >
-      <span className="yh-lampbutton__led" data-part="lamp" aria-hidden="true" />
-      <span className="yh-lampbutton__label" data-part="label">
-        {view.label}
-      </span>
-      {view.code && (
-        <Text {...view.code.text} className={view.code.className} {...view.code.attrs}>
-          {view.code.value}
-        </Text>
-      )}
-    </Text>
-  );
+  return <Tree tree={lampButtonView(props)} handlers={lampButtonHandlers(props)} />;
 }
 
 export default LampButton;

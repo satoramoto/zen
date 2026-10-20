@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { transformWithOxc } from 'vite';
 import type { Plugin } from 'vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 /** The Claude Code harness's engine-side TSX: JSX against the global `h` and `Fragment`, as the engine compiles it, never React's runtime. */
 const ENGINE_JSX = /\/src\/harness\/claude-code\/(kit|sample)\/.*\.tsx$/;
@@ -45,7 +46,8 @@ const config: StorybookConfig = {
   framework: { name: '@storybook/react-vite', options: {} },
   core: { disableTelemetry: true },
   viteFinal: async (config) => {
-    config.plugins = [engineJsx(), ...(config.plugins ?? [])];
+    // Svelte's plugin too: the Renderer toolbar draws view-tree components with the Svelte `Tree`.
+    config.plugins = [engineJsx(), ...(config.plugins ?? []), svelte()];
     config.resolve ??= {};
     // The harness's sample mod imports its atoms from 'claude-code', as a mod does: here, the bench's stand-in engine.
     config.resolve.alias = {

@@ -2,14 +2,18 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { instances } from '../../../fixtures';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { LampButton, type LampButtonProps } from './LampButton';
+import LampButtonSvelte from './LampButton.svelte';
 import { LAMP_FACES, LAMP_HUES, faceCell, joinRows, lampButtonArgTypes, lampButtonStories as s } from './LampButton.fixtures';
 
-// Every story's args come from LampButton.fixtures.ts, which the Svelte stories and the parity test share.
+// Every story is built from LampButton.fixtures.ts (`story(s.Name)`), which the tree snapshot
+// shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`. The layouts (MinWidth,
+// JoinStart, AllFaces) stay React.
 const meta = {
   title: 'Design OS/Components/Core/LampButton',
   component: LampButton,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: { label: 'Accomp', onToggle: fn(), onLongPress: fn(), onLongRelease: fn(), tipAction: fn() },
@@ -18,13 +22,14 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(LampButton, LampButtonSvelte);
 
 /** A fixture instance as LampButton props (every fixture carries a label). */
 const lamp = (props: object) => props as LampButtonProps;
 
 /** The first LampButton on the Stage board: Accomp, lit, with its Genos code (section row). */
 export const Board: Story = {
-  args: s.Board.args,
+  ...story(s.Board),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Accomp ACMP' });
     await expect(button).toHaveAttribute('aria-pressed', 'true');
@@ -36,7 +41,7 @@ export const Board: Story = {
 
 /** Lit: a double-weight outline in ink and a lit LED; the key stays raised, no fill (it isn't sounding). */
 export const On: Story = {
-  args: s.On.args,
+  ...story(s.On),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Accomp ACMP' });
     await expect(button).toHaveAttribute('aria-pressed', 'true');
@@ -46,7 +51,7 @@ export const On: Story = {
 
 /** Controlled: a click, Space or Enter asks for `!on` through `onToggle` and changes nothing itself. */
 export const Toggles: Story = {
-  args: s.Toggles.args,
+  ...story(s.Toggles),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Unison' });
     await userEvent.click(button);
@@ -65,7 +70,7 @@ export const Toggles: Story = {
 
 /** Shown, not pressable: a dashed, unfilled key with a hollow LED, 64 wide (a settings row's On/Off). */
 export const Disabled: Story = {
-  args: s.Disabled.args,
+  ...story(s.Disabled),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Manual Bass, works with Upper on' });
     await expect(button).toHaveAttribute('aria-disabled', 'true');
@@ -85,36 +90,36 @@ export const Disabled: Story = {
 
 /** Off: a quiet raised key with an unlit LED (Metronome, Unison). */
 export const Off: Story = {
-  args: s.Off.args,
+  ...story(s.Off),
 };
 
 /** A hued lamp, lit: the outline and LED in hue slot 1 (in Yahaha, a part's "On"). */
 export const HueOn: Story = {
-  args: s.HueOn.args,
+  ...story(s.HueOn),
   parameters: { layout: 'padded' },
 };
 
 /** A hued lamp, lit, in hue slot 2. */
 export const HueOn2: Story = {
-  args: s.HueOn2.args,
+  ...story(s.HueOn2),
   parameters: { layout: 'padded' },
 };
 
 /** A hued lamp, off: the key is neutral, the unlit LED keeps its hue (slot 3). */
 export const HueOff: Story = {
-  args: s.HueOff.args,
+  ...story(s.HueOff),
   parameters: { layout: 'padded' },
 };
 
 /** A hued lamp in slot 4, lit. */
 export const HueOn4: Story = {
-  args: s.HueOn4.args,
+  ...story(s.HueOn4),
   parameters: { layout: 'padded' },
 };
 
 /** A hued lamp, absent: dashed and unfilled, the hollow LED still in hue slot 1. */
 export const HueDisabled: Story = {
-  args: s.HueDisabled.args,
+  ...story(s.HueDisabled),
   parameters: { layout: 'padded' },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Channel 1 on (no sound loaded)' });
@@ -126,24 +131,24 @@ export const HueDisabled: Story = {
 
 /** A function lamp, off (Harm/Arp, L Hold, Looper). */
 export const FunctionOff: Story = {
-  args: s.FunctionOff.args,
+  ...story(s.FunctionOff),
   parameters: { layout: 'padded' },
 };
 
 /** A function lamp, latched: the neutral outline and a lit LED (Sound). */
 export const FunctionOn: Story = {
-  args: s.FunctionOn.args,
+  ...story(s.FunctionOn),
   parameters: { layout: 'padded' },
 };
 
 /** The running lamp: the solid success fill (Start / Stop), one of the few faces that fill, because the band is running. */
 export const Running: Story = {
-  args: s.Running.args,
+  ...story(s.Running),
 };
 
 /** New: a `role-2` lamp lit (in Yahaha, the metronome): the outline and LED in the second role hue. */
 export const Role2On: Story = {
-  args: s.Role2On.args,
+  ...story(s.Role2On),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Metronome' });
     await expect(button).toHaveAttribute('data-face', 'on');
@@ -153,24 +158,24 @@ export const Role2On: Story = {
 
 /** New: a `role-2` lamp off: a quiet key with a neutral unlit LED. A role-2 key wears its hue only while active. */
 export const Role2Off: Story = {
-  args: s.Role2Off.args,
+  ...story(s.Role2Off),
 };
 
 /** New: a `role-2` lamp armed: the waiting ring and blinking LED in the role hue. */
 export const Role2Waiting: Story = {
-  args: s.Role2Waiting.args,
+  ...story(s.Role2Waiting),
   parameters: { layout: 'padded' },
 };
 
 /** The record lamp, lit: the solid danger fill. */
 export const Recording: Story = {
-  args: s.Recording.args,
+  ...story(s.Recording),
   parameters: { layout: 'padded' },
 };
 
 /** The Looper looping: lit as running (success), since looping is playback. */
 export const Looping: Story = {
-  args: s.Looping.args,
+  ...story(s.Looping),
   parameters: { layout: 'padded' },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Looper, looping' });
@@ -181,7 +186,7 @@ export const Looping: Story = {
 
 /** Loop armed: a 2px ring and blinking LED in the running colour over a faint wash of it. */
 export const ArmedLoop: Story = {
-  args: s.ArmedLoop.args,
+  ...story(s.ArmedLoop),
   parameters: { layout: 'padded' },
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Looper, loop armed' });
@@ -192,7 +197,7 @@ export const ArmedLoop: Story = {
 
 /** Looper's Rec armed in the lamp row: the ring and blinking LED in record red. A click only asks. */
 export const Armed: Story = {
-  args: s.Armed.args,
+  ...story(s.Armed),
   parameters: { layout: 'padded' },
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Looper, rec armed. Long press: loop rec' });
@@ -208,7 +213,7 @@ export const Armed: Story = {
 
 /** Added: armed and pressed, Sync Start engaged and waiting for the first chord: the on outline with its LED blinking. */
 export const ArmedPressed: Story = {
-  args: s.ArmedPressed.args,
+  ...story(s.ArmedPressed),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Sync Start, waiting for a chord' });
     await expect(button).toHaveAttribute('data-face', 'armed');

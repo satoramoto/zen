@@ -1,9 +1,11 @@
-// Knob's model: its props and the view both renderers draw from them (classes, `data-*`, ARIA, the
-// arc and pointer geometry, which texts show). No framework: `Knob.tsx` (React) and `Knob.svelte`
-// (Svelte) both render `knobView`; the input is the `knobInput.ts` store beside it.
+// Knob's model: its props and the tree both renderers draw from them (classes, `data-*`, ARIA, the
+// arc and pointer geometry, which texts show, the `knob` store it binds). No framework: `Knob.tsx`
+// (React) and `Knob.svelte` (Svelte) both pass `knobView` and `knobHandlers` to their `Tree`; the
+// input is the `knobInput.ts` store beside it, registered as `knob` in `src/library/view/stores.ts`.
 import type { HueSlot } from '../../core/hue';
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+import { textView, type ElementView, type TextModelProps } from '../../../primitives/Text.model';
+import { h, wire, type Handlers, type Node } from '../../../view/Tree.model';
 import { BOX, R, START, arc, point, sweepOf } from './geometry';
 import { knobRootAttrs, type TipAction } from './knobInput';
 
@@ -37,37 +39,15 @@ export interface KnobModelProps {
   onstep?: (delta: number) => void;
 }
 
-/** What the renderers draw. */
-export interface KnobView {
-  /** The spoken name. */
-  name: string;
-  /** The button. */
-  root: ElementView;
-  /** The name's Text props (class `yh-knob__label`, `data-part="label"`). */
-  label: Pick<TextModelProps, 'role' | 'weight' | 'case'>;
-  /** The groove and the cap: Surface materials (well, handle) as plain spans with Surface's class and data. */
-  track: ElementView;
-  body: ElementView;
-  /** The ring's `viewBox`. */
-  viewBox: string;
-  /** The lit arc's path; null when there is none. */
-  arc: string | null;
-  /** The pointer tick's ends; null when unused. */
-  pointer: { x1: string; y1: string; x2: string; y2: string } | null;
-  /** The value shown in the ring's centre; null when unused. */
-  value: string | null;
-  /** The unit after it; null when none. */
-  unit: string | null;
-  /** The Genos code line; null when none. */
-  code: string | null;
+/** A disc-shaped Surface span (no layer, so no shader): `lib-surface` with its material and corners. */
+function disc(material: 'well' | 'handle', className: string, part: string): Node {
+  return h('span', { class: `lib-surface ${className}`, 'data-material': material, 'data-radius': 'circle', 'data-part': part, 'aria-hidden': 'true' });
 }
 
-/** A disc-shaped Surface span (no layer, so no shader): `lib-surface` with its material and corners. */
-function disc(material: 'well' | 'handle', className: string, part: string): ElementView {
-  return {
-    className: `lib-surface ${className}`,
-    attrs: { 'data-material': material, 'data-radius': 'circle', 'data-part': part, 'aria-hidden': 'true' },
-  };
+/** A Text's attributes (its class and `data-*`) plus the part's name. */
+function text(props: TextModelProps, part: string): Record<string, string | undefined> {
+  const view: ElementView = textView(props);
+  return { class: view.className, ...view.attrs, 'data-part': part };
 }
 
 /** The knob's spoken name: `name`, else "{label} ({code}) {value}{unit}", or "unused". */
@@ -75,7 +55,9 @@ export function knobName({ label, code = '', value = '', unit = '', unused = fal
   return name ?? (unused ? 'unused' : `${label}${code ? ` (${code})` : ''} ${value}${unit}`);
 }
 
-export function knobView(props: KnobModelProps): KnobView {
+/** The tree Knob draws: the button (binding the `knob` store), its name, the dial (well, cap, ring,
+ *  value and unit) and the Genos code. */
+export function knobView(props: KnobModelProps): Node {
   const { code = '', value = '', unit = '', fraction = 0, unused = false, hue, tip } = props;
   const name = knobName(props);
   const deg = unused ? 0 : sweepOf(fraction);
@@ -86,11 +68,12 @@ export function knobView(props: KnobModelProps): KnobView {
   const tipInner = point(START + deg, R + 3);
   // "0" and "Off" say "nothing here" and step back, as a send at 0 does (SendReadout).
   const rest = !unused && /^(0|off)$/i.test(value.trim());
-  return {
-    name,
-    root: {
-      className: `yh-knob ${focusRing}`,
-      attrs: {
+  const label = text({ role: 'caption', weight: unused ? 'body' : 'strong', case: 'label', className: 'yh-knob__label' }, 'label');
+  return wire(
+    h(
+      'button',
+      {
+        class: `yh-knob ${focusRing}`,
         ...knobRootAttrs(name),
         'data-part': 'root',
         'data-unused': unused ? 'true' : undefined,
@@ -98,17 +81,44 @@ export function knobView(props: KnobModelProps): KnobView {
         'data-hue': hue === undefined ? undefined : String(hue),
         'data-tip': tip,
       },
-    },
-    label: { role: 'caption', weight: unused ? 'body' : 'strong', case: 'label' },
-    track: disc('well', 'yh-knob__track', 'well'),
-    body: disc('handle', 'yh-knob__body', 'body'),
-    viewBox: `0 0 ${BOX} ${BOX}`,
-    arc: !unused && lit ? lit : null,
-    pointer: unused
-      ? null
-      : { x1: tipInner.x.toFixed(2), y1: tipInner.y.toFixed(2), x2: tipOuter.x.toFixed(2), y2: tipOuter.y.toFixed(2) },
-    value: unused ? null : value,
-    unit: unused || !unit ? null : unit,
-    code: code ? code : null,
-  };
+      h('span', label, props.label),
+      h(
+        'span',
+        { class: 'yh-knob__dial', 'data-part': 'dial' },
+        // The groove: the full 270° sweep, cut from a disc so it can wear any material; then the cap the arc sits around.
+        disc('well', 'yh-knob__track', 'well'),
+        disc('handle', 'yh-knob__body', 'body'),
+        h(
+          'svg',
+          { class: 'yh-knob__ring', viewBox: `0 0 ${BOX} ${BOX}`, 'aria-hidden': 'true' },
+          !unused && lit ? h('path', { class: 'yh-knob__lit', 'data-part': 'arc', d: lit }) : null,
+          unused
+            ? null
+            : h('line', {
+                class: 'yh-knob__pointer',
+                'data-part': 'pointer',
+                x1: tipInner.x.toFixed(2),
+                y1: tipInner.y.toFixed(2),
+                x2: tipOuter.x.toFixed(2),
+                y2: tipOuter.y.toFixed(2),
+              }),
+        ),
+        unused
+          ? null
+          : h(
+              'span',
+              text({ role: 'numeral', className: 'yh-knob__value' }, 'value'),
+              value,
+              unit ? h('span', text({ role: 'body', size: 'caption', leading: 'tight', className: 'yh-knob__unit' }, 'unit'), unit) : null,
+            ),
+      ),
+      code ? h('span', text({ role: 'caption', className: 'yh-knob__code' }, 'code'), code) : null,
+    ),
+    { bind: [['knob', { unused, tip, tipAction: 'tipAction', onpress: 'press', onstep: 'step' }]] },
+  );
+}
+
+/** The callbacks `knobView`'s tree names: a press, a step, and the app's tooltip action. */
+export function knobHandlers(props: KnobModelProps): Handlers {
+  return { press: props.onpress, step: props.onstep, tipAction: props.tipAction };
 }

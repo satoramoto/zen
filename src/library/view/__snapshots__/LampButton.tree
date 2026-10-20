@@ -1,0 +1,465 @@
+## Board
+<button aria-label="Accomp ACMP" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="on" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" data-tip="transport.acmp" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tip":"transport.acmp","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Accomp"
+  <span class="lib-text lib-tone yh-lampbutton__code" data-part="code" data-role="numeral" data-text-case="none" data-text-size="caption" data-text-weight="body">
+    "ACMP"
+
+## On
+<button aria-label="Accomp ACMP" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="on" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Accomp"
+  <span class="lib-text lib-tone yh-lampbutton__code" data-part="code" data-role="numeral" data-text-case="none" data-text-size="caption" data-text-weight="body">
+    "ACMP"
+
+## Toggles
+<button aria-label="Unison" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Unison"
+
+## Disabled
+<button aria-disabled="true" aria-label="Manual Bass, works with Upper on" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--sm lib-focus-ring yh-lampbutton--fixed" data-contrast="dim" data-face="disabled" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" style="min-width: 64px" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## Off
+<button aria-label="Metronome" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Metronome"
+
+## HueOn
+<button aria-label="Channel 1 on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="1" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## HueOn2
+<button aria-label="Channel 2 on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## HueOff
+<button aria-label="Channel 3 off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="3" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## HueOn4
+<button aria-label="Channel 4 on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="4" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## HueDisabled
+<button aria-disabled="true" aria-label="Channel 1 on (no sound loaded)" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="1" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## FunctionOff
+<button aria-label="Harm/Arp" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Harm/Arp"
+
+## FunctionOn
+<button aria-label="Sound" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Sound"
+
+## Running
+<button aria-label="Start / Stop" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="on" data-hue="ok" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Start / Stop"
+
+## Role2On
+<button aria-label="Metronome" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="on" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Metronome"
+
+## Role2Off
+<button aria-label="Metronome" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="off" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Metronome"
+
+## Role2Waiting
+<button aria-label="Auto Fill, armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Auto Fill"
+
+## Recording
+<button aria-label="Looper, recording" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="record" data-hue="rec" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Looper"
+
+## Looping
+<button aria-label="Looper, looping" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="lamp" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Looper"
+
+## ArmedLoop
+<button aria-label="Looper, loop armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="lamp" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Looper"
+
+## Armed
+<button aria-label="Looper, rec armed. Long press: loop rec" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="rec" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" data-tip="looper.rec" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tip":"looper.rec","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Looper"
+
+## ArmedPressed
+<button aria-label="Sync Start, waiting for a chord" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring" data-face="armed" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Sync Start"
+
+## MinWidth #1
+<button aria-label="Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--sm lib-focus-ring yh-lampbutton--fixed" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" style="min-width: 64px" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## MinWidth #2
+<button aria-label="Manual Bass" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--sm lib-focus-ring yh-lampbutton--fixed" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" style="min-width: 64px" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Manual Bass"
+
+## JoinStart #1
+<button aria-label="Metronome" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring yh-lampbutton--join-start" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Metronome"
+
+## JoinStart #2
+<button aria-label="Metronome settings" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring yh-lampbutton--fixed yh-lampbutton--join-end" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" style="min-width: 32px" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "▾"
+
+## JoinStart #3
+<button aria-label="Metronome" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring yh-lampbutton--join-start" data-face="on" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Metronome"
+
+## JoinStart #4
+<button aria-label="Metronome settings" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--md lib-focus-ring yh-lampbutton--fixed yh-lampbutton--join-end" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" style="min-width: 32px" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "▾"
+
+## AllFaces #1
+<button aria-label="t Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #2
+<button aria-label="1 Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="1" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #3
+<button aria-label="2 Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #4
+<button aria-label="3 Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="3" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #5
+<button aria-label="4 Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="4" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #6
+<button aria-label="5 Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="5" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #7
+<button aria-label="ok Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="ok" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #8
+<button aria-label="lamp Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="lamp" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #9
+<button aria-label="role-2 Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #10
+<button aria-label="rec Off" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Off"
+
+## AllFaces #11
+<button aria-label="t Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #12
+<button aria-label="1 Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="1" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #13
+<button aria-label="2 Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #14
+<button aria-label="3 Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="3" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #15
+<button aria-label="4 Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="4" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #16
+<button aria-label="5 Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="5" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #17
+<button aria-label="ok Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="ok" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #18
+<button aria-label="lamp Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="lamp" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #19
+<button aria-label="role-2 Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #20
+<button aria-label="rec Armed" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="waiting" data-hue="rec" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed"
+
+## AllFaces #21
+<button aria-label="t On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #22
+<button aria-label="1 On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="1" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #23
+<button aria-label="2 On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #24
+<button aria-label="3 On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="3" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #25
+<button aria-label="4 On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="4" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #26
+<button aria-label="5 On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="5" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #27
+<button aria-label="ok On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="ok" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #28
+<button aria-label="lamp On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="lamp" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #29
+<button aria-label="role-2 On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="on" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #30
+<button aria-label="rec On" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="record" data-hue="rec" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "On"
+
+## AllFaces #31
+<button aria-label="t Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #32
+<button aria-label="1 Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="1" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #33
+<button aria-label="2 Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #34
+<button aria-label="3 Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="3" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #35
+<button aria-label="4 Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="4" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #36
+<button aria-label="5 Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="5" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #37
+<button aria-label="ok Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="ok" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #38
+<button aria-label="lamp Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="lamp" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #39
+<button aria-label="role-2 Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #40
+<button aria-label="rec Armed on" aria-pressed="true" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-face="armed" data-hue="rec" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Armed on"
+
+## AllFaces #41
+<button aria-disabled="true" aria-label="t Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #42
+<button aria-disabled="true" aria-label="1 Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="1" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #43
+<button aria-disabled="true" aria-label="2 Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #44
+<button aria-disabled="true" aria-label="3 Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="3" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #45
+<button aria-disabled="true" aria-label="4 Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="4" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #46
+<button aria-disabled="true" aria-label="5 Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="5" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #47
+<button aria-disabled="true" aria-label="ok Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="ok" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #48
+<button aria-disabled="true" aria-label="lamp Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="lamp" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #49
+<button aria-disabled="true" aria-label="role-2 Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="role-2" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"
+
+## AllFaces #50
+<button aria-disabled="true" aria-label="rec Disabled" aria-pressed="false" class="lib-text lib-tone yh-lampbutton yh-lampbutton--cell lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="t" data-part="face" data-role="label" data-tabular="" data-text-leading="tight" type="button" @click=toggle use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="yh-lampbutton__led" data-part="lamp">
+  <span class="yh-lampbutton__label" data-part="label">
+    "Disabled"

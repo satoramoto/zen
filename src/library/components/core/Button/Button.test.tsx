@@ -4,7 +4,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Button, type ButtonProps } from './Button';
-import { LONG_PRESS_MS } from './useLongPress';
+import { LONG_PRESS_MS } from './longPress';
 
 const INIT = { pointerId: 1, button: 0, clientX: 0, clientY: 0 };
 const pointer = (pointerId: number, x = 0) => ({ pointerId, button: 0, clientX: x, clientY: 0 });

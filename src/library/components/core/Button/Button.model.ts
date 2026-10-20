@@ -1,9 +1,12 @@
-// Button's model: its props, the face it draws from them (classes, `data-*` and ARIA), and which
-// clicks press it. No framework: `Button.tsx` (React) and `Button.svelte` (Svelte) both render
-// `buttonView`; the long press and the hold are stores beside it (`longPress.ts`, `hold.ts`).
+// Button's model: its props, the tree it draws from them (classes, `data-*`, ARIA, the stores it
+// binds) and the handlers that tree names. No framework: `Button.tsx` (React) and `Button.svelte`
+// (Svelte) both pass `buttonView` and `buttonHandlers` to their `Tree`; the long press and the hold
+// are stores beside it (`longPress.ts`, `hold.ts`), registered in `src/library/view/stores.ts`.
 import type { HueSlot } from '../hue';
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+import { textView } from '../../../primitives/Text.model';
+import { h, slot, when, wire, type Handlers, type Node } from '../../../view/Tree.model';
+import type { TipAction } from '../../../view/tip';
 
 export type ButtonGlyph = 'prev' | 'next' | 'up' | 'down' | 'plus' | 'minus' | 'caret';
 export type ButtonHue =
@@ -26,7 +29,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'quiet';
 export type ButtonFace = 'off' | 'on' | 'chosen' | 'waiting' | 'disabled';
 
 /** The parent's tooltip action (a Svelte-style `use:tip`): called with the node and the key. */
-export type TipAction = (node: HTMLElement, key: string) => { update?: (key: string) => void; destroy?: () => void } | void;
+export type { TipAction };
 
 /** Every Button prop but its icon (a React node or a Svelte snippet, so each renderer adds its own). */
 export interface ButtonModelProps {
@@ -103,54 +106,56 @@ const NEUTRAL = new Set<ButtonHue>(['t', 't2', 'm', 'lamp']);
 /** The tones whose on face is solid: running (Start / Stop) and recording. A solid fill means sounding or running. */
 const SOLID = new Set<ButtonHue>(['ok', 'rec']);
 
-/** What a renderer draws: the face (a `Text` rendered as a `<button>`), the label and the glyph. */
-export interface ButtonView {
-  /** The face's Text props. */
-  text: TextModelProps;
-  /** The face's class (beside Text's own) and its `type`, `data-*`, `title` and ARIA attributes. */
-  face: ElementView;
-  /** The label's text, or null for none. */
-  label: string | null;
-  /** The glyph's character and its attributes, drawn as a `label` Text with `leading="tight"`; null for none. */
-  glyph: { char: string; className: string; attrs: Record<string, string | undefined> } | null;
-  /** Whether the long press is on (a pointer hold-to-press or a right-click reach `onLongPress`). */
-  longPress: boolean;
+/** Which of Button's slots the caller filled: an empty slot draws no wrapper. */
+export interface ButtonSlots {
+  /** An `icon` was given (a React node, a Svelte snippet). */
+  icon?: boolean;
 }
 
-/** The face Button draws from its props: the same precedence as ever (disabled, chosen, on, waiting, off). */
-export function buttonView({
-  label = '',
-  symbol,
-  title,
-  size = 'md',
-  variant = 'secondary',
-  bar,
-  on = false,
-  chosen = false,
-  waiting = false,
-  lit = true,
-  tall = false,
-  hue = 't',
-  pressed,
-  popup,
-  expanded = false,
-  controls,
-  join,
-  disabled = false,
-  hold = false,
-  name,
-  tip,
-  onLongPress,
-}: ButtonModelProps): ButtonView {
+/**
+ * The tree Button draws from its props: the face (a `label` Text as a `<button>`), the icon slot,
+ * the label and the glyph, in the same precedence of faces as ever (disabled, chosen, on, waiting,
+ * off). It binds the long press, the hold and the tooltip, and a click calls `press`
+ * (`buttonHandlers`).
+ */
+export function buttonView(props: ButtonModelProps, slots: ButtonSlots = {}): Node {
+  const {
+    label = '',
+    symbol,
+    title,
+    size = 'md',
+    variant = 'secondary',
+    bar,
+    on = false,
+    chosen = false,
+    waiting = false,
+    lit = true,
+    tall = false,
+    hue = 't',
+    pressed,
+    popup,
+    expanded = false,
+    controls,
+    join,
+    disabled = false,
+    hold = false,
+    name,
+    tip,
+    onLongPress,
+  } = props;
   const running = size === 'band' && bar === true;
   const open = popup !== undefined && expanded;
   const face: Exclude<ButtonFace, 'disabled'> = chosen ? 'chosen' : on || running || open ? 'on' : waiting ? 'waiting' : 'off';
   const drawn: ButtonHue = running && !chosen ? 'ok' : NEUTRAL.has(hue) ? 't' : hue;
-  return {
-    text: { role: 'label', leading: 'tight', tabular: true },
-    face: {
-      className: `yh-button ${focusRing}`,
-      attrs: {
+  const text = textView({ role: 'label', leading: 'tight', tabular: true, className: `yh-button ${focusRing}` });
+  const glyph = textView({ role: 'label', leading: 'tight', className: 'yh-button__glyph' });
+  const longPress = !disabled && !hold && onLongPress !== undefined;
+  return wire(
+    h(
+      'button',
+      {
+        class: text.className,
+        ...text.attrs,
         type: 'button',
         'data-part': 'face',
         'data-size': size,
@@ -173,12 +178,34 @@ export function buttonView({
         'aria-controls': controls,
         'aria-disabled': disabled ? 'true' : undefined,
       },
+      when(slots.icon === true, () => h('span', { class: 'yh-button__icon', 'data-part': 'icon', 'aria-hidden': 'true' }, slot('icon'))),
+      when(label !== '', () => h('span', { class: 'yh-button__label', 'data-part': 'label' }, label)),
+      symbol
+        ? h('span', { class: glyph.className, ...glyph.attrs, 'data-part': 'glyph', 'data-glyph': symbol, 'aria-hidden': 'true' }, GLYPHS[symbol])
+        : null,
+    ),
+    {
+      on: { click: 'press' },
+      bind: [
+        ['longPress', { disabled: !longPress, onLongPress: 'longPress', onLongRelease: 'longRelease' }],
+        ['hold', { enabled: hold && !disabled, onHold: 'hold' }],
+        ['tip', { tip, tipAction: 'tipAction' }],
+      ],
     },
-    label: label !== '' ? label : null,
-    glyph: symbol
-      ? { char: GLYPHS[symbol], className: 'yh-button__glyph', attrs: { 'data-part': 'glyph', 'data-glyph': symbol, 'aria-hidden': 'true' } }
-      : null,
-    longPress: !disabled && !hold && onLongPress !== undefined,
+  );
+}
+
+/** The callbacks `buttonView`'s tree names: `press` (a click that presses: `clickPresses`), and the
+ *  long press's, the hold's and the tooltip's. */
+export function buttonHandlers(props: ButtonModelProps): Handlers {
+  return {
+    press: (event: MouseEvent) => {
+      if (clickPresses(props, event.detail)) props.onPress?.();
+    },
+    longPress: props.onLongPress,
+    longRelease: props.onLongRelease,
+    hold: props.onHold,
+    tipAction: props.tipAction,
   };
 }
 

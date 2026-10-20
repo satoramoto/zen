@@ -2,8 +2,8 @@
  * The knob's input, framework-free: a drag turns it relative to where it is (a step every 4px up or
  * right, 16px with Shift), ↑ → / ↓ ← and the wheel step it (a trackpad's small deltas adding up to
  * one notch), and a click that didn't turn it is a press, as are Space and Enter. It also applies
- * the app's tooltip action. `useKnob` (React) and the `knobInput` action (`knobInput.svelte.ts`) both wrap
- * `bindKnob`; neither holds any of this logic.
+ * the app's tooltip action. Registered as the `knob` store (`src/library/view/stores.ts`): Knob's
+ * tree binds it by name and both renderers apply it; neither holds any of this logic.
  */
 import { DRAG_PX, FINE_PX, WHEEL_PX, wheelPx } from './geometry';
 

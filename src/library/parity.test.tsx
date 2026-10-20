@@ -1,5 +1,6 @@
-// DOM parity: every component's React and Svelte renderers draw the same DOM for every story's
-// fixture (parity.ts). One line per component: `parity(name, ReactComponent, SvelteComponent, fixtures)`.
+// DOM parity: every unconverted component's React and Svelte renderers draw the same DOM for every
+// story's fixture (parity.ts). One line per component: `parity(name, ReactComponent, SvelteComponent, fixtures)`.
+// A component converted to a view tree moves from here to `view/snapshot.test.ts`.
 import { parity } from './parity';
 import { Text } from './primitives/Text';
 import TextSvelte from './primitives/Text.svelte';
@@ -7,9 +8,6 @@ import { textStories } from './primitives/Text.fixtures';
 import { Stack } from './primitives/Stack';
 import StackSvelte from './primitives/Stack.svelte';
 import { stackStories } from './primitives/Stack.fixtures';
-import { Button } from './components/core/Button/Button';
-import ButtonSvelte from './components/core/Button/Button.svelte';
-import { buttonStories } from './components/core/Button/Button.fixtures';
 import { Region } from './layout/Region';
 import RegionSvelte from './layout/Region.svelte';
 import { regionStories } from './layout/Region.fixtures';
@@ -29,9 +27,6 @@ import { assemblyStories } from './layout/assembly/Assembly.fixtures';
 import { Pad } from './components/music/Pad/Pad';
 import PadSvelte from './components/music/Pad/Pad.svelte';
 import { padStories } from './components/music/Pad/Pad.fixtures';
-import { Knob } from './components/music/Knob/Knob';
-import KnobSvelte from './components/music/Knob/Knob.svelte';
-import { knobStories } from './components/music/Knob/Knob.fixtures';
 import { Fader } from './components/music/Fader/Fader';
 import FaderSvelte from './components/music/Fader/Fader.svelte';
 import { faderStories } from './components/music/Fader/Fader.fixtures';
@@ -74,9 +69,6 @@ import { surfaceStories } from './primitives/Surface.fixtures';
 import { Icon } from './primitives/Icon';
 import IconSvelte from './primitives/Icon.svelte';
 import { iconStories } from './primitives/Icon.fixtures';
-import { LampButton } from './components/core/LampButton/LampButton';
-import LampButtonSvelte from './components/core/LampButton/LampButton.svelte';
-import { lampButtonStories } from './components/core/LampButton/LampButton.fixtures';
 import { LineSlider } from './components/core/LineSlider/LineSlider';
 import LineSliderSvelte from './components/core/LineSlider/LineSlider.svelte';
 import { lineSliderStories } from './components/core/LineSlider/LineSlider.fixtures';
@@ -86,9 +78,6 @@ import { statusDotStories } from './components/core/StatusDot/StatusDot.fixtures
 import { Separator } from './components/core/Separator/Separator';
 import SeparatorSvelte from './components/core/Separator/Separator.svelte';
 import { separatorStories } from './components/core/Separator/Separator.fixtures';
-import { SettingsRow } from './components/core/SettingsRow/SettingsRow';
-import SettingsRowSvelte from './components/core/SettingsRow/SettingsRow.svelte';
-import { settingsRowStories } from './components/core/SettingsRow/SettingsRow.fixtures';
 import { Tabs } from './layout/Tabs';
 import TabsSvelte from './layout/Tabs.svelte';
 import { tabsStories } from './layout/Tabs.fixtures';
@@ -141,7 +130,6 @@ import { stageStories } from './yahaha/Stage/Stage.fixtures';
 
 parity('Text', Text, TextSvelte, textStories);
 parity('Stack', Stack, StackSvelte, stackStories);
-parity('Button', Button, ButtonSvelte, buttonStories);
 parity('Region', Region, RegionSvelte, regionStories);
 parity('Group', Group, GroupSvelte, groupStories);
 parity('Layer', Layer, LayerSvelte, layerStories);
@@ -150,7 +138,6 @@ parity('Hole', Hole, HoleSvelte, holeStories);
 parity('Screen', Screen, ScreenSvelte, screenStories);
 parity('Screen (assembled)', Screen, ScreenSvelte, assemblyStories);
 parity('Pad', Pad, PadSvelte, padStories);
-parity('Knob', Knob, KnobSvelte, knobStories);
 parity('Fader', Fader, FaderSvelte, faderStories);
 parity('Keys', Keys, KeysSvelte, keysStories);
 parity('Meter', Meter, MeterSvelte, meterStories);
@@ -165,11 +152,9 @@ parity('SoundCell', SoundCell, SoundCellSvelte, soundCellStories);
 parity('RackCell', RackCell, RackCellSvelte, rackCellStories);
 parity('Surface', Surface, SurfaceSvelte, surfaceStories);
 parity('Icon', Icon, IconSvelte, iconStories);
-parity('LampButton', LampButton, LampButtonSvelte, lampButtonStories);
 parity('LineSlider', LineSlider, LineSliderSvelte, lineSliderStories);
 parity('StatusDot', StatusDot, StatusDotSvelte, statusDotStories);
 parity('Separator', Separator, SeparatorSvelte, separatorStories);
-parity('SettingsRow', SettingsRow, SettingsRowSvelte, settingsRowStories);
 parity('Tabs', Tabs, TabsSvelte, tabsStories);
 parity('HealthSlot', HealthSlot, HealthSlotSvelte, healthSlotStories);
 parity('MetronomePopover', MetronomePopover, MetronomePopoverSvelte, metronomePopoverStories);

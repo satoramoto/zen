@@ -1,11 +1,11 @@
-import { useEffect, useRef, type ReactNode } from 'react';
-import { useLongPress } from './useLongPress';
-import { buttonView, clickPresses, type ButtonModelProps } from './Button.model';
-import { createHold } from './hold';
-import { Text } from '../../../primitives/Text';
+import type { ReactNode } from 'react';
+import { Tree } from '../../../view/Tree';
+import { buttonHandlers, buttonView, type ButtonModelProps } from './Button.model';
+import '../../../primitives/Text.css';
 import './Button.css';
 
-// The props, faces and accessible name are framework-free, in the model; `Button.svelte` renders the same view.
+// The props, faces, accessible name and behaviour are framework-free, in the model and its stores;
+// this file and `Button.svelte` only hand the model's tree to their `Tree`.
 export type { ButtonGlyph, ButtonHue, ButtonSize, ButtonVariant, ButtonFace, TipAction, ButtonModelProps } from './Button.model';
 
 export interface ButtonProps extends ButtonModelProps {
@@ -75,61 +75,6 @@ export interface ButtonProps extends ButtonModelProps {
  *   `cta-ink` (the primary fill and its label), `tint` (the hover, press and waiting wash).
  * - `--yh-wait-ring`: the waiting and on ring's weight, one weight across Button, LampButton and Pad.
  */
-export function Button(props: ButtonProps) {
-  const { icon, disabled = false, hold = false, tip, tipAction, onPress, onHold, onLongPress, onLongRelease } = props;
-  const view = buttonView(props);
-
-  const node = useRef<HTMLButtonElement>(null);
-  const onHoldRef = useRef(onHold);
-  onHoldRef.current = onHold;
-  const holding = useRef(createHold(() => node.current, () => onHoldRef.current)).current;
-
-  // A hold ends at once when it can't continue: disabled, or no longer a hold button...
-  useEffect(() => {
-    if (disabled || !hold) holding.stop(true);
-  }, [disabled, hold, holding]);
-  // ...or when the button goes away while held.
-  useEffect(() => () => holding.stop(false), [holding]);
-
-  useLongPress(node, { onLongPress, onLongRelease, disabled: !view.longPress });
-
-  useEffect(() => {
-    const target = node.current;
-    if (!tipAction || tip === undefined || !target) return;
-    const handle = tipAction(target, tip);
-    return () => handle?.destroy?.();
-  }, [tip, tipAction]);
-
-  return (
-    <Text
-      as="button"
-      {...view.text}
-      ref={node}
-      className={view.face.className}
-      {...view.face.attrs}
-      onClick={(event) => {
-        if (clickPresses({ disabled, hold }, event.detail)) onPress?.();
-      }}
-      onPointerDown={(event) => holding.down(event, hold && !disabled)}
-      onPointerUp={(event) => holding.end(event)}
-      onPointerCancel={(event) => holding.end(event)}
-      onLostPointerCapture={(event) => holding.end(event)}
-    >
-      {icon !== undefined && (
-        <span className="yh-button__icon" data-part="icon" aria-hidden="true">
-          {icon}
-        </span>
-      )}
-      {view.label !== null && (
-        <span className="yh-button__label" data-part="label">
-          {view.label}
-        </span>
-      )}
-      {view.glyph && (
-        <Text role="label" leading="tight" className={view.glyph.className} {...view.glyph.attrs}>
-          {view.glyph.char}
-        </Text>
-      )}
-    </Text>
-  );
+export function Button({ icon, ...props }: ButtonProps) {
+  return <Tree tree={buttonView(props, { icon: icon !== undefined })} slots={{ icon }} handlers={buttonHandlers(props)} />;
 }
