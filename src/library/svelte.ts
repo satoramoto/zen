@@ -19,6 +19,19 @@ import ButtonSvelte from './components/core/Button/Button.svelte';
 import type { TextModelProps } from './primitives/Text.model';
 import type { StackModelProps } from './primitives/Stack.model';
 import type { ButtonModelProps } from './components/core/Button/Button.model';
+import OpaqueSvelte from './primitives/Opaque.svelte';
+import HoleSvelte from './primitives/Hole.svelte';
+import RegionSvelte from './layout/Region.svelte';
+import GroupSvelte from './layout/Group.svelte';
+import LayerSvelte from './layout/Layer.svelte';
+import ScreenSvelte from './layout/Screen.svelte';
+import AssembledScreenSvelte from './layout/assembly/AssembledScreen.svelte';
+import type { AmbientRegion } from './contract';
+import type { RegionModelProps } from './layout/Region.model';
+import type { GroupModelProps } from './layout/Group.model';
+import type { LayerModelProps } from './layout/Layer.model';
+import type { ScreenModelProps } from './layout/Screen.model';
+import type { Placed, Placement, Principles, ScreenSpec } from './layout/assembly/types';
 import PadSvelte from './components/music/Pad/Pad.svelte';
 import KnobSvelte from './components/music/Knob/Knob.svelte';
 import FaderSvelte from './components/music/Fader/Fader.svelte';
@@ -69,6 +82,18 @@ import AppBarSvelte from './yahaha/AppBar/AppBar.svelte';
 import type { HealthSlotModelProps } from './yahaha/HealthSlot/HealthSlot.model';
 import type { MetronomePopoverModelProps } from './yahaha/AppBar/MetronomePopover.model';
 import type { AppBarModelProps } from './yahaha/AppBar/AppBar.model';
+import AccentBlockSvelte from './yahaha/AccentBlock/AccentBlock.svelte';
+import WaitingChipSvelte from './yahaha/WaitingChip/WaitingChip.svelte';
+import StatusLineSvelte from './yahaha/StatusLine/StatusLine.svelte';
+import DisplayArtSvelte from './yahaha/DisplayArt/DisplayArt.svelte';
+import HueLegendSvelte from './yahaha/HueLegend/HueLegend.svelte';
+import OneTouchPickerSvelte from './yahaha/OneTouchPicker/OneTouchPicker.svelte';
+import type { AccentBlockModelProps } from './yahaha/AccentBlock/AccentBlock.model';
+import type { WaitingChipModelProps } from './yahaha/WaitingChip/WaitingChip.model';
+import type { StatusLineModelProps } from './yahaha/StatusLine/StatusLine.model';
+import type { DisplayArtModelProps } from './yahaha/DisplayArt/DisplayArt.model';
+import type { HueLegendProps } from './yahaha/HueLegend/HueLegend.model';
+import type { OneTouchPickerProps } from './yahaha/OneTouchPicker/OneTouchPicker.model';
 
 // The theme: the `theme` action, the scope, and the system mode.
 export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './svelte/theme.svelte';
@@ -96,6 +121,62 @@ export interface StackProps extends HTMLAttributes<HTMLElement>, Omit<StackModel
   children?: Snippet;
 }
 export const Stack = StackSvelte as unknown as Component<StackProps>;
+
+// Opaque and Hole (Surface itself is exported with the primitives).
+export const Opaque = OpaqueSvelte as unknown as Component<{ class?: string; style?: string; children?: Snippet }>;
+export const Hole = HoleSvelte as unknown as Component<{ class?: string; style?: string; name?: string; children?: Snippet }>;
+export { setControlContext, getControlContext, CONTROL_FIELD, CONTROL_TOOLBAR, type ControlContextValue } from './primitives/control.svelte';
+
+// Layout: regions, groups, layers and screens; the assembled screen and its form, room and principles runes.
+export interface RegionProps extends Omit<RegionModelProps, 'className'> {
+  label?: string | Snippet;
+  aside?: string | Snippet;
+  class?: string;
+  style?: string;
+  children?: Snippet;
+}
+export const Region = RegionSvelte as unknown as Component<RegionProps>;
+export interface GroupProps extends Omit<GroupModelProps, 'className'> {
+  label?: string | Snippet | false;
+  aside?: string | Snippet;
+  class?: string;
+  style?: string;
+  children?: Snippet;
+}
+export const Group = GroupSvelte as unknown as Component<GroupProps>;
+export interface LayerProps extends HTMLAttributes<HTMLElement>, Omit<LayerModelProps, 'className'> {
+  ambient?: AmbientRegion;
+  as?: string;
+  class?: string;
+  children?: Snippet;
+}
+export const Layer = LayerSvelte as unknown as Component<LayerProps>;
+export interface ScreenProps extends Omit<ScreenModelProps, 'className'> {
+  header?: string | Snippet;
+  footer?: string | Snippet;
+  gridRef?: HTMLElement | null;
+  gridStyle?: string;
+  class?: string;
+  style?: string;
+  children?: Snippet;
+  regions?: Record<string, Snippet<[string, Placed]>>;
+  onPlacement?: (placement: Placement) => void;
+}
+export const Screen = ScreenSvelte as unknown as Component<ScreenProps, {}, 'gridRef'>;
+export interface AssembledScreenProps {
+  name: string;
+  spec: ScreenSpec;
+  regions?: Record<string, Snippet<[string, Placed]>>;
+  room?: { w: number; h: number };
+  principles?: Principles;
+  onPlacement?: (placement: Placement) => void;
+  class?: string;
+  style?: string;
+}
+export const AssembledScreen = AssembledScreenSvelte as unknown as Component<AssembledScreenProps>;
+export { getForm, getChosenForm, setFormContext } from './layout/assembly/forms.svelte';
+export { scopePrinciples } from './layout/assembly/principles.svelte';
+export { measureRoom } from './layout/assembly/room.svelte';
 
 // Controls.
 export interface ButtonProps extends ButtonModelProps {
@@ -195,3 +276,17 @@ export interface AppBarProps extends AppBarModelProps<string | Snippet> {
 }
 export const AppBar = AppBarSvelte as unknown as Component<AppBarProps>;
 export { dismiss, createFocusReturn, type DismissParams } from './yahaha/AppBar/popover.svelte';
+
+// Yahaha widgets: Yahaha's own concepts, mapped onto the library's slots through `yahaha/hues.ts`.
+export type AccentBlockProps = AccentBlockModelProps;
+export const AccentBlock = AccentBlockSvelte as unknown as Component<AccentBlockProps>;
+export type WaitingChipProps = WaitingChipModelProps;
+export const WaitingChip = WaitingChipSvelte as unknown as Component<WaitingChipProps>;
+export type StatusLineProps = StatusLineModelProps;
+export const StatusLine = StatusLineSvelte as unknown as Component<StatusLineProps>;
+export type DisplayArtProps = DisplayArtModelProps;
+export const DisplayArt = DisplayArtSvelte as unknown as Component<DisplayArtProps>;
+export type { HueLegendProps };
+export const HueLegend = HueLegendSvelte as unknown as Component<HueLegendProps>;
+export type { OneTouchPickerProps };
+export const OneTouchPicker = OneTouchPickerSvelte as unknown as Component<OneTouchPickerProps>;

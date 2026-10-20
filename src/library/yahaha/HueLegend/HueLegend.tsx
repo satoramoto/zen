@@ -1,50 +1,18 @@
-import type { HueSlot as Hue } from '../../components/core/hue';
 import { Stack } from '../../primitives/Stack';
 import { Text } from '../../primitives/Text';
-import { PART_HUE_INDEX, type Part } from '../hues';
+import { hueLegendView, type HueLegendProps } from './HueLegend.model';
 import './HueLegend.css';
 
-/** A section family, as the original names its colour token. Sections take no hue now. */
-export type Section = 'intro' | 'main' | 'ending' | 'brk' | 'fill';
-
-/**
- * @deprecated Sections take no hue (`../hues`): every entry is `undefined`. Kept so code built on
- * the old API compiles; key parts with `PART_HUE_INDEX` instead.
- */
-export const SECTION_HUE: Record<Section, Hue | undefined> = {
-  intro: undefined,
-  main: undefined,
-  ending: undefined,
-  brk: undefined,
-  fill: undefined,
-};
-
-export interface HueLegendItem {
-  /** The word ("Right 1"). */
-  label: string;
-  /** The part whose controls it keys (`r1`); its hue comes from `PART_HUE_INDEX`. */
-  part?: Part;
-  /**
-   * @deprecated A section ("intro"). Accepted for older callers, but a section has no hue, so the
-   * entry draws the outlined "no colour" chip.
-   */
-  hue?: Section;
-}
-
-/** The four parts in keyboard order, the legend's default entries. */
-export const PART_LEGEND: HueLegendItem[] = [
-  { label: 'Right 1', part: 'r1' },
-  { label: 'Right 2', part: 'r2' },
-  { label: 'Right 3', part: 'r3' },
-  { label: 'Left', part: 'l' },
-];
-
-export interface HueLegendProps {
-  /** The entries, left to right. Default: the four parts (`PART_LEGEND`). */
-  items?: HueLegendItem[];
-  /** The list's accessible name. */
-  label?: string;
-}
+export {
+  SECTION_HUE,
+  PART_LEGEND,
+  hueLegendView,
+  entryHue,
+  type Section,
+  type HueLegendItem,
+  type HueLegendProps,
+  type HueLegendView,
+} from './HueLegend.model';
 
 /**
  * HueLegend: the key to the four part colours.
@@ -72,24 +40,15 @@ export interface HueLegendProps {
  * **Tuning knobs.** `--yh-huelegend-radius` (the chip's corners: a third of `--radius-control`,
  * a pad in miniature).
  */
-export function HueLegend({ items = PART_LEGEND, label = 'Part colours' }: HueLegendProps) {
+export function HueLegend(props: HueLegendProps) {
+  const view = hueLegendView(props);
   return (
-    <Stack as="ul" direction="row" gap={4} align="center" className="yh-huelegend" aria-label={label}>
-      {items.map((item, i) => (
-        <Stack
-          as="li"
-          direction="row"
-          gap={2}
-          align="center"
-          key={`${i}-${item.label}`}
-          className="yh-huelegend__item"
-          data-part={item.part}
-          data-section={item.hue}
-          data-hue={item.part ? PART_HUE_INDEX[item.part] : undefined}
-        >
-          <span className="yh-huelegend__chip" aria-hidden="true" />
-          <Text role="caption" case="label" leading="tight" className="yh-huelegend__word">
-            {item.label}
+    <Stack as="ul" {...view.list.stack} className={view.list.className} {...view.list.attrs}>
+      {view.entries.map((entry) => (
+        <Stack as="li" key={entry.key} {...entry.stack} className={entry.className} {...entry.attrs}>
+          <span className={view.chip.className} {...view.chip.attrs} />
+          <Text {...view.word.text} className={view.word.className}>
+            {entry.label}
           </Text>
         </Stack>
       ))}

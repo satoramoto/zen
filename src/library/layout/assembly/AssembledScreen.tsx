@@ -1,16 +1,17 @@
 import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import type { PackPrinciples } from '../../contract';
 import { useThemeScope } from '../../theme';
-import { packs } from '../../themes/packs';
 import { Surface } from '../../primitives/Surface';
+import { reactStyle } from '../style';
 import { assemble } from './assemble';
+import { assembledView, type SlotView } from './AssembledScreen.model';
 import { FormProvider } from './forms';
-import type { Placed, Placement, Principles, Rect, ScreenSpec } from './types';
-import { principlesFor } from './units';
+import { scopePrinciples } from './principles';
+import { FALLBACK_ROOM, observeRoom, type RoomSize } from './room';
+import type { Placed, Placement, Principles, ScreenSpec } from './types';
 import './Assembly.css';
 
-/** The slot variables an assembled screen sets for app CSS to read: `under` and `over` (unitless px of the slot a pinned region covers at its top or bottom, set inline), `underEdge` (the knob an app sets on the slot to narrow the clip and fade to what the pinned region above really draws, unitless px; the pinned region's edge by default, Assembly.css) and `panelInset` (a floating panel's inset from the room's edges, Assembly.css). */
-export const SLOT_VARS = { under: '--lib-under', over: '--lib-over', underEdge: '--lib-under-edge', panelInset: '--lib-panel-inset' } as const;
+// What the screen draws is framework-free (AssembledScreen.model.ts); `AssembledScreen.svelte` renders the same view.
+export { SLOT_VARS } from './AssembledScreen.model';
 
 /** What the screen draws in a region's place: content, or a function of the chosen form. */
 export type RegionContent = ReactNode | ((form: string, placed: Placed) => ReactNode);
@@ -31,25 +32,14 @@ export interface AssembledScreenProps {
   style?: CSSProperties;
 }
 
-/** The board's size, where nothing can measure the room. */
-const FALLBACK_ROOM = { w: 1440, h: 900 };
-
-/** The room's px from the screen's own box, kept current. */
-function useRoom(given?: { w: number; h: number }) {
+/** The room's px from the screen's own box, kept current (`observeRoom`, room.ts). */
+function useRoom(given?: RoomSize) {
   const ref = useRef<HTMLDivElement>(null);
-  const [room, setRoom] = useState<{ w: number; h: number } | null>(null);
+  const [room, setRoom] = useState<RoomSize | null>(null);
   useLayoutEffect(() => {
     const node = ref.current;
-    if (given || !node || typeof ResizeObserver === 'undefined') return;
-    const read = () => {
-      const w = node.clientWidth;
-      const h = node.clientHeight;
-      if (w > 0 && h > 0) setRoom((r) => (r && r.w === w && r.h === h ? r : { w, h }));
-    };
-    read();
-    const observer = new ResizeObserver(read);
-    observer.observe(node);
-    return () => observer.disconnect();
+    if (given || !node) return;
+    return observeRoom(node, setRoom);
   }, [given]);
   return [ref, given ?? room ?? FALLBACK_ROOM] as const;
 }
@@ -60,17 +50,8 @@ function useRoom(given?: { w: number; h: number }) {
  */
 export function useScopePrinciples(given?: Principles): Principles {
   const scope = useThemeScope();
-  return useMemo(() => {
-    if (given) return given;
-    const facets = scope?.facets ?? packs[0].facets;
-    const pack: PackPrinciples = scope?.principles ?? packs.find((p) => p.facets === facets)?.principles ?? packs[0].principles;
-    return principlesFor(facets, pack);
-  }, [given, scope]);
+  return useMemo(() => scopePrinciples(scope, given), [given, scope]);
 }
-
-/** A rectangle as the unitless custom properties Assembly.css turns into px. */
-const at = (r: Rect): CSSProperties =>
-  ({ '--lib-at-x': r.x, '--lib-at-y': r.y, '--lib-at-w': r.w, '--lib-at-h': r.h }) as CSSProperties;
 
 /**
  * **Job.** A screen that assembles itself: the regions' declared forms, the screen's intent (`spec`)
@@ -113,77 +94,39 @@ export function AssembledScreen({ name, spec, regions, room: given, principles, 
   useLayoutEffect(() => {
     onPlacement?.(placement);
   }, [placement, onPlacement]);
+  const view = assembledView(name, spec, placement, className);
 
-  const slot = (id: string) => {
-    const placed = placement.regions[id];
+  const slot = ({ id, placed, attrs, style: decls, glass }: SlotView) => {
     const content = regions[id];
-    // Scrolling behind a pinned region: the slot reaches up to the top of the one above (`--lib-under`, unitless px: how much of the slot's top it covers) and down to the bottom of the one below (`--lib-over`: how much of its bottom).
-    const up = placed.under?.reach ?? 0;
-    const down = placed.over?.reach ?? 0;
-    const rect = up || down ? { ...placed.rect, y: placed.rect.y - up, h: placed.rect.h + up + down } : placed.rect;
-    // What scrolls behind is clipped at the pinned region's drawn edge (`--lib-under-pin`, `--lib-over-pin`: px from the slot's top or bottom) and fades in beside it (Assembly.css).
-    const inset = placed.inset;
-    const style = {
-      ...at(rect),
-      ...(up ? { [SLOT_VARS.under]: up, '--lib-under-pin': placed.under!.edge } : {}),
-      ...(down ? { [SLOT_VARS.over]: down, '--lib-over-pin': placed.over!.edge } : {}),
-      ...(inset ? { '--lib-inset-t': inset.top, '--lib-inset-r': inset.right, '--lib-inset-b': inset.bottom, '--lib-inset-l': inset.left } : {}),
-    } as CSSProperties;
     return (
-      <div key={id} className="lib-assembled__slot" data-region={id} data-form={placed.form} data-under={placed.under?.id} data-over={placed.over?.id} data-panel={inset ? '' : undefined}
-        data-glass={placed.glass ? '' : undefined}
-        data-under-glass={placed.under?.glass ? '' : undefined}
-        data-over-glass={placed.over?.glass ? '' : undefined}
-        style={style}
-      >
-        {placed.glass && <Surface layer="float" radius="none" className="lib-assembled__glass" aria-hidden="true" />}
-        <FormProvider form={placed.form} parts={placed.parts}>{typeof content === 'function' ? content(placed.form, placed) : content}</FormProvider>
+      <div key={id} className="lib-assembled__slot" {...attrs} style={reactStyle(decls)}>
+        {glass && <Surface layer="float" radius="none" className="lib-assembled__glass" aria-hidden="true" />}
+        <FormProvider form={placed.form} parts={placed.parts}>
+          {typeof content === 'function' ? content(placed.form, placed) : content}
+        </FormProvider>
       </div>
     );
   };
-  const zone = (part: 'header' | 'body' | 'footer') => placement.order.filter((id) => placement.regions[id].zone === part);
-  const { zones } = placement;
-  // The room's box in layout px (the design room when scaled); `--lib-scale` draws it at `room`.
-  const laidOut = { ...placement.room, w: placement.room.w / placement.scale, h: placement.room.h / placement.scale };
 
   return (
-    <div
-      ref={ref}
-      className={`lib-assembled${className ? ` ${className}` : ''}`}
-      role="group"
-      aria-label={name}
-      data-part="screen"
-      data-zoom={placement.zoom.toFixed(3)}
-      data-overflow={placement.overflow || undefined}
-      data-aspect={spec.aspect ? spec.aspect.ratio.toFixed(3) : undefined}
-      style={style}
-    >
-      {placement.bands.map((band, i) => (
-        <Surface key={i} layer="ground" radius="none" className="lib-assembled__band" data-part="band" aria-hidden="true" style={at(band)} />
+    <div ref={ref} className={view.className} {...view.attrs} style={style}>
+      {view.bands.map((band, i) => (
+        <Surface key={i} layer="ground" radius="none" className="lib-assembled__band" data-part="band" aria-hidden="true" style={reactStyle(band)} />
       ))}
-      <div
-        className="lib-assembled__room"
-        data-part="room"
-        data-scale={placement.scale === 1 ? undefined : placement.scale.toFixed(3)}
-        style={{ ...at(laidOut), '--lib-scale': placement.scale } as CSSProperties}
-      >
-        {spec.header?.length ? (
-          <div className="lib-assembled__zone" data-part="header" style={at(zones.header)}>
-            {zone('header').map(slot)}
+      <div className="lib-assembled__room" {...view.room.attrs} style={reactStyle(view.room.style)}>
+        {view.header ? (
+          <div className="lib-assembled__zone" data-part="header" style={reactStyle(view.header.style)}>
+            {view.header.slots.map(slot)}
           </div>
         ) : null}
-        <div className="lib-assembled__zone" data-part="body" style={at(zones.body)}>
-          <div
-            className="lib-assembled__body"
-            data-part="grid"
-            style={{ ...at({ x: 0, y: 0, w: placement.layout.w, h: placement.layout.h }), '--lib-zoom': placement.zoom } as CSSProperties}
-          >
-            {zone('body').map(slot)}
+        <div className="lib-assembled__zone" data-part="body" style={reactStyle(view.body.style)}>
+          <div className="lib-assembled__body" data-part="grid" style={reactStyle(view.body.gridStyle)}>
+            {view.body.slots.map(slot)}
           </div>
         </div>
-        {spec.footer?.length ? (
-          <div className="lib-assembled__zone" data-part="footer" style={at(zones.footer)}>
-            {zone('footer').map(slot)}
+        {view.footer ? (
+          <div className="lib-assembled__zone" data-part="footer" style={reactStyle(view.footer.style)}>
+            {view.footer.slots.map(slot)}
           </div>
         ) : null}
       </div>

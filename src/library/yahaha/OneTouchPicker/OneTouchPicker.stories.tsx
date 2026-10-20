@@ -2,7 +2,9 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { OneTouchPicker } from './OneTouchPicker';
+import { CELLS_GRID, oneTouchPickerArgTypes, oneTouchPickerStories as s } from './OneTouchPicker.fixtures';
 
+// Every story's args come from OneTouchPicker.fixtures.ts, which the Svelte stories and the parity test share.
 const meta = {
   title: 'Yahaha/Primitives/OneTouchPicker',
   component: OneTouchPicker,
@@ -10,16 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: { onApply: fn() },
-  argTypes: {
-    applied: { control: { type: 'inline-radio' }, options: [0, 1, 2, 3, 4] },
-    count: { control: { type: 'number', min: 0, max: 4, step: 1 } },
-    numbers: { control: { type: 'number', min: 1, max: 4, step: 1 } },
-    label: { control: 'text' },
-    orientation: { control: { type: 'inline-radio' }, options: ['horizontal', 'vertical'] },
-    cells: { control: 'boolean' },
-    hue: { control: { type: 'inline-radio' }, options: ['neutral', 'a'] },
-    name: { control: 'text' },
-  },
+  argTypes: oneTouchPickerArgTypes,
 } satisfies Meta<typeof OneTouchPicker>;
 
 export default meta;
@@ -29,8 +22,14 @@ type Story = StoryObj<typeof meta>;
 const grid: Decorator = (Story) => (
   <div
     role="group"
-    aria-label="One Touch Setting (OTS)"
-    style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 'var(--space-1)', width: 610, height: 55 }}
+    aria-label={CELLS_GRID.name}
+    style={{
+      display: 'grid',
+      gridTemplateColumns: `repeat(${CELLS_GRID.columns}, 1fr)`,
+      gap: 'var(--space-1)',
+      width: CELLS_GRID.width,
+      height: CELLS_GRID.height,
+    }}
   >
     <Story />
   </div>
@@ -38,7 +37,7 @@ const grid: Decorator = (Story) => (
 
 /** The board: One Touch 2 applied, in primary ink with the style's 2px rule along its foot. */
 export const Board: Story = {
-  args: { applied: 2 },
+  args: s.Board.args,
   play: async ({ canvasElement }) => {
     const buttons = within(canvasElement).getAllByRole('button');
     await expect(buttons.map((b) => b.getAttribute('data-face'))).toEqual(['off', 'chosen', 'off', 'off']);
@@ -47,11 +46,11 @@ export const Board: Story = {
 };
 
 /** None applied: every number an equal outlined cell. */
-export const NoneApplied: Story = { args: { applied: 0 } };
+export const NoneApplied: Story = { args: s.NoneApplied.args };
 
 /** Vertical, as in the golden Stage's One Touch block: the caption on top, the strip under it. */
 export const Vertical: Story = {
-  args: { applied: 2, orientation: 'vertical' },
+  args: s.Vertical.args,
   play: async ({ canvasElement }) => {
     const buttons = within(canvasElement).getAllByRole('button');
     await expect(buttons[1]).toHaveAttribute('aria-pressed', 'true');
@@ -61,7 +60,7 @@ export const Vertical: Story = {
 
 /** Cells in a 5-cell grid: no wrapper, the caption flush left, 2 applied, 4 past the style's three settings disabled. */
 export const Cells: Story = {
-  args: { applied: 2, count: 3, cells: true },
+  args: s.Cells.args,
   decorators: [grid],
   play: async ({ canvasElement }) => {
     const group = within(canvasElement).getByRole('group', { name: 'One Touch Setting (OTS)' });
@@ -77,7 +76,7 @@ export const Cells: Story = {
 
 /** Cells in the style's own colour (`hue` a): outlined in it, the applied one marked by its rule, not filled. */
 export const CellsViolet: Story = {
-  args: { applied: 2, count: 4, cells: true, hue: 'a' },
+  args: s.CellsViolet.args,
   decorators: [grid],
   play: async ({ canvasElement }) => {
     const numbers = within(canvasElement).getAllByRole('button');
@@ -88,7 +87,7 @@ export const CellsViolet: Story = {
 
 /** A style with two One Touch settings: 3 and 4 disabled. */
 export const TwoSettings: Story = {
-  args: { applied: 1, count: 2 },
+  args: s.TwoSettings.args,
   play: async ({ canvasElement }) => {
     const buttons = within(canvasElement).getAllByRole('button');
     await expect(buttons.map((b) => (b as HTMLButtonElement).disabled)).toEqual([false, false, true, true]);

@@ -1,26 +1,12 @@
 import type { CSSProperties } from 'react';
 import { Text } from '../../primitives/Text';
-import { SECTION_STATE_COLOUR } from '../hues';
+import { waitingChipView, type WaitingChipModelProps } from './WaitingChip.model';
 import './WaitingChip.css';
 
-export type WaitingHue = 'intro' | 'main' | 'ending' | 'brk' | 'fill' | 'a' | 't';
-export type WaitingSize = 'count' | 'line' | 'display';
+// The props and the chip are framework-free, in the model; `WaitingChip.svelte` renders the same view.
+export type { WaitingHue, WaitingSize, WaitingChipModelProps } from './WaitingChip.model';
 
-const SECTIONS: ReadonlySet<WaitingHue> = new Set<WaitingHue>(['intro', 'main', 'ending', 'brk', 'fill']);
-
-export interface WaitingChipProps {
-  /** The text, drawn as given (a section's shown name or a style's name). Blank: nothing renders. */
-  label: string;
-  /**
-   * Which thing is waiting: a section (`intro`, `main`, `ending`, `brk`, `fill`), `a` a queued
-   * style, `t` (default) anything else. It tints the "next" arrow, not the words. Next is
-   * `--accent` everywhere, so every value but `a` draws the arrow in it (a section takes no hue of
-   * its own); a queued style (`a`) reads `--style`.
-   */
-  hue?: WaitingHue;
-  /** `count` control-height label text; `line` the same, capped and ellipsized (style line); `display` the display size. */
-  size?: WaitingSize;
-}
+export type WaitingChipProps = WaitingChipModelProps;
 
 /**
  * WaitingChip: names what comes next (the next section, a style waiting for the bar line).
@@ -57,23 +43,13 @@ export interface WaitingChipProps {
  * queued style, set inline for a section), `--yh-waiting-chip-max` (the `line` size's width cap,
  * six control heights).
  */
-export function WaitingChip({ label, hue = 't', size = 'count' }: WaitingChipProps) {
-  if (label.trim() === '') return null;
-  const style = SECTIONS.has(hue) ? ({ '--yh-waiting-chip-hue': SECTION_STATE_COLOUR.next } as CSSProperties) : undefined;
+export function WaitingChip(props: WaitingChipProps) {
+  const view = waitingChipView(props);
+  if (view === null) return null;
   return (
-    <Text
-      role={size === 'display' ? 'display' : 'body'}
-      size={size === 'display' ? undefined : 'label'}
-      tabular
-      className={`yh-waiting-chip yh-waiting-chip--${size}`}
-      data-part="chip"
-      data-face="waiting"
-      data-hue={hue}
-      data-size={size}
-      style={style}
-    >
-      <span className="yh-waiting-chip__arrow" data-part="arrow" aria-hidden="true" />
-      {label}
+    <Text {...view.text} className={view.chip.className} {...view.chip.attrs} style={view.style as CSSProperties | undefined}>
+      <span className={view.arrow.className} {...view.arrow.attrs} />
+      {view.label}
     </Text>
   );
 }

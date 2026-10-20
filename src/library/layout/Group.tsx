@@ -2,7 +2,12 @@ import type { CSSProperties, ReactNode } from 'react';
 import type { Step } from '../primitives/step';
 import { Text } from '../primitives/Text';
 import { CONTROL_TOOLBAR, ControlContext, Stack, type StackAlign } from '../primitives/Stack';
+import { GROUP_BODY_CLASS, GROUP_ROOT_STACK, groupBodyStack, groupLabel, groupView } from './Group.model';
+import { reactStyle } from './style';
 import './Group.css';
+
+// The elements and the shown label are framework-free, in the model; `Group.svelte` renders the same view.
+export { groupView, groupBodyStack, groupLabel, GROUP_ROOT_STACK, GROUP_BODY_CLASS, type GroupModelProps } from './Group.model';
 
 export interface GroupProps {
   /** The group's accessible name; also its visible label unless `label` is given. */
@@ -47,22 +52,15 @@ export interface GroupProps {
  * their size, hit target, keys and menus.
  */
 export function Group({ name, label, aside, direction = 'row', wrap = false, gap = 2, align, area, toolbar = false, className, style, children }: GroupProps) {
-  const shown = label === false ? null : (label ?? name);
+  const shown = groupLabel(name, label);
+  const root = groupView({ name, area, toolbar, className });
   const body = (
-    <Stack className="lib-group__body" data-part="body" direction={direction} wrap={wrap} gap={gap} align={align}>
+    <Stack {...groupBodyStack({ direction, wrap, gap, align })} className={GROUP_BODY_CLASS} data-part="body">
       {children}
     </Stack>
   );
   return (
-    <Stack
-      className={`lib-group${className ? ` ${className}` : ''}`}
-      direction="column"
-      gap={1}
-      role={toolbar ? 'toolbar' : 'group'}
-      aria-label={name}
-      data-part="group"
-      style={area ? { gridArea: area, ...style } : style}
-    >
+    <Stack {...GROUP_ROOT_STACK} className={root.className} {...root.attrs} style={reactStyle(root.style, style)}>
       {(shown || aside) && (
         <div className="lib-group__head" data-part="head">
           {shown && (
