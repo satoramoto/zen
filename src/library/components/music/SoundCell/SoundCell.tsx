@@ -1,34 +1,14 @@
 import type { ReactNode } from 'react';
-import type { HueSlot } from '../../core/hue';
-import { focusRing } from '../../../primitives/Ring';
 import { Text } from '../../../primitives/Text';
+import { soundCellView, type SoundCellModelProps } from './SoundCell.model';
 import './SoundCell.css';
 
-export interface SoundCellProps {
-  /** The part's short name ("R1", "L"). */
-  part: string;
-  /** The part's full name, for the buttons' names and the short name's title ("Right 1"). */
-  partName: string;
-  /** The part's categorical hue slot (`--hue-1` … `--hue-5`); an app maps its meaning (e.g. Yahaha's parts). Default 1. */
-  hue?: HueSlot;
-  /** The sound's number in its list ("41"). Empty: not shown. */
-  number?: string;
-  /** The sound's name; a long one ends in an ellipsis. */
-  sound: string;
-  /** The part is off: its short name fades in its own hue, the sound steps back. */
-  off?: boolean;
-  /** The sound button's accessible name. Default: "Right 1 sound: 1 Stage Grand. Opens the quick sound list". */
-  soundName?: string;
-  /** The tooltip key of the part's short name, set as `data-tip`. */
-  partTip?: string;
-  /** The tooltip key of the sound, set as `data-tip`. */
-  soundTip?: string;
+// The props and the view are framework-free, in the model; `SoundCell.svelte` renders the same view.
+export type { SoundCellModelProps } from './SoundCell.model';
+
+export interface SoundCellProps extends SoundCellModelProps {
   /** The marks after the sound's name (the part's marks). */
   marks?: ReactNode;
-  /** Called when the short name is pressed (opens Channel). */
-  onPart?: () => void;
-  /** Called when the sound is pressed (opens the quick sound list). */
-  onSound?: () => void;
 }
 
 /**
@@ -59,55 +39,22 @@ export interface SoundCellProps {
  * - `--yh-part-hue`: the part's ink, `--hue-N` from `hue`; the short name wears it (faded when off).
  * - `--yh-sound-cell-width`: the cell's width on the row (default `14em`); the row may set it.
  */
-export function SoundCell({
-  part,
-  partName,
-  hue = 1,
-  number = '',
-  sound,
-  off = false,
-  soundName,
-  partTip,
-  soundTip,
-  marks,
-  onPart,
-  onSound,
-}: SoundCellProps) {
-  const spoken =
-    soundName ?? `${partName} sound: ${[number, sound].filter(Boolean).join(' ')}. Opens the quick sound list`;
+export function SoundCell(props: SoundCellProps) {
+  const { marks, onPart, onSound } = props;
+  const view = soundCellView(props);
   return (
-    <div className="yh-sound-cell" data-hue={hue} data-off={off ? 'true' : undefined}>
-      <Text
-        as="button"
-        role="label"
-        tabular
-        type="button"
-        className={`yh-sound-cell__part ${focusRing}`}
-        title={partName}
-        aria-label={`${partName}: open Channel`}
-        data-tip={partTip}
-        onClick={() => onPart?.()}
-      >
-        {part}
+    <div className={view.root.className} {...view.root.attrs}>
+      <Text as="button" {...view.part.text} className={view.part.className} {...view.part.attrs} onClick={() => onPart?.()}>
+        {view.part.label}
       </Text>
-      <Text
-        as="button"
-        role="caption"
-        size="body"
-        tabular
-        type="button"
-        className={`yh-sound-cell__sound ${focusRing}`}
-        aria-label={spoken}
-        data-tip={soundTip}
-        onClick={() => onSound?.()}
-      >
-        <span className="yh-sound-cell__title">{sound}</span>
-        {number && (
-          <Text role="caption" tabular className="yh-sound-cell__number">
-            {number}
+      <Text as="button" {...view.sound.text} className={view.sound.className} {...view.sound.attrs} onClick={() => onSound?.()}>
+        <span className={view.title.className}>{view.title.label}</span>
+        {view.number && (
+          <Text {...view.number.text} className={view.number.className} {...view.number.attrs}>
+            {view.number.label}
           </Text>
         )}
-        {marks != null && <span className="yh-sound-cell__marks">{marks}</span>}
+        {marks != null && <span className={view.marksClassName}>{marks}</span>}
       </Text>
     </div>
   );

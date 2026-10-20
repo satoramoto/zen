@@ -1,99 +1,17 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
-import type { HueSlot } from '../../core/hue';
-import {
-  BLACK_HEIGHT_RATIO,
-  BLACK_WIDTH_RATIO,
-  chordNames,
-  heldNames,
-  keysLabel,
-  layout,
-  noteAt,
-  noteName,
-  type KeyPart,
-  type KeyRange,
-} from './keyLayout';
+import { useEffect, useRef, type CSSProperties } from 'react';
+import { KEYS_TIP, keysView, type KeysModelProps } from './Keys.model';
+import { useFillWidth } from './useFillWidth';
+import { useKeysInput } from './useKeysInput';
 import { Text } from '../../../primitives/Text';
 import './Keys.css';
 
-/** The app's tooltip hook, applied to the split handle (the original's `use:tip` action). */
-export type TipAction = (node: HTMLElement, key: string) => { destroy?: () => void } | void;
+// The props and the strip are framework-free, in the model; `Keys.svelte` renders the same view.
+export type { TipAction, KeysModelProps } from './Keys.model';
 
-export interface KeysProps {
-  /** The lowest and highest MIDI note shown, both included (C3 = 60). Default: C1-C6, 61 keys. */
-  range?: KeyRange;
-  /** The split note, the highest note of the left zone; null = no split (no left zone). */
-  split?: number | null;
-  /** The held notes the left zone plays: they fill in `leftHue`. */
-  heldLeft?: number[];
-  /** The held notes the right zone plays: they fill in `rightHue`. */
-  heldRight?: number[];
-  /**
-   * The left zone's categorical hue slot (`--hue-n`), for its lamp and held keys; an app maps its
-   * meaning (e.g. Yahaha's Left part takes 4). Default 4.
-   */
-  leftHue?: HueSlot;
-  /** The left zone's name on the ruler. Default "Left". */
-  leftName?: string;
-  /**
-   * The right zone's categorical hue slot (`--hue-n`), for its lamp and held keys; an app maps
-   * its meaning (e.g. Yahaha's Right 1–3 parts take 1–3). Default 1.
-   */
-  rightHue?: HueSlot;
-  /** The right zone's name on the ruler. Default "Right". */
-  rightName?: string;
-  /**
-   * The widget's width: px, or `'fill'` to take its container's width and lay the keys out from
-   * the measured width (re-laid on every resize). Default 1392.
-   */
-  width?: number | 'fill';
-  /**
-   * The zone ruler above the keys: each zone's name, what it holds, the split's name. Default
-   * true. Off, it is just the keys (one strip height): held keys still wear their zone's hue, so
-   * the split reads on the keys, and the picture's accessible label still says it all. With
-   * `onSplit` the handle stays (the split line is its hit column), without its labelled flag.
-   */
-  ruler?: boolean;
-  /** The lowest and highest note the split may be set to (the engine's 24-96). */
-  splitMin?: number;
-  splitMax?: number;
-  /** Parameter lock on the split: the handle reads as locked and nothing here moves it. */
-  splitLocked?: boolean;
-  /** Armed: the next key pressed with the pointer becomes the split. */
-  picking?: boolean;
-  /** The app's tooltip hook, applied to the split handle with the key `settings.split_strip`. */
-  tipAction?: TipAction;
-  /** Asks for a new split note (a drag, an arrow, or a key picked while armed). Without it the keys are a picture. */
-  onSplit?: (note: number) => void;
-  /** Asks to arm (`true`) or disarm (`false`) the pick: a click on the handle, Enter, Esc, or a key picked. */
-  onPick?: (armed: boolean) => void;
-}
+/** Keys takes no children: its props are the model's. */
+export type KeysProps = KeysModelProps;
 
-/** A drag moves the split only once the pointer has moved this far, so a click stays a click. */
-const DRAG_SLOP = 3;
-const TIP = 'settings.split_strip';
-const px = (n: number) => `${n}px`;
-
-type Zone = { side: KeyPart; name: string; hue: HueSlot; from: number; to: number; held: string[]; lit: boolean };
-
-/**
- * The root's own width in layout px (unscaled, so a frame drawn scaled still lays out at design
- * px), while `on`; 0 until measured. Read before paint, then on every resize.
- */
-function useFillWidth(on: boolean) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [measured, setMeasured] = useState(0);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!on || !el) return;
-    const read = () => setMeasured(Math.max(0, el.clientWidth));
-    read();
-    if (typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(read);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [on]);
-  return [ref, measured] as const;
-}
+const css = (style: Record<string, string>) => style as CSSProperties;
 
 /**
  * The keyboard strip: the keyboard's range, where the split sits, and what each zone (left and
@@ -144,6 +62,8 @@ function useFillWidth(on: boolean) {
  * `--key-white` / `--key-black`, not the `key` material, so a Surface would change them; the
  * ruler's type mixes weights the text roles don't pair (a label at body weight, readout figures
  * at label size); and focus lands on the handle while its ring is drawn on the flag inside it.
+ * The strip is `keysView` (Keys.model.ts); the pointer and keyboard input is the `keysInput.ts`
+ * store and the measured width the `fillWidth.ts` store, so `Keys.svelte` draws the same.
  *
  * **Tuning knobs.**
  * - `--yh-keys-black-w`, `--yh-keys-split-x`, `--yh-keys-split-step`: the layout's geometry (a
@@ -157,344 +77,109 @@ function useFillWidth(on: boolean) {
  *   off the faces.
  * - `--yh-keys-hue`: a zone's hue slot, for its lamp and held keys.
  */
-export function Keys({
-  range = { low: 36, high: 96 },
-  split = 54,
-  heldLeft = [],
-  heldRight = [],
-  leftHue = 4,
-  leftName = 'Left',
-  rightHue = 1,
-  rightName = 'Right',
-  width: widthProp = 1392,
-  ruler = true,
-  splitMin = 24,
-  splitMax = 96,
-  splitLocked = false,
-  picking = false,
-  tipAction,
-  onSplit,
-  onPick,
-}: KeysProps) {
-  const fill = widthProp === 'fill';
-  const [rootRef, measured] = useFillWidth(fill);
-  // Unmeasured (first render without layout, or a hidden container), the layout runs at 0 px: no
-  // division by it, and the root hides its contents until it has a width.
-  const width = fill ? measured : Math.max(0, widthProp);
-  const unmeasured = fill && measured <= 0;
-  const keys = useMemo(
-    () => layout(range, Math.max(0, width), split, heldLeft, heldRight),
-    [range, width, split, heldLeft, heldRight],
-  );
-  const hueOf = (side: KeyPart | null) => (side === 'left' ? leftHue : side === 'right' ? rightHue : undefined);
-  const label = keysLabel(range, split, heldLeft, heldRight);
-  const interactive = onSplit !== undefined && split !== null;
-  const armed = interactive && picking && !splitLocked;
-  const blackWidth = keys.whiteWidth * BLACK_WIDTH_RATIO;
-  // Where the split line meets the top of the keys: the zones and the flag meet there.
-  const topX = keys.splitX === null ? null : keys.splitX + (keys.splitStep * blackWidth) / 2;
-
-  const zones: Zone[] = useMemo(() => {
-    const right: Zone = {
-      side: 'right',
-      name: rightName,
-      hue: rightHue,
-      from: topX ?? 0,
-      to: width,
-      held: heldNames(split === null ? [...heldLeft, ...heldRight] : heldRight),
-      lit: heldRight.length > 0 || (split === null && heldLeft.length > 0),
-    };
-    const left: Zone = {
-      side: 'left',
-      name: leftName,
-      hue: leftHue,
-      from: 0,
-      to: topX ?? width,
-      held: chordNames(heldLeft),
-      lit: heldLeft.length > 0,
-    };
-    if (topX !== null) return [left, right];
-    if (split !== null && split >= range.high) return [left];
-    return [right];
-  }, [topX, width, split, heldLeft, heldRight, leftName, leftHue, rightName, rightHue, range.high]);
+export function Keys(props: KeysProps) {
+  const { tipAction, onSplit, onPick } = props;
+  const [rootRef, measured] = useFillWidth<HTMLDivElement>(props.width === 'fill');
+  const view = keysView(props, measured);
 
   const strip = useRef<HTMLDivElement>(null);
   const handle = useRef<HTMLSpanElement>(null);
+  const input = useKeysInput({ settings: view.settings, onSplit, onPick }, view.armed, strip);
 
   // The app's tooltip, on the handle.
-  const hasHandle = interactive && topX !== null;
+  const hasHandle = view.handle !== null;
   useEffect(() => {
     if (!tipAction || !handle.current) return;
-    const result = tipAction(handle.current, TIP);
+    const result = tipAction(handle.current, KEYS_TIP);
     return () => result?.destroy?.();
   }, [tipAction, hasHandle]);
 
-  // Esc while armed disarms, and only that: caught first so the app's Esc doesn't also leave the screen.
-  const pickRef = useRef(onPick);
-  pickRef.current = onPick;
-  useEffect(() => {
-    if (!armed) return;
-    const onKey = (event: globalThis.KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      pickRef.current?.(false);
-    };
-    window.addEventListener('keydown', onKey, true);
-    return () => window.removeEventListener('keydown', onKey, true);
-  }, [armed]);
-
-  /** Asks for a split note, clamped to the limits; nothing when it is already there or locked. */
-  function ask(note: number | null) {
-    if (note === null || splitLocked || split === null) return;
-    const next = Math.max(splitMin, Math.min(splitMax, Math.round(note)));
-    if (next !== split) onSplit?.(next);
-  }
-
-  /** The key under a pointer; `top` reads it at the black keys' height (a drag: black keys by x alone). */
-  function keyUnder(event: PointerEvent, top: boolean): number | null {
-    const box = strip.current?.getBoundingClientRect();
-    if (!box) return null;
-    // The strip may be drawn scaled (screens scale to fit): map back to its own px.
-    const scale = box.width > 0 ? width / box.width : 1;
-    const x = (event.clientX - box.left) * scale;
-    const y = top ? 0 : (event.clientY - box.top) * scale;
-    return noteAt(keys, x, y, blackWidth, box.height * scale * BLACK_HEIGHT_RATIO);
-  }
-
-  function capture(event: PointerEvent) {
-    try {
-      (event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId);
-    } catch {
-      // jsdom and synthetic events have no pointer capture.
-    }
-  }
-
-  // The handle: drag to move; a click (no drag) arms or disarms the pick.
-  const drag = useRef<{ pointer: number; startX: number; dragged: boolean } | null>(null);
-
-  function handleDown(event: PointerEvent) {
-    if (event.button !== 0 || splitLocked) return;
-    drag.current = { pointer: event.pointerId, startX: event.clientX, dragged: false };
-    capture(event);
-  }
-  function handleMove(event: PointerEvent) {
-    const d = drag.current;
-    if (!d || d.pointer !== event.pointerId) return;
-    if (!d.dragged && Math.abs(event.clientX - d.startX) < DRAG_SLOP) return;
-    d.dragged = true;
-    ask(keyUnder(event, true));
-  }
-  function handleUp(event: PointerEvent) {
-    const d = drag.current;
-    if (!d || d.pointer !== event.pointerId) return;
-    drag.current = null;
-    if (!d.dragged) onPick?.(!picking);
-  }
-  function handleCancel(event: PointerEvent) {
-    if (drag.current?.pointer === event.pointerId) drag.current = null;
-  }
-
-  function handleKey(event: KeyboardEvent) {
-    if (split === null) return;
-    if (event.key === 'Escape') {
-      if (picking) {
-        event.preventDefault();
-        onPick?.(false);
-      }
-      return;
-    }
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      if (!splitLocked) onPick?.(!picking);
-      return;
-    }
-    const to: Record<string, number> = {
-      ArrowRight: split + 1,
-      ArrowUp: split + 1,
-      ArrowLeft: split - 1,
-      ArrowDown: split - 1,
-      PageUp: split + 12,
-      PageDown: split - 12,
-      Home: splitMin,
-      End: splitMax,
-    };
-    if (!(event.key in to)) return;
-    event.preventDefault();
-    ask(to[event.key]);
-  }
-
-  // The pick, while armed: the key pressed becomes the split; sliding keeps choosing; lifting disarms.
-  const pickPointer = useRef<number | null>(null);
-
-  function pickDown(event: PointerEvent) {
-    if (event.button !== 0) return;
-    pickPointer.current = event.pointerId;
-    capture(event);
-    ask(keyUnder(event, false));
-  }
-  function pickMove(event: PointerEvent) {
-    if (pickPointer.current === event.pointerId) ask(keyUnder(event, false));
-  }
-  function pickUp(event: PointerEvent) {
-    if (pickPointer.current !== event.pointerId) return;
-    pickPointer.current = null;
-    onPick?.(false);
-  }
-  function pickCancel(event: PointerEvent) {
-    if (pickPointer.current === event.pointerId) pickPointer.current = null;
-  }
-
-  const rootStyle = {
-    width: fill ? '100%' : px(width),
-    '--yh-keys-black-w': px(blackWidth),
-    '--yh-keys-split-x': px(keys.splitX ?? 0),
-    '--yh-keys-split-step': keys.splitStep,
-  } as CSSProperties;
-
-  const splitName = split === null ? '' : noteName(split);
-
   return (
-    <div
-      className="yh-keys"
-      data-part="root"
-      ref={rootRef}
-      style={rootStyle}
-      data-width={fill ? 'fill' : undefined}
-      data-unmeasured={unmeasured ? '' : undefined}
-      data-picking={armed ? '' : undefined}
-      data-locked={splitLocked ? '' : undefined}
-      data-ruler={ruler ? undefined : 'off'}
-    >
-      {ruler && (
-      <div className="yh-keys__ruler" data-part="ruler" aria-hidden="true">
-        {zones.map((zone) => (
-          <div
-            key={zone.side}
-            className="yh-keys__zone"
-            data-part="zone"
-            data-side={zone.side}
-            data-hue={zone.hue}
-            data-split={topX !== null ? '' : undefined}
-            data-on={zone.lit ? 'true' : 'false'}
-            style={{ left: px(zone.from), width: px(Math.max(0, zone.to - zone.from)) }}
-          >
-            <Text role="body" size="label" case="label" className="yh-keys__part" data-part="zone-name">
-              {zone.name}
-            </Text>
-            {armed && zone.side !== 'left' ? (
-              <Text role="body" size="label" className="yh-keys__hint" data-part="hint">
-                Press a key to set the split · Esc cancels
+    <div className={view.root.className} ref={rootRef} style={css(view.root.style)} {...view.root.attrs}>
+      {view.ruler && (
+        <div className="yh-keys__ruler" data-part="ruler" aria-hidden="true">
+          {view.ruler.zones.map((zone) => (
+            <div key={zone.side} className="yh-keys__zone" {...zone.attrs} style={css(zone.style)}>
+              <Text role="body" size="label" case="label" className="yh-keys__part" data-part="zone-name">
+                {zone.name}
               </Text>
-            ) : (
-              zone.held.length > 0 && (
-                <Text role="body" weight="strong" tabular className="yh-keys__held" data-part="held">
-                  {zone.held.join(' ')}
+              {zone.hint ? (
+                <Text role="body" size="label" className="yh-keys__hint" data-part="hint">
+                  Press a key to set the split · Esc cancels
                 </Text>
-              )
-            )}
-          </div>
-        ))}
-        {!interactive && topX !== null && (
-          <Text
-            role="body"
-            size="label"
-            weight="strong"
-            tabular
-            className="yh-keys__marker"
-            data-part="marker"
-            style={{ left: px(topX) }}
-          >
-            {splitName}
-          </Text>
-        )}
-      </div>
+              ) : (
+                zone.held !== null && (
+                  <Text role="body" weight="strong" tabular className="yh-keys__held" data-part="held">
+                    {zone.held}
+                  </Text>
+                )
+              )}
+            </div>
+          ))}
+          {view.ruler.marker && (
+            <Text
+              role="body"
+              size="label"
+              weight="strong"
+              tabular
+              className="yh-keys__marker"
+              data-part="marker"
+              style={css(view.ruler.marker.style)}
+            >
+              {view.ruler.marker.text}
+            </Text>
+          )}
+        </div>
       )}
 
       <div className="yh-keys__body" data-part="body">
-        <div className="yh-keys__strip" data-part="strip" role="img" aria-label={label} ref={strip}>
-          {keys.whites.map((key) => (
-            <Text
-              as="div"
-              role="body"
-              size="caption"
-              leading="tight"
-              weight={key.held ? 'strong' : undefined}
-              tabular
-              key={key.note}
-              className="yh-keys__white"
-              data-part="white"
-              data-held={key.held ?? undefined}
-              data-hue={hueOf(key.held)}
-              data-c={key.label ? '' : undefined}
-              style={{ left: px(key.x), width: px(keys.whiteWidth) }}
-            >
+        <div className="yh-keys__strip" {...view.strip.attrs} ref={strip}>
+          {view.whites.map((key) => (
+            <Text as="div" {...key.text} key={key.note} className="yh-keys__white" {...key.attrs} style={css(key.style)}>
               {key.label}
             </Text>
           ))}
-          {keys.blacks.map((key) => (
-            <div
-              key={key.note}
-              className="yh-keys__black"
-              data-part="black"
-              data-held={key.held ?? undefined}
-              data-hue={hueOf(key.held)}
-              style={{ left: px(key.x) }}
-            />
+          {view.blacks.map((key) => (
+            <div key={key.note} className="yh-keys__black" {...key.attrs} style={css(key.style)} />
           ))}
-          {keys.splitX !== null && (
-            <div className="yh-keys__split" data-part="split" data-step={keys.splitStep}>
+          {view.split && (
+            <div className="yh-keys__split" {...view.split.attrs}>
               <span className="yh-keys__split-top" data-part="split-top" />
-              {keys.splitStep !== 0 && <span className="yh-keys__split-join" data-part="split-join" />}
+              {view.split.join && <span className="yh-keys__split-join" data-part="split-join" />}
               <span className="yh-keys__split-bottom" data-part="split-bottom" />
             </div>
           )}
         </div>
-        {armed && (
+        {view.pick && (
           // The pick surface: pointer only (the handle's arrows are the keyboard's way).
           <div
             className="yh-keys__pick"
             data-part="pick"
             aria-hidden="true"
-            onPointerDown={pickDown}
-            onPointerMove={pickMove}
-            onPointerUp={pickUp}
-            onPointerCancel={pickCancel}
+            onPointerDown={input.pickDown}
+            onPointerMove={input.pickMove}
+            onPointerUp={input.pickUp}
+            onPointerCancel={input.pickCancel}
           />
         )}
       </div>
 
-      {hasHandle && split !== null && (
+      {view.handle && (
         <span
           ref={handle}
           className="yh-keys__handle"
-          data-part="handle"
-          role="slider"
           tabIndex={0}
-          style={{ left: px(topX ?? 0) }}
-          aria-label={
-            splitLocked
-              ? 'Split point (locked)'
-              : armed
-                ? 'Split point: click a key to set it, Esc cancels'
-                : 'Split point: drag, or click then click a key'
-          }
-          aria-orientation="horizontal"
-          aria-valuemin={splitMin}
-          aria-valuemax={splitMax}
-          aria-valuenow={split}
-          aria-valuetext={splitName}
-          aria-disabled={splitLocked ? 'true' : undefined}
-          data-tip={TIP}
-          onKeyDown={handleKey}
-          onPointerDown={handleDown}
-          onPointerMove={handleMove}
-          onPointerUp={handleUp}
-          onPointerCancel={handleCancel}
+          {...view.handle.attrs}
+          style={css(view.handle.style)}
+          onKeyDown={input.handleKey}
+          onPointerDown={input.handleDown}
+          onPointerMove={input.handleMove}
+          onPointerUp={input.handleUp}
+          onPointerCancel={input.handleCancel}
         >
           <Text role="body" size="label" weight="strong" leading="tight" tabular className="yh-keys__flag" data-part="flag">
             <span className="yh-keys__grip" data-part="grip" aria-hidden="true" />
-            {splitName}
+            {view.handle.text}
           </Text>
         </span>
       )}

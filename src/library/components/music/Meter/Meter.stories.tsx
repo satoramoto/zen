@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../../../storybook';
 import { Meter } from './Meter';
+import { meterArgTypes, meterBase, meterStories as s } from './Meter.fixtures';
 
 /**
  * `live.meter~`: a level, read-only (`role="meter"`). The channel is a `well`, the level lit in the
@@ -13,39 +14,30 @@ const meta = {
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  args: { value: 0.62, name: 'Level' },
-  argTypes: {
-    value: { control: { type: 'range', min: 0, max: 1, step: 0.01 } },
-    peak: { control: { type: 'range', min: 0, max: 1, step: 0.01 } },
-    orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
-    layout: { control: 'inline-radio', options: ['stacked', 'inline', 'inside'] },
-    side: { control: 'inline-radio', options: ['left', 'right'] },
-    showValue: { control: 'boolean' },
-    display: { control: 'text' },
-    width: { control: 'number' },
-    length: { control: 'number' },
-    ink: { control: 'text' },
-  },
+  args: meterBase,
+  argTypes: meterArgTypes,
 } satisfies Meta<typeof Meter>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Every story's args come from Meter.fixtures.ts, which the Svelte stories and the parity test share.
+
 /** Caption over the bar, no reading: the widget's default face. */
-export const Default: Story = {};
+export const Default: Story = { args: s.Default.args };
 
 /** With a peak hold drawn as a line. */
-export const Peak: Story = { args: { value: 0.48, peak: 0.81 } };
+export const Peak: Story = { args: s.Peak.args };
 
 /** Vertical, with its reading. */
-export const Vertical: Story = { args: { orientation: 'vertical', value: 0.7, peak: 0.9, showValue: true, length: 96, width: 6 } };
+export const Vertical: Story = { args: s.Vertical.args };
 
 /** Inline: caption over reading, beside the bar. */
-export const Inline: Story = { args: { layout: 'inline', showValue: true } };
+export const Inline: Story = { args: s.Inline.args };
 
 /** A row: caption and reading inside the bar. */
 export const Inside: Story = {
-  args: { name: 'Energy', layout: 'inside', showValue: true },
+  args: s.Inside.args,
   render: (args) => (
     <div style={{ width: 'calc(var(--control-h) * 7)' }}>
       <Meter {...args} />
@@ -54,13 +46,13 @@ export const Inside: Story = {
 };
 
 /** An authoritative reading. */
-export const Display: Story = { ...Inside, args: { ...Inside.args, display: 'live' } };
+export const Display: Story = { ...Inside, args: s.Display.args };
 
 /** Clamped: an overshoot (1.4, peak 2) fills the bar and stops at 100. */
-export const Clamped: Story = { args: { value: 1.4, peak: 2, showValue: true } };
+export const Clamped: Story = { args: s.Clamped.args };
 
 /** A custom ink. */
-export const Ink: Story = { args: { ink: 'var(--hue-3)', peak: 0.75 } };
+export const Ink: Story = { args: s.Ink.args };
 
 /** Driven: an envelope pulsing, the peak decaying behind it. */
 export const Driven: Story = {
