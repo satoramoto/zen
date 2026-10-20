@@ -1,47 +1,25 @@
 import { useEffect, useState } from 'react';
-import type { TipAction } from '../../components/music/Pad/Pad';
 import { StatusDot } from '../../components/core/StatusDot/StatusDot';
 import { Text } from '../../primitives/Text';
-import { health, type HealthTarget } from './health';
+import { healthSlotView, type HealthSlotModelProps, type HealthState, type HealthWord } from './HealthSlot.model';
 import './HealthSlot.css';
 
+// The props and the slot are framework-free, in the model; `HealthSlot.svelte` renders the same view.
 export type { HealthTarget } from './health';
+export type { HealthSlotModelProps } from './HealthSlot.model';
+export type HealthSlotProps = HealthSlotModelProps;
 
-export interface HealthSlotProps {
-  /** The first keyboard part (0–3: R1 R2 R3 L) whose plugin failed and isn't missing (`firstFailedPart`). */
-  failedPart?: 0 | 1 | 2 | 3 | null;
-  /** False when there is no audio (`io.synth` is null). */
-  synthOn?: boolean;
-  /** Audio dropouts in the last 30 s, counted by the wiring. */
-  dropouts?: number;
-  /** The buffer in use, in frames (64 … 1024); null when unknown. */
-  bufferFrames?: number | null;
-  /** The CPU load, 1.0 = the whole buffer; null before the first meters frame. */
-  cpu?: number | null;
-  /** A fixed width in px. Default: fills its container's width. */
-  width?: number;
-  /** The tooltip key, as `data-tip` on the button (or the calm text); null turns it off. */
-  tip?: string | null;
-  /** The app's tooltip action, applied with `tip` to whichever element carries `data-tip`. */
-  tipAction?: TipAction;
-  /** Called with where to fix the trouble on a click, Enter or Space. */
-  onOpen?: (target: HealthTarget) => void;
-}
-
-/**
- * Splits "CPU 74%" into words and numerals, so the counts can wear the readout face. A digit
- * inside a name ("R3 failed") is part of the name and stays in its face.
- */
-function Words({ text }: { text: string }) {
+/** The text as words and numerals (`healthWords`): the counts wear the readout face. */
+function Words({ words }: { words: HealthWord[] }) {
   return (
     <>
-      {text.split(/(?<![\p{L}\d])(\d+%?)/u).map((part, i) =>
-        i % 2 ? (
+      {words.map((word, i) =>
+        word.numeral ? (
           <Text key={i} role="numeral" size="inherit" className="yh-health-slot__num" data-part="num">
-            {part}
+            {word.text}
           </Text>
         ) : (
-          part
+          word.text
         ),
       )}
     </>
@@ -53,7 +31,7 @@ function Words({ text }: { text: string }) {
  * Launchkey wears (filled `ok` when fine, a hollow faint ring when there is no audio); trouble is
  * the danger chip's triangle, drawn as StatusLine's error mark.
  */
-function Mark({ state }: { state: 'calm' | 'off' | 'trouble' }) {
+function Mark({ state }: { state: HealthState }) {
   return (
     <span className="yh-health-slot__mark" data-part="mark" data-state={state} aria-hidden="true">
       {state === 'trouble' ? (
@@ -101,21 +79,10 @@ function Mark({ state }: { state: 'calm' | 'off' | 'trouble' }) {
  * readers, `tip` as `data-tip` on whichever element shows (null turns it off), the ellipsis when the
  * slot is narrow, and no motion beyond a hover fade (off under reduced motion).
  */
-export function HealthSlot({
-  failedPart = null,
-  synthOn = true,
-  dropouts = 0,
-  bufferFrames = null,
-  cpu = null,
-  width,
-  tip = 'app.health',
-  tipAction,
-  onOpen,
-}: HealthSlotProps) {
-  const shown = health({ failedPart, synthOn, dropouts, bufferFrames, cpu });
-  const state = shown.target === null ? 'calm' : shown.hue === 'ending' ? 'trouble' : 'off';
-  const dataTip = tip ?? undefined;
-  const target = shown.target;
+export function HealthSlot(props: HealthSlotProps) {
+  const { tipAction, onOpen } = props;
+  const view = healthSlotView(props);
+  const { state, target, tip: dataTip } = view;
   // The element carrying `data-tip`: the button in trouble, the calm text otherwise.
   const [node, setNode] = useState<HTMLElement | null>(null);
   useEffect(() => {
@@ -125,19 +92,9 @@ export function HealthSlot({
   }, [node, dataTip, tipAction]);
 
   return (
-    <Text
-      role="label"
-      weight="body"
-      case="none"
-      tabular
-      className={`yh-health-slot${width === undefined ? ' yh-health-slot--fill' : ''}`}
-      data-part="root"
-      data-hue={shown.hue}
-      data-state={state}
-      style={width === undefined ? undefined : { width: `${width}px` }}
-    >
+    <Text role="label" weight="body" case="none" tabular className={view.className} {...view.attrs} style={view.style}>
       <span role="status" className="yh-health-slot__live" data-part="live">
-        {shown.label}
+        {view.label}
       </span>
       {target ? (
         <Text
@@ -155,14 +112,14 @@ export function HealthSlot({
         >
           <Mark state={state} />
           <span className="yh-health-slot__text" data-part="text">
-            <Words text={shown.text} />
+            <Words words={view.words} />
           </span>
         </Text>
       ) : (
         <span className="yh-health-slot__calm" data-part="calm">
           <Mark state={state} />
           <span ref={setNode} className="yh-health-slot__text" data-part="text" aria-hidden="true" data-tip={dataTip}>
-            {shown.text}
+            {view.text}
           </span>
         </span>
       )}

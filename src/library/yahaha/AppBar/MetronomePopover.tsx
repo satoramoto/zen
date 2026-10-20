@@ -1,36 +1,15 @@
-import { useEffect, useRef, type KeyboardEvent } from 'react';
-import { LampButton, type TipAction } from '../../components/core/LampButton/LampButton';
+import { useRef, type KeyboardEvent } from 'react';
+import { LampButton } from '../../components/core/LampButton/LampButton';
 import { LineSlider } from '../../components/core/LineSlider/LineSlider';
 import { SettingsRow } from '../../components/core/SettingsRow/SettingsRow';
 import { Text } from '../../primitives/Text';
+import { isOwnKey, METRONOME_LABEL_WIDTH, metronomePopoverView, type MetronomePopoverModelProps } from './MetronomePopover.model';
+import { useDismiss } from './usePopover';
 import './MetronomePopover.css';
 
-export interface MetronomePopoverProps {
-  /** The popover's id: the opener's `aria-controls` names it. */
-  id?: string;
-  /** The metronome on. */
-  on?: boolean;
-  /** The click's volume, 0–127. */
-  volume?: number;
-  /** A bell on the first beat of each bar. */
-  bell?: boolean;
-  /** The click can sound (the built-in synth is running); false shows a caption saying it can't. */
-  audible?: boolean;
-  /** The app's tooltip action, applied to every control with its key. */
-  tipAction?: TipAction;
-  /** Called with the state asked for when the metronome's On/Off is pressed. */
-  onOn?: (on: boolean) => void;
-  /** Called with the volume asked for (0–127). */
-  onVolume?: (volume: number) => void;
-  /** Called with the state asked for when the bell's On/Off is pressed. */
-  onBell?: (on: boolean) => void;
-  /** Called on Esc or a press outside the popover (not on its opener, which toggles it itself). */
-  onClose?: () => void;
-}
-
-/** Keys the popover's own controls handle (the slider's steps): they stop here, so the window's
- * shortcuts (style step, pad page) don't also act on them. */
-const OWN_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End']);
+// The props and the popover are framework-free, in the model; `MetronomePopover.svelte` renders the same view.
+export type { MetronomePopoverModelProps } from './MetronomePopover.model';
+export type MetronomePopoverProps = MetronomePopoverModelProps;
 
 /**
  * MetronomePopover: the metronome's settings, opened from the app bar's Metronome ▾.
@@ -51,68 +30,27 @@ const OWN_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Pa
  * shortcuts) and a press outside (except on the opener, `[aria-controls=<id>]`) call `onClose`;
  * the slider's arrow keys never reach the window. Where it sits is the parent's: it draws in place.
  */
-export function MetronomePopover({
-  id = 'metronome-settings',
-  on = false,
-  volume = 100,
-  bell = false,
-  audible = true,
-  tipAction,
-  onOn,
-  onVolume,
-  onBell,
-  onClose,
-}: MetronomePopoverProps) {
+export function MetronomePopover(props: MetronomePopoverProps) {
+  const { tipAction, onOn, onVolume, onBell, onClose } = props;
+  const view = metronomePopoverView(props);
   const box = useRef<HTMLDivElement>(null);
-  const close = useRef(onClose);
-  close.current = onClose;
 
   // Esc and a press outside close it. A press on the opener is left to the opener (it toggles).
-  useEffect(() => {
-    const keydown = (event: globalThis.KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      // In the capture phase, so the window's own key handlers never see this Esc.
-      event.stopPropagation();
-      event.preventDefault();
-      close.current?.();
-    };
-    const pointerdown = (event: PointerEvent) => {
-      const target = event.target as Node | null;
-      if (!target || !box.current || box.current.contains(target)) return;
-      if (target instanceof Element && target.closest(`[aria-controls="${id}"]`)) return;
-      close.current?.();
-    };
-    window.addEventListener('keydown', keydown, true);
-    window.addEventListener('pointerdown', pointerdown, true);
-    return () => {
-      window.removeEventListener('keydown', keydown, true);
-      window.removeEventListener('pointerdown', pointerdown, true);
-    };
-  }, [id]);
+  useDismiss(box, view.id, onClose);
 
   const ownKeys = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (OWN_KEYS.has(event.key)) event.stopPropagation();
+    if (isOwnKey(event.key)) event.stopPropagation();
   };
 
   return (
-    <Text
-      as="div"
-      ref={box}
-      className="yh-metronome-popover"
-      data-part="root"
-      id={id}
-      ariaRole="dialog"
-      tabIndex={-1}
-      aria-label="Metronome settings"
-      onKeyDown={ownKeys}
-    >
+    <Text as="div" ref={box} className={view.className} {...view.attrs} ariaRole="dialog" tabIndex={-1} onKeyDown={ownKeys}>
       <Text role="label" tone="primary" className="yh-metronome-popover__title" data-part="title">
         Metronome
       </Text>
-      <SettingsRow label="On/off" labelWidth={104}>
+      <SettingsRow id={view.rowIds.on} label="On/off" labelWidth={METRONOME_LABEL_WIDTH}>
         <LampButton
-          label={on ? 'On' : 'Off'}
-          on={on}
+          label={view.onLabel}
+          on={view.on}
           size="sm"
           name="Metronome on/off"
           tip="metronome.on"
@@ -120,9 +58,9 @@ export function MetronomePopover({
           onToggle={(next) => onOn?.(next)}
         />
       </SettingsRow>
-      <SettingsRow label="Volume" labelWidth={104}>
+      <SettingsRow id={view.rowIds.volume} label="Volume" labelWidth={METRONOME_LABEL_WIDTH}>
         <LineSlider
-          value={volume}
+          value={view.volume}
           min={0}
           max={127}
           name="Metronome volume"
@@ -132,10 +70,10 @@ export function MetronomePopover({
           onchange={(v) => onVolume?.(v)}
         />
       </SettingsRow>
-      <SettingsRow label="Bell on beat 1" labelWidth={104}>
+      <SettingsRow id={view.rowIds.bell} label="Bell on beat 1" labelWidth={METRONOME_LABEL_WIDTH}>
         <LampButton
-          label={bell ? 'On' : 'Off'}
-          on={bell}
+          label={view.bellLabel}
+          on={view.bell}
           size="sm"
           name="Bell on beat 1"
           tip="metronome.bell"
@@ -143,7 +81,7 @@ export function MetronomePopover({
           onToggle={(next) => onBell?.(next)}
         />
       </SettingsRow>
-      {!audible && (
+      {view.note && (
         <Text as="p" size="caption" className="yh-metronome-popover__note" data-part="note">
           The built-in synth isn't running: the click can't sound.
         </Text>

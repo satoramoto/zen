@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { MetronomePopover } from './MetronomePopover';
-import { boardMetronome } from './AppBar.fixtures';
+import { boardMetronome, metronomePopoverArgTypes, metronomePopoverStories as s } from './AppBar.fixtures';
 
 /**
  * The metronome's settings, opened by the app bar's Metronome ▾: the title, then Metronome
@@ -22,13 +22,7 @@ const meta = {
     onBell: fn(),
     onClose: fn(),
   },
-  argTypes: {
-    id: { control: 'text' },
-    on: { control: 'boolean' },
-    volume: { control: { type: 'number', min: 0, max: 127, step: 1 } },
-    bell: { control: 'boolean' },
-    audible: { control: 'boolean' },
-  },
+  argTypes: metronomePopoverArgTypes,
 } satisfies Meta<typeof MetronomePopover>;
 
 export default meta;
@@ -54,10 +48,10 @@ export const Board: Story = {
 
 /** Off, quiet, no bell. */
 export const Off: Story = {
-  args: { on: false, volume: 20, bell: false },
+  args: s.Off.args,
 };
 
 /** The built-in synth isn't running: a caption says the click can't sound. */
 export const NotAudible: Story = {
-  args: { audible: false },
+  args: s.NotAudible.args,
 };
