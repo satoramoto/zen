@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useLongPress } from '../Button/useLongPress';
+import { useBound } from '../../../view/useBound';
+import { bindLongPress } from '../Button/longPress';
 import { lampButtonView, lampToggle, type LampButtonModelProps } from './LampButton.model';
 import { Text } from '../../../primitives/Text';
 import './LampButton.css';
@@ -62,7 +63,7 @@ export function LampButton(props: LampButtonProps) {
   const view = lampButtonView(props);
   const ref = useRef<HTMLButtonElement>(null);
 
-  useLongPress(ref, { onLongPress, onLongRelease, disabled: !view.longPress });
+  useBound(ref, bindLongPress, { onLongPress, onLongRelease, disabled: !view.longPress });
 
   useEffect(() => {
     const node = ref.current;

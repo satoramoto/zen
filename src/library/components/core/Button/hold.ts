@@ -1,8 +1,9 @@
 /**
  * Button's repeat-while-held (`hold`), framework-free: a primary pointer going down starts a hold
  * (`onHold(true)`), and only that pointer's up, cancel or lost capture ends it (`onHold(false)`,
- * once). Each renderer creates one per button, feeds it its pointer events, and stops it when the
- * hold can't continue (disabled, no longer a hold button, unmounted).
+ * once). `bindHold` listens on the button and is registered as the `hold` store
+ * (`src/library/view/stores.ts`); turned off (disabled, no longer a hold button) or unbound, it
+ * ends a hold in progress.
  */
 export interface HoldStore {
   /** A pointer went down: starts a hold when `enabled` (a hold button, not disabled) and none is in progress. */
@@ -44,5 +45,37 @@ export function createHold(node: () => HTMLElement | null | undefined, onHold: (
       if (holdId !== null && event.pointerId === holdId) stop(false);
     },
     stop,
+  };
+}
+
+export interface HoldParams {
+  /** A hold button that isn't disabled: pointers start holds. */
+  enabled?: boolean;
+  /** `true` when a primary pointer goes down, `false` once when that hold ends. */
+  onHold?: (down: boolean) => void;
+}
+
+/** Listens on `node` for holds. Turned off mid-hold, it ends the hold and releases its pointer;
+ *  destroyed mid-hold, it ends it. Params are read at each event. */
+export function bindHold(node: HTMLElement, initial: HoldParams): { update(params: HoldParams): void; destroy(): void } {
+  let params = initial;
+  const holding = createHold(
+    () => node,
+    () => params.onHold,
+  );
+  const down = (event: PointerEvent) => holding.down(event, params.enabled === true);
+  const end = (event: PointerEvent) => holding.end(event);
+  node.addEventListener('pointerdown', down);
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture'] as const) node.addEventListener(type, end);
+  return {
+    update(next) {
+      params = next;
+      if (!params.enabled) holding.stop(true);
+    },
+    destroy() {
+      holding.stop(false);
+      node.removeEventListener('pointerdown', down);
+      for (const type of ['pointerup', 'pointercancel', 'lostpointercapture'] as const) node.removeEventListener(type, end);
+    },
   };
 }

@@ -1,0 +1,177 @@
+## Board
+<button aria-label="Dynamics (DynCtrl) 127" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Dynamics"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <path class="yh-knob__lit" d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44" data-part="arc">
+      <line class="yh-knob__pointer" data-part="pointer" x1="39.56" x2="42.38" y1="39.56" y2="42.38">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "127"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "DynCtrl"
+
+## Partial
+<button aria-label="Retrig rate (RtgRate) 1/8" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Retrig rate"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <path class="yh-knob__lit" d="M 10.56 37.44 A 19 19 0 0 1 15.37 7.07" data-part="arc">
+      <line class="yh-knob__pointer" data-part="pointer" x1="14.01" x2="12.20" y1="4.40" y2="0.83">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "1/8"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "RtgRate"
+
+## Unit
+<button aria-label="Swing (Swing) 0%" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-rest="true" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Swing"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <line class="yh-knob__pointer" data-part="pointer" x1="8.44" x2="5.62" y1="39.56" y2="42.38">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "0"
+      <span class="lib-text lib-tone yh-knob__unit" data-part="unit" data-role="body" data-text-leading="tight" data-text-size="caption">
+        "%"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "Swing"
+
+## Unused
+<button aria-label="unused" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" data-unused="true" type="button" use:knob={"unused":true,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="body">
+    "---"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+
+## Hue
+<button aria-label="Retrig rate (RtgRate) 1/8" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-hue="2" data-part="root" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Retrig rate"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <path class="yh-knob__lit" d="M 10.56 37.44 A 19 19 0 0 1 15.37 7.07" data-part="arc">
+      <line class="yh-knob__pointer" data-part="pointer" x1="14.01" x2="12.20" y1="4.40" y2="0.83">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "1/8"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "RtgRate"
+
+## BoardRow #1
+<button aria-label="Dynamics (DynCtrl) 127" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Dynamics"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <path class="yh-knob__lit" d="M 10.56 37.44 A 19 19 0 1 1 37.44 37.44" data-part="arc">
+      <line class="yh-knob__pointer" data-part="pointer" x1="39.56" x2="42.38" y1="39.56" y2="42.38">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "127"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "DynCtrl"
+
+## BoardRow #2
+<button aria-label="Retrig rate (RtgRate) 1/8" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Retrig rate"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <path class="yh-knob__lit" d="M 10.56 37.44 A 19 19 0 0 1 15.37 7.07" data-part="arc">
+      <line class="yh-knob__pointer" data-part="pointer" x1="14.01" x2="12.20" y1="4.40" y2="0.83">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "1/8"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "RtgRate"
+
+## BoardRow #3
+<button aria-label="Swing (Swing) 0%" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-rest="true" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Swing"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <line class="yh-knob__pointer" data-part="pointer" x1="8.44" x2="5.62" y1="39.56" y2="42.38">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "0"
+      <span class="lib-text lib-tone yh-knob__unit" data-part="unit" data-role="body" data-text-leading="tight" data-text-size="caption">
+        "%"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "Swing"
+
+## BoardRow #4
+<button aria-label="Cutoff (Cutoff) 64" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Cutoff"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <path class="yh-knob__lit" d="M 10.56 37.44 A 19 19 0 0 1 24.00 5.00" data-part="arc">
+      <line class="yh-knob__pointer" data-part="pointer" x1="24.00" x2="24.00" y1="2.00" y2="-2.00">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "64"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "Cutoff"
+
+## BoardRow #5
+<button aria-label="Resonance (Reso) Off" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-rest="true" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Resonance"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <line class="yh-knob__pointer" data-part="pointer" x1="8.44" x2="5.62" y1="39.56" y2="42.38">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "Off"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "Reso"
+
+## BoardRow #6
+<button aria-label="Attack (EGAtk) 12" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" type="button" use:knob={"unused":false,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="strong">
+    "Attack"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+      <path class="yh-knob__lit" d="M 10.56 37.44 A 19 19 0 0 1 5.93 29.87" data-part="arc">
+      <line class="yh-knob__pointer" data-part="pointer" x1="3.08" x2="-0.73" y1="30.80" y2="32.03">
+    <span class="lib-text lib-tone yh-knob__value" data-part="value" data-role="numeral">
+      "12"
+  <span class="lib-text lib-tone yh-knob__code" data-part="code" data-role="caption">
+    "EGAtk"
+
+## BoardRow #7
+<button aria-label="unused" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" data-unused="true" type="button" use:knob={"unused":true,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="body">
+    "---"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">
+
+## BoardRow #8
+<button aria-label="unused" aria-roledescription="knob" class="yh-knob lib-focus-ring" data-part="root" data-tip="knobs.knob" data-unused="true" type="button" use:knob={"unused":true,"tip":"knobs.knob","tipAction":"tipAction","onpress":"press","onstep":"step"}>
+  <span class="lib-text lib-tone yh-knob__label" data-part="label" data-role="caption" data-text-case="label" data-text-weight="body">
+    "---"
+  <span class="yh-knob__dial" data-part="dial">
+    <span aria-hidden="true" class="lib-surface yh-knob__track" data-material="well" data-part="well" data-radius="circle">
+    <span aria-hidden="true" class="lib-surface yh-knob__body" data-material="handle" data-part="body" data-radius="circle">
+    <svg aria-hidden="true" class="yh-knob__ring" viewBox="0 0 48 48">

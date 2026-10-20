@@ -1,16 +1,18 @@
 <!--
   LampButton: the Svelte renderer of `lampButtonView` (LampButton.model.ts), the same markup,
   classes and attributes as `LampButton.tsx`; see LampButton.tsx for the job, the faces and the
-  tuning knobs. The long press is Button's `longPress` action (over `longPress.ts`), attached
-  through Text to the button element.
+  tuning knobs. The long press is Button's store (`longPress.ts`) as an action, attached through
+  Text to the button element.
 -->
 <script lang="ts">
   import { fromAction } from 'svelte/attachments';
   import Text from '../../../primitives/Text.svelte';
-  import { longPress } from '../Button/longPress.svelte';
+  import { actionOf } from '../../../view/bridge';
+  import { bindLongPress } from '../Button/longPress';
   import { lampButtonView, lampToggle, type LampButtonModelProps } from './LampButton.model';
   import './LampButton.css';
 
+  const longPress = actionOf(bindLongPress);
   let props: LampButtonModelProps = $props();
   const view = $derived(lampButtonView(props));
 

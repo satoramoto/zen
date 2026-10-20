@@ -39,8 +39,5 @@ export function scopeView(facets: Facets, mode: Mode, bleed = false): ScopeView 
   };
 }
 
-/** Custom properties as a `style` attribute's text (`--a: 1; --b: 2`), for renderers that set it as a string. */
-export const styleText = (vars: Record<string, string>): string =>
-  Object.entries(vars)
-    .map(([name, value]) => `${name}: ${value}`)
-    .join('; ');
+/** Custom properties as a `style` attribute's text (`--a: 1; --b: 2`): the view tree's `styleText`. */
+export { styleText } from './view/Tree.model';

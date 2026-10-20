@@ -1,13 +1,14 @@
 import type { Preview } from '@storybook/react-vite';
 import '../src/styles.css';
 import { libraryGlobalTypes, libraryInitialGlobals } from '../src/library/storybook';
+import { rendererGlobalTypes, rendererInitialGlobals } from '../src/library/storybook.globals';
 // The Claude Code harness: the global `h`/`Fragment` its kit and sample mod compile against, its
 // toolbar (surface, pane theme, frame, width, skin) and the decorator that draws `Harness/...` stories in a pane.
 import '../src/harness/claude-code/bench/globals';
 import { harnessGlobalTypes, harnessInitialGlobals, withHarness } from '../src/harness/claude-code/storybook';
 const preview: Preview = {
-  globalTypes: { ...libraryGlobalTypes, ...harnessGlobalTypes },
-  initialGlobals: { ...libraryInitialGlobals, ...harnessInitialGlobals },
+  globalTypes: { ...libraryGlobalTypes, ...rendererGlobalTypes, ...harnessGlobalTypes },
+  initialGlobals: { ...libraryInitialGlobals, ...rendererInitialGlobals, ...harnessInitialGlobals },
   decorators: [withHarness],
   parameters: {
     layout: 'padded',

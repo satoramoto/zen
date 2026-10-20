@@ -16,6 +16,9 @@ import ThemeScopeSvelte from './svelte/ThemeScope.svelte';
 import TextSvelte from './primitives/Text.svelte';
 import StackSvelte from './primitives/Stack.svelte';
 import ButtonSvelte from './components/core/Button/Button.svelte';
+import { actionOf } from './view/bridge';
+import { bindLongPress } from './components/core/Button/longPress';
+import { bindKnob } from './components/music/Knob/knobInput';
 import type { TextModelProps } from './primitives/Text.model';
 import type { StackModelProps } from './primitives/Stack.model';
 import type { ButtonModelProps } from './components/core/Button/Button.model';
@@ -207,7 +210,8 @@ export interface ButtonProps extends ButtonModelProps {
   icon?: Snippet;
 }
 export const Button = ButtonSvelte as unknown as Component<ButtonProps>;
-export { longPress } from './components/core/Button/longPress.svelte';
+/** Button's long press as an action, for an app's own elements (`use:longPress={{ onLongPress }}`). */
+export const longPress = actionOf(bindLongPress);
 
 // Music controls.
 export interface PadProps extends PadModelProps {}
@@ -215,7 +219,8 @@ export const Pad = PadSvelte as unknown as Component<PadProps>;
 export { padPress } from './components/music/Pad/padPress.svelte';
 export interface KnobProps extends KnobModelProps {}
 export const Knob = KnobSvelte as unknown as Component<KnobProps>;
-export { knobInput } from './components/music/Knob/knobInput.svelte';
+/** Knob's input as an action, for an app's own knob (`use:knobInput={{ onstep }}`). */
+export const knobInput = actionOf(bindKnob);
 export interface FaderProps extends FaderModelProps {}
 export const Fader = FaderSvelte as unknown as Component<FaderProps>;
 export { faderInput } from './components/music/Fader/faderInput.svelte';

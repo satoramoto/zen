@@ -1,8 +1,8 @@
 /**
  * The long press, framework-free: hold a button for a moment (or right-click it) to reach its
  * second function. A port of yahaha's `longpress` action (yahaha/src/ui/actions/longpress).
- * `useLongPress` (React) and the `longPress` action (`longPress.svelte.ts`) both wrap
- * `bindLongPress`; neither holds any of this logic.
+ * Registered as the `longPress` store (`src/library/view/stores.ts`): a tree binds it by name and
+ * both renderers apply it; neither holds any of this logic.
  *
  * - A primary-button press held for LONG_PRESS_MS without moving more than MOVE_TOLERANCE_PX calls
  *   `onLongPress` while still held; its release calls `onLongRelease`, and the click that follows

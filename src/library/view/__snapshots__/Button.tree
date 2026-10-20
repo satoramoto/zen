@@ -1,0 +1,606 @@
+## Board
+<button aria-expanded="false" aria-haspopup="dialog" aria-label="Metronome settings" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="off" data-hue="t" data-join="end" data-part="face" data-role="label" data-size="caret" data-tabular="" data-text-leading="tight" data-tip="metronome.settings" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tip":"metronome.settings","tipAction":"tipAction"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="caret" data-part="glyph" data-role="label" data-text-leading="tight">
+    "▾"
+
+## Icon
+<button aria-label="Help mode" aria-pressed="false" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "?"
+
+## BandOn
+<button aria-label="Fade" aria-pressed="true" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fade"
+
+## On
+<button aria-label="Help mode" aria-pressed="true" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "?"
+
+## Chosen
+<button aria-label="One Touch 2, applied" aria-pressed="true" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "2"
+
+## Band
+<button aria-label="Stop (fade with hold)" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Stop"
+
+## Running
+<button aria-label="Start / Stop, running" aria-pressed="true" class="lib-text lib-tone yh-button lib-focus-ring" data-bar="" data-face="on" data-hue="ok" data-part="face" data-role="label" data-size="band" data-solid="" data-tabular="" data-text-leading="tight" data-tip="transport.start_stop" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tip":"transport.start_stop","tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Start / Stop"
+
+## Stopped
+<button aria-label="Start / Stop" aria-pressed="false" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-tip="transport.start_stop" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tip":"transport.start_stop","tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Start / Stop"
+
+## Waiting
+<button aria-label="Fade, armed" aria-pressed="false" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-tip="transport.fade" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tip":"transport.fade","tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fade"
+
+## WaitingFlash #1
+<button aria-label="Fade, armed, lit" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fade"
+
+## WaitingFlash #2
+<button aria-label="Fade, armed, unlit" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="t" data-lit="false" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fade"
+
+## WaitingFlash #3
+<button aria-label="Hue 1, armed, lit" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="1" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "On"
+
+## WaitingFlash #4
+<button aria-label="Hue 1, armed, unlit" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="1" data-lit="false" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "On"
+
+## Role2 #1
+<button aria-label="Start / Stop, stopped" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="role-2" data-part="face" data-role="label" data-size="band" data-tabular="" data-tall="" data-text-leading="tight" data-variant="primary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Start"
+
+## Role2 #2
+<button aria-label="Start / Stop, running" class="lib-text lib-tone yh-button lib-focus-ring" data-bar="" data-face="on" data-hue="ok" data-part="face" data-role="label" data-size="band" data-solid="" data-tabular="" data-tall="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Stop"
+
+## Role2 #3
+<button aria-label="Sync Start" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="role-2" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Sync Start"
+
+## Role2 #4
+<button aria-label="Sync Start, armed" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="role-2" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Sync Start"
+
+## Role2 #5
+<button aria-label="Fill up, queued, unlit" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="role-2" data-lit="false" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fill"
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="up" data-part="glyph" data-role="label" data-text-leading="tight">
+    "▲"
+
+## Role2 #6
+<button aria-label="Tap, on" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="role-2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Tap"
+
+## Role2 #7
+<button aria-label="Tempo up" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="off" data-hue="role-2" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="plus" data-part="glyph" data-role="label" data-text-leading="tight">
+    "+"
+
+## Tall
+<button aria-label="Start / Stop" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-tall="" data-text-leading="tight" data-variant="primary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Start"
+
+## Disabled
+<button aria-disabled="true" aria-label="Audition (stop the band first)" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="t" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Audition"
+
+## DisabledHue
+<button aria-disabled="true" aria-label="Fill up (none in this style)" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="fill" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fill"
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="up" data-part="glyph" data-role="label" data-text-leading="tight">
+    "▲"
+
+## Hold
+<button aria-label="Tempo up (Scene Launch)" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-tip="tempo.up" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":true,"onHold":"hold"} use:tip={"tip":"tempo.up","tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Tempo"
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="plus" data-part="glyph" data-role="label" data-text-leading="tight">
+    "+"
+
+## LongPress
+<button aria-label="Stop" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-tip="transport.stop" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tip":"transport.stop","tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Stop"
+
+## Hierarchy #1
+<button aria-label="Start" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-variant="primary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Start"
+
+## Hierarchy #2
+<button aria-label="Stop" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Stop"
+
+## Hierarchy #3
+<button aria-label="Reset" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="quiet" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Reset"
+
+## Hierarchy #4
+<button aria-label="Previous style" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="quiet" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="prev" data-part="glyph" data-role="label" data-text-leading="tight">
+    "◀"
+
+## Hierarchy #5
+<button aria-label="Next style" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="quiet" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="next" data-part="glyph" data-role="label" data-text-leading="tight">
+    "▶"
+
+## Quiet #1
+<button aria-label="JSON off" aria-pressed="false" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="quiet" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "JSON"
+
+## Quiet #2
+<button aria-label="JSON chosen" aria-pressed="true" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="t" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="quiet" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "JSON"
+
+## Quiet #3
+<button aria-disabled="true" aria-label="JSON disabled" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="t" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="quiet" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "JSON"
+
+## IconToggle #1
+<button aria-label="Inspector" aria-pressed="false" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="quiet" title="Show the inspector (⌘I)" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+
+## IconToggle #2
+<button aria-label="Sources" aria-pressed="true" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="chosen" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="quiet" title="Hide the sources" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+
+## IconToggle #3
+<button aria-label="Library" aria-pressed="false" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="quiet" title="Show the library" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Library"
+
+## IconToggle #4
+<button aria-label="Sources (secondary)" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="secondary" title="Sources" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+
+## IconToggle #5
+<button aria-disabled="true" aria-label="Sources (disabled)" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-contrast="dim" data-face="disabled" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="quiet" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+
+## Faces #1
+<button aria-label="t" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "t"
+
+## Faces #2
+<button aria-label="t" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "t"
+
+## Faces #3
+<button aria-label="t" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "t"
+
+## Faces #4
+<button aria-label="t" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "t"
+
+## Faces #5
+<button aria-disabled="true" aria-label="t" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "t"
+
+## Faces #6
+<button aria-label="a" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="a" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "a"
+
+## Faces #7
+<button aria-label="a" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="a" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "a"
+
+## Faces #8
+<button aria-label="a" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="a" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "a"
+
+## Faces #9
+<button aria-label="a" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="a" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "a"
+
+## Faces #10
+<button aria-disabled="true" aria-label="a" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="a" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "a"
+
+## Faces #11
+<button aria-label="rec" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="rec" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "rec"
+
+## Faces #12
+<button aria-label="rec" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="rec" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "rec"
+
+## Faces #13
+<button aria-label="rec" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="rec" data-part="face" data-role="label" data-size="pair" data-solid="" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "rec"
+
+## Faces #14
+<button aria-label="rec" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="rec" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "rec"
+
+## Faces #15
+<button aria-disabled="true" aria-label="rec" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="rec" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "rec"
+
+## Faces #16
+<button aria-label="ok" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="ok" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ok"
+
+## Faces #17
+<button aria-label="ok" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="ok" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ok"
+
+## Faces #18
+<button aria-label="ok" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="ok" data-part="face" data-role="label" data-size="pair" data-solid="" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ok"
+
+## Faces #19
+<button aria-label="ok" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="ok" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ok"
+
+## Faces #20
+<button aria-disabled="true" aria-label="ok" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="ok" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ok"
+
+## Faces #21
+<button aria-label="role-2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="role-2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "role-2"
+
+## Faces #22
+<button aria-label="role-2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="role-2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "role-2"
+
+## Faces #23
+<button aria-label="role-2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="role-2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "role-2"
+
+## Faces #24
+<button aria-label="role-2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="role-2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "role-2"
+
+## Faces #25
+<button aria-disabled="true" aria-label="role-2" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="role-2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "role-2"
+
+## Faces #26
+<button aria-label="1" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="1" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "1"
+
+## Faces #27
+<button aria-label="1" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="1" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "1"
+
+## Faces #28
+<button aria-label="1" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="1" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "1"
+
+## Faces #29
+<button aria-label="1" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="1" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "1"
+
+## Faces #30
+<button aria-disabled="true" aria-label="1" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="1" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "1"
+
+## Faces #31
+<button aria-label="2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "2"
+
+## Faces #32
+<button aria-label="2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "2"
+
+## Faces #33
+<button aria-label="2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "2"
+
+## Faces #34
+<button aria-label="2" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "2"
+
+## Faces #35
+<button aria-disabled="true" aria-label="2" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="2" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "2"
+
+## Faces #36
+<button aria-label="3" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="3" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "3"
+
+## Faces #37
+<button aria-label="3" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="3" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "3"
+
+## Faces #38
+<button aria-label="3" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="3" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "3"
+
+## Faces #39
+<button aria-label="3" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="3" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "3"
+
+## Faces #40
+<button aria-disabled="true" aria-label="3" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="3" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "3"
+
+## Faces #41
+<button aria-label="4" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="4" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "4"
+
+## Faces #42
+<button aria-label="4" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="4" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "4"
+
+## Faces #43
+<button aria-label="4" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="4" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "4"
+
+## Faces #44
+<button aria-label="4" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="4" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "4"
+
+## Faces #45
+<button aria-disabled="true" aria-label="4" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="4" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "4"
+
+## Faces #46
+<button aria-label="5" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="5" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "5"
+
+## Faces #47
+<button aria-label="5" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="5" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "5"
+
+## Faces #48
+<button aria-label="5" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="5" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "5"
+
+## Faces #49
+<button aria-label="5" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="5" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "5"
+
+## Faces #50
+<button aria-disabled="true" aria-label="5" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="5" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "5"
+
+## Faces #51
+<button aria-label="intro" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="intro" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "intro"
+
+## Faces #52
+<button aria-label="intro" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="intro" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "intro"
+
+## Faces #53
+<button aria-label="intro" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="intro" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "intro"
+
+## Faces #54
+<button aria-label="intro" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="intro" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "intro"
+
+## Faces #55
+<button aria-disabled="true" aria-label="intro" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="intro" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "intro"
+
+## Faces #56
+<button aria-label="main" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="main" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "main"
+
+## Faces #57
+<button aria-label="main" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="main" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "main"
+
+## Faces #58
+<button aria-label="main" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="main" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "main"
+
+## Faces #59
+<button aria-label="main" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="main" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "main"
+
+## Faces #60
+<button aria-disabled="true" aria-label="main" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="main" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "main"
+
+## Faces #61
+<button aria-label="ending" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="ending" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ending"
+
+## Faces #62
+<button aria-label="ending" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="ending" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ending"
+
+## Faces #63
+<button aria-label="ending" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="ending" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ending"
+
+## Faces #64
+<button aria-label="ending" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="ending" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ending"
+
+## Faces #65
+<button aria-disabled="true" aria-label="ending" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="ending" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "ending"
+
+## Faces #66
+<button aria-label="brk" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="brk" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "brk"
+
+## Faces #67
+<button aria-label="brk" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="brk" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "brk"
+
+## Faces #68
+<button aria-label="brk" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="brk" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "brk"
+
+## Faces #69
+<button aria-label="brk" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="brk" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "brk"
+
+## Faces #70
+<button aria-disabled="true" aria-label="brk" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="brk" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "brk"
+
+## Faces #71
+<button aria-label="fill" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="fill" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "fill"
+
+## Faces #72
+<button aria-label="fill" class="lib-text lib-tone yh-button lib-focus-ring" data-face="waiting" data-hue="fill" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "fill"
+
+## Faces #73
+<button aria-label="fill" class="lib-text lib-tone yh-button lib-focus-ring" data-face="on" data-hue="fill" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "fill"
+
+## Faces #74
+<button aria-label="fill" class="lib-text lib-tone yh-button lib-focus-ring" data-face="chosen" data-hue="fill" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "fill"
+
+## Faces #75
+<button aria-disabled="true" aria-label="fill" class="lib-text lib-tone yh-button lib-focus-ring" data-contrast="dim" data-face="disabled" data-hue="fill" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "fill"
+
+## Sizes #1
+<button aria-label="Help mode" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="icon" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "?"
+
+## Sizes #2
+<button aria-label="Panic" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Panic"
+
+## Sizes #3
+<button aria-label="Stop" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="band" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Stop"
+
+## Sizes #4
+<button aria-label="Fill up" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fill"
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="up" data-part="glyph" data-role="label" data-text-leading="tight">
+    "▲"
+
+## Sizes #5
+<button aria-label="Fill down" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="pair" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Fill"
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="down" data-part="glyph" data-role="label" data-text-leading="tight">
+    "▼"
+
+## Sizes #6
+<button aria-label="Metronome" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-join="start" data-part="face" data-role="label" data-size="md" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Metronome"
+
+## Sizes #7
+<button aria-expanded="false" aria-haspopup="dialog" aria-label="Metronome settings" class="lib-text lib-tone yh-button lib-focus-ring" data-alone="" data-face="off" data-hue="t" data-join="end" data-part="face" data-role="label" data-size="caret" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-button__glyph" data-glyph="caret" data-part="glyph" data-role="label" data-text-leading="tight">
+    "▾"
+
+## Sizes #8
+<button aria-label="Audition" class="lib-text lib-tone yh-button lib-focus-ring" data-face="off" data-hue="t" data-part="face" data-role="label" data-size="cell" data-tabular="" data-text-leading="tight" data-variant="secondary" type="button" @click=press use:longPress={"disabled":true,"onLongPress":"longPress","onLongRelease":"longRelease"} use:hold={"enabled":false,"onHold":"hold"} use:tip={"tipAction":"tipAction"}>
+  <span class="yh-button__label" data-part="label">
+    "Audition"

@@ -1,13 +1,12 @@
-import { Text } from '../../../primitives/Text';
-import { knobView, type KnobModelProps, type TipAction } from './Knob.model';
-import { useKnob } from './useKnob';
+import { Tree } from '../../../view/Tree';
+import { knobHandlers, knobView, type KnobModelProps, type TipAction } from './Knob.model';
+import '../../../primitives/Text.css';
 // The well and the cap are Surface materials drawn as plain spans with Surface's class and data
 // (`knobView`; no layer, so never a shader). Before Knob.css, so its corners win.
 import '../../../primitives/Surface.css';
 import './Knob.css';
 
 export type { TipAction, KnobModelProps };
-export { useKnob };
 
 /** Every Knob prop (Knob.model.ts). */
 export type KnobProps = KnobModelProps;
@@ -19,8 +18,8 @@ export type KnobProps = KnobModelProps;
  * invite a turn. The player reads the number first, the arc second (how far round), the name
  * third; the Genos code is reference only.
  *
- * **Changed.** *Headless* (the materials pass): behaviour lives in `useKnob` (over the `knobInput.ts` store), the
- * look's decisions in `knobView` (Knob.model.ts, shared with Knob.svelte), and the markup is
+ * **Changed.** *Headless* (the materials pass): behaviour lives in the `knob` store (`knobInput.ts`), the
+ * look's decisions and the markup in `knobView` (Knob.model.ts, the tree both renderers draw), and the markup is
  * named parts (`data-part`: root, label, dial, well, body, arc, pointer, value, unit, code) whose
  * look comes from the theme's Materials: the ring's groove is a `well`, a round cap inside it is
  * the `handle` the value sits on, and the value arc is lit (`--lit` is the hue slot or ink, its
@@ -56,40 +55,5 @@ export type KnobProps = KnobModelProps;
  * - `--yh-knob-round`: the well's and cap's corners, a disc whatever the pack's radii.
  */
 export function Knob(props: KnobProps) {
-  const { unused, tip, tipAction, onpress, onstep } = props;
-  const view = knobView(props);
-  const { rootProps } = useKnob({ unused, name: view.name, tip, tipAction, onpress, onstep });
-
-  return (
-    <button {...rootProps} className={view.root.className} {...view.root.attrs}>
-      <Text {...view.label} className="yh-knob__label" data-part="label">
-        {props.label}
-      </Text>
-      <span className="yh-knob__dial" data-part="dial">
-        {/* The groove: the full 270° sweep, cut from a disc so it can wear any material. */}
-        <span className={view.track.className} {...view.track.attrs} />
-        {/* The cap the arc sits around. */}
-        <span className={view.body.className} {...view.body.attrs} />
-        <svg className="yh-knob__ring" viewBox={view.viewBox} aria-hidden="true">
-          {view.arc !== null && <path className="yh-knob__lit" data-part="arc" d={view.arc} />}
-          {view.pointer && <line className="yh-knob__pointer" data-part="pointer" {...view.pointer} />}
-        </svg>
-        {view.value !== null && (
-          <Text role="numeral" className="yh-knob__value" data-part="value">
-            {view.value}
-            {view.unit !== null && (
-              <Text role="body" size="caption" leading="tight" className="yh-knob__unit" data-part="unit">
-                {view.unit}
-              </Text>
-            )}
-          </Text>
-        )}
-      </span>
-      {view.code !== null && (
-        <Text role="caption" className="yh-knob__code" data-part="code">
-          {view.code}
-        </Text>
-      )}
-    </button>
-  );
+  return <Tree tree={knobView(props)} handlers={knobHandlers(props)} />;
 }
