@@ -1,39 +1,11 @@
 import type { CSSProperties } from 'react';
+import { statusDotView, type StatusDotModelProps } from './StatusDot.model';
 import './StatusDot.css';
 
-/** What a deprecated section value draws: the playing (selected) role, whichever section it is. */
-const SECTION_COLOUR = 'var(--selected)';
+// The props and the face are framework-free, in the model; `StatusDot.svelte` renders the same view.
+export type { StatusDotSection, StatusDotHue, StatusDotModelProps } from './StatusDot.model';
 
-/**
- * A song section, as older callers passed it to `hue`. Every section reads the playing role.
- * @deprecated A section takes no hue of its own: every section draws the same playing role, so the
- * value adds nothing. Let the word beside the dot name the section. Kept so older callers compile.
- */
-export type StatusDotSection = 'intro' | 'main' | 'ending' | 'brk' | 'fill';
-
-/** The colour role: `ok` connected or running, `d` absent, `t` modified or waiting, or a section (the playing role). */
-export type StatusDotHue = 'ok' | 'd' | 't' | StatusDotSection;
-
-const SECTIONS: ReadonlySet<StatusDotHue> = new Set<StatusDotHue>(['intro', 'main', 'ending', 'brk', 'fill']);
-
-export interface StatusDotProps {
-  /**
-   * The colour role: `ok` connected or running, `d` absent, `t` modified or waiting. A section
-   * (`intro`, `main`, `ending`, `brk`, `fill`) is still accepted but takes no hue of its own: the
-   * dot before "Section" marks what is playing, so every section reads `--selected`.
-   */
-  hue?: StatusDotHue;
-  /** A ring in the hue, empty inside and never glowing: "armed, not yet" or "not there". */
-  hollow?: boolean;
-  /** The bloom around a solid dot (only palettes with a lamp bloom draw it). Ignored when `hollow`. */
-  glow?: boolean;
-  /** `md` every status dot, `sm` the rack readout's modified dot. */
-  size?: 'md' | 'sm';
-  /** `false` hides the dot but keeps its box, so the text after it doesn't move. */
-  visible?: boolean;
-  /** The accessible name for a dot with no word beside it ("Running"). Without it the dot is decorative. */
-  name?: string;
-}
+export type StatusDotProps = StatusDotModelProps;
 
 /**
  * A small round light that says at a glance whether something is connected, running, waiting or
@@ -64,26 +36,7 @@ export interface StatusDotProps {
  * - `--yh-status-dot-*`: the dot's `-hue` (its colour role; set inline for a section), `-size`
  *   (its diameter in `em`, per `size`) and `-round` (its corner radius, round on every pack).
  */
-export function StatusDot({ hue = 'ok', hollow = false, glow = true, size = 'md', visible = true, name }: StatusDotProps) {
-  // Absent is always the "not there" ring: a faint solid dot was invisible from a metre.
-  const ring = hollow || hue === 'd';
-  const glows = glow && !ring;
-  const named = visible && name !== undefined;
-  const style: CSSProperties = {};
-  if (SECTIONS.has(hue)) (style as Record<string, string>)['--yh-status-dot-hue'] = SECTION_COLOUR;
-  if (!visible) style.visibility = 'hidden';
-  return (
-    <span
-      className="yh-status-dot"
-      data-part="root"
-      data-hue={hue}
-      data-face={ring ? 'hollow' : 'solid'}
-      data-glow={glows ? 'true' : 'false'}
-      data-size={size}
-      style={Object.keys(style).length ? style : undefined}
-      role={named ? 'img' : undefined}
-      aria-label={named ? name : undefined}
-      aria-hidden={named ? undefined : true}
-    />
-  );
+export function StatusDot(props: StatusDotProps) {
+  const view = statusDotView(props);
+  return <span className={view.className} {...view.attrs} style={view.style as CSSProperties | undefined} />;
 }

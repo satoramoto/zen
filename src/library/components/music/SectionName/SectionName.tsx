@@ -1,35 +1,12 @@
 import type { CSSProperties } from 'react';
 import { Text } from '../../../primitives/Text';
+import { sectionNameView, type SectionNameModelProps } from './SectionName.model';
 import './SectionName.css';
 
-/**
- * Where a section stands: playing now, queued next, stopped, or not in the song. The app's holder
- * maps it to a contract colour (playing `--selected`, next `--accent`, idle `--text-2`, absent
- * `--text-4` in Yahaha's case); the name itself stays neutral.
- */
-export type SectionState = 'playing' | 'next' | 'idle' | 'absent';
+// The props and the view are framework-free, in the model; `SectionName.svelte` renders the same view.
+export type { SectionState, SectionHue, SectionNameModelProps } from './SectionName.model';
 
-/** The five section kinds. Kept as a hook (`data-hue`); a section takes no colour from its kind. */
-export type SectionHue = 'intro' | 'main' | 'ending' | 'brk' | 'fill';
-
-export interface SectionNameProps {
-  /** The section's shown name ("Main B", "Intro II", "Fill"). Empty: "—". */
-  label: string;
-  /**
-   * The section kind. Accepted for older callers and kept on `data-hue`, but it no longer picks a
-   * colour: sections take no hue.
-   */
-  hue?: SectionHue;
-  /** Where the section stands, on `data-state` for the parent (the name itself stays neutral). Default `playing`. */
-  state?: SectionState;
-  /** The band is stopped. Same as `state="idle"`. */
-  idle?: boolean;
-  /**
-   * The name's size, a CSS length ("64px", "var(--size-display)"), set as `--yh-section-name-size`
-   * on the root. Default: that property's value, `--size-numeral`.
-   */
-  size?: string;
-}
+export type SectionNameProps = SectionNameModelProps;
 
 /**
  * The playing section's name on the display ("Main B"). A readout, not a control.
@@ -59,30 +36,16 @@ export interface SectionNameProps {
  * - `--yh-section-name-size`: the name's size (default `--size-numeral`); a parent sets it on
  *   the element, or `size` inline.
  */
-export function SectionName({ label, hue = 'main', state, idle = false, size }: SectionNameProps) {
-  const stands: SectionState = idle ? 'idle' : (state ?? 'playing');
-  const shown = label.trim() === '' ? '—' : label.trim();
-  // Split "Main B" into its word and its variation, so a parent can style the variation.
-  const match = /^(.*\S)\s+(\S{1,3})$/.exec(shown);
-  const word = match ? match[1] : shown;
-  const variant = match ? match[2] : '';
+export function SectionName(props: SectionNameProps) {
+  const { name, style, word, variant } = sectionNameView(props);
   return (
-    <Text
-      role="display"
-      leading="tight"
-      className="yh-section-name"
-      data-part="name"
-      data-hue={hue}
-      data-state={stands}
-      data-idle={idle ? 'true' : undefined}
-      style={size === undefined ? undefined : ({ '--yh-section-name-size': size } as CSSProperties)}
-    >
+    <Text {...name.text} className={name.className} {...name.attrs} style={style as CSSProperties | undefined}>
       {word}
       {variant && (
         <>
           {' '}
-          <Text role="display" size="inherit" leading="tight" tabular className="yh-section-name__variant" data-part="variant">
-            {variant}
+          <Text {...variant.text} className={variant.className} {...variant.attrs}>
+            {variant.content}
           </Text>
         </>
       )}

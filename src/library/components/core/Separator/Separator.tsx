@@ -1,9 +1,10 @@
+import { separatorView, type SeparatorModelProps } from './Separator.model';
 import './Separator.css';
 
-export interface SeparatorProps {
-  /** `short`: a control's height less one `--space-3` step, centred in the row; `full`: the row's whole height. */
-  length?: 'short' | 'full';
-}
+// The props and the line are framework-free, in the model; `Separator.svelte` renders the same view.
+export type { SeparatorModelProps } from './Separator.model';
+
+export type SeparatorProps = SeparatorModelProps;
 
 /**
  * Separator: the vertical hairline between groups in a row.
@@ -25,6 +26,7 @@ export interface SeparatorProps {
  * **Kept.** One plain line, no colour of its own, the two lengths, decorative and hidden from
  * assistive tech (the groups it splits are announced by their own roles); the parent spaces it.
  */
-export function Separator({ length = 'short' }: SeparatorProps) {
-  return <span className="yh-separator" data-part="root" data-length={length} aria-hidden="true" />;
+export function Separator(props: SeparatorProps) {
+  const view = separatorView(props);
+  return <span className={view.className} {...view.attrs} />;
 }

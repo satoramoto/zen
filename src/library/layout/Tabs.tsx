@@ -1,80 +1,35 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { Text } from '../primitives/Text';
+import { nextTab, tabNode, tabsView, type TabItemModel, type TabsModelProps, type TabView, type TipAction } from './Tabs.model';
 import './Tabs.css';
 
-export interface TabItem {
-  id: string;
-  label: ReactNode;
-  /** The tab's accessible name when the label isn't plain text. */
-  name?: string;
-  disabled?: boolean;
-  /** The tooltip key, rendered as `data-tip`. */
-  tip?: string;
-}
+// The view and the keyboard are framework-free, in the model; `Tabs.svelte` renders the same view.
+export { tabDomId, tabsView, nextTab, stopTab, type TabItemModel, type TabsModelProps, type TipAction } from './Tabs.model';
 
-/**
- * The app's tooltip hook (Svelte's `use:tip` shape): called with a tab's node and its `tip` key;
- * the handle it returns is destroyed when the key changes or the tab unmounts. The same signature
- * the library's controls take.
- */
-export type TipAction = (
-  node: HTMLElement,
-  key: string,
-) => void | { update?: (key: string) => void; destroy?: () => void };
+export type TabItem = TabItemModel<ReactNode>;
 
-export interface TabsProps {
-  /** The tablist's accessible name. */
-  name: string;
-  items: TabItem[];
-  /** The chosen tab's id. An id no tab has (or `null`) leaves none chosen. */
-  value: string | null;
+export interface TabsProps extends Omit<TabsModelProps<ReactNode>, 'onChange'> {
   onChange: (id: string) => void;
-  /** Ids for each tab's panel (`aria-controls`), when the tabs switch a panel. */
-  panelId?: string;
-  /** A tab's DOM id, so a panel can name the chosen one. */
-  tabId?: (id: string) => string;
-  /** The app's tooltip action, applied to each tab that has a `tip`, with that tab's key. */
-  tipAction?: TipAction;
 }
 
-interface TabProps {
-  item: TabItem;
-  domId: string;
-  on: boolean;
-  stop: boolean;
-  panelId?: string;
-  tipAction?: TipAction;
-  onChoose: () => void;
-}
-
-function Tab({ item: t, domId, on, stop, panelId, tipAction, onChoose }: TabProps) {
+function Tab({ tab, tipAction, onChoose }: { tab: TabView<ReactNode>; tipAction?: TipAction; onChoose: () => void }) {
   const [node, setNode] = useState<HTMLButtonElement | null>(null);
   useEffect(() => {
-    if (!node || !tipAction || t.tip === undefined) return;
-    const handle = tipAction(node, t.tip);
+    if (!node || !tipAction || tab.tip === undefined) return;
+    const handle = tipAction(node, tab.tip);
     return () => handle?.destroy?.();
-  }, [node, t.tip, tipAction]);
+  }, [node, tab.tip, tipAction]);
   return (
     <Text
       as="button"
-      size="label"
-      weight="strong"
-      case="label"
+      {...tab.text}
       ref={setNode}
-      id={domId}
-      type="button"
-      ariaRole="tab"
-      className="lib-tabs__tab"
-      data-part="tab"
-      aria-selected={on}
-      aria-controls={panelId}
-      aria-label={t.name}
-      aria-disabled={t.disabled || undefined}
-      tabIndex={stop ? 0 : -1}
-      data-tip={t.tip}
-      onClick={() => !t.disabled && !on && onChoose()}
+      className={tab.face.className}
+      {...tab.face.attrs}
+      tabIndex={tab.tabIndex}
+      onClick={() => tab.choosable && onChoose()}
     >
-      {t.label}
+      {tab.label}
     </Text>
   );
 }
@@ -87,42 +42,27 @@ function Tab({ item: t, domId, on, stop, panelId, tipAction, onChoose }: TabProp
  *
  * **Behaviour.** A `tablist`: ← → move (skipping disabled), Home / End jump to the ends; focus
  * follows the choice. With none chosen, the first enabled tab takes the tab stop. `tipAction`
- * runs the app's tooltip on each tab with its own `tip`.
+ * runs the app's tooltip on each tab with its own `tip`. Each tab's DOM id is `tabId(id)`, or
+ * `tabs-<name>-<id>` by default.
  */
-export function Tabs({ name, items, value, onChange, panelId, tabId, tipAction }: TabsProps) {
-  const uid = useId();
-  const id = tabId ?? ((v: string) => `${uid}-${v}`);
+export function Tabs(props: TabsProps) {
+  const { items, value, onChange, tipAction } = props;
+  const view = tabsView(props);
   const list = useRef<HTMLDivElement>(null);
-  const live = items.filter((t) => !t.disabled);
-  const stopId = live.some((t) => t.id === value) ? value : live[0]?.id;
 
   const keyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const at = live.findIndex((t) => t.id === value);
-    let next = -1;
-    if (event.key === 'ArrowRight') next = (at + 1) % live.length;
-    else if (event.key === 'ArrowLeft') next = at < 0 ? live.length - 1 : (at - 1 + live.length) % live.length;
-    else if (event.key === 'Home') next = 0;
-    else if (event.key === 'End') next = live.length - 1;
-    if (next < 0 || live.length === 0) return;
+    const next = nextTab(items, value, event.key);
+    if (next === null) return;
     event.preventDefault();
     event.stopPropagation();
-    onChange(live[next].id);
-    list.current?.ownerDocument.getElementById(id(live[next].id))?.focus();
+    onChange(next);
+    tabNode(list.current, view, next)?.focus();
   };
 
   return (
-    <div ref={list} className="lib-tabs" role="tablist" aria-label={name} data-part="tabs" onKeyDown={keyDown}>
-      {items.map((t) => (
-        <Tab
-          key={t.id}
-          item={t}
-          domId={id(t.id)}
-          on={t.id === value}
-          stop={t.id === stopId}
-          panelId={panelId}
-          tipAction={tipAction}
-          onChoose={() => onChange(t.id)}
-        />
+    <div ref={list} className={view.list.className} {...view.list.attrs} onKeyDown={keyDown}>
+      {view.tabs.map((t) => (
+        <Tab key={t.id} tab={t} tipAction={tipAction} onChoose={() => onChange(t.id)} />
       ))}
     </div>
   );

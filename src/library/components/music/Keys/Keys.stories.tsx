@@ -2,9 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { Keys } from './Keys';
-import { boardKeys, range49, range61 } from './Keys.fixtures';
+import { keysArgTypes, keysStories as s, range61 } from './Keys.fixtures';
 import { BLACK_WIDTH_RATIO, layout } from './keyLayout';
 
+// Every story's args come from Keys.fixtures.ts, which the Svelte stories and the parity test share.
 const meta = {
   title: 'Design OS/Components/Music/Keys',
   component: Keys,
@@ -12,31 +13,12 @@ const meta = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: {
-    ...boardKeys,
-    splitMin: 24,
-    splitMax: 96,
-    splitLocked: false,
-    picking: false,
+    ...s.Board.args,
     tipAction: fn(),
     onSplit: fn(),
     onPick: fn(),
   },
-  argTypes: {
-    range: { control: 'object' },
-    split: { control: { type: 'number', min: 0, max: 127, step: 1 } },
-    heldLeft: { control: 'object' },
-    heldRight: { control: 'object' },
-    leftHue: { control: 'inline-radio', options: [1, 2, 3, 4, 5] },
-    leftName: { control: 'text' },
-    rightHue: { control: 'inline-radio', options: [1, 2, 3, 4, 5] },
-    rightName: { control: 'text' },
-    width: { control: { type: 'number', min: 200, step: 1 } },
-    ruler: { control: 'boolean' },
-    splitMin: { control: { type: 'number', min: 0, max: 127, step: 1 } },
-    splitMax: { control: { type: 'number', min: 0, max: 127, step: 1 } },
-    splitLocked: { control: 'boolean' },
-    picking: { control: 'boolean' },
-  },
+  argTypes: keysArgTypes,
 } satisfies Meta<typeof Keys>;
 
 export default meta;
@@ -51,6 +33,7 @@ function at(strip: HTMLElement, width: number, x: number, yShare: number) {
 
 /** The Stage board: 61 keys, split F#2, the left hand's Am7 in hue 4, E4 and A4 in hue 1 ("Right 1"). */
 export const Board: Story = {
+  args: s.Board.args,
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole('slider', { name: /^Split point/ });
@@ -77,7 +60,7 @@ export const Board: Story = {
 
 /** Nothing held: the split and the zones' unlit lamps only. */
 export const Idle: Story = {
-  args: { heldLeft: [], heldRight: [] },
+  args: s.Idle.args,
 };
 
 /**
@@ -85,7 +68,7 @@ export const Idle: Story = {
  * beside the black keys, then steps across to the C|D white edge below them.
  */
 export const BlackKeySplit: Story = {
-  args: { split: 61, heldLeft: [], heldRight: [] },
+  args: s.BlackKeySplit.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('img', { name: /^Keys: split C#3/ })).toBeInTheDocument();
@@ -100,7 +83,7 @@ export const BlackKeySplit: Story = {
  * the split. Here from C3 to F#2, a black key.
  */
 export const Drag: Story = {
-  args: { split: 60, heldLeft: [], heldRight: [] },
+  args: s.Drag.args,
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole('slider', { name: /^Split point/ });
@@ -128,7 +111,7 @@ export const Drag: Story = {
  * disarms. Esc disarms too.
  */
 export const Armed: Story = {
-  args: { split: 60, picking: true, heldLeft: [], heldRight: [] },
+  args: s.Armed.args,
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const strip = canvas.getByRole('img', { name: /^Keys:/ });
@@ -152,7 +135,7 @@ export const Armed: Story = {
 
 /** Locked: the flag is dashed with no grip, the arrows and a drag ask for nothing, and the pick won't arm. */
 export const Locked: Story = {
-  args: { splitLocked: true, picking: true, heldLeft: [], heldRight: [] },
+  args: s.Locked.args,
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole('slider', { name: 'Split point (locked)' });
@@ -168,22 +151,22 @@ export const Locked: Story = {
 
 /** No split: one zone, every held key in the right zone's hue (here hue 2, "Right 2", with a black key). */
 export const NoSplit: Story = {
-  args: { split: null, heldLeft: [], heldRight: [60, 63, 67], rightHue: 2, rightName: 'Right 2' },
+  args: s.NoSplit.args,
 };
 
 /** A 49-key keyboard at a narrower width, split B2, held black keys in both zones. */
 export const Keys49: Story = {
-  args: { range: range49, split: 59, heldLeft: [49, 54, 58], heldRight: [73, 78], rightHue: 3, rightName: 'Right 3', width: 960 },
+  args: s.Keys49.args,
 };
 
 /** The full 61 keys with the right zone ("Right 1") playing high, split at C3. */
 export const HighSplit: Story = {
-  args: { range: range61, split: 60, heldLeft: [48, 52, 55], heldRight: [84, 88, 91] },
+  args: s.HighSplit.args,
 };
 
 /** Added: without `onSplit` the keys are a picture: the split's name sits on the ruler, nothing to grab. */
 export const Picture: Story = {
-  args: { onSplit: undefined },
+  args: { ...s.Picture.args, onSplit: undefined },
 };
 
 /**
@@ -191,7 +174,7 @@ export const Picture: Story = {
  * list or split name above; the held keys keep their zone's hue, so the split still reads.
  */
 export const NoRuler: Story = {
-  args: { ruler: false, onSplit: undefined },
+  args: { ...s.NoRuler.args, onSplit: undefined },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('.yh-keys__ruler')).toBeNull();
     await expect(canvasElement.querySelector(".yh-keys__white[data-held='left']")).toHaveAttribute('data-hue', '4');
@@ -203,7 +186,7 @@ export const NoRuler: Story = {
  * fill it and re-lay on every resize, with nothing measured by the caller. Here in hue 5.
  */
 export const Fluid: Story = {
-  args: { width: 'fill', rightHue: 5, rightName: 'Right 5' },
+  args: s.Fluid.args,
   argTypes: { width: { control: false } },
   parameters: { layout: 'padded' },
   decorators: [
@@ -228,5 +211,5 @@ export const Fluid: Story = {
 
 /** Added: a narrow strip (49 keys at 480px), where the zone labels give way before the keys do. */
 export const Narrow: Story = {
-  args: { range: range49, split: 59, heldLeft: [49, 54, 58], heldRight: [73, 78], rightHue: 3, rightName: 'Right 3', width: 480 },
+  args: s.Narrow.args,
 };

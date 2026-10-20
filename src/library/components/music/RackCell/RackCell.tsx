@@ -1,23 +1,14 @@
 import type { ReactNode } from 'react';
-import { focusRing } from '../../../primitives/Ring';
 import { Text } from '../../../primitives/Text';
+import { rackCellView, type RackCellModelProps } from './RackCell.model';
 import './RackCell.css';
 
-export interface RackCellProps {
-  /** The rack's name ("Sunday drive"). Empty: "No rack". */
-  rack: string;
-  /** The Quick Rack slot it's on ("A1"). Empty: no slot shown. */
-  slot?: string;
-  /** The small word before the slot. */
-  label?: string;
-  /** The accessible name. Default: "Rack: Sunday drive, on Quick Rack A1. Opens the Rack page". */
-  name?: string;
-  /** The tooltip key, set as `data-tip`. */
-  tip?: string;
+// The props and the view are framework-free, in the model; `RackCell.svelte` renders the same view.
+export type { RackCellModelProps } from './RackCell.model';
+
+export interface RackCellProps extends RackCellModelProps {
   /** The marks after the name (the modified dot). */
   mark?: ReactNode;
-  /** Called on a click, Space or Enter (opens the Rack page). */
-  onPress?: () => void;
 }
 
 /**
@@ -47,37 +38,30 @@ export interface RackCellProps {
  * **Tuning knobs.**
  * - `--yh-rack-cell-width`: the cell's width on the row (default `12em`); the row may set it.
  */
-export function RackCell({ rack, slot = '', label = 'Rack', name, tip, mark, onPress }: RackCellProps) {
-  const empty = rack.trim() === '';
-  const shown = empty ? 'No rack' : rack;
-  const spoken = name ?? `${label}: ${shown}${slot ? `, on Quick Rack ${slot}` : ''}. Opens the Rack page`;
+export function RackCell(props: RackCellProps) {
+  const { mark, onPress } = props;
+  const view = rackCellView(props);
   return (
-    <div className="yh-rack-cell">
-      <button
-        type="button"
-        className={`yh-rack-cell__button ${focusRing}`}
-        aria-label={spoken}
-        data-tip={tip}
-        onClick={() => onPress?.()}
-      >
-        <Text role="label" size="caption" tabular className="yh-rack-cell__head">
-          <span className="yh-rack-cell__label">{label}</span>
-          {slot && (
+    <div className={view.rootClassName}>
+      <button className={view.button.className} {...view.button.attrs} type="button" onClick={() => onPress?.()}>
+        <Text {...view.head.text} className={view.head.className} {...view.head.attrs}>
+          <span className={view.label.className}>{view.label.label}</span>
+          {view.slot && (
             <>
-              <span className="yh-rack-cell__separator" aria-hidden>
-                ·
+              <span className={view.slot.separator.className} {...view.slot.separator.attrs}>
+                {view.slot.separator.char}
               </span>
-              <Text role="label" case="none" tabular className="yh-rack-cell__slot">
-                {slot}
+              <Text {...view.slot.value.text} className={view.slot.value.className} {...view.slot.value.attrs}>
+                {view.slot.value.label}
               </Text>
             </>
           )}
         </Text>
-        <Text role="caption" size="body" tabular className="yh-rack-cell__name" data-empty={empty ? 'true' : undefined}>
-          <Text role="caption" size={empty ? 'caption' : 'body'} tabular className="yh-rack-cell__title">
-            {shown}
+        <Text {...view.name.text} className={view.name.className} {...view.name.attrs}>
+          <Text {...view.title.text} className={view.title.className} {...view.title.attrs}>
+            {view.title.label}
           </Text>
-          {mark != null && <span className="yh-rack-cell__mark">{mark}</span>}
+          {mark != null && <span className={view.markClassName}>{mark}</span>}
         </Text>
       </button>
     </div>

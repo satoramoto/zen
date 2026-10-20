@@ -1,22 +1,11 @@
 import { Text } from '../../../primitives/Text';
+import { sendReadoutView, type SendReadoutModelProps } from './SendReadout.model';
 import './SendReadout.css';
 
-export interface SendReadoutProps {
-  /** The reverb send, 0-127. */
-  reverb: number;
-  /** The chorus send, 0-127. */
-  chorus: number;
-  /** The delay send, 0-127. */
-  delay: number;
-  /** The lead word ("Band"): it starts the spoken name; not drawn (the Effects page it opens says whose sends). */
-  label?: string;
-  /** The accessible name. Default: "Band sends: reverb 40, chorus 12, delay 0. Opens Effects". */
-  name?: string;
-  /** The tooltip key, set as `data-tip`. */
-  tip?: string;
-  /** Called on a click, Space or Enter (opens Effects). */
-  onPress?: () => void;
-}
+// The props and the view are framework-free, in the model; `SendReadout.svelte` renders the same view.
+export type { SendReadoutModelProps } from './SendReadout.model';
+
+export type SendReadoutProps = SendReadoutModelProps;
 
 /**
  * SendReadout: the band's effect sends on the style line, "Band Reverb 40 Chorus 12 Delay 0".
@@ -41,23 +30,17 @@ export interface SendReadoutProps {
  * **Kept.** One flat inline row that sits on the style line; a real button with the spoken name
  * "Band sends: reverb 40, chorus 12, delay 0. Opens Effects"; click, Space and Enter all press it.
  */
-export function SendReadout({ reverb, chorus, delay, label = 'Band', name, tip, onPress }: SendReadoutProps) {
-  const sends = [
-    ['Reverb', reverb],
-    ['Chorus', chorus],
-    ['Delay', delay],
-  ] as const;
-  const spoken = name ?? `${label} sends: reverb ${reverb}, chorus ${chorus}, delay ${delay}. Opens Effects`;
-
+export function SendReadout(props: SendReadoutProps) {
+  const view = sendReadoutView(props);
   return (
-    <button type="button" className="yh-send-readout" aria-label={spoken} data-tip={tip} onClick={() => onPress?.()}>
-      {sends.map(([word, level]) => (
-        <span key={word} className="yh-send-readout-send" data-off={level === 0 ? '' : undefined}>
-          <Text size="label" case="label" className="yh-send-readout-name">
-            {word}
+    <button className={view.button.className} {...view.button.attrs} onClick={() => props.onPress?.()}>
+      {view.sends.map((send) => (
+        <span key={send.word.content} className={send.className} {...send.attrs}>
+          <Text {...send.word.text} className={send.word.className}>
+            {send.word.content}
           </Text>
-          <Text role="numeral" size="label" className="yh-send-readout-level">
-            {level}
+          <Text {...send.level.text} className={send.level.className}>
+            {send.level.content}
           </Text>
         </span>
       ))}

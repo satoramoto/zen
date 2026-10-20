@@ -1,44 +1,16 @@
-import type { HueSlot } from '../../core/hue';
-import { BOX, R, START, arc, point, sweepOf } from './geometry';
-import { focusRing } from '../../../primitives/Ring';
-import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
-import { useKnob, type TipAction } from './useKnob';
-// The well and the cap are Surfaces through the class and data attributes, without
-// `data-radius`: they are discs (`--yh-knob-round`), which no Surface radius gives. Before
-// Knob.css, so its corners win.
+import { knobView, type KnobModelProps, type TipAction } from './Knob.model';
+import { useKnob } from './useKnob';
+// The well and the cap are Surface materials drawn as plain spans with Surface's class and data
+// (`knobView`; no layer, so never a shader). Before Knob.css, so its corners win.
 import '../../../primitives/Surface.css';
 import './Knob.css';
 
-export type { TipAction };
+export type { TipAction, KnobModelProps };
 export { useKnob };
 
-export interface KnobProps {
-  /** The plain name ("Dynamics", "Retrig rate"). For an unused knob, the board's "---". */
-  label: string;
-  /** The Genos code beneath the ring ("DynCtrl"). */
-  code?: string;
-  /** The value as shown ("127", "1/8", "Off"). */
-  value?: string;
-  /** A small unit after the value ("%"). */
-  unit?: string;
-  /** How far round the arc is, 0–1 of its 270°. */
-  fraction?: number;
-  /** Nothing is mapped to this knob: dim name, an empty ring, no value. */
-  unused?: boolean;
-  /** A categorical hue slot (1–5, `--hue-n`) for what owns this knob; an app maps its meaning (e.g. Yahaha's parts). Its arc wears that hue. Default: ink. */
-  hue?: HueSlot;
-  /** The accessible name. Default: "{label} ({code}) {value}{unit}", or "unused". */
-  name?: string;
-  /** The tooltip key, rendered as `data-tip`. */
-  tip?: string;
-  /** The app's tooltip hook, applied with `tip` when both are set. */
-  tipAction?: TipAction;
-  /** Called on a click that didn't turn the knob, Space or Enter. */
-  onpress?: () => void;
-  /** Called with the steps turned (positive: clockwise): ±1 on a key or a wheel notch, the steps a drag covered. Not when unused. */
-  onstep?: (delta: number) => void;
-}
+/** Every Knob prop (Knob.model.ts). */
+export type KnobProps = KnobModelProps;
 
 /**
  * Knob: one of the eight band knobs.
@@ -47,7 +19,8 @@ export interface KnobProps {
  * invite a turn. The player reads the number first, the arc second (how far round), the name
  * third; the Genos code is reference only.
  *
- * **Changed.** *Headless* (the materials pass): behaviour lives in `useKnob`, and the markup is
+ * **Changed.** *Headless* (the materials pass): behaviour lives in `useKnob` (over the `knobInput.ts` store), the
+ * look's decisions in `knobView` (Knob.model.ts, shared with Knob.svelte), and the markup is
  * named parts (`data-part`: root, label, dial, well, body, arc, pointer, value, unit, code) whose
  * look comes from the theme's Materials: the ring's groove is a `well`, a round cap inside it is
  * the `handle` the value sits on, and the value arc is lit (`--lit` is the hue slot or ink, its
@@ -82,77 +55,39 @@ export interface KnobProps {
  * - `--yh-knob-ring`: the ring's side (default 2.25 control heights); KnobBank sets it per slot.
  * - `--yh-knob-round`: the well's and cap's corners, a disc whatever the pack's radii.
  */
-export function Knob({
-  label,
-  code = '',
-  value = '',
-  unit = '',
-  fraction = 0,
-  unused = false,
-  hue,
-  name,
-  tip,
-  tipAction,
-  onpress,
-  onstep,
-}: KnobProps) {
-  const spoken = name ?? (unused ? 'unused' : `${label}${code ? ` (${code})` : ''} ${value}${unit}`);
-  const { rootProps } = useKnob({ unused, name: spoken, tip, tipAction, onpress, onstep });
-
-  const deg = unused ? 0 : sweepOf(fraction);
-  const lit = arc(START, START + deg);
-  // The pointer: a short tick just outside the ring at the arc's end, so it never merges into the
-  // lit arc (same ink on a neutral knob) and stays clear of the value in the centre.
-  const tipOuter = point(START + deg, R + 7);
-  const tipInner = point(START + deg, R + 3);
-  // "0" and "Off" say "nothing here" and step back, as a send at 0 does (SendReadout).
-  const rest = !unused && /^(0|off)$/i.test(value.trim());
+export function Knob(props: KnobProps) {
+  const { unused, tip, tipAction, onpress, onstep } = props;
+  const view = knobView(props);
+  const { rootProps } = useKnob({ unused, name: view.name, tip, tipAction, onpress, onstep });
 
   return (
-    <button
-      {...rootProps}
-      className={`yh-knob ${focusRing}`}
-      data-part="root"
-      data-unused={unused || undefined}
-      data-rest={rest || undefined}
-      data-hue={hue}
-      data-tip={tip}
-    >
-      <Text role="caption" weight={unused ? 'body' : 'strong'} case="label" className="yh-knob__label" data-part="label">
-        {label}
+    <button {...rootProps} className={view.root.className} {...view.root.attrs}>
+      <Text {...view.label} className="yh-knob__label" data-part="label">
+        {props.label}
       </Text>
       <span className="yh-knob__dial" data-part="dial">
         {/* The groove: the full 270° sweep, cut from a disc so it can wear any material. */}
-        <Surface as="span" material="well" radius="circle" className="yh-knob__track" data-part="well" aria-hidden="true" />
+        <span className={view.track.className} {...view.track.attrs} />
         {/* The cap the arc sits around. */}
-        <Surface as="span" material="handle" radius="circle" className="yh-knob__body" data-part="body" aria-hidden="true" />
-        <svg className="yh-knob__ring" viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true">
-          {!unused && lit && <path className="yh-knob__lit" data-part="arc" d={lit} />}
-          {!unused && (
-            <line
-              className="yh-knob__pointer"
-              data-part="pointer"
-              x1={tipInner.x.toFixed(2)}
-              y1={tipInner.y.toFixed(2)}
-              x2={tipOuter.x.toFixed(2)}
-              y2={tipOuter.y.toFixed(2)}
-            />
-          )}
+        <span className={view.body.className} {...view.body.attrs} />
+        <svg className="yh-knob__ring" viewBox={view.viewBox} aria-hidden="true">
+          {view.arc !== null && <path className="yh-knob__lit" data-part="arc" d={view.arc} />}
+          {view.pointer && <line className="yh-knob__pointer" data-part="pointer" {...view.pointer} />}
         </svg>
-        {!unused && (
+        {view.value !== null && (
           <Text role="numeral" className="yh-knob__value" data-part="value">
-            {value}
-            {unit && (
+            {view.value}
+            {view.unit !== null && (
               <Text role="body" size="caption" leading="tight" className="yh-knob__unit" data-part="unit">
-                {unit}
+                {view.unit}
               </Text>
             )}
           </Text>
         )}
       </span>
-      {code && (
+      {view.code !== null && (
         <Text role="caption" className="yh-knob__code" data-part="code">
-          {code}
+          {view.code}
         </Text>
       )}
     </button>
