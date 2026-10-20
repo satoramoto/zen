@@ -28,6 +28,7 @@ import ScreenSvelte from './layout/Screen.svelte';
 import AssembledScreenSvelte from './layout/assembly/AssembledScreen.svelte';
 import type { AmbientRegion } from './contract';
 import type { RegionModelProps } from './layout/Region.model';
+import type { TabItemModel, TipAction } from './layout/Tabs.model';
 import type { GroupModelProps } from './layout/Group.model';
 import type { LayerModelProps } from './layout/Layer.model';
 import type { ScreenModelProps } from './layout/Screen.model';
@@ -88,6 +89,19 @@ import type { StatusLineModelProps } from './yahaha/StatusLine/StatusLine.model'
 import type { DisplayArtModelProps } from './yahaha/DisplayArt/DisplayArt.model';
 import type { HueLegendProps } from './yahaha/HueLegend/HueLegend.model';
 import type { OneTouchPickerProps } from './yahaha/OneTouchPicker/OneTouchPicker.model';
+import DisplaySvelte from './yahaha/Display/Display.svelte';
+import SongFormSvelte from './yahaha/SongForm/SongForm.svelte';
+import FaderBankSvelte from './yahaha/FaderBank/FaderBank.svelte';
+import FaderBankRegionSvelte from './yahaha/FaderBank/FaderBankRegion.svelte';
+import KnobBankSvelte from './yahaha/KnobBank/KnobBank.svelte';
+import KnobBankRegionSvelte from './yahaha/KnobBank/KnobBankRegion.svelte';
+import PadBankSvelte from './yahaha/PadBank/PadBank.svelte';
+import PadBankRegionSvelte from './yahaha/PadBank/PadBankRegion.svelte';
+import type { DisplayModelProps } from './yahaha/Display/Display.model';
+import type { SongFormProps as SongFormModelProps } from './yahaha/SongForm/SongForm.model';
+import type { FaderBankModelProps, FaderBankRegionModelProps } from './yahaha/FaderBank/FaderBank.model';
+import type { KnobBankProps as KnobBankModelProps, KnobBankRegionModelProps } from './yahaha/KnobBank/KnobBank.model';
+import type { PadBankProps as PadBankModelProps, PadBankRegionProps as PadBankRegionModelProps } from './yahaha/PadBank/PadBank.model';
 
 // The theme: the `theme` action, the scope, and the system mode.
 export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './svelte/theme.svelte';
@@ -125,9 +139,17 @@ export { setControlContext, getControlContext, CONTROL_FIELD, CONTROL_TOOLBAR, t
 export interface RegionProps extends Omit<RegionModelProps, 'className'> {
   label?: string | Snippet;
   aside?: string | Snippet;
+  /** The views: the header shows a tab per view and the body the chosen one. */
+  views?: TabItemModel<string | Snippet>[];
+  /** The chosen view's id (controlled, bindable). */
+  view?: string;
+  defaultView?: string;
+  onView?: (id: string) => void;
+  tipAction?: TipAction;
   class?: string;
   style?: string;
-  children?: Snippet;
+  /** The body; with views, called with the chosen view's id. */
+  children?: Snippet<[string | undefined]>;
 }
 export const Region = RegionSvelte as unknown as Component<RegionProps>;
 export interface GroupProps extends Omit<GroupModelProps, 'className'> {
@@ -274,3 +296,27 @@ export type { HueLegendProps };
 export const HueLegend = HueLegendSvelte as unknown as Component<HueLegendProps>;
 export type { OneTouchPickerProps };
 export const OneTouchPicker = OneTouchPickerSvelte as unknown as Component<OneTouchPickerProps>;
+
+// Yahaha regions: each bank and its screen region (the Region with the bank's views).
+export interface DisplayProps extends DisplayModelProps {}
+export const Display = DisplaySvelte as unknown as Component<DisplayProps>;
+export interface SongFormProps extends SongFormModelProps {}
+export const SongForm = SongFormSvelte as unknown as Component<SongFormProps>;
+export type FaderBankProps = FaderBankModelProps<string | Snippet>;
+export const FaderBank = FaderBankSvelte as unknown as Component<FaderBankProps>;
+export interface FaderBankRegionProps extends FaderBankRegionModelProps<string | Snippet> {
+  class?: string;
+}
+export const FaderBankRegion = FaderBankRegionSvelte as unknown as Component<FaderBankRegionProps>;
+export interface KnobBankProps extends KnobBankModelProps {}
+export const KnobBank = KnobBankSvelte as unknown as Component<KnobBankProps>;
+export interface KnobBankRegionProps extends KnobBankRegionModelProps {
+  class?: string;
+}
+export const KnobBankRegion = KnobBankRegionSvelte as unknown as Component<KnobBankRegionProps>;
+export interface PadBankProps extends PadBankModelProps {}
+export const PadBank = PadBankSvelte as unknown as Component<PadBankProps>;
+export interface PadBankRegionProps extends Omit<PadBankRegionModelProps, 'className'> {
+  class?: string;
+}
+export const PadBankRegion = PadBankRegionSvelte as unknown as Component<PadBankRegionProps>;

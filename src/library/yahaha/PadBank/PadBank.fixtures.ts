@@ -1,4 +1,5 @@
-import type { PadItem } from './PadBank';
+import { defineFixtures } from '../../fixtures';
+import { PAD_BANK_FORMS, type PadBankRegionProps, type PadItem } from './PadBank.model';
 
 // Ported from the baseline's `sectionPads` (yahaha/src/ui/PadBank/PadBank.fixtures.ts) and the
 // Stage Playground's `stagePadBanks` (yahaha/src/ui/Stage/Stage.fixtures.ts). The baseline's "—"
@@ -131,3 +132,70 @@ export const allPadsByBank: PadItem[][] = [sectionPads, ...padsByBank];
 
 /** The board's bank name and its old counter (PadBank no longer draws the counter). */
 export const quickRackBank = { name: 'Quick Racks', count: '1/4' };
+
+/* ---------- stories: PadBank.stories.tsx and PadBank.stories.svelte.ts draw these ---------- */
+
+/** The bank indexes in `allPadBanks`. */
+export const BANK = { Sections: 0, QuickRacks: 1, Chord: 2, MultiPads: 3, Setup: 4 } as const;
+
+/** The controls, the same in both Storybooks. */
+export const padBankArgTypes = {
+  pads: { control: 'object' },
+  banks: { control: 'object' },
+  bank: { control: { type: 'number', min: 0, max: allPadBanks.length - 1, step: 1 } },
+  lit: { control: 'boolean' },
+  form: { control: { type: 'inline-radio' }, options: PAD_BANK_FORMS.map((f) => f.id) },
+  columns: { control: { type: 'inline-radio' }, options: [8, 4] },
+  bankName: { control: 'text' },
+} as const;
+
+/** Every story's frame width: a 1440 Stage's pads, unless `padBankFrameWidths` names its own. */
+export const PAD_BANK_FRAME_WIDTH = 552;
+
+/** The stories whose frame is wider than `PAD_BANK_FRAME_WIDTH`, by name. */
+export const padBankFrameWidths: Partial<Record<string, number>> = { Forms: 1100 };
+
+/** A box inside the frame: its width, and a height (a grid, so the region fills it) when it names one. */
+export interface PadBankBox {
+  width: number;
+  height?: number;
+}
+
+/** The stories that draw the region in a box inside the frame, by name. */
+export const padBankBoxes: Partial<Record<string, PadBankBox>> = {
+  FourByFour: { width: 464, height: 232 },
+  At1217: { width: 464 },
+  ShortRegion: { width: 552, height: 120 },
+};
+
+/** Every story's args over: the board, the Quick Racks bank. */
+const board: Partial<PadBankRegionProps> = { pads: quickRackPads, banks: allPadBanks, bank: BANK.QuickRacks, lit: true };
+
+/** Every story's args (and the Forms story's three regions, one per form). */
+export const padBankStories = defineFixtures<PadBankRegionProps>()({
+  Board: { args: board },
+  Sections: { args: { ...board, pads: sectionPads, bank: BANK.Sections } },
+  FourByFour: { args: { ...board, columns: 4 } },
+  FlashOff: { args: { ...board, pads: quickRackStorePads, lit: false } },
+  StoreArmed: { args: { ...board, pads: quickRackStorePads } },
+  ChordBank: { args: { ...board, bank: BANK.Chord, pads: chordPads } },
+  FewerPads: { args: { ...board, pads: quickRackPads.slice(0, 5) } },
+  FewerPadsFourByFour: { args: { ...board, pads: quickRackPads.slice(0, 5), columns: 4 } },
+  MultiPadsBank: { args: { ...board, bank: BANK.MultiPads, pads: multiPadPads } },
+  SetupBank: { args: { ...board, bank: BANK.Setup, pads: setupPads } },
+  PartLit: {
+    args: {
+      ...board,
+      bank: BANK.MultiPads,
+      pads: multiPadPads.map((pad, i): PadItem => (i === 1 ? { ...pad, family: 'r2', state: 'playing' } : pad)),
+    },
+  },
+  At1440: { args: board },
+  At1217: { args: { ...board, bank: BANK.Chord, pads: chordPads } },
+  ShortRegion: { args: { ...board, pads: sectionPads, bank: BANK.Sections } },
+  Forms: {
+    args: { ...board, pads: sectionPads, bank: BANK.Sections },
+    items: PAD_BANK_FORMS.map((f) => ({ form: f.id, name: `Pads (${f.id})` })),
+  },
+  Playground: { args: board },
+});

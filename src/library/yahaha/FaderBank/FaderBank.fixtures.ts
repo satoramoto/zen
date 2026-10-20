@@ -1,7 +1,13 @@
 // Ported from yahaha/src/ui/FaderBank/FaderBank.fixtures.ts. Added: each live strip's `sound`.
 // Changed: Left plays Finger Bass, as the board shows (the original's fixture repeated Silk Strings).
-import type { TabItem } from '../../layout/Tabs'
-import type { BankLamp, FaderStrip } from './FaderBank'
+// The stories as plain props (`faderBankStories`): FaderBank.stories.tsx (React) and
+// FaderBank.stories.svelte.ts (Svelte) both draw them, and the parity test renders every instance
+// of the bank in both.
+import { defineFixtures, type FixtureProps } from '../../fixtures'
+import type { TabItemModel } from '../../layout/Tabs.model'
+import type { BankLamp, FaderBankRegionModelProps, FaderStrip } from './FaderBank.model'
+
+type TabItem = TabItemModel<string>
 
 /** The band header's fader page tabs (the master button). */
 export const faderPageTabs: TabItem[] = [
@@ -230,3 +236,65 @@ export const styleStrips: FaderStrip[] = [
   })),
   panelStrips[panelStrips.length - 1],
 ]
+
+/** The mixer's region on a 1440×900 Stage (the board's band: 702×368). */
+export const BOARD_REGION = { width: 702, height: 368 }
+/** The same region on a 1217×752 Stage. */
+export const SMALL_REGION = { width: 593, height: 311 }
+/** The Forms story's boxes, each the size of its form's least at the compact scale (the body plus a 12 px plate inset and a 36 px head). */
+export const FORM_BOXES = { tall: { width: 565, height: 354 }, short: { width: 549, height: 266 } } as const
+
+/** The controls, the same in both Storybooks. */
+export const faderBankArgTypes = {
+  strips: { control: 'object' },
+  pageTabs: { control: 'object' },
+  page: { control: 'select', options: faderPageTabs.map((tab) => tab.id) },
+  layerTabs: { control: 'object' },
+  layer: { control: 'select', options: layerTabs.map((tab) => tab.id) },
+  partLamps: { control: 'object' },
+  functionLamps: { control: 'object' },
+} as const
+
+/** Every story's base: the board, Panel page, Vol layer. */
+export const boardArgs: FixtureProps<FaderBankRegionModelProps> = {
+  strips: panelStrips,
+  pageTabs: faderPageTabs,
+  page: 'panel',
+  layerTabs,
+  layer: 'volume',
+  partLamps,
+  functionLamps,
+}
+
+export const faderBankStories = defineFixtures<FaderBankRegionModelProps>()({
+  Board: { args: boardArgs },
+  PageButtonHold: { args: boardArgs },
+  ReverbLayer: { args: { ...boardArgs, layer: 'reverb', strips: reverbStrips } },
+  SmallStage: { args: boardArgs },
+  Forms: {
+    args: boardArgs,
+    items: [
+      { name: 'Mixer, tall', form: 'tall' },
+      { name: 'Mixer, short', form: 'short' },
+    ],
+  },
+  StylePage: { args: { ...boardArgs, page: 'style', strips: styleStrips } },
+  TakeoverBothWays: {
+    args: {
+      ...boardArgs,
+      strips: panelStrips.map((strip) =>
+        strip.id === 'right2' ? { ...strip, away: 110 } : strip.id === 'left' ? { ...strip, away: 20 } : strip,
+      ),
+    },
+  },
+  AllPartsOff: {
+    args: {
+      ...boardArgs,
+      strips: panelStrips.map((strip): FaderStrip =>
+        strip.kind === 'part' || strip.kind === 'off' ? { ...strip, kind: 'off', away: undefined, meter: 0, meter2: 0, peak: 0 } : strip,
+      ),
+      partLamps: partLamps.map((lamp): BankLamp => ({ ...lamp, on: false, label: 'Off' })),
+    },
+  },
+  Live: { args: boardArgs },
+})

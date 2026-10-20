@@ -3,7 +3,18 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { KNOB_BANK_FORMS, KnobBankRegion, type KnobItem } from './KnobBank';
-import { knobPages, knobsByPage, reverbKnobs, styleKnobs } from './KnobBank.fixtures';
+import {
+  KNOB_BANK_FORM_WIDTHS,
+  KNOB_BANK_WIDTH,
+  KNOB_BANK_WIDTH_1217,
+  knobBankArgTypes,
+  knobBankBoard,
+  knobBankStories as s,
+  knobsByPage,
+} from './KnobBank.fixtures';
+import { instances } from '../../fixtures';
+
+// Every story's args come from KnobBank.fixtures.ts, which the Svelte stories and the parity test share.
 
 /**
  * The Stage's Knobs region, as the Stage draws it: one `Region` named Knobs whose views are the
@@ -18,7 +29,7 @@ const meta = {
     withLibraryTheme,
     // The region's width on the board's Stage; a story may set its own (`parameters.width`).
     (Story, { parameters }) => (
-      <div style={{ width: (parameters.width as number | string | undefined) ?? 552 }}>
+      <div style={{ width: (parameters.width as number | string | undefined) ?? KNOB_BANK_WIDTH }}>
         <Story />
       </div>
     ),
@@ -26,21 +37,13 @@ const meta = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: {
-    knobs: styleKnobs,
-    pages: knobPages,
-    page: 0,
+    ...knobBankBoard,
     tipAction: fn(),
     onPage: fn(),
     onPress: fn(),
     onStep: fn(),
   },
-  argTypes: {
-    knobs: { control: 'object' },
-    pages: { control: 'object' },
-    page: { control: { type: 'number', min: 0, max: knobPages.length - 1, step: 1 } },
-    pageLabel: { control: 'text' },
-    form: { control: 'inline-radio', options: KNOB_BANK_FORMS.map((f) => f.id) },
-  },
+  argTypes: knobBankArgTypes,
 } satisfies Meta<typeof KnobBankRegion>;
 
 export default meta;
@@ -48,6 +51,7 @@ type Story = StoryObj<typeof meta>;
 
 /** The board: the Style page chosen; knob 7 unused. A tab click asks for that page's index. */
 export const Board: Story = {
+  args: s.Board.args,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('tab', { name: 'Style' })).toHaveAttribute('aria-selected', 'true');
@@ -58,35 +62,35 @@ export const Board: Story = {
 };
 
 /** The Reverb page chosen. */
-export const ReverbPage: Story = { args: { page: 3 } };
+export const ReverbPage: Story = { args: s.ReverbPage.args };
 
 /** New: the Reverb page with its own knobs: the parts' sends on 1–4 wear their parts' hues. */
-export const ReverbSends: Story = { args: { page: 3, knobs: reverbKnobs } };
+export const ReverbSends: Story = { args: s.ReverbSends.args };
 
 /** New: the Rack page, the parts' volumes on 1–4 in their hues; Harmony, Metronome and Tempo in ink. */
-export const RackPage: Story = { args: { page: 1, knobs: knobsByPage[1] } };
+export const RackPage: Story = { args: s.RackPage.args };
 
 /** New: the Pan page: text values ("C", "L24") read in the ring like numbers. */
-export const PanPage: Story = { args: { page: 2, knobs: knobsByPage[2] } };
+export const PanPage: Story = { args: s.PanPage.args };
 
 /** New: the Chorus page, with an unmapped slot before the return. */
-export const ChorusPage: Story = { args: { page: 4, knobs: knobsByPage[4] } };
+export const ChorusPage: Story = { args: s.ChorusPage.args };
 
 /** New: only three knobs given: the bank still draws all eight, the rest unused, as on the hardware. */
-export const FewerKnobs: Story = { args: { knobs: styleKnobs.slice(0, 3) } };
+export const FewerKnobs: Story = { args: s.FewerKnobs.args };
 
 /** New: no page list, only the page's name as the one tab (a swap page). */
-export const PageLabelOnly: Story = { args: { pages: [], pageLabel: 'Swap R1' } };
+export const PageLabelOnly: Story = { args: s.PageLabelOnly.args };
 
 /** New: the region at a 1440 × 900 Stage (about 552px wide). */
-export const At1440: Story = {};
+export const At1440: Story = { args: s.At1440.args };
 
 /** New: the region at a 1217 × 752 Stage (about 464px wide): rings shrink to their slots. */
 export const At1217: Story = {
-  args: { page: 3, knobs: reverbKnobs },
+  args: s.At1217.args,
   decorators: [
     (Story) => (
-      <div style={{ width: 464 }}>
+      <div style={{ width: KNOB_BANK_WIDTH_1217 }}>
         <Story />
       </div>
     ),
@@ -100,12 +104,13 @@ export const At1217: Story = {
  * compact width. Choose a form with the `form` control on the other stories.
  */
 export const Forms: Story = {
+  args: s.Forms.args,
   parameters: { width: 'auto' },
   render: (args) => (
     <div style={{ display: 'grid', gap: 24, justifyItems: 'start' }}>
-      {KNOB_BANK_FORMS.map((f) => (
-        <div key={f.id} style={{ width: f.id === 'labelled' ? 640 : 424 }} data-testid={`form-${f.id}`}>
-          <KnobBankRegion {...args} knobs={knobsByPage[1]} page={1} form={f.id} />
+      {instances(s.Forms).map(({ form }) => (
+        <div key={form} style={{ width: KNOB_BANK_FORM_WIDTHS[form ?? ''] }} data-testid={`form-${form}`}>
+          <KnobBankRegion {...args} form={form} />
         </div>
       ))}
     </div>
@@ -122,6 +127,7 @@ export const Forms: Story = {
 
 /** New: a working bank: tabs switch page, keys / drag / wheel step a knob's level 0–127. */
 export const Playground: Story = {
+  args: s.Playground.args,
   render: function Render(args) {
     const [page, setPage] = useState(args.page ?? 0);
     const [sets, setSets] = useState<KnobItem[][]>(knobsByPage);

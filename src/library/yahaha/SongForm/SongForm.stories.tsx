@@ -14,20 +14,19 @@ import {
   type SongFormProps,
   type TransportFormId,
 } from './SongForm';
-import {
-  songFormBoard,
-  songFormFillPending,
-  songFormSparse,
-  songFormStopped,
-  songFormSyncArmed,
-} from './SongForm.fixtures';
+import { SONG_FORM_WIDTH, songFormArgTypes, songFormArgs, songFormBoxes, songFormStories as s } from './SongForm.fixtures';
+
+// Every story's args come from SongForm.fixtures.ts, which the Svelte stories and the parity test share.
+
+/** A story's region box from the fixtures, as its parameters. */
+const box = (name: keyof typeof s) => ({ regionWidth: songFormBoxes[name]?.width, regionHeight: songFormBoxes[name]?.height });
 
 /**
  * The region's box on the Stage: `regionWidth` in a story's parameters sets its width, and
  * `regionHeight` gives it a height, as the Stage's strip does (the steps then fill it).
  */
 const atWidth: Decorator = (Story, context) => {
-  const width = (context.parameters.regionWidth as number | undefined) ?? 1392;
+  const width = (context.parameters.regionWidth as number | undefined) ?? SONG_FORM_WIDTH;
   const height = context.parameters.regionHeight as number | undefined;
   return (
     <div style={{ width, maxWidth: '100%', height }}>
@@ -49,8 +48,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: { layout: 'padded' },
   args: {
-    ...songFormBoard,
-    lit: true,
+    ...songFormArgs,
     tipAction: fn(),
     onSection: fn(),
     onStartStop: fn(),
@@ -64,12 +62,7 @@ const meta = {
     onFade: fn(),
     onReset: fn(),
   },
-  argTypes: {
-    running: { control: 'boolean' },
-    fillPending: { control: 'inline-radio', options: [undefined, 'up', 'down'] },
-    lit: { control: 'boolean' },
-    nextAt: { control: 'text' },
-  },
+  argTypes: songFormArgTypes,
 } satisfies Meta<typeof SongForm>;
 
 export default meta;
@@ -77,7 +70,7 @@ type Story = StoryObj<typeof meta>;
 
 /** Stopped (SectionRow's board): Main A chosen to start, underlined rather than filled (nothing sounds); Start on the `--transport` fill, the one saturated key; Accomp on as an outline with its LED lit; the sync and fill keys neutral until armed or queued. */
 export const Stopped: Story = {
-  args: { ...songFormStopped, next: undefined, nextAt: undefined },
+  args: s.Stopped.args,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     const start = canvas.getByRole('button', { name: 'Start / Stop, stopped' });
@@ -90,6 +83,7 @@ export const Stopped: Story = {
 
 /** Running in Main B with Main C next after bar 4 (PadBank's board). A press on a section queues it. */
 export const Board: Story = {
+  args: s.Board.args,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Main B, playing' })).toHaveAttribute('aria-pressed', 'true');
@@ -101,11 +95,11 @@ export const Board: Story = {
 };
 
 /** The flash's off phase: Main C keeps its NEXT tag; its accent wash goes. */
-export const FlashOff: Story = { args: { lit: false } };
+export const FlashOff: Story = { args: s.FlashOff.args };
 
 /** Fill ▲ queued: the key waits, and the spoken cue says "Fill, then Main C, after bar 4". */
 export const FillPending: Story = {
-  args: songFormFillPending,
+  args: s.FillPending.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Fill, then Main C, after bar 4');
@@ -117,7 +111,7 @@ export const FillPending: Story = {
 
 /** Sync Start armed on Intro I: its key waits, the only transport-hue ring in the cluster, and the spoken cue says the band starts with the first chord. */
 export const SyncStartArmed: Story = {
-  args: { ...songFormSyncArmed, next: undefined, nextAt: undefined },
+  args: s.SyncStartArmed.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Sync Start, armed' })).toHaveAttribute('aria-pressed', 'true');
@@ -127,7 +121,7 @@ export const SyncStartArmed: Story = {
 
 /** A style missing sections: one Intro, two Mains, one Ending, no Break; Auto Fill on. Absent steps keep their place. */
 export const MissingSections: Story = {
-  args: songFormSparse,
+  args: s.MissingSections.args,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Main D, not in this style' }));
@@ -137,13 +131,13 @@ export const MissingSections: Story = {
 };
 
 /** A fade-out under way while running: Fade rings in the ink colour, not a fill (a fill means sounding). */
-export const Fading: Story = { args: { fading: true } };
+export const Fading: Story = { args: s.Fading.args };
 
 /** The 1217 × 752 Stage: the region 1169 wide, the form over the transport (as `both` always is), its steps at numeral size. */
-export const At1217: Story = { parameters: { regionWidth: 1169 } };
+export const At1217: Story = { args: s.At1217.args, parameters: box('At1217') };
 
 /** A narrow column (720): the transport under the form, in two rows sharing its width; the steps at body size so the form stays one row. */
-export const Narrow: Story = { parameters: { regionWidth: 720 } };
+export const Narrow: Story = { args: s.Narrow.args, parameters: box('Narrow') };
 
 /**
  * The form alone (`part="form"`), as the stacked Stage's strip on the 1440 × 900 board: the
@@ -151,8 +145,8 @@ export const Narrow: Story = { parameters: { regionWidth: 720 } };
  * own variables.
  */
 export const FormPart: Story = {
-  args: { part: 'form' },
-  parameters: { regionWidth: 1392, regionHeight: 72 },
+  args: s.FormPart.args,
+  parameters: box('FormPart'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('group', { name: 'Sections' })).toBeInTheDocument();
@@ -168,8 +162,8 @@ export const FormPart: Story = {
  * them), here 67; still one row.
  */
 export const FormPartSmall: Story = {
-  args: { part: 'form' },
-  parameters: { regionWidth: 1169, regionHeight: 67 },
+  args: s.FormPartSmall.args,
+  parameters: box('FormPartSmall'),
   play: async ({ canvasElement }) => {
     const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
     await expect(Math.round(form.getBoundingClientRect().height)).toBe(67);
@@ -177,12 +171,12 @@ export const FormPartSmall: Story = {
 };
 
 /** The form alone with no height given: the steps take their default, two control heights. */
-export const FormPartAuto: Story = { args: { part: 'form' } };
+export const FormPartAuto: Story = { args: s.FormPartAuto.args };
 
 /** The transport alone (`part="transport"`), as the stacked Stage sets it beside the hero; running. */
 export const TransportPart: Story = {
-  args: { part: 'transport' },
-  parameters: { regionWidth: 520 },
+  args: s.TransportPart.args,
+  parameters: box('TransportPart'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('group', { name: 'Transport' })).toBeInTheDocument();
@@ -197,8 +191,8 @@ export const TransportPart: Story = {
  * the keys (body size, Start / Stop at display).
  */
 export const TransportPartTall: Story = {
-  args: { part: 'transport' },
-  parameters: { regionWidth: 720, regionHeight: 210 },
+  args: s.TransportPartTall.args,
+  parameters: box('TransportPartTall'),
 };
 
 /**
@@ -209,6 +203,7 @@ export const TransportPartTall: Story = {
  * `compact` (four rows, the narrowest), each narrower than the one before.
  */
 export const Forms: Story = {
+  args: s.Forms.args,
   render: (args) => <FormsSheet {...args} />,
   play: async ({ canvasElement }) => {
     const boxes = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-specimen]'));
@@ -263,6 +258,6 @@ function FormsSheet(args: SongFormProps) {
 
 /** The transport alone while stopped with Sync Start armed: Start the one fill, Sync Start the one transport-hue ring. */
 export const TransportPartStopped: Story = {
-  args: { ...songFormSyncArmed, part: 'transport', next: undefined, nextAt: undefined },
-  parameters: { regionWidth: 520 },
+  args: s.TransportPartStopped.args,
+  parameters: box('TransportPartStopped'),
 };

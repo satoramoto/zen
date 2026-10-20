@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { PAD_BANK_FORMS, PadBankRegion, type PadItem } from './PadBank';
 import {
+  BANK,
+  PAD_BANK_FRAME_WIDTH,
   allPadBanks,
   allPadsByBank,
-  chordPads,
-  multiPadPads,
-  quickRackPads,
-  quickRackStorePads,
-  sectionPads,
-  setupPads,
+  padBankArgTypes,
+  padBankBoxes,
+  padBankFrameWidths,
+  padBankStories as s,
+  type PadBankBox,
 } from './PadBank.fixtures';
 
 /** Every pad on the canvas is a square: its rendered width and height agree to half a pixel. */
@@ -26,11 +27,14 @@ async function expectSquarePads(canvasElement: HTMLElement) {
 }
 
 /** The bank indexes in `allPadBanks`. */
-const SECTIONS = 0;
-const QUICK_RACKS = 1;
-const CHORD = 2;
-const MULTI_PADS = 3;
-const SETUP = 4;
+const CHORD = BANK.Chord;
+
+/** A decorator drawing the region in `box` (a grid when it has a height, so the region fills it). */
+const inBox = (box: PadBankBox | undefined): Decorator => (Story) => (
+  <div style={{ width: box?.width, height: box?.height, display: box?.height ? 'grid' : undefined }}>
+    <Story />
+  </div>
+);
 
 /**
  * The Stage's Pads region, as the Stage draws it: one `Region` named Pads whose views are the
@@ -47,7 +51,7 @@ const meta = {
     withLibraryTheme,
     // The frame: a 1440 Stage's pads (552) unless a story names its own (`parameters.frameWidth`).
     (Story, { parameters }) => (
-      <div style={{ width: (parameters.frameWidth as number | undefined) ?? 552 }}>
+      <div style={{ width: (parameters.frameWidth as number | undefined) ?? PAD_BANK_FRAME_WIDTH }}>
         <Story />
       </div>
     ),
@@ -55,23 +59,13 @@ const meta = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: {
-    pads: quickRackPads,
-    banks: allPadBanks,
-    bank: QUICK_RACKS,
-    lit: true,
+    pads: allPadsByBank[BANK.QuickRacks],
+    ...s.Board.args,
     tipAction: fn(),
     onBank: fn(),
     onPress: fn(),
   },
-  argTypes: {
-    pads: { control: 'object' },
-    banks: { control: 'object' },
-    bank: { control: { type: 'number', min: 0, max: allPadBanks.length - 1, step: 1 } },
-    lit: { control: 'boolean' },
-    form: { control: { type: 'inline-radio' }, options: PAD_BANK_FORMS.map((f) => f.id) },
-    columns: { control: { type: 'inline-radio' }, options: [8, 4] },
-    bankName: { control: 'text' },
-  },
+  argTypes: padBankArgTypes,
 } satisfies Meta<typeof PadBankRegion>;
 
 export default meta;
@@ -79,6 +73,7 @@ type Story = StoryObj<typeof meta>;
 
 /** The board: the Quick Racks bank, Rack 1 loaded and OTS 1 on. A tab click asks for that bank. */
 export const Board: Story = {
+  args: s.Board.args,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole('tab').map((t) => t.textContent)).toEqual(allPadBanks);
@@ -96,7 +91,7 @@ export const Board: Story = {
  * III absent from this style; the other transport pads neutral at rest.
  */
 export const Sections: Story = {
-  args: { pads: sectionPads, bank: SECTIONS },
+  args: s.Sections.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('tab', { name: 'Sections' })).toHaveAttribute('aria-selected', 'true');
@@ -111,14 +106,8 @@ export const Sections: Story = {
  * row by row, in a block about 464 × 232: the pads are squares sized by its height, centred.
  */
 export const FourByFour: Story = {
-  args: { columns: 4 },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 464, height: 232, display: 'grid' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  args: s.FourByFour.args,
+  decorators: [inBox(padBankBoxes.FourByFour)],
   play: async ({ canvasElement }) => {
     const grid = canvasElement.querySelector<HTMLElement>('.yh-padbank__pads');
     await expect(grid?.dataset.columns).toBe('4');
@@ -127,59 +116,42 @@ export const FourByFour: Story = {
 };
 
 /** The flash's off phase, with Store armed: the rack slots and Store keep ARMED; their wash and ring rest. */
-export const FlashOff: Story = { args: { pads: quickRackStorePads, lit: false } };
+export const FlashOff: Story = { args: s.FlashOff.args };
 
 /** New: Store armed, the flash's on phase: every rack slot and Store wait for the slot to store into. */
-export const StoreArmed: Story = { args: { pads: quickRackStorePads } };
+export const StoreArmed: Story = { args: s.StoreArmed.args };
 
 /** New: the Chord bank: its unassigned top row is eight empty faces, the switches below read as the bank. */
-export const ChordBank: Story = { args: { bank: CHORD, pads: chordPads } };
+export const ChordBank: Story = { args: s.ChordBank.args };
 
 /** New: only five pads given: the bank still draws all sixteen, the rest empty, as on the hardware. */
-export const FewerPads: Story = { args: { pads: quickRackPads.slice(0, 5) } };
+export const FewerPads: Story = { args: s.FewerPads.args };
 
 /** New: only five pads given, as a 4 × 4 grid. */
-export const FewerPadsFourByFour: Story = { args: { pads: quickRackPads.slice(0, 5), columns: 4 } };
+export const FewerPadsFourByFour: Story = { args: s.FewerPadsFourByFour.args };
 
 /** New: the Multi Pads bank, Pad 1 playing. */
-export const MultiPadsBank: Story = { args: { bank: MULTI_PADS, pads: multiPadPads } };
+export const MultiPadsBank: Story = { args: s.MultiPadsBank.args };
 
 /** New: the Setup bank: Single fingering and Stop Style chosen. */
-export const SetupBank: Story = { args: { bank: SETUP, pads: setupPads } };
+export const SetupBank: Story = { args: s.SetupBank.args };
 
 /** New: a pad the engine lights for a part wears that part's hue (Right 2 here); nothing else does. */
-export const PartLit: Story = {
-  args: {
-    bank: MULTI_PADS,
-    pads: multiPadPads.map((pad, i): PadItem => (i === 1 ? { ...pad, family: 'r2', state: 'playing' } : pad)),
-  },
-};
+export const PartLit: Story = { args: s.PartLit.args };
 
 /** New: the region at a 1440 × 900 Stage (about 552px wide), two rows of eight. */
-export const At1440: Story = {};
+export const At1440: Story = { args: s.At1440.args };
 
 /** New: the region at a 1217 × 752 Stage (about 464px wide), two rows of eight. */
 export const At1217: Story = {
-  args: { bank: CHORD, pads: chordPads },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 464 }}>
-        <Story />
-      </div>
-    ),
-  ],
+  args: s.At1217.args,
+  decorators: [inBox(padBankBoxes.At1217)],
 };
 
 /** New: a wide, short region (552 × 120): the pads stay squares, sized by the height, the row centred. */
 export const ShortRegion: Story = {
-  args: { pads: sectionPads, bank: SECTIONS },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 552, height: 120, display: 'grid' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  args: s.ShortRegion.args,
+  decorators: [inBox(padBankBoxes.ShortRegion)],
   play: async ({ canvasElement }) => {
     await expectSquarePads(canvasElement);
   },
@@ -194,12 +166,12 @@ export const ShortRegion: Story = {
  * here it is the `form` prop.
  */
 export const Forms: Story = {
-  args: { pads: sectionPads, bank: SECTIONS },
-  parameters: { frameWidth: 1100 },
+  args: s.Forms.args,
+  parameters: { frameWidth: padBankFrameWidths.Forms },
   render: (args) => (
     <div style={{ display: 'grid', gap: 24 }}>
-      {PAD_BANK_FORMS.map((f) => (
-        <PadBankRegion key={f.id} {...args} form={f.id} name={`Pads (${f.id})`} />
+      {(s.Forms.items ?? []).map((item) => (
+        <PadBankRegion key={item.form} {...args} {...item} />
       ))}
     </div>
   ),
@@ -228,6 +200,7 @@ export const Forms: Story = {
 
 /** New: a working bank: tabs switch bank, a press toggles a pad on and off. */
 export const Playground: Story = {
+  args: s.Playground.args,
   render: function Render(args) {
     const [bank, setBank] = useState(args.bank ?? 0);
     const [sets, setSets] = useState<PadItem[][]>(allPadsByBank);
