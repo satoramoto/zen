@@ -1,6 +1,7 @@
 // The room an assembled screen measures, framework-free: its own box's px, kept current by a
-// ResizeObserver. React's `useRoom` (AssembledScreen.tsx) and Svelte's `measureRoom`
-// (room.svelte.ts) both wrap `observeRoom`.
+// ResizeObserver. The assembled screen binds it as the `room` store (`bindRoom`, view/stores.ts),
+// which reports each size through its `onRoom` handler into the screen's room state; Svelte's
+// public `measureRoom` (room.svelte.ts) wraps `observeRoom` too.
 
 export interface RoomSize {
   w: number;
@@ -30,4 +31,15 @@ export function observeRoom(node: HTMLElement, onSize: (room: RoomSize) => void)
   const observer = new ResizeObserver(read);
   observer.observe(node);
   return () => observer.disconnect();
+}
+
+export interface RoomParams {
+  /** Called with the box's px now and on every change (`observeRoom`). */
+  onRoom?: (room: RoomSize) => void;
+}
+
+/** The measured room as a store (registered as `room`): reports `node`'s size through `onRoom`, read
+ *  at the moment it reports (so the latest handler), until the element goes. */
+export function bindRoom(node: HTMLElement, params: RoomParams): { destroy(): void } {
+  return { destroy: observeRoom(node, (room) => params.onRoom?.(room)) };
 }

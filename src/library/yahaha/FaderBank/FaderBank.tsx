@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { useForm } from '../../layout/assembly';
 import { Tree } from '../../view/Tree';
 import type { Node } from '../../view/Tree.model';
-import { withRegionViews } from '../regionViews';
 import { FADER_BANK_FORMS } from './FaderBank.forms';
 import {
   faderBankHandlers,
@@ -121,7 +120,7 @@ export interface FaderBankRegionProps extends FaderBankRegionModelProps<ReactNod
 export function FaderBankRegion({ className, ...props }: FaderBankRegionProps) {
   // The tree's root is a component node: React's `Tree` draws any child, but types `tree` as an element.
   return (
-    <Tree tree={faderBankRegionView({ ...props, className }) as unknown as Node} handlers={faderBankRegionHandlers(props)} components={withRegionViews} />
+    <Tree tree={faderBankRegionView({ ...props, className }) as unknown as Node} handlers={faderBankRegionHandlers(props)} />
   );
 }
 

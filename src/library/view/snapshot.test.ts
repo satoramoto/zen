@@ -68,6 +68,18 @@ const kids = (props: unknown): string[] => {
   return typeof children === 'string' ? [children] : [];
 };
 
+import { regionView, type RegionDrawProps } from '../layout/Region.model';
+import { regionSample, regionSampleStories, regionStories, type RegionSampleArgs } from '../layout/Region.fixtures';
+import { groupView, type GroupDrawProps } from '../layout/Group.model';
+import { groupSample, groupSampleStories, groupStories, type GroupSampleArgs } from '../layout/Group.fixtures';
+import { layerView, type LayerViewProps } from '../layout/Layer.model';
+import { layerStories } from '../layout/Layer.fixtures';
+import { screenView } from '../layout/Screen.model';
+import { screenArgs, screenSample, screenStories, screenStoryArgs, type ScreenArgs } from '../layout/Screen.fixtures';
+import { assembledPlacement, assembledScreenView } from '../layout/assembly/AssembledScreen.model';
+import { assemblyStories } from '../layout/assembly/Assembly.fixtures';
+import { scopePrinciples } from '../layout/assembly/principles';
+
 function snapshot<P>(name: string, view: (props: P) => Node, fixtures: Fixtures<P>): void {
   describe(name, () => {
     it('draws the same tree for every fixture', async () => {
@@ -109,6 +121,16 @@ snapshot('StatusDot', (props) => statusDotView(props), statusDotStories);
 snapshot('Separator', (props) => separatorView(props), separatorStories);
 snapshot('LineSlider', (props) => lineSliderView(props as Parameters<typeof lineSliderView>[0]), lineSliderStories);
 snapshot('Tabs', (props) => tabsView(props), tabsStories);
+snapshot('Region',(props) => regionView(props as RegionDrawProps, {}, { uid: 'uid' }), regionStories);
+// A composite: Regions holding Groups of Buttons, and Regions with views (Tabs by name).
+snapshot('Region sample', (props) => regionSample(props as RegionSampleArgs), regionSampleStories);
+snapshot('Group', (props) => groupView(props as GroupDrawProps), groupStories);
+snapshot('Group sample', (props) => groupSample(props as GroupSampleArgs), groupSampleStories);
+snapshot('Layer', (props) => layerView(props as LayerViewProps), layerStories);
+snapshot('Screen', (props) => screenView(props, props), screenStories);
+snapshot('Screen (assembled)', (props) => screenView(props), assemblyStories);
+snapshot('Screen sample', (args: Partial<ScreenArgs>) => screenSample({ ...screenArgs, ...args }),{ Default: { args: screenStoryArgs.Default }, GridOnly: { args: screenStoryArgs.GridOnly } });
+snapshot('AssembledScreen', (props) => assembledScreenView(props, assembledPlacement(props, { room: null, principles: scopePrinciples(null) })), assemblyStories as Fixtures<Parameters<typeof assembledScreenView>[0]>);
 snapshot('Display', (props) => displayView(props as Parameters<typeof displayView>[0], { fromScreen: props.form ?? 'compact', chosen: null }, false), displayStories);
 snapshot('SongForm', (props) => songFormView(props, props.formForm ?? 'strip', props.transportForm ?? 'keys'), songFormStories);
 snapshot('FaderBank', (props) => faderBankView(props as FaderBankModelProps, (props as FaderBankModelProps).form ?? 'tall'), faderBankStories);

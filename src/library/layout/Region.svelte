@@ -1,11 +1,13 @@
 <!--
-  Region: the Svelte renderer of `regionView` (Region.model.ts), the same section, header and body
-  as `Region.tsx`; see Region.tsx for the job. `label` and `aside` are text or snippets.
+  Region: the model's tree (`regionView`, Region.model.ts) drawn by the Svelte `Tree`, as
+  `Region.tsx` draws it with the React one; see Region.tsx for the job. `label` and `aside` are
+  text or snippets.
 
   Views: React's `Region.View` children are `views` here, one item per view (its id, tab label,
   name, disabled, tip). The header then shows their `Tabs` and the body is the chosen view's
   tabpanel, rendering `children` with the chosen id. With `view` the choice is the caller's
-  (`bind:view` works too); without, the region keeps its own (`defaultView`, else the first).
+  (`bind:view` works too); without, the region keeps its own (`defaultView`, else the first), a
+  local store the handlers write.
 -->
 <script module lang="ts">
   import type { Snippet } from 'svelte';
@@ -16,11 +18,12 @@
 </script>
 
 <script lang="ts">
-  import Text from '../primitives/Text.svelte';
-  import Tabs from './Tabs.svelte';
-  import type { TipAction } from './Tabs.model';
-  import { chosenView, regionBodyView, regionHasHead, regionIds, regionView, type RegionModelProps } from './Region.model';
-  import { styleString } from './style';
+  import { fromStore } from 'svelte/store';
+  import Tree from '../view/Tree.svelte';
+  import type { TipAction } from '../components/core/Button/Button.model';
+  import { localState } from './local';
+  import { isSlotContent, regionHandlers, regionInitialView, regionView, regionViewSlot, type RegionModelProps } from './Region.model';
+  import '../primitives/Text.css';
   import './Region.css';
 
   interface Props extends Omit<RegionModelProps, 'className'> {
@@ -62,27 +65,26 @@
   }: Props = $props();
 
   const uid = $props.id();
-  const ids = regionIds(uid);
   // svelte-ignore state_referenced_locally
-  let own = $state(defaultView ?? views[0]?.id);
-  const tabbed = $derived(views.length > 0);
-  const chosen = $derived(chosenView(views, view, own));
-
-  const choose = (id: string) => {
-    if (view === undefined) own = id;
-    onView?.(id);
-  };
-
-  const root = $derived(regionView({ name, area, fit, className }, tabbed));
-  const body = $derived(regionBodyView(gap, tabbed ? { panelId: ids.panel, tabId: chosen ? ids.tab(chosen.id) : undefined } : undefined));
+  const own = localState(regionInitialView(views, defaultView));
+  const chosen = fromStore(own);
+  const text = (value: string | Snippet | undefined) => (typeof value === 'string' ? value : undefined);
+  const snippet = (value: string | Snippet | undefined) => (typeof value === 'string' ? undefined : value);
+  // Every view's body is `children`: the tree's `SlotCall` renders it with the chosen view's id.
+  const slots = $derived({
+    label: snippet(label),
+    aside: snippet(aside),
+    children: children as Snippet | undefined,
+    ...Object.fromEntries(views.map((v) => [regionViewSlot(v.id), children as Snippet | undefined])),
+  });
 </script>
 
-<section class={root.className} {...root.attrs} style={styleString(root.style, style)}>{#if regionHasHead(label, aside, tabbed)}<header class="lib-region__head" data-part="head">{#if label}<Text size="caption" weight="strong" case="label" class="lib-region__label">{#if typeof label === 'string'}{label}{:else}{@render label()}{/if}</Text>{/if}{#if tabbed && chosen}<Tabs
-          {name}
-          items={views}
-          value={chosen.id}
-          onChange={choose}
-          panelId={ids.panel}
-          tabId={ids.tab}
-          {tipAction}
-        />{/if}{#if aside}<span class="lib-region__aside">{#if typeof aside === 'string'}{aside}{:else}{@render aside()}{/if}</span>{/if}</header>{/if}<div class={body.className} {...body.attrs}>{@render children?.(tabbed ? chosen?.id : undefined)}</div></section>
+<Tree
+  tree={regionView(
+    { name, area, gap, fit, className, style, views, view, tipAction, label: text(label), aside: text(aside) },
+    { label: isSlotContent(label), aside: isSlotContent(aside) },
+    { uid, own: chosen.current },
+  )}
+  {slots}
+  handlers={regionHandlers({ view, onView, tipAction }, own, uid)}
+/>

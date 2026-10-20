@@ -1,0 +1,38 @@
+## Default
+<div aria-label="Sections" class="lib-stack lib-group" data-direction="column" data-gap="1" data-part="group" role="group">
+  <div class="lib-group__head" data-part="head">
+    <span class="lib-text lib-tone lib-group__label" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+      "Sections"
+  <div class="lib-stack lib-group__body" data-direction="row" data-gap="2" data-part="body">
+    {children}
+
+## WithAside
+<div aria-label="Sections" class="lib-stack lib-group" data-direction="column" data-gap="1" data-part="group" role="group">
+  <div class="lib-group__head" data-part="head">
+    <span class="lib-text lib-tone lib-group__label" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+      "Sections"
+    <span class="lib-group__aside">
+      "1 / 2"
+  <div class="lib-stack lib-group__body" data-direction="row" data-gap="2" data-part="body">
+    {children}
+
+## Wrapping
+<div aria-label="Sections" class="lib-stack lib-group" data-direction="column" data-gap="1" data-part="group" role="group">
+  <div class="lib-group__head" data-part="head">
+    <span class="lib-text lib-tone lib-group__label" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+      "Sections"
+  <div class="lib-stack lib-group__body" data-direction="row" data-gap="2" data-part="body" data-wrap="true">
+    {children}
+
+## ColumnUnlabelled
+<div aria-label="Sections" class="lib-stack lib-group" data-direction="column" data-gap="1" data-part="group" role="group">
+  <div class="lib-stack lib-group__body" data-direction="column" data-gap="2" data-part="body">
+    {children}
+
+## InRegion
+<div aria-label="Sections" class="lib-stack lib-group" data-direction="column" data-gap="1" data-part="group" role="group">
+  <div class="lib-group__head" data-part="head">
+    <span class="lib-text lib-tone lib-group__label" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+      "Sections"
+  <div class="lib-stack lib-group__body" data-direction="row" data-gap="2" data-part="body">
+    {children}

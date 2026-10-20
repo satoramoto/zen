@@ -24,6 +24,12 @@ import { Region } from '../layout/Region';
 import { Tabs } from '../layout/Tabs';
 import { Stack } from '../primitives/Stack';
 import { Text } from '../primitives/Text';
+import { Layer } from '../layout/Layer';
+import { Screen } from '../layout/Screen';
+import { SlotCall } from '../layout/SlotCall';
+import { Surface } from '../primitives/Surface';
+import { AssembledScreen } from '../layout/assembly/AssembledScreen';
+import { FormProvider as FormScope } from '../layout/assembly/forms';
 import { AccentBlock } from '../yahaha/AccentBlock/AccentBlock';
 import { AppBar } from '../yahaha/AppBar/AppBar';
 import { MetronomePopover } from '../yahaha/AppBar/MetronomePopover';
@@ -44,6 +50,12 @@ let registry: Record<string, ComponentType<any>> | undefined;
 /** The React component registered as `name`; throws for an unknown name. */
 export function reactComponent(name: string): ComponentType<any> {
   registry ??= {
+    AssembledScreen,
+    FormScope,
+    Layer,
+    Screen,
+    SlotCall,
+    Surface,
     Button,
     Knob,
     LampButton,

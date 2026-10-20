@@ -1,7 +1,7 @@
 // A small screen for the assembly tests and the story: a bar, then what's playing beside a
 // sidebar, then the pads. Every need is in control heights and space steps. Below it, the
-// Assembly stories as plain data: Assembly.stories.tsx (React) and Assembly.stories.svelte.ts
-// (Svelte) both draw them, and parity.test.tsx renders each story's screen (empty slots) in both.
+// Assembly stories as plain data: Assembly.stories.tsx draws them, and the tree snapshots
+// (view/snapshot.test.ts) print each story's screen (empty slots).
 import { defineFixtures } from '../../fixtures';
 import type { ScreenModelProps } from '../Screen.model';
 import type { Forms, ScreenSpec } from './types';

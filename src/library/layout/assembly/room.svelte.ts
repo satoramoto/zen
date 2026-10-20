@@ -1,5 +1,8 @@
-// The measured room in Svelte: React's `useRoom` over the same `observeRoom` (room.ts).
-import { FALLBACK_ROOM, observeRoom, type RoomSize } from './room';
+// The measured room in Svelte, for a screen of an app's own: the assembled screen's `room` store
+// (`bindRoom`, room.ts) writing a local room state (`localState`), read with `fromStore`.
+import { fromStore } from 'svelte/store';
+import { localState } from '../local';
+import { FALLBACK_ROOM, bindRoom, type RoomSize } from './room';
 
 /**
  * The room an element measures: attach `attach` to it (`{@attach room.attach}`); `current` is
@@ -7,14 +10,15 @@ import { FALLBACK_ROOM, observeRoom, type RoomSize } from './room';
  * measures, as in jsdom). Reactive; call it while a component initialises.
  */
 export function measureRoom(given?: () => RoomSize | undefined): { readonly current: RoomSize; attach: (node: HTMLElement) => (() => void) | undefined } {
-  let measured = $state<RoomSize | null>(null);
+  const room = localState<RoomSize | null>(null);
+  const measured = fromStore(room);
   return {
     get current() {
-      return given?.() ?? measured ?? FALLBACK_ROOM;
+      return given?.() ?? measured.current ?? FALLBACK_ROOM;
     },
     attach(node) {
       if (given?.()) return;
-      return observeRoom(node, (size) => (measured = size));
+      return bindRoom(node, { onRoom: room.set }).destroy;
     },
   };
 }

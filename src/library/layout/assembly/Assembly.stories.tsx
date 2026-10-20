@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../../storybook';
+import { withRenderer } from '../../stories/story';
 import { Text } from '../../primitives/Text';
 import { Stack } from '../../primitives/Stack';
 import { Region } from '../Region';
@@ -95,9 +96,14 @@ function Demo({ width, height, aspect = 'none' }: { width: number; height: numbe
   );
 }
 
+/**
+ * React only (Renderer on Svelte shows a note): the demo's parts are components of the story's own
+ * that read their form with `useForm`, and the caption shows the placement `onPlacement` reports,
+ * so the story is a layout of its own rather than a fixture or a view tree.
+ */
 const meta: Meta<typeof Demo> = {
   title: 'Design OS/Layout/Assembly',
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   component: Demo,
   args: demoArgs,

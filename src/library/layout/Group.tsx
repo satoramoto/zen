@@ -1,13 +1,16 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Step } from '../primitives/step';
-import { Text } from '../primitives/Text';
-import { CONTROL_TOOLBAR, ControlContext, Stack, type StackAlign } from '../primitives/Stack';
-import { GROUP_BODY_CLASS, GROUP_ROOT_STACK, groupBodyStack, groupLabel, groupView } from './Group.model';
-import { reactStyle } from './style';
+import { CONTROL_TOOLBAR, ControlContext, type StackAlign } from '../primitives/Stack';
+import { Tree } from '../view/Tree';
+import { groupView } from './Group.model';
+import { cssText, isSlotContent } from './Region.model';
+import '../primitives/Stack.css';
+import '../primitives/Text.css';
 import './Group.css';
 
-// The elements and the shown label are framework-free, in the model; `Group.svelte` renders the same view.
-export { groupView, groupBodyStack, groupLabel, GROUP_ROOT_STACK, GROUP_BODY_CLASS, type GroupModelProps } from './Group.model';
+// The tree and the shown label are framework-free, in the model; this file and `Group.svelte` only
+// hand its tree to their `Tree`, with the label, aside and controls as slots.
+export { groupView, groupBodyStack, groupLabel, GROUP_ROOT_STACK, GROUP_BODY_CLASS, type GroupModelProps, type GroupDrawProps } from './Group.model';
 
 export interface GroupProps {
   /** The group's accessible name; also its visible label unless `label` is given. */
@@ -51,27 +54,18 @@ export interface GroupProps {
  * with a chevron, a faint hover and press tint). The context changes the look; the controls keep
  * their size, hit target, keys and menus.
  */
-export function Group({ name, label, aside, direction = 'row', wrap = false, gap = 2, align, area, toolbar = false, className, style, children }: GroupProps) {
-  const shown = groupLabel(name, label);
-  const root = groupView({ name, area, toolbar, className });
-  const body = (
-    <Stack {...groupBodyStack({ direction, wrap, gap, align })} className={GROUP_BODY_CLASS} data-part="body">
-      {children}
-    </Stack>
+export function Group({ label, aside, style, toolbar = false, children, ...props }: GroupProps) {
+  const tree = groupView(
+    {
+      ...props,
+      toolbar,
+      label: typeof label === 'string' || label === false ? label : undefined,
+      aside: typeof aside === 'string' ? aside : undefined,
+      style: cssText(style),
+    },
+    { label: isSlotContent(label), aside: isSlotContent(aside) },
   );
-  return (
-    <Stack {...GROUP_ROOT_STACK} className={root.className} {...root.attrs} style={reactStyle(root.style, style)}>
-      {(shown || aside) && (
-        <div className="lib-group__head" data-part="head">
-          {shown && (
-            <Text size="caption" weight="strong" case="label" className="lib-group__label">
-              {shown}
-            </Text>
-          )}
-          {aside && <span className="lib-group__aside">{aside}</span>}
-        </div>
-      )}
-      {toolbar ? <ControlContext.Provider value={CONTROL_TOOLBAR}>{body}</ControlContext.Provider> : body}
-    </Stack>
-  );
+  // React's context reaches the controls through the slot: only the body's are a toolbar's.
+  const body = toolbar ? <ControlContext.Provider value={CONTROL_TOOLBAR}>{children}</ControlContext.Provider> : children;
+  return <Tree tree={tree} slots={{ label: label === false ? undefined : label, aside, children: body }} />;
 }
