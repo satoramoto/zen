@@ -1,0 +1,22 @@
+## Groups
+<section aria-label="Pads" class="lib-region" data-part="region">
+  <header class="lib-region__head" data-part="head">
+    <span class="lib-text lib-tone lib-region__label" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+      "Pads"
+  <div class="lib-region__body" data-gap="3" data-part="body">
+    {children}
+
+## Plain
+<section aria-label="Mixer" class="lib-region" data-part="region">
+  <header class="lib-region__head" data-part="head">
+    <span class="lib-text lib-tone lib-region__label" data-role="body" data-text-case="label" data-text-size="caption" data-text-weight="strong">
+      "Mixer"
+    <span class="lib-region__aside">
+      "8 strips"
+  <div class="lib-region__body" data-part="body">
+    {children}
+
+## Headless
+<section aria-label="Mixer" class="lib-region" data-part="region">
+  <div class="lib-region__body" data-part="body">
+    {children}

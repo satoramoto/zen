@@ -1,7 +1,9 @@
-// Screen's stories as plain data: Screen.stories.tsx (React) and Screen.stories.svelte.ts (Svelte)
-// both draw them, and parity.test.tsx renders every story's Screen in both (the regions' names
-// standing in as the grid's text). The assembled screen's stories are Assembly.fixtures.ts.
+// Screen's stories as plain data: `screenStories` (each story's Screen, the regions' names standing
+// in as the grid's text) for the tree snapshot, and `screenSample`, the stories' composed screen as
+// a view tree (Screen.stories.tsx draws it with either renderer's `Tree`). The assembled screen's
+// stories are Assembly.fixtures.ts.
 import { defineFixtures } from '../fixtures';
+import { component, h, type Node } from '../view/Tree.model';
 import type { ScreenModelProps } from './Screen.model';
 
 /** The arrangements the story switches between: each grid's areas and tracks. */
@@ -53,3 +55,32 @@ export const screenStories = defineFixtures<ScreenModelProps & { header?: string
     items: Object.values(ARRANGEMENTS),
   },
 });
+
+/* ---------- the stories as a view tree (a composite: Screen holding Regions) ---------- */
+
+/** A muted caption line inside a region. */
+const note = (text: string): Node => h('p', { style: 'margin: 0; color: var(--text-3); font-size: var(--size-caption)' }, text);
+
+/** A Region (a registered component) holding `text`. */
+const region = (props: Record<string, string>, text: string) => component('Region', props, { slots: { children: [note(text)] } });
+
+/** A story's tree: Screen (in a frame the height of the canvas) with the app bar and keys as Regions
+ *  in its header and footer slots, and a Region per grid area in its children. */
+export function screenSample(args: ScreenArgs): Node {
+  const { header, footer, ...props } = screenProps(args);
+  return h(
+    'div',
+    { style: 'height: calc(100vh - 2 * var(--space-6))' },
+    component('Screen', props as Record<string, unknown>, {
+      slots: {
+        ...(header ? { header: [region({ name: 'App bar' }, HEADER_NOTE)] } : {}),
+        ...(footer ? { footer: [region({ name: 'Keys' }, FOOTER_NOTE)] } : {}),
+        children: [
+          region({ name: 'Hero', label: 'Hero', area: 'hero' }, 'area="hero"'),
+          region({ name: 'Mixer', label: 'Mixer', area: 'mixer' }, 'area="mixer"'),
+          region({ name: 'Pads', label: 'Pads', area: 'pads' }, 'area="pads"'),
+        ],
+      },
+    }),
+  );
+}

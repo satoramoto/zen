@@ -1,0 +1,43 @@
+## Default
+<div style="height: calc(100vh - 2 * var(--space-6))">
+  <Screen areas=["hero hero","mixer pads"] columns="minmax(0, 1.4fr) minmax(0, 1fr)" name="Stage" rows="auto minmax(0, 1fr)">
+    #header
+      <Region name="App bar">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "Header: fixed, never scrolls with the grid"
+    #footer
+      <Region name="Keys">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "Footer: fixed at the bottom"
+    #children
+      <Region area="hero" label="Hero" name="Hero">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "area=\"hero\""
+      <Region area="mixer" label="Mixer" name="Mixer">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "area=\"mixer\""
+      <Region area="pads" label="Pads" name="Pads">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "area=\"pads\""
+
+## GridOnly
+<div style="height: calc(100vh - 2 * var(--space-6))">
+  <Screen areas=["hero hero","mixer pads"] columns="minmax(0, 1.4fr) minmax(0, 1fr)" name="Stage" rows="auto minmax(0, 1fr)">
+    #children
+      <Region area="hero" label="Hero" name="Hero">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "area=\"hero\""
+      <Region area="mixer" label="Mixer" name="Mixer">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "area=\"mixer\""
+      <Region area="pads" label="Pads" name="Pads">
+        #children
+          <p style="margin: 0; color: var(--text-3); font-size: var(--size-caption)">
+            "area=\"pads\""

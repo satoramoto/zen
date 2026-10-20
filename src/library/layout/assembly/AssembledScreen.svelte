@@ -1,21 +1,22 @@
 <!--
-  AssembledScreen: the Svelte renderer of `assembledView` (AssembledScreen.model.ts), the same
-  root, bands, room, zones and slots as `AssembledScreen.tsx`; see AssembledScreen.tsx for the job.
-  The room is measured by `measureRoom` (room.svelte.ts), the principles come from the nearest
-  ThemeScope (`scopePrinciples`, principles.svelte.ts), and each slot hands its form to what's
-  inside through `FormScope` (`getForm`, forms.svelte.ts). A region's content is a snippet given
-  the chosen form and the placed region.
+  AssembledScreen: the model's tree (`assembledScreenView`, AssembledScreen.model.ts) drawn by the
+  Svelte `Tree`, as `AssembledScreen.tsx` draws it with the React one; see AssembledScreen.tsx for
+  the job. The measured room is a local state (`localState`) the `room` store writes, read with
+  `fromStore`; the principles come from the nearest ThemeScope (`scopePrinciples`,
+  principles.svelte.ts). Each region's content is a snippet given the chosen form and the placed
+  region, bound to them (`bindSnippet`) as its slot, inside the `FormScope` the tree wraps it in.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import Surface from '../../primitives/Surface.svelte';
-  import { styleString } from '../style';
-  import { assemble } from './assemble';
-  import { assembledView, type SlotView } from './AssembledScreen.model';
-  import FormScope from './FormScope.svelte';
+  import { fromStore } from 'svelte/store';
+  import Tree from '../../view/Tree.svelte';
+  import { localState } from '../local';
+  import { bindSnippet } from '../snippet';
+  import { assembledPlacement, assembledScreenHandlers, assembledScreenView, regionFills } from './AssembledScreen.model';
   import { scopePrinciples } from './principles.svelte';
-  import { measureRoom } from './room.svelte';
+  import type { RoomSize } from './room';
   import type { Placed, Placement, Principles, ScreenSpec } from './types';
+  import '../../primitives/Surface.css';
   import './Assembly.css';
 
   interface Props {
@@ -31,20 +32,19 @@
     /** Called with each new placement. */
     onPlacement?: (placement: Placement) => void;
     class?: string;
+    /** The root's class, as Screen's tree passes it (`class` wins). */
+    className?: string;
     style?: string;
   }
 
-  let { name, spec, regions = {}, room: given, principles, onPlacement, class: className, style }: Props = $props();
+  let { name, spec, regions = {}, room: given, principles, onPlacement, class: cls, className, style }: Props = $props();
 
-  const room = measureRoom(() => given);
-  const p = scopePrinciples(() => principles);
-  const placement = $derived(assemble(spec, room.current, p.current));
-  $effect(() => {
-    onPlacement?.(placement);
-  });
-  const view = $derived(assembledView(name, spec, placement, className));
+  const room = localState<RoomSize | null>(null);
+  const measured = fromStore(room);
+  const scope = scopePrinciples(() => principles);
+  const model = $derived({ name, spec, room: given, className: cls ?? className, style });
+  const placement = $derived(assembledPlacement(model, { room: measured.current, principles: scope.current }));
+  const slots = $derived(regionFills(placement, (id, placed) => bindSnippet(regions[id], () => placed.form, () => placed)));
 </script>
 
-{#snippet slot({ id, placed, attrs, style: decls, glass }: SlotView)}<div class="lib-assembled__slot" {...attrs} style={styleString(decls)}>{#if glass}<Surface layer="float" radius="none" class="lib-assembled__glass" aria-hidden="true" />{/if}<FormScope form={placed.form} parts={placed.parts}>{@render regions[id]?.(placed.form, placed)}</FormScope></div>{/snippet}
-
-<div {@attach room.attach} class={view.className} {...view.attrs} style={styleString({}, style)}>{#each view.bands as band, i (i)}<Surface layer="ground" radius="none" class="lib-assembled__band" data-part="band" aria-hidden="true" style={styleString(band)} />{/each}<div class="lib-assembled__room" {...view.room.attrs} style={styleString(view.room.style)}>{#if view.header}<div class="lib-assembled__zone" data-part="header" style={styleString(view.header.style)}>{#each view.header.slots as s (s.id)}{@render slot(s)}{/each}</div>{/if}<div class="lib-assembled__zone" data-part="body" style={styleString(view.body.style)}><div class="lib-assembled__body" data-part="grid" style={styleString(view.body.gridStyle)}>{#each view.body.slots as s (s.id)}{@render slot(s)}{/each}</div></div>{#if view.footer}<div class="lib-assembled__zone" data-part="footer" style={styleString(view.footer.style)}>{#each view.footer.slots as s (s.id)}{@render slot(s)}{/each}</div>{/if}</div></div>
+<Tree tree={assembledScreenView(model, placement)} {slots} handlers={assembledScreenHandlers({ onPlacement }, placement, room)} />

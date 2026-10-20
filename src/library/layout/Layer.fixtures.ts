@@ -1,6 +1,6 @@
 // Layer's stories (and Opaque's and Hole's, shown under the same title) as plain data:
-// Layer.stories.tsx (React) and Layer.stories.svelte.ts (Svelte) both draw them, and
-// parity.test.tsx renders every instance in both.
+// Layer.stories.tsx draws them in React or Svelte, the tree snapshot (view/snapshot.test.ts)
+// records `layerView` for every Layer instance, and parity.test.tsx renders Opaque's and Hole's in both.
 import { LAYERS, type AmbientRegion } from '../contract';
 import { defineFixtures } from '../fixtures';
 import type { LayerModelProps } from './Layer.model';

@@ -1,42 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../storybook';
-import { Region } from './Region';
-import { Screen } from './Screen';
-import { FOOTER_NOTE, HEADER_NOTE, screenArgTypes, screenArgs, screenProps, screenStoryArgs, type ScreenArgs } from './Screen.fixtures';
+import { treeStory, withRenderer, type StoryView } from '../stories/story';
+import { screenArgTypes, screenArgs, screenSample, screenStoryArgs, type ScreenArgs } from './Screen.fixtures';
 
-const note = (text: string) => <p style={{ margin: 0, color: 'var(--text-3)', fontSize: 'var(--size-caption)' }}>{text}</p>;
+const view: StoryView<ScreenArgs> = (args) => ({ tree: screenSample(args) });
 
+/**
+ * Each story is a view tree (`screenSample`, Screen.fixtures.ts): a Screen with Regions in its
+ * header, footer and grid, drawn by React's or Svelte's `Tree` (the toolbar's Renderer).
+ */
 const meta: Meta<ScreenArgs> = {
   title: 'Design OS/Layout/Screen',
-  decorators: [withLibraryTheme],
-  parameters: { layout: 'fullscreen' },
+  decorators: [withRenderer, withLibraryTheme],
+  render: treeStory(view).render,
+  parameters: { layout: 'fullscreen', ...treeStory(view).parameters },
   args: screenArgs,
   argTypes: screenArgTypes,
-  render: (args) => {
-    const { name, areas, columns, rows, header, footer } = screenProps(args);
-    return (
-      <div style={{ height: 'calc(100vh - 2 * var(--space-6))' }}>
-        <Screen
-          name={name}
-          areas={areas}
-          columns={columns}
-          rows={rows}
-          header={header ? <Region name="App bar">{note(HEADER_NOTE)}</Region> : undefined}
-          footer={footer ? <Region name="Keys">{note(FOOTER_NOTE)}</Region> : undefined}
-        >
-          <Region name="Hero" label="Hero" area="hero">
-            {note('area="hero"')}
-          </Region>
-          <Region name="Mixer" label="Mixer" area="mixer">
-            {note('area="mixer"')}
-          </Region>
-          <Region name="Pads" label="Pads" area="pads">
-            {note('area="pads"')}
-          </Region>
-        </Screen>
-      </div>
-    );
-  },
 };
 export default meta;
 type Story = StoryObj<ScreenArgs>;

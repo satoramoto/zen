@@ -1,0 +1,53 @@
+## Default
+<div style="width: 560px">
+  <Group direction="row" gap=2 name="Sections" wrap=false>
+    #children
+      <Button key=Intro A label="Intro A" variant="secondary">
+      <Button key=Main A label="Main A" variant="primary">
+      <Button key=Main B label="Main B" variant="secondary">
+      <Button key=Fill A label="Fill A" variant="secondary">
+
+## WithAside
+<div style="width: 560px">
+  <Group aside="1 / 2" direction="row" gap=2 name="Sections" wrap=false>
+    #children
+      <Button key=Intro A label="Intro A" variant="secondary">
+      <Button key=Main A label="Main A" variant="primary">
+      <Button key=Main B label="Main B" variant="secondary">
+      <Button key=Fill A label="Fill A" variant="secondary">
+
+## Wrapping
+<div style="width: 360px">
+  <Group direction="row" gap=2 name="Sections" wrap=true>
+    #children
+      <Button key=Intro A label="Intro A" variant="secondary">
+      <Button key=Main A label="Main A" variant="primary">
+      <Button key=Main B label="Main B" variant="secondary">
+      <Button key=Fill A label="Fill A" variant="secondary">
+      <Button key=Fill B label="Fill B" variant="secondary">
+      <Button key=Break label="Break" variant="secondary">
+      <Button key=Ending A label="Ending A" variant="secondary">
+      <Button key=Ending B label="Ending B" variant="secondary">
+
+## ColumnUnlabelled
+<div style="width: 200px">
+  <Group direction="column" gap=2 label=false name="Sections" wrap=false>
+    #children
+      <Button key=Intro A label="Intro A" variant="secondary">
+      <Button key=Main A label="Main A" variant="primary">
+      <Button key=Main B label="Main B" variant="secondary">
+
+## InRegion
+<div style="width: 560px">
+  <Region gap=4 label="Pads" name="Pads">
+    #children
+      <Group direction="row" gap=2 name="Sections" wrap=false>
+        #children
+          <Button key=Intro A label="Intro A" variant="secondary">
+          <Button key=Main A label="Main A" variant="primary">
+          <Button key=Main B label="Main B" variant="secondary">
+          <Button key=Fill A label="Fill A" variant="secondary">
+      <Group aside="Transport" gap=2 name="Utility">
+        #children
+          <Button key=Sync Start label="Sync Start">
+          <Button key=Start / Stop label="Start / Stop">

@@ -1,15 +1,15 @@
 <!--
-  Screen: the Svelte renderer of `screenView` and `screenGrid` (Screen.model.ts), the same root,
-  header, grid and footer as `Screen.tsx`; see Screen.tsx for the job. `header` and `footer` are
-  text or snippets, `gridRef` binds the grid. With a `spec` it draws `AssembledScreen.svelte`,
-  each region's content a snippet given the chosen form and the placed region.
+  Screen: the model's tree (`screenView`, Screen.model.ts) drawn by the Svelte `Tree`, as
+  `Screen.tsx` draws it with the React one; see Screen.tsx for the job. `header` and `footer` are
+  text or snippets, `gridRef` binds the grid (the `ref` store, through the `gridRef` handler). With a
+  `spec` the tree is the `AssembledScreen` component, each region's content a snippet given the
+  chosen form and the placed region, passed through as its `regions`.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import AssembledScreen from './assembly/AssembledScreen.svelte';
+  import Tree from '../view/Tree.svelte';
   import type { Placed, Placement } from './assembly/types';
-  import { screenGrid, screenView, type ScreenModelProps } from './Screen.model';
-  import { styleString } from './style';
+  import { REGIONS_SLOT, screenHandlers, screenView, type ScreenModelProps } from './Screen.model';
   import './Screen.css';
 
   interface Props extends Omit<ScreenModelProps, 'className'> {
@@ -30,27 +30,16 @@
     onPlacement?: (placement: Placement) => void;
   }
 
-  let {
-    name,
-    header,
-    footer,
-    areas,
-    columns,
-    rows,
-    gridRef = $bindable(null),
-    gridStyle,
-    class: className,
-    style,
-    children,
-    spec,
-    regions,
-    room,
-    principles,
-    onPlacement,
-  }: Props = $props();
+  let { header, footer, gridRef = $bindable(null), class: className, children, regions, onPlacement, ...props }: Props = $props();
 
-  const view = $derived(screenView(name, className));
-  const grid = $derived(styleString(screenGrid({ areas, columns, rows }), gridStyle));
+  // `regions` is no snippet: its slot passes it through, untouched, as AssembledScreen's `regions`.
+  const slots = $derived({
+    header: typeof header === 'string' ? undefined : header,
+    footer: typeof footer === 'string' ? undefined : footer,
+    children,
+    [REGIONS_SLOT]: (regions ?? {}) as unknown as Snippet,
+  });
+  const handlers = $derived(screenHandlers({ gridRef: (element: HTMLElement | null) => (gridRef = element), onPlacement }));
 </script>
 
-{#if spec}<AssembledScreen {name} {spec} {regions} {room} {principles} {onPlacement} class={className} {style} />{:else}<div class={view.className} {...view.attrs} {style}>{#if header}<div class="lib-screen__header" data-part="header">{#if typeof header === 'string'}{header}{:else}{@render header()}{/if}</div>{/if}<div class="lib-screen__grid" data-part="grid" bind:this={gridRef} style={grid}>{@render children?.()}</div>{#if footer}<div class="lib-screen__footer" data-part="footer">{#if typeof footer === 'string'}{footer}{:else}{@render footer()}{/if}</div>{/if}</div>{/if}
+<Tree tree={screenView({ ...props, className }, { header, footer })} {slots} {handlers} />

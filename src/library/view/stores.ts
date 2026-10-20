@@ -8,6 +8,9 @@ import { bindHold, type HoldParams } from '../components/core/Button/hold';
 import { bindKnob, type KnobParams } from '../components/music/Knob/knobInput';
 import { bindTip, type TipParams } from './tip';
 import { bindLineSlider, type LineSliderParams } from '../components/core/LineSlider/slide';
+import { bindRoom, type RoomParams } from '../layout/assembly/room';
+import { bindReport, type ReportParams } from '../layout/assembly/report';
+import { bindRef, type RefParams } from '../layout/Screen.model';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -64,6 +67,12 @@ export const stores = {
   knob: keyed<KnobParams, 'tipAction' | 'onpress' | 'onstep'>(bindKnob, ['tipAction', 'onpress', 'onstep']),
   /** LineSlider's keys and drag (`slide.ts`). */
   lineSlider: keyed<LineSliderParams, 'onchange' | 'onheld'>(bindLineSlider, ['onchange', 'onheld']),
+  /** An assembled screen's measured room (`layout/assembly/room.ts`). */
+  room: keyed<RoomParams, 'onRoom'>(bindRoom, ['onRoom']),
+  /** An assembled screen's placement, reported once per change (`layout/assembly/report.ts`). */
+  report: keyed<ReportParams, 'onReport'>(bindReport, ['onReport']),
+  /** Screen's `gridRef`: the element on mount, null on unmount (`layout/Screen.model.ts`). */
+  ref: keyed<RefParams, 'onRef'>(bindRef, ['onRef']),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;

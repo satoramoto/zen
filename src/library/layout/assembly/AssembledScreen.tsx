@@ -1,16 +1,25 @@
-import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useMemo, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
 import { useThemeScope } from '../../theme';
-import { Surface } from '../../primitives/Surface';
-import { reactStyle } from '../style';
-import { assemble } from './assemble';
-import { assembledView, type SlotView } from './AssembledScreen.model';
-import { FormProvider } from './forms';
+import { Tree } from '../../view/Tree';
+import { localState } from '../local';
+import {
+  assembledPlacement,
+  assembledScreenHandlers,
+  assembledScreenView,
+  regionFills,
+  type AssembledScreenModelProps,
+} from './AssembledScreen.model';
 import { scopePrinciples } from './principles';
-import { FALLBACK_ROOM, observeRoom, type RoomSize } from './room';
+import type { RoomSize } from './room';
 import type { Placed, Placement, Principles, ScreenSpec } from './types';
+// The bands and the glass are Surfaces drawn as plain divs with Surface's class and data
+// (`assembledScreenView`; never a shader). Before Assembly.css, so its rules win.
+import '../../primitives/Surface.css';
 import './Assembly.css';
 
-// What the screen draws is framework-free (AssembledScreen.model.ts); `AssembledScreen.svelte` renders the same view.
+// What the screen draws is framework-free (AssembledScreen.model.ts); this file and
+// `AssembledScreen.svelte` read the screen's state (its measured room, the scope's principles),
+// place the spec and hand the tree to their `Tree`, each region's content in its slot.
 export { SLOT_VARS } from './AssembledScreen.model';
 
 /** What the screen draws in a region's place: content, or a function of the chosen form. */
@@ -29,19 +38,8 @@ export interface AssembledScreenProps {
   /** Called with each new placement (the inspector, tests). */
   onPlacement?: (placement: Placement) => void;
   className?: string;
-  style?: CSSProperties;
-}
-
-/** The room's px from the screen's own box, kept current (`observeRoom`, room.ts). */
-function useRoom(given?: RoomSize) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [room, setRoom] = useState<RoomSize | null>(null);
-  useLayoutEffect(() => {
-    const node = ref.current;
-    if (given || !node) return;
-    return observeRoom(node, setRoom);
-  }, [given]);
-  return [ref, given ?? room ?? FALLBACK_ROOM] as const;
+  /** The root's style (a string too, as Screen's tree passes it). */
+  style?: CSSProperties | string;
 }
 
 /**
@@ -52,6 +50,9 @@ export function useScopePrinciples(given?: Principles): Principles {
   const scope = useThemeScope();
   return useMemo(() => scopePrinciples(scope, given), [given, scope]);
 }
+
+/** A region's content as its slot draws it: a function of the chosen form called with it. */
+const content = (region: RegionContent, placed: Placed): ReactNode => (typeof region === 'function' ? region(placed.form, placed) : region);
 
 /**
  * **Job.** A screen that assembles itself: the regions' declared forms, the screen's intent (`spec`)
@@ -86,50 +87,20 @@ export function useScopePrinciples(given?: Principles): Principles {
  *
  * With `aspect.fit: 'scale'` the room is laid out at its design size and drawn smaller by a CSS
  * `transform: scale()` (Assembly.css), carried in `data-scale` on the room.
+ *
+ * **State.** The measured room is the screen's own (a `localState` the `room` store writes); each
+ * new placement reaches `onPlacement` through the `report` store.
  */
-export function AssembledScreen({ name, spec, regions, room: given, principles, onPlacement, className, style }: AssembledScreenProps) {
-  const [ref, room] = useRoom(given);
-  const p = useScopePrinciples(principles);
-  const placement = useMemo(() => assemble(spec, room, p), [spec, room, p]);
-  useLayoutEffect(() => {
-    onPlacement?.(placement);
-  }, [placement, onPlacement]);
-  const view = assembledView(name, spec, placement, className);
-
-  const slot = ({ id, placed, attrs, style: decls, glass }: SlotView) => {
-    const content = regions[id];
-    return (
-      <div key={id} className="lib-assembled__slot" {...attrs} style={reactStyle(decls)}>
-        {glass && <Surface layer="float" radius="none" className="lib-assembled__glass" aria-hidden="true" />}
-        <FormProvider form={placed.form} parts={placed.parts}>
-          {typeof content === 'function' ? content(placed.form, placed) : content}
-        </FormProvider>
-      </div>
-    );
-  };
-
+export function AssembledScreen({ regions = {}, onPlacement, ...props }: AssembledScreenProps) {
+  const [room] = useState(() => localState<RoomSize | null>(null));
+  const measured = useSyncExternalStore(room.subscribe, room.get, room.get);
+  const principles = useScopePrinciples(props.principles);
+  const placement = useMemo(() => assembledPlacement(props, { room: measured, principles }), [props.spec, props.room, measured, principles]);
   return (
-    <div ref={ref} className={view.className} {...view.attrs} style={style}>
-      {view.bands.map((band, i) => (
-        <Surface key={i} layer="ground" radius="none" className="lib-assembled__band" data-part="band" aria-hidden="true" style={reactStyle(band)} />
-      ))}
-      <div className="lib-assembled__room" {...view.room.attrs} style={reactStyle(view.room.style)}>
-        {view.header ? (
-          <div className="lib-assembled__zone" data-part="header" style={reactStyle(view.header.style)}>
-            {view.header.slots.map(slot)}
-          </div>
-        ) : null}
-        <div className="lib-assembled__zone" data-part="body" style={reactStyle(view.body.style)}>
-          <div className="lib-assembled__body" data-part="grid" style={reactStyle(view.body.gridStyle)}>
-            {view.body.slots.map(slot)}
-          </div>
-        </div>
-        {view.footer ? (
-          <div className="lib-assembled__zone" data-part="footer" style={reactStyle(view.footer.style)}>
-            {view.footer.slots.map(slot)}
-          </div>
-        ) : null}
-      </div>
-    </div>
+    <Tree
+      tree={assembledScreenView(props as AssembledScreenModelProps, placement)}
+      slots={regionFills(placement, (id, placed) => content(regions[id], placed))}
+      handlers={assembledScreenHandlers({ onPlacement }, placement, room)}
+    />
   );
 }
