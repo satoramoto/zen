@@ -1,41 +1,12 @@
 import { Fragment } from 'react';
 import { Text } from '../../primitives/Text';
-import type { Forms } from '../../layout/assembly/types';
+import { statusLineView, type StatusLineModelProps } from './StatusLine.model';
 import './StatusLine.css';
 
-/** The line's one form, for an assembled screen's footer: one control height, full width. */
-export const STATUS_LINE_FORMS: Forms<'line'> = [
-  { id: 'line', min: { w: 0, h: { control: 1 } }, ideal: { w: 0, h: { control: 1 } }, grow: { w: true } },
-];
+// The props, the form and the view are framework-free, in the model; `StatusLine.svelte` renders the same view.
+export { STATUS_LINE_FORMS, statusLineView, type StatusHint, type StatusLineModelProps } from './StatusLine.model';
 
-/** A control's tooltip, shown in the line's place while the control is hovered or focused. */
-export interface StatusHint {
-  /** The entry's title. */
-  title: string;
-  /** What the control does. */
-  body: string;
-  /** Its keys, already labelled ("Y", "Shift+Y / F5"). */
-  keys?: string | null;
-  /** Where it is on the Launchkey. */
-  launchkey?: string | null;
-}
-
-export interface StatusLineProps {
-  /** The hovered or focused control's tooltip: shown in place of the message while set. */
-  hint?: StatusHint | null;
-  /** `message.text`. `null` or `''`: no message, the line is empty. */
-  text?: string | null;
-  /** `message.error`: the error mark shows before the text. Ignored while there is no text. */
-  error?: boolean;
-  /** `message.seq`. A new value re-creates the button's contents, so a repeat is announced again. */
-  seq?: number;
-  /** A fixed width in px. Unset, the line fills its container. */
-  width?: number;
-  /** The tooltip key from `app/src/help/tooltips.ts`, as `data-tip` on the button. `null` turns it off. */
-  tip?: string | null;
-  /** Called on click, Enter or Space on the line's button; the parent sends `clearMessage`. */
-  onClear?: () => void;
-}
+export type StatusLineProps = StatusLineModelProps;
 
 /**
  * The one line between the band and the keys that says what the app just did or refused.
@@ -69,7 +40,8 @@ export interface StatusLineProps {
  * contents keyed on `seq` inside a button that keeps focus, a hint that is `aria-hidden` while the
  * message stays announced underneath it, `tip` as `data-tip`, no timer and no motion of its own.
  */
-export function StatusLine({ hint = null, text = null, error = false, seq = 0, width, tip = 'display.status', onClear }: StatusLineProps) {
+export function StatusLine({ onClear, ...props }: StatusLineProps) {
+  const { width, hint, message } = statusLineView(props);
   return (
     <Text
       as="p"
@@ -78,40 +50,28 @@ export function StatusLine({ hint = null, text = null, error = false, seq = 0, w
       data-part="root"
       ariaRole="status"
       aria-live="polite"
-      style={width === undefined ? undefined : { width: `${width}px` }}
+      style={width === undefined ? undefined : { width }}
     >
       {hint ? (
         <span className="yh-status-line-hint" data-part="hint" aria-hidden="true">
           <Text weight="strong" tabular className="yh-status-line-hint-title" data-part="hint-title">{hint.title}</Text>
           <span className="yh-status-line-hint-body" data-part="hint-body">{hint.body}</span>
-          {hint.keys || hint.launchkey ? (
+          {hint.places.length > 0 ? (
             <span className="yh-status-line-hint-meta" data-part="hint-meta">
-              {hint.keys ? (
-                <span className="yh-status-line-hint-place" data-part="hint-place">
-                  <Text role="caption" case="label" tabular className="yh-status-line-hint-label" data-part="hint-label">Key</Text>{' '}
-                  <Text as="kbd" role="caption" tabular className="yh-status-line-key" data-part="key">{hint.keys}</Text>
+              {hint.places.map((place) => (
+                <span key={place.label} className="yh-status-line-hint-place" data-part="hint-place">
+                  <Text role="caption" case="label" tabular className="yh-status-line-hint-label" data-part="hint-label">{place.label}</Text>{' '}
+                  <Text as="kbd" role="caption" tabular className="yh-status-line-key" data-part="key">{place.key}</Text>
                 </span>
-              ) : null}
-              {hint.launchkey ? (
-                <span className="yh-status-line-hint-place" data-part="hint-place">
-                  <Text role="caption" case="label" tabular className="yh-status-line-hint-label" data-part="hint-label">Launchkey</Text>{' '}
-                  <Text as="kbd" role="caption" tabular className="yh-status-line-key" data-part="key">{hint.launchkey}</Text>
-                </span>
-              ) : null}
+              ))}
             </span>
           ) : null}
         </span>
       ) : null}
-      {text ? (
-        <button
-          type="button"
-          className={hint ? 'yh-status-line-button yh-status-line-under' : 'yh-status-line-button'}
-          data-part="button"
-          data-tip={tip ?? undefined}
-          onClick={() => onClear?.()}
-        >
-          <Fragment key={seq}>
-            {error ? (
+      {message ? (
+        <button type="button" className={message.className} {...message.attrs} onClick={() => onClear?.()}>
+          <Fragment key={message.seq}>
+            {message.error ? (
               <Text role="label" leading="tight" tabular className="yh-status-line-tag" data-part="tag" aria-hidden="true">
                 <svg data-hue="warn" className="yh-status-line-mark" data-part="mark" width="12" height="12" viewBox="0 0 12 12">
                   <path d="M6 1.5 L11 10.5 H1 Z" />
@@ -124,8 +84,8 @@ export function StatusLine({ hint = null, text = null, error = false, seq = 0, w
             {/* The space after "Error:" sits outside the hidden span: the accessible name trims each
                 element's text, so a space inside it would be lost ("Error:Can't"). */}
             <span className="yh-status-line-text" data-part="text">
-              {error ? <span className="yh-status-line-hidden" data-part="hidden">Error:</span> : null}
-              {error ? ` ${text}` : text}
+              {message.error ? <span className="yh-status-line-hidden" data-part="hidden">Error:</span> : null}
+              {message.text}
             </span>
           </Fragment>
           <svg className="yh-status-line-clear" data-part="clear" aria-hidden="true" width="10" height="10" viewBox="0 0 10 10">

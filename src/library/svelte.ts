@@ -76,6 +76,18 @@ import type { StatusDotModelProps } from './components/core/StatusDot/StatusDot.
 import type { SeparatorModelProps } from './components/core/Separator/Separator.model';
 import type { SettingsRowModelProps } from './components/core/SettingsRow/SettingsRow.model';
 import type { TabsModelProps } from './layout/Tabs.model';
+import AccentBlockSvelte from './yahaha/AccentBlock/AccentBlock.svelte';
+import WaitingChipSvelte from './yahaha/WaitingChip/WaitingChip.svelte';
+import StatusLineSvelte from './yahaha/StatusLine/StatusLine.svelte';
+import DisplayArtSvelte from './yahaha/DisplayArt/DisplayArt.svelte';
+import HueLegendSvelte from './yahaha/HueLegend/HueLegend.svelte';
+import OneTouchPickerSvelte from './yahaha/OneTouchPicker/OneTouchPicker.svelte';
+import type { AccentBlockModelProps } from './yahaha/AccentBlock/AccentBlock.model';
+import type { WaitingChipModelProps } from './yahaha/WaitingChip/WaitingChip.model';
+import type { StatusLineModelProps } from './yahaha/StatusLine/StatusLine.model';
+import type { DisplayArtModelProps } from './yahaha/DisplayArt/DisplayArt.model';
+import type { HueLegendProps } from './yahaha/HueLegend/HueLegend.model';
+import type { OneTouchPickerProps } from './yahaha/OneTouchPicker/OneTouchPicker.model';
 
 // The theme: the `theme` action, the scope, and the system mode.
 export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './svelte/theme.svelte';
@@ -248,3 +260,17 @@ export const SettingsRow = SettingsRowSvelte as unknown as Component<SettingsRow
 export type { TabItemModel as TabItem, TipAction as TabsTipAction } from './layout/Tabs.model';
 export type TabsProps = TabsModelProps<string | Snippet>;
 export const Tabs = TabsSvelte as unknown as Component<TabsProps>;
+
+// Yahaha widgets: Yahaha's own concepts, mapped onto the library's slots through `yahaha/hues.ts`.
+export type AccentBlockProps = AccentBlockModelProps;
+export const AccentBlock = AccentBlockSvelte as unknown as Component<AccentBlockProps>;
+export type WaitingChipProps = WaitingChipModelProps;
+export const WaitingChip = WaitingChipSvelte as unknown as Component<WaitingChipProps>;
+export type StatusLineProps = StatusLineModelProps;
+export const StatusLine = StatusLineSvelte as unknown as Component<StatusLineProps>;
+export type DisplayArtProps = DisplayArtModelProps;
+export const DisplayArt = DisplayArtSvelte as unknown as Component<DisplayArtProps>;
+export type { HueLegendProps };
+export const HueLegend = HueLegendSvelte as unknown as Component<HueLegendProps>;
+export type { OneTouchPickerProps };
+export const OneTouchPicker = OneTouchPickerSvelte as unknown as Component<OneTouchPickerProps>;
