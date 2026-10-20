@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
-import { Text } from '../../../primitives/Text';
-import { rackCellView, type RackCellModelProps } from './RackCell.model';
+import { Tree } from '../../../view/Tree';
+import { rackCellHandlers, rackCellView, type RackCellModelProps } from './RackCell.model';
+import '../../../primitives/Text.css';
 import './RackCell.css';
 
-// The props and the view are framework-free, in the model; `RackCell.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; this file and `RackCell.svelte` only
+// hand its tree to their `Tree`, with the mark as the `mark` slot.
 export type { RackCellModelProps } from './RackCell.model';
 
 export interface RackCellProps extends RackCellModelProps {
@@ -38,32 +40,6 @@ export interface RackCellProps extends RackCellModelProps {
  * **Tuning knobs.**
  * - `--yh-rack-cell-width`: the cell's width on the row (default `12em`); the row may set it.
  */
-export function RackCell(props: RackCellProps) {
-  const { mark, onPress } = props;
-  const view = rackCellView(props);
-  return (
-    <div className={view.rootClassName}>
-      <button className={view.button.className} {...view.button.attrs} type="button" onClick={() => onPress?.()}>
-        <Text {...view.head.text} className={view.head.className} {...view.head.attrs}>
-          <span className={view.label.className}>{view.label.label}</span>
-          {view.slot && (
-            <>
-              <span className={view.slot.separator.className} {...view.slot.separator.attrs}>
-                {view.slot.separator.char}
-              </span>
-              <Text {...view.slot.value.text} className={view.slot.value.className} {...view.slot.value.attrs}>
-                {view.slot.value.label}
-              </Text>
-            </>
-          )}
-        </Text>
-        <Text {...view.name.text} className={view.name.className} {...view.name.attrs}>
-          <Text {...view.title.text} className={view.title.className} {...view.title.attrs}>
-            {view.title.label}
-          </Text>
-          {mark != null && <span className={view.markClassName}>{mark}</span>}
-        </Text>
-      </button>
-    </div>
-  );
+export function RackCell({ mark, ...props }: RackCellProps) {
+  return <Tree tree={rackCellView(props, { mark: mark != null })} slots={{ mark }} handlers={rackCellHandlers(props)} />;
 }

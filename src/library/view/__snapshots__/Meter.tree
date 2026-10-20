@@ -1,0 +1,97 @@
+## Default
+<div class="lib-meter" data-layout="stacked" data-orientation="horizontal" style="--lib-meter-fill: 0.62">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="62" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+
+## Peak
+<div class="lib-meter" data-layout="stacked" data-orientation="horizontal" style="--lib-meter-fill: 0.48; --lib-meter-peak: 0.81">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="48" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+      <i class="lib-meter__hold" data-part="hold">
+
+## Vertical
+<div class="lib-meter" data-layout="stacked" data-orientation="vertical" style="--lib-meter-fill: 0.7; --lib-meter-peak: 0.9; --lib-meter-thickness: 6px; --lib-meter-length: 96px">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+      <i class="lib-meter__hold" data-part="hold">
+  <span class="lib-text lib-tone lib-meter__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "70"
+
+## Inline
+<div class="lib-meter" data-layout="inline" data-orientation="horizontal" data-side="left" style="--lib-meter-fill: 0.62">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="62" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+  <span class="lib-text lib-tone lib-meter__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "62"
+
+## Inside
+<div class="lib-meter" data-layout="inside" data-orientation="horizontal" style="--lib-meter-fill: 0.62">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Energy"
+  <div class="lib-meter__frame">
+    <div aria-label="Energy" aria-valuemax="100" aria-valuemin="0" aria-valuenow="62" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+  <span class="lib-text lib-tone lib-meter__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "62"
+
+## Display
+<div class="lib-meter" data-layout="inside" data-orientation="horizontal" style="--lib-meter-fill: 0.62">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Energy"
+  <div class="lib-meter__frame">
+    <div aria-label="Energy" aria-valuemax="100" aria-valuemin="0" aria-valuenow="62" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+  <span class="lib-text lib-tone lib-meter__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "live"
+
+## Clamped
+<div class="lib-meter" data-layout="stacked" data-orientation="horizontal" style="--lib-meter-fill: 1; --lib-meter-peak: 1">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="100" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+      <i class="lib-meter__hold" data-part="hold">
+  <span class="lib-text lib-tone lib-meter__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "100"
+
+## Ink
+<div class="lib-meter" data-layout="stacked" data-orientation="horizontal" style="--lib-meter-fill: 0.62; --lib-meter-peak: 0.75; --lib-meter-ink: var(--hue-3)">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="62" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+      <i class="lib-meter__hold" data-part="hold">
+
+## Driven #1
+<div class="lib-meter" data-layout="stacked" data-orientation="horizontal" style="--lib-meter-fill: 0.5; --lib-meter-peak: 0.7">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+      <i class="lib-meter__hold" data-part="hold">
+  <span class="lib-text lib-tone lib-meter__readout" data-part="readout" data-role="numeral" data-text-size="label">
+    "50"
+
+## Driven #2
+<div class="lib-meter" data-layout="stacked" data-orientation="vertical" style="--lib-meter-fill: 0.5; --lib-meter-peak: 0.7; --lib-meter-length: 96px">
+  <span class="lib-text lib-tone lib-meter__caption" data-part="caption" data-role="body" data-text-case="label" data-text-size="caption">
+    "Level"
+  <div class="lib-meter__frame">
+    <div aria-label="Level" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="lib-surface lib-meter__channel" data-material="well" data-part="channel" data-radius="pill" role="meter">
+      <i class="lib-meter__level" data-part="level">
+      <i class="lib-meter__hold" data-part="hold">

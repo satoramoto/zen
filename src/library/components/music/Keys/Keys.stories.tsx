@@ -1,15 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { fixtureStories, withRenderer } from '../../../stories/story';
 import { Keys } from './Keys';
+import KeysSvelte from './Keys.svelte';
 import { keysArgTypes, keysStories as s, range61 } from './Keys.fixtures';
 import { BLACK_WIDTH_RATIO, layout } from './keyLayout';
 
-// Every story's args come from Keys.fixtures.ts, which the Svelte stories and the parity test share.
+// Every story is built from Keys.fixtures.ts (`story(s.Name)`), which the tree snapshot shares; the
+// toolbar's Renderer draws it with React's or Svelte's `Tree`.
 const meta = {
   title: 'Design OS/Components/Music/Keys',
   component: Keys,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   args: {
@@ -23,6 +26,7 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(Keys, KeysSvelte);
 
 /** A pointer event's client point `x` px from the strip's left and `yShare` of its height down, at whatever scale it is drawn. */
 function at(strip: HTMLElement, width: number, x: number, yShare: number) {
@@ -33,7 +37,7 @@ function at(strip: HTMLElement, width: number, x: number, yShare: number) {
 
 /** The Stage board: 61 keys, split F#2, the left hand's Am7 in hue 4, E4 and A4 in hue 1 ("Right 1"). */
 export const Board: Story = {
-  args: s.Board.args,
+  ...story(s.Board),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole('slider', { name: /^Split point/ });
@@ -59,16 +63,14 @@ export const Board: Story = {
 };
 
 /** Nothing held: the split and the zones' unlit lamps only. */
-export const Idle: Story = {
-  args: s.Idle.args,
-};
+export const Idle: Story = story(s.Idle);
 
 /**
  * A split on a black key, C#3: the left zone takes C#3, and the split line runs up C#3's right edge
  * beside the black keys, then steps across to the C|D white edge below them.
  */
 export const BlackKeySplit: Story = {
-  args: s.BlackKeySplit.args,
+  ...story(s.BlackKeySplit),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('img', { name: /^Keys: split C#3/ })).toBeInTheDocument();
@@ -83,7 +85,7 @@ export const BlackKeySplit: Story = {
  * the split. Here from C3 to F#2, a black key.
  */
 export const Drag: Story = {
-  args: s.Drag.args,
+  ...story(s.Drag),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole('slider', { name: /^Split point/ });
@@ -111,7 +113,7 @@ export const Drag: Story = {
  * disarms. Esc disarms too.
  */
 export const Armed: Story = {
-  args: s.Armed.args,
+  ...story(s.Armed),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const strip = canvas.getByRole('img', { name: /^Keys:/ });
@@ -135,7 +137,7 @@ export const Armed: Story = {
 
 /** Locked: the flag is dashed with no grip, the arrows and a drag ask for nothing, and the pick won't arm. */
 export const Locked: Story = {
-  args: s.Locked.args,
+  ...story(s.Locked),
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole('slider', { name: 'Split point (locked)' });
@@ -150,30 +152,23 @@ export const Locked: Story = {
 };
 
 /** No split: one zone, every held key in the right zone's hue (here hue 2, "Right 2", with a black key). */
-export const NoSplit: Story = {
-  args: s.NoSplit.args,
-};
+export const NoSplit: Story = story(s.NoSplit);
 
 /** A 49-key keyboard at a narrower width, split B2, held black keys in both zones. */
-export const Keys49: Story = {
-  args: s.Keys49.args,
-};
+export const Keys49: Story = story(s.Keys49);
 
 /** The full 61 keys with the right zone ("Right 1") playing high, split at C3. */
-export const HighSplit: Story = {
-  args: s.HighSplit.args,
-};
+export const HighSplit: Story = story(s.HighSplit);
 
 /** Added: without `onSplit` the keys are a picture: the split's name sits on the ruler, nothing to grab. */
-export const Picture: Story = {
-  args: { ...s.Picture.args, onSplit: undefined },
-};
+export const Picture: Story = story(s.Picture, { args: { ...s.Picture.args, onSplit: undefined } });
 
 /**
  * Added: `ruler={false}`, just the keys (as the Yahaha Stage draws them): no zone names, held
  * list or split name above; the held keys keep their zone's hue, so the split still reads.
  */
 export const NoRuler: Story = {
+  ...story(s.NoRuler),
   args: { ...s.NoRuler.args, onSplit: undefined },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('.yh-keys__ruler')).toBeNull();
@@ -183,7 +178,8 @@ export const NoRuler: Story = {
 
 /**
  * Added: `width="fill"` in a container 80% of the canvas wide, resizable from its corner: the keys
- * fill it and re-lay on every resize, with nothing measured by the caller. Here in hue 5.
+ * fill it and re-lay on every resize, with nothing measured by the caller. Here in hue 5. (Its
+ * container is a React decorator the fixture doesn't describe, so React draws it.)
  */
 export const Fluid: Story = {
   args: s.Fluid.args,
@@ -210,6 +206,4 @@ export const Fluid: Story = {
 };
 
 /** Added: a narrow strip (49 keys at 480px), where the zone labels give way before the keys do. */
-export const Narrow: Story = {
-  args: s.Narrow.args,
-};
+export const Narrow: Story = story(s.Narrow);

@@ -1,8 +1,9 @@
 /**
  * Keys' input, framework-free: dragging and clicking the split handle, stepping it from the
  * keyboard, the pick (while armed, the key pressed becomes the split), and the Esc that disarms
- * before the app hears it. `Keys.tsx` (through `useKeysInput`) and `Keys.svelte` both feed it
- * their events; neither holds any of this logic.
+ * before the app hears it. `bindKeysInput` binds it all on the Keys root as one store (`keysInput`
+ * in `src/library/view/stores.ts`): the handle and the pick surface are found by `data-part` under
+ * it, so both renderers' `Tree` apply it and neither holds any of this logic.
  *
  * - The handle: a primary pointer going down starts a press; once it has moved `DRAG_SLOP` px it
  *   drags (the key under it, black keys by x alone, is asked for); lifted without a drag it is a
@@ -13,7 +14,7 @@
  *   asking, lifting disarms.
  * - Every ask is clamped to the limits and dropped when locked or already there (`askedSplit`).
  */
-import { askedSplit, DRAG_SLOP, noteUnder, steppedSplit, type KeysSettings } from './Keys.model';
+import { askedSplit, DRAG_SLOP, keysSettings, noteUnder, steppedSplit, type KeysInputData, type KeysSettings } from './Keys.model';
 
 /** What the input reads, fresh on every event: the view's settings and the callbacks. */
 export interface KeysInputParams {
@@ -169,6 +170,69 @@ export function bindPickEscape(target: EventTarget, initial: PickEscapeParams): 
     destroy() {
       params = { ...params, armed: false };
       sync();
+    },
+  };
+}
+
+/** What `bindKeysInput` is bound with: the view's plain data (`keysView` fills it) and the two asks. */
+export interface KeysBindParams extends KeysInputData {
+  onSplit?: (note: number) => void;
+  onPick?: (armed: boolean) => void;
+}
+
+/** The handle or the pick surface an event came from, under `root`; null for anything else. */
+function partOf(root: HTMLElement, event: Event): { part: 'handle' | 'pick'; element: HTMLElement } | null {
+  const target = event.target as Element | null;
+  const element = target?.closest?.('[data-part="handle"], [data-part="pick"]') as HTMLElement | null | undefined;
+  if (!element || !root.contains(element)) return null;
+  return { part: element.getAttribute('data-part') as 'handle' | 'pick', element };
+}
+
+/**
+ * Keys' input on its root: the handle's pointer and keys and the pick surface's pointer (each found
+ * by `data-part` under `node`, so either may come and go), and the Esc that disarms, on the window
+ * while `armed`. The keys are laid out again from `params` (`keysSettings`) for the pointer to map
+ * through the strip (`data-part="strip"`).
+ */
+export function bindKeysInput(node: HTMLElement, initial: KeysBindParams): { update(params: KeysBindParams): void; destroy(): void } {
+  let params = initial;
+  let settings = keysSettings(params);
+  const input = createKeysInput(
+    () => ({ settings, onSplit: params.onSplit, onPick: params.onPick }),
+    () => node.querySelector<HTMLElement>('[data-part="strip"]'),
+  );
+  const escape = bindPickEscape(window, { armed: params.armed, onPick: (next) => params.onPick?.(next) });
+
+  const pointer = (handle: keyof KeysInput & `handle${string}`, pick: keyof KeysInput & `pick${string}`) => (event: Event) => {
+    const from = partOf(node, event);
+    if (!from) return;
+    const e = event as PointerEvent;
+    const fields: KeysPointer = { button: e.button, pointerId: e.pointerId, clientX: e.clientX, clientY: e.clientY, currentTarget: from.element };
+    (input[from.part === 'handle' ? handle : pick] as (event: KeysPointer) => void)(fields);
+  };
+  const listeners: [string, (event: Event) => void][] = [
+    ['pointerdown', pointer('handleDown', 'pickDown')],
+    ['pointermove', pointer('handleMove', 'pickMove')],
+    ['pointerup', pointer('handleUp', 'pickUp')],
+    ['pointercancel', pointer('handleCancel', 'pickCancel')],
+    [
+      'keydown',
+      (event) => {
+        if (partOf(node, event)?.part === 'handle') input.handleKey(event as KeyboardEvent);
+      },
+    ],
+  ];
+  for (const [type, listener] of listeners) node.addEventListener(type, listener);
+
+  return {
+    update(next) {
+      params = next;
+      settings = keysSettings(params);
+      escape.update({ armed: params.armed, onPick: (armed) => params.onPick?.(armed) });
+    },
+    destroy() {
+      for (const [type, listener] of listeners) node.removeEventListener(type, listener);
+      escape.destroy();
     },
   };
 }

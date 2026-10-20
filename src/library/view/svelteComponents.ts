@@ -17,6 +17,11 @@ import Pad from '../components/music/Pad/Pad.svelte';
 import PartMarks from '../components/music/PartMarks/PartMarks.svelte';
 import SectionName from '../components/music/SectionName/SectionName.svelte';
 import TempoReadout from '../components/music/TempoReadout/TempoReadout.svelte';
+import Meter from '../components/music/Meter/Meter.svelte';
+import BarReadout from '../components/music/BarReadout/BarReadout.svelte';
+import SendReadout from '../components/music/SendReadout/SendReadout.svelte';
+import SoundCell from '../components/music/SoundCell/SoundCell.svelte';
+import RackCell from '../components/music/RackCell/RackCell.svelte';
 import Group from '../layout/Group.svelte';
 import Region from '../layout/Region.svelte';
 import Tabs from '../layout/Tabs.svelte';
@@ -82,6 +87,11 @@ export function svelteComponent(name: string): Component<any> {
     Stage,
     StatusLine,
     WaitingChip,
+    Meter,
+    BarReadout,
+    SendReadout,
+    SoundCell,
+    RackCell,
   } as Record<string, Component<any>>;
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);

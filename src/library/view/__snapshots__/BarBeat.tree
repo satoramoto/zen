@@ -1,0 +1,78 @@
+## Board
+<div aria-label="Beat 2 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## Intro
+<div aria-label="Beat 1 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-downbeat="true" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## Stopped
+<div aria-label="Stopped" class="yh-bar-beat" data-material="screen" data-part="window" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-downbeat="true" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## ThreeFour
+<div aria-label="Beat 3 of 3" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 3">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+
+## Sections #1
+<div aria-label="Beat 3 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## Sections #2
+<div aria-label="Beat 3 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## Sections #3
+<div aria-label="Beat 3 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## Sections #4
+<div aria-label="Beat 3 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## Sections #5
+<div aria-label="Beat 3 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## SevenEight
+<div aria-label="Beat 5 of 7" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 7">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+
+## Thick
+<div aria-label="Beat 2 of 4" class="yh-bar-beat" data-material="screen" data-part="window" data-playing="true" role="img" style="--yh-bar-beat-count: 4; --yh-bar-beat-line: 6px">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--past" data-downbeat="true" data-part="cell" data-state="past">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--current" data-lit="true" data-part="cell" data-state="current">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">
+  <span aria-hidden="true" class="yh-bar-beat__segment yh-bar-beat__segment--future" data-part="cell" data-state="future">

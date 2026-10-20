@@ -1,11 +1,12 @@
-import type { CSSProperties } from 'react';
-import { Surface } from '../../../primitives/Surface';
-import { Text } from '../../../primitives/Text';
-import { faderView, type FaderModelProps } from './Fader.model';
-import { useFader } from './useFader';
+import { Tree } from '../../../view/Tree';
+import { faderHandlers, faderView, type FaderModelProps } from './Fader.model';
+import '../../../primitives/Text.css';
+// The groove and meter are Surface wells drawn as plain spans with Surface's class and data
+// (`faderView`; no layer, so never a shader). Before Fader.css, so its look wins.
+import '../../../primitives/Surface.css';
 import './Fader.css';
 
-// The props and the strip they draw are framework-free, in the model; `Fader.svelte` renders the same view.
+// The props and the tree they draw are framework-free, in the model; `Fader.svelte` draws the same tree.
 export type { FaderHue, FaderKind, FaderModelProps, FaderTipAction } from './Fader.model';
 
 export type FaderProps = FaderModelProps;
@@ -38,7 +39,7 @@ export type FaderProps = FaderModelProps;
  * to `--size-label`, so a silent "64" doesn't compete with the live levels. *Empty slot*: `empty`
  * draws the banks' one empty look, a faint solid groove (`--text-1` at 10%) with no cap, value or
  * edge, instead of a dotted thread. *Headless* (2026-10): the behaviour lives in the `faderInput.ts`
- * store (`useFader` binds it here, the `faderInput` action in Svelte), the strip in `Fader.model.ts`; the
+ * store (the tree binds it, `faderView` in `Fader.model.ts`, which both renderers draw); the
  * markup is named parts (`data-part`: head, value, travel, groove, fill, ghost, cap, meter), and the
  * look comes from the theme's Materials: the groove and meter channel are `well`, the cap a
  * `handle` (its grip line stays the Fader's own, in ink), the fill is lit in the strip ink
@@ -56,57 +57,5 @@ export type FaderProps = FaderModelProps;
  *   positions the component sets inline (`-level`, `-away`, `-m`).
  */
 export function Fader(props: FaderProps) {
-  const view = faderView(props);
-  const { rootRef, railRef } = useFader({
-    level: props.level ?? 0,
-    parked: view.parked,
-    tip: props.tip,
-    tipAction: props.tipAction,
-    onlevel: props.onlevel,
-  });
-
-  return (
-    <div
-      ref={rootRef}
-      className={view.root.className}
-      tabIndex={view.root.tabIndex}
-      {...view.root.attrs}
-      style={view.root.style as CSSProperties}
-    >
-      <span className="yh-fader__head" data-part="head" aria-hidden="true">
-        {view.word && (
-          <Text role="label" size="caption" leading="tight" className="yh-fader__word">
-            {view.word}
-          </Text>
-        )}
-        <Text role="numeral" size={view.numSize} className="yh-fader__value" data-part="value">
-          {view.num}
-        </Text>
-      </span>
-      <span className="yh-fader__travel" data-part="travel" aria-hidden="true">
-        <span className="yh-fader__rail" ref={railRef}>
-          <Surface as="span" {...view.groove.surface} className={view.groove.className} {...view.groove.attrs} />
-          {view.fill && <span className="yh-fader__fill" data-part="fill" />}
-          {view.ghost && <span className="yh-fader__ghost" data-part="ghost" style={view.ghost as CSSProperties} />}
-          {view.fill && <span className="yh-fader__cap" data-part="cap" />}
-        </span>
-        {view.meter && (
-          <span className="yh-fader__meters">
-            <Surface
-              as="span"
-              {...view.meter.surface}
-              className={view.meter.className}
-              {...view.meter.attrs}
-              style={view.meter.style as CSSProperties}
-            />
-          </span>
-        )}
-      </span>
-      {view.takeover && (
-        <svg className="yh-fader__takeover" viewBox="0 0 10 10" aria-hidden="true">
-          <path d={view.takeover} />
-        </svg>
-      )}
-    </div>
-  );
+  return <Tree tree={faderView(props)} handlers={faderHandlers(props)} />;
 }

@@ -1,8 +1,13 @@
-// SoundCell's stories as plain props: SoundCell.stories.tsx (React) and SoundCell.stories.svelte.ts
-// (Svelte) both draw them, and parity.test.tsx renders every instance in both. The marks are a
-// React node or a Svelte snippet, so each Storybook adds its own (WithMarks).
-import { defineFixtures } from '../../../fixtures';
+// SoundCell's stories as plain props: SoundCell.stories.tsx draws them in either renderer, and the
+// tree snapshot records every instance. The stories that compose (WithMarks: PartMarks in the
+// `marks` slot; Row: a row of cells) are view trees built here (`soundCellMarksSample`,
+// `soundCellRowSample`), drawn with `treeStory`.
+import { defineFixtures, type FixtureProps } from '../../../fixtures';
+import { component, h, type Node } from '../../../view/Tree.model';
 import type { SoundCellModelProps } from './SoundCell.model';
+
+/** A cell's data props (its callbacks are the samples' `part` and `sound` handlers). */
+export type SoundCellData = FixtureProps<SoundCellModelProps>;
 
 /** The controls, the same in both Storybooks. */
 export const soundCellArgTypes = {
@@ -37,3 +42,18 @@ export const soundCellStories = defineFixtures<SoundCellModelProps>()({
     ],
   },
 });
+
+/** The cells' callbacks, by the keys the samples name. */
+const on = { onPart: 'part', onSound: 'sound' };
+
+/** The WithMarks story: one cell (the story's args) with PartMarks (edited) in its `marks` slot. */
+export const soundCellMarksSample = (args: SoundCellData): Node =>
+  h('div', {}, component('SoundCell', { ...args }, { on, slots: { marks: [component('PartMarks', { edited: true })] } }));
+
+/** The Row story: the five hue slots side by side, each item over the story's args. */
+export const soundCellRowSample = (args: SoundCellData): Node =>
+  h(
+    'div',
+    { class: 'lib-row', style: 'gap: var(--space-4); align-items: flex-start' },
+    (soundCellStories.Row.items ?? []).map((item) => component('SoundCell', { ...args, ...item }, { on, key: item.part })),
+  );

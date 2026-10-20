@@ -1,7 +1,8 @@
-// Meter's model: its props and the view it draws from them (classes, `data-*`, ARIA, the inline
-// custom properties and the reading). No framework: `Meter.tsx` (React) and `Meter.svelte`
-// (Svelte) both render `meterView`.
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+// Meter's model: its props and the tree both renderers draw from them (classes, `data-*`, ARIA, the
+// inline custom properties and the reading). No framework: `Meter.tsx` (React) and `Meter.svelte`
+// (Svelte) both pass `meterView` to their `Tree`. Read-only: it binds no store and names no handler.
+import { textView } from '../../../primitives/Text.model';
+import { h, styleText, type Node } from '../../../view/Tree.model';
 
 /** Caption above the meter, beside it, or laid over a horizontal bar. */
 export type MeterLayout = 'stacked' | 'inline' | 'inside';
@@ -37,41 +38,14 @@ export interface MeterModelProps {
   ink?: string;
 }
 
-/** A Text part: its Text props (no class), its class and its attributes. */
-export interface MeterTextPart extends ElementView {
-  text: TextModelProps;
-}
-
-/** What a renderer draws. */
-export interface MeterView {
-  /** The root `div`. */
-  root: ElementView;
-  /** The root's inline custom properties (`--lib-meter-*`), each value a string. */
-  style: Record<string, string>;
-  /** The caption Text and its words, or null for none. */
-  caption: (MeterTextPart & { content: string }) | null;
-  /** The frame `div` around the channel. */
-  frame: ElementView;
-  /** The channel: a `well` surface (Surface's attributes included), `role="meter"`. */
-  channel: ElementView;
-  /** The lit fill `<i>`. */
-  level: ElementView;
-  /** The peak line `<i>`, or null for none. */
-  hold: ElementView | null;
-  /** The reading Text and its words, or null for none. */
-  readout: (MeterTextPart & { content: string }) | null;
-}
-
 /** Clamped to 0–1; a non-finite value reads 0. */
 export const unit = (v: number) => (Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0);
 
-/** CSS text for an inline style record (`--a: 1; --b: 2`). */
-export const styleText = (style: Record<string, string>) =>
-  Object.entries(style)
-    .map(([name, value]) => `${name}: ${value}`)
-    .join('; ');
-
-/** The meter Meter draws from its props. */
+/**
+ * The tree Meter draws: the root (its `--lib-meter-*` custom properties inline), the caption Text,
+ * the frame around the channel (a `well` Surface's class and data, `role="meter"`) with the lit
+ * level and the peak line, and the reading Text.
+ */
 export function meterView({
   value,
   peak,
@@ -88,51 +62,50 @@ export function meterView({
   title,
   hint,
   ink,
-}: MeterModelProps): MeterView {
+}: MeterModelProps): Node {
   const level = unit(value);
   const held = peak === undefined ? undefined : unit(peak);
-  const style: Record<string, string> = { '--lib-meter-fill': String(level) };
-  if (held !== undefined) style['--lib-meter-peak'] = String(held);
-  if (width !== undefined) style['--lib-meter-thickness'] = `${width}px`;
-  if (length !== undefined) style['--lib-meter-length'] = `${length}px`;
-  if (ink !== undefined) style['--lib-meter-ink'] = ink;
-  return {
-    root: {
-      className: `lib-meter${className ? ` ${className}` : ''}`,
-      attrs: {
-        'data-orientation': orientation,
-        'data-layout': layout,
-        'data-side': layout === 'inline' ? side : undefined,
-        'data-hint': hint,
-      },
+  const caption = textView({ role: 'body', size: 'caption', case: 'label', className: 'lib-meter__caption' });
+  const readout = textView({ role: 'numeral', size: 'label', className: 'lib-meter__readout' });
+  return h(
+    'div',
+    {
+      class: `lib-meter${className ? ` ${className}` : ''}`,
+      'data-orientation': orientation,
+      'data-layout': layout,
+      'data-side': layout === 'inline' ? side : undefined,
+      'data-hint': hint,
+      style: styleText({
+        '--lib-meter-fill': String(level),
+        '--lib-meter-peak': held === undefined ? undefined : String(held),
+        '--lib-meter-thickness': width === undefined ? undefined : `${width}px`,
+        '--lib-meter-length': length === undefined ? undefined : `${length}px`,
+        '--lib-meter-ink': ink,
+      }),
     },
-    style,
-    caption: name
-      ? { text: { role: 'body', size: 'caption', case: 'label' }, className: 'lib-meter__caption', attrs: { 'data-part': 'caption' }, content: name }
+    name ? h('span', { class: caption.className, ...caption.attrs, 'data-part': 'caption' }, name) : null,
+    h(
+      'div',
+      { class: 'lib-meter__frame', title },
+      h(
+        'div',
+        {
+          class: 'lib-surface lib-meter__channel',
+          'data-material': 'well',
+          'data-radius': 'pill',
+          'data-part': 'channel',
+          role: 'meter',
+          'aria-valuenow': String(Math.round(level * 100)),
+          'aria-valuemin': '0',
+          'aria-valuemax': '100',
+          'aria-label': label ?? name,
+        },
+        h('i', { class: 'lib-meter__level', 'data-part': 'level' }),
+        held !== undefined ? h('i', { class: 'lib-meter__hold', 'data-part': 'hold' }) : null,
+      ),
+    ),
+    showValue
+      ? h('span', { class: readout.className, ...readout.attrs, 'data-part': 'readout' }, display ?? String(Math.round(level * 100)))
       : null,
-    frame: { className: 'lib-meter__frame', attrs: { title } },
-    channel: {
-      className: 'lib-surface lib-meter__channel',
-      attrs: {
-        'data-material': 'well',
-        'data-radius': 'pill',
-        'data-part': 'channel',
-        role: 'meter',
-        'aria-valuenow': String(Math.round(level * 100)),
-        'aria-valuemin': '0',
-        'aria-valuemax': '100',
-        'aria-label': label ?? name,
-      },
-    },
-    level: { className: 'lib-meter__level', attrs: { 'data-part': 'level' } },
-    hold: held !== undefined ? { className: 'lib-meter__hold', attrs: { 'data-part': 'hold' } } : null,
-    readout: showValue
-      ? {
-          text: { role: 'numeral', size: 'label' },
-          className: 'lib-meter__readout',
-          attrs: { 'data-part': 'readout' },
-          content: display ?? String(Math.round(level * 100)),
-        }
-      : null,
-  };
+  );
 }

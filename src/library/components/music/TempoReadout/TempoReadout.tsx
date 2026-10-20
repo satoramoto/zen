@@ -1,12 +1,11 @@
-import { useRef, type CSSProperties } from 'react';
-import { Text } from '../../../primitives/Text';
-import { tempoReadoutView, type TempoReadoutModelProps } from './TempoReadout.model';
-import { bindTempoNumber, bindTempoStep } from './tempoGestures';
-import { useBinding, useTip } from './useTempoGestures';
+import { Tree } from '../../../view/Tree';
+import { tempoReadoutHandlers, tempoReadoutView, type TempoReadoutModelProps } from './TempoReadout.model';
+// The number, the unit and the keys are Texts, drawn with Text's class and data attributes.
+import '../../../primitives/Text.css';
 import './TempoReadout.css';
 
-// The props and the view are framework-free, in the model; the gestures are the `tempoGestures.ts`
-// store; `TempoReadout.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; the gestures are the `tempoNumber` and
+// `tempoStep` stores (`tempoGestures.ts`) the tree binds; `TempoReadout.svelte` draws the same tree.
 export type { TipAction, TempoReadoutModelProps } from './TempoReadout.model';
 
 export type TempoReadoutProps = TempoReadoutModelProps;
@@ -55,41 +54,7 @@ export type TempoReadoutProps = TempoReadoutModelProps;
  *   slot never jitters.
  */
 export function TempoReadout(props: TempoReadoutProps) {
-  const { bpm, min, max, onTempo, onReset, onPlus, onMinus, tipAction } = props;
-  const view = tempoReadoutView(props);
-
-  const number = useRef<HTMLSpanElement>(null);
-  const upButton = useRef<HTMLButtonElement>(null);
-  const downButton = useRef<HTMLButtonElement>(null);
-  useTip(number, tipAction, view.value.tip);
-  useTip(upButton, tipAction, view.plus.tip);
-  useTip(downButton, tipAction, view.minus.tip);
-  useBinding(number, bindTempoNumber, { bpm, min, max, onTempo, onReset });
-  useBinding(upButton, bindTempoStep, { report: onPlus });
-  useBinding(downButton, bindTempoStep, { report: onMinus });
-
-  const { tabindex, ...valueAttrs } = view.value.attrs;
-
-  return (
-    <div className={view.root.className} {...view.root.attrs} style={view.root.style as CSSProperties}>
-      <span className={view.window.className} {...view.window.attrs}>
-        <Text {...view.value.text} ref={number} className={view.value.className} tabIndex={Number(tabindex)} {...valueAttrs}>
-          {view.value.label}
-        </Text>
-        <Text {...view.unit.text} className={view.unit.className} {...view.unit.attrs}>
-          {view.unit.label}
-        </Text>
-      </span>
-      <Text {...view.steps.text} className={view.steps.className} {...view.steps.attrs}>
-        <Text as="button" {...view.plus.text} ref={upButton} className={view.plus.className} {...view.plus.attrs}>
-          <span aria-hidden="true">{view.plus.glyph}</span>
-        </Text>
-        <Text as="button" {...view.minus.text} ref={downButton} className={view.minus.className} {...view.minus.attrs}>
-          <span aria-hidden="true">{view.minus.glyph}</span>
-        </Text>
-      </Text>
-    </div>
-  );
+  return <Tree tree={tempoReadoutView(props)} handlers={tempoReadoutHandlers(props)} />;
 }
 
 export default TempoReadout;

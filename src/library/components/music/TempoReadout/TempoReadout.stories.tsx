@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { TempoReadout } from './TempoReadout';
-import { CELLS_BOX, tempoReadoutArgTypes, tempoReadoutStories as s } from './TempoReadout.fixtures';
+import { fixtureStories, treeStory, withRenderer } from '../../../stories/story';
+import { TempoReadout, type TempoReadoutProps } from './TempoReadout';
+import TempoReadoutSvelte from './TempoReadout.svelte';
+import { CELLS_BOX, tempoReadoutArgTypes, tempoReadoutCellsSample, tempoReadoutStories as s } from './TempoReadout.fixtures';
+
+// Every story is built from TempoReadout.fixtures.ts (`story(s.Name)`), which the tree snapshot
+// shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`. The Cells stories are a
+// view tree from the fixtures (`treeStory`), the readout in its size container.
 
 /**
  * The display's tempo block: the number in the readout face (drag it, scroll on it, or use the
@@ -12,7 +18,7 @@ import { CELLS_BOX, tempoReadoutArgTypes, tempoReadoutStories as s } from './Tem
 const meta = {
   title: 'Design OS/Components/Music/TempoReadout',
   component: TempoReadout,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'centered' },
   args: { bpm: 104, onTempo: fn(), onPlus: fn(), onMinus: fn(), onReset: fn() },
   argTypes: tempoReadoutArgTypes,
@@ -20,10 +26,17 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(TempoReadout, TempoReadoutSvelte);
+
+/** The Cells stories' tree: the readout in its size container, its callbacks from the args. */
+const cells = treeStory(({ onTempo, onPlus, onMinus, onReset, tipAction, ...data }: TempoReadoutProps) => ({
+  tree: tempoReadoutCellsSample(data),
+  handlers: { tempo: onTempo, plus: onPlus, minus: onMinus, reset: onReset },
+}));
 
 /** The board: 104 BPM. Dragging up 8px asks for 106; − held calls with `true`, released with `false`. */
 export const Board: Story = {
-  args: s.Board.args,
+  ...story(s.Board),
   play: async ({ canvasElement, args }) => {
     const c = within(canvasElement);
     const number = c.getByRole('spinbutton');
@@ -41,7 +54,7 @@ export const Board: Story = {
 
 /** At the top of its range: ↑ asks for nothing more. */
 export const AtMax: Story = {
-  args: s.AtMax.args,
+  ...story(s.AtMax),
   play: async ({ canvasElement, args }) => {
     await fireEvent.keyDown(within(canvasElement).getByRole('spinbutton'), { key: 'ArrowUp' });
     await expect(args.onTempo).not.toHaveBeenCalled();
@@ -49,13 +62,11 @@ export const AtMax: Story = {
 };
 
 /** A two-digit tempo keeps the same width as 500, so the unit and keys don't move. */
-export const Slow: Story = {
-  args: s.Slow.args,
-};
+export const Slow: Story = story(s.Slow);
 
 /** New: a hero-sized numeral by `size` (set as `--yh-tempo-readout-size`); + and − scale with it. */
 export const HeroSize: Story = {
-  args: s.HeroSize.args,
+  ...story(s.HeroSize),
   play: async ({ canvasElement }) => {
     const tempo = canvasElement.querySelector<HTMLElement>('.yh-tempo-readout')!;
     await expect(tempo.style.getPropertyValue('--yh-tempo-readout-size')).toBe('var(--size-display)');
@@ -65,12 +76,8 @@ export const HeroSize: Story = {
 /** In cells: it fills a 360 × 80 size container; the reading on its foot, + over − beside it. */
 export const Cells: Story = {
   args: s.Cells.args,
-  parameters: { sample: CELLS_BOX },
-  render: (args) => (
-    <div style={{ containerType: 'size', ...CELLS_BOX }}>
-      <TempoReadout {...args} />
-    </div>
-  ),
+  ...cells,
+  parameters: { ...cells.parameters, sample: CELLS_BOX },
   play: async ({ canvasElement, args }) => {
     const c = within(canvasElement);
     const tempo = canvasElement.querySelector('[data-cells]') as HTMLElement;

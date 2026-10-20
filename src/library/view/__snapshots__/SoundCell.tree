@@ -1,0 +1,97 @@
+## Board
+<div class="yh-sound-cell" data-hue="1">
+  <button aria-label="Right 1: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Right 1" type="button" @click=part>
+    "R1"
+  <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Stage Grand"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "1"
+
+## Off
+<div class="yh-sound-cell" data-hue="3" data-off="true">
+  <button aria-label="Right 3: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Right 3" type="button" @click=part>
+    "R3"
+  <button aria-label="Right 3 sound: 57 Brass Section. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Brass Section"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "57"
+
+## LongName
+<div class="yh-sound-cell" data-hue="4">
+  <button aria-label="Left: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Left" type="button" @click=part>
+    "L"
+  <button aria-label="Left sound: 208 Concert Grand Piano Bright Stereo. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Concert Grand Piano Bright Stereo"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "208"
+
+## WithMarks
+<div class="yh-sound-cell" data-hue="2">
+  <button aria-label="Right 2: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Right 2" type="button" @click=part>
+    "R2"
+  <button aria-label="Right 2 sound: 41 Warm Strings. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Warm Strings"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "41"
+
+## NoNumber
+<div class="yh-sound-cell" data-hue="1">
+  <button aria-label="Right 1: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Right 1" type="button" @click=part>
+    "R1"
+  <button aria-label="Right 1 sound: User Piano. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "User Piano"
+
+## Row #1
+<div class="yh-sound-cell" data-hue="1">
+  <button aria-label="Right 1: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Right 1" type="button" @click=part>
+    "R1"
+  <button aria-label="Right 1 sound: 1 Stage Grand. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Stage Grand"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "1"
+
+## Row #2
+<div class="yh-sound-cell" data-hue="2">
+  <button aria-label="Right 2: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Right 2" type="button" @click=part>
+    "R2"
+  <button aria-label="Right 2 sound: 41 Warm Strings. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Warm Strings"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "41"
+
+## Row #3
+<div class="yh-sound-cell" data-hue="3" data-off="true">
+  <button aria-label="Right 3: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Right 3" type="button" @click=part>
+    "R3"
+  <button aria-label="Right 3 sound: 57 Brass Section. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Brass Section"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "57"
+
+## Row #4
+<div class="yh-sound-cell" data-hue="4">
+  <button aria-label="Left: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Left" type="button" @click=part>
+    "L"
+  <button aria-label="Left sound: 208 Concert Grand Piano Bright Stereo. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Concert Grand Piano Bright Stereo"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "208"
+
+## Row #5
+<div class="yh-sound-cell" data-hue="5">
+  <button aria-label="Slot 5: open Channel" class="lib-text lib-tone yh-sound-cell__part lib-focus-ring" data-role="label" data-tabular="" title="Slot 5" type="button" @click=part>
+    "5"
+  <button aria-label="Slot 5 sound: 12 Jazz Organ. Opens the quick sound list" class="lib-text lib-tone yh-sound-cell__sound lib-focus-ring" data-role="caption" data-tabular="" data-text-size="body" type="button" @click=sound>
+    <span class="yh-sound-cell__title">
+      "Jazz Organ"
+    <span class="lib-text lib-tone yh-sound-cell__number" data-role="caption" data-tabular="">
+      "12"

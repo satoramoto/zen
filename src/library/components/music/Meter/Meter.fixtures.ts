@@ -1,6 +1,8 @@
-// Meter's stories as plain props: Meter.stories.tsx (React) and Meter.stories.svelte.ts (Svelte)
-// both draw them, and the parity test renders every instance in both.
+// Meter's stories as plain props: Meter.stories.tsx draws them with React's or Svelte's `Tree`,
+// and the tree snapshot renders every instance. The Inside stories' row is a view tree built here
+// (`meterRowSample`), drawn with `treeStory`.
 import { defineFixtures } from '../../../fixtures';
+import { component, h, type Node } from '../../../view/Tree.model';
 import type { MeterModelProps } from './Meter.model';
 
 /** The controls, the same in both Storybooks. */
@@ -40,3 +42,7 @@ export const meterStories = defineFixtures<MeterModelProps>()({
     ],
   },
 });
+
+/** The Inside and Display stories: the meter (the story's args) in a row seven controls wide. */
+export const meterRowSample = (args: MeterModelProps): Node =>
+  h('div', { style: 'width: calc(var(--control-h) * 7)' }, component('Meter', { ...args }));

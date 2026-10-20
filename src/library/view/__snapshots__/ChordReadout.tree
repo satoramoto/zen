@@ -1,0 +1,114 @@
+## Board
+<div aria-label="Chord Am7: A C E G, Fingered On Bass" class="lib-surface yh-chord-readout" data-held="false" data-material="screen" data-part="window" data-radius="control" role="img">
+  <div aria-hidden="true" class="lib-text lib-tone yh-chord-readout__chord" data-fit="full" data-part="chord" data-role="display" data-text-leading="snug" use:chordFit={"onFit":"fit","key":"[\"Am\",\"7\",false,null]"}>
+    "Am"
+    <span class="lib-text lib-tone yh-chord-readout__ext" data-part="extension" data-role="display" data-text-leading="tight">
+      "7"
+  <p aria-hidden="true" class="lib-text lib-tone yh-chord-readout__line" data-part="line" data-role="body" data-text-size="label">
+    <span class="lib-text lib-tone yh-chord-readout__tones" data-part="tones" data-role="body" data-text-size="inherit" data-text-weight="numeral">
+      <span key=0 class="yh-chord-readout__tone" data-part="tone">
+        "A"
+      <span key=1 class="yh-chord-readout__tone" data-part="tone">
+        "C"
+      <span key=2 class="yh-chord-readout__tone" data-part="tone">
+        "E"
+      <span key=3 class="yh-chord-readout__tone" data-part="tone">
+        "G"
+    <span class="yh-chord-readout__fingering" data-part="fingering" data-tip-text="Fingered On Bass" data-tip="fingering.select" use:tip={"tip":"fingering.select","tipAction":"tipAction"}>
+      "Fingered On Bass"
+
+## Held
+<div aria-label="Chord Cmaj7, held: C E G B, Fingered" class="lib-surface yh-chord-readout yh-chord-readout--held" data-held="true" data-material="screen" data-part="window" data-radius="control" role="img">
+  <div aria-hidden="true" class="lib-text lib-tone yh-chord-readout__chord" data-fit="full" data-part="chord" data-role="display" data-text-leading="snug" use:chordFit={"onFit":"fit","key":"[\"C\",\"maj7\",true,null]"}>
+    "C"
+    <span class="lib-text lib-tone yh-chord-readout__ext" data-part="extension" data-role="display" data-text-leading="tight">
+      "maj7"
+  <p aria-hidden="true" class="lib-text lib-tone yh-chord-readout__line" data-part="line" data-role="body" data-text-size="label">
+    <span class="lib-text lib-tone yh-chord-readout__tones" data-part="tones" data-role="body" data-text-size="inherit" data-text-weight="numeral">
+      <span key=0 class="yh-chord-readout__tone" data-part="tone">
+        "C"
+      <span key=1 class="yh-chord-readout__tone" data-part="tone">
+        "E"
+      <span key=2 class="yh-chord-readout__tone" data-part="tone">
+        "G"
+      <span key=3 class="yh-chord-readout__tone" data-part="tone">
+        "B"
+    <span class="yh-chord-readout__fingering" data-part="fingering" data-tip-text="Fingered" data-tip="fingering.select" use:tip={"tip":"fingering.select","tipAction":"tipAction"}>
+      "Fingered"
+    <span class="lib-text lib-tone yh-chord-readout__held" data-part="held" data-role="body" data-text-case="label" data-text-size="caption">
+      "held"
+
+## Long
+<div aria-label="Chord C♯mmaj9(♯11)/G♯: C♯ E G♯ C D♯ G, AI Full Keyboard" class="lib-surface yh-chord-readout" data-held="false" data-material="screen" data-part="window" data-radius="control" role="img">
+  <div aria-hidden="true" class="lib-text lib-tone yh-chord-readout__chord" data-fit="full" data-part="chord" data-role="display" data-text-leading="snug" use:chordFit={"onFit":"fit","key":"[\"C♯m\",\"maj9(♯11)/G♯\",false,null]"}>
+    "C♯m"
+    <span class="lib-text lib-tone yh-chord-readout__ext" data-part="extension" data-role="display" data-text-leading="tight">
+      "maj9(♯11)"
+    <span class="lib-text lib-tone yh-chord-readout__bass" data-part="bass" data-role="display" data-text-leading="snug">
+      "/G♯"
+  <p aria-hidden="true" class="lib-text lib-tone yh-chord-readout__line" data-part="line" data-role="body" data-text-size="label">
+    <span class="lib-text lib-tone yh-chord-readout__tones" data-part="tones" data-role="body" data-text-size="inherit" data-text-weight="numeral">
+      <span key=0 class="yh-chord-readout__tone" data-part="tone">
+        "C♯"
+      <span key=1 class="yh-chord-readout__tone" data-part="tone">
+        "E"
+      <span key=2 class="yh-chord-readout__tone" data-part="tone">
+        "G♯"
+      <span key=3 class="yh-chord-readout__tone" data-part="tone">
+        "C"
+      <span key=4 class="yh-chord-readout__tone" data-part="tone">
+        "D♯"
+      <span key=5 class="yh-chord-readout__tone" data-part="tone">
+        "G"
+    <span class="yh-chord-readout__fingering" data-part="fingering" data-tip-text="AI Full Keyboard" data-tip="fingering.select" use:tip={"tip":"fingering.select","tipAction":"tipAction"}>
+      "AI Full Keyboard"
+
+## LongFingering
+<div aria-label="Chord Am7: A C E G B D, AI Full Keyboard · played Cm7 (Keyboard transpose −3)" class="lib-surface yh-chord-readout" data-held="false" data-material="screen" data-part="window" data-radius="control" role="img">
+  <div aria-hidden="true" class="lib-text lib-tone yh-chord-readout__chord" data-fit="full" data-part="chord" data-role="display" data-text-leading="snug" use:chordFit={"onFit":"fit","key":"[\"Am\",\"7\",false,null]"}>
+    "Am"
+    <span class="lib-text lib-tone yh-chord-readout__ext" data-part="extension" data-role="display" data-text-leading="tight">
+      "7"
+  <p aria-hidden="true" class="lib-text lib-tone yh-chord-readout__line" data-part="line" data-role="body" data-text-size="label">
+    <span class="lib-text lib-tone yh-chord-readout__tones" data-part="tones" data-role="body" data-text-size="inherit" data-text-weight="numeral">
+      <span key=0 class="yh-chord-readout__tone" data-part="tone">
+        "A"
+      <span key=1 class="yh-chord-readout__tone" data-part="tone">
+        "C"
+      <span key=2 class="yh-chord-readout__tone" data-part="tone">
+        "E"
+      <span key=3 class="yh-chord-readout__tone" data-part="tone">
+        "G"
+      <span key=4 class="yh-chord-readout__tone" data-part="tone">
+        "B"
+      <span key=5 class="yh-chord-readout__tone" data-part="tone">
+        "D"
+    <span class="yh-chord-readout__fingering" data-part="fingering" data-tip-text="AI Full Keyboard · played Cm7 (Keyboard transpose −3)" data-tip="fingering.select" use:tip={"tip":"fingering.select","tipAction":"tipAction"}>
+      "AI Full Keyboard · played Cm7 (Keyboard transpose −3)"
+
+## HeroSize
+<div aria-label="Chord Am7: A C E G, Fingered On Bass" class="lib-surface yh-chord-readout" data-held="false" data-material="screen" data-part="window" data-radius="control" role="img" style="--yh-chord-readout-hero: calc(var(--size-display) * 1.4)">
+  <div aria-hidden="true" class="lib-text lib-tone yh-chord-readout__chord" data-fit="full" data-part="chord" data-role="display" data-text-leading="snug" use:chordFit={"onFit":"fit","key":"[\"Am\",\"7\",false,\"calc(var(--size-display) * 1.4)\"]"}>
+    "Am"
+    <span class="lib-text lib-tone yh-chord-readout__ext" data-part="extension" data-role="display" data-text-leading="tight">
+      "7"
+  <p aria-hidden="true" class="lib-text lib-tone yh-chord-readout__line" data-part="line" data-role="body" data-text-size="label">
+    <span class="lib-text lib-tone yh-chord-readout__tones" data-part="tones" data-role="body" data-text-size="inherit" data-text-weight="numeral">
+      <span key=0 class="yh-chord-readout__tone" data-part="tone">
+        "A"
+      <span key=1 class="yh-chord-readout__tone" data-part="tone">
+        "C"
+      <span key=2 class="yh-chord-readout__tone" data-part="tone">
+        "E"
+      <span key=3 class="yh-chord-readout__tone" data-part="tone">
+        "G"
+    <span class="yh-chord-readout__fingering" data-part="fingering" data-tip-text="Fingered On Bass" data-tip="fingering.select" use:tip={"tip":"fingering.select","tipAction":"tipAction"}>
+      "Fingered On Bass"
+
+## Empty
+<div aria-label="Chord none, Fingered" class="lib-surface yh-chord-readout" data-held="false" data-material="screen" data-part="window" data-radius="control" role="img">
+  <div aria-hidden="true" class="lib-text lib-tone yh-chord-readout__chord yh-chord-readout__chord--none" data-fit="full" data-part="chord" data-role="display" data-text-leading="snug" use:chordFit={"onFit":"fit","key":"[\"\",\"\",false,null]"}>
+    "—"
+  <p aria-hidden="true" class="lib-text lib-tone yh-chord-readout__line" data-part="line" data-role="body" data-text-size="label">
+    <span class="yh-chord-readout__fingering" data-part="fingering" data-tip-text="Fingered" data-tip="fingering.select" use:tip={"tip":"fingering.select","tipAction":"tipAction"}>
+      "Fingered"

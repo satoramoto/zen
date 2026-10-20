@@ -1,5 +1,5 @@
-// SendReadout's stories as plain props: SendReadout.stories.tsx (React) and
-// SendReadout.stories.svelte.ts (Svelte) both draw them, and the parity test renders every instance in both.
+// SendReadout's stories as plain props: SendReadout.stories.tsx draws them (React or Svelte, by the
+// toolbar's Renderer), and the tree snapshot records `sendReadoutView` for every instance.
 import { defineFixtures } from '../../../fixtures';
 import type { SendReadoutModelProps } from './SendReadout.model';
 

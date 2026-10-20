@@ -1,0 +1,355 @@
+## Board
+<button aria-label="Main B, playing" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Main B"
+
+## Idle
+<button aria-label="Intro I (pad 1)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro I"
+
+## Dark
+<button aria-label="Intro III (not in this style)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="dark" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro III"
+
+## DarkUtility
+<button aria-label="Auto Fill (unavailable)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="dark" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## Next
+<button aria-label="Main C, queued after bar 4 (flashing)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="top" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Main C"
+
+## NextCorner
+<button aria-label="Main C, queued after bar 4 (flashing)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="corner" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag yh-pad__tag--corner" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Main C"
+
+## TagClearance #1
+<button aria-label="C, next, Song-form step" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="corner" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag yh-pad__tag--corner" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "C"
+
+## TagClearance #2
+<button aria-label="Main A, next, 4 × 4 cell" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="top" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Main A"
+
+## TagClearance #3
+<button aria-label="Rack 4, next, 2 × 8 cell" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="top" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Rack 4"
+
+## TagClearance #4
+<button aria-label="Bank +, next, Narrow cell" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="top" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Bank +"
+
+## TagClearance #5
+<button aria-label="C, armed, Song-form step" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="corner" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag yh-pad__tag--corner" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "C"
+
+## TagClearance #6
+<button aria-label="Main A, armed, 4 × 4 cell" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="top" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "Main A"
+
+## TagClearance #7
+<button aria-label="Rack 4, armed, 2 × 8 cell" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="top" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "Rack 4"
+
+## TagClearance #8
+<button aria-label="Bank +, armed, Narrow cell" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="top" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "Bank +"
+
+## NextUnlit
+<button aria-label="Main C, queued after bar 4 (flashing)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-lit="false" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="top" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Main C"
+
+## Armed
+<button aria-label="Ending I, armed (pulsing)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="ending" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="top" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "Ending I"
+
+## Utility
+<button aria-label="Sync Start (pad 4)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Sync Start"
+
+## UtilityOn
+<button aria-label="Auto Fill (pad 12)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## Running
+<button aria-label="Start / Stop, running (pad 16)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="start" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="running" data-text-leading="snug" data-tip="section.lamps" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Start / Stop"
+
+## RoleRunning
+<button aria-label="Start / Stop, running (pad 16)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="start" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="running" data-text-leading="snug" data-tip="section.lamps" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Start / Stop"
+
+## RoleStopped
+<button aria-label="Start / Stop, stopped (pad 16)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="start" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tip="section.lamps" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Start / Stop"
+
+## RoleOn
+<button aria-label="Auto Fill, on (pad 12)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tip="section.lamps" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## RoleArmed
+<button aria-label="Sync Start, armed" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="top" data-text-leading="snug" data-tip="section.lamps" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "Sync Start"
+
+## Hue
+<button aria-label="QUICK 1 (pad 1)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="1" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tip="padpage.racks" data-tone="hue-1" data-util="true" type="button" use:padPress={"disabled":false,"tip":"padpage.racks","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 1"
+
+## HueDark
+<button aria-label="BANK - (pad 13)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="3" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="dark" data-text-leading="snug" data-tip="padpage.racks" data-tone="hue-3" data-util="true" type="button" use:padPress={"disabled":false,"tip":"padpage.racks","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "BANK -"
+
+## NextAccent
+<button aria-label="Main C, queued after bar 4" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="top" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Main C"
+
+## Disabled
+<button aria-disabled="true" aria-label="Auto Fill (pad 12)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":true,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## FillCell
+<button aria-label="Main B (pad 10)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-fill="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Main B"
+
+## Bank #1
+<button aria-label="Intro I (pad 1)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro I"
+
+## Bank #2
+<button aria-label="Intro II (pad 2)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro II"
+
+## Bank #3
+<button aria-label="Intro III (pad 3)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="dark" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro III"
+
+## Bank #4
+<button aria-label="Sync Start (pad 4)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="top" data-text-leading="snug" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "Sync Start"
+
+## Bank #5
+<button aria-label="Ending I (pad 5)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="ending" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Ending I"
+
+## Bank #6
+<button aria-label="Ending II (pad 6)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="ending" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Ending II"
+
+## Bank #7
+<button aria-label="Fill (pad 7)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="fill" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Fill"
+
+## Bank #8
+<button aria-label="Break (pad 8)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="brk" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Break"
+
+## Bank #9
+<button aria-label="Main A (pad 9)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Main A"
+
+## Bank #10
+<button aria-label="Main B (pad 10)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Main B"
+
+## Bank #11
+<button aria-label="Main C (pad 11)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="corner" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag yh-pad__tag--corner" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Main C"
+
+## Bank #12
+<button aria-label="Auto Fill (pad 12)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## Bank #13
+<button aria-label="QUICK 1 (pad 13)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="1" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="hue-1" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 1"
+
+## Bank #14
+<button aria-label="QUICK 2 (pad 14)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="2" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="hue-2" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 2"
+
+## Bank #15
+<button aria-label="BANK - (pad 15)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="3" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="dark" data-text-leading="snug" data-tone="hue-3" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "BANK -"
+
+## Bank #16
+<button aria-label="Start / Stop (pad 16)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="start" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="running" data-text-leading="snug" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Start / Stop"
+
+## OnRing #1
+<button aria-label="Auto Fill, on (ring)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tip="section.lamps" data-tone="neutral" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## OnRing #2
+<button aria-label="Auto Fill, on (ring, role 2)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tip="section.lamps" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tip":"section.lamps","tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## OnRing #3
+<button aria-label="Quick 1, on (ring)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="1" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="hue-1" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 1"
+
+## OnRing #4
+<button aria-label="Main B, playing (fill)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Main B"
+
+## BankRing #1
+<button aria-label="Intro I (pad 1)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro I"
+
+## BankRing #2
+<button aria-label="Intro II (pad 2)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro II"
+
+## BankRing #3
+<button aria-label="Intro III (pad 3)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="intro" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="dark" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Intro III"
+
+## BankRing #4
+<button aria-label="Sync Start (pad 4)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-lit="true" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="armed" data-tag="top" data-text-leading="snug" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "ARMED"
+  <span class="yh-pad__label" data-part="label">
+    "Sync Start"
+
+## BankRing #5
+<button aria-label="Ending I (pad 5)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="ending" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Ending I"
+
+## BankRing #6
+<button aria-label="Ending II (pad 6)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="ending" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Ending II"
+
+## BankRing #7
+<button aria-label="Fill (pad 7)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="fill" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Fill"
+
+## BankRing #8
+<button aria-label="Break (pad 8)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="brk" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Break"
+
+## BankRing #9
+<button aria-label="Main A (pad 9)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Main A"
+
+## BankRing #10
+<button aria-label="Main B (pad 10)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Main B"
+
+## BankRing #11
+<button aria-label="Main C (pad 11)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="main" data-lit="true" data-material="key" data-next="accent" data-on-face="fill" data-part="face" data-radius="control" data-role="label" data-state="next" data-tag="corner" data-text-leading="snug" data-tone="neutral" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span aria-hidden="true" class="lib-text lib-tone yh-pad__tag yh-pad__tag--corner" data-part="chip" data-role="body" data-text-case="upper" data-text-size="caption" data-text-weight="strong">
+    "NEXT"
+  <span class="yh-pad__label" data-part="label">
+    "Main C"
+
+## BankRing #12
+<button aria-label="Auto Fill (pad 12)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="role-2" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Auto Fill"
+
+## BankRing #13
+<button aria-label="QUICK 1 (pad 13)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="1" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="playing" data-text-leading="snug" data-tone="hue-1" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 1"
+
+## BankRing #14
+<button aria-label="QUICK 2 (pad 14)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="2" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="idle" data-text-leading="snug" data-tone="hue-2" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "QUICK 2"
+
+## BankRing #15
+<button aria-label="BANK - (pad 15)" aria-pressed="false" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="util" data-hue="3" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="dark" data-text-leading="snug" data-tone="hue-3" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "BANK -"
+
+## BankRing #16
+<button aria-label="Start / Stop (pad 16)" aria-pressed="true" class="lib-text lib-tone yh-pad lib-surface lib-focus-ring" data-family="start" data-material="key" data-next="accent" data-on-face="ring" data-part="face" data-radius="control" data-role="label" data-state="running" data-text-leading="snug" data-tone="success" data-util="true" type="button" use:padPress={"disabled":false,"tipAction":"tipAction","onPress":"press"}>
+  <span class="yh-pad__label" data-part="label">
+    "Start / Stop"

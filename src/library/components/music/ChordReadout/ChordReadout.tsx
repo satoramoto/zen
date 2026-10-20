@@ -1,11 +1,16 @@
-import { useEffect, useRef, type CSSProperties } from 'react';
-import { Surface } from '../../../primitives/Surface';
-import { Text } from '../../../primitives/Text';
-import { chordReadoutView, MATERIAL, type ChordReadoutModelProps } from './ChordReadout.model';
-import { useFit } from './useFit';
+import { useState, useSyncExternalStore } from 'react';
+import { Tree } from '../../../view/Tree';
+import { viewState } from '../viewState';
+import { chordReadoutHandlers, chordReadoutView, type ChordReadoutModelProps } from './ChordReadout.model';
+import type { Fit } from './fit';
+import '../../../primitives/Text.css';
+// The window is a `screen` Surface drawn as a plain div with Surface's class and data (no layer, so
+// never a shader). Before ChordReadout.css, so its own rules win.
+import '../../../primitives/Surface.css';
 import './ChordReadout.css';
 
-// The props and what they draw are framework-free, in the model; `ChordReadout.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; `ChordReadout.svelte` draws the same
+// tree. The hero's fit is the `chordFit` store the tree binds, reporting to this view state.
 export type { ChordNote, ChordReadoutModelProps, TipAction } from './ChordReadout.model';
 
 export type ChordReadoutProps = ChordReadoutModelProps;
@@ -49,61 +54,7 @@ export type ChordReadoutProps = ChordReadoutModelProps;
  *   fit steps and the fixed line box scale from it.
  */
 export function ChordReadout(props: ChordReadoutProps) {
-  const { chord, extension, held, size, tip, tipAction } = props;
-  const view = chordReadoutView(props);
-  const hero = useRef<HTMLDivElement>(null);
-  const fingeringRef = useRef<HTMLSpanElement>(null);
-  const hasFingering = view.fingering !== null;
-
-  // The app's tooltip on the fingering, the readout's one hover target.
-  useEffect(() => {
-    const node = fingeringRef.current;
-    if (!node || !tipAction || tip === undefined) return;
-    const handle = tipAction(node, tip);
-    return () => handle?.destroy?.();
-  }, [tip, tipAction, hasFingering]);
-
-  // The largest hero step at which the chord fits its column (`fit.ts`), measured again on each change.
-  const fit = useFit(hero, [chord, extension, held, size]);
-
-  const style = view.heroSize === undefined ? undefined : ({ '--yh-chord-readout-hero': view.heroSize } as CSSProperties);
-  return (
-    <Surface material={MATERIAL} className={view.root.className} {...view.root.attrs} style={style}>
-      <Text as="div" role="display" leading="snug" ref={hero} className={view.hero.className} {...view.hero.attrs} data-fit={fit}>
-        {view.chord}
-        {view.raised !== null && (
-          <Text role="display" leading="tight" className="yh-chord-readout__ext" data-part="extension">
-            {view.raised}
-          </Text>
-        )}
-        {view.bass !== null && (
-          <Text role="display" leading="snug" className="yh-chord-readout__bass" data-part="bass">
-            {view.bass}
-          </Text>
-        )}
-      </Text>
-      {/* Drawn only: the readout's spoken name already says it whole. */}
-      <Text as="p" role="body" size="label" className="yh-chord-readout__line" data-part="line" aria-hidden="true">
-        {view.tones !== null && (
-          <Text role="body" size="inherit" weight="numeral" className="yh-chord-readout__tones" data-part="tones">
-            {view.tones.map((note, i) => (
-              <span key={i} className="yh-chord-readout__tone" data-part="tone">
-                {note}
-              </span>
-            ))}
-          </Text>
-        )}
-        {view.fingering !== null && (
-          <span ref={fingeringRef} className="yh-chord-readout__fingering" {...view.fingering.attrs}>
-            {view.fingering.text}
-          </span>
-        )}
-        {view.held && (
-          <Text role="body" size="caption" case="label" className="yh-chord-readout__held" data-part="held">
-            held
-          </Text>
-        )}
-      </Text>
-    </Surface>
-  );
+  const [fit] = useState(() => viewState<Fit>('full'));
+  const step = useSyncExternalStore(fit.subscribe, fit.get);
+  return <Tree tree={chordReadoutView(props, step)} handlers={chordReadoutHandlers(props, fit.set)} />;
 }

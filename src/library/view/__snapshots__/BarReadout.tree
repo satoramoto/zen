@@ -1,0 +1,212 @@
+## Level
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Level"
+  <span aria-label="Level" aria-valuemax="127" aria-valuemin="0" aria-valuenow="90" aria-valuetext="Level 90" class="yh-bar-readout__bar" data-face="off" data-tip="mixer.channel.level" role="slider" tabindex="0" use:barInput={"value":90,"min":0,"max":127,"disabled":false,"reset":100,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 71%">
+    <span class="yh-bar-readout__cap" style="left: 71%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "90"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""
+
+## Pan
+<div class="yh-bar-readout yh-bar-readout--bipolar">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Pan"
+  <span aria-label="Pan" aria-valuemax="127" aria-valuemin="0" aria-valuenow="70" aria-valuetext="Pan R6" class="yh-bar-readout__bar" data-face="off" data-tip="mixer.channel.pan" role="slider" tabindex="0" use:barInput={"value":70,"min":0,"max":127,"disabled":false,"reset":64,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__centre">
+    <span class="yh-bar-readout__fill" style="left: 50%; width: 5%">
+    <span class="yh-bar-readout__cap" style="left: 55%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "R6"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""
+
+## LowFreq
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Low freq"
+  <span aria-label="Low freq" aria-valuemax="2000" aria-valuemin="32" aria-valuenow="120" aria-valuetext="Low freq 120 Hz" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":120,"min":32,"max":2000,"steps":[32,36,40,45,50,56,63,70,80,90,100,110,125,140,160,180,200,225,250,280,315,355,400,450,500,560,630,700,800,900,1000,1100,1200,1400,1600,1800,2000],"disabled":false,"reset":80,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 33%">
+    <span class="yh-bar-readout__cap" style="left: 33%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "120"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      "Hz"
+
+## Display
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Speed"
+  <span aria-label="Speed" aria-valuemax="127" aria-valuemin="0" aria-valuenow="40" aria-valuetext="Speed 0.50 Hz" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":40,"min":0,"max":127,"disabled":false,"reset":64,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 31%">
+    <span class="yh-bar-readout__cap" style="left: 31%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "0.50"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      "Hz"
+
+## Ratio
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Ratio"
+  <span aria-label="Ratio" aria-valuemax="200" aria-valuemin="10" aria-valuenow="30" aria-valuetext="Ratio 3:1" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":30,"min":10,"max":200,"disabled":false,"reset":30,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 11%">
+    <span class="yh-bar-readout__cap" style="left: 11%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "3"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ":1"
+
+## Waiting
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Level"
+    <span aria-hidden="true" class="lib-text lib-tone yh-bar-readout__away" data-role="body" data-text-size="inherit" data-text-weight="strong">
+      "↕"
+  <span aria-label="Level" aria-valuemax="127" aria-valuemin="0" aria-valuenow="90" aria-valuetext="Level 90, hardware fader away" class="yh-bar-readout__bar" data-face="off" data-tip="mixer.channel.level" role="slider" tabindex="0" use:barInput={"value":90,"min":0,"max":127,"disabled":false,"reset":100,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 71%">
+    <span class="yh-bar-readout__cap" style="left: 71%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "90"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""
+
+## Disabled
+<div class="yh-bar-readout yh-bar-readout--disabled">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Send 5"
+  <span aria-disabled="true" aria-label="Send 5" aria-valuemax="127" aria-valuemin="0" aria-valuetext="Send 5, not added" class="yh-bar-readout__bar" data-face="disabled" role="slider" tabindex="0" use:barInput={"value":0,"min":0,"max":127,"disabled":true,"reset":0,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "—"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""
+
+## Group #1
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Level"
+  <span aria-label="Level" aria-valuemax="127" aria-valuemin="0" aria-valuenow="90" aria-valuetext="Level 90" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":90,"min":0,"max":127,"disabled":false,"reset":100,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 71%">
+    <span class="yh-bar-readout__cap" style="left: 71%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "90"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""
+
+## Group #2
+<div class="yh-bar-readout yh-bar-readout--bipolar">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Pan"
+  <span aria-label="Pan" aria-valuemax="127" aria-valuemin="0" aria-valuenow="52" aria-valuetext="Pan L12" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":52,"min":0,"max":127,"disabled":false,"reset":64,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__centre">
+    <span class="yh-bar-readout__fill" style="left: 41%; width: 9%">
+    <span class="yh-bar-readout__cap" style="left: 41%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "L12"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""
+
+## Group #3
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Gain"
+  <span aria-label="Gain" aria-valuemax="0" aria-valuemin="-48" aria-valuenow="-18" aria-valuetext="Gain −18 dB" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":-18,"min":-48,"max":0,"disabled":false,"reset":0,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 63%">
+    <span class="yh-bar-readout__cap" style="left: 63%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "−18"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      "dB"
+
+## Group #4
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "High freq"
+  <span aria-label="High freq" aria-valuemax="16000" aria-valuemin="500" aria-valuenow="8000" aria-valuetext="High freq 8.0 kHz" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":8000,"min":500,"max":16000,"steps":[500,560,630,700,800,900,1000,1100,1200,1400,1600,1800,2000,2200,2500,2800,3200,3600,4000,4500,5000,5600,6300,7000,8000,9000,10000,11000,12000,14000,16000],"disabled":false,"reset":4000,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 80%">
+    <span class="yh-bar-readout__cap" style="left: 80%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "8.0"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      "kHz"
+
+## Group #5
+<div class="yh-bar-readout">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Attack"
+  <span aria-label="Attack" aria-valuemax="40" aria-valuemin="0" aria-valuenow="12" aria-valuetext="Attack 12 ms" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":12,"min":0,"max":40,"disabled":false,"reset":1,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__fill" style="left: 0%; width: 30%">
+    <span class="yh-bar-readout__cap" style="left: 30%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "12"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      "ms"
+
+## Group #6
+<div class="yh-bar-readout yh-bar-readout--bipolar">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Transpose"
+    <span aria-hidden="true" class="lib-text lib-tone yh-bar-readout__away" data-role="body" data-text-size="inherit" data-text-weight="strong">
+      "↕"
+  <span aria-label="Transpose" aria-valuemax="127" aria-valuemin="0" aria-valuenow="76" aria-valuetext="Transpose +12, hardware fader away" class="yh-bar-readout__bar" data-face="off" role="slider" tabindex="0" use:barInput={"value":76,"min":0,"max":127,"disabled":false,"reset":64,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+    <span class="yh-bar-readout__centre">
+    <span class="yh-bar-readout__fill" style="left: 50%; width: 10%">
+    <span class="yh-bar-readout__cap" style="left: 60%">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "+12"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""
+
+## Group #7
+<div class="yh-bar-readout yh-bar-readout--disabled">
+  <span class="lib-text lib-tone yh-bar-readout__label" data-role="body" data-text-case="label" data-text-size="caption">
+    <span class="yh-bar-readout__label-text">
+      "Send 5"
+  <span aria-disabled="true" aria-label="Send 5" aria-valuemax="127" aria-valuemin="0" aria-valuetext="Send 5, not added" class="yh-bar-readout__bar" data-face="disabled" role="slider" tabindex="0" use:barInput={"value":0,"min":0,"max":127,"disabled":true,"reset":0,"onChange":"change","onState":"state"}>
+    <span class="yh-bar-readout__track">
+  <span aria-hidden="true" class="yh-bar-readout__slot">
+    <span class="lib-text lib-tone yh-bar-readout__value" data-role="numeral" data-text-size="body">
+      "—"
+    <span class="lib-text lib-tone yh-bar-readout__unit" data-role="body" data-text-size="caption">
+      ""

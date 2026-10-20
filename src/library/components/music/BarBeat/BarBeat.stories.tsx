@@ -1,11 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { BarBeat } from './BarBeat';
-import { barBeatArgTypes, barBeatStories as s } from './BarBeat.fixtures';
-import { instances } from '../../../fixtures';
+import { treeStory, withRenderer } from '../../../stories/story';
+import { BarBeat, type BarBeatProps } from './BarBeat';
+import { barBeatArgTypes, barBeatSample, barBeatSectionsSample, barBeatStories as s } from './BarBeat.fixtures';
 
-// Every story's args come from BarBeat.fixtures.ts, which the Svelte stories and the parity test share.
+// Every story's args come from BarBeat.fixtures.ts, which the tree snapshot shares. The bar fills
+// its container, so each story is a view tree (a 320px column, `barBeatSample`) that the toolbar's
+// Renderer draws with React's or Svelte's `Tree`.
+const one = treeStory((args: BarBeatProps) => ({ tree: barBeatSample(args) }));
 
 /**
  * The display's beat cells, one per beat, in neutral ink: past beats in `--text-3`, the current
@@ -16,13 +19,9 @@ import { instances } from '../../../fixtures';
 const meta = {
   title: 'Design OS/Components/Music/BarBeat',
   component: BarBeat,
-  decorators: [withLibraryTheme],
-  parameters: { layout: 'centered' },
-  render: (args) => (
-    <div style={{ width: 320 }}>
-      <BarBeat {...args} />
-    </div>
-  ),
+  decorators: [withRenderer, withLibraryTheme],
+  parameters: { layout: 'centered', ...one.parameters },
+  render: one.render,
   argTypes: barBeatArgTypes,
 } satisfies Meta<typeof BarBeat>;
 
@@ -57,13 +56,7 @@ export const ThreeFour: Story = { args: s.ThreeFour.args };
  * ignored, so all five bars look the same.
  */
 export const Sections: Story = {
-  render: () => (
-    <div style={{ display: 'grid', gap: 16, width: 320 }}>
-      {instances(s.Sections).map((item) => (
-        <BarBeat key={item.hue} {...item} />
-      ))}
-    </div>
-  ),
+  ...treeStory(() => ({ tree: barBeatSectionsSample() })),
   play: async ({ canvasElement }) => {
     for (const bar of within(canvasElement).getAllByRole('img')) await expect(bar).not.toHaveAttribute('data-hue');
   },

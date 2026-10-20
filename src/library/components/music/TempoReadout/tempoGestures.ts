@@ -1,6 +1,6 @@
 /**
- * TempoReadout's gestures, framework-free. `useTempoGestures.ts` (React hooks) and
- * `tempoGestures.svelte.ts` (Svelte actions) both wrap these bindings; neither holds any of this logic.
+ * TempoReadout's gestures, framework-free stores, registered as `tempoNumber` and `tempoStep` in
+ * `src/library/view/stores.ts`; TempoReadout's tree binds them in both renderers.
  *
  * - `bindTempoNumber`: on the number, a primary-button drag asks for a tempo every `DRAG_PX`
  *   (pointer capture, one call per new value), a wheel step asks for ±1 (not passive, so the page
@@ -9,7 +9,7 @@
  * - `bindTempoStep`: on + or −, a primary press reports `true` and its release (up, leave, cancel)
  *   `false` once; a keyboard click (no pointer detail) reports one press and release.
  */
-import { clampTempo, DRAG_PX, STEP_KEYS, type TipAction } from './TempoReadout.model';
+import { clampTempo, DRAG_PX, STEP_KEYS } from './TempoReadout.model';
 
 export interface TempoNumberParams {
   bpm: number;
@@ -135,11 +135,4 @@ export function bindTempoStep(node: HTMLElement, initial: TempoStepParams): Bind
       node.removeEventListener('click', onClick);
     },
   };
-}
-
-/** Applies the app's tooltip action to `node` with `key`; returns its teardown. */
-export function applyTip(node: HTMLElement, tipAction: TipAction | undefined, key: string): (() => void) | undefined {
-  if (!tipAction) return undefined;
-  const handle = tipAction(node, key);
-  return () => handle?.destroy?.();
 }

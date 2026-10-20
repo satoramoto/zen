@@ -1,5 +1,5 @@
-// SectionName's stories as plain props: SectionName.stories.tsx (React) and
-// SectionName.stories.svelte.ts (Svelte) both draw them, and the parity test renders every instance in both.
+// SectionName's stories as plain props: SectionName.stories.tsx draws them in either renderer, and
+// the tree snapshot records every instance.
 import { defineFixtures } from '../../../fixtures';
 import type { SectionNameModelProps } from './SectionName.model';
 

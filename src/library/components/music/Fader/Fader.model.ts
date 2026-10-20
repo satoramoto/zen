@@ -1,16 +1,21 @@
-// Fader's model: its props and the strip it draws from them (classes, `data-*`, ARIA and the 0–1
-// positions it sets inline). No framework: `Fader.tsx` (React) and `Fader.svelte` (Svelte) both
-// render `faderView`; the drag, wheel and keys are the `faderInput.ts` store beside it.
+// Fader's model: its props and the tree both renderers draw from them (classes, `data-*`, ARIA, the
+// 0–1 positions it sets inline, the stores it binds). No framework: `Fader.tsx` (React) and
+// `Fader.svelte` (Svelte) both pass `faderView` and `faderHandlers` to their `Tree`; the drag, wheel
+// and keys are the `faderInput.ts` store beside it (registered as `faderInput` in
+// `src/library/view/stores.ts`), the tooltip the kernel's `tip` store.
 import type { HueSlot } from '../../core/hue';
+import type { TipAction } from '../../core/Button/Button.model';
 import { focusRing } from '../../../primitives/Ring';
-import type { ElementView, TextSize } from '../../../primitives/Text.model';
+import { surfaceView } from '../../../primitives/Surface.model';
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';
 
 /** A categorical hue slot (1–5), or one of the neutral strips: `a`, `t2`, `t`. */
 export type FaderHue = HueSlot | 'a' | 't2' | 't';
 export type FaderKind = 'part' | 'group' | 'master' | 'off' | 'parked';
 
 /** The parent's tooltip action: called with the node and the key; may return a handle whose `destroy` cleans up. */
-export type FaderTipAction = (node: HTMLElement, key: string) => { update?: (key: string) => void; destroy?: () => void } | void;
+export type FaderTipAction = TipAction;
 
 /** The top of the travel: levels are 0–127, whole. */
 export const FADER_MAX = 127;
@@ -63,49 +68,25 @@ export function splitValue(value: string): { word: string; num: string } {
   return m ? { word: m[1], num: m[2] } : { word: '', num: value };
 }
 
-/** A part drawn as a `Surface` (React) or a plain element with Surface's attributes (Svelte). */
-export interface SurfacePart {
-  /** The Surface props: what it is made of and its corners. */
-  surface: { material: 'well'; radius: 'none' };
-  /** The part's own class (after `lib-surface`). */
-  className: string;
-  /** Its `data-part`. */
-  attrs: Record<string, string | undefined>;
-  /** Inline custom properties, or none. */
-  style?: Record<string, string>;
-}
-
-/** The attributes `Surface` emits for a part's surface props (Svelte draws them itself; no shader here, there is no layer). */
-export function surfaceAttrs({ material, radius }: SurfacePart['surface']): Record<string, string | undefined> {
-  return { 'data-material': material, 'data-radius': radius };
-}
-
-/** What a renderer draws. */
-export interface FaderView {
-  /** The root `div`: its class, slider role, ARIA, `data-*`, and inline style. `tabindex` is `tabIndex` (0). */
-  root: ElementView & { tabIndex: number; style: Record<string, string | undefined> };
-  /** The layer word over the number ("Rev"), or empty for none. */
-  word: string;
-  /** The number. */
-  num: string;
-  /** The number's Text size: a step down when off. */
-  numSize: TextSize;
-  groove: SurfacePart;
-  /** Whether the fill and cap are drawn (not parked). */
-  fill: boolean;
-  /** The ghost cap's 0–1 position while away, or null. */
-  ghost: Record<string, string> | null;
-  /** The one meter (the louder side), or null with no meters. */
-  meter: SurfacePart | null;
-  /** The takeover arrow's path, or null when not away. */
-  takeover: string | null;
-  /** Whether the fader is parked: shown, not usable. */
-  parked: boolean;
-}
-
 const ARROW = { up: 'M5 1 9 8H1z', down: 'M5 9 1 2h8z', at: 'M1 4h8v2H1z' } as const;
 
-/** The strip Fader draws from its props. */
+/** A Text's attributes (its class and `data-*`), plus any of the part's own. */
+function text(props: TextModelProps, extra: Record<string, string | undefined> = {}): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs, ...extra };
+}
+
+/** A `well` Surface span with no corners (no layer, so no shader): `lib-surface`, its class and data. */
+function well(className: string, part: string, style?: string): Node {
+  const view = surfaceView({ material: 'well', radius: 'none', className });
+  return h('span', { class: view.className, ...view.attrs, 'data-part': part, style });
+}
+
+/**
+ * The tree Fader draws: the slider root (binding the `faderInput` store, which finds the rail by its
+ * class, and the `tip` store), the head (layer word and number), the travel (groove, fill, ghost,
+ * cap, the one meter) and the takeover arrow.
+ */
 export function faderView({
   name,
   value = '',
@@ -120,18 +101,19 @@ export function faderView({
   fillHeight = false,
   empty = false,
   tip,
-}: FaderModelProps): FaderView {
+}: FaderModelProps): Node {
   const parked = kind === 'parked';
   const off = kind === 'off';
   const live = !parked && !off;
   const showMeters = !parked && !layered;
   const direction = away === undefined || parked ? undefined : away < level ? 'up' : away > level ? 'down' : 'at';
   const { word, num } = splitValue(parked ? '' : value);
-  return {
-    root: {
-      className: `yh-fader ${focusRing}`,
-      tabIndex: 0,
-      attrs: {
+  return wire(
+    h(
+      'div',
+      {
+        class: `yh-fader ${focusRing}`,
+        tabindex: '0',
         role: 'slider',
         'aria-label': name,
         'aria-orientation': 'vertical',
@@ -147,26 +129,49 @@ export function faderView({
         'data-empty': parked && empty ? 'true' : undefined,
         'data-away': direction,
         'data-tip': tip,
+        style: styleText({ '--yh-fader-level': String(clamp(level, 0, FADER_MAX) / FADER_MAX), width: width === undefined ? undefined : `${width}px` }),
       },
-      style: { '--yh-fader-level': String(clamp(level, 0, FADER_MAX) / FADER_MAX), width: width === undefined ? undefined : `${width}px` },
+      h(
+        'span',
+        { class: 'yh-fader__head', 'data-part': 'head', 'aria-hidden': 'true' },
+        word ? h('span', text({ role: 'label', size: 'caption', leading: 'tight', className: 'yh-fader__word' }), word) : null,
+        // Off, the number steps down a size as well as a shade, so it never competes with a live level.
+        h('span', text({ role: 'numeral', size: off ? 'label' : 'heading', className: 'yh-fader__value' }, { 'data-part': 'value' }), num),
+      ),
+      h(
+        'span',
+        { class: 'yh-fader__travel', 'data-part': 'travel', 'aria-hidden': 'true' },
+        h(
+          'span',
+          { class: 'yh-fader__rail' },
+          well('yh-fader__groove', 'groove'),
+          parked ? null : h('span', { class: 'yh-fader__fill', 'data-part': 'fill' }),
+          direction === undefined
+            ? null
+            : h('span', { class: 'yh-fader__ghost', 'data-part': 'ghost', style: styleText({ '--yh-fader-away': String(clamp(away!, 0, FADER_MAX) / FADER_MAX) }) }),
+          parked ? null : h('span', { class: 'yh-fader__cap', 'data-part': 'cap' }),
+        ),
+        // One meter, the louder side: two read as a second, thinner fader at Stage scale.
+        showMeters
+          ? h(
+              'span',
+              { class: 'yh-fader__meters' },
+              well('yh-fader__meter', 'meter', styleText({ '--yh-fader-m': String(live ? clamp(Math.max(meter, meter2), 0, 1) : 0) })),
+            )
+          : null,
+      ),
+      direction === undefined ? null : h('svg', { class: 'yh-fader__takeover', viewBox: '0 0 10 10', 'aria-hidden': 'true' }, h('path', { d: ARROW[direction] })),
+    ),
+    {
+      bind: [
+        ['faderInput', { level, parked, onlevel: 'level' }],
+        ['tip', { tip, tipAction: 'tipAction' }],
+      ],
     },
-    word,
-    num,
-    // Off, the number steps down a size as well as a shade, so it never competes with a live level.
-    numSize: off ? 'label' : 'heading',
-    groove: { surface: { material: 'well', radius: 'none' }, className: 'yh-fader__groove', attrs: { 'data-part': 'groove' } },
-    fill: !parked,
-    ghost: direction === undefined ? null : { '--yh-fader-away': String(clamp(away!, 0, FADER_MAX) / FADER_MAX) },
-    // One meter, the louder side: two read as a second, thinner fader at Stage scale.
-    meter: showMeters
-      ? {
-          surface: { material: 'well', radius: 'none' },
-          className: 'yh-fader__meter',
-          attrs: { 'data-part': 'meter' },
-          style: { '--yh-fader-m': String(live ? clamp(Math.max(meter, meter2), 0, 1) : 0) },
-        }
-      : null,
-    takeover: direction === undefined ? null : ARROW[direction],
-    parked,
-  };
+  );
+}
+
+/** The callbacks `faderView`'s tree names: the level asked for, and the app's tooltip action. */
+export function faderHandlers(props: FaderModelProps): Handlers {
+  return { level: props.onlevel, tipAction: props.tipAction };
 }

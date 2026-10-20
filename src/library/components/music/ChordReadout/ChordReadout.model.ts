@@ -1,9 +1,12 @@
-// ChordReadout's model: its props and what it draws from them (the window's Surface attributes,
-// the chord split at its slash bass, the notes, the fingering and its tip, the spoken name). No
-// framework: `ChordReadout.tsx` (React) and `ChordReadout.svelte` (Svelte) both render
-// `chordReadoutView`; the hero's fit is a store beside it (`fit.ts`).
+// ChordReadout's model: its props and the tree both renderers draw from them (the window's Surface
+// attributes, the chord split at its slash bass, the notes, the fingering and its tip, the spoken
+// name). No framework: `ChordReadout.tsx` (React) and `ChordReadout.svelte` (Svelte) both pass
+// `chordReadoutView` and `chordReadoutHandlers` to their `Tree`. The hero's fit is the `chordFit`
+// store (`fit.ts`), reporting its step to the binding's view state, which passes it back as `fit`.
 import type { TipAction } from '../../core/Button/Button.model';
-import type { ElementView } from '../../../primitives/Text.model';
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { each, h, styleText, wire, type Handlers, type Node } from '../../../view/Tree.model';
+import type { Fit } from './fit';
 
 export type { TipAction };
 
@@ -48,70 +51,82 @@ export function splitBass(extension: string): [string, string] {
   return i < 0 ? [extension, ''] : [extension.slice(0, i), extension.slice(i)];
 }
 
-/** What a renderer draws. */
-export interface ChordReadoutView {
-  /** What `Surface material="screen"` puts on the window (React draws it through `Surface`; Svelte writes it). */
-  surface: ElementView;
-  /** The window's own class and attributes beside the Surface's (role, spoken name, `data-held`). */
-  root: ElementView;
-  /** The hero size for `--yh-chord-readout-hero` on the root, or undefined for none. */
-  heroSize: string | undefined;
-  /** The chord line (a display Text, snug), its class and attributes beside `data-fit`. */
-  hero: ElementView;
-  /** The chord's text ("Am", or "—" for none). */
-  chord: string;
-  /** The raised extension, or null for none. */
-  raised: string | null;
-  /** The slash bass ("/G♯"), or null for none. */
-  bass: string | null;
-  /** The notes' names, or null to draw no tones. */
-  tones: string[] | null;
-  /** The fingering's text and its attributes (`data-tip`, `data-tip-text`), or null for none. */
-  fingering: { text: string; attrs: Record<string, string | undefined> } | null;
-  /** Whether the "held" tag shows. */
-  held: boolean;
+/** A Text's attributes (its class and `data-*`). */
+function text(props: TextModelProps): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs };
 }
 
-/** The readout ChordReadout draws from its props. */
-export function chordReadoutView({
-  chord,
-  extension = '',
-  notes = [],
-  fingering = '',
-  held = false,
-  label = 'Chord',
-  tip,
-  size,
-}: ChordReadoutModelProps): ChordReadoutView {
+/**
+ * The tree ChordReadout draws: the `screen` window (a Surface without a layer, so no shader), the
+ * hero chord at the step `fit` (binding the `chordFit` store, keyed by what changes its width),
+ * and the small line of tones, fingering (binding the app's `tip`) and the "held" tag.
+ */
+export function chordReadoutView(
+  { chord, extension = '', notes = [], fingering = '', held = false, label = 'Chord', tip, size }: ChordReadoutModelProps,
+  fit: Fit = 'full',
+): Node {
   const none = chord.trim() === '';
   const [raised, bass] = splitBass(none ? '' : extension);
   const spoken =
     `${label} ${none ? 'none' : chord + extension}${held ? ', held' : ''}` +
     (notes.length ? `: ${notes.map((n) => n.note).join(' ')}` : '') +
     (fingering ? `, ${fingering}` : '');
-  return {
-    surface: { className: 'lib-surface', attrs: { 'data-material': MATERIAL, 'data-radius': 'control' } },
-    root: {
-      className: `yh-chord-readout${held ? ' yh-chord-readout--held' : ''}`,
-      attrs: {
-        'data-part': 'window',
-        role: 'img',
-        'aria-label': spoken,
-        'data-held': held ? 'true' : 'false',
-      },
+  return h(
+    'div',
+    {
+      class: `lib-surface yh-chord-readout${held ? ' yh-chord-readout--held' : ''}`,
+      'data-material': MATERIAL,
+      'data-radius': 'control',
+      'data-part': 'window',
+      role: 'img',
+      'aria-label': spoken,
+      'data-held': held ? 'true' : 'false',
+      style: styleText(size === undefined ? undefined : { '--yh-chord-readout-hero': size }),
     },
-    heroSize: size,
-    hero: {
-      className: `yh-chord-readout__chord${none ? ' yh-chord-readout__chord--none' : ''}`,
-      attrs: { 'data-part': 'chord', 'aria-hidden': 'true' },
-    },
-    chord: none ? '—' : chord,
-    raised: raised !== '' ? raised : null,
-    bass: bass !== '' ? bass : null,
-    tones: notes.length > 0 ? notes.map((n) => n.note) : null,
-    fingering: fingering
-      ? { text: fingering, attrs: { 'data-part': 'fingering', 'data-tip': tip, 'data-tip-text': tip ? fingering : undefined } }
-      : null,
-    held,
-  };
+    wire(
+      h(
+        'div',
+        {
+          ...text({ role: 'display', leading: 'snug', className: `yh-chord-readout__chord${none ? ' yh-chord-readout__chord--none' : ''}` }),
+          'data-part': 'chord',
+          'aria-hidden': 'true',
+          'data-fit': fit,
+        },
+        none ? '—' : chord,
+        raised !== '' ? h('span', { ...text({ role: 'display', leading: 'tight', className: 'yh-chord-readout__ext' }), 'data-part': 'extension' }, raised) : null,
+        bass !== '' ? h('span', { ...text({ role: 'display', leading: 'snug', className: 'yh-chord-readout__bass' }), 'data-part': 'bass' }, bass) : null,
+      ),
+      { bind: [['chordFit', { onFit: 'fit', key: JSON.stringify([chord, extension, held, size ?? null]) }]] },
+    ),
+    // Drawn only: the readout's spoken name already says it whole.
+    h(
+      'p',
+      { ...text({ role: 'body', size: 'label', className: 'yh-chord-readout__line' }), 'data-part': 'line', 'aria-hidden': 'true' },
+      notes.length > 0
+        ? h(
+            'span',
+            { ...text({ role: 'body', size: 'inherit', weight: 'numeral', className: 'yh-chord-readout__tones' }), 'data-part': 'tones' },
+            each(notes, (_, i) => String(i), (n) => h('span', { class: 'yh-chord-readout__tone', 'data-part': 'tone' }, n.note)),
+          )
+        : null,
+      fingering
+        ? wire(
+            h(
+              'span',
+              { class: 'yh-chord-readout__fingering', 'data-part': 'fingering', 'data-tip': tip, 'data-tip-text': tip ? fingering : undefined },
+              fingering,
+            ),
+            { bind: [['tip', { tip, tipAction: 'tipAction' }]] },
+          )
+        : null,
+      held ? h('span', { ...text({ role: 'body', size: 'caption', case: 'label', className: 'yh-chord-readout__held' }), 'data-part': 'held' }, 'held') : null,
+    ),
+  );
+}
+
+/** The callbacks `chordReadoutView`'s tree names: the app's tooltip action, and `fit`, where the
+ *  `chordFit` store reports the hero's step (the binding's view state's `set`). */
+export function chordReadoutHandlers(props: ChordReadoutModelProps, onFit: (fit: Fit) => void): Handlers {
+  return { tipAction: props.tipAction, fit: onFit };
 }

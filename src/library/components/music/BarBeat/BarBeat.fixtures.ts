@@ -1,6 +1,8 @@
-// BarBeat's stories as plain props: BarBeat.stories.tsx (React) and BarBeat.stories.svelte.ts
-// (Svelte) both draw them, and the parity test renders every instance in both.
-import { defineFixtures } from '../../../fixtures';
+// BarBeat's stories as plain props: BarBeat.stories.tsx draws them with React's or Svelte's
+// `Tree`, and the tree snapshot renders every instance. The bar fills its container, so each story
+// is a view tree built here (`barBeatSample`, `barBeatSectionsSample`), drawn with `treeStory`.
+import { defineFixtures, instances } from '../../../fixtures';
+import { component, h, type Node } from '../../../view/Tree.model';
 import type { BarBeatHue, BarBeatModelProps } from './BarBeat.model';
 
 /** The controls, the same in both Storybooks. */
@@ -22,3 +24,14 @@ export const barBeatStories = defineFixtures<BarBeatModelProps>()({
   SevenEight: { args: { beat: 5, beats: 7 } },
   Thick: { args: { beat: 2, beats: 4, thickness: '6px' } },
 });
+
+/** One bar (the story's args) in a 320px column. */
+export const barBeatSample = (args: BarBeatModelProps): Node => h('div', { style: 'width: 320px' }, component('BarBeat', { ...args }));
+
+/** The Sections story: a bar per old section hue, stacked in a 320px column. */
+export const barBeatSectionsSample = (): Node =>
+  h(
+    'div',
+    { style: 'display: grid; gap: 16px; width: 320px' },
+    instances(barBeatStories.Sections).map((item) => component('BarBeat', { ...item }, { key: item.hue })),
+  );

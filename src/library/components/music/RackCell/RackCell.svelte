@@ -1,11 +1,13 @@
 <!--
-  RackCell: the Svelte renderer of `rackCellView` (RackCell.model.ts), the same markup, classes and
-  attributes as `RackCell.tsx`; see RackCell.tsx for the job and the tuning knobs. `mark` is a snippet.
+  RackCell: the model's tree (`rackCellView`, RackCell.model.ts) drawn by the Svelte `Tree`, as
+  `RackCell.tsx` draws it with the React one; see RackCell.tsx for the job and the tuning knobs.
+  `mark` is a snippet, the tree's `mark` slot.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import Text from '../../../primitives/Text.svelte';
-  import { rackCellView, type RackCellModelProps } from './RackCell.model';
+  import Tree from '../../../view/Tree.svelte';
+  import { rackCellHandlers, rackCellView, type RackCellModelProps } from './RackCell.model';
+  import '../../../primitives/Text.css';
   import './RackCell.css';
 
   interface Props extends RackCellModelProps {
@@ -13,19 +15,7 @@
     mark?: Snippet;
   }
 
-  let props: Props = $props();
-  const view = $derived(rackCellView(props));
+  let { mark, ...props }: Props = $props();
 </script>
 
-<div class={view.rootClassName}
-  ><button class={view.button.className} {...view.button.attrs} type="button" onclick={() => props.onPress?.()}
-    ><Text {...view.head.text} class={view.head.className} {...view.head.attrs}
-      ><span class={view.label.className}>{view.label.label}</span
-      >{#if view.slot}<span class={view.slot.separator.className} {...view.slot.separator.attrs}>{view.slot.separator.char}</span
-        ><Text {...view.slot.value.text} class={view.slot.value.className} {...view.slot.value.attrs}>{view.slot.value.label}</Text
-        >{/if}</Text
-    ><Text {...view.name.text} class={view.name.className} {...view.name.attrs}
-      ><Text {...view.title.text} class={view.title.className} {...view.title.attrs}>{view.title.label}</Text
-      >{#if props.mark}<span class={view.markClassName}>{@render props.mark()}</span>{/if}</Text
-    ></button
-  ></div>
+<Tree tree={rackCellView(props, { mark: mark !== undefined })} slots={{ mark }} handlers={rackCellHandlers(props)} />

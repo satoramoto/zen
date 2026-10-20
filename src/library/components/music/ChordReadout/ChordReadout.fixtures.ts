@@ -1,6 +1,5 @@
-// ChordReadout's stories as plain props: ChordReadout.stories.tsx (React) and
-// ChordReadout.stories.svelte.ts (Svelte) both draw them, and parity.test.tsx renders every
-// instance in both. The original's fixtures (yahaha/src/ui/NowPlaying/NowPlaying.fixtures.ts),
+// ChordReadout's stories as plain props: ChordReadout.stories.tsx draws them in either renderer,
+// and the tree snapshot records every instance. The original's fixtures (yahaha/src/ui/NowPlaying/NowPlaying.fixtures.ts),
 // copied so the pairs compare one to one.
 import { defineFixtures, type FixtureProps } from '../../../fixtures';
 import type { ChordReadoutModelProps } from './ChordReadout.model';

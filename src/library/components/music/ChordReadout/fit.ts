@@ -1,8 +1,8 @@
 /**
  * The hero's fit, framework-free: the largest hero step at which the chord fits its column (the
  * last step when none does), measured at once, again once the web font has loaded (the fallback is
- * a different width) and whenever the column resizes. `ChordReadout.tsx` binds it in a layout
- * effect; the `chordFit` action (`fit.svelte.ts`) binds it in Svelte.
+ * a different width) and whenever the column resizes. ChordReadout's tree binds it as the
+ * `chordFit` store (`src/library/view/stores.ts`), reporting the step to the binding's view state.
  */
 
 /** Hero sizes, largest first: the chord takes the first at which it fits its column. */
@@ -28,14 +28,18 @@ export interface FitParams {
   onFit: (fit: Fit) => void;
 }
 
+/** The fit as the tree binds it (`chordFit` in `src/library/view/stores.ts`): `key` is plain data
+ *  whose change measures again (the chord, its extension, held and size, as one string). */
+export type ChordFitParams = FitParams & { key?: string };
+
 /** A bound fit: measure again (the chord or its size changed), or unbind. */
 export interface FitBinding {
-  update(params?: FitParams): void;
+  update(params?: ChordFitParams): void;
   destroy(): void;
 }
 
 /** Measures `node` now, once the fonts are ready and on every resize, until destroyed. */
-export function bindFit(node: HTMLElement, initial: FitParams): FitBinding {
+export function bindFit(node: HTMLElement, initial: ChordFitParams): FitBinding {
   let params = initial;
   let live = true;
   const fit = () => {

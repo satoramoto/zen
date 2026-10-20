@@ -1,0 +1,1084 @@
+## Board
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 425px; --yh-keys-split-step: 1" use:keysInput={"range":{"low":36,"high":96},"split":54,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="true" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 436.2133333333333px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "G A C E"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="true" data-part="zone" data-side="right" data-split="" style="left: 436.2133333333333px; width: 955.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "E4 A4"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 436.2133333333333px">
+      "F#2"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split F#2, left hand G A C E, right hand E4 A4, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## Idle
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 425px; --yh-keys-split-step: 1" use:keysInput={"range":{"low":36,"high":96},"split":54,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="false" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 436.2133333333333px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="false" data-part="zone" data-side="right" data-split="" style="left: 436.2133333333333px; width: 955.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 436.2133333333333px">
+      "F#2"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split F#2, left hand none, right hand none, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## BlackKeySplit
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 580px; --yh-keys-split-step: 1" use:keysInput={"range":{"low":36,"high":96},"split":61,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="false" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 591.2133333333334px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="false" data-part="zone" data-side="right" data-split="" style="left: 591.2133333333334px; width: 800.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 591.2133333333334px">
+      "C#3"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split C#3, left hand none, right hand none, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## Drag
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 580px; --yh-keys-split-step: -1" use:keysInput={"range":{"low":36,"high":96},"split":60,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="false" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 568.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="false" data-part="zone" data-side="right" data-split="" style="left: 568.7866666666666px; width: 823.2133333333334px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 568.7866666666666px">
+      "C3"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split C3, left hand none, right hand none, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="-1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## Armed
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 580px; --yh-keys-split-step: -1" use:keysInput={"range":{"low":36,"high":96},"split":60,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":true,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="false" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 568.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="false" data-part="zone" data-side="right" data-split="" style="left: 568.7866666666666px; width: 823.2133333333334px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 568.7866666666666px">
+      "C3"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split C3, left hand none, right hand none, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="-1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## Locked
+<div class="yh-keys" data-locked="" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 425px; --yh-keys-split-step: 1" use:keysInput={"range":{"low":36,"high":96},"split":54,"splitMin":24,"splitMax":96,"splitLocked":true,"picking":true,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="false" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 436.2133333333333px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="false" data-part="zone" data-side="right" data-split="" style="left: 436.2133333333333px; width: 955.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 436.2133333333333px">
+      "F#2"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split F#2, left hand none, right hand none, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## NoSplit
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 0px; --yh-keys-split-step: 0" use:keysInput={"range":{"low":36,"high":96},"split":null,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=right class="yh-keys__zone" data-hue="2" data-on="true" data-part="zone" data-side="right" style="left: 0px; width: 1392px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 2"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "C3 D#3 G3"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: no split, held C3 D#3 G3, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-held="right" data-hue="2" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="2" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-held="right" data-hue="2" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+
+## Keys49
+<div class="yh-keys" data-part="root" style="width: 960px; --yh-keys-black-w: 19.2px; --yh-keys-split-x: 231px; --yh-keys-split-step: 0" use:keysInput={"range":{"low":48,"high":96},"split":59,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":960,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="true" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 231px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "C# F# A#"
+    <div key=right class="yh-keys__zone" data-hue="3" data-on="true" data-part="zone" data-side="right" data-split="" style="left: 231px; width: 729px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 3"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "C#4 F#4"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 231px">
+      "B2"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split B2, left hand C# F# A#, right hand C#4 F#4, 49 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 33.10344827586207px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 33.10344827586207px; width: 33.10344827586207px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 66.20689655172414px; width: 33.10344827586207px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 99.31034482758622px; width: 33.10344827586207px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 132.41379310344828px; width: 33.10344827586207px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 165.51724137931035px; width: 33.10344827586207px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 198.62068965517244px; width: 33.10344827586207px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 231.7241379310345px; width: 33.10344827586207px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 264.82758620689657px; width: 33.10344827586207px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 297.93103448275866px; width: 33.10344827586207px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 331.0344827586207px; width: 33.10344827586207px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 364.1379310344828px; width: 33.10344827586207px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 397.2413793103449px; width: 33.10344827586207px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 430.3448275862069px; width: 33.10344827586207px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 463.448275862069px; width: 33.10344827586207px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 496.55172413793105px; width: 33.10344827586207px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 529.6551724137931px; width: 33.10344827586207px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 562.7586206896552px; width: 33.10344827586207px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 595.8620689655173px; width: 33.10344827586207px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 628.9655172413793px; width: 33.10344827586207px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 662.0689655172414px; width: 33.10344827586207px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 695.1724137931035px; width: 33.10344827586207px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 728.2758620689656px; width: 33.10344827586207px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 761.3793103448277px; width: 33.10344827586207px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 794.4827586206898px; width: 33.10344827586207px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 827.5862068965517px; width: 33.10344827586207px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 860.6896551724138px; width: 33.10344827586207px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 893.7931034482759px; width: 33.10344827586207px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 926.896551724138px; width: 33.10344827586207px">
+        "C6"
+      <div key=b49 class="yh-keys__black" data-held="left" data-hue="4" data-part="black" style="left: 33.10344827586207px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 66.20689655172414px">
+      <div key=b54 class="yh-keys__black" data-held="left" data-hue="4" data-part="black" style="left: 132.41379310344828px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 165.51724137931035px">
+      <div key=b58 class="yh-keys__black" data-held="left" data-hue="4" data-part="black" style="left: 198.62068965517244px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 264.82758620689657px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 297.93103448275866px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 364.1379310344828px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 397.2413793103449px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 430.3448275862069px">
+      <div key=b73 class="yh-keys__black" data-held="right" data-hue="3" data-part="black" style="left: 496.55172413793105px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 529.6551724137931px">
+      <div key=b78 class="yh-keys__black" data-held="right" data-hue="3" data-part="black" style="left: 595.8620689655173px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 628.9655172413793px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 662.0689655172414px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 728.2758620689656px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 761.3793103448277px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 827.5862068965517px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 860.6896551724138px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 893.7931034482759px">
+      <div class="yh-keys__split" data-part="split" data-step="0">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## HighSplit
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 580px; --yh-keys-split-step: -1" use:keysInput={"range":{"low":36,"high":96},"split":60,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="true" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 568.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "C E G"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="true" data-part="zone" data-side="right" data-split="" style="left: 568.7866666666666px; width: 823.2133333333334px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "C5 E5 G5"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 568.7866666666666px">
+      "C3"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split C3, left hand C E G, right hand C5 E5 G5, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="-1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## Picture
+<div class="yh-keys" data-part="root" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 425px; --yh-keys-split-step: 1" use:keysInput={"range":{"low":36,"high":96},"split":54,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="true" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 436.2133333333333px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "G A C E"
+    <div key=right class="yh-keys__zone" data-hue="1" data-on="true" data-part="zone" data-side="right" data-split="" style="left: 436.2133333333333px; width: 955.7866666666666px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 1"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "E4 A4"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 436.2133333333333px">
+      "F#2"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split F#2, left hand G A C E, right hand E4 A4, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## NoRuler
+<div class="yh-keys" data-part="root" data-ruler="off" style="width: 1392px; --yh-keys-black-w: 22.426666666666662px; --yh-keys-split-x: 425px; --yh-keys-split-step: 1" use:keysInput={"range":{"low":36,"high":96},"split":54,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":1392,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split F#2, left hand G A C E, right hand E4 A4, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 38.666666666666664px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 38.666666666666664px; width: 38.666666666666664px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 77.33333333333333px; width: 38.666666666666664px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 116px; width: 38.666666666666664px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 154.66666666666666px; width: 38.666666666666664px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 193.33333333333331px; width: 38.666666666666664px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 232px; width: 38.666666666666664px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 270.66666666666663px; width: 38.666666666666664px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 309.3333333333333px; width: 38.666666666666664px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 348px; width: 38.666666666666664px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 386.66666666666663px; width: 38.666666666666664px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 425.3333333333333px; width: 38.666666666666664px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 464px; width: 38.666666666666664px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 502.66666666666663px; width: 38.666666666666664px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 541.3333333333333px; width: 38.666666666666664px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 580px; width: 38.666666666666664px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 618.6666666666666px; width: 38.666666666666664px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 657.3333333333333px; width: 38.666666666666664px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 696px; width: 38.666666666666664px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 734.6666666666666px; width: 38.666666666666664px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 773.3333333333333px; width: 38.666666666666664px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 812px; width: 38.666666666666664px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 850.6666666666666px; width: 38.666666666666664px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 889.3333333333333px; width: 38.666666666666664px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 928px; width: 38.666666666666664px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 966.6666666666666px; width: 38.666666666666664px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="1" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 1005.3333333333333px; width: 38.666666666666664px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1044px; width: 38.666666666666664px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1082.6666666666665px; width: 38.666666666666664px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1121.3333333333333px; width: 38.666666666666664px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1160px; width: 38.666666666666664px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1198.6666666666665px; width: 38.666666666666664px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1237.3333333333333px; width: 38.666666666666664px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1276px; width: 38.666666666666664px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1314.6666666666665px; width: 38.666666666666664px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 1353.3333333333333px; width: 38.666666666666664px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 38.666666666666664px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 77.33333333333333px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 154.66666666666666px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 193.33333333333331px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 232px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 309.3333333333333px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 348px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 425.3333333333333px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 464px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 502.66666666666663px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 580px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 618.6666666666666px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 696px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 734.6666666666666px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 773.3333333333333px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 850.6666666666666px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 889.3333333333333px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 966.6666666666666px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 1005.3333333333333px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 1044px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 1121.3333333333333px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 1160px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 1237.3333333333333px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 1276px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 1314.6666666666665px">
+      <div class="yh-keys__split" data-part="split" data-step="1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## Fluid
+<div class="yh-keys" data-part="root" data-unmeasured="" data-width="fill" style="width: 100%; --yh-keys-black-w: 0px; --yh-keys-split-x: 0px; --yh-keys-split-step: 1" use:keysInput={"range":{"low":36,"high":96},"split":54,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":0,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":true,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="true" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 0px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "G A C E"
+    <div key=right class="yh-keys__zone" data-hue="5" data-on="true" data-part="zone" data-side="right" data-split="" style="left: 0px; width: 0px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 5"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "E4 A4"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 0px">
+      "F#2"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split F#2, left hand G A C E, right hand E4 A4, 61 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w36 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+        "C1"
+      <div key=w38 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w40 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w41 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w43 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 0px; width: 0px">
+      <div key=w45 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 0px; width: 0px">
+      <div key=w47 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 0px; width: 0px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-held="left" data-hue="4" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 0px; width: 0px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="5" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 0px; width: 0px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-held="right" data-hue="5" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" data-text-weight="strong" style="left: 0px; width: 0px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 0px">
+        "C6"
+      <div key=b37 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b39 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b42 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b44 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b46 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b49 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b54 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b58 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b73 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b78 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 0px">
+      <div class="yh-keys__split" data-part="split" data-step="1">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-join" data-part="split-join">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">
+
+## Narrow
+<div class="yh-keys" data-part="root" style="width: 480px; --yh-keys-black-w: 9.6px; --yh-keys-split-x: 115px; --yh-keys-split-step: 0" use:keysInput={"range":{"low":48,"high":96},"split":59,"splitMin":24,"splitMax":96,"splitLocked":false,"picking":false,"armed":false,"width":480,"onSplit":"split","onPick":"pick"} use:fillWidth={"on":false,"onWidth":"width"}>
+  <div aria-hidden="true" class="yh-keys__ruler" data-part="ruler">
+    <div key=left class="yh-keys__zone" data-hue="4" data-on="true" data-part="zone" data-side="left" data-split="" style="left: 0px; width: 115px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Left"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "C# F# A#"
+    <div key=right class="yh-keys__zone" data-hue="3" data-on="true" data-part="zone" data-side="right" data-split="" style="left: 115px; width: 365px">
+      <span class="lib-text lib-tone yh-keys__part" data-part="zone-name" data-role="body" data-text-case="label" data-text-size="label">
+        "Right 3"
+      <span class="lib-text lib-tone yh-keys__held" data-part="held" data-role="body" data-tabular="" data-text-weight="strong">
+        "C#4 F#4"
+    <span class="lib-text lib-tone yh-keys__marker" data-part="marker" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong" style="left: 115px">
+      "B2"
+  <div class="yh-keys__body" data-part="body">
+    <div aria-label="Keys: split B2, left hand C# F# A#, right hand C#4 F#4, 49 keys" class="yh-keys__strip" data-part="strip" role="img">
+      <div key=w48 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 0px; width: 16.551724137931036px">
+        "C2"
+      <div key=w50 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 16.551724137931036px; width: 16.551724137931036px">
+      <div key=w52 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 33.10344827586207px; width: 16.551724137931036px">
+      <div key=w53 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 49.65517241379311px; width: 16.551724137931036px">
+      <div key=w55 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 66.20689655172414px; width: 16.551724137931036px">
+      <div key=w57 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 82.75862068965517px; width: 16.551724137931036px">
+      <div key=w59 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 99.31034482758622px; width: 16.551724137931036px">
+      <div key=w60 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 115.86206896551725px; width: 16.551724137931036px">
+        "C3"
+      <div key=w62 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 132.41379310344828px; width: 16.551724137931036px">
+      <div key=w64 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 148.96551724137933px; width: 16.551724137931036px">
+      <div key=w65 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 165.51724137931035px; width: 16.551724137931036px">
+      <div key=w67 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 182.0689655172414px; width: 16.551724137931036px">
+      <div key=w69 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 198.62068965517244px; width: 16.551724137931036px">
+      <div key=w71 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 215.17241379310346px; width: 16.551724137931036px">
+      <div key=w72 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 231.7241379310345px; width: 16.551724137931036px">
+        "C4"
+      <div key=w74 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 248.27586206896552px; width: 16.551724137931036px">
+      <div key=w76 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 264.82758620689657px; width: 16.551724137931036px">
+      <div key=w77 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 281.3793103448276px; width: 16.551724137931036px">
+      <div key=w79 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 297.93103448275866px; width: 16.551724137931036px">
+      <div key=w81 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 314.48275862068965px; width: 16.551724137931036px">
+      <div key=w83 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 331.0344827586207px; width: 16.551724137931036px">
+      <div key=w84 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 347.58620689655174px; width: 16.551724137931036px">
+        "C5"
+      <div key=w86 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 364.1379310344828px; width: 16.551724137931036px">
+      <div key=w88 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 380.68965517241384px; width: 16.551724137931036px">
+      <div key=w89 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 397.2413793103449px; width: 16.551724137931036px">
+      <div key=w91 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 413.7931034482759px; width: 16.551724137931036px">
+      <div key=w93 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 430.3448275862069px; width: 16.551724137931036px">
+      <div key=w95 class="lib-text lib-tone yh-keys__white" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 446.89655172413796px; width: 16.551724137931036px">
+      <div key=w96 class="lib-text lib-tone yh-keys__white" data-c="" data-part="white" data-role="body" data-tabular="" data-text-leading="tight" data-text-size="caption" style="left: 463.448275862069px; width: 16.551724137931036px">
+        "C6"
+      <div key=b49 class="yh-keys__black" data-held="left" data-hue="4" data-part="black" style="left: 16.551724137931036px">
+      <div key=b51 class="yh-keys__black" data-part="black" style="left: 33.10344827586207px">
+      <div key=b54 class="yh-keys__black" data-held="left" data-hue="4" data-part="black" style="left: 66.20689655172414px">
+      <div key=b56 class="yh-keys__black" data-part="black" style="left: 82.75862068965517px">
+      <div key=b58 class="yh-keys__black" data-held="left" data-hue="4" data-part="black" style="left: 99.31034482758622px">
+      <div key=b61 class="yh-keys__black" data-part="black" style="left: 132.41379310344828px">
+      <div key=b63 class="yh-keys__black" data-part="black" style="left: 148.96551724137933px">
+      <div key=b66 class="yh-keys__black" data-part="black" style="left: 182.0689655172414px">
+      <div key=b68 class="yh-keys__black" data-part="black" style="left: 198.62068965517244px">
+      <div key=b70 class="yh-keys__black" data-part="black" style="left: 215.17241379310346px">
+      <div key=b73 class="yh-keys__black" data-held="right" data-hue="3" data-part="black" style="left: 248.27586206896552px">
+      <div key=b75 class="yh-keys__black" data-part="black" style="left: 264.82758620689657px">
+      <div key=b78 class="yh-keys__black" data-held="right" data-hue="3" data-part="black" style="left: 297.93103448275866px">
+      <div key=b80 class="yh-keys__black" data-part="black" style="left: 314.48275862068965px">
+      <div key=b82 class="yh-keys__black" data-part="black" style="left: 331.0344827586207px">
+      <div key=b85 class="yh-keys__black" data-part="black" style="left: 364.1379310344828px">
+      <div key=b87 class="yh-keys__black" data-part="black" style="left: 380.68965517241384px">
+      <div key=b90 class="yh-keys__black" data-part="black" style="left: 413.7931034482759px">
+      <div key=b92 class="yh-keys__black" data-part="black" style="left: 430.3448275862069px">
+      <div key=b94 class="yh-keys__black" data-part="black" style="left: 446.89655172413796px">
+      <div class="yh-keys__split" data-part="split" data-step="0">
+        <span class="yh-keys__split-top" data-part="split-top">
+        <span class="yh-keys__split-bottom" data-part="split-bottom">

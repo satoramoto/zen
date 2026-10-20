@@ -1,7 +1,8 @@
-// SectionName's model: its props and the view it draws (the name's Text, its `data-*`, the inline
-// size, and the name split into its word and variation). No framework: `SectionName.tsx` (React)
-// and `SectionName.svelte` (Svelte) both render `sectionNameView`.
-import type { ElementView, TextModelProps } from '../../../primitives/Text.model';
+// SectionName's model: its props and the tree both renderers draw from them (the name's Text, its
+// `data-*`, the inline size, and the name split into its word and variation). No framework:
+// `SectionName.tsx` (React) and `SectionName.svelte` (Svelte) both pass `sectionNameView` to their `Tree`.
+import { textView, type TextModelProps } from '../../../primitives/Text.model';
+import { h, styleText, type Node } from '../../../view/Tree.model';
 
 /**
  * Where a section stands: playing now, queued next, stopped, or not in the song. The app's holder
@@ -32,22 +33,6 @@ export interface SectionNameModelProps {
   size?: string;
 }
 
-/** A Text part: its Text props (no class), its class and its attributes. */
-export interface SectionNameTextPart extends ElementView {
-  text: TextModelProps;
-}
-
-/** What a renderer draws: the name (its word, then a space and the variation's Text, if any). */
-export interface SectionNameView {
-  name: SectionNameTextPart;
-  /** The name's inline custom property, or undefined for no `style`. */
-  style: Record<string, string> | undefined;
-  /** The word ("Main"), or the whole name, or "—". */
-  word: string;
-  /** The variation ("B", "III") and its Text, or null for none. */
-  variant: (SectionNameTextPart & { content: string }) | null;
-}
-
 /** "Main B" split into its word and its variation (up to three characters after the last space). */
 export function splitSectionName(label: string): { word: string; variant: string } {
   const shown = label.trim() === '' ? '—' : label.trim();
@@ -55,25 +40,29 @@ export function splitSectionName(label: string): { word: string; variant: string
   return match ? { word: match[1], variant: match[2] } : { word: shown, variant: '' };
 }
 
-/** The name SectionName draws from its props. */
-export function sectionNameView({ label, hue = 'main', state, idle = false, size }: SectionNameModelProps): SectionNameView {
+/** A Text's attributes (its class and `data-*`). */
+function text(props: TextModelProps): Record<string, string | undefined> {
+  const view = textView(props);
+  return { class: view.className, ...view.attrs };
+}
+
+/** The tree SectionName draws: the name's Text (its word, then a space and the variation's Text, if any). */
+export function sectionNameView({ label, hue = 'main', state, idle = false, size }: SectionNameModelProps): Node {
   const stands: SectionState = idle ? 'idle' : (state ?? 'playing');
   const { word, variant } = splitSectionName(label);
-  return {
-    name: {
-      text: { role: 'display', leading: 'tight' },
-      className: 'yh-section-name',
-      attrs: { 'data-part': 'name', 'data-hue': hue, 'data-state': stands, 'data-idle': idle ? 'true' : undefined },
+  return h(
+    'span',
+    {
+      ...text({ role: 'display', leading: 'tight', className: 'yh-section-name' }),
+      'data-part': 'name',
+      'data-hue': hue,
+      'data-state': stands,
+      'data-idle': idle ? 'true' : undefined,
+      style: styleText(size === undefined ? undefined : { '--yh-section-name-size': size }),
     },
-    style: size === undefined ? undefined : { '--yh-section-name-size': size },
     word,
-    variant: variant
-      ? {
-          text: { role: 'display', size: 'inherit', leading: 'tight', tabular: true },
-          className: 'yh-section-name__variant',
-          attrs: { 'data-part': 'variant' },
-          content: variant,
-        }
+    variant
+      ? [' ', h('span', { ...text({ role: 'display', size: 'inherit', leading: 'tight', tabular: true, className: 'yh-section-name__variant' }), 'data-part': 'variant' }, variant)]
       : null,
-  };
+  );
 }

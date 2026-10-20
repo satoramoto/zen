@@ -21,6 +21,11 @@ import { bindDismiss } from './yahaha/AppBar/popover';
 import { bindLineSlider } from './components/core/LineSlider/slide';
 import { bindLongPress } from './components/core/Button/longPress';
 import { bindKnob } from './components/music/Knob/knobInput';
+import { bindPad } from './components/music/Pad/padPress';
+import { bindFader } from './components/music/Fader/faderInput';
+import { bindFit } from './components/music/ChordReadout/fit';
+import { bindTempoNumber, bindTempoStep } from './components/music/TempoReadout/tempoGestures';
+import { bindBarInput } from './components/music/BarReadout/barInput';
 import type { TextModelProps } from './primitives/Text.model';
 import type { StackModelProps } from './primitives/Stack.model';
 import type { ButtonModelProps } from './components/core/Button/Button.model';
@@ -218,14 +223,16 @@ export const longPress = actionOf(bindLongPress);
 // Music controls.
 export interface PadProps extends PadModelProps {}
 export const Pad = PadSvelte as unknown as Component<PadProps>;
-export { padPress } from './components/music/Pad/padPress.svelte';
+/** Pad's press and tooltip as an action, for an app's own pad (`use:padPress={{ onPress }}`). */
+export const padPress = actionOf(bindPad);
 export interface KnobProps extends KnobModelProps {}
 export const Knob = KnobSvelte as unknown as Component<KnobProps>;
 /** Knob's input as an action, for an app's own knob (`use:knobInput={{ onstep }}`). */
 export const knobInput = actionOf(bindKnob);
 export interface FaderProps extends FaderModelProps {}
 export const Fader = FaderSvelte as unknown as Component<FaderProps>;
-export { faderInput } from './components/music/Fader/faderInput.svelte';
+/** Fader's drag, keys and wheel as an action, for an app's own fader (`use:faderInput={{ level, onlevel }}`). */
+export const faderInput = actionOf(bindFader);
 export type KeysProps = KeysModelProps;
 export const Keys = KeysSvelte as unknown as Component<KeysProps>;
 export interface MeterProps extends Omit<MeterModelProps, 'className'> {
@@ -236,17 +243,22 @@ export interface BarBeatProps extends BarBeatModelProps {}
 export const BarBeat = BarBeatSvelte as unknown as Component<BarBeatProps>;
 export interface ChordReadoutProps extends ChordReadoutModelProps {}
 export const ChordReadout = ChordReadoutSvelte as unknown as Component<ChordReadoutProps>;
-export { chordFit } from './components/music/ChordReadout/fit.svelte';
+/** ChordReadout's fit as an action (`use:chordFit={{ onFit, key }}`): every update measures again. */
+export const chordFit = actionOf(bindFit);
 export interface PartMarksProps extends PartMarksModelProps {}
 export const PartMarks = PartMarksSvelte as unknown as Component<PartMarksProps>;
 export interface SectionNameProps extends SectionNameModelProps {}
 export const SectionName = SectionNameSvelte as unknown as Component<SectionNameProps>;
 export type TempoReadoutProps = TempoReadoutModelProps;
 export const TempoReadout = TempoReadoutSvelte as unknown as Component<TempoReadoutProps>;
-export { tempoNumber, tempoStep } from './components/music/TempoReadout/tempoGestures.svelte';
+/** TempoReadout's number gestures (drag, wheel, keys, double-click reset) as an action. */
+export const tempoNumber = actionOf(bindTempoNumber);
+/** TempoReadout's + / − hold reporting as an action. */
+export const tempoStep = actionOf(bindTempoStep);
 export interface BarReadoutProps extends BarReadoutModelProps {}
 export const BarReadout = BarReadoutSvelte as unknown as Component<BarReadoutProps>;
-export { barInput } from './components/music/BarReadout/barInput.svelte';
+/** BarReadout's drag, keys, hold and reset as an action (`use:barInput={{ value, min, max, reset, onChange, onState }}`). */
+export const barInput = actionOf(bindBarInput);
 export interface SendReadoutProps extends SendReadoutModelProps {}
 export const SendReadout = SendReadoutSvelte as unknown as Component<SendReadoutProps>;
 export interface SoundCellProps extends SoundCellModelProps {

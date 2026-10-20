@@ -1,8 +1,8 @@
-import type { CSSProperties } from 'react';
+import { Tree } from '../../../view/Tree';
 import { barBeatView, type BarBeatModelProps } from './BarBeat.model';
 import './BarBeat.css';
 
-// The props, beat states and view are framework-free, in the model; `BarBeat.svelte` renders the same view.
+// The props, beat states and tree are framework-free, in the model; `BarBeat.svelte` draws the same tree.
 export { beatState } from './BarBeat.model';
 export type { BarBeatHue, BarBeatModelProps, BeatState } from './BarBeat.model';
 
@@ -41,15 +41,7 @@ export type BarBeatProps = BarBeatModelProps;
  * - `--yh-bar-beat-count`: the number of cells, set inline from `beats`.
  */
 export function BarBeat(props: BarBeatProps) {
-  const view = barBeatView(props);
-  const style = view.style as CSSProperties;
-  return (
-    <div className={view.root.className} {...view.root.attrs} style={style}>
-      {view.cells.map((cell, i) => (
-        <span key={i} className={cell.className} {...cell.attrs} />
-      ))}
-    </div>
-  );
+  return <Tree tree={barBeatView(props)} />;
 }
 
 export default BarBeat;

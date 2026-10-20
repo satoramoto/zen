@@ -1,0 +1,75 @@
+## Board
+<div class="yh-rack-cell">
+  <button aria-label="Rack: Sunday drive, on Quick Rack A1. Opens the Rack page" class="yh-rack-cell__button lib-focus-ring" data-tip="nav.rack" type="button" @click=press>
+    <span class="lib-text lib-tone yh-rack-cell__head" data-role="label" data-tabular="" data-text-size="caption">
+      <span class="yh-rack-cell__label">
+        "Rack"
+      <span aria-hidden="true" class="yh-rack-cell__separator">
+        "·"
+      <span class="lib-text lib-tone yh-rack-cell__slot" data-role="label" data-tabular="" data-text-case="none">
+        "A1"
+    <span class="lib-text lib-tone yh-rack-cell__name" data-role="caption" data-tabular="" data-text-size="body">
+      <span class="lib-text lib-tone yh-rack-cell__title" data-role="caption" data-tabular="" data-text-size="body">
+        "Sunday drive"
+
+## NoSlot
+<div class="yh-rack-cell">
+  <button aria-label="Rack: Ballad night. Opens the Rack page" class="yh-rack-cell__button lib-focus-ring" type="button" @click=press>
+    <span class="lib-text lib-tone yh-rack-cell__head" data-role="label" data-tabular="" data-text-size="caption">
+      <span class="yh-rack-cell__label">
+        "Rack"
+    <span class="lib-text lib-tone yh-rack-cell__name" data-role="caption" data-tabular="" data-text-size="body">
+      <span class="lib-text lib-tone yh-rack-cell__title" data-role="caption" data-tabular="" data-text-size="body">
+        "Ballad night"
+
+## Modified
+<div class="yh-rack-cell">
+  <button aria-label="Rack: Sunday drive, on Quick Rack A1. Opens the Rack page" class="yh-rack-cell__button lib-focus-ring" type="button" @click=press>
+    <span class="lib-text lib-tone yh-rack-cell__head" data-role="label" data-tabular="" data-text-size="caption">
+      <span class="yh-rack-cell__label">
+        "Rack"
+      <span aria-hidden="true" class="yh-rack-cell__separator">
+        "·"
+      <span class="lib-text lib-tone yh-rack-cell__slot" data-role="label" data-tabular="" data-text-case="none">
+        "A1"
+    <span class="lib-text lib-tone yh-rack-cell__name" data-role="caption" data-tabular="" data-text-size="body">
+      <span class="lib-text lib-tone yh-rack-cell__title" data-role="caption" data-tabular="" data-text-size="body">
+        "Sunday drive"
+
+## LongName
+<div class="yh-rack-cell">
+  <button aria-label="Rack: Saturday wedding set, second half with horns, on Quick Rack B4. Opens the Rack page" class="yh-rack-cell__button lib-focus-ring" type="button" @click=press>
+    <span class="lib-text lib-tone yh-rack-cell__head" data-role="label" data-tabular="" data-text-size="caption">
+      <span class="yh-rack-cell__label">
+        "Rack"
+      <span aria-hidden="true" class="yh-rack-cell__separator">
+        "·"
+      <span class="lib-text lib-tone yh-rack-cell__slot" data-role="label" data-tabular="" data-text-case="none">
+        "B4"
+    <span class="lib-text lib-tone yh-rack-cell__name" data-role="caption" data-tabular="" data-text-size="body">
+      <span class="lib-text lib-tone yh-rack-cell__title" data-role="caption" data-tabular="" data-text-size="body">
+        "Saturday wedding set, second half with horns"
+
+## Empty
+<div class="yh-rack-cell">
+  <button aria-label="Rack: No rack. Opens the Rack page" class="yh-rack-cell__button lib-focus-ring" type="button" @click=press>
+    <span class="lib-text lib-tone yh-rack-cell__head" data-role="label" data-tabular="" data-text-size="caption">
+      <span class="yh-rack-cell__label">
+        "Rack"
+    <span class="lib-text lib-tone yh-rack-cell__name" data-empty="true" data-role="caption" data-tabular="" data-text-size="body">
+      <span class="lib-text lib-tone yh-rack-cell__title" data-role="caption" data-tabular="" data-text-size="caption">
+        "No rack"
+
+## InRow
+<div class="yh-rack-cell">
+  <button aria-label="Rack: Sunday drive, on Quick Rack A1. Opens the Rack page" class="yh-rack-cell__button lib-focus-ring" type="button" @click=press>
+    <span class="lib-text lib-tone yh-rack-cell__head" data-role="label" data-tabular="" data-text-size="caption">
+      <span class="yh-rack-cell__label">
+        "Rack"
+      <span aria-hidden="true" class="yh-rack-cell__separator">
+        "·"
+      <span class="lib-text lib-tone yh-rack-cell__slot" data-role="label" data-tabular="" data-text-case="none">
+        "A1"
+    <span class="lib-text lib-tone yh-rack-cell__name" data-role="caption" data-tabular="" data-text-size="body">
+      <span class="lib-text lib-tone yh-rack-cell__title" data-role="caption" data-tabular="" data-text-size="body">
+        "Sunday drive"

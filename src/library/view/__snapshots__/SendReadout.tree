@@ -1,0 +1,53 @@
+## Board
+<button aria-label="Band sends: reverb 40, chorus 12, delay 0. Opens Effects" class="yh-send-readout" data-tip="display.band_sends" type="button" @click=press>
+  <span key=Reverb class="yh-send-readout-send">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Reverb"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "40"
+  <span key=Chorus class="yh-send-readout-send">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Chorus"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "12"
+  <span key=Delay class="yh-send-readout-send" data-off="">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Delay"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "0"
+
+## Full
+<button aria-label="Band sends: reverb 127, chorus 127, delay 127. Opens Effects" class="yh-send-readout" data-tip="display.band_sends" type="button" @click=press>
+  <span key=Reverb class="yh-send-readout-send">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Reverb"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "127"
+  <span key=Chorus class="yh-send-readout-send">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Chorus"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "127"
+  <span key=Delay class="yh-send-readout-send">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Delay"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "127"
+
+## AllOff
+<button aria-label="Band sends: reverb 0, chorus 0, delay 0. Opens Effects" class="yh-send-readout" data-tip="display.band_sends" type="button" @click=press>
+  <span key=Reverb class="yh-send-readout-send" data-off="">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Reverb"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "0"
+  <span key=Chorus class="yh-send-readout-send" data-off="">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Chorus"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "0"
+  <span key=Delay class="yh-send-readout-send" data-off="">
+    <span class="lib-text lib-tone yh-send-readout-name" data-role="body" data-text-case="label" data-text-size="label">
+      "Delay"
+    <span class="lib-text lib-tone yh-send-readout-level" data-role="numeral" data-text-size="label">
+      "0"
