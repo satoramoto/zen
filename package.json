@@ -23,11 +23,6 @@
       "types": "./lib/svelte.d.ts",
       "import": "./lib/svelte.js"
     },
-    "./storybook-svelte": {
-      "zen-source": "./src/library/storybook-svelte.ts",
-      "types": "./lib/storybook-svelte.d.ts",
-      "import": "./lib/storybook-svelte.js"
-    },
     "./harness/*": "./src/harness/*",
     "./package.json": "./package.json"
   },
@@ -48,9 +43,7 @@
     "test:watch": "vitest",
     "tiers": "tsx scripts/tiers.ts",
     "build": "tsc --noEmit && vite build",
-    "build:storybook": "storybook build --disable-telemetry",
-    "storybook:svelte": "storybook dev -c .storybook-svelte -p 6023 --no-open --disable-telemetry",
-    "build:storybook:svelte": "storybook build -c .storybook-svelte -o storybook-svelte-static --disable-telemetry"
+    "build:storybook": "storybook build --disable-telemetry"
   },
   "engines": {
     "node": ">=22.12.0"

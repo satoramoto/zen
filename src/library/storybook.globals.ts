@@ -1,5 +1,4 @@
-// The Storybook toolbar every zen Storybook shares, framework-free: `storybook.tsx` (React) and
-// `storybook-svelte.ts` (Svelte) both re-export it, so the two toolbars are one.
+// The Storybook toolbar, framework-free: `storybook.tsx` re-exports it.
 import { FROM_THEME } from './resolve';
 import { packs } from './themes/packs';
 import { palettes } from './themes/palettes';

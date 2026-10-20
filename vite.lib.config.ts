@@ -7,7 +7,7 @@
 //   app's own Storybook) → `lib/storybook.js`. Its own entry, so the main one never reaches it.
 // - `svelte` (`src/library/svelte.ts`, `./svelte`: the Svelte 5 renderers and the theme action) →
 //   `lib/svelte.js`, compiled here by vite-plugin-svelte against `svelte` (external, a peer at the
-//   compiler's minor or later), and `storybook-svelte` (`./storybook-svelte`) → `lib/storybook-svelte.js`.
+//   compiler's minor or later).
 //
 // Code the entries share is in shared chunks, `lib/chunks/zen-*.js`, so an app importing both
 // gets one copy. CSS is split per chunk (`cssCodeSplit`), and `joinStyles` then gathers every
@@ -59,7 +59,6 @@ export default defineConfig({
         index: 'src/library/index.ts',
         storybook: 'src/library/storybook.tsx',
         svelte: 'src/library/svelte.ts',
-        'storybook-svelte': 'src/library/storybook-svelte.ts',
       },
       formats: ['es'],
       fileName: (_format, name) => `${name}.js`,
