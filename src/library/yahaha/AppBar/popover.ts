@@ -1,7 +1,7 @@
 /**
- * The metronome popover's open/close handling, framework-free. `useDismiss`/`useFocusReturn`
- * (React, `usePopover.ts`) and the `dismiss` action/`focusReturn` (Svelte, `popover.svelte.ts`) wrap
- * these; neither renderer holds any of this logic.
+ * The metronome popover's open/close handling, framework-free. `src/library/view/stores.ts`
+ * registers `bindDismiss` as `dismiss` (MetronomePopover's tree binds it) and `bindFocusReturn` as
+ * `focusReturn` (AppBar's ▾ box binds it); neither renderer holds any of this logic.
  *
  * - `bindDismiss(node, params)`: while bound, Esc (caught in the capture phase, so the window's own
  *   shortcuts never see it) and a pointer press outside `node` call `onClose`. A press on the opener

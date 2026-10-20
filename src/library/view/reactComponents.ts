@@ -14,12 +14,14 @@ import { Separator } from '../components/core/Separator/Separator';
 import { StatusDot } from '../components/core/StatusDot/StatusDot';
 import { HealthSlot } from '../yahaha/HealthSlot/HealthSlot';
 import { MetronomePopover } from '../yahaha/AppBar/MetronomePopover';
+import { ChordReadout } from '../components/music/ChordReadout/ChordReadout';
+import { TempoReadout } from '../components/music/TempoReadout/TempoReadout';
 
 let registry: Record<string, ComponentType<any>> | undefined;
 
 /** The React component registered as `name`; throws for an unknown name. */
 export function reactComponent(name: string): ComponentType<any> {
-  registry ??= { Button, Knob, LampButton, SettingsRow, Tabs, LineSlider, Separator, StatusDot, HealthSlot, MetronomePopover };
+  registry ??= { Button, Knob, LampButton, SettingsRow, Tabs, LineSlider, Separator, StatusDot, HealthSlot, MetronomePopover, ChordReadout, TempoReadout };
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;

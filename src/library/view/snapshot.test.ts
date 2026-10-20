@@ -5,7 +5,7 @@
 // `npx vitest run src/library/view/snapshot.test.ts -u` records a deliberate change.
 import { describe, expect, it } from 'vitest';
 import { instances, type Fixtures } from '../fixtures';
-import { printTree, type Node } from './Tree.model';
+import { h, printTree, type Node } from './Tree.model';
 import { buttonView } from '../components/core/Button/Button.model';
 import { buttonStories } from '../components/core/Button/Button.fixtures';
 import { knobView } from '../components/music/Knob/Knob.model';
@@ -14,6 +14,23 @@ import { lampButtonView } from '../components/core/LampButton/LampButton.model';
 import { lampButtonStories } from '../components/core/LampButton/LampButton.fixtures';
 import { settingsRowView } from '../components/core/SettingsRow/SettingsRow.model';
 import { controlArgs, settingsRowSample, settingsRowStories, type SampleArgs } from '../components/core/SettingsRow/SettingsRow.fixtures';
+import { accentBlockView } from '../yahaha/AccentBlock/AccentBlock.model';
+import { accentBlockStories } from '../yahaha/AccentBlock/AccentBlock.fixtures';
+import { waitingChipView } from '../yahaha/WaitingChip/WaitingChip.model';
+import { waitingChipDrawn } from '../yahaha/WaitingChip/WaitingChip.fixtures';
+import { statusLineView } from '../yahaha/StatusLine/StatusLine.model';
+import { statusLineStories } from '../yahaha/StatusLine/StatusLine.fixtures';
+import { displayArtView } from '../yahaha/DisplayArt/DisplayArt.model';
+import { displayArtStories } from '../yahaha/DisplayArt/DisplayArt.fixtures';
+import { hueLegendView } from '../yahaha/HueLegend/HueLegend.model';
+import { hueLegendStories } from '../yahaha/HueLegend/HueLegend.fixtures';
+import { oneTouchPickerView } from '../yahaha/OneTouchPicker/OneTouchPicker.model';
+import { oneTouchPickerStories } from '../yahaha/OneTouchPicker/OneTouchPicker.fixtures';
+import { healthSlotView } from '../yahaha/HealthSlot/HealthSlot.model';
+import { healthSlotStories } from '../yahaha/HealthSlot/HealthSlot.fixtures';
+import { appBarView } from '../yahaha/AppBar/AppBar.model';
+import { metronomePopoverView } from '../yahaha/AppBar/MetronomePopover.model';
+import { appBarStories, metronomePopoverStories } from '../yahaha/AppBar/AppBar.fixtures';
 
 function snapshot<P>(name: string, view: (props: P) => Node, fixtures: Fixtures<P>): void {
   describe(name, () => {
@@ -35,3 +52,13 @@ snapshot('LampButton', (props) => lampButtonView(props as Parameters<typeof lamp
 snapshot('SettingsRow', (props) => settingsRowView(props as Parameters<typeof settingsRowView>[0], 'uid'), settingsRowStories);
 // A composite: SettingsRow holding a LampButton (component nodes, a callback by key, a filled slot).
 snapshot('SettingsRow sample', (props) => settingsRowSample({ ...controlArgs, ...props } as SampleArgs), settingsRowStories);
+snapshot('AccentBlock', (props) => accentBlockView(props as Parameters<typeof accentBlockView>[0]), accentBlockStories);
+snapshot('WaitingChip', (props) => waitingChipView(props as Parameters<typeof waitingChipView>[0])!, waitingChipDrawn);
+snapshot('StatusLine', (props) => statusLineView(props), statusLineStories);
+snapshot('DisplayArt', (props) => displayArtView(props), displayArtStories);
+snapshot('HueLegend', (props) => hueLegendView(props), hueLegendStories);
+// OneTouchPicker draws several roots in its `cells` mode (one `Tree` each); printed under a `#roots` marker.
+snapshot('OneTouchPicker', (props) => h('#roots', {}, ...oneTouchPickerView(props)), oneTouchPickerStories);
+snapshot('HealthSlot', (props) => healthSlotView(props), healthSlotStories);
+snapshot('AppBar', (props) => appBarView(props), appBarStories);
+snapshot('MetronomePopover', (props) => metronomePopoverView(props), metronomePopoverStories);

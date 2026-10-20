@@ -1,6 +1,7 @@
-// HealthSlot's stories as plain props: HealthSlot.stories.tsx (React) and HealthSlot.stories.svelte.ts
-// (Svelte) both draw them, and parity.test.tsx renders every instance in both.
-import { defineFixtures } from '../../fixtures';
+// HealthSlot's stories as plain props: HealthSlot.stories.tsx draws them with either renderer, and
+// the tree snapshot renders every instance.
+import { defineFixtures, instances } from '../../fixtures';
+import { component, h, type Node } from '../../view/Tree.model';
 import type { HealthSlotModelProps } from './HealthSlot.model';
 
 /** The controls, the same in both Storybooks. */
@@ -33,3 +34,16 @@ export const healthSlotStories = defineFixtures<HealthSlotModelProps>()({
     items: [{}, { synthOn: false }, { cpu: 0.74 }, { dropouts: 2 }, { failedPart: 2 }],
   },
 });
+
+/** The AllStates story: every state side by side in a 220px bar-like strip, each item over the
+ *  story's args (their data; `onOpen` is the handler `open`). */
+export function healthSlotAllStates(args: HealthSlotModelProps): Node {
+  const data = Object.fromEntries(Object.entries(args).filter(([, value]) => typeof value !== 'function'));
+  return h(
+    'div',
+    { style: 'display: grid; gap: var(--space-2); width: 220px' },
+    instances({ args: data, items: healthSlotStories.AllStates.items }).map((props, i) =>
+      component('HealthSlot', props, { on: { onOpen: 'open' }, key: String(i) }),
+    ),
+  );
+}

@@ -1,16 +1,9 @@
-import { useRef, type ReactNode } from 'react';
-import { Button } from '../../components/core/Button/Button';
-import { LampButton } from '../../components/core/LampButton/LampButton';
-import { Separator } from '../../components/core/Separator/Separator';
-import { StatusDot } from '../../components/core/StatusDot/StatusDot';
-import { Stack } from '../../primitives/Stack';
-import { Tabs } from '../../layout/Tabs';
-import { Text } from '../../primitives/Text';
-import { HealthSlot } from '../HealthSlot/HealthSlot';
-import { MetronomePopover } from './MetronomePopover';
-import { appBarView, type AppBarModelProps } from './AppBar.model';
-import { useFocusReturn } from './usePopover';
+import type { ReactNode } from 'react';
+import { Tree } from '../../view/Tree';
+import { appBarHandlers, appBarView, type AppBarModelProps } from './AppBar.model';
 import type { Forms } from '../../layout/assembly/types';
+import '../../primitives/Text.css';
+import '../../primitives/Stack.css';
 import './AppBar.css';
 
 /**
@@ -24,7 +17,8 @@ export const APP_BAR_FORMS: Forms<'bar'> = [
 export type { HealthTarget } from '../HealthSlot/HealthSlot';
 export type { TabItem } from '../../layout/Tabs';
 
-// The props and the bar are framework-free, in the model; `AppBar.svelte` renders the same view.
+// The props, the bar and its handlers are framework-free, in the model and the `focusReturn` store;
+// this file and `AppBar.svelte` only hand the model's tree to their `Tree`, with `end` as a slot.
 export type { AppBarModelProps } from './AppBar.model';
 
 export interface AppBarProps extends AppBarModelProps<ReactNode> {
@@ -82,163 +76,8 @@ export interface AppBarProps extends AppBarModelProps<ReactNode> {
  * gap between the global switches, a step wider than Metronome▾'s 0 join; tightened at the
  * narrowest widths).
  */
-export function AppBar(props: AppBarProps) {
-  const {
-    displayTabs,
-    fullTabs,
-    onChoose,
-    tipAction,
-    onHealth,
-    onMetronome,
-    onMetronomeSettings,
-    onMetronomeClose,
-    onMetronomeVolume,
-    onMetronomeBell,
-    onUnison,
-    onHelp,
-    onPanic,
-    end,
-  } = props;
-  const view = appBarView(props);
-  const { chosen, nowPlaying, metronome, launchkey } = view;
-  const caretBox = useRef<HTMLSpanElement>(null);
-
-  // When the popover closes with focus inside it, focus would fall to the page: give it back to ▾.
-  useFocusReturn(caretBox, metronome.open);
-
-  return (
-    <Text as="header" size="label" className="yh-appbar" data-part="root" style={view.style}>
-      <Stack direction="row" align="center" className="yh-appbar__row" data-part="row">
-        <Text size="label" weight="strong" className="yh-appbar__name" data-part="name">yahaha</Text>
-
-        <Stack as="nav" direction="row" gap={0} align="center" className="yh-appbar__nav" data-part="nav" aria-label="Pages">
-          <Tabs name="Display pages" items={displayTabs} value={chosen} onChange={(id) => onChoose?.(id)} tipAction={tipAction} />
-          <span className="yh-appbar__runs-gap" data-part="runs-gap">
-            <Separator />
-          </span>
-          <Tabs name="Full pages" items={fullTabs} value={chosen} onChange={(id) => onChoose?.(id)} tipAction={tipAction} />
-        </Stack>
-
-        <span className="yh-appbar__middle" data-part="middle">
-          {nowPlaying && (
-            <span className="yh-appbar__playing" data-part="playing" aria-label={nowPlaying.label}>
-              <Text size="label" weight="strong" tabular className="yh-appbar__style" data-part="style">{nowPlaying.style}</Text>
-              <Text role="numeral" size="label" className="yh-appbar__tempo" data-part="tempo">{nowPlaying.tempo}</Text>
-              <span className="yh-appbar__unit" data-part="unit">BPM</span>
-            </span>
-          )}
-        </span>
-
-        {end !== undefined && (
-          <Stack as="span" direction="row" align="center" className="yh-appbar__end" data-part="end">
-            <Separator />
-            {end}
-          </Stack>
-        )}
-
-        <Stack as="span" direction="row" align="center" className="yh-appbar__switches" data-part="switches" role="group" aria-label="Global switches">
-          <Stack as="span" direction="row" gap={0} align="center" className="yh-appbar__metronome" data-part="metronome" role="group" aria-label="Metronome">
-            <LampButton
-              label="Metronome"
-              on={metronome.on}
-              hue={metronome.hue}
-              join="start"
-              name="Metronome"
-              tip="metronome.on"
-              tipAction={tipAction}
-              onToggle={(next) => onMetronome?.(next)}
-            />
-            <span ref={caretBox} className="yh-appbar__caret" data-part="caret">
-              <Button
-                symbol="caret"
-                size="caret"
-                join="end"
-                popup="dialog"
-                expanded={metronome.open}
-                controls={metronome.id}
-                name="Metronome settings: on/off, volume, bell on beat 1"
-                tip="metronome.settings"
-                tipAction={tipAction}
-                onPress={() => onMetronomeSettings?.()}
-              />
-            </span>
-            {metronome.open && (
-              <span className="yh-appbar__popover" data-part="popover">
-                <MetronomePopover
-                  id={metronome.id}
-                  on={metronome.on}
-                  volume={metronome.volume}
-                  bell={metronome.bell}
-                  audible={metronome.audible}
-                  tipAction={tipAction}
-                  onOn={(next) => onMetronome?.(next)}
-                  onVolume={(v) => onMetronomeVolume?.(v)}
-                  onBell={(next) => onMetronomeBell?.(next)}
-                  onClose={() => onMetronomeClose?.()}
-                />
-              </span>
-            )}
-          </Stack>
-          <LampButton
-            label="Unison"
-            on={view.unison}
-            name="Unison"
-            tip="transport.unison"
-            tipAction={tipAction}
-            onToggle={(next) => onUnison?.(next)}
-          />
-          <Button
-            label="?"
-            size="icon"
-            on={view.help}
-            pressed={view.help}
-            name="Help mode: point at any control to learn what it does"
-            tip="app.help"
-            tipAction={tipAction}
-            onPress={() => onHelp?.(!view.help)}
-          />
-        </Stack>
-
-        <Stack as="span" direction="row" align="center" className="yh-appbar__status" data-part="status" role="group" aria-label="Connections">
-          <Separator />
-          <Stack
-            as="span"
-            direction="row"
-            gap={2}
-            align="center"
-            className="yh-appbar__launchkey"
-            data-part="launchkey"
-            role="status"
-            title={launchkey.label}
-            data-connected={launchkey.connected}
-            aria-label={launchkey.label}
-          >
-            <StatusDot hue={launchkey.dot.hue} hollow={launchkey.dot.hollow} />
-            <Text size="label" case="label" className="yh-appbar__launchkey-word" data-part="launchkey-word">Launchkey</Text>
-          </Stack>
-          <span className="yh-appbar__health" data-part="health">
-            <HealthSlot
-              {...view.health}
-              tipAction={tipAction}
-              onOpen={onHealth}
-            />
-          </span>
-        </Stack>
-
-        <Stack as="span" direction="row" align="center" className="yh-appbar__panic" data-part="panic">
-          <Separator />
-          <Button
-            label="Panic"
-            hue="rec"
-            name="Panic: all notes off"
-            tip="transport.panic"
-            tipAction={tipAction}
-            onPress={() => onPanic?.()}
-          />
-        </Stack>
-      </Stack>
-    </Text>
-  );
+export function AppBar({ end, ...props }: AppBarProps) {
+  return <Tree tree={appBarView(props, { end: end !== undefined })} slots={{ end }} handlers={appBarHandlers(props)} />;
 }
 
 export default AppBar;

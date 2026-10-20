@@ -1,13 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
+import { fixtureStories, withRenderer } from '../../stories/story';
 import { StatusLine } from './StatusLine';
+import StatusLineSvelte from './StatusLine.svelte';
 import { ERROR, LONG_TEXT, statusLineArgTypes, statusLineStories as s } from './StatusLine.fixtures';
 
+// Every story is built from StatusLine.fixtures.ts (`story(s.Name)`), which the tree snapshot shares;
+// the toolbar's Renderer draws it with React's or Svelte's `Tree`. The plays are the behaviours.
 const meta = {
   title: 'Yahaha/Primitives/StatusLine',
   component: StatusLine,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'centered' },
   args: { onClear: fn(), tip: 'display.status' },
   argTypes: statusLineArgTypes,
@@ -15,10 +19,11 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(StatusLine, StatusLineSvelte);
 
 /** The Stage at the board fixture: no message, so an empty row that keeps its height. */
 export const Board: Story = {
-  args: s.Board.args,
+  ...story(s.Board),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const status = canvas.getByRole('status');
@@ -29,7 +34,7 @@ export const Board: Story = {
 
 /** A refusal: the error chip (mark and word), then the message in the primary text role. */
 export const Error: Story = {
-  args: s.Error.args,
+  ...story(s.Error),
   play: async ({ canvasElement }) => {
     const status = within(canvasElement).getByRole('status');
     const button = within(status).getByRole('button', { name: `Error: ${ERROR}` });
@@ -40,7 +45,7 @@ export const Error: Story = {
 
 /** A notice: the text alone, from the left edge. */
 export const Notice: Story = {
-  args: s.Notice.args,
+  ...story(s.Notice),
   play: async ({ canvasElement }) => {
     const button = within(canvasElement).getByRole('button', { name: 'Added SlowWalker.T552 to the library and loaded it.' });
     await expect(button).toHaveAttribute('data-tip', 'display.status');
@@ -50,7 +55,7 @@ export const Notice: Story = {
 
 /** A click, Enter or Space on the line asks the parent to clear it (`onClear`). */
 export const Clears: Story = {
-  args: s.Clears.args,
+  ...story(s.Clears),
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: 'One Touch 3 applied · Recovered: Sunday drive' });
     await expect(button).toHaveAttribute('data-tip', 'display.status');
@@ -67,7 +72,7 @@ export const Clears: Story = {
 
 /** A hovered control's tooltip in the line's place: the title, what it does, its key and Launchkey place. */
 export const Hint: Story = {
-  args: s.Hint.args,
+  ...story(s.Hint),
   play: async ({ canvasElement }) => {
     const status = within(canvasElement).getByRole('status');
     const hint = status.querySelector('.yh-status-line-hint')!;
@@ -81,7 +86,7 @@ export const Hint: Story = {
 
 /** A hint over an error: the hint shows; the error stays in the live region, not drawn. */
 export const HintOverMessage: Story = {
-  args: s.HintOverMessage.args,
+  ...story(s.HintOverMessage),
   play: async ({ canvasElement }) => {
     const status = within(canvasElement).getByRole('status');
     await expect(status.querySelector('.yh-status-line-hint')!.textContent).toContain('Accomp');
@@ -93,7 +98,7 @@ export const HintOverMessage: Story = {
 
 /** A message too long for 600px: one line ending in "…", the row keeps its height; the whole text stays in the name. */
 export const LongText: Story = {
-  args: s.LongText.args,
+  ...story(s.LongText),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: `Error: ${LONG_TEXT}` });
@@ -103,12 +108,8 @@ export const LongText: Story = {
 };
 
 /** Keyboard focus: the ring in the accent role round the chip and text, and the clear mark shown. */
-export const Focused: Story = {
-  args: s.Focused.args,
-  parameters: { pseudo: { focusVisible: true } },
-};
+const focused = story(s.Focused);
+export const Focused: Story = { ...focused, parameters: { ...focused.parameters, pseudo: { focusVisible: true } } };
 
 /** A narrow hint: the key and Launchkey place give way before the title. */
-export const HintNarrow: Story = {
-  args: s.HintNarrow.args,
-};
+export const HintNarrow: Story = story(s.HintNarrow);

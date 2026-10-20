@@ -1,0 +1,204 @@
+## Board
+<span class="lib-text lib-tone yh-health-slot" data-hue="m" data-part="root" data-role="label" data-state="calm" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: fine"
+  <span class="yh-health-slot__calm" data-part="calm">
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="calm">
+      <StatusDot hollow=false hue="ok">
+    <span aria-hidden="true" class="yh-health-slot__text" data-part="text" data-tip="app.health" use:tip={"tip":"app.health","tipAction":"tipAction"}>
+      "Audio"
+
+## Cpu
+<span class="lib-text lib-tone yh-health-slot" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: CPU 74%"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      "CPU "
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "74%"
+
+## Failed
+<span class="lib-text lib-tone yh-health-slot" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: R3 failed"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      "R3 failed"
+
+## FailedBeatsOff
+<span class="lib-text lib-tone yh-health-slot" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: L failed"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      "L failed"
+
+## AudioOff
+<span class="lib-text lib-tone yh-health-slot" data-hue="m" data-part="root" data-role="label" data-state="off" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: Audio off"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="off">
+      <StatusDot hollow=true hue="d">
+    <span class="yh-health-slot__text" data-part="text">
+      "Audio off"
+
+## Dropouts
+<span class="lib-text lib-tone yh-health-slot" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: 2 dropouts"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "2"
+      " dropouts"
+
+## OneDropout
+<span class="lib-text lib-tone yh-health-slot" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: 1 dropout"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "1"
+      " dropout"
+
+## BufferHint
+<span class="lib-text lib-tone yh-health-slot yh-health-slot--fill" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: 3 dropouts · buffer 256?"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "3"
+      " dropouts · buffer "
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "256"
+      "?"
+
+## BufferHintInBar
+<span class="lib-text lib-tone yh-health-slot" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: 3 dropouts · buffer 256?"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "3"
+      " dropouts · buffer "
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "256"
+      "?"
+
+## LargestBuffer
+<span class="lib-text lib-tone yh-health-slot" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body" style="width: 100px">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: 3 dropouts"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "3"
+      " dropouts"
+
+## AllStates #1
+<span class="lib-text lib-tone yh-health-slot yh-health-slot--fill" data-hue="m" data-part="root" data-role="label" data-state="calm" data-tabular="" data-text-case="none" data-text-weight="body">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: fine"
+  <span class="yh-health-slot__calm" data-part="calm">
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="calm">
+      <StatusDot hollow=false hue="ok">
+    <span aria-hidden="true" class="yh-health-slot__text" data-part="text" data-tip="app.health" use:tip={"tip":"app.health","tipAction":"tipAction"}>
+      "Audio"
+
+## AllStates #2
+<span class="lib-text lib-tone yh-health-slot yh-health-slot--fill" data-hue="m" data-part="root" data-role="label" data-state="off" data-tabular="" data-text-case="none" data-text-weight="body">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: Audio off"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="off">
+      <StatusDot hollow=true hue="d">
+    <span class="yh-health-slot__text" data-part="text">
+      "Audio off"
+
+## AllStates #3
+<span class="lib-text lib-tone yh-health-slot yh-health-slot--fill" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: CPU 74%"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      "CPU "
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "74%"
+
+## AllStates #4
+<span class="lib-text lib-tone yh-health-slot yh-health-slot--fill" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: 2 dropouts"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      <span class="lib-text lib-tone yh-health-slot__num" data-part="num" data-role="numeral" data-text-size="inherit">
+        "2"
+      " dropouts"
+
+## AllStates #5
+<span class="lib-text lib-tone yh-health-slot yh-health-slot--fill" data-hue="ending" data-part="root" data-role="label" data-state="trouble" data-tabular="" data-text-case="none" data-text-weight="body">
+  <span class="yh-health-slot__live" data-part="live" role="status">
+    "Audio health: R3 failed"
+  <button class="lib-text lib-tone yh-health-slot__button" data-part="button" data-role="label" data-tabular="" data-text-case="none" data-text-weight="body" data-tip="app.health" type="button" @click=open use:tip={"tip":"app.health","tipAction":"tipAction"}>
+    <span aria-hidden="true" class="yh-health-slot__mark" data-part="mark" data-state="trouble">
+      <svg class="yh-health-slot__triangle" data-part="triangle" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M6 1.5 L11 10.5 H1 Z">
+        <path d="M6 5 V7.4">
+        <circle cx="6" cy="8.9" r="0.6">
+    <span class="yh-health-slot__text" data-part="text">
+      "R3 failed"

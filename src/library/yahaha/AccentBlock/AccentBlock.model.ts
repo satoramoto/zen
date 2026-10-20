@@ -1,11 +1,13 @@
-// AccentBlock's model: its props and the block it draws from them (the element, its classes,
-// `data-*`, ARIA and inline style, the shown text, the chevron). No framework: `AccentBlock.tsx`
-// (React) and `AccentBlock.svelte` (Svelte) both render `accentBlockView`; the tooltip binding is
-// the store beside it (`tip.ts`).
-import type { ElementView, TextModelProps } from '../../primitives/Text.model';
-import type { TipAction } from './tip';
+// AccentBlock's model: its props, the tree it draws from them (the element, its classes, `data-*`,
+// ARIA and inline style, the shown text, the chevron) and the handlers that tree names. No
+// framework: `AccentBlock.tsx` (React) and `AccentBlock.svelte` (Svelte) both pass
+// `accentBlockView` and `accentBlockHandlers` to their `Tree`; the tooltip is the kernel's `tip`
+// store (`src/library/view/tip.ts`).
+import { textView } from '../../primitives/Text.model';
+import { h, styleText, when, wire, type Handlers, type Node } from '../../view/Tree.model';
+import type { TipAction } from '../../components/core/Button/Button.model';
 
-export type { TipAction } from './tip';
+export type { TipAction };
 
 export interface AccentBlockModelProps {
   /** The text in the block ("Sunday Drive Pop", "Style", "Swap R1"). */
@@ -33,28 +35,11 @@ export interface AccentBlockModelProps {
   chevron?: boolean;
 }
 
-/** Inline style declarations, property to value (custom properties included). */
-export type StyleMap = Record<string, string>;
-
-/** What a renderer draws: the block (a `Text`), its text and whether it has a chevron. */
-export interface AccentBlockView {
-  /** The block's element: `button` or `span`. */
-  as: 'button' | 'span';
-  /** The block's Text props. */
-  text: TextModelProps;
-  /** The block's class (beside Text's own) and its `type`, `data-*` and ARIA attributes. */
-  block: ElementView;
-  /** The block's inline style, or undefined for none. */
-  style: StyleMap | undefined;
-  /** The text shown: the label, or `empty` when the label is blank. */
-  shown: string;
-  /** Whether the trailing chevron is drawn (`button` only). */
-  chevron: boolean;
-  /** Whether the tooltip hook applies: a button with both `tip` and `tipAction`. */
-  tip: boolean;
-}
-
-/** The block AccentBlock draws from its props. */
+/**
+ * The tree AccentBlock draws from its props: the block (a `label` Text as a `button` or a `span`),
+ * its text (the label, or `empty` when the label is blank) and, on a button, the chevron. A button
+ * calls `press` on a click and binds the tooltip store when it has a `tip` (a span never does).
+ */
 export function accentBlockView({
   label,
   empty = '—',
@@ -63,16 +48,17 @@ export function accentBlockView({
   width,
   name,
   tip,
-  tipAction,
   chevron = true,
-}: AccentBlockModelProps): AccentBlockView {
+}: AccentBlockModelProps): Node {
   const button = as === 'button';
-  return {
-    as: button ? 'button' : 'span',
-    text: { role: 'label', size: 'body', leading: 'tight', tabular: true },
-    block: {
-      className: 'yh-accentblock',
-      attrs: button
+  const text = textView({ role: 'label', size: 'body', leading: 'tight', tabular: true, className: 'yh-accentblock' });
+  const block = h(
+    button ? 'button' : 'span',
+    {
+      class: text.className,
+      ...text.attrs,
+      style: styleText(width === undefined ? undefined : { width: `${width}px` }),
+      ...(button
         ? {
             type: 'button',
             'aria-label': name,
@@ -82,16 +68,25 @@ export function accentBlockView({
             'data-size': size,
             'data-tip': tip,
           }
-        : { 'data-part': 'block', 'data-face': 'accent', 'data-size': size },
+        : { 'data-part': 'block', 'data-face': 'accent', 'data-size': size }),
     },
-    style: width === undefined ? undefined : { width: `${width}px` },
-    shown: label.trim() === '' ? empty : label,
-    chevron: button && chevron,
-    tip: button && !!tip && tipAction !== undefined,
-  };
+    h('span', { class: 'yh-accentblock__text', 'data-part': 'text' }, label.trim() === '' ? empty : label),
+    when(button && chevron, () =>
+      h('svg', { class: 'yh-accentblock__chevron', 'data-part': 'chevron', viewBox: '0 0 12 12', 'aria-hidden': 'true' }, h('path', { d: 'M4.5 2.5 8 6l-3.5 3.5' })),
+    ),
+  );
+  if (!button) return block;
+  return wire(block, {
+    on: { click: 'press' },
+    // A blank key draws no tooltip; the store applies a key only with an action to apply.
+    ...(tip ? { bind: [['tip', { tip, tipAction: 'tipAction' }]] } : {}),
+  });
 }
 
-/** A style map as an inline `style` string (`width: 240px`), or undefined for none. */
-export function styleText(style: StyleMap | undefined): string | undefined {
-  return style === undefined ? undefined : Object.entries(style).map(([property, value]) => `${property}: ${value}`).join('; ');
+/** The callbacks `accentBlockView`'s tree names: `press` (the button's click) and the tooltip's. */
+export function accentBlockHandlers(props: AccentBlockModelProps): Handlers {
+  return {
+    press: () => props.onPress?.(),
+    tipAction: props.tipAction,
+  };
 }

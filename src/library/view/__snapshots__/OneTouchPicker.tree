@@ -1,0 +1,85 @@
+## Board
+<#roots>
+  <div key=root aria-label="One Touch Setting (OTS): 2 applied. Click to apply; on the Launchkey, Shift + pads 9 to 12" class="yh-onetouchpicker" data-orientation="horizontal" data-part="root" role="group">
+    <span key=label aria-hidden="true" class="lib-text lib-tone yh-onetouchpicker__label" data-part="label" data-role="caption" data-text-case="label">
+      "One Touch"
+    <span class="yh-onetouchpicker__strip" data-part="strip">
+      <button key=1 aria-label="Apply One Touch 1 (Shift + pad 9)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.1" type="button" @click=apply1 use:tip={"tip":"ots.1","tipAction":"tipAction"}>
+        "1"
+      <button key=2 aria-label="One Touch 2, applied (Shift + pad 10)" aria-pressed="true" class="lib-text lib-tone yh-onetouchpicker__number" data-face="chosen" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.2" type="button" @click=apply2 use:tip={"tip":"ots.2","tipAction":"tipAction"}>
+        "2"
+      <button key=3 aria-label="Apply One Touch 3 (Shift + pad 11)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.3" type="button" @click=apply3 use:tip={"tip":"ots.3","tipAction":"tipAction"}>
+        "3"
+      <button key=4 aria-label="Apply One Touch 4 (Shift + pad 12)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.4" type="button" @click=apply4 use:tip={"tip":"ots.4","tipAction":"tipAction"}>
+        "4"
+
+## NoneApplied
+<#roots>
+  <div key=root aria-label="One Touch Setting (OTS): none applied. Click to apply; on the Launchkey, Shift + pads 9 to 12" class="yh-onetouchpicker" data-orientation="horizontal" data-part="root" role="group">
+    <span key=label aria-hidden="true" class="lib-text lib-tone yh-onetouchpicker__label" data-part="label" data-role="caption" data-text-case="label">
+      "One Touch"
+    <span class="yh-onetouchpicker__strip" data-part="strip">
+      <button key=1 aria-label="Apply One Touch 1 (Shift + pad 9)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.1" type="button" @click=apply1 use:tip={"tip":"ots.1","tipAction":"tipAction"}>
+        "1"
+      <button key=2 aria-label="Apply One Touch 2 (Shift + pad 10)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.2" type="button" @click=apply2 use:tip={"tip":"ots.2","tipAction":"tipAction"}>
+        "2"
+      <button key=3 aria-label="Apply One Touch 3 (Shift + pad 11)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.3" type="button" @click=apply3 use:tip={"tip":"ots.3","tipAction":"tipAction"}>
+        "3"
+      <button key=4 aria-label="Apply One Touch 4 (Shift + pad 12)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.4" type="button" @click=apply4 use:tip={"tip":"ots.4","tipAction":"tipAction"}>
+        "4"
+
+## Vertical
+<#roots>
+  <div key=root aria-label="One Touch Setting (OTS): 2 applied. Click to apply; on the Launchkey, Shift + pads 9 to 12" class="yh-onetouchpicker" data-orientation="vertical" data-part="root" role="group">
+    <span key=label aria-hidden="true" class="lib-text lib-tone yh-onetouchpicker__label" data-part="label" data-role="caption" data-text-case="label">
+      "One Touch"
+    <span class="yh-onetouchpicker__strip" data-part="strip">
+      <button key=1 aria-label="Apply One Touch 1 (Shift + pad 9)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.1" type="button" @click=apply1 use:tip={"tip":"ots.1","tipAction":"tipAction"}>
+        "1"
+      <button key=2 aria-label="One Touch 2, applied (Shift + pad 10)" aria-pressed="true" class="lib-text lib-tone yh-onetouchpicker__number" data-face="chosen" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.2" type="button" @click=apply2 use:tip={"tip":"ots.2","tipAction":"tipAction"}>
+        "2"
+      <button key=3 aria-label="Apply One Touch 3 (Shift + pad 11)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.3" type="button" @click=apply3 use:tip={"tip":"ots.3","tipAction":"tipAction"}>
+        "3"
+      <button key=4 aria-label="Apply One Touch 4 (Shift + pad 12)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.4" type="button" @click=apply4 use:tip={"tip":"ots.4","tipAction":"tipAction"}>
+        "4"
+
+## Cells
+<#roots>
+  <span key=label class="lib-text lib-tone yh-onetouchpicker__label yh-onetouchpicker__cell" data-part="label" data-role="caption" data-text-case="label">
+    "One Touch"
+  <button key=1 aria-label="Apply One Touch 1 (Shift + pad 9)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="off" data-ink="neutral" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.1" type="button" @click=apply1 use:tip={"tip":"ots.1","tipAction":"tipAction"}>
+    "1"
+  <button key=2 aria-label="One Touch 2, applied (Shift + pad 10)" aria-pressed="true" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="on" data-ink="neutral" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.2" type="button" @click=apply2 use:tip={"tip":"ots.2","tipAction":"tipAction"}>
+    "2"
+  <button key=3 aria-label="Apply One Touch 3 (Shift + pad 11)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="off" data-ink="neutral" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.3" type="button" @click=apply3 use:tip={"tip":"ots.3","tipAction":"tipAction"}>
+    "3"
+  <button key=4 aria-label="Apply One Touch 4 (Shift + pad 12)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="disabled" data-ink="neutral" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.4" disabled="" type="button" @click=apply4 use:tip={"tip":"ots.4","tipAction":"tipAction"}>
+    "4"
+
+## CellsViolet
+<#roots>
+  <span key=label class="lib-text lib-tone yh-onetouchpicker__label yh-onetouchpicker__cell" data-part="label" data-role="caption" data-text-case="label">
+    "One Touch"
+  <button key=1 aria-label="Apply One Touch 1 (Shift + pad 9)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="off" data-ink="a" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.1" type="button" @click=apply1 use:tip={"tip":"ots.1","tipAction":"tipAction"}>
+    "1"
+  <button key=2 aria-label="One Touch 2, applied (Shift + pad 10)" aria-pressed="true" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="on" data-ink="a" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.2" type="button" @click=apply2 use:tip={"tip":"ots.2","tipAction":"tipAction"}>
+    "2"
+  <button key=3 aria-label="Apply One Touch 3 (Shift + pad 11)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="off" data-ink="a" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.3" type="button" @click=apply3 use:tip={"tip":"ots.3","tipAction":"tipAction"}>
+    "3"
+  <button key=4 aria-label="Apply One Touch 4 (Shift + pad 12)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number yh-onetouchpicker__cell" data-face="off" data-ink="a" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.4" type="button" @click=apply4 use:tip={"tip":"ots.4","tipAction":"tipAction"}>
+    "4"
+
+## TwoSettings
+<#roots>
+  <div key=root aria-label="One Touch Setting (OTS): 1 applied. Click to apply; on the Launchkey, Shift + pads 9 to 12" class="yh-onetouchpicker" data-orientation="horizontal" data-part="root" role="group">
+    <span key=label aria-hidden="true" class="lib-text lib-tone yh-onetouchpicker__label" data-part="label" data-role="caption" data-text-case="label">
+      "One Touch"
+    <span class="yh-onetouchpicker__strip" data-part="strip">
+      <button key=1 aria-label="One Touch 1, applied (Shift + pad 9)" aria-pressed="true" class="lib-text lib-tone yh-onetouchpicker__number" data-face="chosen" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.1" type="button" @click=apply1 use:tip={"tip":"ots.1","tipAction":"tipAction"}>
+        "1"
+      <button key=2 aria-label="Apply One Touch 2 (Shift + pad 10)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.2" type="button" @click=apply2 use:tip={"tip":"ots.2","tipAction":"tipAction"}>
+        "2"
+      <button key=3 aria-label="Apply One Touch 3 (Shift + pad 11)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.3" disabled="" type="button" @click=apply3 use:tip={"tip":"ots.3","tipAction":"tipAction"}>
+        "3"
+      <button key=4 aria-label="Apply One Touch 4 (Shift + pad 12)" aria-pressed="false" class="lib-text lib-tone yh-onetouchpicker__number" data-face="off" data-material="key" data-part="number" data-role="numeral" data-text-size="label" data-tip="ots.4" disabled="" type="button" @click=apply4 use:tip={"tip":"ots.4","tipAction":"tipAction"}>
+        "4"

@@ -1,5 +1,5 @@
-// AppBar's and MetronomePopover's stories as plain props: their `.stories.tsx` (React) and
-// `.stories.svelte.ts` (Svelte) both draw them, and parity.test.tsx renders every instance in both.
+// AppBar's and MetronomePopover's stories as plain props: their `.stories.tsx` build every story
+// from them (both renderers), and `view/snapshot.test.ts` snapshots each instance's tree.
 import { defineFixtures } from '../../fixtures';
 import type { TabItemModel } from '../../layout/Tabs.model';
 import type { AppBarModelProps } from './AppBar.model';

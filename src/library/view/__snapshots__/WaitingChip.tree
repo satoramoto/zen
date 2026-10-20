@@ -1,0 +1,54 @@
+## Board
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="main" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label" style="--yh-waiting-chip-hue: var(--accent)">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Main C"
+
+## Display
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--display" data-face="waiting" data-hue="t" data-part="chip" data-role="display" data-size="display" data-tabular="">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Main C"
+
+## QueuedStyle
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--line" data-face="waiting" data-hue="a" data-part="chip" data-role="body" data-size="line" data-tabular="" data-text-size="label">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Coastal Highway"
+
+## LongStyle
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--line" data-face="waiting" data-hue="a" data-part="chip" data-role="body" data-size="line" data-tabular="" data-text-size="label">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Coastal Highway Cruise Unplugged Ballad"
+
+## AllHues #1
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="intro" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label" style="--yh-waiting-chip-hue: var(--accent)">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Intro II"
+
+## AllHues #2
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="main" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label" style="--yh-waiting-chip-hue: var(--accent)">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Main C"
+
+## AllHues #3
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="fill" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label" style="--yh-waiting-chip-hue: var(--accent)">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Fill B"
+
+## AllHues #4
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="brk" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label" style="--yh-waiting-chip-hue: var(--accent)">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Break"
+
+## AllHues #5
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="ending" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label" style="--yh-waiting-chip-hue: var(--accent)">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Ending III"
+
+## AllHues #6
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="a" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Coastal Highway"
+
+## AllHues #7
+<span class="lib-text lib-tone yh-waiting-chip yh-waiting-chip--count" data-face="waiting" data-hue="t" data-part="chip" data-role="body" data-size="count" data-tabular="" data-text-size="label">
+  <span aria-hidden="true" class="yh-waiting-chip__arrow" data-part="arrow">
+  "Main D"

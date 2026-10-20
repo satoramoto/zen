@@ -12,12 +12,14 @@ import Separator from '../components/core/Separator/Separator.svelte';
 import StatusDot from '../components/core/StatusDot/StatusDot.svelte';
 import HealthSlot from '../yahaha/HealthSlot/HealthSlot.svelte';
 import MetronomePopover from '../yahaha/AppBar/MetronomePopover.svelte';
+import ChordReadout from '../components/music/ChordReadout/ChordReadout.svelte';
+import TempoReadout from '../components/music/TempoReadout/TempoReadout.svelte';
 
 let registry: Record<string, Component<any>> | undefined;
 
 /** The Svelte component registered as `name`; throws for an unknown name. */
 export function svelteComponent(name: string): Component<any> {
-  registry ??= { Button, Knob, LampButton, SettingsRow, Tabs, LineSlider, Separator, StatusDot, HealthSlot, MetronomePopover } as Record<string, Component<any>>;
+  registry ??= { Button, Knob, LampButton, SettingsRow, Tabs, LineSlider, Separator, StatusDot, HealthSlot, MetronomePopover, ChordReadout, TempoReadout } as Record<string, Component<any>>;
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;

@@ -1,9 +1,10 @@
-// HueLegend's model: its props, the default entries, and the view a renderer draws (the list, each
-// entry with its part's `data-hue`, the chip and the word). No framework: `HueLegend.tsx` (React)
-// and `HueLegend.svelte` (Svelte) both render `hueLegendView`.
+// HueLegend's model: its props, the default entries, and the tree it draws (the list, each entry
+// with its part's `data-hue`, the chip and the word). No framework: `HueLegend.tsx` (React) and
+// `HueLegend.svelte` (Svelte) both draw `hueLegendView` with `Tree`.
 import type { HueSlot as Hue } from '../../components/core/hue';
-import type { StackModelProps } from '../../primitives/Stack.model';
-import type { ElementView, TextModelProps } from '../../primitives/Text.model';
+import { stackView } from '../../primitives/Stack.model';
+import { textView } from '../../primitives/Text.model';
+import { each, h, type Node } from '../../view/Tree.model';
 import { PART_HUE_INDEX, type Part } from '../hues';
 
 /** A section family, as the original names its colour token. Sections take no hue now. */
@@ -48,44 +49,32 @@ export interface HueLegendProps {
   label?: string;
 }
 
-/** A Stack-rendered element: its Stack props, its class (beside Stack's own) and its attributes. */
-export interface StackElementView extends ElementView {
-  stack: Omit<StackModelProps, 'className'>;
-}
-
-/** One entry: the `li` Stack, then a chip and the word. */
-export interface HueLegendEntryView extends StackElementView {
-  key: string;
-  label: string;
-}
-
-/** What a renderer draws. */
-export interface HueLegendView {
-  /** The `ul` Stack. */
-  list: StackElementView;
-  entries: HueLegendEntryView[];
-  /** Every entry's chip (a `span`). */
-  chip: ElementView;
-  /** Every entry's word: a Text with these props and class. */
-  word: { text: TextModelProps; className: string };
-}
-
 /** The `data-hue` of an entry: its part's hue slot, or none for a section. */
 export function entryHue(item: HueLegendItem): string | undefined {
   return item.part ? String(PART_HUE_INDEX[item.part]) : undefined;
 }
 
-export function hueLegendView({ items = PART_LEGEND, label = 'Part colours' }: HueLegendProps): HueLegendView {
-  return {
-    list: { stack: { direction: 'row', gap: 4, align: 'center' }, className: 'yh-huelegend', attrs: { 'aria-label': label } },
-    entries: items.map((item, i) => ({
-      key: `${i}-${item.label}`,
-      label: item.label,
-      stack: { direction: 'row', gap: 2, align: 'center' },
-      className: 'yh-huelegend__item',
-      attrs: { 'data-part': item.part, 'data-section': item.hue, 'data-hue': entryHue(item) },
-    })),
-    chip: { className: 'yh-huelegend__chip', attrs: { 'aria-hidden': 'true' } },
-    word: { text: { role: 'caption', case: 'label', leading: 'tight' }, className: 'yh-huelegend__word' },
-  };
+/**
+ * The tree HueLegend draws: a row Stack as a `ul` named by `label`, and per entry a row Stack as an
+ * `li` (its part's `data-hue`), a decorative chip and the word, a `caption` Text.
+ */
+export function hueLegendView({ items = PART_LEGEND, label = 'Part colours' }: HueLegendProps): Node {
+  const list = stackView({ direction: 'row', gap: 4, align: 'center', className: 'yh-huelegend' });
+  const entry = stackView({ direction: 'row', gap: 2, align: 'center', className: 'yh-huelegend__item' });
+  const word = textView({ role: 'caption', case: 'label', leading: 'tight', className: 'yh-huelegend__word' });
+  return h(
+    'ul',
+    { class: list.className, ...list.attrs, 'aria-label': label },
+    each(
+      items,
+      (item, i) => `${i}-${item.label}`,
+      (item) =>
+        h(
+          'li',
+          { class: entry.className, ...entry.attrs, 'data-part': item.part, 'data-section': item.hue, 'data-hue': entryHue(item) },
+          h('span', { class: 'yh-huelegend__chip', 'aria-hidden': 'true' }),
+          h('span', { class: word.className, ...word.attrs }, item.label),
+        ),
+    ),
+  );
 }
