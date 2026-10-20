@@ -1,7 +1,10 @@
-// HealthSlot's model: its props and what it draws from them (the root's classes and data, the live
-// words, the button or the calm text, the mark's state, the text split into words and numerals). No
-// framework: `HealthSlot.tsx` (React) and `HealthSlot.svelte` (Svelte) both render `healthSlotView`.
-import type { TipAction } from '../../components/music/Pad/Pad.model';
+// HealthSlot's model: its props, the tree it draws from them (the root's classes and data, the live
+// words, the button or the calm text, the mark, the text split into words and numerals) and the
+// handlers that tree names. No framework: `HealthSlot.tsx` (React) and `HealthSlot.svelte` (Svelte)
+// both pass `healthSlotView` and `healthSlotHandlers` to their `Tree`.
+import type { TipAction } from '../../components/core/Button/Button.model';
+import { textView } from '../../primitives/Text.model';
+import { component, h, styleText, wire, type Bind, type Handlers, type Node } from '../../view/Tree.model';
 import { health, type HealthTarget } from './health';
 
 export type { HealthTarget } from './health';
@@ -37,18 +40,14 @@ export interface HealthWord {
   numeral: boolean;
 }
 
-/** What a renderer draws. */
-export interface HealthSlotView {
-  /** The root's class, data and inline width (`style` for React, `styleText` for Svelte). */
-  className: string;
-  attrs: Record<string, string | undefined>;
-  style: Record<string, string> | undefined;
-  styleText: string | undefined;
+/** What the slot shows, decided from the props. */
+export interface HealthSlotState {
   /** The hidden polite live region's words. */
   label: string;
   /** The visible text, and the same split into words and numerals (for the button). */
   text: string;
   words: HealthWord[];
+  hue: string;
   state: HealthState;
   /** Where a press goes; null when calm (no button). */
   target: HealthTarget | null;
@@ -67,28 +66,112 @@ export function healthWords(text: string): HealthWord[] {
     .filter((word) => word.text !== '');
 }
 
-/** The slot HealthSlot draws from its props. */
-export function healthSlotView({
+/** What the slot shows from its props: the one `health()` choice, its state and its words. */
+export function healthSlotState({
   failedPart = null,
   synthOn = true,
   dropouts = 0,
   bufferFrames = null,
   cpu = null,
-  width,
   tip = 'app.health',
-}: HealthSlotModelProps): HealthSlotView {
+}: HealthSlotModelProps): HealthSlotState {
   const shown = health({ failedPart, synthOn, dropouts, bufferFrames, cpu });
   const state: HealthState = shown.target === null ? 'calm' : shown.hue === 'ending' ? 'trouble' : 'off';
   return {
-    className: `yh-health-slot${width === undefined ? ' yh-health-slot--fill' : ''}`,
-    attrs: { 'data-part': 'root', 'data-hue': shown.hue, 'data-state': state },
-    style: width === undefined ? undefined : { width: `${width}px` },
-    styleText: width === undefined ? undefined : `width: ${width}px`,
     label: shown.label,
     text: shown.text,
     words: healthWords(shown.text),
+    hue: shown.hue,
     state,
     target: shown.target,
     tip: tip ?? undefined,
+  };
+}
+
+/**
+ * The state's shape. Calm and off are the app bar's status lamp, the same `StatusDot` the
+ * Launchkey wears (filled `ok` when fine, a hollow faint ring when there is no audio); trouble is
+ * the danger chip's triangle, drawn as StatusLine's error mark.
+ */
+function mark(state: HealthState): Node {
+  return h(
+    'span',
+    { class: 'yh-health-slot__mark', 'data-part': 'mark', 'data-state': state, 'aria-hidden': 'true' },
+    state === 'trouble'
+      ? h(
+          'svg',
+          { class: 'yh-health-slot__triangle', 'data-part': 'triangle', width: '12', height: '12', viewBox: '0 0 12 12' },
+          h('path', { d: 'M6 1.5 L11 10.5 H1 Z' }),
+          h('path', { d: 'M6 5 V7.4' }),
+          h('circle', { cx: '6', cy: '8.9', r: '0.6' }),
+        )
+      : component('StatusDot', { hue: state === 'calm' ? 'ok' : 'd', hollow: state === 'off' }),
+  );
+}
+
+/**
+ * The tree HealthSlot draws: a `label` Text root with the live region, then the trouble (or off)
+ * button with the mark and the words, or the calm mark and text. The tooltip store sits on
+ * whichever element carries `data-tip`; a click on the button calls `open` (`healthSlotHandlers`).
+ */
+export function healthSlotView(props: HealthSlotModelProps): Node {
+  const { width } = props;
+  const view = healthSlotState(props);
+  const label = { role: 'label', weight: 'body', case: 'none', tabular: true } as const;
+  const root = textView({ ...label, className: `yh-health-slot${width === undefined ? ' yh-health-slot--fill' : ''}` });
+  const tip: { bind: Bind[] } = { bind: [['tip', { tip: view.tip, tipAction: 'tipAction' }]] };
+  return h(
+    'span',
+    {
+      class: root.className,
+      ...root.attrs,
+      'data-part': 'root',
+      'data-hue': view.hue,
+      'data-state': view.state,
+      style: styleText(width === undefined ? undefined : { width: `${width}px` }),
+    },
+    h('span', { role: 'status', class: 'yh-health-slot__live', 'data-part': 'live' }, view.label),
+    view.target
+      ? wire(
+          h(
+            'button',
+            {
+              class: textView({ ...label, className: 'yh-health-slot__button' }).className,
+              ...textView(label).attrs,
+              type: 'button',
+              'data-part': 'button',
+              'data-tip': view.tip,
+            },
+            mark(view.state),
+            h(
+              'span',
+              { class: 'yh-health-slot__text', 'data-part': 'text' },
+              view.words.map((word) => {
+                if (!word.numeral) return word.text;
+                const num = textView({ role: 'numeral', size: 'inherit', className: 'yh-health-slot__num' });
+                return h('span', { class: num.className, ...num.attrs, 'data-part': 'num' }, word.text);
+              }),
+            ),
+          ),
+          { on: { click: 'open' }, ...tip },
+        )
+      : h(
+          'span',
+          { class: 'yh-health-slot__calm', 'data-part': 'calm' },
+          mark(view.state),
+          wire(h('span', { class: 'yh-health-slot__text', 'data-part': 'text', 'aria-hidden': 'true', 'data-tip': view.tip }, view.text), tip),
+        ),
+  );
+}
+
+/** The callbacks `healthSlotView`'s tree names: `open` (the button's click: `onOpen` with where to
+ *  fix the trouble) and the tooltip's `tipAction`. */
+export function healthSlotHandlers(props: HealthSlotModelProps): Handlers {
+  return {
+    open: () => {
+      const { target } = healthSlotState(props);
+      if (target) props.onOpen?.(target);
+    },
+    tipAction: props.tipAction,
   };
 }

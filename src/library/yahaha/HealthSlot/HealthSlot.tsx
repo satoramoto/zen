@@ -1,51 +1,13 @@
-import { useEffect, useState } from 'react';
-import { StatusDot } from '../../components/core/StatusDot/StatusDot';
-import { Text } from '../../primitives/Text';
-import { healthSlotView, type HealthSlotModelProps, type HealthState, type HealthWord } from './HealthSlot.model';
+import { Tree } from '../../view/Tree';
+import { healthSlotHandlers, healthSlotView, type HealthSlotModelProps } from './HealthSlot.model';
+import '../../primitives/Text.css';
 import './HealthSlot.css';
 
-// The props and the slot are framework-free, in the model; `HealthSlot.svelte` renders the same view.
+// The props, the tree and its handlers are framework-free, in the model; this file and
+// `HealthSlot.svelte` only hand the model's tree to their `Tree`.
 export type { HealthTarget } from './health';
 export type { HealthSlotModelProps } from './HealthSlot.model';
 export type HealthSlotProps = HealthSlotModelProps;
-
-/** The text as words and numerals (`healthWords`): the counts wear the readout face. */
-function Words({ words }: { words: HealthWord[] }) {
-  return (
-    <>
-      {words.map((word, i) =>
-        word.numeral ? (
-          <Text key={i} role="numeral" size="inherit" className="yh-health-slot__num" data-part="num">
-            {word.text}
-          </Text>
-        ) : (
-          word.text
-        ),
-      )}
-    </>
-  );
-}
-
-/**
- * The state's shape. Calm and off are the app bar's status lamp, the same `StatusDot` the
- * Launchkey wears (filled `ok` when fine, a hollow faint ring when there is no audio); trouble is
- * the danger chip's triangle, drawn as StatusLine's error mark.
- */
-function Mark({ state }: { state: HealthState }) {
-  return (
-    <span className="yh-health-slot__mark" data-part="mark" data-state={state} aria-hidden="true">
-      {state === 'trouble' ? (
-        <svg className="yh-health-slot__triangle" data-part="triangle" width="12" height="12" viewBox="0 0 12 12">
-          <path d="M6 1.5 L11 10.5 H1 Z" />
-          <path d="M6 5 V7.4" />
-          <circle cx="6" cy="8.9" r="0.6" />
-        </svg>
-      ) : (
-        <StatusDot hue={state === 'calm' ? 'ok' : 'd'} hollow={state === 'off'} />
-      )}
-    </span>
-  );
-}
 
 /**
  * HealthSlot: the app bar's audio health.
@@ -80,49 +42,5 @@ function Mark({ state }: { state: HealthState }) {
  * slot is narrow, and no motion beyond a hover fade (off under reduced motion).
  */
 export function HealthSlot(props: HealthSlotProps) {
-  const { tipAction, onOpen } = props;
-  const view = healthSlotView(props);
-  const { state, target, tip: dataTip } = view;
-  // The element carrying `data-tip`: the button in trouble, the calm text otherwise.
-  const [node, setNode] = useState<HTMLElement | null>(null);
-  useEffect(() => {
-    if (!node || !tipAction || dataTip === undefined) return;
-    const handle = tipAction(node, dataTip);
-    return () => handle?.destroy?.();
-  }, [node, dataTip, tipAction]);
-
-  return (
-    <Text role="label" weight="body" case="none" tabular className={view.className} {...view.attrs} style={view.style}>
-      <span role="status" className="yh-health-slot__live" data-part="live">
-        {view.label}
-      </span>
-      {target ? (
-        <Text
-          as="button"
-          role="label"
-          weight="body"
-          case="none"
-          tabular
-          ref={setNode}
-          type="button"
-          className="yh-health-slot__button"
-          data-part="button"
-          data-tip={dataTip}
-          onClick={() => onOpen?.(target)}
-        >
-          <Mark state={state} />
-          <span className="yh-health-slot__text" data-part="text">
-            <Words words={view.words} />
-          </span>
-        </Text>
-      ) : (
-        <span className="yh-health-slot__calm" data-part="calm">
-          <Mark state={state} />
-          <span ref={setNode} className="yh-health-slot__text" data-part="text" aria-hidden="true" data-tip={dataTip}>
-            {view.text}
-          </span>
-        </span>
-      )}
-    </Text>
-  );
+  return <Tree tree={healthSlotView(props)} handlers={healthSlotHandlers(props)} />;
 }

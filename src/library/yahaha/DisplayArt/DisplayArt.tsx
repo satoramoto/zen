@@ -1,7 +1,9 @@
+import { Tree } from '../../view/Tree';
 import { displayArtView, type DisplayArtModelProps } from './DisplayArt.model';
 import './DisplayArt.css';
 
-// The props and the view are framework-free, in the model; `DisplayArt.svelte` renders the same view.
+// The props and the tree are framework-free, in the model; this file and `DisplayArt.svelte` only
+// hand its tree to their `Tree`.
 export { displayArtView, type DisplayArtModelProps } from './DisplayArt.model';
 
 export type DisplayArtProps = DisplayArtModelProps;
@@ -40,15 +42,5 @@ export type DisplayArtProps = DisplayArtModelProps;
  * each a theme mix that switches on `--scheme-light`).
  */
 export function DisplayArt(props: DisplayArtProps) {
-  const { attrs, fade } = displayArtView(props);
-  return (
-    <div className="yh-displayart" {...attrs}>
-      <div className="yh-displayart__sun" data-part="sun">
-        <div className="yh-displayart__disc" data-part="disc" />
-      </div>
-      <div className="yh-displayart__hill" data-part="hill" data-hill="far" />
-      <div className="yh-displayart__hill" data-part="hill" data-hill="near" />
-      {fade && <div className="yh-displayart__fade" data-part="fade" />}
-    </div>
-  );
+  return <Tree tree={displayArtView(props)} />;
 }

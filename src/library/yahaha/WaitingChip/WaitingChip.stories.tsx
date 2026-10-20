@@ -1,23 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
+import { fixtureStories, withRenderer } from '../../stories/story';
 import { WaitingChip } from './WaitingChip';
+import WaitingChipSvelte from './WaitingChip.svelte';
 import { waitingChipArgTypes, waitingChipStories as s } from './WaitingChip.fixtures';
 
+// Every story is built from WaitingChip.fixtures.ts (`story(s.Name)`), which the tree snapshot
+// shares; the toolbar's Renderer draws it with React's or Svelte's `Tree`. The plays are the behaviours.
 const meta = {
   title: 'Yahaha/Primitives/WaitingChip',
   component: WaitingChip,
-  decorators: [withLibraryTheme],
+  decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'centered' },
   argTypes: waitingChipArgTypes,
 } satisfies Meta<typeof WaitingChip>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(WaitingChip, WaitingChipSvelte);
 
 /** The count row's next section, Main: an arrow in the "next" role (`--accent`) before "Main C"; sections take no hue. */
 export const Board: Story = {
-  args: { label: 'Main C', ...s.Board.args },
+  ...story(s.Board),
   play: async ({ canvasElement }) => {
     const chip = within(canvasElement).getByText('Main C');
     await expect(chip).toHaveAttribute('data-face', 'waiting');
@@ -30,13 +35,11 @@ export const Board: Story = {
 };
 
 /** The next section on the display (`t`), in the display face, its arrow in `--accent` (next, by default). */
-export const Display: Story = {
-  args: { label: 'Main C', ...s.Display.args },
-};
+export const Display: Story = story(s.Display);
 
 /** The style line's queued style, waiting for the bar line: an accent arrow before "Coastal Highway". */
 export const QueuedStyle: Story = {
-  args: { label: 'Coastal Highway', ...s.QueuedStyle.args },
+  ...story(s.QueuedStyle),
   play: async ({ canvasElement }) => {
     const chip = within(canvasElement).getByText('Coastal Highway');
     await expect(chip).toHaveAttribute('data-hue', 'a');
@@ -44,10 +47,12 @@ export const QueuedStyle: Story = {
   },
 };
 
+const empty = story(s.Empty);
+
 /** Nothing waiting: an empty label draws nothing at all. */
 export const Empty: Story = {
-  args: { label: '', ...s.Empty.args },
-  parameters: { rendersNothing: true },
+  ...empty,
+  parameters: { ...empty.parameters, rendersNothing: true },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('[data-face]')).toBeNull();
   },
@@ -55,7 +60,7 @@ export const Empty: Story = {
 
 /** A long style name on the style line: capped and ended with "…"; the full name is still its text. */
 export const LongStyle: Story = {
-  args: { label: 'Coastal Highway Cruise Unplugged Ballad', ...s.LongStyle.args },
+  ...story(s.LongStyle),
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByText('Coastal Highway Cruise Unplugged Ballad')).toBeInTheDocument();
   },
@@ -65,13 +70,4 @@ export const LongStyle: Story = {
  * Every hue at the count size, to compare the arrows under each pack: every section and the
  * queued style share the "next" role; only `t` is neutral.
  */
-export const AllHues: Story = {
-  args: { label: 'Main C', ...s.AllHues.args },
-  render: () => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-      {(s.AllHues.items ?? []).map((item) => (
-        <WaitingChip key={item.hue} label={item.label ?? ''} hue={item.hue} />
-      ))}
-    </div>
-  ),
-};
+export const AllHues: Story = story(s.AllHues);

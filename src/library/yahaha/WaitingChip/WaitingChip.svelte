@@ -1,17 +1,16 @@
 <!--
-  WaitingChip: the Svelte renderer of `waitingChipView` (WaitingChip.model.ts), the same markup,
-  classes and attributes as `WaitingChip.tsx`; see WaitingChip.tsx for the job and the tuning knobs.
-  A blank label draws nothing.
+  WaitingChip: the model's tree (`waitingChipView`, WaitingChip.model.ts) drawn by the Svelte
+  `Tree`, as `WaitingChip.tsx` draws it with the React one; see WaitingChip.tsx for the job and the
+  tuning knobs. A blank label draws nothing.
 -->
 <script lang="ts">
-  import Text from '../../primitives/Text.svelte';
-  import { styleText, waitingChipView, type WaitingChipModelProps } from './WaitingChip.model';
+  import Tree from '../../view/Tree.svelte';
+  import { waitingChipView, type WaitingChipModelProps } from './WaitingChip.model';
+  import '../../primitives/Text.css';
   import './WaitingChip.css';
 
   let props: WaitingChipModelProps = $props();
-  const view = $derived(waitingChipView(props));
+  const tree = $derived(waitingChipView(props));
 </script>
 
-{#if view}<Text {...view.text} class={view.chip.className} {...view.chip.attrs} style={styleText(view.style)}
-    ><span class={view.arrow.className} {...view.arrow.attrs}></span>{view.label}</Text
-  >{/if}
+{#if tree}<Tree {tree} />{/if}

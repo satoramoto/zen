@@ -1,8 +1,10 @@
-// OneTouchPicker's model: its props and the view a renderer draws (the group, its caption, the
-// strip and each number's face, spoken name and tooltip key). No framework: `OneTouchPicker.tsx`
-// (React) and `OneTouchPicker.svelte` (Svelte) both render `oneTouchPickerView`.
+// OneTouchPicker's model: its props and the trees it draws (the group, its caption, the strip and
+// each number's face, spoken name and tooltip). No framework: `OneTouchPicker.tsx` (React) and
+// `OneTouchPicker.svelte` (Svelte) both draw `oneTouchPickerView`'s roots with `Tree`, and
+// `oneTouchPickerHandlers` for the callbacks they name.
 import type { TipAction } from '../../components/core/Button/Button.model';
-import type { ElementView, TextModelProps } from '../../primitives/Text.model';
+import { textView } from '../../primitives/Text.model';
+import { each, h, wire, type Handlers, type Node } from '../../view/Tree.model';
 
 export type { TipAction };
 
@@ -35,31 +37,6 @@ export interface OneTouchPickerProps {
 /** A number's face: `chosen` in the strip, `on` / `disabled` in cells, else `off`. */
 export type OneTouchFace = 'off' | 'chosen' | 'on' | 'disabled';
 
-/** One number: a `numeral` Text rendered as a `<button>`. */
-export interface OneTouchNumberView extends ElementView {
-  /** The One Touch it applies, 1 to `numbers` (also its text). */
-  n: number;
-  /** The tooltip key (`ots.<n>`), also its `data-tip`. */
-  tip: string;
-  /** Past the style's count: a disabled button (a boolean, not an attribute string). */
-  disabled: boolean;
-}
-
-/** What a renderer draws. */
-export interface OneTouchPickerView {
-  /** No wrapper: the label and the numbers are siblings in the parent's cells. */
-  cells: boolean;
-  /** The wrapping group `div` (unused in cells). */
-  root: ElementView;
-  /** The caption: a Text with these props, class and attributes. */
-  label: ElementView & { text: TextModelProps; word: string };
-  /** The strip `span` around the numbers (unused in cells). */
-  strip: ElementView;
-  /** Every number's Text props. */
-  numberText: TextModelProps;
-  numbers: OneTouchNumberView[];
-}
-
 /** The group's spoken name: `name`, or which is applied and the Launchkey's pads. */
 export function oneTouchGroupName(applied: number, name?: string): string {
   return (
@@ -79,6 +56,15 @@ export function oneTouchFace(on: boolean, disabled: boolean, cells: boolean): On
   return on ? 'chosen' : 'off';
 }
 
+/** The handler key a number's click calls: `apply<n>`. */
+const applyKey = (n: number) => `apply${n}`;
+
+/**
+ * The trees OneTouchPicker draws, each a root its renderer draws with `Tree`: the group `div` (the
+ * caption Text, then the strip of numbers), or in `cells` no wrapper, the caption and each number
+ * as top-level siblings (keys `label` and `<n>`). Each number is a `numeral` Text as a `<button>`;
+ * a click calls `apply<n>` and the tooltip store applies `tipAction` with its key `ots.<n>`.
+ */
 export function oneTouchPickerView({
   applied = 0,
   count = 4,
@@ -88,42 +74,67 @@ export function oneTouchPickerView({
   cells = false,
   hue = 'neutral',
   name,
-}: OneTouchPickerProps): OneTouchPickerView {
-  return {
-    cells,
-    root: {
-      className: 'yh-onetouchpicker',
-      attrs: { 'data-part': 'root', 'data-orientation': orientation, role: 'group', 'aria-label': oneTouchGroupName(applied, name) },
-    },
-    label: {
-      text: { role: 'caption', case: 'label' },
-      word: label,
-      className: cells ? 'yh-onetouchpicker__label yh-onetouchpicker__cell' : 'yh-onetouchpicker__label',
-      attrs: { 'data-part': 'label', 'aria-hidden': cells ? undefined : 'true' },
-    },
-    strip: { className: 'yh-onetouchpicker__strip', attrs: { 'data-part': 'strip' } },
-    numberText: { role: 'numeral', size: 'label' },
-    numbers: Array.from({ length: Math.max(0, numbers) }, (_, i) => {
-      const n = i + 1;
+}: OneTouchPickerProps): Node[] {
+  const caption = textView({ role: 'caption', case: 'label', className: cells ? 'yh-onetouchpicker__label yh-onetouchpicker__cell' : 'yh-onetouchpicker__label' });
+  const numeral = textView({ role: 'numeral', size: 'label', className: `yh-onetouchpicker__number${cells ? ' yh-onetouchpicker__cell' : ''}` });
+  const labelNode: Node = {
+    ...h('span', { class: caption.className, ...caption.attrs, 'data-part': 'label', 'aria-hidden': cells ? undefined : 'true' }, label),
+    key: 'label',
+  };
+  const all = Array.from({ length: Math.max(0, numbers) }, (_, i) => i + 1);
+  const buttons = each(
+    all,
+    (n) => String(n),
+    (n) => {
       const on = n === applied;
       const disabled = n > count;
       const tip = `ots.${n}`;
-      return {
-        n,
-        tip,
-        disabled,
-        className: `yh-onetouchpicker__number${cells ? ' yh-onetouchpicker__cell' : ''}`,
-        attrs: {
-          type: 'button',
-          'data-part': 'number',
-          'data-material': 'key',
-          'aria-pressed': String(on),
-          'aria-label': oneTouchNumberName(n, on),
-          'data-face': oneTouchFace(on, disabled, cells),
-          'data-ink': cells ? hue : undefined,
-          'data-tip': tip,
+      return wire(
+        h(
+          'button',
+          {
+            class: numeral.className,
+            ...numeral.attrs,
+            type: 'button',
+            'data-part': 'number',
+            'data-material': 'key',
+            'aria-pressed': String(on),
+            'aria-label': oneTouchNumberName(n, on),
+            'data-face': oneTouchFace(on, disabled, cells),
+            'data-ink': cells ? hue : undefined,
+            'data-tip': tip,
+            disabled: disabled ? '' : undefined,
+          },
+          String(n),
+        ),
+        { on: { click: applyKey(n) }, bind: [['tip', { tip, tipAction: 'tipAction' }]] },
+      );
+    },
+  );
+  if (cells) return [labelNode, ...buttons];
+  return [
+    {
+      ...h(
+        'div',
+        {
+          class: 'yh-onetouchpicker',
+          'data-part': 'root',
+          'data-orientation': orientation,
+          role: 'group',
+          'aria-label': oneTouchGroupName(applied, name),
         },
-      };
-    }),
-  };
+        labelNode,
+        h('span', { class: 'yh-onetouchpicker__strip', 'data-part': 'strip' }, buttons),
+      ),
+      key: 'root',
+    },
+  ];
+}
+
+/** The callbacks `oneTouchPickerView`'s trees name: `apply<n>` for each number (calls `onApply(n)`)
+ *  and the tooltip's `tipAction`. */
+export function oneTouchPickerHandlers({ numbers = 4, onApply, tipAction }: OneTouchPickerProps): Handlers {
+  const handlers: Handlers = { tipAction };
+  for (let n = 1; n <= numbers; n++) handlers[applyKey(n)] = () => onApply?.(n);
+  return handlers;
 }

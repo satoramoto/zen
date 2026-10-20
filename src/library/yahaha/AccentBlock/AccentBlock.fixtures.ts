@@ -1,9 +1,9 @@
-// AccentBlock's stories as plain props: AccentBlock.stories.tsx (React) and
-// AccentBlock.stories.svelte.ts (Svelte) both draw them, and the parity test renders every one in both.
+// AccentBlock's stories as plain props: AccentBlock.stories.tsx draws them (in either renderer),
+// and the tree snapshot records the tree for every one.
 import { defineFixtures } from '../../fixtures';
 import type { AccentBlockModelProps } from './AccentBlock.model';
 
-/** The controls, the same in both Storybooks. */
+/** The story controls. */
 export const accentBlockArgTypes = {
   label: { control: 'text' },
   empty: { control: 'text' },

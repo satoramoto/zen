@@ -17,6 +17,7 @@ import TextSvelte from './primitives/Text.svelte';
 import StackSvelte from './primitives/Stack.svelte';
 import ButtonSvelte from './components/core/Button/Button.svelte';
 import { actionOf } from './view/bridge';
+import { bindDismiss } from './yahaha/AppBar/popover';
 import { bindLineSlider } from './components/core/LineSlider/slide';
 import { bindLongPress } from './components/core/Button/longPress';
 import { bindKnob } from './components/music/Knob/knobInput';
@@ -305,7 +306,8 @@ export interface AppBarProps extends AppBarModelProps<string | Snippet> {
   end?: Snippet;
 }
 export const AppBar = AppBarSvelte as unknown as Component<AppBarProps>;
-export { dismiss, createFocusReturn, type DismissParams } from './yahaha/AppBar/popover.svelte';
+export const dismiss = actionOf(bindDismiss);
+export { createFocusReturn, type DismissParams } from './yahaha/AppBar/popover';
 
 // Yahaha widgets: Yahaha's own concepts, mapped onto the library's slots through `yahaha/hues.ts`.
 export type AccentBlockProps = AccentBlockModelProps;

@@ -1,0 +1,37 @@
+## Board
+<ul aria-label="Part colours" class="lib-stack yh-huelegend" data-align="center" data-direction="row" data-gap="4">
+  <li key=0-Right 1 class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="1" data-part="r1">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Right 1"
+  <li key=1-Right 2 class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="2" data-part="r2">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Right 2"
+  <li key=2-Right 3 class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="3" data-part="r3">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Right 3"
+  <li key=3-Left class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="4" data-part="l">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Left"
+
+## OverPads
+<ul aria-label="Part colours" class="lib-stack yh-huelegend" data-align="center" data-direction="row" data-gap="4">
+  <li key=0-Right 1 class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="1" data-part="r1">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Right 1"
+  <li key=1-Right 2 class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="2" data-part="r2">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Right 2"
+  <li key=2-Right 3 class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="3" data-part="r3">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Right 3"
+  <li key=3-Left class="lib-stack yh-huelegend__item" data-align="center" data-direction="row" data-gap="2" data-hue="4" data-part="l">
+    <span aria-hidden="true" class="yh-huelegend__chip">
+    <span class="lib-text lib-tone yh-huelegend__word" data-role="caption" data-text-case="label" data-text-leading="tight">
+      "Left"

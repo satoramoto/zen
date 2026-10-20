@@ -1,5 +1,5 @@
-// HueLegend's stories as plain props: HueLegend.stories.tsx (React) and HueLegend.stories.svelte.ts
-// (Svelte) both draw them, and the parity test renders every instance in both.
+// HueLegend's stories as plain props: HueLegend.stories.tsx draws them with either renderer's
+// `Tree`, and the tree snapshot prints every instance.
 import { defineFixtures } from '../../fixtures';
 import { PART_LEGEND, type HueLegendProps } from './HueLegend.model';
 

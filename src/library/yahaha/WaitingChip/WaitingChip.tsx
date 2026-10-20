@@ -1,9 +1,10 @@
-import type { CSSProperties } from 'react';
-import { Text } from '../../primitives/Text';
+import { Tree } from '../../view/Tree';
 import { waitingChipView, type WaitingChipModelProps } from './WaitingChip.model';
+import '../../primitives/Text.css';
 import './WaitingChip.css';
 
-// The props and the chip are framework-free, in the model; `WaitingChip.svelte` renders the same view.
+// The props and the chip are framework-free, in the model; this file and `WaitingChip.svelte` only
+// hand the model's tree (none for a blank label) to their `Tree`.
 export type { WaitingHue, WaitingSize, WaitingChipModelProps } from './WaitingChip.model';
 
 export type WaitingChipProps = WaitingChipModelProps;
@@ -44,12 +45,6 @@ export type WaitingChipProps = WaitingChipModelProps;
  * six control heights).
  */
 export function WaitingChip(props: WaitingChipProps) {
-  const view = waitingChipView(props);
-  if (view === null) return null;
-  return (
-    <Text {...view.text} className={view.chip.className} {...view.chip.attrs} style={view.style as CSSProperties | undefined}>
-      <span className={view.arrow.className} {...view.arrow.attrs} />
-      {view.label}
-    </Text>
-  );
+  const tree = waitingChipView(props);
+  return tree && <Tree tree={tree} />;
 }

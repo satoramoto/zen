@@ -1,18 +1,10 @@
-import { Stack } from '../../primitives/Stack';
-import { Text } from '../../primitives/Text';
+import { Tree } from '../../view/Tree';
 import { hueLegendView, type HueLegendProps } from './HueLegend.model';
+import '../../primitives/Stack.css';
+import '../../primitives/Text.css';
 import './HueLegend.css';
 
-export {
-  SECTION_HUE,
-  PART_LEGEND,
-  hueLegendView,
-  entryHue,
-  type Section,
-  type HueLegendItem,
-  type HueLegendProps,
-  type HueLegendView,
-} from './HueLegend.model';
+export { SECTION_HUE, PART_LEGEND, hueLegendView, entryHue, type Section, type HueLegendItem, type HueLegendProps } from './HueLegend.model';
 
 /**
  * HueLegend: the key to the four part colours.
@@ -41,17 +33,5 @@ export {
  * a pad in miniature).
  */
 export function HueLegend(props: HueLegendProps) {
-  const view = hueLegendView(props);
-  return (
-    <Stack as="ul" {...view.list.stack} className={view.list.className} {...view.list.attrs}>
-      {view.entries.map((entry) => (
-        <Stack as="li" key={entry.key} {...entry.stack} className={entry.className} {...entry.attrs}>
-          <span className={view.chip.className} {...view.chip.attrs} />
-          <Text {...view.word.text} className={view.word.className}>
-            {entry.label}
-          </Text>
-        </Stack>
-      ))}
-    </Stack>
-  );
+  return <Tree tree={hueLegendView(props)} />;
 }
