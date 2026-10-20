@@ -1,15 +1,13 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { useId } from 'react';
 import { Text } from '../../../primitives/Text';
+import { settingsRowView, type SettingsRowModelProps } from './SettingsRow.model';
 import './SettingsRow.css';
 
-export interface SettingsRowProps {
-  /** The setting's name, in the label column ("Main timing"). */
-  label: string;
-  /** A short note after the control ("Fader button 7"). Empty: none. */
-  hint?: string;
-  /** The label column's width in px (the boards' 120). */
-  labelWidth?: number;
+// The props and the row are framework-free, in the model; `SettingsRow.svelte` renders the same view.
+export type { SettingsRowModelProps } from './SettingsRow.model';
+
+export interface SettingsRowProps extends SettingsRowModelProps {
   /** The control: a lamp, a run of tabs, a slider, a readout. Its own accessible name stays its own. */
   children?: ReactNode;
 }
@@ -43,30 +41,19 @@ export interface SettingsRowProps {
  * - `--yh-settings-label-w`: the label column's width (set inline from `labelWidth`).
  * - `--yh-settings-control-w`: the control column's minimum; a page sets it once on the stack so every hint starts on one line.
  */
-export function SettingsRow({ label, hint = '', labelWidth = 120, children }: SettingsRowProps) {
-  const id = useId();
-  const labelId = `${id}-label`;
-  const hintId = `${id}-hint`;
-  const style = { '--yh-settings-label-w': `${labelWidth}px` } as CSSProperties;
+export function SettingsRow({ children, ...props }: SettingsRowProps) {
+  const view = settingsRowView(props, useId());
   return (
-    <Text
-      as="div"
-      role="body"
-      tabular
-      className="yh-settings-row"
-      data-part="root"
-      ariaRole="group"
-      aria-labelledby={labelId}
-      aria-describedby={hint ? hintId : undefined}
-      style={style}
-    >
-      <span className="yh-settings-row__label" data-part="label" id={labelId} title={label}>
-        {label}
+    <Text as="div" {...view.text} className={view.root.className} {...view.root.attrs} style={view.style as CSSProperties}>
+      <span className={view.label.className} {...view.label.attrs}>
+        {view.label.text}
       </span>
-      <span className="yh-settings-row__control" data-part="control">{children}</span>
-      {hint && (
-        <span className="yh-settings-row__hint" data-part="hint" id={hintId} title={hint}>
-          {hint}
+      <span className={view.control.className} {...view.control.attrs}>
+        {children}
+      </span>
+      {view.hint && (
+        <span className={view.hint.className} {...view.hint.attrs}>
+          {view.hint.text}
         </span>
       )}
     </Text>

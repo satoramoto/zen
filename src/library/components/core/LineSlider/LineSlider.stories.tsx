@@ -2,7 +2,10 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { LineSlider } from './LineSlider';
+import { LineSlider, type LineSliderProps } from './LineSlider';
+import { lineSliderArgTypes, lineSliderStories as s } from './LineSlider.fixtures';
+
+// Every story's args come from LineSlider.fixtures.ts, which the Svelte stories and the parity test share.
 
 const meta = {
   title: 'Design OS/Components/Core/LineSlider',
@@ -10,29 +13,8 @@ const meta = {
   decorators: [withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
-  args: {
-    value: 10,
-    min: 0,
-    max: 30,
-    step: 1,
-    name: 'Chord settle',
-    unit: 'ms',
-    tip: 'settings.chord_settle',
-    onchange: fn(),
-    tipAction: fn(),
-  },
-  argTypes: {
-    value: { control: 'number' },
-    min: { control: 'number' },
-    max: { control: 'number' },
-    step: { control: 'number' },
-    name: { control: 'text' },
-    valueText: { control: 'text' },
-    unit: { control: 'text' },
-    width: { control: 'number' },
-    disabled: { control: 'boolean' },
-    tip: { control: 'text' },
-  },
+  args: { ...(s.Board.args as LineSliderProps), onchange: fn(), tipAction: fn() },
+  argTypes: lineSliderArgTypes,
 } satisfies Meta<typeof LineSlider>;
 
 export default meta;
@@ -79,7 +61,7 @@ export const Board: Story = {
 
 /** At the top: End and → ask for nothing, since the value is already the most it can be. */
 export const AtMax: Story = {
-  args: { value: 30 },
+  args: s.AtMax.args,
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider');
     slider.focus();
@@ -91,7 +73,7 @@ export const AtMax: Story = {
 
 /** A value shown as a word with a fractional step: "5.0 s" of a 0–10 s fade, a step of 0.5. */
 export const ValueText: Story = {
-  args: { value: 5, min: 0, max: 10, step: 0.5, name: 'Fade in', valueText: '5.0', unit: 's', tip: 'settings.fade_in' },
+  args: s.ValueText.args,
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider', { name: 'Fade in' });
     await expect(slider).toHaveAttribute('aria-valuetext', '5.0 s');
@@ -106,7 +88,7 @@ export const ValueText: Story = {
  * announced as disabled; keys and presses ask for nothing.
  */
 export const Disabled: Story = {
-  args: { disabled: true },
+  args: s.Disabled.args,
   play: async ({ canvasElement, args }) => {
     const slider = within(canvasElement).getByRole('slider');
     await expect(slider).toHaveAttribute('aria-disabled', 'true');
@@ -121,19 +103,20 @@ export const Disabled: Story = {
 
 /** At the bottom of the range: the rail still shows the whole line, so the range reads when empty. */
 export const AtMin: Story = {
-  args: { value: 0 },
+  args: s.AtMin.args,
 };
 
 /** New: a column of Settings rows, live. The numerals right-align and the lines never shift as digits change. */
 export const SettingsColumn: Story = {
   render: function Column() {
-    const [settle, setSettle] = useState(10);
-    const [fade, setFade] = useState(5);
-    const [swing, setSwing] = useState(54);
+    const [settleRow, fadeRow, swingRow] = s.SettingsColumn.items as LineSliderProps[];
+    const [settle, setSettle] = useState(settleRow.value);
+    const [fade, setFade] = useState(fadeRow.value);
+    const [swing, setSwing] = useState(swingRow.value);
     const rows = [
-      { label: 'Chord settle', el: <LineSlider name="Chord settle" value={settle} max={30} unit="ms" onchange={setSettle} /> },
-      { label: 'Fade in', el: <LineSlider name="Fade in" value={fade} max={10} step={0.5} valueText={fade.toFixed(1)} unit="s" onchange={setFade} /> },
-      { label: 'Swing', el: <LineSlider name="Swing" value={swing} min={50} max={75} unit="%" onchange={setSwing} /> },
+      { label: settleRow.name, el: <LineSlider {...settleRow} value={settle} onchange={setSettle} /> },
+      { label: fadeRow.name, el: <LineSlider {...fadeRow} value={fade} valueText={fade.toFixed(1)} onchange={setFade} /> },
+      { label: swingRow.name, el: <LineSlider {...swingRow} value={swing} onchange={setSwing} /> },
     ];
     return (
       <div style={{ display: 'grid', gridTemplateColumns: 'max-content max-content', alignItems: 'center', columnGap: 'var(--space-6)' }}>

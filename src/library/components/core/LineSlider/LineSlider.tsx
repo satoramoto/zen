@@ -1,35 +1,14 @@
-import { snap, useLineSlider, type TipAction } from './useLineSlider';
-import { focusRing } from '../../../primitives/Ring';
+import { useEffect, useRef } from 'react';
+import { useLineSlider } from './useLineSlider';
+import { lineSliderView, snap, type LineSliderModelProps } from './LineSlider.model';
 import { Text } from '../../../primitives/Text';
 import './LineSlider.css';
 
-export type { TipAction };
+// The props and the view are framework-free, in the model; `LineSlider.svelte` renders the same view.
+export type { TipAction } from './LineSlider.model';
 export { snap, useLineSlider };
 
-export interface LineSliderProps {
-  /** The value, between `min` and `max`. */
-  value: number;
-  min?: number;
-  max?: number;
-  /** One arrow press; Page Up / Page Down move ten. */
-  step?: number;
-  /** The accessible name ("Chord settle"). */
-  name: string;
-  /** The value as shown ("5.0", "Off"). Default: the number. */
-  valueText?: string;
-  /** The unit after the value, small ("ms", "s", "%"). */
-  unit?: string;
-  /** The line's width in px. Default 160. */
-  width?: number;
-  /** Shown, not movable. Stays focusable and is announced as disabled. */
-  disabled?: boolean;
-  /** The tooltip key, rendered as `data-tip`. */
-  tip?: string;
-  /** The app's tooltip action; applied with `tip` when both are set. */
-  tipAction?: TipAction;
-  /** Called with the value asked for (clamped and on a step). Controlled: the line moves when `value` does. */
-  onchange?: (value: number) => void;
-}
+export type LineSliderProps = LineSliderModelProps;
 
 /**
  * A horizontal value on a Settings page: a line you drag, then the value as a numeral.
@@ -39,7 +18,7 @@ export interface LineSliderProps {
  * number is what a player looks at, the line says roughly
  * where in the range it sits and that it can be dragged.
  *
- * **Changed.** *Headless* (the materials pass): behaviour lives in `useLineSlider`, and the
+ * **Changed.** *Headless* (the materials pass): behaviour lives in the `slide.ts` store (`useLineSlider` in React), and the
  * markup is named parts (`data-part`: root, slider, track, fill, thumb, readout, value, unit)
  * whose look comes from the theme's Materials: the track is a `well`, the thumb a `handle`, and
  * the fill is lit (`--lit`, with `--mat-lit-glow`), so a design system can be tried on without
@@ -67,59 +46,35 @@ export interface LineSliderProps {
  * - `--yh-lineslider-ground`: the colour of the ring cut around the thumb; a parent on a raised surface sets it to its own face.
  * - `--yh-lineslider-thumb-*` (`-w`, `-h`, `-radius`): the thumb's width, resting height and corner; the track's corner and the hit area's side padding follow them.
  */
-export function LineSlider({
-  value,
-  min = 0,
-  max = 127,
-  step = 1,
-  name,
-  valueText,
-  unit = '',
-  width = 160,
-  disabled = false,
-  tip,
-  tipAction,
-  onchange,
-}: LineSliderProps) {
-  const shown = valueText ?? String(value);
-  // Reserve room for the widest value the range can show, so the line never moves.
-  const digits = Math.max(shown.length, String(min).length, String(max).length);
-  const { fraction, sliderProps, trackRef } = useLineSlider({
-    value,
-    min,
-    max,
-    step,
-    name,
-    valueText: unit ? `${shown} ${unit}` : shown,
-    disabled,
-    tip,
-    tipAction,
-    onchange,
-  });
+export function LineSlider(props: LineSliderProps) {
+  const { value, min, max, step, disabled, tip, tipAction, onchange } = props;
+  const node = useRef<HTMLSpanElement>(null);
+  const held = useLineSlider(node, { value, min, max, step, disabled, onchange });
+  const view = lineSliderView(props, held);
+  const { tabindex, ...sliderAttrs } = view.slider.attrs;
 
-  const percent = `${fraction * 100}%`;
+  useEffect(() => {
+    const target = node.current;
+    if (!tipAction || tip === undefined || !target) return;
+    const handle = tipAction(target, tip);
+    return () => handle?.destroy?.();
+  }, [tip, tipAction]);
 
   return (
-    <span className="yh-lineslider" data-part="root" data-disabled={disabled || undefined}>
-      <span
-        {...sliderProps}
-        className={`yh-lineslider__hit ${focusRing}`}
-        data-part="slider"
-        style={{ width: `${width}px` }}
-        data-tip={tip}
-      >
-        <span ref={trackRef} className="yh-lineslider__track" data-part="track">
-          <span className="yh-lineslider__fill" data-part="fill" style={{ width: percent }} />
-          <span className="yh-lineslider__thumb" data-part="thumb" style={{ left: percent }} />
+    <span className={view.root.className} {...view.root.attrs}>
+      <span ref={node} className={view.slider.className} {...sliderAttrs} tabIndex={Number(tabindex)} style={{ width: view.slider.width }}>
+        <span className={view.track.className} {...view.track.attrs}>
+          <span className={view.fill.className} {...view.fill.attrs} style={{ width: view.fill.width }} />
+          <span className={view.thumb.className} {...view.thumb.attrs} style={{ left: view.thumb.left }} />
         </span>
       </span>
-      <span className="yh-lineslider__readout" data-part="readout" aria-hidden="true">
-        <Text role="numeral" className="yh-lineslider__value" data-part="value" style={{ minWidth: `${digits}ch` }}>
-          {shown}
+      <span className={view.readout.className} {...view.readout.attrs}>
+        <Text {...view.value.text} className={view.value.className} {...view.value.attrs} style={{ minWidth: view.value.minWidth }}>
+          {view.value.shown}
         </Text>
-        {unit && (
-          <Text role="caption" leading="tight" className="yh-lineslider__unit" data-part="unit">
-            {unit}
+        {view.unit && (
+          <Text {...view.unit.text} className={view.unit.className} {...view.unit.attrs}>
+            {view.unit.shown}
           </Text>
         )}
       </span>

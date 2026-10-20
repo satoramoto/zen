@@ -1,11 +1,11 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
-import { toneAttr, type TextRole, type TextTone } from './Text';
+import type { TextTone } from './Text';
+import { iconView, type IconSize } from './Icon.model';
 import './Text.css';
 import './Icon.css';
 
-/** An icon's size: a type role's size (so it matches the text beside it) or the control height. */
-export type IconSize = TextRole | 'control';
-export const ICON_SIZES = ['display', 'numeral', 'heading', 'body', 'label', 'caption', 'code', 'control'] as const;
+// The sizes are framework-free, in the model; `Icon.svelte` renders the same view.
+export { ICON_SIZES, iconView, type IconSize, type IconModelProps } from './Icon.model';
 
 export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** A type role's size (`code` is the body size) or `control` (`--control-h`); default `1em`. */
@@ -30,20 +30,11 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'childr
  * **Tuning knobs.** `--lib-icon-size` (the square's side), `--lib-icon-stroke` (stroke width in
  * viewBox units).
  */
-export function Icon({ size, tone, label, viewBox = '0 0 24 24', className, children, ...rest }: IconProps) {
+export function Icon({ size, tone, label, viewBox, className, children, ...rest }: IconProps) {
+  const view = iconView({ size, tone, label, viewBox, className });
   return (
-    <span
-      className={`lib-icon lib-tone${className ? ` ${className}` : ''}`}
-      data-size={size}
-      data-tone={toneAttr(tone)}
-      role={label ? 'img' : undefined}
-      aria-label={label}
-      aria-hidden={label ? undefined : true}
-      {...rest}
-    >
-      <svg viewBox={viewBox} focusable="false" aria-hidden="true">
-        {children}
-      </svg>
+    <span className={view.slot.className} {...view.slot.attrs} {...rest}>
+      <svg {...view.svg}>{children}</svg>
     </span>
   );
 }
