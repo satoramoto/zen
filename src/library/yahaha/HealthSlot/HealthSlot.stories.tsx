@@ -2,22 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { HealthSlot } from './HealthSlot';
+import { healthSlotArgTypes, healthSlotArgs, healthSlotStories as s } from './HealthSlot.fixtures';
 
 const meta = {
   title: 'Yahaha/Primitives/HealthSlot',
   component: HealthSlot,
   decorators: [withLibraryTheme],
   parameters: { layout: 'centered' },
-  args: { onOpen: fn(), tip: 'app.health' },
-  argTypes: {
-    failedPart: { control: 'select', options: [null, 0, 1, 2, 3] },
-    synthOn: { control: 'boolean' },
-    dropouts: { control: { type: 'number', min: 0, step: 1 } },
-    bufferFrames: { control: 'select', options: [null, 64, 128, 256, 512, 1024] },
-    cpu: { control: { type: 'range', min: 0, max: 1.2, step: 0.01 } },
-    width: { control: { type: 'number', min: 0, step: 1 } },
-    tip: { control: 'text' },
-  },
+  args: { onOpen: fn(), ...healthSlotArgs },
+  argTypes: healthSlotArgTypes,
 } satisfies Meta<typeof HealthSlot>;
 
 export default meta;
@@ -27,7 +20,7 @@ const hueOf = (root: HTMLElement) => root.querySelector('[data-hue]');
 
 /** The Stage board: calm, a quiet "Audio" at the right edge of the app bar's 100px slot. */
 export const Board: Story = {
-  args: { failedPart: null, synthOn: true, dropouts: 0, bufferFrames: 256, cpu: 0.2, width: 100 },
+  args: s.Board.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Audio health: fine');
@@ -41,7 +34,7 @@ export const Board: Story = {
 
 /** A busy CPU: "CPU 74%" with a warning triangle; a click opens Settings › System. */
 export const Cpu: Story = {
-  args: { synthOn: true, dropouts: 0, bufferFrames: 256, cpu: 0.74, width: 100 },
+  args: s.Cpu.args,
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Audio health: CPU 74%');
@@ -55,7 +48,7 @@ export const Cpu: Story = {
 
 /** Right 3's plugin failed: "R3 failed" as trouble; a click opens that part's Channel page. */
 export const Failed: Story = {
-  args: { failedPart: 2, synthOn: true, bufferFrames: 256, cpu: 0.2, width: 100 },
+  args: s.Failed.args,
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Audio health: R3 failed');
@@ -69,7 +62,7 @@ export const Failed: Story = {
 
 /** A failed plugin outranks no audio: "L failed". */
 export const FailedBeatsOff: Story = {
-  args: { failedPart: 3, synthOn: false, width: 100 },
+  args: s.FailedBeatsOff.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button', { name: 'L failed' })).toBeInTheDocument();
   },
@@ -77,7 +70,7 @@ export const FailedBeatsOff: Story = {
 
 /** No audio: "Audio off" stays neutral (a hollow ring, not an alarm) yet opens Settings › System. */
 export const AudioOff: Story = {
-  args: { synthOn: false, width: 100 },
+  args: s.AudioOff.args,
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Audio health: Audio off');
@@ -92,7 +85,7 @@ export const AudioOff: Story = {
 
 /** Two dropouts in the last 30 s: "2 dropouts"; Space on the button opens Settings › System. */
 export const Dropouts: Story = {
-  args: { dropouts: 2, bufferFrames: 256, cpu: 0.2, width: 100 },
+  args: s.Dropouts.args,
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole('button', { name: '2 dropouts' });
     await expect(button).toHaveAttribute('data-tip', 'app.health');
@@ -105,7 +98,7 @@ export const Dropouts: Story = {
 
 /** One dropout: the singular "1 dropout". */
 export const OneDropout: Story = {
-  args: { dropouts: 1, bufferFrames: 256, width: 100 },
+  args: s.OneDropout.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button', { name: '1 dropout' })).toBeInTheDocument();
   },
@@ -116,7 +109,7 @@ export const OneDropout: Story = {
  * size up. It outranks the busy CPU. No width, so nothing is cut.
  */
 export const BufferHint: Story = {
-  args: { dropouts: 3, bufferFrames: 128, cpu: 0.74 },
+  args: s.BufferHint.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Audio health: 3 dropouts · buffer 256?');
@@ -127,7 +120,7 @@ export const BufferHint: Story = {
 
 /** The same hint in the app bar's 100px: cut with "…", while the live region and name stay whole. */
 export const BufferHintInBar: Story = {
-  args: { dropouts: 3, bufferFrames: 128, width: 100 },
+  args: s.BufferHintInBar.args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toHaveTextContent('Audio health: 3 dropouts · buffer 256?');
@@ -137,7 +130,7 @@ export const BufferHintInBar: Story = {
 
 /** At 1024 frames there's no larger buffer to suggest: just "3 dropouts". */
 export const LargestBuffer: Story = {
-  args: { dropouts: 3, bufferFrames: 1024, width: 100 },
+  args: s.LargestBuffer.args,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole('button', { name: '3 dropouts' })).toBeInTheDocument();
   },
@@ -147,11 +140,9 @@ export const LargestBuffer: Story = {
 export const AllStates: Story = {
   render: (args) => (
     <div style={{ display: 'grid', gap: 'var(--space-2)', width: 220 }}>
-      <HealthSlot {...args} />
-      <HealthSlot {...args} synthOn={false} />
-      <HealthSlot {...args} cpu={0.74} />
-      <HealthSlot {...args} dropouts={2} />
-      <HealthSlot {...args} failedPart={2} />
+      {(s.AllStates.items ?? []).map((item, i) => (
+        <HealthSlot key={i} {...args} {...item} />
+      ))}
     </div>
   ),
 };

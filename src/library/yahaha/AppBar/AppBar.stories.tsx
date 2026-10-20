@@ -3,9 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../storybook';
 import { AppBar, type AppBarProps } from './AppBar';
-import { boardAppBar, boardMetronome, displayPageTabs, fullPageTabs } from './AppBar.fixtures';
-
-const PAGE_IDS = [...displayPageTabs, ...fullPageTabs].map((tab) => tab.id);
+import { appBarArgTypes, appBarStories as s, boardAppBar } from './AppBar.fixtures';
 
 /**
  * The bar on top of every page: the page nav (display pages, a hairline, full pages), the global
@@ -19,8 +17,6 @@ const meta = {
   parameters: { layout: 'fullscreen' },
   args: {
     ...boardAppBar,
-    displayTabs: displayPageTabs,
-    fullTabs: fullPageTabs,
     onChoose: fn(),
     onHealth: fn(),
     onMetronome: fn(),
@@ -33,27 +29,7 @@ const meta = {
     onPanic: fn(),
     tipAction: fn(),
   },
-  argTypes: {
-    width: { control: { type: 'number', min: 0, step: 1 } },
-    chosen: { control: 'select', options: [null, ...PAGE_IDS], table: { category: 'Tabs' } },
-    displayTabs: { control: 'object', table: { category: 'Tabs' } },
-    fullTabs: { control: 'object', table: { category: 'Tabs' } },
-    launchkey: { control: 'boolean', table: { category: 'StatusDot' } },
-    failedPart: { control: 'select', options: [null, 0, 1, 2, 3], table: { category: 'HealthSlot' } },
-    synthOn: { control: 'boolean', table: { category: 'HealthSlot' } },
-    dropouts: { control: { type: 'number', min: 0, step: 1 }, table: { category: 'HealthSlot' } },
-    bufferFrames: { control: 'select', options: [null, 64, 128, 256, 512, 1024], table: { category: 'HealthSlot' } },
-    cpu: { control: { type: 'range', min: 0, max: 1.2, step: 0.01 }, table: { category: 'HealthSlot' } },
-    metronome: { control: 'boolean', table: { category: 'Switches' } },
-    metronomeOpen: { control: 'boolean', table: { category: 'Switches' } },
-    metronomeVolume: { control: { type: 'number', min: 0, max: 127, step: 1 }, table: { category: 'Switches' } },
-    metronomeBell: { control: 'boolean', table: { category: 'Switches' } },
-    metronomeAudible: { control: 'boolean', table: { category: 'Switches' } },
-    unison: { control: 'boolean', table: { category: 'Switches' } },
-    help: { control: 'boolean', table: { category: 'Switches' } },
-    nowPlaying: { control: 'object' },
-    end: { control: false },
-  },
+  argTypes: appBarArgTypes,
 } satisfies Meta<typeof AppBar>;
 
 export default meta;
@@ -74,27 +50,27 @@ export const Board: Story = {
 
 /** Library chosen: the block moves past the hairline. */
 export const Library: Story = {
-  args: { chosen: 'library' },
+  args: s.Library.args,
 };
 
 /** Off the Stage (Settings here): the style and its tempo in the bar's middle, the tabs where they were. */
 export const OffStage: Story = {
-  args: { chosen: 'settings', nowPlaying: { style: 'Sunday Drive Pop', tempo: 104 } },
+  args: s.OffStage.args,
 };
 
 /** The Launchkey unplugged: a hollow ring and the word fades. */
 export const NoLaunchkey: Story = {
-  args: { launchkey: false },
+  args: s.NoLaunchkey.args,
 };
 
 /** Trouble: Right 3's plugin failed, "R3 failed" in the danger role; a click opens its Channel page. */
 export const Trouble: Story = {
-  args: { failedPart: 2 },
+  args: s.Trouble.args,
 };
 
 /** The switches as on the section row's Helpers story: Metronome on, lit in the `transport` hue. */
 export const Helpers: Story = {
-  args: { metronome: true },
+  args: s.Helpers.args,
   play: async ({ canvasElement }) => {
     const switches = within(canvasElement).getByRole('group', { name: 'Global switches' });
     await expect(within(switches).getByRole('button', { name: 'Metronome' })).toHaveAttribute('data-hue', 'role-2');
@@ -103,30 +79,23 @@ export const Helpers: Story = {
 
 /** The section row's AllOn: Metronome on with its settings open, Unison and help on. */
 export const AllOn: Story = {
-  args: {
-    metronome: true,
-    metronomeOpen: true,
-    metronomeVolume: boardMetronome.volume,
-    metronomeBell: boardMetronome.bell,
-    unison: true,
-    help: true,
-  },
+  args: s.AllOn.args,
   parameters: { layout: 'fullscreen' },
 };
 
 /** The metronome's settings open, and the synth off: the popover says the click can't sound. */
 export const MetronomeNotAudible: Story = {
-  args: { metronome: true, metronomeOpen: true, metronomeAudible: false, synthOn: false },
+  args: s.MetronomeNotAudible.args,
 };
 
 /** The smallest board, 1217 wide: tighter gaps, the name steps aside, every control still there. */
 export const Narrow: Story = {
-  args: { width: 1217, chosen: 'settings', nowPlaying: { style: 'Sunday Drive Pop', tempo: 104 }, dropouts: 4 },
+  args: s.Narrow.args,
 };
 
 /** The board's full 1440 width. */
 export const Wide: Story = {
-  args: { width: 1440 },
+  args: s.Wide.args,
 };
 
 /** Wired: the bar holds its own state here, so the tabs, switches and popover respond as in the app. */
