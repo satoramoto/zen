@@ -1,4 +1,7 @@
-import type { FolderItem } from './FolderList'
+// FolderList's stories as plain props: FolderList.stories.tsx draws them (with either renderer's
+// `Tree`), and the tree snapshot (`src/library/view/snapshot.test.ts`) prints every instance.
+import { defineFixtures, type FixtureProps } from '../../../fixtures';
+import type { FolderItem, FolderListModelProps } from './FolderList.model';
 
 /** The style browser's folders: fake names and counts, no real style data. */
 export const styleFolders: FolderItem[] = [
@@ -14,7 +17,7 @@ export const styleFolders: FolderItem[] = [
   { id: 'world', label: 'World', count: '37', tip: 'library.folder' },
   { id: 'user', label: 'User styles on the external drive with a long name', count: '11', tip: 'library.folder' },
   { id: 'empty', label: 'Imported (empty)', count: '0', tip: 'library.folder', disabled: true },
-]
+];
 
 /** The sound browser's categories. */
 export const soundCategories: FolderItem[] = [
@@ -27,4 +30,25 @@ export const soundCategories: FolderItem[] = [
   { id: 'synth', label: 'Synth', count: '44' },
   { id: 'drums', label: 'Drum kits', count: '16' },
   { id: 'plugins', label: 'Sampler Deluxe', count: '8' },
-]
+];
+
+const ALL_IDS = [...styleFolders, ...soundCategories].map((item) => item.id);
+
+/** The controls. */
+export const folderListArgTypes = {
+  items: { control: 'object' },
+  chosen: { control: 'select', options: [null, ...ALL_IDS] },
+  label: { control: 'text' },
+  width: { control: { type: 'number', min: 80, step: 10 } },
+  height: { control: { type: 'number', min: 28, step: 28 } },
+} as const;
+
+/** The style folders, Pop & Rock chosen, in a 220 × 280 box. Every story starts from it. */
+const styles: FixtureProps<FolderListModelProps> = { items: styleFolders, chosen: 'pop', label: 'Style folders', width: 220, height: 280 };
+
+export const folderListStories = defineFixtures<FolderListModelProps>()({
+  Styles: { args: styles },
+  Keys: { args: styles },
+  Sounds: { args: { ...styles, items: soundCategories, chosen: null, label: 'Sound categories', height: 252 } },
+  Narrow: { args: { ...styles, chosen: 'user', width: 160 } },
+});

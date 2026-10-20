@@ -8,6 +8,10 @@ import { instances, type Fixtures } from '../fixtures';
 import { h, printTree, type Node } from './Tree.model';
 import { buttonView } from '../components/core/Button/Button.model';
 import { buttonStories } from '../components/core/Button/Button.fixtures';
+import { actionButtonView } from '../components/core/ActionButton/ActionButton.model';
+import { actionButtonStories } from '../components/core/ActionButton/ActionButton.fixtures';
+import { searchFieldView } from '../components/core/SearchField/SearchField.model';
+import { searchFieldStories } from '../components/core/SearchField/SearchField.fixtures';
 import { knobView } from '../components/music/Knob/Knob.model';
 import { knobStories } from '../components/music/Knob/Knob.fixtures';
 import { lampButtonView } from '../components/core/LampButton/LampButton.model';
@@ -73,6 +77,12 @@ import { separatorView } from '../components/core/Separator/Separator.model';
 import { separatorStories } from '../components/core/Separator/Separator.fixtures';
 import { lineSliderView } from '../components/core/LineSlider/LineSlider.model';
 import { lineSliderStories } from '../components/core/LineSlider/LineSlider.fixtures';
+import { sliderView } from '../components/core/Slider/Slider.model';
+import { sliderStories } from '../components/core/Slider/Slider.fixtures';
+import { popoverView } from '../components/core/Popover/Popover.model';
+import { popoverStories } from '../components/core/Popover/Popover.fixtures';
+import { modalView, sheetView } from '../components/core/Modal/Modal.model';
+import { modalSample, modalStories, sheetStories } from '../components/core/Modal/Modal.fixtures';
 import { tabsView } from '../layout/Tabs.model';
 import { tabsStories } from '../layout/Tabs.fixtures';
 import { displayView } from '../yahaha/Display/Display.model';
@@ -87,6 +97,10 @@ import { padBankRegionView, padBankView, type PadBankProps, type PadBankRegionPr
 import { padBankStories } from '../yahaha/PadBank/PadBank.fixtures';
 import { stageView } from '../yahaha/Stage/Stage.model';
 import { stageStories } from '../yahaha/Stage/Stage.fixtures';
+import { pageListView } from '../components/core/PageList/PageList.model';
+import { pageListStories } from '../components/core/PageList/PageList.fixtures';
+import { folderListView } from '../components/core/FolderList/FolderList.model';
+import { folderListStories } from '../components/core/FolderList/FolderList.fixtures';
 
 /** A primitive fixture's text children, as the tree builders take them. */
 const kids = (props: unknown): string[] => {
@@ -121,6 +135,8 @@ function snapshot<P>(name: string, view: (props: P) => Node, fixtures: Fixtures<
 }
 
 snapshot('Button', (props) => buttonView(props), buttonStories);
+snapshot('ActionButton', (props) => actionButtonView(props), actionButtonStories);
+snapshot('SearchField', (props) => searchFieldView(props as Parameters<typeof searchFieldView>[0]), searchFieldStories);
 snapshot('Knob', (props) => knobView(props as Parameters<typeof knobView>[0]), knobStories);
 snapshot('LampButton', (props) => lampButtonView(props as Parameters<typeof lampButtonView>[0]), lampButtonStories);
 snapshot('SettingsRow', (props) => settingsRowView(props as Parameters<typeof settingsRowView>[0], 'uid'), settingsRowStories);
@@ -159,6 +175,12 @@ snapshot('Hole', (props) => holeNode(undefined, (props as { name?: string }).nam
 snapshot('StatusDot', (props) => statusDotView(props), statusDotStories);
 snapshot('Separator', (props) => separatorView(props), separatorStories);
 snapshot('LineSlider', (props) => lineSliderView(props as Parameters<typeof lineSliderView>[0]), lineSliderStories);
+snapshot('Slider', (props) => sliderView(props as Parameters<typeof sliderView>[0]), sliderStories);
+snapshot('Popover', (props) => popoverView(props), popoverStories);
+snapshot('Modal', (props) => modalView(props as Parameters<typeof modalView>[0]), modalStories);
+// A composite: a Modal holding action buttons in its `actions` slot.
+snapshot('Modal sample', (props) => modalSample(props), { WithActions: modalStories.WithActions });
+snapshot('Sheet', (props) => sheetView(props as Parameters<typeof sheetView>[0]), sheetStories);
 snapshot('Tabs', (props) => tabsView(props), tabsStories);
 snapshot('Region',(props) => regionView(props as RegionDrawProps, {}, { uid: 'uid' }), regionStories);
 // A composite: Regions holding Groups of Buttons, and Regions with views (Tabs by name).
@@ -181,3 +203,5 @@ snapshot('PadBank', (props) => padBankView(props as PadBankProps, (props as PadB
 snapshot('PadBankRegion', (props) => padBankRegionView(props as PadBankRegionProps) as unknown as Node, padBankStories);
 // The Stage's target tree (the Screen with its regions as slots); its bindings still draw the Screen by hand until the layout lane's Screen takes region slots.
 snapshot('Stage', (props) => stageView(props, {}, { left: 0, right: 0 }), stageStories);
+snapshot('PageList', (props) => pageListView(props as Parameters<typeof pageListView>[0]), pageListStories);
+snapshot('FolderList', (props) => folderListView(props as Parameters<typeof folderListView>[0]), folderListStories);
