@@ -17,7 +17,7 @@ export {
   type SurfaceModelProps,
 } from './Surface.model';
 
-export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as'> {
+export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as' | 'style'> {
   /** Forwarded to the rendered element (`any`: the element is whatever `as` names). */
   ref?: Ref<any>;
   /** The depth it sits at: backdrop, edge and cast shadow (and the fill, without a material). */
@@ -44,8 +44,21 @@ export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as'>
   /** The element to render; default `div`. */
   as?: ElementType;
   className?: string;
-  style?: CSSProperties;
+  /** Inline style: an object, or a `style` string (as a view tree's `component('Surface', …)` passes it). */
+  style?: CSSProperties | string;
   children?: ReactNode;
+}
+
+/** A `style` string as React's style object (`min-width` → `minWidth`; custom properties as is). */
+function styleObject(text: string): CSSProperties {
+  const style: Record<string, string> = {};
+  for (const declaration of text.split(';')) {
+    const colon = declaration.indexOf(':');
+    const name = declaration.slice(0, colon).trim();
+    if (colon < 0 || !name) continue;
+    style[name.startsWith('--') ? name : name.replace(/^-ms-/, 'ms-').replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())] = declaration.slice(colon + 1).trim();
+  }
+  return style as CSSProperties;
 }
 
 /**
@@ -93,6 +106,7 @@ export function Surface({
   shader,
   as: Tag = 'div',
   className,
+  style,
   children,
   ...rest
 }: SurfaceProps) {
@@ -105,7 +119,7 @@ export function Surface({
   const source = chosen && supported && !opaque && chosen !== failed ? (typeof chosen === 'string' ? compiledMaterial(chosen) : chosen) : null;
   const view = surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }, source !== null);
   return (
-    <Tag className={view.className} {...view.attrs} {...rest}>
+    <Tag className={view.className} {...view.attrs} {...rest} style={typeof style === 'string' ? styleObject(style) : style}>
       {source && chosen && (
         <ShaderCanvas
           className="lib-surface__shader"

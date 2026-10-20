@@ -16,6 +16,8 @@ import Region from '../layout/Region.svelte';
 import Group from '../layout/Group.svelte';
 import Layer from '../layout/Layer.svelte';
 import Screen from '../layout/Screen.svelte';
+import SlotCall from '../layout/SlotCall.svelte';
+import Surface from '../primitives/Surface.svelte';
 import AssembledScreen from '../layout/assembly/AssembledScreen.svelte';
 import FormScope from '../layout/assembly/FormScope.svelte';
 import HealthSlot from '../yahaha/HealthSlot/HealthSlot.svelte';
@@ -27,7 +29,7 @@ let registry: Record<string, Component<any>> | undefined;
 
 /** The Svelte component registered as `name`; throws for an unknown name. */
 export function svelteComponent(name: string): Component<any> {
-  registry ??= { Button, Knob, LampButton, LineSlider, Separator, SettingsRow, Stack, StatusDot, Tabs, Text, HealthSlot, MetronomePopover, ChordReadout, TempoReadout, AssembledScreen, FormScope, Group, Layer, Region, Screen } as Record<string, Component<any>>;
+  registry ??= { Button, Knob, LampButton, LineSlider, Separator, SettingsRow, Stack, StatusDot, Tabs, Text, HealthSlot, MetronomePopover, ChordReadout, TempoReadout, AssembledScreen, FormScope, Group, Layer, Region, Screen, SlotCall, Surface } as Record<string, Component<any>>;
   const found = registry[name];
   if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/view/reactComponents.ts and svelteComponents.ts)`);
   return found;

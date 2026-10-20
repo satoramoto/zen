@@ -4,14 +4,13 @@
   the job. The measured room is a local state (`localState`) the `room` store writes, read with
   `fromStore`; the principles come from the nearest ThemeScope (`scopePrinciples`,
   principles.svelte.ts). Each region's content is a snippet given the chosen form and the placed
-  region, bound to them (`bindSnippet`) as its slot, inside the `FormScope` the tree wraps it in.
+  region, rendered with them by the tree's `SlotCall`, inside the `FormScope` the tree wraps it in.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { fromStore } from 'svelte/store';
   import Tree from '../../view/Tree.svelte';
   import { localState } from '../local';
-  import { bindSnippet } from '../snippet';
   import { assembledPlacement, assembledScreenHandlers, assembledScreenView, regionFills } from './AssembledScreen.model';
   import { scopePrinciples } from './principles.svelte';
   import type { RoomSize } from './room';
@@ -44,7 +43,8 @@
   const scope = scopePrinciples(() => principles);
   const model = $derived({ name, spec, room: given, className: cls ?? className, style });
   const placement = $derived(assembledPlacement(model, { room: measured.current, principles: scope.current }));
-  const slots = $derived(regionFills(placement, (id, placed) => bindSnippet(regions[id], () => placed.form, () => placed)));
+  // Each region's snippet as is: the tree's `SlotCall` renders it with the form and the placed region.
+  const slots = $derived(regionFills(placement, (id) => regions[id] as Snippet | undefined));
 </script>
 
 <Tree tree={assembledScreenView(model, placement)} {slots} handlers={assembledScreenHandlers({ onPlacement }, placement, room)} />

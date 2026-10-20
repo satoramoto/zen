@@ -178,7 +178,8 @@ export function regionView<L>(props: RegionDrawProps<L>, slots: RegionSlots, { u
         role: tabbed ? 'tabpanel' : undefined,
         'aria-labelledby': tabbed && chosen ? ids.tab(chosen.id) : undefined,
       },
-      tabbed ? (chosen ? slot(regionViewSlot(chosen.id)) : null) : slot('children'),
+      // The chosen view's body, given its id (Svelte's `children(id)`; React's view children as they are).
+      tabbed ? (chosen ? component('SlotCall', { args: [chosen.id] }, { slots: { content: slot(regionViewSlot(chosen.id)) } }) : null) : slot('children'),
     ),
   );
 }

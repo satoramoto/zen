@@ -5,8 +5,8 @@
 // (Svelte) each read the screen's state (the measured room, the scope's principles), compute the
 // placement with `assembledPlacement` and hand the tree to their `Tree`, each region's content in
 // its own slot (`regionSlot(id)`), inside a `FormScope` that hands it the chosen form.
-import { surfaceView, type SurfaceModelProps } from '../../primitives/Surface.model';
-import { component, each, h, slot, styleText, when, wire, type Bind, type Handlers, type Node } from '../../view/Tree.model';
+import type { SurfaceModelProps } from '../../primitives/Surface.model';
+import { component, each, h, slot, styleText, when, wire, type Bind, type ComponentNode, type Handlers, type Node } from '../../view/Tree.model';
 import type { StyleDecls } from '../style';
 import { assemble } from './assemble';
 import { FALLBACK_ROOM, type RoomSize } from './room';
@@ -209,20 +209,23 @@ export function placementKey(placement: Placement): string {
   return (hash >>> 0).toString(36);
 }
 
-/** A Surface drawn as its element: `surfaceView`'s class and `data-*`, plus `attrs`. */
-const surface = (props: SurfaceModelProps, attrs: Record<string, string | undefined>): Node => {
-  const view = surfaceView(props);
-  return h('div', { class: view.className, ...view.attrs, ...attrs });
-};
+/** A `Surface` (the component, so a pack's shader material still draws on it) with `attrs`. */
+const surface = (props: SurfaceModelProps, attrs: Record<string, string | undefined>, key?: string): ComponentNode =>
+  component('Surface', { ...props, ...attrs }, { key });
 
-/** A region's slot: the glass first when it has one, then its content (`regionSlot(id)`) in a
- *  `FormScope` handing it the chosen form and its parts' forms. */
+/** A region's slot: the glass first when it has one, then its content (`regionSlot(id)`, called
+ *  with the chosen form and the placed region by `SlotCall`) in a `FormScope` handing it the
+ *  chosen form and its parts' forms. */
 const slotNode = ({ id, placed, attrs, style, glass }: SlotView): Node =>
   h(
     'div',
     { class: 'lib-assembled__slot', ...attrs, style: styleText(style) },
     when(glass, () => surface({ layer: 'float', radius: 'none', className: 'lib-assembled__glass' }, { 'aria-hidden': 'true' })),
-    component('FormScope', { form: placed.form, parts: placed.parts }, { slots: { children: [slot(regionSlot(id))] } }),
+    component(
+      'FormScope',
+      { form: placed.form, parts: placed.parts },
+      { slots: { children: [component('SlotCall', { args: [placed.form, placed] }, { slots: { content: slot(regionSlot(id)) } })] } },
+    ),
   );
 
 const zone = (part: 'header' | 'footer', view: ZoneView): Node =>
@@ -241,8 +244,8 @@ export function assembledScreenView(props: AssembledScreenModelProps, placement:
     h(
       'div',
       { class: view.className, ...view.attrs, style: styleAttr(props.style) },
-      each(view.bands, (_, i) => `band-${i}`, (band) =>
-        surface({ layer: 'ground', radius: 'none', className: 'lib-assembled__band' }, { 'data-part': 'band', 'aria-hidden': 'true', style: styleText(band) }),
+      view.bands.map((band, i) =>
+        surface({ layer: 'ground', radius: 'none', className: 'lib-assembled__band' }, { 'data-part': 'band', 'aria-hidden': 'true', style: styleText(band) }, `band-${i}`),
       ),
       {
         ...h(

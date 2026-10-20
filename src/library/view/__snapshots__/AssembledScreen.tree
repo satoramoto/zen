@@ -5,21 +5,29 @@
       <div key=bar class="lib-assembled__slot" data-form="bar" data-region="bar" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 900; --lib-at-h: 28">
         <FormScope form="bar">
           #children
-            {region:bar}
+            <SlotCall args=["bar",{"id":"bar","form":"bar","step":0,"rect":{"x":0,"y":0,"w":900,"h":28},"zone":"header"}]>
+              #content
+                {region:bar}
     <div class="lib-assembled__zone" data-part="body" style="--lib-at-x: 0; --lib-at-y: 36; --lib-at-w: 900; --lib-at-h: 384">
       <div class="lib-assembled__body" data-part="grid" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 900; --lib-at-h: 384; --lib-zoom: 1">
         <div key=now class="lib-assembled__slot" data-form="full" data-region="now" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 588; --lib-at-h: 220">
           <FormScope form="full">
             #children
-              {region:now}
+              <SlotCall args=["full",{"id":"now","form":"full","step":0,"rect":{"x":0,"y":0,"w":588,"h":220},"zone":"body"}]>
+                #content
+                  {region:now}
         <div key=side class="lib-assembled__slot" data-form="docked" data-region="side" style="--lib-at-x: 596; --lib-at-y: 0; --lib-at-w: 304; --lib-at-h: 220">
           <FormScope form="docked">
             #children
-              {region:side}
+              <SlotCall args=["docked",{"id":"side","form":"docked","step":0,"rect":{"x":596,"y":0,"w":304,"h":220},"zone":"body"}]>
+                #content
+                  {region:side}
         <div key=pads class="lib-assembled__slot" data-form="two-rows" data-region="pads" style="--lib-at-x: 0; --lib-at-y: 228; --lib-at-w: 900; --lib-at-h: 156">
           <FormScope form="two-rows">
             #children
-              {region:pads}
+              <SlotCall args=["two-rows",{"id":"pads","form":"two-rows","step":0,"rect":{"x":0,"y":228,"w":900,"h":156},"zone":"body"}]>
+                #content
+                  {region:pads}
 
 ## Board
 <div aria-label="Assembly demo" class="lib-assembled" data-part="screen" data-zoom="1.000" role="group" use:report={"key":"12tvrd2","onReport":"placement"}>
@@ -28,21 +36,29 @@
       <div key=bar class="lib-assembled__slot" data-form="bar" data-region="bar" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 1440; --lib-at-h: 28">
         <FormScope form="bar">
           #children
-            {region:bar}
+            <SlotCall args=["bar",{"id":"bar","form":"bar","step":0,"rect":{"x":0,"y":0,"w":1440,"h":28},"zone":"header"}]>
+              #content
+                {region:bar}
     <div class="lib-assembled__zone" data-part="body" style="--lib-at-x: 0; --lib-at-y: 36; --lib-at-w: 1440; --lib-at-h: 864">
       <div class="lib-assembled__body" data-part="grid" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 1440; --lib-at-h: 864; --lib-zoom: 1">
         <div key=now class="lib-assembled__slot" data-form="full" data-region="now" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 1128; --lib-at-h: 220">
           <FormScope form="full">
             #children
-              {region:now}
+              <SlotCall args=["full",{"id":"now","form":"full","step":0,"rect":{"x":0,"y":0,"w":1128,"h":220},"zone":"body"}]>
+                #content
+                  {region:now}
         <div key=side class="lib-assembled__slot" data-form="docked" data-region="side" style="--lib-at-x: 1136; --lib-at-y: 0; --lib-at-w: 304; --lib-at-h: 220">
           <FormScope form="docked">
             #children
-              {region:side}
+              <SlotCall args=["docked",{"id":"side","form":"docked","step":0,"rect":{"x":1136,"y":0,"w":304,"h":220},"zone":"body"}]>
+                #content
+                  {region:side}
         <div key=pads class="lib-assembled__slot" data-form="two-rows" data-region="pads" style="--lib-at-x: 0; --lib-at-y: 228; --lib-at-w: 1440; --lib-at-h: 636">
           <FormScope form="two-rows">
             #children
-              {region:pads}
+              <SlotCall args=["two-rows",{"id":"pads","form":"two-rows","step":0,"rect":{"x":0,"y":228,"w":1440,"h":636},"zone":"body"}]>
+                #content
+                  {region:pads}
 
 ## Short
 <div aria-label="Assembly demo" class="lib-assembled" data-part="screen" data-zoom="1.000" role="group" use:report={"key":"18z11kl","onReport":"placement"}>
@@ -51,21 +67,29 @@
       <div key=bar class="lib-assembled__slot" data-form="bar" data-region="bar" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 900; --lib-at-h: 28">
         <FormScope form="bar">
           #children
-            {region:bar}
+            <SlotCall args=["bar",{"id":"bar","form":"bar","step":0,"rect":{"x":0,"y":0,"w":900,"h":28},"zone":"header"}]>
+              #content
+                {region:bar}
     <div class="lib-assembled__zone" data-part="body" style="--lib-at-x: 0; --lib-at-y: 36; --lib-at-w: 900; --lib-at-h: 294">
       <div class="lib-assembled__body" data-part="grid" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 900; --lib-at-h: 294; --lib-zoom: 1">
         <div key=now class="lib-assembled__slot" data-form="full" data-region="now" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 588; --lib-at-h: 206">
           <FormScope form="full">
             #children
-              {region:now}
+              <SlotCall args=["full",{"id":"now","form":"full","step":0,"rect":{"x":0,"y":0,"w":588,"h":206},"zone":"body"}]>
+                #content
+                  {region:now}
         <div key=side class="lib-assembled__slot" data-form="docked" data-region="side" style="--lib-at-x: 596; --lib-at-y: 0; --lib-at-w: 304; --lib-at-h: 206">
           <FormScope form="docked">
             #children
-              {region:side}
+              <SlotCall args=["docked",{"id":"side","form":"docked","step":0,"rect":{"x":596,"y":0,"w":304,"h":206},"zone":"body"}]>
+                #content
+                  {region:side}
         <div key=pads class="lib-assembled__slot" data-form="one-row" data-region="pads" style="--lib-at-x: 0; --lib-at-y: 214; --lib-at-w: 900; --lib-at-h: 80">
           <FormScope form="one-row">
             #children
-              {region:pads}
+              <SlotCall args=["one-row",{"id":"pads","form":"one-row","step":1,"rect":{"x":0,"y":214,"w":900,"h":80},"zone":"body"}]>
+                #content
+                  {region:pads}
 
 ## Small
 <div aria-label="Assembly demo" class="lib-assembled" data-part="screen" data-zoom="1.000" role="group" use:report={"key":"97f08g","onReport":"placement"}>
@@ -74,68 +98,92 @@
       <div key=bar class="lib-assembled__slot" data-form="bar" data-region="bar" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 600; --lib-at-h: 28">
         <FormScope form="bar">
           #children
-            {region:bar}
+            <SlotCall args=["bar",{"id":"bar","form":"bar","step":0,"rect":{"x":0,"y":0,"w":600,"h":28},"zone":"header"}]>
+              #content
+                {region:bar}
     <div class="lib-assembled__zone" data-part="body" style="--lib-at-x: 0; --lib-at-y: 36; --lib-at-w: 600; --lib-at-h: 204">
       <div class="lib-assembled__body" data-part="grid" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 600; --lib-at-h: 204; --lib-zoom: 1">
         <div key=now class="lib-assembled__slot" data-form="compact" data-region="now" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 512; --lib-at-h: 116">
           <FormScope form="compact">
             #children
-              {region:now}
+              <SlotCall args=["compact",{"id":"now","form":"compact","step":1,"rect":{"x":0,"y":0,"w":512,"h":116},"zone":"body"}]>
+                #content
+                  {region:now}
         <div key=side class="lib-assembled__slot" data-form="rail" data-region="side" style="--lib-at-x: 520; --lib-at-y: 0; --lib-at-w: 80; --lib-at-h: 116">
           <FormScope form="rail">
             #children
-              {region:side}
+              <SlotCall args=["rail",{"id":"side","form":"rail","step":1,"rect":{"x":520,"y":0,"w":80,"h":116},"zone":"body"}]>
+                #content
+                  {region:side}
         <div key=pads class="lib-assembled__slot" data-form="one-row" data-region="pads" style="--lib-at-x: 0; --lib-at-y: 124; --lib-at-w: 600; --lib-at-h: 80">
           <FormScope form="one-row">
             #children
-              {region:pads}
+              <SlotCall args=["one-row",{"id":"pads","form":"one-row","step":1,"rect":{"x":0,"y":124,"w":600,"h":80},"zone":"body"}]>
+                #content
+                  {region:pads}
 
 ## AspectLocked
 <div aria-label="Assembly demo" class="lib-assembled" data-aspect="1.778" data-part="screen" data-zoom="1.000" role="group" use:report={"key":"bpxutr","onReport":"placement"}>
-  <div key=band-0 aria-hidden="true" class="lib-surface lib-assembled__band" data-layer="ground" data-part="band" data-radius="none" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 176; --lib-at-h: 420">
-  <div key=band-1 aria-hidden="true" class="lib-surface lib-assembled__band" data-layer="ground" data-part="band" data-radius="none" style="--lib-at-x: 922.6666666666666; --lib-at-y: 0; --lib-at-w: 177.33333333333337; --lib-at-h: 420">
+  <Surface key=band-0 aria-hidden="true" className="lib-assembled__band" data-part="band" layer="ground" radius="none" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 176; --lib-at-h: 420">
+  <Surface key=band-1 aria-hidden="true" className="lib-assembled__band" data-part="band" layer="ground" radius="none" style="--lib-at-x: 922.6666666666666; --lib-at-y: 0; --lib-at-w: 177.33333333333337; --lib-at-h: 420">
   <div key=room class="lib-assembled__room" data-part="room" style="--lib-at-x: 176; --lib-at-y: 0; --lib-at-w: 746.6666666666666; --lib-at-h: 420; --lib-scale: 1">
     <div class="lib-assembled__zone" data-part="header" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 746.6666666666666; --lib-at-h: 28">
       <div key=bar class="lib-assembled__slot" data-form="bar" data-region="bar" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 746.6666666666666; --lib-at-h: 28">
         <FormScope form="bar">
           #children
-            {region:bar}
+            <SlotCall args=["bar",{"id":"bar","form":"bar","step":0,"rect":{"x":0,"y":0,"w":746.6666666666666,"h":28},"zone":"header"}]>
+              #content
+                {region:bar}
     <div class="lib-assembled__zone" data-part="body" style="--lib-at-x: 0; --lib-at-y: 36; --lib-at-w: 746.6666666666666; --lib-at-h: 384">
       <div class="lib-assembled__body" data-part="grid" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 746.6666666666666; --lib-at-h: 384; --lib-zoom: 1">
         <div key=now class="lib-assembled__slot" data-form="full" data-region="now" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 434.66666666666663; --lib-at-h: 220">
           <FormScope form="full">
             #children
-              {region:now}
+              <SlotCall args=["full",{"id":"now","form":"full","step":0,"rect":{"x":0,"y":0,"w":434.66666666666663,"h":220},"zone":"body"}]>
+                #content
+                  {region:now}
         <div key=side class="lib-assembled__slot" data-form="docked" data-region="side" style="--lib-at-x: 442.66666666666663; --lib-at-y: 0; --lib-at-w: 304; --lib-at-h: 220">
           <FormScope form="docked">
             #children
-              {region:side}
+              <SlotCall args=["docked",{"id":"side","form":"docked","step":0,"rect":{"x":442.66666666666663,"y":0,"w":304,"h":220},"zone":"body"}]>
+                #content
+                  {region:side}
         <div key=pads class="lib-assembled__slot" data-form="two-rows" data-region="pads" style="--lib-at-x: 0; --lib-at-y: 228; --lib-at-w: 746.6666666666666; --lib-at-h: 156">
           <FormScope form="two-rows">
             #children
-              {region:pads}
+              <SlotCall args=["two-rows",{"id":"pads","form":"two-rows","step":0,"rect":{"x":0,"y":228,"w":746.6666666666666,"h":156},"zone":"body"}]>
+                #content
+                  {region:pads}
 
 ## AspectScaled
 <div aria-label="Assembly demo" class="lib-assembled" data-aspect="1.778" data-part="screen" data-zoom="1.000" role="group" use:report={"key":"1uusnye","onReport":"placement"}>
-  <div key=band-0 aria-hidden="true" class="lib-surface lib-assembled__band" data-layer="ground" data-part="band" data-radius="none" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 700; --lib-at-h: 103">
-  <div key=band-1 aria-hidden="true" class="lib-surface lib-assembled__band" data-layer="ground" data-part="band" data-radius="none" style="--lib-at-x: 0; --lib-at-y: 496.75; --lib-at-w: 700; --lib-at-h: 103.25">
+  <Surface key=band-0 aria-hidden="true" className="lib-assembled__band" data-part="band" layer="ground" radius="none" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 700; --lib-at-h: 103">
+  <Surface key=band-1 aria-hidden="true" className="lib-assembled__band" data-part="band" layer="ground" radius="none" style="--lib-at-x: 0; --lib-at-y: 496.75; --lib-at-w: 700; --lib-at-h: 103.25">
   <div key=room class="lib-assembled__room" data-part="room" data-scale="0.438" style="--lib-at-x: 0; --lib-at-y: 103; --lib-at-w: 1600; --lib-at-h: 900; --lib-scale: 0.4375">
     <div class="lib-assembled__zone" data-part="header" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 1600; --lib-at-h: 28">
       <div key=bar class="lib-assembled__slot" data-form="bar" data-region="bar" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 1600; --lib-at-h: 28">
         <FormScope form="bar">
           #children
-            {region:bar}
+            <SlotCall args=["bar",{"id":"bar","form":"bar","step":0,"rect":{"x":0,"y":0,"w":1600,"h":28},"zone":"header"}]>
+              #content
+                {region:bar}
     <div class="lib-assembled__zone" data-part="body" style="--lib-at-x: 0; --lib-at-y: 36; --lib-at-w: 1600; --lib-at-h: 864">
       <div class="lib-assembled__body" data-part="grid" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 1600; --lib-at-h: 864; --lib-zoom: 1">
         <div key=now class="lib-assembled__slot" data-form="full" data-region="now" style="--lib-at-x: 0; --lib-at-y: 0; --lib-at-w: 1288; --lib-at-h: 220">
           <FormScope form="full">
             #children
-              {region:now}
+              <SlotCall args=["full",{"id":"now","form":"full","step":0,"rect":{"x":0,"y":0,"w":1288,"h":220},"zone":"body"}]>
+                #content
+                  {region:now}
         <div key=side class="lib-assembled__slot" data-form="docked" data-region="side" style="--lib-at-x: 1296; --lib-at-y: 0; --lib-at-w: 304; --lib-at-h: 220">
           <FormScope form="docked">
             #children
-              {region:side}
+              <SlotCall args=["docked",{"id":"side","form":"docked","step":0,"rect":{"x":1296,"y":0,"w":304,"h":220},"zone":"body"}]>
+                #content
+                  {region:side}
         <div key=pads class="lib-assembled__slot" data-form="two-rows" data-region="pads" style="--lib-at-x: 0; --lib-at-y: 228; --lib-at-w: 1600; --lib-at-h: 636">
           <FormScope form="two-rows">
             #children
-              {region:pads}
+              <SlotCall args=["two-rows",{"id":"pads","form":"two-rows","step":0,"rect":{"x":0,"y":228,"w":1600,"h":636},"zone":"body"}]>
+                #content
+                  {region:pads}

@@ -22,7 +22,6 @@
   import Tree from '../view/Tree.svelte';
   import type { TipAction } from '../components/core/Button/Button.model';
   import { localState } from './local';
-  import { bindSnippet } from './snippet';
   import { isSlotContent, regionHandlers, regionInitialView, regionView, regionViewSlot, type RegionModelProps } from './Region.model';
   import '../primitives/Text.css';
   import './Region.css';
@@ -71,23 +70,12 @@
   const chosen = fromStore(own);
   const text = (value: string | Snippet | undefined) => (typeof value === 'string' ? value : undefined);
   const snippet = (value: string | Snippet | undefined) => (typeof value === 'string' ? undefined : value);
-  // Each body is `children` bound to its view's id, made once per id (and again only when
-  // `children` changes), so a new `views` array never redraws the body.
-  const bodies = new Map<string | undefined, Snippet | undefined>();
-  let bodiesOf: Props['children'];
-  const body = (id: string | undefined) => {
-    if (bodiesOf !== children) {
-      bodies.clear();
-      bodiesOf = children;
-    }
-    if (!bodies.has(id)) bodies.set(id, bindSnippet(children, () => id));
-    return bodies.get(id);
-  };
+  // Every view's body is `children`: the tree's `SlotCall` renders it with the chosen view's id.
   const slots = $derived({
     label: snippet(label),
     aside: snippet(aside),
-    children: body(undefined),
-    ...Object.fromEntries(views.map((v) => [regionViewSlot(v.id), body(v.id)])),
+    children: children as Snippet | undefined,
+    ...Object.fromEntries(views.map((v) => [regionViewSlot(v.id), children as Snippet | undefined])),
   });
 </script>
 

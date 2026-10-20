@@ -17,6 +17,8 @@
     /** The element to render; default `div`. */
     as?: string;
     class?: string;
+    /** The class as a view tree's `component('Surface', …)` passes it (`class` wins). */
+    className?: string;
     /** The rendered element (`bind:ref`). */
     ref?: HTMLElement | null;
     children?: Snippet;
@@ -32,13 +34,14 @@
     ambient,
     shader: _shader,
     as = 'div',
-    class: className,
+    class: cls,
+    className: treeClass,
     ref = $bindable(null),
     children,
     ...rest
   }: Props = $props();
 
-  const view = $derived(surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }));
+  const view = $derived(surfaceView({ layer, material, radius, pressed, lit, border, ambient, className: cls ?? treeClass }));
 </script>
 
 <svelte:element this={as} bind:this={ref} class={view.className} {...view.attrs} {...rest}>{@render children?.()}</svelte:element>

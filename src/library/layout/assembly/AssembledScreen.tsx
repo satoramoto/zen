@@ -12,8 +12,8 @@ import {
 import { scopePrinciples } from './principles';
 import type { RoomSize } from './room';
 import type { Placed, Placement, Principles, ScreenSpec } from './types';
-// The bands and the glass are Surfaces drawn as plain divs with Surface's class and data
-// (`assembledScreenView`; never a shader). Before Assembly.css, so its rules win.
+// The bands and the glass are `Surface` components in the tree (so a pack's shader material draws
+// on them). Its stylesheet before Assembly.css, so Assembly's rules win.
 import '../../primitives/Surface.css';
 import './Assembly.css';
 
@@ -50,9 +50,6 @@ export function useScopePrinciples(given?: Principles): Principles {
   const scope = useThemeScope();
   return useMemo(() => scopePrinciples(scope, given), [given, scope]);
 }
-
-/** A region's content as its slot draws it: a function of the chosen form called with it. */
-const content = (region: RegionContent, placed: Placed): ReactNode => (typeof region === 'function' ? region(placed.form, placed) : region);
 
 /**
  * **Job.** A screen that assembles itself: the regions' declared forms, the screen's intent (`spec`)
@@ -99,7 +96,7 @@ export function AssembledScreen({ regions = {}, onPlacement, ...props }: Assembl
   return (
     <Tree
       tree={assembledScreenView(props as AssembledScreenModelProps, placement)}
-      slots={regionFills(placement, (id, placed) => content(regions[id], placed))}
+      slots={regionFills(placement, (id) => regions[id] as ReactNode)}
       handlers={assembledScreenHandlers({ onPlacement }, placement, room)}
     />
   );

@@ -3,7 +3,7 @@
 // (Svelte) each hand `layerView` to their `Tree`.
 import type { AmbientRegion, LayerName } from '../contract';
 import { surfaceView, type SurfaceModelProps } from '../primitives/Surface.model';
-import { component, h, slot, type Node } from '../view/Tree.model';
+import { component, slot, type Handlers, type Node } from '../view/Tree.model';
 import { cssText } from './Region.model';
 
 /** What Layer decides from, in any framework. */
@@ -40,16 +40,27 @@ export function passAttrs(props: Record<string, unknown>): Record<string, string
   return attrs;
 }
 
+/** The event props among `props` (`onClick` in React, `onclick` in Svelte): each a function,
+ *  routed to the element through the tree's handlers under its own name. */
+export function layerHandlers(props: Record<string, unknown>): Handlers {
+  return Object.fromEntries(Object.entries(props).filter(([name, value]) => /^on[A-Za-z]/.test(name) && typeof value === 'function')) as Handlers;
+}
+
 /**
- * The tree Layer draws: a Surface element (`as`, default `div`) with `layerSurface`'s class and
- * attributes and its `ambient`, the other attributes after them, and the `children` slot.
- * `custom`: React's `as` is a component, drawn as `LAYER_AS` with `className`.
+ * The tree Layer draws: a `Surface` (the component, so a pack's shader material still draws on
+ * it) with `layerSurface`'s props, its `ambient`, its element (`as`, default `div`) and the other
+ * attributes, the `children` slot, and each event prop in `handlers` (`layerHandlers`) passed on
+ * under its own name. `custom`: React's `as` is a component, drawn as `LAYER_AS` with Surface's
+ * class and attributes.
  */
-export function layerView({ level, className, ambient, as = 'div', ...rest }: LayerViewProps, custom = false): Node {
+export function layerView({ level, className, ambient, as = 'div', ...rest }: LayerViewProps, custom = false, handlers: Handlers = {}): Node {
   const surface = layerSurface({ level, className });
-  const view = surfaceView({ ...surface, ambient });
-  const attrs = { ...view.attrs, ...passAttrs(rest) };
+  const on = Object.keys(handlers).length ? Object.fromEntries(Object.keys(handlers).map((name) => [name, name])) : undefined;
+  const slots = { children: slot('children') };
   // Both `Tree`s draw a component node at the root as they do anywhere (typed as their `Node`).
-  if (custom) return component(LAYER_AS, { className: view.className, ...attrs }, { slots: { children: slot('children') } }) as unknown as Node;
-  return h(as, { class: view.className, ...attrs }, slot('children'));
+  if (custom) {
+    const view = surfaceView({ ...surface, ambient });
+    return component(LAYER_AS, { className: view.className, ...view.attrs, ...passAttrs(rest) }, { on, slots }) as unknown as Node;
+  }
+  return component('Surface', { ...surface, ambient, as, ...passAttrs(rest) }, { on, slots }) as unknown as Node;
 }
