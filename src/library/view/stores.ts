@@ -14,7 +14,7 @@ import { bindSelect, bindSelectMenu, type SelectMenuParams, type SelectParams } 
 import { bindStepAdjust, type StepAdjustParams } from '../components/core/StepValue/adjust';
 import { bindReadoutAdjust, type ReadoutAdjustParams } from '../components/core/Readout/adjust';
 import { bindNumberField, bindNumberFieldEditor, type NumberFieldEditorParams, type NumberFieldParams } from '../components/core/NumberField/numberFieldInput';
-import { bindCheckDefault, type CheckDefaultParams } from '../components/core/Checkbox/checkDefault';
+import { bindCheckControlled, bindCheckDefault, type CheckControlledParams, type CheckDefaultParams } from '../components/core/Checkbox/checkDefault';
 import { bindRoom, type RoomParams } from '../layout/assembly/room';
 import { bindReport, type ReportParams } from '../layout/assembly/report';
 import { bindRef, type RefParams } from '../layout/Screen.model';
@@ -102,6 +102,8 @@ export const stores = {
   numberFieldEditor: keyed<NumberFieldEditorParams, 'onDraft' | 'onCommit' | 'onCancel'>(bindNumberFieldEditor, ['onDraft', 'onCommit', 'onCancel']),
   /** An uncontrolled Checkbox's or Radio's starting state, set once (`checkDefault.ts`). */
   checkDefault: keyed<CheckDefaultParams, never>(bindCheckDefault, []),
+  /** A controlled Checkbox's or Radio's state put back after a change its parent rejects (`checkDefault.ts`). */
+  checkControlled: keyed<CheckControlledParams, never>(bindCheckControlled, []),
   /** An assembled screen's measured room (`layout/assembly/room.ts`). */
   room: keyed<RoomParams, 'onRoom'>(bindRoom, ['onRoom']),
   /** An assembled screen's placement, reported once per change (`layout/assembly/report.ts`). */

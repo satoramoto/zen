@@ -7,7 +7,7 @@
 import { focusRing } from '../../../primitives/Ring';
 import { textNode } from '../../../primitives/Text.model';
 import { h, styleText, when, wire, type Handlers, type Node } from '../../../view/Tree.model';
-import { defaultOrigin, fillFrom, hintAttribute, type FillOrigin } from '../Param/fill';
+import { defaultOrigin, fillFrom, hintAttribute, type FillOrigin } from '../Param/fill.model';
 import { format, widestText } from '../Param/format';
 import { clamp, fractionOf, quantize, type Param } from '../Param/param';
 

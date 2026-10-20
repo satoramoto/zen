@@ -1,7 +1,8 @@
 // Checkbox's model: its props, the tree it draws from them (shared with Radio: the check and dash
 // marks, the input's attributes) and the handlers that tree names. No framework: `Checkbox.tsx`
 // (React) and `Checkbox.svelte` (Svelte) both pass `checkboxView` and `checkboxHandlers` to their
-// `Tree`; an uncontrolled input's starting state is the `checkDefault.ts` store beside it.
+// `Tree`; an uncontrolled input's starting state, and a controlled one's restore after a rejected change,
+// are the `checkDefault.ts` stores beside it.
 import { textNode } from '../../../primitives/Text.model';
 import { h, slot, when, wire, type Bind, type Handlers, type Node } from '../../../view/Tree.model';
 import type { ControlSize } from '../Toggle/sizes';
@@ -61,7 +62,9 @@ export function dashMarkNode(): Node {
 export function checkInputNode(type: 'checkbox' | 'radio', props: CheckModelProps, mixed: boolean): Node {
   const { checked, defaultChecked = false, disabled, name, value, 'aria-label': ariaLabel } = props;
   const controlled = checked !== undefined;
-  const bind: Bind[] = controlled ? [] : [['checkDefault', { checked: defaultChecked === true, mixed: mixed && defaultChecked === 'mixed' }]];
+  const bind: Bind[] = controlled
+    ? [['checkControlled', { checked: checked === true, ...(mixed ? { indeterminate: checked === 'mixed' } : {}) }]]
+    : [['checkDefault',{ checked: defaultChecked === true, mixed: mixed && defaultChecked === 'mixed' }]];
   return wire(
     h('input', {
       class: 'lib-check__input',
