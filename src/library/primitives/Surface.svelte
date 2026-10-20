@@ -1,9 +1,9 @@
 <!--
-  Surface: the Svelte renderer of `surfaceView` (Surface.model.ts), the same element, class and
-  attributes as `Surface.tsx`; see Surface.tsx for the job and the tuning knobs. `as` names the
-  element, `ref` binds it, and every other prop (native attributes, handlers, attachments) lands
-  on it. It draws no shader material yet: the layer's CSS material is the whole look, as on
-  React's fallback path.
+  Surface: the Svelte renderer of `surfaceView` (Surface.model.ts), the same element, classes and
+  attributes as `Surface.tsx`. See Surface.tsx for the job and the tuning knobs. `as` names the
+  element, `ref` binds it, and every other prop (native attributes, handlers, attachments) lands on it.
+  No shader material yet: `shader` is accepted and ignored, so the layer's CSS material is the whole
+  look (the fallback React draws without WebGL2), and there is no `Opaque` scope to switch it off.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
@@ -12,6 +12,8 @@
   import './Surface.css';
 
   interface Props extends HTMLAttributes<HTMLElement>, Omit<SurfaceModelProps, 'className'> {
+    /** Accepted for the React Surface's API; Svelte draws no shader material yet. */
+    shader?: string | false;
     /** The element to render; default `div`. */
     as?: string;
     class?: string;
@@ -20,7 +22,21 @@
     children?: Snippet;
   }
 
-  let { layer, material, radius, pressed, lit, border, ambient, as = 'div', class: className, ref = $bindable(null), children, ...rest }: Props = $props();
+  let {
+    layer,
+    material,
+    radius,
+    pressed,
+    lit,
+    border,
+    ambient,
+    shader: _shader,
+    as = 'div',
+    class: className,
+    ref = $bindable(null),
+    children,
+    ...rest
+  }: Props = $props();
 
   const view = $derived(surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }));
 </script>

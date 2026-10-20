@@ -19,7 +19,6 @@ import ButtonSvelte from './components/core/Button/Button.svelte';
 import type { TextModelProps } from './primitives/Text.model';
 import type { StackModelProps } from './primitives/Stack.model';
 import type { ButtonModelProps } from './components/core/Button/Button.model';
-import SurfaceSvelte from './primitives/Surface.svelte';
 import OpaqueSvelte from './primitives/Opaque.svelte';
 import HoleSvelte from './primitives/Hole.svelte';
 import RegionSvelte from './layout/Region.svelte';
@@ -28,7 +27,6 @@ import LayerSvelte from './layout/Layer.svelte';
 import ScreenSvelte from './layout/Screen.svelte';
 import AssembledScreenSvelte from './layout/assembly/AssembledScreen.svelte';
 import type { AmbientRegion } from './contract';
-import type { SurfaceModelProps } from './primitives/Surface.model';
 import type { RegionModelProps } from './layout/Region.model';
 import type { GroupModelProps } from './layout/Group.model';
 import type { LayerModelProps } from './layout/Layer.model';
@@ -62,13 +60,7 @@ export interface StackProps extends HTMLAttributes<HTMLElement>, Omit<StackModel
 }
 export const Stack = StackSvelte as unknown as Component<StackProps>;
 
-export interface SurfaceProps extends HTMLAttributes<HTMLElement>, Omit<SurfaceModelProps, 'className'> {
-  as?: string;
-  class?: string;
-  ref?: HTMLElement | null;
-  children?: Snippet;
-}
-export const Surface = SurfaceSvelte as unknown as Component<SurfaceProps, {}, 'ref'>;
+// Opaque and Hole (Surface itself is exported with the primitives).
 export const Opaque = OpaqueSvelte as unknown as Component<{ class?: string; style?: string; children?: Snippet }>;
 export const Hole = HoleSvelte as unknown as Component<{ class?: string; style?: string; name?: string; children?: Snippet }>;
 export { setControlContext, getControlContext, CONTROL_FIELD, CONTROL_TOOLBAR, type ControlContextValue } from './primitives/control.svelte';

@@ -2,11 +2,20 @@ import { createContext, useContext, useState, type AllHTMLAttributes, type CSSPr
 import type { AmbientRegion, LayerName } from '../contract';
 import { ShaderCanvas, compiledMaterial, useShaderSupport, type ShaderMaterialName, type ShaderSource } from '../shader';
 import { useThemeScope } from '../theme';
-import { holeView, opaqueView, surfaceView, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
+import { surfaceView, type LitSlot, type MaterialRole, type SurfaceRadius } from './Surface.model';
 import './Surface.css';
 
-// The element's class and attributes are framework-free, in the model; `Surface.svelte` renders the same view.
-export { MATERIAL_ROLES, LIT_SLOTS, SURFACE_RADII, surfaceView, type MaterialRole, type LitSlot, type SurfaceRadius, type SurfaceModelProps } from './Surface.model';
+// The materials, lamps and corners are framework-free, in the model; `Surface.svelte` renders the same view.
+export {
+  MATERIAL_ROLES,
+  LIT_SLOTS,
+  SURFACE_RADII,
+  surfaceView,
+  type MaterialRole,
+  type LitSlot,
+  type SurfaceRadius,
+  type SurfaceModelProps,
+} from './Surface.model';
 
 export interface SurfaceProps extends Omit<AllHTMLAttributes<HTMLElement>, 'as'> {
   /** Forwarded to the rendered element (`any`: the element is whatever `as` names). */
@@ -128,7 +137,7 @@ const OpaqueContext = createContext(false);
 export function Opaque({ children, className, style }: { children?: ReactNode; className?: string; style?: CSSProperties }) {
   return (
     <OpaqueContext.Provider value={true}>
-      <div className={opaqueView(className).className} style={style}>
+      <div className={`lib-opaque${className ? ` ${className}` : ''}`} style={style}>
         {children}
       </div>
     </OpaqueContext.Provider>
@@ -140,9 +149,8 @@ export function Opaque({ children, className, style }: { children?: ReactNode; c
  * ground shows through. It paints nothing; panels over it go in an `Opaque` scope.
  */
 export function Hole({ className, style, children, name }: { className?: string; style?: CSSProperties; children?: ReactNode; name?: string }) {
-  const view = holeView(className, name);
   return (
-    <div className={view.className} {...view.attrs} style={style}>
+    <div className={`lib-hole${className ? ` ${className}` : ''}`} data-part="hole" aria-label={name} role={name ? 'img' : undefined} style={style}>
       {children}
     </div>
   );

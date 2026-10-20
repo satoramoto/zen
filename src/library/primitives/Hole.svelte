@@ -1,10 +1,10 @@
 <!--
-  Hole: the Svelte renderer of `holeView` (Surface.model.ts), the same element and attributes as
+  Hole: the Svelte renderer of `holeView` (Hole.model.ts), the same element and attributes as
   React's `Hole` (Surface.tsx): a cut-out through every layer to what's behind the page.
 -->
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { holeView } from './Surface.model';
+  import { holeView } from './Hole.model';
   import './Surface.css';
 
   let { class: className, style, name, children }: { class?: string; style?: string; name?: string; children?: Snippet } = $props();

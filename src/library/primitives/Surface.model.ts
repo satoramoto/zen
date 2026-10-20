@@ -1,7 +1,6 @@
-// Surface's model: the element a renderer draws (its class and `data-*` attributes) from its
-// depth, material and marks. No framework: `Surface.tsx` (React) and `Surface.svelte` (Svelte)
-// both render `surfaceView`. Whether a shader draws is the renderer's (it needs the scope, WebGL
-// support and the Opaque context); the view only marks it with `data-shader`.
+// Surface's model: the materials, lamps and corners, and the view a renderer draws (its class and
+// `data-*` attributes). No framework: `Surface.tsx` (React) and `Surface.svelte` (Svelte) both
+// render `surfaceView`. The shader canvas is React's alone for now (Surface.tsx).
 import type { AmbientRegion, LayerName } from '../contract';
 import type { HueSlot } from '../components/core/hue';
 import type { ElementView } from './Text.model';
@@ -32,21 +31,22 @@ export interface SurfaceModelProps {
   lit?: LitSlot;
   /** An inset hairline: `--border`, or `--border-strong` with `'strong'`. */
   border?: boolean | 'strong';
-  /** Which region of the picture's ambient light it takes (see `Surface.tsx`). */
+  /** Which region of the picture's ambient light it takes (`--ambient-<region>`, from the nearest
+   *  `Ambient`). Default: the region a surrounding surface took, else `avg`. */
   ambient?: AmbientRegion;
   /** Classes added after the Surface's own. */
   className?: string;
 }
 
-/** Surface's element: `lib-surface` plus the caller's class, and the attributes `Surface.css` reads. `shaded`: a shader canvas is drawn inside. */
+/** Surface's element: `lib-surface` plus the caller's class, and the attributes `Surface.css` reads.
+ *  `shaded`: a shader canvas is drawn inside (`data-shader`). */
 export function surfaceView({ layer, material, radius, pressed, lit, border, ambient, className }: SurfaceModelProps, shaded = false): ElementView {
-  const corners: SurfaceRadius = radius ?? (layer && !material ? 'card' : 'control');
   return {
     className: `lib-surface${className ? ` ${className}` : ''}`,
     attrs: {
       'data-layer': layer,
       'data-material': material,
-      'data-radius': corners,
+      'data-radius': radius ?? (layer && !material ? 'card' : 'control'),
       'data-pressed': pressed ? '' : undefined,
       'data-lit': lit === undefined ? undefined : typeof lit === 'number' ? `hue-${lit}` : lit,
       'data-border': border === 'strong' ? 'strong' : border ? 'true' : undefined,
@@ -55,10 +55,3 @@ export function surfaceView({ layer, material, radius, pressed, lit, border, amb
     },
   };
 }
-
-/** Opaque's and Hole's elements. */
-export const opaqueView = (className?: string): ElementView => ({ className: `lib-opaque${className ? ` ${className}` : ''}`, attrs: {} });
-export const holeView = (className?: string, name?: string): ElementView => ({
-  className: `lib-hole${className ? ` ${className}` : ''}`,
-  attrs: { 'data-part': 'hole', 'aria-label': name, role: name ? 'img' : undefined },
-});
