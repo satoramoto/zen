@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CHANNELS, TIERS, countBy, filterLeads, formatReportDate, isReady, safeHref, leadsByChannel, leadsByTier, readyLeads, type Lead } from './report';
+import { CHANNELS, TIERS, countBy, filterLeads, formatReportDate, isReady, safeHref, safeContactHref, leadsByChannel, leadsByTier, readyLeads, type Lead } from './report';
 import { REPORT } from '../stories/report.fixtures';
 
 const lead = (name: string, over: Partial<Lead> = {}): Lead => ({ name, tier: 'A', location: 'Somewhere', status: 'new', channel: 'email', ...over });
@@ -74,6 +74,21 @@ describe('safeHref', () => {
 
   it('drops every other scheme, relative paths and missing values', () => {
     for (const u of ['javascript:alert(1)', 'data:text/html,x', 'mailto:a@b.c', '//example.com', '/a', 'example.com', 'https:/x', '', null, undefined]) expect(safeHref(u)).toBeUndefined();
+  });
+});
+
+describe('safeContactHref', () => {
+  it('keeps http, https and mailto addresses, trimmed', () => {
+    expect(safeContactHref('https://example.com/a')).toBe('https://example.com/a');
+    expect(safeContactHref('http://example.com')).toBe('http://example.com');
+    expect(safeContactHref('mailto:a@b.c')).toBe('mailto:a@b.c');
+    expect(safeContactHref('MAILTO:A@B.C')).toBe('MAILTO:A@B.C');
+    expect(safeContactHref('  mailto:a@b.c ')).toBe('mailto:a@b.c');
+  });
+
+  it('drops every other scheme, an empty mailto, bare addresses and missing values', () => {
+    for (const u of ['javascript:alert(1)', 'data:text/html,x', 'mailto:', 'mailto: a@b.c', 'a@b.c', '//example.com', '/a', 'tel:123', '', null, undefined])
+      expect(safeContactHref(u)).toBeUndefined();
   });
 });
 
