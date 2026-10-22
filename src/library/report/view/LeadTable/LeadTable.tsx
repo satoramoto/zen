@@ -134,9 +134,12 @@ interface RowProps extends Pick<LeadTableProps, 'extra' | 'onOpen'> {
 
 function Row({ lead, index, columns, extra, onOpen, selected }: RowProps) {
   // The name button's click (from a press, Enter or Space) bubbles here, so the row is the one handler.
+  // A click on any other control in the row (a link, or whatever the app put in the extra column) is that
+  // control's own and does not open the lead.
   const open = onOpen
     ? (e: MouseEvent<HTMLTableRowElement>) => {
-        if (!(e.target as Element).closest('a')) onOpen(lead, index);
+        const control = (e.target as Element).closest('a, button, input, select, textarea, label, [role="button"]');
+        if (!control || control.classList.contains('lib-report-leads__open')) onOpen(lead, index);
       }
     : undefined;
   return (
