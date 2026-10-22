@@ -1,0 +1,51 @@
+/* LeadDetail: one opened lead. Contract variables only. */
+
+.lib-report-detail {
+  min-width: 0;
+}
+
+.lib-report-detail__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.lib-report-detail__title {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.lib-report-detail__close {
+  flex: none;
+}
+
+.lib-report-detail__link {
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 0.2em;
+}
+
+.lib-report-detail__link:hover {
+  text-decoration-color: currentColor;
+}
+
+.lib-report-detail__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.lib-report-detail__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.lib-report-detail__value {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}

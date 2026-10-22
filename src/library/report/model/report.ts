@@ -140,6 +140,11 @@ export function safeHref(url: string | null | undefined): string | undefined {
   return typeof url === 'string' && /^https?:\/\//i.test(url.trim()) ? url.trim() : undefined;
 }
 
+/** `url` when it is an `http:`, `https:` or `mailto:` address (safe to link a contact), otherwise `undefined` (show it as text). */
+export function safeContactHref(url: string | null | undefined): string | undefined {
+  return typeof url === 'string' && /^(https?:\/\/|mailto:[^\s])/i.test(url.trim()) ? url.trim() : undefined;
+}
+
 const MONTHS =['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 /** A report date for reading: `2026-10-19` → `19 October 2026`, as a calendar date (no time zone). Anything else is returned as written. */

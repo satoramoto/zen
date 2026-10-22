@@ -77,7 +77,55 @@
   overflow-wrap: anywhere;
 }
 
-/* Stacked rows: each lead is a block (name and channel; location and when; angle; contact). */
+.lib-report-leads__cell[data-col='window'] { width: 12%; }
+
+/* Openable rows (`onOpen`): the name is a button, the row takes the pointer, the open one is marked. */
+.lib-report-leads__row[data-openable] {
+  cursor: pointer;
+}
+
+.lib-report-leads__row[data-openable]:hover > .lib-report-leads__cell {
+  background: var(--surface-2);
+}
+
+.lib-report-leads__row[data-selected] > .lib-report-leads__cell {
+  background: var(--surface-3);
+}
+
+.lib-report-leads__row[data-selected] > .lib-report-leads__cell:first-child {
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* Selected or hovered rows have a fill, so every edge cell keeps its inner padding. */
+.lib-report-leads[data-openable] .lib-report-leads__cell:first-child {
+  padding-inline-start: var(--space-3);
+}
+
+.lib-report-leads[data-openable] .lib-report-leads__cell:last-child {
+  padding-inline-end: var(--space-3);
+}
+
+.lib-report-leads__open {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 0.2em;
+}
+
+.lib-report-leads__open:hover {
+  text-decoration-color: currentColor;
+}
+
+.lib-report-leads__open:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Stacked rows: each lead is a block (name and channel on the first line, then each other column in order). */
 @container lib-report-leads (max-width: 40rem) {
   .lib-report-leads__table,
   .lib-report-leads__group {
@@ -102,12 +150,6 @@
   .lib-report-leads__row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      'name channel'
-      'location location'
-      'when when'
-      'angle angle'
-      'contact contact';
     column-gap: var(--space-3);
     row-gap: var(--space-1);
     padding-block: var(--space-3);
@@ -125,10 +167,29 @@
     display: none;
   }
 
-  .lib-report-leads__cell[data-col='name'] { grid-area: name; }
-  .lib-report-leads__cell[data-col='channel'] { grid-area: channel; }
-  .lib-report-leads__cell[data-col='location'] { grid-area: location; }
-  .lib-report-leads__cell[data-col='when'] { grid-area: when; }
-  .lib-report-leads__cell[data-col='angle'] { grid-area: angle; }
-  .lib-report-leads__cell[data-col='contact'] { grid-area: contact; }
+  /* Name and channel share the first line; every other column, the app's included, takes a full line in order. */
+  .lib-report-leads__row > .lib-report-leads__cell { grid-column: 1 / -1; }
+  .lib-report-leads__row > .lib-report-leads__cell[data-col='name'] { grid-column: 1; grid-row: 1; }
+  .lib-report-leads__row > .lib-report-leads__cell[data-col='channel'] { grid-column: 2; grid-row: 1; }
+
+  /* Openable rows: the fill and the inner padding move from the cells to the row. */
+  .lib-report-leads[data-openable] .lib-report-leads__row {
+    padding-inline: var(--space-3);
+  }
+
+  .lib-report-leads[data-openable] .lib-report-leads__row > .lib-report-leads__cell {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .lib-report-leads__row[data-openable]:hover {
+    background: var(--surface-2);
+  }
+
+  .lib-report-leads__row[data-selected],
+  .lib-report-leads__row[data-selected]:hover {
+    background: var(--surface-3);
+    box-shadow: inset 2px 0 0 var(--accent);
+  }
 }

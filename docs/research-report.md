@@ -3,8 +3,8 @@
 `src/library/report/` is a **market research report**: one plain-JSON document about a market, a goal, what the research found and the leads it turned up, and the views that render it as a readable document. It is generic: nothing in it knows what the market is (festivals, clients, suppliers). Every word on the page except the section headings comes from the data.
 
 - `model/report.ts`: the types below and pure helpers (`leadsByTier`, `leadsByChannel`, `readyLeads`, `isReady`, `filterLeads`, `countBy`, `formatReportDate`), unit-tested in `report.test.ts`. No React.
-- `view/<Name>/`: `Report` (the whole document), and its parts `Brief`, `Summary`, `Segments`, `Findings`, `LeadTable`, `Sources`, each usable alone.
-- `stories/`: the fixture and the stories under `Design OS/Report/…` (`Report`, `Lead Table`, `Parts`).
+- `view/<Name>/`: `Report` (the whole document), and its parts `Brief`, `Summary`, `Segments`, `Findings`, `LeadTable`, `Sources`, each usable alone; and `LeadDetail`, one opened lead, for an app's board.
+- `stories/`: the fixture and the stories under `Design OS/Report/…` (`Report`, `Lead Table`, `Lead Detail`, `Parts`).
 
 Everything is exported from `report/index.ts`, which the package root re-exports. The model's `Report` type is exported as `ReportData` (and `Brief`, `Stat`, `Segment`, `Finding`, `Source` as `ReportBrief`, `ReportStat`, …), since the view names are taken by the components.
 
@@ -52,7 +52,7 @@ A lead is **ready** (`isReady`) when it is tier A, reached by email or form, and
 
 - **Typography does the work.** Text roles only: the title is `display`, section heads `heading`, prose `body`, field names `label`, dates and footnotes `caption`, stats `numeral`. Colour is a tone or a hue slot: tier A, B, C (and segment 1, 2, 3) take hues 1–3.
 - **Reading measure.** Prose holds `measure` (`narrow`, `normal`, `wide`: about 60, 70, 80 characters). The summary row and the lead table take the full width.
-- **Lead table.** Grouped by tier, columns name, location, when, channel, angle (a skip reason in its place, quiet) and contact. Tier and channel are small outlined labels: a `Surface` (`radius="pill"`, `border`) holding a `Text`, not a new control. `filter` (`{ tier?, channel?, ready? }`) narrows it; with no rows an `empty` message stands in. Under 40rem of container width each row stacks into a block.
+- **Lead table.** Grouped by tier, columns name, location, when, channel, angle (a skip reason in its place, quiet) and contact. Tier and channel are small outlined labels: a `Surface` (`radius="pill"`, `border`) holding a `Text`, not a new control. `filter` (`{ tier?, channel?, ready? }`) narrows it; with no rows an `empty` message stands in. Under 40rem of container width each row stacks into a block. `columns` picks and orders the built-in columns (`name`, `location`, `when`, `channel`, `window`, `angle`, `contact`, `comparable`, `fee`, `travel`), and `extra` adds one the app fills.
 
 ## Where the fixture came from
 
@@ -73,3 +73,33 @@ import data from './report.json';
 ```
 
 A JSON import widens `tier` and `channel` to `string`, hence the cast; validate at the boundary if the file isn't yours. To show only the leads to contact now, pass `filter={{ ready: true }}`, or render `<LeadTable leads={data.leads} filter={{ ready: true }} />` on its own.
+
+## Composing a board
+
+An app that works through the leads lays `LeadTable` and `LeadDetail` side by side and keeps the open lead itself. `onOpen` makes each row open (the name becomes a button; the detail carries the link instead), `selected` marks the open row, both by index in `leads`. The detail shows the fields the app chooses, in its own words, and anything it adds as children:
+
+```tsx
+const [open, setOpen] = useState<number | null>(null);
+const lead = open === null ? null : leads[open];
+
+<LeadTable
+  leads={leads}
+  columns={['name', 'location', 'channel', 'window']}
+  extra={{ title: 'Notes', render: (l, i) => notes[i]?.length ?? 0 }}
+  onOpen={(_, i) => setOpen(i)}
+  selected={open}
+/>
+{lead && (
+  <LeadDetail
+    lead={lead}
+    fields={[
+      { label: 'Window', value: lead.window ?? '' },
+      { label: 'Contact', value: lead.contact ?? '', href: lead.contact ? `mailto:${lead.contact}` : null },
+    ].filter((f) => f.value)}
+    sources={data.sources}
+    onClose={() => setOpen(null)}
+  />
+)}
+```
+
+A field's `href` links its value when it is `http`, `https` or `mailto` (`safeContactHref`); blank values are the app's to drop. The story `Design OS/Report/Lead Detail` → `In A Board` is this board on the fixture.

@@ -13,6 +13,7 @@ export {
   filterLeads,
   formatReportDate,
   safeHref,
+  safeContactHref,
   type Tier,
   type Channel,
   type Report as ReportData,
@@ -35,7 +36,9 @@ export { Summary, type SummaryProps } from './view/Summary/Summary';
 export { Segments, type SegmentsProps } from './view/Segments/Segments';
 /** Numbered headed paragraphs. */
 export { Findings, type FindingsProps } from './view/Findings/Findings';
-/** The leads grouped by tier, narrowed by a filter. */
-export { LeadTable, type LeadTableProps } from './view/LeadTable/LeadTable';
+/** The leads grouped by tier, narrowed by a filter; rows openable and selectable, columns chosen by the app. */
+export { LeadTable, type LeadTableProps, type LeadColumn } from './view/LeadTable/LeadTable';
+/** One opened lead: its header, the app's research fields as a definition list, sources and anything the app adds. */
+export { LeadDetail, type LeadDetailProps, type DetailField } from './view/LeadDetail/LeadDetail';
 /** A footnote list of sources. */
 export { Sources, type SourcesProps } from './view/Sources/Sources';
