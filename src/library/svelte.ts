@@ -392,6 +392,16 @@ export interface SearchFieldProps extends SearchFieldModelProps {
 }
 export const SearchField = SearchFieldSvelte as unknown as Component<SearchFieldProps, {}, 'ref'>;
 
+// Gate: one shared key before an app shows anything (title, message and extra content as snippets).
+import GateSvelte from './components/core/Gate/Gate.svelte';
+import type { GateModelProps } from './components/core/Gate/Gate.model';
+export interface GateProps extends GateModelProps {
+  title?: Snippet;
+  message?: Snippet;
+  children?: Snippet;
+}
+export const Gate = GateSvelte as unknown as Component<GateProps>;
+
 // Lane S1-B: Popover (the panel as a snippet; `createHoverIntent` for a hover-opened one).
 import PopoverSvelte from './components/core/Popover/Popover.svelte';
 import type { PopoverBindingProps } from './components/core/Popover/Popover.model';

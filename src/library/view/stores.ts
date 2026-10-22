@@ -35,6 +35,7 @@ import { bindShader, type ShaderParams } from '../shader/bindShader';
 import { bindSearchClear, type SearchClearParams } from '../components/core/SearchField/clear';
 import { bindPageList, type PageListParams } from '../components/core/PageList/pageListKeys';
 import { bindFolderList, type FolderListParams } from '../components/core/FolderList/folderListKeys';
+import { bindGateFocus, type GateFocusParams } from '../components/core/Gate/gateFocus';
 
 /** A bound store: `update` with new params, `destroy` when the element goes. */
 export interface StoreBinding<P> {
@@ -159,6 +160,8 @@ export const stores = {
   pageList: keyed<PageListParams, 'onChoose'>(bindPageList, ['onChoose']),
   /** FolderList's clicks, ↑ ↓ Home End and roving tab stop (`folderListKeys.ts`). */
   folderList: keyed<FolderListParams, 'onChoose' | 'onActive'>(bindFolderList, ['onChoose', 'onActive']),
+  /** Gate's field: focused at mount and when a submit ends (`Gate/gateFocus.ts`). */
+  gateFocus: keyed<GateFocusParams, never>(bindGateFocus, []),
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;
