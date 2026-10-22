@@ -1,0 +1,78 @@
+/* Gate: a full-screen ground with a card centred on it, holding the key field. Reads only
+   contract variables; type is Text's. */
+
+.lib-gate {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  padding: var(--space-6) var(--space-4);
+}
+
+.lib-gate__card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--space-2) * 50); /* 400px at the 4px unit */
+  padding: var(--space-6);
+}
+
+.lib-gate__title,
+.lib-gate__message,
+.lib-gate__error {
+  margin: 0;
+}
+
+/* The input chrome, as SearchField draws it: the pack's input fill and edges on `--control-h`. */
+.lib-gate__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  min-width: 0;
+  height: var(--control-h);
+  padding: 0 var(--space-1) 0 var(--space-3);
+  border-style: solid;
+  border-color: var(--border-strong);
+  border-width: 0 var(--input-border-sides) var(--input-border-bottom);
+  border-radius: var(--radius-input);
+  background: var(--input-fill);
+}
+
+.lib-gate__field:hover {
+  border-color: var(--text-3);
+}
+
+.lib-gate__field:focus-within {
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.lib-gate__field[data-disabled] {
+  border-style: dashed;
+  border-color: var(--border);
+}
+
+.lib-gate__input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  caret-color: var(--accent);
+  outline: none;
+  appearance: none;
+}
+
+.lib-gate__input:disabled {
+  color: var(--text-3);
+  cursor: progress;
+}
+
+/* Holds its line while empty, so an error appearing doesn't move the submit key. */
+.lib-gate__error {
+  min-height: 1lh;
+}
