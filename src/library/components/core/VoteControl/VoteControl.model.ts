@@ -174,7 +174,9 @@ export function voteControlView(
         voters,
         (voter, at) => `${voter.name}-${at}`,
         (voter) => {
-          const said = voter.gone ? goneLabel : (labelOf(voter.value) ?? noVoteLabel);
+          // A name that left keeps its choice on show, with the gone mark after it.
+          const choice = labelOf(voter.value) ?? noVoteLabel;
+          const said = voter.gone ? `${choice} (${goneLabel})` : choice;
           const kind = voter.gone ? 'gone' : voter.value !== null && labelOf(voter.value) !== undefined ? 'voted' : 'none';
           return h(
             'li',
