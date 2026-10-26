@@ -1,0 +1,149 @@
+/* LeadList: the leads as rows built for importance (action, when, lead, details, trailing).
+   Contract variables plus the --lib-leadlist-* declared here. The root is a size container:
+   under 40rem each row stacks.
+
+   **Tuning knobs:** `--lib-leadlist-action-w` (the action column), `--lib-leadlist-when-w` (the
+   date column), `--lib-leadlist-details-w` (the details column), `--lib-leadlist-trailing-w`
+   (the trailing column; `auto` sizes it per row). */
+
+.lib-report-list {
+  --lib-leadlist-action-w: 9rem;
+  --lib-leadlist-when-w: 5.25rem;
+  --lib-leadlist-details-w: 14rem;
+  --lib-leadlist-trailing-w: auto;
+
+  container: lib-report-list / inline-size;
+  min-width: 0;
+}
+
+.lib-report-list__rows {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.lib-report-list__row {
+  display: grid;
+  grid-template-columns:
+    var(--lib-leadlist-action-w) var(--lib-leadlist-when-w) minmax(0, 1fr) var(--lib-leadlist-details-w)
+    var(--lib-leadlist-trailing-w);
+  grid-template-areas: 'action when lead details trailing';
+  column-gap: var(--space-4);
+  row-gap: var(--space-1);
+  align-items: start;
+  padding: var(--space-3);
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+.lib-report-list[data-compact] .lib-report-list__row {
+  grid-template-columns: var(--lib-leadlist-action-w) var(--lib-leadlist-when-w) minmax(0, 1fr) var(--lib-leadlist-trailing-w);
+  grid-template-areas: 'action when lead trailing';
+  column-gap: var(--space-3);
+}
+
+.lib-report-list__action { grid-area: action; min-width: 0; }
+.lib-report-list__when { grid-area: when; min-width: 0; }
+.lib-report-list__lead { grid-area: lead; min-width: 0; }
+.lib-report-list__details { grid-area: details; min-width: 0; }
+.lib-report-list__trailing { grid-area: trailing; min-width: 0; }
+
+.lib-report-list__action,
+.lib-report-list__when,
+.lib-report-list__lead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* The action: a coloured icon and its label on one line, cut to the column's width. */
+.lib-report-list__chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.lib-report-list__details {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.lib-report-list__group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-3) var(--space-2);
+  border-bottom: var(--border-width) solid var(--border-strong);
+}
+
+.lib-report-list__group:first-child .lib-report-list__group-head {
+  padding-block-start: var(--space-3);
+}
+
+.lib-report-list__link {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 0.2em;
+}
+
+.lib-report-list__link:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Openable rows (`onOpen`): the name is a button, the row takes the pointer, the open one is marked. */
+.lib-report-list__row[data-openable] {
+  cursor: pointer;
+}
+
+.lib-report-list__row[data-openable]:hover {
+  background: var(--surface-2);
+}
+
+.lib-report-list__row[data-selected],
+.lib-report-list__row[data-selected]:hover {
+  background: var(--surface-3);
+  box-shadow: inset calc(var(--border-width) * 2) 0 0 var(--accent);
+}
+
+.lib-report-list__open {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 0.2em;
+}
+
+.lib-report-list__open:hover {
+  text-decoration-color: currentColor;
+}
+
+.lib-report-list__open:focus-visible {
+  outline: calc(var(--border-width) * 2) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Stacked rows: action, when and trailing on the first line; the lead under; the details under that. */
+@container lib-report-list (max-width: 40rem) {
+  .lib-report-list__row,
+  .lib-report-list[data-compact] .lib-report-list__row {
+    grid-template-columns: var(--lib-leadlist-action-w) auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'action when . trailing'
+      'lead lead lead lead'
+      'details details details details';
+    column-gap: var(--space-3);
+  }
+
+  .lib-report-list__when:empty,
+  .lib-report-list__details:empty {
+    display: none;
+  }
+}
