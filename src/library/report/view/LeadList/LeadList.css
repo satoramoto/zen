@@ -1,6 +1,6 @@
 /* LeadList: the leads as rows built for importance (action, when, lead, details, trailing).
    Contract variables plus the --lib-leadlist-* declared here. The root is a size container:
-   under 40rem each row stacks.
+   under 40rem each row stacks. `data-variant="rail"` (at the end) is a narrow column for a sidebar.
 
    **Tuning knobs:** `--lib-leadlist-action-w` (the action column), `--lib-leadlist-when-w` (the
    date column), `--lib-leadlist-details-w` (the details column), `--lib-leadlist-trailing-w`
@@ -146,4 +146,48 @@
   .lib-report-list__details:empty {
     display: none;
   }
+}
+
+/* Rail (`variant="rail"`): a narrow column for a sidebar. Each row is a tone bar, the date block as a
+   rail and the body, all at the row's full height. No stacking query: the more specific selectors
+   below win over it at any width. */
+.lib-report-list[data-variant='rail'] .lib-report-list__row {
+  grid-template-columns: calc(var(--border-width) * 3) var(--lib-leadlist-when-w) minmax(0, 1fr);
+  grid-template-areas: 'tone when lead';
+  column-gap: 0;
+  row-gap: 0;
+  align-items: stretch;
+  padding: 0;
+}
+
+.lib-report-list__tone {
+  grid-area: tone;
+}
+
+.lib-report-list__tone[data-tone='go'] { background: var(--success); }
+.lib-report-list__tone[data-tone='done'] { background: var(--text-3); }
+.lib-report-list__tone[data-tone='soon'] { background: var(--warning); }
+.lib-report-list__tone[data-tone='urgent'] { background: var(--danger); }
+
+.lib-report-list[data-variant='rail'] .lib-report-list__when {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-inline-end: var(--border-width) solid var(--border);
+}
+
+.lib-report-list[data-variant='rail'] .lib-report-list__lead {
+  justify-content: space-between;
+  padding: var(--space-3);
+}
+
+.lib-report-list[data-variant='rail'] .lib-report-list__trailing:empty {
+  display: none;
+}
+
+/* The selected row is a tint, so it doesn't fight the tone bar. */
+.lib-report-list[data-variant='rail'] .lib-report-list__row[data-selected],
+.lib-report-list[data-variant='rail'] .lib-report-list__row[data-selected]:hover {
+  background: var(--surface-3);
+  box-shadow: none;
 }
