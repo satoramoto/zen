@@ -171,9 +171,14 @@
 
 .lib-report-list[data-variant='rail'] .lib-report-list__when {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: var(--space-3);
   border-inline-end: var(--border-width) solid var(--border);
+}
+
+/* The top line and the numeral stay together at the top; only the foot is pinned to the bottom. */
+.lib-report-list[data-variant='rail'] .lib-report-list__when [data-part='when-foot'] {
+  margin-block-start: auto;
 }
 
 .lib-report-list[data-variant='rail'] .lib-report-list__lead {
