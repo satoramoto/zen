@@ -24,8 +24,8 @@ export type VoteControlProps = VoteControlModelProps;
  * promise shows its message on the error line (`aria-live="polite"`), else `That did not save.`,
  * and the control goes back to `value`; the next pick clears it. `error` shows the app's own text
  * over it. A choice can be changed, never cleared. Under the choices, the tally: each name, then
- * its choice's label, `no vote yet` (`noVoteLabel`) or, for a name that left, `no longer here`
- * (`goneLabel`).
+ * its choice's label or `no vote yet` (`noVoteLabel`); a name that left keeps its choice on show
+ * with `(no longer here)` (`goneLabel`) after it.
  *
  * **Parts** (`data-part`): `root` (`aria-busy`), `choices` (the radiogroup), `choice`
  * (`aria-checked`, `data-value`), `label`, `meaning`, `error`, `tally`, `voter` (`data-state`:

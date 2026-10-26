@@ -122,7 +122,7 @@ export const Tally: Story = {
     await expect(rowOf(canvasElement, 'Ada').getByText('Yes')).toBeInTheDocument();
     await expect(rowOf(canvasElement, 'Grace').getByText('No')).toBeInTheDocument();
     await expect(rowOf(canvasElement, 'Linus').getByText('no vote yet')).toBeInTheDocument();
-    await expect(rowOf(canvasElement, 'Margaret').getByText('no longer here')).toBeInTheDocument();
+    await expect(rowOf(canvasElement, 'Margaret').getByText(/\(no longer here\)$/)).toBeInTheDocument();
   },
 };
 
