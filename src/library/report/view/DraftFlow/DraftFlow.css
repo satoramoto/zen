@@ -1,0 +1,162 @@
+/* DraftFlow: one outgoing message from proposals. Contract variables only. */
+
+.lib-draft {
+  --lib-draft-clamp-lines: 8;
+  --lib-draft-body-lines: 8;
+
+  container: lib-draft / inline-size;
+  min-width: 0;
+}
+
+/* Proposals: stacked, two side by side from 44rem of container width. */
+.lib-draft__proposals {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@container lib-draft (min-width: 44rem) {
+  .lib-draft__proposals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.lib-draft__proposal {
+  display: flex;
+  min-width: 0;
+  padding: var(--space-4);
+}
+
+.lib-draft__proposal-inner {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lib-draft__proposal-head > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lib-draft__proposal-head > [data-part='tag'] {
+  flex: none;
+}
+
+.lib-draft__proposal-foot {
+  margin-top: auto;
+}
+
+.lib-draft__wrap {
+  overflow-wrap: anywhere;
+}
+
+/* The body as written, clamped to its knob's lines until Show all. */
+.lib-draft__excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--lib-draft-clamp-lines);
+  line-clamp: var(--lib-draft-clamp-lines);
+  overflow: hidden;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.lib-draft__excerpt[data-expanded] {
+  display: block;
+  -webkit-line-clamp: none;
+  line-clamp: none;
+  overflow: visible;
+}
+
+/* Draft: the fields take the pack's input chrome, as SearchField does. */
+.lib-draft__field {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-style: solid;
+  border-color: var(--border-strong);
+  border-width: 0 var(--input-border-sides) var(--input-border-bottom);
+  border-radius: var(--radius-input);
+  background: var(--input-fill);
+  caret-color: var(--accent);
+  outline: none;
+  appearance: none;
+}
+
+.lib-draft__field:hover {
+  border-color: var(--text-3);
+}
+
+.lib-draft__field:focus-visible,
+.lib-draft__field:focus {
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.lib-draft__input {
+  min-height: var(--control-h);
+}
+
+/* Grows with its content where the browser can (`field-sizing`); elsewhere `rows` follows the lines. */
+.lib-draft__textarea {
+  field-sizing: content;
+  min-height: calc(var(--lib-draft-body-lines) * 1lh);
+  resize: vertical;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Holds its line while empty, so a status appearing doesn't move the keys. */
+.lib-draft__status {
+  min-height: 1lh;
+}
+
+/* Approve with unsaved edits: held back in look, still pressable (it saves first). */
+.lib-draft__approve[data-unsaved] {
+  opacity: 0.55;
+}
+
+.lib-draft__approve[data-unsaved]:hover,
+.lib-draft__approve[data-unsaved]:focus-within {
+  opacity: 1;
+}
+
+/* Ready and Sent: the email read back, a row per field. */
+.lib-draft__email {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+}
+
+.lib-draft__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'label copy'
+    'value value';
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) 0;
+}
+
+.lib-draft__row + .lib-draft__row {
+  border-top: 1px solid var(--border);
+}
+
+.lib-draft__row-label {
+  grid-area: label;
+}
+
+.lib-draft__copy {
+  grid-area: copy;
+}
+
+.lib-draft__value {
+  grid-area: value;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
