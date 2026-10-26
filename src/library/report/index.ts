@@ -42,5 +42,7 @@ export { LeadTable, type LeadTableProps, type LeadColumn } from './view/LeadTabl
 export { LeadList, type LeadListProps, type LeadAction, type LeadActionTone, type WhenBlock } from './view/LeadList/LeadList';
 /** One opened lead: its header, the app's research fields as a definition list, sources and anything the app adds. */
 export { LeadDetail, type LeadDetailProps, type DetailField } from './view/LeadDetail/LeadDetail';
+/** One outgoing message written from proposals, in four stages driven by props: pick a proposal, edit the draft, read it back ready to send, sent. */
+export { DraftFlow, type DraftFlowProps, type DraftProposal, type DraftWorking, type DraftFlowWords } from './view/DraftFlow/DraftFlow';
 /** A footnote list of sources. */
 export { Sources, type SourcesProps } from './view/Sources/Sources';
