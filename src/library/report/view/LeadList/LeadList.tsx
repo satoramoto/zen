@@ -49,6 +49,9 @@ export interface LeadListProps {
   grouped?: boolean;
   /** Drop the details column and the action note: for a sidebar. Default `false`. */
   compact?: boolean;
+  /** The layout. `row` (default): the columns side by side. `rail`: a narrow column for a sidebar beside a map,
+   *  each row a tone bar, the date block as a rail and the lead stacked over the row's height. */
+  variant?: 'row' | 'rail';
   className?: string;
 }
 
@@ -149,9 +152,10 @@ interface RowProps extends Pick<LeadListProps, 'action' | 'when' | 'details' | '
   index: number;
   selected: boolean;
   compact: boolean;
+  rail: boolean;
 }
 
-function Row({ lead, index, action, when = defaultWhen, details, trailing, onOpen, selected, compact }: RowProps) {
+function Row({ lead, index, action, when = defaultWhen, details, trailing, onOpen, selected, compact, rail }: RowProps) {
   // The name button's click (a press, Enter or Space) bubbles here, so the row is the one handler. A click
   // on any other control in the row (a link, or whatever the app put in a column) is that control's own.
   const open = onOpen
@@ -163,16 +167,38 @@ function Row({ lead, index, action, when = defaultWhen, details, trailing, onOpe
   const act = action?.(lead, index) ?? null;
   const date = when(lead, index);
   const more = trailing?.(lead, index);
+  const attrs = {
+    className: 'lib-report-list__row',
+    'data-part': 'row',
+    'data-tier': lead.tier,
+    ...(lead.skip ? { 'data-skip': '' } : {}),
+    ...(onOpen ? { 'data-openable': '' } : {}),
+    ...(selected ? { 'data-selected': '', 'aria-current': 'true' as const } : {}),
+    onClick: open,
+  };
+  if (rail)
+    return (
+      <li {...attrs}>
+        <span className="lib-report-list__tone" data-part="tone" {...(act ? { 'data-tone': act.tone } : {})} aria-hidden="true" />
+        <div className="lib-report-list__when" data-col="when">
+          {date ? <When block={date} /> : null}
+        </div>
+        <div className="lib-report-list__lead" data-col="lead">
+          {act ? <Action action={act} compact /> : null}
+          <Name lead={lead} open={!!onOpen} />
+          <Text role="caption" tone="secondary" data-part="location">
+            {lead.location}
+          </Text>
+          {trailing ? (
+            <Text as="div" role="caption" tone="muted" className="lib-report-list__trailing" data-col="trailing">
+              {more}
+            </Text>
+          ) : null}
+        </div>
+      </li>
+    );
   return (
-    <li
-      className="lib-report-list__row"
-      data-part="row"
-      data-tier={lead.tier}
-      {...(lead.skip ? { 'data-skip': '' } : {})}
-      {...(onOpen ? { 'data-openable': '' } : {})}
-      {...(selected ? { 'data-selected': '', 'aria-current': 'true' as const } : {})}
-      onClick={open}
-    >
+    <li {...attrs}>
       <div className="lib-report-list__action" data-col="action">
         {act ? <Action action={act} compact={compact} /> : null}
       </div>
@@ -234,11 +260,20 @@ function Group({ tier, rows, render }: { tier: Tier; rows: Shown[]; render: (row
  * The first columns are fixed widths, so rows align without a table; under 40rem of container
  * width each row stacks (action and when, then the lead, then the details).
  *
+ * **Variants** (`variant`, on the root as `data-variant`). `row` (default) is the above. `rail` is a
+ * narrow column for a sidebar beside a map, each row using its full height: a thin tone bar on the
+ * left edge in the action's tone (none without an action, its space kept), the date block as a rail
+ * (top line, numeral, foot pinned to the bottom, a hairline on its right, `--lib-leadlist-when-w`
+ * wide), and the body stacked over the rest: the action (icon and label, no note), the name, the
+ * location, and `trailing` under it as a caption. No details column; `compact` is ignored and the
+ * 40rem stacking doesn't apply. The selected row is a background tint instead of the accent bar.
+ *
  * **Tuning knobs.** `--lib-leadlist-action-w` (9rem), `--lib-leadlist-when-w` (5.25rem),
  * `--lib-leadlist-details-w` (14rem), `--lib-leadlist-trailing-w` (`auto`).
  *
- * **Parts** (`data-part`). `root`; `group` and `group-head` when grouped; `row` each lead
- * (`data-tier`, `data-skip`, `data-openable`, `data-selected`); `action` (`data-tone`),
+ * **Parts** (`data-part`). `root` (`data-variant`); `group` and `group-head` when grouped; `row` each lead
+ * (`data-tier`, `data-skip`, `data-openable`, `data-selected`); `tone` in `rail` (`data-tone` when
+ * the row has an action); `action` (`data-tone`),
  * `action-note`, `when-top`, `when-big`, `when-foot`, `name`, `location`, `angle`, `skip`; `empty`.
  * Each column carries `data-col` (`action`, `when`, `lead`, `details`, `trailing`).
  */
@@ -254,9 +289,12 @@ export function LeadList({
   onOpen,
   selected,
   grouped = false,
-  compact = false,
+  compact: compactProp = false,
+  variant = 'row',
   className,
 }: LeadListProps) {
+  const rail = variant === 'rail';
+  const compact = compactProp && !rail;
   const kept = new Set(filterLeads(leads, filter));
   const shown: Shown[] = leads.map((lead, index) => ({ lead, index })).filter(({ lead }) => kept.has(lead));
   const render = ({ lead, index }: Shown) => (
@@ -271,12 +309,14 @@ export function LeadList({
       onOpen={onOpen}
       selected={selected === index}
       compact={compact}
+      rail={rail}
     />
   );
   return (
     <div
       className={`lib-report-list${className ? ` ${className}` : ''}`}
       data-part="root"
+      data-variant={variant}
       {...(onOpen ? { 'data-openable': '' } : {})}
       {...(compact ? { 'data-compact': '' } : {})}
     >

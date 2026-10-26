@@ -134,3 +134,65 @@ export const Openable: Story = {
     await expect(canvasElement.querySelectorAll('[aria-current]')).toHaveLength(1);
   },
 };
+
+const RAIL_TONES: readonly (LeadAction | null)[] = [
+  { label: 'Reach out', tone: 'go' },
+  { label: 'Done', tone: 'done' },
+  { label: 'Follow up soon', tone: 'soon' },
+  { label: 'Overdue', tone: 'urgent' },
+  null,
+];
+
+/** A sample next step cycling through every tone, and no action every fifth row. */
+const railAction = (_: Lead, index: number) => RAIL_TONES[index % RAIL_TONES.length] ?? null;
+
+function RailList({ leads, grouped }: { leads: readonly Lead[]; grouped: boolean }) {
+  const [selected, setSelected] = useState<number | null>(null);
+  return (
+    <Stack direction="column" gap={3}>
+      <Text role="caption" tone="muted" data-testid="opened">
+        {selected === null ? 'None open' : `Open: ${leads[selected]?.name}`}
+      </Text>
+      <LeadList
+        variant="rail"
+        leads={leads}
+        grouped={grouped}
+        when={whenOf}
+        action={railAction}
+        trailing={(_, i) => (i % 3 === 0 ? `#${i + 1}` : null)}
+        onOpen={(_, i) => setSelected(i)}
+        selected={selected}
+      />
+    </Stack>
+  );
+}
+
+/** `variant="rail"`: a narrow column for a sidebar beside a map. A tone bar, the date block as a rail, the lead stacked. */
+export const Rail: Story = {
+  render: (args) => <RailList leads={args.leads} grouped={args.grouped} />,
+  argTypes: { compact: { table: { disable: true } } },
+  decorators: [(Story) => <div style={{ width: '24rem', maxWidth: '100%' }}>{Story()}</div>],
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(canvasElement.querySelector('[data-part="root"]')!.getAttribute('data-variant')).toBe('rail');
+    const rows = [...canvasElement.querySelectorAll<HTMLElement>('[data-part="row"]')];
+    await expect(rows).toHaveLength(REPORT.leads.length);
+    for (const tone of ['go', 'done', 'soon', 'urgent'])
+      await expect(canvasElement.querySelector(`[data-part="tone"][data-tone="${tone}"]`)).toBeTruthy();
+    await expect(rows.every((row) => row.querySelector('[data-part="tone"]'))).toBe(true);
+    await expect(canvasElement.querySelector('[data-col="details"]')).toBeNull();
+    await expect(canvasElement.querySelector('[data-part="action-note"]')).toBeNull();
+    const [first, second] = rows;
+    const nameOf = (row: HTMLElement) => row.querySelector('[data-part="name"]')!.textContent!;
+    // A click on the name opens it and marks the row current.
+    await userEvent.click(within(first!).getByRole('button', { name: nameOf(first!) }));
+    await expect(c.getByTestId('opened').textContent).toBe(`Open: ${nameOf(first!)}`);
+    await expect(first!.getAttribute('aria-current')).toBe('true');
+    await expect(first!.hasAttribute('data-selected')).toBe(true);
+    // A click elsewhere on the next row (its date rail) moves the selection.
+    await userEvent.click(second!.querySelector<HTMLElement>('[data-col="when"]')!);
+    await expect(c.getByTestId('opened').textContent).toBe(`Open: ${nameOf(second!)}`);
+    await expect(first!.hasAttribute('aria-current')).toBe(false);
+    await expect(canvasElement.querySelectorAll('[aria-current]')).toHaveLength(1);
+  },
+};
