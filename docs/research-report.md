@@ -106,3 +106,8 @@ const lead = open === null ? null : leads[open];
 ```
 
 A field's `href` links its value when it is `http`, `https` or `mailto` (`safeContactHref`); blank values are the app's to drop. The story `Design OS/Report/Lead Detail` → `In A Board` is this board on the fixture.
+
+## Writing to a lead
+
+`DraftFlow` writes one outgoing message from the app's `proposals` in four stages its props decide: no `draft` shows the proposals as cards ("Use this" calls `onUse(id)`); a draft not `approved` is edited and saved through `onSave` (on blur and on Save), and Approve calls `onApprove(true)`; an approved draft is read back with To, Subject and Body to copy, Edit again (`onApprove(false)`) and Mark as sent (`onSent()`); `sent` shows "Sent <at>" over the collapsed email.
+The app holds the data and saves; a rejected promise shows its message in the stage's status line and the stage stays. Every built-in word is in `words`. Stories: `Design OS/Report/Draft Flow`.
