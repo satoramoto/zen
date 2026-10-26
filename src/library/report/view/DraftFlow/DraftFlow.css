@@ -113,16 +113,6 @@
   min-height: 1lh;
 }
 
-/* Approve with unsaved edits: held back in look, still pressable (it saves first). */
-.lib-draft__approve[data-unsaved] {
-  opacity: 0.55;
-}
-
-.lib-draft__approve[data-unsaved]:hover,
-.lib-draft__approve[data-unsaved]:focus-within {
-  opacity: 1;
-}
-
 /* Ready and Sent: the email read back, a row per field. */
 .lib-draft__email {
   display: flex;

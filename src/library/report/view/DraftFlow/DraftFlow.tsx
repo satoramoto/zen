@@ -29,6 +29,7 @@ export interface DraftFlowWords {
   save: string;
   saved: string;
   saving: string;
+  unsaved: string;
   approve: string;
   editAgain: string;
   markSent: string;
@@ -54,6 +55,7 @@ const WORDS: DraftFlowWords = {
   save: 'Save',
   saved: 'Saved',
   saving: 'Saving…',
+  unsaved: 'Unsaved changes',
   approve: 'Approve',
   editAgain: 'Edit again',
   markSent: 'Mark as sent',
@@ -141,9 +143,12 @@ function StatusLine({ text, error }: { text: string | null; error: boolean }) {
  * **Behaviour.** Proposals: one card each (subject, tag, body clamped to about eight lines with
  * Show all), two side by side from 44rem of container width, stacked under; "Use this" calls
  * `onUse`. Draft: subject field and auto-growing body, saved by `onSave` on blur and on Save, with
- * a quiet Saving… / Saved / error line (`aria-live`); Approve looks held back while there are
- * unsaved edits but stays pressable, and saves them first; "Start over from a proposal" shows the
- * proposals again, keeping the draft (Back to the draft returns) until another is used. Ready: the
+ * a quiet Unsaved changes / Saving… / Saved / error line (`aria-live`); Approve is the outlined key
+ * while there are unsaved edits but stays pressable, saves them first and approves only once the
+ * save succeeds. A new `draft` from the app replaces the fields only when they hold no unsaved edits
+ * (the echo of a save never does). "Start over from a proposal" saves, then shows the proposals
+ * again (staying put if the save fails), keeping the draft (Back to the draft returns) until another
+ * is used. Ready: the
  * heading, To / Subject / Body read-only, each with a copy button (the Clipboard API, else the text
  * is selected); Edit again calls `onApprove(false)`, Mark as sent `onSent`. Sent: "Sent <at>" and the
  * final email under a disclosure, collapsed. A rejected promise shows its message in the stage's
@@ -227,7 +232,7 @@ function ProposalsStage({
         </div>
       )}
       {onBack ? (
-        <span className="lib-draft__quiet" data-part="back">
+        <span data-part="back">
           <Button label={words.backToDraft} variant="quiet" disabled={busy || pending} onPress={onBack} />
         </span>
       ) : null}
@@ -301,6 +306,7 @@ function ProposalCard({ proposal, words, disabled, onUse }: { proposal: DraftPro
 // ── Draft ────────────────────────────────────────────────────────────────────
 
 type Pair = { subject: string; body: string };
+const same = (a: Pair, b: Pair) => a.subject === b.subject && a.body === b.body;
 type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved' } | { kind: 'error'; message: string };
 
 function DraftStage({
@@ -327,18 +333,28 @@ function DraftStage({
   const [saved, setSaved] = useState<Pair>({ subject: draft.subject, body: draft.body });
   const [state, setState] = useState<SaveState>({ kind: 'idle' });
   const [pending, setPending] = useState(false);
-  const inflight = useRef<{ key: string; promise: Promise<boolean> } | null>(null);
+  const inflight = useRef<{ key: string; value: Pair; promise: Promise<boolean> } | null>(null);
+  // The fields and the saved value as of the last render, for the resync below to read.
+  const latest = useRef({ fields: { subject, body }, saved });
+  useLayoutEffect(() => {
+    latest.current = { fields: { subject, body }, saved };
+  });
 
-  // A draft the app changed from outside (not the echo of a save) replaces the edits.
+  // The app's draft changed. It is now the saved value; it replaces the fields only when they hold
+  // no unsaved edits, and never when it is the echo of the save in flight (typing may have gone on).
   useEffect(() => {
-    if (draft.subject === saved.subject && draft.body === saved.body) return;
-    setSaved({ subject: draft.subject, body: draft.body });
-    setSubject(draft.subject);
-    setBody(draft.body);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const prop = { subject: draft.subject, body: draft.body };
+    const { fields, saved: was } = latest.current;
+    if (same(prop, was)) return;
+    setSaved(prop);
+    const echo = inflight.current !== null && same(prop, inflight.current.value);
+    if (!echo && same(fields, was)) {
+      setSubject(prop.subject);
+      setBody(prop.body);
+    }
   }, [draft.subject, draft.body]);
 
-  const dirty = subject !== saved.subject || body !== saved.body;
+  const dirty = !same({ subject, body }, saved);
 
   const save = (): Promise<boolean> => {
     if (!dirty) return Promise.resolve(true);
@@ -359,8 +375,18 @@ function DraftStage({
         if (inflight.current?.key === key) inflight.current = null;
       }
     })();
-    inflight.current = { key, promise };
+    inflight.current = { key, value: next, promise };
     return promise;
+  };
+
+  // Leaving for the proposals saves first and stays here if the save fails, so no edit is lost.
+  const startOver = async () => {
+    setPending(true);
+    try {
+      if (await save()) onStartOver();
+    } finally {
+      setPending(false);
+    }
   };
 
   const approve = async () => {
@@ -378,10 +404,20 @@ function DraftStage({
   };
 
   const status =
-    state.kind === 'error' ? state.message : state.kind === 'saving' ? words.saving : state.kind === 'saved' && !dirty ? words.saved : null;
+    state.kind === 'error'
+      ? state.message
+      : state.kind === 'saving'
+        ? words.saving
+        : dirty
+          ? words.unsaved
+          : state.kind === 'saved'
+            ? words.saved
+            : null;
   const lines = Math.max(6, body.split('\n').length + 1);
   const bodyText = textView({ role: 'body', tone: 'primary', className: 'lib-draft__field lib-draft__textarea' });
-  const held = busy || pending || state.kind === 'saving';
+  // A save in flight doesn't disable the keys: the blur that starts it comes from the press itself
+  // (mousedown moves focus), which would swallow the click. Each key waits for that save instead.
+  const held = busy || pending;
 
   return (
     <Stack direction="column" gap={4} className="lib-draft__editor" data-part="editor">
@@ -428,15 +464,18 @@ function DraftStage({
       </Stack>
       <StatusLine text={status} error={state.kind === 'error'} />
       <Stack direction="row" gap={2} align="center" justify="between" wrap>
-        <span className="lib-draft__quiet" data-part="start-over">
-          <Button label={words.startOver} variant="quiet" disabled={held} onPress={onStartOver} />
+        <span data-part="start-over">
+          <Button label={words.startOver} variant="quiet" disabled={held} onPress={() => void startOver()} />
         </span>
         <Stack direction="row" gap={2} align="center" wrap>
           <span data-part="save">
             <Button label={words.save} disabled={held} onPress={() => void save()} />
           </span>
-          <span className="lib-draft__approve" data-part="approve" data-unsaved={dirty ? '' : undefined}>
-            <Button label={words.approve} variant="primary" disabled={busy || pending} onPress={() => void approve()} />
+          {/* The outlined key while edits are unsaved. Pressing saves them first (or waits for the save
+              in flight) and approves only once it succeeds, so what is approved is what was saved; while
+              it runs the key is not pressable. */}
+          <span data-part="approve" data-unsaved={dirty ? '' : undefined}>
+            <Button label={words.approve} variant={dirty ? 'secondary' : 'primary'} disabled={held} onPress={() => void approve()} />
           </span>
         </Stack>
       </Stack>

@@ -136,7 +136,49 @@ export const SaveFails: Story = {
     await expect(await c.findByText('Could not reach the server.')).toBeTruthy();
     await expect(c.getByLabelText('Subject')).toHaveValue(`${DRAFT.subject}!`);
     await userEvent.click(c.getByRole('button', { name: 'Approve' }));
+    await waitFor(() => expect(args.onSave).toHaveBeenCalledTimes(2));
     await expect(args.onApprove).not.toHaveBeenCalled();
+    // Start over saves first; the save fails, so the draft and its edits stay.
+    await userEvent.click(c.getByRole('button', { name: 'Start over from a proposal' }));
+    await waitFor(() => expect(args.onSave).toHaveBeenCalledTimes(3));
+    await expect(await c.findByText('Could not reach the server.')).toBeTruthy();
+    await expect(c.getByLabelText('Subject')).toHaveValue(`${DRAFT.subject}!`);
+    await expect(canvasElement.querySelector('[data-part="proposal"]')).toBeNull();
+  },
+};
+
+/** The app echoes each save into `draft` before it resolves; typing on meanwhile keeps every letter. */
+function EchoHarness(args: DraftFlowProps) {
+  const [draft, setDraft] = useState<DraftWorking>(DRAFT);
+  return (
+    <DraftFlow
+      {...args}
+      draft={draft}
+      onSave={async (next) => {
+        await args.onSave(next);
+        setDraft((d) => ({ ...d, ...next }));
+        await new Promise((r) => setTimeout(r, 300));
+      }}
+    />
+  );
+}
+
+export const EchoWhileTyping: Story = {
+  render: (args) => (
+    <div style={{ maxWidth: '64rem' }}>
+      <EchoHarness {...args} />
+    </div>
+  ),
+  play: async ({ canvasElement, args }) => {
+    const c = within(canvasElement);
+    const subject = c.getByLabelText('Subject');
+    await typeInto(subject, ' A');
+    fireEvent.focusOut(subject);
+    await waitFor(() => expect(args.onSave).toHaveBeenCalledWith({ subject: `${DRAFT.subject} A`, body: DRAFT.body }));
+    // The echo lands while the save is still in flight; the next letters stay.
+    await typeInto(subject, 'B');
+    await expect(await c.findByText('Unsaved changes', {}, { timeout: 5000 })).toBeTruthy();
+    await expect(subject).toHaveValue(`${DRAFT.subject} AB`);
   },
 };
 
