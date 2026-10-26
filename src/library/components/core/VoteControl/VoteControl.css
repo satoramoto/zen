@@ -1,0 +1,108 @@
+/* VoteControl: the choices as cards in a row that stacks when narrow, each with its label over its
+   meaning; the error line; the tally of names. Reads only contract variables; type is Text's. */
+
+.lib-vote {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* Side by side while each choice has about 30 units, stacked below that. */
+.lib-vote__choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--space-2) * 30)), 1fr));
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.lib-vote__choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: var(--control-h);
+  margin: 0;
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-2);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.lib-vote__choice:not([aria-checked='true']):not([aria-disabled='true']):hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+
+/* The picked choice: ink, a fill and a 2px ring in the selection colour, drawn inside so nothing reflows. */
+.lib-vote__choice[aria-checked='true'] {
+  border-color: var(--selected);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--selected);
+  color: var(--text-1);
+  cursor: default;
+}
+
+.lib-vote__choice[aria-disabled='true'] {
+  cursor: progress;
+}
+
+.lib-vote__choice:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.lib-vote__label,
+.lib-vote__meaning {
+  overflow-wrap: anywhere;
+}
+
+/* Holds its line while empty, so an error appearing doesn't move the tally. */
+.lib-vote__error {
+  min-height: 1lh;
+  margin: 0;
+}
+
+.lib-vote__tally {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lib-vote__voter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+  padding: var(--space-1) 0;
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+.lib-vote__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lib-vote__voter[data-state='gone'] .lib-vote__name {
+  text-decoration: line-through;
+  color: var(--text-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-vote__choice {
+    transition: none;
+  }
+}
