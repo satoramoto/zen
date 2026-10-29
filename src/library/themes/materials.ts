@@ -732,7 +732,9 @@ export const mixflowMaterials: Materials = {
   tabs: {
     track: { fill: 'var(--instrument-surface-control)', shadow: hairline('var(--instrument-border-control)'), texture: 'none' },
     tab: bare, chosen: { fill: 'var(--action)', shadow: NO_SHADOW, texture: 'none' },
-    ink: 'var(--text-2)', chosenInk: 'var(--action-text)', pad: '0px', gap: '0px', tabPad: '0 var(--space-4)',
+    // added: generic tabs fit their existing region minima at every scale; Music's source
+    // pressables retain their separate --wdg-space insets, not this generic tab padding.
+    ink: 'var(--text-2)', chosenInk: 'var(--action-text)', pad: '0px', gap: '0px', tabPad: '0 var(--space-2)',
   },
   well: { fill: 'var(--surface-1)', shadow: NO_SHADOW, texture: 'none' },
   screen: { fill: 'var(--instrument-surface-control)', shadow: NO_SHADOW, texture: 'none' }, // source NumberField window

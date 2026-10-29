@@ -1,5 +1,21 @@
 # Music story browser evidence
 
+## Merge follow-up: dense scale compatibility (2026-10-29)
+
+Full CI exposed existing Yahaha layout failures when mixflow's source density was applied to
+general Zen controls. The same scale facet now carries compact general metrics plus explicit
+instrument density roles. Generic tab padding/assembly target floors remain compatible;
+Music retains its exact 22px/2px/source-type anatomy. No existing test assertions were changed.
+
+- Latest browser regression: **258/258 passed**, 132 stories; no failures, flakiness or HMR
+  recoveries. Report: `.shots/music-catalog/density-regression/stories-2026-10-29T23-25-47-282Z.json`.
+- `LiveEditor` now also resizes an actual Music control through Instrument density while
+  preserving general control height, canvas identity, and the edited skin JSON round-trip.
+- The previously failing Yahaha suites plus token/skin/tier/Music lifecycle checks pass
+  **476/476** locally. Both renderer baselines still match the source at all three sizes with
+  zero differing pixels; all 39 live facet swaps pass. Library/Storybook builds and `check:lib`
+  pass. The full required CI suite is re-run on the follow-up commit.
+
 ## Current full verification — 2026-10-29
 
 **258/258 renderer runs passed across all 132 indexed Music stories**, with **0 persistent failures, 0 flaky runs and 3 explicit HMR recoveries**. This supersedes the historical failures retained below.

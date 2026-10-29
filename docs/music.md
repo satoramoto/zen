@@ -34,6 +34,13 @@ a theme. `Music.MixerView` includes that CSS boundary itself. Every existing Zen
 can dress the family. **The mixflow pack is the fidelity contract**: source typography, density,
 colours, geometry, materials, layout and interaction states must not be casually changed.
 
+The mixflow scale keeps general Zen UI at the existing compact density/target envelope and
+stores its source-faithful density in `scale.instrument` (22px controls, 2px spacing and the
+8–20px source type ladder). The same facet emits both vocabularies; Music reads
+`--instrument-control-h`, `--instrument-space-*` and `--instrument-size-*`. Other scales
+inherit their ordinary metrics unless explicitly overridden. The existing editor's
+**Instrument density** group edits these roles without shrinking unrelated app controls.
+
 ## Parts and ownership
 
 - `controls/`: shared action faces, toggles, segmented/select menus, popups, parameter knobs,

@@ -46,3 +46,19 @@
 - **Native-controls comparison passed:** the open Wave Settings popover is pixel-identical at 1440×900 (full page 1440×902): **0 differing pixels**. Source and mixflow checkbox schemes are `normal`; a separate legacy Linear/dark browser check reports `dark`. Artifacts: `.shots/music-theme-native/`.
 - **Three scoped browser story plays passed**, no failures/retries/HMR interruption: `music-theme--live-editor` (source/deck/spectral repaint while paused, same canvas identities, working control, legacy palette/material swaps and actual pasted-JSON import); `music-theme--all-instrument-swatches` (all 35 editable, exact untouched HSL and Reset); `music-theme--legacy-facet-round-trip` (four legacy facet swaps, partial colour/finish/axes/text overrides, JSON round-trip and inherited reset). `node scripts/music-stories.mjs --prefix Music/Theme --renderer react --workers 1 --timeout 90000 --retries 0 --output .shots/music-theme-editor`. Report: `.shots/music-theme-editor/stories-2026-10-29T21-22-42-685Z.json`. These are React-only controlled editor harnesses; Music's renderer parity is covered by its component stories.
 - **Latest scoped run: 4/4 plays passed**, no failures/flakiness/HMR interruptions, including **`music-theme--material-facet-paint`**. It observes Hardware's actual face/well/screen/handle gradients, handle texture/shadow and changed pressed shadow; verifies unchanged part dimensions; then observes Frost's different paint on all four roles without remounting. The other three plays passed again with the material binding enabled. Report: `.shots/music-theme-materials-editor/stories-2026-10-29T21-30-44-792Z.json`. Latest `npm run typecheck` passed too.
+
+## Integration follow-up: dense scale compatibility
+
+The first full CI run exposed general Yahaha layout assumptions when the source's 22px/2px
+metrics were used as the ordinary Zen scale. The mixflow facet now supplies compact general
+metrics plus explicit `scale.instrument` source metrics. Music reads the emitted
+`--instrument-{control-h,space-*,size-*}` roles; other scale facets derive them from their own
+ordinary values. There is no inner theme or literal per-component source exception. The
+existing scale editor exposes all instrument metrics and skin validation/merging supports
+partial density overrides on legacy facets. General tab padding and the assembled-screen
+target floor use compatible generic values; Music pressable insets/geometry remain original.
+
+The three previously failing existing Yahaha suites plus token/skin checks pass **438/438**
+without changing their assertions. The mixer still has **zero differing pixels** at all three
+reference sizes. `LiveEditor` also exercises actual control resizing through the new density
+fields while checking that the general control height and mounted canvases are preserved.

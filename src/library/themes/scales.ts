@@ -42,10 +42,15 @@ const roomy: Scale = {
 // openflowfm/widgets type.css / tokens.css / palette.css: 2px gaps, 8px widget insets,
 // 22px toolbar controls, and a type ladder whose smallest annotation is genuinely 8px.
 export const mixflowScale: Scale = {
+  // added: general Zen controls retain the compact scale's readable/touch-target envelope.
+  ...compact,
   id: 'mixflow', label: 'mix[flow] (dense instrument)',
-  unit: 2, control: 22,
-  sizes: { caption: 8, label: 9, body: 11, heading: 14, display: 18, numeral: 20 },
   controlText: 10, leadText: 12,
+  instrument: {
+    unit: 2, control: 22,
+    sizes: { caption: 8, label: 9, body: 11, heading: 14, display: 18, numeral: 20 },
+    controlText: 10, leadText: 12,
+  },
 };
 
 export const scales: Scale[] = [compact, regular, airy, roomy, mixflowScale];

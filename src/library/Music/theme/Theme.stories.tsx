@@ -108,7 +108,21 @@ export const LiveEditor: Story = {
       await userEvent.keyboard('{ArrowUp}');
       await expect(monitor).toHaveAttribute('aria-valuenow', '66');
     });
+    await step('instrument density edits resize the actual control without shrinking general app controls', async () => {
+      const specimen = canvas.getByRole('region', { name: 'Paused Music specimen' });
+      const monitor = within(specimen).getByRole('slider', { name: 'Source monitor' });
+      const before = monitor.getBoundingClientRect().width;
+      const generalHeight = getComputedStyle(specimen).getPropertyValue('--control-h');
+      await userEvent.click(canvas.getByRole('tab', { name: /^Scale(, changed)?$/ }));
+      canvas.getByRole('slider', { name: 'Instrument control height' }).focus();
+      await userEvent.keyboard('{ArrowUp}');
+      await waitFor(() => expect(monitor.getBoundingClientRect().width).toBeGreaterThan(before));
+      await expect(getComputedStyle(specimen).getPropertyValue('--control-h')).toBe(generalHeight);
+      await expect(JSON.parse(text()).overrides.scale.instrument.control).toBe(23);
+      stable();
+    });
     await step('wear legacy facets while keeping instrument edits and finish overrides', async () => {
+      await userEvent.click(canvas.getByRole('tab', { name: /^Palette(, changed)?$/ }));
       await choose('Palette from', 'Linear');
       await userEvent.click(canvas.getByRole('tab', { name: /^Materials(, changed)?$/ }));
       canvas.getByRole('slider', { name: 'Waveform colour strength' }).focus();
@@ -155,6 +169,7 @@ export const MaterialFacetPaint: Story = {
       const css = getComputedStyle(node);
       return `${css.backgroundColor}|${css.backgroundImage}|${css.boxShadow}`;
     };
+    await canvasElement.ownerDocument.fonts.ready;
     const original = parts.map(paint);
     const boxes = parts.map((node) => { const { width, height } = node.getBoundingClientRect(); return { width, height }; });
     const choose = async (name: string) => {

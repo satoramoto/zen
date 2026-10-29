@@ -88,6 +88,11 @@ scope; do not silently implement new editing policy under a fidelity claim.
   scaling to make a screenshot fit.
 - Keep source HSL precision: rounding to 8-bit hex before `color-mix()` produced visible
   waveform differences. The current contract/editor retains exact untouched source paint.
+- Dense metrics live in the same scale facet's `instrument` roles, not in general control
+  sizes. Use `--instrument-control-h`, `--instrument-space-*` and `--instrument-size-*` for
+  source-faithful Music anatomy; ordinary Zen controls retain their layout/target floors.
+  Legacy scale facets inherit their general metrics automatically. Preserve editor and skin
+  JSON support for these density overrides when adding Arrange.
 - Native form control `color-scheme` matters. Mixflow preserves the reference scheme through
   its material facet; do not globally change the browser scheme to fix one checkbox.
 - Do not repaint cached waveforms for every ancestor transform/playhead frame. Paused theme

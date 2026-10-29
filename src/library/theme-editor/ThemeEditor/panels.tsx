@@ -338,6 +338,24 @@ export function ScalePanel({ skin, onChange, resolved, base }: PanelProps) {
           </Row>
         ))}
       </Group>
+      <Group name="Instrument density" direction="column" gap={1}>
+        <Row label="Spacing unit">
+          <NumberRowField label="Instrument spacing unit" value={s.instrument!.unit} base={b.instrument!.unit} min={1} max={32} pattern="%d px" onChange={(v) => set(['scale', 'instrument', 'unit'], v)} />
+        </Row>
+        <Row label="Control height">
+          <NumberRowField label="Instrument control height" value={s.instrument!.control} base={b.instrument!.control} min={12} max={96} pattern="%d px" onChange={(v) => set(['scale', 'instrument', 'control'], v)} />
+        </Row>
+        {SIZES.map(({ key, name }) => (
+          <Row key={key} label={name}>
+            <NumberRowField label={`Instrument ${name.toLowerCase()} size`} value={s.instrument!.sizes[key]} base={b.instrument!.sizes[key]} min={6} max={200} pattern="%d px" onChange={(v) => set(['scale', 'instrument', 'sizes', key], v)} />
+          </Row>
+        ))}
+        {([['controlText', 'control text'], ['leadText', 'lead text']] as const).map(([key, name]) => (
+          <Row key={key} label={name}>
+            <NumberRowField label={`Instrument ${name} size`} value={s.instrument![key]!} base={b.instrument![key]!} min={6} max={200} pattern="%d px" onChange={(v) => set(['scale', 'instrument', key], v)} />
+          </Row>
+        ))}
+      </Group>
       <Group name="Specimen" direction="column" gap={2}>
         {SIZES.map((z) => (
           <Text key={z.key} role={z.key} truncate>

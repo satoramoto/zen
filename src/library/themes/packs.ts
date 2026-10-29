@@ -166,7 +166,9 @@ export const packs: ThemePack[] = [
       'Reference family colours remain exact instrument roles rather than being spread apart to redesign their palette.',
     ],
     facets: facets('mixflow', 'mixflow', 'mixflow', 'mixflow'),
-    principles: { minTarget: 16, density: 'dense', gaps: { body: 1, group: 1 }, notes: [
+    // added: generic assembled screens retain their 24px target floor. Music's faithful
+    // dense geometry is an explicit role in this same scale facet, not a second theme.
+    principles: { minTarget: 24, density: 'dense', gaps: { body: 1, group: 1 }, notes: [
       'The source is a dense desktop mixer: preserve its anatomical grid, small reading windows, and grouped controls.',
       'Scroll the four-deck face when narrow; do not shrink targets or omit instrument controls.',
     ] },

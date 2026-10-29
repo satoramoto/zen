@@ -154,10 +154,8 @@ export interface Faces {
   lineHeight?: string;
 }
 
-/** Scale: type sizes, the spacing unit and control height together, so text and controls grow as one. */
-export interface Scale {
-  id: string;
-  label: string;
+/** One density's coupled spacing, controls and text metrics. */
+export interface ScaleMetrics {
   /** Base spacing unit in px. */
   unit: number;
   /** Control height in px. */
@@ -167,6 +165,20 @@ export interface Scale {
   /** Additional dense-UI text roles. Outside sizes so its existing indexed contract stays total. */
   controlText?: number;
   leadText?: number;
+}
+
+/** Scale: general UI metrics plus optional dense instrument roles, all owned by one facet. */
+export interface Scale extends ScaleMetrics {
+  id: string;
+  label: string;
+  /** A dense instrument does not shrink general app controls below their layout/target floors. */
+  instrument?: ScaleMetrics;
+}
+
+/** Instrument density follows ordinary scale edits unless the facet explicitly supplies it. */
+export function instrumentScale(s: Scale): Required<ScaleMetrics> {
+  const v = s.instrument ?? s;
+  return { unit: v.unit, control: v.control, sizes: v.sizes, controlText: v.controlText ?? v.sizes.label, leadText: v.leadText ?? v.sizes.body };
 }
 
 /** One material: what a part is made of. Values are CSS and may read palette variables. */
@@ -451,6 +463,7 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
   const p = palette[mode];
   const instrument = instrumentScheme(p);
   const finish = instrumentFinish(m);
+  const dense = instrumentScale(s);
   const vars: Record<string, string> = {
     '--scheme': mode,
     // The mode as a number CSS can compute with: 1 in light, 0 in dark. Multiply it in calc() to
@@ -530,6 +543,9 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--control-h': `${s.control}px`,
     '--size-control': `${s.controlText ?? s.sizes.label}px`,
     '--size-lead': `${s.leadText ?? s.sizes.body}px`,
+    '--instrument-control-h': `${dense.control}px`,
+    '--instrument-size-control': `${dense.controlText}px`,
+    '--instrument-size-lead': `${dense.leadText}px`,
 
     '--instrument-waveform-base': instrument.waveformBase,
     '--instrument-signal': instrument.signal,
@@ -608,6 +624,8 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
   p.hues.forEach((v, i) => (vars[`--hue-${i + 1}`] = v));
   for (const [role, px] of Object.entries(s.sizes)) vars[`--size-${role}`] = `${px}px`;
   SPACE_STEPS.forEach((n, i) => (vars[`--space-${i + 1}`] = `${n * s.unit}px`));
+  for (const [role, px] of Object.entries(dense.sizes)) vars[`--instrument-size-${role}`] = `${px}px`;
+  SPACE_STEPS.forEach((n, i) => (vars[`--instrument-space-${i + 1}`] = `${n * dense.unit}px`));
   Object.assign(vars, AMBIENT_FALLBACKS);
   vars['--ambient-l-min'] = '0';
   vars['--ambient-l-max'] = '1';

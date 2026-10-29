@@ -2,7 +2,7 @@
 // any facet for another named one, and overrides single values inside the facets. No React, no
 // storage, no DOM: a Vue or Svelte binding wraps these exactly as the React components do
 // (docs/theme-editor.md).
-import { LAYERS, instrumentFinish, instrumentScheme, type Facets, type Faces, type LayerName, type Materials, type Scale, type Scheme } from '../contract';
+import { LAYERS, instrumentFinish, instrumentScale, instrumentScheme, type Facets, type Faces, type LayerName, type Materials, type Scale, type Scheme } from '../contract';
 import { parseCssHsl } from './colour';
 import { FROM_THEME, resolveTheme } from '../resolve';
 import { packs, type ThemePack } from '../themes/packs';
@@ -91,7 +91,7 @@ export function editableFacets(facets: Facets): Facets {
       trackingLabel: f.trackingLabel ?? f.tracking, trackingCaps: f.trackingCaps ?? f.trackingDisplay,
       lineHeight: f.lineHeight ?? '1.4',
     },
-    scale: { ...s, controlText: s.controlText ?? s.sizes.label, leadText: s.leadText ?? s.sizes.body },
+    scale: { ...s, controlText: s.controlText ?? s.sizes.label, leadText: s.leadText ?? s.sizes.body, instrument: instrumentScale(s) },
     materials: { ...m, instrument: instrumentFinish(m) },
   };
 }
@@ -135,10 +135,16 @@ export function applyOverrides(facets: Facets, overrides: SkinOverrides | undefi
     material = merge(material, ordinary) as Materials;
     if (instrument !== undefined) material = merge(material, { instrument }, { instrument: instrumentFinish(material) }) as Materials;
   }
+  let scale = facets.scale;
+  if (overrides.scale) {
+    const { instrument, ...ordinary } = overrides.scale;
+    scale = merge(scale, ordinary, defaults.scale) as Scale;
+    if (instrument !== undefined) scale = merge(scale, { instrument }, { instrument: instrumentScale(scale) }) as Scale;
+  }
   return {
     palette,
     faces: overrides.faces ? (merge(facets.faces, overrides.faces, defaults.faces) as Faces) : facets.faces,
-    scale: overrides.scale ? (merge(facets.scale, overrides.scale, defaults.scale) as Scale) : facets.scale,
+    scale,
     materials: material,
   };
 }
@@ -190,6 +196,11 @@ const RANGES: Record<string, readonly [number, number]> = {
   'scale.sizes': [6, 200],
   'scale.controlText': [6, 200],
   'scale.leadText': [6, 200],
+  'scale.instrument.unit': [1, 32],
+  'scale.instrument.control': [12, 96],
+  'scale.instrument.sizes': [6, 200],
+  'scale.instrument.controlText': [6, 200],
+  'scale.instrument.leadText': [6, 200],
 };
 
 /**
