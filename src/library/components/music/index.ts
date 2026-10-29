@@ -28,3 +28,5 @@ export {
   type TransitionPad,
   type TransitionState,
 } from './TransitionRow/TransitionRow';
+export { ChordStrip, CHORD_STRIP_FORMS, type ChordStripProps, type ChordStripForm, type ChordStripState } from './ChordStrip/ChordStrip';
+export { ArpSequencer, ARP_SEQUENCER_FORMS, type ArpSequencerProps, type ArpSequencerForm } from './ArpSequencer/ArpSequencer';
