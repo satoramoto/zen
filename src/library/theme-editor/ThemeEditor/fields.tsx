@@ -9,7 +9,7 @@ import { Select } from '../../components/core/Select/Select';
 import type { Param } from '../../components/core/Param/param';
 import { FROM_THEME } from '../../resolve';
 import { packs } from '../../themes/packs';
-import { hexToHsl, hslToHex, isHex, type Hsl } from '../colour';
+import { colourFields, hslToHex, isHex, type Hsl } from '../colour';
 import { FACET_LISTS, clearOverride, getOverride, resetFacet, setOverride, swapFacet, type FacetName, type OverridePath, type Skin } from '../skin';
 
 /** One setting: its name in the label column, its controls after it (under it when narrow). */
@@ -126,6 +126,8 @@ export function NumberRowField({ label, value, base, min, max, pattern, step = 1
 /** The solid `#rrggbb` nearest a CSS colour the picker can't take (its red, green and blue, alpha
  *  dropped), or black when it isn't spelled in channels. */
 function solidOf(css: string): string {
+  const colour = colourFields(css);
+  if (colour) return colour.hex;
   const m = /^\s*rgba?\(\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)/i.exec(css);
   if (!m) return hslToHex({ h: 0, s: 0, l: 0 });
   return `#${[m[1], m[2], m[3]].map((c) => Math.max(0, Math.min(255, Math.round(Number(c)))).toString(16).padStart(2, '0')).join('')}`;
@@ -161,7 +163,8 @@ export function ColourRow({
   const held = useRef<{ hsl: Hsl; hex: string } | null>(null);
   const overridden = getOverride(skin, path) !== undefined;
   const [, rerender] = useState(0);
-  if (!isHex(value)) {
+  const parsed = colourFields(value);
+  if (!parsed) {
     // A colour the fields can't hold (a translucent glass surface): shown as it is; picking a
     // colour replaces it with a solid one, and Reset brings it back.
     const raw = String(value);
@@ -177,23 +180,24 @@ export function ColourRow({
       </Row>
     );
   }
-  const hex = value.toLowerCase();
-  const hsl = held.current && held.current.hex === hex ? held.current.hsl : hexToHsl(hex);
-  const baseHsl = isHex(base) ? hexToHsl(base) : hsl;
+  const { hex } = parsed;
+  const raw = String(value);
+  const hsl = held.current && held.current.hex === hex ? held.current.hsl : parsed.hsl;
+  const baseHsl = colourFields(base)?.hsl ?? hsl;
   const write = (next: string) => onChange(setOverride(skin, path, next.toLowerCase()));
   const writeHsl = (next: Hsl) => {
     const out = hslToHex(next);
     held.current = { hsl: next, hex: out };
-    if (out === hex) rerender((n) => n + 1);
+    if (out === hex && isHex(value)) rerender((n) => n + 1);
     else write(out);
   };
   return (
     <Row label={name} className="zen-theme-editor__colour">
-      <label className="zen-theme-editor__swatch" data-part="swatch" style={{ background: hex }} title={`Pick ${name.toLowerCase()}`}>
+      <label className="zen-theme-editor__swatch" data-part="swatch" style={{ background: raw }} title={`Pick ${name.toLowerCase()}: ${raw}`}>
         <input type="color" value={hex} aria-label={`${name} colour`} onChange={(e) => write(e.currentTarget.value)} />
       </label>
-      <Text role="code" tone="secondary" className="zen-theme-editor__hex" data-part="hex">
-        {hex}
+      <Text role="code" tone="secondary" className={isHex(value) ? 'zen-theme-editor__hex' : 'zen-theme-editor__raw'} title={raw} data-part="hex">
+        {raw}
       </Text>
       {CHANNELS.map((c) => (
         <NumberField

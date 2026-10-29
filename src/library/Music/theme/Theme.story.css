@@ -1,0 +1,22 @@
+.music-theme-story {
+  display: grid;
+  grid-template-columns: minmax(240px, 340px) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-6);
+}
+.music-theme-story__editor { min-width: 0; }
+.music-theme-story__preview {
+  position: sticky;
+  top: var(--space-4);
+  display: grid;
+  min-width: 0;
+  gap: var(--space-4);
+}
+.music-theme-story__controls { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-5); }
+.music-theme-story__wave { display: grid; gap: var(--space-2); min-width: 0; }
+.music-theme-story__wave canvas { width: 100%; }
+.music-theme-story__json { max-width: 100%; overflow: auto; }
+@media (max-width: 48rem) {
+  .music-theme-story { grid-template-columns: minmax(0, 1fr); }
+  .music-theme-story__preview { position: static; grid-row: 1; }
+}

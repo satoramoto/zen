@@ -30,6 +30,22 @@
   max-inline-size: 100%;
 }
 
+.zen-theme-editor__text {
+  min-inline-size: 0;
+  inline-size: 100%;
+  min-block-size: var(--control-h);
+  padding-inline: var(--space-2);
+  color: var(--text-1);
+  background: var(--input-fill);
+  border: var(--input-border-sides) solid var(--border);
+  border-block-end-width: var(--input-border-bottom);
+  border-radius: var(--radius-input);
+}
+.zen-theme-editor__text:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
 /* The swatch: the colour itself, with the system picker laid invisibly over it. */
 .zen-theme-editor__swatch {
   position: relative;

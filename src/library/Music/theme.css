@@ -1,0 +1,321 @@
+/*! Recursive Variable — Copyright 2019 The Recursive Project Authors (github.com/arrowtype/recursive)
+ *
+ * SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+ *
+ * PREAMBLE
+ * The goals of the Open Font License (OFL) are to stimulate worldwide
+ * development of collaborative font projects, to support the font creation
+ * efforts of academic and linguistic communities, and to provide a free and
+ * open framework in which fonts may be shared and improved in partnership
+ * with others.
+ *
+ * The OFL allows the licensed fonts to be used, studied, modified and
+ * redistributed freely as long as they are not sold by themselves. The
+ * fonts, including any derivative works, can be bundled, embedded,
+ * redistributed and/or sold with any software provided that any reserved
+ * names are not used by derivative works. The fonts and derivatives,
+ * however, cannot be released under any other type of license. The
+ * requirement for fonts to remain under this license does not apply
+ * to any document created using the fonts or their derivatives.
+ *
+ * DEFINITIONS
+ * "Font Software" refers to the set of files released by the Copyright
+ * Holder(s) under this license and clearly marked as such. This may
+ * include source files, build scripts and documentation.
+ *
+ * "Reserved Font Name" refers to any names specified as such after the
+ * copyright statement(s).
+ *
+ * "Original Version" refers to the collection of Font Software components as
+ * distributed by the Copyright Holder(s).
+ *
+ * "Modified Version" refers to any derivative made by adding to, deleting,
+ * or substituting -- in part or in whole -- any of the components of the
+ * Original Version, by changing formats or by porting the Font Software to a
+ * new environment.
+ *
+ * "Author" refers to any designer, engineer, programmer, technical
+ * writer or other person who contributed to the Font Software.
+ *
+ * PERMISSION & CONDITIONS
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of the Font Software, to use, study, copy, merge, embed, modify,
+ * redistribute, and sell modified and unmodified copies of the Font
+ * Software, subject to the following conditions:
+ *
+ * 1) Neither the Font Software nor any of its individual components,
+ * in Original or Modified Versions, may be sold by itself.
+ *
+ * 2) Original or Modified Versions of the Font Software may be bundled,
+ * redistributed and/or sold with any software, provided that each copy
+ * contains the above copyright notice and this license. These can be
+ * included either as stand-alone text files, human-readable headers or
+ * in the appropriate machine-readable metadata fields within text or
+ * binary files as long as those fields can be easily viewed by the user.
+ *
+ * 3) No Modified Version of the Font Software may use the Reserved Font
+ * Name(s) unless explicit written permission is granted by the corresponding
+ * Copyright Holder. This restriction only applies to the primary font name as
+ * presented to the users.
+ *
+ * 4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+ * Software shall not be used to promote, endorse or advertise any
+ * Modified Version, except to acknowledge the contribution(s) of the
+ * Copyright Holder(s) and the Author(s) or with their explicit written
+ * permission.
+ *
+ * 5) The Font Software, modified or unmodified, in part or in whole,
+ * must be distributed entirely under this license, and must not be
+ * distributed under any other license. The requirement for fonts to
+ * remain under this license does not apply to any document created
+ * using the Font Software.
+ *
+ * TERMINATION
+ * This license becomes null and void if any of the above conditions are
+ * not met.
+ *
+ * DISCLAIMER
+ * THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+ * OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+ * COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+ * DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+ * OTHER DEALINGS IN THE FONT SOFTWARE.
+ */
+/* Reference: widgets/type.css. Self-hosted Fontsource subsets, never a CDN. Declaring the custom
+   axes separately lets a different Zen face work without inheriting Recursive's MONO/CASL cut. */
+@font-face {
+  font-family: 'Recursive Variable';
+  font-style: normal;
+  font-weight: 300 1000;
+  font-display: block;
+  src: url('@fontsource-variable/recursive/files/recursive-latin-full-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Recursive Variable';
+  font-style: normal;
+  font-weight: 300 1000;
+  font-display: block;
+  src: url('@fontsource-variable/recursive/files/recursive-latin-ext-full-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* One-way, local aliases. Never write a Zen contract variable here. Every pack/facet/skin still
+   comes from the enclosing ThemeScope/SkinScope; .zen-music is not a second theme root. */
+.zen-music {
+  --bg: var(--surface-0);
+  --panel: var(--surface-1);
+  --rail: var(--instrument-surface-rail);
+  --sel: var(--instrument-surface-selected);
+  --bd: var(--border);
+  --bd2: var(--instrument-border-quiet);
+  --bd3: var(--instrument-border-control);
+  --fg: var(--text-1);
+  --ui: var(--text-2);
+  --detail: var(--text-3);
+  --caption: var(--text-4);
+  --idle: var(--instrument-idle);
+  --primary: var(--action);
+  --primary-hover: color-mix(in srgb, var(--primary) 75%, var(--instrument-highlight));
+  --primary-muted: color-mix(in srgb, var(--primary) 50%, var(--caption));
+  --on-primary: var(--action-text);
+  --signal: var(--instrument-signal);
+  --caution: var(--warning);
+  --caution-hover: color-mix(in srgb, var(--caution) 75%, var(--instrument-highlight));
+  --focus: var(--instrument-focus);
+  --preview: var(--instrument-preview);
+  --info: var(--instrument-info);
+  --amber: var(--primary);
+  --amber-hover: var(--primary-hover);
+  --amber-muted: var(--primary-muted);
+  --red: var(--instrument-negative);
+  --green: var(--instrument-positive);
+  --blue: var(--instrument-info);
+  --alarm: var(--instrument-negative);
+  --surface-control: var(--instrument-surface-control);
+  --surface-stats: var(--instrument-surface-stats);
+  --surface-cell: var(--instrument-surface-cell);
+  --surface-cell-muted: var(--instrument-surface-cell-muted);
+  --surface-sunken: var(--instrument-surface-sunken);
+  --surface-band: var(--instrument-surface-band);
+  --surface-lane-head: var(--instrument-surface-lane-head);
+  --surface-outside: color-mix(in srgb, var(--instrument-surface-outside) 70.1960784314%, transparent);
+  --surface-manual: var(--instrument-surface-manual);
+  --radius: var(--radius-control);
+  --radius-xs: var(--radius-control);
+  --radius-sm: var(--radius-control);
+  --radius-md: var(--radius-card);
+  --radius-lg: var(--radius-card);
+  --shadow-edge: var(--instrument-shadow-edge);
+  --ring: inset 0 0 0 1px;
+  --ring-out: 0 0 0 1px;
+  --ring-focus: 0 0 0 2px;
+  --edge-top: inset 0 2px 0;
+  --edge-bottom: inset 0 -2px 0;
+  --edge-left: inset 2px 0 0;
+  --shadow-menu: var(--layer-float-cast);
+  --shadow-modal: var(--layer-overlay-cast);
+  --shadow-lift: 0 -8px 14px -4px var(--shadow-edge);
+  --ctl-h: var(--control-h);
+  --scroll-size: calc(var(--space-1) * 5);
+  --scroll-inset: calc(var(--space-1) * 1.5);
+
+  --mono: var(--font-mono);
+  --sans: var(--font-sans);
+  --mono-axes: var(--font-mono-axes);
+  --sans-axes: var(--font-sans-axes);
+  --text-annot: var(--size-caption);
+  --text-label: var(--size-label);
+  --text-control: var(--size-control);
+  --text-body: var(--size-body);
+  --text-lead: var(--size-lead);
+  --text-heading: var(--size-heading);
+  --text-title: var(--size-display);
+  --weight-normal: var(--weight-body);
+  --track-tight: var(--tracking-tight);
+  --track-none: var(--tracking);
+  --track-slight: var(--tracking-slight);
+  --track-label: var(--tracking-label);
+  --track-caps: var(--tracking-caps);
+
+  --stem-drums: var(--instrument-source-1);
+  --stem-bass: var(--instrument-source-2);
+  --stem-other: var(--instrument-source-3);
+  --stem-vocals: var(--instrument-source-4);
+  --stem-guitar: var(--instrument-source-5);
+  --stem-piano: var(--instrument-source-6);
+  --stem-drums-label: color-mix(in srgb, var(--stem-drums) 45%, var(--caption));
+  --stem-bass-label: color-mix(in srgb, var(--stem-bass) 45%, var(--caption));
+  --stem-other-label: color-mix(in srgb, var(--stem-other) 45%, var(--caption));
+  --stem-vocals-label: color-mix(in srgb, var(--stem-vocals) 45%, var(--caption));
+  --stem-guitar-label: color-mix(in srgb, var(--stem-guitar) 45%, var(--caption));
+  --stem-piano-label: color-mix(in srgb, var(--stem-piano) 45%, var(--caption));
+  --deck-a: var(--instrument-deck-1);
+  --deck-b: var(--instrument-deck-2);
+  --deck-c: var(--instrument-deck-3);
+  --deck-d: var(--instrument-deck-4);
+  --deck-a-waveform: color-mix(in srgb, var(--deck-a) var(--instrument-waveform-strength), var(--instrument-waveform-base));
+  --deck-b-waveform: color-mix(in srgb, var(--deck-b) var(--instrument-waveform-strength), var(--instrument-waveform-base));
+  --deck-c-waveform: color-mix(in srgb, var(--deck-c) var(--instrument-waveform-strength), var(--instrument-waveform-base));
+  --deck-d-waveform: color-mix(in srgb, var(--deck-d) var(--instrument-waveform-strength), var(--instrument-waveform-base));
+  --spectral-low: var(--instrument-spectral-low);
+  --spectral-mid: var(--instrument-spectral-mid);
+  --spectral-high: var(--instrument-spectral-high);
+  --music-spectral-mode: var(--instrument-spectral-mode);
+  --music-spectral-strength: var(--instrument-spectral-strength);
+  --waveform-base: var(--instrument-waveform-base);
+  --waveform-silence: var(--instrument-idle);
+
+  /* Literal white-alpha drawing in mixer.css becomes the palette's highlight at the exact
+     reference alpha. These remain distinguishable under light mode and coloured packs too. */
+  --music-highlight: var(--instrument-highlight);
+  --music-deck-shine: color-mix(in srgb, var(--instrument-highlight) 0.7843137255%, transparent);
+  --music-wave-grid: color-mix(in srgb, var(--instrument-highlight) 14.9019607843%, transparent);
+  --music-wave-grid-faint: color-mix(in srgb, var(--instrument-highlight) 8.6274509804%, transparent);
+  --music-wave-grid-bars: color-mix(in srgb, var(--instrument-highlight) 20%, transparent);
+  --music-wave-grid-beats: color-mix(in srgb, var(--instrument-highlight) 10.1960784314%, transparent);
+  --music-wave-loading: color-mix(in srgb, var(--instrument-highlight) 3.137254902%, transparent);
+  --music-wave-source-rule: color-mix(in srgb, var(--instrument-highlight) 6.2745098039%, transparent);
+  --music-context-radius: var(--instrument-popup-radius);
+  --music-context-shadow: var(--instrument-context-shadow);
+  /* The mixer lane retains source geometry and consumes these exact paint aliases. */
+  --play-deck-sheen: var(--music-deck-shine);
+  --play-fader-highlight: var(--instrument-highlight);
+  --play-wave-grid-ink: var(--music-wave-grid);
+  --play-wave-bar-faint: var(--music-wave-grid-faint);
+  --play-wave-bar: var(--music-wave-grid-bars);
+  --play-wave-beat: var(--music-wave-grid-beats);
+  --play-wave-loading-stripe: var(--music-wave-loading);
+  --play-wave-source-divider: var(--music-wave-source-rule);
+  --play-context-shadow: var(--instrument-context-shadow-ink);
+  --play-context-radius: var(--instrument-popup-radius);
+}
+
+/* Reference tokens.css. Repeated per widget exactly where the source repeated them; device or
+   per-control overrides remain local. Dimensions follow Zen's scale instead of freezing 22px. */
+.zen-music.wdg,
+.zen-music .wdg {
+  /* These are colours, never material backgrounds: mixer/FX rules use them in color-mix().
+     Actual part paint (including gradients) is applied by materials.css. */
+  --wdg-face: var(--surface-control);
+  --wdg-edge: var(--bd3);
+  --wdg-edge-live: var(--focus);
+  --wdg-empty: var(--idle);
+  --wdg-fill: var(--primary);
+  --wdg-fill-text: var(--on-primary);
+  --wdg-marker: var(--fg);
+  --wdg-text: var(--ui);
+  --wdg-text-strong: var(--fg);
+  --wdg-caption: var(--caption);
+  --wdg-focus: var(--focus);
+  --wdg-well: var(--panel);
+  --wdg-alarm: var(--alarm);
+  --wdg-port-edge: var(--bd3);
+  --wdg-port-ink: var(--wdg-device-accent, var(--focus));
+  --wdg-cord: var(--focus);
+  --wdg-graph-dot: var(--sel);
+  --wdg-plate: var(--surface-cell);
+  --wdg-plate-head: var(--sel);
+  --wdg-plate-selected: var(--bd);
+  --wdg-radius: var(--radius-control);
+  --wdg-plate-radius: var(--radius-card);
+  --wdg-modal-radius: var(--radius-card);
+  --wdg-modal-scrim: var(--instrument-scrim);
+  --wdg-modal-shadow: var(--shadow-modal);
+  --wdg-sans: var(--sans);
+  --wdg-mono-axes: var(--mono-axes);
+  --wdg-sans-axes: var(--sans-axes);
+  --wdg-height: calc(var(--control-h) * 17 / 22);
+  --wdg-field-height: calc(var(--control-h) * 16 / 22);
+  --wdg-track: calc(var(--control-h) * 14 / 22);
+  --wdg-thumb: calc(var(--control-h) / 11);
+  --wdg-strip: calc(var(--control-h) * 4 / 22);
+  --wdg-mark-width: calc(var(--control-h) * 3 / 22);
+  --wdg-reach-ink: var(--ui);
+  --wdg-arrival-ink: color-mix(in srgb, var(--amber-hover) 60%, var(--fg));
+  --wdg-groove: var(--surface-sunken);
+  --wdg-knob-size: calc(var(--control-h) * 34 / 22);
+  --wdg-knob-height: calc(var(--control-h) * 27 / 22);
+  --wdg-xypad-handle: calc(var(--control-h) / 2);
+  --wdg-meter-thickness: calc(var(--control-h) * 6 / 22);
+  --wdg-meter-span: calc(var(--control-h) * 48 / 22);
+  --wdg-port-size: calc(var(--control-h) * 9 / 22);
+  --wdg-port-gap: var(--space-3);
+  --wdg-port-inset: var(--wdg-space);
+  --wdg-graph-grid: calc(var(--space-4) * 3);
+  --wdg-graph-x: 0px;
+  --wdg-graph-y: 0px;
+  --wdg-gap: var(--space-1);
+  --wdg-space: var(--space-4);
+  --wdg-modal-width: calc(var(--control-h) * 480 / 22);
+  --wdg-row-height: calc(var(--control-h) * 60 / 22);
+  --wdg-device-rows: 2;
+  --wdg-device-height: calc(var(--wdg-height) + 1px + 2px + 2 * var(--wdg-space) + var(--wdg-device-rows) * var(--wdg-row-height) + (var(--wdg-device-rows) - 1) * var(--wdg-space));
+}
+
+.zen-music {
+  color: var(--fg);
+  color-scheme: var(--instrument-native-color-scheme);
+  font-family: var(--sans);
+  font-variation-settings: var(--sans-axes);
+  font-size: var(--text-body);
+  font-weight: var(--weight-normal);
+  letter-spacing: var(--tracking);
+  line-height: var(--line-height);
+  -webkit-user-select: none;
+  user-select: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--idle) transparent;
+}
+.zen-music ::-webkit-scrollbar { width: var(--scroll-size); height: var(--scroll-size); }
+.zen-music ::-webkit-scrollbar-thumb { border: var(--scroll-inset) solid transparent; border-radius: var(--radius-pill); background: var(--idle); background-clip: padding-box; }
+.zen-music ::-webkit-scrollbar-thumb:hover { background: var(--focus); background-clip: padding-box; }
+.zen-music ::-webkit-scrollbar-track,
+.zen-music ::-webkit-scrollbar-corner { background: transparent; }
+.zen-music :is(input, select) { -webkit-user-select: text; user-select: text; }

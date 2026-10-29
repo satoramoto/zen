@@ -1,0 +1,18 @@
+/* Story presentation only. An isolated control is a specimen, not a viewport-sized app. */
+.lib-scope:has(> .music-story-stage[data-music-stage='specimen']) {
+  min-height: 0;
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
+}
+
+.music-story-stage[data-music-stage='specimen'] {
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: clamp(16px, var(--space-4), 24px);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: max(8px, var(--radius-card));
+  background: var(--surface-1);
+}

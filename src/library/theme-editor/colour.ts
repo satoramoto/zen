@@ -14,6 +14,48 @@ export interface Hsl {
 const HEX = /^#[0-9a-f]{6}$/i;
 export const isHex = (v: unknown): v is string => typeof v === 'string' && HEX.test(v);
 
+const NUMBER = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i;
+const finite = (value: string): number | undefined => NUMBER.test(value) && Number.isFinite(Number(value)) ? Number(value) : undefined;
+const percent = (value: string): number | undefined => value.endsWith('%') ? finite(value.slice(0, -1)) : undefined;
+
+/** Solid CSS hsl(), without a DOM or any serialization round-trip through 8-bit RGB. Supports
+ * modern space/slash and legacy comma syntax plus CSS hue units. Translucent colours stay raw
+ * in the editor rather than silently losing alpha. The original paint string is never rewritten. */
+export function parseCssHsl(value: unknown): Hsl | undefined {
+  if (typeof value !== 'string') return undefined;
+  const match = /^hsla?\(\s*([^()]*)\s*\)$/i.exec(value.trim());
+  if (!match) return undefined;
+  const body = match[1].trim();
+  let parts: string[], alpha: string | undefined;
+  if (body.includes(',')) {
+    parts = body.split(/\s*,\s*/);
+    if (parts.length === 4) alpha = parts.pop();
+  } else {
+    const split = body.split(/\s*\/\s*/);
+    if (split.length > 2) return undefined;
+    parts = split[0].trim().split(/\s+/);
+    alpha = split[1];
+  }
+  if (parts.length !== 3) return undefined;
+  if (alpha !== undefined && (alpha.endsWith('%') ? percent(alpha) !== 100 : finite(alpha) !== 1)) return undefined;
+  const hue = /^([+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?)(deg|grad|rad|turn)?$/i.exec(parts[0]);
+  const s = percent(parts[1]), l = percent(parts[2]);
+  if (!hue || s === undefined || l === undefined) return undefined;
+  const n = finite(hue[1]);
+  if (n === undefined) return undefined;
+  const multiplier = ({ deg: 1, grad: .9, rad: 180 / Math.PI, turn: 360 } as Record<string, number>)[hue[2]?.toLowerCase() ?? 'deg'];
+  const h = n * multiplier;
+  if (!Number.isFinite(h)) return undefined;
+  return { h: ((h % 360) + 360) % 360, s: Math.max(0, Math.min(100, s)), l: Math.max(0, Math.min(100, l)) };
+}
+
+/** The picker may need a hex approximation; that is presentation only, never the stored paint. */
+export function colourFields(value: unknown): { hex: string; hsl: Hsl } | undefined {
+  if (isHex(value)) return { hex: value.toLowerCase(), hsl: hexToHsl(value) };
+  const hsl = parseCssHsl(value);
+  return hsl ? { hex: hslToHex(hsl), hsl } : undefined;
+}
+
 const rgbOf = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
 const hex2 = (n: number) =>
   Math.round(Math.max(0, Math.min(1, n)) * 255)
@@ -116,17 +158,21 @@ const meaningColours = (p: Scheme): [string, string][] => [
 /**
  * What would make a palette hard to read or hard to tell apart, in one mode, in plain words: text
  * below WCAG AA on its fill, and meaning colours closer than `DISTINCT` (the rules zen's own packs
- * are held to). Colours that aren't `#rrggbb` are skipped. Empty when all is well.
+ * are held to). Solid source HSL is understood too; other CSS expressions are skipped.
  */
 export function paletteWarnings(palette: Palette, mode: Mode): string[] {
   const p = palette[mode];
   const out: string[] = [];
   for (const [name, ink, ground] of readPairs(p)) {
-    if (!isHex(ink) || !isHex(ground)) continue;
-    const c = contrast(ink, ground);
+    const i = colourFields(ink), g = colourFields(ground);
+    if (!i || !g) continue;
+    const c = contrast(i.hex, g.hex);
     if (c < AA) out.push(`${name} is ${c.toFixed(1)}:1; AA needs ${AA}:1.`);
   }
-  const roles = meaningColours(p).filter(([, v]) => isHex(v));
+  const roles = meaningColours(p).flatMap(([name, v]): [string, string][] => {
+    const colour = colourFields(v);
+    return colour ? [[name, colour.hex]] : [];
+  });
   for (const [i, [a, x]] of roles.entries())
     for (const [b, y] of roles.slice(i + 1)) if (distance(x, y) < DISTINCT) out.push(`${a} and ${b} read alike.`);
   return out;

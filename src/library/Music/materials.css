@@ -1,0 +1,52 @@
+/* A part's paint, not its geometry. Neutral --wdg-face/well aliases stay colour-valued for
+   source colour mixes; gradients and textures are valid only in these background layers.
+   One extra scope class intentionally outranks the reference's resting face declarations. */
+.zen-music .wdg-slider-body,
+.zen-music .wdg-toggle-body,
+.zen-music .wdg-segmented-body,
+.zen-music .wdg-select-body,
+.zen-music .wdg-button-body[data-tone='normal'],
+.zen-music .wdg-button-body[data-tone='danger'],
+.zen-music .wdg-control-group {
+  background: var(--mat-key-texture), var(--mat-key-fill);
+  box-shadow: var(--mat-key-shadow);
+}
+
+/* Chosen ink remains the component's semantic slot; the material contributes the finish and
+   the pressed edge, not a replacement category colour. */
+.zen-music .wdg-toggle-body[data-on],
+.zen-music .wdg-segmented-body button[aria-checked='true'] {
+  background: var(--mat-key-texture), var(--wdg-fill);
+  box-shadow: var(--mat-key-pressed);
+}
+.zen-music .wdg-toggle-body:active:not(:disabled),
+.zen-music .wdg-segmented-body button:active:not(:disabled),
+.zen-music .wdg-button-body:active:not(:disabled) { box-shadow: var(--mat-key-pressed); }
+.zen-music .wdg-toggle[data-layout='inside'] > .wdg-toggle-body[data-on] {
+  background: var(--mat-key-texture), var(--mat-key-fill);
+}
+
+/* A number window is a screen; meter channels and the cut-in fader slot are wells. */
+.zen-music .wdg-number-body {
+  background: var(--mat-screen-texture), var(--mat-screen-fill);
+  box-shadow: var(--mat-screen-shadow);
+}
+.zen-music .wdg-meter-body,
+.zen-music .play-channel-fader:not(.play-master-stereo) .wdg-slider-body::before {
+  background: var(--mat-well-texture), var(--mat-well-fill);
+  box-shadow: var(--mat-well-shadow);
+}
+
+/* Full-height inside-layout marks are ink, not handles. A free cap can retain local marker ink
+   (the source's flat slider) or reveal the selected material's paint/texture (hardware, frost).
+   The CSS switch is whitespace for marker paint, guaranteed-invalid `initial` for material
+   paint. Build the fallback here so each handle reads its local ink, not the scope's. A solid
+   marker stays a solid background: a uniform gradient introduces browser dithering. */
+.zen-music .wdg-slider:not([data-layout='inside']) .wdg-slider-thumb {
+  --music-handle-local-fill: var(--instrument-handle-marker-switch) var(--wdg-marker);
+  background: var(--mat-handle-texture), var(--music-handle-local-fill, var(--mat-handle-fill));
+  box-shadow: var(--instrument-free-handle-shadow);
+}
+.zen-music .play-channel-fader:not(.play-master-stereo) .wdg-slider-thumb {
+  box-shadow: var(--mat-handle-shadow);
+}
