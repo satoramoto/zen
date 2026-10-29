@@ -47,6 +47,10 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p src/harness/claude-code",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:music:stories": "node scripts/music-stories.mjs",
+    "test:music:visual": "node scripts/music-visual.mjs",
+    "test:music:themes": "node scripts/music-theme-switch.mjs",
+    "test:music:hooks": "vitest run src/library/Music",
     "tiers": "tsx scripts/tiers.ts",
     "build": "tsc --noEmit && vite build",
     "build:storybook": "storybook build --disable-telemetry"
@@ -65,6 +69,7 @@
     }
   },
   "devDependencies": {
+    "@fontsource-variable/recursive": "5.3.0",
     "@storybook/addon-a11y": "10.6.1",
     "@storybook/addon-docs": "10.6.1",
     "@storybook/react-vite": "10.6.1",
@@ -79,6 +84,8 @@
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.2",
     "jsdom": "30.1.2",
+    "playwright": "1.64.1",
+    "pngjs": "7.0.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "storybook": "10.6.1",

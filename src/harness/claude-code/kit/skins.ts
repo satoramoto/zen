@@ -380,6 +380,48 @@ export const SKINS = {
       "#4a98ff",
       "#badbfe"
     ]
+  },
+  mixflow: {
+    label: "mix[flow]",
+    ok: "#51cd85",
+    warn: "#f0b23c",
+    bad: "#e0483f",
+    blue: "#7c86ff",
+    purple: "#c86ef0",
+    cyan: "#3ff4ff",
+    slate: "#a8abce",
+    orchid: "#d900af",
+    ramp: {
+      blue: [
+        "#7c86ff",
+        "#5d65bf",
+        "#aab0ff",
+        "#444a8c"
+      ],
+      slate: [
+        "#a8abce",
+        "#7e809b",
+        "#c6c8df",
+        "#5c5e71"
+      ]
+    },
+    muted: "#8b8b93",
+    gray: {
+      light: "#b7b7be",
+      mid: "#8b8b93",
+      dark: "#5e5e66"
+    },
+    hues: [
+      "#36b8ec",
+      "#7c86ff",
+      "#c86ef0",
+      "#f2659f",
+      "#d900af"
+    ],
+    roles: [
+      "#c6e34a",
+      "#3ff4ff"
+    ]
   }
 } as const satisfies Record<string, Skin>
 

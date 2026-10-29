@@ -27,6 +27,15 @@ const preview: Preview = {
         order: [
           'Design OS',
           ['Systems', 'Layout', 'Components', ['Core', 'Music'], 'Graph', ['Circuit', ['Samples', 'Behaviours'], 'Graph', 'Device', 'NodeSheet']],
+          'Music',
+          [
+            'Mixer', ['Four-deck mixer', 'Deck strip', 'Master strip', 'Transport', 'Wave controls'],
+            'Controls', ['Knob', 'Fader', 'Number field', 'Button', 'Toggle', 'Hold button', 'Segmented', 'Select'],
+            'Displays', ['Meter', 'Waveform'],
+            'Overlays', ['Context panel', 'Popup'],
+            'Themes', ['Theme editor'],
+            'Foundations', ['Button face', 'Label', 'Frame bindings'],
+          ],
           'Harness',
           ['Claude Code', ['Kit', 'Skins', 'Sample mod']],
           'Yahaha',

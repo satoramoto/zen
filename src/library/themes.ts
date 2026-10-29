@@ -26,6 +26,8 @@ export {
   type LayerInk,
   type LayerAmbient,
   type Scheme,
+  type InstrumentScheme,
+  instrumentScheme,
   type Density,
 } from './contract';
 export { resolveTheme, FROM_THEME, type ThemeChoice } from './resolve';

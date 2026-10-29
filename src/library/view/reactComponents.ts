@@ -4,6 +4,7 @@
 // component in each. The map is built on first use, so the import cycle (a registered component
 // draws a `Tree`, which reads this) never sees a half-loaded module.
 import type { ComponentType } from 'react';
+import { musicReactComponents } from '../Music/registry.react';
 import { Button } from '../components/core/Button/Button';
 import { ActionButton } from '../components/core/ActionButton/ActionButton';
 import { SearchField } from '../components/core/SearchField/SearchField';
@@ -84,6 +85,7 @@ let registry: Record<string, ComponentType<any>> | undefined;
 /** The React component registered as `name`; throws for an unknown name. */
 export function reactComponent(name: string): ComponentType<any> {
   registry ??= {
+    ...musicReactComponents(),
     AssembledScreen,
     FormScope,
     Layer,

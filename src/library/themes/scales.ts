@@ -39,4 +39,13 @@ const roomy: Scale = {
   sizes: { caption: 12, body: 13, label: 13, heading: 20, display: 32, numeral: 28 },
 };
 
-export const scales: Scale[] = [compact, regular, airy, roomy];
+// openflowfm/widgets type.css / tokens.css / palette.css: 2px gaps, 8px widget insets,
+// 22px toolbar controls, and a type ladder whose smallest annotation is genuinely 8px.
+export const mixflowScale: Scale = {
+  id: 'mixflow', label: 'mix[flow] (dense instrument)',
+  unit: 2, control: 22,
+  sizes: { caption: 8, label: 9, body: 11, heading: 14, display: 18, numeral: 20 },
+  controlText: 10, leadText: 12,
+};
+
+export const scales: Scale[] = [compact, regular, airy, roomy, mixflowScale];
