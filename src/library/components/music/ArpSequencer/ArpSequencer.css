@@ -1,0 +1,159 @@
+/* ArpSequencer: the followed chord and its degree readout, the 16 × 8 degree grid (stalk, tie) and
+   the mode with four knobs. Cells are well Surfaces and words are Texts; this file places them,
+   sizes the grid from the scale and draws the stalk, the tie and the state inks. Contract
+   variables plus the local --yh-arp-* knobs. */
+
+.yh-arp {
+  /* A cell's least height and the gap a tie bar crosses; a compact arp tightens the first. */
+  --yh-arp-cell: calc(var(--control-h) * 0.75);
+  --yh-arp-gap: var(--space-1);
+  /* The stalk's height on an on cell, 0–1; the model sets it per cell. */
+  --yh-arp-velocity: 0.6;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+}
+.yh-arp[data-form='compact'] {
+  --yh-arp-cell: calc(var(--control-h) * 0.6);
+}
+
+/* The head: what the arp follows, then what every degree sounds as. */
+.yh-arp__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+.yh-arp__follow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.yh-arp__follow-label {
+  color: var(--text-3);
+}
+.yh-arp__legend {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+.yh-arp__degree-note {
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* The grid: sixteen equal columns (and, when full, a degree-label column before them). Each row is
+   display: contents, so its cells are the grid's own and every column stays aligned. */
+.yh-arp__grid {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: var(--yh-arp-gap);
+  min-width: 0;
+}
+.yh-arp[data-form='full'] .yh-arp__grid {
+  grid-template-columns: auto repeat(16, minmax(0, 1fr));
+}
+.yh-arp__row {
+  display: contents;
+}
+
+/* A degree label: a quiet caption button at the row's reading end. */
+.yh-arp__degree {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: calc(var(--size-caption) * 3);
+  padding: 0 var(--space-1);
+  border: 0;
+  background: none;
+  color: var(--text-3);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* A cell: a well Surface button. It is the whole column's degree slot; the step's own degree keeps
+   a strong edge, and every other cell is dimmed so the sixteen steps read at a glance. */
+.yh-arp__cell {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--yh-arp-cell);
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+.yh-arp__cell:not([data-here='true']) {
+  opacity: 0.55;
+}
+/* Every cell is live: a dimmed one comes up to full ink under the pointer. */
+.yh-arp:not([data-disabled]) .yh-arp__cell:not([data-here='true']):hover {
+  opacity: 1;
+}
+
+/* The stalk's track: the cell's own floor, a quarter clear either side, so a full velocity fills
+   the cell and a light one is a low bar rather than a floating dash. */
+.yh-arp__meter {
+  position: absolute;
+  inset: 0 25%;
+}
+.yh-arp__stalk {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 2px;
+  height: calc(var(--yh-arp-velocity) * 100%);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+/* The tie: a bar from an on step's edge across the gap and a hair into the next column. */
+.yh-arp__tie {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  z-index: 1;
+  width: calc(var(--yh-arp-gap) + var(--space-1));
+  height: 2px;
+  transform: translateY(-50%);
+  background: var(--accent);
+}
+
+/* The foot: the mode on the reading side, the four knobs sharing the rest. */
+.yh-arp__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  min-width: 0;
+}
+/* The four knobs sit as one cluster at the reading end, a step apart, however wide the arp is: a
+   knob is a fixed ring, so stretching them across the strip would only space out the words. */
+.yh-arp__knobs {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: flex-end;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* Read-only: the whole arp steps back; the handlers are absent, so nothing moves. */
+.yh-arp[data-disabled] {
+  opacity: 0.6;
+}
+.yh-arp[data-disabled] .yh-arp__cell,
+.yh-arp[data-disabled] .yh-arp__degree {
+  cursor: default;
+}
