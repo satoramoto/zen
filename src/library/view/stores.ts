@@ -26,6 +26,7 @@ import { bindRef, type RefParams } from './ref';
 import { bindDisplayFit, bindDisplayWide, type DisplayFitParams, type DisplayWideParams } from '../yahaha/Display/fit';
 import { bindPad, type PadParams } from '../components/music/Pad/padPress';
 import { bindFader, type FaderParams } from '../components/music/Fader/faderInput';
+import { bindXyInput, type XyInputParams } from '../components/music/XYPad/xyInput';
 import { bindKeysInput, type KeysBindParams } from '../components/music/Keys/keysInput';
 import { bindFillWidth, type FillWidthParams } from '../components/music/Keys/fillWidth';
 import { bindFit, type ChordFitParams } from '../components/music/ChordReadout/fit';
@@ -140,6 +141,8 @@ export const stores = {
   padPress: keyed<PadParams, 'onPress' | 'tipAction'>(bindPad, ['onPress', 'tipAction']),
   /** Fader's drag, keys and wheel (`faderInput.ts`). */
   faderInput: keyed<FaderParams, 'onlevel'>(bindFader, ['onlevel']),
+  /** XYPad's pointer drag and arrow keys (`xyInput.ts`). */
+  xyInput: keyed<XyInputParams, 'onMove'>(bindXyInput, ['onMove']),
   /** Keys' split handle, pick surface and Esc (`keysInput.ts`). */
   keysInput: keyed<KeysBindParams, 'onSplit' | 'onPick'>(bindKeysInput, ['onSplit', 'onPick']),
   /** Keys' measured width (`fillWidth.ts`). */
