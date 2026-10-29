@@ -39,3 +39,6 @@ export {
   type MixBandProps,
   type MixBandForm,
 } from './MixBand/MixBand';
+export { Transport, TRANSPORT_FORMS, TRANSPORT_UNITS, clockText, positionText, readingText, type TransportProps, type TransportForm, type TransportLoop, type TransportPosition, type TransportTempo, type TransportUnit } from './Transport/Transport';
+export { DeviceFace, DEVICE_FACE_FORMS, type DeviceFaceProps, type DeviceFaceForm } from './DeviceFace/DeviceFace';
+export { PianoRoll, PIANO_ROLL_FORMS, type PianoRollProps, type PianoRollForm, type PianoRollKey, type PianoRollNote } from './PianoRoll/PianoRoll';

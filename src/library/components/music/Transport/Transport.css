@@ -1,0 +1,19 @@
+/* Transport: play, stop, loop, tempo and the position reading in one row. Contract variables
+   plus the local --yh-transport-* (declared under **Tuning knobs** in Transport.tsx). */
+
+.yh-transport {
+  --yh-transport-gap: var(--space-1);
+
+  display: flex;
+  gap: var(--yh-transport-gap);
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+}
+
+.yh-transport__tempogroup {
+  display: flex;
+  gap: var(--space-1);
+  align-items: baseline;
+  min-width: 0;
+}

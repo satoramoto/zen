@@ -44,6 +44,9 @@ import XYPad from '../components/music/XYPad/XYPad.svelte';
 import MacroPads from '../components/music/MacroPads/MacroPads.svelte';
 import StemLanes from '../components/music/StemLanes/StemLanes.svelte';
 import TransitionRow from '../components/music/TransitionRow/TransitionRow.svelte';
+import Transport from '../components/music/Transport/Transport.svelte';
+import DeviceFace from '../components/music/DeviceFace/DeviceFace.svelte';
+import PianoRoll from '../components/music/PianoRoll/PianoRoll.svelte';
 import BarReadout from '../components/music/BarReadout/BarReadout.svelte';
 import SendReadout from '../components/music/SendReadout/SendReadout.svelte';
 import SoundCell from '../components/music/SoundCell/SoundCell.svelte';
@@ -154,6 +157,9 @@ export function svelteComponent(name: string): Component<any> {
     MacroPads,
     StemLanes,
     TransitionRow,
+    Transport,
+    DeviceFace,
+    PianoRoll,
     BarReadout,
     SendReadout,
     SoundCell,

@@ -1,0 +1,251 @@
+## Default
+<div aria-label="8 rows, 4 notes, bars 0 to 16" class="yh-pianoroll" data-form="full" data-part="root" role="img" style="--yh-roll-rows: 8">
+  <div class="yh-pianoroll__keys" data-part="keys">
+    <span class="yh-pianoroll__key" data-part="key" key="72">
+      "C5"
+    <span class="yh-pianoroll__key" data-part="key" key="71">
+      "B4"
+    <span class="yh-pianoroll__key" data-black="true" data-part="key" key="70">
+      "B♭4"
+    <span class="yh-pianoroll__key" data-part="key" key="69">
+      "A4"
+    <span class="yh-pianoroll__key" data-part="key" key="67">
+      "G4"
+    <span class="yh-pianoroll__key" data-part="key" key="65">
+      "F4"
+    <span class="yh-pianoroll__key" data-part="key" key="64">
+      "E4"
+    <span class="yh-pianoroll__key" data-part="key" key="60">
+      "C4"
+  <div class="yh-pianoroll__grid" data-part="grid">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane72">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane71">
+    <div class="yh-pianoroll__lane" data-black="true" data-part="lane" key="lane70">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane69">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane67">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane65">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane64">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane60">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar0" style="left: 25%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar1" style="left: 50%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar2" style="left: 75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat1" style="left: 6.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat2" style="left: 12.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat3" style="left: 18.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat5" style="left: 31.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat6" style="left: 37.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat7" style="left: 43.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat9" style="left: 56.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat10" style="left: 62.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat11" style="left: 68.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat13" style="left: 81.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat14" style="left: 87.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat15" style="left: 93.75%">
+    <div class="yh-pianoroll__note" data-hue="1" data-part="note" key="c" style="left: 0%; width: 25%; top: 0%; height: 12.5%" title="C">
+      "C"
+    <div class="yh-pianoroll__note" data-hue="2" data-part="note" key="a" style="left: 25%; width: 25%; top: 37.5%; height: 12.5%" title="A">
+      "A"
+    <div class="yh-pianoroll__note" data-hue="3" data-part="note" key="f" style="left: 50%; width: 25%; top: 62.5%; height: 12.5%" title="F">
+      "F"
+    <div class="yh-pianoroll__note" data-hue="4" data-marked="true" data-part="note" key="g" style="left: 75%; width: 25%; top: 50%; height: 12.5%" title="G">
+      "G"
+    <div aria-hidden="true" class="yh-pianoroll__playhead" data-part="playhead" style="left: 30%">
+  <ol class="yh-pianoroll__bars" data-part="bars">
+    <li key="n0">
+      "1"
+    <li key="n1">
+      "2"
+    <li key="n2">
+      "3"
+    <li key="n3">
+      "4"
+
+## EveryState
+<div aria-label="8 rows, 6 notes, bars 0 to 16" class="yh-pianoroll" data-form="full" data-part="root" role="img" style="--yh-roll-rows: 8">
+  <div class="yh-pianoroll__keys" data-part="keys">
+    <span class="yh-pianoroll__key" data-part="key" key="72">
+      "C5"
+    <span class="yh-pianoroll__key" data-part="key" key="71">
+      "B4"
+    <span class="yh-pianoroll__key" data-black="true" data-part="key" key="70">
+      "B♭4"
+    <span class="yh-pianoroll__key" data-part="key" key="69">
+      "A4"
+    <span class="yh-pianoroll__key" data-part="key" key="67">
+      "G4"
+    <span class="yh-pianoroll__key" data-part="key" key="65">
+      "F4"
+    <span class="yh-pianoroll__key" data-part="key" key="64">
+      "E4"
+    <span class="yh-pianoroll__key" data-part="key" key="60">
+      "C4"
+  <div class="yh-pianoroll__grid" data-part="grid">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane72">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane71">
+    <div class="yh-pianoroll__lane" data-black="true" data-part="lane" key="lane70">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane69">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane67">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane65">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane64">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane60">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar0" style="left: 25%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar1" style="left: 50%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar2" style="left: 75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat1" style="left: 6.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat2" style="left: 12.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat3" style="left: 18.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat5" style="left: 31.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat6" style="left: 37.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat7" style="left: 43.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat9" style="left: 56.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat10" style="left: 62.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat11" style="left: 68.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat13" style="left: 81.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat14" style="left: 87.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat15" style="left: 93.75%">
+    <div class="yh-pianoroll__note" data-hue="1" data-part="note" key="c" style="left: 0%; width: 25%; top: 0%; height: 12.5%" title="C">
+      "C"
+    <div class="yh-pianoroll__note" data-hue="2" data-part="note" key="a" style="left: 25%; width: 25%; top: 37.5%; height: 12.5%" title="A">
+      "A"
+    <div class="yh-pianoroll__note" data-hue="3" data-part="note" key="f" style="left: 50%; width: 25%; top: 62.5%; height: 12.5%" title="F">
+      "F"
+    <div class="yh-pianoroll__note" data-hue="4" data-marked="true" data-part="note" key="g" style="left: 75%; width: 25%; top: 50%; height: 12.5%" title="G">
+      "G"
+    <div class="yh-pianoroll__note" data-emphasis="true" data-hue="5" data-part="note" key="e" style="left: 6.25%; width: 6.25%; top: 75%; height: 12.5%" title="E">
+      "E"
+    <div aria-hidden="true" class="yh-pianoroll__playhead" data-part="playhead" style="left: 75%">
+  <ol class="yh-pianoroll__bars" data-part="bars">
+    <li key="n0">
+      "1"
+    <li key="n1">
+      "2"
+    <li key="n2">
+      "3"
+    <li key="n3">
+      "4"
+
+## Dense
+<div aria-label="8 rows, 4 notes, bars 0 to 16" class="yh-pianoroll" data-form="full" data-part="root" role="img" style="--yh-roll-rows: 8">
+  <div class="yh-pianoroll__keys" data-part="keys">
+    <span class="yh-pianoroll__key" data-part="key" key="72">
+      "C5"
+    <span class="yh-pianoroll__key" data-part="key" key="71">
+      "B4"
+    <span class="yh-pianoroll__key" data-black="true" data-part="key" key="70">
+      "B♭4"
+    <span class="yh-pianoroll__key" data-part="key" key="69">
+      "A4"
+    <span class="yh-pianoroll__key" data-part="key" key="67">
+      "G4"
+    <span class="yh-pianoroll__key" data-part="key" key="65">
+      "F4"
+    <span class="yh-pianoroll__key" data-part="key" key="64">
+      "E4"
+    <span class="yh-pianoroll__key" data-part="key" key="60">
+      "C4"
+  <div class="yh-pianoroll__grid" data-part="grid">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane72">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane71">
+    <div class="yh-pianoroll__lane" data-black="true" data-part="lane" key="lane70">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane69">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane67">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane65">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane64">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane60">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar0" style="left: 25%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar1" style="left: 50%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar2" style="left: 75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat1" style="left: 6.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat2" style="left: 12.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat3" style="left: 18.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat5" style="left: 31.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat6" style="left: 37.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat7" style="left: 43.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat9" style="left: 56.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat10" style="left: 62.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat11" style="left: 68.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat13" style="left: 81.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat14" style="left: 87.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat15" style="left: 93.75%">
+    <div class="yh-pianoroll__note" data-hue="1" data-part="note" key="c" style="left: 0%; width: 25%; top: 0%; height: 12.5%" title="C">
+      "C"
+    <div class="yh-pianoroll__note" data-hue="2" data-part="note" key="a" style="left: 25%; width: 25%; top: 37.5%; height: 12.5%" title="A">
+      "A"
+    <div class="yh-pianoroll__note" data-hue="3" data-part="note" key="f" style="left: 50%; width: 25%; top: 62.5%; height: 12.5%" title="F">
+      "F"
+    <div class="yh-pianoroll__note" data-hue="4" data-marked="true" data-part="note" key="g" style="left: 75%; width: 25%; top: 50%; height: 12.5%" title="G">
+      "G"
+  <ol class="yh-pianoroll__bars" data-part="bars">
+    <li key="n0">
+      "1"
+    <li key="n1">
+      "2"
+    <li key="n2">
+      "3"
+    <li key="n3">
+      "4"
+
+## Empty
+<div class="yh-pianoroll" data-empty="true" data-form="full" data-part="root">
+
+## Disabled
+<div aria-label="8 rows, 4 notes, bars 0 to 16" class="yh-pianoroll" data-disabled="true" data-form="full" data-part="root" role="img" style="--yh-roll-rows: 8">
+  <div class="yh-pianoroll__keys" data-part="keys">
+    <span class="yh-pianoroll__key" data-part="key" key="72">
+      "C5"
+    <span class="yh-pianoroll__key" data-part="key" key="71">
+      "B4"
+    <span class="yh-pianoroll__key" data-black="true" data-part="key" key="70">
+      "B♭4"
+    <span class="yh-pianoroll__key" data-part="key" key="69">
+      "A4"
+    <span class="yh-pianoroll__key" data-part="key" key="67">
+      "G4"
+    <span class="yh-pianoroll__key" data-part="key" key="65">
+      "F4"
+    <span class="yh-pianoroll__key" data-part="key" key="64">
+      "E4"
+    <span class="yh-pianoroll__key" data-part="key" key="60">
+      "C4"
+  <div class="yh-pianoroll__grid" data-part="grid">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane72">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane71">
+    <div class="yh-pianoroll__lane" data-black="true" data-part="lane" key="lane70">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane69">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane67">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane65">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane64">
+    <div class="yh-pianoroll__lane" data-part="lane" key="lane60">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar0" style="left: 25%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar1" style="left: 50%">
+    <div aria-hidden="true" class="yh-pianoroll__barline" data-part="barline" key="bar2" style="left: 75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat1" style="left: 6.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat2" style="left: 12.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat3" style="left: 18.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat5" style="left: 31.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat6" style="left: 37.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat7" style="left: 43.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat9" style="left: 56.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat10" style="left: 62.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat11" style="left: 68.75%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat13" style="left: 81.25%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat14" style="left: 87.5%">
+    <div aria-hidden="true" class="yh-pianoroll__beatline" data-part="beatline" key="beat15" style="left: 93.75%">
+    <div class="yh-pianoroll__note" data-hue="1" data-part="note" key="c" style="left: 0%; width: 25%; top: 0%; height: 12.5%" title="C">
+      "C"
+    <div class="yh-pianoroll__note" data-hue="2" data-part="note" key="a" style="left: 25%; width: 25%; top: 37.5%; height: 12.5%" title="A">
+      "A"
+    <div class="yh-pianoroll__note" data-hue="3" data-part="note" key="f" style="left: 50%; width: 25%; top: 62.5%; height: 12.5%" title="F">
+      "F"
+    <div class="yh-pianoroll__note" data-hue="4" data-marked="true" data-part="note" key="g" style="left: 75%; width: 25%; top: 50%; height: 12.5%" title="G">
+      "G"
+    <div aria-hidden="true" class="yh-pianoroll__playhead" data-part="playhead" style="left: 50%">
+  <ol class="yh-pianoroll__bars" data-part="bars">
+    <li key="n0">
+      "1"
+    <li key="n1">
+      "2"
+    <li key="n2">
+      "3"
+    <li key="n3">
+      "4"

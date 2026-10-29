@@ -5,6 +5,15 @@ import type { ArpState, LiveChord, LiveCue, LiveLoop, LiveSend, LiveSong, LiveSt
 import type { TransitionPad } from '../../components/music/TransitionRow/TransitionRow.model';
 import type { MacroPad } from '../../components/music/MacroPads/MacroPads.model';
 
+/** Where the head is: elapsed seconds and the bar.beat position. */
+export interface ShowTransport {
+  playing: boolean;
+  tempo: number;
+  seconds: number;
+  bar: number;
+  bars: number;
+}
+
 /** The whole sample set: what the Show draws, in one value. */
 export interface ShowData {
   /** The setlist, in order; one song open. */
@@ -31,6 +40,8 @@ export interface ShowData {
   macros: readonly MacroPad[];
   /** Jamming: the grid stays live past the arrangement. */
   jam: boolean;
+  /** The transport: playing, tempo and where the head is. */
+  transport: ShowTransport;
 }
 
 const songs: readonly LiveSong[] = [
@@ -135,4 +146,5 @@ export const LIVE_SHOW: ShowData = {
     { id: 'filter', label: 'Filter / resonance', xLabel: 'Cutoff', yLabel: 'Resonance', x: 0.62, y: 0.7, hue: 3 },
   ],
   jam: true,
+  transport: { playing: true, tempo: 112, seconds: 96, bar: 48.5, bars: 64 },
 };

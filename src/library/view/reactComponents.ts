@@ -44,6 +44,9 @@ import { XYPad } from '../components/music/XYPad/XYPad';
 import { MacroPads } from '../components/music/MacroPads/MacroPads';
 import { StemLanes } from '../components/music/StemLanes/StemLanes';
 import { TransitionRow } from '../components/music/TransitionRow/TransitionRow';
+import { Transport } from '../components/music/Transport/Transport';
+import { DeviceFace } from '../components/music/DeviceFace/DeviceFace';
+import { PianoRoll } from '../components/music/PianoRoll/PianoRoll';
 import { BarReadout } from '../components/music/BarReadout/BarReadout';
 import { SendReadout } from '../components/music/SendReadout/SendReadout';
 import { SoundCell } from '../components/music/SoundCell/SoundCell';
@@ -151,6 +154,9 @@ export function reactComponent(name: string): ComponentType<any> {
     MacroPads,
     StemLanes,
     TransitionRow,
+    Transport,
+    DeviceFace,
+    PianoRoll,
     BarReadout,
     SendReadout,
     SoundCell,

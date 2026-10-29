@@ -9,7 +9,7 @@ import { component, h, slot, type Handlers, type Node } from '../../view/Tree.mo
 import type { ArpState, LiveCellRef, LiveLoop } from '../../components/music/live.model';
 import type { ScreenSpec } from '../../layout/assembly/types';
 import { SHOW_START, SHOW_TABS } from './Show.spec';
-import { LIVE_SHOW, type ShowData } from './Show.data';
+import { LIVE_SHOW, type ShowData, type ShowTransport } from './Show.data';
 
 /** Every Show prop (region contents are the show's own widgets, never app slots). */
 export interface ShowModelProps {
@@ -21,6 +21,16 @@ export interface ShowModelProps {
   onTab?: (id: string) => void;
   /** Jamming: the grid stays live past the arrangement. Controlled; default the dataset's. */
   jam?: boolean;
+  /** The transport: playing, tempo and where the head is. Controlled; default the dataset's. */
+  transport?: ShowTransport;
+  /** Play was pressed: `true` from stopped, `false` from playing. */
+  onPlay?: (playing: boolean) => void;
+  /** The transport's stop was pressed. */
+  onHalt?: () => void;
+  /** The tempo was stepped. */
+  onTempo?: (tempo: number) => void;
+  /** The reading was toggled. */
+  onUnit?: (unit: 'beats' | 'seconds') => void;
   /** JAM was flipped. */
   onJam?: (on: boolean) => void;
   /** A loop cell was launched. */
@@ -78,8 +88,6 @@ export function showTab(active: string | undefined): (typeof SHOW_TABS)[number] 
   return SHOW_TABS.find((t) => t.id === active) ?? SHOW_TABS[0];
 }
 
-const jamLabel = (jam: boolean): string => (jam ? 'JAM on: the grid stays live past the arrangement' : 'JAM off: songs play their arrangement');
-
 /**
  * The tree Show draws: the tab strip with the JAM lamp beside it, then the open tab's Screen —
  * each region holding the dataset's widget. `tab` is the binding's (`showTab(active)`).
@@ -87,6 +95,7 @@ const jamLabel = (jam: boolean): string => (jam ? 'JAM on: the grid stays live p
 export function showView({ data = LIVE_SHOW, jam, disabled, className }: ShowModelProps, tab: (typeof SHOW_TABS)[number]): Node {
   const set = data;
   const jamming = jam ?? set.jam;
+  const transport = { playing: set.transport.playing, tempo: set.transport.tempo, position: { seconds: set.transport.seconds, bar: set.transport.bar, bars: set.transport.bars } };
   const inert = disabled === true;
   const regions: Record<string, (ReturnType<typeof component> | ReturnType<typeof slot>)[]> = {
     loop: [
@@ -149,23 +158,32 @@ export function showView({ data = LIVE_SHOW, jam, disabled, className }: ShowMod
         { name: 'Show tabs', items: SHOW_TABS.map((t) => ({ id: t.id, label: t.title })) },
         { on: { onChange: 'tab' } },
       ),
-      h('span', { class: tag.className, ...tag.attrs, 'data-part': 'setname' }, 'Hidden Signals · 112 · 17.3'),
       component(
-        'LampButton',
-        { label: 'JAM', on: jamming, rec: true, name: jamLabel(jamming) },
-        { on: { onToggle: 'jam' } },
+        'Transport',
+        {
+          playing: transport.playing,
+          tempo: { value: transport.tempo },
+          position: transport.position,
+          loop: { on: jamming, title: 'JAM: the grid stays live past the arrangement', partial: true },
+        },
+        { on: { onPlay: 'play', onStop: 'halt', onLoop: 'jam', onUnit: 'unit' } },
       ),
+      h('span', { class: tag.className, ...tag.attrs, 'data-part': 'setname' }, 'Hidden Signals · 112 · 17.3'),
     ),
     component('Screen', { name: tab.title, spec: tab.spec }, { slots }),
   );
 }
 
 /** The callbacks `showView`'s tree names: the tab, JAM and every widget's asks. */
-export function showHandlers({ data = LIVE_SHOW, jam, onTab, onJam, onLaunch, onStop, onStopTrack, onSelectTrack, onToggleSong, onLevel, onSend, onReturn, onArm, onMute, onSolo, onSelect, onFollow, onMutate, onKeep, onRevert, onStep, onArpState, onMove, onFire, onCue, onToggleStem }: ShowModelProps): Handlers {
+export function showHandlers({ data = LIVE_SHOW, jam, onTab, onPlay, onHalt, onTempo, onUnit, onJam, onLaunch, onStop, onStopTrack, onSelectTrack, onToggleSong, onLevel, onSend, onReturn, onArm, onMute, onSolo, onSelect, onFollow, onMutate, onKeep, onRevert, onStep, onArpState, onMove, onFire, onCue, onToggleStem }: ShowModelProps): Handlers {
   const jamming = jam ?? data.jam;
   return {
     tab: (id: string) => onTab?.(id),
-    jam: () => onJam?.(!jamming),
+    play: (playing: boolean) => onPlay?.(playing),
+    halt: () => onHalt?.(),
+    tempo: (value: number) => onTempo?.(value),
+    unit: (unit: 'beats' | 'seconds') => onUnit?.(unit),
+    jam: (on: boolean) => onJam?.(on),
     launch: (cell: LiveCellRef) => onLaunch?.(cell),
     stop: () => onStop?.(),
     stopTrack: (trackId: string) => onStopTrack?.(trackId),
