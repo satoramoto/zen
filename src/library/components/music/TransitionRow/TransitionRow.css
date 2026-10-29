@@ -11,6 +11,7 @@
   --yh-transition-ring: calc(var(--border-width) * 2);
 
   display: grid;
+  height: 100%;
   grid-template-columns: repeat(6, minmax(min-content, 1fr));
   gap: var(--yh-transition-gap);
   align-items: stretch;

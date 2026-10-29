@@ -49,7 +49,8 @@ const GRID_H = lengthSum(PAD_H, PAD_H, { space: [GAP] });
  * The transition row's forms, most room first:
  *
  * - `row`: the six pads in one line (the mockups' `RISER / DROP / CRASH / HOLD A / HOLD B / CUT`),
- *   each growing to share the width. Least: the six labels' widths at the widest pad size and the
+ *   each growing to share the width and the height it is given, since these are the surface's
+ *   biggest targets. Least: the six labels' widths at the widest pad size and the
  *   gaps; ideal: four control widths of spare room, the pads taller than their least.
  * - `grid`: two rows of three, for a surface too narrow for one line. Least: the three widest
  *   columns and the gaps, two pads' least height and the row gap; it grows both ways.
@@ -59,7 +60,7 @@ export const TRANSITION_ROW_FORMS: Forms<TransitionRowForm> = [
     id: 'row',
     min: { w: ROW_W, h: PAD_H },
     ideal: { w: lengthSum(ROW_W, { control: 4 }), h: lengthMax(PAD_H, { control: 3 }) },
-    grow: { w: true },
+    grow: { w: true, h: true },
   },
   {
     id: 'grid',

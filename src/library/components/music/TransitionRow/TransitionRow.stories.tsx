@@ -22,7 +22,9 @@ const meta = {
   component: TransitionRow,
   decorators: [withRenderer, withStoryFrame, withLibraryTheme],
   tags: ['autodocs'],
-  parameters: { layout: 'centered' },
+  // Fullscreen: the row is a stage surface, so it must be judged at the width it will have
+  // (six pads sharing 1440 px), not shrink-wrapped to its labels by a centred frame.
+  parameters: { layout: 'fullscreen', frame: { w: 1440, h: 160 } },
   args: { pads: transitionBoard },
   argTypes: transitionRowArgTypes,
 } satisfies Meta<typeof TransitionRow>;
