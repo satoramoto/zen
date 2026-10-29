@@ -63,6 +63,10 @@ the running Omarchy shell. Quickshell/Qt is required only for the native check.
 
 ## Lab observations (local Qt/Quickshell, October 2026)
 
+The matched 10-scene screenshot experiment, measured failures and reproduction
+instructions are in [`omarchy-render-comparison.md`](omarchy-render-comparison.md).
+Use **Omarchy/Lab/Render comparison** for side-by-side, overlay and pixel diffs.
+
 | Probe | Browser | Native | Verdict |
 |---|---|---|---|
 | Data-only ES-module view | Draws | Draws | Shared module works without a transpiler in Qt |

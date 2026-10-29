@@ -12,7 +12,14 @@ parser.add_argument('--plugin', type=Path, help='Plugin repo containing preview/
 parser.add_argument('--tab', default='quick', choices=['quick', 'levels', 'routing', 'alsa'])
 parser.add_argument('--smoke', action='store_true', help='Render offscreen, exercise fixture states and exit')
 parser.add_argument('--screenshot', type=Path)
+parser.add_argument('--capture', action='store_true', help='Capture the initial fixture without running the smoke interactions')
+parser.add_argument('--width', type=int, default=850)
+parser.add_argument('--height', type=int, default=850)
 args = parser.parse_args()
+if args.capture and not args.screenshot:
+    parser.error('--capture requires --screenshot')
+if not (320 <= args.width <= 2400 and 320 <= args.height <= 2400):
+    parser.error('Capture dimensions must be between 320 and 2400')
 repo = Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='omarchy-framework-', dir='/tmp/opencode') as directory:
     stage = Path(directory)
@@ -64,7 +71,7 @@ with tempfile.TemporaryDirectory(prefix='omarchy-framework-', dir='/tmp/opencode
         '''
     screenshot = ''
     if args.screenshot:
-        screenshot = 'canvas.grabToImage(function(result) { result.saveToFile(' + json.dumps(str(args.screenshot.resolve())) + '); Qt.quit() })'
+        screenshot = 'frame.grabToImage(function(result) { if (!result.saveToFile(' + json.dumps(str(args.screenshot.resolve())) + ')) { Qt.exit(1); return }; console.log("OMARCHY_CAPTURE_META " + JSON.stringify({tree: Plugin.view(host.state), width: frame.width, height: frame.height, nodes: host.measure(nativeTree)})); Qt.quit() })'
     finish = screenshot or 'Qt.quit()'
     smoke = '''
     property int stage: 0
@@ -81,6 +88,8 @@ with tempfile.TemporaryDirectory(prefix='omarchy-framework-', dir='/tmp/opencode
         }
     }
     ''' % (finish, smoke_step) if args.smoke else ''
+    if args.capture:
+        smoke = 'Timer { interval: 800; running: true; onTriggered: { ' + screenshot + ' } }'
     (stage / 'shell.qml').write_text('''
 import QtQuick
 import QtQuick.Controls as QQC
@@ -90,6 +99,16 @@ import "kit" as Kit
 Scope {
     id: host
     property var lastInput: null
+    function measure(item) {
+        var result = []
+        if (item.objectName === "om-node") {
+            var p = item.mapToItem(frame, 0, 0)
+            result.push({kind: item.node.kind, label: item.node.label || "", action: item.node.action || "", x: p.x, y: p.y, width: item.width, height: item.height})
+        }
+        var children = item.children || []
+        for (var i = 0; i < children.length; i++) result = result.concat(measure(children[i]))
+        return result
+    }
     function findControl(item, name) {
         if (item.objectName === name) return item
         var children = item.children || []
@@ -102,10 +121,14 @@ Scope {
     property var state: ''' + init + '''
     FloatingWindow {
         visible: true
-        implicitWidth: 850; implicitHeight: 850
+        implicitWidth: ''' + str(args.width) + '''; implicitHeight: ''' + str(args.height) + '''
         title: "Omarchy / portable plugin preview (fixtures only)"
         color: "#1a1b26"
-        QQC.ScrollView {
+        Rectangle {
+          id: frame
+          anchors.fill: parent
+          color: "#1a1b26"
+          QQC.ScrollView {
             id: canvas
             anchors.fill: parent
             anchors.margins: 20
@@ -116,14 +139,24 @@ Scope {
                 node: Plugin.view(host.state)
                 onDispatched: function(action, payload, value) { host.state = ''' + reducer + ''' }
             }
+          }
         }
     }
 ''' + smoke + '\n}\n')
     env = dict(os.environ)
-    if args.smoke:
-        env.update(QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software')
+    if args.smoke or args.capture:
+        env.update(QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software', QT_SCALE_FACTOR='1')
     try:
-        result = subprocess.run(['quickshell', '-p', str(stage / 'shell.qml')], env=env, timeout=25 if args.smoke else None)
+        result = subprocess.run(['quickshell', '-p', str(stage / 'shell.qml')], env=env, timeout=25 if args.smoke or args.capture else None, capture_output=args.capture, text=args.capture)
+        if args.capture:
+            import re
+            output = result.stdout + result.stderr
+            match = re.search(r'OMARCHY_CAPTURE_META (\{[^\n]+\})', output)
+            if not match or result.returncode:
+                print(output)
+                raise SystemExit('Native capture failed')
+            args.screenshot.with_suffix('.json').write_text(json.dumps(json.loads(match.group(1)), indent=2))
+            print('Captured ' + str(args.screenshot))
         raise SystemExit(result.returncode)
     except subprocess.TimeoutExpired:
         raise SystemExit('Native smoke timed out')

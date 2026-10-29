@@ -27,3 +27,5 @@ export const Controls: Story = {
 };
 export const Narrow: Story = {args: {width: 380}};
 export const Light: Story = {args: {theme: 'light'}};
+/** Untouched fixture for native/browser capture; Controls has an interaction play. */
+export const Baseline: Story = {};

@@ -6,6 +6,7 @@ import QtQuick.Layouts
 // Theme is injected by the host; an installed host supplies Commons.Color/Style.
 Loader {
     id: root
+    objectName: "om-node"
     required property var node
     property var theme: ({background: "#1a1b26", foreground: "#c0caf5", muted: "#8993b5", accent: "#7aa2f7", urgent: "#f7768e", font: "JetBrains Mono", size: 13})
     signal dispatched(string action, var payload, var value)
