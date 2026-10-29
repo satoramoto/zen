@@ -1,0 +1,57 @@
+/* LoopPie: one loop's phase as a wedge in a ring, with a numeral middle while recording.
+   Contract variables plus the local --yh-loop-* (declared under **Tuning knobs** in LoopPie.tsx). */
+
+.yh-looppie {
+  --yh-loop-size: var(--control-h);
+  --yh-loop-track: var(--border-strong);
+  --yh-loop-ink: var(--text-2);
+  --yh-loop-width: var(--border-width);
+
+  position: relative;
+  display: inline-block;
+  width: var(--yh-loop-size);
+  height: var(--yh-loop-size);
+  min-width: 0;
+  margin: 0;
+  flex: none;
+}
+
+.yh-looppie[data-hue='1'] { --yh-loop-ink: var(--hue-1); }
+.yh-looppie[data-hue='2'] { --yh-loop-ink: var(--hue-2); }
+.yh-looppie[data-hue='3'] { --yh-loop-ink: var(--hue-3); }
+.yh-looppie[data-hue='4'] { --yh-loop-ink: var(--hue-4); }
+.yh-looppie[data-hue='5'] { --yh-loop-ink: var(--hue-5); }
+
+.yh-looppie__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.yh-looppie__track {
+  fill: none;
+  stroke: var(--yh-loop-track);
+  stroke-width: var(--yh-loop-width);
+}
+
+.yh-looppie__wedge {
+  fill: var(--yh-loop-ink);
+  opacity: 0.9;
+}
+
+.yh-looppie[data-recording] .yh-looppie__wedge {
+  opacity: 1;
+}
+
+.yh-looppie__middle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.yh-looppie[data-disabled] {
+  opacity: 0.5;
+}

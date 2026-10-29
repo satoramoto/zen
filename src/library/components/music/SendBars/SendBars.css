@@ -1,0 +1,89 @@
+/* SendBars: two thin horizontal send bars with a unity hinge. Contract variables plus the
+   local --yh-sendbars-* (declared under **Tuning knobs** in SendBars.tsx). */
+
+.yh-sendbars {
+  --yh-sendbars-gap: var(--space-1);
+  --yh-sendbars-bar-h: var(--space-2);
+  --yh-sendbars-ink: var(--text-2);
+
+  display: grid;
+  gap: var(--yh-sendbars-gap);
+  align-content: center;
+  min-width: 0;
+  margin: 0;
+}
+
+.yh-sendbars__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1);
+  align-items: center;
+  min-width: 0;
+}
+
+.yh-sendbars__bar {
+  --yh-sendbars-at: 0%;
+  position: relative;
+  display: block;
+  min-width: 0;
+  height: var(--yh-sendbars-bar-h);
+  border-radius: var(--radius-pill);
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.yh-sendbars__bar[data-hue='1'] { --yh-sendbars-ink: var(--hue-1); }
+.yh-sendbars__bar[data-hue='2'] { --yh-sendbars-ink: var(--hue-2); }
+.yh-sendbars__bar[data-hue='3'] { --yh-sendbars-ink: var(--hue-3); }
+.yh-sendbars__bar[data-hue='4'] { --yh-sendbars-ink: var(--hue-4); }
+.yh-sendbars__bar[data-hue='5'] { --yh-sendbars-ink: var(--hue-5); }
+
+.yh-sendbars__track {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--border-strong);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.yh-sendbars__fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--yh-sendbars-at, 0%);
+  border-radius: inherit;
+  background: var(--yh-sendbars-ink);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.yh-sendbars__hinge {
+  position: absolute;
+  top: calc(var(--border-width) * -1);
+  bottom: calc(var(--border-width) * -1);
+  left: 75%;
+  width: var(--border-width);
+  background: var(--text-1);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.yh-sendbars__thumb {
+  position: absolute;
+  top: 50%;
+  left: var(--yh-sendbars-at, 0%);
+  width: calc(var(--space-1) * 1.5);
+  height: calc(var(--space-1) * 1.5);
+  border-radius: var(--radius-pill);
+  background: var(--yh-sendbars-ink);
+  border: var(--border-width) solid var(--text-1);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.yh-sendbars[data-disabled] .yh-sendbars__bar {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

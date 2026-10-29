@@ -1,0 +1,188 @@
+/* LoopGrid: folded songs over column-aligned track columns of cells, with a pie stop row.
+   Contract variables plus the local --yh-loopgrid-* (declared under **Tuning knobs** in LoopGrid.tsx). */
+
+.yh-loopgrid {
+  --yh-loopgrid-gap: var(--space-1);
+  --yh-loopgrid-cell-h: var(--control-h);
+  --yh-loopgrid-pie: calc(var(--control-h) * 0.55);
+  --yh-loopgrid-ink: 0.45;
+
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  min-width: 0;
+  margin: 0;
+}
+
+/* One song header: chevron, name, folded summary, tempo. Full width of the grid. */
+.yh-loopgrid__song {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.yh-loopgrid__song[data-open] {
+  border-color: var(--border-strong);
+}
+
+.yh-loopgrid__chevron {
+  flex: none;
+  color: var(--text-3);
+}
+
+/* The open song's track columns: one column per track, aligned across songs. */
+.yh-loopgrid__columns {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--yh-loopgrid-gap);
+  align-items: start;
+  min-width: 0;
+}
+
+.yh-loopgrid__track {
+  display: grid;
+  gap: var(--yh-loopgrid-gap);
+  align-content: start;
+  min-width: 0;
+}
+
+.yh-loopgrid__track[data-parked] {
+  opacity: var(--yh-loopgrid-ink);
+}
+
+.yh-loopgrid__trackhead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-1);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+.yh-loopgrid__trackhead[data-selected] {
+  border-bottom-color: currentColor;
+}
+
+.yh-loopgrid__mark {
+  width: var(--space-1);
+  height: var(--space-2);
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+
+.yh-loopgrid__track[data-hue='1'] .yh-loopgrid__mark { background: var(--hue-1); }
+.yh-loopgrid__track[data-hue='2'] .yh-loopgrid__mark { background: var(--hue-2); }
+.yh-loopgrid__track[data-hue='3'] .yh-loopgrid__mark { background: var(--hue-3); }
+.yh-loopgrid__track[data-hue='4'] .yh-loopgrid__mark { background: var(--hue-4); }
+.yh-loopgrid__track[data-hue='5'] .yh-loopgrid__mark { background: var(--hue-5); }
+
+/* One cell: a key face; its state is the face. */
+.yh-loopgrid__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--yh-loopgrid-cell-h);
+  padding: var(--space-1);
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+.yh-loopgrid__cell[data-state='empty'] {
+  opacity: 0.45;
+  border-style: dashed;
+}
+
+.yh-loopgrid__cell[data-state='queued'] {
+  border-style: dashed;
+}
+
+.yh-loopgrid__cell[data-state='recording'] {
+  border-color: currentColor;
+}
+
+.yh-loopgrid__cell--hole {
+  min-height: var(--yh-loopgrid-cell-h);
+  border: 1px dashed transparent;
+}
+
+.yh-loopgrid__pie {
+  width: var(--yh-loopgrid-pie);
+  height: var(--yh-loopgrid-pie);
+  flex: none;
+}
+
+/* The pie geometry: the track ring and the wedge. */
+.yh-loopgrid__pie .yh-loopgrid__track {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: var(--border-width);
+}
+
+.yh-loopgrid__pie .yh-loopgrid__wedge {
+  fill: var(--text-2);
+  opacity: 0.9;
+}
+
+.yh-loopgrid__pie .yh-loopgrid__wedge[data-hue='1'] { fill: var(--hue-1); }
+.yh-loopgrid__pie .yh-loopgrid__wedge[data-hue='2'] { fill: var(--hue-2); }
+.yh-loopgrid__pie .yh-loopgrid__wedge[data-hue='3'] { fill: var(--hue-3); }
+.yh-loopgrid__pie .yh-loopgrid__wedge[data-hue='4'] { fill: var(--hue-4); }
+.yh-loopgrid__pie .yh-loopgrid__wedge[data-hue='5'] { fill: var(--hue-5); }
+
+/* The stop row: one pie per track, the master loop, and the stop target. */
+.yh-loopgrid__stop {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--yh-loopgrid-gap);
+  align-items: center;
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--border-strong);
+}
+
+.yh-loopgrid__stopcell,
+.yh-loopgrid__master {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.yh-loopgrid__stopcell .yh-loopgrid__pie,
+.yh-loopgrid__master .yh-loopgrid__pie {
+  width: calc(var(--control-h) * 0.7);
+  height: calc(var(--control-h) * 0.7);
+}
+
+.yh-loopgrid__stopbutton {
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+.yh-loopgrid[data-disabled] .yh-loopgrid__cell,
+.yh-loopgrid[data-disabled] .yh-loopgrid__song,
+.yh-loopgrid[data-disabled] .yh-loopgrid__trackhead,
+.yh-loopgrid[data-disabled] .yh-loopgrid__stopbutton {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

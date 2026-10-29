@@ -1,0 +1,74 @@
+/* MixBand: column-aligned strips of meter, fader, sends and lamps, then the returns.
+   Contract variables plus the local --yh-mixband-* (declared under **Tuning knobs** in MixBand.tsx). */
+
+.yh-mixband {
+  --yh-mixband-gap: var(--space-1);
+  --yh-mixband-strip-gap: var(--space-1);
+
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--yh-mixband-gap);
+  align-items: start;
+  min-width: 0;
+  margin: 0;
+}
+
+.yh-mixband__strip {
+  display: grid;
+  gap: var(--yh-mixband-strip-gap);
+  align-content: start;
+  justify-items: stretch;
+  min-width: 0;
+}
+
+.yh-mixband__strip[data-parked] {
+  opacity: 0.45;
+}
+
+.yh-mixband__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-1);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+.yh-mixband__head[data-selected] {
+  border-bottom-color: currentColor;
+}
+
+.yh-mixband__mark {
+  width: var(--space-1);
+  height: var(--space-2);
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+
+.yh-mixband__strip[data-hue='1'] .yh-mixband__mark { background: var(--hue-1); }
+.yh-mixband__strip[data-hue='2'] .yh-mixband__mark { background: var(--hue-2); }
+.yh-mixband__strip[data-hue='3'] .yh-mixband__mark { background: var(--hue-3); }
+.yh-mixband__strip[data-hue='4'] .yh-mixband__mark { background: var(--hue-4); }
+.yh-mixband__strip[data-hue='5'] .yh-mixband__mark { background: var(--hue-5); }
+
+.yh-mixband__lamps {
+  display: grid;
+  grid-auto-flow: column;
+  gap: var(--space-1);
+  justify-content: center;
+}
+
+.yh-mixband__strip--return {
+  border-left: 1px solid var(--border-strong);
+  padding-left: var(--space-1);
+}
+
+.yh-mixband[data-disabled] .yh-mixband__strip {
+  opacity: 0.7;
+}
