@@ -1,8 +1,9 @@
 // LoopGrid's model: a folded set over eight track columns, and the tree both renderers draw.
 // No framework: `LoopGrid.tsx` (React) and `LoopGrid.svelte` (Svelte) both pass `loopGridView`
 // and `loopGridHandlers` to their `Tree`. The grid holds no state: a cell asks for `onLaunch`,
-// a song header for `onToggleSong`, the stop row for `onStop`. Set's ClipGrid is the behaviour
-// reference (folded song rows, column-aligned tracks, the pie stop row); the cells' pies are
+// a song header for `onToggleSong`, a stop pie for `onStopTrack`, the master stop for `onStop`.
+// Live's session view is the behaviour reference (folded scenes, column-aligned tracks, a stop
+// row with one stop per track plus stop-all); the cells' pies are
 // LoopPie wedges drawn inline, so this model needs no registered component.
 import type { HueSlot } from '../../core/hue';
 import { surfaceView } from '../../../primitives/Surface.model';
@@ -30,6 +31,8 @@ export interface LoopGridModelProps {
   onSelectTrack?: (id: string) => void;
   /** A song header was folded or unfolded. */
   onToggleSong?: (id: string) => void;
+  /** A track's stop pie was pressed (Live's per-track stop under the grid). */
+  onStopTrack?: (trackId: string) => void;
   /** Shown, dimmed, deaf: the set is drawn but nothing fires. */
   disabled?: boolean;
   /** Classes added to the root, after the grid's own. */
@@ -152,7 +155,7 @@ function songNode(song: LiveSong, inert: boolean): Node {
  * one pie per track (its playing cell's phase, else 0), the set loop's phase, and the stop button.
  * `form` is the binding's: `full` keeps song headers, `rows` drops them.
  */
-export function loopGridView({ songs, tracks, loop, selected, disabled, className }: LoopGridModelProps, form: LoopGridForm): Node {
+export function loopGridView({ songs, tracks, loop, selected, disabled, className, onStopTrack }: LoopGridModelProps, form: LoopGridForm): Node {
   const inert = disabled === true;
   const width = Math.max(8, ...tracks.map((t) => t.cells.length));
   const open = songs.filter((s) => s.open);
@@ -179,10 +182,26 @@ export function loopGridView({ songs, tracks, loop, selected, disabled, classNam
       { class: 'yh-loopgrid__stop', 'data-part': 'stop' },
       each(tracks, (t) => t.id, (track) => {
         const playing = track.cells.find((c) => c.state === 'playing' || c.state === 'queued' || c.state === 'recording');
+        const pie = pieNode(playing?.phase ?? 0, track.hue, 'stoppie');
         return h(
           'span',
           { class: 'yh-loopgrid__stopcell', 'data-part': 'stopcell', 'data-track': track.id },
-          pieNode(playing?.phase ?? 0, track.hue, 'stoppie'),
+          onStopTrack === undefined || inert
+            ? pie
+            : wire(
+                h(
+                  'button',
+                  {
+                    class: 'yh-loopgrid__stopcellbutton',
+                    type: 'button',
+                    'data-part': 'stopcellbutton',
+                    'aria-label': `stop ${track.name}`,
+                    'aria-disabled': inert ? 'true' : undefined,
+                  },
+                  pie,
+                ),
+                { on: { click: `stop:${track.id}` } },
+              ),
         );
       }),
       h(
@@ -209,8 +228,8 @@ export function loopGridView({ songs, tracks, loop, selected, disabled, classNam
   );
 }
 
-/** The callbacks `loopGridView`'s tree names: launches, selects, folds and the stop. */
-export function loopGridHandlers({ songs, tracks, onLaunch, onStop, onSelectTrack, onToggleSong }: LoopGridModelProps): Handlers {
+/** The callbacks `loopGridView`'s tree names: launches, selects, folds and the stops. */
+export function loopGridHandlers({ songs, tracks, onLaunch, onStop, onSelectTrack, onToggleSong, onStopTrack }: LoopGridModelProps): Handlers {
   const handlers: Handlers = {};
   songs.forEach((song) => {
     handlers[`song:${song.id}`] = () => onToggleSong?.(song.id);
@@ -220,6 +239,7 @@ export function loopGridHandlers({ songs, tracks, onLaunch, onStop, onSelectTrac
     track.cells.forEach((cell) => {
       handlers[`cell:${track.id}:${cell.id}`] = () => onLaunch?.({ track: track.id, cell: cell.id });
     });
+    handlers[`stop:${track.id}`] = () => onStopTrack?.(track.id);
   });
   handlers['stop'] = () => onStop?.();
   return handlers;

@@ -57,4 +57,6 @@
   min-width: 0;
   min-height: 0;
   height: 100%;
+  /* Clearance for the floating frame bar (edit chrome never covers the region's top). */
+  padding-top: calc(var(--control-h) + var(--space-1));
 }

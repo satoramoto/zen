@@ -90,7 +90,8 @@
 .yh-loopgrid__track[data-hue='4'] .yh-loopgrid__mark { background: var(--hue-4); }
 .yh-loopgrid__track[data-hue='5'] .yh-loopgrid__mark { background: var(--hue-5); }
 
-/* One cell: a key face; its state is the face. */
+/* One cell: a key face; its state is the face. A live cell carries its track's hue (Live's
+   coloured playing clip, Bitwig's marked active clip); an empty slot is a faint outline. */
 .yh-loopgrid__cell {
   display: flex;
   align-items: center;
@@ -103,17 +104,28 @@
 }
 
 .yh-loopgrid__cell[data-state='empty'] {
-  opacity: 0.45;
-  border-style: dashed;
+  opacity: 0.35;
 }
 
 .yh-loopgrid__cell[data-state='queued'] {
   border-style: dashed;
 }
 
+.yh-loopgrid__cell[data-state='playing'],
 .yh-loopgrid__cell[data-state='recording'] {
-  border-color: currentColor;
+  border-style: solid;
 }
+
+.yh-loopgrid__cell[data-hue='1'][data-state='playing'],
+.yh-loopgrid__cell[data-hue='1'][data-state='recording'] { border-color: var(--hue-1); background: color-mix(in srgb, var(--hue-1) 16%, transparent); }
+.yh-loopgrid__cell[data-hue='2'][data-state='playing'],
+.yh-loopgrid__cell[data-hue='2'][data-state='recording'] { border-color: var(--hue-2); background: color-mix(in srgb, var(--hue-2) 16%, transparent); }
+.yh-loopgrid__cell[data-hue='3'][data-state='playing'],
+.yh-loopgrid__cell[data-hue='3'][data-state='recording'] { border-color: var(--hue-3); background: color-mix(in srgb, var(--hue-3) 16%, transparent); }
+.yh-loopgrid__cell[data-hue='4'][data-state='playing'],
+.yh-loopgrid__cell[data-hue='4'][data-state='recording'] { border-color: var(--hue-4); background: color-mix(in srgb, var(--hue-4) 16%, transparent); }
+.yh-loopgrid__cell[data-hue='5'][data-state='playing'],
+.yh-loopgrid__cell[data-hue='5'][data-state='recording'] { border-color: var(--hue-5); background: color-mix(in srgb, var(--hue-5) 16%, transparent); }
 
 .yh-loopgrid__cell--hole {
   min-height: var(--yh-loopgrid-cell-h);
@@ -162,6 +174,22 @@
   justify-content: center;
   gap: var(--space-1);
   min-width: 0;
+}
+
+/* A stop pie with `onStopTrack` is a button wearing the pie as its face (Live's per-track stop). */
+.yh-loopgrid__stopcellbutton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  background: none;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.yh-loopgrid__stopcellbutton:hover {
+  background: color-mix(in srgb, var(--text-1) 12%, transparent);
 }
 
 .yh-loopgrid__stopcell .yh-loopgrid__pie,

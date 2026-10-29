@@ -49,11 +49,11 @@ const GRID_H = lengthSum(PAD_H, PAD_H, { space: [GAP] });
  * The transition row's forms, most room first:
  *
  * - `row`: the six pads in one line (the mockups' `RISER / DROP / CRASH / HOLD A / HOLD B / CUT`),
- *   each growing to share the width and the height it is given, since these are the surface's
- *   biggest targets. Least: the six labels' widths at the widest pad size and the
- *   gaps; ideal: four control widths of spare room, the pads taller than their least.
- * - `grid`: two rows of three, for a surface too narrow for one line. Least: the three widest
- *   columns and the gaps, two pads' least height and the row gap; it grows both ways.
+ *   each growing to share the width and, up to four control heights, the height it is given, since
+ *   these are the surface's biggest targets. Past four controls it stops: a deck's lanes are exact
+ *   and this row never slabs, so leftover room stays ground.
+ * - `grid`: two rows of three, for a surface too narrow for one line. Grows both ways to eight
+ *   controls, then stops for the same reason.
  */
 export const TRANSITION_ROW_FORMS: Forms<TransitionRowForm> = [
   {
@@ -61,11 +61,13 @@ export const TRANSITION_ROW_FORMS: Forms<TransitionRowForm> = [
     min: { w: ROW_W, h: PAD_H },
     ideal: { w: lengthSum(ROW_W, { control: 4 }), h: lengthMax(PAD_H, { control: 3 }) },
     grow: { w: true, h: true },
+    max: { h: { control: 4 } },
   },
   {
     id: 'grid',
     min: { w: GRID_W, h: GRID_H },
     ideal: { w: lengthSum(GRID_W, { control: 6 }), h: lengthSum(lengthMax(PAD_H, { control: 3 }), lengthMax(PAD_H, { control: 3 }), { space: [GAP] }) },
     grow: { w: true, h: true },
+    max: { h: { control: 8 } },
   },
 ];

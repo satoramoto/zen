@@ -31,7 +31,7 @@ const story = fixtureStories<Story>(LoopGrid, LoopGridSvelte);
 /** A story that can be played: every callback a spy. */
 const live = (fixture: Parameters<typeof story>[0], extra: Partial<Story> = {}): Story => ({
   ...story(fixture, extra),
-  args: { ...fixture.args, onLaunch: fn(), onStop: fn(), onSelectTrack: fn(), onToggleSong: fn() },
+  args: { ...fixture.args, onLaunch: fn(), onStop: fn(), onSelectTrack: fn(), onToggleSong: fn(), onStopTrack: fn() },
 });
 
 /** The set at bar 17: two songs folded, Hidden Signals open, Keys recording its third bar. */
