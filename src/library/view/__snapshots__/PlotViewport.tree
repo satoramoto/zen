@@ -1,0 +1,1164 @@
+## Grid
+<svg aria-label="Integer point grid" class="zen-math-viewport" role="group" tabindex="0" viewBox="0 0 1000 1000" @pointerdown=down @pointermove=move @pointerup=up @pointercancel=cancel @keydown=key>
+  <title>
+    "Integer point grid"
+  <desc>
+    "Drag to pan. Use plus and minus to zoom, arrows to move selection, Home to fit. Select a point to inspect it."
+  <g transform="translate(0 0) translate(500 500) scale(1) translate(-500 -500)">
+    <g data-point-id="1" data-selected="false">
+      <title>
+        "1"
+      <circle cx="131.81818181818187" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="131.81818181818187" data-hue="0" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="124.81818181818187" y="124.81818181818187">
+    <g data-point-id="2" data-selected="false">
+      <title>
+        "2"
+      <circle cx="213.63636363636363" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="131.81818181818187" data-hue="0" opacity="1" r="4">
+    <g data-point-id="3" data-selected="false">
+      <title>
+        "3"
+      <circle cx="295.4545454545455" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="131.81818181818187" data-hue="1" opacity="1" r="4">
+    <g data-point-id="4" data-selected="false">
+      <title>
+        "4"
+      <circle cx="377.27272727272725" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="131.81818181818187" data-hue="0" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="370.27272727272725" y="124.81818181818187">
+    <g data-point-id="5" data-selected="false">
+      <title>
+        "5"
+      <circle cx="459.0909090909091" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="131.81818181818187" data-hue="0" opacity="1" r="4">
+    <g data-point-id="6" data-selected="false">
+      <title>
+        "6"
+      <circle cx="540.9090909090909" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="131.81818181818187" data-hue="1" opacity="1" r="4">
+    <g data-point-id="7" data-selected="false">
+      <title>
+        "7"
+      <circle cx="622.7272727272727" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="131.81818181818187" data-hue="0" opacity="1" r="4">
+    <g data-point-id="8" data-selected="false">
+      <title>
+        "8"
+      <circle cx="704.5454545454545" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="131.81818181818187" data-hue="0" opacity="1" r="4">
+    <g data-point-id="9" data-selected="false">
+      <title>
+        "9"
+      <circle cx="786.3636363636364" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="131.81818181818187" data-hue="1" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="779.3636363636364" y="124.81818181818187">
+    <g data-point-id="10" data-selected="false">
+      <title>
+        "10"
+      <circle cx="868.1818181818181" cy="131.81818181818187" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="131.81818181818187" data-hue="0" opacity="1" r="4">
+    <g data-point-id="11" data-selected="false">
+      <title>
+        "11"
+      <circle cx="131.81818181818187" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="213.63636363636363" data-hue="0" opacity="1" r="4">
+    <g data-point-id="12" data-selected="false">
+      <title>
+        "12"
+      <circle cx="213.63636363636363" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="213.63636363636363" data-hue="1" opacity="1" r="4">
+    <g data-point-id="13" data-selected="false">
+      <title>
+        "13"
+      <circle cx="295.4545454545455" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="213.63636363636363" data-hue="0" opacity="1" r="4">
+    <g data-point-id="14" data-selected="false">
+      <title>
+        "14"
+      <circle cx="377.27272727272725" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="213.63636363636363" data-hue="0" opacity="1" r="4">
+    <g data-point-id="15" data-selected="false">
+      <title>
+        "15"
+      <circle cx="459.0909090909091" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="213.63636363636363" data-hue="1" opacity="1" r="4">
+    <g data-point-id="16" data-selected="false">
+      <title>
+        "16"
+      <circle cx="540.9090909090909" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="213.63636363636363" data-hue="0" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="533.9090909090909" y="206.63636363636363">
+    <g data-point-id="17" data-selected="false">
+      <title>
+        "17"
+      <circle cx="622.7272727272727" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="213.63636363636363" data-hue="0" opacity="1" r="4">
+    <g data-point-id="18" data-selected="false">
+      <title>
+        "18"
+      <circle cx="704.5454545454545" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="213.63636363636363" data-hue="1" opacity="1" r="4">
+    <g data-point-id="19" data-selected="false">
+      <title>
+        "19"
+      <circle cx="786.3636363636364" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="213.63636363636363" data-hue="0" opacity="1" r="4">
+    <g data-point-id="20" data-selected="false">
+      <title>
+        "20"
+      <circle cx="868.1818181818181" cy="213.63636363636363" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="213.63636363636363" data-hue="0" opacity="1" r="4">
+    <g data-point-id="21" data-selected="false">
+      <title>
+        "21"
+      <circle cx="131.81818181818187" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="295.4545454545455" data-hue="1" opacity="1" r="4">
+    <g data-point-id="22" data-selected="false">
+      <title>
+        "22"
+      <circle cx="213.63636363636363" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="295.4545454545455" data-hue="0" opacity="1" r="4">
+    <g data-point-id="23" data-selected="false">
+      <title>
+        "23"
+      <circle cx="295.4545454545455" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="295.4545454545455" data-hue="0" opacity="1" r="4">
+    <g data-point-id="24" data-selected="false">
+      <title>
+        "24"
+      <circle cx="377.27272727272725" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="295.4545454545455" data-hue="1" opacity="1" r="4">
+    <g data-point-id="25" data-selected="false">
+      <title>
+        "25"
+      <circle cx="459.0909090909091" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="295.4545454545455" data-hue="0" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="452.0909090909091" y="288.4545454545455">
+    <g data-point-id="26" data-selected="false">
+      <title>
+        "26"
+      <circle cx="540.9090909090909" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="295.4545454545455" data-hue="0" opacity="1" r="4">
+    <g data-point-id="27" data-selected="false">
+      <title>
+        "27"
+      <circle cx="622.7272727272727" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="295.4545454545455" data-hue="1" opacity="1" r="4">
+    <g data-point-id="28" data-selected="false">
+      <title>
+        "28"
+      <circle cx="704.5454545454545" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="295.4545454545455" data-hue="0" opacity="1" r="4">
+    <g data-point-id="29" data-selected="false">
+      <title>
+        "29"
+      <circle cx="786.3636363636364" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="295.4545454545455" data-hue="0" opacity="1" r="4">
+    <g data-point-id="30" data-selected="false">
+      <title>
+        "30"
+      <circle cx="868.1818181818181" cy="295.4545454545455" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="295.4545454545455" data-hue="1" opacity="1" r="4">
+    <g data-point-id="31" data-selected="false">
+      <title>
+        "31"
+      <circle cx="131.81818181818187" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="377.27272727272725" data-hue="0" opacity="1" r="4">
+    <g data-point-id="32" data-selected="false">
+      <title>
+        "32"
+      <circle cx="213.63636363636363" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="377.27272727272725" data-hue="0" opacity="1" r="4">
+    <g data-point-id="33" data-selected="false">
+      <title>
+        "33"
+      <circle cx="295.4545454545455" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="377.27272727272725" data-hue="1" opacity="1" r="4">
+    <g data-point-id="34" data-selected="false">
+      <title>
+        "34"
+      <circle cx="377.27272727272725" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="377.27272727272725" data-hue="0" opacity="1" r="4">
+    <g data-point-id="35" data-selected="false">
+      <title>
+        "35"
+      <circle cx="459.0909090909091" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="377.27272727272725" data-hue="0" opacity="1" r="4">
+    <g data-point-id="36" data-selected="true">
+      <title>
+        "36"
+      <circle cx="540.9090909090909" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="377.27272727272725" data-hue="1" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="533.9090909090909" y="370.27272727272725">
+      <circle class="zen-math-viewport__selection" cx="540.9090909090909" cy="377.27272727272725" r="11">
+      <text class="zen-math-viewport__label" data-role="caption" x="549.9090909090909" y="368.27272727272725">
+        "36"
+    <g data-point-id="37" data-selected="false">
+      <title>
+        "37"
+      <circle cx="622.7272727272727" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="377.27272727272725" data-hue="0" opacity="1" r="4">
+    <g data-point-id="38" data-selected="false">
+      <title>
+        "38"
+      <circle cx="704.5454545454545" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="377.27272727272725" data-hue="0" opacity="1" r="4">
+    <g data-point-id="39" data-selected="false">
+      <title>
+        "39"
+      <circle cx="786.3636363636364" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="377.27272727272725" data-hue="1" opacity="1" r="4">
+    <g data-point-id="40" data-selected="false">
+      <title>
+        "40"
+      <circle cx="868.1818181818181" cy="377.27272727272725" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="377.27272727272725" data-hue="0" opacity="1" r="4">
+    <g data-point-id="41" data-selected="false">
+      <title>
+        "41"
+      <circle cx="131.81818181818187" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="459.0909090909091" data-hue="0" opacity="1" r="4">
+    <g data-point-id="42" data-selected="false">
+      <title>
+        "42"
+      <circle cx="213.63636363636363" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="459.0909090909091" data-hue="1" opacity="1" r="4">
+    <g data-point-id="43" data-selected="false">
+      <title>
+        "43"
+      <circle cx="295.4545454545455" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="459.0909090909091" data-hue="0" opacity="1" r="4">
+    <g data-point-id="44" data-selected="false">
+      <title>
+        "44"
+      <circle cx="377.27272727272725" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="459.0909090909091" data-hue="0" opacity="1" r="4">
+    <g data-point-id="45" data-selected="false">
+      <title>
+        "45"
+      <circle cx="459.0909090909091" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="459.0909090909091" data-hue="1" opacity="1" r="4">
+    <g data-point-id="46" data-selected="false">
+      <title>
+        "46"
+      <circle cx="540.9090909090909" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="459.0909090909091" data-hue="0" opacity="1" r="4">
+    <g data-point-id="47" data-selected="false">
+      <title>
+        "47"
+      <circle cx="622.7272727272727" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="459.0909090909091" data-hue="0" opacity="1" r="4">
+    <g data-point-id="48" data-selected="false">
+      <title>
+        "48"
+      <circle cx="704.5454545454545" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="459.0909090909091" data-hue="1" opacity="1" r="4">
+    <g data-point-id="49" data-selected="false">
+      <title>
+        "49"
+      <circle cx="786.3636363636364" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="459.0909090909091" data-hue="0" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="779.3636363636364" y="452.0909090909091">
+    <g data-point-id="50" data-selected="false">
+      <title>
+        "50"
+      <circle cx="868.1818181818181" cy="459.0909090909091" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="459.0909090909091" data-hue="0" opacity="1" r="4">
+    <g data-point-id="51" data-selected="false">
+      <title>
+        "51"
+      <circle cx="131.81818181818187" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="540.9090909090909" data-hue="1" opacity="1" r="4">
+    <g data-point-id="52" data-selected="false">
+      <title>
+        "52"
+      <circle cx="213.63636363636363" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="540.9090909090909" data-hue="0" opacity="1" r="4">
+    <g data-point-id="53" data-selected="false">
+      <title>
+        "53"
+      <circle cx="295.4545454545455" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="540.9090909090909" data-hue="0" opacity="1" r="4">
+    <g data-point-id="54" data-selected="false">
+      <title>
+        "54"
+      <circle cx="377.27272727272725" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="540.9090909090909" data-hue="1" opacity="1" r="4">
+    <g data-point-id="55" data-selected="false">
+      <title>
+        "55"
+      <circle cx="459.0909090909091" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="540.9090909090909" data-hue="0" opacity="1" r="4">
+    <g data-point-id="56" data-selected="false">
+      <title>
+        "56"
+      <circle cx="540.9090909090909" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="540.9090909090909" data-hue="0" opacity="1" r="4">
+    <g data-point-id="57" data-selected="false">
+      <title>
+        "57"
+      <circle cx="622.7272727272727" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="540.9090909090909" data-hue="1" opacity="1" r="4">
+    <g data-point-id="58" data-selected="false">
+      <title>
+        "58"
+      <circle cx="704.5454545454545" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="540.9090909090909" data-hue="0" opacity="1" r="4">
+    <g data-point-id="59" data-selected="false">
+      <title>
+        "59"
+      <circle cx="786.3636363636364" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="540.9090909090909" data-hue="0" opacity="1" r="4">
+    <g data-point-id="60" data-selected="false">
+      <title>
+        "60"
+      <circle cx="868.1818181818181" cy="540.9090909090909" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="540.9090909090909" data-hue="1" opacity="1" r="4">
+    <g data-point-id="61" data-selected="false">
+      <title>
+        "61"
+      <circle cx="131.81818181818187" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="622.7272727272727" data-hue="0" opacity="1" r="4">
+    <g data-point-id="62" data-selected="false">
+      <title>
+        "62"
+      <circle cx="213.63636363636363" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="622.7272727272727" data-hue="0" opacity="1" r="4">
+    <g data-point-id="63" data-selected="false">
+      <title>
+        "63"
+      <circle cx="295.4545454545455" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="622.7272727272727" data-hue="1" opacity="1" r="4">
+    <g data-point-id="64" data-selected="false">
+      <title>
+        "64"
+      <circle cx="377.27272727272725" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="622.7272727272727" data-hue="0" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="370.27272727272725" y="615.7272727272727">
+    <g data-point-id="65" data-selected="false">
+      <title>
+        "65"
+      <circle cx="459.0909090909091" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="622.7272727272727" data-hue="0" opacity="1" r="4">
+    <g data-point-id="66" data-selected="false">
+      <title>
+        "66"
+      <circle cx="540.9090909090909" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="622.7272727272727" data-hue="1" opacity="1" r="4">
+    <g data-point-id="67" data-selected="false">
+      <title>
+        "67"
+      <circle cx="622.7272727272727" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="622.7272727272727" data-hue="0" opacity="1" r="4">
+    <g data-point-id="68" data-selected="false">
+      <title>
+        "68"
+      <circle cx="704.5454545454545" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="622.7272727272727" data-hue="0" opacity="1" r="4">
+    <g data-point-id="69" data-selected="false">
+      <title>
+        "69"
+      <circle cx="786.3636363636364" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="622.7272727272727" data-hue="1" opacity="1" r="4">
+    <g data-point-id="70" data-selected="false">
+      <title>
+        "70"
+      <circle cx="868.1818181818181" cy="622.7272727272727" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="622.7272727272727" data-hue="0" opacity="1" r="4">
+    <g data-point-id="71" data-selected="false">
+      <title>
+        "71"
+      <circle cx="131.81818181818187" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="704.5454545454545" data-hue="0" opacity="1" r="4">
+    <g data-point-id="72" data-selected="false">
+      <title>
+        "72"
+      <circle cx="213.63636363636363" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="704.5454545454545" data-hue="1" opacity="1" r="4">
+    <g data-point-id="73" data-selected="false">
+      <title>
+        "73"
+      <circle cx="295.4545454545455" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="704.5454545454545" data-hue="0" opacity="1" r="4">
+    <g data-point-id="74" data-selected="false">
+      <title>
+        "74"
+      <circle cx="377.27272727272725" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="704.5454545454545" data-hue="0" opacity="1" r="4">
+    <g data-point-id="75" data-selected="false">
+      <title>
+        "75"
+      <circle cx="459.0909090909091" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="704.5454545454545" data-hue="1" opacity="1" r="4">
+    <g data-point-id="76" data-selected="false">
+      <title>
+        "76"
+      <circle cx="540.9090909090909" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="704.5454545454545" data-hue="0" opacity="1" r="4">
+    <g data-point-id="77" data-selected="false">
+      <title>
+        "77"
+      <circle cx="622.7272727272727" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="704.5454545454545" data-hue="0" opacity="1" r="4">
+    <g data-point-id="78" data-selected="false">
+      <title>
+        "78"
+      <circle cx="704.5454545454545" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="704.5454545454545" data-hue="1" opacity="1" r="4">
+    <g data-point-id="79" data-selected="false">
+      <title>
+        "79"
+      <circle cx="786.3636363636364" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="704.5454545454545" data-hue="0" opacity="1" r="4">
+    <g data-point-id="80" data-selected="false">
+      <title>
+        "80"
+      <circle cx="868.1818181818181" cy="704.5454545454545" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="704.5454545454545" data-hue="0" opacity="1" r="4">
+    <g data-point-id="81" data-selected="false">
+      <title>
+        "81"
+      <circle cx="131.81818181818187" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="786.3636363636364" data-hue="1" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="124.81818181818187" y="779.3636363636364">
+    <g data-point-id="82" data-selected="false">
+      <title>
+        "82"
+      <circle cx="213.63636363636363" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="786.3636363636364" data-hue="0" opacity="1" r="4">
+    <g data-point-id="83" data-selected="false">
+      <title>
+        "83"
+      <circle cx="295.4545454545455" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="786.3636363636364" data-hue="0" opacity="1" r="4">
+    <g data-point-id="84" data-selected="false">
+      <title>
+        "84"
+      <circle cx="377.27272727272725" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="786.3636363636364" data-hue="1" opacity="1" r="4">
+    <g data-point-id="85" data-selected="false">
+      <title>
+        "85"
+      <circle cx="459.0909090909091" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="786.3636363636364" data-hue="0" opacity="1" r="4">
+    <g data-point-id="86" data-selected="false">
+      <title>
+        "86"
+      <circle cx="540.9090909090909" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="786.3636363636364" data-hue="0" opacity="1" r="4">
+    <g data-point-id="87" data-selected="false">
+      <title>
+        "87"
+      <circle cx="622.7272727272727" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="786.3636363636364" data-hue="1" opacity="1" r="4">
+    <g data-point-id="88" data-selected="false">
+      <title>
+        "88"
+      <circle cx="704.5454545454545" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="786.3636363636364" data-hue="0" opacity="1" r="4">
+    <g data-point-id="89" data-selected="false">
+      <title>
+        "89"
+      <circle cx="786.3636363636364" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="786.3636363636364" data-hue="0" opacity="1" r="4">
+    <g data-point-id="90" data-selected="false">
+      <title>
+        "90"
+      <circle cx="868.1818181818181" cy="786.3636363636364" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="786.3636363636364" data-hue="1" opacity="1" r="4">
+    <g data-point-id="91" data-selected="false">
+      <title>
+        "91"
+      <circle cx="131.81818181818187" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="131.81818181818187" cy="868.1818181818181" data-hue="0" opacity="1" r="4">
+    <g data-point-id="92" data-selected="false">
+      <title>
+        "92"
+      <circle cx="213.63636363636363" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="213.63636363636363" cy="868.1818181818181" data-hue="0" opacity="1" r="4">
+    <g data-point-id="93" data-selected="false">
+      <title>
+        "93"
+      <circle cx="295.4545454545455" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="295.4545454545455" cy="868.1818181818181" data-hue="1" opacity="1" r="4">
+    <g data-point-id="94" data-selected="false">
+      <title>
+        "94"
+      <circle cx="377.27272727272725" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="377.27272727272725" cy="868.1818181818181" data-hue="0" opacity="1" r="4">
+    <g data-point-id="95" data-selected="false">
+      <title>
+        "95"
+      <circle cx="459.0909090909091" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="459.0909090909091" cy="868.1818181818181" data-hue="0" opacity="1" r="4">
+    <g data-point-id="96" data-selected="false">
+      <title>
+        "96"
+      <circle cx="540.9090909090909" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="540.9090909090909" cy="868.1818181818181" data-hue="1" opacity="1" r="4">
+    <g data-point-id="97" data-selected="false">
+      <title>
+        "97"
+      <circle cx="622.7272727272727" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="622.7272727272727" cy="868.1818181818181" data-hue="0" opacity="1" r="4">
+    <g data-point-id="98" data-selected="false">
+      <title>
+        "98"
+      <circle cx="704.5454545454545" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="704.5454545454545" cy="868.1818181818181" data-hue="0" opacity="1" r="4">
+    <g data-point-id="99" data-selected="false">
+      <title>
+        "99"
+      <circle cx="786.3636363636364" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="786.3636363636364" cy="868.1818181818181" data-hue="1" opacity="1" r="4">
+    <g data-point-id="100" data-selected="false">
+      <title>
+        "100"
+      <circle cx="868.1818181818181" cy="868.1818181818181" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="868.1818181818181" cy="868.1818181818181" data-hue="0" opacity="1" r="4">
+      <rect class="zen-math-viewport__outline" height="14" opacity="1" style="stroke: var(--hue-2)" width="14" x="861.1818181818181" y="861.1818181818181">
+
+## Empty
+<svg aria-label="Empty plot" class="zen-math-viewport" role="group" tabindex="0" viewBox="0 0 1000 1000" @pointerdown=down @pointermove=move @pointerup=up @pointercancel=cancel @keydown=key>
+  <title>
+    "Empty plot"
+  <desc>
+    "Drag to pan. Use plus and minus to zoom, arrows to move selection, Home to fit. Select a point to inspect it."
+  <g transform="translate(0 0) translate(500 500) scale(1) translate(-500 -500)">
+
+## Volume
+<svg aria-label="Integer point volume" class="zen-math-viewport" role="group" tabindex="0" viewBox="0 0 1000 1000" @pointerdown=down @pointermove=move @pointerup=up @pointercancel=cancel @keydown=key>
+  <title>
+    "Integer point volume"
+  <desc>
+    "Drag to pan. Use plus and minus to zoom, arrows to move selection, Home to fit. Select a point to inspect it."
+  <g transform="translate(0 0) translate(500 500) scale(1) translate(-500 -500)">
+    <g data-point-id="1" data-selected="false">
+      <title>
+        "1"
+      <circle cx="460.9056722987949" cy="670.8592103871601" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="460.9056722987949" cy="670.8592103871601" data-hue="1" opacity="1" r="4">
+    <g data-point-id="2" data-selected="false">
+      <title>
+        "2"
+      <circle cx="526.1079917096015" cy="691.4040303892521" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="526.1079917096015" cy="691.4040303892521" data-hue="1" opacity="1" r="4">
+    <g data-point-id="3" data-selected="false">
+      <title>
+        "3"
+      <circle cx="591.3103111204082" cy="711.9488503913439" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="591.3103111204082" cy="711.9488503913439" data-hue="1" opacity="1" r="4">
+    <g data-point-id="4" data-selected="false">
+      <title>
+        "4"
+      <circle cx="656.5126305312148" cy="732.4936703934357" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="656.5126305312148" cy="732.4936703934357" data-hue="1" opacity="1" r="4">
+    <g data-point-id="5" data-selected="false">
+      <title>
+        "5"
+      <circle cx="721.7149499420213" cy="753.0384903955276" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="721.7149499420213" cy="753.0384903955276" data-hue="1" opacity="1" r="4">
+    <g data-point-id="6" data-selected="false">
+      <title>
+        "6"
+      <circle cx="415.2505167385908" cy="700.2002541220231" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="415.2505167385908" cy="700.2002541220231" data-hue="1" opacity="1" r="4">
+    <g data-point-id="7" data-selected="false">
+      <title>
+        "7"
+      <circle cx="480.45283614939746" cy="720.745074124115" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="480.45283614939746" cy="720.745074124115" data-hue="1" opacity="1" r="4">
+    <g data-point-id="8" data-selected="false">
+      <title>
+        "8"
+      <circle cx="545.6551555602041" cy="741.2898941262068" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="545.6551555602041" cy="741.2898941262068" data-hue="1" opacity="1" r="4">
+    <g data-point-id="9" data-selected="false">
+      <title>
+        "9"
+      <circle cx="610.8574749710107" cy="761.8347141282986" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="610.8574749710107" cy="761.8347141282986" data-hue="1" opacity="1" r="4">
+    <g data-point-id="10" data-selected="false">
+      <title>
+        "10"
+      <circle cx="676.0597943818173" cy="782.3795341303905" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="676.0597943818173" cy="782.3795341303905" data-hue="1" opacity="1" r="4">
+    <g data-point-id="11" data-selected="false">
+      <title>
+        "11"
+      <circle cx="369.5953611783868" cy="729.5412978568861" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="369.5953611783868" cy="729.5412978568861" data-hue="1" opacity="1" r="4">
+    <g data-point-id="12" data-selected="false">
+      <title>
+        "12"
+      <circle cx="434.7976805891934" cy="750.086117858978" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="434.7976805891934" cy="750.086117858978" data-hue="1" opacity="1" r="4">
+    <g data-point-id="13" data-selected="false">
+      <title>
+        "13"
+      <circle cx="500" cy="770.6309378610698" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="500" cy="770.6309378610698" data-hue="1" opacity="1" r="4">
+    <g data-point-id="14" data-selected="false">
+      <title>
+        "14"
+      <circle cx="565.2023194108066" cy="791.1757578631616" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="565.2023194108066" cy="791.1757578631616" data-hue="1" opacity="1" r="4">
+    <g data-point-id="15" data-selected="false">
+      <title>
+        "15"
+      <circle cx="630.4046388216132" cy="811.7205778652535" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="630.4046388216132" cy="811.7205778652535" data-hue="1" opacity="1" r="4">
+    <g data-point-id="16" data-selected="false">
+      <title>
+        "16"
+      <circle cx="323.94020561818274" cy="758.8823415917491" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="323.94020561818274" cy="758.8823415917491" data-hue="1" opacity="1" r="4">
+    <g data-point-id="17" data-selected="false">
+      <title>
+        "17"
+      <circle cx="389.1425250289893" cy="779.427161593841" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="389.1425250289893" cy="779.427161593841" data-hue="1" opacity="1" r="4">
+    <g data-point-id="18" data-selected="false">
+      <title>
+        "18"
+      <circle cx="454.3448444397959" cy="799.9719815959328" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="454.3448444397959" cy="799.9719815959328" data-hue="1" opacity="1" r="4">
+    <g data-point-id="19" data-selected="false">
+      <title>
+        "19"
+      <circle cx="519.5471638506025" cy="820.5168015980246" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="519.5471638506025" cy="820.5168015980246" data-hue="1" opacity="1" r="4">
+    <g data-point-id="20" data-selected="false">
+      <title>
+        "20"
+      <circle cx="584.7494832614092" cy="841.0616216001165" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="584.7494832614092" cy="841.0616216001165" data-hue="1" opacity="1" r="4">
+    <g data-point-id="21" data-selected="false">
+      <title>
+        "21"
+      <circle cx="278.28505005797865" cy="788.2233853266121" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="278.28505005797865" cy="788.2233853266121" data-hue="1" opacity="1" r="4">
+    <g data-point-id="22" data-selected="false">
+      <title>
+        "22"
+      <circle cx="343.48736946878523" cy="808.768205328704" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="343.48736946878523" cy="808.768205328704" data-hue="1" opacity="1" r="4">
+    <g data-point-id="23" data-selected="false">
+      <title>
+        "23"
+      <circle cx="408.68968887959187" cy="829.3130253307958" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="408.68968887959187" cy="829.3130253307958" data-hue="1" opacity="1" r="4">
+    <g data-point-id="24" data-selected="false">
+      <title>
+        "24"
+      <circle cx="473.89200829039845" cy="849.8578453328876" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="473.89200829039845" cy="849.8578453328876" data-hue="1" opacity="1" r="4">
+    <g data-point-id="25" data-selected="false">
+      <title>
+        "25"
+      <circle cx="539.0943277012051" cy="870.4026653349795" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="539.0943277012051" cy="870.4026653349795" data-hue="1" opacity="1" r="4">
+    <g data-point-id="26" data-selected="false">
+      <title>
+        "26"
+      <circle cx="460.9056722987949" cy="535.5437414566253" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="460.9056722987949" cy="535.5437414566253" data-hue="1" opacity="1" r="4">
+    <g data-point-id="27" data-selected="false">
+      <title>
+        "27"
+      <circle cx="526.1079917096015" cy="556.0885614587171" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="526.1079917096015" cy="556.0885614587171" data-hue="1" opacity="1" r="4">
+    <g data-point-id="28" data-selected="false">
+      <title>
+        "28"
+      <circle cx="591.3103111204082" cy="576.6333814608089" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="591.3103111204082" cy="576.6333814608089" data-hue="1" opacity="1" r="4">
+    <g data-point-id="29" data-selected="false">
+      <title>
+        "29"
+      <circle cx="656.5126305312148" cy="597.1782014629008" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="656.5126305312148" cy="597.1782014629008" data-hue="1" opacity="1" r="4">
+    <g data-point-id="30" data-selected="false">
+      <title>
+        "30"
+      <circle cx="721.7149499420213" cy="617.7230214649926" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="721.7149499420213" cy="617.7230214649926" data-hue="1" opacity="1" r="4">
+    <g data-point-id="31" data-selected="false">
+      <title>
+        "31"
+      <circle cx="415.2505167385908" cy="564.8847851914883" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="415.2505167385908" cy="564.8847851914883" data-hue="1" opacity="1" r="4">
+    <g data-point-id="32" data-selected="false">
+      <title>
+        "32"
+      <circle cx="480.45283614939746" cy="585.4296051935801" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="480.45283614939746" cy="585.4296051935801" data-hue="1" opacity="1" r="4">
+    <g data-point-id="33" data-selected="false">
+      <title>
+        "33"
+      <circle cx="545.6551555602041" cy="605.9744251956719" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="545.6551555602041" cy="605.9744251956719" data-hue="1" opacity="1" r="4">
+    <g data-point-id="34" data-selected="false">
+      <title>
+        "34"
+      <circle cx="610.8574749710107" cy="626.5192451977638" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="610.8574749710107" cy="626.5192451977638" data-hue="1" opacity="1" r="4">
+    <g data-point-id="35" data-selected="false">
+      <title>
+        "35"
+      <circle cx="676.0597943818173" cy="647.0640651998556" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="676.0597943818173" cy="647.0640651998556" data-hue="1" opacity="1" r="4">
+    <g data-point-id="36" data-selected="true">
+      <title>
+        "36"
+      <circle cx="369.5953611783868" cy="594.2258289263513" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="369.5953611783868" cy="594.2258289263513" data-hue="1" opacity="1" r="4">
+      <circle class="zen-math-viewport__selection" cx="369.5953611783868" cy="594.2258289263513" r="11">
+      <text class="zen-math-viewport__label" data-role="caption" x="378.5953611783868" y="585.2258289263513">
+        "36"
+    <g data-point-id="37" data-selected="false">
+      <title>
+        "37"
+      <circle cx="434.7976805891934" cy="614.770648928443" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="434.7976805891934" cy="614.770648928443" data-hue="1" opacity="1" r="4">
+    <g data-point-id="38" data-selected="false">
+      <title>
+        "38"
+      <circle cx="500" cy="635.315468930535" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="500" cy="635.315468930535" data-hue="1" opacity="1" r="4">
+    <g data-point-id="39" data-selected="false">
+      <title>
+        "39"
+      <circle cx="565.2023194108066" cy="655.8602889326268" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="565.2023194108066" cy="655.8602889326268" data-hue="1" opacity="1" r="4">
+    <g data-point-id="40" data-selected="false">
+      <title>
+        "40"
+      <circle cx="630.4046388216132" cy="676.4051089347186" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="630.4046388216132" cy="676.4051089347186" data-hue="1" opacity="1" r="4">
+    <g data-point-id="41" data-selected="false">
+      <title>
+        "41"
+      <circle cx="323.94020561818274" cy="623.5668726612142" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="323.94020561818274" cy="623.5668726612142" data-hue="1" opacity="1" r="4">
+    <g data-point-id="42" data-selected="false">
+      <title>
+        "42"
+      <circle cx="389.1425250289893" cy="644.111692663306" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="389.1425250289893" cy="644.111692663306" data-hue="1" opacity="1" r="4">
+    <g data-point-id="43" data-selected="false">
+      <title>
+        "43"
+      <circle cx="454.3448444397959" cy="664.6565126653979" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="454.3448444397959" cy="664.6565126653979" data-hue="1" opacity="1" r="4">
+    <g data-point-id="44" data-selected="false">
+      <title>
+        "44"
+      <circle cx="519.5471638506025" cy="685.2013326674897" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="519.5471638506025" cy="685.2013326674897" data-hue="1" opacity="1" r="4">
+    <g data-point-id="45" data-selected="false">
+      <title>
+        "45"
+      <circle cx="584.7494832614092" cy="705.7461526695815" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="584.7494832614092" cy="705.7461526695815" data-hue="1" opacity="1" r="4">
+    <g data-point-id="46" data-selected="false">
+      <title>
+        "46"
+      <circle cx="278.28505005797865" cy="652.9079163960771" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="278.28505005797865" cy="652.9079163960771" data-hue="1" opacity="1" r="4">
+    <g data-point-id="47" data-selected="false">
+      <title>
+        "47"
+      <circle cx="343.48736946878523" cy="673.452736398169" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="343.48736946878523" cy="673.452736398169" data-hue="1" opacity="1" r="4">
+    <g data-point-id="48" data-selected="false">
+      <title>
+        "48"
+      <circle cx="408.68968887959187" cy="693.9975564002609" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="408.68968887959187" cy="693.9975564002609" data-hue="1" opacity="1" r="4">
+    <g data-point-id="49" data-selected="false">
+      <title>
+        "49"
+      <circle cx="473.89200829039845" cy="714.5423764023526" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="473.89200829039845" cy="714.5423764023526" data-hue="1" opacity="1" r="4">
+    <g data-point-id="50" data-selected="false">
+      <title>
+        "50"
+      <circle cx="539.0943277012051" cy="735.0871964044445" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="539.0943277012051" cy="735.0871964044445" data-hue="1" opacity="1" r="4">
+    <g data-point-id="51" data-selected="false">
+      <title>
+        "51"
+      <circle cx="460.9056722987949" cy="400.22827252609034" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="460.9056722987949" cy="400.22827252609034" data-hue="1" opacity="1" r="4">
+    <g data-point-id="52" data-selected="false">
+      <title>
+        "52"
+      <circle cx="526.1079917096015" cy="420.7730925281822" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="526.1079917096015" cy="420.7730925281822" data-hue="1" opacity="1" r="4">
+    <g data-point-id="53" data-selected="false">
+      <title>
+        "53"
+      <circle cx="591.3103111204082" cy="441.31791253027404" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="591.3103111204082" cy="441.31791253027404" data-hue="1" opacity="1" r="4">
+    <g data-point-id="54" data-selected="false">
+      <title>
+        "54"
+      <circle cx="656.5126305312148" cy="461.86273253236584" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="656.5126305312148" cy="461.86273253236584" data-hue="1" opacity="1" r="4">
+    <g data-point-id="55" data-selected="false">
+      <title>
+        "55"
+      <circle cx="721.7149499420213" cy="482.4075525344577" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="721.7149499420213" cy="482.4075525344577" data-hue="1" opacity="1" r="4">
+    <g data-point-id="56" data-selected="false">
+      <title>
+        "56"
+      <circle cx="415.2505167385908" cy="429.5693162609533" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="415.2505167385908" cy="429.5693162609533" data-hue="1" opacity="1" r="4">
+    <g data-point-id="57" data-selected="false">
+      <title>
+        "57"
+      <circle cx="480.45283614939746" cy="450.11413626304517" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="480.45283614939746" cy="450.11413626304517" data-hue="1" opacity="1" r="4">
+    <g data-point-id="58" data-selected="false">
+      <title>
+        "58"
+      <circle cx="545.6551555602041" cy="470.65895626513696" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="545.6551555602041" cy="470.65895626513696" data-hue="1" opacity="1" r="4">
+    <g data-point-id="59" data-selected="false">
+      <title>
+        "59"
+      <circle cx="610.8574749710107" cy="491.2037762672288" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="610.8574749710107" cy="491.2037762672288" data-hue="1" opacity="1" r="4">
+    <g data-point-id="60" data-selected="false">
+      <title>
+        "60"
+      <circle cx="676.0597943818173" cy="511.7485962693207" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="676.0597943818173" cy="511.7485962693207" data-hue="1" opacity="1" r="4">
+    <g data-point-id="61" data-selected="false">
+      <title>
+        "61"
+      <circle cx="369.5953611783868" cy="458.9103599958163" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="369.5953611783868" cy="458.9103599958163" data-hue="1" opacity="1" r="4">
+    <g data-point-id="62" data-selected="false">
+      <title>
+        "62"
+      <circle cx="434.7976805891934" cy="479.45517999790815" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="434.7976805891934" cy="479.45517999790815" data-hue="1" opacity="1" r="4">
+    <g data-point-id="63" data-selected="false">
+      <title>
+        "63"
+      <circle cx="500" cy="500" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="500" cy="500" data-hue="1" opacity="1" r="4">
+    <g data-point-id="64" data-selected="false">
+      <title>
+        "64"
+      <circle cx="565.2023194108066" cy="520.5448200020918" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="565.2023194108066" cy="520.5448200020918" data-hue="1" opacity="1" r="4">
+    <g data-point-id="65" data-selected="false">
+      <title>
+        "65"
+      <circle cx="630.4046388216132" cy="541.0896400041836" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="630.4046388216132" cy="541.0896400041836" data-hue="1" opacity="1" r="4">
+    <g data-point-id="66" data-selected="false">
+      <title>
+        "66"
+      <circle cx="323.94020561818274" cy="488.2514037306793" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="323.94020561818274" cy="488.2514037306793" data-hue="1" opacity="1" r="4">
+    <g data-point-id="67" data-selected="false">
+      <title>
+        "67"
+      <circle cx="389.1425250289893" cy="508.7962237327711" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="389.1425250289893" cy="508.7962237327711" data-hue="1" opacity="1" r="4">
+    <g data-point-id="68" data-selected="false">
+      <title>
+        "68"
+      <circle cx="454.3448444397959" cy="529.341043734863" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="454.3448444397959" cy="529.341043734863" data-hue="1" opacity="1" r="4">
+    <g data-point-id="69" data-selected="false">
+      <title>
+        "69"
+      <circle cx="519.5471638506025" cy="549.8858637369548" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="519.5471638506025" cy="549.8858637369548" data-hue="1" opacity="1" r="4">
+    <g data-point-id="70" data-selected="false">
+      <title>
+        "70"
+      <circle cx="584.7494832614092" cy="570.4306837390466" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="584.7494832614092" cy="570.4306837390466" data-hue="1" opacity="1" r="4">
+    <g data-point-id="71" data-selected="false">
+      <title>
+        "71"
+      <circle cx="278.28505005797865" cy="517.5924474655423" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="278.28505005797865" cy="517.5924474655423" data-hue="1" opacity="1" r="4">
+    <g data-point-id="72" data-selected="false">
+      <title>
+        "72"
+      <circle cx="343.48736946878523" cy="538.137267467634" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="343.48736946878523" cy="538.137267467634" data-hue="1" opacity="1" r="4">
+    <g data-point-id="73" data-selected="false">
+      <title>
+        "73"
+      <circle cx="408.68968887959187" cy="558.682087469726" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="408.68968887959187" cy="558.682087469726" data-hue="1" opacity="1" r="4">
+    <g data-point-id="74" data-selected="false">
+      <title>
+        "74"
+      <circle cx="473.89200829039845" cy="579.2269074718178" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="473.89200829039845" cy="579.2269074718178" data-hue="1" opacity="1" r="4">
+    <g data-point-id="75" data-selected="false">
+      <title>
+        "75"
+      <circle cx="539.0943277012051" cy="599.7717274739096" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="539.0943277012051" cy="599.7717274739096" data-hue="1" opacity="1" r="4">
+    <g data-point-id="76" data-selected="false">
+      <title>
+        "76"
+      <circle cx="460.9056722987949" cy="264.9128035955555" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="460.9056722987949" cy="264.9128035955555" data-hue="1" opacity="1" r="4">
+    <g data-point-id="77" data-selected="false">
+      <title>
+        "77"
+      <circle cx="526.1079917096015" cy="285.4576235976473" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="526.1079917096015" cy="285.4576235976473" data-hue="1" opacity="1" r="4">
+    <g data-point-id="78" data-selected="false">
+      <title>
+        "78"
+      <circle cx="591.3103111204082" cy="306.0024435997391" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="591.3103111204082" cy="306.0024435997391" data-hue="1" opacity="1" r="4">
+    <g data-point-id="79" data-selected="false">
+      <title>
+        "79"
+      <circle cx="656.5126305312148" cy="326.547263601831" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="656.5126305312148" cy="326.547263601831" data-hue="1" opacity="1" r="4">
+    <g data-point-id="80" data-selected="false">
+      <title>
+        "80"
+      <circle cx="721.7149499420213" cy="347.0920836039228" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="721.7149499420213" cy="347.0920836039228" data-hue="1" opacity="1" r="4">
+    <g data-point-id="81" data-selected="false">
+      <title>
+        "81"
+      <circle cx="415.2505167385908" cy="294.2538473304184" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="415.2505167385908" cy="294.2538473304184" data-hue="1" opacity="1" r="4">
+    <g data-point-id="82" data-selected="false">
+      <title>
+        "82"
+      <circle cx="480.45283614939746" cy="314.79866733251026" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="480.45283614939746" cy="314.79866733251026" data-hue="1" opacity="1" r="4">
+    <g data-point-id="83" data-selected="false">
+      <title>
+        "83"
+      <circle cx="545.6551555602041" cy="335.3434873346021" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="545.6551555602041" cy="335.3434873346021" data-hue="1" opacity="1" r="4">
+    <g data-point-id="84" data-selected="false">
+      <title>
+        "84"
+      <circle cx="610.8574749710107" cy="355.88830733669397" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="610.8574749710107" cy="355.88830733669397" data-hue="1" opacity="1" r="4">
+    <g data-point-id="85" data-selected="false">
+      <title>
+        "85"
+      <circle cx="676.0597943818173" cy="376.43312733878577" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="676.0597943818173" cy="376.43312733878577" data-hue="1" opacity="1" r="4">
+    <g data-point-id="86" data-selected="false">
+      <title>
+        "86"
+      <circle cx="369.5953611783868" cy="323.59489106528144" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="369.5953611783868" cy="323.59489106528144" data-hue="1" opacity="1" r="4">
+    <g data-point-id="87" data-selected="false">
+      <title>
+        "87"
+      <circle cx="434.7976805891934" cy="344.13971106737324" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="434.7976805891934" cy="344.13971106737324" data-hue="1" opacity="1" r="4">
+    <g data-point-id="88" data-selected="false">
+      <title>
+        "88"
+      <circle cx="500" cy="364.68453106946504" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="500" cy="364.68453106946504" data-hue="1" opacity="1" r="4">
+    <g data-point-id="89" data-selected="false">
+      <title>
+        "89"
+      <circle cx="565.2023194108066" cy="385.22935107155695" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="565.2023194108066" cy="385.22935107155695" data-hue="1" opacity="1" r="4">
+    <g data-point-id="90" data-selected="false">
+      <title>
+        "90"
+      <circle cx="630.4046388216132" cy="405.77417107364874" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="630.4046388216132" cy="405.77417107364874" data-hue="1" opacity="1" r="4">
+    <g data-point-id="91" data-selected="false">
+      <title>
+        "91"
+      <circle cx="323.94020561818274" cy="352.93593480014437" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="323.94020561818274" cy="352.93593480014437" data-hue="1" opacity="1" r="4">
+    <g data-point-id="92" data-selected="false">
+      <title>
+        "92"
+      <circle cx="389.1425250289893" cy="373.4807548022362" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="389.1425250289893" cy="373.4807548022362" data-hue="1" opacity="1" r="4">
+    <g data-point-id="93" data-selected="false">
+      <title>
+        "93"
+      <circle cx="454.3448444397959" cy="394.025574804328" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="454.3448444397959" cy="394.025574804328" data-hue="1" opacity="1" r="4">
+    <g data-point-id="94" data-selected="false">
+      <title>
+        "94"
+      <circle cx="519.5471638506025" cy="414.5703948064199" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="519.5471638506025" cy="414.5703948064199" data-hue="1" opacity="1" r="4">
+    <g data-point-id="95" data-selected="false">
+      <title>
+        "95"
+      <circle cx="584.7494832614092" cy="435.11521480851167" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="584.7494832614092" cy="435.11521480851167" data-hue="1" opacity="1" r="4">
+    <g data-point-id="96" data-selected="false">
+      <title>
+        "96"
+      <circle cx="278.28505005797865" cy="382.27697853500734" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="278.28505005797865" cy="382.27697853500734" data-hue="1" opacity="1" r="4">
+    <g data-point-id="97" data-selected="false">
+      <title>
+        "97"
+      <circle cx="343.48736946878523" cy="402.8217985370992" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="343.48736946878523" cy="402.8217985370992" data-hue="1" opacity="1" r="4">
+    <g data-point-id="98" data-selected="false">
+      <title>
+        "98"
+      <circle cx="408.68968887959187" cy="423.366618539191" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="408.68968887959187" cy="423.366618539191" data-hue="1" opacity="1" r="4">
+    <g data-point-id="99" data-selected="false">
+      <title>
+        "99"
+      <circle cx="473.89200829039845" cy="443.91143854128285" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="473.89200829039845" cy="443.91143854128285" data-hue="1" opacity="1" r="4">
+    <g data-point-id="100" data-selected="false">
+      <title>
+        "100"
+      <circle cx="539.0943277012051" cy="464.4562585433747" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="539.0943277012051" cy="464.4562585433747" data-hue="1" opacity="1" r="4">
+    <g data-point-id="101" data-selected="false">
+      <title>
+        "101"
+      <circle cx="460.9056722987949" cy="129.59733466502053" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="460.9056722987949" cy="129.59733466502053" data-hue="1" opacity="1" r="4">
+    <g data-point-id="102" data-selected="false">
+      <title>
+        "102"
+      <circle cx="526.1079917096015" cy="150.14215466711238" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="526.1079917096015" cy="150.14215466711238" data-hue="1" opacity="1" r="4">
+    <g data-point-id="103" data-selected="false">
+      <title>
+        "103"
+      <circle cx="591.3103111204082" cy="170.68697466920418" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="591.3103111204082" cy="170.68697466920418" data-hue="1" opacity="1" r="4">
+    <g data-point-id="104" data-selected="false">
+      <title>
+        "104"
+      <circle cx="656.5126305312148" cy="191.23179467129597" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="656.5126305312148" cy="191.23179467129597" data-hue="1" opacity="1" r="4">
+    <g data-point-id="105" data-selected="false">
+      <title>
+        "105"
+      <circle cx="721.7149499420213" cy="211.77661467338788" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="721.7149499420213" cy="211.77661467338788" data-hue="1" opacity="1" r="4">
+    <g data-point-id="106" data-selected="false">
+      <title>
+        "106"
+      <circle cx="415.2505167385908" cy="158.9383783998835" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="415.2505167385908" cy="158.9383783998835" data-hue="1" opacity="1" r="4">
+    <g data-point-id="107" data-selected="false">
+      <title>
+        "107"
+      <circle cx="480.45283614939746" cy="179.48319840197536" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="480.45283614939746" cy="179.48319840197536" data-hue="1" opacity="1" r="4">
+    <g data-point-id="108" data-selected="false">
+      <title>
+        "108"
+      <circle cx="545.6551555602041" cy="200.0280184040672" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="545.6551555602041" cy="200.0280184040672" data-hue="1" opacity="1" r="4">
+    <g data-point-id="109" data-selected="false">
+      <title>
+        "109"
+      <circle cx="610.8574749710107" cy="220.572838406159" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="610.8574749710107" cy="220.572838406159" data-hue="1" opacity="1" r="4">
+    <g data-point-id="110" data-selected="false">
+      <title>
+        "110"
+      <circle cx="676.0597943818173" cy="241.1176584082508" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="676.0597943818173" cy="241.1176584082508" data-hue="1" opacity="1" r="4">
+    <g data-point-id="111" data-selected="false">
+      <title>
+        "111"
+      <circle cx="369.5953611783868" cy="188.27942213474648" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="369.5953611783868" cy="188.27942213474648" data-hue="1" opacity="1" r="4">
+    <g data-point-id="112" data-selected="false">
+      <title>
+        "112"
+      <circle cx="434.7976805891934" cy="208.82424213683834" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="434.7976805891934" cy="208.82424213683834" data-hue="1" opacity="1" r="4">
+    <g data-point-id="113" data-selected="false">
+      <title>
+        "113"
+      <circle cx="500" cy="229.36906213893013" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="500" cy="229.36906213893013" data-hue="1" opacity="1" r="4">
+    <g data-point-id="114" data-selected="false">
+      <title>
+        "114"
+      <circle cx="565.2023194108066" cy="249.91388214102201" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="565.2023194108066" cy="249.91388214102201" data-hue="1" opacity="1" r="4">
+    <g data-point-id="115" data-selected="false">
+      <title>
+        "115"
+      <circle cx="630.4046388216132" cy="270.4587021431138" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="630.4046388216132" cy="270.4587021431138" data-hue="1" opacity="1" r="4">
+    <g data-point-id="116" data-selected="false">
+      <title>
+        "116"
+      <circle cx="323.94020561818274" cy="217.62046586960946" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="323.94020561818274" cy="217.62046586960946" data-hue="1" opacity="1" r="4">
+    <g data-point-id="117" data-selected="false">
+      <title>
+        "117"
+      <circle cx="389.1425250289893" cy="238.16528587170126" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="389.1425250289893" cy="238.16528587170126" data-hue="1" opacity="1" r="4">
+    <g data-point-id="118" data-selected="false">
+      <title>
+        "118"
+      <circle cx="454.3448444397959" cy="258.71010587379305" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="454.3448444397959" cy="258.71010587379305" data-hue="1" opacity="1" r="4">
+    <g data-point-id="119" data-selected="false">
+      <title>
+        "119"
+      <circle cx="519.5471638506025" cy="279.25492587588496" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="519.5471638506025" cy="279.25492587588496" data-hue="1" opacity="1" r="4">
+    <g data-point-id="120" data-selected="false">
+      <title>
+        "120"
+      <circle cx="584.7494832614092" cy="299.7997458779767" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="584.7494832614092" cy="299.7997458779767" data-hue="1" opacity="1" r="4">
+    <g data-point-id="121" data-selected="false">
+      <title>
+        "121"
+      <circle cx="278.28505005797865" cy="246.96150960447238" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="278.28505005797865" cy="246.96150960447238" data-hue="1" opacity="1" r="4">
+    <g data-point-id="122" data-selected="false">
+      <title>
+        "122"
+      <circle cx="343.48736946878523" cy="267.5063296065643" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="343.48736946878523" cy="267.5063296065643" data-hue="1" opacity="1" r="4">
+    <g data-point-id="123" data-selected="false">
+      <title>
+        "123"
+      <circle cx="408.68968887959187" cy="288.0511496086561" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="408.68968887959187" cy="288.0511496086561" data-hue="1" opacity="1" r="4">
+    <g data-point-id="124" data-selected="false">
+      <title>
+        "124"
+      <circle cx="473.89200829039845" cy="308.59596961074794" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="473.89200829039845" cy="308.59596961074794" data-hue="1" opacity="1" r="4">
+    <g data-point-id="125" data-selected="false">
+      <title>
+        "125"
+      <circle cx="539.0943277012051" cy="329.1407896128398" fill="transparent" r="7">
+      <circle class="zen-math-viewport__point" cx="539.0943277012051" cy="329.1407896128398" data-hue="1" opacity="1" r="4">

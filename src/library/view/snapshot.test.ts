@@ -237,3 +237,19 @@ snapshot('Stage', (props) => stageView(props, {}, { left: 0, right: 0 }), stageS
 snapshot('Stage slots', (props) => [stageView(props, {}, { left: 0, right: 0 }, { [props.slot]: true }), stageSample(props)], stageSlotStories);
 snapshot('PageList', (props) => pageListView(props as Parameters<typeof pageListView>[0]), pageListStories);
 snapshot('FolderList', (props) => folderListView(props as Parameters<typeof folderListView>[0]), folderListStories);
+
+import { exactValueView } from "../math/view/ExactValue/ExactValue.model";
+import { exactValueStories } from "../math/view/ExactValue/ExactValue.fixtures";
+import { expressionFieldView } from "../math/view/ExpressionField/ExpressionField.model";
+import { expressionFieldStories } from "../math/view/ExpressionField/ExpressionField.fixtures";
+import { plotViewportView } from "../math/view/PlotViewport/PlotViewport.model";
+import { plotViewportStories } from "../math/view/PlotViewport/PlotViewport.fixtures";
+snapshot("ExactValue", exactValueView, exactValueStories);
+snapshot("ExpressionField", expressionFieldView, expressionFieldStories);
+snapshot("PlotViewport", plotViewportView, plotViewportStories);
+import { mathInspectorView } from "../math/view/MathInspector/MathInspector.model";
+import { mathInspectorStories } from "../math/view/MathInspector/MathInspector.fixtures";
+snapshot("MathInspector", mathInspectorView, mathInspectorStories);
+import { distributionPlotView } from '../math/view/DistributionPlot/DistributionPlot.model';
+import { distributionPlotStories } from '../math/view/DistributionPlot/DistributionPlot.fixtures';
+snapshot('DistributionPlot', distributionPlotView, distributionPlotStories);

@@ -1,0 +1,22 @@
+/* Application arrangement only: surfaces, type, colour and control chrome come from Zen. */
+.zen-studio-story { box-sizing:border-box; block-size:calc(100dvh - var(--space-4)); min-block-size:36rem; padding:var(--space-4); }
+.zen-studio-screen { block-size:100%; gap:var(--space-4); }
+.zen-studio-screen > .lib-screen__grid { gap:var(--space-4); }
+.zen-studio-header, .zen-studio-canvas-heading, .zen-studio-status, .zen-studio-section-heading { display:flex; justify-content:space-between; align-items:center; gap:var(--space-3); }
+.zen-studio-header { padding-block:var(--space-2) var(--space-4); flex-wrap:wrap; }
+.zen-studio-title { margin:0; }
+.zen-studio-story .lib-region__body { overflow:auto; padding:var(--space-4); }
+.zen-studio-story .lib-region__body > *, .zen-studio-story .lib-group, .zen-studio-story .lib-group__body > * { flex-shrink:0; }
+.zen-studio-story .lib-group__body { flex:0 0 auto; min-block-size:min-content; }
+.zen-studio-plot { flex:1 0 18rem !important; min-block-size:18rem; }
+.zen-studio-range { display:grid; grid-template-columns:1fr 1fr 0.7fr; gap:var(--space-2); }
+.zen-studio-range > * { min-inline-size:0; }
+.zen-studio-layers { display:flex; flex-direction:column; gap:var(--space-4); }
+.zen-studio-layer { display:flex; flex-direction:column; gap:var(--space-2); }
+.zen-studio-layer-row { display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:var(--space-2); }
+.zen-studio-layer-row > * { min-inline-size:0; }
+.zen-studio-selection { display:flex; align-items:center; gap:var(--space-4); padding-block:var(--space-3); flex-wrap:wrap; }
+.zen-studio-selection-value { display:flex; flex-direction:column; gap:var(--space-1); }
+.zen-studio-selection > :last-child { margin-inline-start:auto; }
+.zen-studio-json { white-space:pre-wrap; overflow-wrap:anywhere; max-block-size:16rem; overflow:auto; }
+@media (max-width: 48rem) { .zen-studio-story { block-size:auto; } .zen-studio-screen > .lib-screen__grid { display:flex;flex-direction:column; } .zen-studio-plot { block-size:26rem; } .zen-studio-tools .lib-region__body { max-block-size:32rem; } .zen-studio-status { flex-wrap:wrap; } }

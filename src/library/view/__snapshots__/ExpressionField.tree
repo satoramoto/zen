@@ -1,0 +1,35 @@
+## Predicate
+<div class="lib-expression-field">
+  <label class="lib-text lib-tone" data-role="label" for="predicate-expression">
+    "Layer predicate"
+  <div class="lib-surface lib-expression-field__well" data-material="well" data-radius="input">
+    <input aria-describedby="predicate-expression-description" autocapitalize="off" autocomplete="off" class="lib-text lib-tone lib-expression-field__input lib-focus-ring" data-role="code" id="predicate-expression" spellcheck="false" type="text" value="n % 3 == 0" @input=change @keydown=key>
+  <div class="lib-text lib-tone" data-role="caption" data-tone="secondary" id="predicate-expression-description">
+    "A predicate returns true or false. Enter commits the expression."
+
+## Invalid
+<div class="lib-expression-field" data-invalid="">
+  <label class="lib-text lib-tone" data-role="label" for="invalid-expression">
+    "Layer predicate"
+  <div class="lib-surface lib-expression-field__well" data-material="well" data-radius="input">
+    <input aria-describedby="invalid-expression-error" aria-invalid="true" autocapitalize="off" autocomplete="off" class="lib-text lib-tone lib-expression-field__input lib-focus-ring" data-role="code" id="invalid-expression" spellcheck="false" type="text" value="n %" @input=change @keydown=key>
+  <div class="lib-text lib-tone" data-role="caption" data-tone="danger" id="invalid-expression-error" role="alert">
+    "Expected a value after %. Previous results remain unchanged."
+
+## ReadOnly
+<div class="lib-expression-field">
+  <label class="lib-text lib-tone" data-role="label" for="readonly-expression">
+    "Derived intersection"
+  <div class="lib-surface lib-expression-field__well" data-material="well" data-radius="input">
+    <input aria-describedby="readonly-expression-description" autocapitalize="off" autocomplete="off" class="lib-text lib-tone lib-expression-field__input lib-focus-ring" data-role="code" id="readonly-expression" readonly="" spellcheck="false" type="text" value="A and B" @input=change @keydown=key>
+  <div class="lib-text lib-tone" data-role="caption" data-tone="secondary" id="readonly-expression-description">
+    "Derived from two layers."
+
+## Disabled
+<div class="lib-expression-field">
+  <label class="lib-text lib-tone" data-role="label" for="disabled-expression">
+    "Expression"
+  <div class="lib-surface lib-expression-field__well" data-material="well" data-radius="input">
+    <input aria-describedby="disabled-expression-description" autocapitalize="off" autocomplete="off" class="lib-text lib-tone lib-expression-field__input lib-focus-ring" data-role="code" disabled="" id="disabled-expression" spellcheck="false" type="text" value="is_prime(n)" @input=change @keydown=key>
+  <div class="lib-text lib-tone" data-role="caption" data-tone="secondary" id="disabled-expression-description">
+    "Connect a computation engine to evaluate."

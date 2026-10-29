@@ -75,3 +75,6 @@ export { ControlContext, CONTROL_FIELD, CONTROL_TOOLBAR, useControlContext, type
 
 /** The design window a Storybook frame draws a view at, or null in an app (`@satoramoto/zen/storybook` provides it). */
 export { useFrameRoom, type StoryFrame, type StoryFrameParam } from './frame';
+
+// Generic mathematical presentation and scientific viewports.
+export * from "./math";

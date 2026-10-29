@@ -1,0 +1,6 @@
+.lib-expression-field { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.lib-expression-field__well { display: flex; min-width: 0; }
+.lib-expression-field__input { width: 100%; min-width: 0; box-sizing: border-box; padding: var(--space-2) var(--space-3); border: 0; border-radius: var(--radius-input); background: transparent; color: var(--text-1); }
+.lib-expression-field__input::placeholder { color: var(--text-3); }
+.lib-expression-field__input:disabled { opacity: .5; cursor: not-allowed; }
+.lib-expression-field__input[aria-invalid="true"] { outline: 1px solid var(--danger); }

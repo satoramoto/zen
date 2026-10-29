@@ -1,0 +1,35 @@
+## Integer
+<div class="lib-exact-value" data-kind="exact">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Selected integer"
+  <output aria-label="Selected integer: 36" class="lib-text lib-tone lib-exact-value__value" data-canonical="36" data-role="numeral">
+    "36"
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "ℤ · Exact"
+
+## BeyondMachinePrecision
+<div class="lib-exact-value" data-kind="exact">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Exact integer"
+  <output aria-label="Exact integer: 900719925474099312345678901234567890" class="lib-text lib-tone lib-exact-value__value" data-canonical="900719925474099312345678901234567890" data-role="code">
+    "900719925474099312345678901234567890"
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "ℤ · Exact"
+
+## Rational
+<div class="lib-exact-value" data-kind="exact">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Rational value"
+  <output aria-label="Rational value: 355/113" class="lib-text lib-tone lib-exact-value__value" data-canonical="355/113" data-role="code">
+    "355/113"
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "ℚ · Exact"
+
+## Approximation
+<div class="lib-exact-value" data-kind="approximate">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Numerical approximation"
+  <output aria-label="Numerical approximation: 3.141592653589793" class="lib-text lib-tone lib-exact-value__value" data-canonical="3.141592653589793" data-role="code">
+    "3.141592653589793"
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "ℝ · Approximate · 16 significant digits"

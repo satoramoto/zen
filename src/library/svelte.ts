@@ -494,3 +494,15 @@ export const Stage = StageSvelte as unknown as Component<StageProps>;
 export { TEMPO_MAX, TEMPO_MIN, STAGE_SPECS, STAGE_HERO_SPECS, type StageBackdrop, type StageFit, type StageHero, type StageLayout, type StageTipAction } from './yahaha/Stage/Stage.model';
 export { tapTempo, createTapTempo, TAP_COUNT, TAP_RESET_MS, type TapTempo } from './yahaha/Stage/tapTempo';
 export { sectionPads, pressSectionPad, SECTIONS_BANK, SECTION_PAD_LAYOUT, type SectionPadAction, type SectionPadHandlers } from './yahaha/Stage/sectionPads';
+
+// Mathematical presentation uses the same view trees as the React binding.
+export { default as ExactValue } from "./math/view/ExactValue/ExactValue.svelte";
+export { default as ExpressionField } from "./math/view/ExpressionField/ExpressionField.svelte";
+export { default as PlotViewport } from "./math/view/PlotViewport/PlotViewport.svelte";
+export type { ExactValueProps } from "./math/view/ExactValue/ExactValue.model";
+export type { ExpressionFieldProps } from "./math/view/ExpressionField/ExpressionField.model";
+export type { PlotViewportProps, PlotPoint, PlotCamera } from "./math/view/PlotViewport/PlotViewport.model";
+export { default as MathInspector } from "./math/view/MathInspector/MathInspector.svelte";
+export type { MathInspectorProps, MathProperty, MathMembership } from "./math/view/MathInspector/MathInspector.model";
+export { default as DistributionPlot } from './math/view/DistributionPlot/DistributionPlot.svelte';
+export type { DistributionPlotProps, DistributionBin } from './math/view/DistributionPlot/DistributionPlot.model';
