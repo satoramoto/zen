@@ -1,0 +1,169 @@
+/* TransitionRow: six oversized transition pads on one plate, drawn as `key` Surfaces with Text
+   labels and captions. Idle is quiet, armed is lit and outlined, fired is filled with the pad's hue
+   slot and inked `on-solid`. Contract variables plus the local --yh-transition-* (declared under
+   **Tuning knobs** in TransitionRow.tsx): the gap, the pad's least height and width, the ring's
+   weight, the idle edge and the ink a state fills with. */
+
+.yh-transitionrow {
+  --yh-transition-gap: var(--space-2);
+  --yh-transition-pad-h: calc(var(--control-h) * 2);
+  --yh-transition-pad-min-w: var(--control-h);
+  --yh-transition-ring: calc(var(--border-width) * 2);
+
+  display: grid;
+  grid-template-columns: repeat(6, minmax(min-content, 1fr));
+  gap: var(--yh-transition-gap);
+  align-items: stretch;
+  min-width: 0;
+  margin: 0;
+}
+
+/* The grid form: two rows of three, each column as wide as its widest pad. */
+.yh-transitionrow[data-form='grid'] {
+  grid-template-columns: repeat(3, minmax(min-content, 1fr));
+}
+
+/* One pad: a key face, its words at the foot, room above for the lamp. */
+.yh-transitionrow__pad {
+  /* Identity: the hue slot when the pad has one, otherwise neutral ink. */
+  --yh-transition-ink: var(--text-1);
+  --yh-transition-edge: var(--border-strong);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  min-width: var(--yh-transition-pad-min-w);
+  min-height: var(--yh-transition-pad-h);
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--yh-transition-edge);
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color 80ms ease-out, box-shadow 80ms ease-out;
+}
+
+.yh-transitionrow__pad[data-hue='1'] { --yh-transition-ink: var(--hue-1); }
+.yh-transitionrow__pad[data-hue='2'] { --yh-transition-ink: var(--hue-2); }
+.yh-transitionrow__pad[data-hue='3'] { --yh-transition-ink: var(--hue-3); }
+.yh-transitionrow__pad[data-hue='4'] { --yh-transition-ink: var(--hue-4); }
+.yh-transitionrow__pad[data-hue='5'] { --yh-transition-ink: var(--hue-5); }
+
+/* Hover and press: the key gives a little. Before the state faces, so a state's own face wins. */
+.yh-transitionrow__pad:hover:where(:not([aria-disabled='true'], [data-state='fired'])) {
+  background:
+    linear-gradient(color-mix(in srgb, var(--text-1) 8%, transparent), color-mix(in srgb, var(--text-1) 8%, transparent)),
+    var(--mat-key-texture),
+    var(--mat-key-fill);
+}
+.yh-transitionrow__pad:active:where(:not([aria-disabled='true'])) {
+  transform: translateY(1px);
+  box-shadow: var(--mat-key-pressed);
+}
+
+/* The words: the label in the label role, its caption under it. A Text's own rule paints the ink. */
+.yh-transitionrow__label,
+.yh-transitionrow__hint {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* The lamp: lit only while the pad is armed, at the top left. */
+.yh-transitionrow__lamp {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  width: calc(var(--space-1) * 1.5);
+  height: calc(var(--space-1) * 1.5);
+  border-radius: var(--radius-pill);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The selected rule: across the foot, in the pad's ink, for the pad the app holds as current. */
+.yh-transitionrow__mark {
+  position: absolute;
+  right: var(--space-2);
+  bottom: var(--space-1);
+  left: var(--space-2);
+  height: 2px;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.yh-transitionrow__pad[data-selected] .yh-transitionrow__mark {
+  opacity: 1;
+}
+
+/* Armed: lit and outlined. The key face stays, an inset ring in the pad's hue and a faint wash of
+   it say "ready", and the lamp comes on. */
+.yh-transitionrow__pad[data-state='armed'] {
+  border-color: var(--yh-transition-ink);
+  background: color-mix(in srgb, var(--yh-transition-ink) 14%, var(--surface-1));
+  box-shadow:
+    inset 0 0 0 calc(var(--yh-transition-ring) - var(--border-width)) var(--yh-transition-ink),
+    var(--mat-key-shadow);
+}
+.yh-transitionrow__pad[data-state='armed'] .yh-transitionrow__lamp {
+  --lit: var(--yh-transition-ink);
+  background: var(--lit);
+  box-shadow: var(--mat-lit-glow);
+  opacity: 1;
+}
+
+/* Fired: filled with the hue slot, the words on solid ink, the key pressed in, a bloom on the
+   palettes that glow. A pad with no hue fills with the second role hue. */
+.yh-transitionrow__pad[data-state='fired'] {
+  border-color: var(--yh-transition-ink);
+  background: var(--yh-transition-ink);
+  color: var(--action-text);
+  box-shadow:
+    var(--mat-key-pressed),
+    0 0 calc(var(--bloom) * 2) color-mix(in srgb, var(--yh-transition-ink) 60%, transparent);
+}
+.yh-transitionrow__pad[data-state='fired']:not([data-hue]) {
+  --yh-transition-ink: var(--role-2);
+}
+
+/* Inert (no `onFire`): dashed, muted and no press give, so it doesn't read as something to fire. */
+.yh-transitionrow__pad[aria-disabled='true'] {
+  border-style: dashed;
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+.yh-transitionrow__pad[aria-disabled='true']:active {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Empty: the row's own footprint, dashed, with one quiet line. No pads means no columns to take a
+   width from, so the mark keeps one row of six least targets. */
+.yh-transitionrow__empty {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(var(--control-h) * 6);
+  min-height: var(--yh-transition-pad-h);
+  padding: var(--space-3);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-control);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yh-transitionrow__pad {
+    transition: none;
+  }
+  .yh-transitionrow__pad:active {
+    transform: none;
+  }
+}
