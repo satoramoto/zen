@@ -215,6 +215,43 @@ export interface WorkspaceRegion {
   and a binding panel (`kind` → `track` id / `param`). Every action returns a new `ScreenSpec`;
   the component never writes CSS, so the result still assembles and still re-themes.
 
+## Sourcing: pull, don't redraw
+
+A lane's first job is to find the thing already built, match its **behaviour, proportions and
+states**, then express it in zen's primitives. In this order:
+
+1. **zen's generic parts, used as they are** — `Fader`, `Meter`, `SendReadout`, `Knob`, `Pad`,
+   `Keys`, `BarReadout`, `ChordReadout`, `SectionName`, `PartMarks`, `Surface`, `Text`, `Stack`,
+   `Ring`, `Segmented`, `LampButton`. A new widget wraps these; it never re-draws one.
+2. **zen's Yahaha redesign** (`src/library/yahaha/`) — the model for a bank: how `FaderBank`
+   declares its forms and keeps its columns, how `PadBank` steps `two-rows → one-row`.
+3. **The apps' own implementations**, as behaviour references only. Nothing imports across repos.
+
+| Building | Pull it from | Open its story |
+|---|---|---|
+| `LoopGrid`, `LoopPie` | `openflowfm/set/src/components/ClipGrid/` — `TrackStatus` (the pie), `SongHeaderRow`, `Row`, `TrackMeter` | no Storybook in `set`; see yahaha `Screens/Looper`, `Components/PadBank` |
+| `MixBand`, `SendBars` | yahaha `FaderBank` (strips, forms, travel), `SendList` | yahaha `Components/FaderBank`, `Components/SendList`, `Components/ChannelMix`; widgets `Music/Four-deck mixer` |
+| `ChordStrip`, `ArpSequencer` | yahaha `HarmArp` (degree rows, modes, hold), `ChordReadout` | yahaha `Screens/HarmArp`, `Screens/Stage` |
+| `XYPad`, `MacroPads` | `openflowfm/widgets/src/controls/XYPad.tsx` (drag, trails, axis labels) | widgets `Controls/XY pad`; yahaha `Screens/Effects`, `Screens/QuickRacks` |
+| `StemLanes` | `openflowfm/mix/src/components/Waveform.tsx`, `Lanes.tsx`, `Ruler.tsx`; widgets `Waveform` | widgets `Music/Waveform`; yahaha `Screens/Looper` |
+| `TransitionRow` | yahaha `TransportColumn`, `MultiPads` | yahaha `Components/TransportColumn`, `Screens/MultiPads` |
+| `Workspace` | zen `Tabs` + the assembly demos | `Design OS/Layout/Assembly` |
+
+Where each Storybook is:
+
+```sh
+npm --prefix yahaha run storybook      # zen's Yahaha baseline (Svelte), in the worktree
+cd ../../../openflowfm/widgets && npm run dev   # Controls/, Music/, Chrome/, Mixer/
+cd ../../../openflowfm/mix && npm run dev       # the app: Waveform, Lanes, Ruler, Tablature
+```
+
+What "pull" means, and what it doesn't: match the **states, the order of information and the
+proportions**; never copy an app's colours, words or data shapes. `mix[flow]`'s lane drawing is
+a reference for a stem envelope, not a component to import; `HarmArp` is a reference for how a
+chord arp is operated, not for its app's chord model (`ArpState` in `live.model.ts` is ours).
+
+A lane that cannot find a reference says so in its report, rather than inventing a control.
+
 ## Definition of done, per lane
 
 - `npm run typecheck` and `npm run build:storybook` exit 0.
@@ -224,6 +261,12 @@ export interface WorkspaceRegion {
   form at 900 px), *Empty*, *Disabled*. Layout lane: `Design OS/Layout/Workspace`.
 - Read in a browser in three packs and both modes. Say which pack and which story you checked.
 - No `.test.tsx`, no new baseline lines, no edit outside the lane's folders.
+
+## Landed so far
+
+- **Lane 6 · `TransitionRow`** (`live/6-transitions`, `b423f07`): forms `row` (three pads across)
+  → `grid` (two rows of three). Disabled is "no `onFire`", not a prop. Selected is a 2 px rule
+  across the pad's foot plus `aria-current`, no extra colour.
 
 ## Open decisions (orchestrator)
 
