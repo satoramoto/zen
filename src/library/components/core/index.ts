@@ -64,6 +64,10 @@ export {
 export { Modal, Sheet, type ModalProps, type SheetProps, type SheetSide } from './Modal/Modal';
 /** A full-screen gate asking for one shared key before an app shows anything; the app checks it in `onSubmit`. */
 export { Gate, type GateProps } from './Gate/Gate';
+/** A vote among a few choices, each with its meaning always in view, and the tally of who chose what. */
+export { VoteControl, type VoteControlProps, type VoteChoice, type Voter } from './VoteControl/VoteControl';
+/** A full-screen step: pick your own name from a list, once. */
+export { NamePicker, type NamePickerProps } from './NamePicker/NamePicker';
 
 // The node graph (Graph, Port, Device, NodeSheet) and the Circuit model live in their own area,
 // `src/library/graph/`, exported from the package root beside this.

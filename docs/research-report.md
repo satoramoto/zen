@@ -3,7 +3,7 @@
 `src/library/report/` is a **market research report**: one plain-JSON document about a market, a goal, what the research found and the leads it turned up, and the views that render it as a readable document. It is generic: nothing in it knows what the market is (festivals, clients, suppliers). Every word on the page except the section headings comes from the data.
 
 - `model/report.ts`: the types below and pure helpers (`leadsByTier`, `leadsByChannel`, `readyLeads`, `isReady`, `filterLeads`, `countBy`, `formatReportDate`), unit-tested in `report.test.ts`. No React.
-- `view/<Name>/`: `Report` (the whole document), and its parts `Brief`, `Summary`, `Segments`, `Findings`, `LeadTable`, `Sources`, each usable alone; and `LeadDetail`, one opened lead, for an app's board.
+- `view/<Name>/`: `Report` (the whole document), and its parts `Brief`, `Summary`, `Segments`, `Findings`, `LeadTable`, `Sources`, each usable alone; `LeadList`, the leads as rows built for importance, in place of the table; and `LeadDetail`, one opened lead, for an app's board.
 - `stories/`: the fixture and the stories under `Design OS/Report/…` (`Report`, `Lead Table`, `Lead Detail`, `Parts`).
 
 Everything is exported from `report/index.ts`, which the package root re-exports. The model's `Report` type is exported as `ReportData` (and `Brief`, `Stat`, `Segment`, `Finding`, `Source` as `ReportBrief`, `ReportStat`, …), since the view names are taken by the components.
@@ -53,6 +53,9 @@ A lead is **ready** (`isReady`) when it is tier A, reached by email or form, and
 - **Typography does the work.** Text roles only: the title is `display`, section heads `heading`, prose `body`, field names `label`, dates and footnotes `caption`, stats `numeral`. Colour is a tone or a hue slot: tier A, B, C (and segment 1, 2, 3) take hues 1–3.
 - **Reading measure.** Prose holds `measure` (`narrow`, `normal`, `wide`: about 60, 70, 80 characters). The summary row and the lead table take the full width.
 - **Lead table.** Grouped by tier, columns name, location, when, channel, angle (a skip reason in its place, quiet) and contact. Tier and channel are small outlined labels: a `Surface` (`radius="pill"`, `border`) holding a `Text`, not a new control. `filter` (`{ tier?, channel?, ready? }`) narrows it; with no rows an `empty` message stands in. Under 40rem of container width each row stacks into a block. `columns` picks and orders the built-in columns (`name`, `location`, `when`, `channel`, `window`, `angle`, `contact`, `comparable`, `fee`, `travel`), and `extra` adds one the app fills.
+- **Lead list.** `LeadList` is the alternative to the table, rows built for importance: the app's `action` (a coloured icon and label, tone `go`, `done`, `soon` or `urgent`, and a note), its `when` (a date block: small line, large numeral, caption), the name and location, `details` (the angle by default, three lines at most) and `trailing`. The first columns are fixed widths (`--lib-leadlist-action-w`, `-when-w`, `-details-w`); `grouped` groups by tier, `compact` drops the details for a sidebar; `filter`, `onOpen` and `selected` work as in the table.
+- **Lead list rail.** `variant="rail"` (on the root as `data-variant`) lays each row out for a narrow sidebar beside a map, at its full height: a thin tone bar on the left in the action's tone (`data-part="tone"`), the date block as a rail with its foot pinned to the bottom and a hairline on its right, and the action, name, location and `trailing` stacked over the rest.
+- No details column and no action note in `rail`; `compact` is ignored, the 40rem stacking doesn't apply, and the selected row is a background tint instead of the accent bar.
 
 ## Where the fixture came from
 
@@ -103,3 +106,8 @@ const lead = open === null ? null : leads[open];
 ```
 
 A field's `href` links its value when it is `http`, `https` or `mailto` (`safeContactHref`); blank values are the app's to drop. The story `Design OS/Report/Lead Detail` → `In A Board` is this board on the fixture.
+
+## Writing to a lead
+
+`DraftFlow` writes one outgoing message from the app's `proposals` in four stages its props decide: no `draft` shows the proposals as cards ("Use this" calls `onUse(id)`); a draft not `approved` is edited and saved through `onSave` (on blur and on Save), and Approve calls `onApprove(true)`; an approved draft is read back with To, Subject and Body to copy, Edit again (`onApprove(false)`) and Mark as sent (`onSent()`); `sent` shows "Sent <at>" over the collapsed email.
+The app holds the data and saves; a rejected promise shows its message in the stage's status line and the stage stays. Every built-in word is in `words`. Stories: `Design OS/Report/Draft Flow`.

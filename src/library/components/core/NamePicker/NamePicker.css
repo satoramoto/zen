@@ -1,0 +1,29 @@
+/* NamePicker: a full-screen ground with a card centred on it, holding the names, as Gate draws
+   its own. Reads only contract variables; type is Text's. */
+
+.lib-name-picker {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  padding: var(--space-6) var(--space-4);
+}
+
+.lib-name-picker__card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--space-2) * 50); /* 400px at the 4px unit */
+  padding: var(--space-6);
+}
+
+.lib-name-picker__title,
+.lib-name-picker__message {
+  margin: 0;
+}
+
+/* A long list scrolls inside the card, so the pick key stays on screen. */
+.lib-name-picker__names {
+  max-height: 50dvh;
+  overflow-y: auto;
+  padding: var(--space-1);
+}

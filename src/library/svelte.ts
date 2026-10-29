@@ -402,6 +402,23 @@ export interface GateProps extends GateModelProps {
 }
 export const Gate = GateSvelte as unknown as Component<GateProps>;
 
+// VoteControl: a vote among a few choices with their meanings, and the tally.
+import VoteControlSvelte from './components/core/VoteControl/VoteControl.svelte';
+import type { VoteControlModelProps } from './components/core/VoteControl/VoteControl.model';
+export type { VoteChoice, Voter } from './components/core/VoteControl/VoteControl.model';
+export type VoteControlProps = VoteControlModelProps;
+export const VoteControl = VoteControlSvelte as unknown as Component<VoteControlProps>;
+
+// NamePicker: pick your own name from a list, once (title, message and extra content as snippets).
+import NamePickerSvelte from './components/core/NamePicker/NamePicker.svelte';
+import type { NamePickerModelProps } from './components/core/NamePicker/NamePicker.model';
+export interface NamePickerProps extends NamePickerModelProps {
+  title?: Snippet;
+  message?: Snippet;
+  children?: Snippet;
+}
+export const NamePicker = NamePickerSvelte as unknown as Component<NamePickerProps>;
+
 // Lane S1-B: Popover (the panel as a snippet; `createHoverIntent` for a hover-opened one).
 import PopoverSvelte from './components/core/Popover/Popover.svelte';
 import type { PopoverBindingProps } from './components/core/Popover/Popover.model';
