@@ -1,87 +1,66 @@
-# Omarchy render A/B — 2026-10-29
+# Omarchy render A/B
 
-## Verdict
+## Current result
 
-**The shared view contract works. Visual parity does not.** The browser is
-currently useful for composition and fixtures, but not a trustworthy native
-layout/style predictor. Do not migrate the live plugin based on this preview.
+The migrated native plugin and browser share the view **and layout**, with real
+Omarchy Ui primitives on the native side. The current capture matrix verifies:
 
-The native side here is the framework's current `Tree.qml` in real Quickshell,
-using generic Qt Quick Controls. It is **not** the installed Omarchy `Ui` kit
-and is **not** a capture of the old/live Patchy Mixer.qml. That distinction is
-why this experiment must precede claiming Omarchy parity.
+- Identical serialized view inputs and semantic elements.
+- **Zero x/y/width/height drift** for every measured node.
+- No horizontally offscreen controls at 850px or 390px.
+- Identical bounds for the actual open Qt dropdown and its browser counterpart.
+- Visually reviewed text, spacing, section rules, fields, switches, sliders,
+  selected/disabled controls, dialogs and popup lists.
 
-## Method
+This is layout/appearance parity for the captured contract, not byte-identical
+pixels. Qt and Chromium still differ in glyph antialiasing, border rasterization
+and tiny control-glyph details. Raw MAE is retained as evidence, not described as
+a pass rate. The comparison tool fails on any geometry drift or horizontal
+overflow, even if most pixels happen to be empty background.
 
-- 10 capture pairs: lab, Patchy Quick/Levels/Routing/Hardware, each at 850×850
-  and 390×850. Device-pixel ratio 1.
-- Untouched initial fixtures in both runtimes. Separate lab Baseline story:
-  the Controls story has a play function that would otherwise change its state.
-- Chromium captures only the plugin panel, not Storybook or desktop framing.
-  The panel is constrained to the native window dimensions and can scroll.
-- Qt captures the entire background-backed native panel, not a transparent
-  content crop. Uses `QT_QPA_PLATFORM=offscreen`, software rendering.
-- Capture command asserts identical serialized view trees, panel dimensions,
-  semantic element identities and occurrence counts. Every pair passes those
-  checks. This verifies comparison inputs, **not render fidelity**.
-- Both sides emit element rectangles. Compare matching element occurrences to
-  measure x/y/width/height drift; save raw diff and 50/50 overlay PNGs.
-- MAE is average per-channel pixel error; mostly-identical backgrounds dilute
-  it. It is not an acceptance threshold and must not be called a pass rate.
+## Matrix
 
-## Observed failures
+17 capture pairs:
 
-| Feature | Evidence | Why it matters |
-|---|---|---|
-| Row packing | Quick's Advanced button is ~385px farther right natively at 850px | Qt RowLayout distributes spare space differently from CSS flex |
-| Narrow advanced tabs | Routing/Hardware Advanced starts at x=372 with width=86 in a 390px panel | Actual offscreen control; browser wraps it to another line |
-| Button sizing | Native buttons 7.5px shorter; arrow buttons ~50px wider | Density, targets and neighbouring text widths differ |
-| Vertical rhythm | Lab footer ~58px higher natively; Levels footer ~72.5px higher at 850px | Leading, section padding and control heights accumulate |
-| Narrow padding | Native uses 20px while browser's responsive padding is 12px plus border | Same outer panel size still yields different content widths |
-| Structure | Browser section hairlines and panel border are absent natively | Preview promises visual structure native doesn't provide |
-| Controls | Native gradients, blue slider fill, square knobs and Qt checkboxes vs browser styling | Generic Qt is the wrong visual reference for Omarchy |
-| Text | Wrapping and line box heights differ, even with the same font family | Long labels and narrow layouts need explicit contracts |
+- Lab at 850×850 and 390×850.
+- Patchy Quick, Levels, Routing and Hardware at both widths.
+- Empty, loading, error, hardware editor, disconnect confirmation.
+- Open sample-rate dropdown, including the real Qt popup overlay.
+- Quick using the current system palette/font snapshot, not just the fixed
+  preview palette.
 
-No elements are missing from the **view data**. Two narrow cases have controls
-outside the visible window. Merely asserting node counts would have missed that.
+Patchy captures instantiate its actual manifest entry, `Panel.qml`, with a fake
+controller. The default scenes use a fixed palette but read current Commons
+control state, font and shape tokens; the browser receives that exact snapshot.
+The system-theme scene also follows the active native palette/body type scale.
+The real installed Wayland window was separately opened and inspected with live
+read-only data. No live rate, buffer, gain or routing mutations were used as tests.
 
-## Per-scene measurements
+## What changed since the initial failed A/B
 
-Normalized pixel MAE below is descriptive only. Lower is not necessarily better:
-Hardware has less content and more shared empty background.
+| Initial defect | Correction |
+|---|---|
+| Qt tabs spread across the row | One shared packing/wrapping algorithm |
+| Advanced clipped offscreen at 390px | Same wrapped rectangles in both engines |
+| Different control heights and cumulative vertical drift | Shared integer sizes, line boxes and text breaks |
+| Generic Qt controls vs browser mockups | Actual Omarchy Ui.Button/PanelSlider/ToggleSwitch/Dropdown/TextField |
+| Missing native separators / panel border | Explicit structural primitives in both bindings |
+| Style/selection/font mismatch | Serializable snapshot of actual Commons style roles |
+| Browser-only platform select popup | Themed DOM listbox mirroring Omarchy dropdown geometry/navigation |
+| Native screenshot silently omitted dropdown | Temporarily capture the real Qt overlay with the QML surface, then restore it |
+| Transparent native PNG border compared to opaque browser window | Composite native item alpha over its actual QQuickWindow background |
+| Field focus lost on redraw; device reorder could replace controls | Keyed native reconciliation, with a real-host identity/drag test |
+| Browser slider wrote throughout drag | Commit only on release/keyboard completion, matching native behaviour |
 
-| Scene | Width | Elements | Native horizontal overflow | Normalized MAE |
-|---|---:|---:|---:|---:|
-| Lab | 850 | 15 | 0 | 0.02539 |
-| Lab | 390 | 15 | 0 | 0.03191 |
-| Quick | 850 | 35 | 0 | 0.02750 |
-| Quick | 390 | 35 | 0 | 0.05120 |
-| Levels | 850 | 33 | 0 | 0.03089 |
-| Levels | 390 | 33 | 0 | 0.04444 |
-| Routing | 850 | 22 | 0 | 0.03031 |
-| Routing | 390 | 22 | 1 | 0.04607 |
-| Hardware | 850 | 19 | 0 | 0.01126 |
-| Hardware | 390 | 19 | 1 | 0.02249 |
+The original baseline had ~385px horizontal tab drift, 7.5px control-height
+differences, >70px accumulated vertical drift and offscreen Advanced controls in
+two narrow scenes. Those are now hard assertion failures in the capture command.
 
-## Next correction pass
-
-1. Use the actual Omarchy `Ui` primitives as native reference, not Qt defaults.
-   Read existing Button, PanelSlider, Dropdown, TextField, Toggle and Style
-   rather than inventing another control implementation.
-2. Define the layout contract explicitly: row packing/wrapping, growth,
-   min-width, padding and line-height. Fix the offscreen tabs first.
-3. Reflect native tokens and controls in the browser; don't arbitrarily make
-   Omarchy look like browser defaults. Rerun this matrix after each change.
-4. Extend the lab to hover/focus, open dropdowns, modal editor/confirmation,
-   scrolling and slider drag/release. Add loading/error states to native A/B.
-5. Only then wire Patchy's live controller, preserving all existing behaviours.
-
-## Reproduce and inspect
+## Inspect/reproduce
 
 Start the unified launcher with Patchy's external stories as described in
-`harness-omarchy.md`. Capture tooling additionally needs Playwright, system
-Chromium and ImageMagick. An isolated optional Playwright install avoids changing
-Zen's dependency graph:
+`harness-omarchy.md`. Capture tooling also needs Playwright, system Chromium and
+ImageMagick. Keep the optional Playwright install outside Zen's dependencies:
 
 ```sh
 npm install --prefix /tmp/opencode/omarchy-browser --no-save playwright
@@ -89,12 +68,23 @@ PLAYWRIGHT_MODULE=/tmp/opencode/omarchy-browser/node_modules/playwright/index.mj
   node scripts/omarchy-compare.mjs /absolute/path/to/patchy
 ```
 
-`STORYBOOK_URL` and `CHROMIUM_PATH` override their local defaults.
+`STORYBOOK_URL` and `CHROMIUM_PATH` override defaults. Refresh the viewer after
+capture generation. Avoid running interactive browser tests concurrently with
+capture generation: Storybook HMR can reinitialize stories while tests navigate.
 
-Open **Omarchy → Lab → Render comparison → Captured**. Choose any scene and
-side-by-side, overlay or pixel-difference view. Fit-to-width and 1:1 modes are
-available. The geometry table exposes native-minus-browser rectangle deltas.
+Open **Omarchy → Lab → Render comparison → Captured** for side-by-side, overlay,
+pixel differences and measured geometry. Fit-to-width and 1:1 modes are available.
 
-Artifacts live in ignored `.shots/omarchy-ab/`: per-scene browser/native PNGs,
-overlay/difference PNGs, input trees, element rectangles, and `report.json`.
-Fresh checkouts show instructions instead of fabricated capture evidence.
+Artifacts are ignored `.shots/omarchy-ab/`: actual browser/native PNGs,
+overlay/difference PNGs, exact input trees, theme snapshots, popup/element
+rectangles and `report.json`. A fresh checkout without captures shows directions,
+not fabricated evidence.
+
+## Limits
+
+Offscreen software Qt and Chromium at DPR 1 are the repeatable visual bench.
+This does not prove every compositor scale, font fallback, custom per-edge theme
+border, Qt version or accessibility path. Wayland placement, physical pointer
+interaction, audio-hardware renegotiation and end-to-end latency are separate
+checks. Reported PipeWire clock metadata is not a measured ALSA device buffer or
+end-to-end latency reading.

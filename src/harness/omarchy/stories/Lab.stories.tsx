@@ -18,8 +18,9 @@ export const Controls: Story = {
     await expect(c.getByRole('button', {name: 'Increment · 1'})).toBeVisible();
     await userEvent.click(c.getByRole('checkbox', {name: 'Enabled'}));
     await expect(c.getByRole('checkbox')).toBeChecked();
-    await userEvent.selectOptions(c.getByRole('combobox'), 'headphones');
-    await expect(c.getByRole('combobox')).toHaveValue('headphones');
+    await userEvent.click(c.getByRole('combobox'));
+    await userEvent.click(c.getByRole('option',{name:'Headphones'}));
+    await expect(c.getByRole('combobox')).toHaveTextContent('Headphones');
     await userEvent.type(c.getByRole('textbox'), 'Works in the lab');
     await expect(c.getByRole('textbox')).toHaveValue('Works in the lab');
     await expect(c.getByRole('button', {name: 'Disabled action'})).toBeDisabled();

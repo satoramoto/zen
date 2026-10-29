@@ -15,6 +15,10 @@ export interface Element {
   selected?: boolean;
   tone?: 'muted' | 'danger';
   grow?: boolean;
+  focusKey?: string;
+  cursor?: boolean;
+  dialog?: boolean;
+  allowEmpty?: boolean;
 }
 export function element(kind: Element['kind'], props?: Partial<Element>, children?: Element[]): Element;
 export function column(children: Element[], props?: Partial<Element>): Element;

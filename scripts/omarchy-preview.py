@@ -24,6 +24,9 @@ repo = Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='omarchy-framework-', dir='/tmp/opencode') as directory:
     stage = Path(directory)
     shutil.copytree(repo / 'src/harness/omarchy/kit', stage / 'kit')
+    omarchy = Path(os.environ.get('OMARCHY_PATH', '/usr/share/omarchy')) / 'shell'
+    for name in ('Commons', 'Ui'):
+        (stage / name).symlink_to(omarchy / name, target_is_directory=True)
     imports = 'import "kit/lab.mjs" as Plugin\n'
     init = 'Plugin.initial()'
     reducer = 'Plugin.reduce(host.state, action, payload, value)'
@@ -41,26 +44,26 @@ with tempfile.TemporaryDirectory(prefix='omarchy-framework-', dir='/tmp/opencode
             if (findControl(nativeTree, "input") !== host.lastInput || !host.lastInput.activeFocus)
                 throw new Error("input identity/focus lost on redraw")
             var toggle = findControl(nativeTree, "checked")
-            toggle.checked = true
             toggle.toggled()
             if (!host.state.checked) throw new Error("toggle dispatch failed")
         } else if (stage === 4) {
             var select = findControl(nativeTree, "choice")
-            select.currentIndex = 2
-            select.activated(2)
+            select.changed("headphones")
             if (host.state.choice !== "headphones") throw new Error("select dispatch failed")
         } else if (stage === 5) {
             var slider = findControl(nativeTree, "value")
-            slider.value = 80
-            slider.moved()
+            slider.released(80)
             if (host.state.value !== 80) throw new Error("slider dispatch failed")
         }
     '''
     if args.plugin:
         plugin = args.plugin.resolve() / 'preview'
         for name in ('plugin.mjs', 'fixtures.mjs'):
-            source = (plugin / name).read_text().replace('@omarchy/kit/', './kit/')
+            source = (plugin / name).read_text().replace('@omarchy/kit/', './kit/').replace('../Patchy.mjs','./Patchy.mjs')
             (stage / name).write_text(source)
+        for name in ('Patchy.mjs','Rows.mjs'):
+            source=(args.plugin.resolve()/name).read_text().replace('./zen/','./kit/')
+            (stage/name).write_text(source)
         imports = 'import "plugin.mjs" as Plugin\nimport "fixtures.mjs" as Fixtures\n'
         init = 'Plugin.initial(Fixtures.fixture(), ' + json.dumps(args.tab) + ')'
         reducer = 'Plugin.simulate(host.state, action, payload, value)'
@@ -71,7 +74,7 @@ with tempfile.TemporaryDirectory(prefix='omarchy-framework-', dir='/tmp/opencode
         '''
     screenshot = ''
     if args.screenshot:
-        screenshot = 'frame.grabToImage(function(result) { if (!result.saveToFile(' + json.dumps(str(args.screenshot.resolve())) + ')) { Qt.exit(1); return }; console.log("OMARCHY_CAPTURE_META " + JSON.stringify({tree: Plugin.view(host.state), width: frame.width, height: frame.height, nodes: host.measure(nativeTree)})); Qt.quit() })'
+        screenshot = 'frame.grabToImage(function(result) { if (!result.saveToFile(' + json.dumps(str(args.screenshot.resolve())) + ')) { Qt.exit(1); return }; console.log("OMARCHY_CAPTURE_META " + JSON.stringify({tree: Plugin.view(host.state), theme:nativeTree.theme, width: frame.width, height: frame.height, nodes: host.measure(nativeTree)})); Qt.quit() })'
     finish = screenshot or 'Qt.quit()'
     smoke = '''
     property int stage: 0
@@ -98,6 +101,7 @@ import "kit" as Kit
 ''' + imports + '''
 Scope {
     id: host
+    Kit.Theme {id:captureTheme}
     property var lastInput: null
     function measure(item) {
         var result = []
@@ -128,15 +132,18 @@ Scope {
           id: frame
           anchors.fill: parent
           color: "#1a1b26"
+          border.width: 1; border.color: captureTheme.color(captureTheme.snapshot.normalBorder)
+          radius:captureTheme.snapshot.radius
           QQC.ScrollView {
             id: canvas
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins: 21
             contentWidth: availableWidth
             Kit.Tree {
                 id: nativeTree
                 width: canvas.availableWidth
                 node: Plugin.view(host.state)
+                theme:captureTheme.snapshot
                 onDispatched: function(action, payload, value) { host.state = ''' + reducer + ''' }
             }
           }
