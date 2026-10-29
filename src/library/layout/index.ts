@@ -9,3 +9,28 @@ export { Tabs, type TabsProps, type TabItem } from './Tabs';
 export { Layer, type LayerProps } from './Layer';
 // Self-assembling screens: forms, specs, principles and the solver (docs/assembly.md).
 export * from './assembly';
+// The live workspace: tabs of screens with a structural edit mode (docs/workspace.md).
+export {
+  Workspace,
+  addRegion,
+  moveRegion,
+  moveRegionToRow,
+  removeRegion,
+  splitRegion,
+  workspaceRegionIds,
+  WORKSPACE_EDITS,
+  paletteRegion,
+  contentSlot,
+  newRegionId,
+  workspaceSlots,
+  workspaceTab,
+  type WorkspaceProps,
+  type WorkspaceContent,
+  type WorkspaceModelProps,
+  type WorkspaceTrack,
+  type WorkspaceTab,
+  type WorkspaceSpec,
+  type WorkspaceRegion,
+  type WorkspaceBinding,
+  type WorkspaceEdit,
+} from './Workspace/Workspace';

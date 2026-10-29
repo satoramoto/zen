@@ -34,6 +34,16 @@ import { PartMarks } from '../components/music/PartMarks/PartMarks';
 import { SectionName } from '../components/music/SectionName/SectionName';
 import { TempoReadout } from '../components/music/TempoReadout/TempoReadout';
 import { Meter } from '../components/music/Meter/Meter';
+import { LoopPie } from '../components/music/LoopPie/LoopPie';
+import { LoopGrid } from '../components/music/LoopGrid/LoopGrid';
+import { SendBars } from '../components/music/SendBars/SendBars';
+import { MixBand } from '../components/music/MixBand/MixBand';
+import { ChordStrip } from '../components/music/ChordStrip/ChordStrip';
+import { ArpSequencer } from '../components/music/ArpSequencer/ArpSequencer';
+import { XYPad } from '../components/music/XYPad/XYPad';
+import { MacroPads } from '../components/music/MacroPads/MacroPads';
+import { StemLanes } from '../components/music/StemLanes/StemLanes';
+import { TransitionRow } from '../components/music/TransitionRow/TransitionRow';
 import { BarReadout } from '../components/music/BarReadout/BarReadout';
 import { SendReadout } from '../components/music/SendReadout/SendReadout';
 import { SoundCell } from '../components/music/SoundCell/SoundCell';
@@ -131,6 +141,16 @@ export function reactComponent(name: string): ComponentType<any> {
     StatusLine,
     WaitingChip,
     Meter,
+    LoopPie,
+    LoopGrid,
+    SendBars,
+    MixBand,
+    ChordStrip,
+    ArpSequencer,
+    XYPad,
+    MacroPads,
+    StemLanes,
+    TransitionRow,
     BarReadout,
     SendReadout,
     SoundCell,

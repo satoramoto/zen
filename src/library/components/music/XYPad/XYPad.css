@@ -1,0 +1,110 @@
+/* XYPad: a field with a quarter grid, a fading trail, a crosshair at (x, y) and axis labels at its
+   edges. Contract variables plus the local --yh-xy-* knobs. The field is a `well` Surface drawn as
+   a span with Surface's class and data (no layer, so never a shader); the crosshair, trail and dot
+   share one ink, the hue slot or text ink. */
+
+.yh-xypad {
+  /* The one ink the trail, crosshair and dot share: the hue slot when the pad has one, else text. */
+  --yh-xy-ink: var(--hue, var(--text-1));
+  /* Hairlines: the quarter grid and the crosshair. Declared knob, so a pack can thicken them. */
+  --yh-xy-grid-w: 1px;
+  --yh-xy-cross-w: 1px;
+  --yh-xy-trail-w: 2px;
+  --yh-xy-dot: calc(var(--space-2) + 2px);
+  /* The set point, 0–1 of the field; the component sets both inline. */
+  --yh-xy-x: 0.5;
+  --yh-xy-y: 0.5;
+
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* The wide form: a 2:1 field, for a strip beside other controls. */
+.yh-xypad[data-form='wide'] {
+  aspect-ratio: 2;
+}
+
+/* The field itself: the `well` Surface fills the root, under the marks. */
+.yh-xypad__well {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-control);
+}
+
+/* The SVG maps its 0–100 box onto the field exactly; every stroke is set in CSS px. */
+.yh-xypad__field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.yh-xypad__grid-line {
+  stroke: var(--text-4);
+  stroke-width: var(--yh-xy-grid-w);
+  vector-effect: non-scaling-stroke;
+}
+.yh-xypad__trail-line {
+  stroke: var(--yh-xy-ink);
+  stroke-width: var(--yh-xy-trail-w);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.yh-xypad__cross {
+  stroke: var(--yh-xy-ink);
+  stroke-width: var(--yh-xy-cross-w);
+  vector-effect: non-scaling-stroke;
+  opacity: 0.7;
+}
+
+/* The point itself: a lit dot on the crossing, in the field's ink. */
+.yh-xypad__dot {
+  position: absolute;
+  left: calc(var(--yh-xy-x) * 100%);
+  top: calc((1 - var(--yh-xy-y)) * 100%);
+  width: var(--yh-xy-dot);
+  height: var(--yh-xy-dot);
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-pill);
+  background: var(--yh-xy-ink);
+  box-shadow: var(--mat-lit-glow);
+  pointer-events: none;
+}
+
+/* The axis labels: the horizontal one along the bottom left edge, the vertical one up the left. */
+.yh-xypad__axis {
+  position: absolute;
+  max-width: calc(100% - var(--space-4));
+  overflow: hidden;
+  color: var(--text-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.yh-xypad__axis--x {
+  bottom: var(--space-1);
+  left: var(--space-1);
+}
+.yh-xypad__axis--y {
+  top: var(--space-1);
+  left: var(--space-1);
+  max-width: none;
+  max-height: calc(100% - var(--space-4));
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* Shown but not usable: the whole field dims, the pointer stops being a crosshair. */
+.yh-xypad[data-disabled] {
+  cursor: default;
+  opacity: 0.55;
+}
