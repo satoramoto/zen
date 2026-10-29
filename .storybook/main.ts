@@ -27,6 +27,7 @@ const config: StorybookConfig = {
     '../src/stories/**/*.stories.@(ts|tsx)',
     '../src/library/**/*.stories.@(ts|tsx)',
     '../src/harness/**/*.stories.@(ts|tsx)',
+    ...(process.env.OMARCHY_PLUGIN_SOURCE ? [`${process.env.OMARCHY_PLUGIN_SOURCE}/preview/**/*.stories.@(ts|tsx)`] : []),
   ],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   framework: { name: '@storybook/react-vite', options: {} },
@@ -39,7 +40,13 @@ const config: StorybookConfig = {
     config.resolve.alias = {
       ...(config.resolve.alias as Record<string, string>),
       'claude-code': fileURLToPath(new URL('../src/harness/claude-code/bench/engine.ts', import.meta.url)),
+      '@omarchy': fileURLToPath(new URL('../src/harness/omarchy', import.meta.url)),
     };
+    if (process.env.OMARCHY_PLUGIN_SOURCE) {
+      config.server ??= {};
+      config.server.fs ??= {};
+      config.server.fs.allow = [...(config.server.fs.allow ?? []), fileURLToPath(new URL('..', import.meta.url)), process.env.OMARCHY_PLUGIN_SOURCE];
+    }
     return config;
   },
 };
