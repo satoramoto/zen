@@ -1,0 +1,184 @@
+## Default
+<div class="yh-transitionrow" data-disabled="true" data-form="row" data-part="root">
+  <button key=riser aria-disabled="true" aria-label="RISER, 8 bars" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="1" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire0>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "RISER"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "8 bars"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=drop aria-disabled="true" aria-label="DROP, next bar" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="2" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire1>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "DROP"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "next bar"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=crash aria-disabled="true" aria-label="CRASH, one shot" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="3" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire2>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "CRASH"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "one shot"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-a aria-disabled="true" aria-label="HOLD A, A section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="4" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire3>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "HOLD A"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "A section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-b aria-disabled="true" aria-label="HOLD B, B section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="5" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire4>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "HOLD B"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "B section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=cut aria-disabled="true" aria-label="CUT, hard cut" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire5>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "CUT"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "hard cut"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+
+## EveryState
+<div class="yh-transitionrow" data-disabled="true" data-form="row" data-part="root">
+  <button key=riser aria-disabled="true" aria-label="RISER, 8 bars" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="1" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="armed" type="button" @click=fire0>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "RISER"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "8 bars"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=drop aria-current="true" aria-disabled="true" aria-label="DROP, next bar" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="2" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-selected="true" data-state="fired" type="button" @click=fire1>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight" data-tone="on-solid">
+      "DROP"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="on-solid">
+      "next bar"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=crash aria-disabled="true" aria-label="CRASH, one shot" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="3" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire2>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "CRASH"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "one shot"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-a aria-disabled="true" aria-label="HOLD A, A section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="4" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="fired" type="button" @click=fire3>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight" data-tone="on-solid">
+      "HOLD A"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="on-solid">
+      "A section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-b aria-disabled="true" aria-label="HOLD B, B section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="5" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="armed" type="button" @click=fire4>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "HOLD B"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "B section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=cut aria-disabled="true" aria-label="CUT, hard cut" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="fired" type="button" @click=fire5>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight" data-tone="on-solid">
+      "CUT"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="on-solid">
+      "hard cut"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+
+## Dense
+<div class="yh-transitionrow" data-disabled="true" data-form="row" data-part="root">
+  <button key=riser aria-disabled="true" aria-label="RISER, 8 bars" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="1" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="armed" type="button" @click=fire0>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "RISER"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "8 bars"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=drop aria-current="true" aria-disabled="true" aria-label="DROP, next bar" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="2" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-selected="true" data-state="fired" type="button" @click=fire1>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight" data-tone="on-solid">
+      "DROP"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="on-solid">
+      "next bar"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=crash aria-disabled="true" aria-label="CRASH, one shot" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="3" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire2>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "CRASH"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "one shot"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-a aria-disabled="true" aria-label="HOLD A, A section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="4" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="fired" type="button" @click=fire3>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight" data-tone="on-solid">
+      "HOLD A"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="on-solid">
+      "A section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-b aria-disabled="true" aria-label="HOLD B, B section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="5" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="armed" type="button" @click=fire4>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "HOLD B"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "B section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=cut aria-disabled="true" aria-label="CUT, hard cut" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="fired" type="button" @click=fire5>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight" data-tone="on-solid">
+      "CUT"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="on-solid">
+      "hard cut"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+
+## Empty
+<div class="yh-transitionrow" data-disabled="true" data-empty="true" data-form="row" data-part="root">
+  <span class="lib-text lib-tone yh-transitionrow__empty" data-part="empty" data-role="caption" data-tone="muted">
+    "No transitions"
+
+## Disabled
+<div class="yh-transitionrow" data-disabled="true" data-form="row" data-part="root">
+  <button key=riser aria-disabled="true" aria-label="RISER, 8 bars" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="1" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire0>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "RISER"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "8 bars"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=drop aria-disabled="true" aria-label="DROP, next bar" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="2" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire1>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "DROP"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "next bar"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=crash aria-disabled="true" aria-label="CRASH, one shot" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="3" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire2>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "CRASH"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "one shot"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-a aria-disabled="true" aria-label="HOLD A, A section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="4" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire3>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "HOLD A"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "A section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=hold-b aria-disabled="true" aria-label="HOLD B, B section" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-hue="5" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire4>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "HOLD B"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "B section"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">
+  <button key=cut aria-disabled="true" aria-label="CUT, hard cut" class="lib-surface yh-transitionrow__pad lib-focus-ring lib-press-ring" data-material="key" data-part="pad" data-radius="control" data-row-disabled="true" data-state="idle" type="button" @click=fire5>
+    <span aria-hidden="true" class="yh-transitionrow__lamp" data-part="lamp">
+    <span class="lib-text lib-tone yh-transitionrow__label" data-part="label" data-role="label" data-text-leading="tight">
+      "CUT"
+    <span class="lib-text lib-tone yh-transitionrow__hint" data-part="hint" data-role="caption" data-tone="muted">
+      "hard cut"
+    <span aria-hidden="true" class="yh-transitionrow__mark" data-part="mark">

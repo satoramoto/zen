@@ -1,0 +1,129 @@
+## Default
+<div class="yh-chord-strip" data-form="full" data-part="root">
+  <div aria-label="Chord progression" class="yh-chord-strip__blocks" data-part="blocks" role="group">
+    <button key=am7 aria-label="Am7: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow0>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Am7"
+    <button key=dm7 aria-label="Dm7: D F A C" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow1>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Dm7"
+    <button key=g7 aria-current="true" aria-label="G7, now: G B D F" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-lit="accent" data-material="key" data-part="block" data-pressed="" data-radius="control" data-state="now" data-tone="now" type="button" @click=follow2>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+        "G7"
+      <span class="lib-text lib-tone yh-chord-strip__notes" data-part="notes" data-role="caption" data-text-leading="tight" data-truncate="">
+        "G B D F"
+    <button key=cmaj7 aria-label="Cmaj7, next, selected: C E G B" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-border="strong" data-material="key" data-part="block" data-radius="control" data-selected="true" data-state="next" data-tone="next" type="button" @click=follow3>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Cmaj7"
+      <span aria-hidden="true" class="yh-chord-strip__mark" data-part="mark">
+    <button key=fmaj7 aria-label="Fmaj7: F A C E" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow4>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Fmaj7"
+    <button key=e7 aria-label="E7: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow5>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"
+    <button key=am7-2 aria-label="Am7: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow6>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Am7"
+    <button key=e7-2 aria-label="E7: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow7>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"
+
+## EveryState
+<div class="yh-chord-strip" data-form="full" data-part="root">
+  <div aria-label="Chord progression" class="yh-chord-strip__blocks" data-part="blocks" role="group">
+    <button key=am7 aria-current="true" aria-label="Am7, now: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-lit="accent" data-material="key" data-part="block" data-pressed="" data-radius="control" data-state="now" data-tone="now" type="button" @click=follow0>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+        "Am7"
+      <span class="lib-text lib-tone yh-chord-strip__notes" data-part="notes" data-role="caption" data-text-leading="tight" data-truncate="">
+        "A C E G"
+    <button key=dm7 aria-label="Dm7, next: D F A C" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-border="strong" data-material="key" data-part="block" data-radius="control" data-state="next" data-tone="next" type="button" @click=follow1>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Dm7"
+    <button key=g7 aria-label="G7: G B D F" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow2>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "G7"
+    <button key=cmaj7 aria-label="Cmaj7, selected: C E G B" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-border="strong" data-material="key" data-part="block" data-radius="control" data-selected="true" data-state="idle" data-tone="idle" type="button" @click=follow3>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Cmaj7"
+      <span aria-hidden="true" class="yh-chord-strip__mark" data-part="mark">
+    <button key=fmaj7 aria-label="Fmaj7: F A C E" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow4>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Fmaj7"
+    <button key=e7 aria-label="E7: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow5>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"
+    <button key=am7-2 aria-label="Am7: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow6>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Am7"
+    <button key=e7-2 aria-label="E7: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow7>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"
+
+## Dense
+<div class="yh-chord-strip" data-form="full" data-part="root">
+  <div aria-label="Chord progression" class="yh-chord-strip__blocks" data-part="blocks" role="group">
+    <button key=am7 aria-label="Am7: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow0>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Am7"
+    <button key=dm7 aria-label="Dm7: D F A C" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow1>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Dm7"
+    <button key=g7 aria-label="G7: G B D F" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow2>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "G7"
+    <button key=cmaj7 aria-label="Cmaj7: C E G B" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow3>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Cmaj7"
+    <button key=fmaj7 aria-current="true" aria-label="Fmaj7, now, selected: F A C E" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-border="strong" data-lit="accent" data-material="key" data-part="block" data-pressed="" data-radius="control" data-selected="true" data-state="now" data-tone="now" type="button" @click=follow4>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+        "Fmaj7"
+      <span class="lib-text lib-tone yh-chord-strip__notes" data-part="notes" data-role="caption" data-text-leading="tight" data-truncate="">
+        "F A C E"
+      <span aria-hidden="true" class="yh-chord-strip__mark" data-part="mark">
+    <button key=e7 aria-label="E7, next: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-border="strong" data-material="key" data-part="block" data-radius="control" data-state="next" data-tone="next" type="button" @click=follow5>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"
+    <button key=am7-2 aria-label="Am7: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow6>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Am7"
+    <button key=e7-2 aria-label="E7: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" type="button" @click=follow7>
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"
+
+## Empty
+<div class="yh-chord-strip" data-form="full" data-part="root">
+  <div class="lib-surface yh-chord-strip__empty" data-material="well" data-part="empty" data-radius="control">
+    <span class="lib-text lib-tone yh-chord-strip__empty-text" data-part="empty-text" data-role="caption" data-text-leading="tight">
+      "No chords"
+
+## Disabled
+<div class="yh-chord-strip" data-disabled="true" data-form="full" data-part="root">
+  <div aria-label="Chord progression" class="yh-chord-strip__blocks" data-part="blocks" role="group">
+    <button key=am7 aria-label="Am7: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Am7"
+    <button key=dm7 aria-label="Dm7: D F A C" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Dm7"
+    <button key=g7 aria-current="true" aria-label="G7, now: G B D F" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-lit="accent" data-material="key" data-part="block" data-pressed="" data-radius="control" data-state="now" data-tone="now" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+        "G7"
+      <span class="lib-text lib-tone yh-chord-strip__notes" data-part="notes" data-role="caption" data-text-leading="tight" data-truncate="">
+        "G B D F"
+    <button key=cmaj7 aria-label="Cmaj7, next, selected: C E G B" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-border="strong" data-material="key" data-part="block" data-radius="control" data-selected="true" data-state="next" data-tone="next" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Cmaj7"
+      <span aria-hidden="true" class="yh-chord-strip__mark" data-part="mark">
+    <button key=fmaj7 aria-label="Fmaj7: F A C E" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Fmaj7"
+    <button key=e7 aria-label="E7: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"
+    <button key=am7-2 aria-label="Am7: A C E G" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "Am7"
+    <button key=e7-2 aria-label="E7: E G♯ B D" class="lib-surface yh-chord-strip__block lib-focus-ring lib-press-ring" data-material="key" data-part="block" data-radius="control" data-state="idle" data-tone="idle" disabled="" type="button">
+      <span class="lib-text lib-tone yh-chord-strip__name" data-part="name" data-role="body" data-text-leading="tight" data-text-weight="body" data-truncate="">
+        "E7"

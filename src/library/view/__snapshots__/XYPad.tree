@@ -1,0 +1,263 @@
+## Default
+<div aria-label="XY pad: Cutoff over Resonance" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-hue="2" data-x="0.620" data-y="0.700" role="group" style="--yh-xy-x: 0.62; --yh-xy-y: 0.7" tabindex="0" use:xyInput={"x":0.62,"y":0.7,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.21" x1="8.00" x2="14.00" y1="84.00" y2="76.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.27" x1="14.00" x2="20.00" y1="76.00" y2="78.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.33" x1="20.00" x2="27.00" y1="78.00" y2="64.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.39" x1="27.00" x2="34.00" y1="64.00" y2="67.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.46" x1="34.00" x2="40.00" y1="67.00" y2="52.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.52" x1="40.00" x2="46.00" y1="52.00" y2="56.00">
+    <line key=6 class="yh-xypad__trail-line" opacity="0.58" x1="46.00" x2="53.00" y1="56.00" y2="40.00">
+    <line key=7 class="yh-xypad__trail-line" opacity="0.64" x1="53.00" x2="58.00" y1="40.00" y2="45.00">
+    <line key=8 class="yh-xypad__trail-line" opacity="0.70" x1="58.00" x2="62.00" y1="45.00" y2="30.00">
+    <line class="yh-xypad__cross" x1="62.00" x2="62.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="30.00" y2="30.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Cutoff"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Resonance"
+
+## EveryState #1
+<div aria-label="XY pad: Cutoff over Resonance" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-hue="2" data-x="0.620" data-y="0.700" role="group" style="--yh-xy-x: 0.62; --yh-xy-y: 0.7" tabindex="0" use:xyInput={"x":0.62,"y":0.7,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.21" x1="8.00" x2="14.00" y1="84.00" y2="76.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.27" x1="14.00" x2="20.00" y1="76.00" y2="78.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.33" x1="20.00" x2="27.00" y1="78.00" y2="64.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.39" x1="27.00" x2="34.00" y1="64.00" y2="67.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.46" x1="34.00" x2="40.00" y1="67.00" y2="52.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.52" x1="40.00" x2="46.00" y1="52.00" y2="56.00">
+    <line key=6 class="yh-xypad__trail-line" opacity="0.58" x1="46.00" x2="53.00" y1="56.00" y2="40.00">
+    <line key=7 class="yh-xypad__trail-line" opacity="0.64" x1="53.00" x2="58.00" y1="40.00" y2="45.00">
+    <line key=8 class="yh-xypad__trail-line" opacity="0.70" x1="58.00" x2="62.00" y1="45.00" y2="30.00">
+    <line class="yh-xypad__cross" x1="62.00" x2="62.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="30.00" y2="30.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Cutoff"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Resonance"
+
+## EveryState #2
+<div aria-label="XY pad: Rate over Depth" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-hue="1" data-x="0.920" data-y="0.900" role="group" style="--yh-xy-x: 0.92; --yh-xy-y: 0.9" tabindex="0" use:xyInput={"x":0.92,"y":0.9,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.24" x1="32.00" x2="40.00" y1="38.00" y2="32.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.33" x1="40.00" x2="48.00" y1="32.00" y2="26.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.43" x1="48.00" x2="56.00" y1="26.00" y2="22.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.52" x1="56.00" x2="64.00" y1="22.00" y2="28.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.61" x1="64.00" x2="70.00" y1="28.00" y2="34.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.70" x1="70.00" x2="76.00" y1="34.00" y2="40.00">
+    <line class="yh-xypad__cross" x1="92.00" x2="92.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="10.00" y2="10.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Rate"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Depth"
+
+## EveryState #3
+<div aria-label="XY pad: Time over Feedback" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-hue="3" data-x="0.080" data-y="0.120" role="group" style="--yh-xy-x: 0.08; --yh-xy-y: 0.12" tabindex="0" use:xyInput={"x":0.08,"y":0.12,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.24" x1="32.00" x2="40.00" y1="38.00" y2="32.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.33" x1="40.00" x2="48.00" y1="32.00" y2="26.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.43" x1="48.00" x2="56.00" y1="26.00" y2="22.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.52" x1="56.00" x2="64.00" y1="22.00" y2="28.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.61" x1="64.00" x2="70.00" y1="28.00" y2="34.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.70" x1="70.00" x2="76.00" y1="34.00" y2="40.00">
+    <line class="yh-xypad__cross" x1="8.00" x2="8.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="88.00" y2="88.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Time"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Feedback"
+
+## EveryState #4
+<div aria-label="XY pad: Drive over Tone" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-hue="4" data-x="0.500" data-y="0.500" role="group" style="--yh-xy-x: 0.5; --yh-xy-y: 0.5" tabindex="0" use:xyInput={"x":0.5,"y":0.5,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line class="yh-xypad__cross" x1="50.00" x2="50.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="50.00" y2="50.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Drive"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Tone"
+
+## EveryState #5
+<div aria-label="XY pad: Space over Mix" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-hue="5" data-x="0.240" data-y="0.780" role="group" style="--yh-xy-x: 0.24; --yh-xy-y: 0.78" tabindex="0" use:xyInput={"x":0.24,"y":0.78,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.21" x1="8.00" x2="14.00" y1="84.00" y2="76.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.27" x1="14.00" x2="20.00" y1="76.00" y2="78.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.33" x1="20.00" x2="27.00" y1="78.00" y2="64.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.39" x1="27.00" x2="34.00" y1="64.00" y2="67.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.46" x1="34.00" x2="40.00" y1="67.00" y2="52.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.52" x1="40.00" x2="46.00" y1="52.00" y2="56.00">
+    <line key=6 class="yh-xypad__trail-line" opacity="0.58" x1="46.00" x2="53.00" y1="56.00" y2="40.00">
+    <line key=7 class="yh-xypad__trail-line" opacity="0.64" x1="53.00" x2="58.00" y1="40.00" y2="45.00">
+    <line key=8 class="yh-xypad__trail-line" opacity="0.70" x1="58.00" x2="62.00" y1="45.00" y2="30.00">
+    <line class="yh-xypad__cross" x1="24.00" x2="24.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="22.00" y2="22.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Space"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Mix"
+
+## EveryState #6
+<div aria-label="XY pad: Cutoff over Resonance" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-x="0.420" data-y="0.360" role="group" style="--yh-xy-x: 0.42; --yh-xy-y: 0.36" tabindex="0" use:xyInput={"x":0.42,"y":0.36,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.21" x1="8.00" x2="14.00" y1="84.00" y2="76.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.27" x1="14.00" x2="20.00" y1="76.00" y2="78.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.33" x1="20.00" x2="27.00" y1="78.00" y2="64.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.39" x1="27.00" x2="34.00" y1="64.00" y2="67.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.46" x1="34.00" x2="40.00" y1="67.00" y2="52.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.52" x1="40.00" x2="46.00" y1="52.00" y2="56.00">
+    <line key=6 class="yh-xypad__trail-line" opacity="0.58" x1="46.00" x2="53.00" y1="56.00" y2="40.00">
+    <line key=7 class="yh-xypad__trail-line" opacity="0.64" x1="53.00" x2="58.00" y1="40.00" y2="45.00">
+    <line key=8 class="yh-xypad__trail-line" opacity="0.70" x1="58.00" x2="62.00" y1="45.00" y2="30.00">
+    <line class="yh-xypad__cross" x1="42.00" x2="42.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="64.00" y2="64.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Cutoff"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Resonance"
+
+## EveryState #7
+<div aria-label="XY pad" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-x="0.500" data-y="0.500" role="group" style="--yh-xy-x: 0.5; --yh-xy-y: 0.5" tabindex="0" use:xyInput={"x":0.5,"y":0.5,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line class="yh-xypad__cross" x1="50.00" x2="50.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="50.00" y2="50.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+
+## Dense
+<div aria-label="XY pad: Time over Feedback" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-hue="3" data-x="0.620" data-y="0.700" role="group" style="--yh-xy-x: 0.62; --yh-xy-y: 0.7" tabindex="0" use:xyInput={"x":0.62,"y":0.7,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.24" x1="32.00" x2="40.00" y1="38.00" y2="32.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.33" x1="40.00" x2="48.00" y1="32.00" y2="26.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.43" x1="48.00" x2="56.00" y1="26.00" y2="22.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.52" x1="56.00" x2="64.00" y1="22.00" y2="28.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.61" x1="64.00" x2="70.00" y1="28.00" y2="34.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.70" x1="70.00" x2="76.00" y1="34.00" y2="40.00">
+    <line class="yh-xypad__cross" x1="62.00" x2="62.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="30.00" y2="30.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Time"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Feedback"
+
+## Empty
+<div aria-label="XY pad" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-form="square" data-x="0.500" data-y="0.500" role="group" style="--yh-xy-x: 0.5; --yh-xy-y: 0.5" tabindex="0" use:xyInput={"x":0.5,"y":0.5,"disabled":false,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line class="yh-xypad__cross" x1="50.00" x2="50.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="50.00" y2="50.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+
+## Disabled
+<div aria-disabled="true" aria-label="XY pad: Cutoff over Resonance" aria-roledescription="XY pad" class="yh-xypad lib-focus-ring" data-disabled="true" data-form="square" data-hue="2" data-x="0.620" data-y="0.700" role="group" style="--yh-xy-x: 0.62; --yh-xy-y: 0.7" use:xyInput={"x":0.62,"y":0.7,"disabled":true,"onMove":"move"}>
+  <span aria-hidden="true" class="lib-surface yh-xypad__well" data-border="true" data-material="well" data-part="well" data-radius="control">
+  <svg aria-hidden="true" class="yh-xypad__field" preserveAspectRatio="none" viewBox="0 0 100 100">
+    <g class="yh-xypad__grid">
+      <line class="yh-xypad__grid-line" x1="25" x2="25" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="25" y2="25">
+      <line class="yh-xypad__grid-line" x1="50" x2="50" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="50" y2="50">
+      <line class="yh-xypad__grid-line" x1="75" x2="75" y1="0" y2="100">
+      <line class="yh-xypad__grid-line" x1="0" x2="100" y1="75" y2="75">
+    <line key=0 class="yh-xypad__trail-line" opacity="0.21" x1="8.00" x2="14.00" y1="84.00" y2="76.00">
+    <line key=1 class="yh-xypad__trail-line" opacity="0.27" x1="14.00" x2="20.00" y1="76.00" y2="78.00">
+    <line key=2 class="yh-xypad__trail-line" opacity="0.33" x1="20.00" x2="27.00" y1="78.00" y2="64.00">
+    <line key=3 class="yh-xypad__trail-line" opacity="0.39" x1="27.00" x2="34.00" y1="64.00" y2="67.00">
+    <line key=4 class="yh-xypad__trail-line" opacity="0.46" x1="34.00" x2="40.00" y1="67.00" y2="52.00">
+    <line key=5 class="yh-xypad__trail-line" opacity="0.52" x1="40.00" x2="46.00" y1="52.00" y2="56.00">
+    <line key=6 class="yh-xypad__trail-line" opacity="0.58" x1="46.00" x2="53.00" y1="56.00" y2="40.00">
+    <line key=7 class="yh-xypad__trail-line" opacity="0.64" x1="53.00" x2="58.00" y1="40.00" y2="45.00">
+    <line key=8 class="yh-xypad__trail-line" opacity="0.70" x1="58.00" x2="62.00" y1="45.00" y2="30.00">
+    <line class="yh-xypad__cross" x1="62.00" x2="62.00" y1="0" y2="100">
+    <line class="yh-xypad__cross" x1="0" x2="100" y1="30.00" y2="30.00">
+  <span aria-hidden="true" class="yh-xypad__dot" data-part="dot">
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--x" data-part="x-label" data-role="caption" data-text-leading="tight">
+    "Cutoff"
+  <span class="lib-text lib-tone yh-xypad__axis yh-xypad__axis--y" data-part="y-label" data-role="caption" data-text-leading="tight">
+    "Resonance"

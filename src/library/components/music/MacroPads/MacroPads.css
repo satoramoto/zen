@@ -1,0 +1,40 @@
+/* MacroPads: a short bank of XY pads, each with its caption above it. Contract variables plus the
+   local --yh-mp-* knob. The pads are XYPad's own tree, so their field, trail and crosshair look is
+   XYPad.css's; this file only arranges the bank and its captions. */
+
+.yh-macropads {
+  /* Pads across: two in `two-up`, one in `one-up`. */
+  --yh-mp-cols: 2;
+
+  display: grid;
+  grid-template-columns: repeat(var(--yh-mp-cols), minmax(0, 1fr));
+  align-content: start;
+  gap: var(--space-2);
+  width: 100%;
+}
+.yh-macropads[data-form='one-up'] {
+  --yh-mp-cols: 1;
+}
+
+/* One macro: its caption over its field. */
+.yh-macropads__pad {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* The caption: a label Text at caption size, quiet, one line cut with an ellipsis. */
+.yh-macropads__label {
+  overflow: hidden;
+  color: var(--text-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* No pads: one empty well, so an empty bank still has a place on the screen. */
+.yh-macropads__empty {
+  width: 100%;
+  aspect-ratio: 4;
+}

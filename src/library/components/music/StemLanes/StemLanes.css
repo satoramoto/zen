@@ -1,0 +1,201 @@
+/* StemLanes: one deck faceplate. A Surface plate (`raised`, `card`) holds a shared ruler (loop
+   window, playhead, cue flags) and one lane per stem (hue mark, name, mirrored envelope, M / S
+   pair), both in the same four-column grid so times line up. Contract variables only, plus the
+   local --yh-stem-* knobs listed in StemLanes.tsx. */
+
+.yh-stemlanes {
+  /* The form's lengths: the model sets these inline from STEM_LANES_SIZE (StemLanes.forms.ts);
+     these are the `four` values, for a deck drawn without one. */
+  --yh-stem-ruler-h: var(--control-h);
+  --yh-stem-lane-h: calc(var(--control-h) * 1.25);
+  --yh-stem-mark-w: var(--space-1);
+  --yh-stem-name-w: calc(var(--space-6) * 1.5);
+  --yh-stem-keys-w: calc(var(--control-h) * 4);
+  --yh-stem-pad: var(--space-2);
+  --yh-stem-gap: var(--space-1);
+  /* The envelope's edge and washes, and the muted lane's fade. */
+  --yh-stem-line: max(1px, var(--border-width));
+  --yh-stem-fill-opacity: 0.3;
+  --yh-stem-stroke-opacity: 0.85;
+  --yh-stem-muted-opacity: 0.4;
+  /* The loop band's wash, 0–1 of the text ink. */
+  --yh-stem-band-opacity: 0.12;
+  /* Positions, 0–1; the model sets them inline. */
+  --yh-stem-at: 0;
+  --yh-stem-start: 0;
+  --yh-stem-end: 1;
+  --yh-stem-position: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--yh-stem-gap);
+  width: 100%;
+  min-width: 0;
+  padding: var(--yh-stem-pad);
+  color: var(--text-1);
+}
+
+/* The ruler and a lane share one grid: the hue mark, the name, the time axis, the key pair. */
+.yh-stemlanes__ruler,
+.yh-stemlanes__lane {
+  display: grid;
+  grid-template-columns: var(--yh-stem-mark-w) var(--yh-stem-name-w) minmax(0, 1fr) var(--yh-stem-keys-w);
+  gap: var(--yh-stem-gap);
+  align-items: center;
+  min-width: 0;
+}
+
+.yh-stemlanes__ruler {
+  height: var(--yh-stem-ruler-h);
+}
+
+/* The shared time axis: the ruler's track sits in the lanes' envelope column, so a cue's `at` and
+   the playhead line up with the peaks under them. */
+.yh-stemlanes__track {
+  position: relative;
+  grid-column: 3;
+  height: 100%;
+  min-width: 0;
+}
+
+/* The loop window: a shaded band with a hairline edge at each end. */
+.yh-stemlanes__window {
+  position: absolute;
+  inset-block: 0;
+  left: calc(var(--yh-stem-start) * 100%);
+  width: calc((var(--yh-stem-end) - var(--yh-stem-start)) * 100%);
+  background: color-mix(in oklab, var(--text-1) calc(var(--yh-stem-band-opacity) * 100%), transparent);
+  border-inline: 1px solid var(--border-strong);
+}
+
+/* The playhead: a hairline through the ruler with a small foot. */
+.yh-stemlanes__playhead {
+  position: absolute;
+  inset-block: 0;
+  left: calc(var(--yh-stem-position) * 100%);
+  width: 2px;
+  translate: -1px 0;
+  background: var(--text-1);
+  pointer-events: none;
+}
+.yh-stemlanes__playhead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: var(--space-1);
+  height: var(--space-1);
+  translate: -50% 0;
+  background: var(--text-1);
+  border-radius: var(--radius-pill);
+}
+
+/* A cue flag: a marker at its time, its label under it. Stacked, the label is not drawn and the
+   marker is the whole flag; the button keeps its spoken name either way. */
+.yh-stemlanes__cue {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--yh-stem-at) * 100%);
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: var(--space-3);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+}
+.yh-stemlanes__cue:disabled {
+  cursor: default;
+}
+.yh-stemlanes__cue::before {
+  content: '';
+  flex: 1 1 0;
+  width: 1px;
+  min-height: 0;
+  background: var(--border-strong);
+}
+.yh-stemlanes__cue:not(:disabled):hover {
+  color: var(--text-1);
+}
+.yh-stemlanes__cue:not(:disabled):hover::before {
+  background: var(--text-2);
+}
+/* A caption Text in the label case: the flag's word, never wider than it must be. */
+.yh-stemlanes__cue-label {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* The lanes, top to bottom. */
+.yh-stemlanes__lane-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--yh-stem-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yh-stemlanes__lane {
+  height: var(--yh-stem-lane-h);
+}
+
+/* The hue mark: a thin bar of the lane's identity colour, full lane height. */
+.yh-stemlanes__mark {
+  align-self: stretch;
+  width: var(--yh-stem-mark-w);
+  background: var(--hue, var(--text-3));
+  border-radius: var(--radius-pill);
+}
+
+/* A label Text, strong and tight; it truncates to its column. */
+.yh-stemlanes__name {
+  min-width: 0;
+}
+
+/* The mirrored envelope. One path per lane: the hue's wash for the body and its edge for the line,
+   at the knobs' weights (`vector-effect` keeps the line a hairline at any width). */
+.yh-stemlanes__peaks {
+  display: block;
+  width: 100%;
+  /* A lane's height, not `100%`: in an auto-sized grid row a percentage height falls back to the
+     SVG's intrinsic 300 px, which makes every envelope overflow its lane. */
+  height: var(--yh-stem-lane-h);
+  min-width: 0;
+  overflow: visible;
+}
+.yh-stemlanes__envelope {
+  fill: var(--hue, var(--text-3));
+  fill-opacity: var(--yh-stem-fill-opacity);
+  stroke: var(--hue, var(--text-3));
+  stroke-opacity: var(--yh-stem-stroke-opacity);
+  stroke-width: var(--yh-stem-line);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* A muted lane recedes: its mark and envelope fade; the lamp says the flag in words. */
+.yh-stemlanes__lane[data-muted] .yh-stemlanes__mark,
+.yh-stemlanes__lane[data-muted] .yh-stemlanes__peaks {
+  opacity: var(--yh-stem-muted-opacity);
+}
+
+/* The M / S pair, at the lane's end. */
+.yh-stemlanes__keys {
+  display: flex;
+  gap: var(--yh-stem-gap);
+  justify-self: end;
+}
+
+/* No stems: the deck keeps a lane's height, so its face reads as an empty deck, not a broken one. */
+.yh-stemlanes__empty {
+  display: flex;
+  align-items: center;
+  height: var(--yh-stem-lane-h);
+  padding-inline: var(--space-2);
+}

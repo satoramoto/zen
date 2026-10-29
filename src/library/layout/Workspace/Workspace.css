@@ -1,0 +1,62 @@
+/* Workspace: a tab strip, an edit palette, and the open tab's screen, each region framed while
+   editing. The frame's plate is a Surface (its own hairline border); the tools are Buttons and the
+   binding a Segmented — this file only lays them out, never paints. Local spacing under
+   **Tuning knobs** in Workspace.tsx. */
+
+.yh-workspace {
+  --yh-workspace-gap: var(--space-2);
+  --yh-workspace-frame-gap: var(--space-1);
+
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--yh-workspace-gap);
+  align-content: stretch;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+}
+
+.yh-workspace[data-editing] {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.yh-workspace__palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+  min-width: 0;
+}
+
+/* The frame is the region's edit plate; its bar floats over the region's top edge so the slot's
+   height stays exactly what the solver gave the region. */
+.yh-workspace__frame {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.yh-workspace__bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  min-width: 0;
+  overflow-x: auto;
+  padding: var(--yh-workspace-frame-gap);
+}
+
+.yh-workspace__body {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  /* Clearance for the floating frame bar (edit chrome never covers the region's top). */
+  padding-top: calc(var(--control-h) + var(--space-1));
+}

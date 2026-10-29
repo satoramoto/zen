@@ -34,6 +34,16 @@ import PartMarks from '../components/music/PartMarks/PartMarks.svelte';
 import SectionName from '../components/music/SectionName/SectionName.svelte';
 import TempoReadout from '../components/music/TempoReadout/TempoReadout.svelte';
 import Meter from '../components/music/Meter/Meter.svelte';
+import LoopPie from '../components/music/LoopPie/LoopPie.svelte';
+import LoopGrid from '../components/music/LoopGrid/LoopGrid.svelte';
+import SendBars from '../components/music/SendBars/SendBars.svelte';
+import MixBand from '../components/music/MixBand/MixBand.svelte';
+import ChordStrip from '../components/music/ChordStrip/ChordStrip.svelte';
+import ArpSequencer from '../components/music/ArpSequencer/ArpSequencer.svelte';
+import XYPad from '../components/music/XYPad/XYPad.svelte';
+import MacroPads from '../components/music/MacroPads/MacroPads.svelte';
+import StemLanes from '../components/music/StemLanes/StemLanes.svelte';
+import TransitionRow from '../components/music/TransitionRow/TransitionRow.svelte';
 import BarReadout from '../components/music/BarReadout/BarReadout.svelte';
 import SendReadout from '../components/music/SendReadout/SendReadout.svelte';
 import SoundCell from '../components/music/SoundCell/SoundCell.svelte';
@@ -134,6 +144,16 @@ export function svelteComponent(name: string): Component<any> {
     StatusLine,
     WaitingChip,
     Meter,
+    LoopPie,
+    LoopGrid,
+    SendBars,
+    MixBand,
+    ChordStrip,
+    ArpSequencer,
+    XYPad,
+    MacroPads,
+    StemLanes,
+    TransitionRow,
     BarReadout,
     SendReadout,
     SoundCell,

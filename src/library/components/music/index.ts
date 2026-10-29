@@ -14,3 +14,28 @@ export { PartMarks, type PartMarksProps } from './PartMarks/PartMarks';
 export { SoundCell, type SoundCellProps } from './SoundCell/SoundCell';
 export { RackCell, type RackCellProps } from './RackCell/RackCell';
 export { Meter, type MeterProps, type MeterLayout, type MeterSide } from './Meter/Meter';
+
+// The live workspace's parts, and the plain data they share (docs/live-workspace.md).
+export * from './live.model';
+export { XYPad, XY_PAD_FORMS, XY_TRAIL_POINTS, clamp01, xyTrailPoints, type XYPadProps, type XYPadForm } from './XYPad/XYPad';
+export { MacroPads, MACRO_PADS_FORMS, MACRO_PADS_MAX, type MacroPadsProps, type MacroPadsForm, type MacroPad } from './MacroPads/MacroPads';
+export { StemLanes, STEM_LANES_FORMS, type StemLanesProps, type StemLanesForm } from './StemLanes/StemLanes';
+export {
+  TransitionRow,
+  TRANSITION_STATES,
+  TRANSITION_LABELS,
+  type TransitionRowProps,
+  type TransitionPad,
+  type TransitionState,
+} from './TransitionRow/TransitionRow';
+export { ChordStrip, CHORD_STRIP_FORMS, type ChordStripProps, type ChordStripForm, type ChordStripState } from './ChordStrip/ChordStrip';
+export { ArpSequencer, ARP_SEQUENCER_FORMS, type ArpSequencerProps, type ArpSequencerForm } from './ArpSequencer/ArpSequencer';
+export { LoopPie, LOOP_PIE_FORMS, clampPhase, loopWedge, type LoopPieProps, type LoopPieForm } from './LoopPie/LoopPie';
+export { LoopGrid, LOOP_GRID_FORMS, cellName, type LoopGridProps, type LoopGridForm } from './LoopGrid/LoopGrid';
+export { SendBars, SEND_BARS_FORMS, SEND_UNITY, clampSend, type SendBarsProps, type SendBarsForm } from './SendBars/SendBars';
+export {
+  MixBand,
+  MIX_BAND_FORMS,
+  type MixBandProps,
+  type MixBandForm,
+} from './MixBand/MixBand';

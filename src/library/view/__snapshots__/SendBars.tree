@@ -1,0 +1,151 @@
+## Default
+<div class="yh-sendbars" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "A"
+    <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "B"
+    <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+
+## EveryState #1
+<div class="yh-sendbars" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "A"
+    <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "B"
+    <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+
+## EveryState #2
+<div class="yh-sendbars" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "A"
+    <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "B"
+    <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+
+## EveryState #3
+<div class="yh-sendbars" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "A"
+    <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="1" aria-valuetext="100 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 100%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "B"
+    <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="1" aria-valuetext="100 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 100%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+
+## EveryState #4
+<div class="yh-sendbars" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "Delay"
+    <div aria-label="Delay send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-hue="5" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "Verb"
+    <div aria-label="Verb send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.2" aria-valuetext="20 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 20%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+
+## Dense
+<div class="yh-sendbars" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "A"
+    <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.6" aria-valuetext="60 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 60%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "B"
+    <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.3" aria-valuetext="30 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 30%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+
+## Empty
+<div class="yh-sendbars" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "A"
+    <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "B"
+    <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+
+## Disabled
+<div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+  <div class="yh-sendbars__row" data-part="row" data-send="0">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "A"
+    <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=send0 @keydown=send0>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+  <div class="yh-sendbars__row" data-part="row" data-send="1">
+    <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+      "B"
+    <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=send1 @keydown=send1>
+      <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+      <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+      <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+      <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
