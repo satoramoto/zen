@@ -1,0 +1,28 @@
+/* Browser approximations of Commons.Color/Style. Not a new Zen pack. */
+.om-desktop { --om-bg: #1a1b26; --om-fg: #c0caf5; --om-muted: #8993b5; --om-accent: #7aa2f7; --om-danger: #f7768e; background: #101116; padding: 28px; min-height: 100vh; box-sizing: border-box; color-scheme: dark; }
+.om-desktop[data-theme="light"] { --om-bg: #f5f5f0; --om-fg: #24283b; --om-muted: #575f78; --om-accent: #3159a3; --om-danger: #ae314b; background: #deded8; color-scheme: light; }
+.om-plugin { margin: 0 auto; padding: 20px; background: var(--om-bg); color: var(--om-fg); font: 13px/1.5 'JetBrains Mono', monospace; border: 1px solid color-mix(in srgb, var(--om-fg) 25%, transparent); box-sizing: border-box; }
+.om-plugin * { box-sizing: border-box; }
+.om-column { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.om-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 0; }
+.om-text { min-width: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.om-text.grow { flex: 1; }
+.om-text.muted, .om-plugin small { color: var(--om-muted); }
+.om-text.danger { color: var(--om-danger); }
+.om-plugin small { display: block; font-size: 11px; }
+.om-section { display: flex; flex-direction: column; gap: 12px; padding: 12px 0; border-top: 1px solid color-mix(in srgb, var(--om-fg) 18%, transparent); }
+.om-section h2 { font: 600 11px/1.5 'JetBrains Mono', monospace; letter-spacing: .08em; color: var(--om-muted); margin: 0 0 2px; text-transform: uppercase; }
+.om-plugin button, .om-plugin select, .om-plugin input:not([type="range"]):not([type="checkbox"]) { font: inherit; color: var(--om-fg); background: color-mix(in srgb, var(--om-fg) 4%, var(--om-bg)); border: 1px solid color-mix(in srgb, var(--om-fg) 40%, transparent); border-radius: 0; padding: 6px 10px; }
+.om-plugin button { cursor: pointer; }
+.om-plugin button:hover, .om-plugin button[aria-pressed="true"] { background: color-mix(in srgb, var(--om-fg) 18%, var(--om-bg)); }
+.om-plugin :focus-visible { outline: 2px solid var(--om-accent); outline-offset: 3px; }
+.om-plugin :disabled { opacity: .45; cursor: not-allowed; }
+.om-slider { display: flex; align-items: center; gap: 12px; }
+.om-slider input { flex: 1; min-width: 50px; accent-color: var(--om-accent); }
+.om-slider output { width: 4ch; text-align: right; }
+.om-toggle { display: flex; align-items: center; gap: 8px; }
+.om-toggle input { accent-color: var(--om-accent); }
+.om-select { display: flex; flex-direction: column; gap: 4px; }
+.om-select > span { font-size: 11px; color: var(--om-muted); }
+.om-select select { width: 100%; }
+@media (max-width: 600px) { .om-desktop { padding: 8px; } .om-plugin { padding: 12px; } }
