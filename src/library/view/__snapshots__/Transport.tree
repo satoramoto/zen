@@ -1,0 +1,54 @@
+## Default
+<div aria-label="Transport" class="yh-transport" data-form="bar" data-part="root" role="group">
+  <Button disabled=false label="Pause" name="Pause" size="sm" variant="primary" @onPress=play>
+  <LampButton disabled=false label="Loop" name="Loop the set" on=true waiting=false @onToggle=loop>
+  <span class="yh-transport__tempogroup" data-part="tempo">
+    <span class="lib-text lib-tone yh-transport__tempo" data-part="tempovalue" data-role="numeral" data-tabular="">
+      "112"
+  <Button label="49.3.1" name="Beat position 49.3.1. Show elapsed time" @onPress=unit>
+
+## EveryState #1
+<div aria-label="Transport" class="yh-transport" data-form="bar" data-part="root" role="group">
+  <Button disabled=false label="Play" name="Play" size="sm" variant="secondary" @onPress=play>
+  <Button label="1.1.1" name="Beat position 1.1.1. Show elapsed time" @onPress=unit>
+
+## EveryState #2
+<div aria-label="Transport" class="yh-transport" data-form="bar" data-part="root" role="group">
+  <Button disabled=false label="Pause" name="Pause" size="sm" variant="primary" @onPress=play>
+  <LampButton disabled=false label="Loop" name="Loop" on=true waiting=false @onToggle=loop>
+  <span class="yh-transport__tempogroup" data-part="tempo">
+    <span class="lib-text lib-tone yh-transport__tempo" data-part="tempovalue" data-role="numeral" data-tabular="">
+      "112"
+  <Button label="49.3.1" name="Beat position 49.3.1. Show elapsed time" @onPress=unit>
+
+## EveryState #3
+<div aria-label="Transport" class="yh-transport" data-form="bar" data-part="root" role="group">
+  <Button disabled=false label="Pause" name="Pause" size="sm" variant="primary" @onPress=play>
+  <LampButton disabled=false label="Loop" name="Looping the break" on=false waiting=true @onToggle=loop>
+  <span class="yh-transport__tempogroup" data-part="tempo">
+    <span class="lib-text lib-tone yh-transport__tempo" data-part="tempovalue" data-role="numeral" data-tabular="">
+      "128"
+  <Button label="101.1.1" name="Beat position 101.1.1. Show elapsed time" @onPress=unit>
+
+## EveryState #4
+<div aria-label="Transport" class="yh-transport" data-form="bar" data-part="root" role="group">
+  <Button disabled=false label="Play" name="Play" size="sm" variant="secondary" @onPress=play>
+  <span class="yh-transport__tempogroup" data-part="tempo">
+    <span class="lib-text lib-tone yh-transport__tempo" data-part="tempovalue" data-role="numeral" data-tabular="">
+      "100"
+  <Button label="0:30" name="Elapsed time 0:30" @onPress=unit>
+
+## Dense
+<div aria-label="Transport" class="yh-transport" data-form="bar" data-part="root" role="group">
+  <Button disabled=false label="Pause" name="Pause" size="sm" variant="primary" @onPress=play>
+  <Button label="49.3.1" name="Beat position 49.3.1. Show elapsed time" @onPress=unit>
+
+## Empty
+<div aria-label="Transport" class="yh-transport" data-form="bar" data-part="root" role="group">
+  <Button disabled=false label="Play" name="Play" size="sm" variant="secondary" @onPress=play>
+  <Button label="0:00" name="Elapsed time 0:00" @onPress=unit>
+
+## Disabled
+<div aria-label="Transport" class="yh-transport" data-disabled="true" data-form="bar" data-part="root" role="group">
+  <Button disabled=true label="Play" name="Play" size="sm" variant="secondary" @onPress=play>
+  <Button label="49.3.1" name="Beat position 49.3.1. Show elapsed time" @onPress=unit>

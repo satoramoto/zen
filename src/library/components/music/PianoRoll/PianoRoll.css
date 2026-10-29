@@ -1,0 +1,108 @@
+/* PianoRoll: a compact keyboard and note timeline. Contract variables plus the local
+   --yh-roll-* (declared under **Tuning knobs** in PianoRoll.tsx). */
+
+.yh-pianoroll {
+  --yh-roll-rows: 8;
+  --yh-roll-ink: var(--text-2);
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1);
+  align-items: stretch;
+  min-width: 0;
+  margin: 0;
+}
+
+.yh-pianoroll__keys {
+  display: grid;
+  grid-template-rows: repeat(var(--yh-roll-rows), minmax(0, 1fr));
+  min-height: 0;
+}
+
+.yh-pianoroll__key {
+  display: flex;
+  align-items: center;
+  padding-right: var(--space-1);
+  color: var(--text-3);
+}
+
+.yh-pianoroll__key[data-black] {
+  color: var(--text-4);
+}
+
+.yh-pianoroll__grid {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(var(--yh-roll-rows), minmax(0, 1fr));
+  min-height: 0;
+  border-left: 1px solid var(--border-strong);
+}
+
+.yh-pianoroll__lane {
+  border-bottom: 1px solid var(--border);
+}
+
+.yh-pianoroll__lane[data-black] {
+  background: color-mix(in srgb, var(--text-1) 6%, transparent);
+}
+
+.yh-pianoroll__barline,
+.yh-pianoroll__beatline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--border-width);
+  background: var(--border-strong);
+  pointer-events: none;
+}
+
+.yh-pianoroll__beatline {
+  background: var(--border);
+}
+
+.yh-pianoroll__note {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding-left: var(--space-1);
+  overflow: hidden;
+  white-space: nowrap;
+  border-radius: var(--radius-control);
+  background: var(--yh-roll-ink);
+  opacity: 0.85;
+  color: var(--text-1);
+}
+
+.yh-pianoroll__note[data-hue='1'] { background: var(--hue-1); }
+.yh-pianoroll__note[data-hue='2'] { background: var(--hue-2); }
+.yh-pianoroll__note[data-hue='3'] { background: var(--hue-3); }
+.yh-pianoroll__note[data-hue='4'] { background: var(--hue-4); }
+.yh-pianoroll__note[data-hue='5'] { background: var(--hue-5); }
+
+.yh-pianoroll__note[data-emphasis] {
+  outline: var(--border-width) solid var(--text-1);
+  outline-offset: calc(var(--border-width) * -1);
+}
+
+.yh-pianoroll__playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(var(--border-width) * 2);
+  background: var(--text-1);
+  pointer-events: none;
+}
+
+.yh-pianoroll__bars {
+  display: flex;
+  gap: var(--space-1);
+  grid-column: 2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-3);
+}
+
+.yh-pianoroll[data-disabled] {
+  opacity: 0.5;
+}

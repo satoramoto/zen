@@ -1,0 +1,41 @@
+/* DeviceFace: one effect's faceplate. The plate is a Surface, the header Buttons; this file
+   only lays them out, never paints. Local spacing under **Tuning knobs** in DeviceFace.tsx. */
+
+.yh-deviceface {
+  --yh-deviceface-gap: var(--space-2);
+
+  display: grid;
+  gap: var(--yh-deviceface-gap);
+  align-content: start;
+  min-width: 0;
+  margin: 0;
+}
+
+.yh-deviceface[data-on='false'] {
+  opacity: 0.55;
+}
+
+.yh-deviceface__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-1);
+  align-items: center;
+  min-width: 0;
+}
+
+.yh-deviceface__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  min-width: 0;
+}
+
+.yh-deviceface[data-folded] .yh-deviceface__body {
+  display: none;
+}
+
+.yh-deviceface[data-selected] {
+  outline: var(--border-width) solid currentColor;
+  outline-offset: calc(var(--border-width) * -1);
+}

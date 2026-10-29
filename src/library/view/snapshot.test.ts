@@ -272,6 +272,12 @@ import { stemLanesView } from '../components/music/StemLanes/StemLanes.model';
 import { stemLanesStories } from '../components/music/StemLanes/StemLanes.fixtures';
 import { transitionRowView } from '../components/music/TransitionRow/TransitionRow.model';
 import { transitionRowStories } from '../components/music/TransitionRow/TransitionRow.fixtures';
+import { transportView } from '../components/music/Transport/Transport.model';
+import { transportStories } from '../components/music/Transport/Transport.fixtures';
+import { deviceFaceView } from '../components/music/DeviceFace/DeviceFace.model';
+import { deviceFaceStories } from '../components/music/DeviceFace/DeviceFace.fixtures';
+import { pianoRollView } from '../components/music/PianoRoll/PianoRoll.model';
+import { pianoRollStories } from '../components/music/PianoRoll/PianoRoll.fixtures';
 import { showView, showTab } from '../yahaha/Show/Show.model';
 import { showStories } from '../yahaha/Show/Show.fixtures';
 
@@ -286,3 +292,6 @@ snapshot('MacroPads', (props) => macroPadsView(props as Parameters<typeof macroP
 snapshot('StemLanes', (props) => stemLanesView(props as Parameters<typeof stemLanesView>[0], 'four'), stemLanesStories);
 snapshot('TransitionRow', (props) => transitionRowView(props as Parameters<typeof transitionRowView>[0], 'row'), transitionRowStories);
 snapshot('Show', (props) => showView(props as Parameters<typeof showView>[0], showTab((props as { active?: string }).active)), showStories);
+snapshot('Transport', (props) => transportView(props as Parameters<typeof transportView>[0], 'bar'), transportStories);
+snapshot('DeviceFace', (props) => deviceFaceView(props as Parameters<typeof deviceFaceView>[0], 'face'), deviceFaceStories);
+snapshot('PianoRoll', (props) => pianoRollView(props as Parameters<typeof pianoRollView>[0], 'full'), pianoRollStories);

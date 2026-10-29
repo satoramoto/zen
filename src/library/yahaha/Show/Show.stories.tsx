@@ -56,11 +56,11 @@ export const MixSends: Story = live(s.MixSends);
 /** Stem deck: four Demucs lanes, hot cues, cuts. */
 export const Stems: Story = live(s.Stems);
 
-/** JAM off: the lamp goes out, the arrangement owns playback. */
+/** JAM off: the loop switch asks for it back. */
 export const NoJam: Story = live(s.NoJam, {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByRole('button', { name: /JAM off/ }));
+    await userEvent.click(canvas.getByRole('button', { name: /JAM/ }));
     await expect(args.onJam).toHaveBeenCalledWith(true);
   },
 });

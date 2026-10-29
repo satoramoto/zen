@@ -1,0 +1,69 @@
+## Default
+<div class="lib-surface yh-deviceface" data-form="face" data-material="key" data-on="true" data-part="root" data-radius="card">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=false label="On" name="FX A Delay power" on=true @onToggle=power>
+    <Button disabled=false label="FX A Delay" name="FX A Delay" variant="quiet" @onPress=select>
+    <Button disabled=false name="Fold FX A Delay" size="sm" symbol="up" variant="quiet" @onPress=fold>
+  <div class="yh-deviceface__body" data-part="body">
+    {params}
+
+## EveryState #1
+<div class="lib-surface yh-deviceface" data-form="face" data-material="key" data-on="true" data-part="root" data-radius="card" data-selected="true">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=false label="On" name="FX A Delay power" on=true @onToggle=power>
+    <Button disabled=false label="FX A Delay" name="FX A Delay" variant="quiet" @onPress=select>
+    <Button disabled=false name="Fold FX A Delay" size="sm" symbol="up" variant="quiet" @onPress=fold>
+  <div class="yh-deviceface__body" data-part="body">
+    {params}
+
+## EveryState #2
+<div class="lib-surface yh-deviceface" data-form="face" data-material="key" data-on="true" data-part="root" data-radius="card">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=false label="On" name="FX B Reverb power" on=true @onToggle=power>
+    <Button disabled=false label="FX B Reverb" name="FX B Reverb" variant="quiet" @onPress=select>
+    <Button disabled=false name="Fold FX B Reverb" size="sm" symbol="up" variant="quiet" @onPress=fold>
+  <div class="yh-deviceface__body" data-part="body">
+    {params}
+
+## EveryState #3
+<div class="lib-surface yh-deviceface" data-form="face" data-material="key" data-on="false" data-part="root" data-radius="card">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=false label="On" name="Filter power" on=false @onToggle=power>
+    <Button disabled=false label="Filter" name="Filter" variant="quiet" @onPress=select>
+    <Button disabled=false name="Fold Filter" size="sm" symbol="up" variant="quiet" @onPress=fold>
+  <div class="yh-deviceface__body" data-part="body">
+    {params}
+
+## EveryState #4
+<div class="lib-surface yh-deviceface" data-folded="true" data-form="face" data-material="key" data-on="true" data-part="root" data-radius="card">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=false label="On" name="Folded drive power" on=true @onToggle=power>
+    <Button disabled=false label="Folded drive" name="Folded drive" variant="quiet" @onPress=select>
+    <Button disabled=false name="Unfold Folded drive" size="sm" symbol="down" variant="quiet" @onPress=fold>
+
+## Dense
+<div class="lib-surface yh-deviceface" data-form="face" data-material="key" data-on="true" data-part="root" data-radius="card">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=false label="On" name="FX A Delay power" on=true @onToggle=power>
+    <Button disabled=false label="FX A Delay" name="FX A Delay" variant="quiet" @onPress=select>
+    <Button disabled=false name="Fold FX A Delay" size="sm" symbol="up" variant="quiet" @onPress=fold>
+  <div class="yh-deviceface__body" data-part="body">
+    {params}
+
+## Empty
+<div class="lib-surface yh-deviceface" data-form="face" data-material="key" data-on="false" data-part="root" data-radius="card">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=false label="On" name="No device power" on=false @onToggle=power>
+    <Button disabled=false label="No device" name="No device" variant="quiet" @onPress=select>
+    <Button disabled=false name="Fold No device" size="sm" symbol="up" variant="quiet" @onPress=fold>
+  <div class="yh-deviceface__body" data-part="body">
+    {params}
+
+## Disabled
+<div class="lib-surface yh-deviceface" data-disabled="true" data-form="face" data-material="key" data-on="true" data-part="root" data-radius="card">
+  <div class="yh-deviceface__head" data-part="head">
+    <LampButton disabled=true label="On" name="FX A Delay power" on=true @onToggle=power>
+    <Button disabled=true label="FX A Delay" name="FX A Delay" variant="quiet" @onPress=select>
+    <Button disabled=true name="Fold FX A Delay" size="sm" symbol="up" variant="quiet" @onPress=fold>
+  <div class="yh-deviceface__body" data-part="body">
+    {params}
