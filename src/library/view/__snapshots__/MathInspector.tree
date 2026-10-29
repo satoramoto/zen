@@ -1,0 +1,117 @@
+## SelectedObject
+<section aria-label="Selected integer" class="lib-stack lib-math-inspector" data-direction="column" data-gap="4">
+  <h3 class="lib-text lib-tone lib-math-inspector__heading" data-role="heading">
+    "Selected integer"
+  <div class="lib-exact-value" data-kind="exact">
+    <output class="lib-text lib-tone lib-exact-value__value" data-canonical="36" data-role="numeral">
+      "36"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+      "ℤ⁺ · Exact"
+  <div class="lib-stack" data-direction="column" data-gap="2">
+    <h4 class="lib-text lib-tone lib-math-inspector__heading" data-role="label">
+      "Properties"
+    <dl class="lib-math-inspector__properties">
+      <div key=Factorization:0 class="lib-math-inspector__property">
+        <dt class="lib-text lib-tone" data-role="body" data-tone="secondary">
+          "Factorization"
+        <dd class="lib-text lib-tone lib-math-inspector__property-value" data-role="code">
+          "2² × 3²"
+      <div key=Divisor count:1 class="lib-math-inspector__property">
+        <dt class="lib-text lib-tone" data-role="body" data-tone="secondary">
+          "Divisor count"
+        <dd class="lib-text lib-tone lib-math-inspector__property-value" data-role="code">
+          "9"
+      <div key=Coordinates:2 class="lib-math-inspector__property">
+        <dt class="lib-text lib-tone" data-role="body" data-tone="secondary">
+          "Coordinates"
+        <dd class="lib-text lib-tone lib-math-inspector__property-value" data-role="code">
+          "(15, 1, 0)"
+  <div class="lib-stack" data-direction="column" data-gap="2">
+    <h4 class="lib-text lib-tone lib-math-inspector__heading" data-role="label">
+      "Membership"
+    <ul class="lib-stack lib-math-inspector__memberships" data-direction="column" data-gap="3">
+      <li key=a class="lib-stack" data-direction="column" data-gap="1" data-matches="true" data-membership="a">
+        <div class="lib-stack" data-align="baseline" data-direction="row" data-gap="2" data-justify="between" data-wrap="true">
+          <span class="lib-text lib-tone" data-role="body">
+            <span aria-hidden="true" class="lib-text lib-tone" data-role="body" data-tone="hue-1">
+              "● "
+            "Multiples of 3"
+          <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+            "Included"
+        <code class="lib-text lib-tone lib-math-inspector__expression" data-role="code" data-text-size="caption" data-tone="secondary">
+          "36 mod 3 = 0"
+      <li key=b class="lib-stack" data-direction="column" data-gap="1" data-matches="true" data-membership="b">
+        <div class="lib-stack" data-align="baseline" data-direction="row" data-gap="2" data-justify="between" data-wrap="true">
+          <span class="lib-text lib-tone" data-role="body">
+            <span aria-hidden="true" class="lib-text lib-tone" data-role="body" data-tone="hue-2">
+              "● "
+            "Squares"
+          <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+            "Included"
+        <code class="lib-text lib-tone lib-math-inspector__expression" data-role="code" data-text-size="caption" data-tone="secondary">
+          "6² = 36"
+      <li key=c class="lib-stack" data-direction="column" data-gap="1" data-matches="false" data-membership="c">
+        <div class="lib-stack" data-align="baseline" data-direction="row" data-gap="2" data-justify="between" data-wrap="true">
+          <span class="lib-text lib-tone" data-role="body">
+            <span aria-hidden="true" class="lib-text lib-tone" data-role="body" data-tone="hue-3">
+              "○ "
+            "Prime numbers"
+          <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+            "Not included"
+        <code class="lib-text lib-tone lib-math-inspector__expression" data-role="code" data-text-size="caption" data-tone="secondary">
+          "36 = 2 × 18"
+
+## LargeExactObject
+<section aria-label="Exact object" class="lib-stack lib-math-inspector" data-direction="column" data-gap="4">
+  <h3 class="lib-text lib-tone lib-math-inspector__heading" data-role="heading">
+    "Exact object"
+  <div class="lib-exact-value" data-kind="exact">
+    <output class="lib-text lib-tone lib-exact-value__value" data-canonical="900719925474099312345678901234567890" data-role="numeral">
+      "900719925474099312345678901234567890"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+      "ℤ · Exact"
+  <div class="lib-stack" data-direction="column" data-gap="2">
+    <h4 class="lib-text lib-tone lib-math-inspector__heading" data-role="label">
+      "Properties"
+    <dl class="lib-math-inspector__properties">
+      <div key=Canonical representation:0 class="lib-math-inspector__property">
+        <dt class="lib-text lib-tone" data-role="body" data-tone="secondary">
+          "Canonical representation"
+        <dd class="lib-text lib-tone lib-math-inspector__property-value" data-role="code">
+          "900719925474099312345678901234567890"
+  <div class="lib-stack" data-direction="column" data-gap="2">
+    <h4 class="lib-text lib-tone lib-math-inspector__heading" data-role="label">
+      "Membership"
+    <ul class="lib-stack lib-math-inspector__memberships" data-direction="column" data-gap="3">
+      <li key=even class="lib-stack" data-direction="column" data-gap="1" data-matches="true" data-membership="even">
+        <div class="lib-stack" data-align="baseline" data-direction="row" data-gap="2" data-justify="between" data-wrap="true">
+          <span class="lib-text lib-tone" data-role="body">
+            <span aria-hidden="true" class="lib-text lib-tone" data-role="body" data-tone="hue-1">
+              "● "
+            "Even integers"
+          <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+            "Included"
+        <code class="lib-text lib-tone lib-math-inspector__expression" data-role="code" data-text-size="caption" data-tone="secondary">
+          "900719925474099312345678901234567890 mod 2 = 0"
+
+## Empty
+<section aria-label="Selected object" class="lib-stack lib-math-inspector" data-direction="column" data-gap="4">
+  <h3 class="lib-text lib-tone lib-math-inspector__heading" data-role="heading">
+    "Selected object"
+  <div class="lib-exact-value" data-kind="exact">
+    <output class="lib-text lib-tone lib-exact-value__value" data-canonical="1" data-role="numeral">
+      "1"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+      "ℤ · Exact"
+  <div class="lib-stack" data-direction="column" data-gap="2">
+    <h4 class="lib-text lib-tone lib-math-inspector__heading" data-role="label">
+      "Properties"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+      "No properties supplied."
+    <dl class="lib-math-inspector__properties">
+  <div class="lib-stack" data-direction="column" data-gap="2">
+    <h4 class="lib-text lib-tone lib-math-inspector__heading" data-role="label">
+      "Membership"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+      "No membership predicates supplied."
+    <ul class="lib-stack lib-math-inspector__memberships" data-direction="column" data-gap="3">

@@ -1,0 +1,19 @@
+.lib-distribution-plot { display:flex; flex-direction:column; gap:var(--space-2); min-inline-size:0; }
+.lib-distribution-plot__chart > svg { inline-size:100%; block-size:auto; overflow:visible; }
+.lib-distribution-plot__tick { fill:var(--text-3); }
+.lib-distribution-plot__guide { stroke:var(--border); stroke-dasharray:3 5; }
+.lib-distribution-plot__baseline { stroke:var(--border-strong); }
+.lib-distribution-plot__target { fill:transparent; stroke:transparent; }
+.lib-distribution-plot__bar { fill:var(--hue-1); pointer-events:none; }
+.lib-distribution-plot[data-hue='2'] .lib-distribution-plot__bar { fill:var(--hue-2); }
+.lib-distribution-plot[data-hue='3'] .lib-distribution-plot__bar { fill:var(--hue-3); }
+.lib-distribution-plot[data-hue='4'] .lib-distribution-plot__bar { fill:var(--hue-4); }
+.lib-distribution-plot__bin[role='button'] { cursor:pointer; }
+.lib-distribution-plot__bin:focus { outline:none; }
+.lib-distribution-plot__bin:focus-visible .lib-distribution-plot__target,
+.lib-distribution-plot__bin[data-selected='true'] .lib-distribution-plot__target { stroke:var(--accent); stroke-width:2; }
+.lib-distribution-plot__bin:hover .lib-distribution-plot__target { fill:var(--surface-2); }
+.lib-distribution-plot__endpoints { display:flex; justify-content:space-between; gap:var(--space-3); }
+
+.lib-distribution-plot__chart { display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--space-2); }
+.lib-distribution-plot__scale { display:flex; flex-direction:column; justify-content:space-between; padding-block:var(--space-1); }

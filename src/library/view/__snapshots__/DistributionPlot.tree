@@ -1,0 +1,269 @@
+## Uniform
+<div class="lib-distribution-plot" data-hue="1">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Multiples of three by interval"
+  <div class="lib-distribution-plot__chart">
+    <div aria-hidden="true" class="lib-distribution-plot__scale">
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "100%"
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "0%"
+    <svg aria-label="Multiples of three by interval" role="group" viewBox="36 0 592 138">
+      <desc>
+        "Each bar is the proportion of matching observations in its interval. The vertical scale is fixed from zero to one hundred percent."
+      <line class="lib-distribution-plot__guide" x1="40" x2="624" y1="14" y2="14">
+      <line class="lib-distribution-plot__baseline" x1="40" x2="624" y1="126" y2="126">
+      <g key=0 aria-label="1–100: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="0" data-selected="false" role="group" tabindex="0" @click=select:0 @keydown=key:0>
+        <title>
+          "1–100: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="40" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="42.19" y="89.03999999999999">
+      <g key=1 aria-label="101–200: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="1" data-selected="false" role="group" tabindex="0" @click=select:1 @keydown=key:1>
+        <title>
+          "101–200: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="58.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="60.44" y="89.03999999999999">
+      <g key=2 aria-label="201–300: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="2" data-selected="false" role="group" tabindex="0" @click=select:2 @keydown=key:2>
+        <title>
+          "201–300: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="76.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="78.69" y="87.91999999999999">
+      <g key=3 aria-label="301–400: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="3" data-selected="false" role="group" tabindex="0" @click=select:3 @keydown=key:3>
+        <title>
+          "301–400: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="94.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="96.94" y="89.03999999999999">
+      <g key=4 aria-label="401–500: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="4" data-selected="false" role="group" tabindex="0" @click=select:4 @keydown=key:4>
+        <title>
+          "401–500: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="113" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="115.19" y="89.03999999999999">
+      <g key=5 aria-label="501–600: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="5" data-selected="false" role="group" tabindex="0" @click=select:5 @keydown=key:5>
+        <title>
+          "501–600: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="131.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="133.44" y="87.91999999999999">
+      <g key=6 aria-label="601–700: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="6" data-selected="false" role="group" tabindex="0" @click=select:6 @keydown=key:6>
+        <title>
+          "601–700: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="149.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="151.69" y="89.03999999999999">
+      <g key=7 aria-label="701–800: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="7" data-selected="false" role="group" tabindex="0" @click=select:7 @keydown=key:7>
+        <title>
+          "701–800: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="167.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="169.94" y="89.03999999999999">
+      <g key=8 aria-label="801–900: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="8" data-selected="false" role="group" tabindex="0" @click=select:8 @keydown=key:8>
+        <title>
+          "801–900: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="186" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="188.19" y="87.91999999999999">
+      <g key=9 aria-label="901–1000: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="9" data-selected="false" role="group" tabindex="0" @click=select:9 @keydown=key:9>
+        <title>
+          "901–1000: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="204.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="206.44" y="89.03999999999999">
+      <g key=10 aria-label="1001–1100: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="10" data-selected="false" role="group" tabindex="0" @click=select:10 @keydown=key:10>
+        <title>
+          "1001–1100: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="222.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="224.69" y="89.03999999999999">
+      <g key=11 aria-label="1101–1200: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="11" data-selected="false" role="group" tabindex="0" @click=select:11 @keydown=key:11>
+        <title>
+          "1101–1200: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="240.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="242.94" y="87.91999999999999">
+      <g key=12 aria-label="1201–1300: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="12" data-selected="false" role="group" tabindex="0" @click=select:12 @keydown=key:12>
+        <title>
+          "1201–1300: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="259" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="261.19" y="89.03999999999999">
+      <g key=13 aria-label="1301–1400: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="13" data-selected="false" role="group" tabindex="0" @click=select:13 @keydown=key:13>
+        <title>
+          "1301–1400: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="277.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="279.44" y="89.03999999999999">
+      <g key=14 aria-label="1401–1500: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="14" data-selected="false" role="group" tabindex="0" @click=select:14 @keydown=key:14>
+        <title>
+          "1401–1500: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="295.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="297.69" y="87.91999999999999">
+      <g key=15 aria-label="1501–1600: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="15" data-selected="false" role="group" tabindex="0" @click=select:15 @keydown=key:15>
+        <title>
+          "1501–1600: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="313.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="315.94" y="89.03999999999999">
+      <g key=16 aria-label="1601–1700: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="16" data-selected="false" role="group" tabindex="0" @click=select:16 @keydown=key:16>
+        <title>
+          "1601–1700: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="332" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="334.19" y="89.03999999999999">
+      <g key=17 aria-label="1701–1800: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="17" data-selected="false" role="group" tabindex="0" @click=select:17 @keydown=key:17>
+        <title>
+          "1701–1800: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="350.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="352.44" y="87.91999999999999">
+      <g key=18 aria-label="1801–1900: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="18" data-selected="false" role="group" tabindex="0" @click=select:18 @keydown=key:18>
+        <title>
+          "1801–1900: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="368.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="370.69" y="89.03999999999999">
+      <g key=19 aria-label="1901–2000: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="19" data-selected="false" role="group" tabindex="0" @click=select:19 @keydown=key:19>
+        <title>
+          "1901–2000: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="386.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="388.94" y="89.03999999999999">
+      <g key=20 aria-label="2001–2100: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="20" data-selected="false" role="group" tabindex="0" @click=select:20 @keydown=key:20>
+        <title>
+          "2001–2100: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="405" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="407.19" y="87.91999999999999">
+      <g key=21 aria-label="2101–2200: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="21" data-selected="false" role="group" tabindex="0" @click=select:21 @keydown=key:21>
+        <title>
+          "2101–2200: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="423.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="425.44" y="89.03999999999999">
+      <g key=22 aria-label="2201–2300: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="22" data-selected="false" role="group" tabindex="0" @click=select:22 @keydown=key:22>
+        <title>
+          "2201–2300: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="441.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="443.69" y="89.03999999999999">
+      <g key=23 aria-label="2301–2400: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="23" data-selected="false" role="group" tabindex="0" @click=select:23 @keydown=key:23>
+        <title>
+          "2301–2400: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="459.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="461.94" y="87.91999999999999">
+      <g key=24 aria-label="2401–2500: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="24" data-selected="false" role="group" tabindex="0" @click=select:24 @keydown=key:24>
+        <title>
+          "2401–2500: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="478" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="480.19" y="89.03999999999999">
+      <g key=25 aria-label="2501–2600: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="25" data-selected="false" role="group" tabindex="0" @click=select:25 @keydown=key:25>
+        <title>
+          "2501–2600: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="496.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="498.44" y="89.03999999999999">
+      <g key=26 aria-label="2601–2700: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="26" data-selected="false" role="group" tabindex="0" @click=select:26 @keydown=key:26>
+        <title>
+          "2601–2700: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="514.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="516.69" y="87.91999999999999">
+      <g key=27 aria-label="2701–2800: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="27" data-selected="false" role="group" tabindex="0" @click=select:27 @keydown=key:27>
+        <title>
+          "2701–2800: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="532.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="534.94" y="89.03999999999999">
+      <g key=28 aria-label="2801–2900: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="28" data-selected="false" role="group" tabindex="0" @click=select:28 @keydown=key:28>
+        <title>
+          "2801–2900: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="551" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="553.19" y="89.03999999999999">
+      <g key=29 aria-label="2901–3000: 34 of 100 (34.00%)" class="lib-distribution-plot__bin" data-bin-id="29" data-selected="false" role="group" tabindex="0" @click=select:29 @keydown=key:29>
+        <title>
+          "2901–3000: 34 of 100 (34.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="569.25" y="14">
+        <rect class="lib-distribution-plot__bar" height="38.080000000000005" width="13.870000000000001" x="571.44" y="87.91999999999999">
+      <g key=30 aria-label="3001–3100: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="30" data-selected="false" role="group" tabindex="0" @click=select:30 @keydown=key:30>
+        <title>
+          "3001–3100: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="587.5" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="589.69" y="89.03999999999999">
+      <g key=31 aria-label="3101–3200: 33 of 100 (33.00%)" class="lib-distribution-plot__bin" data-bin-id="31" data-selected="false" role="group" tabindex="0" @click=select:31 @keydown=key:31>
+        <title>
+          "3101–3200: 33 of 100 (33.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="18.25" x="605.75" y="14">
+        <rect class="lib-distribution-plot__bar" height="36.96" width="13.870000000000001" x="607.94" y="89.03999999999999">
+  <div class="lib-distribution-plot__endpoints">
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      "1"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      "3,200"
+
+## Uneven
+<div class="lib-distribution-plot" data-hue="2">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Matching share by interval"
+  <div class="lib-distribution-plot__chart">
+    <div aria-hidden="true" class="lib-distribution-plot__scale">
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "100%"
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "0%"
+    <svg aria-label="Matching share by interval" role="group" viewBox="36 0 592 138">
+      <desc>
+        "Each bar is the proportion of matching observations in its interval. The vertical scale is fixed from zero to one hundred percent."
+      <line class="lib-distribution-plot__guide" x1="40" x2="624" y1="14" y2="14">
+      <line class="lib-distribution-plot__baseline" x1="40" x2="624" y1="126" y2="126">
+      <g key=0 aria-label="1–100: 0 of 100 (0.00%)" class="lib-distribution-plot__bin" data-bin-id="0" data-selected="false" role="group" tabindex="0" @click=select:0 @keydown=key:0>
+        <title>
+          "1–100: 0 of 100 (0.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="146" x="40" y="14">
+        <rect class="lib-distribution-plot__bar" height="0" width="110.96000000000001" x="57.519999999999996" y="126">
+      <g key=1 aria-label="101–200: 25 of 100 (25.00%)" class="lib-distribution-plot__bin" data-bin-id="1" data-selected="false" role="group" tabindex="0" @click=select:1 @keydown=key:1>
+        <title>
+          "101–200: 25 of 100 (25.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="146" x="186" y="14">
+        <rect class="lib-distribution-plot__bar" height="28" width="110.96000000000001" x="203.52" y="98">
+      <g key=2 aria-label="201–300: 100 of 100 (100.00%)" class="lib-distribution-plot__bin" data-bin-id="2" data-selected="true" role="group" tabindex="0" @click=select:2 @keydown=key:2>
+        <title>
+          "201–300: 100 of 100 (100.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="146" x="332" y="14">
+        <rect class="lib-distribution-plot__bar" height="112" width="110.96000000000001" x="349.52" y="14">
+      <g key=3 aria-label="301–400: 50 of 100 (50.00%)" class="lib-distribution-plot__bin" data-bin-id="3" data-selected="false" role="group" tabindex="0" @click=select:3 @keydown=key:3>
+        <title>
+          "301–400: 50 of 100 (50.00%)"
+        <rect class="lib-distribution-plot__target" height="116" width="146" x="478" y="14">
+        <rect class="lib-distribution-plot__bar" height="56" width="110.96000000000001" x="495.52" y="70">
+  <div class="lib-distribution-plot__endpoints">
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      "1–100"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      "301–400"
+
+## Empty
+<div class="lib-distribution-plot" data-hue="1">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Empty distribution"
+  <div class="lib-distribution-plot__chart">
+    <div aria-hidden="true" class="lib-distribution-plot__scale">
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "100%"
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "0%"
+    <svg aria-label="Empty distribution" role="group" viewBox="36 0 592 138">
+      <desc>
+        "Each bar is the proportion of matching observations in its interval. The vertical scale is fixed from zero to one hundred percent."
+      <line class="lib-distribution-plot__guide" x1="40" x2="624" y1="14" y2="14">
+      <line class="lib-distribution-plot__baseline" x1="40" x2="624" y1="126" y2="126">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+    "No observations"
+  <div class="lib-distribution-plot__endpoints">
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      ""
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      ""
+
+## Unavailable
+<div class="lib-distribution-plot" data-hue="1">
+  <span class="lib-text lib-tone" data-role="caption" data-tone="secondary">
+    "Missing observations"
+  <div class="lib-distribution-plot__chart">
+    <div aria-hidden="true" class="lib-distribution-plot__scale">
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "100%"
+      <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+        "0%"
+    <svg aria-label="Missing observations" role="group" viewBox="36 0 592 138">
+      <desc>
+        "Each bar is the proportion of matching observations in its interval. The vertical scale is fixed from zero to one hundred percent."
+      <line class="lib-distribution-plot__guide" x1="40" x2="624" y1="14" y2="14">
+      <line class="lib-distribution-plot__baseline" x1="40" x2="624" y1="126" y2="126">
+      <g key=empty aria-label="1–100: no valid observations" class="lib-distribution-plot__bin" data-bin-id="empty" data-selected="false" role="group" tabindex="0" @click=select:0 @keydown=key:0>
+        <title>
+          "1–100: no valid observations"
+        <rect class="lib-distribution-plot__target" height="116" width="584" x="40" y="14">
+  <div class="lib-distribution-plot__endpoints">
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      "1–100"
+    <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+      "1–100"

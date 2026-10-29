@@ -1,0 +1,26 @@
+import type { Meta,StoryObj } from '@storybook/react-vite';
+import { expect,userEvent,within } from 'storybook/test';
+import { withLibraryTheme } from '../../storybook';
+import { SpatialStudio } from './SpatialStudio.story';
+const meta={title:'Design OS/Math/Spatial Studio',component:SpatialStudio,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{initialLayout:'grid'}} satisfies Meta<typeof SpatialStudio>;
+export default meta;
+type Story=StoryObj<typeof meta>;
+export const Playground:Story={};
+export const Volume:Story={args:{initialLayout:'volume'}};
+export const Acceptance:Story={play:async({canvasElement})=>{const c=within(canvasElement);await userEvent.click(c.getByRole('tab',{name:'Inspect'}));const selected=c.getByRole('textbox',{name:'Go to integer'});await userEvent.clear(selected);await userEvent.type(selected,'81{Enter}');await expect(c.getByText('5 divisors · perfect square')).toBeInTheDocument();await userEvent.click(c.getByRole('button',{name:'Capture view'}));await expect(c.getByRole('button',{name:'Grid · 81'})).toBeInTheDocument();await userEvent.click(c.getByRole('tab',{name:'Setup'}));await userEvent.click(c.getByRole('button',{name:'Experiment file'}));await userEvent.click(c.getByRole('button',{name:'Show definition'}));await expect(c.getByText(/"selectedId": "81"/)).toBeInTheDocument();}};
+export const LargeGrid:Story={args:{initialCount:100000}};
+export const CanvasInteractions:Story={play:async({canvasElement})=>{
+ const c=within(canvasElement);
+ const point81=canvasElement.querySelector('[data-point-id="81"]') as Element;
+ await userEvent.hover(point81);
+ await expect(c.getByText('Preview · pinned 36')).toBeInTheDocument();
+ await userEvent.click(point81);
+ await expect(c.getByText('Pinned')).toBeInTheDocument();
+ const point49=canvasElement.querySelector('[data-point-id="49"]') as Element;
+ await userEvent.hover(point49);
+ await expect(c.getByText('Preview · pinned 81')).toBeInTheDocument();
+ await userEvent.unhover(point49);
+ await expect(c.getByText('5 divisors · perfect square')).toBeInTheDocument();
+ await userEvent.click(c.getByRole('button',{name:'Unpin'}));
+ await expect(c.getByText('Hover to preview an integer. Click to pin it. Scroll to zoom; drag to pan.')).toBeInTheDocument();
+}};

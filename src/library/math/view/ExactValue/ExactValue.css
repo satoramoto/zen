@@ -1,0 +1,2 @@
+.lib-exact-value { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.lib-exact-value__value { overflow-wrap: anywhere; white-space: pre-wrap; user-select: text; }

@@ -1,0 +1,7 @@
+.lib-math-inspector { min-width: 0; }
+.lib-math-inspector__heading { margin: 0; }
+.lib-math-inspector__properties { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; }
+.lib-math-inspector__property { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-1) var(--space-3); }
+.lib-math-inspector__property-value { margin: 0; overflow-wrap: anywhere; min-width: 0; }
+.lib-math-inspector__memberships { list-style: none; padding: 0; margin: 0; }
+.lib-math-inspector__expression { overflow-wrap: anywhere; white-space: pre-wrap; }

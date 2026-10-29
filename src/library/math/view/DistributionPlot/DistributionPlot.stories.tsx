@@ -1,0 +1,22 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
+import { withLibraryTheme } from '../../../storybook';
+import { fixtureStories, withRenderer } from '../../../stories/story';
+import { DistributionPlot } from './DistributionPlot';
+import DistributionPlotSvelte from './DistributionPlot.svelte';
+import { distributionPlotStories as s } from './DistributionPlot.fixtures';
+const meta = { title: 'Design OS/Math/DistributionPlot', component: DistributionPlot, decorators: [withRenderer, withLibraryTheme], args: { onSelect: fn() }, parameters: { layout: 'padded' } } satisfies Meta<typeof DistributionPlot>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+const story = fixtureStories<Story>(DistributionPlot, DistributionPlotSvelte);
+export const Uniform: Story = story(s.Uniform);
+export const Uneven: Story = story(s.Uneven, { play: async ({ canvasElement, args }) => {
+  const bar = within(canvasElement).getByRole('button', { name: '201–300: 100 of 100 (100.00%)' });
+  await userEvent.click(bar);
+  await expect(args.onSelect).toHaveBeenCalledWith('2');
+  bar.focus();
+  await userEvent.keyboard('{Enter}');
+  await expect(args.onSelect).toHaveBeenCalledTimes(2);
+} });
+export const Empty: Story = story(s.Empty);
+export const Unavailable: Story = story(s.Unavailable);
