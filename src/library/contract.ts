@@ -6,6 +6,8 @@
 type Four = readonly [string, string, string, string];
 type Two = readonly [string, string];
 type Five = readonly [string, string, string, string, string];
+type Six = readonly [string, string, string, string, string, string];
+type Three = readonly [string, string, string];
 
 export type Mode = 'light' | 'dark';
 
@@ -49,6 +51,68 @@ export interface Scheme {
   /** The instrument extension: a drawn keyboard's white and black keys. White keys are light and
    *  black keys dark in every mode, so the keyboard reads as one. */
   keys: { white: string; black: string };
+  /** Optional instrument paint. Source identities and related deck shades are deliberately not
+   * the five mutually separated categorical hues: a family may contain neighbouring shades.
+   * Old palettes omit this and inherit their existing hues, roles, surfaces and ink. */
+  instrument?: InstrumentScheme;
+}
+
+/** Framework-free colours for dense instruments, analysis displays and related source families.
+ * All entries are colours, so the existing skin import/export and colour controls can edit them. */
+export interface InstrumentScheme {
+  sources: Six;
+  decks: Four;
+  spectral: Three;
+  waveformBase: string;
+  signal: string;
+  positive: string;
+  negative: string;
+  info: string;
+  preview: string;
+  idle: string;
+  focus: string;
+  highlight: string;
+  borderQuiet: string;
+  borderControl: string;
+  surface: {
+    rail: string;
+    selected: string;
+    control: string;
+    stats: string;
+    cell: string;
+    cellMuted: string;
+    sunken: string;
+    band: string;
+    laneHead: string;
+    outside: string;
+    manual: string;
+  };
+}
+
+/** A palette's optional instrument roles, with colour-valued fallbacks (also usable by canvas).
+ * No defaults from a different pack are ever introduced into an old palette. */
+export function instrumentScheme(p: Scheme): InstrumentScheme {
+  return p.instrument ?? {
+    sources: [...p.hues, p.roles[0]],
+    decks: [p.roles[0], `color-mix(in srgb, ${p.roles[0]} 85%, ${p.text[0]})`, p.roles[1], `color-mix(in srgb, ${p.roles[1]} 85%, ${p.text[0]})`],
+    spectral: [p.hues[0], p.hues[1], p.hues[2]],
+    waveformBase: p.text[2],
+    signal: p.success,
+    positive: p.success,
+    negative: p.danger,
+    info: p.hues[0],
+    preview: p.roles[0],
+    idle: p.borderStrong,
+    focus: p.borderStrong,
+    highlight: p.text[0],
+    borderQuiet: p.border,
+    borderControl: p.borderStrong,
+    surface: {
+      rail: p.surface[0], selected: p.surface[3], control: p.surface[2], stats: p.surface[1],
+      cell: p.surface[2], cellMuted: p.surface[1], sunken: p.surface[0], band: p.surface[0],
+      laneHead: p.surface[3], outside: p.surface[1], manual: p.surface[2],
+    },
+  };
 }
 
 /** Colour, in both modes. A scope follows the system's light/dark preference unless told otherwise. */
@@ -78,18 +142,43 @@ export interface Faces {
   tracking: string;
   trackingDisplay: string;
   labelCase: 'none' | 'uppercase';
+  /** Custom variable-font axes; `wght` is left to the weight roles. */
+  variation?: Partial<Record<'sans' | 'display' | 'mono' | 'readout', string>>;
+  weightMedium?: number;
+  weightBold?: number;
+  trackingTight?: string;
+  trackingSlight?: string;
+  trackingLabel?: string;
+  trackingCaps?: string;
+  /** Inherited text leading; instruments may retain the browser's normal font metrics. */
+  lineHeight?: string;
 }
 
-/** Scale: type sizes, the spacing unit and control height together, so text and controls grow as one. */
-export interface Scale {
-  id: string;
-  label: string;
+/** One density's coupled spacing, controls and text metrics. */
+export interface ScaleMetrics {
   /** Base spacing unit in px. */
   unit: number;
   /** Control height in px. */
   control: number;
   /** Type sizes in px. */
   sizes: { caption: number; body: number; label: number; heading: number; display: number; numeral: number };
+  /** Additional dense-UI text roles. Outside sizes so its existing indexed contract stays total. */
+  controlText?: number;
+  leadText?: number;
+}
+
+/** Scale: general UI metrics plus optional dense instrument roles, all owned by one facet. */
+export interface Scale extends ScaleMetrics {
+  id: string;
+  label: string;
+  /** A dense instrument does not shrink general app controls below their layout/target floors. */
+  instrument?: ScaleMetrics;
+}
+
+/** Instrument density follows ordinary scale edits unless the facet explicitly supplies it. */
+export function instrumentScale(s: Scale): Required<ScaleMetrics> {
+  const v = s.instrument ?? s;
+  return { unit: v.unit, control: v.control, sizes: v.sizes, controlText: v.controlText ?? v.sizes.label, leadText: v.leadText ?? v.sizes.body };
 }
 
 /** One material: what a part is made of. Values are CSS and may read palette variables. */
@@ -179,6 +268,39 @@ export interface Materials {
   /** A shader material (docs/shader-graph.md) drawn over a layer's CSS fill and under its
    *  content, where WebGL2 allows; the CSS layer is the fallback. A layer left out has none. */
   shaders?: Partial<Record<LayerName, 'water' | 'ether' | 'glass'>>;
+  /** Optional dense-instrument finishes. The defaults read the material's ordinary layers;
+   * only a source with different popup corners or shadow recipes needs to supply them. */
+  instrument?: {
+    popupRadius: string;
+    contextShadow: string;
+    contextShadowInk: string;
+    shadowEdge: string;
+    scrim: string;
+    waveformStrength: string;
+    spectralStrength: string;
+    spectralMode: 'spectral' | 'deck';
+    /** CSS color-scheme for native form controls; `var(--scheme)` follows the Zen mode. */
+    nativeColorScheme: string;
+    /** A printed marker (flat instruments) or a physical cap dressed by handle material. */
+    handlePaint: 'marker' | 'material';
+    /** A free control's handle shadow; a mixer fader uses handle.shadow directly. */
+    freeHandleShadow: string;
+  };
+}
+
+/** Virtual optional finish defaults. Skin validation and partial overrides use the same values
+ * as CSS emission, without adding frozen mixflow values to a legacy facet. */
+export function instrumentFinish(m: Materials): NonNullable<Materials['instrument']> {
+  return m.instrument ?? {
+    popupRadius: m.radiusCard,
+    contextShadow: 'var(--layer-float-cast)',
+    contextShadowInk: 'var(--instrument-shadow-edge)',
+    shadowEdge: 'oklch(from var(--surface-0) calc(l * 0.25) c h / 0.6)',
+    scrim: 'color-mix(in srgb, var(--surface-0) 60%, transparent)',
+    waveformStrength: '65%', spectralStrength: '100', spectralMode: 'spectral',
+    nativeColorScheme: 'var(--scheme)',
+    handlePaint: 'material', freeHandleShadow: 'var(--mat-handle-shadow)',
+  };
 }
 
 /**
@@ -339,6 +461,9 @@ const MATERIAL_ROLES = ['well', 'screen', 'key', 'handle'] as const;
 
 export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets, mode: Mode): Record<string, string> {
   const p = palette[mode];
+  const instrument = instrumentScheme(p);
+  const finish = instrumentFinish(m);
+  const dense = instrumentScale(s);
   const vars: Record<string, string> = {
     '--scheme': mode,
     // The mode as a number CSS can compute with: 1 in light, 0 in dark. Multiply it in calc() to
@@ -372,12 +497,23 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--font-mono': t.mono,
     '--font-readout': t.readout,
     '--font-math': t.math,
+    '--font-sans-axes': t.variation?.sans ?? 'normal',
+    '--font-display-axes': t.variation?.display ?? 'normal',
+    '--font-mono-axes': t.variation?.mono ?? 'normal',
+    '--font-readout-axes': t.variation?.readout ?? 'normal',
     '--weight-body': String(t.weightBody),
     '--weight-strong': String(t.weightStrong),
     '--weight-display': String(t.weightDisplay),
     '--weight-numeral': String(t.weightNumeral),
+    '--weight-medium': String(t.weightMedium ?? Math.round((t.weightBody + t.weightStrong) / 2)),
+    '--weight-bold': String(t.weightBold ?? Math.max(t.weightStrong, t.weightDisplay)),
     '--tracking': t.tracking,
     '--tracking-display': t.trackingDisplay,
+    '--tracking-tight': t.trackingTight ?? t.tracking,
+    '--tracking-slight': t.trackingSlight ?? t.tracking,
+    '--tracking-label': t.trackingLabel ?? t.tracking,
+    '--tracking-caps': t.trackingCaps ?? t.trackingDisplay,
+    '--line-height': t.lineHeight ?? '1.4',
     '--label-case': t.labelCase,
 
     '--radius-control': m.radiusControl,
@@ -405,7 +541,43 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--focus-ring-offset': m.focus?.offset ?? '2px',
 
     '--control-h': `${s.control}px`,
+    '--size-control': `${s.controlText ?? s.sizes.label}px`,
+    '--size-lead': `${s.leadText ?? s.sizes.body}px`,
+    '--instrument-control-h': `${dense.control}px`,
+    '--instrument-size-control': `${dense.controlText}px`,
+    '--instrument-size-lead': `${dense.leadText}px`,
+
+    '--instrument-waveform-base': instrument.waveformBase,
+    '--instrument-signal': instrument.signal,
+    '--instrument-positive': instrument.positive,
+    '--instrument-negative': instrument.negative,
+    '--instrument-info': instrument.info,
+    '--instrument-preview': instrument.preview,
+    '--instrument-idle': instrument.idle,
+    '--instrument-focus': instrument.focus,
+    '--instrument-highlight': instrument.highlight,
+    '--instrument-border-quiet': instrument.borderQuiet,
+    '--instrument-border-control': instrument.borderControl,
+    '--instrument-popup-radius': finish.popupRadius,
+    '--instrument-context-shadow': finish.contextShadow,
+    '--instrument-context-shadow-ink': finish.contextShadowInk,
+    '--instrument-shadow-edge': finish.shadowEdge,
+    '--instrument-scrim': finish.scrim,
+    '--instrument-waveform-strength': finish.waveformStrength,
+    '--instrument-spectral-strength': finish.spectralStrength,
+    '--instrument-spectral-mode': finish.spectralMode,
+    '--instrument-native-color-scheme': finish.nativeColorScheme,
+    // CSS's empty-token / guaranteed-invalid switch defers the local marker colour to each
+    // handle. Do not put var(--wdg-marker) here: it would resolve too early, on the theme scope.
+    '--instrument-handle-marker-switch': finish.handlePaint === 'marker' ? ' ' : 'initial',
+    '--instrument-free-handle-shadow': finish.freeHandleShadow,
   };
+  instrument.sources.forEach((v, i) => (vars[`--instrument-source-${i + 1}`] = v));
+  instrument.decks.forEach((v, i) => (vars[`--instrument-deck-${i + 1}`] = v));
+  instrument.spectral.forEach((v, i) => (vars[`--instrument-spectral-${['low', 'mid', 'high'][i]}`] = v));
+  for (const [role, value] of Object.entries(instrument.surface)) {
+    vars[`--instrument-surface-${role.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`] = value;
+  }
   for (const role of MATERIAL_ROLES) {
     vars[`--mat-${role}-fill`] = m[role].fill;
     vars[`--mat-${role}-solid`] = m[role].solid ?? m[role].fill;
@@ -452,6 +624,8 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
   p.hues.forEach((v, i) => (vars[`--hue-${i + 1}`] = v));
   for (const [role, px] of Object.entries(s.sizes)) vars[`--size-${role}`] = `${px}px`;
   SPACE_STEPS.forEach((n, i) => (vars[`--space-${i + 1}`] = `${n * s.unit}px`));
+  for (const [role, px] of Object.entries(dense.sizes)) vars[`--instrument-size-${role}`] = `${px}px`;
+  SPACE_STEPS.forEach((n, i) => (vars[`--instrument-space-${i + 1}`] = `${n * dense.unit}px`));
   Object.assign(vars, AMBIENT_FALLBACKS);
   vars['--ambient-l-min'] = '0';
   vars['--ambient-l-max'] = '1';

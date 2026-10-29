@@ -2,6 +2,7 @@
 // component, with the same names as `reactComponents.ts`. One line per component in each. Built on
 // first use, as the React side is.
 import type { Component } from 'svelte';
+import { musicSvelteComponents } from '../Music/registry.svelte';
 import Button from '../components/core/Button/Button.svelte';
 import ActionButton from '../components/core/ActionButton/ActionButton.svelte';
 import SearchField from '../components/core/SearchField/SearchField.svelte';
@@ -87,6 +88,7 @@ let registry: Record<string, Component<any>> | undefined;
 /** The Svelte component registered as `name`; throws for an unknown name. */
 export function svelteComponent(name: string): Component<any> {
   registry ??= {
+    ...musicSvelteComponents(),
     AssembledScreen,
     FormScope,
     Layer,

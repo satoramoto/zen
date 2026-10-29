@@ -15,11 +15,12 @@ import { toCssVars } from './contract';
 export { libraryGlobalTypes, libraryInitialGlobals } from './storybook.globals';
 
 /** A translucent ground needs something behind it: the pack's stand-in desktop, per mode. */
-function Desktop({ desktop, mode, children }: { desktop?: { light: string; dark: string }; mode: ModeChoice; children: ReactNode }) {
+function Desktop({ desktop, mode, fullHeight, children }: { desktop?: { light: string; dark: string }; mode: ModeChoice; fullHeight: boolean; children: ReactNode }) {
   const system = useSystemMode();
-  if (!desktop) return <>{children}</>;
   const resolved = mode === 'system' ? system : mode;
-  return <div style={{ background: desktop[resolved], minHeight: '100vh' }}>{children}</div>;
+  // Keep the same host across pack switches: adding/removing a desktop wrapper would remount an
+  // instrument (and reset its controlled story host) when switching to or from a glass pack.
+  return <div style={desktop ? { background: desktop[resolved], minHeight: fullHeight ? '100vh' : undefined } : { display: 'contents' }}>{children}</div>;
 }
 
 // The design window a story is drawn at (`parameters.frame`, in px); its context lives in
@@ -146,7 +147,7 @@ export const withLibraryTheme: Decorator = (Story, context) => {
   // A palette swapped in from another pack keeps this pack's desktop only if the pack's own palette is worn.
   const desktop = facets.palette === pack.facets.palette ? pack.desktop : undefined;
   return (
-    <Desktop desktop={desktop} mode={mode}>
+    <Desktop desktop={desktop} mode={mode} fullHeight={context.parameters.layout === 'fullscreen'}>
       <ThemeScope facets={facets} principles={pack.principles} mode={mode} bleed={context.parameters.layout === 'fullscreen'}>
         <Story />
       </ThemeScope>

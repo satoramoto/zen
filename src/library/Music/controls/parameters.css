@@ -1,0 +1,66 @@
+/* Source parameter anatomy. Palette, typography and geometry aliases come from Music/theme.
+   The zero-specificity scope can itself be a widget root, or contain widgets. */
+:where(.zen-music, .zen-music *) {
+  &.wdg, &.wdg * { box-sizing: border-box; }
+  &.wdg-widget, &.wdg-number { display: inline-flex; flex-direction: column; align-items: center; gap: var(--wdg-gap); }
+  &.wdg-widget[data-layout='inline'] { display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; align-items: center; gap: 0 var(--wdg-space); }
+  &.wdg-widget[data-layout='inline'] > .wdg-body { grid-row: 1 / span 2; grid-column: 2; }
+  &.wdg-widget[data-layout='inline'] > .wdg-caption, &.wdg-widget[data-layout='inline'] > .wdg-readout { grid-column: 1; justify-self: start; text-align: left; }
+  &.wdg-widget[data-layout='inline'] > .wdg-caption { grid-row: 1; align-self: end; }
+  &.wdg-widget[data-layout='inline'] > .wdg-caption:has(+ .wdg-body:last-child) { grid-row: 1 / span 2; align-self: center; }
+  &.wdg-widget[data-layout='inline'] > .wdg-readout { grid-row: 2; align-self: start; }
+  &.wdg-widget[data-layout='inline'][data-side='right'] > .wdg-body { grid-column: 1; }
+  &.wdg-widget[data-layout='inline'][data-side='right'] > .wdg-caption, &.wdg-widget[data-layout='inline'][data-side='right'] > .wdg-readout { grid-column: 2; justify-self: end; text-align: right; }
+  &.wdg-widget[data-layout='inside'] { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; width: 100%; gap: 0; }
+  &.wdg-widget[data-layout='inside'] > .wdg-body { position: relative; grid-row: 1; grid-column: 1 / -1; width: 100%; }
+  &.wdg-widget[data-layout='inside'] > .wdg-caption, &.wdg-widget[data-layout='inside'] > .wdg-readout { z-index: 3; grid-row: 1; align-self: center; white-space: nowrap; pointer-events: none; }
+  &.wdg-widget[data-layout='inside'] > .wdg-caption { grid-column: 1; min-width: 0; padding-left: 4px; overflow: hidden; color: var(--wdg-text); text-align: left; text-overflow: ellipsis; }
+  &.wdg-widget[data-layout='inside'] > .wdg-readout { grid-column: 2; min-width: 0; padding-left: 6px; padding-right: 4px; color: color-mix(in srgb, var(--wdg-arrival-ink) calc(var(--wdg-heat, 0) * 100%), var(--wdg-text-strong)); font-family: var(--wdg-sans); font-variation-settings: var(--wdg-sans-axes); font-variant-numeric: tabular-nums; letter-spacing: normal; text-align: right; }
+  &.wdg-widget[data-layout='inside'][data-disabled] > .wdg-caption, &.wdg-widget[data-layout='inside'][data-disabled] > .wdg-readout { color: var(--wdg-text); opacity: 0.75; }
+  &.wdg-widget > .wdg-body { display: flex; align-items: center; justify-content: center; }
+  &.wdg-caption { font-family: var(--wdg-sans); font-variation-settings: var(--wdg-sans-axes); font-size: var(--text-label); line-height: 1.2; color: var(--wdg-caption); white-space: nowrap; text-align: center; }
+  &.wdg-driver { margin-left: 4px; color: var(--wdg-fill); }
+  &.wdg-readout, &.wdg-number-body { font-variation-settings: var(--wdg-mono-axes); font-size: var(--text-label); letter-spacing: var(--track-tight); font-variant-numeric: tabular-nums; }
+  &.wdg-readout { min-width: calc(var(--wdg-chars, 0) * 1ch); line-height: 1.2; color: var(--wdg-text); white-space: nowrap; text-align: center; }
+  &.wdg-slider-body, &.wdg-number-body { position: relative; overflow: hidden; border: 1px solid var(--wdg-edge); border-radius: var(--wdg-radius); background: var(--wdg-face); }
+  /* The source reset covers elements, not generated content. Keep the slot's 8px content
+     plus two 1px borders rather than shrinking it under Zen's border-box reset. */
+  &.wdg-slider .wdg-slider-body::before { box-sizing: content-box; }
+  &.wdg [role='slider'] { outline: none; touch-action: none; }
+  &.wdg [role='slider']:focus-visible { outline: 1px solid var(--wdg-focus); outline-offset: 1px; }
+  &.wdg-widget[data-disabled], &.wdg:has(> [aria-disabled='true']) { opacity: 0.4; }
+  &.wdg-knob-dial { width: var(--wdg-knob-size); height: var(--wdg-knob-height); border-radius: var(--wdg-radius); cursor: ns-resize; }
+  &.wdg .wdg-knob-dial[data-pointer-focus]:focus-visible { outline: none; }
+  &.wdg-knob-dial svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  &.wdg-knob-empty, &.wdg-knob-fill { fill: none; stroke-width: 4; stroke-linecap: round; }
+  &.wdg-knob-empty { stroke: var(--wdg-empty); }
+  &.wdg-knob-fill { stroke: var(--wdg-fill); }
+  &.wdg-knob-marker { stroke: var(--wdg-marker); stroke-width: 2; stroke-linecap: round; }
+  &.wdg-slider-vertical .wdg-slider-body { width: var(--wdg-track); height: var(--wdg-slider-length); cursor: ns-resize; }
+  &.wdg-slider-horizontal .wdg-slider-body { width: var(--wdg-slider-length); height: var(--wdg-track); cursor: ew-resize; }
+  &.wdg-slider-horizontal[data-layout='inside'] .wdg-slider-body { width: 100%; height: var(--wdg-inside-height, var(--wdg-field-height)); }
+  &.wdg-slider-fill, &.wdg-number-fill { position: absolute; background: var(--wdg-fill); pointer-events: none; }
+  &.wdg-number-fill, &.wdg-slider-horizontal .wdg-slider-fill { inset: 0 auto 0 calc(var(--wdg-fill-start) * 100%); width: calc(var(--wdg-fill-size) * 100%); }
+  &.wdg-slider-vertical .wdg-slider-fill { inset: auto 0 calc(var(--wdg-fill-start) * 100%) 0; height: calc(var(--wdg-fill-size) * 100%); }
+  &.wdg-slider-thumb { position: absolute; background: var(--wdg-marker); pointer-events: none; }
+  &.wdg-slider-vertical .wdg-slider-thumb { inset: auto 0 calc(var(--wdg-fraction) * (100% - var(--wdg-thumb))) 0; height: var(--wdg-thumb); }
+  &.wdg-slider-horizontal .wdg-slider-thumb { inset: 0 auto 0 calc(var(--wdg-fraction) * (100% - var(--wdg-thumb))); width: var(--wdg-thumb); }
+  &.wdg-slider-span, &.wdg-slider-reach, &.wdg-slider-wake { position: absolute; pointer-events: none; }
+  &.wdg-slider-horizontal .wdg-slider-span { inset: 0 auto 0 calc(var(--wdg-span-at) * 100%); width: max(2px, calc(var(--wdg-span-size) * 100%)); background: var(--wdg-fill); opacity: 0.16; }
+  &.wdg-slider-horizontal .wdg-slider-reach, &.wdg-slider-horizontal .wdg-slider-wake { z-index: 2; top: 0; bottom: 0; transform: translateX(-50%); }
+  &.wdg-slider-horizontal .wdg-slider-reach { left: calc(var(--wdg-span-reach) * 100%); width: var(--wdg-mark-width); background: var(--wdg-reach-ink); }
+  &.wdg-slider-horizontal .wdg-slider-wake { top: var(--wdg-wake-lift); bottom: var(--wdg-wake-lift); left: calc(var(--wdg-wake-at) * 100%); width: 2px; border-radius: var(--radius-xs); background: var(--wdg-marker); opacity: var(--wdg-wake-ink); }
+  &.wdg-slider-wake[data-wake='0'] { --wdg-wake-at: var(--wdg-wake-0, var(--wdg-live, 0)); --wdg-wake-lift: 3px; --wdg-wake-ink: 1; }
+  &.wdg-slider-wake[data-wake='1'] { --wdg-wake-at: var(--wdg-wake-1, var(--wdg-live, 0)); --wdg-wake-lift: 3px; --wdg-wake-ink: 0.62; }
+  &.wdg-slider-wake[data-wake='2'] { --wdg-wake-at: var(--wdg-wake-2, var(--wdg-live, 0)); --wdg-wake-lift: 3.5px; --wdg-wake-ink: 0.44; }
+  &.wdg-slider-wake[data-wake='3'] { --wdg-wake-at: var(--wdg-wake-3, var(--wdg-live, 0)); --wdg-wake-lift: 4px; --wdg-wake-ink: 0.3; }
+  &.wdg-slider-wake[data-wake='4'] { --wdg-wake-at: var(--wdg-wake-4, var(--wdg-live, 0)); --wdg-wake-lift: 4.5px; --wdg-wake-ink: 0.2; }
+  &.wdg-slider-wake[data-wake='5'] { --wdg-wake-at: var(--wdg-wake-5, var(--wdg-live, 0)); --wdg-wake-lift: 5px; --wdg-wake-ink: 0.12; }
+  &.wdg-slider[data-layout='inside'] .wdg-slider-thumb { z-index: 2; inset: 0 auto 0 calc(var(--wdg-fraction) * 100%); width: var(--wdg-mark-width); transform: translateX(-50%); background: var(--wdg-fill); }
+  &.wdg-number-body { display: flex; align-items: center; justify-content: center; height: var(--wdg-field-height); color: var(--wdg-text); line-height: 1; white-space: nowrap; width: var(--wdg-number-width, max(38px, calc(var(--wdg-chars, 6) * 1ch + 12px))); margin: 0; padding: 0; cursor: ew-resize; }
+  &.wdg-number-text { position: relative; pointer-events: none; }
+  &.wdg-number-ink { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--wdg-fill-text); clip-path: inset(0 calc(100% - (var(--wdg-fill-start) + var(--wdg-fill-size)) * 100%) 0 calc(var(--wdg-fill-start) * 100%)); pointer-events: none; }
+  &.wdg-number-input { cursor: text; text-align: center; outline: none; }
+  &.wdg-number-input:focus { border-color: var(--wdg-edge-live); }
+  &.wdg [aria-disabled='true'] { cursor: default; }
+}

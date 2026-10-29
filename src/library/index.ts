@@ -8,6 +8,8 @@ export {
   LAYERS,
   type Mode,
   type Scheme,
+  type InstrumentScheme,
+  instrumentScheme,
   type Palette,
   type Faces,
   type Scale,
@@ -48,6 +50,9 @@ export * from './layout';
 // `ButtonFace`), and Param's `format` is `formatParam`.
 export * from './components/core';
 export * from './components/music';
+
+// New reference-faithful music toolkit; the legacy component names above are not replaced.
+export * as Music from './Music';
 
 // The graph: the node-graph view (Graph, GraphNode, Port, Device, NodeSheet) and the Circuit model it draws.
 export * from './graph';

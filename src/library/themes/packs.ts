@@ -154,4 +154,23 @@ export const packs: ThemePack[] = [
     facets: facets('big-red', 'classic', 'compact', 'panel'),
     principles: principles.studio,
   },
+  {
+    id: 'mixflow', label: 'mix[flow]',
+    source: { name: 'openflowfm/widgets (Current favorite)', url: 'https://github.com/openflowfm/widgets' },
+    northStar: 'The original dense four-deck instrument, not a restyled approximation.',
+    keep: [
+      'DEFAULT_THEME is PRESETS[0], Current favorite: neutral primary, green signal, six independent source identities, two related deck families.',
+      'Opaque near-black surfaces, one-pixel edges and 2px rectangular corners; no gradients, bevels or bloom added to controls.',
+      'Self-hosted Recursive: MONO 1 for readings, MONO 0 for labels, CASL 0.38 in both.',
+      '8/9/10/11/12/14/18px type, 22px toolbar controls, 2px gaps and 8px widget insets.',
+      'Reference family colours remain exact instrument roles rather than being spread apart to redesign their palette.',
+    ],
+    facets: facets('mixflow', 'mixflow', 'mixflow', 'mixflow'),
+    // added: generic assembled screens retain their 24px target floor. Music's faithful
+    // dense geometry is an explicit role in this same scale facet, not a second theme.
+    principles: { minTarget: 24, density: 'dense', gaps: { body: 1, group: 1 }, notes: [
+      'The source is a dense desktop mixer: preserve its anatomical grid, small reading windows, and grouped controls.',
+      'Scroll the four-deck face when narrow; do not shrink targets or omit instrument controls.',
+    ] },
+  },
 ];

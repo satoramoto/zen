@@ -2,7 +2,8 @@
 // any facet for another named one, and overrides single values inside the facets. No React, no
 // storage, no DOM: a Vue or Svelte binding wraps these exactly as the React components do
 // (docs/theme-editor.md).
-import { LAYERS, type Facets, type Faces, type LayerName, type Materials, type Scale, type Scheme } from '../contract';
+import { LAYERS, instrumentFinish, instrumentScale, instrumentScheme, type Facets, type Faces, type LayerName, type Materials, type Scale, type Scheme } from '../contract';
+import { parseCssHsl } from './colour';
 import { FROM_THEME, resolveTheme } from '../resolve';
 import { packs, type ThemePack } from '../themes/packs';
 import { palettes } from '../themes/palettes';
@@ -76,17 +77,37 @@ export function skinFromPack(pack: ThemePack | string): Skin {
   return { format: SKIN_FORMAT, version: SKIN_VERSION, id: p.id, label: p.label, base: p.id };
 }
 
-function merge(base: unknown, over: unknown): unknown {
+/** Optional contract fields as the currently worn facets resolve them, never another pack's
+ * source defaults. This is an editor/validation view: untouched packs keep their exact objects. */
+export function editableFacets(facets: Facets): Facets {
+  const { palette: p, faces: f, scale: s, materials: m } = facets;
+  return {
+    palette: { ...p, light: { ...p.light, instrument: instrumentScheme(p.light) }, dark: { ...p.dark, instrument: instrumentScheme(p.dark) } },
+    faces: {
+      ...f, variation: { sans: 'normal', display: 'normal', mono: 'normal', readout: 'normal', ...f.variation },
+      weightMedium: f.weightMedium ?? Math.round((f.weightBody + f.weightStrong) / 2),
+      weightBold: f.weightBold ?? Math.max(f.weightStrong, f.weightDisplay),
+      trackingTight: f.trackingTight ?? f.tracking, trackingSlight: f.trackingSlight ?? f.tracking,
+      trackingLabel: f.trackingLabel ?? f.tracking, trackingCaps: f.trackingCaps ?? f.trackingDisplay,
+      lineHeight: f.lineHeight ?? '1.4',
+    },
+    scale: { ...s, controlText: s.controlText ?? s.sizes.label, leadText: s.leadText ?? s.sizes.body, instrument: instrumentScale(s) },
+    materials: { ...m, instrument: instrumentFinish(m) },
+  };
+}
+
+function merge(base: unknown, over: unknown, defaults?: unknown): unknown {
   if (over === undefined) return base;
   if (Array.isArray(over)) {
-    if (!Array.isArray(base)) return base;
-    return base.map((v, i) => (over[i] === undefined || over[i] === null ? v : merge(v, over[i])));
+    const values = Array.isArray(base) ? base : Array.isArray(defaults) ? defaults : undefined;
+    if (!values) return base;
+    return values.map((v, i) => (over[i] === undefined || over[i] === null ? v : merge(v, over[i], Array.isArray(defaults) ? defaults[i] : undefined)));
   }
   if (isObj(over)) {
-    const out: Obj = isObj(base) ? { ...base } : {};
+    const out: Obj = isObj(base) ? { ...base } : isObj(defaults) ? { ...defaults } : {};
     for (const [k, v] of Object.entries(over)) {
       if (v === null) delete out[k];
-      else out[k] = merge(out[k], v);
+      else out[k] = merge(out[k], v, isObj(defaults) ? defaults[k] : undefined);
     }
     return out;
   }
@@ -96,14 +117,35 @@ function merge(base: unknown, over: unknown): unknown {
 /** The facets with a skin's overrides laid over them. Pure: the facets passed in are not changed. */
 export function applyOverrides(facets: Facets, overrides: SkinOverrides | undefined): Facets {
   if (!overrides) return facets;
+  // Derive a missing instrument extension after ordinary palette edits, so holes in its lists
+  // inherit the edited palette's own hues/roles, not a stale snapshot of the old values.
+  const scheme = (base: Scheme, over: SchemeOverrides | undefined): Scheme => {
+    if (!over) return base;
+    const { instrument, ...ordinary } = over;
+    const p = merge(base, ordinary) as Scheme;
+    return instrument === undefined ? p : merge(p, { instrument }, { instrument: instrumentScheme(p) }) as Scheme;
+  };
+  const defaults = editableFacets(facets);
   const palette = overrides.palette
-    ? { ...facets.palette, light: merge(facets.palette.light, overrides.palette.light) as Scheme, dark: merge(facets.palette.dark, overrides.palette.dark) as Scheme }
+    ? { ...facets.palette, light: scheme(facets.palette.light, overrides.palette.light), dark: scheme(facets.palette.dark, overrides.palette.dark) }
     : facets.palette;
+  let material = facets.materials;
+  if (overrides.materials) {
+    const { instrument, ...ordinary } = overrides.materials;
+    material = merge(material, ordinary) as Materials;
+    if (instrument !== undefined) material = merge(material, { instrument }, { instrument: instrumentFinish(material) }) as Materials;
+  }
+  let scale = facets.scale;
+  if (overrides.scale) {
+    const { instrument, ...ordinary } = overrides.scale;
+    scale = merge(scale, ordinary, defaults.scale) as Scale;
+    if (instrument !== undefined) scale = merge(scale, { instrument }, { instrument: instrumentScale(scale) }) as Scale;
+  }
   return {
     palette,
-    faces: overrides.faces ? (merge(facets.faces, overrides.faces) as Faces) : facets.faces,
-    scale: overrides.scale ? (merge(facets.scale, overrides.scale) as Scale) : facets.scale,
-    materials: overrides.materials ? (merge(facets.materials, overrides.materials) as Materials) : facets.materials,
+    faces: overrides.faces ? (merge(facets.faces, overrides.faces, defaults.faces) as Faces) : facets.faces,
+    scale,
+    materials: material,
   };
 }
 
@@ -137,6 +179,9 @@ const MAX_STRING = 2000;
 const ENUMS: Record<string, readonly string[]> = {
   'faces.labelCase': ['none', 'uppercase'],
   'materials.input': ['filled', 'box', 'underline'],
+  'materials.instrument.spectralMode': ['spectral', 'deck'],
+  'materials.instrument.nativeColorScheme': ['var(--scheme)', 'normal', 'light', 'dark', 'light dark', 'dark light'],
+  'materials.instrument.handlePaint': ['marker', 'material'],
 };
 /** Ranges for numbers, by override path. */
 const RANGES: Record<string, readonly [number, number]> = {
@@ -144,9 +189,18 @@ const RANGES: Record<string, readonly [number, number]> = {
   'faces.weightStrong': [100, 1000],
   'faces.weightDisplay': [100, 1000],
   'faces.weightNumeral': [100, 1000],
+  'faces.weightMedium': [100, 1000],
+  'faces.weightBold': [100, 1000],
   'scale.unit': [1, 32],
   'scale.control': [12, 96],
   'scale.sizes': [6, 200],
+  'scale.controlText': [6, 200],
+  'scale.leadText': [6, 200],
+  'scale.instrument.unit': [1, 32],
+  'scale.instrument.control': [12, 96],
+  'scale.instrument.sizes': [6, 200],
+  'scale.instrument.controlText': [6, 200],
+  'scale.instrument.leadText': [6, 200],
 };
 
 /**
@@ -175,7 +229,7 @@ function checkOverride(path: string[], base: unknown, over: unknown, errors: str
   if (isObj(base)) {
     if (!isObj(over)) return void errors.push(`${at}: expected an object`);
     for (const [k, v] of Object.entries(over)) {
-      if (!(k in base)) errors.push(`${at}.${k}: not part of the contract`);
+      if (!Object.hasOwn(base, k)) errors.push(`${at}.${k}: not part of the contract`);
       else checkOverride([...path, k], base[k], v, errors);
     }
     return;
@@ -188,13 +242,13 @@ function checkOverride(path: string[], base: unknown, over: unknown, errors: str
   }
   if (typeof over !== 'string') return void errors.push(`${at}: expected text`);
   if (ENUMS[key] && !ENUMS[key].includes(over)) return void errors.push(`${at}: one of ${ENUMS[key].join(', ')}`);
-  if (path[0] === 'palette' && path.at(-1) !== 'bloom' && !HEX.test(over)) return void errors.push(`${at}: a colour as #rrggbb`);
+  if (path[0] === 'palette' && path.at(-1) !== 'bloom' && !HEX.test(over) && !parseCssHsl(over)) return void errors.push(`${at}: a colour as #rrggbb`);
   const problem = cssProblem(over);
   if (problem) errors.push(`${at}: ${problem}`);
 }
 
 /** Checks a value is a skin this zen can wear: a known base, known facet ids, and overrides that
- *  fit the contract (each the same type as the value it replaces, colours as #rrggbb, CSS that
+ *  fit the contract (each the same type as the value it replaces, solid #rrggbb or hsl colours, CSS that
  *  fetches nothing). On success the skin comes back normalized (`normalizeSkin`). */
 export function validateSkin(value: unknown): SkinResult {
   const errors: string[] = [];
@@ -224,7 +278,7 @@ export function validateSkin(value: unknown): SkinResult {
   const o = value.overrides;
   if (o !== undefined) {
     if (!isObj(o)) return { ok: false, errors: ['overrides: expected an object'] };
-    const facets = baseFacets({ base: base as string, facets: value.facets as Skin['facets'] });
+    const facets = editableFacets(baseFacets({ base: base as string, facets: value.facets as Skin['facets'] }));
     for (const [k, v] of Object.entries(o)) {
       if (!(FACET_NAMES as readonly string[]).includes(k)) {
         errors.push(`overrides.${k}: not a facet (${FACET_NAMES.join(', ')})`);
@@ -245,7 +299,7 @@ export function validateSkin(value: unknown): SkinResult {
               if (!(LAYERS as readonly string[]).includes(layer)) errors.push(`overrides.materials.shaders.${layer}: not a layer (${LAYERS.join(', ')})`);
               else if (s !== null && !(SHADER_NAMES as readonly unknown[]).includes(s)) errors.push(`overrides.materials.shaders.${layer}: one of ${SHADER_NAMES.join(', ')} or null`);
             }
-        } else if (!(field in facet)) errors.push(`overrides.${k}.${field}: not part of the contract`);
+        } else if (!Object.hasOwn(facet, field)) errors.push(`overrides.${k}.${field}: not part of the contract`);
         else checkOverride([k, field], facet[field], fv, errors);
       }
     }
@@ -345,7 +399,7 @@ export function getOverride(skin: Skin, path: OverridePath): unknown {
 
 /** The value in force at `path` (`['palette', 'dark', 'accent']`), overrides applied. */
 export function valueAt(skin: Skin, path: OverridePath): unknown {
-  return getIn(resolveSkin(skin).facets, path);
+  return getIn(editableFacets(resolveSkin(skin).facets), path);
 }
 
 /** Renames a skin that is still its pack, so an edited one never passes for the pack itself. */
@@ -358,7 +412,7 @@ function asCustom(skin: Skin): Skin {
 /** Overrides one value. Setting a value equal to the base's clears the override instead, so a
  *  skin only ever holds what differs. Returns a new skin, in normal form. */
 export function setOverride(skin: Skin, path: OverridePath, value: unknown): Skin {
-  const base = getIn(baseFacets(skin), path);
+  const base = getIn(editableFacets(baseFacets(skin)), path);
   if (value === base || (value === null && base === undefined)) return clearOverride(skin, path);
   return normalizeSkin(asCustom({ ...skin, overrides: setIn(skin.overrides, path, value) as SkinOverrides }));
 }

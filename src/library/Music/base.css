@@ -1,0 +1,158 @@
+@import './theme.css';
+@import './materials.css';
+
+/* Reference: widgets/controls/shared.css. :where keeps the scope from increasing specificity,
+   so a deck's local overrides win in the same order as the original instrument. */
+.zen-music,
+.zen-music *,
+.zen-music *::before,
+.zen-music *::after { box-sizing: border-box; }
+
+:where(.zen-music) .wdg-widget,
+:where(.zen-music) .wdg-number,
+:where(.zen-music) .wdg-toggle,
+:where(.zen-music) .wdg-segmented {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--wdg-gap);
+}
+:where(.zen-music) .wdg-widget[data-layout='inline'] {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0 var(--wdg-space);
+}
+:where(.zen-music) .wdg-widget[data-layout='inline'] > .wdg-body { grid-row: 1 / span 2; grid-column: 2; }
+:where(.zen-music) .wdg-widget[data-layout='inline'] > .wdg-caption,
+:where(.zen-music) .wdg-widget[data-layout='inline'] > .wdg-readout { grid-column: 1; justify-self: start; text-align: left; }
+:where(.zen-music) .wdg-widget[data-layout='inline'] > .wdg-caption { grid-row: 1; align-self: end; }
+:where(.zen-music) .wdg-widget[data-layout='inline'] > .wdg-caption:has(+ .wdg-body:last-child) { grid-row: 1 / span 2; align-self: center; }
+:where(.zen-music) .wdg-widget[data-layout='inline'] > .wdg-readout { grid-row: 2; align-self: start; }
+:where(.zen-music) .wdg-widget[data-layout='inline'][data-side='right'] > .wdg-body { grid-column: 1; }
+:where(.zen-music) .wdg-widget[data-layout='inline'][data-side='right'] > .wdg-caption,
+:where(.zen-music) .wdg-widget[data-layout='inline'][data-side='right'] > .wdg-readout { grid-column: 2; justify-self: end; text-align: right; }
+
+:where(.zen-music) .wdg-widget[data-layout='inside'] {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  width: 100%;
+  gap: 0;
+}
+:where(.zen-music) .wdg-widget[data-layout='inside'] > .wdg-body { position: relative; grid-row: 1; grid-column: 1 / -1; width: 100%; }
+:where(.zen-music) .wdg-widget[data-layout='inside'] > .wdg-caption,
+:where(.zen-music) .wdg-widget[data-layout='inside'] > .wdg-readout { z-index: 3; grid-row: 1; align-self: center; white-space: nowrap; pointer-events: none; }
+:where(.zen-music) .wdg-widget[data-layout='inside'] > .wdg-caption {
+  grid-column: 1;
+  min-width: 0;
+  padding-left: 4px;
+  overflow: hidden;
+  color: var(--wdg-text);
+  text-align: left;
+  text-overflow: ellipsis;
+}
+:where(.zen-music) .wdg-widget[data-layout='inside'] > .wdg-readout {
+  grid-column: 2;
+  min-width: 0;
+  padding-left: 6px;
+  padding-right: 4px;
+  color: color-mix(in srgb, var(--wdg-arrival-ink) calc(var(--wdg-heat, 0) * 100%), var(--wdg-text-strong));
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--wdg-sans-axes);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: normal;
+  text-align: right;
+}
+:where(.zen-music) .wdg-widget[data-layout='inside'] .wdg-meter-horizontal { border: 0; background: var(--wdg-groove); }
+:where(.zen-music) .wdg-widget[data-layout='inside'] .wdg-meter-level,
+:where(.zen-music) .wdg-widget[data-layout='inside'] .wdg-meter-hold { top: auto; bottom: 0; height: var(--wdg-strip); opacity: 1; }
+:where(.zen-music) .wdg-meter[data-layout='inside'] > .wdg-body::after { position: absolute; right: 0; bottom: 0; left: 0; height: var(--wdg-strip); background: var(--wdg-fill); content: ''; opacity: 0.16; pointer-events: none; }
+
+/* Set value / arriving value / range: the original full-height marks and faint range wash. */
+:where(.zen-music) .wdg-slider-span,
+:where(.zen-music) .wdg-slider-reach,
+:where(.zen-music) .wdg-slider-wake { position: absolute; pointer-events: none; }
+:where(.zen-music) .wdg-slider-horizontal .wdg-slider-span { inset: 0 auto 0 calc(var(--wdg-span-at) * 100%); width: max(2px, calc(var(--wdg-span-size) * 100%)); background: var(--wdg-fill); opacity: 0.16; }
+:where(.zen-music) .wdg-slider-horizontal .wdg-slider-reach,
+:where(.zen-music) .wdg-slider-horizontal .wdg-slider-wake { z-index: 2; top: 0; bottom: 0; transform: translateX(-50%); }
+:where(.zen-music) .wdg-slider-horizontal .wdg-slider-reach { left: calc(var(--wdg-span-reach) * 100%); width: var(--wdg-mark-width); background: var(--wdg-reach-ink); }
+:where(.zen-music) .wdg-slider-horizontal .wdg-slider-wake {
+  top: var(--wdg-wake-lift);
+  bottom: var(--wdg-wake-lift);
+  left: calc(var(--wdg-wake-at) * 100%);
+  width: 2px;
+  border-radius: var(--radius-xs);
+  background: var(--wdg-marker);
+  opacity: var(--wdg-wake-ink);
+}
+:where(.zen-music) .wdg-slider-wake[data-wake='0'] { --wdg-wake-at: var(--wdg-wake-0, var(--wdg-live, 0)); --wdg-wake-lift: 3px; --wdg-wake-ink: 1; }
+:where(.zen-music) .wdg-slider-wake[data-wake='1'] { --wdg-wake-at: var(--wdg-wake-1, var(--wdg-live, 0)); --wdg-wake-lift: 3px; --wdg-wake-ink: 0.62; }
+:where(.zen-music) .wdg-slider-wake[data-wake='2'] { --wdg-wake-at: var(--wdg-wake-2, var(--wdg-live, 0)); --wdg-wake-lift: 3.5px; --wdg-wake-ink: 0.44; }
+:where(.zen-music) .wdg-slider-wake[data-wake='3'] { --wdg-wake-at: var(--wdg-wake-3, var(--wdg-live, 0)); --wdg-wake-lift: 4px; --wdg-wake-ink: 0.3; }
+:where(.zen-music) .wdg-slider-wake[data-wake='4'] { --wdg-wake-at: var(--wdg-wake-4, var(--wdg-live, 0)); --wdg-wake-lift: 4.5px; --wdg-wake-ink: 0.2; }
+:where(.zen-music) .wdg-slider-wake[data-wake='5'] { --wdg-wake-at: var(--wdg-wake-5, var(--wdg-live, 0)); --wdg-wake-lift: 5px; --wdg-wake-ink: 0.12; }
+:where(.zen-music) .wdg-slider[data-layout='inside'] .wdg-slider-thumb { z-index: 2; inset: 0 auto 0 calc(var(--wdg-fraction) * 100%); width: var(--wdg-mark-width); transform: translateX(-50%); background: var(--wdg-fill); }
+:where(.zen-music) .wdg-driver { margin-left: 4px; color: var(--wdg-fill); }
+:where(.zen-music) .wdg-widget[data-layout='inside'][data-disabled] > .wdg-caption,
+:where(.zen-music) .wdg-widget[data-layout='inside'][data-disabled] > .wdg-readout { color: var(--wdg-text); opacity: 0.75; }
+:where(.zen-music) .wdg-widget > .wdg-body { display: flex; align-items: center; justify-content: center; }
+
+:where(.zen-music) .wdg-slider-body,
+:where(.zen-music) .wdg-number-body,
+:where(.zen-music) .wdg-toggle-body,
+:where(.zen-music) .wdg-segmented-body,
+:where(.zen-music) .wdg-select-body,
+:where(.zen-music) .wdg-button-body[data-tone='normal'],
+:where(.zen-music) .wdg-button-body[data-tone='danger'],
+:where(.zen-music) .wdg-meter-body {
+  overflow: hidden;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-face);
+}
+:where(.zen-music) .wdg-number-body,
+:where(.zen-music) .wdg-toggle-body,
+:where(.zen-music) .wdg-button-body { display: flex; align-items: center; justify-content: center; height: var(--wdg-field-height); color: var(--wdg-text); line-height: 1; white-space: nowrap; }
+:where(.zen-music) .wdg-control-group { display: inline-flex; align-items: stretch; height: var(--ctl-h); border: 1px solid var(--wdg-edge); border-radius: var(--wdg-radius); background: var(--wdg-face); overflow: hidden; }
+:where(.zen-music) .wdg-control-group > * { display: flex; align-items: center; }
+:where(.zen-music) .wdg-control-group > * + * { border-left: 1px solid var(--wdg-edge); }
+:where(.zen-music) .wdg-control-group > .wdg > .wdg-body,
+:where(.zen-music) .wdg-control-group > .wdg-body { height: 100%; border: 0; border-radius: 0; }
+:where(.zen-music) .wdg-control-group > .wdg > .wdg-segmented-body button { height: 100%; }
+
+:where(.zen-music) .wdg-caption,
+:where(.zen-music) .wdg-label { font-family: var(--wdg-sans); font-variation-settings: var(--wdg-sans-axes); font-size: var(--text-label); line-height: 1.2; color: var(--wdg-caption); white-space: nowrap; text-align: center; }
+:where(.zen-music) .wdg-readout,
+:where(.zen-music) .wdg-number-body { font-family: var(--font-readout); font-variation-settings: var(--font-readout-axes); font-size: var(--text-label); letter-spacing: var(--track-tight); font-variant-numeric: tabular-nums; }
+:where(.zen-music) .wdg-toggle-body,
+:where(.zen-music) .wdg-segmented-body button,
+:where(.zen-music) .wdg-select-body,
+:where(.zen-music) .wdg-button-body { font-family: var(--wdg-sans); font-variation-settings: var(--wdg-sans-axes); font-size: var(--text-control); cursor: pointer; }
+:where(.zen-music) .wdg-slider-body,
+:where(.zen-music) .wdg-number-body { position: relative; }
+:where(.zen-music) .wdg-slider-fill,
+:where(.zen-music) .wdg-number-fill { position: absolute; background: var(--wdg-fill); pointer-events: none; }
+:where(.zen-music) .wdg-number-fill,
+:where(.zen-music) .wdg-slider-horizontal .wdg-slider-fill { inset: 0 auto 0 calc(var(--wdg-fill-start) * 100%); width: calc(var(--wdg-fill-size) * 100%); }
+:where(.zen-music) .wdg-toggle-body:hover:not(:disabled):not([data-on]),
+:where(.zen-music) .wdg-segmented-body button:hover:not(:disabled):not([aria-checked='true']),
+:where(.zen-music) .wdg-button-body:hover:not(:disabled) { color: var(--wdg-text-strong); }
+:where(.zen-music) .wdg-device-power[data-on],
+:where(.zen-music) .wdg-segmented-body button[aria-checked='true'] { border-color: var(--wdg-fill); background: var(--wdg-fill); color: var(--wdg-fill-text); }
+:where(.zen-music) .wdg-toggle-body[data-on] { border-color: var(--wdg-edge); background: var(--wdg-fill); color: var(--wdg-fill-text); }
+:where(.zen-music) .wdg [role='slider'] { outline: none; touch-action: none; }
+:where(.zen-music) .wdg [role='slider']:focus-visible,
+:where(.zen-music) .wdg-toggle-body:focus-visible,
+:where(.zen-music) .wdg-device-head:focus-visible,
+:where(.zen-music) .wdg-device-head button:focus-visible,
+:where(.zen-music) .wdg-segmented-body button:focus-visible,
+:where(.zen-music) .wdg-select-body:focus-visible { outline: 1px solid var(--wdg-focus); outline-offset: 1px; }
+:where(.zen-music) .wdg-control-group :is(button, [role='slider']):focus-visible { outline: 1px solid var(--wdg-focus); outline-offset: -2px; }
+:where(.zen-music) .wdg-widget[data-disabled],
+:where(.zen-music) .wdg[aria-disabled='true'],
+:where(.zen-music) .wdg:has(> [aria-disabled='true']),
+:where(.zen-music) .wdg:has(> :disabled) { opacity: 0.4; }
+:where(.zen-music) .wdg [aria-disabled='true'],
+:where(.zen-music) .wdg :disabled { cursor: default; }

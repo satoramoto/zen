@@ -1,0 +1,64 @@
+# Music theme lane
+
+## Integration
+
+- Default fidelity target: widgets `src/theme/theme.ts` `DEFAULT_THEME = PRESETS[0]`, **Current favorite**, not palette.css's fallback amber. Original primary, source, deck, signal and spectral **HSL strings retain full source precision through CSS paint and skin JSON**. All four saved presets, surfaces and exact deck-variation math live in `themes/mixflow-reference.ts`; there is no pre-mix 8-bit quantization or per-component skin special case.
+- Pack and all four facet ids are **`mixflow`**. It is appended to the lists, preserving the old default pack. Keep the enclosing `ThemeScope`/`SkinScope`; there is no forced inner theme, ThemeRoot or React theme context.
+- Import `Music/base.css` **before** component/mixer CSS. It imports `theme.css` and owns the original `controls/shared.css` anatomy, including slider inside-layout/wake and common pressable rules. Do not copy that shared CSS again in another lane.
+- Mixer root: **`zen-music wdg play-example`**. Standalone component stories need a **`zen-music wdg` wrapper**. This class establishes local aliases; it does not select a theme.
+- `theme.css` loads the two exact Recursive Latin variable subsets from the lead-installed `@fontsource-variable/recursive` package, using `font-display:block`. No runtime CDN, copied binary or external checkout import. Its preserved OFL notice/license ships with the CSS.
+- Mixflow's face supplies proportional Recursive (`MONO 0, CASL .38`) at the root, mono axes for readings, normal inherited leading/tracking, and source weights. Other face facets supply their own fonts/axes/tracking/leading. A readout explicitly takes `--font-readout`, an invisible change for mixflow but needed for Elektron's separate readout family.
+- Mixflow's material sets `instrument.nativeColorScheme: 'normal'`, preserving the reference native checkbox appearance. `.zen-music` reads `--instrument-native-color-scheme`; legacy materials default to `var(--scheme)` and retain their actual mode. No global body/preview override is used.
+- `base.css` also imports **`materials.css`**, a geometry-free paint binding: keys/selected faces use `--mat-key-*` and pressed treatment; number windows use `--mat-screen-*`; meter channels and fader slots use `--mat-well-*`; physical caps use `--mat-handle-*`. Fills, gradients, textures and shadows really change under Hardware/Frost, not only radii. `--wdg-face`/`--wdg-well` stay **palette colours**, safe in `color-mix()`, never gradient-valued material backgrounds. Mixflow's number-window material matches the original control surface.
+- Dense finish options `handlePaint: 'marker' | 'material'` and `freeHandleShadow` preserve the original flat slider marker and its absent free-cap shadow while mixer faders keep the source handle shadow. Legacy materials default to physical handle paint/shadow. The local CSS marker switch is deliberately whitespace/guaranteed-invalid `initial`: it resolves local marker ink on each cap without a brand selector, early-resolved variable or a dithered uniform gradient. Geometry and source component files are unchanged.
+
+## APIs (local exports; lead chooses public aliases)
+
+- `theme/resolve.ts`: **`musicMixerTheme(deckIds)`** → source-compatible `MixerTheme` using CSS aliases, so existing scopes/facet swaps/editor edits apply live without a hook. Pass `state.decks.map(d => d.id)`; default ids are a/b/c/d.
+- **`resolveMusicTheme(facets, mode, deckIds)`** → `{colors, deckPairs, mixer, waveformBase, waveformSilence}` when a host already has resolved Zen facets. Uses the currently worn palette/materials, never an injected default.
+- **`identityLabel(ink, caption = 'var(--caption)')`** preserves the source's 45% identity/55% caption sRGB treatment.
+- `theme/legacy.ts`: **`importMixflowTheme(value, {id?, label?})`** and **`parseMixflowTheme(json, options)`** return `{ok:true, skin, warnings, spectral}` or `{ok:false, errors}`. `skin` is a normal `zen-skin` v1 on base `mixflow`, usable by existing SkinScope/provider/storage/import-export. The reference has one mode, so its values override dark only; Zen's derived light mode remains editable independently. No localStorage or DOM side effects.
+- `theme/theme.ts` offers the old plain-data `Theme`, `Tone`, `ColorRole`, `DeckVariation`, `DEFAULT_THEME`, `PRESETS`, `DARK_SURFACES`, `DEFAULT_VARIATION`, `ROLES`, `STEM_ROLES`, `color`, and `isTheme` names. It is **not** an alternate theme implementation/root.
+
+## Contract and aliases
+
+- Optional **`Scheme.instrument`** adds six `sources`, four `decks`, three `spectral` colours, waveform neutral, signal/status inks, quiet/control borders and detailed neutral surfaces. Every pack emits the same `--instrument-*` variable set through `toCssVars`; omitted extensions derive from that pack's existing hues/roles/surfaces. The old five generic hue slots and their separation contract stay unchanged.
+- `sources[0..5]` map to **drums, bass, other, vocals, guitar, piano**. `decks[0..3]` map to **A, B, C, D**: two shades from left then two from right. Waveform shades remain a live colour mix, not frozen extra swatches.
+- Local aliases include original `--bg/--panel/--rail/--sel`, `--bd/--bd2/--bd3`, ink/primary/state/surface aliases, `--stem-*`, `--deck-*`, `--spectral-*`, `--mono/--sans`, source type/track aliases and all `--wdg-*` defaults. **No Zen contract variable is overwritten.** The `--wdg-*` defaults remain per-widget as in the reference; geometry follows the selected Zen scale.
+- All ten CSS-lane aliases from `docs/music-layout-reference.md` are supplied: `--play-deck-sheen`, `--play-fader-highlight`, `--play-wave-grid-ink`, `--play-wave-bar-faint`, `--play-wave-bar`, `--play-wave-beat`, `--play-wave-loading-stripe`, `--play-wave-source-divider`, `--play-context-shadow` (colour only), `--play-context-radius`. `--music-*` equivalents are available too. White-alpha paints use the palette's highlight at the exact original alpha; shape/shadow literals are facet-owned.
+- Waveform lane owns `theme/spectral.ts`. Canvas reads `--instrument-spectral-{low,mid,high}`, `--instrument-waveform-base`, `--instrument-idle`; aliases also expose `--music-spectral-mode` and numeric **0–100** `--music-spectral-strength`. These follow active palette/material/skin edits.
+
+## Existing editor, optional defaults and limitations
+
+- The **existing** ThemeEditor now exposes all **35 instrument palette swatches** in five additional groups. Paths: `['palette', mode, 'instrument', 'sources', i]`, `…'decks',i`, `…'spectral',i`, `…'surface',name`, and the instrument's scalar colour roles. The colour row displays original solid CSS HSL, a correctly initialized native picker, and H/S/L fields without rewriting untouched paint. New edits may become hex; Reset restores the exact source HSL string. Modern/legacy HSL syntax and hue units are parsed framework-free; skin validation accepts solid source HSL safely.
+- The same editor also exposes font axes, medium/bold weights, extra tracking/leading, `scale.controlText/leadText` (outside `sizes`, preserving its total indexed type), and every `materials.instrument` finish, strength, paint-mode, handle-paint/shadow and native-control-scheme setting.
+- **The optional-default caveat is fixed.** `skin.ts` uses `editableFacets` as a virtual validation/editor schema, and seeds only an overridden optional branch when merging. Missing instrument arrays inherit the selected palette's own hues/roles/surfaces; partial finish overrides inherit the selected material's own defaults. Optional face/scale fields likewise validate on legacy facets. Untouched packs retain their original facet objects, and virtual defaults are not frozen into skin JSON. `valueAt`, Reset and imports use the same defaults. No mixflow values are forced onto another pack.
+- Legacy adapter explicitly rejects translucent saved surface roles other than outside rather than silently making them solid. The outside-area tint retains reference #b3 alpha; a custom outside alpha emits a warning. Optional non-default waveform finishes are returned as `spectral` metadata (with a warning), not silently embedded in the skin; pass them through the waveform lane's explicit paint override. Band colours, paint mode and strength are in the skin.
+- No model/helper/snapshot/unit suites were added or run. No old `components/music/` files, central exports/registries, commits/worktrees/servers or generated harness skins were touched. Expanded ownership includes the existing editor's panels/fields/stories, `skin.ts` and `colour.ts`. Lead generates harness skins after final palette integration.
+
+## Actually checked
+
+- `npm run typecheck` passed (after preserving the existing `Scale.sizes` total index).
+- `npm run build:lib` and `npm run check:lib` passed at the lane checkpoint; the latter reports both framework-free entries free of React. Final central-export/font-bundling integration remains the lead's build checkpoint.
+- One-off **static CSS source audit**: all 53 shared-control rules retain source selectors/order/declarations after scope, whitespace and removed literal fallbacks are normalized, except the intentional readout font-family/axes facet adaptation. This is not a UI test or browser evidence.
+- **Exact browser visual comparison passed:** source vs port, **0 differing pixels**, maximum delta **0**, at 1440×900, 1280×720 and 900×700. Artifacts: `.shots/music-theme-precision/`. HSL quantization was the baseline paint discrepancy; retaining source HSL removed it.
+- **Repeated after material paint integration:** the same three source comparisons are still **0 differing pixels / maximum delta 0**. Latest artifacts: `.shots/music-theme-materials/`. A first uniform-gradient handle overlay produced 1-level dithering; the solid local-marker binding fixes it rather than accepting a tolerance.
+- **Native-controls comparison passed:** the open Wave Settings popover is pixel-identical at 1440×900 (full page 1440×902): **0 differing pixels**. Source and mixflow checkbox schemes are `normal`; a separate legacy Linear/dark browser check reports `dark`. Artifacts: `.shots/music-theme-native/`.
+- **Three scoped browser story plays passed**, no failures/retries/HMR interruption: `music-theme--live-editor` (source/deck/spectral repaint while paused, same canvas identities, working control, legacy palette/material swaps and actual pasted-JSON import); `music-theme--all-instrument-swatches` (all 35 editable, exact untouched HSL and Reset); `music-theme--legacy-facet-round-trip` (four legacy facet swaps, partial colour/finish/axes/text overrides, JSON round-trip and inherited reset). `node scripts/music-stories.mjs --prefix Music/Theme --renderer react --workers 1 --timeout 90000 --retries 0 --output .shots/music-theme-editor`. Report: `.shots/music-theme-editor/stories-2026-10-29T21-22-42-685Z.json`. These are React-only controlled editor harnesses; Music's renderer parity is covered by its component stories.
+- **Latest scoped run: 4/4 plays passed**, no failures/flakiness/HMR interruptions, including **`music-theme--material-facet-paint`**. It observes Hardware's actual face/well/screen/handle gradients, handle texture/shadow and changed pressed shadow; verifies unchanged part dimensions; then observes Frost's different paint on all four roles without remounting. The other three plays passed again with the material binding enabled. Report: `.shots/music-theme-materials-editor/stories-2026-10-29T21-30-44-792Z.json`. Latest `npm run typecheck` passed too.
+
+## Integration follow-up: dense scale compatibility
+
+The first full CI run exposed general Yahaha layout assumptions when the source's 22px/2px
+metrics were used as the ordinary Zen scale. The mixflow facet now supplies compact general
+metrics plus explicit `scale.instrument` source metrics. Music reads the emitted
+`--instrument-{control-h,space-*,size-*}` roles; other scale facets derive them from their own
+ordinary values. There is no inner theme or literal per-component source exception. The
+existing scale editor exposes all instrument metrics and skin validation/merging supports
+partial density overrides on legacy facets. General tab padding and the assembled-screen
+target floor use compatible generic values; Music pressable insets/geometry remain original.
+
+The three previously failing existing Yahaha suites plus token/skin checks pass **438/438**
+without changing their assertions. The mixer still has **zero differing pixels** at all three
+reference sizes. `LiveEditor` also exercises actual control resizing through the new density
+fields while checking that the general control height and mounted canvases are preserved.

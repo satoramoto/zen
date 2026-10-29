@@ -1,4 +1,5 @@
-import type { Palette } from '../contract';
+import type { InstrumentScheme, Palette } from '../contract';
+import { MIXFLOW_DEFAULT_SPECTRAL, MIXFLOW_DEFAULT_THEME, MIXFLOW_DARK_SURFACES, mixflowColor, mixflowDeckTones, type MixflowReferenceTheme } from './mixflow-reference';
 
 // Values from each Refero style's colour roles (or yahaha's Push boards, or yahaha's old desk UI).
 // Anything the source doesn't define is marked "added". None of the Refero styles defines a
@@ -545,4 +546,59 @@ export const bigRed: Palette = {
   },
 };
 
-export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed];
+/** The original six sources and four deck-family shades, kept independent of Zen's five generic
+ * hues. Their neighbouring pastels are intentional source data, not a separation-rule redesign. */
+export function mixflowInstrument(theme: MixflowReferenceTheme): InstrumentScheme {
+  const s = { ...MIXFLOW_DARK_SURFACES, ...theme.surfaces }, c = theme.colors;
+  const spectral = theme.spectral ?? MIXFLOW_DEFAULT_SPECTRAL;
+  return {
+    sources: [c.drums, c.bass, c.other, c.vocals, c.guitar, c.piano].map(mixflowColor) as unknown as InstrumentScheme['sources'],
+    decks: mixflowDeckTones(theme).map(mixflowColor) as unknown as InstrumentScheme['decks'],
+    spectral: [spectral.colors.low, spectral.colors.mid, spectral.colors.high].map(mixflowColor) as unknown as InstrumentScheme['spectral'],
+    waveformBase: s.waveformBase, signal: mixflowColor(c.signal), positive: s.success, negative: s.danger,
+    info: s.info, preview: s.preview, idle: s.idle, focus: s.focus, highlight: '#ffffff',
+    borderQuiet: s.borderQuiet, borderControl: s.borderControl,
+    surface: {
+      rail: s.rail, selected: s.selected, control: s.control, stats: s.stats, cell: s.cell,
+      cellMuted: s.cellMuted, sunken: s.sunken, band: s.band, laneHead: s.laneHead,
+      outside: s.outside.slice(0, 7), manual: s.manual,
+    },
+  };
+}
+const mixflowSurfaces = MIXFLOW_DARK_SURFACES;
+export const mixflow: Palette = {
+  id: 'mixflow', label: 'mix[flow] (Current favorite)',
+  dark: {
+    // Added: generic Zen meaning colours retain Frost's separation-safe roles. Music's original
+    // source families and state inks live in instrument, never repainted to satisfy that rule.
+    ...frost.dark,
+    surface: [mixflowSurfaces.background, mixflowSurfaces.panel, mixflowSurfaces.control, mixflowSurfaces.selected],
+    text: [mixflowSurfaces.text, mixflowSurfaces.ui, mixflowSurfaces.detail, mixflowSurfaces.caption],
+    border: mixflowSurfaces.border, borderStrong: mixflowSurfaces.focus,
+    action: mixflowColor(MIXFLOW_DEFAULT_THEME.colors.primary),
+    actionText: '#000000',
+    instrument: mixflowInstrument(MIXFLOW_DEFAULT_THEME),
+  },
+  // added: the reference is dark-only. A light mode turns its neutral surfaces over, deepens
+  // each source along its own hue, and keeps the editor free to change either mode separately.
+  light: {
+    ...frost.light,
+    surface: ['#f4f4f5', '#ebebed', '#e3e3e6', '#d9d9de'],
+    text: ['#141416', '#3a3a41', '#606068', '#8b8b93'],
+    border: '#ccccd2', borderStrong: '#8b8b93',
+    instrument: {
+      sources: ['#227f9e', '#535db1', '#9251b2', '#b94a78', '#a76639', '#737d32'], // added
+      decks: ['#388c3e', '#498c38', '#1685a2', '#1698a2'], // added
+      spectral: ['#a52b2b', '#2b842b', '#3535ab'], // added
+      waveformBase: '#747b86', signal: '#0b7a3a', positive: '#24866e', negative: '#bd3933', // added
+      info: '#277da8', preview: '#8956ad', idle: '#b1b1ba', focus: '#777782', highlight: '#141416', // added
+      borderQuiet: '#d4d4da', borderControl: '#c5c5cc', // added
+      surface: { // added
+        rail: '#eeeef0', selected: '#d9d9de', control: '#e3e3e6', stats: '#e9e9ec', cell: '#dedee3',
+        cellMuted: '#e7e7eb', sunken: '#eeeef0', band: '#f0f0f2', laneHead: '#dedee5', outside: '#e6e6ea', manual: '#e1e1e6',
+      },
+    },
+  },
+};
+
+export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed, mixflow];

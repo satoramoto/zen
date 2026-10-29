@@ -115,4 +115,23 @@ const instrument: Faces = {
   labelCase: 'none', // decision 68: labels in sentence case ("Now playing")
 };
 
-export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument];
+// openflowfm/widgets type.css: the same Recursive family in a proportional and monospaced cut,
+// CASL 0.38 in both. Music/theme.css self-hosts the exact Latin and Latin-ext variable subsets.
+export const mixflowFaces: Faces = {
+  id: 'mixflow', label: 'mix[flow] (Recursive)',
+  sans: "'Recursive Variable', system-ui, -apple-system, sans-serif",
+  display: "'Recursive Variable', system-ui, -apple-system, sans-serif",
+  mono: "'Recursive Variable', ui-monospace, Menlo, monospace",
+  readout: "'Recursive Variable', ui-monospace, Menlo, monospace",
+  math: MATH, // added: the reference has no math role
+  variation: {
+    sans: "'MONO' 0, 'CASL' 0.38", display: "'MONO' 0, 'CASL' 0.38",
+    mono: "'MONO' 1, 'CASL' 0.38", readout: "'MONO' 1, 'CASL' 0.38",
+  },
+  weightBody: 400, weightMedium: 500, weightStrong: 600, weightBold: 700,
+  weightDisplay: 600, weightNumeral: 400,
+  tracking: 'normal', trackingDisplay: 'normal', trackingTight: '-0.02em', trackingSlight: '0.04em', lineHeight: 'normal',
+  trackingLabel: '0.08em', trackingCaps: '0.14em', labelCase: 'none',
+};
+
+export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument, mixflowFaces];

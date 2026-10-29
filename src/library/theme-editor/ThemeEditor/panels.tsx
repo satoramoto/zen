@@ -1,5 +1,6 @@
 // The editor's facet tabs: palette, type, scale, materials and shader. Each reads the values in
 // force (`resolved`) and the base's (`base`, where a double-click resets to) and writes overrides.
+import type { ChangeEvent } from 'react';
 import { Text } from '../../primitives/Text';
 import { Stack } from '../../primitives/Stack';
 import { Group } from '../../layout/Group';
@@ -9,7 +10,7 @@ import { Select } from '../../components/core/Select/Select';
 import { LAYERS, type Facets, type Mode, type Scheme } from '../../contract';
 import { faces as FACES } from '../../themes/faces';
 import { paletteWarnings } from '../colour';
-import { SHADER_NAMES, clearOverride, getOverride, setOverride, type OverridePath, type ShaderName, type Skin } from '../skin';
+import { SHADER_NAMES, clearOverride, editableFacets, getOverride, setOverride, type OverridePath, type ShaderName, type Skin } from '../skin';
 import { ColourRow, FacetHead, LengthField, NumberRowField, Row } from './fields';
 
 export interface PanelProps {
@@ -23,7 +24,7 @@ export interface PanelProps {
 
 /* ---------- palette ---------- */
 
-type ColourKey = readonly [keyof Scheme, (number | string)?];
+type ColourKey = readonly [keyof Scheme, ...(number | string)[]];
 const COLOUR_GROUPS: { name: string; roles: { name: string; key: ColourKey }[] }[] = [
   { name: 'Surfaces', roles: [0, 1, 2, 3].map((i) => ({ name: `Surface ${i}`, key: ['surface', i] as const })) },
   { name: 'Text', roles: [0, 1, 2, 3].map((i) => ({ name: `Text ${i + 1}`, key: ['text', i] as const })) },
@@ -75,17 +76,54 @@ const COLOUR_GROUPS: { name: string; roles: { name: string; key: ColourKey }[] }
       { name: 'Black key', key: ['keys', 'black'] },
     ],
   },
+  {
+    name: 'Instrument sources',
+    roles: [0, 1, 2, 3, 4, 5].map((i) => ({ name: `Source ${i + 1}`, key: ['instrument', 'sources', i] as const })),
+  },
+  {
+    name: 'Instrument decks',
+    roles: ['A', 'B', 'C', 'D'].map((letter, i) => ({ name: `Deck ${letter}`, key: ['instrument', 'decks', i] as const })),
+  },
+  {
+    name: 'Spectral paint',
+    roles: [
+      ...['Low', 'Mid', 'High'].map((name, i) => ({ name: `${name} frequencies`, key: ['instrument', 'spectral', i] as const })),
+      { name: 'Waveform neutral', key: ['instrument', 'waveformBase'] },
+    ],
+  },
+  {
+    name: 'Instrument ink & signals',
+    roles: [
+      { name: 'Signal', key: ['instrument', 'signal'] },
+      { name: 'Positive signal', key: ['instrument', 'positive'] },
+      { name: 'Negative signal', key: ['instrument', 'negative'] },
+      { name: 'Information', key: ['instrument', 'info'] },
+      { name: 'Preview', key: ['instrument', 'preview'] },
+      { name: 'Idle', key: ['instrument', 'idle'] },
+      { name: 'Instrument focus', key: ['instrument', 'focus'] },
+      { name: 'Highlight', key: ['instrument', 'highlight'] },
+      { name: 'Quiet border', key: ['instrument', 'borderQuiet'] },
+      { name: 'Control border', key: ['instrument', 'borderControl'] },
+    ],
+  },
+  {
+    name: 'Instrument surfaces',
+    roles: [
+      ['Rail', 'rail'], ['Chosen surface', 'selected'], ['Control surface', 'control'], ['Statistics', 'stats'],
+      ['Cell', 'cell'], ['Muted cell', 'cellMuted'], ['Sunken', 'sunken'], ['Band', 'band'],
+      ['Lane heading', 'laneHead'], ['Outside area', 'outside'], ['Manual', 'manual'],
+    ].map(([name, key]) => ({ name, key: ['instrument', 'surface', key] as const })),
+  },
 ];
 
 const MODES: readonly Mode[] = ['light', 'dark'];
 
-const pick = (scheme: Scheme, key: ColourKey): unknown => {
-  const v = scheme[key[0]] as unknown;
-  return key[1] === undefined ? v : (v as Record<string | number, unknown> | undefined)?.[key[1]];
-};
+const pick = (scheme: Scheme, key: ColourKey): unknown => key.reduce<unknown>((at, part) =>
+  at !== null && typeof at === 'object' ? (at as Record<string | number, unknown>)[part] : undefined, scheme);
 
 export function PalettePanel({ skin, onChange, resolved, base, mode, onModeChange }: PanelProps & { mode: Mode; onModeChange(mode: Mode): void }) {
   const warnings = paletteWarnings(resolved.palette, mode);
+  const worn = editableFacets(resolved).palette[mode], original = editableFacets(base).palette[mode];
   return (
     <Stack gap={4}>
       <FacetHead skin={skin} facet="palette" onChange={onChange} />
@@ -95,15 +133,15 @@ export function PalettePanel({ skin, onChange, resolved, base, mode, onModeChang
       {COLOUR_GROUPS.map((g) => (
         <Group key={g.name} name={g.name} direction="column" gap={1}>
           {g.roles.map((r) => {
-            const path = ['palette', mode, ...r.key.filter((k) => k !== undefined)] as unknown as OverridePath;
+            const path: OverridePath = ['palette', mode, ...r.key];
             return (
               <ColourRow
                 key={r.name}
                 skin={skin}
                 name={r.name}
                 path={path}
-                value={pick(resolved.palette[mode], r.key)}
-                base={pick(base.palette[mode], r.key)}
+                value={pick(worn, r.key)}
+                base={pick(original, r.key)}
                 onChange={onChange}
               />
             );
@@ -159,7 +197,9 @@ const FACE_ROLES = [
 
 const WEIGHTS = [
   { key: 'weightBody', name: 'Body weight' },
+  { key: 'weightMedium', name: 'Medium weight' },
   { key: 'weightStrong', name: 'Strong weight' },
+  { key: 'weightBold', name: 'Bold weight' },
   { key: 'weightDisplay', name: 'Display weight' },
   { key: 'weightNumeral', name: 'Numeral weight' },
 ] as const;
@@ -178,7 +218,7 @@ function stackItems(current: string) {
 }
 
 export function TypePanel({ skin, onChange, resolved, base }: PanelProps) {
-  const f = resolved.faces;
+  const f = editableFacets(resolved).faces, b = editableFacets(base).faces;
   const set = (path: OverridePath, v: unknown) => onChange(setOverride(skin, path, v));
   return (
     <Stack gap={4}>
@@ -203,7 +243,7 @@ export function TypePanel({ skin, onChange, resolved, base }: PanelProps) {
       <Group name="Weights" direction="column" gap={1}>
         {WEIGHTS.map((w) => (
           <Row key={w.key} label={w.name}>
-            <NumberRowField label={w.name} value={f[w.key]} base={base.faces[w.key]} min={100} max={900} step={100} pattern="%d" onChange={(v) => set(['faces', w.key], v)} />
+            <NumberRowField label={w.name} value={f[w.key]!} base={b[w.key]!} min={100} max={1000} step={100} pattern="%d" onChange={(v) => set(['faces', w.key], v)} />
           </Row>
         ))}
       </Group>
@@ -214,6 +254,17 @@ export function TypePanel({ skin, onChange, resolved, base }: PanelProps) {
         <Row label="Display tracking">
           <LengthField label="Display tracking" raw={f.trackingDisplay} base={base.faces.trackingDisplay} unit="em" min={-0.1} max={0.2} step={0.001} onChange={(v) => set(['faces', 'trackingDisplay'], v)} />
         </Row>
+        {([
+          ['trackingTight', 'Tight tracking'], ['trackingSlight', 'Slight tracking'],
+          ['trackingLabel', 'Label tracking'], ['trackingCaps', 'Caps tracking'],
+        ] as const).map(([key, name]) => (
+          <Row key={key} label={name}>
+            <LengthField label={name} raw={f[key]} base={b[key]} unit="em" min={-.1} max={.3} step={.001} onChange={(v) => set(['faces', key], v)} />
+          </Row>
+        ))}
+        <Row label="Line height">
+          <Text as="input" role="body" size="label" className="zen-theme-editor__text" aria-label="Line height" value={f.lineHeight ?? ''} onChange={(e: ChangeEvent<HTMLInputElement>) => set(['faces', 'lineHeight'], e.currentTarget.value)} />
+        </Row>
         <Row label="Label case">
           <Segmented
             items={['None', 'Upper']}
@@ -222,6 +273,13 @@ export function TypePanel({ skin, onChange, resolved, base }: PanelProps) {
             onChange={(i) => set(['faces', 'labelCase'], i === 1 ? 'uppercase' : 'none')}
           />
         </Row>
+      </Group>
+      <Group name="Variable font axes" direction="column" gap={1}>
+        {(['sans', 'display', 'mono', 'readout'] as const).map((key) => (
+          <Row key={key} label={`${key[0].toUpperCase()}${key.slice(1)} axes`}>
+            <Text as="input" role="code" size="label" className="zen-theme-editor__text" aria-label={`${key} variation axes`} value={f.variation?.[key] ?? 'normal'} onChange={(e: ChangeEvent<HTMLInputElement>) => set(['faces', 'variation', key], e.currentTarget.value)} />
+          </Row>
+        ))}
       </Group>
       <Group name="Specimen" direction="column" gap={2}>
         {FACE_ROLES.map((r) => (
@@ -247,7 +305,7 @@ const SIZES = [
 ] as const;
 
 export function ScalePanel({ skin, onChange, resolved, base }: PanelProps) {
-  const s = resolved.scale;
+  const s = editableFacets(resolved).scale, b = editableFacets(base).scale;
   const set = (path: OverridePath, v: unknown) => onChange(setOverride(skin, path, v));
   return (
     <Stack gap={4}>
@@ -272,6 +330,29 @@ export function ScalePanel({ skin, onChange, resolved, base }: PanelProps) {
               pattern="%d px"
               onChange={(v) => set(['scale', 'sizes', z.key], v)}
             />
+          </Row>
+        ))}
+        {([['controlText', 'Control text'], ['leadText', 'Lead text']] as const).map(([key, name]) => (
+          <Row key={key} label={name}>
+            <NumberRowField label={`${name} size`} value={s[key]!} base={b[key]!} min={6} max={200} pattern="%d px" onChange={(v) => set(['scale', key], v)} />
+          </Row>
+        ))}
+      </Group>
+      <Group name="Instrument density" direction="column" gap={1}>
+        <Row label="Spacing unit">
+          <NumberRowField label="Instrument spacing unit" value={s.instrument!.unit} base={b.instrument!.unit} min={1} max={32} pattern="%d px" onChange={(v) => set(['scale', 'instrument', 'unit'], v)} />
+        </Row>
+        <Row label="Control height">
+          <NumberRowField label="Instrument control height" value={s.instrument!.control} base={b.instrument!.control} min={12} max={96} pattern="%d px" onChange={(v) => set(['scale', 'instrument', 'control'], v)} />
+        </Row>
+        {SIZES.map(({ key, name }) => (
+          <Row key={key} label={name}>
+            <NumberRowField label={`Instrument ${name.toLowerCase()} size`} value={s.instrument!.sizes[key]} base={b.instrument!.sizes[key]} min={6} max={200} pattern="%d px" onChange={(v) => set(['scale', 'instrument', 'sizes', key], v)} />
+          </Row>
+        ))}
+        {([['controlText', 'control text'], ['leadText', 'lead text']] as const).map(([key, name]) => (
+          <Row key={key} label={name}>
+            <NumberRowField label={`Instrument ${name} size`} value={s.instrument![key]!} base={b.instrument![key]!} min={6} max={200} pattern="%d px" onChange={(v) => set(['scale', 'instrument', key], v)} />
           </Row>
         ))}
       </Group>
@@ -303,8 +384,9 @@ const RADII = [
 const INPUTS = ['filled', 'box', 'underline'] as const;
 
 export function MaterialsPanel({ skin, onChange, resolved, base }: PanelProps) {
-  const m = resolved.materials;
-  const b = base.materials;
+  const m = editableFacets(resolved).materials;
+  const b = editableFacets(base).materials;
+  const instrument = m.instrument!, original = b.instrument!;
   const set = (path: OverridePath, v: unknown) => onChange(setOverride(skin, path, v));
   return (
     <Stack gap={4}>
@@ -336,6 +418,35 @@ export function MaterialsPanel({ skin, onChange, resolved, base }: PanelProps) {
         </Row>
         <Row label="Lit strength">
           <LengthField label="Lit strength" raw={m.lit.strength} base={b.lit.strength} unit="%" min={0} max={100} step={1} onChange={(v) => set(['materials', 'lit', 'strength'], v)} />
+        </Row>
+      </Group>
+      <Group name="Instrument finish" direction="column" gap={1}>
+        <Row label="Popup radius">
+          <LengthField label="Popup radius" raw={instrument.popupRadius} base={original.popupRadius} unit="px" min={0} max={48} step={1} onChange={(v) => set(['materials', 'instrument', 'popupRadius'], v)} />
+        </Row>
+        <Row label="Waveform colour">
+          <LengthField label="Waveform colour strength" raw={instrument.waveformStrength} base={original.waveformStrength} unit="%" min={0} max={100} step={1} onChange={(v) => set(['materials', 'instrument', 'waveformStrength'], v)} />
+        </Row>
+        <Row label="Spectral strength">
+          <LengthField label="Spectral strength" raw={instrument.spectralStrength} base={original.spectralStrength} unit="" min={0} max={100} step={1} onChange={(v) => set(['materials', 'instrument', 'spectralStrength'], v)} />
+        </Row>
+        <Row label="Waveform paint">
+          <Segmented items={['Spectral', 'Deck']} index={instrument.spectralMode === 'deck' ? 1 : 0} label="Waveform paint mode" onChange={(i) => set(['materials', 'instrument', 'spectralMode'], i === 1 ? 'deck' : 'spectral')} />
+        </Row>
+        <Row label="Native controls">
+          <Select items={['Theme mode', 'Browser normal', 'Light', 'Dark', 'Light or dark', 'Dark or light']} index={['var(--scheme)', 'normal', 'light', 'dark', 'light dark', 'dark light'].indexOf(instrument.nativeColorScheme)} label="Native control colour scheme" onChange={(i) => set(['materials', 'instrument', 'nativeColorScheme'], ['var(--scheme)', 'normal', 'light', 'dark', 'light dark', 'dark light'][i])} />
+        </Row>
+        <Row label="Handle marker ink">
+          <Segmented items={['Marker ink', 'Material']} index={instrument.handlePaint === 'marker' ? 0 : 1} label="Handle paint" onChange={(i) => set(['materials', 'instrument', 'handlePaint'], i === 0 ? 'marker' : 'material')} />
+        </Row>
+        <Row label="Free handle shadow">
+          <Text as="input" role="code" size="label" className="zen-theme-editor__text" aria-label="Free handle shadow" value={instrument.freeHandleShadow} onChange={(e: ChangeEvent<HTMLInputElement>) => set(['materials', 'instrument', 'freeHandleShadow'], e.currentTarget.value)} />
+        </Row>
+        {([['contextShadowInk', 'Popup shadow ink'], ['shadowEdge', 'Edge shadow ink'], ['scrim', 'Modal scrim']] as const).map(([key, name]) => (
+          <ColourRow key={key} skin={skin} name={name} path={['materials', 'instrument', key]} value={instrument[key]} base={original[key]} onChange={onChange} />
+        ))}
+        <Row label="Popup shadow">
+          <Text as="input" role="code" size="label" className="zen-theme-editor__text" aria-label="Popup shadow" value={instrument.contextShadow} onChange={(e: ChangeEvent<HTMLInputElement>) => set(['materials', 'instrument', 'contextShadow'], e.currentTarget.value)} />
         </Row>
       </Group>
     </Stack>

@@ -9,6 +9,8 @@
 // Each component is exported as a typed `Component<Props>` (the `.svelte` file's own props, which
 // the declaration build can't read). A lane adds its components here, one block each.
 import type { Component, Snippet } from 'svelte';
+// New Music namespace; legacy music names in this entry remain untouched.
+export * as Music from './Music/svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { Facets, PackPrinciples } from './contract';
 import type { ModeChoice } from './theme.model';

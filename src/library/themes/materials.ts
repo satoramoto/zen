@@ -716,6 +716,40 @@ export const frostMaterials: Materials = {
   focus: { ink: 'var(--text-2)', offset: '0px' },
 };
 
+// openflowfm/widgets palette.css and controls/shared.css. No bevel, glow or rounding inflation:
+// the face is almost black, every edge a single hairline, every ordinary corner 2px.
+export const mixflowMaterials: Materials = {
+  id: 'mixflow', label: 'mix[flow] (flat 2px instrument)',
+  radiusControl: '2px', radiusCard: '2px', radiusInput: '2px', radiusPill: '999px',
+  borderWidth: '1px', input: 'box', light: '180deg', // added: the reference's flat faces have no light source
+  layers: {
+    ground: plain('var(--surface-0)'), base: plain('var(--surface-1)'), raised: plain('var(--instrument-surface-control)'),
+    float: { ...plain('var(--instrument-surface-control)'), edge: hairline('var(--instrument-border-control)'), cast: '0 8px 24px rgb(0 0 0 / 55%)' },
+    overlay: { ...plain('var(--instrument-surface-control)'), edge: hairline('var(--instrument-border-control)'), cast: '0 18px 52px rgb(0 0 0 / 48%)' },
+    top: { ...plain('var(--instrument-surface-control)'), edge: hairline('var(--instrument-border-control)'), cast: '0 8px 24px rgb(0 0 0 / 55%)' }, // added: reference has no separate toast layer
+  },
+  plate: { inset: 'var(--space-4)', gap: 'var(--space-1)', head: { inset: 'var(--space-4)', rule: 'inset 0 -1px 0 var(--border)' } },
+  tabs: {
+    track: { fill: 'var(--instrument-surface-control)', shadow: hairline('var(--instrument-border-control)'), texture: 'none' },
+    tab: bare, chosen: { fill: 'var(--action)', shadow: NO_SHADOW, texture: 'none' },
+    // added: generic tabs fit their existing region minima at every scale; Music's source
+    // pressables retain their separate --wdg-space insets, not this generic tab padding.
+    ink: 'var(--text-2)', chosenInk: 'var(--action-text)', pad: '0px', gap: '0px', tabPad: '0 var(--space-2)',
+  },
+  well: { fill: 'var(--surface-1)', shadow: NO_SHADOW, texture: 'none' },
+  screen: { fill: 'var(--instrument-surface-control)', shadow: NO_SHADOW, texture: 'none' }, // source NumberField window
+  key: { fill: 'var(--instrument-surface-control)', shadow: NO_SHADOW, texture: 'none', pressed: NO_SHADOW },
+  handle: { fill: 'var(--action)', shadow: '0 2px 4px rgb(0 0 0 / 60%)', texture: 'none' },
+  lit: { radius: '0px', strength: '0%' },
+  focus: { ink: 'var(--instrument-focus)', offset: '1px' },
+  instrument: {
+    popupRadius: '5px', contextShadow: '0 8px 28px #00000099', contextShadowInk: '#00000099', shadowEdge: 'rgb(0 0 0 / 60%)',
+    scrim: 'rgb(0 0 0 / 60%)', waveformStrength: '65%', spectralStrength: '100', spectralMode: 'spectral',
+    nativeColorScheme: 'normal', // preview.css: source native controls retain the browser's normal scheme
+    handlePaint: 'marker', freeHandleShadow: NO_SHADOW, // source free sliders are marker ink, not raised fader caps
+  },
+};
+
 export const materials: Materials[] = [
   pushMaterials,
   elektronMaterials,
@@ -724,4 +758,5 @@ export const materials: Materials[] = [
   hardwareMaterials,
   frostMaterials,
   panelMaterials,
+  mixflowMaterials,
 ];
