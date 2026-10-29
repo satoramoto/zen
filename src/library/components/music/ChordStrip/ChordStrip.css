@@ -1,0 +1,127 @@
+/* ChordStrip: one block per chord across the width, the chord now and the one next marked, the
+   active chord's notes under it and an action row beneath. Blocks and actions are key Surfaces,
+   the words are Texts; this file places them and picks the paper's ink per state. Contract
+   variables and the one local --yh-chord-strip-gap. */
+
+.yh-chord-strip {
+  /* A full step between blocks; compact takes a tight one. */
+  --yh-chord-strip-gap: var(--space-2);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+}
+.yh-chord-strip[data-form='compact'] {
+  --yh-chord-strip-gap: var(--space-1);
+  gap: var(--space-1);
+}
+
+/* The blocks: eight keys sharing the width. */
+.yh-chord-strip__blocks {
+  display: flex;
+  gap: var(--yh-chord-strip-gap);
+  min-width: 0;
+}
+.yh-chord-strip__block {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-1);
+  /* A four-character name ("Cmaj7") and the block's padding: the least a block keeps, as
+     ChordStrip.forms.ts declares it, so the strip never collapses to its words. */
+  min-width: calc(var(--size-body) * 4 + var(--space-2) * 2);
+  /* Padding, the name's line and the notes line: the full form's least. */
+  min-height: calc(var(--space-2) * 2 + var(--size-body) + var(--space-1) + var(--size-caption));
+  padding: var(--space-2);
+  border: 0;
+  color: var(--text-3);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.yh-chord-strip[data-form='compact'] .yh-chord-strip__block {
+  min-height: calc(var(--space-1) * 2 + var(--size-body));
+  padding: var(--space-1);
+}
+
+/* Ink: now in primary, next in secondary, the rest muted; the notes sit a step quieter. */
+.yh-chord-strip__block[data-tone='now'] {
+  color: var(--text-1);
+}
+.yh-chord-strip__block[data-tone='next'] {
+  color: var(--text-2);
+}
+.yh-chord-strip__name,
+.yh-chord-strip__notes {
+  max-width: 100%;
+}
+.yh-chord-strip__notes {
+  color: var(--text-2);
+}
+
+/* Next: a dashed strong edge, so the chord after now reads as *about to* without the accent. Now's
+   ring comes from the press Ring (Ring.css) on data-pressed. */
+.yh-chord-strip__block[data-state='next'] {
+  outline: var(--border-width) dashed var(--border-strong);
+  outline-offset: calc(var(--border-width) * -1);
+}
+
+/* The app's selection (the chord the actions change): one accent mark in the corner. */
+.yh-chord-strip__mark {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  width: var(--space-1);
+  height: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+/* The action row: a quiet row of key buttons at the reading end. It is not drawn at all when the
+   app passes none of the three handlers. */
+.yh-chord-strip__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.yh-chord-strip__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-h);
+  padding: 0 var(--space-2);
+  border: 0;
+  color: var(--text-2);
+  font: inherit;
+  cursor: pointer;
+}
+.yh-chord-strip[data-form='compact'] .yh-chord-strip__action {
+  min-height: calc(var(--control-h) * 0.75);
+  padding: 0 var(--space-1);
+}
+
+/* No chords: one quiet well, its word centred. */
+.yh-chord-strip__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--control-h) * 2);
+  padding: var(--space-2);
+}
+.yh-chord-strip__empty-text {
+  color: var(--text-3);
+}
+
+/* Read-only: the whole strip steps back and nothing invites a press. */
+.yh-chord-strip[data-disabled] {
+  opacity: 0.6;
+}
+.yh-chord-strip[data-disabled] .yh-chord-strip__block,
+.yh-chord-strip[data-disabled] .yh-chord-strip__action {
+  cursor: default;
+}
