@@ -1,0 +1,811 @@
+## Default
+<div class="yh-loopgrid" data-form="full" data-part="root">
+  <button key=open aria-expanded="false" aria-label="1 Open, folded" class="yh-loopgrid__song" data-part="song" data-song="open" type="button" @click=song:open>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▸"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "1 Open"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="summary" data-role="caption" data-tone="muted">
+      "■■□"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "100 · Am"
+  <button key=glass aria-expanded="false" aria-label="2 Glass, folded" class="yh-loopgrid__song" data-part="song" data-song="glass" type="button" @click=song:glass>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▸"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "2 Glass"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="summary" data-role="caption" data-tone="muted">
+      "■■■□"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "104 · F"
+  <button key=hidden aria-expanded="true" aria-label="3 Hidden Signals, open" class="yh-loopgrid__song" data-open="true" data-part="song" data-song="hidden" type="button" @click=song:hidden>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▾"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "3 Hidden Signals"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "112 · C"
+  <button key=wire aria-expanded="false" aria-label="4 Wire, folded" class="yh-loopgrid__song" data-part="song" data-song="wire" type="button" @click=song:wire>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▸"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "4 Wire"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="summary" data-role="caption" data-tone="muted">
+      "■■□□"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "118 · G"
+  <div key=thidden class="yh-loopgrid__columns" data-part="columns" data-song="hidden">
+    <div key=drums class="yh-loopgrid__track" data-hue="1" data-part="track" data-track="drums">
+      <button aria-label="select Drums" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:drums>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Drums"
+      <button key=c0 aria-label="Drums Main, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="drums" type="button" @click=cell:drums:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Main"
+      <button key=c1 aria-label="Drums Break, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="drums" type="button" @click=cell:drums:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Break"
+      <button key=c2 aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:c>
+      <button key=c3 aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=bass class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="bass">
+      <button aria-label="select Bass" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:bass>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Bass"
+      <button key=c0 aria-label="Bass Sub, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="bass" type="button" @click=cell:bass:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Sub"
+      <button key=c1 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:b>
+      <button key=c2 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:c>
+      <button key=c3 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=keys class="yh-loopgrid__track" data-hue="3" data-part="track" data-selected="true" data-track="keys">
+      <button aria-current="true" aria-label="select Keys" class="yh-loopgrid__trackhead" data-part="trackhead" data-selected="true" type="button" @click=track:keys>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Keys"
+      <button key=c0 aria-label="Keys slot, recording" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="recording" data-track="keys" type="button" @click=cell:keys:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="bars" data-role="caption">
+          "3"
+      <button key=c1 aria-label="Keys Pad, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="keys" type="button" @click=cell:keys:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Pad"
+      <button key=c2 aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:c>
+      <button key=c3 aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=vox class="yh-loopgrid__track" data-hue="4" data-part="track" data-track="vox">
+      <button aria-label="select Vox" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:vox>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Vox"
+      <button key=c0 aria-label="Vox Verse, queued" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="queued" data-track="vox" type="button" @click=cell:vox:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Verse"
+      <button key=c1 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:b>
+      <button key=c2 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:c>
+      <button key=c3 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=gtr class="yh-loopgrid__track" data-hue="5" data-part="track" data-track="gtr">
+      <button aria-label="select Gtr" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:gtr>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Gtr"
+      <button key=c0 aria-label="Gtr Riff, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="gtr" type="button" @click=cell:gtr:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Riff"
+      <button key=c1 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:b>
+      <button key=c2 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:c>
+      <button key=c3 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=perc class="yh-loopgrid__track" data-hue="1" data-part="track" data-track="perc">
+      <button aria-label="select Perc" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:perc>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Perc"
+      <button key=c0 aria-label="Perc Top, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="perc" type="button" @click=cell:perc:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Top"
+      <button key=c1 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:b>
+      <button key=c2 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:c>
+      <button key=c3 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=syn class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="syn">
+      <button aria-label="select Syn" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:syn>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Syn"
+      <button key=c0 aria-label="Syn Arp, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="syn" type="button" @click=cell:syn:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Arp"
+      <button key=c1 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:b>
+      <button key=c2 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:c>
+      <button key=c3 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=fx class="yh-loopgrid__track" data-hue="3" data-part="track" data-track="fx">
+      <button aria-label="select FX" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:fx>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "FX"
+      <button key=c0 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:a>
+      <button key=c1 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:b>
+      <button key=c2 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:c>
+      <button key=c3 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+  <div class="yh-loopgrid__stop" data-part="stop">
+    <span key=drums class="yh-loopgrid__stopcell" data-part="stopcell" data-track="drums">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+    <span key=bass class="yh-loopgrid__stopcell" data-part="stopcell" data-track="bass">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+    <span key=keys class="yh-loopgrid__stopcell" data-part="stopcell" data-track="keys">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+    <span key=vox class="yh-loopgrid__stopcell" data-part="stopcell" data-track="vox">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+    <span key=gtr class="yh-loopgrid__stopcell" data-part="stopcell" data-track="gtr">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=perc class="yh-loopgrid__stopcell" data-part="stopcell" data-track="perc">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=syn class="yh-loopgrid__stopcell" data-part="stopcell" data-track="syn">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+    <span key=fx class="yh-loopgrid__stopcell" data-part="stopcell" data-track="fx">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span class="yh-loopgrid__master" data-part="master">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="masterpie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 5.000000000000001 10 Z">
+      <span class="lib-text lib-tone yh-loopgrid__stopname" data-part="bars" data-role="label">
+        "8"
+    <button aria-label="stop all" class="yh-loopgrid__stopbutton" data-part="stopbutton" type="button" @click=stop>
+      "■"
+
+## EveryState
+<div class="yh-loopgrid" data-form="full" data-part="root">
+  <button key=open aria-expanded="true" aria-label="1 Open, open" class="yh-loopgrid__song" data-open="true" data-part="song" data-song="open" type="button" @click=song:open>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▾"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "1 Open"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "100 · Am"
+  <button key=glass aria-expanded="false" aria-label="2 Glass, folded" class="yh-loopgrid__song" data-part="song" data-song="glass" type="button" @click=song:glass>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▸"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "2 Glass"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="summary" data-role="caption" data-tone="muted">
+      "■■■□"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "104 · F"
+  <div key=topen class="yh-loopgrid__columns" data-part="columns" data-song="open">
+    <div key=drums class="yh-loopgrid__track" data-hue="1" data-part="track" data-selected="true" data-track="drums">
+      <button aria-current="true" aria-label="select Drums" class="yh-loopgrid__trackhead" data-part="trackhead" data-selected="true" type="button" @click=track:drums>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Drums"
+      <button key=c0 aria-label="Drums Main, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="drums" type="button" @click=cell:drums:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Main"
+      <button key=c1 aria-label="Drums Break, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="drums" type="button" @click=cell:drums:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Break"
+      <button key=c2 aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:c>
+      <button key=c3 aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=bass class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="bass">
+      <button aria-label="select Bass" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:bass>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Bass"
+      <button key=c0 aria-label="Bass Sub, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="bass" type="button" @click=cell:bass:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Sub"
+      <button key=c1 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:b>
+      <button key=c2 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:c>
+      <button key=c3 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=keys class="yh-loopgrid__track" data-hue="3" data-part="track" data-track="keys">
+      <button aria-label="select Keys" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:keys>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Keys"
+      <button key=c0 aria-label="Keys slot, recording" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="recording" data-track="keys" type="button" @click=cell:keys:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="bars" data-role="caption">
+          "3"
+      <button key=c1 aria-label="Keys Pad, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="keys" type="button" @click=cell:keys:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Pad"
+      <button key=c2 aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:c>
+      <button key=c3 aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=vox class="yh-loopgrid__track" data-hue="4" data-part="track" data-track="vox">
+      <button aria-label="select Vox" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:vox>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Vox"
+      <button key=c0 aria-label="Vox Verse, queued" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="queued" data-track="vox" type="button" @click=cell:vox:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Verse"
+      <button key=c1 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:b>
+      <button key=c2 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:c>
+      <button key=c3 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=gtr class="yh-loopgrid__track" data-hue="5" data-part="track" data-track="gtr">
+      <button aria-label="select Gtr" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:gtr>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Gtr"
+      <button key=c0 aria-label="Gtr Riff, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="gtr" type="button" @click=cell:gtr:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Riff"
+      <button key=c1 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:b>
+      <button key=c2 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:c>
+      <button key=c3 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=perc class="yh-loopgrid__track" data-hue="1" data-part="track" data-track="perc">
+      <button aria-label="select Perc" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:perc>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Perc"
+      <button key=c0 aria-label="Perc Top, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="perc" type="button" @click=cell:perc:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Top"
+      <button key=c1 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:b>
+      <button key=c2 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:c>
+      <button key=c3 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=syn class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="syn">
+      <button aria-label="select Syn" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:syn>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Syn"
+      <button key=c0 aria-label="Syn Arp, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="syn" type="button" @click=cell:syn:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Arp"
+      <button key=c1 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:b>
+      <button key=c2 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:c>
+      <button key=c3 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=fx class="yh-loopgrid__track" data-hue="3" data-part="track" data-track="fx">
+      <button aria-label="select FX" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:fx>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "FX"
+      <button key=c0 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:a>
+      <button key=c1 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:b>
+      <button key=c2 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:c>
+      <button key=c3 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+  <div class="yh-loopgrid__stop" data-part="stop">
+    <span key=drums class="yh-loopgrid__stopcell" data-part="stopcell" data-track="drums">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+    <span key=bass class="yh-loopgrid__stopcell" data-part="stopcell" data-track="bass">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+    <span key=keys class="yh-loopgrid__stopcell" data-part="stopcell" data-track="keys">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+    <span key=vox class="yh-loopgrid__stopcell" data-part="stopcell" data-track="vox">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+    <span key=gtr class="yh-loopgrid__stopcell" data-part="stopcell" data-track="gtr">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=perc class="yh-loopgrid__stopcell" data-part="stopcell" data-track="perc">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=syn class="yh-loopgrid__stopcell" data-part="stopcell" data-track="syn">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+    <span key=fx class="yh-loopgrid__stopcell" data-part="stopcell" data-track="fx">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span class="yh-loopgrid__master" data-part="master">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="masterpie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0 5.000000000000001 Z">
+      <span class="lib-text lib-tone yh-loopgrid__stopname" data-part="bars" data-role="label">
+        "12"
+    <button aria-label="stop all" class="yh-loopgrid__stopbutton" data-part="stopbutton" type="button" @click=stop>
+      "■"
+
+## Dense
+<div class="yh-loopgrid" data-form="full" data-part="root">
+  <button key=hidden aria-expanded="true" aria-label="3 Hidden Signals, open" class="yh-loopgrid__song" data-open="true" data-part="song" data-song="hidden" type="button" @click=song:hidden>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▾"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "3 Hidden Signals"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "112 · C"
+  <div key=thidden class="yh-loopgrid__columns" data-part="columns" data-song="hidden">
+    <div key=drums class="yh-loopgrid__track" data-hue="1" data-part="track" data-track="drums">
+      <button aria-label="select Drums" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:drums>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Drums"
+      <button key=c0 aria-label="Drums Main, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="drums" type="button" @click=cell:drums:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Main"
+      <button key=c1 aria-label="Drums Break, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="drums" type="button" @click=cell:drums:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Break"
+      <button key=c2 aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:c>
+      <button key=c3 aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=bass class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="bass">
+      <button aria-label="select Bass" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:bass>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Bass"
+      <button key=c0 aria-label="Bass Sub, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="bass" type="button" @click=cell:bass:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Sub"
+      <button key=c1 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:b>
+      <button key=c2 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:c>
+      <button key=c3 aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=keys class="yh-loopgrid__track" data-hue="3" data-part="track" data-track="keys">
+      <button aria-label="select Keys" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:keys>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Keys"
+      <button key=c0 aria-label="Keys slot, recording" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="recording" data-track="keys" type="button" @click=cell:keys:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="bars" data-role="caption">
+          "3"
+      <button key=c1 aria-label="Keys Pad, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="keys" type="button" @click=cell:keys:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Pad"
+      <button key=c2 aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:c>
+      <button key=c3 aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=vox class="yh-loopgrid__track" data-hue="4" data-part="track" data-selected="true" data-track="vox">
+      <button aria-current="true" aria-label="select Vox" class="yh-loopgrid__trackhead" data-part="trackhead" data-selected="true" type="button" @click=track:vox>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Vox"
+      <button key=c0 aria-label="Vox Verse, queued" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="queued" data-track="vox" type="button" @click=cell:vox:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Verse"
+      <button key=c1 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:b>
+      <button key=c2 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:c>
+      <button key=c3 aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=gtr class="yh-loopgrid__track" data-hue="5" data-part="track" data-track="gtr">
+      <button aria-label="select Gtr" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:gtr>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Gtr"
+      <button key=c0 aria-label="Gtr Riff, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="gtr" type="button" @click=cell:gtr:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Riff"
+      <button key=c1 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:b>
+      <button key=c2 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:c>
+      <button key=c3 aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=perc class="yh-loopgrid__track" data-hue="1" data-part="track" data-track="perc">
+      <button aria-label="select Perc" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:perc>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Perc"
+      <button key=c0 aria-label="Perc Top, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="perc" type="button" @click=cell:perc:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Top"
+      <button key=c1 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:b>
+      <button key=c2 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:c>
+      <button key=c3 aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=syn class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="syn">
+      <button aria-label="select Syn" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:syn>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Syn"
+      <button key=c0 aria-label="Syn Arp, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="syn" type="button" @click=cell:syn:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Arp"
+      <button key=c1 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:b>
+      <button key=c2 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:c>
+      <button key=c3 aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=fx class="yh-loopgrid__track" data-hue="3" data-part="track" data-track="fx">
+      <button aria-label="select FX" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:fx>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "FX"
+      <button key=c0 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:a>
+      <button key=c1 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:b>
+      <button key=c2 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:c>
+      <button key=c3 aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+  <div class="yh-loopgrid__stop" data-part="stop">
+    <span key=drums class="yh-loopgrid__stopcell" data-part="stopcell" data-track="drums">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+    <span key=bass class="yh-loopgrid__stopcell" data-part="stopcell" data-track="bass">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+    <span key=keys class="yh-loopgrid__stopcell" data-part="stopcell" data-track="keys">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+    <span key=vox class="yh-loopgrid__stopcell" data-part="stopcell" data-track="vox">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+    <span key=gtr class="yh-loopgrid__stopcell" data-part="stopcell" data-track="gtr">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=perc class="yh-loopgrid__stopcell" data-part="stopcell" data-track="perc">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=syn class="yh-loopgrid__stopcell" data-part="stopcell" data-track="syn">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+    <span key=fx class="yh-loopgrid__stopcell" data-part="stopcell" data-track="fx">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span class="yh-loopgrid__master" data-part="master">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="masterpie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 3.4549150281252627 Z">
+    <button aria-label="stop all" class="yh-loopgrid__stopbutton" data-part="stopbutton" type="button" @click=stop>
+      "■"
+
+## Empty
+<div class="yh-loopgrid" data-form="full" data-part="root">
+  <div class="yh-loopgrid__stop" data-part="stop">
+    <span class="yh-loopgrid__master" data-part="master">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="masterpie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <button aria-label="stop all" class="yh-loopgrid__stopbutton" data-part="stopbutton" type="button" @click=stop>
+      "■"
+
+## Disabled
+<div class="yh-loopgrid" data-disabled="true" data-form="full" data-part="root">
+  <button key=open aria-disabled="true" aria-expanded="false" aria-label="1 Open, folded" class="yh-loopgrid__song" data-part="song" data-song="open" type="button" @click=song:open>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▸"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "1 Open"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="summary" data-role="caption" data-tone="muted">
+      "■■□"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "100 · Am"
+  <button key=glass aria-disabled="true" aria-expanded="false" aria-label="2 Glass, folded" class="yh-loopgrid__song" data-part="song" data-song="glass" type="button" @click=song:glass>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▸"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "2 Glass"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="summary" data-role="caption" data-tone="muted">
+      "■■■□"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "104 · F"
+  <button key=hidden aria-disabled="true" aria-expanded="true" aria-label="3 Hidden Signals, open" class="yh-loopgrid__song" data-open="true" data-part="song" data-song="hidden" type="button" @click=song:hidden>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▾"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "3 Hidden Signals"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "112 · C"
+  <button key=wire aria-disabled="true" aria-expanded="false" aria-label="4 Wire, folded" class="yh-loopgrid__song" data-part="song" data-song="wire" type="button" @click=song:wire>
+    <span aria-hidden="true" class="yh-loopgrid__chevron" data-part="chevron">
+      "▸"
+    <span class="lib-text lib-tone yh-loopgrid__songname" data-part="songname" data-role="label" data-text-leading="tight">
+      "4 Wire"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="summary" data-role="caption" data-tone="muted">
+      "■■□□"
+    <span class="lib-text lib-tone yh-loopgrid__songmeta" data-part="songmeta" data-role="caption" data-tone="muted">
+      "118 · G"
+  <div key=thidden class="yh-loopgrid__columns" data-part="columns" data-song="hidden">
+    <div key=drums class="yh-loopgrid__track" data-hue="1" data-part="track" data-track="drums">
+      <button aria-disabled="true" aria-label="select Drums" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:drums>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Drums"
+      <button key=c0 aria-disabled="true" aria-label="Drums Main, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="drums" type="button" @click=cell:drums:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Main"
+      <button key=c1 aria-disabled="true" aria-label="Drums Break, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="drums" type="button" @click=cell:drums:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Break"
+      <button key=c2 aria-disabled="true" aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:c>
+      <button key=c3 aria-disabled="true" aria-label="Drums slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="drums" type="button" @click=cell:drums:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=bass class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="bass">
+      <button aria-disabled="true" aria-label="select Bass" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:bass>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Bass"
+      <button key=c0 aria-disabled="true" aria-label="Bass Sub, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="bass" type="button" @click=cell:bass:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Sub"
+      <button key=c1 aria-disabled="true" aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:b>
+      <button key=c2 aria-disabled="true" aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:c>
+      <button key=c3 aria-disabled="true" aria-label="Bass slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="bass" type="button" @click=cell:bass:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=keys class="yh-loopgrid__track" data-hue="3" data-part="track" data-track="keys">
+      <button aria-disabled="true" aria-label="select Keys" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:keys>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Keys"
+      <button key=c0 aria-disabled="true" aria-label="Keys slot, recording" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="recording" data-track="keys" type="button" @click=cell:keys:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="bars" data-role="caption">
+          "3"
+      <button key=c1 aria-disabled="true" aria-label="Keys Pad, stopped" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="keys" type="button" @click=cell:keys:b>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Pad"
+      <button key=c2 aria-disabled="true" aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:c>
+      <button key=c3 aria-disabled="true" aria-label="Keys slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="keys" type="button" @click=cell:keys:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=vox class="yh-loopgrid__track" data-hue="4" data-part="track" data-track="vox">
+      <button aria-disabled="true" aria-label="select Vox" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:vox>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Vox"
+      <button key=c0 aria-disabled="true" aria-label="Vox Verse, queued" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="queued" data-track="vox" type="button" @click=cell:vox:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Verse"
+      <button key=c1 aria-disabled="true" aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:b>
+      <button key=c2 aria-disabled="true" aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:c>
+      <button key=c3 aria-disabled="true" aria-label="Vox slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="4" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="vox" type="button" @click=cell:vox:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=gtr class="yh-loopgrid__track" data-hue="5" data-part="track" data-track="gtr">
+      <button aria-disabled="true" aria-label="select Gtr" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:gtr>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Gtr"
+      <button key=c0 aria-disabled="true" aria-label="Gtr Riff, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="gtr" type="button" @click=cell:gtr:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Riff"
+      <button key=c1 aria-disabled="true" aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:b>
+      <button key=c2 aria-disabled="true" aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:c>
+      <button key=c3 aria-disabled="true" aria-label="Gtr slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="5" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="gtr" type="button" @click=cell:gtr:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=perc class="yh-loopgrid__track" data-hue="1" data-part="track" data-track="perc">
+      <button aria-disabled="true" aria-label="select Perc" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:perc>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Perc"
+      <button key=c0 aria-disabled="true" aria-label="Perc Top, stopped" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="stopped" data-track="perc" type="button" @click=cell:perc:a>
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Top"
+      <button key=c1 aria-disabled="true" aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:b>
+      <button key=c2 aria-disabled="true" aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:c>
+      <button key=c3 aria-disabled="true" aria-label="Perc slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="1" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="perc" type="button" @click=cell:perc:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=syn class="yh-loopgrid__track" data-hue="2" data-part="track" data-track="syn">
+      <button aria-disabled="true" aria-label="select Syn" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:syn>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "Syn"
+      <button key=c0 aria-disabled="true" aria-label="Syn Arp, playing" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="playing" data-track="syn" type="button" @click=cell:syn:a>
+        <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="pie" viewBox="0 0 10 10">
+          <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+          <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+        <span class="lib-text lib-tone yh-loopgrid__cellname" data-part="cellname" data-role="caption">
+          "Arp"
+      <button key=c1 aria-disabled="true" aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:b>
+      <button key=c2 aria-disabled="true" aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:c>
+      <button key=c3 aria-disabled="true" aria-label="Syn slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="2" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="syn" type="button" @click=cell:syn:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+    <div key=fx class="yh-loopgrid__track" data-hue="3" data-part="track" data-track="fx">
+      <button aria-disabled="true" aria-label="select FX" class="yh-loopgrid__trackhead" data-part="trackhead" type="button" @click=track:fx>
+        <span aria-hidden="true" class="yh-loopgrid__mark" data-part="mark">
+        <span class="lib-text lib-tone yh-loopgrid__trackname" data-part="trackname" data-role="label" data-text-leading="tight">
+          "FX"
+      <button key=c0 aria-disabled="true" aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="a" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:a>
+      <button key=c1 aria-disabled="true" aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="b" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:b>
+      <button key=c2 aria-disabled="true" aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="c" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:c>
+      <button key=c3 aria-disabled="true" aria-label="FX slot, empty" class="lib-surface yh-loopgrid__cell" data-cell="d" data-hue="3" data-material="key" data-part="cell" data-radius="control" data-state="empty" data-track="fx" type="button" @click=cell:fx:d>
+      <span key=c4 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c5 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c6 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+      <span key=c7 aria-hidden="true" class="yh-loopgrid__cell yh-loopgrid__cell--hole" data-part="hole">
+  <div class="yh-loopgrid__stop" data-part="stop">
+    <span key=drums class="yh-loopgrid__stopcell" data-part="stopcell" data-track="drums">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="1">
+    <span key=bass class="yh-loopgrid__stopcell" data-part="stopcell" data-track="bass">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537635 9.045084971874736 Z" data-hue="2">
+    <span key=keys class="yh-loopgrid__stopcell" data-part="stopcell" data-track="keys">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z" data-hue="3">
+    <span key=vox class="yh-loopgrid__stopcell" data-part="stopcell" data-track="vox">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462366 0.9549150281252627 Z" data-hue="4">
+    <span key=gtr class="yh-loopgrid__stopcell" data-part="stopcell" data-track="gtr">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=perc class="yh-loopgrid__stopcell" data-part="stopcell" data-track="perc">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span key=syn class="yh-loopgrid__stopcell" data-part="stopcell" data-track="syn">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0.9549150281252619 2.0610737385376354 Z" data-hue="2">
+    <span key=fx class="yh-loopgrid__stopcell" data-part="stopcell" data-track="fx">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="stoppie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+    <span class="yh-loopgrid__master" data-part="master">
+      <svg aria-hidden="true" class="yh-loopgrid__pie" data-part="masterpie" viewBox="0 0 10 10">
+        <circle class="yh-loopgrid__track" cx="5" cy="5" r="4.5">
+        <path class="yh-loopgrid__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 5.000000000000001 10 Z">
+    <button aria-disabled="true" aria-label="stop all" class="yh-loopgrid__stopbutton" data-part="stopbutton" type="button" @click=stop>
+      "■"

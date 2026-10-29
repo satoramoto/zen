@@ -1,0 +1,721 @@
+## Default
+<div class="yh-mixband" data-form="tall" data-part="root">
+  <div key=drums class="yh-mixband__strip" data-hue="1" data-part="strip" data-track="drums">
+    <button aria-label="select Drums" class="yh-mixband__head" data-part="head" type="button" @click=select:drums>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Drums"
+    <Meter label="Drums meter" value=0.7>
+    <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tdrums:send0 @keydown=tdrums:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=tdrums:send1 @keydown=tdrums:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Drums mute" @onToggle=mute:drums>
+      <LampButton label="S" name="Drums solo" @onToggle=solo:drums>
+      <LampButton label="Arm" name="Drums arm" rec=true @onToggle=arm:drums>
+  <div key=bass class="yh-mixband__strip" data-hue="2" data-part="strip" data-track="bass">
+    <button aria-label="select Bass" class="yh-mixband__head" data-part="head" type="button" @click=select:bass>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Bass"
+    <Meter label="Bass meter" value=0.6>
+    <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.3" aria-valuetext="30 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 30%" tabindex="0" @pointerdown=tbass:send0 @keydown=tbass:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.2" aria-valuetext="20 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 20%" tabindex="0" @pointerdown=tbass:send1 @keydown=tbass:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Bass mute" @onToggle=mute:bass>
+      <LampButton label="S" name="Bass solo" @onToggle=solo:bass>
+      <LampButton label="Arm" name="Bass arm" rec=true @onToggle=arm:bass>
+  <div key=keys class="yh-mixband__strip" data-hue="3" data-part="strip" data-selected="true" data-track="keys">
+    <button aria-current="true" aria-label="select Keys" class="yh-mixband__head" data-part="head" data-selected="true" type="button" @click=select:keys>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Keys"
+    <Meter label="Keys meter" value=0.5>
+    <Fader hue=3 kind="part" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.6" aria-valuetext="60 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 60%" tabindex="0" @pointerdown=tkeys:send0 @keydown=tkeys:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tkeys:send1 @keydown=tkeys:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Keys mute" @onToggle=mute:keys>
+      <LampButton label="S" name="Keys solo" @onToggle=solo:keys>
+      <LampButton label="Arm" name="Keys arm" on=true rec=true @onToggle=arm:keys>
+  <div key=vox class="yh-mixband__strip" data-hue="4" data-part="strip" data-track="vox">
+    <button aria-label="select Vox" class="yh-mixband__head" data-part="head" type="button" @click=select:vox>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Vox"
+    <Meter label="Vox meter" value=0.65>
+    <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send0 @keydown=tvox:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send1 @keydown=tvox:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Vox mute" @onToggle=mute:vox>
+      <LampButton label="S" name="Vox solo" on=true @onToggle=solo:vox>
+      <LampButton label="Arm" name="Vox arm" rec=true @onToggle=arm:vox>
+  <div key=gtr class="yh-mixband__strip" data-hue="5" data-part="strip" data-track="gtr">
+    <button aria-label="select Gtr" class="yh-mixband__head" data-part="head" type="button" @click=select:gtr>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Gtr"
+    <Meter label="Gtr meter" value=0.4>
+    <Fader hue=5 kind="part" level=76 meter=0.4 name="Gtr level" value="76" @onlevel=level:gtr>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.2" aria-valuetext="20 percent" class="yh-sendbars__bar" data-hue="5" data-part="bar" role="slider" style="--yh-sendbars-at: 20%" tabindex="0" @pointerdown=tgtr:send0 @keydown=tgtr:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.1" aria-valuetext="10 percent" class="yh-sendbars__bar" data-hue="5" data-part="bar" role="slider" style="--yh-sendbars-at: 10%" tabindex="0" @pointerdown=tgtr:send1 @keydown=tgtr:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Gtr mute" on=true @onToggle=mute:gtr>
+      <LampButton label="S" name="Gtr solo" @onToggle=solo:gtr>
+      <LampButton label="Arm" name="Gtr arm" rec=true @onToggle=arm:gtr>
+  <div key=perc class="yh-mixband__strip" data-hue="1" data-part="strip" data-track="perc">
+    <button aria-label="select Perc" class="yh-mixband__head" data-part="head" type="button" @click=select:perc>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Perc"
+    <Meter label="Perc meter" value=0.45>
+    <Fader hue=1 kind="part" level=70 meter=0.45 name="Perc level" value="70" @onlevel=level:perc>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.35" aria-valuetext="35 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 35%" tabindex="0" @pointerdown=tperc:send0 @keydown=tperc:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.3" aria-valuetext="30 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 30%" tabindex="0" @pointerdown=tperc:send1 @keydown=tperc:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Perc mute" @onToggle=mute:perc>
+      <LampButton label="S" name="Perc solo" @onToggle=solo:perc>
+      <LampButton label="Arm" name="Perc arm" rec=true @onToggle=arm:perc>
+  <div key=syn class="yh-mixband__strip" data-hue="2" data-part="strip" data-track="syn">
+    <button aria-label="select Syn" class="yh-mixband__head" data-part="head" type="button" @click=select:syn>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Syn"
+    <Meter label="Syn meter" value=0.5>
+    <Fader hue=2 kind="part" level=83 meter=0.5 name="Syn level" value="83" @onlevel=level:syn>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.45" aria-valuetext="45 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 45%" tabindex="0" @pointerdown=tsyn:send0 @keydown=tsyn:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.55" aria-valuetext="55 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 55.00000000000001%" tabindex="0" @pointerdown=tsyn:send1 @keydown=tsyn:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Syn mute" @onToggle=mute:syn>
+      <LampButton label="S" name="Syn solo" @onToggle=solo:syn>
+      <LampButton label="Arm" name="Syn arm" rec=true @onToggle=arm:syn>
+  <div key=fx class="yh-mixband__strip" data-hue="3" data-parked="true" data-part="strip" data-track="fx">
+    <button aria-label="select FX" class="yh-mixband__head" data-part="head" type="button" @click=select:fx>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "FX"
+    <Meter label="FX meter" value=0.3>
+    <Fader hue=3 kind="parked" level=64 meter=0.3 name="FX level" value="64" @onlevel=level:fx>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=tfx:send0 @keydown=tfx:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=tfx:send1 @keydown=tfx:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="FX mute" @onToggle=mute:fx>
+      <LampButton label="S" name="FX solo" @onToggle=solo:fx>
+      <LampButton label="Arm" name="FX arm" rec=true @onToggle=arm:fx>
+  <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
+    <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+      "FX A"
+    <Meter label="FX A meter" value=0.7>
+    <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
+  <div key=fxb class="yh-mixband__strip yh-mixband__strip--return" data-hue="2" data-part="return" data-send="fxb">
+    <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+      "FX B"
+    <Meter label="FX B meter" value=0.6>
+    <Fader hue=2 kind="group" level=76 name="FX B level" value="76" @onlevel=return:fxb>
+
+## EveryState
+<div class="yh-mixband" data-form="tall" data-part="root">
+  <div key=drums class="yh-mixband__strip" data-hue="1" data-part="strip" data-track="drums">
+    <button aria-label="select Drums" class="yh-mixband__head" data-part="head" type="button" @click=select:drums>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Drums"
+    <Meter label="Drums meter" value=0.7>
+    <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tdrums:send0 @keydown=tdrums:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=tdrums:send1 @keydown=tdrums:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Drums mute" on=true @onToggle=mute:drums>
+      <LampButton label="S" name="Drums solo" @onToggle=solo:drums>
+      <LampButton label="Arm" name="Drums arm" rec=true @onToggle=arm:drums>
+  <div key=bass class="yh-mixband__strip" data-hue="2" data-part="strip" data-selected="true" data-track="bass">
+    <button aria-current="true" aria-label="select Bass" class="yh-mixband__head" data-part="head" data-selected="true" type="button" @click=select:bass>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Bass"
+    <Meter label="Bass meter" value=0.6>
+    <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.3" aria-valuetext="30 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 30%" tabindex="0" @pointerdown=tbass:send0 @keydown=tbass:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.2" aria-valuetext="20 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 20%" tabindex="0" @pointerdown=tbass:send1 @keydown=tbass:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Bass mute" @onToggle=mute:bass>
+      <LampButton label="S" name="Bass solo" on=true @onToggle=solo:bass>
+      <LampButton label="Arm" name="Bass arm" rec=true @onToggle=arm:bass>
+  <div key=keys class="yh-mixband__strip" data-hue="3" data-parked="true" data-part="strip" data-track="keys">
+    <button aria-label="select Keys" class="yh-mixband__head" data-part="head" type="button" @click=select:keys>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Keys"
+    <Meter label="Keys meter" value=0.5>
+    <Fader hue=3 kind="parked" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.6" aria-valuetext="60 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 60%" tabindex="0" @pointerdown=tkeys:send0 @keydown=tkeys:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tkeys:send1 @keydown=tkeys:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Keys mute" @onToggle=mute:keys>
+      <LampButton label="S" name="Keys solo" @onToggle=solo:keys>
+      <LampButton label="Arm" name="Keys arm" on=true rec=true @onToggle=arm:keys>
+  <div key=vox class="yh-mixband__strip" data-hue="4" data-part="strip" data-track="vox">
+    <button aria-label="select Vox" class="yh-mixband__head" data-part="head" type="button" @click=select:vox>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Vox"
+    <Meter label="Vox meter" value=0.65>
+    <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send0 @keydown=tvox:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send1 @keydown=tvox:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Vox mute" @onToggle=mute:vox>
+      <LampButton label="S" name="Vox solo" on=true @onToggle=solo:vox>
+      <LampButton label="Arm" name="Vox arm" rec=true @onToggle=arm:vox>
+  <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
+    <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+      "FX A"
+    <Meter label="FX A meter" value=0.7>
+    <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
+  <div key=fxb class="yh-mixband__strip yh-mixband__strip--return" data-hue="2" data-part="return" data-send="fxb">
+    <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+      "FX B"
+    <Meter label="FX B meter" value=0.6>
+    <Fader hue=2 kind="group" level=76 name="FX B level" value="76" @onlevel=return:fxb>
+
+## Dense
+<div class="yh-mixband" data-form="tall" data-part="root">
+  <div key=drums class="yh-mixband__strip" data-hue="1" data-part="strip" data-track="drums">
+    <button aria-label="select Drums" class="yh-mixband__head" data-part="head" type="button" @click=select:drums>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Drums"
+    <Meter label="Drums meter" value=0.7>
+    <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tdrums:send0 @keydown=tdrums:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=tdrums:send1 @keydown=tdrums:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Drums mute" @onToggle=mute:drums>
+      <LampButton label="S" name="Drums solo" @onToggle=solo:drums>
+      <LampButton label="Arm" name="Drums arm" rec=true @onToggle=arm:drums>
+  <div key=bass class="yh-mixband__strip" data-hue="2" data-part="strip" data-track="bass">
+    <button aria-label="select Bass" class="yh-mixband__head" data-part="head" type="button" @click=select:bass>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Bass"
+    <Meter label="Bass meter" value=0.6>
+    <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.3" aria-valuetext="30 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 30%" tabindex="0" @pointerdown=tbass:send0 @keydown=tbass:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.2" aria-valuetext="20 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 20%" tabindex="0" @pointerdown=tbass:send1 @keydown=tbass:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Bass mute" @onToggle=mute:bass>
+      <LampButton label="S" name="Bass solo" @onToggle=solo:bass>
+      <LampButton label="Arm" name="Bass arm" rec=true @onToggle=arm:bass>
+  <div key=keys class="yh-mixband__strip" data-hue="3" data-part="strip" data-track="keys">
+    <button aria-label="select Keys" class="yh-mixband__head" data-part="head" type="button" @click=select:keys>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Keys"
+    <Meter label="Keys meter" value=0.5>
+    <Fader hue=3 kind="part" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.6" aria-valuetext="60 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 60%" tabindex="0" @pointerdown=tkeys:send0 @keydown=tkeys:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tkeys:send1 @keydown=tkeys:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Keys mute" @onToggle=mute:keys>
+      <LampButton label="S" name="Keys solo" @onToggle=solo:keys>
+      <LampButton label="Arm" name="Keys arm" on=true rec=true @onToggle=arm:keys>
+  <div key=vox class="yh-mixband__strip" data-hue="4" data-part="strip" data-selected="true" data-track="vox">
+    <button aria-current="true" aria-label="select Vox" class="yh-mixband__head" data-part="head" data-selected="true" type="button" @click=select:vox>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Vox"
+    <Meter label="Vox meter" value=0.65>
+    <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
+    <div class="yh-sendbars" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send0 @keydown=tvox:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send1 @keydown=tvox:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Vox mute" @onToggle=mute:vox>
+      <LampButton label="S" name="Vox solo" on=true @onToggle=solo:vox>
+      <LampButton label="Arm" name="Vox arm" rec=true @onToggle=arm:vox>
+  <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
+    <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+      "FX A"
+    <Meter label="FX A meter" value=0.7>
+    <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
+
+## Empty
+<div class="yh-mixband" data-form="tall" data-part="root">
+
+## Disabled
+<div class="yh-mixband" data-disabled="true" data-form="tall" data-part="root">
+  <div key=drums class="yh-mixband__strip" data-hue="1" data-part="strip" data-track="drums">
+    <button aria-disabled="true" aria-label="select Drums" class="yh-mixband__head" data-part="head" type="button" @click=select:drums>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Drums"
+    <Meter label="Drums meter" value=0.7>
+    <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tdrums:send0 @keydown=tdrums:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.75" aria-valuetext="75 percent, unity" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 75%" tabindex="0" @pointerdown=tdrums:send1 @keydown=tdrums:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Drums mute" @onToggle=mute:drums>
+      <LampButton label="S" name="Drums solo" @onToggle=solo:drums>
+      <LampButton label="Arm" name="Drums arm" rec=true @onToggle=arm:drums>
+  <div key=bass class="yh-mixband__strip" data-hue="2" data-part="strip" data-track="bass">
+    <button aria-disabled="true" aria-label="select Bass" class="yh-mixband__head" data-part="head" type="button" @click=select:bass>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Bass"
+    <Meter label="Bass meter" value=0.6>
+    <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.3" aria-valuetext="30 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 30%" tabindex="0" @pointerdown=tbass:send0 @keydown=tbass:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.2" aria-valuetext="20 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 20%" tabindex="0" @pointerdown=tbass:send1 @keydown=tbass:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Bass mute" @onToggle=mute:bass>
+      <LampButton label="S" name="Bass solo" @onToggle=solo:bass>
+      <LampButton label="Arm" name="Bass arm" rec=true @onToggle=arm:bass>
+  <div key=keys class="yh-mixband__strip" data-hue="3" data-part="strip" data-track="keys">
+    <button aria-disabled="true" aria-label="select Keys" class="yh-mixband__head" data-part="head" type="button" @click=select:keys>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Keys"
+    <Meter label="Keys meter" value=0.5>
+    <Fader hue=3 kind="part" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.6" aria-valuetext="60 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 60%" tabindex="0" @pointerdown=tkeys:send0 @keydown=tkeys:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.4" aria-valuetext="40 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 40%" tabindex="0" @pointerdown=tkeys:send1 @keydown=tkeys:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Keys mute" @onToggle=mute:keys>
+      <LampButton label="S" name="Keys solo" @onToggle=solo:keys>
+      <LampButton label="Arm" name="Keys arm" on=true rec=true @onToggle=arm:keys>
+  <div key=vox class="yh-mixband__strip" data-hue="4" data-part="strip" data-track="vox">
+    <button aria-disabled="true" aria-label="select Vox" class="yh-mixband__head" data-part="head" type="button" @click=select:vox>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Vox"
+    <Meter label="Vox meter" value=0.65>
+    <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send0 @keydown=tvox:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.5" aria-valuetext="50 percent" class="yh-sendbars__bar" data-hue="4" data-part="bar" role="slider" style="--yh-sendbars-at: 50%" tabindex="0" @pointerdown=tvox:send1 @keydown=tvox:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Vox mute" @onToggle=mute:vox>
+      <LampButton label="S" name="Vox solo" on=true @onToggle=solo:vox>
+      <LampButton label="Arm" name="Vox arm" rec=true @onToggle=arm:vox>
+  <div key=gtr class="yh-mixband__strip" data-hue="5" data-part="strip" data-track="gtr">
+    <button aria-disabled="true" aria-label="select Gtr" class="yh-mixband__head" data-part="head" type="button" @click=select:gtr>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Gtr"
+    <Meter label="Gtr meter" value=0.4>
+    <Fader hue=5 kind="part" level=76 meter=0.4 name="Gtr level" value="76" @onlevel=level:gtr>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.2" aria-valuetext="20 percent" class="yh-sendbars__bar" data-hue="5" data-part="bar" role="slider" style="--yh-sendbars-at: 20%" tabindex="0" @pointerdown=tgtr:send0 @keydown=tgtr:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.1" aria-valuetext="10 percent" class="yh-sendbars__bar" data-hue="5" data-part="bar" role="slider" style="--yh-sendbars-at: 10%" tabindex="0" @pointerdown=tgtr:send1 @keydown=tgtr:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Gtr mute" on=true @onToggle=mute:gtr>
+      <LampButton label="S" name="Gtr solo" @onToggle=solo:gtr>
+      <LampButton label="Arm" name="Gtr arm" rec=true @onToggle=arm:gtr>
+  <div key=perc class="yh-mixband__strip" data-hue="1" data-part="strip" data-track="perc">
+    <button aria-disabled="true" aria-label="select Perc" class="yh-mixband__head" data-part="head" type="button" @click=select:perc>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Perc"
+    <Meter label="Perc meter" value=0.45>
+    <Fader hue=1 kind="part" level=70 meter=0.45 name="Perc level" value="70" @onlevel=level:perc>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.35" aria-valuetext="35 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 35%" tabindex="0" @pointerdown=tperc:send0 @keydown=tperc:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.3" aria-valuetext="30 percent" class="yh-sendbars__bar" data-hue="1" data-part="bar" role="slider" style="--yh-sendbars-at: 30%" tabindex="0" @pointerdown=tperc:send1 @keydown=tperc:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Perc mute" @onToggle=mute:perc>
+      <LampButton label="S" name="Perc solo" @onToggle=solo:perc>
+      <LampButton label="Arm" name="Perc arm" rec=true @onToggle=arm:perc>
+  <div key=syn class="yh-mixband__strip" data-hue="2" data-part="strip" data-track="syn">
+    <button aria-disabled="true" aria-label="select Syn" class="yh-mixband__head" data-part="head" type="button" @click=select:syn>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "Syn"
+    <Meter label="Syn meter" value=0.5>
+    <Fader hue=2 kind="part" level=83 meter=0.5 name="Syn level" value="83" @onlevel=level:syn>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.45" aria-valuetext="45 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 45%" tabindex="0" @pointerdown=tsyn:send0 @keydown=tsyn:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0.55" aria-valuetext="55 percent" class="yh-sendbars__bar" data-hue="2" data-part="bar" role="slider" style="--yh-sendbars-at: 55.00000000000001%" tabindex="0" @pointerdown=tsyn:send1 @keydown=tsyn:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="Syn mute" @onToggle=mute:syn>
+      <LampButton label="S" name="Syn solo" @onToggle=solo:syn>
+      <LampButton label="Arm" name="Syn arm" rec=true @onToggle=arm:syn>
+  <div key=fx class="yh-mixband__strip" data-hue="3" data-parked="true" data-part="strip" data-track="fx">
+    <button aria-disabled="true" aria-label="select FX" class="yh-mixband__head" data-part="head" type="button" @click=select:fx>
+      <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
+      <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+        "FX"
+    <Meter label="FX meter" value=0.3>
+    <Fader hue=3 kind="parked" level=64 meter=0.3 name="FX level" value="64" @onlevel=level:fx>
+    <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
+      <div class="yh-sendbars__row" data-part="row" data-send="0">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "A"
+        <div aria-disabled="true" aria-label="A send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=tfx:send0 @keydown=tfx:send0>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+      <div class="yh-sendbars__row" data-part="row" data-send="1">
+        <span class="lib-text lib-tone yh-sendbars__label" data-part="label" data-role="caption" data-tone="muted">
+          "B"
+        <div aria-disabled="true" aria-label="B send" aria-valuemax="1" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 percent" class="yh-sendbars__bar" data-hue="3" data-part="bar" role="slider" style="--yh-sendbars-at: 0%" tabindex="0" @pointerdown=tfx:send1 @keydown=tfx:send1>
+          <span aria-hidden="true" class="yh-sendbars__track" data-part="track">
+          <span aria-hidden="true" class="yh-sendbars__fill" data-part="fill">
+          <span aria-hidden="true" class="yh-sendbars__hinge" data-part="hinge">
+          <span aria-hidden="true" class="yh-sendbars__thumb" data-part="thumb">
+    <div class="yh-mixband__lamps" data-part="lamps">
+      <LampButton label="M" name="FX mute" @onToggle=mute:fx>
+      <LampButton label="S" name="FX solo" @onToggle=solo:fx>
+      <LampButton label="Arm" name="FX arm" rec=true @onToggle=arm:fx>
+  <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
+    <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+      "FX A"
+    <Meter label="FX A meter" value=0.7>
+    <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
+  <div key=fxb class="yh-mixband__strip yh-mixband__strip--return" data-hue="2" data-part="return" data-send="fxb">
+    <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
+      "FX B"
+    <Meter label="FX B meter" value=0.6>
+    <Fader hue=2 kind="group" level=76 name="FX B level" value="76" @onlevel=return:fxb>

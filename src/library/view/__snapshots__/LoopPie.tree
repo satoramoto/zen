@@ -1,0 +1,67 @@
+## Default
+<div aria-label="62 percent through the loop" class="yh-looppie" data-form="pie" data-hue="2" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 1.5772644703565564 8.644843137107058 Z">
+
+## EveryState #1
+<div aria-label="0 percent through the loop" class="yh-looppie" data-form="pie" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+
+## EveryState #2
+<div aria-label="25 percent through the loop" class="yh-looppie" data-form="pie" data-hue="1" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 10 5 Z">
+
+## EveryState #3
+<div aria-label="62 percent through the loop" class="yh-looppie" data-form="pie" data-hue="2" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 1.5772644703565564 8.644843137107058 Z">
+
+## EveryState #4
+<div aria-label="90 percent through the loop" class="yh-looppie" data-form="pie" data-hue="3" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 2.061073738537633 0.9549150281252636 Z">
+
+## EveryState #5
+<div aria-label="100 percent through the loop" class="yh-looppie" data-form="pie" data-hue="4" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <circle class="yh-looppie__wedge" cx="5" cy="5" r="5">
+
+## EveryState #6
+<div aria-label="recording, bar 4" class="yh-looppie" data-form="pie" data-hue="5" data-part="root" data-recording="true" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 7.938926261462367 9.045084971874736 Z">
+  <span class="lib-text lib-tone yh-looppie__middle" data-part="middle" data-role="numeral" data-tabular="">
+    "4"
+
+## EveryState #7
+<div aria-label="75 percent through the loop" class="yh-looppie" data-form="pie" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 1 1 0 5.000000000000001 Z">
+  <span class="lib-text lib-tone yh-looppie__middle" data-part="middle" data-role="numeral" data-tabular="">
+    "8"
+
+## Dense
+<div aria-label="30 percent through the loop" class="yh-looppie" data-form="pie" data-hue="3" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 9.755282581475768 6.545084971874736 Z">
+
+## Empty
+<div aria-label="0 percent through the loop" class="yh-looppie" data-form="pie" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+
+## Disabled
+<div aria-label="50 percent through the loop" class="yh-looppie" data-disabled="true" data-form="pie" data-hue="2" data-part="root" role="img">
+  <svg aria-hidden="true" class="yh-looppie__svg" viewBox="0 0 10 10">
+    <circle class="yh-looppie__track" cx="5" cy="5" r="4.5">
+    <path class="yh-looppie__wedge" d="M 5 5 L 5 0 A 5 5 0 0 1 5.000000000000001 10 Z">
