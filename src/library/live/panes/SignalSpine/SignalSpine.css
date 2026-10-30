@@ -1,0 +1,231 @@
+/* SignalSpine: cartridges on one cable, the looper's layers as tree rings. The track's hue slot
+   inks the rings, the cable's beads and the level. Contract variables only. */
+
+.lv-spine {
+  --lv-ink: var(--text-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+.lv-spine[data-hue='1'] { --lv-ink: var(--hue-1); }
+.lv-spine[data-hue='2'] { --lv-ink: var(--hue-2); }
+.lv-spine[data-hue='3'] { --lv-ink: var(--hue-3); }
+.lv-spine[data-hue='4'] { --lv-ink: var(--hue-4); }
+.lv-spine[data-hue='5'] { --lv-ink: var(--hue-5); }
+
+/* The track switcher, centred: ◂ name · source ▸. */
+.lv-spine__bar {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+}
+
+.lv-spine__chain {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: stretch;
+  min-height: 0;
+}
+.lv-spine[data-form='column'] .lv-spine__chain {
+  flex-direction: column;
+}
+
+/* The cable between cartridges: a rule with beads travelling along it. */
+.lv-spine__cable {
+  position: relative;
+  flex: 0 0 var(--space-4);
+  align-self: center;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--lv-ink) 0 3px, transparent 3px 9px);
+  background-size: 9px 3px;
+  opacity: 0.8;
+  animation: lv-spine-flow 0.6s linear infinite;
+}
+.lv-spine[data-form='column'] .lv-spine__cable {
+  flex-basis: var(--space-3);
+  width: 3px;
+  height: auto;
+  background: repeating-linear-gradient(180deg, var(--lv-ink) 0 3px, transparent 3px 9px);
+  background-size: 3px 9px;
+  animation-name: lv-spine-flow-down;
+}
+
+.lv-spine__cart {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--surface-1);
+  box-shadow: var(--layer-raised-cast, none);
+}
+.lv-spine__cart[data-stage='looper'] {
+  flex-grow: 2;
+  border-color: var(--lv-ink);
+  box-shadow: inset 0 0 0 1px var(--lv-ink);
+}
+.lv-spine__cart[data-bypass] {
+  border-style: dashed;
+  background: none;
+}
+
+.lv-spine__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--space-1);
+  border: none;
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--text-1) 6%, transparent);
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+}
+.lv-spine__head:disabled {
+  cursor: default;
+}
+.lv-spine__head:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+.lv-spine__options {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 var(--space-1);
+  list-style: none;
+}
+.lv-spine__params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  align-items: center;
+  margin-top: auto;
+}
+.lv-spine__params b {
+  color: var(--text-1);
+  font-weight: inherit;
+}
+
+/* ---------- the looper's rings ---------- */
+
+.lv-spine__looper {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: 0;
+}
+.lv-spine__rings {
+  flex: 1 1 auto;
+  height: 100%;
+  min-width: 0;
+  max-height: calc(var(--control-h) * 5);
+}
+.lv-spine__ring-band {
+  fill: none;
+  stroke: color-mix(in oklab, var(--lv-ink) 55%, var(--surface-1));
+}
+.lv-spine__ring[data-kind='base'] .lv-spine__ring-band {
+  stroke: var(--lv-ink);
+}
+.lv-spine__ring[data-muted] .lv-spine__ring-band {
+  stroke: var(--border-strong);
+  stroke-dasharray: 2 2;
+}
+.lv-spine__ring-sweep {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-linecap: butt;
+  opacity: 0.55;
+}
+.lv-spine__bars {
+  text-anchor: middle;
+  fill: var(--text-1);
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+}
+.lv-spine__layers {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lv-spine__layer {
+  padding: 2px var(--space-1);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-1);
+  color: var(--text-3);
+  text-align: left;
+  cursor: pointer;
+}
+.lv-spine__layer[aria-pressed='true'] {
+  border-color: var(--lv-ink);
+  color: var(--text-1);
+}
+.lv-spine__layer:disabled {
+  cursor: default;
+}
+.lv-spine__layer:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---------- out ---------- */
+
+.lv-spine__out {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-card);
+}
+.lv-spine[data-form='column'] .lv-spine__out {
+  flex-direction: row;
+}
+.lv-spine__level {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  width: var(--space-2);
+  min-height: var(--control-h);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.lv-spine__level > span {
+  position: absolute;
+  inset: auto 0 0;
+  background: var(--lv-ink);
+}
+
+@keyframes lv-spine-flow {
+  to {
+    background-position: 9px 0;
+  }
+}
+@keyframes lv-spine-flow-down {
+  to {
+    background-position: 0 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lv-spine__cable {
+    animation: none;
+  }
+}

@@ -1,0 +1,33 @@
+/* The concept views' faceplate tag (LiveSet.story.tsx): a caption chip over each pane's top-left
+   corner, overlaid so the solver's sizes hold. And the pane stories' specimen box. */
+
+.lv-face {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+}
+.lv-face__tag {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  z-index: 1;
+  padding: 0 var(--space-1);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-1);
+  pointer-events: none;
+}
+
+.lv-specimen {
+  box-sizing: border-box;
+  padding: var(--space-4);
+  background: var(--surface-0);
+  color: var(--text-1);
+}
+.lv-specimen__box {
+  box-sizing: border-box;
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-1);
+}

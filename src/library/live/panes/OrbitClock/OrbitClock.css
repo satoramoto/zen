@@ -1,0 +1,158 @@
+/* OrbitClock: one ring per generator, beads for steps, a comet hand per ring. Each ring's ink is
+   its track's hue slot. Contract variables only. */
+
+.lv-orbit {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+.lv-orbit [data-hue='1'] { --lv-ink: var(--hue-1); }
+.lv-orbit [data-hue='2'] { --lv-ink: var(--hue-2); }
+.lv-orbit [data-hue='3'] { --lv-ink: var(--hue-3); }
+.lv-orbit [data-hue='4'] { --lv-ink: var(--hue-4); }
+.lv-orbit [data-hue='5'] { --lv-ink: var(--hue-5); }
+
+.lv-orbit__sky {
+  flex: 1 1 auto;
+  height: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.lv-orbit__ring {
+  --lv-ink: var(--text-2);
+  outline: none;
+}
+.lv-orbit__ring[role='button'] {
+  cursor: pointer;
+}
+.lv-orbit__track {
+  fill: none;
+  stroke: color-mix(in oklab, var(--lv-ink) 26%, transparent);
+  stroke-width: 0.6;
+}
+/* A wide invisible stroke, so the ring is easy to hit between beads. */
+.lv-orbit__hit-area {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 10;
+}
+.lv-orbit__ring[data-selected] .lv-orbit__track {
+  stroke: var(--lv-ink);
+  stroke-width: 1.6;
+}
+.lv-orbit__ring:focus-visible .lv-orbit__track {
+  stroke: var(--focus-ring);
+  stroke-width: 2;
+}
+.lv-orbit__tail {
+  fill: none;
+  stroke: var(--lv-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+.lv-orbit__bead {
+  fill: var(--text-3);
+}
+.lv-orbit__bead[data-hit] {
+  fill: color-mix(in oklab, var(--lv-ink) 70%, var(--surface-1));
+  stroke: var(--surface-0);
+  stroke-width: 0.6;
+}
+.lv-orbit__bead[data-lit] {
+  fill: var(--lv-ink);
+  filter: drop-shadow(0 0 calc(var(--bloom) * 0.6) var(--lv-ink));
+}
+.lv-orbit__head {
+  fill: var(--text-1);
+}
+
+/* Twelve o'clock: where every hand starts, and where they meet again. */
+.lv-orbit__noon {
+  stroke: var(--text-3);
+  stroke-width: 0.6;
+  stroke-dasharray: 1.5 2;
+}
+.lv-orbit__chaos {
+  fill: none;
+  stroke: var(--warning);
+  stroke-width: 2;
+  stroke-dasharray: 1 2.5;
+  opacity: 0.8;
+}
+.lv-orbit__chord,
+.lv-orbit__meet {
+  text-anchor: middle;
+  fill: var(--text-1);
+  font-family: var(--font-display);
+}
+.lv-orbit__chord {
+  font-weight: var(--weight-display);
+}
+.lv-orbit__meet {
+  fill: var(--text-3);
+  font-family: var(--font-sans);
+}
+
+.lv-orbit__side {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-inline-end: var(--space-2);
+}
+.lv-orbit__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lv-orbit__item {
+  --lv-ink: var(--text-2);
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-2);
+  align-items: baseline;
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+}
+.lv-orbit__item:disabled {
+  cursor: default;
+}
+.lv-orbit__item[aria-pressed='true'] {
+  border-color: var(--lv-ink);
+  background: color-mix(in oklab, var(--lv-ink) 12%, transparent);
+}
+.lv-orbit__item:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+.lv-orbit__swatch {
+  align-self: center;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--lv-ink);
+}
+.lv-orbit__hint {
+  grid-column: 2 / -1;
+}
+.lv-orbit__dice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+}

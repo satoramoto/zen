@@ -1,0 +1,127 @@
+/* ChordCompass: the circle of fifths as an SVG wheel, the progression a path round it. Contract
+   variables only: the key is a wash of --role-1, the chord now is solid --role-1, the next move
+   is the one strong stroke. */
+
+.lv-compass {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+.lv-compass__wheel {
+  flex: 1 1 auto;
+  height: 100%;
+  min-width: 0;
+  max-height: 100%;
+  overflow: visible;
+}
+
+.lv-compass__wedge path {
+  fill: var(--surface-1);
+  stroke: var(--border);
+  stroke-width: 0.6;
+  transition: fill 160ms ease-out;
+}
+.lv-compass__wedge text {
+  fill: var(--text-3);
+  font-family: var(--font-sans);
+  text-anchor: middle;
+  pointer-events: none;
+}
+.lv-compass__wedge[data-visited] text {
+  fill: var(--text-1);
+}
+.lv-compass__wedge[data-key] path {
+  fill: color-mix(in oklab, var(--role-1) 16%, var(--surface-1));
+}
+.lv-compass__wedge[data-next] path {
+  fill: color-mix(in oklab, var(--role-1) 34%, var(--surface-1));
+}
+.lv-compass__wedge[data-now] path {
+  fill: var(--role-1);
+}
+.lv-compass__wedge[data-now] text {
+  fill: var(--role-1-text);
+  font-weight: var(--weight-strong);
+}
+.lv-compass__wedge[role='button'] {
+  cursor: pointer;
+  outline: none;
+}
+.lv-compass__wedge[role='button']:hover path {
+  stroke: var(--text-2);
+}
+.lv-compass__wedge[role='button']:focus-visible path {
+  stroke: var(--focus-ring);
+  stroke-width: 2;
+}
+
+/* The progression: a faint closed outline, its stops as dots, the move about to happen strong. */
+.lv-compass__loop {
+  fill: color-mix(in oklab, var(--text-1) 4%, transparent);
+  stroke: var(--text-3);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.lv-compass__stop {
+  fill: var(--text-2);
+  pointer-events: none;
+}
+.lv-compass__move {
+  stroke: var(--text-1);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 5 3;
+  animation: lv-compass-march 0.8s linear infinite;
+  pointer-events: none;
+}
+.lv-compass__land {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.6;
+  pointer-events: none;
+}
+
+.lv-compass__hub {
+  fill: var(--surface-2);
+  stroke: var(--border-strong);
+  stroke-width: 0.8;
+}
+.lv-compass__now,
+.lv-compass__then {
+  text-anchor: middle;
+  font-family: var(--font-display);
+  fill: var(--text-1);
+}
+.lv-compass__now {
+  font-weight: var(--weight-display);
+}
+.lv-compass__then {
+  font-family: var(--font-sans);
+  fill: var(--text-3);
+}
+
+.lv-compass__readout {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding-inline-end: var(--space-3);
+}
+
+@keyframes lv-compass-march {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lv-compass__move {
+    animation: none;
+  }
+}
