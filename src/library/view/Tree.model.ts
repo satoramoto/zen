@@ -67,7 +67,8 @@ export type Handler = (...args: any[]) => unknown;
 export type Handlers = Record<string, Handler | undefined>;
 
 /** A child or a list of them; null, undefined and false draw nothing (for `when`). */
-type ChildArg = Child | null | undefined | false | ChildArg[];
+/** What `h` and `component` slots take as children: a child, a hole, or a list of them. */
+export type ChildArg = Child | null | undefined | false | ChildArg[];
 
 const flatten = (children: ChildArg[]): (Child | null)[] =>
   children.flatMap((child): (Child | null)[] => (Array.isArray(child) ? flatten(child) : child === null || child === undefined || child === false ? [null] : [child]));
