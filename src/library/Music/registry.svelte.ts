@@ -29,6 +29,18 @@ import MusicWaveControls from './mixer/WaveControls.svelte';
 import MusicDeckStrip from './mixer/DeckStrip.svelte';
 import MusicMasterStrip from './mixer/MasterStrip.svelte';
 import MusicMixerView from './mixer/MixerView.svelte';
+import MusicRigHealth from './live/RigHealth/RigHealth.svelte';
+import MusicChordCompass from './live/ChordCompass/ChordCompass.svelte';
+import MusicLandingDial from './live/LandingDial/LandingDial.svelte';
+import MusicSetlistRiver from './live/SetlistRiver/SetlistRiver.svelte';
+import MusicPushTwin from './live/PushTwin/PushTwin.svelte';
+import MusicOrbitClock from './live/OrbitClock/OrbitClock.svelte';
+import MusicSignalSpine from './live/SignalSpine/SignalSpine.svelte';
+import MusicProgressionStrip from './live/ProgressionStrip/ProgressionStrip.svelte';
+import MusicCutPads from './live/CutPads/CutPads.svelte';
+import MusicThrowPads from './live/ThrowPads/ThrowPads.svelte';
+import MusicLaunchGrid from './live/LaunchGrid/LaunchGrid.svelte';
+import MusicTrackStrips from './live/TrackStrips/TrackStrips.svelte';
 
 export function musicSvelteComponents() {
   return {
@@ -38,5 +50,6 @@ export function musicSvelteComponents() {
     MusicContextControls, MusicPhonesIcon, MusicPowerIcon, MusicMomentary, MusicSeparator, MusicMixerSection,
     MusicKnobStack, MusicStemConnections, MusicFrameMeter, MusicFramePlayhead, MusicFrameWaveform, MusicWaveControls,
     MusicDeckStrip, MusicMasterStrip, MusicMixerView,
+    MusicRigHealth, MusicTrackStrips, MusicLaunchGrid, MusicThrowPads, MusicCutPads, MusicProgressionStrip, MusicSignalSpine, MusicOrbitClock, MusicPushTwin, MusicSetlistRiver, MusicLandingDial, MusicChordCompass,
   };
 }

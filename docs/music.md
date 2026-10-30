@@ -66,6 +66,24 @@ cancel on unmount and take replacement samplers without turning rendering into a
 Canvas palette changes schedule a repaint, even while paused, without reanalysis or remounting
 playback.
 
+## Live: the looper's panes (new parts, not ports)
+
+`src/library/Music/live/` holds parts that mix[flow] never had: the live looper's panes, built
+**in** the family's face rather than ported from it — the same aliases, controls (`MusicKnob`,
+`MusicSlider`, `MusicMeter`, `MusicToggle`, `MusicSegmented`, `MusicButton`), deck anatomy, 24px
+launch cells and stem inks. They are not fidelity-locked: no reference screenshot governs them, and
+the port's zero-difference evidence below does not cover them.
+
+- `live.model.ts` / `live.css`: the shared pieces every pane draws the same way — the pane root
+  (its own `.zen-music` boundary, as `MixerView`), the deck title row, axis captions, mono readings,
+  the launch cell's states and the status dot — and the stem inks (`STEM_INKS`, `inkStyle`) a
+  track wears. `polar.ts` is the round panes' geometry.
+- One folder per pane, each a view-tree component with React and Svelte bindings, `forms` for the
+  assembled screen, fixtures and stories under **Music/Live**.
+- Panes take time as a `beat` prop and hold no state; the app owns the clock and every value.
+- The composed pages (tabs of panes in the Workspace, one linked set) are `Live/Views`
+  (`src/library/live/`), React-only story harnesses.
+
 ## Storybook catalog
 
 The Music sidebar is grouped by use, not by implementation folders:
@@ -76,6 +94,7 @@ The Music sidebar is grouped by use, not by implementation folders:
 - **Overlays**: context panels and popups.
 - **Themes**: the existing theme editor with live Music specimens.
 - **Foundations**: button faces, labels and technical frame bindings.
+- **Live**: the looper's panes (`Music/live/`, above).
 
 Each component sits directly inside its category, with variants beneath it. The full mixer
 opens with **Default**, followed by **Interactive** and the fixed reference/host-state examples.

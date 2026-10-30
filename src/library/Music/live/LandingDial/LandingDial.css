@@ -1,0 +1,146 @@
+
+/* LandingDial: a countdown ring of bar cells on the pane face, the bars gone solid `--primary`, the
+   bar now filling with the beat; the number left in big mono. */
+
+:where(.zen-music).live-land {
+  align-items: stretch;
+}
+:where(.zen-music).live-land[data-form='chip'] {
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  padding: 0 6px;
+}
+
+:where(.zen-music) .live-land-ring {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+}
+:where(.zen-music) .live-land-mini {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+
+/* A bar: the mixer's cell. Ahead a flat face with its edge, gone solid, now filling. */
+:where(.zen-music) .live-land-bar path {
+  fill: var(--wdg-face);
+  stroke: var(--wdg-edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-land-bar[data-state='gone'] path {
+  fill: var(--primary);
+  stroke: var(--primary);
+}
+:where(.zen-music) .live-land-bar[data-state='now'] path {
+  stroke: var(--primary);
+}
+:where(.zen-music) .live-land-bar[data-state='now'] .live-land-fill {
+  fill: var(--primary);
+  stroke: none;
+}
+:where(.zen-music) .live-land-bar[data-state='off'] path {
+  fill: none;
+  stroke: var(--wdg-caption);
+  stroke-dasharray: 3 3;
+}
+
+/* The downbeat it lands on: a rule across the ring at twelve. */
+:where(.zen-music) .live-land-down {
+  stroke: var(--wdg-text-strong);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music).live-land:not([data-armed]) .live-land-down {
+  stroke: var(--wdg-caption);
+}
+
+:where(.zen-music) .live-land-ring text {
+  text-anchor: middle;
+}
+:where(.zen-music) .live-land-count {
+  fill: var(--wdg-text-strong);
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-variant-numeric: tabular-nums;
+}
+:where(.zen-music).live-land:not([data-armed]) .live-land-count {
+  fill: var(--wdg-caption);
+}
+:where(.zen-music) .live-land-via {
+  fill: var(--wdg-caption);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--wdg-sans-axes);
+  font-weight: 550;
+  letter-spacing: 0.08em;
+}
+:where(.zen-music).live-land[data-armed] .live-land-via {
+  fill: var(--primary);
+}
+:where(.zen-music) .live-land-unit {
+  fill: var(--wdg-caption);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--wdg-sans-axes);
+}
+
+/* What it lands on, and what hits on the one. */
+:where(.zen-music) .live-land-says {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+:where(.zen-music) .live-land-line {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-size: 9px;
+  white-space: nowrap;
+}
+:where(.zen-music) .live-land-line b {
+  font-weight: 550;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-land-line .live-reading {
+  color: var(--wdg-text);
+}
+:where(.zen-music) .live-land-hit b {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  color: var(--primary);
+}
+
+:where(.zen-music) .live-land-switches {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* The chip: a mini ring, the bars left in mono, the route as a caption. */
+:where(.zen-music) .live-land-chip-count {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 11px;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music).live-land:not([data-armed]) .live-land-chip-count {
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-land-chip-route {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 9px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wdg-caption);
+}

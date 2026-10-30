@@ -1,0 +1,249 @@
+
+/* SetlistRiver: the night as one timeline. The body's bands all span its full width with no
+   side borders, and the songs share it by `--river-cols` (`minmax(0, <minutes>fr)` each, no gap),
+   so one 1px playhead at `--river-at` lines up through the contour, the songs and the ruler, as
+   the mixer's waveform playhead does through its lanes. */
+
+:where(.zen-music).live-river[data-form='strip'] {
+  padding: 2px;
+}
+
+:where(.zen-music) .live-river-body {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+}
+
+/* ---------- the tempo contour: a waveform lane ---------- */
+
+:where(.zen-music) .live-river-lane {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 28px;
+  overflow: hidden;
+  border-block: 1px solid var(--wdg-edge);
+  background: var(--bg);
+}
+:where(.zen-music) .live-river-contour {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+:where(.zen-music) .live-river-contour line {
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-river-minute {
+  stroke: var(--play-wave-bar-faint);
+}
+:where(.zen-music) .live-river-bound {
+  stroke: var(--play-wave-bar);
+}
+:where(.zen-music) .live-river-fill {
+  fill: color-mix(in srgb, var(--primary) 16%, transparent);
+}
+:where(.zen-music) .live-river-line {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-river-past {
+  fill: color-mix(in srgb, var(--bg) 55%, transparent);
+}
+:where(.zen-music) .live-river-bpm {
+  position: absolute;
+  overflow: hidden;
+  padding-bottom: 2px;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--wdg-caption);
+  pointer-events: none;
+}
+:where(.zen-music) .live-river-bpm[data-state='now'] {
+  color: var(--primary);
+}
+
+/* ---------- the songs ---------- */
+
+:where(.zen-music) .live-river-songs {
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: var(--river-cols, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:where(.zen-music).live-river[data-form='strip'] .live-river-songs {
+  flex: 1 1 auto;
+}
+:where(.zen-music) .live-river-song {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-inline: 1px;
+}
+
+:where(.zen-music) .live-river-face {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 28px;
+  padding: 2px 4px;
+  overflow: hidden;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-face);
+  color: var(--wdg-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+:where(.zen-music) .live-river-song[data-open] > .live-river-face {
+  flex: 0 0 auto;
+}
+:where(.zen-music) .live-river-face:hover:not(:disabled) {
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-river-face:disabled {
+  cursor: default;
+}
+:where(.zen-music) .live-river-face:focus-visible {
+  outline: 1px solid var(--wdg-focus);
+  outline-offset: 1px;
+}
+
+:where(.zen-music) .live-river-name {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+  min-width: 0;
+  line-height: 12px;
+  white-space: nowrap;
+}
+:where(.zen-music) .live-river-index {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-river-name > b {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 550;
+  text-overflow: ellipsis;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-river-meta {
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-river-cue {
+  color: var(--primary);
+}
+
+/* Played: hatched and dimmed. Now: edged and tinted in the accent. Cued: a dashed accent edge.
+   A jam: a dashed free stretch, no face. */
+:where(.zen-music) .live-river-face[data-state='done'] {
+  background: repeating-linear-gradient(135deg, var(--play-wave-loading-stripe) 0 1px, transparent 1px 5px), var(--bg);
+}
+:where(.zen-music) .live-river-face[data-state='done'] .live-river-name > b {
+  font-weight: 400;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-river-face[data-state='now'] {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--wdg-face));
+}
+:where(.zen-music) .live-river-face[data-state='now'] .live-river-index {
+  color: var(--primary);
+}
+:where(.zen-music) .live-river-face[data-state='cued'] {
+  border: 1px dashed var(--primary);
+}
+:where(.zen-music) .live-river-face[data-state='jam'] {
+  border: 1px dashed var(--wdg-edge);
+  background: transparent;
+}
+:where(.zen-music) .live-river-face[data-state='jam'] .live-river-name > b {
+  font-weight: 400;
+  color: var(--wdg-text);
+}
+
+/* The song now's scenes: launch cells, the playing one filled `--primary`. */
+:where(.zen-music) .live-river-scenes {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 2px;
+}
+:where(.zen-music) .live-river-scene {
+  gap: 3px;
+  font-size: 8px;
+}
+:where(.zen-music) .live-river-glyph {
+  flex: 0 0 auto;
+  font-size: 7px;
+}
+:where(.zen-music) .live-river-scene-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- the minute ruler and the playhead ---------- */
+
+:where(.zen-music) .live-river-ruler {
+  position: relative;
+  flex: 0 0 auto;
+  height: 11px;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 11px;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-river-tick {
+  position: absolute;
+  top: 0;
+  padding-inline-start: 2px;
+  border-inline-start: 1px solid var(--play-wave-bar);
+}
+:where(.zen-music) .live-river-end {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--wdg-text);
+}
+
+:where(.zen-music) .live-river-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--river-at, 0);
+  z-index: 2;
+  width: 1px;
+  background: var(--wdg-text-strong);
+  pointer-events: none;
+}

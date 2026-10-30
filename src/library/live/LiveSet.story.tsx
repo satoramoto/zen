@@ -1,72 +1,48 @@
 // The stories' stand-in for the app: one live set's state, a running clock, and the content for
-// every pane kind, linked (the selected track is the orbit ring, the spine and the Push column; a
-// wedge picked on the compass overrides the chord the orbits follow). Story harness only: the
-// panes themselves hold no state.
+// every pane kind, all Music-family panes in mix[flow]'s face and linked (the selected track is the
+// grid's column, the strip, the orbit ring, the spine and the Push column; a compass wedge
+// overrides the chord the orbits follow). Story harness only: the panes hold no state.
 import { useMemo, useState, type ReactNode } from 'react';
 import { fn } from 'storybook/test';
-import { ArpSequencer } from '../components/music/ArpSequencer/ArpSequencer';
-import { arpSequencerBoard } from '../components/music/ArpSequencer/ArpSequencer.fixtures';
-import { ChordStrip } from '../components/music/ChordStrip/ChordStrip';
-import type { LiveTrack } from '../components/music/live.model';
-import { LoopGrid } from '../components/music/LoopGrid/LoopGrid';
-import { loopBoard, loopSongs } from '../components/music/LoopGrid/LoopGrid.fixtures';
-import { MacroPads } from '../components/music/MacroPads/MacroPads';
-import { MACRO_PADS } from '../components/music/MacroPads/MacroPads.fixtures';
-import { MixBand } from '../components/music/MixBand/MixBand';
-import { mixBoard, mixReturns } from '../components/music/MixBand/MixBand.fixtures';
-import { StemLanes } from '../components/music/StemLanes/StemLanes';
-import { stemLanesBoard } from '../components/music/StemLanes/StemLanes.fixtures';
-import { TransitionRow, type TransitionPad } from '../components/music/TransitionRow/TransitionRow';
-import { transitionBoard } from '../components/music/TransitionRow/TransitionRow.fixtures';
 import type { WorkspaceBinding } from '../layout/Workspace/Workspace.types';
-import { Text } from '../primitives/Text';
+import { ChordCompass, type FollowMode } from '../Music/live/ChordCompass/ChordCompass';
+import { compassProgression } from '../Music/live/ChordCompass/ChordCompass.fixtures';
+import { CutPads, type CutPad } from '../Music/live/CutPads/CutPads';
+import { cutPadsBoard } from '../Music/live/CutPads/CutPads.fixtures';
+import { LandingDial, type LandingLength, type LandingTarget } from '../Music/live/LandingDial/LandingDial';
+import { LaunchGrid } from '../Music/live/LaunchGrid/LaunchGrid';
+import { launchSongs, launchTracks } from '../Music/live/LaunchGrid/LaunchGrid.fixtures';
+import { OrbitClock } from '../Music/live/OrbitClock/OrbitClock';
+import { orbitGenerators, orbitTracks } from '../Music/live/OrbitClock/OrbitClock.fixtures';
+import { ProgressionStrip, type ProgressionFollow } from '../Music/live/ProgressionStrip/ProgressionStrip';
+import { progressionChords } from '../Music/live/ProgressionStrip/ProgressionStrip.fixtures';
+import { PushTwin } from '../Music/live/PushTwin/PushTwin';
+import { pushScenes, pushSections, pushTracks, pushTransitions } from '../Music/live/PushTwin/PushTwin.fixtures';
+import { RigHealth } from '../Music/live/RigHealth/RigHealth';
+import { rigHealthBoard } from '../Music/live/RigHealth/RigHealth.fixtures';
+import { SetlistRiver } from '../Music/live/SetlistRiver/SetlistRiver';
+import { riverSongs } from '../Music/live/SetlistRiver/SetlistRiver.fixtures';
+import { SignalSpine, type SpineLayer, type SpineStage } from '../Music/live/SignalSpine/SignalSpine';
+import { keysChain, keysLayers, spineTracks } from '../Music/live/SignalSpine/SignalSpine.fixtures';
+import { ThrowPads, type ThrowPad } from '../Music/live/ThrowPads/ThrowPads';
+import { throwPads } from '../Music/live/ThrowPads/ThrowPads.fixtures';
+import { TrackStrips, type TrackStrip } from '../Music/live/TrackStrips/TrackStrips';
+import { stripReturns, stripTracks } from '../Music/live/TrackStrips/TrackStrips.fixtures';
 import { useBeat } from './clock';
-import { ChordCompass, type FollowMode } from './panes/ChordCompass/ChordCompass';
-import { LandingDial } from './panes/LandingDial/LandingDial';
-import { OrbitClock } from './panes/OrbitClock/OrbitClock';
-import { PushTwin } from './panes/PushTwin/PushTwin';
-import { RigHealth } from './panes/RigHealth/RigHealth';
-import { SetlistRiver } from './panes/SetlistRiver/SetlistRiver';
-import { SignalSpine } from './panes/SignalSpine/SignalSpine';
-import {
-  KEYS_CHAIN,
-  KEYS_LAYERS,
-  PUSH_SECTIONS,
-  PUSH_TRANSITIONS,
-  RIG_DEVICES,
-  RIG_INPUTS,
-  RIG_LOAD,
-  SET_CHORD_INDEX,
-  SET_GENERATORS,
-  SET_NOW,
-  SET_PROGRESSION,
-  SET_SONGS,
-  SET_TRACKS,
-  type ChainStage,
-  type LandingLength,
-  type LandingTarget,
-  type LoopLayer,
-} from './set';
-import { kindOf, PANE_KINDS } from './views';
+import { kindOf } from './views';
 
-/** The set's eight tracks: the grid's cells with the mixer's levels, meters, sends and lamps. */
-export const LIVE_TRACKS: readonly LiveTrack[] = loopBoard.map((track, i) => {
-  const strip = mixBoard[i % mixBoard.length];
-  return { ...track, level: strip.level, meter: strip.meter, sends: strip.sends ?? [0, 0], muted: strip.muted, soloed: strip.soloed, armed: strip.armed, parked: strip.parked };
-});
+/** The set's tempo: Hidden Signals. */
+export const TEMPO = 112;
 
-const TEMPO = 112;
-
-/** An audio track's chain in the stand-in data: Keys's own, with its input swapped and no generator or instrument. */
-const audioChain = (source: string): readonly ChainStage[] =>
-  KEYS_CHAIN.map((s) => (s.id === 'input' ? { ...s, value: `audio · ${source}` } : s.id === 'gen' || s.id === 'inst' ? { ...s, bypass: true, params: undefined } : s.id === 'looper' ? { ...s, value: 'audio loop · 8 bars' } : s));
+/** The bars until Wire lands, at the start of the story. */
+const CUE_BARS = 6;
 
 /** Where the progression is at `beat`: the chord's index and the beats until the next. */
 function chordAt(beat: number): { index: number; toNext: number } {
-  const lengths = SET_PROGRESSION.map((c) => c.beats ?? 4);
+  const lengths = compassProgression.map((c) => c.beats ?? 4);
   const total = lengths.reduce((a, b) => a + b, 0) || 1;
-  // Start where ChordStrip's fixture stands.
-  const offset = lengths.slice(0, SET_CHORD_INDEX).reduce((a, b) => a + b, 0);
+  // Start where the fixtures stand (G7, the third chord).
+  const offset = lengths.slice(0, 2).reduce((a, b) => a + b, 0);
   let t = (((beat + offset) % total) + total) % total;
   for (let i = 0; i < lengths.length; i++) {
     if (t < lengths[i]) return { index: i, toNext: Math.max(1, Math.ceil(lengths[i] - t)) };
@@ -75,124 +51,137 @@ function chordAt(beat: number): { index: number; toNext: number } {
   return { index: 0, toNext: 1 };
 }
 
-/**
- * A region's faceplate tag: a caption chip over the pane's top-left corner, so every pane says
- * what it is (the Workspace stories' own). Overlaid, never laid out, so the solver's sizes hold.
- */
-function face(label: string, children: ReactNode): ReactNode {
-  return (
-    <div className="lv-face">
-      <Text role="caption" tone="muted" className="lv-face__tag">
-        {label}
-      </Text>
-      {children}
-    </div>
+/** An audio track's chain in the stand-in data: Keys's own, its input swapped and no generator or instrument. */
+const audioChain = (source: string): readonly SpineStage[] =>
+  keysChain.map((s) =>
+    s.id === 'input' ? { ...s, value: `audio · ${source}` } : s.id === 'gen' || s.id === 'inst' ? { ...s, bypass: true, params: undefined } : s.id === 'looper' ? { ...s, value: 'audio loop · 8 bars' } : s,
   );
-}
 
 export interface LiveSetOptions {
   /** Run the clock. Off for stories that hold a still frame. */
   running?: boolean;
-  /** What each region is bound to, by region id: `{ track }` points a spine or orbit at a column. */
+  /** What each region is bound to, by region id: `{ track }` points a spine or an orbit at a column. */
   bindings?: Record<string, WorkspaceBinding>;
 }
 
-/** The set's state and a function from a region id to its content. */
+/** The set's state, and a function from a region id to its pane. */
 export function useLiveSet({ running = true, bindings = {} }: LiveSetOptions = {}) {
   const beat = useBeat(TEMPO, running, 2);
   const [selected, setSelected] = useState('keys');
   const [follow, setFollow] = useState<FollowMode>('prog');
+  const [loopFollow, setLoopFollow] = useState<ProgressionFollow>('loop');
   const [bassLock, setBassLock] = useState(true);
   const [target, setTarget] = useState<LandingTarget>('song');
   const [length, setLength] = useState<LandingLength>(8);
   const [held, setHeld] = useState<string | undefined>(undefined);
   const [scene, setScene] = useState(1);
-  const [layers, setLayers] = useState<readonly LoopLayer[]>(KEYS_LAYERS);
+  const [layers, setLayers] = useState<readonly SpineLayer[]>(keysLayers);
   const [picked, setPicked] = useState<string | undefined>(undefined);
+  const [strips, setStrips] = useState<readonly TrackStrip[]>(stripTracks);
+  const [throws, setThrows] = useState<readonly ThrowPad[]>(throwPads);
+  const [cuts, setCuts] = useState<readonly CutPad[]>(cutPadsBoard.map((p) => (p.id === 'riser' ? { ...p, state: 'armed' } : p)));
 
   const { index, toNext } = chordAt(beat);
-  const chordName = picked ?? SET_PROGRESSION[index]?.name;
+  const chordName = picked ?? compassProgression[index]?.name;
   const bar = Math.floor(beat / 4);
-  const barsLeft = ((((SET_NOW.barsToCue - bar) % length) + length) % length) || length;
-  const pads: TransitionPad[] = transitionBoard.map((p) => ({ ...p, state: p.id === 'riser' ? 'armed' : p.state }));
+  const barsLeft = (((CUE_BARS - bar) % length) + length) % length || length;
+  const step = (id: string, by: number) => {
+    const i = spineTracks.findIndex((t) => t.id === id);
+    setSelected(spineTracks[(i + by + spineTracks.length) % spineTracks.length].id);
+  };
 
   const content = useMemo(() => {
-    return (id: string, regionBindings: Record<string, WorkspaceBinding> = bindings): ReactNode => {
+    return (id: string): ReactNode => {
       const kind = kindOf(id);
       if (!kind) return null;
-      const label = PANE_KINDS[kind].label;
-      const bound = regionBindings[id]?.track;
-      const trackId = bound ?? selected;
-      const track = SET_TRACKS.find((t) => t.id === trackId) ?? SET_TRACKS[2];
+      const trackId = bindings[id]?.track ?? selected;
+      const track = spineTracks.find((t) => t.id === trackId) ?? spineTracks[2];
       switch (kind) {
         case 'river':
-          return face(label, <SetlistRiver songs={SET_SONGS} progress={SET_NOW.progress + (beat % 64) / 640} barsToCue={barsLeft} onPick={fn()} onScene={(s) => setScene(SET_SONGS[2].scenes?.findIndex((x) => x.id === s) ?? 0)} />);
-        case 'compass':
-          return face(
-            label,
-            <ChordCompass chords={SET_PROGRESSION} index={index} keyName="C" beatsToNext={toNext} follow={follow} onFollow={setFollow} bassLock={bassLock} onBassLock={setBassLock} onPick={(c) => setPicked((p) => (p === c ? undefined : c))} />,
+          return <SetlistRiver songs={riverSongs} progress={0.38 + (beat % 64) / 640} barsToCue={barsLeft} onPick={fn()} onScene={(s) => setScene(Math.max(0, ['bed', 'bass', 'full', 'break', 'kept'].indexOf(s)))} />;
+        case 'loop':
+          return <LaunchGrid songs={launchSongs} tracks={launchTracks} loop={{ phase: (beat % 32) / 32, bars: 8 }} selected={selected} onLaunch={fn()} onStop={fn()} onStopTrack={fn()} onSelectTrack={setSelected} onToggleSong={fn()} />;
+        case 'mix':
+          return (
+            <TrackStrips
+              tracks={strips}
+              returns={stripReturns}
+              selected={selected}
+              onLevel={({ track: t, level }) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, level } : s)))}
+              onSend={({ track: t, send, level }) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, sends: (send === 0 ? [level, s.sends?.[1] ?? 0] : [s.sends?.[0] ?? 0, level]) as [number, number] } : s)))}
+              onReturn={fn()}
+              onMute={(t) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, muted: !s.muted } : s)))}
+              onSolo={(t) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, soloed: !s.soloed } : s)))}
+              onArm={(t) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, armed: !s.armed } : s)))}
+              onSelect={setSelected}
+            />
           );
+        case 'compass':
+          return (
+            <ChordCompass
+              chords={compassProgression}
+              index={index}
+              keyName="C"
+              beatsToNext={toNext}
+              follow={follow}
+              onFollow={setFollow}
+              bassLock={bassLock}
+              onBassLock={setBassLock}
+              onPick={(c) => setPicked((p) => (p === c ? undefined : c))}
+            />
+          );
+        case 'follow':
+          return <ProgressionStrip chords={progressionChords} index={index} beat={beat} follow={loopFollow} onFollow={setLoopFollow} onSelect={fn()} onMutate={fn()} onKeep={fn()} onRevert={() => setPicked(undefined)} />;
         case 'orbits':
-          return face(label, <OrbitClock generators={SET_GENERATORS} tracks={SET_TRACKS} beat={beat} chaos={0.25} chord={chordName} selected={trackId} onSelect={setSelected} onMutate={fn()} onShake={fn()} onKeep={fn()} onRevert={() => setPicked(undefined)} />);
+          return <OrbitClock generators={orbitGenerators} tracks={orbitTracks} beat={beat} chaos={0.25} chord={chordName} selected={trackId} onSelect={setSelected} onMutate={fn()} onShake={fn()} onKeep={fn()} onRevert={() => setPicked(undefined)} />;
         case 'spine':
-          return face(
-            label,
+          return (
             <SignalSpine
               track={track}
-              chain={track.id === 'keys' ? KEYS_CHAIN : audioChain(track.source)}
+              chain={track.id === 'keys' ? keysChain : audioChain(track.source)}
               layers={layers}
               loopBars={8}
               beat={beat}
               outs={['Main L/R', 'IEM 2']}
-              level={LIVE_TRACKS.find((t) => t.id === track.id)?.meter ?? 0.5}
-              onPrev={() => setSelected(SET_TRACKS[(SET_TRACKS.findIndex((t) => t.id === track.id) + 7) % 8].id)}
-              onNext={() => setSelected(SET_TRACKS[(SET_TRACKS.findIndex((t) => t.id === track.id) + 1) % 8].id)}
+              level={strips.find((s) => s.id === track.id)?.meter ?? 0.5}
+              onPrev={() => step(track.id, -1)}
+              onNext={() => step(track.id, 1)}
               onStage={fn()}
               onUndo={() => setLayers((l) => (l.length > 1 ? l.slice(0, -1) : l))}
               onMuteLayer={(lid) => setLayers((l) => l.map((x) => (x.id === lid ? { ...x, muted: !x.muted } : x)))}
-            />,
+              onParam={fn()}
+            />
           );
         case 'push':
-          return face(
-            label,
+          return (
             <PushTwin
-              tracks={LIVE_TRACKS}
-              sections={PUSH_SECTIONS}
+              tracks={pushTracks}
+              sections={pushSections}
               section={1}
               queuedSection={2}
-              transitions={PUSH_TRANSITIONS}
+              transitions={pushTransitions}
               held={held}
-              scenes={['bed', '+bass', 'full', 'break', 'kept']}
+              scenes={pushScenes}
               scene={scene}
               selected={selected}
               onPad={(p) => {
-                if (p.row === 'transitions') setHeld((h) => (h === PUSH_TRANSITIONS[p.column] ? undefined : PUSH_TRANSITIONS[p.column]));
-                else if (p.row === 'clips' || p.row === 'stop') setSelected(LIVE_TRACKS[p.column]?.id ?? selected);
+                if (p.row === 'transitions') setHeld((h) => (h === pushTransitions[p.column] ? undefined : pushTransitions[p.column]));
+                else if (p.row === 'clips' || p.row === 'stop') setSelected(pushTracks[p.column]?.id ?? selected);
               }}
               onScene={setScene}
-            />,
+            />
           );
         case 'landing':
-          return face(label, <LandingDial via="RISER" lands="Wire" landsHint="118 · G" hit="DROP" target={target} onTarget={setTarget} length={length} onLength={setLength} barsLeft={Math.min(barsLeft, length)} beat={beat} armed onCancel={fn()} />);
-        case 'rig':
-          return <RigHealth inputs={RIG_INPUTS} devices={RIG_DEVICES} load={RIG_LOAD} xruns={0} frames={64} quantize="1 bar" countIn="1 bar" onOpen={fn()} />;
-        case 'loop':
-          return face(label, <LoopGrid songs={loopSongs} tracks={LIVE_TRACKS} loop={{ phase: (beat % 32) / 32, bars: 8 }} selected={selected} onLaunch={fn()} onStop={fn()} onStopTrack={fn()} onSelectTrack={setSelected} onToggleSong={fn()} />);
-        case 'mix':
-          return face(label, <MixBand tracks={LIVE_TRACKS} sends={[...mixReturns]} selected={selected} onLevel={fn()} onSend={fn()} onReturn={fn()} onArm={fn()} onMute={fn()} onSolo={fn()} onSelect={setSelected} />);
-        case 'follow':
-          return face(label, <ChordStrip chords={[...SET_PROGRESSION]} index={index} onFollow={fn()} onMutate={fn()} onKeep={fn()} onRevert={() => setPicked(undefined)} />);
-        case 'arp':
-          return face(label, <ArpSequencer state={arpSequencerBoard.state!} chords={[...SET_PROGRESSION]} index={index} onStep={fn()} onState={fn()} />);
-        case 'throws':
-          return face(label, <MacroPads pads={[...MACRO_PADS]} onMove={fn()} />);
+          return <LandingDial via="RISER" lands="Wire" landsHint="118 · G" hit="DROP" target={target} onTarget={setTarget} length={length} onLength={setLength} barsLeft={Math.min(barsLeft, length)} beat={beat} armed onCancel={fn()} />;
         case 'cuts':
-          return face(label, <TransitionRow pads={pads} selected="riser" onFire={fn()} />);
-        case 'stems':
-          return face(label, <StemLanes {...stemLanesBoard} onCue={fn()} onToggle={fn()} />);
+          return <CutPads pads={cuts} selected="riser" onFire={(c) => setCuts((all) => all.map((p) => (p.id === c ? { ...p, state: p.state === 'fired' ? 'idle' : 'fired' } : p)))} />;
+        case 'throws':
+          return <ThrowPads pads={throws} onMove={({ id: pad, x, y }) => setThrows((all) => all.map((p) => (p.id === pad ? { ...p, x, y, trail: [...(p.trail ?? []).slice(-23), { x: p.x, y: p.y }] } : p)))} />;
+        case 'rig':
+          return <RigHealth {...rigHealthBoard} onOpen={fn()} />;
       }
     };
-  }, [beat, bindings, selected, follow, bassLock, target, length, held, scene, layers, picked, index, toNext, chordName, barsLeft, pads]);
+  }, [beat, bindings, selected, follow, loopFollow, bassLock, target, length, held, scene, layers, picked, strips, throws, cuts, index, toNext, chordName, barsLeft]);
 
   return { beat, selected, setSelected, content };
 }

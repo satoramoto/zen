@@ -1,0 +1,232 @@
+
+/* OrbitClock: thin rings on the pane face, flat beads in each track's stem ink, a side list like
+   the mixer's stem labels and the dice two by two. No glows. */
+
+:where(.zen-music) .live-orbit-body {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 8px;
+  min-height: 0;
+}
+
+/* The dial: the largest square the sky holds, centred. */
+:where(.zen-music) .live-orbit-sky {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+}
+:where(.zen-music) .live-orbit-dial {
+  position: relative;
+  flex: none;
+  width: min(100cqw, 100cqh);
+  height: min(100cqw, 100cqh);
+}
+:where(.zen-music) .live-orbit-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+:where(.zen-music) .live-orbit-ring {
+  outline: none;
+}
+:where(.zen-music) .live-orbit-ring[role='button'] {
+  cursor: pointer;
+}
+/* A wide invisible band, so a ring is easy to hit between its beads. */
+:where(.zen-music) .live-orbit-hit {
+  fill: none;
+  stroke: transparent;
+  pointer-events: stroke;
+}
+:where(.zen-music) .live-orbit-track {
+  fill: none;
+  stroke: var(--wdg-edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-orbit-ring[role='button']:hover .live-orbit-track {
+  stroke: var(--wdg-caption);
+}
+:where(.zen-music) .live-orbit-ring[data-selected] .live-orbit-track {
+  stroke: var(--stem-ink, var(--primary));
+  stroke-width: 1.5;
+}
+:where(.zen-music) .live-orbit-ring:focus-visible .live-orbit-track {
+  stroke: var(--wdg-focus);
+  stroke-width: 2;
+}
+:where(.zen-music) .live-orbit-tail {
+  fill: none;
+  stroke: color-mix(in srgb, var(--stem-ink, var(--primary)) 45%, transparent);
+  stroke-width: 2;
+  stroke-linecap: butt;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-orbit-hand {
+  stroke: var(--wdg-text-strong);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-orbit-bead {
+  fill: var(--wdg-caption);
+}
+:where(.zen-music) .live-orbit-bead[data-state='hit'] {
+  fill: var(--stem-ink, var(--primary));
+}
+:where(.zen-music) .live-orbit-bead[data-state='lit'] {
+  fill: var(--wdg-text-strong);
+  stroke: var(--stem-ink, var(--primary));
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-orbit-bead[data-state='passing'] {
+  fill: var(--wdg-text-strong);
+}
+
+/* Twelve o'clock: where every hand starts, and where they meet again. */
+:where(.zen-music) .live-orbit-noon {
+  stroke: var(--wdg-caption);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-orbit-chaos {
+  fill: none;
+  stroke: color-mix(in srgb, var(--caution) 55%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The hub: the chord over when the hands meet, as HTML so the type stays the mixer's. */
+:where(.zen-music) .live-orbit-hub {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+:where(.zen-music) .live-orbit-chord {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-orbit-meet {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  color: var(--wdg-caption);
+  white-space: nowrap;
+}
+
+/* ---------- the side: the generators like the mixer's stem labels, then the dice ---------- */
+
+:where(.zen-music) .live-orbit-side {
+  display: flex;
+  flex: 0 0 176px;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  padding-left: 6px;
+  border-left: 1px solid var(--wdg-edge);
+}
+:where(.zen-music) .live-orbit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  overflow: auto;
+}
+:where(.zen-music) .live-orbit-row {
+  display: grid;
+  flex: none;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  grid-template-rows: 12px 12px;
+  gap: 0 4px;
+  align-items: center;
+  height: 28px;
+  padding: 1px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--wdg-radius);
+  background: none;
+  color: var(--wdg-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+:where(.zen-music) .live-orbit-row:hover:not(:disabled) {
+  border-color: var(--wdg-edge);
+}
+:where(.zen-music) .live-orbit-row:disabled {
+  cursor: default;
+}
+:where(.zen-music) .live-orbit-row:focus-visible {
+  outline: 1px solid var(--wdg-focus);
+}
+:where(.zen-music) .live-orbit-row[aria-pressed='true'] {
+  border-color: var(--stem-ink, var(--primary));
+  background: color-mix(in srgb, var(--stem-ink, var(--primary)) 14%, var(--wdg-face));
+}
+:where(.zen-music) .live-orbit-letter {
+  grid-row: 1 / 3;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--stem-ink, var(--primary));
+}
+:where(.zen-music) .live-orbit-name {
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 550;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-orbit-kind {
+  font-size: 8px;
+  line-height: 12px;
+  color: var(--stem-label, var(--wdg-caption));
+}
+:where(.zen-music) .live-orbit-hint {
+  grid-column: 2 / 4;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wdg-caption);
+}
+
+:where(.zen-music) .live-orbit-dice {
+  display: grid;
+  flex: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-top: auto;
+}
+:where(.zen-music) .live-orbit-dice > .wdg-button {
+  display: flex;
+  min-width: 0;
+}
+:where(.zen-music) .live-orbit-dice .wdg-button-body {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+:where(.zen-music) .live-orbit-side > .live-reading {
+  flex: none;
+  font-size: 8px;
+}

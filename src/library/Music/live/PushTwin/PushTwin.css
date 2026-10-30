@@ -1,0 +1,206 @@
+
+/* PushTwin: the Push on screen. One grid (`.live-push-board`): column 1 the row bands, 2–9 the
+   pads, 10 the scene buttons; row 1 the display, 2–9 the pad rows. The display, the bands, the
+   pads and the scenes are subgrids of it, so the screen and the hardware share every row and
+   column exactly. The pad side (`--push-pad`) is the largest square that fits the pane (container
+   units), so the pads stay square in any room. */
+
+:where(.zen-music).live-push {
+  container-type: size;
+  padding: 6px;
+}
+:where(.zen-music).live-push[data-form='grid'] {
+  padding: 2px;
+}
+
+:where(.zen-music) .live-push-board {
+  --push-gap: 2px;
+  --push-band: 44px;
+  --push-scene: 44px;
+  --push-display: 48px;
+  --push-pad: max(12px, min((100cqw - var(--push-band) - var(--push-scene) - 9 * var(--push-gap)) / 8, (100cqh - var(--push-display) - 8 * var(--push-gap)) / 8));
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: var(--push-band) repeat(8, var(--push-pad)) var(--push-scene);
+  grid-template-rows: var(--push-display) repeat(8, var(--push-pad));
+  gap: var(--push-gap);
+  place-content: center;
+  min-height: 0;
+}
+:where(.zen-music).live-push[data-form='grid'] .live-push-board {
+  --push-pad: max(8px, min((100cqw - 7 * var(--push-gap)) / 8, (100cqh - 7 * var(--push-gap)) / 8));
+  grid-template-columns: repeat(8, var(--push-pad));
+  grid-template-rows: repeat(8, var(--push-pad));
+}
+
+/* ---------- the display: a dark well, a scribble strip per column ---------- */
+
+:where(.zen-music) .live-push-corner {
+  grid-row: 1;
+  grid-column: 1;
+  align-self: end;
+  justify-self: end;
+  padding-inline-end: 5px;
+  font-size: 9px;
+  font-weight: 550;
+  line-height: 12px;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-push-scene-head {
+  grid-row: 1;
+  grid-column: 10;
+  align-self: end;
+  justify-self: center;
+}
+:where(.zen-music) .live-push-display {
+  display: grid;
+  grid-row: 1;
+  grid-column: 2 / span 8;
+  grid-template-columns: subgrid;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--bg);
+}
+:where(.zen-music) .live-push-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 2px 0;
+}
+:where(.zen-music) .live-push-strip[data-selected] {
+  box-shadow: inset 0 -2px 0 var(--stem-ink);
+}
+:where(.zen-music) .live-push-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 8px;
+  font-weight: 550;
+  line-height: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--stem-label);
+}
+:where(.zen-music) .live-push-strip[data-selected] .live-push-name {
+  color: var(--stem-ink);
+}
+:where(.zen-music) .live-push-encoder {
+  display: block;
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+}
+:where(.zen-music) .live-push-ring,
+:where(.zen-music) .live-push-fill {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+:where(.zen-music) .live-push-ring {
+  stroke: var(--wdg-empty);
+}
+:where(.zen-music) .live-push-fill {
+  stroke: var(--stem-ink);
+}
+:where(.zen-music) .live-push-marker {
+  stroke: var(--wdg-marker);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+:where(.zen-music) .live-push-db {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  color: var(--wdg-caption);
+}
+
+/* ---------- the bands, the pads, the scenes: one set of rows ---------- */
+
+:where(.zen-music) .live-push-bands {
+  display: grid;
+  grid-row: 2 / span 8;
+  grid-column: 1;
+  grid-template-rows: subgrid;
+}
+:where(.zen-music) .live-push-band {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 0;
+  padding-inline-end: 5px;
+  border-inline-end: 1px solid var(--wdg-edge);
+}
+:where(.zen-music) .live-push-band[data-band='clips'] {
+  grid-row: span 5;
+}
+
+:where(.zen-music) .live-push-pads {
+  display: grid;
+  grid-row: 2 / span 8;
+  grid-column: 2 / span 8;
+  grid-template-rows: subgrid;
+  grid-template-columns: subgrid;
+}
+:where(.zen-music).live-push[data-form='grid'] .live-push-pads {
+  grid-row: 1 / span 8;
+  grid-column: 1 / span 8;
+}
+:where(.zen-music) .live-push-scenes {
+  display: grid;
+  grid-row: 2 / span 8;
+  grid-column: 10;
+  grid-template-rows: subgrid;
+}
+
+/* A pad: the launch cell, square, its name at the foot like a pad's label. */
+:where(.zen-music) .live-push-pad,
+:where(.zen-music) .live-push-scene {
+  height: auto;
+  min-height: 0;
+  padding: 2px 3px;
+  font-size: 8px;
+  line-height: 10px;
+}
+:where(.zen-music) .live-push-pad {
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+:where(.zen-music) .live-push-scene {
+  gap: 3px;
+  justify-content: flex-start;
+}
+:where(.zen-music) .live-push-word {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+:where(.zen-music) .live-push-glyph {
+  flex: 0 0 auto;
+  font-size: 7px;
+}
+
+/* Stop: a ■ per column, lit in the column's ink while it plays; the selected column's edged. */
+:where(.zen-music) .live-push-pad[data-row='stop'] {
+  align-items: center;
+  justify-content: center;
+}
+:where(.zen-music) .live-push-pad[data-row='stop'][data-state='stopped'] .live-push-glyph {
+  color: var(--stem-ink);
+}
+:where(.zen-music) .live-push-pad[data-selected] {
+  border-color: var(--stem-ink, var(--wdg-text-strong));
+}
+
+/* Sections: the one now solid `--primary` ('on'), a queued one outlined and blinking (the
+   launch cell's own). Transitions: neutral faces, the one held `--caution` (mix[flow]'s Hold). */
+:where(.zen-music) .live-push-pad[data-state='held'] {
+  border-color: var(--caution);
+  background: var(--caution);
+  color: var(--on-primary);
+}

@@ -1,0 +1,363 @@
+
+/* SignalSpine: cartridges like the mixer's FX units (.play-fx-unit) on a 1px cable with travelling
+   dots, the looper outlined in the track's ink, Out a meter in a well like a channel. */
+
+:where(.zen-music) .live-spine-bar {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+}
+:where(.zen-music) .live-spine-bar > .live-head {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+:where(.zen-music) .live-spine-arrow .wdg-button-body {
+  width: 20px;
+  padding: 0;
+  font-size: 10px;
+}
+:where(.zen-music) .live-spine-aside {
+  margin-inline-start: auto;
+  font-size: 8px;
+}
+
+/* ---------- the chain ---------- */
+
+:where(.zen-music) .live-spine-chain {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+}
+:where(.zen-music).live-spine[data-form='column'] .live-spine-chain {
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* The cable: a 1px rule with dots of the track's ink travelling along it. */
+:where(.zen-music) .live-spine-cable {
+  flex: 0 0 14px;
+  align-self: center;
+  height: 5px;
+  background:
+    linear-gradient(var(--wdg-edge), var(--wdg-edge)) center / 100% 1px no-repeat,
+    radial-gradient(circle, var(--stem-ink, var(--primary)) 0 1px, transparent 1.5px) 0 50% / 7px 5px repeat-x;
+  animation: zen-music-live-spine-flow 0.7s linear infinite;
+}
+:where(.zen-music).live-spine[data-form='column'] .live-spine-cable {
+  flex-basis: 10px;
+  width: 5px;
+  height: auto;
+  background:
+    linear-gradient(var(--wdg-edge), var(--wdg-edge)) center / 1px 100% no-repeat,
+    radial-gradient(circle, var(--stem-ink, var(--primary)) 0 1px, transparent 1.5px) 50% 0 / 5px 7px repeat-y;
+  animation-name: zen-music-live-spine-flow-down;
+}
+
+/* A cartridge: the FX unit's flat face, its head row over its knobs. */
+:where(.zen-music) .live-spine-cart {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  min-height: 0;
+  padding: 4px;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: color-mix(in srgb, var(--wdg-face) 55%, transparent);
+}
+:where(.zen-music) .live-spine-cart[data-stage='looper'] {
+  flex-grow: 2.2;
+  border-color: var(--stem-ink, var(--primary));
+}
+:where(.zen-music) .live-spine-cart[data-bypass] {
+  border-style: dashed;
+  background: none;
+}
+:where(.zen-music).live-spine[data-form='column'] .live-spine-cart {
+  flex: 0 0 auto;
+}
+
+:where(.zen-music) .live-spine-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+/* The head: the select's body, the chosen option and its caret. */
+:where(.zen-music) .live-spine-head {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: var(--wdg-field-height);
+  padding: 0 4px 0 5px;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-face);
+  color: var(--wdg-text);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--wdg-sans-axes);
+  font-size: var(--text-control);
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+}
+:where(.zen-music) .live-spine-head:hover:not(:disabled) {
+  border-color: var(--wdg-edge-live);
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-spine-head:disabled {
+  cursor: default;
+}
+:where(.zen-music) .live-spine-head:focus-visible {
+  outline: 1px solid var(--wdg-focus);
+  outline-offset: 1px;
+}
+:where(.zen-music) .live-spine-cart[data-bypass] .live-spine-head {
+  border-style: dashed;
+  background: none;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-spine-value {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+:where(.zen-music) .live-spine-caret {
+  flex: none;
+  width: 0;
+  height: 0;
+  margin-left: auto;
+  border-top: 4px solid var(--wdg-text);
+  border-right: 3px solid transparent;
+  border-left: 3px solid transparent;
+}
+
+/* The other options behind the head, faint, as the select's menu would list them. */
+:where(.zen-music) .live-spine-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0 0 5px;
+  overflow: hidden;
+  list-style: none;
+}
+:where(.zen-music) .live-spine-options > li {
+  overflow: hidden;
+  font-size: 8px;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wdg-caption);
+}
+/* Knobs and readings, spaced like the FX unit's params. */
+:where(.zen-music) .live-spine-params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px solid var(--wdg-edge);
+}
+:where(.zen-music) .live-spine-params .wdg-knob .wdg-caption {
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-spine-reading {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  font-size: var(--text-label);
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-spine-reading > b {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--wdg-text);
+}
+
+/* ---------- the looper's rings ---------- */
+
+:where(.zen-music) .live-spine-looper {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 6px;
+  align-items: center;
+  min-height: 0;
+}
+:where(.zen-music).live-spine[data-form='column'] .live-spine-looper {
+  height: 132px;
+}
+:where(.zen-music) .live-spine-dial {
+  position: relative;
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 48px;
+  min-height: 48px;
+}
+:where(.zen-music) .live-spine-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+:where(.zen-music) .live-spine-hub {
+  fill: none;
+  stroke: var(--wdg-edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-spine-ring {
+  outline: none;
+}
+:where(.zen-music) .live-spine-ring[role='button'] {
+  cursor: pointer;
+}
+:where(.zen-music) .live-spine-band {
+  fill: none;
+  stroke: color-mix(in srgb, var(--stem-ink, var(--primary)) 55%, var(--wdg-face));
+}
+:where(.zen-music) .live-spine-ring[data-kind='base'] .live-spine-band {
+  stroke: var(--stem-ink, var(--primary));
+}
+:where(.zen-music) .live-spine-ring[data-muted] .live-spine-band {
+  stroke: var(--wdg-edge);
+  stroke-dasharray: 2 2;
+}
+:where(.zen-music) .live-spine-ring[role='button']:hover .live-spine-band {
+  stroke: color-mix(in srgb, var(--stem-ink, var(--primary)) 75%, var(--wdg-text-strong));
+}
+:where(.zen-music) .live-spine-ring[data-muted][role='button']:hover .live-spine-band {
+  stroke: var(--wdg-caption);
+}
+:where(.zen-music) .live-spine-ring:focus-visible .live-spine-band {
+  stroke: var(--wdg-focus);
+}
+:where(.zen-music) .live-spine-hit {
+  fill: none;
+  stroke: transparent;
+  pointer-events: stroke;
+}
+:where(.zen-music) .live-spine-sweep {
+  fill: color-mix(in srgb, var(--wdg-text-strong) 14%, transparent);
+  pointer-events: none;
+}
+:where(.zen-music) .live-spine-hand {
+  stroke: var(--wdg-text-strong);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+/* The loop's bars in the middle, as HTML so the type stays the mixer's. */
+:where(.zen-music) .live-spine-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  line-height: 1;
+}
+:where(.zen-music) .live-spine-bars > b {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-spine-bars > span {
+  font-size: 8px;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-spine-layers {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:where(.zen-music) .live-spine-layers > li {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  white-space: nowrap;
+  color: var(--stem-label, var(--wdg-text));
+}
+:where(.zen-music) .live-spine-layers > li[data-muted] {
+  color: var(--wdg-caption);
+  text-decoration: line-through;
+}
+:where(.zen-music) .live-spine-undo {
+  flex: none;
+}
+
+/* ---------- out: a meter in a well, like a channel ---------- */
+
+:where(.zen-music) .live-spine-out {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  min-width: 56px;
+  padding: 4px;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+}
+:where(.zen-music).live-spine[data-form='column'] .live-spine-out {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+:where(.zen-music) .live-spine-well {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: var(--wdg-well);
+}
+:where(.zen-music) .live-spine-outs {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+  font-size: 8px;
+  white-space: nowrap;
+  color: var(--wdg-caption);
+}
+:where(.zen-music).live-spine[data-form='column'] .live-spine-outs {
+  align-items: flex-start;
+}
+
+@keyframes zen-music-live-spine-flow {
+  to {
+    background-position: center, 7px 50%;
+  }
+}
+@keyframes zen-music-live-spine-flow-down {
+  to {
+    background-position: center, 50% 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.zen-music) .live-spine-cable {
+    animation: none;
+  }
+}

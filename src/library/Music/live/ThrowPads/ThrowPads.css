@@ -1,0 +1,145 @@
+
+/* ThrowPads: one or two XY fields in wells, each with the mixer's waveform grid, its axes' captions
+   on its edges, the finger's trail as fading dots, a 1px crosshair and a dot at the point — all in
+   the pad's stem ink. */
+
+:where(.zen-music) .live-throws-pads {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-height: 0;
+}
+:where(.zen-music).live-throws[data-form='one'] .live-throws-pads {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+:where(.zen-music) .live-throws-pad {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  min-height: 0;
+}
+:where(.zen-music) .live-throws-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+:where(.zen-music) .live-throws-name {
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 550;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--stem-ink, var(--primary));
+}
+
+:where(.zen-music) .live-throws-field {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+:where(.zen-music) .live-throws-field:focus-visible {
+  outline: 1px solid var(--wdg-focus);
+  outline-offset: 1px;
+}
+:where(.zen-music).live-throws[data-inert] .live-throws-field {
+  border-style: dashed;
+  cursor: default;
+}
+:where(.zen-music) .live-throws-field > * {
+  pointer-events: none;
+}
+
+/* The waveform lane's grid, both ways: eighths. */
+:where(.zen-music) .live-throws-grid {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, var(--play-wave-grid-ink) 0 1px, transparent 1px 12.5%),
+    repeating-linear-gradient(180deg, var(--play-wave-grid-ink) 0 1px, transparent 1px 12.5%);
+}
+
+:where(.zen-music) .live-throws-trail {
+  position: absolute;
+  inset: 0;
+}
+:where(.zen-music) .live-throws-trail > span {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--stem-ink, var(--primary));
+}
+
+:where(.zen-music) .live-throws-cross {
+  position: absolute;
+  background: var(--stem-ink, var(--primary));
+  opacity: 0.6;
+}
+:where(.zen-music) .live-throws-cross[data-axis='x'] {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+:where(.zen-music) .live-throws-cross[data-axis='y'] {
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+:where(.zen-music) .live-throws-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border: 1px solid var(--bg);
+  border-radius: 50%;
+  background: var(--stem-ink, var(--primary));
+}
+
+:where(.zen-music) .live-throws-axis {
+  position: absolute;
+  padding: 1px 3px;
+  background: var(--wdg-well);
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  white-space: nowrap;
+  color: var(--stem-label, var(--wdg-caption));
+}
+:where(.zen-music) .live-throws-axis[data-axis='x'] {
+  right: 3px;
+  bottom: 3px;
+}
+:where(.zen-music) .live-throws-axis[data-axis='y'] {
+  top: 3px;
+  left: 3px;
+}
+
+:where(.zen-music) .live-throws-empty {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  border: 1px dashed var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+}
+:where(.zen-music) .live-throws-empty + .live-throws-pads {
+  display: none;
+}

@@ -23,6 +23,18 @@ import { WaveControls as MusicWaveControls } from './mixer/WaveControls';
 import { DeckStrip as MusicDeckStrip } from './mixer/DeckStrip';
 import { MasterStrip as MusicMasterStrip } from './mixer/MasterStrip';
 import { MixerView as MusicMixerView } from './mixer/MixerView';
+import { RigHealth as MusicRigHealth } from './live/RigHealth/RigHealth';
+import { ChordCompass as MusicChordCompass } from './live/ChordCompass/ChordCompass';
+import { LandingDial as MusicLandingDial } from './live/LandingDial/LandingDial';
+import { SetlistRiver as MusicSetlistRiver } from './live/SetlistRiver/SetlistRiver';
+import { PushTwin as MusicPushTwin } from './live/PushTwin/PushTwin';
+import { OrbitClock as MusicOrbitClock } from './live/OrbitClock/OrbitClock';
+import { SignalSpine as MusicSignalSpine } from './live/SignalSpine/SignalSpine';
+import { ProgressionStrip as MusicProgressionStrip } from './live/ProgressionStrip/ProgressionStrip';
+import { CutPads as MusicCutPads } from './live/CutPads/CutPads';
+import { ThrowPads as MusicThrowPads } from './live/ThrowPads/ThrowPads';
+import { LaunchGrid as MusicLaunchGrid } from './live/LaunchGrid/LaunchGrid';
+import { TrackStrips as MusicTrackStrips } from './live/TrackStrips/TrackStrips';
 
 /** Lazy for the same Tree ↔ component import cycle as Zen's main registry. */
 export function musicReactComponents() {
@@ -33,5 +45,6 @@ export function musicReactComponents() {
     MusicContextControls, MusicPhonesIcon, MusicPowerIcon, MusicMomentary, MusicSeparator, MusicMixerSection,
     MusicKnobStack, MusicStemConnections, MusicFrameMeter, MusicFramePlayhead, MusicFrameWaveform, MusicWaveControls,
     MusicDeckStrip, MusicMasterStrip, MusicMixerView,
+    MusicRigHealth, MusicTrackStrips, MusicLaunchGrid, MusicThrowPads, MusicCutPads, MusicProgressionStrip, MusicSignalSpine, MusicOrbitClock, MusicPushTwin, MusicSetlistRiver, MusicLandingDial, MusicChordCompass,
   };
 }

@@ -1,0 +1,120 @@
+
+/* ProgressionStrip: the head with its Follow switch and mutation buttons, a row of launch cells as
+   wide as their chords, and a 2px progress bar under them, segment for segment. */
+
+:where(.zen-music).live-prog {
+  gap: 6px;
+}
+
+:where(.zen-music) .live-prog-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  --wdg-field-height: 20px;
+}
+:where(.zen-music) .live-prog-tools > .live-axis {
+  margin-inline-start: 6px;
+}
+:where(.zen-music) .live-prog-actions {
+  display: flex;
+  gap: 2px;
+  margin-inline-start: 8px;
+}
+
+:where(.zen-music) .live-prog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* The cells and the bar share one column template (set inline, a column per chord as wide as its
+   beats): a chord's segment sits under its cell. */
+:where(.zen-music) .live-prog-cells,
+:where(.zen-music) .live-prog-bar {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+:where(.zen-music) .live-prog-cell {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  height: 24px;
+  padding-inline: 5px;
+  text-align: left;
+}
+:where(.zen-music).live-prog[data-form='full'] .live-prog-cell {
+  height: 36px;
+}
+:where(.zen-music) .live-prog-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 550;
+  line-height: 12px;
+  text-overflow: ellipsis;
+}
+:where(.zen-music) .live-prog-notes {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  text-overflow: ellipsis;
+  color: var(--wdg-caption);
+}
+
+/* Now: filled with the accent, as a playing launch cell. Next: outlined in it. */
+:where(.zen-music) .live-prog-cell[data-state='now'] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+}
+:where(.zen-music) .live-prog-cell[data-state='now'] .live-prog-notes {
+  color: inherit;
+  opacity: 0.75;
+}
+:where(.zen-music) .live-prog-cell[data-state='next'] {
+  border-color: var(--primary);
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-prog-cell[data-state='idle'] {
+  background: var(--wdg-well);
+}
+
+/* The selection the mutation buttons act on: a 2px foot rule. */
+:where(.zen-music) .live-prog-cell[data-selected='true'] {
+  box-shadow: inset 0 -2px 0 var(--wdg-text-strong);
+}
+
+:where(.zen-music) .live-prog-seg {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+  background: var(--wdg-well);
+}
+:where(.zen-music) .live-prog-seg > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--wdg-caption);
+}
+:where(.zen-music) .live-prog-seg[data-state='now'] > span {
+  background: var(--primary);
+}
+
+:where(.zen-music) .live-prog-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  border: 1px dashed var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+}
+:where(.zen-music).live-prog[data-form='full'] .live-prog-empty {
+  height: 36px;
+}

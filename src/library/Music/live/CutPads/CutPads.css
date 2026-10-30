@@ -1,0 +1,129 @@
+
+/* CutPads: the transitions as the biggest cells on the page, in the launch cell's language — a
+   label over a mono caption, the state in the corner. Armed is outlined in caution and blinks
+   slowly, fired is filled with the accent, held is filled caution (mix[flow]'s Hold) and ringed, selected stands on a
+   2px foot rule, inert pads are dashed. */
+
+:where(.zen-music) .live-cuts-pads {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(var(--live-cuts-cols, 6), minmax(0, 1fr));
+  grid-auto-rows: minmax(44px, 1fr);
+  gap: 2px;
+  min-height: 0;
+}
+
+:where(.zen-music) .live-cuts-pad {
+  position: relative;
+  flex-direction: column;
+  gap: 3px;
+  height: auto;
+  min-height: 44px;
+  padding: 4px 6px 8px;
+  background: var(--wdg-face);
+  container-type: inline-size;
+}
+:where(.zen-music) .live-cuts-label {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: var(--text-body);
+  font-weight: 550;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-cuts-hint {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  text-overflow: ellipsis;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-cuts-tag {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  color: var(--caution);
+}
+
+/* Armed: a caution outline that breathes until the boundary fires it. */
+:where(.zen-music) .live-cuts-pad[data-state='armed'] {
+  border-color: var(--caution);
+  animation: zen-music-live-cuts-armed 1.4s ease-in-out infinite alternate;
+}
+
+/* Fired: filled with the accent, as a playing cell. */
+:where(.zen-music) .live-cuts-pad[data-state='fired'] {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+/* Held: filled caution and ringed inside, latched until released. */
+:where(.zen-music) .live-cuts-pad[data-state='held'] {
+  border-color: var(--caution);
+  background: var(--caution);
+  box-shadow: inset 0 0 0 1px var(--caution), inset 0 0 0 2px var(--bg);
+}
+:where(.zen-music) .live-cuts-pad:is([data-state='fired'], [data-state='held']) :is(.live-cuts-label, .live-cuts-hint, .live-cuts-tag) {
+  color: var(--on-primary);
+}
+
+/* Selected: a 2px foot rule along the pad's foot, in the label's ink. */
+:where(.zen-music) .live-cuts-pad[data-selected='true']::after {
+  content: '';
+  position: absolute;
+  inset: auto 6px 4px;
+  height: 2px;
+  background: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-cuts-pad[data-state='fired'][data-selected='true']::after,
+:where(.zen-music) .live-cuts-pad[data-state='held'][data-selected='true']::after {
+  background: var(--on-primary);
+}
+
+/* Inert: dashed, caption-coloured; read, not pressed. */
+:where(.zen-music).live-cuts[data-inert] .live-cuts-pad {
+  border-style: dashed;
+}
+:where(.zen-music).live-cuts[data-inert] .live-cuts-pad:is([data-state='idle'], [data-state='armed']) {
+  background: var(--wdg-well);
+}
+:where(.zen-music).live-cuts[data-inert] .live-cuts-pad:is([data-state='idle'], [data-state='armed']) .live-cuts-label {
+  color: var(--wdg-caption);
+}
+
+:where(.zen-music) .live-cuts-empty {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px dashed var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+}
+
+/* A narrow pad keeps its word: the corner tag goes (the face still says the state). */
+@container (max-width: 112px) {
+  :where(.zen-music) .live-cuts-tag {
+    display: none;
+  }
+}
+
+@keyframes zen-music-live-cuts-armed {
+  to {
+    border-color: var(--wdg-edge);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.zen-music) .live-cuts-pad[data-state='armed'] {
+    animation: none;
+  }
+}

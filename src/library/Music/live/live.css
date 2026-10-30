@@ -1,0 +1,177 @@
+/* The live panes' shared face: mix[flow]'s deck anatomy (Music/mixer/mixer.css) for panes that
+   aren't decks. A pane is a deck-like column: the faint sheen, a 1px edge, the title row, 8–9px
+   captions, mono readings, 24px cells. Only Music's aliases (Music/theme.css), so every Zen pack
+   dresses it. Imported by every pane's stylesheet. */
+
+:where(.zen-music).live-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 8px 6px 6px;
+  overflow: hidden;
+  border: 1px solid var(--wdg-edge);
+  background: linear-gradient(90deg, transparent, var(--play-deck-sheen) 50%, transparent), var(--bg);
+  color: var(--wdg-text);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--wdg-sans-axes);
+  font-size: var(--text-label);
+  line-height: normal;
+  letter-spacing: normal;
+  user-select: none;
+}
+
+/* The title row: the deck letter in its ink, the title over its caption, a mono reading right. */
+:where(.zen-music) .live-head {
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0 4px;
+  align-items: start;
+  min-height: 24px;
+}
+:where(.zen-music) .live-head > :nth-child(n + 4) {
+  align-self: center;
+}
+:where(.zen-music) .live-head:has(> :nth-child(4)) {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+}
+:where(.zen-music) .live-head:not(:has(.live-mark)) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+:where(.zen-music) .live-head:not(:has(.live-mark)):has(> :nth-child(3)) {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+:where(.zen-music) .live-mark {
+  line-height: 24px;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--stem-ink, var(--primary));
+}
+:where(.zen-music) .live-titles {
+  min-width: 0;
+}
+:where(.zen-music) .live-title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 550;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-sub {
+  margin: 0;
+  overflow: hidden;
+  font-size: 8px;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-aside {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 12px;
+  text-align: right;
+  color: var(--wdg-caption);
+}
+
+:where(.zen-music) .live-axis {
+  font-size: 8px;
+  color: var(--wdg-caption);
+  white-space: nowrap;
+}
+:where(.zen-music) .live-reading {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 9px;
+  color: var(--wdg-caption);
+  white-space: nowrap;
+}
+
+/* A launch cell, the mixer's hot-cue cell: a 24px face, filled with its ink while it plays. */
+:where(.zen-music) .live-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 24px;
+  padding-inline: 2px;
+  overflow: hidden;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-face);
+  color: var(--wdg-text);
+  font: inherit;
+  font-size: var(--text-control);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+:where(.zen-music) .live-cell:hover:not(:disabled) {
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-cell:disabled {
+  cursor: default;
+}
+:where(.zen-music) .live-cell:focus-visible {
+  outline: 1px solid var(--wdg-focus);
+  outline-offset: 1px;
+}
+:where(.zen-music) .live-cell[data-state='playing'],
+:where(.zen-music) .live-cell[data-state='on'] {
+  border-color: var(--stem-ink, var(--primary));
+  background: var(--stem-ink, var(--primary));
+  color: var(--on-primary);
+}
+:where(.zen-music) .live-cell[data-state='queued'] {
+  outline: 1px solid var(--stem-ink, var(--primary));
+  outline-offset: -1px;
+  animation: zen-music-live-queued 0.7s infinite alternate;
+}
+:where(.zen-music) .live-cell[data-state='recording'] {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--on-primary);
+}
+:where(.zen-music) .live-cell[data-state='stopped'] {
+  color: var(--stem-label, var(--wdg-text));
+  background: color-mix(in srgb, var(--stem-ink, var(--wdg-face)) 16%, var(--wdg-face));
+}
+:where(.zen-music) .live-cell[data-state='empty'],
+:where(.zen-music) .live-cell[data-state='off'] {
+  background: var(--wdg-well);
+  color: var(--wdg-caption);
+}
+
+/* A dot: green connected, caution trouble, red absent (hollow). */
+:where(.zen-music) .live-dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+:where(.zen-music) .live-dot[data-state='low'] {
+  background: var(--caution);
+}
+:where(.zen-music) .live-dot[data-state='none'] {
+  border: 1px solid var(--red);
+  background: transparent;
+}
+
+@keyframes zen-music-live-queued {
+  to {
+    outline-color: transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.zen-music) .live-cell[data-state='queued'] {
+    animation: none;
+  }
+}

@@ -1,0 +1,179 @@
+
+/* ChordCompass: the circle of fifths as flat wedge cells on the pane face, the progression a thin
+   line round it, the chord now the one solid `--primary` cell. */
+
+:where(.zen-music).live-compass {
+  flex-direction: row;
+  gap: 8px;
+  align-items: stretch;
+}
+:where(.zen-music).live-compass[data-form='dial'] {
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.zen-music) .live-compass-wheel {
+  flex: 1 1 auto;
+  align-self: center;
+  min-width: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: visible;
+}
+
+/* A wedge: the mixer's cell, flat face and 1px edge; its name a caption. */
+:where(.zen-music) .live-compass-wedge path {
+  fill: var(--wdg-face);
+  stroke: var(--wdg-edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-compass-wedge text {
+  fill: var(--wdg-caption);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--wdg-sans-axes);
+  text-anchor: middle;
+  pointer-events: none;
+}
+:where(.zen-music) .live-compass-wedge[data-visited] text {
+  fill: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-compass-wedge[data-key] path {
+  fill: color-mix(in srgb, var(--primary) 14%, var(--wdg-face));
+}
+:where(.zen-music) .live-compass-wedge[data-state='now'] path {
+  fill: var(--primary);
+}
+:where(.zen-music) .live-compass-wedge[data-state='now'] text {
+  fill: var(--on-primary);
+  font-weight: 550;
+}
+:where(.zen-music) .live-compass-wedge[data-state='next'] text {
+  fill: var(--primary);
+}
+:where(.zen-music) .live-compass-wedge[role='button'] {
+  cursor: pointer;
+  outline: none;
+}
+:where(.zen-music) .live-compass-wedge[role='button']:hover text {
+  fill: var(--wdg-text-strong);
+}
+:where(.zen-music) .live-compass-wedge[data-state='now'][role='button']:hover text {
+  fill: var(--on-primary);
+}
+:where(.zen-music) .live-compass-wedge[role='button']:focus-visible path {
+  stroke: var(--wdg-focus);
+  stroke-width: 2;
+}
+
+/* The next chord: its wedge outlined, drawn over its neighbours' edges. */
+:where(.zen-music) .live-compass-next {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+/* The progression: a thin closed line, small stops, the move about to happen the one strong segment. */
+:where(.zen-music) .live-compass-prog {
+  pointer-events: none;
+}
+:where(.zen-music) .live-compass-loop {
+  fill: none;
+  stroke: var(--wdg-text);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.7;
+}
+:where(.zen-music) .live-compass-stop {
+  fill: var(--wdg-text);
+}
+:where(.zen-music) .live-compass-move {
+  stroke: var(--wdg-text-strong);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 3;
+  vector-effect: non-scaling-stroke;
+  animation: zen-music-live-compass-march 0.8s linear infinite;
+}
+:where(.zen-music) .live-compass-land {
+  fill: none;
+  stroke: var(--wdg-text-strong);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The hub: the pane's own ground under the progression (a long move crosses it), the chord in mono over it. */
+:where(.zen-music) .live-compass-hub-face {
+  fill: var(--bg);
+  stroke: var(--wdg-edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+:where(.zen-music) .live-compass-hub text {
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+:where(.zen-music) .live-compass-hub-chord {
+  fill: var(--wdg-text-strong);
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+}
+:where(.zen-music) .live-compass-hub-then {
+  fill: var(--wdg-caption);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--wdg-sans-axes);
+}
+
+/* The readout column: the head row, the chord in big mono, its notes, the next move, the tools. */
+:where(.zen-music) .live-compass-readout {
+  display: flex;
+  flex: 0 0 120px;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-inline-start: 8px;
+  border-inline-start: 1px solid var(--wdg-edge);
+}
+:where(.zen-music) .live-compass-chord {
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 22px;
+  line-height: 26px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--primary);
+}
+:where(.zen-music) .live-compass-next-line {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+  margin: 0;
+}
+:where(.zen-music) .live-compass-next-line .live-reading {
+  color: var(--wdg-text);
+}
+:where(.zen-music) .live-compass-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+@keyframes zen-music-live-compass-march {
+  to {
+    stroke-dashoffset: -7;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.zen-music) .live-compass-move {
+    animation: none;
+  }
+}

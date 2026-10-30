@@ -3,21 +3,20 @@ import { useState, type ReactNode } from 'react';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../storybook';
 import { Workspace } from '../layout/Workspace/Workspace';
-import { workspaceRegionIds } from '../layout/Workspace/Workspace.edit';
+import { workspaceFixedIds, workspaceRegionIds } from '../layout/Workspace/Workspace.edit';
 import type { WorkspaceBinding, WorkspaceTab } from '../layout/Workspace/Workspace.types';
+import { spineTracks } from '../Music/live/SignalSpine/SignalSpine.fixtures';
 import { useLiveSet } from './LiveSet.story';
-import { SET_TRACKS } from './set';
-import { CONCEPT_TABS, PANE_PALETTE } from './views';
-import './live.css';
+import { LIVE_TABS, PANE_PALETTE } from './views';
 
-// The concept views: one live set as Lemur pages. Each tab is a ScreenSpec of panes — the new
-// concept panes (Live/Panes) beside the live widgets — and the solver picks every pane's form.
-// The set is one linked state: pick a track on the orbits and the spine, the Push column and the
-// grid follow it; pick a wedge on the compass and the orbits follow that chord. The Mine tab is
-// the point of it all: edit mode with every pane kind in the palette, so a page is built, not
-// designed. React-only: region content is app content.
+// The live views: one set as Lemur pages. Each tab is a ScreenSpec of Music-family live panes
+// (Music/Live), every one in mix[flow]'s face, and the solver picks every pane's form. The set is
+// one linked state: select a track anywhere and the grid, the strips, the orbits, the spine and the
+// Push follow it; pick a compass wedge and the orbits follow that chord. Mine is the point of it:
+// edit mode with every pane kind in the palette, so a page is built, not designed. React-only:
+// region content is app content.
 
-interface ConceptProps {
+interface LiveProps {
   /** The tab the story opens on. */
   start: string;
   editing?: boolean;
@@ -25,14 +24,14 @@ interface ConceptProps {
 }
 
 /** The app's side of the Workspace: it keeps the tabs, the open tab and the bindings, and fills every region. */
-function Concepts({ start, editing = false, running = true }: ConceptProps) {
-  const [tabs, setTabs] = useState<readonly WorkspaceTab[]>(CONCEPT_TABS);
+function Live({ start, editing = false, running = true }: LiveProps) {
+  const [tabs, setTabs] = useState<readonly WorkspaceTab[]>(LIVE_TABS);
   const [active, setActive] = useState(start);
   const [bindings, setBindings] = useState<Record<string, WorkspaceBinding>>({});
   const live = useLiveSet({ running, bindings });
   const tab = tabs.find((t) => t.id === active) ?? tabs[0];
   const content: Record<string, ReactNode> = {};
-  for (const id of workspaceRegionIds(tab.spec)) content[id] = live.content(id, bindings);
+  for (const id of [...workspaceRegionIds(tab.spec), ...workspaceFixedIds(tab.spec)]) content[id] = live.content(id);
 
   return (
     <Workspace
@@ -41,7 +40,7 @@ function Concepts({ start, editing = false, running = true }: ConceptProps) {
       active={tab.id}
       editing={editing}
       palette={PANE_PALETTE}
-      tracks={SET_TRACKS.map((t) => ({ id: t.id, label: t.name }))}
+      tracks={spineTracks.map((t) => ({ id: t.id, label: t.name }))}
       bindings={bindings}
       content={content}
       onTab={setActive}
@@ -53,27 +52,33 @@ function Concepts({ start, editing = false, running = true }: ConceptProps) {
 
 const meta = {
   title: 'Live/Views',
-  component: Concepts,
+  component: Live,
   decorators: [withStoryFrame, withLibraryTheme],
   parameters: { layout: 'fullscreen', frame: { w: 1440, h: 900 } },
   argTypes: {
-    start: { control: 'select', options: CONCEPT_TABS.map((t) => t.id) },
+    start: { control: 'select', options: LIVE_TABS.map((t) => t.id) },
     editing: { control: 'boolean' },
     running: { control: 'boolean' },
   },
-} satisfies Meta<typeof Concepts>;
+} satisfies Meta<typeof Live>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
  * ONE: the unified board. The night along the top (tempo contour, the song now open into its
- * scenes, Wire cued), the clips beside the compass and the landing countdown, the mix underneath,
- * the rig's one line on the floor.
+ * scenes, Wire cued), the launch grid beside the compass and the landing countdown, the track
+ * strips underneath, the rig's one line on the floor.
  */
 export const One: Story = {
   name: 'ONE',
   args: { start: 'one' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Select Bass in the grid's header: the strips follow.
+    await userEvent.click(canvas.getAllByRole('button', { name: /^Bass/ })[0]);
+    await waitFor(() => expect(canvasElement.querySelector('.live-track-strips [data-selected="true"]')).toBeTruthy());
+  },
 };
 
 /** Follow: the harmony as a place (compass), in time (orbits), and as the loop that plays it. */
@@ -81,7 +86,7 @@ export const Follow: Story = {
   args: { start: 'follow' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    // Pick Drums on the orbits' list: the ring and the list item are pressed together.
+    // Pick the Drums ring: its ring and its list row read pressed.
     await userEvent.click(canvas.getAllByRole('button', { name: /^Drums/ })[0]);
     await waitFor(() => expect(canvas.getAllByRole('button', { pressed: true, name: /Drums/ }).length).toBeGreaterThan(0));
   },
@@ -92,9 +97,9 @@ export const Track: Story = {
   args: { start: 'track' },
   play: async ({ canvasElement }) => {
     // Keys is selected; the spine's next arrow moves it to Vox.
-    const bar = within(canvasElement.querySelector<HTMLElement>('.lv-spine__bar')!);
-    await userEvent.click(bar.getByRole('button', { name: 'Next track' }));
-    await waitFor(() => expect(bar.getByText('Vox')).toBeTruthy());
+    const spine = within(canvasElement.querySelector<HTMLElement>('.live-spine')!);
+    await userEvent.click(spine.getByRole('button', { name: /next track/i }));
+    await waitFor(() => expect(spine.getAllByText('Vox').length).toBeGreaterThan(0));
   },
 };
 
@@ -114,7 +119,7 @@ export const Mine: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'add Chord compass to this tab' }));
-    await waitFor(() => expect(canvas.getByRole('img', { name: /Circle of fifths/ })).toBeTruthy());
+    await waitFor(() => expect(canvasElement.querySelector('.live-compass')).toBeTruthy());
   },
 };
 

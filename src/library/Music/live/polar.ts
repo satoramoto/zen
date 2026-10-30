@@ -1,4 +1,4 @@
-// Polar geometry for the round panes (the compass, the orbits, the landing dial): points on a
+// Polar geometry for the round live panes (ChordCompass, OrbitClock, LandingDial, SignalSpine): points on a
 // circle and annular sectors as SVG path data. Angles are turns (0–1), 0 at twelve o'clock,
 // clockwise, so a phase reads straight onto a dial.
 
