@@ -104,7 +104,7 @@ const e = createElement;
  * width rather than spilling over.
  */
 export const withHarness: Decorator = (Story, ctx) => {
-  if (!ctx.title.startsWith('Harness/')) {
+  if (!ctx.title.startsWith('Harness/Claude Code/')) {
     if (active) {
       active = false;
       document.documentElement.classList.remove('cc-harness');
