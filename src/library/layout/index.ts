@@ -18,6 +18,7 @@ export {
   removeRegion,
   splitRegion,
   workspaceRegionIds,
+  workspaceFixedIds,
   WORKSPACE_EDITS,
   paletteRegion,
   contentSlot,

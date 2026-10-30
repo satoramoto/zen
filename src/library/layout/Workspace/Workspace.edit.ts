@@ -156,3 +156,8 @@ export function workspaceRegionIds(spec: ScreenSpec): string[] {
   walk(spec.rows);
   return ids;
 }
+
+/** The header's and footer's region ids: fixed, so they take content but no edits. */
+export function workspaceFixedIds(spec: ScreenSpec): string[] {
+  return [...(spec.header ?? []), ...(spec.footer ?? [])].map((r) => r.id);
+}

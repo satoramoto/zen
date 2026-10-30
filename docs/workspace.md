@@ -42,6 +42,8 @@ diff and re-theme — the layout builder stores specs, not screenshots.
 
 - `content`: what goes in each region, by region id (React nodes, or Svelte snippets), reaching
   the Screen as `content:<id>` slots. The frame wraps this content without the app knowing.
+  A tab's `header` and `footer` regions take content the same way; they are fixed, so edit mode
+  never frames them.
 - `palette`: the kinds the surface can place (`WorkspaceRegion`: a kind, a label and the
   widget's own `forms`). Without a palette the edit mode rearranges but adds nothing.
 - `tracks`: the `{ id, label }` list a region binds to. Without it there is nothing to bind.

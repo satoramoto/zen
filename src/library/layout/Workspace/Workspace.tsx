@@ -7,7 +7,7 @@ import './Workspace.css';
 
 // The props, the edits and the tree are framework-free (Workspace.model.ts, Workspace.edit.ts,
 // Workspace.types.ts); `Workspace.svelte` draws the same tree.
-export { addRegion, moveRegion, moveRegionToRow, removeRegion, splitRegion, workspaceRegionIds } from './Workspace.edit';
+export { addRegion, moveRegion, moveRegionToRow, removeRegion, splitRegion, workspaceFixedIds, workspaceRegionIds } from './Workspace.edit';
 export { WORKSPACE_EDITS, paletteRegion, type WorkspaceBinding, type WorkspaceEdit, type WorkspaceRegion, type WorkspaceSpec, type WorkspaceTab } from './Workspace.types';
 export { contentSlot, newRegionId, workspaceSlots, workspaceTab, type WorkspaceModelProps, type WorkspaceTrack } from './Workspace.model';
 

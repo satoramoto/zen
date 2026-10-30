@@ -8,7 +8,7 @@ import { surfaceView } from '../../primitives/Surface.model';
 import { textView } from '../../primitives/Text.model';
 import { component, each, h, slot, type Child, type Handlers, type Node } from '../../view/Tree.model';
 import type { ScreenSpec } from '../assembly/types';
-import { addRegion, moveRegion, moveRegionToRow, removeRegion, splitRegion, workspaceRegionIds } from './Workspace.edit';
+import { addRegion, moveRegion, moveRegionToRow, removeRegion, splitRegion, workspaceFixedIds, workspaceRegionIds } from './Workspace.edit';
 import { paletteRegion, type WorkspaceBinding, type WorkspaceEdit, type WorkspaceRegion, type WorkspaceSpec } from './Workspace.types';
 
 /** One bindable track: the Segmented's member and the binding's value. */
@@ -52,7 +52,7 @@ export function workspaceTab({ workspace, active }: Pick<WorkspaceModelProps, 'w
 
 /** A region id no tab uses yet: the kind, suffixed past every collision. */
 export function newRegionId(spec: ScreenSpec, kind: string): string {
-  const taken = new Set(workspaceRegionIds(spec));
+  const taken = new Set([...workspaceRegionIds(spec), ...workspaceFixedIds(spec)]);
   let id = kind;
   for (let i = 2; taken.has(id); i++) id = `${kind}-${i}`;
   return id;
@@ -61,11 +61,11 @@ export function newRegionId(spec: ScreenSpec, kind: string): string {
 /** The content slot a region's app content reaches the binding through. */
 export const contentSlot = (id: string): string => `content:${id}`;
 
-/** The Tree's slots for a tab: each region's app content under its content slot. */
+/** The Tree's slots for a tab: each region's app content under its content slot, the header's and footer's too. */
 export function workspaceSlots<C>(tab: WorkspaceSpec['tabs'][number] | undefined, content: Record<string, C> | undefined): Record<string, C> {
   const slots: Record<string, C> = {};
   if (!tab || !content) return slots;
-  for (const id of workspaceRegionIds(tab.spec)) {
+  for (const id of [...workspaceRegionIds(tab.spec), ...workspaceFixedIds(tab.spec)]) {
     const fill = content[id];
     if (fill !== undefined) slots[contentSlot(id)] = fill;
   }
@@ -140,6 +140,8 @@ export function workspaceView(
       ? [frameNode(tab!.id, id, bindings?.[id]?.['track'], tracks, palette, inert)]
       : [slot(contentSlot(id))];
   }
+  // The header and footer are fixed: their content, never a frame (nothing there moves or splits).
+  for (const id of tab ? workspaceFixedIds(tab.spec) : []) screenSlots[`region:${id}`] = [slot(contentSlot(id))];
   return h(
     'div',
     {
