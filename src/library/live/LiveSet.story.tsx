@@ -20,7 +20,9 @@ import { progressionChords } from '../Music/live/ProgressionStrip/ProgressionStr
 import { PushTwin } from '../Music/live/PushTwin/PushTwin';
 import { pushScenes, pushSections, pushTracks, pushTransitions } from '../Music/live/PushTwin/PushTwin.fixtures';
 import { RigHealth } from '../Music/live/RigHealth/RigHealth';
+import { DicePad, type ScaleLock } from '../Music/live/DicePad/DicePad';
 import { SectionBar } from '../Music/live/SectionBar/SectionBar';
+import { SongCard } from '../Music/live/SongCard/SongCard';
 import { songSections } from '../Music/live/SectionBar/SectionBar.fixtures';
 import { StemDeck, type DeckStem } from '../Music/live/StemDeck/StemDeck';
 import { deckMarkers, deckStems } from '../Music/live/StemDeck/StemDeck.fixtures';
@@ -84,6 +86,9 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
   const [throws, setThrows] = useState<readonly ThrowPad[]>(throwPads);
   const [queuedSection, setQueuedSection] = useState<string | undefined>('chorus');
   const [stems, setStems] = useState<readonly DeckStem[]>(deckStems);
+  const [jam, setJam] = useState(false);
+  const [scaleLock, setScaleLock] = useState<ScaleLock>('chord');
+  const [chaos, setChaos] = useState(0.25);
   const [cuts, setCuts] = useState<readonly CutPad[]>(cutPadsBoard.map((p) => (p.id === 'riser' ? { ...p, state: 'armed' } : p)));
 
   const { index, toNext } = chordAt(beat);
@@ -119,6 +124,19 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
               onSelect={setSelected}
             />
           );
+        case 'song':
+          return (
+            <SongCard
+              song={jam ? undefined : { id: 'hidden', name: 'Hidden Signals', tempo: TEMPO, key: 'Am' }}
+              index={jam ? undefined : 3}
+              total={7}
+              next={{ id: 'wire', name: 'Wire', tempo: 118, key: 'G', cued: true, barsToCue: barsLeft }}
+              jam={jam}
+              onJam={() => setJam((j) => !j)}
+            />
+          );
+        case 'dice':
+          return <DicePad target={track.name} scaleLock={scaleLock} onScaleLock={setScaleLock} chaos={chaos} onChaos={setChaos} onDice={fn()} />;
         case 'sections':
           return <SectionBar sections={songSections} current="verse" queued={queuedSection} hint="change on phrase" onSection={setQueuedSection} />;
         case 'stems':
@@ -197,7 +215,7 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
           return <RigHealth {...rigHealthBoard} onOpen={fn()} />;
       }
     };
-  }, [beat, selected, queuedSection, stems, follow, loopFollow, bassLock, target, length, held, scene, layers, picked, strips, throws, cuts, index, toNext, chordName, barsLeft]);
+  }, [beat, selected, queuedSection, stems, jam, scaleLock, chaos, follow, loopFollow, bassLock, target, length, held, scene, layers, picked, strips, throws, cuts, index, toNext, chordName, barsLeft]);
 
   return { beat, selected, setSelected, content };
 }

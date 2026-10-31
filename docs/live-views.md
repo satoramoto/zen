@@ -65,8 +65,8 @@ press queues it; a stem toggle mutes it.
 
 | Tab | Rows (each a row of region instances) | For |
 |---|---|---|
-| ONE | river · loop + compass · sections + landing · mix + stems · rig | the whole set on one page |
-| Follow | compass + orbits · follow · rig | the harmony: place, time and the loop |
+| ONE | river · song + dice · loop + compass · sections + landing · mix + stems · rig | the whole set on one page |
+| Follow | compass + orbits · follow + dice · rig | the harmony: place, time, the loop and the dice |
 | Track | spine · stems · throws + cuts · rig | one column as its signal path |
 | Hands | push + orbits · sections + landing · rig | what the hardware is doing |
 | Mine | river · rig, edit mode | build a page from the palette |
@@ -95,6 +95,8 @@ remount it (**Remounted**).
 | Pane | Guarantees its stories exercise |
 |---|---|
 | `SetlistRiver` | a song press or Enter asks to cue it; cued and the old cue read back from the host; a scene reads playing |
+| `SongCard` | JAM (click or Space) asks; the card reads the jam, and the song again, only from the host; between songs nothing is invented; rebinding to the next song; `chip` fits |
+| `DicePad` | each move asks by name (click or Enter), aimed at the selected track; SHAKE names every generator and is the only move without a target; a move the host can't make is disabled; the scale lock (click or arrows) and CHAOS (drag or arrows, 0–1) read back; rebinding to another track; `row` fits |
 | `LaunchGrid` | a slot (click or Enter) asks by `{ track, cell }` and reads queued only when the host queues it; a column's stop, a song's fold and the selected track read back |
 | `SectionBar` | a section press, Enter or Space asks by id and reads queued only from the host; widths follow bars; an unavailable section is disabled, says why and asks nothing; rebinding to another song; `row` and `chip` forms fit |
 | `TrackStrips` | fader drag (the shared parameter gesture) and arrows, send knobs, M/S/● and select read back per track, others untouched; a missing meter draws no meter; a drag cut off by removal asks nothing more |

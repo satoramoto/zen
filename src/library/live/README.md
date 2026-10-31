@@ -18,6 +18,8 @@ stories under **Music/Live**, `docs/music.md` → "Live"); this folder only comp
 | Pane | The idea |
 | --- | --- |
 | `SetlistRiver` | the night as a timeline by minutes under its tempo contour; the song now opens into scenes |
+| `SongCard` | the song now and the song next (cued, in N bars), JAM from here |
+| `DicePad` | MUTATE, SHAKE, ROTATE, RATIO ↑, KEEP, REVERT over their captions, the scale lock, CHAOS |
 | `LaunchGrid` | the session grid: songs folded above, tracks as columns in their stem inks, stops under |
 | `SectionBar` | the song's sections as Push row 7's cells, each as wide as its bars: playing, queued, ready |
 | `TrackStrips` | a deck-style channel per track: sends, fader and meter in a well, M / S / arm; FX returns |
