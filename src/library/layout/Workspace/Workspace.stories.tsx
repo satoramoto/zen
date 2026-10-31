@@ -206,8 +206,11 @@ export const AddFromPalette: Story = {
       const canvas = within(canvasElement);
       await userEvent.click(canvas.getByRole('button', { name: 'add Transitions to this tab' }));
       await expect(args.onSpec).toHaveBeenCalled();
-      const [, , why] = (args.onSpec as unknown as { mock: { calls: [string, unknown, string][] } }).mock.calls[0];
+      const [, , why, placed] = (args.onSpec as unknown as { mock: { calls: [string, unknown, string, { id: string; kind: string }][] } }).mock.calls[0];
       await expect(why).toBe('add');
+      // The placed instance is named with its kind: the app never reads a kind out of the id.
+      await expect(placed.kind).toBe('cuts');
+      await expect(typeof placed.id).toBe('string');
     },
   }),
 };
@@ -237,8 +240,9 @@ export const Split: Story = {
       const canvas = within(canvasElement);
       await userEvent.click(canvas.getByRole('button', { name: 'split loop with Transitions' }));
       await expect(args.onSpec).toHaveBeenCalled();
-      const [, , why] = (args.onSpec as unknown as { mock: { calls: [string, unknown, string][] } }).mock.calls[0];
+      const [, , why, placed] = (args.onSpec as unknown as { mock: { calls: [string, unknown, string, { id: string; kind: string }][] } }).mock.calls[0];
       await expect(why).toBe('split');
+      await expect(placed.kind).toBe('cuts');
     },
   }),
 };

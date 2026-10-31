@@ -1,10 +1,11 @@
 // The stories' stand-in for the app: one live set's state, a running clock, and the content for
-// every pane kind, all Music-family panes in mix[flow]'s face and linked (the selected track is the
-// grid's column, the strip, the orbit ring, the spine and the Push column; a compass wedge
-// overrides the chord the orbits follow). Story harness only: the panes hold no state.
+// every region instance, by the pane kind it names, all Music-family panes in mix[flow]'s face and
+// linked (the selected track is the grid's column, the strip, the orbit ring, the spine and the
+// Push column; a compass wedge overrides the chord the orbits follow). A region bound to a fixed
+// track shows that track whatever is selected. Story harness only: the panes hold no state, and
+// the clock, the queue and the stems' mutes here are scenario data, not a scheduler or an engine.
 import { useMemo, useState, type ReactNode } from 'react';
 import { fn } from 'storybook/test';
-import type { WorkspaceBinding } from '../layout/Workspace/Workspace.types';
 import { ChordCompass, type FollowMode } from '../Music/live/ChordCompass/ChordCompass';
 import { compassProgression } from '../Music/live/ChordCompass/ChordCompass.fixtures';
 import { CutPads, type CutPad } from '../Music/live/CutPads/CutPads';
@@ -19,6 +20,10 @@ import { progressionChords } from '../Music/live/ProgressionStrip/ProgressionStr
 import { PushTwin } from '../Music/live/PushTwin/PushTwin';
 import { pushScenes, pushSections, pushTracks, pushTransitions } from '../Music/live/PushTwin/PushTwin.fixtures';
 import { RigHealth } from '../Music/live/RigHealth/RigHealth';
+import { SectionBar } from '../Music/live/SectionBar/SectionBar';
+import { songSections } from '../Music/live/SectionBar/SectionBar.fixtures';
+import { StemDeck, type DeckStem } from '../Music/live/StemDeck/StemDeck';
+import { deckMarkers, deckStems } from '../Music/live/StemDeck/StemDeck.fixtures';
 import { rigHealthBoard } from '../Music/live/RigHealth/RigHealth.fixtures';
 import { SetlistRiver } from '../Music/live/SetlistRiver/SetlistRiver';
 import { riverSongs } from '../Music/live/SetlistRiver/SetlistRiver.fixtures';
@@ -29,7 +34,7 @@ import { throwPads } from '../Music/live/ThrowPads/ThrowPads.fixtures';
 import { TrackStrips, type TrackStrip } from '../Music/live/TrackStrips/TrackStrips';
 import { stripReturns, stripTracks } from '../Music/live/TrackStrips/TrackStrips.fixtures';
 import { useBeat } from './clock';
-import { kindOf } from './views';
+import type { LiveRegion } from './views';
 
 /** The set's tempo: Hidden Signals. */
 export const TEMPO = 112;
@@ -60,12 +65,10 @@ const audioChain = (source: string): readonly SpineStage[] =>
 export interface LiveSetOptions {
   /** Run the clock. Off for stories that hold a still frame. */
   running?: boolean;
-  /** What each region is bound to, by region id: `{ track }` points a spine or an orbit at a column. */
-  bindings?: Record<string, WorkspaceBinding>;
 }
 
-/** The set's state, and a function from a region id to its pane. */
-export function useLiveSet({ running = true, bindings = {} }: LiveSetOptions = {}) {
+/** The set's state, and a function from a region instance to its pane. */
+export function useLiveSet({ running = true }: LiveSetOptions = {}) {
   const beat = useBeat(TEMPO, running, 2);
   const [selected, setSelected] = useState('keys');
   const [follow, setFollow] = useState<FollowMode>('prog');
@@ -79,6 +82,8 @@ export function useLiveSet({ running = true, bindings = {} }: LiveSetOptions = {
   const [picked, setPicked] = useState<string | undefined>(undefined);
   const [strips, setStrips] = useState<readonly TrackStrip[]>(stripTracks);
   const [throws, setThrows] = useState<readonly ThrowPad[]>(throwPads);
+  const [queuedSection, setQueuedSection] = useState<string | undefined>('chorus');
+  const [stems, setStems] = useState<readonly DeckStem[]>(deckStems);
   const [cuts, setCuts] = useState<readonly CutPad[]>(cutPadsBoard.map((p) => (p.id === 'riser' ? { ...p, state: 'armed' } : p)));
 
   const { index, toNext } = chordAt(beat);
@@ -91,12 +96,10 @@ export function useLiveSet({ running = true, bindings = {} }: LiveSetOptions = {
   };
 
   const content = useMemo(() => {
-    return (id: string): ReactNode => {
-      const kind = kindOf(id);
-      if (!kind) return null;
-      const trackId = bindings[id]?.track ?? selected;
+    return (region: LiveRegion): ReactNode => {
+      const trackId = region.binding.mode === 'fixed' ? region.binding.target : selected;
       const track = spineTracks.find((t) => t.id === trackId) ?? spineTracks[2];
-      switch (kind) {
+      switch (region.kind) {
         case 'river':
           return <SetlistRiver songs={riverSongs} progress={0.38 + (beat % 64) / 640} barsToCue={barsLeft} onPick={fn()} onScene={(s) => setScene(Math.max(0, ['bed', 'bass', 'full', 'break', 'kept'].indexOf(s)))} />;
         case 'loop':
@@ -114,6 +117,19 @@ export function useLiveSet({ running = true, bindings = {} }: LiveSetOptions = {
               onSolo={(t) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, soloed: !s.soloed } : s)))}
               onArm={(t) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, armed: !s.armed } : s)))}
               onSelect={setSelected}
+            />
+          );
+        case 'sections':
+          return <SectionBar sections={songSections} current="verse" queued={queuedSection} hint="change on phrase" onSection={setQueuedSection} />;
+        case 'stems':
+          return (
+            <StemDeck
+              title="Hidden Signals"
+              sub={`${TEMPO} · Am · warped`}
+              stems={stems}
+              markers={deckMarkers}
+              position={((beat % 256) + 256) % 256 / 256}
+              onMute={(id) => setStems((all) => all.map((s) => (s.id === id ? { ...s, muted: !s.muted } : s)))}
             />
           );
         case 'compass':
@@ -143,7 +159,7 @@ export function useLiveSet({ running = true, bindings = {} }: LiveSetOptions = {
               loopBars={8}
               beat={beat}
               outs={['Main L/R', 'IEM 2']}
-              level={strips.find((s) => s.id === track.id)?.meter ?? 0.5}
+              meter={strips.find((s) => s.id === track.id)?.meter}
               onPrev={() => step(track.id, -1)}
               onNext={() => step(track.id, 1)}
               onStage={fn()}
@@ -181,7 +197,7 @@ export function useLiveSet({ running = true, bindings = {} }: LiveSetOptions = {
           return <RigHealth {...rigHealthBoard} onOpen={fn()} />;
       }
     };
-  }, [beat, bindings, selected, follow, loopFollow, bassLock, target, length, held, scene, layers, picked, strips, throws, cuts, index, toNext, chordName, barsLeft]);
+  }, [beat, selected, queuedSection, stems, follow, loopFollow, bassLock, target, length, held, scene, layers, picked, strips, throws, cuts, index, toNext, chordName, barsLeft]);
 
   return { beat, selected, setSelected, content };
 }

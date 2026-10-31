@@ -34,4 +34,5 @@ export {
   type WorkspaceRegion,
   type WorkspaceBinding,
   type WorkspaceEdit,
+  type WorkspacePlacement,
 } from './Workspace/Workspace';
