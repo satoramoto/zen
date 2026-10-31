@@ -3,6 +3,7 @@
 // `pushTwinView` and `pushTwinHandlers` to their `Tree`. The twin holds no state: what every pad is
 // lit as comes in as props, a press only asks `onPad` / `onScene`.
 import { h, when, wire, type Handlers, type Node } from '../../../view/Tree.model';
+import { sectionLabel, sectionState } from '../sections';
 import { inkStyle, liveAxis, livePane, type StemInk } from '../live.model';
 import { arc, polar } from '../polar';
 import type { PushTwinForm } from './PushTwin.forms';
@@ -140,9 +141,8 @@ function pads({ tracks, sections, section, queuedSection, transitions, held, sel
   }
   for (let c = 0; c < COLUMNS; c++) {
     const name = sections[c];
-    const state = !name ? 'empty' : c === section ? 'on' : c === queuedSection ? 'queued' : 'stopped';
-    const said = state === 'on' ? 'playing' : state === 'queued' ? 'queued' : state === 'empty' ? 'empty' : 'ready';
-    out.push(pad('sections', c, undefined, state, `Section ${name ?? c + 1}, ${said}`, none || !name, undefined, {}, ...word(name)));
+    const state = sectionState(!!name, c === section, c === queuedSection);
+    out.push(pad('sections', c, undefined, state, sectionLabel(name ?? String(c + 1), state), none || !name, undefined, {}, ...word(name)));
   }
   for (let c = 0; c < COLUMNS; c++) {
     const name = transitions[c];

@@ -1,0 +1,116 @@
+/* StemDeck: a lane per stem, its head (ink letter, name, route, M, gain) over its waveform in a
+   well; the host's section marks along the top and its playhead across every lane. A muted lane
+   dims its waveform; an unavailable one is dashed. `toggles` is one row of inked toggles. */
+
+:where(.zen-music) .live-stems-body {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+}
+:where(.zen-music) .live-stems-marks {
+  position: relative;
+  flex: 0 0 auto;
+  height: 12px;
+  border-bottom: 1px solid var(--wdg-edge);
+}
+:where(.zen-music) .live-stems-mark {
+  position: absolute;
+  top: 0;
+  padding-left: 3px;
+  border-left: 1px solid var(--wdg-caption);
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 11px;
+  color: var(--wdg-caption);
+  white-space: nowrap;
+}
+:where(.zen-music) .live-stems-lanes {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+}
+:where(.zen-music) .live-stems-lane {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+}
+:where(.zen-music) .live-stems-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 22px;
+}
+:where(.zen-music) .live-stems-name {
+  font-weight: 550;
+  color: var(--stem-label, var(--wdg-text-strong));
+}
+:where(.zen-music) .live-stems-to {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 9px;
+  color: var(--wdg-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:where(.zen-music) .live-stems-well {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  overflow: hidden;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+}
+:where(.zen-music) .live-stems-wave {
+  width: 100%;
+}
+:where(.zen-music) .live-stems-lane[data-muted] .live-stems-well {
+  opacity: 0.35;
+}
+:where(.zen-music) .live-stems-lane[data-unavailable] .live-stems-well {
+  border-style: dashed;
+}
+:where(.zen-music) .live-stems-playhead {
+  position: absolute;
+  top: 12px;
+  bottom: 0;
+  left: var(--live-stems-at);
+  width: 1px;
+  background: var(--wdg-text-strong);
+  pointer-events: none;
+}
+
+:where(.zen-music).live-stems[data-form='toggles'] {
+  flex-direction: row;
+  align-items: center;
+}
+:where(.zen-music) .live-stems-toggles {
+  display: flex;
+  gap: 4px;
+}
+
+:where(.zen-music) .live-stems-empty {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px dashed var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+}
