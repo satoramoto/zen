@@ -8,7 +8,7 @@ import './Workspace.css';
 // The props, the edits and the tree are framework-free (Workspace.model.ts, Workspace.edit.ts,
 // Workspace.types.ts); `Workspace.svelte` draws the same tree.
 export { addRegion, moveRegion, moveRegionToRow, removeRegion, splitRegion, workspaceFixedIds, workspaceRegionIds } from './Workspace.edit';
-export { WORKSPACE_EDITS, paletteRegion, type WorkspaceBinding, type WorkspaceEdit, type WorkspaceRegion, type WorkspaceSpec, type WorkspaceTab } from './Workspace.types';
+export { WORKSPACE_EDITS, paletteRegion, type WorkspaceBinding, type WorkspaceEdit, type WorkspacePlacement, type WorkspaceRegion, type WorkspaceSpec, type WorkspaceTab } from './Workspace.types';
 export { contentSlot, newRegionId, workspaceSlots, workspaceTab, type WorkspaceModelProps, type WorkspaceTrack } from './Workspace.model';
 
 /** What goes in each region, by region id: the app's content for the tab's `content:<id>` slots. */
@@ -31,7 +31,8 @@ function contentFor(props: WorkspaceProps, id: string): WorkspaceContent {
  * region, remove it, add a palette kind to the tab, bind it to a track). Docs: `docs/workspace.md`.
  *
  * **Changed.** *Tabs are screens*: a tab **is** a `ScreenSpec`, and an edit returns a new one
- * through `onSpec(tabId, next, why)` — never a grid, never a pixel. The solver still owns sizes,
+ * through `onSpec(tabId, next, why, placed)` — never a grid, never a pixel (`placed` names the instance
+ * an add or a split made, and its kind, so the app never reads a kind out of an id). The solver still owns sizes,
  * so an edited tab re-themes and steps its forms down like any other screen.
  *
  * **Kept.** The workspace holds no state: the open tab, the specs and the bindings stay the app's.

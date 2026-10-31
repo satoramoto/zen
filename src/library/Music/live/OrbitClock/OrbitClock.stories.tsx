@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { OrbitClock } from './OrbitClock';
+import { expectFits, host, withHost } from '../host.story';
+import { OrbitClock, type OrbitClockProps } from './OrbitClock';
 import OrbitClockSvelte from './OrbitClock.svelte';
 import { orbitClockArgTypes, orbitClockBoard, orbitClockStories as s } from './OrbitClock.fixtures';
 
@@ -17,7 +18,7 @@ const meta = {
   id: 'music-live-orbit-clock',
   title: 'Music/Live/Orbit clock',
   component: OrbitClock,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 720, h: 440 } },
   args: orbitClockBoard,
@@ -95,5 +96,29 @@ export const Disabled: Story = story(s.Disabled, {
     const canvas = within(canvasElement);
     for (const button of canvas.getAllByRole('button')) await expect(button).toBeDisabled();
     await expect(canvasElement.querySelector('.live-orbit-ring[role="button"]')).toBeNull();
+  },
+});
+
+/** A host that takes the selection. The dice are the host's generators to run; it changes nothing for them. */
+const orbits = host<OrbitClockProps>({ apply: { onSelect: (_, selected: string) => ({ selected }) } });
+
+/** Controlled readback: a ring (by click or Enter) or a row selects its track once the host says so; both marks follow. */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...orbits },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Drums: EUCLID E(5,16) · kick' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Drums generator, EUCLID' })).toHaveAttribute('aria-pressed', 'true'));
+    await expect(canvas.getByRole('button', { name: 'Drums: EUCLID E(5,16) · kick' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(canvas.getByRole('button', { name: 'Bass generator, EUCLID' })).toHaveAttribute('aria-pressed', 'false');
+    canvas.getByRole('button', { name: 'Keys generator, ARP' }).focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Keys generator, ARP' })).toHaveAttribute('aria-pressed', 'true'));
+    await expect(args.onSelect).toHaveBeenLastCalledWith('keys');
+    const hits = () => [...canvasElement.querySelectorAll('.live-orbit-bead')].map((b) => b.getAttribute('data-state')).join();
+    const before = hits();
+    await userEvent.click(canvas.getByRole('button', { name: 'Shake all' }));
+    await expect(args.onShake).toHaveBeenCalledTimes(1);
+    await expect(hits()).toBe(before);
   },
 });

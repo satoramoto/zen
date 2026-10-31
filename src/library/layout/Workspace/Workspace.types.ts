@@ -32,6 +32,15 @@ export interface WorkspaceRegion {
   head?: boolean;
 }
 
+/**
+ * The region instance an `add` or `split` placed: its new id and the palette kind it is. The app
+ * records the kind from this, never from the id (an id names an instance, not a component type).
+ */
+export interface WorkspacePlacement {
+  id: string;
+  kind: string;
+}
+
 /** Which track or param a region is bound to. Plain data; the app reads it. */
 export type WorkspaceBinding = Readonly<Record<string, string>>;
 

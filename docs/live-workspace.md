@@ -264,15 +264,41 @@ A lane that cannot find a reference says so in its report, rather than inventing
 
 ## Landed so far
 
-- **Lane 6 · `TransitionRow`** (`live/6-transitions`, `b423f07`): forms `row` (three pads across)
-  → `grid` (two rows of three). Disabled is "no `onFire`", not a prop. Selected is a 2 px rule
-  across the pad's foot plus `aria-current`, no extra colour.
+All eight lanes landed: `LoopPie` and `LoopGrid` (1), `SendBars` and `MixBand` (2), `ChordStrip`
+and `ArpSequencer` (3), `XYPad` and `MacroPads` (4), `StemLanes` (5), `TransitionRow` (6), the
+`Workspace` (7, `layout/Workspace/`) and the Show (8, `yahaha/Show/`).
 
-## Open decisions (orchestrator)
+They were followed by the live looper's own panes in mix[flow]'s face (`src/library/Music/live/`,
+`docs/live-views.md`), and the `Live/Views` pages composed from them, which are where this work now
+continues. SectionBar and StemDeck are the first parts built from the wireframes' gaps.
 
-- `LoopGrid`'s cell count: fixed 8 per track, or the widest `cells.length`? (Default: the widest,
-  never fewer than 8, so columns stay aligned.)
-- Does a tab own its own header/footer, or does the workspace own one persistent bar? (Default:
-  persistent `Tabs` bar + per-tab `spec.header`, so the bar counter is always in the same place.)
-- Does edit mode ship in the app, or Storybook-only first? (Default: Storybook-only until the
-  regions are settled.)
+## Decisions
+
+Settled:
+
+- **`LoopGrid`'s cell count**: the widest `cells.length`, never fewer than eight
+  (`LoopGrid.model.ts`).
+- **A tab's header and footer**: the Workspace fills a tab's own `spec.header` / `spec.footer`
+  regions (`56f511a`), fixed, never framed. `Live/Views` puts the rig's line in an ordinary last
+  row instead, to match mix's flat documents.
+- **Edit mode in the app**: mix ships its own surface editor (mix `src/rig/editor/`). Zen's
+  Workspace edit mode stays the Storybook prototype; it is not a second production builder.
+- **Region kinds**: a region instance names its kind; nothing infers one from an id. The
+  Workspace's `onSpec` reports `placed: { id, kind }` for an add or a split.
+
+Open (each is a product decision, not taken here):
+
+- **Nesting.** Zen's Screen lets a split stack two regions in one column; mix's version-1 document
+  is flat rows. `Live/Views` stays flat. Either mix's document gains stacked columns, or a host
+  with flat documents (mix) doesn't offer split.
+- **Instance ids.** The Workspace's `newRegionId` still mints `kind`, `kind-2`. Nothing reads them
+  any more; whether it should mint mix-style fresh ids (`tab-region-n`) is open.
+- **Sections.** What FILL, VAR ▸ and NO FORM do, how a song advances (manual, after N bars, on the
+  chord), and whether a second press replaces or cancels a queued section are the host's.
+  SectionBar draws them as ordinary sections and shows the host's `hint`.
+- **Stems.** What SLICE does (slices to pads?), what the ONE board's ALL does, whether a stem has
+  a gain control (StemDeck only reads gain), and replacing a stem with a track's part are open;
+  none is drawn.
+- **SignalSpine's Out.** `meter` is now the measured output and `level` the fader's setting. A
+  read-only Out still reads `level` as the measurement, so mix's Signal panel keeps working, but
+  it should pass `meter` when it next moves its zen pin.

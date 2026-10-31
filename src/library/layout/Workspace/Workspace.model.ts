@@ -9,7 +9,7 @@ import { textView } from '../../primitives/Text.model';
 import { component, each, h, slot, type Child, type Handlers, type Node } from '../../view/Tree.model';
 import type { ScreenSpec } from '../assembly/types';
 import { addRegion, moveRegion, moveRegionToRow, removeRegion, splitRegion, workspaceFixedIds, workspaceRegionIds } from './Workspace.edit';
-import { paletteRegion, type WorkspaceBinding, type WorkspaceEdit, type WorkspaceRegion, type WorkspaceSpec } from './Workspace.types';
+import { paletteRegion, type WorkspaceBinding, type WorkspaceEdit, type WorkspacePlacement, type WorkspaceRegion, type WorkspaceSpec } from './Workspace.types';
 
 /** One bindable track: the Segmented's member and the binding's value. */
 export interface WorkspaceTrack {
@@ -35,8 +35,8 @@ export interface WorkspaceModelProps {
   editing?: boolean;
   /** A tab was chosen. */
   onTab?: (id: string) => void;
-  /** A structural edit was made: the tab's next spec and which of the six it was. */
-  onSpec?: (tabId: string, spec: ScreenSpec, why: WorkspaceEdit) => void;
+  /** A structural edit was made: the tab's next spec, which of the six it was, and for `add` and `split` the instance placed. */
+  onSpec?: (tabId: string, spec: ScreenSpec, why: WorkspaceEdit, placed?: WorkspacePlacement) => void;
   /** A region was bound to a track. */
   onBinding?: (tabId: string, regionId: string, binding: WorkspaceBinding) => void;
   /** Shown, dimmed, deaf: the surface is read, not played. */
@@ -186,8 +186,10 @@ export function workspaceHandlers({ workspace, active, palette, tracks, onTab, o
     handlers[`down:${id}`] = () => onSpec?.(tab.id, moveRegionToRow(tab.spec, id, 'down'), 'moveRow');
     handlers[`drop:${id}`] = () => onSpec?.(tab.id, removeRegion(tab.spec, id), 'remove');
     for (const kind of palette ?? []) {
-      handlers[`add:${id}:${kind.kind}`] = () =>
-        onSpec?.(tab.id, splitRegion(tab.spec, id, paletteRegion(kind, newRegionId(tab.spec, kind.kind))), 'split');
+      handlers[`add:${id}:${kind.kind}`] = () => {
+        const placed = { id: newRegionId(tab.spec, kind.kind), kind: kind.kind };
+        onSpec?.(tab.id, splitRegion(tab.spec, id, paletteRegion(kind, placed.id)), 'split', placed);
+      };
     }
     if (tracks !== undefined) {
       handlers[`bind:${id}`] = (index: number) => {
@@ -197,8 +199,10 @@ export function workspaceHandlers({ workspace, active, palette, tracks, onTab, o
     }
   }
   for (const kind of palette ?? []) {
-    handlers[`palette:${kind.kind}`] = () =>
-      onSpec?.(tab.id, addRegion(tab.spec, tab.spec.rows.length - 1, paletteRegion(kind, newRegionId(tab.spec, kind.kind))), 'add');
+    handlers[`palette:${kind.kind}`] = () => {
+      const placed = { id: newRegionId(tab.spec, kind.kind), kind: kind.kind };
+      onSpec?.(tab.id, addRegion(tab.spec, tab.spec.rows.length - 1, paletteRegion(kind, placed.id)), 'add', placed);
+    };
   }
   return handlers;
 }

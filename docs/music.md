@@ -78,11 +78,18 @@ the port's zero-difference evidence below does not cover them.
   (its own `.zen-music` boundary, as `MixerView`), the deck title row, axis captions, mono readings,
   the launch cell's states and the status dot — and the stem inks (`STEM_INKS`, `inkStyle`) a
   track wears. `polar.ts` is the round panes' geometry.
+- `sections.ts`: a song section's cell, state and label, shared by PushTwin's row 7 and SectionBar.
 - One folder per pane, each a view-tree component with React and Svelte bindings, `forms` for the
-  assembled screen, fixtures and stories under **Music/Live**.
-- Panes take time as a `beat` prop and hold no state; the app owns the clock and every value.
+  assembled screen, fixtures and stories under **Music/Live**. `SectionBar` (the song's sections)
+  and `StemDeck` (a song's stems on one deck) are the first parts built from the wireframes' gaps.
+- `host.story.tsx` (story harness): the host each pane's **Hosted**, **Rebound** and **Remounted**
+  stories drive, so a play reads the pane's controlled props back in both renderers. What each pane
+  guarantees is listed in `docs/live-views.md`.
+- Panes take time as a `beat` prop and hold no state; the app owns the clock and every value. A
+  reading the host doesn't supply (a meter, a load, a waveform) is drawn as missing, never as zero.
 - The composed pages (tabs of panes in the Workspace, one linked set) are `Live/Views`
-  (`src/library/live/`), React-only story harnesses.
+  (`src/library/live/`), React-only story harnesses. Each tab is a document of region instances in
+  mix's surface shape, each naming its pane kind and binding.
 
 ## Storybook catalog
 

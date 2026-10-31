@@ -3,14 +3,16 @@ import { useState, type ReactNode } from 'react';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../storybook';
 import { Workspace } from '../layout/Workspace/Workspace';
-import { workspaceFixedIds, workspaceRegionIds } from '../layout/Workspace/Workspace.edit';
-import type { WorkspaceBinding, WorkspaceTab } from '../layout/Workspace/Workspace.types';
+import { workspaceRegionIds } from '../layout/Workspace/Workspace.edit';
+import type { WorkspaceBinding } from '../layout/Workspace/Workspace.types';
+import type { ScreenSpec } from '../layout/assembly/types';
 import { spineTracks } from '../Music/live/SignalSpine/SignalSpine.fixtures';
 import { useLiveSet } from './LiveSet.story';
-import { LIVE_TABS, PANE_PALETTE } from './views';
+import { LIVE_DOCUMENT, PANE_KINDS, PANE_PALETTE, isPaneKind, liveScreen, type LiveRegion } from './views';
 
-// The live views: one set as Lemur pages. Each tab is a ScreenSpec of Music-family live panes
-// (Music/Live), every one in mix[flow]'s face, and the solver picks every pane's form. The set is
+// The live views: one set as Lemur pages. Each tab is a document of region instances (views.ts, in
+// mix's surface-document shape), each naming its Music-family live pane and its binding; the solver
+// picks every pane's form. The set is
 // one linked state: select a track anywhere and the grid, the strips, the orbits, the spine and the
 // Push follow it; pick a compass wedge and the orbits follow that chord. Mine is the point of it:
 // edit mode with every pane kind in the palette, so a page is built, not designed. React-only:
@@ -23,20 +25,36 @@ interface LiveProps {
   running?: boolean;
 }
 
-/** The app's side of the Workspace: it keeps the tabs, the open tab and the bindings, and fills every region. */
+/** A tab as the app holds it: the layout the Workspace edits, and the region instances it places. */
+interface HeldTab {
+  id: string;
+  title: string;
+  spec: ScreenSpec;
+  regions: readonly LiveRegion[];
+}
+
+const HELD: readonly HeldTab[] = LIVE_DOCUMENT.tabs.map((t) => ({ id: t.id, title: t.title, spec: liveScreen(t), regions: t.regions }));
+
+/**
+ * The app's side of the Workspace: it keeps the tabs, the open tab and every region instance, and
+ * fills each region from its instance's kind and binding. An add or a split records the instance
+ * the Workspace says it placed, with its kind; a removed region's instance goes with it.
+ */
 function Live({ start, editing = false, running = true }: LiveProps) {
-  const [tabs, setTabs] = useState<readonly WorkspaceTab[]>(LIVE_TABS);
+  const [tabs, setTabs] = useState<readonly HeldTab[]>(HELD);
   const [active, setActive] = useState(start);
-  const [bindings, setBindings] = useState<Record<string, WorkspaceBinding>>({});
-  const live = useLiveSet({ running, bindings });
+  const live = useLiveSet({ running });
   const tab = tabs.find((t) => t.id === active) ?? tabs[0];
   const content: Record<string, ReactNode> = {};
-  for (const id of [...workspaceRegionIds(tab.spec), ...workspaceFixedIds(tab.spec)]) content[id] = live.content(id);
+  for (const region of tab.regions) content[region.id] = live.content(region);
+  const bindings: Record<string, WorkspaceBinding> = {};
+  for (const region of tab.regions) if (region.binding.mode === 'fixed') bindings[region.id] = { track: region.binding.target };
+  const update = (id: string, change: (t: HeldTab) => HeldTab) => setTabs((all) => all.map((t) => (t.id === id ? change(t) : t)));
 
   return (
     <Workspace
       name="Hidden Signals"
-      workspace={{ tabs, start }}
+      workspace={{ tabs: tabs.map(({ id, title, spec }) => ({ id, title, spec })), start }}
       active={tab.id}
       editing={editing}
       palette={PANE_PALETTE}
@@ -44,8 +62,17 @@ function Live({ start, editing = false, running = true }: LiveProps) {
       bindings={bindings}
       content={content}
       onTab={setActive}
-      onSpec={(id, next) => setTabs((all) => all.map((t) => (t.id === id ? { ...t, spec: next } : t)))}
-      onBinding={(_, region, binding) => setBindings((b) => ({ ...b, [region]: binding }))}
+      onSpec={(id, next, _why, placed) =>
+        update(id, (t) => {
+          const present = new Set(workspaceRegionIds(next));
+          const added: LiveRegion[] =
+            placed && isPaneKind(placed.kind) ? [{ id: placed.id, kind: placed.kind, title: PANE_KINDS[placed.kind].label, binding: { mode: 'selected' } }] : [];
+          return { ...t, spec: next, regions: [...t.regions, ...added].filter((r) => present.has(r.id)) };
+        })
+      }
+      onBinding={(id, region, binding) =>
+        update(id, (t) => ({ ...t, regions: t.regions.map((r) => (r.id === region && binding.track ? { ...r, binding: { mode: 'fixed', target: binding.track } } : r)) }))
+      }
     />
   );
 }
@@ -56,7 +83,7 @@ const meta = {
   decorators: [withStoryFrame, withLibraryTheme],
   parameters: { layout: 'fullscreen', frame: { w: 1440, h: 900 } },
   argTypes: {
-    start: { control: 'select', options: LIVE_TABS.map((t) => t.id) },
+    start: { control: 'select', options: LIVE_DOCUMENT.tabs.map((t) => t.id) },
     editing: { control: 'boolean' },
     running: { control: 'boolean' },
   },
@@ -67,8 +94,8 @@ type Story = StoryObj<typeof meta>;
 
 /**
  * ONE: the unified board. The night along the top (tempo contour, the song now open into its
- * scenes, Wire cued), the launch grid beside the compass and the landing countdown, the track
- * strips underneath, the rig's one line on the floor.
+ * scenes, Wire cued), the launch grid beside the compass, the song's sections beside the landing
+ * countdown, the track strips beside the stem deck, the rig's one line last.
  */
 export const One: Story = {
   name: 'ONE',
@@ -78,6 +105,16 @@ export const One: Story = {
     // Select Bass in the grid's header: the strips follow.
     await userEvent.click(canvas.getAllByRole('button', { name: /^Bass/ })[0]);
     await waitFor(() => expect(canvasElement.querySelector('.live-track-strips [data-selected="true"]')).toBeTruthy());
+    // The new parts sit in the same set: a section press queues it; a stem toggle mutes it.
+    const sections = within(canvasElement.querySelector<HTMLElement>('.live-sections')!);
+    await userEvent.click(sections.getByRole('button', { name: /^Section BRIDGE/ }));
+    await waitFor(() => expect(sections.getByRole('button', { name: /^Section BRIDGE, queued/ })).toBeTruthy());
+    const stems = canvasElement.querySelector<HTMLElement>('.live-stems')!;
+    await expect(stems).toBeTruthy();
+    const toggle = within(stems).getAllByRole('button').find((b) => /Bass/.test(b.getAttribute('aria-label') ?? ''))!;
+    const was = toggle.getAttribute('aria-pressed');
+    await userEvent.click(toggle);
+    await waitFor(() => expect(within(stems).getAllByRole('button').find((b) => /Bass/.test(b.getAttribute('aria-label') ?? ''))).not.toHaveAttribute('aria-pressed', was!));
   },
 };
 
@@ -120,6 +157,11 @@ export const Mine: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'add Chord compass to this tab' }));
     await waitFor(() => expect(canvasElement.querySelector('.live-compass')).toBeTruthy());
+    // The new parts come from the same palette: the Workspace names each instance it places, with its kind.
+    await userEvent.click(canvas.getByRole('button', { name: 'add Sections to this tab' }));
+    await waitFor(() => expect(canvasElement.querySelector('.live-sections')).toBeTruthy());
+    await userEvent.click(canvas.getByRole('button', { name: 'add Stem deck to this tab' }));
+    await waitFor(() => expect(canvasElement.querySelector('.live-stems')).toBeTruthy());
   },
 };
 

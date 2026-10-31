@@ -44,21 +44,70 @@ density: nobody plays a set from a screen that looks like a Bitwig screenshot. T
   edited tab re-themes and steps its forms down on a small window. The layout builder stores
   specs, not screenshots.
 
-## The five views (`Design OS/Layout/Workspace`)
+## Two sets of views
 
-All five share one linked dataset: the grid's tracks are the mixer's strips (levels, meters,
-sends, lamps), the arp follows the follow strip's progression, the deck's cues sit under the
-same bar counter. Each region wears a faceplate tag — the device header strip reduced to a word,
-overlaid so the solver's heights stay exact.
+There are two generations of views, and both stay:
 
-| Tab | Regions | For |
+- **`Design OS/Layout/Workspace`**: the Workspace's own fixtures, built from the zen-styled
+  `components/music/` parts (LoopGrid, MixBand, StemLanes, TransitionRow…). Its tabs are My stage,
+  Session grid, Arp & follow, Mix & sends and Stem deck. Edit mode frames every region with the six
+  structural edits (move, moveRow, split, remove, add, bind).
+- **`Live/Views`** (`src/library/live/`): the live looper's pages, built from the Music family's
+  live panes in mix[flow]'s face (`src/library/Music/live/`, stories under **Music/Live**). These
+  are the views the wireframes asked for.
+
+### `Live/Views`
+
+All tabs share one linked set (`LiveSet.story.tsx`, a story harness: its clock, queue and mutes
+are scenario data, not a scheduler or an engine). Select a track anywhere and the grid, strips,
+orbits, spine and Push follow; a compass wedge overrides the chord the orbits follow; a section
+press queues it; a stem toggle mutes it.
+
+| Tab | Rows (each a row of region instances) | For |
 |---|---|---|
-| My stage | Loop grid over Mix | the set at a glance: launch and levels |
-| Session grid | Loop grid over Transitions | running songs: sections and cuts |
-| Arp & follow | Follow over Arp beside Throws | the keys tab: harmony and throws |
-| Mix & sends | Mix | riding the mix: every level, send and lamp |
-| Stem deck | Stems over Transitions | the deck: four lanes, cues, cuts |
+| ONE | river · loop + compass · sections + landing · mix + stems · rig | the whole set on one page |
+| Follow | compass + orbits · follow · rig | the harmony: place, time and the loop |
+| Track | spine · stems · throws + cuts · rig | one column as its signal path |
+| Hands | push + orbits · sections + landing · rig | what the hardware is doing |
+| Mine | river · rig, edit mode | build a page from the palette |
 
-Edit mode frames every region with the six structural edits (move, moveRow, split, remove, add,
-bind); the Edit story and its plays cover them. The component stories stay the dual-renderer
-contract; the views are React-only renders, since region content is app content.
+Each tab is a **document in mix's surface shape** (`views.ts`; mix `src/rig/contract.ts`,
+version 1): rows of region instance ids, and the instances, each naming its pane `kind`, its
+`title` and a `binding` (`{ mode: 'selected' }`, or `{ mode: 'fixed', target }`). Instance ids are
+fresh (`one-region-3`) and name an instance, never a component type: nothing reads a kind out of
+an id. `liveScreen(tab)` turns a tab into the ScreenSpec the solver draws. When the Workspace adds
+or splits, its `onSpec` names the instance it placed and its kind (`placed`), and the host records
+that. The rig's line is an ordinary last row, as mix's Health is, not a footer.
+
+The views are React-only renders, since region content is app content. Their plays are overviews;
+what each pane guarantees is held by the pane's own stories (below), not by the pages.
+
+## What each pane guarantees (`Music/Live`)
+
+Every pane is an exported component with React and Svelte bindings and several stories whose
+plays run in both renderers (`npm run test:music:stories -- --prefix music-live`). Beyond Default,
+Every state, Dense, Empty and Disabled, each has a **Hosted** story: `Music/live/host.story.tsx`
+stands in for the app, applying each intent to the pane's props as a host would, so a play presses
+the real control (pointer and keyboard where the pane has both) and reads the pane back. A spy call
+alone is not taken as evidence. The host can also rebind a pane (**Rebound**) and remove and
+remount it (**Remounted**).
+
+| Pane | Guarantees its stories exercise |
+|---|---|
+| `SetlistRiver` | a song press or Enter asks to cue it; cued and the old cue read back from the host; a scene reads playing |
+| `LaunchGrid` | a slot (click or Enter) asks by `{ track, cell }` and reads queued only when the host queues it; a column's stop, a song's fold and the selected track read back |
+| `SectionBar` | a section press, Enter or Space asks by id and reads queued only from the host; widths follow bars; an unavailable section is disabled, says why and asks nothing; rebinding to another song; `row` and `chip` forms fit |
+| `TrackStrips` | fader drag (the shared parameter gesture) and arrows, send knobs, M/S/● and select read back per track, others untouched; a missing meter draws no meter; a drag cut off by removal asks nothing more |
+| `StemDeck` | a toggle asks by stem id and mutes only from the host; no envelope reads "no waveform"; an unavailable stem is disabled with its reason; no playhead without a position; rebinding to another song; remount redraws |
+| `ChordCompass` | follow and bass lock read back; a wedge pick only asks: the chord playing and next stay the host's; Empty is an inert reference |
+| `ProgressionStrip` | selection (click or Enter) and follow read back; Mutate only asks; Empty has no now or next |
+| `OrbitClock` | ring, row or Enter select the track and both marks follow; the dice only ask |
+| `SignalSpine` | a knob reads back the host's amount and words; the Out fader's setting is not the meter's measurement (`meter`); no reading says so; rebinding to another track |
+| `PushTwin` | a clip pad (click or Enter) reads queued from the host, a stop pad stops its column, a section queues, a scene lights; section cells share `live/sections.ts` with `SectionBar` |
+| `LandingDial` | target (click or arrow keys), length and Cancel read back; nothing counts down by itself |
+| `CutPads` | a pad reads fired and selected only from the host; a press without a host change reads nothing back; narrow forms fit |
+| `ThrowPads` | drag and arrows ask in 0–1 (y up), each arrow stepping from the host's point; rebinding; a drag cut off by removal asks nothing more |
+| `RigHealth` | no load sample reads `cpu —` and unreported xruns aren't drawn (never a made-up 0%); a press opens by id; rebinding |
+
+No pane schedules, plays, follows harmony or measures anything: what is playing, queued, muted or
+measured is always the host's to say.

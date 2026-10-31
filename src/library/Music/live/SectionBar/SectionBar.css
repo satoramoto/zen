@@ -1,0 +1,103 @@
+/* SectionBar: the song's sections as launch cells (live.css): playing lit, queued blinking, ready
+   tinted. In `bars` each cell takes its bars' share of the width, its name over a mono length;
+   in `row` the cells are equal, names alone; `chip` is one line. An unavailable section is dashed
+   and dimmed; an inert bar is dashed throughout. */
+
+:where(.zen-music) .live-sections-cells {
+  display: grid;
+  flex: 1 1 auto;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(var(--live-sections-count, 5), minmax(0, 1fr));
+  gap: 2px;
+  min-height: 0;
+}
+:where(.zen-music).live-sections[data-form='bars'] .live-sections-cells {
+  grid-template-columns: none;
+  grid-auto-columns: auto;
+  display: flex;
+}
+:where(.zen-music).live-sections[data-form='bars'] .live-sections-cell {
+  flex: var(--live-sections-share, 4) 1 0;
+  min-width: 44px;
+}
+
+:where(.zen-music) .live-sections-cell {
+  position: relative;
+  flex-direction: column;
+  gap: 2px;
+  height: auto;
+  min-height: 24px;
+  padding: 2px 4px;
+  container-type: inline-size;
+}
+:where(.zen-music).live-sections[data-form='bars'] .live-sections-cell {
+  min-height: 44px;
+}
+:where(.zen-music) .live-sections-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:where(.zen-music) .live-sections-length {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.8;
+}
+:where(.zen-music) .live-sections-tag {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  color: var(--stem-ink, var(--primary));
+}
+@container (max-width: 72px) {
+  :where(.zen-music) .live-sections-tag {
+    display: none;
+  }
+}
+
+:where(.zen-music) .live-sections-cell[data-unavailable] {
+  border-style: dashed;
+  background: var(--wdg-well);
+  color: var(--wdg-caption);
+}
+:where(.zen-music).live-sections[data-inert] .live-sections-cell {
+  border-style: dashed;
+}
+
+:where(.zen-music) .live-sections-chip {
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music).live-sections[data-form='chip'] {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+:where(.zen-music) .live-sections-empty {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  border: 1px dashed var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+}

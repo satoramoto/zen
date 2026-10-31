@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { SignalSpine } from './SignalSpine';
+import { expectFits, host, withHost } from '../host.story';
+import { SignalSpine, type SignalSpineProps, type SpineParamChange } from './SignalSpine';
 import SignalSpineSvelte from './SignalSpine.svelte';
 import { signalSpineArgTypes, signalSpineBoard, signalSpineStories as s } from './SignalSpine.fixtures';
 
@@ -17,7 +18,7 @@ const meta = {
   id: 'music-live-signal-spine',
   title: 'Music/Live/Signal spine',
   component: SignalSpine,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 1240, h: 300 } },
   args: signalSpineBoard,
@@ -94,5 +95,74 @@ export const Disabled: Story = story(s.Disabled, {
     const canvas = within(canvasElement);
     for (const button of canvas.getAllByRole('button')) await expect(button).toBeDisabled();
     await expect(canvasElement.querySelector('.live-spine-ring[role="button"]')).toBeNull();
+  },
+});
+
+/** A host that sets a knob's amount (and its reading), the Out fader, and a layer's mute. */
+const spine = host<SignalSpineProps>({
+  apply: {
+    onParam: (p, { stage, param, amount }: SpineParamChange) => ({
+      chain: p.chain.map((st) =>
+        st.id !== stage ? st : { ...st, params: st.params?.map((q) => (q.name === param ? { ...q, amount, value: `${Math.round(amount * 100)}%` } : q)) },
+      ),
+    }),
+    onLevel: (_, level: number) => ({ level }),
+    onMuteLayer: (p, id: string) => ({ layers: p.layers.map((l) => (l.id === id ? { ...l, muted: !l.muted } : l)) }),
+  },
+});
+
+/**
+ * Controlled readback. A knob turned by its arrows reads back the host's amount and words; Out's
+ * fader steps the setting and its reading, while the meter keeps the host's measurement (a fader's
+ * setting is not a reading); a ring press mutes its layer. Each ask names its stage, knob or layer.
+ */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...spine },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const gate = canvas.getByRole('slider', { name: 'Generator gate' });
+    gate.focus();
+    await userEvent.keyboard('{ArrowUp}');
+    await expect(args.onParam).toHaveBeenLastCalledWith({ stage: 'gen', param: 'gate', amount: expect.closeTo(0.61, 5) });
+    await waitFor(() => expect(canvas.getByRole('slider', { name: 'Generator gate' })).toHaveAttribute('aria-valuetext', '61%'));
+    await expect(canvas.getByRole('slider', { name: 'Instrument tone' })).toHaveAttribute('aria-valuetext', '42%');
+    const level = canvas.getByRole('slider', { name: 'Keys level' });
+    level.focus();
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    await waitFor(() => expect(canvasElement.querySelector('[data-part="out-reading"]')).toHaveTextContent('60%'));
+    await expect(args.onLevel).toHaveBeenLastCalledWith(expect.closeTo(0.6, 5));
+    await expect(canvas.getByRole('meter', { name: 'Keys output level' })).toHaveAttribute('aria-valuenow', '62');
+    await userEvent.click(canvas.getByRole('button', { name: 'Mute layer 3, dub at 0:32' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Mute layer 3, dub at 0:32' })).toHaveAttribute('aria-pressed', 'true'));
+    await expect(args.onMuteLayer).toHaveBeenCalledWith('l3');
+  },
+});
+
+/** Rebinding: the host hands the spine another track. Its name and layers draw, and a ring asks about the new track's layer. */
+export const Rebound: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, host: { ...spine.host, presets: { 'Bind Vox': s.EveryState.args! } } },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Bind Vox' }));
+    await waitFor(() => expect(canvas.getByRole('heading', { name: 'Vox' })).toBeTruthy());
+    await expect(canvas.queryByRole('heading', { name: 'Keys' })).toBeNull();
+    await expect(canvas.getByRole('meter', { name: 'Vox output level' })).toHaveAttribute('aria-valuenow', '88');
+    const ring = canvasElement.querySelector<HTMLElement>('.live-spine-ring[role="button"]:not([data-muted])')!;
+    const label = ring.getAttribute('aria-label')!;
+    await userEvent.click(ring);
+    const asked = (args.onMuteLayer as ReturnType<typeof fn>).mock.calls.at(-1)![0] as string;
+    await expect(s.EveryState.args!.layers!.map((l) => l.id)).toContain(asked);
+    await expect(s.Default.args!.layers!.map((l) => l.id)).not.toContain(asked);
+    await waitFor(() => expect(canvas.getByRole('button', { name: label })).toHaveAttribute('aria-pressed', 'true'));
+  },
+});
+
+/** No output reading from the host: Out says so, rather than a silent meter or 0%. */
+export const Unmeasured: Story = story(s.Empty, {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.queryByRole('meter')).toBeNull();
+    await expect(canvas.getByText('no reading')).toBeTruthy();
+    await expect(canvasElement.querySelector('[data-part="out-reading"]')).toHaveTextContent('—');
   },
 });

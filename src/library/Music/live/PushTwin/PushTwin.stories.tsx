@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { PushTwin } from './PushTwin';
+import { expectFits, host, withHost } from '../host.story';
+import { PushTwin, type PushTwinProps, type PushPadRef } from './PushTwin';
 import PushTwinSvelte from './PushTwin.svelte';
 import { pushTwinArgTypes, pushTwinBoard, pushTwinStories as s } from './PushTwin.fixtures';
 
@@ -17,7 +18,7 @@ const meta = {
   id: 'music-live-push-twin',
   title: 'Music/Live/Push twin',
   component: PushTwin,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 600, h: 560 } },
   args: pushTwinBoard,
@@ -112,5 +113,39 @@ export const Disabled: Story = story(s.Disabled, {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const button of canvas.getAllByRole('button')) await expect(button).toBeDisabled();
+  },
+});
+
+/** A host that queues a clip a pad asks for, stops a column, and takes a scene. */
+const push = host<PushTwinProps>({
+  apply: {
+    onPad: (p, { row, column, slot }: PushPadRef) => {
+      if (row === 'clips') return { tracks: p.tracks.map((t, i) => (i !== column ? t : { ...t, cells: t.cells.map((c, j) => (j === slot ? { ...c, state: 'queued' } : c)) })) };
+      if (row === 'stop') return { tracks: p.tracks.map((t, i) => (i !== column ? t : { ...t, cells: t.cells.map((c) => (c.state === 'empty' ? c : { ...c, state: 'stopped' })) })) };
+      if (row === 'sections') return { queuedSection: column };
+      return {};
+    },
+    onScene: (_, scene: number) => ({ scene }),
+  },
+});
+
+/** Controlled readback: a clip pad (by click or Enter) reads queued, a stop pad stops its column, a section queues, a scene lights — once the host says so. */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...push },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Gtr clip 1, Riff, stopped' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Gtr clip 1, Riff, queued' })).toHaveAttribute('data-state', 'queued'));
+    canvas.getByRole('button', { name: 'Drums clip 2, Break, stopped' }).focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Drums clip 2, Break, queued' })).toBeTruthy());
+    await expect(args.onPad).toHaveBeenLastCalledWith({ row: 'clips', column: 0, slot: 1 });
+    await userEvent.click(canvas.getByRole('button', { name: 'Stop Keys, playing' }));
+    await waitFor(() => expect(canvas.queryAllByRole('button', { name: /^Keys clip .*(playing|queued|recording)$/ })).toHaveLength(0));
+    await userEvent.click(canvas.getByRole('button', { name: 'Section CHORUS, ready' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Section CHORUS, queued' })).toHaveAttribute('data-state', 'queued'));
+    await userEvent.click(canvas.getByRole('button', { name: 'Scene 3, full' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^Scene 3, full/ })).toHaveAttribute('data-state', 'on'));
+    await expect(canvas.getByRole('button', { name: /^Scene 2/ })).not.toHaveAttribute('data-state', 'on');
   },
 });

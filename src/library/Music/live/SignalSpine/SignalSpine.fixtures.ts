@@ -70,7 +70,7 @@ export const keysLayers: readonly SpineLayer[] = [
 ];
 
 /** Keys at bar 3 of its 8-bar loop. */
-export const signalSpineBoard: SignalSpineProps = { track: keys, chain: keysChain, layers: keysLayers, loopBars: 8, beat: 10.5, outs: ['Main L/R', 'IEM 2'], level: 0.62 };
+export const signalSpineBoard: SignalSpineProps = { track: keys, chain: keysChain, layers: keysLayers, loopBars: 8, beat: 10.5, outs: ['Main L/R', 'IEM 2'], level: 0.62, meter: 0.62 };
 
 /** Vox: the mic straight in, no generator or instrument (both thru), a long loop with five layers. */
 const voxChain: readonly SpineStage[] = [
@@ -97,6 +97,7 @@ export const signalSpineArgTypes = {
   beat: { control: { type: 'range', min: 0, max: 64, step: 0.25 } },
   outs: { control: 'object' },
   level: { control: { type: 'range', min: 0, max: 1, step: 0.01 } },
+  meter: { control: { type: 'range', min: 0, max: 1, step: 0.01 } },
   form: { control: 'inline-radio', options: ['chain', 'column'] },
   onPrev: { control: false },
   onNext: { control: false },
@@ -111,11 +112,11 @@ export const signalSpineArgTypes = {
 export const signalSpineStories = defineFixtures<SignalSpineProps>()({
   Default: { args: signalSpineBoard },
   /** Bypassed stages, base and dubs with two muted, knobs and readings, a hot level. */
-  EveryState: { args: { track: spineTracks[3], chain: voxChain, layers: voxLayers, loopBars: 4, beat: 5.75, outs: ['Main L/R', 'IEM 1', 'IEM 2'], level: 0.88 } },
+  EveryState: { args: { track: spineTracks[3], chain: voxChain, layers: voxLayers, loopBars: 4, beat: 5.75, outs: ['Main L/R', 'IEM 1', 'IEM 2'], level: 0.88, meter: 0.88 } },
   /** Only the base take: nothing to peel. */
   BaseOnly: { args: { ...signalSpineBoard, layers: keysLayers.slice(0, 1), beat: 2 } },
   Dense: { args: { ...signalSpineBoard, form: 'column' } },
-  /** Nothing caught yet: the looper's rings empty, no level. */
-  Empty: { args: { track: keys, chain: keysChain, layers: [], loopBars: 8, beat: 0, level: 0 } },
+  /** Nothing caught yet: the looper's rings empty, and no output reading from the host. */
+  Empty: { args: { track: keys, chain: keysChain, layers: [], loopBars: 8, beat: 0, level: undefined, meter: undefined } },
   Disabled: { args: signalSpineBoard },
 });

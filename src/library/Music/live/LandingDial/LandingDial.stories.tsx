@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { LandingDial } from './LandingDial';
+import { expectFits, host, withHost } from '../host.story';
+import { LandingDial, type LandingDialProps } from './LandingDial';
 import LandingDialSvelte from './LandingDial.svelte';
 import { landingDialArgTypes, landingDialBoard, landingDialStories as s } from './LandingDial.fixtures';
 
@@ -17,7 +18,7 @@ const meta = {
   id: 'music-live-landing-dial',
   title: 'Music/Live/Landing dial',
   component: LandingDial,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 300, h: 420 } },
   args: landingDialBoard,
@@ -77,12 +78,19 @@ const dense = live(s.Dense, {
       const canvas = within(canvasElement);
       await expect(canvas.getByRole('status', { name: 'RISER lands on Wire in 3 bars' })).toBeTruthy();
       await expect(canvas.getByText('RISER → Wire')).toBeTruthy();
+      await expectFits(canvasElement);
     },
 });
 export const Dense: Story = { ...dense, parameters: { ...dense.parameters, frame: { w: 220, h: 32 } } };
 
-/** Nothing queued. */
-export const Empty: Story = story(s.Empty);
+/** Nothing queued: no countdown is drawn, and nothing can be cancelled. */
+export const Empty: Story = story(s.Empty, {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.queryByRole('img', { name: / lands on / })).toBeNull();
+    await expect(canvas.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+  },
+});
 
 /** No callbacks: the switches and Cancel disabled. */
 export const Disabled: Story = story(s.Disabled, {
@@ -90,5 +98,40 @@ export const Disabled: Story = story(s.Disabled, {
     const canvas = within(canvasElement);
     for (const radio of canvas.getAllByRole('radio')) await expect(radio).toBeDisabled();
     await expect(canvas.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+  },
+});
+
+/** A host that takes the target and length a switch asks for, and disarms on Cancel. */
+const landing = host<LandingDialProps>({
+  apply: {
+    onTarget: (_, target: LandingDialProps['target']) => ({ target }),
+    onLength: (_, length: LandingDialProps['length']) => ({ length }),
+    onCancel: () => ({ armed: false }),
+  },
+});
+
+/**
+ * Controlled readback: a click or the arrow keys on a switch ask for a target or a length, and the
+ * switch reads checked once the host takes it. Cancel asks; the ring reads not armed only when the
+ * host disarms. Nothing here counts down: the bars and beat are the host's.
+ */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...landing },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('radio', { name: 'Next section' }));
+    await waitFor(() => expect(canvas.getByRole('radio', { name: 'Next section' })).toHaveAttribute('aria-checked', 'true'));
+    await expect(canvas.getByRole('radio', { name: 'Next song' })).toHaveAttribute('aria-checked', 'false');
+    canvas.getByRole('radio', { name: 'Next section' }).focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await waitFor(() => expect(canvas.getByRole('radio', { name: 'Next scene' })).toHaveAttribute('aria-checked', 'true'));
+    await expect(args.onTarget).toHaveBeenLastCalledWith('scene');
+    await userEvent.click(canvas.getByRole('radio', { name: '16' }));
+    await waitFor(() => expect(canvas.getByRole('radio', { name: '16' })).toHaveAttribute('aria-checked', 'true'));
+    await expect(canvasElement.querySelectorAll('.live-land-bar')).toHaveLength(16);
+    await userEvent.click(canvas.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Cancel' })).toBeDisabled());
+    await expect(canvas.getAllByText('not armed').length).toBeGreaterThan(0);
+    await expect(args.onCancel).toHaveBeenCalledTimes(1);
   },
 });

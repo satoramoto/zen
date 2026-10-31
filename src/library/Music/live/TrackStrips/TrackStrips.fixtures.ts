@@ -58,5 +58,7 @@ export const trackStripsStories = defineFixtures<TrackStripsProps>()({
   },
   Dense: { args: { tracks: stripTracks.slice(0, 4), returns: stripReturns.slice(0, 1), selected: 'vox', form: 'short' } },
   Empty: { args: { tracks: [], returns: [] } },
+  /** Four tracks whose host has no meter reading yet (one non-finite): faders and lamps, no meters, nothing drawn as silence. */
+  Unmetered: { args: { tracks: stripTracks.slice(0, 4).map(({ meter: _, ...t }, i) => (i === 1 ? { ...t, meter: Number.NaN } : t)), returns: stripReturns } },
   Disabled: { args: trackStripsBoard },
 });
