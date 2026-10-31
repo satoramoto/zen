@@ -69,8 +69,14 @@ export interface SignalSpineProps {
   beat: number;
   /** Where it goes: `['Main L/R', 'IEM 2']`. */
   outs?: readonly string[];
-  /** 0–1, the output's level. */
+  /** 0–1, the Out fader's setting (what `onLevel` asks to change). */
   level?: number;
+  /**
+   * 0–1, the output's measured level. With no `onLevel` and no `meter`, `level` is read as the
+   * measurement (a read-only Out). Left out, or non-finite, there is no reading: Out says so rather
+   * than drawing a silent meter.
+   */
+  meter?: number;
   onPrev?: () => void;
   onNext?: () => void;
   /** A cartridge's head was pressed: open its options. */
@@ -221,17 +227,24 @@ const cable = (key: string): Node => ({ ...h('span', { class: 'live-spine-cable'
  * binding's: `chain` left to right, `column` stacked.
  */
 export function signalSpineView(props: SignalSpineProps, form: SignalSpineForm): Node {
-  const { track, chain, layers, loopBars, outs = [], level = 0, onPrev, onNext, onLevel, className } = props;
+  const { track, chain, layers, loopBars, outs = [], level, onPrev, onNext, onLevel, className } = props;
   const column = form === 'column';
   const arrow = (label: string, glyph: string, key: string, live: boolean) =>
     component('MusicButton', { label, disabled: !live, className: 'live-spine-arrow' }, { on: { onPress: key }, slots: { children: [glyph] } });
-  const meter = component('MusicMeter', {
-    label: `${track.name} output level`,
-    value: level,
-    orientation: column ? 'horizontal' : 'vertical',
-    length: column ? 96 : 72,
-    ink: 'var(--stem-ink)',
-  });
+  // A fader's setting is not a measurement: only a read-only Out reads `level` as one.
+  const measured = props.meter ?? (onLevel === undefined ? level : undefined);
+  const reading = measured !== undefined && Number.isFinite(measured) ? measured : undefined;
+  const setting = level !== undefined && Number.isFinite(level) ? level : 0;
+  const meter =
+    reading === undefined
+      ? h('span', { class: 'live-axis', 'data-part': 'no-reading' }, 'no reading')
+      : component('MusicMeter', {
+          label: `${track.name} output level`,
+          value: reading,
+          orientation: column ? 'horizontal' : 'vertical',
+          length: column ? 96 : 72,
+          ink: 'var(--stem-ink)',
+        });
   const out = h(
     'div',
     { class: 'live-spine-out', role: 'group', 'aria-label': 'Out', 'data-stage': 'out' },
@@ -241,10 +254,10 @@ export function signalSpineView(props: SignalSpineProps, form: SignalSpineForm):
       { class: 'live-spine-well' },
       meter,
       when(onLevel !== undefined, () =>
-        component('MusicSlider', { name: '', label: `${track.name} level`, param: LEVEL, value: level, orientation: column ? 'horizontal' : 'vertical', length: column ? 96 : 72, showValue: false }, { on: { onChange: 'level' } }),
+        component('MusicSlider', { name: '', label: `${track.name} level`, param: LEVEL, value: setting, orientation: column ? 'horizontal' : 'vertical', length: column ? 96 : 72, showValue: false }, { on: { onChange: 'level' } }),
       ),
     ),
-    liveReading(`${Math.round(level * 100)}%`),
+    liveReading(onLevel !== undefined ? `${Math.round(setting * 100)}%` : reading === undefined ? '—' : `${Math.round(reading * 100)}%`, { 'data-part': 'out-reading' }),
     h('div', { class: 'live-spine-outs' }, ...outs.map((o) => h('span', {}, o))),
   );
   const nodes: Node[] = [];

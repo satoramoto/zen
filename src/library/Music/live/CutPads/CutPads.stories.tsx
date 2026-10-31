@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { CutPads } from './CutPads';
+import { expectFits, host, withHost } from '../host.story';
+import { CutPads, type CutPadsProps } from './CutPads';
 import CutPadsSvelte from './CutPads.svelte';
 import { cutPadsArgTypes, cutPadsBoard, cutPadsStories as s } from './CutPads.fixtures';
 
@@ -18,7 +19,7 @@ const meta = {
   id: 'music-live-cut-pads',
   title: 'Music/Live/Cut pads',
   component: CutPads,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 960, h: 64 } },
   args: { pads: cutPadsBoard, form: 'row' },
@@ -61,21 +62,62 @@ export const EveryState: Story = live(s.EveryState, {
 });
 
 /** The `grid` form: two rows of three under the head. */
-export const Grid: Story = framed(live(s.Grid), 480, 160);
+export const Grid: Story = framed(live(s.Grid, { play: async ({ canvasElement }) => expectFits(canvasElement) }), 480, 160);
 
 /** Eight pads in the grid: two rows of four. */
-export const More: Story = framed(live(s.More), 560, 160);
+export const More: Story = framed(live(s.More, { play: async ({ canvasElement }) => expectFits(canvasElement) }), 560, 160);
 
 /** The grid in a small frame. */
-export const Dense: Story = framed(live(s.Dense), 320, 130);
+export const Dense: Story = framed(live(s.Dense, { play: async ({ canvasElement }) => expectFits(canvasElement) }), 320, 130);
 
-/** No pads: one quiet well. */
-export const Empty: Story = story(s.Empty);
+/** No pads: one quiet well, nothing to fire. */
+export const Empty: Story = story(s.Empty, {
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).queryAllByRole('button')).toHaveLength(0);
+  },
+});
 
 /** No `onFire`: dashed and inert, the states still read. */
 export const Disabled: Story = story(s.Disabled, {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const button of canvas.getAllByRole('button')) await expect(button).toBeDisabled();
+  },
+});
+
+/** A host that marks a fired pad fired (and selected), and the pad it fired before idle again. */
+const cuts = host<CutPadsProps>({
+  apply: {
+    onFire: (p, id: string) => ({ selected: id, pads: p.pads.map((pad) => (pad.id === id ? { ...pad, state: 'fired' } : pad.state === 'fired' ? { ...pad, state: 'idle' } : pad)) }),
+  },
+});
+
+/** Controlled readback: a press (or Enter) asks to fire; the pad reads fired and selected only when the host says so. */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...cuts },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: /^DROP/ }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^DROP/ })).toHaveAttribute('data-state', 'fired'));
+    await expect(canvas.getByRole('button', { name: /^DROP/ })).toHaveAttribute('aria-current', 'true');
+    canvas.getByRole('button', { name: /^CUT/ }).focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^CUT/ })).toHaveAttribute('data-state', 'fired'));
+    await expect(canvas.getByRole('button', { name: /^DROP/ })).toHaveAttribute('data-state', 'idle');
+    await expect(canvas.getByRole('button', { name: /^DROP/ })).not.toHaveAttribute('aria-current');
+    await expect(args.onFire).toHaveBeenNthCalledWith(1, 'drop');
+    await expect(args.onFire).toHaveBeenNthCalledWith(2, 'cut');
+  },
+});
+
+/** A press without a host change reads nothing back: the pane never marks a pad fired on its own. */
+export const Unconfirmed: Story = live(s.Default, {
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const drop = canvas.getByRole('button', { name: /^DROP/ });
+    const before = drop.getAttribute('data-state');
+    await userEvent.click(drop);
+    await expect(args.onFire).toHaveBeenCalledWith('drop');
+    await expect(canvas.getByRole('button', { name: /^DROP/ })).toHaveAttribute('data-state', before!);
   },
 });

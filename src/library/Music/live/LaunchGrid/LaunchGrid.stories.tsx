@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { LaunchGrid } from './LaunchGrid';
+import { expectFits, host, withHost } from '../host.story';
+import { LaunchGrid, type LaunchGridProps, type LaunchCellRef } from './LaunchGrid';
 import LaunchGridSvelte from './LaunchGrid.svelte';
 import { launchGridArgTypes, launchGridBoard, launchGridStories as s } from './LaunchGrid.fixtures';
 
@@ -17,7 +18,7 @@ const meta = {
   id: 'music-live-launch-grid',
   title: 'Music/Live/Launch grid',
   component: LaunchGrid,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 760, h: 300 } },
   args: launchGridBoard,
@@ -87,5 +88,43 @@ export const Disabled: Story = story(s.Disabled, {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const button of canvas.getAllByRole('button')) await expect(button).toBeDisabled();
+  },
+});
+
+/**
+ * A host that queues what a slot asks to launch (the launch itself, and when, are the host's), stops
+ * a track's slots, folds or opens a song and selects a track.
+ */
+const grid = host<LaunchGridProps>({
+  apply: {
+    onLaunch: (p, { track, cell }: LaunchCellRef) => ({ tracks: p.tracks.map((t) => (t.id !== track ? t : { ...t, cells: t.cells.map((c) => (c.id === cell ? { ...c, state: 'queued' } : c)) })) }),
+    onStopTrack: (p, id: string) => ({ tracks: p.tracks.map((t) => (t.id !== id ? t : { ...t, cells: t.cells.map((c) => (c.state === 'empty' ? c : { ...c, state: 'stopped' })) })) }),
+    onToggleSong: (p, id: string) => ({ songs: p.songs.map((s) => (s.id === id ? { ...s, open: !s.open } : s)) }),
+    onSelectTrack: (_, id: string) => ({ selected: id }),
+  },
+});
+
+/** Controlled readback: a slot (by click or Enter) reads queued, a ■ stops its column, a song folds open, a name selects — each once the host says so. */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...grid },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Keys Pad, stopped' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^Keys Pad, queued/ })).toBeTruthy());
+    canvas.getByRole('button', { name: /^Bass Sub/ }).focus();
+    const asked = await (async () => {
+      await userEvent.keyboard('{Enter}');
+      return (args.onLaunch as ReturnType<typeof fn>).mock.calls.at(-1)![0] as LaunchCellRef;
+    })();
+    await expect(asked).toEqual({ track: 'bass', cell: 'a' });
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^Bass Sub, queued/ })).toBeTruthy());
+    await userEvent.click(canvas.getByRole('button', { name: 'Stop Drums' }));
+    await waitFor(() => expect(canvas.queryAllByRole('button', { name: /^Drums .*(playing|queued|recording)/ })).toHaveLength(0));
+    await userEvent.click(canvas.getByRole('button', { name: '2 Glass, folded' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: '2 Glass, open' })).toBeTruthy());
+    await userEvent.click(canvas.getByRole('button', { name: 'Select Bass' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Select Bass' })).toHaveAttribute('aria-current', 'true'));
+    await expect(canvas.getByRole('button', { name: 'Select Keys' })).not.toHaveAttribute('aria-current');
+    await expect(args.onLaunch).toHaveBeenNthCalledWith(1, { track: 'keys', cell: 'b' });
   },
 });

@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { ChordCompass } from './ChordCompass';
+import { expectFits, host, withHost } from '../host.story';
+import { ChordCompass, type ChordCompassProps } from './ChordCompass';
 import ChordCompassSvelte from './ChordCompass.svelte';
 import { chordCompassArgTypes, chordCompassBoard, chordCompassStories as s } from './ChordCompass.fixtures';
 
@@ -18,7 +19,7 @@ const meta = {
   id: 'music-live-chord-compass',
   title: 'Music/Live/Chord compass',
   component: ChordCompass,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 480, h: 320 } },
   args: chordCompassBoard,
@@ -75,12 +76,18 @@ const dense = live(s.Dense, {
       const canvas = within(canvasElement);
       await expect(canvas.getByText('then Cmaj7')).toBeTruthy();
       await expect(canvas.queryByRole('radio')).toBeNull();
+      await expectFits(canvasElement);
     },
 });
 export const Dense: Story = { ...dense, parameters: { ...dense.parameters, frame: { w: 220, h: 220 } } };
 
-/** No progression, no key: the bare wheel, a dash in the hub. */
-export const Empty: Story = story(s.Empty);
+/** No progression, no key: the bare wheel as a reference — nothing playing, nothing next, nothing to press. */
+export const Empty: Story = story(s.Empty, {
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelectorAll('[data-state="now"], [data-state="next"]')).toHaveLength(0);
+    await expect(within(canvasElement).queryAllByRole('button', { name: /, (playing|next)$/ })).toHaveLength(0);
+  },
+});
 
 /** No callbacks: no wedge is a button, the switch and the lock are disabled. */
 export const Disabled: Story = story(s.Disabled, {
@@ -89,5 +96,35 @@ export const Disabled: Story = story(s.Disabled, {
     await expect(canvas.queryByRole('button', { name: 'C, next' })).toBeNull();
     for (const radio of canvas.getAllByRole('radio')) await expect(radio).toBeDisabled();
     await expect(canvas.getByRole('button', { name: 'Bass lock' })).toBeDisabled();
+  },
+});
+
+/** A host that takes the follow mode and the bass lock. It does nothing with a picked chord: harmony is not the compass's to execute. */
+const compass = host<ChordCompassProps>({
+  apply: {
+    onFollow: (_, follow: ChordCompassProps['follow']) => ({ follow }),
+    onBassLock: (_, bassLock: boolean) => ({ bassLock }),
+  },
+});
+
+/**
+ * Controlled readback: the follow switch and the bass lock read back the host's choice. A picked
+ * wedge only asks: the chord playing and the next one stay where the host's progression has them.
+ */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...compass },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('radio', { name: 'Keys' }));
+    await waitFor(() => expect(canvas.getByRole('radio', { name: 'Keys' })).toHaveAttribute('aria-checked', 'true'));
+    await userEvent.click(canvas.getByRole('button', { name: 'Bass lock' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Bass lock' })).toHaveAttribute('aria-pressed', 'true'));
+    await userEvent.click(canvas.getByRole('button', { name: 'Bass lock' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Bass lock' })).toHaveAttribute('aria-pressed', 'false'));
+    await expect(args.onBassLock).toHaveBeenNthCalledWith(2, false);
+    await userEvent.click(canvas.getByRole('button', { name: 'Dm' }));
+    await expect(args.onPick).toHaveBeenCalledWith('Dm');
+    await expect(canvas.getByRole('button', { name: 'G, playing' })).toHaveAttribute('data-state', 'now');
+    await expect(canvas.getByRole('button', { name: 'C, next' })).toHaveAttribute('data-state', 'next');
   },
 });

@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { ProgressionStrip } from './ProgressionStrip';
+import { expectFits, host, withHost } from '../host.story';
+import { ProgressionStrip, type ProgressionStripProps } from './ProgressionStrip';
 import ProgressionStripSvelte from './ProgressionStrip.svelte';
 import { progressionBoard, progressionStripArgTypes, progressionStripStories as s } from './ProgressionStrip.fixtures';
 
@@ -18,7 +19,7 @@ const meta = {
   id: 'music-live-progression-strip',
   title: 'Music/Live/Progression strip',
   component: ProgressionStrip,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 960, h: 96 } },
   args: progressionBoard,
@@ -67,18 +68,56 @@ export const EveryState: Story = live(s.EveryState, {
 });
 
 /** The `compact` form in a narrow frame: names in 24px cells, no notes. */
-export const Dense: Story = framed(live(s.Dense), 640, 84);
+export const Dense: Story = framed(live(s.Dense, { play: async ({ canvasElement }) => expectFits(canvasElement) }), 640, 84);
 
 /** Four long chords with no voicings. */
 export const Sparse: Story = live(s.Sparse);
 
-/** No chords: one quiet well. */
-export const Empty: Story = story(s.Empty);
+/** No chords (the host has no progression): one quiet well — no chord now or next, nothing to press. */
+export const Empty: Story = story(s.Empty, {
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelectorAll('[data-part="chord"]')).toHaveLength(0);
+    await expect(canvasElement.querySelectorAll('[data-state="now"], [data-state="next"]')).toHaveLength(0);
+  },
+});
 
 /** No callbacks: the strip is read, not pressed. */
 export const Disabled: Story = story(s.Disabled, {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const button of canvas.getAllByRole('button')) await expect(button).toBeDisabled();
+  },
+});
+
+/** A host that takes the selection and the follow mode. Mutate, Keep and Revert are the host's harmony to run; it changes nothing here. */
+const strip = host<ProgressionStripProps>({
+  apply: {
+    onSelect: (_, selected: string) => ({ selected }),
+    onFollow: (_, follow: ProgressionStripProps['follow']) => ({ follow }),
+  },
+});
+
+/**
+ * Controlled readback: a chord press selects it once the host says so (by click or Enter), the
+ * follow switch reads back. Mutate only asks: the chords and the one playing stay the host's.
+ */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...strip },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: /^Dm7/ }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^Dm7/ })).toHaveAttribute('aria-pressed', 'true'));
+    canvas.getByRole('button', { name: /^Cmaj7, next/ }).focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^Cmaj7, next/ })).toHaveAttribute('aria-pressed', 'true'));
+    await expect(canvas.getByRole('button', { name: /^Dm7/ })).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(canvas.getByRole('radio', { name: 'Loop' }));
+    await waitFor(() => expect(canvas.getByRole('radio', { name: 'Loop' })).toHaveAttribute('aria-checked', 'true'));
+    const names = () => [...canvasElement.querySelectorAll('[data-part="chord"]')].map((c) => c.getAttribute('aria-label'));
+    const before = names();
+    await userEvent.click(canvas.getByRole('button', { name: 'Mutate' }));
+    await expect(args.onMutate).toHaveBeenCalledTimes(1);
+    await expect(names()).toEqual(before);
+    await expect(canvas.getByRole('button', { name: /^G7, now/ })).toHaveAttribute('data-state', 'now');
   },
 });

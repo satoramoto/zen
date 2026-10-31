@@ -28,9 +28,9 @@ export interface RigDevice {
 export interface RigHealthProps {
   inputs: readonly RigInput[];
   devices: readonly RigDevice[];
-  /** The last seconds of DSP load, oldest first (0–1). */
+  /** The last seconds of DSP load, oldest first (0–1). Empty (or a non-finite last sample): the engine reports none, and the line says so rather than reading 0%. */
   load: readonly number[];
-  /** Buffer under-runs since the set started. */
+  /** Buffer under-runs since the set started. Left out: not reported, so not drawn. */
   xruns?: number;
   /** Buffer size in frames. */
   frames?: number;
@@ -48,7 +48,8 @@ export interface RigHealthProps {
 const SIGNAL_WORD: Record<SignalState, string> = { ok: 'ok', low: 'low', none: 'no signal' };
 
 /** The load as a sparkline in a 60 × 18 box, scaled to its own peak (never below a quarter, so a quiet engine reads quiet). */
-export function loadPath(load: readonly number[]): string {
+export function loadPath(samples: readonly number[]): string {
+  const load = samples.filter(Number.isFinite);
   const peak = Math.max(0.25, ...load);
   return load.map((v, i) => `${i === 0 ? 'M' : 'L'}${((i / Math.max(load.length - 1, 1)) * 60).toFixed(1)} ${(16 - (v / peak) * 14).toFixed(1)}`).join('');
 }
@@ -65,10 +66,17 @@ function item(id: string, part: string, state: SignalState, label: string, inert
  * sliver of its level (its trouble word when it has one), each controller as a dot, and the DSP
  * load's sparkline with its reading. `form` is the binding's (`useForm` / `getForm`).
  */
-export function rigHealthView({ inputs, devices, load, xruns = 0, frames, quantize, countIn, onOpen, className }: RigHealthProps, form: RigHealthForm): Node {
+/** The load reading: `cpu 12% · 0 xruns · 64 frames`, or `cpu —` with no sample. Only what the engine reported. */
+export function loadText(load: readonly number[], xruns: number | undefined, frames: number | undefined, full: boolean): string {
+  const last = load.length ? load[load.length - 1] : undefined;
+  const cpu = last !== undefined && Number.isFinite(last) ? `cpu ${Math.round(last * 100)}%` : 'cpu —';
+  const runs = xruns !== undefined && Number.isFinite(xruns) ? ` · ${xruns} ${xruns === 1 ? 'xrun' : 'xruns'}` : '';
+  return `${cpu}${runs}${full && frames ? ` · ${frames} frames` : ''}`;
+}
+
+export function rigHealthView({ inputs, devices, load, xruns, frames, quantize, countIn, onOpen, className }: RigHealthProps, form: RigHealthForm): Node {
   const full = form === 'strip';
   const inert = onOpen === undefined;
-  const last = load.length ? load[load.length - 1] : 0;
   return livePane(
     'rig',
     { class: className, 'data-form': form, role: 'status', 'aria-label': 'Rig status' },
@@ -86,7 +94,9 @@ export function rigHealthView({ inputs, devices, load, xruns = 0, frames, quanti
           inert,
           h('span', { class: 'live-dot', 'data-state': i.state, 'aria-hidden': 'true' }),
           h('span', { class: 'live-rig-name' }, i.name),
-          when(full && i.state !== 'none', () => h('span', { class: 'live-rig-level', 'aria-hidden': 'true' }, h('span', { style: styleText({ width: `${Math.round(i.level * 100)}%` }) }))),
+          when(full && i.state !== 'none' && Number.isFinite(i.level), () =>
+            h('span', { class: 'live-rig-level', 'aria-hidden': 'true' }, h('span', { style: styleText({ width: `${Math.round(Math.min(1, Math.max(0, i.level)) * 100)}%` }) })),
+          ),
           when(i.state !== 'ok', () => h('span', { class: 'live-rig-trouble', 'data-state': i.state }, SIGNAL_WORD[i.state])),
         ),
       ),
@@ -111,7 +121,7 @@ export function rigHealthView({ inputs, devices, load, xruns = 0, frames, quanti
       'div',
       { class: 'live-rig-group live-rig-load', 'data-part': 'load' },
       h('svg', { class: 'live-rig-spark', viewBox: '0 0 60 18', 'aria-hidden': 'true' }, h('path', { d: loadPath(load) })),
-      liveReading(`cpu ${Math.round(last * 100)}% · ${xruns} xruns${full && frames ? ` · ${frames} frames` : ''}`, { 'data-trouble': xruns > 0 ? 'true' : undefined }),
+      liveReading(loadText(load, xruns, frames, full), { 'data-part': 'load-reading', 'data-trouble': xruns !== undefined && xruns > 0 ? 'true' : undefined }),
     ),
   );
 }

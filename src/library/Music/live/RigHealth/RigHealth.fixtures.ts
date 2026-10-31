@@ -47,6 +47,8 @@ export const rigHealthStories = defineFixtures<RigHealthProps>()({
   EveryState: { args: { ...rigHealthBoard, xruns: 3, load: [...rigLoad.slice(0, -3), 0.48, 0.71, 0.66] } },
   AllGood: { args: { ...rigHealthBoard, inputs: allGood, devices: rigDevices.map((d) => ({ ...d, connected: true })) } },
   Dense: { args: { ...rigHealthBoard, form: 'dots' } },
-  Empty: { args: { inputs: [], devices: [], load: [] } },
+  Empty: { args: { inputs: [], devices: [], load: [], xruns: undefined, frames: undefined, quantize: undefined, countIn: undefined } },
+  /** The inputs and controllers are known, but the engine reports no load or xruns: the line says so. */
+  Unreported: { args: { inputs: rigInputs, devices: rigDevices, load: [], xruns: undefined, frames: undefined, quantize: '1 bar', countIn: undefined } },
   Disabled: { args: rigHealthBoard },
 });

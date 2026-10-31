@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { SetlistRiver } from './SetlistRiver';
+import { expectFits, host, withHost } from '../host.story';
+import { SetlistRiver, type SetlistRiverProps } from './SetlistRiver';
 import SetlistRiverSvelte from './SetlistRiver.svelte';
 import { setlistRiverArgTypes, setlistRiverBoard, setlistRiverStories as s } from './SetlistRiver.fixtures';
 
@@ -18,7 +19,7 @@ const meta = {
   id: 'music-live-setlist-river',
   title: 'Music/Live/Setlist river',
   component: SetlistRiver,
-  decorators: [withRenderer, withStoryFrame, withLibraryTheme],
+  decorators: [withRenderer, withStoryFrame, withHost, withLibraryTheme],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', frame: { w: 1200, h: 220 } },
   args: setlistRiverBoard,
@@ -84,5 +85,31 @@ export const Disabled: Story = story(s.Disabled, {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const button of canvas.getAllByRole('button')) await expect(button).toBeDisabled();
+  },
+});
+
+/** A host that cues a picked song (the one cued before goes back ahead) and plays a pressed scene. */
+const river = host<SetlistRiverProps>({
+  apply: {
+    onPick: (p, id: string) => ({ songs: p.songs.map((s) => (s.id === id && s.state !== 'now' ? { ...s, state: 'cued' } : s.state === 'cued' ? { ...s, state: 'ahead' } : s)) }),
+    onScene: (p, id: string) => ({
+      songs: p.songs.map((s) => (!s.scenes ? s : { ...s, scenes: s.scenes.map((sc) => (sc.id === id ? { ...sc, state: 'playing' } : sc.state === 'playing' ? { ...sc, state: 'played' } : sc)) })),
+    }),
+  },
+});
+
+/** Controlled readback: a song (by click or Enter) reads cued once the host cues it, the old cue goes back ahead; a scene reads playing. */
+export const Hosted: Story = live(s.Default, {
+  parameters: { ...story(s.Default).parameters, ...river },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    canvas.getByRole('button', { name: /^7 Closer/ }).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(args.onPick).toHaveBeenCalledWith('closer');
+    await waitFor(() => expect(canvas.getByRole('button', { name: /^7 Closer.*cued/ })).toBeTruthy());
+    await expect(canvas.queryByRole('button', { name: /^4 Wire.*cued/ })).toBeNull();
+    await userEvent.click(canvas.getByRole('button', { name: 'full, chorus, ahead' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'full, chorus, playing' })).toHaveAttribute('aria-current', 'true'));
+    await expect(canvas.getByRole('button', { name: '+bass, verse, played' })).not.toHaveAttribute('aria-current');
   },
 });

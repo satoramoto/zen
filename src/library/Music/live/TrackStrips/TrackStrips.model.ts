@@ -15,7 +15,7 @@ import type { TrackStripsForm } from './TrackStrips.forms';
 export interface TrackStrip extends LiveTrackRef {
   /** Fader, 0–1 (1 is unity). */
   level: number;
-  /** The last moment's peak, 0–1. */
+  /** The last moment's measured peak, 0–1. Left out (or non-finite): no reading, so no meter is drawn, rather than a silent one. */
   meter?: number;
   /** FX A and FX B sends, 0–1. */
   sends?: readonly [number, number];
@@ -72,6 +72,7 @@ export const percentText = (value: number): string => `${Math.round(Math.max(0, 
 
 /** A 0–1 gain as decibels: `-1.9 dB`, `-inf dB` at the bottom. */
 export function dbText(level: number): string {
+  if (!Number.isFinite(level)) return '— dB';
   if (!(level > 0)) return '-inf dB';
   const db = 20 * Math.log10(Math.min(1, level));
   return `${Math.abs(db) < 0.05 ? '0.0' : db.toFixed(1)} dB`;
@@ -141,7 +142,7 @@ function trackStrip(track: TrackStrip, props: TrackStripsProps, tall: boolean): 
           ),
         )
       : null,
-    fader(`${track.name} level`, track.level, `level:${track.id}`, onLevel === undefined, track.meter ?? 0),
+    fader(`${track.name} level`, track.level, `level:${track.id}`, onLevel === undefined, Number.isFinite(track.meter) ? track.meter : undefined),
     liveReading(dbText(track.level), { class: 'live-reading live-track-strips-db', 'data-part': 'db' }),
     h(
       'div',
