@@ -81,7 +81,8 @@ the port's zero-difference evidence below does not cover them.
 - `sections.ts`: a song section's cell, state and label, shared by PushTwin's row 7 and SectionBar.
 - One folder per pane, each a view-tree component with React and Svelte bindings, `forms` for the
   assembled screen, fixtures and stories under **Music/Live**. `SectionBar` (the song's sections)
-  and `StemDeck` (a song's stems on one deck) are the first parts built from the wireframes' gaps.
+  and `StemDeck` (a song's stems on one deck) are the first parts built from the wireframes' gaps,
+  then `SongCard` (the song now and next, JAM) and `DicePad` (the happy accidents and CHAOS).
 - `host.story.tsx` (story harness): the host each pane's **Hosted**, **Rebound** and **Remounted**
   stories drive, so a play reads the pane's controlled props back in both renderers. What each pane
   guarantees is listed in `docs/live-views.md`.

@@ -1,0 +1,53 @@
+/* DicePad: the happy accidents as Music buttons (the dice the orbits and the progression already
+   carry), each over the wireframe's caption in `full`; the scale lock and the CHAOS macro under
+   them. `row` is one line: the target, four dice, the macro. */
+
+:where(.zen-music) .live-dice-moves {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+:where(.zen-music).live-dice[data-form='row'] {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+:where(.zen-music).live-dice[data-form='row'] .live-dice-moves {
+  display: flex;
+  flex: 0 1 auto;
+}
+:where(.zen-music) .live-dice-die {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+:where(.zen-music) .live-dice-die > .wdg-button,
+:where(.zen-music) .live-dice-die .wdg-button-body {
+  width: 100%;
+}
+:where(.zen-music) .live-dice-hint {
+  overflow: hidden;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 8px;
+  line-height: 10px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-dice-chaos {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+:where(.zen-music).live-dice[data-form='row'] .live-dice-chaos {
+  flex: 1 1 auto;
+}
+:where(.zen-music) .live-dice-chaos > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}

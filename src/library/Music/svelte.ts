@@ -40,6 +40,8 @@ import ProgressionStripBinding from './live/ProgressionStrip/ProgressionStrip.sv
 import CutPadsBinding from './live/CutPads/CutPads.svelte';
 import SectionBarBinding from './live/SectionBar/SectionBar.svelte';
 import StemDeckBinding from './live/StemDeck/StemDeck.svelte';
+import SongCardBinding from './live/SongCard/SongCard.svelte';
+import DicePadBinding from './live/DicePad/DicePad.svelte';
 import ThrowPadsBinding from './live/ThrowPads/ThrowPads.svelte';
 import LaunchGridBinding from './live/LaunchGrid/LaunchGrid.svelte';
 import TrackStripsBinding from './live/TrackStrips/TrackStrips.svelte';
@@ -87,6 +89,8 @@ export const ProgressionStrip = ProgressionStripBinding as Component<Props<typeo
 export const CutPads = CutPadsBinding as Component<Props<typeof ReactMusic.CutPads>>;
 export const SectionBar = SectionBarBinding as Component<Props<typeof ReactMusic.SectionBar>>;
 export const StemDeck = StemDeckBinding as Component<Props<typeof ReactMusic.StemDeck>>;
+export const SongCard = SongCardBinding as Component<Props<typeof ReactMusic.SongCard>>;
+export const DicePad = DicePadBinding as Component<Props<typeof ReactMusic.DicePad>>;
 export const ThrowPads = ThrowPadsBinding as Component<Props<typeof ReactMusic.ThrowPads>>;
 export const LaunchGrid = LaunchGridBinding as Component<Props<typeof ReactMusic.LaunchGrid>>;
 export const TrackStrips = TrackStripsBinding as Component<Props<typeof ReactMusic.TrackStrips>>;
@@ -120,6 +124,10 @@ export * from './live/SectionBar/SectionBar.model';
 export * from './live/SectionBar/SectionBar.forms';
 export * from './live/StemDeck/StemDeck.model';
 export * from './live/StemDeck/StemDeck.forms';
+export * from './live/SongCard/SongCard.model';
+export * from './live/SongCard/SongCard.forms';
+export * from './live/DicePad/DicePad.model';
+export * from './live/DicePad/DicePad.forms';
 export * from './live/ThrowPads/ThrowPads.model';
 export * from './live/ThrowPads/ThrowPads.forms';
 export * from './live/LaunchGrid/LaunchGrid.model';

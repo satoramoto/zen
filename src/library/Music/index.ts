@@ -45,6 +45,8 @@ export * from './live/ProgressionStrip/ProgressionStrip';
 export * from './live/CutPads/CutPads';
 export * from './live/SectionBar/SectionBar';
 export * from './live/StemDeck/StemDeck';
+export * from './live/SongCard/SongCard';
+export * from './live/DicePad/DicePad';
 export * from './live/ThrowPads/ThrowPads';
 export * from './live/LaunchGrid/LaunchGrid';
 export * from './live/TrackStrips/TrackStrips';

@@ -1,0 +1,56 @@
+/* SongCard: the ONE header's song card — the place in the set and a mono reading over the song's
+   name, the next song under it (its cue word in the accent when cued), JAM at the right. */
+
+:where(.zen-music).live-song[data-form='card'] {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+:where(.zen-music) .live-song-now {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+:where(.zen-music) .live-song-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+}
+:where(.zen-music) .live-song-name {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-body);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music).live-song[data-jam] .live-song-name {
+  color: var(--caution);
+}
+:where(.zen-music) .live-song-next {
+  overflow: hidden;
+}
+:where(.zen-music) .live-song-cue {
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 9px;
+  color: var(--wdg-caption);
+}
+:where(.zen-music) .live-song-next[data-cued] .live-song-cue {
+  color: var(--primary);
+}
+:where(.zen-music) .live-song-chip {
+  overflow: hidden;
+  font-weight: 550;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--wdg-text-strong);
+}
+:where(.zen-music).live-song[data-form='chip'] {
+  justify-content: center;
+}

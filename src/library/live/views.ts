@@ -14,7 +14,9 @@ import { PROGRESSION_STRIP_FORMS } from '../Music/live/ProgressionStrip/Progress
 import { PUSH_TWIN_FORMS } from '../Music/live/PushTwin/PushTwin.forms';
 import { RIG_HEALTH_FORMS } from '../Music/live/RigHealth/RigHealth.forms';
 import { SECTION_BAR_FORMS } from '../Music/live/SectionBar/SectionBar.forms';
+import { DICE_PAD_FORMS } from '../Music/live/DicePad/DicePad.forms';
 import { SETLIST_RIVER_FORMS } from '../Music/live/SetlistRiver/SetlistRiver.forms';
+import { SONG_CARD_FORMS } from '../Music/live/SongCard/SongCard.forms';
 import { SIGNAL_SPINE_FORMS } from '../Music/live/SignalSpine/SignalSpine.forms';
 import { STEM_DECK_FORMS } from '../Music/live/StemDeck/StemDeck.forms';
 import { THROW_PADS_FORMS } from '../Music/live/ThrowPads/ThrowPads.forms';
@@ -23,12 +25,14 @@ import { TRACK_STRIPS_FORMS } from '../Music/live/TrackStrips/TrackStrips.forms'
 /** Every kind a tab can hold: the palette, by kind. */
 export const PANE_KINDS = {
   river: { kind: 'river', label: 'Setlist river', forms: SETLIST_RIVER_FORMS, priority: 'context', plate: false },
+  song: { kind: 'song', label: 'Song card', forms: SONG_CARD_FORMS, priority: 'now', plate: false },
   loop: { kind: 'loop', label: 'Launch grid', forms: LAUNCH_GRID_FORMS, priority: 'now', plate: false },
   sections: { kind: 'sections', label: 'Sections', forms: SECTION_BAR_FORMS, priority: 'now', plate: false },
   mix: { kind: 'mix', label: 'Track strips', forms: TRACK_STRIPS_FORMS, priority: 'controls', plate: false },
   stems: { kind: 'stems', label: 'Stem deck', forms: STEM_DECK_FORMS, priority: 'controls', plate: false },
   compass: { kind: 'compass', label: 'Chord compass', forms: CHORD_COMPASS_FORMS, priority: 'now', plate: false },
   follow: { kind: 'follow', label: 'Progression', forms: PROGRESSION_STRIP_FORMS, priority: 'now', plate: false },
+  dice: { kind: 'dice', label: 'Dice pad', forms: DICE_PAD_FORMS, priority: 'controls', plate: false },
   orbits: { kind: 'orbits', label: 'Orbits', forms: ORBIT_CLOCK_FORMS, priority: 'now', plate: false },
   spine: { kind: 'spine', label: 'Signal spine', forms: SIGNAL_SPINE_FORMS, priority: 'now', plate: false },
   push: { kind: 'push', label: 'Push twin', forms: PUSH_TWIN_FORMS, priority: 'now', plate: false },
@@ -98,13 +102,14 @@ function preset(id: string, title: string, layout: readonly (readonly PaneKind[]
 }
 
 /**
- * ONE: the unified board. The night along the top, the clips beside where the harmony is, the
- * song's sections beside where the set lands next, the strips beside the stems, the rig's line last.
+ * ONE: the unified board. The night along the top, the song now beside the dice (the wireframe's
+ * header), the clips beside where the harmony is, the song's sections beside where the set lands
+ * next, the strips beside the stems, the rig's line last.
  */
-export const ONE_TAB = preset('one', 'ONE', [['river'], ['loop', 'compass'], ['sections', 'landing'], ['mix', 'stems'], ['rig']]);
+export const ONE_TAB = preset('one', 'ONE', [['river'], ['song', 'dice'], ['loop', 'compass'], ['sections', 'landing'], ['mix', 'stems'], ['rig']]);
 
-/** Follow: the harmony as a place (compass), in time (orbits), and as the loop that plays it. */
-export const FOLLOW_TAB = preset('follow', 'Follow', [['compass', 'orbits'], ['follow'], ['rig']]);
+/** Follow: the harmony as a place (compass), in time (orbits), the loop that plays it, and the dice. */
+export const FOLLOW_TAB = preset('follow', 'Follow', [['compass', 'orbits'], ['follow', 'dice'], ['rig']]);
 
 /** Track: one column as its signal path, the song's stems under it, the throws and the cuts under the hands. */
 export const TRACK_TAB = preset('track', 'Track', [['spine'], ['stems'], ['throws', 'cuts'], ['rig']]);

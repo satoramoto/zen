@@ -270,7 +270,7 @@ and `ArpSequencer` (3), `XYPad` and `MacroPads` (4), `StemLanes` (5), `Transitio
 
 They were followed by the live looper's own panes in mix[flow]'s face (`src/library/Music/live/`,
 `docs/live-views.md`), and the `Live/Views` pages composed from them, which are where this work now
-continues. SectionBar and StemDeck are the first parts built from the wireframes' gaps.
+continues. SectionBar, StemDeck, SongCard and DicePad are the first parts built from the wireframes' gaps.
 
 ## Decisions
 
@@ -299,6 +299,11 @@ Open (each is a product decision, not taken here):
 - **Stems.** What SLICE does (slices to pads?), what the ONE board's ALL does, whether a stem has
   a gain control (StemDeck only reads gain), and replacing a stem with a track's part are open;
   none is drawn.
+- **Dice.** What each move does to a generator (and RATIO ↑'s steps), KEEP's scene slot and how
+  far REVERT walks back are the host's. OrbitClock and ProgressionStrip still carry their own dice
+  buttons; whether they give way to DicePad is open.
+- **JAM.** SongCard's JAM asks the host to go free "from here"; whether a second press returns to
+  the song (the stories' host does) or cues the next one is open.
 - **SignalSpine's Out.** `meter` is now the measured output and `level` the fader's setting. A
   read-only Out still reads `level` as the measurement, so mix's Signal panel keeps working, but
   it should pass `meter` when it next moves its zen pin.

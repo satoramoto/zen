@@ -103,12 +103,17 @@ export const One: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     // Select Bass in the grid's header: the strips follow.
-    await userEvent.click(canvas.getAllByRole('button', { name: /^Bass/ })[0]);
-    await waitFor(() => expect(canvasElement.querySelector('.live-track-strips [data-selected="true"]')).toBeTruthy());
+    await userEvent.click(within(canvasElement.querySelector<HTMLElement>('.live-launch-grid')!).getByRole('button', { name: 'Select Bass' }));
+    await waitFor(() => expect(canvasElement.querySelector('.live-track-strips [data-selected="true"]')).toHaveAccessibleName(/Bass/));
     // The new parts sit in the same set: a section press queues it; a stem toggle mutes it.
     const sections = within(canvasElement.querySelector<HTMLElement>('.live-sections')!);
     await userEvent.click(sections.getByRole('button', { name: /^Section BRIDGE/ }));
     await waitFor(() => expect(sections.getByRole('button', { name: /^Section BRIDGE, queued/ })).toBeTruthy());
+    // The song card's JAM goes free; the dice aim at the selected track.
+    const song = within(canvasElement.querySelector<HTMLElement>('.live-song')!);
+    await userEvent.click(song.getByRole('button', { name: 'Jam from here' }));
+    await waitFor(() => expect(song.getByRole('button', { name: 'Jam, playing' })).toHaveAttribute('aria-pressed', 'true'));
+    await expect(canvasElement.querySelector('.live-dice')).toHaveAccessibleName('Dice → Bass');
     const stems = canvasElement.querySelector<HTMLElement>('.live-stems')!;
     await expect(stems).toBeTruthy();
     const toggle = within(stems).getAllByRole('button').find((b) => /Bass/.test(b.getAttribute('aria-label') ?? ''))!;
@@ -162,6 +167,8 @@ export const Mine: Story = {
     await waitFor(() => expect(canvasElement.querySelector('.live-sections')).toBeTruthy());
     await userEvent.click(canvas.getByRole('button', { name: 'add Stem deck to this tab' }));
     await waitFor(() => expect(canvasElement.querySelector('.live-stems')).toBeTruthy());
+    await userEvent.click(canvas.getByRole('button', { name: 'add Dice pad to this tab' }));
+    await waitFor(() => expect(canvasElement.querySelector('.live-dice')).toBeTruthy());
   },
 };
 
