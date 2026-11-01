@@ -41,6 +41,31 @@ stores its source-faithful density in `scale.instrument` (22px controls, 2px spa
 inherit their ordinary metrics unless explicitly overridden. The existing editor's
 **Instrument density** group edits these roles without shrinking unrelated app controls.
 
+## SeekBar
+
+`Music.SeekBar` is available from both renderer namespaces. Supply `duration` and host
+`position` in **seconds**, a required accessible `label`, optional `disabled`, and
+`onSeek(seconds)`. Wrap it in `Music.Scope`; it fills its container's width.
+
+```tsx
+<Music.SeekBar duration={duration} position={enginePosition}
+  label="Playback position" onSeek={requestSeek} />
+```
+
+Click/touch requests the pointed position; drag previews the target independently of incoming
+host position updates. Requests are clamped and frame-coalesced, not acknowledgements. Release
+flushes the last request and immediately restores the latest host readback, even if the host
+has not applied the request. There is no playback clock or pending-engine-position assumption.
+Escape, pointer cancellation, capture loss, disabling and duration changes discard unsent input
+and restore host readback without a compensating seek. Already delivered requests cannot be
+retracted. Unmount discards queued work and releases capture.
+
+Arrows request ±1 second (±0.1 with the platform fine modifier: Command on Apple platforms,
+Ctrl elsewhere); Page Up/Down request ten steps. Home/End request zero/duration. Rapid keys
+accumulate until host readback changes. Double-click has no reset action. Zero, negative or
+nonfinite duration disables all requests. Finite positions are clamped; nonfinite positions
+read as zero. Disabled controls emit no new requests.
+
 ## Parts and ownership
 
 - `controls/`: shared action faces, toggles, segmented/select menus, popups, parameter knobs,

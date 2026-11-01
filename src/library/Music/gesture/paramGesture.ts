@@ -18,6 +18,11 @@ export interface ParamGestureOptions {
   travel?: number | 'element';
   label?: string;
   display?: string;
+  /** Optional absolute keyboard step; existing controls retain parameter-relative steps. */
+  keyStep?: number;
+  /** Discard unsent input on cancellation instead of requesting the drag's start value. */
+  cancelBehavior?: 'revert' | 'discard';
+  resetOnDoubleClick?: boolean;
 }
 export interface ParamGestureParams extends ParamGestureOptions {
   /** NumberField alone opens the editor; otherwise keys belong to the gesture. */
@@ -133,17 +138,27 @@ export function bindParamGesture(node: HTMLElement, initial: ParamGestureParams)
     held.fraction = Math.max(0, Math.min(1, held.fraction + moved / reach));
     emit(valueAt(params.param, held.fraction));
   }
-  function onPointerEnd(e: PointerEvent) { if (drag?.id === e.pointerId) finish(); }
+  function onPointerEnd(e: PointerEvent) {
+    if (drag?.id !== e.pointerId) return;
+    if (e.type !== 'pointerup' && params.cancelBehavior === 'discard') abandon();
+    else finish();
+  }
   function abandon() {
     const held = drag;
     if (held === null) return;
+    if (params.cancelBehavior === 'discard') {
+      if (frame !== null) clock.cancelAnimationFrame(frame);
+      frame = null; pending = null;
+      finish();
+      return;
+    }
     if (params.onDepth && held.fromDepth !== held.depth) params.onDepth(held.fromDepth);
     sent = Number.NaN;
     emit(quantize(params.param, held.from));
     finish();
   }
   function onDoubleClick(e: MouseEvent) {
-    if (params.disabled || wandered) return;
+    if (params.disabled || wandered || params.resetOnDoubleClick === false) return;
     keyed = null;
     if (e.shiftKey && params.onDepth) params.onDepth(0);
     else emit(quantize(params.param, params.param.defaultValue));
@@ -162,7 +177,7 @@ export function bindParamGesture(node: HTMLElement, initial: ParamGestureParams)
       if (drag === null) return;
       e.preventDefault(); e.stopPropagation(); abandon(); return;
     }
-    const step = stepSize(params.param, isFine(e));
+    const step = params.keyStep === undefined ? stepSize(params.param, isFine(e)) : params.keyStep * (isFine(e) ? 0.1 : 1);
     const from = keyed !== null && keyed.given === params.value ? keyed.sent : params.value;
     let next: number;
     switch (e.key) {
@@ -193,7 +208,9 @@ export function bindParamGesture(node: HTMLElement, initial: ParamGestureParams)
     update(next: ParamGestureParams) {
       params = next;
       if (keyed !== null && keyed.given !== params.value) keyed = null;
-      if (params.disabled && drag !== null) finish();
+      if (params.disabled && drag !== null) {
+        if (params.cancelBehavior === 'discard') abandon(); else finish();
+      }
     },
     destroy() {
       if (frame !== null) clock.cancelAnimationFrame(frame);
