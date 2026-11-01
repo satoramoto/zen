@@ -16,6 +16,8 @@ export { Widget } from './controls/Widget';
 export { Meter, type MeterProps } from './music/Meter';
 export { Waveform, type WaveformProps } from './music/Waveform';
 export { Transport, type TransportProps } from './music/Transport';
+/** Controlled seconds-based seek requests and host position readback. */
+export { SeekBar, type SeekBarProps } from './music/SeekBar';
 export { MixerView } from './mixer/MixerView';
 export { RigHealth, RIG_HEALTH_FORMS, SIGNAL_STATES, loadPath, type RigHealthProps, type RigHealthForm, type RigInput, type RigDevice, type SignalState } from './live/RigHealth/RigHealth';
 export { STEM_INKS, type StemInk, type LiveTrackRef } from './live/live.model';

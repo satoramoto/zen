@@ -17,6 +17,7 @@ import WidgetBinding from './controls/Widget.svelte';
 import MeterBinding from './music/Meter.svelte';
 import WaveformBinding from './music/Waveform.svelte';
 import TransportBinding from './music/Transport.svelte';
+import SeekBarBinding from './music/SeekBar.svelte';
 import MixerViewBinding from './mixer/MixerView.svelte';
 import DeckStripBinding from './mixer/DeckStrip.svelte';
 import MasterStripBinding from './mixer/MasterStrip.svelte';
@@ -64,6 +65,9 @@ export const NumberField = NumberFieldBinding as Component<Props<typeof ReactMus
 export const Widget = WidgetBinding as Component<Props<typeof ReactMusic.Widget>>;
 export const Meter = MeterBinding as Component<Props<typeof ReactMusic.Meter>>;
 export const Waveform = WaveformBinding as Component<Props<typeof ReactMusic.Waveform>>;
+export type { SeekBarProps } from './music/SeekBar.model';
+/** Controlled seconds-based seek requests and host position readback. */
+export const SeekBar = SeekBarBinding as Component<Props<typeof ReactMusic.SeekBar>>;
 export const Transport = TransportBinding as Component<Props<typeof ReactMusic.Transport>>;
 export const MixerView = MixerViewBinding as Component<Props<typeof ReactMusic.MixerView>>;
 export const DeckStrip = DeckStripBinding as Component<Props<typeof ReactMusic.DeckStrip>>;

@@ -13,11 +13,13 @@ import { bindFrameMeter, bindFramePlayhead, bindFrameWaveLane, bindFramePosition
 import { bindWaveControls } from './mixer/WaveControls.input';
 import { bindStemConnections } from './mixer/StemConnections.store';
 import { bindDeckHost } from './mixer/DeckStrip.host';
+import { bindSeekBar } from './music/SeekBar.input';
 import { bindTransportPosition } from './music/Transport.input';
 
 /** One set of lifecycle adapters for both renderers, with callback params resolved by handler key. */
 export function musicStores() {
   return {
+    musicSeekBar: keyed(bindSeekBar, ['onSeek']),
     musicToggleMomentary: keyed(bindToggleMomentary, ['onHold']),
     musicSegmented: keyed(bindSegmented, ['onChange']),
     musicSelect: keyed(bindSelect, ['onState', 'onChange']),

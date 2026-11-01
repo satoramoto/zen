@@ -63,6 +63,26 @@ describe('Music parameter store lifecycle', () => {
     binding.destroy();
   });
 
+  it('discards queued writes on cancellation and disable when opted in', () => {
+    for (const end of ['pointercancel', 'lostpointercapture', 'disable', 'Escape']) {
+      const node = document.createElement('div');
+      const onChange = vi.fn();
+      const onRelease = vi.fn();
+      const options = { param, value: 25, onChange, onRelease, cancelBehavior: 'discard' as const };
+      const binding = bindParamGesture(node, options);
+      pointer(node, 'pointerdown');
+      pointer(node, 'pointermove', { clientY: 80 });
+      if (end === 'disable') binding.update({ ...options, disabled: true });
+      else if (end === 'Escape') node.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      else pointer(node, end);
+      vi.runAllTimers();
+      expect(onChange).not.toHaveBeenCalled();
+      expect(onRelease).toHaveBeenCalledOnce();
+      expect(node.hasAttribute('data-dragging')).toBe(false);
+      binding.destroy();
+    }
+  });
+
   it('closes an editor exactly once and detaches its callbacks on destroy', () => {
     const input = document.createElement('input');
     document.body.append(input);
