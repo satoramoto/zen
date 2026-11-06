@@ -1,0 +1,81 @@
+.zen-sine { box-sizing:border-box; min-block-size:100dvh; max-inline-size:1440px; margin-inline:auto; padding:clamp(24px,4.4vw,64px); color:var(--text-1); background:var(--surface-0); font-family:var(--font-sans); line-height:1.5; }
+.zen-sine *, .zen-sine *::before, .zen-sine *::after { box-sizing:border-box; }
+.zen-sine button, .zen-sine input { font:inherit; }
+.zen-sine button { cursor:pointer; }
+.zen-sine button:focus-visible, .zen-sine input:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+.zen-sine__header { display:flex; align-items:center; justify-content:space-between; gap:var(--space-5); margin-block-end:36px; }
+.zen-sine__eyebrow { display:flex; align-items:center; gap:var(--space-3); margin:0 0 22px; font-size:11px; font-weight:var(--weight-strong); letter-spacing:.12em; text-transform:uppercase; color:var(--text-3); }
+.zen-sine__eyebrow span { color:var(--border-strong); }
+.zen-sine h1 { margin:0; font-family:var(--font-display); font-weight:var(--weight-display); font-size:clamp(34px,4vw,58px); line-height:1.08; letter-spacing:-.045em; }
+.zen-sine__intro { margin:18px 0 0; color:var(--text-2); font-size:15px; line-height:1.7; }
+.zen-sine__badge { align-self:flex-start; display:flex; align-items:center; gap:var(--space-2); margin-block-start:2px; font-size:11px; color:var(--text-2); white-space:nowrap; }
+.zen-sine__badge > span { inline-size:6px; block-size:6px; border-radius:var(--radius-pill); background:var(--hue-2); }
+.zen-sine__stage { overflow:hidden; border:1px solid var(--border); border-radius:var(--radius-card); background:var(--surface-1); }
+.zen-sine__plot-headings { display:grid; grid-template-columns:36% 64%; padding:24px 30px 0; font-size:10px; letter-spacing:.1em; color:var(--text-3); text-transform:uppercase; }
+.zen-sine__plot-headings strong { margin-inline-start:12px; font-size:11px; font-weight:var(--weight-medium); color:var(--text-2); letter-spacing:.025em; text-transform:none; }
+.zen-sine__plot-headings small { float:right; font-size:11px; letter-spacing:0; text-transform:none; }
+.zen-sine .MafsView { --mafs-bg:var(--surface-1); --mafs-fg:var(--text-2); --mafs-origin-color:var(--text-3); --mafs-line-color:var(--border); --grid-line-subdivision-color:var(--border); --mafs-red:var(--hue-1); --mafs-orange:var(--hue-2); --mafs-yellow:var(--hue-3); --mafs-green:var(--hue-4); --mafs-blue:var(--hue-5); --mafs-indigo:var(--hue-1); --mafs-violet:var(--hue-3); --mafs-pink:var(--hue-4); font-family:var(--font-mono); }
+.zen-sine .MafsView:focus-visible { outline:2px solid var(--accent); border-radius:var(--radius-control); outline-offset:-3px; }
+.zen-sine .MafsView .mafs-movable-point:focus .mafs-movable-point-focus { stroke-opacity:1; }
+.zen-sine .MafsView .mafs-movable-point-hitbox { r:22px; }
+.zen-sine__equation { display:flex; align-items:center; justify-content:center; gap:30px; padding:18px 30px 24px; }
+.zen-sine__equation-label { color:var(--text-3); font-size:11px; }
+.zen-sine__formula { font-family:var(--font-math); font-size:clamp(25px,2.7vw,38px); white-space:nowrap; letter-spacing:-.025em; }
+.zen-sine__term { border:0; border-block-end:1px dashed currentColor; padding:0 2px; border-radius:0; background:transparent; color:var(--hue-1); font-variant-numeric:tabular-nums; }
+.zen-sine__term[data-quantity="frequency"], .zen-sine__time { color:var(--hue-3); }
+.zen-sine__height { color:var(--hue-2); }
+.zen-sine[data-active="amplitude"] [data-quantity="amplitude"], .zen-sine[data-active="frequency"] [data-quantity="frequency"] { background:var(--surface-3); }
+.zen-sine__result { display:flex; flex-direction:column; padding-inline-start:30px; border-inline-start:1px solid var(--border); }
+.zen-sine__result small { color:var(--text-3); font-size:10px; }
+.zen-sine__result output { min-inline-size:4ch; font:var(--weight-medium) 25px/1.5 var(--font-mono); color:var(--hue-2); }
+.zen-sine__transport { display:flex; align-items:center; gap:var(--space-3); border-block-start:1px solid var(--border); padding:16px 24px; }
+.zen-sine__play { display:flex; align-items:center; gap:10px; min-block-size:38px; min-inline-size:88px; justify-content:center; border:1px solid var(--border-strong); border-radius:var(--radius-control); color:var(--text-1); background:var(--surface-2); font-size:12px !important; }
+.zen-sine__play:hover { background:var(--surface-3); }
+.zen-sine__play span { font-size:12px; }
+.zen-sine__scrub { display:flex; align-items:center; gap:16px; flex:1; min-inline-size:100px; color:var(--text-3); font-size:11px; padding-inline:12px; }
+.zen-sine__scrub input { inline-size:100%; min-inline-size:50px; accent-color:var(--hue-3); cursor:ew-resize; }
+.zen-sine__scrub output { font-family:var(--font-mono); white-space:nowrap; min-inline-size:5ch; }
+.zen-sine__tool { border:0; background:transparent; color:var(--text-2); font-size:11px !important; padding:10px 8px; min-block-size:38px; border-radius:var(--radius-control); white-space:nowrap; }
+.zen-sine__tool:hover, .zen-sine__tool[aria-pressed="true"] { background:var(--surface-2); color:var(--text-1); }
+.zen-sine__below { display:flex; justify-content:space-between; align-items:baseline; gap:var(--space-3); flex-wrap:wrap; padding-block:16px 26px; }
+.zen-sine__hint { margin:0; font-size:12px; color:var(--text-2); }
+.zen-sine__hint > span:first-child { margin-inline-end:8px; color:var(--hue-2); }
+.zen-sine__hint > span:last-child { display:block; margin:5px 0 0 21px; color:var(--text-3); font-size:11px; }
+.zen-sine__comparison { margin:0; font-size:11px; color:var(--text-2); }
+.zen-sine__comparison strong { font-family:var(--font-mono); }
+.zen-sine__invitations { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
+.zen-sine__invitation { display:flex; align-items:center; gap:16px; padding:20px; text-align:start; color:var(--text-2); background:transparent; border:1px solid var(--border); border-radius:var(--radius-card); }
+.zen-sine__invitation:hover { background:var(--surface-1); border-color:var(--border-strong); }
+.zen-sine__invitation[aria-pressed="true"] { background:var(--surface-1); }
+.zen-sine__invitation-number { align-self:flex-start; margin-block-start:2px; color:var(--text-3); font:11px/1.5 var(--font-mono); }
+.zen-sine__invitation strong { display:block; font-size:13px; font-weight:var(--weight-medium); color:var(--text-1); }
+.zen-sine__invitation small { display:block; margin-block-start:6px; font-size:11px; color:var(--text-3); }
+.zen-sine__invitation > span:last-child { margin-inline-start:auto; align-self:flex-start; color:var(--text-3); }
+.zen-sine__footer { display:flex; justify-content:space-between; margin-block-start:26px; padding-block-start:16px; border-block-start:1px solid var(--border); font-size:10px; color:var(--text-3); letter-spacing:.025em; }
+.zen-sine__mobile-link { text-align:center; color:var(--hue-2); font-size:11px; margin:0; }
+@media (max-width:900px) {
+ .zen-sine__badge { display:none; }
+ .zen-sine__equation-label { display:none; }
+ .zen-sine__plot-headings small { display:none; }
+ .zen-sine__transport { gap:4px; padding-inline:12px; }
+ .zen-sine__invitation { padding:14px; gap:10px; }
+}
+@media (max-width:680px) {
+ .zen-sine { padding:24px 16px; }
+ .zen-sine__header { margin-block-end:24px; }
+ .zen-sine__eyebrow { font-size:9px; gap:8px; margin-block-end:18px; }
+ .zen-sine__plot-headings { grid-template-columns:1fr; padding:20px 20px 0; }
+ .zen-sine__plot-headings > span:last-child { display:none; }
+ .zen-sine__equation { padding:18px 12px; gap:16px; }
+ .zen-sine__formula { font-size:26px; }
+ .zen-sine__result { padding-inline-start:16px; }
+ .zen-sine__result small { font-size:9px; }
+ .zen-sine__result output { font-size:21px; }
+ .zen-sine__transport { flex-wrap:wrap; padding:12px; gap:6px; }
+ .zen-sine__scrub { flex-basis:calc(100% - 100px); padding-inline:6px 0; gap:8px; }
+ .zen-sine__tool { flex:1; }
+ .zen-sine__invitations { grid-template-columns:1fr; }
+ .zen-sine__invitation { padding:16px; }
+ .zen-sine__footer { gap:16px; font-size:9px; }
+}
+@media (prefers-reduced-motion:reduce) { .zen-sine .mafs-movable-point * { transition:none; } }
