@@ -1,5 +1,5 @@
 import type {Meta,StoryObj} from '@storybook/react-vite';
-import {expect,userEvent,within,waitFor} from 'storybook/test';
+import {expect,userEvent,within,waitFor,fireEvent} from 'storybook/test';
 import {withLibraryTheme} from '../../storybook';
 import {SignalPlayground} from './SignalPlayground';
 const meta={title:'Design OS/Math/Signals & Spaces',component:SignalPlayground,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{example:'interference'},argTypes:{example:{control:'select',options:['traveling','interference','standing','fourier','beats','modulation','dispersion','torus','sphere','torus4']}}} satisfies Meta<typeof SignalPlayground>;
@@ -33,4 +33,20 @@ export const SwitchDimensions:Story={play:async({canvasElement})=>{
  await expect(c.getByLabelText('Frequency ratio',{selector:'output'})).toHaveTextContent('1.41');
  await userEvent.click(c.getByRole('button',{name:/Higher-dimensional geometry/}));
  await expect(c.getByText('2D manifold · 4D embedding · 3D projection')).toBeInTheDocument();
+}};
+export const CrossSectionAnalysis:Story={play:async({canvasElement})=>{
+ const c=within(canvasElement);
+ await userEvent.click(c.getByRole('button',{name:'Signed value'}));
+ await expect(c.getByRole('button',{name:'Signed value'})).toHaveAttribute('aria-pressed','true');
+ await userEvent.click(c.getByRole('button',{name:'Along z'}));
+ await fireEvent.change(c.getByRole('slider',{name:'Section position'}),{target:{value:'1'}});
+ await expect(c.getByRole('slider',{name:'Section position'})).not.toHaveValue('0');
+ await userEvent.click(c.getByRole('button',{name:'Cancel'}));
+ await expect(c.getByLabelText('RMS',{selector:'output'})).toHaveTextContent('0.000');
+ await userEvent.click(c.getByRole('button',{name:'Pin 2D comparison'}));
+ await userEvent.click(c.getByRole('button',{name:'Interference fringes'}));
+ await expect(c.getByText(/Dashed: frozen section/)).toBeInTheDocument();
+ await userEvent.click(c.getByRole('button',{name:'Along x'}));
+ await expect(c.getByRole('button',{name:'Pin 2D comparison'})).toHaveAttribute('aria-pressed','false');
+ await userEvent.click(c.getByRole('button',{name:'Magnitude'}));
 }};

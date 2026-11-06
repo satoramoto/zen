@@ -1,7 +1,10 @@
-import { useEffect, useLayoutEffect, useId, useRef, useState } from 'react';
-import { Coordinates, Line, Mafs, MovablePoint, Plot, Text, type MovablePointProps } from 'mafs';
+import { useEffect, useId, useRef, useState } from 'react';
+import { Coordinates, Line, Mafs, Plot, Text } from 'mafs';
+import { DragPoint } from './DragPoint';
+import { CrossSection } from './CrossSection';
+import { scalarLimit, type SectionAxis, type SurfaceColorMode } from './analysis';
 import { SignalSurface, type SignalCamera } from './SignalSurface';
-import { boundedParameter, initialSignal, isManifold, signalExamples, signalHeight, signalSpec, surfacePoint, type SignalKind, type SignalSpec, type SignalState } from './signals';
+import { boundedParameter, initialSignal, isManifold, signalExamples, signalSpec, type SignalKind, type SignalSpec, type SignalState } from './signals';
 import 'mafs/core.css';
 import './SignalPlayground.css';
 
@@ -16,15 +19,6 @@ export function SignalPlayground({example='interference'}:SignalPlaygroundProps)
     <SignalScene key={selected} kind={selected}/>
   </section>;
 }
-function PadPoint({label,...props}:MovablePointProps & {label:string}) {
-  const host=useRef<SVGGElement>(null);
-  useLayoutEffect(()=>{
-    const handle=host.current?.querySelector('.mafs-movable-point');
-    handle?.setAttribute('role','group');handle?.setAttribute('aria-label',label);
-    handle?.setAttribute('aria-description','Drag or use arrow keys. Precise sliders are available under Fine adjustments.');
-  },[label]);
-  return <g ref={host}><MovablePoint {...props}/></g>;
-}
 function ParameterPad({spec,state,change}:{spec:SignalSpec;state:SignalState;change:(next:Partial<SignalState>)=>void}){
   const norm=(value:number,p:SignalSpec['a'])=>2*(value-p.min)/(p.max-p.min)-1;
   return <div className="zen-signals__pad">
@@ -33,7 +27,7 @@ function ParameterPad({spec,state,change}:{spec:SignalSpec;state:SignalState;cha
       <Line.Segment point1={[-1,norm(state.b,spec.b)]} point2={[1,norm(state.b,spec.b)]} color="var(--hue-2)" opacity={.25} style="dashed"/>
       <Line.Segment point1={[norm(state.a,spec.a),-1]} point2={[norm(state.a,spec.a),1]} color="var(--hue-2)" opacity={.25} style="dashed"/>
       <Text x={.95} y={-.2} size={11} color="var(--text-3)">a →</Text><Text x={.17} y={1.05} size={11} color="var(--text-3)">b ↑</Text>
-      <PadPoint label={`Explore ${spec.a.label} horizontally and ${spec.b.label} vertically`} point={[norm(state.a,spec.a),norm(state.b,spec.b)]} color="var(--hue-2)" constrain={([x,y])=>[Math.max(-1,Math.min(1,x)),Math.max(-1,Math.min(1,y))]} onMove={([x,y])=>change({a:boundedParameter(spec.a,spec.a.min+(x+1)/2*(spec.a.max-spec.a.min)),b:boundedParameter(spec.b,spec.b.min+(y+1)/2*(spec.b.max-spec.b.min))})}/>
+      <DragPoint label={`Explore ${spec.a.label} horizontally and ${spec.b.label} vertically`} point={[norm(state.a,spec.a),norm(state.b,spec.b)]} color="var(--hue-2)" constrain={([x,y])=>[Math.max(-1,Math.min(1,x)),Math.max(-1,Math.min(1,y))]} onMove={([x,y])=>change({a:boundedParameter(spec.a,spec.a.min+(x+1)/2*(spec.a.max-spec.a.min)),b:boundedParameter(spec.b,spec.b.min+(y+1)/2*(spec.b.max-spec.b.min))})}/>
     </Mafs>
   </div>;
 }
@@ -41,6 +35,7 @@ function SignalScene({kind}:{kind:SignalKind}){
   const animated=kind!=='torus4';
   const spec=signalSpec(kind),manifold=isManifold(kind),extent=manifold?Math.PI:4;
   const [state,setState]=useState(()=>initialSignal(kind));
+  const [axis,setAxis]=useState<SectionAxis>('u'),[probe,setProbe]=useState(0),[colorMode,setColorMode]=useState<SurfaceColorMode>('solid');
   const [playing,setPlaying]=useState(false),[camera,setCamera]=useState<SignalCamera>('perspective'),[resetKey,setResetKey]=useState(0);
   const [notice,setNotice]=useState(spec.notice),[pinned,setPinned]=useState<SignalState|null>(null);
   const root=useRef<HTMLDivElement>(null);const titleId=useId();
@@ -56,7 +51,6 @@ function SignalScene({kind}:{kind:SignalKind}){
     const observer=new IntersectionObserver(([entry])=>{if(!entry.isIntersecting)setPlaying(false);});if(root.current)observer.observe(root.current);
     return()=>{document.removeEventListener('visibilitychange',visibility);observer.disconnect();};
   },[]);
-  const section=(x:number,s:SignalState)=>kind==='sphere'?Math.hypot(...surfacePoint(kind,x,s.slice,s))-1:manifold?surfacePoint(kind,x,s.slice,s)[1]:signalHeight(kind,x,s.slice,s);
   const format=(value:number)=>Math.abs(value)<.0005?'0.00':value.toFixed(2);
   return <div ref={root} className="zen-signals__scene" data-example={kind} data-playing={playing} aria-labelledby={titleId}>
     <header className="zen-signals__header"><div><p>{spec.category}</p><h1 id={titleId}>{spec.title}</h1><span>{spec.subtitle}</span></div><div className="zen-signals__dimension">{kind==='torus4'?'2D manifold · 4D embedding · 3D projection':manifold?'2D manifold · 3D embedding':'2D spatial field · height as amplitude'}</div></header>
@@ -64,18 +58,12 @@ function SignalScene({kind}:{kind:SignalKind}){
       <div className="zen-signals__visuals">
         <div className="zen-signals__surface-wrap">
           <div className="zen-signals__surface-heading"><span>{manifold?'Explore the geometry':'Explore the field'} <small>drag to orbit · scroll to zoom</small></span><div role="group" aria-label="Camera view">{(['perspective','top','front'] as const).map(view=><button key={view} aria-pressed={camera===view} onClick={()=>setCamera(view)}>{view}</button>)}<button aria-label="Reset 3D view" onClick={()=>{setCamera('perspective');setResetKey(n=>n+1);}}>↺</button></div></div>
-          <SignalSurface kind={kind} state={state} camera={camera} resetKey={resetKey}/>
-          <div className="zen-signals__legend"><span>Surface</span><span>{kind==='torus'?'Reference ring · v = 0':'Highlighted section'}</span>{kind==='torus'&&<span>Phase orbit · last 4π of time</span>}{kind==='interference'&&<span>Source positions</span>}</div>
+          <div className="zen-signals__color-tools"><div className="zen-signals__segmented" role="group" aria-label="Surface color">{(['solid','signed','magnitude'] as const).map(mode=><button key={mode} aria-pressed={colorMode===mode} onClick={()=>setColorMode(mode)}>{mode==='solid'?'Solid':mode==='signed'?'Signed value':'Magnitude'}</button>)}</div>{colorMode!=='solid'&&<div className="zen-signals__color-key"><span>{kind==='sphere'?'Radial displacement':manifold?'Displayed height':'Amplitude'}{colorMode==='magnitude'?' · absolute value':''}</span><div className="zen-signals__color-ramp" data-mode={colorMode}/><div className="zen-signals__color-labels"><span>{colorMode==='signed'?(-scalarLimit(kind)).toFixed(2):'0'}</span>{colorMode==='signed'&&<span>0</span>}<span>{scalarLimit(kind).toFixed(2)}</span></div></div>}</div>
+          <SignalSurface kind={kind} state={state} camera={camera} axis={axis} probe={probe} colorMode={colorMode} resetKey={resetKey}/>
+          <div className="zen-signals__legend"><span>Surface</span><span>Section & probe</span>{kind==='torus'&&<span>Phase orbit · last 4π of time</span>}{kind==='interference'&&<span>Source positions</span>}</div>
         </div>
-        <div className="zen-signals__section">
-          <header><span>{kind==='torus'?'Two oscillators, one phase orbit':'The highlighted section, unfolded'}</span>{kind!=='torus'&&<label>Slice {manifold?'v':'z'} <input aria-label="Section position" type="range" min={-extent} max={extent} step="0.01" value={state.slice} onChange={e=>change({slice:Number(e.target.value)})}/><output>{format(state.slice)}</output></label>}</header>
-          <Mafs height={190} pan={false} zoom={false} preserveAspectRatio={false} viewBox={{x:[-extent,extent],y:kind==='sphere'?[-.6,.6]:[-1.65,1.65],padding:.2}}>
-            <Coordinates.Cartesian xAxis={{lines:1,labels:n=>Number.isInteger(n)?n:''}} yAxis={{lines:kind==='sphere'?.25:1,labels:n=>kind==='sphere'?n.toFixed(2):n}}/>
-            {pinned&&<Plot.OfX y={x=>kind==='torus'?Math.sin(pinned.a*(x+pinned.time)+pinned.b):section(x,pinned)} color="var(--text-3)" style="dashed" opacity={.6} domain={[-extent,extent]}/>}
-            {kind==='torus'?<><Plot.OfX y={x=>Math.sin(x+state.time)} color="var(--hue-1)" domain={[-extent,extent]}/><Plot.OfX y={x=>Math.sin(state.a*(x+state.time)+state.b)} color="var(--hue-3)" domain={[-extent,extent]}/></>:<Plot.OfX y={x=>section(x,state)} color="var(--hue-2)" domain={[-extent,extent]} minSamplingDepth={9} maxSamplingDepth={14}/>}
-          </Mafs>
-          <p>{kind==='torus'?'First oscillator: sin(t + offset). Second oscillator: sin(ρ(t + offset) + φ). Their pair determines the point on the torus.':kind==='sphere'?'Horizontal: azimuth φ (radians). Vertical: radial displacement r − 1 along the highlighted latitude.':manifold?'Horizontal: first surface coordinate u (radians). Vertical: displayed 3D height, at fixed v.':'Horizontal: x position. Vertical: amplitude h(x,z,t), at the selected z and time.'}</p>
-        </div>
+        <CrossSection kind={kind} state={state} axis={axis} probe={probe} pinned={pinned} onAxis={next=>{setAxis(next);setPinned(null);}} onProbe={setProbe} onSlice={slice=>change({slice})}/>
+        {kind==='torus'&&<div className="zen-signals__section"><header>Two oscillators, one phase orbit</header><Mafs height={150} pan={false} zoom={false} preserveAspectRatio={false} viewBox={{x:[-extent,extent],y:[-1.2,1.2],padding:.2}}><Coordinates.Cartesian/><Plot.OfX y={x=>Math.sin(x+state.time)} color="var(--hue-1)"/><Plot.OfX y={x=>Math.sin(state.a*(x+state.time)+state.b)} color="var(--hue-3)"/></Mafs><p>First: sin(t + offset). Second: sin(ρ(t + offset) + φ). Their phase pair determines the orbit point; these histories are separate from the geometric section above.</p></div>}
       </div>
       <aside className="zen-signals__aside" aria-label="Explore the relationship">
         <h2>Pull on the relationship.</h2><p className="zen-signals__pad-hint">Drag the point. Two quantities change together.</p>
@@ -86,8 +74,8 @@ function SignalScene({kind}:{kind:SignalKind}){
         <div className="zen-signals__experiments" role="group" aria-label="Try an experiment">{spec.experiments.map(experiment=><button key={experiment.label} onClick={()=>{change({a:experiment.a,b:experiment.b,time:0});setNotice(experiment.notice);}}><span>{experiment.label}</span><span aria-hidden="true">↗</span></button>)}</div>
       </aside>
     </div>
-    <div className="zen-signals__transport">{animated ? <><button className="zen-signals__play" aria-label={playing?'Pause signal':'Play signal'} onClick={()=>{if(state.time>=20)setState(s=>({...s,time:0}));setPlaying(p=>!p);}}>{playing?'Ⅱ Pause':'▶ Play'}</button><label>Time<input aria-label="Signal time" type="range" min="0" max="20" step="0.01" value={state.time} onChange={e=>change({time:Number(e.target.value)})}/><output>{format(state.time)}</output></label></> : <p className="zen-signals__static-hint">Drag the pad to rotate in 4D. Drag the surface to rotate its 3D projection.</p>}<button aria-pressed={!!pinned} onClick={()=>setPinned(p=>p?null:{...state})}>{pinned?'Unpin 2D comparison':'Pin 2D comparison'}</button><button onClick={()=>{change(initialSignal(kind));setNotice(spec.notice);setPinned(null);setCamera('perspective');setResetKey(n=>n+1);}}>Reset scene</button></div>
+    <div className="zen-signals__transport">{animated ? <><button className="zen-signals__play" aria-label={playing?'Pause signal':'Play signal'} onClick={()=>{if(state.time>=20)setState(s=>({...s,time:0}));setPlaying(p=>!p);}}>{playing?'Ⅱ Pause':'▶ Play'}</button><label>Time<input aria-label="Signal time" type="range" min="0" max="20" step="0.01" value={state.time} onChange={e=>change({time:Number(e.target.value)})}/><output>{format(state.time)}</output></label></> : <p className="zen-signals__static-hint">Drag the pad to rotate in 4D. Drag the surface to rotate its 3D projection.</p>}<button aria-pressed={!!pinned} onClick={()=>setPinned(p=>p?null:{...state})}>{pinned?'Unpin 2D comparison':'Pin 2D comparison'}</button><button onClick={()=>{change(initialSignal(kind));setNotice(spec.notice);setPinned(null);setAxis('u');setProbe(0);setColorMode('solid');setCamera('perspective');setResetKey(n=>n+1);}}>Reset scene</button></div>
     <div className="zen-signals__equation"><span>The relationship</span><code>{spec.equation}</code></div>
-    <details className="zen-signals__limits"><summary>Model & interpretation</summary><p>{spec.limits}</p><p>{animated ? 'Playback starts paused and stops at t = 20. Time is dimensionless.' : 'This geometry is static in time. The two pad quantities rotate it in 4D.'} Camera movement changes the view, not the mathematical state. A pinned comparison freezes only the 2D trace.</p></details>
+    <details className="zen-signals__limits"><summary>Model & interpretation</summary><p>{spec.limits}</p><p>{animated ? 'Playback starts paused and stops at t = 20. Time is dimensionless.' : 'This geometry is static in time. The two pad quantities rotate it in 4D.'} Camera movement changes the view, not the mathematical state. A pinned comparison freezes only the 2D section trace. Changing section direction clears the comparison. Color encodes amplitude for fields, radial displacement for the sphere, and displayed height for the tori; magnitude is absolute value, not energy. Each color scale stays fixed across time and parameters.</p></details>
   </div>;
 }
