@@ -12,7 +12,7 @@ function Specimen({kind='interference',slice=0,time=0}:{kind?:SignalKind;slice?:
  useEffect(()=>setPosition(null),[slice]);
  return <section className="zen-signals"><CrossSection kind={kind} state={{...initialSignal(kind),slice:position??slice,time}} axis={axis} probe={probe} pinned={null} onAxis={setAxis} onProbe={setProbe} onSlice={setPosition}/><button onClick={()=>{setPosition(null);setAxis('u');setProbe(0);}}>Reset section</button></section>;
 }
-const meta={title:'Design OS/Math/Components/Cross Section',component:Specimen,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{kind:'interference',slice:0,time:0},argTypes:{kind:{control:'select',options:['interference','standing','sphere','torus4']},slice:{control:{type:'range',min:-3,max:3,step:.01}},time:{control:{type:'range',min:0,max:20,step:.01}}}} satisfies Meta<typeof Specimen>;
+const meta={title:'Math/Components/Cross Section',component:Specimen,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{kind:'interference',slice:0,time:0},argTypes:{kind:{control:'select',options:['interference','standing','sphere','torus4']},slice:{control:{type:'range',min:-3,max:3,step:.01}},time:{control:{type:'range',min:0,max:20,step:.01}}}} satisfies Meta<typeof Specimen>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const SpatialField:Story={};
 export const SphericalDisplacement:Story={args:{kind:'sphere'}};

@@ -11,7 +11,7 @@ function Specimen({constraint='free',label='Explore a point'}:{constraint?:'free
  useEffect(()=>setPoint([1,0]),[constraint]);
  return <section className="zen-signals"><Mafs height={320} pan={false} zoom={false} viewBox={{x:[-2,2],y:[-2,2]}}><Coordinates.Cartesian/><DragPoint label={label} point={point} color="var(--hue-2)" constrain={([x,y])=>constraint==='circle'?[Math.cos(Math.atan2(y,x)),Math.sin(Math.atan2(y,x))]:[Math.max(-2,Math.min(2,x)),constraint==='horizontal'?0:Math.max(-2,Math.min(2,y))]} onMove={setPoint}/></Mafs><p>Drag or use arrow keys. <output aria-label="Point coordinates">{point.map(n=>n.toFixed(2)).join(', ')}</output></p><button onClick={()=>setPoint([1,0])}>Reset point</button></section>;
 }
-const meta={title:'Design OS/Math/Components/Drag Point',component:Specimen,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{constraint:'free',label:'Explore a point'},argTypes:{constraint:{control:'inline-radio',options:['free','circle','horizontal']},label:{control:'text'}}} satisfies Meta<typeof Specimen>;
+const meta={title:'Math/Components/Drag Point',component:Specimen,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{constraint:'free',label:'Explore a point'},argTypes:{constraint:{control:'inline-radio',options:['free','circle','horizontal']},label:{control:'text'}}} satisfies Meta<typeof Specimen>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const Free:Story={};
 export const Circle:Story={args:{constraint:'circle'}};

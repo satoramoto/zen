@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 const base=process.env.MATH_PREVIEW_URL??'http://127.0.0.1:6027';
 const output=process.env.SIGNAL_ARTIFACTS??'.shots/signals';await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true});
-const prefix='design-os-math-signal-playground--';
+const prefix='math-signal-playground--';
 const cases=[['traveling-wave','Turn 90°'],['interference','Cancel'],['standing-wave','One traveler'],['fourier-synthesis','Twelve harmonics'],['beats','Many beats'],['amplitude-modulation','Bare carrier'],['dispersion','Localize it'],['phase-torus','Irrational ratio'],['spherical-mode','Four lobes'],['four-dimensional-projection','Mix the dimensions']];
 const reports=[];
 function observe(){

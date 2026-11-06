@@ -1,6 +1,6 @@
 # Cymatics and standing waves
 
-React-only components under **Design OS / Math / Cymatics Explorer**, **Standing String**,
+React-only components under **Math / Cymatics Explorer**, **Standing String**,
 and **Components / Cymatic Field**. Exported from the normal package entry. They use the
 existing MeshView and DragPoint components; no new rendering dependency or audio engine.
 
