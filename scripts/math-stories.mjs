@@ -15,7 +15,7 @@ function observe(){
 }
 const url=(story,mode='dark',theme='linear')=>`${base}/iframe.html?id=${prefix}${story}&viewMode=story&globals=theme:${theme};mode:${mode}`;
 try {
- for(const story of ['playground','twice-around','tall-and-slow','linked-handles','compare-and-reset','play-and-pause']){
+ for(const story of ['playground','twice-around','tall-and-slow','linked-handles','compare-and-reset','play-and-pause','follow-one-turn']){
   const page=await browser.newPage({viewport:{width:1440,height:1100},colorScheme:'dark'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(observe);
   await page.goto(url(story));
@@ -43,6 +43,7 @@ try {
   assert.ok(Math.abs(after-before)>.05,`orbit drag did not move ${width}`);
   assert.equal(await page.getByRole('slider',{name:'Wave position'}).getAttribute('aria-valuenow'),String(after));
   assert.ok(Math.abs(Number(await page.getByLabel('Current height').textContent())-Math.sin(after))<.006);
+  await page.getByRole('button',{name:'2 · Change the wave'}).click();
   const radius=page.getByRole('slider',{name:'Circle radius'});await radius.focus();await page.keyboard.press('End');
   assert.equal(await radius.getAttribute('aria-valuenow'),'1.65');
   await page.getByRole('button',{name:'Pin comparison',exact:true}).click();await page.getByRole('button',{name:/Twice around/}).click();

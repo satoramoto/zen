@@ -79,3 +79,21 @@
  .zen-sine__footer { gap:16px; font-size:9px; }
 }
 @media (prefers-reduced-motion:reduce) { .zen-sine .mafs-movable-point * { transition:none; } }
+.zen-sine__modes { display:flex; gap:var(--space-2); margin-block-end:16px; }
+.zen-sine__modes button { padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-control); background:transparent; color:var(--text-2); font-size:12px; }
+.zen-sine__modes button[aria-pressed="true"] { background:var(--surface-2); color:var(--text-1); border-color:var(--border-strong); }
+.zen-sine__walkthrough { padding:0 24px 12px; max-inline-size:760px; margin-inline:auto; }
+.zen-sine__stops { display:flex; gap:var(--space-2); }
+.zen-sine__stops button { flex:1; display:flex; align-items:center; justify-content:center; gap:8px; min-block-size:44px; border:1px solid var(--border); border-radius:var(--radius-control); background:transparent; color:var(--text-2); font-size:11px; }
+.zen-sine__stops strong { font-family:var(--font-mono); font-size:15px; }
+.zen-sine__stops button[aria-pressed="true"] { border-color:var(--hue-2); background:var(--surface-2); color:var(--text-1); }
+.zen-sine__walkthrough p { margin:12px 0 0; text-align:center; color:var(--text-2); font-size:12px; min-block-size:42px; }
+.zen-sine__walkthrough p span { display:block; font-size:11px; color:var(--text-3); margin-block-start:4px; }
+@media (max-width:680px) {
+ .zen-sine__walkthrough { padding:4px 12px 8px; }
+ .zen-sine__stops { gap:5px; }
+ .zen-sine__stops button { flex-direction:column; gap:2px; padding:6px 2px; }
+ .zen-sine__modes button { flex:1; padding-inline:8px; font-size:11px; }
+}
+
+.zen-sine__walkthrough .zen-sine__stops-label { min-block-size:0; margin:0 0 10px; color:var(--text-3); font-size:11px; }

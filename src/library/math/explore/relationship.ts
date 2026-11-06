@@ -28,7 +28,7 @@ export const sineRelationship: Relationship<SineQuantity, SineValues> = {
   quantities: {
     amplitude: { label: 'Radius', initial: 1, min: .35, max: 1.65, step: .05 },
     frequency: { label: 'Turns per cycle', initial: 1, min: .5, max: 3, step: .05 },
-    time: { label: 'Time', initial: Math.PI / 4, min: 0, max: TAU, step: Math.PI / 36 },
+    time: { label: 'Time', initial: 0, min: 0, max: TAU, step: Math.PI / 36 },
   },
   derive: ({ amplitude, frequency, time }) => ({
     angle: frequency * time,
