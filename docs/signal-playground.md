@@ -1,6 +1,6 @@
 # Signals & Spaces
 
-Ten React-only, interactive examples under **Design OS / Math / Signals & Spaces**.
+Ten React-only, interactive examples under **Design OS / Math / Signal Playground**.
 `SignalPlayground` is exported from `@satoramoto/zen`. The picker mounts only the selected
 scene, so a gallery never keeps ten WebGL contexts alive.
 
@@ -78,7 +78,7 @@ Start the unified preview in an isolated worktree on free ports:
 PREVIEW_LABEL="Zen Signals" PREVIEW_PORT=4197 STORYBOOK_PORT=6027 npm run dev
 ```
 
-Open `/iframe.html?id=design-os-math-signals-spaces--interference&viewMode=story` on Storybook.
+Open `/iframe.html?id=design-os-math-signal-playground--interference&viewMode=story` on Storybook.
 The two additional behavior stories are Explore Interference and Switch Dimensions.
 
 ```sh

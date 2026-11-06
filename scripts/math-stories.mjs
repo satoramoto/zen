@@ -6,7 +6,7 @@ const base = process.env.MATH_PREVIEW_URL ?? 'http://127.0.0.1:6027';
 const output = process.env.MATH_ARTIFACTS ?? '.shots/math-play';
 await mkdir(output, { recursive: true });
 const browser=await chromium.launch({headless:true});
-const prefix='design-os-math-relationships-circle-to-sine--';
+const prefix='design-os-math-circle-to-sine--';
 const results=[];
 function observe(){
  const events=window.__mathEvents=[];

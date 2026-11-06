@@ -1,6 +1,7 @@
 # Solid cuts and complex relationships
 
-React-only stories under **Design OS / Math / Solid & Complex**. Public components:
+React-only stories under **Design OS / Math**, grouped by **Solid Sections**,
+**Complex Explorer**, **Complex Series**, and **Prime Counting**. Public components:
 `SolidSections`, `ComplexExplorer`, `ComplexSeries`, and `PrimeCounting`.
 
 ## True plane sections
