@@ -15,8 +15,12 @@ PREVIEW_LABEL="Zen Math Play" PREVIEW_PORT=4197 STORYBOOK_PORT=6027 npm run dev
 
 Open `http://127.0.0.1:6027/?path=/story/design-os-math-relationships-circle-to-sine--playground`.
 The stories are Playground, Twice Around, Tall And Slow, Linked Handles, Compare And Reset,
-and Play And Pause. The last three execute interaction assertions in the browser.
+Play And Pause, and Follow One Turn. The last four execute interaction assertions in the browser.
 
+- The default scene starts at zero in **Follow the point** mode: a counterclockwise arrow,
+  rightward time arrow, and linked quarter-turn markers establish the relationship. Select
+  Start, Top, Across, Bottom, or Back to inspect matching heights. **Change the wave** reveals
+  radius and frequency handles; returning to Follow restores the unit circle at zero.
 - Drag the orbiting point or the wave's point to change the same time quantity.
 - Drag the radius handle vertically to change the circle's size and the wave's amplitude.
 - Drag the spacing handle horizontally to change frequency. Its position marks the first
