@@ -1,0 +1,54 @@
+.zen-lab { box-sizing:border-box; max-inline-size:1500px; margin:auto; padding:32px clamp(16px,3vw,48px); min-block-size:100dvh; background:var(--surface-0); color:var(--text-1); font-family:var(--font-sans); }
+.zen-lab * { box-sizing:border-box; }
+.zen-lab button,.zen-lab input { font:inherit; }
+.zen-lab button { cursor:pointer; color:var(--text-2); background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-control); padding:9px 12px; font-size:11px; }
+.zen-lab button:hover,.zen-lab button[aria-pressed="true"] { color:var(--text-1); background:var(--surface-3); border-color:var(--border-strong); }
+.zen-lab :is(button,input,summary,a):focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.zen-lab__title small { color:var(--hue-1); text-transform:uppercase; letter-spacing:.12em; font-size:10px; }
+.zen-lab__title h1 { font:var(--weight-display) clamp(28px,3vw,44px)/1.15 var(--font-display); letter-spacing:-.03em; margin:16px 0 12px; }
+.zen-lab__title p { font-size:14px; color:var(--text-2); margin:0 0 24px; }
+.zen-lab__buttons { display:flex; flex-wrap:wrap; gap:6px; }
+.zen-lab>nav { margin-block-end:18px; }
+.zen-lab__split { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); gap:14px; }
+.zen-lab__card { min-inline-size:0; background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card); overflow:hidden; }
+.zen-lab__bar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding:14px 18px; color:var(--text-2); font-size:11px; }
+.zen-lab__bar button { padding:6px 9px; }
+.zen-lab__mesh { height:410px; position:relative; }
+.zen-lab__canvas { position:absolute; inset:0; touch-action:none; }
+.zen-lab__canvas canvas { display:block; width:100%; height:100%; }
+.zen-lab__paint { display:none; }
+.zen-lab__fallback { position:absolute; inset:0; display:grid; place-content:center; text-align:center; padding:24px; background:var(--surface-1); color:var(--text-2); font-size:13px; }
+.zen-lab__section-svg { display:block; inline-size:100%; height:340px; }
+.zen-lab__axes { stroke:var(--border); stroke-width:.008; }
+.zen-lab__section-fill { fill:var(--hue-2); fill-opacity:.12; stroke:var(--hue-2); stroke-width:.012; }
+.zen-lab__probe { fill:var(--hue-3); }
+.zen-lab__measurements { display:flex; flex-wrap:wrap; justify-content:space-between; gap:18px; padding:18px; }
+.zen-lab__measurements span { display:flex; flex-direction:column; gap:9px; font-size:10px; color:var(--text-2); }
+.zen-lab__measurements output { font:clamp(13px,1.4vw,18px) var(--font-mono); color:var(--text-1); }
+.zen-lab__slider { display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding:14px 18px; font-size:12px; color:var(--text-2); }
+.zen-lab__slider input { flex:1; min-inline-size:100px; accent-color:var(--hue-2); }
+.zen-lab__slider output { font-family:var(--font-mono); }
+.zen-lab__controls { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-block:14px; }
+.zen-lab__controls h2 { font-size:14px; padding:0 18px; }
+.zen-lab__controls .zen-lab__buttons { padding:18px; }
+.zen-lab__note { margin:0; padding:12px 18px; color:var(--text-2); font-size:11px; line-height:1.65; }
+.zen-lab__limits { font-size:12px; color:var(--text-2); line-height:1.7; margin-block-start:24px; }
+.zen-lab__limits summary { cursor:pointer; }
+.zen-lab a { color:var(--hue-1); }
+.zen-lab .MafsView { --mafs-bg:var(--surface-1); --mafs-fg:var(--text-2); --mafs-line-color:var(--border); --mafs-origin-color:var(--text-2); --grid-line-subdivision-color:var(--border); font-family:var(--font-mono); }
+.zen-lab__complex-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.zen-lab__landscape { grid-column:1/-1; }
+.zen-lab__domain { position:relative; }
+.zen-lab__domain canvas { position:absolute; inset:0; width:100%; height:360px; }
+.zen-lab__domain .MafsView { --mafs-bg:transparent; }
+.zen-lab__transport { display:flex; flex-wrap:wrap; align-items:center; gap:18px; padding-block:0 18px; }
+.zen-lab__transport label { display:flex; align-items:center; gap:12px; flex:1; font:12px var(--font-mono); }
+.zen-lab__transport input { flex:1; min-inline-size:80px; accent-color:var(--hue-2); }
+.zen-lab__experiments { padding-block:20px; }
+.zen-lab__experiments h2 { font-size:18px; }
+.zen-lab__experiments p { font-size:12px; color:var(--text-2); line-height:1.7; }
+.zen-lab__phase-key { display:flex; align-items:center; flex-wrap:wrap; gap:12px; font:10px var(--font-mono); color:var(--text-2); padding-block:12px; }
+.zen-lab__phase-key i { width:180px; height:10px; background:linear-gradient(to right,var(--hue-1),var(--hue-2),var(--hue-3),var(--hue-4),var(--hue-1)); border-radius:var(--radius-control); }
+@media(max-width:700px){.zen-lab__split,.zen-lab__controls,.zen-lab__complex-grid{grid-template-columns:1fr}.zen-lab__mesh{height:320px}.zen-lab__section-svg{height:280px}.zen-lab__transport label{flex-basis:40%}.zen-lab__measurements{gap:12px}.zen-lab__domain canvas{height:360px}}
+.zen-lab__domain canvas { pointer-events:none; }
+.zen-lab__domain .MafsView { position:relative; z-index:1; }
