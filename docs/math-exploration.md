@@ -66,7 +66,8 @@ stable identity, for example a module-level constant.
 - **Mafs 0.21.0** is the installed 2D engine. The adapter adds accessible quantity semantics
   and keyboard steps to its movable points. Its stylesheet is scoped through `.zen-sine`
   overrides to the Zen token contract, and the public library build includes it.
-- **MathBox** is the chosen direction for 3D scenes, but is not installed or implemented here.
+- **MathBox** now renders the separate [Signals & Spaces collection](signal-playground.md),
+  with ten signal-processing and manifold scenes. The circle-to-sine scene remains Mafs-only.
 - **MathLive + Cortex Compute Engine** remain the direction for authored expressions. This
   scene's equation is the exact display of a known relationship, not a free-form editor.
   Neither dependency is needed for this first scene.
