@@ -31,12 +31,22 @@ expandable statement of its model assumptions.
 - Playback and time scrubbing share the same state as both renderers. Playback starts paused,
   stops at 20, and pauses when the tab or scene leaves view. The 4D projection is static in
   time and exposes geometry rotations instead of a nonfunctional Play control.
-- The green/hue-2 section on a field is exactly the 2D trace at the selected z. On the sphere,
-  the linked chart shows radial displacement along the selected latitude. On the 4D projection,
-  it shows displayed height along u at fixed v.
-- The phase torus instead pairs the two sinusoidal histories with a finite 4π-time orbit trail;
-  its hue-2 ring is an explicitly labeled v=0 reference. Finite trails do not prove irrational
-  density. A pinned comparison freezes the 2D trace only.
+- The hue-2 section and probe link the surface to a parameter/plan map and an unfolded trace.
+  Choose Along x / Along z for fields, or Along u / Along v for manifolds. Drag the map to move
+  the fixed coordinate and probe together; drag the trace point to inspect a value. Sliders
+  provide precise keyboard access. Fields display a translucent cutting plane. Manifold
+  sections are coordinate curves, explicitly distinguished from planar intersections.
+- Fields plot amplitude; the sphere plots radial displacement; tori plot displayed 3D height.
+  The probe reports that same scalar. Minimum, maximum and RMS are estimates from 513 uniform
+  samples of the displayed interval, not symbolic extrema or total energy.
+- Pin 2D comparison freezes the section's mathematical state, time and fixed coordinate.
+  The dashed trace labels that snapshot. Changing direction clears it to avoid comparing
+  differently parameterized axes. The separate torus oscillator histories remain live.
+- Solid paint retains shaded geometry. Signed value uses a diverging gradient; Magnitude
+  uses absolute value (not energy). Fixed scales are ±1.5 for fields, ±0.45 for spherical
+  displacement, ±0.35 for torus height, and ±√2 for projected 4D torus height. They never
+  renormalize during playback. A labeled gradient key shows the encoding, and the probe
+  provides a numeric reading independent of color. Colors come from Zen's theme tokens.
 
 All quantities and time are dimensionless. These are bounded analytic demonstrations, not
 physical simulation engines, symbolic solvers, FFT-based PDE solvers, or audio processors.
@@ -78,6 +88,7 @@ npm run build:lib
 npm run check:lib
 npm run build:storybook
 MATH_PREVIEW_URL=http://127.0.0.1:6027 node scripts/signal-stories.mjs
+MATH_PREVIEW_URL=http://127.0.0.1:6027 node scripts/signal-analysis.mjs
 ```
 
 The browser runner checks all ten actual WebGL outputs for pixel changes after mathematical
@@ -85,3 +96,8 @@ experiments, drags the parameter pad, changes camera views, exercises playback, 
 Storybook plays, and captures desktop and narrow light/dark layouts. Pure model tests check
 interference cancellation, fixed standing-wave nodes, nondispersive packet translation,
 rational torus closure, bounded finite geometry, and the reference sphere.
+
+The analysis runner exercises signed/magnitude GPU paint, both cut directions, direct map and trace
+dragging, frozen comparisons, the cross-section story play, and 390px layout across field, sphere
+and torus examples. Pure analysis tests check cut coordinates, cancellation RMS, spherical
+displacement and fixed signed/magnitude normalization.
