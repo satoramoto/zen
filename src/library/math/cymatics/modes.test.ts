@@ -1,0 +1,11 @@
+import {describe,it,expect} from 'vitest';
+import {besselJ,drumRoots,modeBasis,mixWeights,displacement,rmsAmplitude,relativeFrequency,sampleMode,rmsGrid,scatterGrains,settleGrains,sampleGrid,standingString} from './modes';
+describe('bounded vibration modes',()=>{
+ it('satisfies fixed square edges',()=>{for(const kind of ['membrane','plate'] as const)for(const x of [-1,1])for(const y of [-.7,0,.4])expect(modeBasis({kind,m:3,n:2},x,y)!.every(v=>Math.abs(v)<1e-12)).toBe(true);});
+ it('satisfies drum boundaries at each supported Bessel root',()=>{drumRoots.forEach((roots,m)=>roots.forEach((root,n)=>{expect(Math.abs(besselJ(m,root))).toBeLessThan(1e-9);expect(Math.abs(modeBasis({kind:'drum',m,n:n+1},1,0)![0])).toBeLessThan(1e-8);}));});
+ it('distinguishes membrane and plate dispersion',()=>{expect(relativeFrequency({kind:'membrane',m:2,n:2})).toBe(2);expect(relativeFrequency({kind:'plate',m:2,n:2})).toBe(4);expect(relativeFrequency({kind:'drum',m:1,n:1})).toBeCloseTo(1.5933405057,8);});
+ it('matches analytic RMS to a full cycle and retains nodes at zero crossings',()=>{const pair=[.6,-.3] as const,w=mixWeights({kind:'membrane',m:2,n:3},.7);const square=Array.from({length:1000},(_,i)=>displacement(pair,w,.9,i/1000)**2).reduce((a,b)=>a+b)/1000;expect(Math.sqrt(square)).toBeCloseTo(rmsAmplitude(pair,w,.9),10);expect(displacement([1,0],[1,0],0,.25)).toBeCloseTo(0);expect(rmsAmplitude([1,0],[1,0],0)).toBe(.5);});
+ it('shows cancellation only for in-phase opposition, not quadrature',()=>{expect(rmsAmplitude([1,-1],[Math.SQRT1_2,Math.SQRT1_2],0)).toBeCloseTo(0);expect(rmsAmplitude([1,-1],[Math.SQRT1_2,Math.SQRT1_2],Math.PI/2)).toBeCloseTo(.5);});
+ it('moves illustrative grains toward lower RMS displacement',()=>{const shape={kind:'membrane',m:3,n:2} as const,grid=sampleMode(shape,81),values=rmsGrid(grid,shape,{mix:0,phase:0}),grains=scatterGrains(shape.kind,200);const energy=()=>grains.reduce((s,p)=>s+sampleGrid(values,81,p.x,p.y)**2,0);const before=energy();for(let i=0;i<120;i++)settleGrains(grains,values,81,shape.kind,1/60);expect(energy()).toBeLessThan(before*.2);});
+ it('keeps equal-wave string nodes stationary',()=>{for(const t of [0,.1,.25,.7])expect(standingString(1/3,3,1,t)).toBeCloseTo(0);expect(Math.abs(standingString(1/3,3,0,.25))).toBeCloseTo(.5);});
+});

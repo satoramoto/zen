@@ -1,0 +1,14 @@
+.zen-cymatics__field { position:relative; aspect-ratio:1; max-inline-size:560px; margin:auto; }
+.zen-cymatics__field>canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.zen-lab .zen-cymatics__field .MafsView { position:relative; z-index:1; --mafs-bg:transparent; }
+.zen-cymatics__swatches { display:none; }
+.zen-cymatics .zen-lab__split { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.zen-cymatics .zen-lab__controls h2 { margin-block:18px 10px; }
+.zen-cymatics .zen-lab__transport { margin-block-start:16px; }
+.zen-cymatics .zen-lab__transport output { min-inline-size:4ch; font:11px var(--font-mono); }
+.zen-cymatics__mode-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; padding:12px 18px; }
+.zen-cymatics__mode-grid button { padding:8px 4px; font:11px var(--font-mono); }
+.zen-cymatics__string { margin-block-start:18px; }
+.zen-cymatics input[type="checkbox"] { accent-color:var(--hue-2); }
+.zen-cymatics button:disabled,.zen-cymatics input:disabled { opacity:.45; cursor:default; }
+@media(max-width:700px){.zen-cymatics .zen-lab__split{grid-template-columns:1fr}.zen-cymatics__mode-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.zen-cymatics .zen-lab__transport label{flex-basis:100%}}

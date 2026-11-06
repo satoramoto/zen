@@ -1,0 +1,10 @@
+import type {Meta,StoryObj} from '@storybook/react-vite';
+import {expect,userEvent,within} from 'storybook/test';
+import {withLibraryTheme} from '../../storybook';
+import {StandingString} from './StandingString';
+const meta={title:'Design OS/Math/Standing String',component:StandingString,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{harmonic:3,reflection:1},argTypes:{harmonic:{control:{type:'range',min:1,max:8,step:1}},reflection:{control:{type:'range',min:0,max:1,step:.01}}}} satisfies Meta<typeof StandingString>;
+export default meta;type Story=StoryObj<typeof meta>;
+export const StandingMode:Story={};
+export const OneTraveler:Story={args:{reflection:0}};
+export const PartialReflection:Story={args:{reflection:.5}};
+export const NodesAndAntinodes:Story={play:async({canvasElement})=>{const c=within(canvasElement);await userEvent.click(c.getByRole('button',{name:'Inspect a node'}));await expect(c.getByLabelText('String RMS')).toHaveTextContent('0.0000');await userEvent.click(c.getByRole('button',{name:'Inspect an antinode'}));await expect(c.getByLabelText('String RMS')).toHaveTextContent('0.7071');await userEvent.click(c.getByRole('button',{name:'One traveler'}));await userEvent.click(c.getByRole('button',{name:'Inspect a node'}));await expect(c.getByLabelText('String RMS')).toHaveTextContent('0.3536');}};

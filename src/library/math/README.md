@@ -12,6 +12,9 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Complex Explorer | `ComplexExplorer`: square, reciprocal and zeta, linked planes and landscapes |
 | Complex Series | `ComplexSeries`: phasor sums and finite prime products |
 | Prime Counting | `PrimeCounting`: discrete count, approximation and residual |
+| Cymatics Explorer | `CymaticsExplorer`: square plates/membranes and drums, nodal patterns and mixtures |
+| Standing String | `StandingString`: counter-propagating waves, nodes and local motion |
+| Components / Cymatic Field | `CymaticField`: nodal grains, signed displacement and cycle-averaged paint |
 | Components / Mesh View | `MeshView`: sampled mesh, clipping plane and native manipulation handles |
 | Components / Signal Surface | `SignalSurface`: field/manifold rendering, sections and scalar colors |
 | Components / Cross Section | `CrossSection`: linked map, trace, probe and sampled statistics |
@@ -32,6 +35,7 @@ available for compatibility. This cleanup does not remove a package API.
 
 - [Circle-to-sine exploration](../../../docs/math-exploration.md)
 - [Signals, sections and scalar paint](../../../docs/signal-playground.md)
+- [Cymatics and standing waves](../../../docs/cymatics.md)
 - [Solid cuts and complex functions](../../../docs/solid-complex-playground.md)
 
 Keep new stories next to the component they document. Add a complete mathematical scene to

@@ -9,3 +9,4 @@ export * from './view/DistributionPlot';
 export * from './explore';
 export * from './signals';
 export * from './lab';
+export * from './cymatics';
