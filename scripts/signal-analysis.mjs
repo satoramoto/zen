@@ -10,7 +10,7 @@ const browser=await chromium.launch({headless:true});
 try{
  for(const [story,width,mode] of [['interference',1440,'dark'],['spherical-mode',1440,'dark'],['phase-torus',1440,'light'],['four-dimensional-projection',390,'light']]){
   const page=await browser.newPage({viewport:{width,height:1100}}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
-  await page.goto(`${base}/iframe.html?id=design-os-math-signals-spaces--${story}&viewMode=story&globals=theme:linear;mode:${mode}`);
+  await page.goto(`${base}/iframe.html?id=design-os-math-signal-playground--${story}&viewMode=story&globals=theme:linear;mode:${mode}`);
   await page.locator('[data-renderer-state="ready"]').waitFor();await settle(page);
   const canvas=page.locator('.zen-signal-surface canvas');const solid=await canvas.screenshot();
   await page.getByRole('button',{name:'Signed value',exact:true}).click();await settle(page);const signed=await canvas.screenshot();assert.ok(changed(solid,signed)>1000,`${story}: signed color did not change`);
@@ -26,5 +26,5 @@ try{
   await canvas.scrollIntoViewIfNeeded();await settle(page);await page.screenshot({path:`${output}/${story}-${width}.png`,fullPage:true});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);console.log('PASS gradients, section directions, direct navigation, linked probe, pinning, layout',story,width);await page.close();
  }
  const page=await browser.newPage();await page.addInitScript(()=>{let channel;window.__plays=[];Object.defineProperty(window,'__STORYBOOK_ADDONS_CHANNEL__',{configurable:true,get:()=>channel,set:c=>{channel=c;for(const name of ['storyFinished','storyThrewException','playFunctionThrewException'])c.on(name,event=>window.__plays.push({name,status:event?.status}));}});});
- await page.goto(`${base}/iframe.html?id=design-os-math-signals-spaces--cross-section-analysis&viewMode=story`);await page.waitForFunction(()=>window.__plays.some(e=>e.name==='storyFinished'),{},{timeout:45000});assert.ok((await page.evaluate(()=>window.__plays)).every(e=>e.name==='storyFinished'&&e.status==='success'));console.log('PASS cross-section Storybook play');
+ await page.goto(`${base}/iframe.html?id=design-os-math-signal-playground--cross-section-analysis&viewMode=story`);await page.waitForFunction(()=>window.__plays.some(e=>e.name==='storyFinished'),{},{timeout:45000});assert.ok((await page.evaluate(()=>window.__plays)).every(e=>e.name==='storyFinished'&&e.status==='success'));console.log('PASS cross-section Storybook play');
 }finally{await browser.close();}

@@ -4,8 +4,8 @@ import {PNG} from 'pngjs';
 import assert from 'node:assert/strict';
 const base=process.env.MATH_PREVIEW_URL??'http://127.0.0.1:6027',output='.shots/lab';await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true});
-const prefix='design-os-math-solid-complex--';
-const url=(s,mode='dark')=>`${base}/iframe.html?id=${prefix}${s}&viewMode=story&globals=theme:linear;mode:${mode}`;
+const group=story=>['sphere-cuts','torus-cuts','ellipsoid-cuts','cut-topology'].includes(story)?'solid-sections':story==='phasor-series'?'complex-series':story==='prime-count'?'prime-counting':'complex-explorer';
+const url=(s,mode='dark')=>`${base}/iframe.html?id=design-os-math-${group(s)}--${s}&viewMode=story&globals=theme:linear;mode:${mode}`;
 function changed(a,b){const x=PNG.sync.read(a),y=PNG.sync.read(b);assert.equal(x.data.length,y.data.length);let n=0;for(let i=0;i<x.data.length;i+=4)if(Math.abs(x.data[i]-y.data[i])+Math.abs(x.data[i+1]-y.data[i+1])+Math.abs(x.data[i+2]-y.data[i+2])>20)n++;return n;}
 async function settle(p){await p.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(done)))));}
 try{
