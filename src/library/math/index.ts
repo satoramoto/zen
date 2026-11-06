@@ -8,3 +8,4 @@ export * from './view/DistributionPlot';
 // Linked exploration scenes are React-only; existing Svelte math primitives remain intact.
 export * from './explore';
 export * from './signals';
+export * from './lab';
