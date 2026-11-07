@@ -1,25 +1,62 @@
-/* Document: the entry page drawn from its data, the page surface and its few blocks. */
+/* Document: the entry page to the textbook's lock. The plate (numeral and meta) ruled off from
+   the title; sections parted by a wide gap; the reading face for the lede. Every colour, face,
+   size and shadow comes from the pack. */
 
 .cmp-document {
   min-block-size: 100vh;
-  padding: var(--space-6) var(--space-4);
+  padding: var(--space-6) var(--space-4) calc(var(--space-6) * 2);
+}
+
+.cmp-document__plate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: end;
+  gap: var(--space-4);
+  padding-block-end: var(--space-4);
+  border-block-end: var(--border-width) solid var(--border-strong);
+  margin-block-end: var(--space-5);
+}
+
+.cmp-document__numeral {
+  --text-size: calc(var(--size-display) * 2.6);
+  --text-leading: 0.85;
+  --text-tracking: -0.03em;
+  font-variation-settings: var(--font-display-axes);
+  min-width: 0;
+}
+
+.cmp-document__meta {
+  text-align: end;
 }
 
 .cmp-document__head {
-  padding-block-end: var(--space-3);
+  padding-block-end: var(--space-4);
+}
+
+.cmp-document__title {
+  --text-leading: 1.05;
+  text-wrap: balance;
 }
 
 .cmp-document__lede {
+  --lib-text-face: var(--font-reading);
+  --text-size: var(--size-lead);
   --text-leading: 1.5;
-  max-width: 60ch;
+  max-width: 52ch;
 }
 
 .cmp-document__section {
   min-width: 0;
+  padding-block-start: var(--space-6);
+}
+
+.cmp-document__section-number {
+  display: inline-block;
+  margin-inline-end: var(--space-3);
 }
 
 .cmp-document__code {
-  padding: var(--space-3);
+  padding: var(--space-4);
   min-width: 0;
 }
 
@@ -27,4 +64,16 @@
   margin: 0;
   overflow-x: auto;
   white-space: pre;
+}
+
+@container cmp-reading (max-width: 44rem) {
+  .cmp-document__plate {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cmp-document__meta {
+    text-align: start;
+  }
+  .cmp-document__numeral {
+    --text-size: calc(var(--size-display) * 1.8);
+  }
 }

@@ -1,9 +1,11 @@
-/* Figure (compendium mockup): the card, its stage and its notes. */
+/* Figure: a raised card (edge and shadow from the pack), the stage a well set into it, controls
+   and a ruled caption below. */
 
 .cmp-figure {
-  margin: 0;
-  padding: var(--space-4);
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
   min-width: 0;
+  overflow: visible;
 }
 
 .cmp-figure__stage {
@@ -12,11 +14,34 @@
   overflow: hidden;
 }
 
+.cmp-figure__below {
+  padding: var(--space-4) var(--space-2) var(--space-2);
+}
+
 .cmp-figure__control {
   min-width: 0;
 }
 
-.cmp-figure__tag {
-  display: inline-block;
-  margin-inline-end: var(--space-2);
+.cmp-figure__changes {
+  --text-leading: 1.6;
+}
+
+.cmp-figure__caption {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: baseline;
+  padding-block-start: var(--space-3);
+  border-block-start: var(--border-width) solid var(--border);
+  --text-leading: 1.6;
+}
+
+.cmp-figure__number {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cmp-figure__text {
+  min-width: 0;
 }

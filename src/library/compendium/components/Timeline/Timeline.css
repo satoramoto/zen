@@ -2,6 +2,7 @@
    bars, points dots with their label hanging under them. */
 
 .cmp-timeline {
+  overflow-x: auto; /* a diagram may be wider than a phone; it scrolls in its own box */
   display: grid;
   row-gap: var(--space-3);
   min-width: 0;

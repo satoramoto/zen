@@ -48,12 +48,12 @@ export function Exercise({ number, prompt, placeholder, check, hint, solution, d
   return (
     <Surface as="section" layer="raised" className="cmp-exercise" aria-labelledby={`${id}-prompt`} data-state={verdict ? (correct ? 'correct' : 'wrong') : 'open'}>
       <Stack gap={3}>
-        {number && (
-          <Text role="label" tone="muted">
-            {number}
-          </Text>
-        )}
         <Text as="p" role="body" id={`${id}-prompt`} className="cmp-exercise__prompt">
+          {number && (
+            <Text role="label" size="caption" tone="accent" className="cmp-exercise__number">
+              {number}
+            </Text>
+          )}
           {prompt}
         </Text>
         <form onSubmit={onSubmit} className="cmp-exercise__form">

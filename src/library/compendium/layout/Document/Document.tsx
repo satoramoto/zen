@@ -11,7 +11,7 @@ import { Ref, Scrub } from '../../components/Scrub/Scrub';
 import { Sidenote } from '../../components/Sidenote/Sidenote';
 import { Steps } from '../../components/Steps/Steps';
 import { Timeline } from '../../components/Timeline/Timeline';
-import type { Block, Entry, EntryHead, Quantity, Run } from '../../model/document';
+import { exercisesIn, figuresIn, type Block, type Entry, type EntryHead, type Quantity, type Run } from '../../model/document';
 import { checkAnswer, type CheckerRegistry, type Progress, type Verdict } from '../../model/exercise';
 import { H, P, Reading, Wide } from '../Reading/Reading';
 import './Document.css';
@@ -32,10 +32,12 @@ export interface DocumentProps {
   progress?: Progress;
   /** Called when an exercise is answered correctly. */
   onProgress?(key: string): void;
+  /** Called whenever a quantity changes, with every quantity's current value. */
+  onQuantities?(quantities: Record<string, Quantity>): void;
   /** The reading measure in `ch`, 44–76. Default 66. */
   measure?: number;
-  /** Shown above the title in place of "Compendium · path": a book's name, say. */
-  crumb?: string;
+  /** The chapter's place in a book: its number, how many there are, and the book's title. Without it the plate shows the entry's path. */
+  chapter?: { number: number; of: number; book: string };
   /** Drawn after the last section: a book's pager. */
   footer?: ReactNode;
 }
@@ -74,7 +76,7 @@ function RunView({ run, page }: { run: Run; page: Page }) {
 
 const Runs = ({ runs, page }: { runs: Run[]; page: Page }) => runs.map((run, i) => <RunView key={i} run={run} page={page} />);
 
-function BlockView({ block, page, exerciseNumber }: { block: Block; page: Page; exerciseNumber?: number }) {
+function BlockView({ block, page, figureNumber, exerciseNumber }: { block: Block; page: Page; figureNumber?: number; exerciseNumber?: number }) {
   switch (block.kind) {
     case 'paragraph':
       return (
@@ -96,7 +98,7 @@ function BlockView({ block, page, exerciseNumber }: { block: Block; page: Page; 
       return (
         <Wide>
           {Figure ? (
-            <Figure {...block.props} {...bound} />
+            <Figure number={figureNumber ? `Figure ${figureNumber}` : undefined} {...block.props} {...bound} />
           ) : (
             <Text role="caption" tone="warning" data-missing-figure={block.figure}>
               No figure “{block.figure}” on this page.
@@ -169,15 +171,17 @@ function BlockView({ block, page, exerciseNumber }: { block: Block; page: Page; 
 }
 
 /**
- * **Job.** An entry, drawn from its data: the head (where it sits, its title, its summary and the
- * legend of marks), then each section as a heading and its blocks in the `Reading` column.
- * Paragraph runs become text, inline formulas, peeks, marks, sidenotes, scrubs and refs; the wide
- * blocks (figures, code, proof graphs, timelines, steps, exercises) take the margin too. The
- * entry's quantities are the page's state: a scrub or a bound figure sets one, everything bound
- * to it follows. It never evaluates anything: a figure is a component it is handed by name, a
- * formula is TeX typeset to MathML, an exercise's answer goes to a checker by name.
+ * **Job.** An entry, drawn from its data, to the textbook's lock: a plate (the chapter's numeral
+ * in the accent, beside its meta) ruled off from the title and summary; then each section with its
+ * number before the heading and its blocks in the `Reading` column, body in the pack's reading
+ * face. Paragraph runs become text, inline formulas, peeks, marks, sidenotes, scrubs and refs; the
+ * wide blocks (figures, code, proof graphs, timelines, steps, exercises) take the margin too. The
+ * entry's quantities are the page's state: a scrub or a bound figure sets one, everything bound to
+ * it follows, and the host hears every change. It never evaluates anything: a figure is a
+ * component it is handed by name, a formula is TeX typeset to MathML, an exercise's answer goes to
+ * a checker by name.
  */
-export function Document({ entry, figures = {}, entries = {}, checkers = {}, progress = {}, onProgress, measure, crumb, footer }: DocumentProps) {
+export function Document({ entry, figures = {}, entries = {}, checkers = {}, progress = {}, onProgress, onQuantities, measure, chapter, footer }: DocumentProps) {
   // The page's quantities, keyed by the entry's id: a new entry brings its own, adjusted during
   // render rather than in an effect (an effect would run after a first interaction that comes
   // before the mount effects flush, and put the starting values back over what the reader set);
@@ -191,20 +195,48 @@ export function Document({ entry, figures = {}, entries = {}, checkers = {}, pro
     checkers,
     quantities,
     setQuantity: (name, value) =>
-      setHeld((h) => (h.quantities[name] ? { ...h, quantities: { ...h.quantities, [name]: { ...h.quantities[name], value } } } : h)),
+      setHeld((h) => {
+        if (!h.quantities[name]) return h;
+        const next = { ...h, quantities: { ...h.quantities, [name]: { ...h.quantities[name], value } } };
+        onQuantities?.(next.quantities);
+        return next;
+      }),
     progress,
     entry,
     onProgress,
   };
-  let exercises = 0;
+  const figureCount = figuresIn(entry).length;
+  const exerciseCount = exercisesIn(entry).length;
+  const counts = [figureCount ? `${figureCount} figure${figureCount === 1 ? '' : 's'}` : '', exerciseCount ? `${exerciseCount} exercise${exerciseCount === 1 ? '' : 's'}` : '']
+    .filter(Boolean)
+    .join(' · ');
+  let figuresSoFar = 0;
+  let exercisesSoFar = 0;
   return (
     <Surface as="article" layer="base" radius="none" className="cmp-document" data-entry={entry.id}>
       <Reading measure={measure}>
-        <Stack gap={3} as="header" className="cmp-document__head">
-          <Text role="label" tone="muted">
-            {crumb ?? ['Compendium', ...(entry.path ?? [])].join(' · ')}
-          </Text>
-          <Text as="h1" role="display" size="heading" weight="display" tone="primary">
+        <Wide>
+          <header className="cmp-document__plate">
+            <Text as="div" role="display" weight="numeral" tone="accent" tabular className="cmp-document__numeral" aria-hidden="true">
+              {chapter ? String(chapter.number).padStart(2, '0') : '§'}
+            </Text>
+            <Stack gap={1} as="div" className="cmp-document__meta">
+              <Text role="label" tone="muted">
+                {chapter ? chapter.book : 'Compendium'}
+              </Text>
+              <Text role="label" tone="muted">
+                {chapter ? `Chapter ${chapter.number} of ${chapter.of}` : (entry.path ?? []).join(' · ') || entry.kind || 'Entry'}
+              </Text>
+              {counts && (
+                <Text role="label" tone="muted">
+                  {counts}
+                </Text>
+              )}
+            </Stack>
+          </header>
+        </Wide>
+        <Stack gap={3} as="div" className="cmp-document__head">
+          <Text as="h1" role="display" tone="primary" className="cmp-document__title">
             {entry.title}
           </Text>
           <Text as="p" role="body" tone="secondary" className="cmp-document__lede">
@@ -213,10 +245,21 @@ export function Document({ entry, figures = {}, entries = {}, checkers = {}, pro
           <MarkLegend />
         </Stack>
         {entry.sections.map((s, i) => (
-          <Stack key={s.id ?? i} gap={4} as="section" className="cmp-document__section">
-            <H id={s.id}>{s.heading}</H>
+          <Stack key={s.id ?? i} gap={5} as="section" className="cmp-document__section">
+            <H id={s.id}>
+              <Text role="label" tone="accent" tabular className="cmp-document__section-number" aria-hidden="true">
+                {chapter ? `${chapter.number}.${i + 1}` : `${i + 1}`}
+              </Text>
+              {s.heading}
+            </H>
             {s.blocks.map((b, j) => (
-              <BlockView key={j} block={b} page={page} exerciseNumber={b.kind === 'exercise' ? ++exercises : undefined} />
+              <BlockView
+                key={j}
+                block={b}
+                page={page}
+                figureNumber={b.kind === 'figure' ? ++figuresSoFar : undefined}
+                exerciseNumber={b.kind === 'exercise' ? ++exercisesSoFar : undefined}
+              />
             ))}
           </Stack>
         ))}
