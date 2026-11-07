@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { HARMONIC, HARMONIC_ENTRIES } from '../harmonic.entry';
+import { HARMONIC } from '../book/harmonic.entry';
+import { HARMONIC_BOOK } from '../book/harmonic.book';
+import { bookIndex } from './book';
 import { figuresIn, formulasIn, paragraph, peeksIn, section, tex, type Entry } from './document';
 import { toMathML } from './formula';
 import { validateEntry } from './validate';
@@ -57,7 +59,7 @@ describe('validateEntry', () => {
     expect(validateEntry(entry(section('S', paragraph(tex('x')), paragraph({ peek: 'x' }))), { entries: ['x'] })).toEqual([]);
   });
   it('passes the harmonic series as written', () => {
-    expect(validateEntry(HARMONIC, { figures: ['harmonic-string'], entries: Object.keys(HARMONIC_ENTRIES) })).toEqual([]);
+    expect(validateEntry(HARMONIC, { figures: ['harmonic-string'], entries: Object.keys(bookIndex(HARMONIC_BOOK)) })).toEqual([]);
     expect([...formulasIn(HARMONIC)].filter((f) => f.display)).toHaveLength(2);
   });
 });

@@ -1,0 +1,28 @@
+/* Steps: a numbered list revealed one step at a time, in a raised card. */
+
+.cmp-steps {
+  padding: var(--space-4);
+  min-width: 0;
+}
+
+.cmp-steps__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cmp-steps__number {
+  flex: none;
+  inline-size: 1.5em;
+  text-align: end;
+  padding-block-start: 0.2em;
+}
+
+.cmp-steps__body {
+  --text-leading: 1.6;
+  min-width: 0;
+}
+
+.cmp-steps__step[data-latest] .cmp-steps__number {
+  color: var(--accent);
+}
