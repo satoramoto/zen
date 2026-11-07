@@ -88,6 +88,7 @@
     "pngjs": "7.0.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "story-spec": "file:../story-spec",
     "storybook": "10.6.1",
     "svelte": "5.57.2",
     "tsx": "4.23.15",
