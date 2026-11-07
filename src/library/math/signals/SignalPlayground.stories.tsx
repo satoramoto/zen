@@ -2,7 +2,7 @@ import type {Meta,StoryObj} from '@storybook/react-vite';
 import {expect,userEvent,within,waitFor,fireEvent} from 'storybook/test';
 import {withLibraryTheme} from '../../storybook';
 import {SignalPlayground} from './SignalPlayground';
-const meta={title:'Design OS/Math/Signal Playground',component:SignalPlayground,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{example:'interference'},argTypes:{example:{control:'select',options:['traveling','interference','standing','fourier','beats','modulation','dispersion','torus','sphere','torus4']}}} satisfies Meta<typeof SignalPlayground>;
+const meta={title:'Math/Signal Playground',component:SignalPlayground,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{example:'interference'},argTypes:{example:{control:'select',options:['traveling','interference','standing','fourier','beats','modulation','dispersion','torus','sphere','torus4']}}} satisfies Meta<typeof SignalPlayground>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const TravelingWave:Story={args:{example:'traveling'}};
 export const Interference:Story={args:{example:'interference'}};

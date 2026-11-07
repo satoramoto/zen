@@ -4,7 +4,7 @@ import {PNG} from 'pngjs';
 import assert from 'node:assert/strict';
 const base=process.env.MATH_PREVIEW_URL??'http://127.0.0.1:6027',output='.shots/cymatics';await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true});
-const url=s=>`${base}/iframe.html?id=design-os-math-${s}&viewMode=story&globals=theme:linear;mode:dark`;
+const url=s=>`${base}/iframe.html?id=math-${s}&viewMode=story&globals=theme:linear;mode:dark`;
 async function settle(p){await p.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(done)))));}
 function changed(a,b){const x=PNG.sync.read(a),y=PNG.sync.read(b);let count=0;assert.equal(x.data.length,y.data.length);for(let i=0;i<x.data.length;i+=4)if(Math.abs(x.data[i]-y.data[i])+Math.abs(x.data[i+1]-y.data[i+1])+Math.abs(x.data[i+2]-y.data[i+2])>20)count++;return count;}
 try{

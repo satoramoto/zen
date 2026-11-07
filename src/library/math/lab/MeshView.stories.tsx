@@ -9,7 +9,7 @@ function Specimen({object='torus',cutaway=false,tool='translate'}:{object?:'sphe
  const mesh=useMemo(()=>solidMesh(object),[object]);const [plane,setPlane]=useState<CuttingPlane>({normal:[0,1,0],offset:.15});const section=useMemo(()=>intersectMesh(mesh,plane),[mesh,plane]);
  return <section className="zen-lab"><div className="zen-lab__card"><MeshView mesh={mesh} plane={plane} lines={section.lines} cutaway={cutaway} tool={tool} onPlaneChange={setPlane}/></div><p>Drag the plane handle. Offset: <output aria-label="Plane offset">{plane.offset.toFixed(2)}</output></p><div className="zen-lab__buttons"><button onClick={()=>setPlane({normal:[1,0,0],offset:0})}>Vertical cut</button><button onClick={()=>setPlane({normal:[0,1,0],offset:.15})}>Reset plane</button></div></section>;
 }
-const meta={title:'Design OS/Math/Components/Mesh View',component:Specimen,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{object:'torus',cutaway:false,tool:'translate'},argTypes:{object:{control:'select',options:['sphere','torus','ellipsoid']},cutaway:{control:'boolean'},tool:{control:'inline-radio',options:['translate','rotate']}}} satisfies Meta<typeof Specimen>;
+const meta={title:'Math/Components/Mesh View',component:Specimen,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{object:'torus',cutaway:false,tool:'translate'},argTypes:{object:{control:'select',options:['sphere','torus','ellipsoid']},cutaway:{control:'boolean'},tool:{control:'inline-radio',options:['translate','rotate']}}} satisfies Meta<typeof Specimen>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const PlaneIntersection:Story={};
 export const Cutaway:Story={args:{cutaway:true}};

@@ -2,7 +2,7 @@ import type {Meta,StoryObj} from '@storybook/react-vite';
 import {withLibraryTheme} from '../../storybook';
 import {expect,userEvent,within} from 'storybook/test';
 import {SolidSections} from './SolidSections';
-const meta={title:'Design OS/Math/Solid Sections',component:SolidSections,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{object:'torus'},argTypes:{object:{control:'select',options:['sphere','torus','ellipsoid']}},} satisfies Meta<typeof SolidSections>;
+const meta={title:'Math/Solid Sections',component:SolidSections,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{object:'torus'},argTypes:{object:{control:'select',options:['sphere','torus','ellipsoid']}},} satisfies Meta<typeof SolidSections>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const SphereCuts:Story={args:{object:'sphere'}};
 export const TorusCuts:Story={args:{object:'torus'}};

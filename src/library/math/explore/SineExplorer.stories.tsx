@@ -4,7 +4,7 @@ import { withLibraryTheme } from '../../storybook';
 import { SineExplorer } from './SineExplorer';
 
 const meta = {
-  title: 'Design OS/Math/Circle to Sine',
+  title: 'Math/Circle to Sine',
   component: SineExplorer,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },

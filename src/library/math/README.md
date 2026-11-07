@@ -1,6 +1,6 @@
 # Math exploration
 
-The **Design OS / Math** Storybook section presents the React exploration framework:
+The **Math** Storybook section presents the React exploration framework:
 linked quantities, directly manipulated drawings, shared probes, and explicit mathematical
 interpretations. Entries are grouped by component rather than by implementation batch.
 
