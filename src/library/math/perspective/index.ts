@@ -4,7 +4,7 @@ export {OpticsExplorer,type OpticsExplorerProps} from './OpticsExplorer';
 export {SpatialOptics,type SpatialOpticsProps} from './SpatialOptics';
 export {StereoExplorer,type StereoExplorerProps} from './StereoExplorer';
 /** Reusable clipped wire projection, finite ray-path and parallel stereo drawing primitives. */
-export {ProjectionView,type ProjectionViewProps,type ProjectionLine,type ProjectionFace} from './ProjectionView';
+export {ProjectionView,type ProjectionViewProps,type ProjectionLine,type ProjectionFace,type ProjectionDot} from './ProjectionView';
 export {RayPathView,type RayPathViewProps} from './RayPathView';
 export {StereoPair,type StereoPairProps} from './StereoPair';
 /** Framework-free models, namespaced to keep coordinate conventions explicit. */

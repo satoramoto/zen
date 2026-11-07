@@ -22,7 +22,9 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Components / Projection View | `ProjectionView`: clipped wire geometry and invertible probe manipulation |
 | Components / Ray Path View | `RayPathView`: finite optical paths, events and normals |
 | Components / Stereo Pair | `StereoPair`: shared geometry through parallel cameras |
-| Stereo Illusion Lab | `StereoIllusionLab`: physically calibrated random-dot relief and parallel/crossed viewing |
+| Stereo Illusion Lab | `StereoIllusionLab`: large motion-depth relief and optional guided, calibrated parallel/crossed viewing |
+| Components / Motion Relief | `MotionRelief`: draggable relief point cloud and optional mesh |
+| Components / Fusion Targets | `FusionTargets`: complementary crosses and visible depth rings |
 | Components / Dot Stereo View | `DotStereoView`: paired random-dot surface rendering with physical image dimensions |
 | Components / Display Calibration | `DisplayCalibration`: ruler-based CSS pixel scale |
 | Components / Cymatic Field | `CymaticField`: nodal grains, signed displacement and cycle-averaged paint |

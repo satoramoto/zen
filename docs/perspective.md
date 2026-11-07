@@ -75,3 +75,7 @@ explorer story plays and `scripts/perspective-stories.mjs`, including actual poi
 keyboard manipulation, viewport invariance, narrow layouts and light/dark presentation.
 Use the unified Zen launcher and give its isolated worktree free ports; the browser runner
 defaults to 6028 or accepts `MATH_PREVIEW_URL`.
+
+`ProjectionView` also accepts `ProjectionDot` point clouds. Dot positions use world
+coordinates and radii use projected image units; points share camera transforms and
+near clipping with the other geometry. `MotionRelief` uses this for enlarged relief exploration.

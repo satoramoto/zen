@@ -3,7 +3,13 @@
 `Math/Stereo Illusion Lab` adds five random-dot scenes: a ring, bowl/dome reversal,
 saddle, radial ripples and hidden ZEN lettering. Parallel and crossed viewing share
 the same physical geometry. Phase and patterns change only on explicit interaction;
-there is no autoplay or flicker. Escape or hiding the page returns to a single-image rest view.
+there is no autoplay or flicker. The default is a large, draggable motion-depth surface: no
+fusion or physical calibration is required. An optional guide mesh makes the relief explicit.
+
+Stereo is a separate viewing choice. Start with complementary bars that form a cross in
+the fused middle image, continue to a visible ring, then try the hidden random-dot relief.
+Progress is self-reported; the app cannot detect fusion. Returning to motion depth is always
+available. Escape or hiding the page removes an active stereo pair.
 
 ## Calibration and geometry
 
@@ -50,6 +56,8 @@ head tracking, medical measurement or physiological prediction is performed.
 - `DotStereoView`: physical viewer and layout, a built-in scene or custom `heightAt(x,y)`
   field (finite normalized heights in −1…1), relief, phase, seed and depth inversion.
   It renders physically sized eye images. A caller must first fit the layout.
+- `MotionRelief`: a rotatable point cloud from the same relief field, with an optional mesh.
+- `FusionTargets`: physically sized complementary alignment crosses and visible depth rings.
 - `DisplayCalibration`: the adjustable ruler reference and explicit confirmation.
 - `useDisplayInvalidation`: lifecycle hook for invalidating a host's measurement on
   detected display changes; the lab wires it to calibration and the active pair.
@@ -57,8 +65,8 @@ head tracking, medical measurement or physiological prediction is performed.
   `reliefParallax`, `eyeImageShift`, `vergenceAngle` and `vergenceDistance`.
 
 The rasterizer forward-warps one deterministic noise field per eye. A depth buffer keeps
-the nearer sample at collisions; disocclusion gaps receive independent noise. The 0.3 mm
-nominal dot pitch is scaled into backing pixels. Pixel rounding limits attainable subpixel
+the nearer sample at collisions; disocclusion gaps receive independent noise. The configurable dot pitch is scaled into backing pixels (0.3 mm primitive default;
+0.6 mm initially in the lab, adjustable to coarser dots). Pixel rounding limits attainable subpixel
 disparity, especially on low-density displays. The model uses a single-valued relief field;
 it is not a general retinal ray tracer. Depth inversion changes the field before visibility
 and shifts are computed, rather than blindly exchanging finished images.
@@ -77,4 +85,6 @@ actual canvas pixels, eye order, depth reversal, viewing distance, Escape, resiz
 invalidation, phase, narrow layout and DPR=2 backing resolution. Full-page screenshot
 capture can transiently resize a browser viewport, so the active measurement is captured
 with an element screenshot; normal resize behavior remains enabled. Human fusion and
-comfort cannot be established by browser tests.
+comfort cannot be established by browser tests. `scripts/stereo-guide-stories.mjs` also
+checks pointer/keyboard rotation, reset, the guided targets, adjustable dot size, returning
+to motion, and narrow/light layouts.

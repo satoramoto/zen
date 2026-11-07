@@ -4,3 +4,7 @@ export {DotStereoView,type DotStereoViewProps} from './DotStereoView';
 export {DisplayCalibration,useDisplayInvalidation,type DisplayCalibrationProps} from './DisplayCalibration';
 export {fitStereoLayout,depthRange,vergenceDistance,vergenceAngle,reliefParallax,eyeImageShift,type StereoViewer,type StereoLayout,type FusionMode} from './viewer';
 export {illusionHeight,stereoIllusions,type StereoIllusion} from './illusions';
+
+/** Optional clear-target fusion guide and single-view motion alternative. */
+export {FusionTargets,type FusionTargetsProps} from './FusionTargets';
+export {MotionRelief} from './MotionRelief';
