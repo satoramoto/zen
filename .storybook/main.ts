@@ -3,6 +3,7 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import { transformWithOxc } from 'vite';
 import type { Plugin } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { sharedAliases } from '../vite.aliases.ts';
 
 /** The Claude Code harness's engine-side TSX: JSX against the global `h` and `Fragment`, as the engine compiles it, never React's runtime. */
 const ENGINE_JSX = /\/src\/harness\/claude-code\/(kit|sample)\/.*\.tsx$/;
@@ -37,11 +38,13 @@ const config: StorybookConfig = {
     config.plugins = [engineJsx(), ...(config.plugins ?? []), svelte()];
     config.resolve ??= {};
     // The harness's sample mod imports its atoms from 'claude-code', as a mod does: here, the bench's stand-in engine.
-    config.resolve.alias = {
-      ...(config.resolve.alias as Record<string, string>),
-      'claude-code': fileURLToPath(new URL('../src/harness/claude-code/bench/engine.ts', import.meta.url)),
-      '@omarchy': fileURLToPath(new URL('../src/harness/omarchy', import.meta.url)),
-    };
+    const existing = config.resolve.alias;
+    config.resolve.alias = [
+      ...(Array.isArray(existing) ? existing : Object.entries(existing ?? {}).map(([find, replacement]) => ({ find, replacement }))),
+      { find: 'claude-code', replacement: fileURLToPath(new URL('../src/harness/claude-code/bench/engine.ts', import.meta.url)) },
+      { find: '@omarchy', replacement: fileURLToPath(new URL('../src/harness/omarchy', import.meta.url)) },
+      ...sharedAliases,
+    ];
     if (process.env.OMARCHY_PLUGIN_SOURCE) {
       config.server ??= {};
       config.server.fs ??= {};
