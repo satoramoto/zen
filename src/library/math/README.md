@@ -22,6 +22,9 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Components / Projection View | `ProjectionView`: clipped wire geometry and invertible probe manipulation |
 | Components / Ray Path View | `RayPathView`: finite optical paths, events and normals |
 | Components / Stereo Pair | `StereoPair`: shared geometry through parallel cameras |
+| Stereo Illusion Lab | `StereoIllusionLab`: physically calibrated random-dot relief and parallel/crossed viewing |
+| Components / Dot Stereo View | `DotStereoView`: paired random-dot surface rendering with physical image dimensions |
+| Components / Display Calibration | `DisplayCalibration`: ruler-based CSS pixel scale |
 | Components / Cymatic Field | `CymaticField`: nodal grains, signed displacement and cycle-averaged paint |
 | Components / Equation Input | `EquationInput`: editable typeset math, touch keyboard and plain-text fallback |
 | Components / Mesh View | `MeshView`: sampled mesh, clipping plane and native manipulation handles |
@@ -42,6 +45,7 @@ available for compatibility. This cleanup does not remove a package API.
 
 ## Implementation references
 
+- [Calibrated stereo illusions](../../../docs/stereo-illusions.md)
 - [Perspective and geometric optics](../../../docs/perspective.md)
 - [Editable wave calculator](../../../docs/wave-calculator.md)
 - [Circle-to-sine exploration](../../../docs/math-exploration.md)
