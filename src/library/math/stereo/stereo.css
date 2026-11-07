@@ -1,0 +1,35 @@
+.zen-stereo-lab__workspace { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr); gap:18px; margin-block:20px; }
+.zen-stereo-lab__stage { display:flex; justify-content:center; align-items:center; min-block-size:340px; padding:24px; overflow:hidden; background:radial-gradient(ellipse at center,color-mix(in srgb,var(--hue-4) 8%,transparent),transparent 70%); }
+.zen-stereo-lab__rest { text-align:center; max-inline-size:340px; }
+.zen-stereo-lab__rest p { font-size:12px; color:var(--text-2); }
+.zen-stereo-lab__preview { display:block; inline-size:200px; block-size:200px; max-inline-size:100%; margin:16px auto; color:var(--text-1); background:var(--surface-0); image-rendering:pixelated; }
+.zen-dot-stereo { display:flex; flex:none; align-items:flex-start; justify-content:center; }
+.zen-dot-stereo__eye { flex:none; text-align:center; }
+.zen-dot-stereo__image { display:block; max-inline-size:none; color:var(--text-1); background:var(--surface-0); image-rendering:pixelated; }
+.zen-dot-stereo__mark { display:block; margin-block-end:8px; font:12px var(--font-mono); color:var(--text-2); }
+.zen-dot-stereo__eye small { display:block; font-size:9px; color:var(--text-3); margin-block-start:8px; white-space:nowrap; }
+.zen-stereo-lab__toolbar { display:flex; flex-wrap:wrap; gap:8px; border-block:1px solid var(--border); padding:16px 20px; }
+.zen-stereo-lab__toolbar button { font-size:12px; }
+.zen-stereo-lab__toolbar button:first-child { border-color:var(--hue-4); color:var(--hue-4); }
+.zen-stereo-lab__toolbar button:disabled { opacity:.5; cursor:default; }
+.zen-stereo-lab__guide { padding:24px; }
+.zen-stereo-lab__guide p { margin-inline:0; }
+.zen-stereo-lab__guide h2 { font-size:19px; }
+.zen-stereo-lab__fine { font-size:11px; color:var(--text-3); }
+.zen-display-calibration { padding:24px; }
+.zen-display-calibration h2 { font-size:18px; }
+.zen-display-calibration p { font-size:12px; color:var(--text-2); }
+.zen-display-calibration > button { margin-block-start:18px; }
+.zen-display-calibration__ruler-scroll { overflow:auto; padding-block:22px; margin-block:12px; }
+.zen-display-calibration__ruler { display:flex; justify-content:space-between; align-items:center; height:32px; position:relative; flex:none; }
+.zen-display-calibration__ruler::before { content:''; position:absolute; inset-inline:0; inset-block-start:50%; border-block-start:1px solid var(--hue-4); }
+.zen-display-calibration__ruler i { height:24px; width:0; border-inline-start:1px solid var(--hue-4); }
+.zen-display-calibration__ruler span { position:relative; color:var(--hue-4); background:var(--surface-1); padding:0 8px; font:12px var(--font-mono); }
+@media(max-width:850px) { .zen-stereo-lab__workspace { grid-template-columns:1fr; } .zen-stereo-lab__stage { min-block-size:280px; } }
+
+.zen-stereo-lab__geometry { display:block; width:100%; max-height:300px; }
+.zen-stereo-lab__geometry text { fill:var(--text-2); font:10px var(--font-mono); }
+.zen-display-calibration__ruler { justify-content:center; }
+.zen-display-calibration__ruler i { position:absolute; inset-block-start:4px; }
+.zen-display-calibration__ruler i:first-child { inset-inline-start:0; }
+.zen-display-calibration__ruler i:last-child { inset-inline-start:100%; }

@@ -12,3 +12,4 @@ export * from './lab';
 export * from './cymatics';
 export * from './calculator';
 export * from './perspective';
+export * from './stereo';
