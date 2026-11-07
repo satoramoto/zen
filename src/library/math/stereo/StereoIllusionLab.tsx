@@ -1,14 +1,16 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {Frame,QuantityControl,Readout} from '../perspective/shared';
 import {DisplayCalibration,useDisplayInvalidation} from './DisplayCalibration';
+import {StereoTuner} from './StereoTuner';
 import {FusionTargets} from './FusionTargets';
 import {MotionRelief} from './MotionRelief';
 import {DotStereoView,ReliefPreview} from './DotStereoView';
 import {stereoIllusions,type StereoIllusion} from './illusions';
 import {baseParallax,depthRange,fitStereoLayout,type FusionMode,type StereoViewer} from './viewer';
 import './stereo.css';
-export interface StereoIllusionLabProps {illusion?:StereoIllusion}
-export function StereoIllusionLab({illusion='ring'}:StereoIllusionLabProps){
+export interface StereoIllusionLabProps {illusion?:StereoIllusion;startIn?:'tune'|'motion'}
+export function StereoIllusionLab({illusion='ring',startIn='tune'}:StereoIllusionLabProps){
+ const [tuning,setTuning]=useState(startIn==='tune');
  const [kind,setKind]=useState(illusion),[viewer,setViewer]=useState<StereoViewer>({pxPerMm:3.8,distanceMm:600,ipdMm:64}),[mode,setMode]=useState<FusionMode>('parallel');
  const [width,setWidth]=useState(24),[relief,setRelief]=useState(6),[phase,setPhase]=useState(0),[seed,setSeed]=useState(1),[inverted,setInverted]=useState(false),[reveal,setReveal]=useState(false);
  const [presentation,setPresentation]=useState<'motion'|'stereo'>('motion'),[step,setStep]=useState<'align'|'depth'|'dots'>('align'),[dotMm,setDotMm]=useState(.6),[motionReset,setMotionReset]=useState(0);
@@ -21,9 +23,10 @@ export function StereoIllusionLab({illusion='ring'}:StereoIllusionLabProps){
  const layout=fitStereoLayout(viewer,width,available,mode),range=layout?depthRange(viewer,layout,step==='align'?0:relief):null,show=presentation==='stereo'&&active&&confirmed&&!!layout;
  const setTraining=(next:typeof step)=>{setPresentation('stereo');setStep(next);if(next==='depth'&&relief===0)setRelief(4);};
  const changeKind=(key:StereoIllusion)=>{setKind(key);setInverted(false);setPhase(0);};
+ if(tuning)return <StereoTuner illusion={illusion} onMotion={()=>setTuning(false)}/>;
  return <Frame eyebrow="Stereo / measured illusions" title="Find depth your way." description="Start with a large surface you can turn normally. If you want to try stereo, build up from a clear alignment target to visible depth, then to hidden shapes.">
   <nav className="zen-perspective__tabs" aria-label="Stereo illusions">{Object.entries(stereoIllusions).map(([key,item])=><button key={key} aria-pressed={kind===key} onClick={()=>changeKind(key as StereoIllusion)}>{item.label}</button>)}</nav>
-  <nav className="zen-perspective__tabs" aria-label="Viewing approach"><button aria-pressed={presentation==='motion'} onClick={()=>{setActive(false);setPresentation('motion');}}>Motion depth · no fusion</button><button aria-pressed={presentation==='stereo'} onClick={()=>{setActive(false);setPresentation('stereo');}}>Stereo pair</button></nav>
+  <nav className="zen-perspective__tabs" aria-label="Viewing approach"><button onClick={()=>setTuning(true)}>Look & tune stereo</button><button aria-pressed={presentation==='motion'} onClick={()=>{setActive(false);setPresentation('motion');}}>Motion depth · no fusion</button><button aria-pressed={presentation==='stereo'} onClick={()=>{setActive(false);setPresentation('stereo');}}>Stereo pair</button></nav>
   {presentation==='stereo'&&<nav className="zen-perspective__tabs" aria-label="Stereo learning steps"><button aria-pressed={step==='align'} onClick={()=>setTraining('align')}>1 · Align a cross</button><button aria-pressed={step==='depth'} onClick={()=>setTraining('depth')}>2 · A visible ring</button><button aria-pressed={step==='dots'} onClick={()=>setTraining('dots')}>3 · Hidden dots</button></nav>}
   <div className="zen-stereo-lab__workspace"><article className="zen-perspective__card"><header><h2>{presentation==='motion'||step==='dots'?stereoIllusions[kind].label:step==='align'?'One circle. One complete cross.':'A ring and its frame.'}</h2><small>{presentation==='motion'?'Motion parallax · one image':show?'Measured stereo pair':'Single-image rest view'}</small></header><div ref={stage} className="zen-stereo-lab__stage" data-active={show}>
    {presentation==='motion'?<MotionRelief illusion={kind} phase={phase} seed={seed} inverted={inverted} resetKey={motionReset}/>:show&&step!=='dots'?<FusionTargets viewer={viewer} layout={layout!} step={step} relief={relief} inverted={inverted}/>:show?<DotStereoView viewer={viewer} layout={layout!} illusion={kind} relief={relief} phase={phase} seed={seed} inverted={inverted} dotMm={dotMm}/>:<div className="zen-stereo-lab__rest"><ReliefPreview illusion={kind} seed={seed} phase={phase} inverted={inverted} reveal={reveal}/><p>{confirmed?'Ready when you are. Start stereo to show the physically sized pair.':'Calibrate the 50 mm reference to enable the stereo pair.'}</p></div>}
