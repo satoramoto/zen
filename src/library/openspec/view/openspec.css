@@ -1,0 +1,246 @@
+/* The OpenSpec views: a reading column for documents, badges for step keywords and delta kinds,
+   a task list with its progress, and the repo's two-pane dashboard. Contract variables only. */
+
+.os-doc {
+  max-width: 72ch;
+  min-width: 0;
+}
+
+.os-doc__p {
+  --text-leading: 1.6;
+  margin: 0;
+}
+
+.os-doc__h {
+  margin: 0;
+  padding-block-start: var(--space-2);
+}
+
+.os-doc__list {
+  margin: 0;
+  padding-inline-start: 1.4em;
+}
+.os-doc__list[data-plain] {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.os-doc__item {
+  --text-leading: 1.6;
+}
+.os-doc__item[data-depth='1'] {
+  margin-inline-start: 1.4em;
+}
+.os-doc__item[data-depth='2'] {
+  margin-inline-start: 2.8em;
+}
+
+.os-doc__code {
+  margin: 0;
+  padding: var(--space-3);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.os-doc__inline-code {
+  padding-inline: 0.2em;
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--text-1) 8%, transparent);
+}
+
+.os-doc__quote {
+  margin: 0;
+  padding-inline-start: var(--space-3);
+  border-inline-start: 3px solid var(--border-strong);
+}
+
+.os-doc__link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* Badges: a step keyword, a delta kind, a status. */
+.os-badge {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  border: 1px solid currentColor;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.os-badge[data-fill] {
+  border-color: transparent;
+  background: color-mix(in oklab, currentColor 14%, transparent);
+}
+
+/* A scenario's steps: keyword badges in a column, text beside them. */
+.os-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  align-items: baseline;
+}
+
+.os-scenario {
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.os-requirement {
+  padding: var(--space-4);
+  min-width: 0;
+  border-inline-start: 3px solid var(--border);
+}
+.os-requirement[data-delta='added'] {
+  border-inline-start-color: var(--success);
+}
+.os-requirement[data-delta='modified'] {
+  border-inline-start-color: var(--warning);
+}
+.os-requirement[data-delta='removed'] {
+  border-inline-start-color: var(--danger);
+}
+
+/* Tasks. */
+.os-tasks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.os-task {
+  display: grid;
+  grid-template-columns: max-content max-content minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: baseline;
+  padding-block: var(--space-1);
+}
+
+.os-task__box {
+  inline-size: 1em;
+  block-size: 1em;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-strong);
+  align-self: center;
+  display: grid;
+  place-items: center;
+}
+.os-task[data-done] .os-task__box {
+  background: var(--success);
+  border-color: var(--success);
+}
+.os-task__tick {
+  inline-size: 0.7em;
+  block-size: 0.7em;
+  fill: none;
+  stroke: var(--success-text);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.os-progress {
+  inline-size: 100%;
+  block-size: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--text-1) 10%, transparent);
+  overflow: hidden;
+}
+.os-progress__fill {
+  block-size: 100%;
+  background: var(--success);
+  border-radius: inherit;
+}
+.os-progress[data-done] .os-progress__fill {
+  background: var(--success);
+}
+
+/* The repo: contents down the side, the open item beside it; folds when narrow. */
+.os-repo {
+  min-block-size: 100vh;
+  container: os-repo / inline-size;
+}
+
+.os-repo__grid {
+  display: grid;
+  grid-template-columns: 20rem minmax(0, 1fr);
+  min-block-size: 100vh;
+}
+
+.os-repo__side {
+  padding: var(--space-5) var(--space-4);
+  border-inline-end: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-block-size: 100vh;
+  overflow: auto;
+}
+
+.os-repo__main {
+  padding: var(--space-6) var(--space-5);
+  min-width: 0;
+}
+
+.os-repo__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.os-repo__item {
+  appearance: none;
+  background: none;
+  border: 0;
+  inline-size: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: var(--space-2);
+  align-items: baseline;
+  text-align: start;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.os-repo__item:hover {
+  background: color-mix(in oklab, var(--text-1) 6%, transparent);
+}
+.os-repo__item[aria-current='true'] {
+  background: color-mix(in oklab, var(--accent) 14%, transparent);
+}
+
+.os-repo__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.os-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: var(--space-3);
+}
+
+.os-stat {
+  padding: var(--space-3);
+}
+
+@container os-repo (max-width: 56rem) {
+  .os-repo__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .os-repo__side {
+    position: static;
+    max-block-size: none;
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--border);
+  }
+  .os-repo__main {
+    padding: var(--space-5) var(--space-4);
+  }
+}

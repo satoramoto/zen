@@ -30,6 +30,7 @@ const COMPONENT_SOURCES = [
   ...filesUnder('theme-editor', /\.(tsx?|css)$/),
   ...filesUnder('report', /\.(tsx?|css)$/),
   ...filesUnder('compendium', /\.(tsx?|css)$/),
+  ...filesUnder('openspec', /\.(tsx?|css)$/),
 ];
 const MODES: Mode[] = ['light', 'dark'];
 const CONTRACT = new Set([...Object.keys(toCssVars(packs[0].facets, 'dark')), ...SCOPE_VARS]);

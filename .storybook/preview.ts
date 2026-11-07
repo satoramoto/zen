@@ -40,6 +40,8 @@ const preview: Preview = {
           ['Fourier', ['Epicycles', 'Heat Modes', 'Step Series', 'Rotating Vector', 'Pair to Sine', 'Coefficient Finder'], 'Wave Calculator', 'Circle to Sine', 'Standing String', 'Cymatics Explorer', 'Signal Playground', 'Solid Sections', 'Complex Explorer', 'Complex Series', 'Prime Counting', 'Components'],
           'Compendium',
           ['Book', 'Layout', ['Document', 'Reading'], 'Components'],
+          'Openspec',
+          ['Repo', 'Spec', 'Change'],
           'Harness',
           ['Claude Code', ['Kit', 'Skins', 'Sample mod']],
           'Yahaha',
