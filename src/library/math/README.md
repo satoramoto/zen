@@ -6,6 +6,7 @@ interpretations. Entries are grouped by component rather than by implementation 
 
 | Storybook entry | Component / purpose |
 | --- | --- |
+| Wave Calculator | `WaveCalculator`: editable linked functions, automatic parameter scrubbing, time and comparison |
 | Circle to Sine | `SineExplorer`: linked orbit and wave, guided stops and comparisons |
 | Signal Playground | `SignalPlayground`: ten fields and manifolds with linked analysis |
 | Solid Sections | `SolidSections`: true plane cuts, holes, disconnected contours and measurements |
@@ -33,6 +34,7 @@ available for compatibility. This cleanup does not remove a package API.
 
 ## Implementation references
 
+- [Editable wave calculator](../../../docs/wave-calculator.md)
 - [Circle-to-sine exploration](../../../docs/math-exploration.md)
 - [Signals, sections and scalar paint](../../../docs/signal-playground.md)
 - [Cymatics and standing waves](../../../docs/cymatics.md)
