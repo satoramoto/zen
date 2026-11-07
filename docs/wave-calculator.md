@@ -101,3 +101,25 @@ to 1200 LaTeX characters and a 150-node conversion budget.
 undo/redo, incomplete fractions, domain errors, inline quantities, touch key insertion,
 local editor assets and keyboard ownership inside Storybook's iframe. Pure bridge tests
 check round-trip grouping, composed functions, logarithms and unsupported input.
+
+## Syntax highlighting
+
+Typeset input uses a small, theme-aware color vocabulary: functions use hue 4,
+adjustable quantities hue 2, x/position hue 1, and t/time hue 3. References f, g and h
+match their respective graph colors. Numbers, constants and operators stay quieter.
+The color key explains the mapping; the per-editor Colors toggle restores monochrome.
+Plain-text mode remains an ordinary source input.
+
+Selecting a quantity highlights its occurrences across all equations with an underline
+and background as well as color. The existing inline controls and curve highlighting
+use that same selection. The `highlighting`, `activeParameter` and `showColorKey` props
+are also available on the standalone `EquationInput`.
+
+The isolated `highlighting.ts` adapter decorates visible MathLive glyph leaves in its
+shadow DOM. It never applies formatting commands to the math model, changes LaTeX,
+rewrites the input sink, or touches selection/undo. A mutation observer reapplies
+presentation after MathLive redraws; attribute writes do not retrigger the observer.
+This deliberately depends on the pinned MathLive 0.111.x rendered-token structure.
+Run `node scripts/highlight-stories.mjs` when upgrading MathLive; it verifies token
+classification, theme colors, active quantities, toggling, unmodified LaTeX and live
+input. The existing equation-input runner covers caret, undo/redo and touch regressions.

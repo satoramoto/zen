@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MathfieldElement } from 'mathlive';
+import { bindEquationHighlighting } from './highlighting';
 import { expressionLatex } from './expression';
 import './EquationInput.css';
 
@@ -12,11 +13,18 @@ export interface EquationInputProps {
   onFocus?(): void;
   onParameter?(name: string): void;
   invalid?: boolean;
+  /** Syntax colors are display-only; references f/g/h follow the calculator's curve colors. */
+  highlighting?: boolean;
+  activeParameter?: string | null;
+  showColorKey?: boolean;
 }
 /** Client-only MathLive binding. LaTeX stays local; validated source flows to the caller. */
 export function EquationInput(props: EquationInputProps) {
   const host = useRef<HTMLDivElement>(null), field = useRef<MathfieldElement | null>(null);
   const latest = useRef(props); latest.current = props;
+  const decoration = useRef<ReturnType<typeof bindEquationHighlighting> | null>(null);
+  const [highlighting, setHighlighting] = useState(props.highlighting ?? true);
+  useEffect(() => setHighlighting(props.highlighting ?? true), [props.highlighting]);
   const keyboardRequested = useRef(false);
   const emitted = useRef(props.value), external = useRef(props.value);
   const [ready, setReady] = useState(false), [failure, setFailure] = useState(false);
@@ -41,6 +49,7 @@ export function EquationInput(props: EquationInputProps) {
       element.inlineShortcuts = { ...element.inlineShortcuts, pi: '\\pi' };
       element.value = expressionLatex(latest.current.value || '0');
       emitted.current = latest.current.value; external.current = latest.current.value;
+      decoration.current = bindEquationHighlighting(element, { enabled: latest.current.highlighting ?? true, activeParameter: latest.current.activeParameter });
       const keyboard = window.mathVirtualKeyboard;
       let previous: { container: typeof keyboard.container; layouts: typeof keyboard.layouts } | null = null;
       const focus = () => {
@@ -76,7 +85,7 @@ export function EquationInput(props: EquationInputProps) {
       };
       element.addEventListener('input', input); element.addEventListener('compositionend', input);
       element.addEventListener('focus', focus); element.addEventListener('blur', release); element.addEventListener('selection-change', selection);
-      dispose = () => { release(); element.removeEventListener('input', input); element.removeEventListener('compositionend', input); element.removeEventListener('focus', focus); element.removeEventListener('blur', release); element.removeEventListener('selection-change', selection); element.remove(); field.current = null; };
+      dispose = () => { decoration.current?.destroy(); decoration.current = null; release(); element.removeEventListener('input', input); element.removeEventListener('compositionend', input); element.removeEventListener('focus', focus); element.removeEventListener('blur', release); element.removeEventListener('selection-change', selection); element.remove(); field.current = null; };
       setReady(true);
     }).catch(() => { field.current?.remove(); field.current = null; if (!cancelled) { setFailure(true); setPlain(true); } });
     return () => { cancelled = true; dispose(); };
@@ -90,6 +99,7 @@ export function EquationInput(props: EquationInputProps) {
   }, [props.value]);
   useEffect(() => { if (field.current) { field.current.id = plain ? `${props.id}-typeset` : props.id; field.current.setAttribute('aria-label', props.label); } }, [props.id, props.label, plain, ready]);
   useEffect(() => { field.current?.setAttribute('aria-invalid', String(!!props.invalid || !!message)); }, [props.invalid, message, ready]);
+  useEffect(() => { decoration.current?.update({ enabled: highlighting, activeParameter: props.activeParameter }); }, [highlighting, props.activeParameter, ready]);
   return <div className="zen-equation-input" data-ready={ready}>
     <div ref={host} hidden={plain} className="zen-equation-input__field" />
     {!ready && !failure && <span className="zen-equation-input__loading">Preparing equation editor…</span>}
@@ -97,8 +107,15 @@ export function EquationInput(props: EquationInputProps) {
     <div className="zen-equation-input__tools">
       <button type="button" disabled={!ready} onClick={() => { if (plain) { try { field.current?.setValue(expressionLatex(props.value), { silenceNotifications: true }); setMessage(''); } catch { setMessage('Finish the plain-text expression before switching to typeset math.'); return; } } field.current?.blur(); setPlain(value => !value); }}>{plain ? 'Typeset' : 'Plain text'}</button>
       {!plain && ready && <button type="button" onPointerDown={event => event.preventDefault()} onClick={() => { if (document.activeElement === field.current) { window.mathVirtualKeyboard.visible ? window.mathVirtualKeyboard.hide() : window.mathVirtualKeyboard.show(); } else { keyboardRequested.current = true; field.current?.focus(); } }}>Math keyboard</button>}
+      {!plain && ready && <button type="button" aria-label={`Syntax colors for ${props.label}`} aria-pressed={highlighting} onClick={() => setHighlighting(value => !value)}>Colors</button>}
     </div>
+    {!plain && highlighting && (props.showColorKey ?? true) && <EquationColorKey />}
     {failure && <small>Equation editor unavailable. You can still type an expression.</small>}
     {message && <small className="zen-equation-input__error" role="status">{message}</small>}
   </div>;
+}
+
+/** Shared legend: color assists reading; labels retain the same meaning without color. */
+export function EquationColorKey() {
+  return <div className="zen-equation-input__color-key" aria-label="Equation color key"><span data-kind="function">Functions</span><span data-kind="parameter">Quantities</span><span data-kind="position">x · position</span><span data-kind="time">t · time</span><small>f, g, h match their curves. The active quantity is underlined.</small></div>;
 }

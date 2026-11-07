@@ -12,3 +12,10 @@
 .zen-equation-input > input { inline-size:100%; padding:12px 0; color:var(--text-1); background:transparent; border:0; border-block-end:1px solid var(--border); font:14px var(--font-mono); }
 .zen-equation-input button:focus-visible, .zen-equation-input input:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 .zen-equation-input__field > .ML__keyboard { position:fixed; inset:0; height:100dvh; inline-size:100vw; }
+.zen-equation-input__color-key { display:flex; flex-wrap:wrap; gap:5px 12px; margin-block:12px; font:10px/1.5 var(--font-sans); }
+.zen-equation-input__color-key [data-kind="function"] { color:var(--hue-4); }
+.zen-equation-input__color-key [data-kind="parameter"] { color:var(--hue-2); }
+.zen-equation-input__color-key [data-kind="position"] { color:var(--hue-1); }
+.zen-equation-input__color-key [data-kind="time"] { color:var(--hue-3); }
+.zen-equation-input__color-key small { flex-basis:100%; color:var(--text-3); font-size:10px; }
+.zen-equation-input__tools button[aria-pressed="true"] { color:var(--text-1); text-decoration:underline; text-underline-offset:3px; }

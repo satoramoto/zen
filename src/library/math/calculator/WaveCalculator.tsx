@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from 
 import { Coordinates, Line, Mafs, Point, useTransformContext, vec } from 'mafs';
 import { RelationshipHandle } from '../explore/RelationshipHandle';
 import { compileExpressions, ExpressionError, functionNames, sampleCurve, type CurvePoint, type Equations, type FunctionName } from './expression';
-import { EquationInput } from './EquationInput';
+import { EquationInput, EquationColorKey } from './EquationInput';
 import 'mafs/core.css';
 import './WaveCalculator.css';
 
@@ -121,10 +121,11 @@ export function WaveCalculator({ preset = 'interference' }: WaveCalculatorProps)
     <div className="zen-calculator__workspace">
       <aside className="zen-calculator__equations" aria-label="Equations">
         <div className="zen-calculator__section-label">01 / Define a relationship</div>
+        <EquationColorKey />
         <div className="zen-calculator__builder"><span>Shape {activeFunction}(x)</span><div><button onClick={() => shape('wave')}>Sine wave</button><button disabled={!!error} onClick={() => shape('fade')}>Fade from center</button><button disabled={!!error} onClick={() => shape('half')}>Half as tall</button><button disabled={!!error} onClick={() => shape('opposite')}>Flip over</button><button onClick={() => shape('combine')}>Combine waves</button></div><small>Tap an equation to choose it. Actions change its expression.</small></div>
         {functionNames.map((name, index) => <div key={name} className="zen-calculator__expression" data-selected={activeFunction === name} style={{ '--curve-color': COLORS[name] } as CSSProperties}>
           <label htmlFor={`${id}-${name}`}><span>{name}(x)</span><small>{index < 2 ? `wave ${index + 1}` : 'result'}</small></label>
-          <div className="zen-calculator__entry"><EquationInput id={`${id}-${name}`} label={`${name}(x) expression`} value={draft[name]} onChange={value => edit(name, value)} onFocus={() => setActiveFunction(name)} onParameter={selectParameter} invalid={!!error && (!error.equation || error.equation === name)} /></div>
+          <div className="zen-calculator__entry"><EquationInput id={`${id}-${name}`} label={`${name}(x) expression`} activeParameter={activeParameter} showColorKey={false} value={draft[name]} onChange={value => edit(name, value)} onFocus={() => setActiveFunction(name)} onParameter={selectParameter} invalid={!!error && (!error.equation || error.equation === name)} /></div>
           <div className="zen-calculator__linked-parameters">{program.parametersByFunction[name].map(parameter => <button key={parameter} aria-label={`Explore ${parameter} in ${name}`} aria-pressed={activeParameter === parameter} title={meanings[parameter]} onClick={() => { setActiveFunction(name); selectParameter(parameter); requestAnimationFrame(() => root.current?.querySelector<HTMLButtonElement>(`[data-inline="${name}"] [data-parameter="${parameter}"]`)?.focus()); }}>{parameter} <span>{(parameters[parameter] ?? 1).toFixed(2)}</span></button>)}</div>
           {activeFunction === name && activeParameter && program.parametersByFunction[name].includes(activeParameter) && <div data-inline={name} className="zen-calculator__inline-quantity"><Parameter name={activeParameter} label={`Adjust ${activeParameter} in ${name}`} meaning={meanings[activeParameter]} value={parameters[activeParameter] ?? 1} active onActivate={() => selectParameter(activeParameter)} onChange={value => setParameter(activeParameter, value)} /></div>}
           <output aria-label={`${name} at probe`}>{nice(readouts[index])}</output><small>at x = {probe.toFixed(2)}</small>

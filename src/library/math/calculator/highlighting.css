@@ -1,0 +1,8 @@
+:host([data-zen-syntax="true"]) [data-zen-math-token="function"] { color:var(--hue-4); }
+:host([data-zen-syntax="true"]) [data-zen-math-token="parameter"] { color:var(--hue-2); }
+:host([data-zen-syntax="true"]) [data-zen-math-token="position"], :host([data-zen-syntax="true"]) [data-zen-math-token="reference-f"] { color:var(--hue-1); }
+:host([data-zen-syntax="true"]) [data-zen-math-token="time"], :host([data-zen-syntax="true"]) [data-zen-math-token="reference-g"] { color:var(--hue-3); }
+:host([data-zen-syntax="true"]) [data-zen-math-token="reference-h"] { color:var(--hue-2); }
+:host([data-zen-syntax="true"]) [data-zen-math-token="constant"], :host([data-zen-syntax="true"]) [data-zen-math-token="operator"] { color:var(--text-2); }
+:host([data-zen-syntax="true"]) [data-zen-math-active] { background:var(--surface-3); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:4px; border-radius:var(--radius-control); }
+:host([data-zen-syntax="true"]) .ML__selected[data-zen-math-token], :host([data-zen-syntax="true"]) .ML__selected [data-zen-math-token] { color:var(--selection-color); }
