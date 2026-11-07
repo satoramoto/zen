@@ -91,3 +91,25 @@
 .zen-calculator__parameter .zen-calculator__meaning { display:block; margin-block-start:4px; font:9px var(--font-sans); color:var(--text-3); }
 .zen-calculator__expression { padding-block:16px; }
 .zen-calculator__entry { margin-block:6px; }
+.zen-calculator__invitation { color:var(--text-2); font-size:12px; }
+.zen-calculator .zen-calculator__explore { color:var(--curve-color); font-size:11px; margin-block:0 12px; border-style:dashed; }
+.zen-term-explorer { padding:14px; margin-block:0 16px; background:var(--surface-0); border:1px solid var(--curve-color); border-radius:var(--radius-control); min-inline-size:0; }
+.zen-term-explorer__heading { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; }
+.zen-term-explorer__heading button { padding:4px 8px; font-size:10px; }
+.zen-term-explorer p { font-size:11px; color:var(--text-2); }
+.zen-term-explorer__parts { display:flex; flex-wrap:wrap; gap:6px; max-block-size:220px; overflow:auto; padding:4px; }
+.zen-term-explorer__parts button { display:flex; flex-direction:column; align-items:flex-start; gap:4px; padding:8px; max-inline-size:100%; min-inline-size:0; }
+.zen-term-explorer__parts small { color:var(--text-3); font-size:9px; }
+.zen-term-explorer button[aria-pressed="true"] { border-color:var(--curve-color); background:var(--surface-2); color:var(--text-1); }
+.zen-term-formula { display:block; max-inline-size:100%; overflow:auto; font-size:16px; white-space:nowrap; }
+.zen-term-explorer__target { display:flex; flex-direction:column; gap:6px; margin-block:16px 10px; color:var(--curve-color); }
+.zen-term-explorer__target > span:first-child { font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
+.zen-term-explorer__actions { display:flex; flex-wrap:wrap; gap:6px; }
+.zen-term-explorer__actions button { font-size:11px; padding:7px 9px; }
+.zen-term-explorer__preview { margin-block-start:14px; border-block-start:1px dashed var(--border-strong); padding-block-start:12px; font-size:11px; }
+.zen-term-explorer__preview > button { color:var(--curve-color); border-color:var(--curve-color); }
+@media (min-width:801px) { .zen-calculator__visual { align-self:start; position:sticky; inset-block-start:16px; } .zen-calculator__workspace { overflow:clip; } }
+.zen-term-explorer__commit { display:flex; flex-wrap:wrap; gap:6px; }
+.zen-term-explorer__commit button { font-size:11px; }
+.zen-term-explorer__commit button:first-child { color:var(--curve-color); border-color:var(--curve-color); }
+.zen-calculator__plot-heading > div { display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end; }
