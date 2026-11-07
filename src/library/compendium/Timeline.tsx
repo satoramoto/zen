@@ -1,26 +1,9 @@
 import { Text } from '../primitives/Text';
 import './Timeline.css';
 
-/** A year; negative is BCE. */
-export type Year = number;
+import type { AxisPiece, TimelineRow, Year } from './model/document';
 
-export interface TimelineRow {
-  id: string;
-  /** Who or what the row is ("Nicole Oresme"). */
-  label: string;
-  /** A span: a life, a period. `circa` marks either end as approximate. */
-  span?: { from: Year; to: Year; circa?: boolean };
-  /** Points on the span: a work, a proof. */
-  points?: { at: Year; label: string; circa?: boolean }[];
-}
-
-/** A stretch of the axis drawn to scale; the stretches are joined by a break. */
-export interface AxisPiece {
-  from: Year;
-  to: Year;
-  /** Year ticks inside the piece. */
-  ticks: Year[];
-}
+export type { AxisPiece, TimelineRow, Year };
 
 const BREAK = 0.04; // the share of the track a break takes
 
@@ -52,7 +35,7 @@ const pct = (f: number) => `${(f * 100).toFixed(3)}%`;
 const yearText = (y: Year, circa?: boolean) => `${circa ? 'c. ' : ''}${y < 0 ? `${-y} BCE` : y}`;
 
 /**
- * **Job.** (Compendium mockup stub.) Spans and points in time, one row per person or thing: the
+ * **Job.** Spans and points in time, one row per person or thing: the
  * label in a fixed column, the track beside it (a span is a thin bar, a point a dot with its
  * label under it). The axis is piecewise (`AxisPiece`) with a break between pieces, since a
  * history that runs from antiquity to 1822 with nothing between is unreadable on one scale.

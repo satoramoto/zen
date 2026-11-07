@@ -1,5 +1,6 @@
 import type { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
 import { Text, type TextTone } from '../primitives/Text';
+import { toMathML } from './model/formula';
 import './Math.css';
 
 // React's types have no MathML elements; React DOM renders them in the MathML namespace.
@@ -37,7 +38,9 @@ declare module 'react' {
 }
 
 export interface FormulaProps {
-  /** MathML content: `mrow`, `mi`, `mn`, `mo`, `mfrac`… (the `math` element is added). */
+  /** The formula in TeX, typeset to MathML (`toMathML`). The usual way to write one. */
+  tex?: string;
+  /** Or hand-written MathML content: `mrow`, `mi`, `mn`, `mo`, `mfrac`… (the `math` element is added). */
   children?: ReactNode;
   /** A displayed formula on its own line, centred in the reading column; default inline. */
   block?: boolean;
@@ -47,29 +50,32 @@ export interface FormulaProps {
 }
 
 /**
- * **Job.** (Compendium mockup stub.) A formula in native MathML, no library. Its size and ink come
- * from a `Text` around the `math` element (`body` at the size around it, inline; `body` for a
- * displayed one); the face stays the browser's math face (`font-family: math` on the element),
- * since the contract has no math face to give it.
+ * **Job.** A formula in native MathML, no rendering library: TeX typeset by temml, or MathML
+ * written by hand. Its size and ink come from a `Text` of the `math` role around the `math`
+ * element, which sets the contract's math face (`--font-math`) on both.
  */
-export function Formula({ children, block = false, label, tone }: FormulaProps) {
+export function Formula({ tex, children, block = false, label, tone }: FormulaProps) {
   return (
     <Text
       as={block ? 'div' : 'span'}
-      role="body"
+      role="math"
       size={block ? undefined : 'inherit'}
       tone={tone}
       className="cmp-math"
       data-block={block ? '' : undefined}
     >
-      <math display={block ? 'block' : 'inline'} aria-label={label}>
-        {children}
-      </math>
+      {tex !== undefined ? (
+        <span className="cmp-math__ml" dangerouslySetInnerHTML={{ __html: toMathML(tex, block, label) }} />
+      ) : (
+        <math display={block ? 'block' : 'inline'} aria-label={label}>
+          {children}
+        </math>
+      )}
     </Text>
   );
 }
 
-/* Small builders, so a formula reads close to how it's written. */
+/* Small builders for hand-written MathML, so a formula reads close to how it's written. */
 
 export const frac = (a: ReactNode, b: ReactNode) => (
   <mfrac>
