@@ -15,6 +15,13 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Prime Counting | `PrimeCounting`: discrete count, approximation and residual |
 | Cymatics Explorer | `CymaticsExplorer`: square plates/membranes and drums, nodal patterns and mixtures |
 | Standing String | `StandingString`: counter-propagating waves, nodes and local motion |
+| Projection Explorer | `ProjectionExplorer`: four linked projections, forced perspective, dolly zoom and anamorphosis |
+| Optical Paths | `OpticsExplorer`: finite mirrors, glass, TIR, coatings and pupil rays |
+| Spatial Optics | `SpatialOptics`: true 3D ray paths, finite surfaces and an independent inspection camera |
+| Stereo Explorer | `StereoExplorer`: binocular disparity, convergence and motion parallax |
+| Components / Projection View | `ProjectionView`: clipped wire geometry and invertible probe manipulation |
+| Components / Ray Path View | `RayPathView`: finite optical paths, events and normals |
+| Components / Stereo Pair | `StereoPair`: shared geometry through parallel cameras |
 | Components / Cymatic Field | `CymaticField`: nodal grains, signed displacement and cycle-averaged paint |
 | Components / Equation Input | `EquationInput`: editable typeset math, touch keyboard and plain-text fallback |
 | Components / Mesh View | `MeshView`: sampled mesh, clipping plane and native manipulation handles |
@@ -35,6 +42,7 @@ available for compatibility. This cleanup does not remove a package API.
 
 ## Implementation references
 
+- [Perspective and geometric optics](../../../docs/perspective.md)
 - [Editable wave calculator](../../../docs/wave-calculator.md)
 - [Circle-to-sine exploration](../../../docs/math-exploration.md)
 - [Signals, sections and scalar paint](../../../docs/signal-playground.md)

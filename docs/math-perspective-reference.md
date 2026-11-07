@@ -2,7 +2,7 @@
 
 Reference: [ryangavin/perspective](https://github.com/ryangavin/perspective), inspected at `aa83fc32debbb3ff92c76f60d6e91e952da08dbf`.
 
-The local checkout is `/home/ryan/Projects/ryangavin/perspective`; it is a reference repository, not a Zen dependency. No code has been ported yet. Keep its app-specific UI in that repository; extract reusable models and exploration primitives into Zen when building the stories.
+The local checkout is `/home/ryan/Projects/ryangavin/perspective`; it is a reference repository, not a Zen dependency. The projection, finite optics and spatial ray geometry are now ported; see [the Zen perspective family](perspective.md). Keep its app-specific UI in that repository; extract reusable models and exploration primitives into Zen when building the stories.
 
 ## Story candidates
 
@@ -15,7 +15,7 @@ The local checkout is `/home/ryan/Projects/ryangavin/perspective`; it is a refer
 | Two eyes, one world | `src/binocular.ts`, `src/stereo.ts` | Change eye separation and target depth; compare disparity, parallax and occlusion. |
 | Walk around the illusion | `src/play.ts`, `src/Playground.tsx` | First-person motion exposes viewpoint-dependent alignment and optical paths. |
 
-Start with the projection comparison and forced-perspective pair: they share a small pure model and make the central relationship especially clear. Use the existing model tests as conceptual checks when extracting it.
+The first port includes projection comparisons, forced perspective, anamorphosis, optical paths and stereo disparity. The projection and forced-perspective pair share a small pure model and make the central relationship especially clear. Use the existing model tests as conceptual checks when extracting it.
 
 ## Fidelity boundaries
 

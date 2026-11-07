@@ -11,3 +11,4 @@ export * from './signals';
 export * from './lab';
 export * from './cymatics';
 export * from './calculator';
+export * from './perspective';
