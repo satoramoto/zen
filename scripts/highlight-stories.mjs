@@ -1,0 +1,34 @@
+import {chromium} from 'playwright';
+import {mkdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const base=process.env.MATH_PREVIEW_URL??'http://127.0.0.1:6027';
+await mkdir('.shots/highlighting',{recursive:true});
+const browser=await chromium.launch({headless:true});
+try {
+ const page=await browser.newPage({viewport:{width:1280,height:1000}}), errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ const tokens=field=>field.evaluate(e=>[...e.shadowRoot.querySelectorAll('[data-zen-math-token]')].map(n=>({text:n.textContent,kind:n.dataset.zenMathToken,active:n.hasAttribute('data-zen-math-active'),color:getComputedStyle(n).color,decoration:getComputedStyle(n).textDecorationLine})));
+ await page.goto(`${base}/iframe.html?id=math-components-equation-input--syntax-colors&viewMode=story&globals=theme:linear;mode:dark`);
+ const field=page.locator('math-field');await field.waitFor();await page.waitForFunction(()=>document.querySelector('math-field')?.dataset.zenSyntax==='true');
+ const colored=await tokens(field);for(const kind of ['function','parameter','position','time','reference-f','constant'])assert.ok(colored.some(t=>t.kind===kind),kind);
+ assert.equal(new Set(['function','parameter','position','time'].map(kind=>colored.find(t=>t.kind===kind).color)).size,4);
+ assert.equal(colored.find(t=>t.text==='a').decoration,'underline');
+ const value=await field.evaluate(e=>e.value);assert.ok(!/color|class/.test(value));
+ await page.screenshot({path:'.shots/highlighting/colors.png',fullPage:true});
+ await page.getByRole('button',{name:'Syntax colors for Equation'}).click();
+ assert.equal(await field.getAttribute('data-zen-syntax'),'false');assert.equal(await field.evaluate(e=>e.value),value);
+ assert.equal(new Set((await tokens(field)).map(t=>t.color)).size,1);
+ await page.getByRole('button',{name:'Syntax colors for Equation'}).click();
+ await field.locator('[data-zen-math-token="parameter"]').first().click();await page.waitForFunction(()=>document.activeElement?.tagName==='MATH-FIELD');
+ await page.keyboard.press('ControlOrMeta+A');await page.keyboard.type('q*cos(x-t)');
+ await page.waitForFunction(()=>document.querySelector('math-field').shadowRoot.querySelector('[data-zen-math-token="parameter"]')?.textContent==='q');
+ assert.ok((await tokens(field)).some(t=>t.text==='cos'&&t.kind==='function'));
+ assert.ok(!(await field.evaluate(e=>e.value)).includes('color'));
+ await page.goto(`${base}/iframe.html?id=math-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:light`);
+ await page.locator('math-field').first().waitFor();await page.getByRole('button',{name:'Explore a in h'}).click();
+ await page.waitForFunction(()=>document.querySelector('math-field').shadowRoot.querySelector('[data-zen-math-active]'));
+ const first=await tokens(page.locator('math-field').first());assert.ok(first.some(t=>t.text==='a'&&t.active));assert.ok(first.filter(t=>t.text!=='a').every(t=>!t.active));
+ await page.getByRole('button',{name:'Show all curves'}).click();assert.ok((await tokens(page.locator('math-field').first())).every(t=>!t.active));
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:'.shots/highlighting/narrow-light.png',fullPage:true});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ assert.deepEqual(errors,[]);console.log('PASS syntax roles, theme colors, active parameters, toggle, unchanged LaTeX, live typing and narrow layout');
+}finally{await browser.close();}
