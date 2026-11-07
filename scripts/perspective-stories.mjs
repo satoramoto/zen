@@ -26,6 +26,7 @@ try{
  await page.mouse.move(sb.x+30,sb.y+30);await page.mouse.down();await page.mouse.move(sb.x+100,sb.y+30,{steps:8});await page.mouse.up();assert.notEqual(await page.getByRole('slider',{name:'Scene turn'}).inputValue(),'0');
  const angle=Number(await page.getByRole('slider',{name:'Scene turn'}).inputValue());await svg.focus();await page.keyboard.press('ArrowRight');assert.equal(Number(await page.getByRole('slider',{name:'Scene turn'}).inputValue()),angle+2);
  await page.getByRole('button',{name:'The dolly zoom',exact:true}).click();const width=await page.getByLabel('Reference plane width').textContent();await page.getByRole('slider',{name:'Camera distance'}).focus();await page.keyboard.press('ArrowRight');assert.equal(await page.getByLabel('Reference plane width').textContent(),width);
+ await page.getByRole('slider',{name:'Scene turn'}).focus();await page.keyboard.press('End');assert.notEqual(await page.getByLabel('Reference plane width').textContent(),width);
  console.log('PASS pointer probe, shared orbit, dolly scale');
  await page.goto(`${base}/iframe.html?id=math-spatial-optics--solid-prism&viewMode=story&globals=theme:linear;mode:dark`);
  const steer=page.getByRole('group',{name:'Steer spatial ray',exact:true});await steer.waitFor();await steer.focus();await page.keyboard.press('ArrowUp');assert.ok(Number(await page.getByRole('slider',{name:'Ray elevation',exact:true}).inputValue())>0);
