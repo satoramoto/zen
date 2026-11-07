@@ -18,6 +18,7 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { sharedAliases } from './vite.aliases';
 
 /** Gathers every chunk's stylesheet into `zen.css`, shared chunks first. */
 function joinStyles(): Plugin {
@@ -50,6 +51,7 @@ function joinStyles(): Plugin {
 
 export default defineConfig({
   plugins: [react(), svelte(), joinStyles()],
+  resolve: { alias: sharedAliases },
   publicDir: false,
   build: {
     outDir: 'lib',

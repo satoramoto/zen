@@ -1,0 +1,9 @@
+{
+  "name": "@satoramoto/use-resize-observer-shim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The use-resize-observer hook with a default export, for mafs 0.21 under React 19. Not installed: every Vite config here aliases the bare 'use-resize-observer' import to index.js (vite.aliases.ts), while npm installs use-resize-observer 10 through package.json overrides so the install itself is clean.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js"
+}
