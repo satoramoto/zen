@@ -3,8 +3,8 @@
 `Math/Stereo Illusion Lab` adds five random-dot scenes: a ring, bowl/dome reversal,
 saddle, radial ripples and hidden ZEN lettering. Parallel and crossed viewing share
 the same physical geometry. Phase and patterns change only on explicit interaction;
-there is no autoplay or flicker. The default is a large, draggable motion-depth surface: no
-fusion or physical calibration is required. An optional guide mesh makes the relief explicit.
+there is no autoplay or flicker. The default is now Look & Tune, a visual sitting-distance and spacing setup. The large,
+draggable motion-depth surface remains available without fusion or physical calibration.
 
 Stereo is a separate viewing choice. Start with complementary bars that form a cross in
 the fused middle image, continue to a visible ring, then try the hidden random-dot relief.
@@ -88,3 +88,37 @@ with an element screenshot; normal resize behavior remains enabled. Human fusion
 comfort cannot be established by browser tests. `scripts/stereo-guide-stories.mjs` also
 checks pointer/keyboard rotation, reset, the guided targets, adjustable dot size, returning
 to motion, and narrow/light layouts.
+
+## Look & Tune
+
+`StereoIllusionLab` opens `StereoTuner` by default; `startIn="motion"` preserves the motion-first
+entry. The Look And Tune story demonstrates the default, while older scene stories retain
+motion-first fixtures for comparison. The reusable tuner has its own component stories.
+
+The sitting-distance slider changes the separation using `2 D tan(a/2)`, where `a` is the
+requested angular spacing. Target spacing then fine-tunes that angle directly. Separation
+is capped by available space and 65% of the estimated eye spacing; the same layout is carried
+from the alignment cross to the ring and continuous pattern. The marks keep their position
+through the transition. Narrow layouts keep the target card visible while scrolling the sliders
+(except short viewports, where normal scrolling preserves access to every control).
+
+This is subjective tuning, not automatic calibration. Initial CSS scale (3.8 px/mm), distance
+(600 mm) and eye spacing (64 mm) are estimates. Optional ruler calibration remains available.
+Detected display changes pause the experience and return to alignment. Scene changes preserve
+settings; switching viewing method returns to alignment. Escape rests the display. Nothing
+animates automatically and no camera is used.
+
+`Stereogram` renders a continuous patterned image using row-wise symmetric correspondence
+constraints, based on the algorithm described by [Thimbleby, Witten and Inglis](https://harold.thimbleby.net/sirds/ieee3d.pdf).
+The repeat distance comes from the same signed screen parallax as the paired renderer. Crossed
+viewing reverses the relationship between unsigned repeat distance and relief, preserving the
+intended depth direction. The raster uses four theme colors; pattern grain controls sample size
+in CSS pixels. Integer sample rounding limits attainable disparity. This implementation targets
+shallow relief and does not perform hidden-surface removal; steep/discontinuous surfaces can
+produce conflicting correspondences or echoes. It is not a general scene renderer.
+
+Tests verify flat-field periodic correspondence, deterministic relief encoding, seat-distance
+scaling, bounds and crossed/parallel depth sign. `scripts/stereo-tuner-stories.mjs` verifies live
+sliders, unchanged alignment mark position, actual pattern pixels, both viewing methods, scene
+changes, rest/resume, display invalidation, themes and narrow layouts. These checks cannot
+establish human fusion or comfort.

@@ -8,3 +8,7 @@ export {illusionHeight,stereoIllusions,type StereoIllusion} from './illusions';
 /** Optional clear-target fusion guide and single-view motion alternative. */
 export {FusionTargets,type FusionTargetsProps} from './FusionTargets';
 export {MotionRelief} from './MotionRelief';
+
+/** Visual seat-and-spacing setup with a continuous hidden-depth field. */
+export {StereoTuner,type StereoTunerProps} from './StereoTuner';
+export {Stereogram,type StereogramProps} from './Stereogram';
