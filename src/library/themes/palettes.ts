@@ -601,4 +601,116 @@ export const mixflow: Palette = {
   },
 };
 
-export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed, mixflow];
+
+// Textbook console (Refero style 1e85631f, midjourney.com, "deep-ocean bioluminescent terminal"):
+// a violet-black void, never pure black; mist text; one portal blue for links; a closed triad of
+// specimen tints (green, amber, red) for state. Light mode is added: the same inks turned over.
+export const console: Palette = {
+  id: 'console',
+  label: 'Textbook console',
+  dark: {
+    surface: ['#06051d', '#0b0a26', '#0f1c36', '#1d293d'], // Cosmic Void, a step, Abyssal Blue, Steel Navy
+    text: ['#ffffff', '#cad5e2', '#8b94a8', '#5c6478'], // Ghost White, Mist, two added steps
+    border: '#1b2340', // added: Fog at low opacity, flattened
+    borderStrong: '#314062', // Deep Slate
+    action: '#00bc7d', // Specimen Green: the thing you act on
+    actionText: '#06051d',
+    selected: '#1d293d', // Steel Navy
+    selectedText: '#ffffff',
+    accent: '#63b3ed', // Portal Blue: links and the thing in hand
+    success: '#00bc7d', // Specimen Green
+    warning: '#f0b100', // Warning Amber
+    danger: '#ff2056', // Fault Red
+    successText: '#06051d',
+    warningText: '#06051d',
+    dangerText: '#06051d',
+    // added: the five categorical hues, off the blue accent and the state triad
+    hues: ['#fde68a', '#c084fc', '#5eead4', '#fda4af', '#a3e635'],
+    onHue: '#06051d',
+    roles: ['#f97316', '#e2e8f0'], // added
+    roleText: ['#06051d', '#06051d'],
+    bloom: '12px', // the specimen glow
+    keys: { white: '#cad5e2', black: '#0f1c36' }, // added
+  },
+  // Added: the console is dark only. Mist becomes paper, the void becomes ink; the blue stays.
+  light: {
+    surface: ['#f4f6fa', '#ffffff', '#e9edf5', '#dde3ee'],
+    text: ['#06051d', '#1d293d', '#5c6478', '#8b94a8'],
+    border: '#dde3ee',
+    borderStrong: '#b9c2d4',
+    action: '#007a52',
+    actionText: '#ffffff',
+    selected: '#dde3ee',
+    selectedText: '#06051d',
+    accent: '#1f6fb5',
+    success: '#007a52',
+    warning: '#8a5a00',
+    danger: '#c2003d',
+    successText: '#ffffff',
+    warningText: '#ffffff',
+    dangerText: '#ffffff',
+    hues: ['#7c3aed', '#475569', '#7c2d12', '#ca8a04', '#65a30d'],
+    onHue: '#ffffff',
+    roles: ['#a21caf', '#4c1d95'],
+    roleText: ['#ffffff', '#ffffff'],
+    bloom: '0px',
+    keys: { white: '#ffffff', black: '#1d293d' },
+  },
+};
+
+// Textbook blueprint (Refero styles 520e6739, timescale.com, "industrial blueprint", and
+// 7a8c99db, 19-86.fr, "architectural blueprint"): warm off-white paper, slate ink, hairline rules
+// in stone, one vermilion for titles and figure numbers, one highlight yellow for the thing you
+// act on, hard offset shadows instead of soft ones. Dark mode is added: ink and paper turned over.
+export const blueprint: Palette = {
+  id: 'blueprint',
+  label: 'Textbook blueprint',
+  light: {
+    surface: ['#f6f4ee', '#fffdf8', '#efece4', '#e6e2d8'], // added: warmed from Canvas White
+    text: ['#23272e', '#3b4048', '#6f7480', '#9a9ea8'], // added: Midnight Ink softened to slate, Shadow Gray, Silverline
+    border: '#cfcbc0', // added: a stone rule
+    borderStrong: '#23272e', // the ink rule
+    action: '#f4e7a1', // Highlight Yellow, softened
+    actionText: '#23272e',
+    selected: '#f4e7a1',
+    selectedText: '#23272e',
+    accent: '#d9482b', // Action Orange, toned to vermilion
+    success: '#2f7a4a', // added
+    warning: '#8a5a00', // added
+    danger: '#9b1137', // added: a crimson off the vermilion
+    successText: '#ffffff',
+    warningText: '#ffffff',
+    dangerText: '#ffffff',
+    hues: ['#2b5fb8', '#9333ea', '#1f8fa3', '#9c2f8c', '#b0a800'], // added
+    onHue: '#ffffff',
+    roles: ['#3f3f46', '#4c1d95'], // added
+    roleText: ['#ffffff', '#ffffff'],
+    bloom: '0px',
+    keys: { white: '#fffdf8', black: '#23272e' },
+  },
+  dark: {
+    surface: ['#1b1c1f', '#232428', '#2b2c31', '#35363c'],
+    text: ['#ece9e1', '#cfcbc0', '#9b9a93', '#6f6e68'],
+    border: '#3a3c41',
+    borderStrong: '#ece9e1',
+    action: '#5c5324',
+    actionText: '#fff6c2',
+    selected: '#5c5324',
+    selectedText: '#fff6c2',
+    accent: '#fe9b61',
+    success: '#1bcc95',
+    warning: '#fedc56',
+    danger: '#f94173',
+    successText: '#1b1c1f',
+    warningText: '#1b1c1f',
+    dangerText: '#1b1c1f',
+    hues: ['#739bf5', '#dcaefe', '#85e9fb', '#ee81b8', '#8fe854'],
+    onHue: '#1b1c1f',
+    roles: ['#a4a698', '#ffeee8'],
+    roleText: ['#1b1c1f', '#1b1c1f'],
+    bloom: '0px',
+    keys: { white: '#cfcbc0', black: '#1b1c1f' },
+  },
+};
+
+export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed, mixflow, console, blueprint];

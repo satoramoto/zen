@@ -135,6 +135,8 @@ export interface Faces {
   /** Mathematics: what MathML (and the `math` text role) is set in. A math face (OpenType MATH
    *  table) first, ending in the generic `math`. */
   math: string;
+  /** Long-form reading: what a textbook's paragraphs are set in. Default the sans. // added */
+  reading?: string;
   weightBody: number;
   weightStrong: number;
   weightDisplay: number;
@@ -497,6 +499,7 @@ export function toCssVars({ palette, faces: t, scale: s, materials: m }: Facets,
     '--font-mono': t.mono,
     '--font-readout': t.readout,
     '--font-math': t.math,
+    '--font-reading': t.reading ?? t.sans,
     '--font-sans-axes': t.variation?.sans ?? 'normal',
     '--font-display-axes': t.variation?.display ?? 'normal',
     '--font-mono-axes': t.variation?.mono ?? 'normal',

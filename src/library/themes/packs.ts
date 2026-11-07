@@ -173,4 +173,32 @@ export const packs: ThemePack[] = [
       'Scroll the four-deck face when narrow; do not shrink targets or omit instrument controls.',
     ] },
   },
+  {
+    id: 'textbook-console',
+    label: 'Textbook console',
+    source: { name: 'Midjourney', url: 'https://midjourney.com', referoId: '1e85631f-1e2e-41fa-a5dc-b1604bdbe25a' },
+    northStar: 'A research console in a bioluminescent void: mono headings at whisper weight, prose in a narrow column, controls as faintly glowing specimens.',
+    keep: [
+      'The ground is a violet-black void, never pure black; prose sits on it directly, with no card behind it.',
+      'Headings and labels are monospace at weight 400 even at display size; nothing bold.',
+      'One blue for links and the thing in hand; the state triad (green, amber, red) is a closed set of translucent tints.',
+      'Pills are fully round, cards 8px; what is raised glows faintly rather than casting a shadow.',
+    ],
+    facets: facets('console', 'console', 'airy', 'console'),
+    principles: principles.textbook,
+  },
+  {
+    id: 'textbook-blueprint',
+    label: 'Textbook blueprint',
+    source: { name: 'Timescale, with 19–86', url: 'https://www.timescale.com', referoId: '520e6739-69c0-4c16-a3ce-1c891c8c77c6' },
+    northStar: 'An industrial blueprint on warm paper: a monumental light numeral, ink rules, one vermilion for titles and figure numbers, one yellow for the thing you act on, hard offset shadows.',
+    keep: [
+      'Depth is a hard offset shadow in the ink, never a soft blur; everything else is flat on paper.',
+      'Vermilion only for titles, figure numbers and the numeral; yellow only for what you act on.',
+      'Rules are 1px: a stone hairline inside the page, the ink for a card edge or a ledger row.',
+      'Text is a serif for reading and a grotesque for everything else; the numeral is the grotesque at its lightest.',
+    ],
+    facets: facets('blueprint', 'blueprint', 'airy', 'blueprint'),
+    principles: principles.textbook,
+  },
 ];

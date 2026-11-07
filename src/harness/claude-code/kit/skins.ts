@@ -422,6 +422,90 @@ export const SKINS = {
       "#c6e34a",
       "#3ff4ff"
     ]
+  },
+  "textbook-console": {
+    label: "Textbook console",
+    ok: "#00bc7d",
+    warn: "#f0b100",
+    bad: "#ff2056",
+    blue: "#63b3ed",
+    purple: "#c084fc",
+    cyan: "#5eead4",
+    slate: "#b0cde5",
+    orchid: "#c993d9",
+    ramp: {
+      blue: [
+        "#63b3ed",
+        "#4a86b2",
+        "#9acef3",
+        "#366282"
+      ],
+      slate: [
+        "#b0cde5",
+        "#849aac",
+        "#ccdfee",
+        "#61717e"
+      ]
+    },
+    muted: "#8b94a8",
+    gray: {
+      light: "#cad5e2",
+      mid: "#8b94a8",
+      dark: "#5c6478"
+    },
+    hues: [
+      "#fde68a",
+      "#c084fc",
+      "#5eead4",
+      "#fda4af",
+      "#a3e635"
+    ],
+    roles: [
+      "#f97316",
+      "#e2e8f0"
+    ]
+  },
+  "textbook-blueprint": {
+    label: "Textbook blueprint",
+    ok: "#1bcc95",
+    warn: "#fedc56",
+    bad: "#f94173",
+    blue: "#739bf5",
+    purple: "#dcaefe",
+    cyan: "#85e9fb",
+    slate: "#b8bfcd",
+    orchid: "#ee81b8",
+    ramp: {
+      blue: [
+        "#739bf5",
+        "#5674b8",
+        "#a4bef9",
+        "#3f5587"
+      ],
+      slate: [
+        "#b8bfcd",
+        "#8a8f9a",
+        "#d1d5df",
+        "#656971"
+      ]
+    },
+    muted: "#9b9a93",
+    gray: {
+      light: "#cfcbc0",
+      mid: "#9b9a93",
+      dark: "#6f6e68"
+    },
+    hues: [
+      "#739bf5",
+      "#dcaefe",
+      "#85e9fb",
+      "#ee81b8",
+      "#8fe854"
+    ],
+    roles: [
+      "#a4a698",
+      "#ffeee8"
+    ]
   }
 } as const satisfies Record<string, Skin>
 

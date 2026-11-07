@@ -146,9 +146,11 @@ describe('the Stage assembles itself', () => {
    * Where the Stage holds the zoom floor and scrolls. visual[flow]'s frost materials part regions
    * by 32 px and pad them by 22 (space is the look), which the Stage's five regions can't afford
    * in the small screen's 1217 × 684.6 room. At 900 × 700 the 16:9 room is 900 × 506.25,
-   * shorter than the Stage's least at the floor under every pack. Everything else is viable.
+   * shorter than the Stage's least at the floor under every pack. The textbook packs are pages,
+   * not an instrument: on the airy scale (40 px controls, a 6 px unit, roomy gaps) the Stage's
+   * five regions outgrow the 1440 and 1217 frames at the floor. Everything else is viable.
    */
-  const scrolls = (id: string, w: number) => w === 900 || (id === 'visuals' && w === 1217);
+  const scrolls = (id: string, w: number) => w === 900 || (id === 'visuals' && w === 1217) || (id.startsWith('textbook') && w <= 1440);
 
   for (const pack of packs)
     for (const [w, h] of SIZES) {
