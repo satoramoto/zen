@@ -1,10 +1,11 @@
-/* Reading (compendium mockup): a measure-wide text column, a margin column beside it, a gutter
-   on the left for marks. Notes and marks float into the margins from inside their paragraph, so
-   they stay on the line they belong to. Below 44rem the margin folds and notes sit inline. */
+/* Reading: a measure-wide text column in the pack's reading face, a margin column beside it, a
+   gutter on the left for marks. Notes and marks float into the margins from inside their
+   paragraph, so they stay on the line they belong to. Below 44rem the margin folds and notes sit
+   inline. */
 
 .cmp-reading {
-  --cmp-measure: 66ch;
-  --cmp-margin: 26ch;
+  --cmp-measure: 58ch;
+  --cmp-margin: 24ch;
   --cmp-gutter: var(--space-5);
   --cmp-mark-gutter: var(--space-5);
   container: cmp-reading / inline-size;
@@ -18,7 +19,7 @@
   margin-inline: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 .cmp-reading__p,
@@ -27,13 +28,15 @@
 }
 
 .cmp-reading__p {
-  --text-leading: 1.6;
+  --lib-text-face: var(--font-reading);
+  --text-size: var(--size-lead);
+  --text-leading: 1.7;
   color: var(--text-1);
 }
 
 .cmp-reading__h {
+  --text-leading: 1.2;
   color: var(--text-1);
-  padding-block-start: var(--space-3);
 }
 
 .cmp-reading__wide {

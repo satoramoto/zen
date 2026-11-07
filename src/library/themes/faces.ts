@@ -134,4 +134,47 @@ export const mixflowFaces: Faces = {
   trackingLabel: '0.08em', trackingCaps: '0.14em', labelCase: 'none',
 };
 
-export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument, mixflowFaces];
+
+// Textbook console (midjourney.com): JetBrains Mono for every label and heading, at weight 400
+// even at display size; DM Sans for prose. The reading face is the prose sans.
+const consoleFaces: Faces = {
+  id: 'console',
+  label: 'Textbook console (JetBrains Mono)',
+  sans: "'DM Sans', system-ui, sans-serif",
+  display: "'JetBrains Mono', ui-monospace, monospace",
+  mono: "'JetBrains Mono', ui-monospace, monospace",
+  readout: "'JetBrains Mono', ui-monospace, monospace",
+  math: MATH, // added
+  reading: "'DM Sans', system-ui, sans-serif",
+  weightBody: 400,
+  weightStrong: 500,
+  weightDisplay: 400, // the whisper-weight heading is the signature
+  weightNumeral: 400,
+  tracking: '0em',
+  trackingDisplay: '0.02em',
+  labelCase: 'none',
+};
+
+// Textbook blueprint (timescale.com, 19-86.fr): a characterful grotesque for display and labels,
+// a text serif for reading, a mono for figure data. // added: the sources set Geist and a light
+// grotesque; Bricolage Grotesque and Newsreader stand in, both on Google Fonts.
+const blueprintFaces: Faces = {
+  id: 'blueprint',
+  label: 'Textbook blueprint (Bricolage, Newsreader)',
+  sans: "'Bricolage Grotesque', system-ui, sans-serif",
+  display: "'Bricolage Grotesque', system-ui, sans-serif",
+  mono: "'JetBrains Mono', ui-monospace, monospace",
+  readout: "'Bricolage Grotesque', system-ui, sans-serif",
+  math: MATH, // added
+  reading: "'Newsreader', Georgia, serif",
+  variation: { display: "'opsz' 96", sans: "'opsz' 14" },
+  weightBody: 400,
+  weightStrong: 500,
+  weightDisplay: 600,
+  weightNumeral: 300, // the monumental light numeral (19-86)
+  tracking: '0em',
+  trackingDisplay: '-0.02em',
+  labelCase: 'none',
+};
+
+export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument, mixflowFaces, consoleFaces, blueprintFaces];

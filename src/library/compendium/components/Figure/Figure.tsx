@@ -19,43 +19,37 @@ export interface FigureProps {
 }
 
 /**
- * **Job.** A live illustration with its control, a "what changes" line
- * and a source: the field guide card's pattern (`src/PrincipleExample.tsx`: brief, toolbar,
- * stage, teaching notes, reference) built from the primitives. The card is a raised `Surface`;
- * the stage a `well`, so the illustration reads as a screen set into it.
+ * **Job.** A live illustration in a card on the raised layer (its edge and shadow are the
+ * pack's: an ink offset on the blueprint, a faint glow on the console), its stage a well, its
+ * control(s) under the stage, and a ruled caption: the figure's number in the accent, its title,
+ * what changes, and its source.
  */
 export function Figure({ number, title, children, control, changes, source }: FigureProps) {
   const titleId = useId();
   return (
     <Surface as="figure" layer="raised" className="cmp-figure" aria-labelledby={titleId}>
-      <Stack gap={3}>
-        <Stack gap={1}>
-          {number && (
-            <Text role="label" tone="muted">
-              {number}
-            </Text>
-          )}
-          <Text role="heading" size="body" weight="strong" tone="primary" id={titleId}>
-            {title}
-          </Text>
-        </Stack>
-        <Surface material="well" radius="input" className="cmp-figure__stage">
-          {children}
-        </Surface>
+      <Surface material="well" radius="input" className="cmp-figure__stage">
+        {children}
+      </Surface>
+      <Stack gap={3} className="cmp-figure__below">
         {control && <div className="cmp-figure__control">{control}</div>}
         {changes && (
           <Text as="p" role="caption" tone="secondary" className="cmp-figure__changes" aria-live="polite">
-            <Text role="label" size="caption" tone="muted" className="cmp-figure__tag">
-              What changes
-            </Text>
             {changes}
           </Text>
         )}
-        <Text as="figcaption" role="caption" tone="muted">
-          <Text role="label" size="caption" tone="muted" className="cmp-figure__tag">
-            Source
-          </Text>
-          {source}
+        <Text as="figcaption" role="caption" tone="muted" className="cmp-figure__caption">
+          {number && (
+            <Text role="label" size="caption" tone="accent" className="cmp-figure__number">
+              {number}
+            </Text>
+          )}
+          <span className="cmp-figure__text">
+            <Text role="caption" weight="strong" tone="primary" id={titleId}>
+              {title}
+            </Text>{' '}
+            {source}
+          </span>
         </Text>
       </Stack>
     </Surface>

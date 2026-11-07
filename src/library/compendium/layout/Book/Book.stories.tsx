@@ -71,7 +71,7 @@ export const HarmonicSeries: Story = {
     for (const chapter of args.book.chapters) expect(validateEntry(chapter, { figures: Object.keys(FIGURES), entries: index })).toEqual([]);
     const contents = within(canvas.getByRole('navigation', { name: 'Contents' }));
     expect(contents.getAllByRole('listitem')).toHaveLength(args.book.chapters.length);
-    expect(contents.getByRole('button', { name: /overtones/i })).toHaveTextContent('0/2');
+    expect(contents.getByRole('button', { name: /overtones/i }).closest('li')).toHaveTextContent('0/2');
     expect(contents.getByRole('button', { name: /the harmonic series/i })).toHaveAttribute('aria-current', 'page');
   },
 };
@@ -124,13 +124,13 @@ export const Progress: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const contents = within(canvas.getByRole('navigation', { name: 'Contents' }));
-    expect(contents.getByRole('button', { name: /overtones/i })).toHaveTextContent('0/2');
+    expect(contents.getByRole('button', { name: /overtones/i }).closest('li')).toHaveTextContent('0/2');
     const fields = canvas.getAllByRole('textbox', { name: 'Your answer' });
     await userEvent.type(fields[0], '4{Enter}');
-    expect(contents.getByRole('button', { name: /overtones/i })).toHaveTextContent('1/2');
+    expect(contents.getByRole('button', { name: /overtones/i }).closest('li')).toHaveTextContent('1/2');
     expect(args.onProgress).toHaveBeenLastCalledWith({ 'overtones/nodes': true });
     await userEvent.type(fields[1], 'perfect fifth{Enter}');
-    expect(contents.getByRole('button', { name: /overtones/i })).toHaveTextContent('2/2');
+    expect(contents.getByRole('button', { name: /overtones/i }).closest('li')).toHaveTextContent('2/2');
     // Turning away and back keeps it.
     await userEvent.click(canvas.getByRole('button', { name: 'Divergence →' }));
     await userEvent.click(canvas.getByRole('button', { name: '← Overtones' }));
@@ -143,7 +143,7 @@ export const Restored: Story = {
   args: { initial: 'divergence', progress: { 'divergence/past-two': true, 'divergence/past-three': true } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    expect(within(canvas.getByRole('navigation', { name: 'Contents' })).getByRole('button', { name: /divergence/i })).toHaveTextContent('2/3');
+    expect(within(canvas.getByRole('navigation', { name: 'Contents' })).getByRole('button', { name: /divergence/i }).closest('li')).toHaveTextContent('2/3');
     expect(canvas.getAllByText(/correct/i)).toHaveLength(2);
   },
 };

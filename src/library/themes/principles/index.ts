@@ -51,3 +51,14 @@ export const studio: PackPrinciples = {
   gaps: { body: 3, group: 2 }, // added
   notes: ['No source states a layout priority; regions rank by what they show (now, next, controls).'],
 };
+
+/** The textbook packs (console, blueprint): a page read at a desk, one column, room as part of the look. */
+export const textbook: PackPrinciples = {
+  minTarget: WCAG_TARGET,
+  density: 'roomy', // added: the mockups' breathing room
+  gaps: { body: 5, group: 3 }, // added
+  notes: [
+    'The reading column is `now`: it never narrows below its measure; the contents ledger goes to an overlay first.',
+    'A figure keeps its full width inside the column; nothing floats beside it.',
+  ],
+};

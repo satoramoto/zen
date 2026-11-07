@@ -1,8 +1,8 @@
-/* Book: contents down the side, the chapter beside it; the contents fold above when narrow. The
-   root is the size container (a container can't query itself), the grid is inside it. */
+/* Book: the ledger of contents down the side, the chapter beside it; the ledger folds above when
+   narrow. The root is the size container (a container can't query itself), the grid is inside it. */
 
 .cmp-book {
-  --cmp-contents: 18rem;
+  --cmp-contents: 19rem;
   min-block-size: 100vh;
   container: cmp-book / inline-size;
 }
@@ -14,13 +14,17 @@
 }
 
 .cmp-book__contents {
-  padding: var(--space-5) var(--space-4);
-  border-inline-end: 1px solid var(--border);
+  padding: var(--space-6) var(--space-5);
+  border-inline-end: var(--border-width) solid var(--border);
   position: sticky;
   top: 0;
   align-self: start;
   max-block-size: 100vh;
   overflow: auto;
+}
+
+.cmp-book__ledger {
+  min-width: 0;
 }
 
 .cmp-book__list {
@@ -29,38 +33,47 @@
   padding: 0;
 }
 
+.cmp-book__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding-block: var(--space-2) var(--space-3);
+  border-block-end: var(--border-width) solid var(--border);
+}
+.cmp-book__row--head {
+  padding-block-end: var(--space-2);
+  border-block-end-color: var(--border-strong);
+}
+
 .cmp-book__chapter {
   appearance: none;
   background: none;
   border: 0;
+  padding: 0;
   inline-size: 100%;
   display: flex;
   gap: var(--space-2);
   align-items: baseline;
   text-align: start;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-control);
   cursor: pointer;
-}
-.cmp-book__chapter:hover {
-  background: color-mix(in oklab, var(--text-1) 6%, transparent);
-}
-.cmp-book__chapter[aria-current='page'] {
-  background: color-mix(in oklab, var(--accent) 14%, transparent);
+  min-width: 0;
 }
 
 .cmp-book__number {
   flex: none;
-  inline-size: 1.4em;
+  inline-size: 1.6em;
 }
 
 .cmp-book__title {
   flex: 1 1 auto;
   min-width: 0;
+  margin: 0;
 }
 
 .cmp-book__progress {
   flex: none;
+  margin: 0;
 }
 
 .cmp-book__page {
@@ -69,7 +82,7 @@
 
 .cmp-book__pager {
   padding-block-start: var(--space-5);
-  border-block-start: 1px solid var(--border);
+  border-block-start: var(--border-width) solid var(--border);
 }
 
 @container cmp-book (max-width: 56rem) {
@@ -80,6 +93,6 @@
     position: static;
     max-block-size: none;
     border-inline-end: 0;
-    border-block-end: 1px solid var(--border);
+    border-block-end: var(--border-width) solid var(--border);
   }
 }

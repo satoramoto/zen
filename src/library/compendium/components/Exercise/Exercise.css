@@ -1,18 +1,21 @@
-/* Exercise: a raised card with the question, an answer field in the pack's input chrome, and the verdict. */
+/* Exercise: a raised card (edge and shadow from the pack) with the question, an answer field in
+   the pack's input chrome, and the verdict. Its number sits inside the prompt in the accent. */
 
 .cmp-exercise {
-  padding: var(--space-4);
+  padding: var(--space-5);
   min-width: 0;
-  border-inline-start: 3px solid var(--border);
 }
-.cmp-exercise[data-state='correct'] {
-  border-inline-start-color: var(--success);
-}
-.cmp-exercise[data-state='wrong'] {
-  border-inline-start-color: var(--danger);
+
+.cmp-exercise__number {
+  display: inline-block;
+  margin-inline-end: var(--space-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .cmp-exercise__prompt {
+  --lib-text-face: var(--font-reading);
+  --text-size: var(--size-lead);
   --text-leading: 1.6;
   margin: 0;
 }
@@ -50,6 +53,7 @@
 
 .cmp-exercise__aside {
   margin: 0;
+  --text-leading: 1.6;
 }
 
 .cmp-exercise__tag {

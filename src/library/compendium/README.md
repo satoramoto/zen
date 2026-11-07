@@ -14,6 +14,19 @@ Stories are under a top-level **Compendium** section: `Compendium/Book` holds th
 textbooks (the Fourier book first), `Compendium/Layout/…` the page and column,
 `Compendium/Components/…` each part on its own.
 
+## The look
+
+Two theme packs are made for the page (`themes/packs.ts`): **textbook-console** (a dark research
+console: deep navy, JetBrains Mono readouts, one green action and a soft glow, after Refero's
+Midjourney style) and **textbook-blueprint** (a warm paper blueprint: Bricolage Grotesque
+headings, Newsreader reading text, slate ink rules, one vermilion and one highlight yellow, hard
+offset shadows, after Timescale and 19-86). Both sit on the `airy` scale and the `textbook`
+principles. Running text reads `--font-reading`, the contract's `reading` face (the sans when a
+pack has none). The page draws a chapter plate (number, book, counts), numbered sections, a
+ruled figure caption with its number, a numbered exercise, and in the Book a chapter ledger
+with the chapter's live quantities. `scripts/compendium-stories.mjs <url> <shots> [pack]` runs
+every play against a served build under a pack and screenshots the books in both packs.
+
 ## The litmus test
 
 The Fourier book re-tells, in its own words, the story a well-known explainer tells in a video:

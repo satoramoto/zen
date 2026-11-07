@@ -750,6 +750,59 @@ export const mixflowMaterials: Materials = {
   },
 };
 
+
+// ── Textbook: console and blueprint ──────────────────────────────────────────────────────────────
+
+/** Textbook console (midjourney.com): dark layers told apart by tone and a faint edge; what is
+ *  raised glows a little in the accent instead of casting a shadow. */
+export const consoleMaterials: Materials = {
+  id: 'console',
+  label: 'Textbook console (8px, glow)',
+  radiusControl: '8px', // cards, images, inputs 8px
+  radiusCard: '8px',
+  radiusInput: '8px',
+  radiusPill: '9999px', // every button a pill
+  borderWidth: '1px',
+  input: 'box',
+  layers: flatLayers(
+    { ...plain('var(--surface-1)'), edge: 'inset 0 0 0 1px var(--border)' }, // added: a hairline off the void
+    {
+      ...plain('var(--surface-1)'), // added: a raised card stays near the void
+      edge: 'inset 0 0 0 1px var(--border-strong)',
+      cast: '0 0 32px -12px color-mix(in oklab, var(--accent) 45%, transparent)', // added: the specimen glow
+    },
+  ),
+  plate: { inset: 'var(--space-5)', gap: 'var(--space-4)', head: { inset: 'var(--space-3) var(--space-5)', rule: 'inset 0 -1px 0 var(--border)' } }, // added
+  tabs: underlineTabs,
+  ...flat,
+};
+
+/** Textbook blueprint (timescale.com): paper, an ink hairline, and a hard offset shadow on what
+ *  is raised; no soft shadow anywhere. */
+export const blueprintMaterials: Materials = {
+  id: 'blueprint',
+  label: 'Textbook blueprint (12px cards, offset shadow)',
+  radiusControl: '8px', // links 8px; buttons 4px in the source, 8px here for the pill-less controls
+  radiusCard: '12px', // cards 12px
+  radiusInput: '8px', // added: inputs 4px in the source, matched to controls
+  radiusPill: '9999px', // tags 9999px
+  borderWidth: '1px',
+  input: 'box',
+  layers: flatLayers(
+    { ...plain('var(--surface-1)'), edge: 'inset 0 0 0 1px var(--border)' }, // added: a stone hairline
+    {
+      ...plain('var(--surface-1)'),
+      edge: 'inset 0 0 0 1px var(--border-strong)', // the ink rule
+      cast: '6px 6px 0 0 var(--border-strong)', // Feature Card: rgb(0,0,0) 5px 5px 0 0, in the ink
+    },
+  ),
+  plate: { inset: 'var(--space-5)', gap: 'var(--space-4)', head: { inset: 'var(--space-3) var(--space-5)', rule: 'inset 0 -1px 0 var(--border-strong)' } }, // added
+  tabs: underlineTabs,
+  ...flat,
+  // added: the flat well is the strong border at 70%, which here is the ink; a figure's stage is paper a tone down
+  well: { fill: 'var(--surface-2)', shadow: 'inset 0 0 0 var(--border-width) var(--border)', texture: 'none' },
+};
+
 export const materials: Materials[] = [
   pushMaterials,
   elektronMaterials,
@@ -758,5 +811,4 @@ export const materials: Materials[] = [
   hardwareMaterials,
   frostMaterials,
   panelMaterials,
-  mixflowMaterials,
-];
+  mixflowMaterials, consoleMaterials, blueprintMaterials];

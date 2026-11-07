@@ -23,7 +23,7 @@ export const HarmonicStringFigure: Story = {
     const canvas = within(canvasElement);
     expect(canvas.getByRole('figure', { name: /overtones of a vibrating string/i })).toBeInTheDocument();
     expect(canvas.getByRole('slider', { name: /harmonic/i })).toBeInTheDocument();
-    expect(canvas.getByText(/what changes/i)).toBeInTheDocument();
+    expect(canvas.getByText(/n = 3: 3 loops/)).toBeInTheDocument();
   },
 };
 
