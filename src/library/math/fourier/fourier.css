@@ -1,0 +1,140 @@
+/* The Fourier figures: planes, arrows, orbits and traces in the contract's colours. */
+
+.zen-fourier {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.zen-fourier__panes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.zen-fourier__plane,
+.zen-fourier__graph {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 24rem;
+  margin-inline: auto;
+}
+
+.zen-fourier__axis {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.zen-fourier__unit {
+  fill: none;
+  stroke: var(--text-4);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.zen-fourier__orbit {
+  fill: none;
+  stroke: var(--text-4);
+  stroke-width: 0.8;
+  opacity: 0.7;
+}
+
+.zen-fourier__arrow line,
+.zen-fourier__arrow path {
+  stroke: var(--text-1);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.zen-fourier__arrow path {
+  fill: var(--text-1);
+}
+.zen-fourier__arrow--lit line,
+.zen-fourier__arrow--lit path {
+  stroke: var(--hue-1);
+  stroke-width: 2.2;
+}
+.zen-fourier__arrow--lit path {
+  fill: var(--hue-1);
+}
+.zen-fourier__arrow--second line,
+.zen-fourier__arrow--second path {
+  stroke: var(--hue-2);
+  stroke-width: 2.2;
+}
+.zen-fourier__arrow--second path {
+  fill: var(--hue-2);
+}
+
+.zen-fourier__trace {
+  fill: none;
+  stroke: var(--hue-1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.zen-fourier__trace--faint {
+  fill: none;
+  stroke: var(--text-4);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+}
+.zen-fourier__trace--second {
+  fill: none;
+  stroke: var(--hue-2);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.zen-fourier__trace--third {
+  fill: none;
+  stroke: var(--hue-3);
+  stroke-width: 1.6;
+}
+.zen-fourier__trace--mode {
+  fill: none;
+  stroke: var(--text-3);
+  stroke-width: 1;
+  opacity: 0.8;
+}
+
+.zen-fourier__dot {
+  fill: var(--hue-1);
+}
+.zen-fourier__dot--second {
+  fill: var(--hue-2);
+}
+.zen-fourier__dot--centre {
+  fill: var(--hue-4);
+  stroke: var(--text-1);
+  stroke-width: 1;
+}
+.zen-fourier__dot--probe {
+  fill: var(--accent);
+}
+
+.zen-fourier__probe {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.zen-fourier__label {
+  fill: var(--text-3);
+  font: 600 10px var(--font-ui, sans-serif);
+}
+
+.zen-fourier__controls {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.zen-fourier__sequence {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

@@ -1,0 +1,58 @@
+/* Exercise: a raised card with the question, an answer field in the pack's input chrome, and the verdict. */
+
+.cmp-exercise {
+  padding: var(--space-4);
+  min-width: 0;
+  border-inline-start: 3px solid var(--border);
+}
+.cmp-exercise[data-state='correct'] {
+  border-inline-start-color: var(--success);
+}
+.cmp-exercise[data-state='wrong'] {
+  border-inline-start-color: var(--danger);
+}
+
+.cmp-exercise__prompt {
+  --text-leading: 1.6;
+  margin: 0;
+}
+
+.cmp-exercise__form {
+  margin: 0;
+}
+
+.cmp-exercise__input {
+  box-sizing: border-box;
+  inline-size: 14ch;
+  max-inline-size: 100%;
+  height: var(--control-h);
+  padding: 0 var(--space-3);
+  border-style: solid;
+  border-color: var(--border-strong);
+  border-width: 0 var(--input-border-sides) var(--input-border-bottom);
+  border-radius: var(--radius-input);
+  background: var(--input-fill);
+  color: var(--text-1);
+  font: inherit;
+}
+.cmp-exercise__input::placeholder {
+  color: var(--text-4);
+}
+.cmp-exercise__input:read-only {
+  color: var(--text-2);
+  border-color: var(--border);
+}
+
+.cmp-exercise__verdict {
+  margin: 0;
+  min-block-size: 1.2em;
+}
+
+.cmp-exercise__aside {
+  margin: 0;
+}
+
+.cmp-exercise__tag {
+  display: inline-block;
+  margin-inline-end: var(--space-2);
+}

@@ -6,6 +6,12 @@ interpretations. Entries are grouped by component rather than by implementation 
 
 | Storybook entry | Component / purpose |
 | --- | --- |
+| Fourier / Epicycles | `Epicycles`: arrows tip to tail drawing a shape, the count and the drawing chosen |
+| Fourier / Heat Modes | `HeatModes`: cosine modes on a rod shrinking at rates that go with n² |
+| Fourier / Step Series | `StepSeries`: the step's cosine series cut off after k terms, with a probe's partial sums |
+| Fourier / Rotating Vector | `RotatingVector`: one term, c · e^(n·2πi·t), its turns, size and starting angle |
+| Fourier / Pair to Sine | `PairToSine`: mirrored arrows turning opposite ways summing to a cosine on the real line |
+| Fourier / Coefficient Finder | `CoefficientFinder`: the drawing's average is c₀; spun back n turns, its average is cₙ |
 | Wave Calculator | `WaveCalculator`: editable linked functions, automatic parameter scrubbing, time and comparison |
 | Circle to Sine | `SineExplorer`: linked orbit and wave, guided stops and comparisons |
 | Signal Playground | `SignalPlayground`: ten fields and manifolds with linked analysis |
@@ -44,6 +50,11 @@ The older ExactValue, ExpressionField, PlotViewport, MathInspector and Distribut
 stories and the Spatial Studio acceptance demo have been removed from this catalogue.
 Their production components, public React/Svelte exports, models, fixtures and tests remain
 available for compatibility. This cleanup does not remove a package API.
+
+The `fourier/` folder (`model/` pure and tested, plain-SVG figures, `useClock`) is what the
+compendium's Fourier textbook draws as its figures (`src/library/compendium/book/fourier/`);
+every figure takes its quantities as controlled props with `on<Prop>` callbacks so a page can
+bind them, and keeps its own state when the page doesn't.
 
 ## Implementation references
 
