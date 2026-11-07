@@ -59,3 +59,45 @@ invalid drafts, circular references, comparison, playback and reset. Run
 or `MATH_PREVIEW_URL`) for those plays plus pointer scrubbing, curve colors, domain errors,
 and desktop/narrow screenshots. Run the normal typecheck, library tests, Storybook build,
 package build and package boundary check when changing exported behavior.
+
+## Typeset input and guided actions
+
+Equations now use `EquationInput`, a React binding around MathLive, with proper fractions,
+powers, roots and parentheses. Type `sin`, `pi`, `sqrt`, `/` or `^`, or open the themed
+math keyboard (with an alphabetic layout for other letters). Touch focus opens it
+automatically. Plain text remains available for source editing and as a load-failure
+fallback. The editor and its bundled fonts load only when mounted; they require no
+MathLive CDN and do not add font payload to the shared Zen stylesheet.
+
+The MathLive buffer owns the caret, selection and undo history. Echoes from React never
+rewrite that buffer. Incomplete fractions and unsupported notation leave the last valid
+graph visible, with feedback beside the equation. Presets, restoring valid expressions,
+and builder actions intentionally replace the edited expression.
+
+“Shape f(x)” follows the focused equation. Sine wave replaces it with `a*sin(b*x-t)`;
+Half as tall divides it by two; Flip over negates it; Combine waves sets `h(x)=f(x)+g(x)`.
+Fade from center multiplies the selected function by `exp(-k*abs(x))`, choosing a fresh
+parameter name and starting at 0.35. Positive values decay away from zero; zero removes
+the envelope; negative values grow away from zero. These are explicit transformations,
+not natural-language interpretation. Existing a and b quantities are shared when adding
+the sine template.
+
+Parameter chips beside every equation include its transitive dependencies. Selecting one
+reveals a keyboard- and pointer-adjustable quantity beside that equation and dims curves
+that do not depend on it. Known presets label height, frequency and phase; editing the
+formula removes those semantic labels rather than guessing their meaning.
+
+MathLive's LaTeX is parsed with Compute Engine in raw form, then translated through an
+allowlist into Zen's existing bounded source interpreter. Compute Engine does not evaluate
+or simplify it. Implicit multiplication is accepted in typeset mode. Printed `ln` is
+natural logarithm and printed `log` is base ten; plain-text `log()` retains its original
+natural-log meaning and typesets as ln. Unsupported operations (including integrals,
+equalities, matrices and non-square roots) get explicit feedback. The previous expression,
+parameter and evaluation budgets still apply; the typeset input is additionally limited
+to 1200 LaTeX characters and a 150-node conversion budget.
+
+`Math/Components/Equation Input` has wave, fraction, envelope and composition specimens.
+`node scripts/equation-input-stories.mjs` checks physical typing, caret preservation,
+undo/redo, incomplete fractions, domain errors, inline quantities, touch key insertion,
+local editor assets and keyboard ownership inside Storybook's iframe. Pure bridge tests
+check round-trip grouping, composed functions, logarithms and unsupported input.

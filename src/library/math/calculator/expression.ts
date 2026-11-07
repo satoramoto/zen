@@ -62,6 +62,7 @@ function parse(source: string): { tree: Node; parameters: Set<string>; dependenc
 export interface ExpressionProgram {
   equations: Equations;
   parameters: string[];
+  parametersByFunction: Record<FunctionName, string[]>;
   evaluate(name: FunctionName, x: number, parameters: Readonly<Record<string, number>>, t?: number): number;
 }
 /** Compiles all definitions atomically and rejects circular function references. */
@@ -78,7 +79,9 @@ export function compileExpressions(equations: Equations): ExpressionProgram {
   for (const name of functionNames) visit(name, []);
   const parameters = [...new Set(functionNames.flatMap(name => [...parsed[name].parameters]))].sort();
   if (parameters.length > 8) throw new ExpressionError('Use at most eight parameters in this workspace.');
+  const linkedParameters = (name: FunctionName): string[] => [...new Set([...parsed[name].parameters, ...[...parsed[name].dependencies].flatMap(linkedParameters)])].sort();
   return {
+    parametersByFunction: Object.fromEntries(functionNames.map(name => [name, linkedParameters(name)])) as Record<FunctionName, string[]>,
     equations: { ...equations }, parameters,
     evaluate(name, x, values, t = 0) {
       let budget = 4096;
@@ -120,4 +123,28 @@ export function sampleCurve(evaluate: (x: number) => number, domain: [number, nu
     path.push([x, y]);
   }
   finish(); return paths;
+}
+
+/** Typeset the supported source grammar without changing its mathematical grouping. */
+export function expressionLatex(source: string): string {
+  const wrap = (value: string) => `\\left(${value}\\right)`;
+  function render(node: Node, parent = 0): string {
+    if (node.kind === 'number') { const text = String(node.value), formatted = text.replace(/e([+-]?\d+)/i, '\\times 10^{$1}'); return /e/i.test(text) && parent > 2 ? wrap(formatted) : formatted; }
+    if (node.kind === 'name') return node.name === 'pi' ? '\\pi' : node.name;
+    if (node.kind === 'call') {
+      const arg = render(node.argument);
+      if (node.name === 'exp') { const power = `e^{${arg}}`; return parent > 4 ? wrap(power) : power; }
+      if (node.name === 'sqrt') return `\\sqrt{${arg}}`;
+      if (node.name === 'abs') return `\\left|${arg}\\right|`;
+      if (node.name === 'floor') return `\\lfloor ${arg}\\rfloor`;
+      if (node.name === 'ceil') return `\\lceil ${arg}\\rceil`;
+      return `${functionNames.includes(node.name as FunctionName) ? node.name : `\\${node.name === 'log' ? 'ln' : node.name}`}${wrap(arg)}`;
+    }
+    if (node.kind === 'unary') { const value = `${node.sign < 0 ? '-' : '+'}${render(node.value, 3)}`; return parent > 3 ? wrap(value) : value; }
+    if (node.op === '/') return `\\frac{${render(node.left)}}{${render(node.right)}}`;
+    const precedence = node.op === '^' ? 4 : node.op === '*' ? 2 : 1;
+    const value = node.op === '^' ? `${render(node.left, 5)}^{${render(node.right)}}` : `${render(node.left, precedence)}${node.op === '*' ? '\\,' : node.op}${render(node.right, precedence + (node.op === '-' ? 1 : 0))}`;
+    return parent > precedence ? wrap(value) : value;
+  }
+  return render(parse(source).tree);
 }

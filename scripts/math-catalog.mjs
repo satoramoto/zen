@@ -9,7 +9,7 @@ try{
  assert.ok(!Object.values(index.entries).some(e=>e.title.startsWith('Design OS/Math/')), 'Math must leave Design OS');
  const math=Object.values(index.entries).filter(e=>e.title.startsWith('Math/'));
  const titles=[...new Set(math.map(e=>e.title))].sort();
- assert.deepEqual(titles,['Wave Calculator','Circle to Sine','Signal Playground','Solid Sections','Complex Explorer','Complex Series','Prime Counting','Components/Mesh View','Components/Signal Surface','Components/Cross Section','Components/Drag Point','Cymatics Explorer','Standing String','Components/Cymatic Field'].map(t=>'Math/'+t).sort());
+ assert.deepEqual(titles,['Wave Calculator','Circle to Sine','Signal Playground','Solid Sections','Complex Explorer','Complex Series','Prime Counting','Components/Equation Input','Components/Mesh View','Components/Signal Surface','Components/Cross Section','Components/Drag Point','Cymatics Explorer','Standing String','Components/Cymatic Field'].map(t=>'Math/'+t).sort());
  console.log('PASS catalogue',titles.length,'groups',math.length,'entries');
  for(const suffix of ['circle-to-sine--follow-one-turn','signal-playground--explore-interference','solid-sections--cut-topology','complex-explorer--visit-zero','components-mesh-view--reset-plane','components-cross-section--switch-direction','components-drag-point--keyboard']){
   const p=await browser.newPage({viewport:{width:1280,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));

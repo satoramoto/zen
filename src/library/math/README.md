@@ -16,6 +16,7 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Cymatics Explorer | `CymaticsExplorer`: square plates/membranes and drums, nodal patterns and mixtures |
 | Standing String | `StandingString`: counter-propagating waves, nodes and local motion |
 | Components / Cymatic Field | `CymaticField`: nodal grains, signed displacement and cycle-averaged paint |
+| Components / Equation Input | `EquationInput`: editable typeset math, touch keyboard and plain-text fallback |
 | Components / Mesh View | `MeshView`: sampled mesh, clipping plane and native manipulation handles |
 | Components / Signal Surface | `SignalSurface`: field/manifold rendering, sections and scalar colors |
 | Components / Cross Section | `CrossSection`: linked map, trace, probe and sampled statistics |

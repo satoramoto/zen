@@ -9,6 +9,8 @@ describe('calculator expressions', () => {
   it('composes functions with their own x and shares parameters and time', () => {
     const program = compileExpressions({ f: 'a*sin(b*x-t)', g: 'f(2*x)', h: 'f(x)+g(x)' });
     expect(program.parameters).toEqual(['a', 'b']);
+    expect(program.parametersByFunction.g).toEqual(['a', 'b']);
+    expect(program.parametersByFunction.h).toEqual(['a', 'b']);
     expect(program.evaluate('h', Math.PI/2, { a: 2, b: 1 })).toBeCloseTo(2);
     expect(program.evaluate('g', 0, { a: 2, b: 1 }, Math.PI/2)).toBeCloseTo(-2);
   });

@@ -5,7 +5,7 @@ const base = process.env.MATH_PREVIEW_URL ?? 'http://127.0.0.1:6027';
 await mkdir('.shots/calculator', { recursive: true });
 const browser = await chromium.launch({ headless: true });
 try {
-  for (const story of ['edit-relationships', 'keep-last-valid-drawing', 'animate-and-compare']) {
+  for (const story of ['edit-relationships', 'keep-last-valid-drawing', 'animate-and-compare', 'friendly-actions']) {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
     const errors = []; page.on('pageerror', error => errors.push(error.message));
     await page.addInitScript(() => { let channel; window.__plays = []; Object.defineProperty(window, '__STORYBOOK_ADDONS_CHANNEL__', { configurable: true, get: () => channel, set: value => { channel = value; for (const name of ['storyFinished', 'storyThrewException', 'playFunctionThrewException']) value.on(name, event => window.__plays.push({ name, status: event?.status, message: event?.message })); } }); });
@@ -20,6 +20,7 @@ try {
   const a = page.getByRole('slider', { name: 'Parameter a' }); await a.waitFor();
   assert.equal(await page.locator('.zen-calculator__curve').evaluateAll(paths => new Set(paths.map(path => getComputedStyle(path).stroke)).size), 3, 'Each equation must have its own curve color');
   const before = await page.getByLabel('f at probe').textContent();
+  await a.scrollIntoViewIfNeeded();
   const box = await a.boundingBox(); await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down(); await page.mouse.move(box.x + box.width / 2 + 60, box.y + box.height / 2, { steps: 10 }); await page.mouse.up();
   assert.equal(await a.getAttribute('aria-valuenow'), '2');
   assert.notEqual(await page.getByLabel('f at probe').textContent(), before);
@@ -27,6 +28,7 @@ try {
   await a.focus(); await page.keyboard.press('ArrowLeft');
   await page.screenshot({ path: '.shots/calculator/desktop.png', fullPage: true });
   console.log('PASS pointer scrubbing + desktop');
+  await page.getByRole('button', { name: 'Plain text', exact: true }).first().click();
   await page.getByRole('textbox', { name: 'f(x) expression' }).fill('sqrt(-1)');
   assert.equal(await page.getByLabel('f at probe').textContent(), 'undefined');
   assert.equal(await page.getByLabel('h at probe').textContent(), 'undefined');

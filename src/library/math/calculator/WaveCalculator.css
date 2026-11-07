@@ -72,3 +72,22 @@
  .zen-calculator footer { flex-direction:column; gap:6px; }
 }
 @media (prefers-reduced-motion:reduce) { .zen-calculator .mafs-movable-point * { transition:none; } }
+.zen-calculator__workspace { grid-template-columns:minmax(300px,1fr) minmax(0,1.8fr); }
+.zen-calculator__builder { margin-block-start:16px; padding-block-end:16px; border-block-end:1px solid var(--border); }
+.zen-calculator__builder > span { display:block; margin-block-end:8px; color:var(--text-2); font:12px var(--font-mono); }
+.zen-calculator__builder > div { display:flex; flex-wrap:wrap; gap:6px; }
+.zen-calculator__builder button { padding:6px 9px; font-size:11px; }
+.zen-calculator__builder small { display:block; margin-block-start:8px; font-size:10px; color:var(--text-3); }
+.zen-calculator__expression[data-selected="true"] > label { font-weight:var(--weight-strong); }
+.zen-calculator__linked-parameters { display:flex; flex-wrap:wrap; gap:6px; margin-block:0 10px; }
+.zen-calculator__linked-parameters button { font:11px var(--font-mono); padding:5px 7px; color:var(--curve-color); background:transparent; }
+.zen-calculator__linked-parameters button span { color:var(--text-3); margin-inline-start:4px; }
+.zen-calculator__linked-parameters button[aria-pressed="true"] { border-color:var(--curve-color); background:var(--surface-2); }
+.zen-calculator__parameter[data-active="true"] { border-color:var(--hue-2); }
+.zen-calculator .zen-calculator__clear-highlight { padding:4px 0; border:0; background:transparent; font-size:10px; color:var(--text-2); text-decoration:underline; }
+@media (max-width:800px) { .zen-calculator__workspace { grid-template-columns:1fr; } .zen-calculator__equations { border-inline-end:0; border-block-end:1px solid var(--border); } }
+.zen-calculator__inline-quantity { margin-block:6px 12px; }
+.zen-calculator .zen-calculator__inline-quantity .zen-calculator__parameter { max-inline-size:none; inline-size:100%; padding:10px 14px; }
+.zen-calculator__parameter .zen-calculator__meaning { display:block; margin-block-start:4px; font:9px var(--font-sans); color:var(--text-3); }
+.zen-calculator__expression { padding-block:16px; }
+.zen-calculator__entry { margin-block:6px; }

@@ -17,6 +17,8 @@ export const FunctionComposition: Story = { args: { preset: 'composition' } };
 export const EditRelationships: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
+    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled());
+    for (const toggle of await c.findAllByRole('button', { name: 'Plain text' })) await userEvent.click(toggle);
     const g = c.getByRole('textbox', { name: 'g(x) expression' });
     await userEvent.clear(g); await userEvent.type(g, '-f(x)');
     await expect(c.getByLabelText('h at probe')).toHaveTextContent('0.000');
@@ -36,6 +38,8 @@ export const EditRelationships: Story = {
 export const KeepLastValidDrawing: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement), before = c.getByLabelText('h at probe').textContent;
+    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled());
+    for (const toggle of await c.findAllByRole('button', { name: 'Plain text' })) await userEvent.click(toggle);
     const f = c.getByRole('textbox', { name: 'f(x) expression' });
     await userEvent.click(f); await userEvent.keyboard('{End}'); await userEvent.type(f, '+');
     await expect(c.getByRole('alert')).toHaveTextContent('Drawing the last valid equations');
@@ -62,5 +66,23 @@ export const AnimateAndCompare: Story = {
     await expect(c.getByLabelText('h at probe')).toHaveTextContent('0.000');
     await expect(c.queryByText('··· pinned result')).not.toBeInTheDocument();
     await expect(canvasElement.querySelector('.zen-calculator')).toHaveAttribute('data-playing', 'false');
+  },
+};
+
+export const FriendlyActions: Story = {
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.click(c.getByRole('button', { name: 'Half as tall' }));
+    await expect(c.getByLabelText('f at probe')).toHaveTextContent('0.500');
+    await userEvent.click(c.getByRole('button', { name: 'Fade from center' }));
+    const envelope = await c.findByRole('slider', { name: 'Parameter k' });
+    await expect(envelope).toHaveAttribute('aria-valuenow', '0.35');
+    await userEvent.click(c.getByRole('button', { name: 'Explore k in f' }));
+    await waitFor(() => expect(c.getByRole('slider', { name: 'Adjust k in f' })).toHaveFocus());
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(envelope).toHaveAttribute('aria-valuenow', '0.4');
+    await expect(c.getByRole('button', { name: 'Explore k in h' })).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(c.getByRole('button', { name: 'Show all curves' }));
+    await expect(c.getByRole('button', { name: 'Explore k in h' })).toHaveAttribute('aria-pressed', 'false');
   },
 };
