@@ -37,7 +37,7 @@ const preview: Preview = {
             'Foundations', ['Button face', 'Label', 'Frame bindings'],
           ],
           'Math',
-          ['Circle to Sine', 'Standing String', 'Cymatics Explorer', 'Signal Playground', 'Solid Sections', 'Complex Explorer', 'Complex Series', 'Prime Counting', 'Components'],
+          ['Wave Calculator', 'Circle to Sine', 'Standing String', 'Cymatics Explorer', 'Signal Playground', 'Solid Sections', 'Complex Explorer', 'Complex Series', 'Prime Counting', 'Components'],
           'Harness',
           ['Claude Code', ['Kit', 'Skins', 'Sample mod']],
           'Yahaha',
