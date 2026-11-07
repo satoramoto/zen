@@ -86,3 +86,27 @@ export const FriendlyActions: Story = {
     await expect(c.getByRole('button', { name: 'Explore k in h' })).toHaveAttribute('aria-pressed', 'false');
   },
 };
+
+/** Selecting a subtree previews linked curves without modifying the live equations. */
+export const ExploreParts: Story = {
+  args: { preset: 'composition' },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.click(c.getByRole('button', { name: 'Explore parts of f' }));
+    await userEvent.click(c.getByRole('button', { name: 'Select sin function, part 3' }));
+    await userEvent.click(c.getByRole('button', { name: /^Half as large$/ }));
+    await expect(c.getByLabelText('f at probe')).toHaveTextContent('1.000');
+    await expect(c.getByText('– – proposal · not applied')).toBeInTheDocument();
+    await userEvent.click(c.getByRole('button', { name: 'Apply change' }));
+    await expect(c.getByLabelText('f at probe')).toHaveTextContent('0.500');
+    await expect(c.getByLabelText('h at probe')).toHaveTextContent('0.500');
+    await expect(c.queryByText('– – proposal · not applied')).not.toBeInTheDocument();
+    await userEvent.click(c.getByRole('button', { name: 'Undo transformation' }));
+    await expect(c.getByLabelText('f at probe')).toHaveTextContent('1.000');
+    await userEvent.click(c.getByRole('button', { name: 'Explore parts of f' }));
+    await userEvent.click(c.getByRole('button', { name: 'Flip its sign' }));
+    await userEvent.click(c.getByRole('button', { name: 'Close equation exploration' }));
+    await expect(c.getByLabelText('f at probe')).toHaveTextContent('1.000');
+    await expect(c.queryByText('– – proposal · not applied')).not.toBeInTheDocument();
+  },
+};

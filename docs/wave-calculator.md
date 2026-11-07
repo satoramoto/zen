@@ -123,3 +123,27 @@ This deliberately depends on the pinned MathLive 0.111.x rendered-token structur
 Run `node scripts/highlight-stories.mjs` when upgrading MathLive; it verifies token
 classification, theme colors, active quantities, toggling, unmodified LaTeX and live
 input. The existing equation-input runner covers caret, undo/redo and touch regressions.
+
+## Select a part and preview a change
+
+Select complete math in the typeset editor, or use **Explore parts** beside an equation.
+The chips are parsed subexpressions, including individual quantities and nested function
+arguments. Repeated selections offer explicit occurrences in equation order; the system
+does not guess which identical term was intended.
+
+Choose an action to preview it (keyboard focus also previews). The proposed equation is
+typeset and linked curves are dashed. Existing equations, solid curves and probe values
+remain unchanged until **Apply change**. **Done** cancels a preview. **Undo transformation**
+restores the previous equations, with up to twenty action steps; manual edits and preset
+changes clear this history so an old action cannot overwrite subsequent typing. Parameter
+changes remain independent. On narrow screens, **View proposal on graph** and **Back to
+selected part** connect the two views.
+
+Transforms replace one AST subtree; horizontal transforms replace only `x` within it.
+The existing expression, token and evaluation limits apply to proposals too. Invalid or
+over-budget proposals cannot be applied. This is the discoverability and preview layer;
+spatial drag-and-drop composition is not implemented yet.
+
+Verify with `node scripts/term-stories.mjs` and the `Explore Parts` Storybook play, alongside
+the existing calculator runner. `terms.test.ts` checks grouping, repeated occurrences,
+composition, invalid paths and envelope symmetry.

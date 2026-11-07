@@ -5,7 +5,7 @@ const base = process.env.MATH_PREVIEW_URL ?? 'http://127.0.0.1:6027';
 await mkdir('.shots/calculator', { recursive: true });
 const browser = await chromium.launch({ headless: true });
 try {
-  for (const story of ['edit-relationships', 'keep-last-valid-drawing', 'animate-and-compare', 'friendly-actions']) {
+  for (const story of ['edit-relationships', 'keep-last-valid-drawing', 'animate-and-compare', 'friendly-actions', 'explore-parts']) {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
     const errors = []; page.on('pageerror', error => errors.push(error.message));
     await page.addInitScript(() => { let channel; window.__plays = []; Object.defineProperty(window, '__STORYBOOK_ADDONS_CHANNEL__', { configurable: true, get: () => channel, set: value => { channel = value; for (const name of ['storyFinished', 'storyThrewException', 'playFunctionThrewException']) value.on(name, event => window.__plays.push({ name, status: event?.status, message: event?.message })); } }); });
@@ -18,6 +18,8 @@ try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
   await page.goto(`${base}/iframe.html?id=math-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:dark`);
   const a = page.getByRole('slider', { name: 'Parameter a' }); await a.waitFor();
+  await page.waitForFunction(() => [...document.querySelectorAll('.zen-equation-input')].every(el => el.dataset.ready === 'true'));
+  await page.evaluate(() => document.fonts.ready);
   assert.equal(await page.locator('.zen-calculator__curve').evaluateAll(paths => new Set(paths.map(path => getComputedStyle(path).stroke)).size), 3, 'Each equation must have its own curve color');
   const before = await page.getByLabel('f at probe').textContent();
   await a.scrollIntoViewIfNeeded();

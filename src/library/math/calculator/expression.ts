@@ -2,10 +2,10 @@
 export const functionNames = ['f', 'g', 'h'] as const;
 export type FunctionName = typeof functionNames[number];
 export type Equations = Record<FunctionName, string>;
-type Node = { kind: 'number'; value: number } | { kind: 'name'; name: string } |
-  { kind: 'unary'; sign: number; value: Node } |
-  { kind: 'binary'; op: string; left: Node; right: Node } |
-  { kind: 'call'; name: string; argument: Node };
+export type ExpressionNode = { kind: 'number'; value: number } | { kind: 'name'; name: string } |
+  { kind: 'unary'; sign: number; value: ExpressionNode } |
+  { kind: 'binary'; op: string; left: ExpressionNode; right: ExpressionNode } |
+  { kind: 'call'; name: string; argument: ExpressionNode };
 const builtins: Record<string, (x: number) => number> = Object.assign(Object.create(null), {
   sin: Math.sin, cos: Math.cos, tan: Math.tan, abs: Math.abs, sqrt: Math.sqrt,
   exp: Math.exp, log: Math.log, floor: Math.floor, ceil: Math.ceil,
@@ -13,7 +13,7 @@ const builtins: Record<string, (x: number) => number> = Object.assign(Object.cre
 export class ExpressionError extends Error {
   constructor(message: string, public equation?: FunctionName) { super(message); }
 }
-function parse(source: string): { tree: Node; parameters: Set<string>; dependencies: Set<FunctionName> } {
+function parse(source: string): { tree: ExpressionNode; parameters: Set<string>; dependencies: Set<FunctionName> } {
   if (source.length > 240) throw new ExpressionError('Keep each expression under 240 characters.');
   const tokens: string[] = []; let offset = 0;
   while (offset < source.length) {
@@ -27,7 +27,7 @@ function parse(source: string): { tree: Node; parameters: Set<string>; dependenc
   const parameters = new Set<string>(), dependencies = new Set<FunctionName>();
   const peek = () => tokens[at];
   const take = () => tokens[at++];
-  function atom(): Node {
+  function atom(): ExpressionNode {
     const token = take();
     if (!token) throw new ExpressionError('Finish the expression.');
     if (token === '(') { const value = sum(); if (take() !== ')') throw new ExpressionError('Close the parentheses.'); return value; }
@@ -51,10 +51,10 @@ function parse(source: string): { tree: Node; parameters: Set<string>; dependenc
     }
     throw new ExpressionError(`Expected a number, name, or parenthesis; found “${token}”.`);
   }
-  function power(): Node { const left = atom(); return peek() === '^' ? (take(), { kind: 'binary', op: '^', left, right: unary() }) : left; }
-  function unary(): Node { return ['+', '-'].includes(peek()) ? { kind: 'unary', sign: take() === '-' ? -1 : 1, value: unary() } : power(); }
-  function product(): Node { let left = unary(); while (['*', '/'].includes(peek())) left = { kind: 'binary', op: take(), left, right: unary() }; return left; }
-  function sum(): Node { let left = product(); while (['+', '-'].includes(peek())) left = { kind: 'binary', op: take(), left, right: product() }; return left; }
+  function power(): ExpressionNode { const left = atom(); return peek() === '^' ? (take(), { kind: 'binary', op: '^', left, right: unary() }) : left; }
+  function unary(): ExpressionNode { return ['+', '-'].includes(peek()) ? { kind: 'unary', sign: take() === '-' ? -1 : 1, value: unary() } : power(); }
+  function product(): ExpressionNode { let left = unary(); while (['*', '/'].includes(peek())) left = { kind: 'binary', op: take(), left, right: unary() }; return left; }
+  function sum(): ExpressionNode { let left = product(); while (['+', '-'].includes(peek())) left = { kind: 'binary', op: take(), left, right: product() }; return left; }
   const tree = sum();
   if (at !== tokens.length) throw new ExpressionError('Separate factors with *, and check your parentheses.');
   return { tree, parameters, dependencies };
@@ -85,7 +85,7 @@ export function compileExpressions(equations: Equations): ExpressionProgram {
     equations: { ...equations }, parameters,
     evaluate(name, x, values, t = 0) {
       let budget = 4096;
-      function evaluate(node: Node, xValue: number): number {
+      function evaluate(node: ExpressionNode, xValue: number): number {
         if (--budget < 0) return NaN;
         switch (node.kind) {
           case 'number': return node.value;
@@ -128,7 +128,7 @@ export function sampleCurve(evaluate: (x: number) => number, domain: [number, nu
 /** Typeset the supported source grammar without changing its mathematical grouping. */
 export function expressionLatex(source: string): string {
   const wrap = (value: string) => `\\left(${value}\\right)`;
-  function render(node: Node, parent = 0): string {
+  function render(node: ExpressionNode, parent = 0): string {
     if (node.kind === 'number') { const text = String(node.value), formatted = text.replace(/e([+-]?\d+)/i, '\\times 10^{$1}'); return /e/i.test(text) && parent > 2 ? wrap(formatted) : formatted; }
     if (node.kind === 'name') return node.name === 'pi' ? '\\pi' : node.name;
     if (node.kind === 'call') {
@@ -148,3 +148,6 @@ export function expressionLatex(source: string): string {
   }
   return render(parse(source).tree);
 }
+
+/** Parsed structure for selection and semantics-preserving transformations. */
+export function expressionTree(source: string): ExpressionNode { return parse(source).tree; }

@@ -12,6 +12,8 @@ export interface EquationInputProps {
   onChange(value: string): void;
   onFocus?(): void;
   onParameter?(name: string): void;
+  /** A complete selected expression; repeated occurrences are resolved by the caller. */
+  onTermSelection?(source: string): void;
   invalid?: boolean;
   /** Syntax colors are display-only; references f/g/h follow the calculator's curve colors. */
   highlighting?: boolean;
@@ -82,6 +84,9 @@ export function EquationInput(props: EquationInputProps) {
       const selection = () => {
         const selected = element.getValue(element.selection, 'latex') || element.getValue(Math.max(0, element.position - 1), element.position, 'latex');
         if (/^[a-z]$/.test(selected)) latest.current.onParameter?.(selected);
+        if (!element.selectionIsCollapsed && latest.current.onTermSelection) {
+          try { latest.current.onTermSelection(latexExpression(selected)); } catch { /* Partial syntax is not a complete term. */ }
+        }
       };
       element.addEventListener('input', input); element.addEventListener('compositionend', input);
       element.addEventListener('focus', focus); element.addEventListener('blur', release); element.addEventListener('selection-change', selection);
