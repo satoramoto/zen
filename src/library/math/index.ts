@@ -10,3 +10,4 @@ export * from './explore';
 export * from './signals';
 export * from './lab';
 export * from './cymatics';
+export * from './calculator';
