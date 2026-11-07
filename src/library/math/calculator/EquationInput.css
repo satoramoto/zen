@@ -1,0 +1,14 @@
+.zen-equation-input { min-inline-size:0; inline-size:100%; color:var(--text-1); }
+.zen-equation-input__field { min-inline-size:0; --keyboard-background:var(--surface-1); --keycap-background:var(--surface-2); --keycap-text:var(--text-1); --keycap-background-hover:var(--surface-3); --keycap-text-hover:var(--text-1); --keyboard-toolbar-background:var(--surface-1); --keyboard-toolbar-text:var(--text-2); --keyboard-accent-color:var(--accent); --keycap-primary-background:var(--accent); --keycap-primary-text:var(--surface-0); --keycap-secondary-background:var(--surface-3); --keycap-secondary-text:var(--text-1); --keycap-border:var(--border); --keycap-border-bottom:var(--border-strong); }
+.zen-equation-input math-field { display:block; inline-size:100%; min-inline-size:0; padding:10px 0; font-size:24px; background:transparent; color:var(--text-1); border:0; border-block-end:1px solid var(--border); border-radius:0; --caret-color:var(--accent); --selection-background-color:var(--surface-3); --selection-color:var(--text-1); --contains-highlight-background-color:var(--surface-2); --smart-fence-color:var(--text-3); --placeholder-color:var(--hue-3); --primary:var(--accent); }
+.zen-equation-input math-field:focus-within { outline:0; border-color:var(--accent); }
+.zen-equation-input math-field[aria-invalid="true"] { border-color:var(--hue-3); }
+.zen-equation-input math-field::part(menu-toggle), .zen-equation-input math-field::part(virtual-keyboard-toggle) { display:none; }
+.zen-equation-input__tools { display:flex; gap:14px; margin-block:5px 8px; }
+.zen-equation-input .zen-equation-input__tools button { padding:3px 0; background:transparent; border:0; color:var(--text-3); font:10px var(--font-sans); }
+.zen-equation-input .zen-equation-input__tools button:hover { color:var(--text-1); }
+.zen-equation-input__loading, .zen-equation-input > small { display:block; padding-block:8px; font:11px/1.5 var(--font-sans); color:var(--text-3); }
+.zen-equation-input > .zen-equation-input__error { color:var(--text-2); }
+.zen-equation-input > input { inline-size:100%; padding:12px 0; color:var(--text-1); background:transparent; border:0; border-block-end:1px solid var(--border); font:14px var(--font-mono); }
+.zen-equation-input button:focus-visible, .zen-equation-input input:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.zen-equation-input__field > .ML__keyboard { position:fixed; inset:0; height:100dvh; inline-size:100vw; }
