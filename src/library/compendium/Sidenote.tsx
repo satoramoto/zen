@@ -10,7 +10,7 @@ export interface SidenoteProps {
 }
 
 /**
- * **Job.** (Compendium mockup stub.) A note anchored to a spot in the text. Inside a `Reading`
+ * **Job.** A note anchored to a spot in the text. Inside a `Reading`
  * paragraph it leaves a numbered marker at that spot and hangs the note in the margin beside the
  * line (a right float pushed out by the margin's width; successive notes clear each other). The
  * numbers are a CSS counter on the reading page. When the margin folds, the note is an indented

@@ -4,18 +4,13 @@ import { focusRing } from '../primitives/Ring';
 import { Popover } from '../components/core/Popover/Popover';
 import { Stack } from '../primitives/Stack';
 import { Text } from '../primitives/Text';
-import { Mark, type Standing } from './Mark';
+import { Mark } from './Mark';
 import './Peek.css';
 
-/** What a peek shows of another entry. */
-export interface PeekEntry {
-  title: string;
-  /** One or two sentences. */
-  summary: string;
-  /** The entry's kind, e.g. "Concept", "Tuning system". */
-  kind?: string;
-  standing?: Standing;
-}
+import type { EntryHead } from './model/document';
+
+/** What a peek shows of another entry: its head. */
+export type PeekEntry = EntryHead;
 
 export interface PeekProps {
   entry: PeekEntry;
@@ -28,7 +23,7 @@ const OPEN_DELAY = 350;
 const CLOSE_DELAY = 200;
 
 /**
- * **Job.** (Compendium mockup stub.) An inline mention of another entry with a preview: a `Popover`
+ * **Job.** An inline mention of another entry with a preview: a `Popover`
  * hung off the words. A hover that rests opens it and leaving both the words and the panel
  * closes it; a tap or click toggles it (touch has no hover); Escape and a press elsewhere close
  * it (the Popover's own dismissal). The words are a button, so it is reachable by keyboard.

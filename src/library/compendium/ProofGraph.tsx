@@ -4,20 +4,9 @@ import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import './ProofGraph.css';
 
-export interface ProofNode {
-  id: string;
-  /** The declaration's name, e.g. `Real.tendsto_sum_range_one_div_nat_succ_atTop`. */
-  name: string;
-  /** What it says, in words. */
-  says: string;
-  kind: 'theorem' | 'lemma' | 'definition';
-}
+import type { ProofGraphData, ProofNode } from './model/document';
 
-export interface ProofGraphData {
-  nodes: ProofNode[];
-  /** `[uses, usedBy]`: the proof of `usedBy` cites `uses`. */
-  edges: [string, string][];
-}
+export type { ProofGraphData, ProofNode };
 
 /** Each node's layer: 0 for what uses nothing here, else one above the highest thing it uses. */
 function layers({ nodes, edges }: ProofGraphData): ProofNode[][] {
@@ -44,7 +33,7 @@ interface Wire {
 }
 
 /**
- * **Job.** (Compendium mockup stub.) A dependency DAG in a layered layout: the goal on top, what
+ * **Job.** A dependency DAG in a layered layout: the goal on top, what
  * it rests on in rows beneath (longest-path layering, in the data's order within a row). Nodes
  * are raised `Surface` chips laid out by the browser (rows wrap at narrow widths); the edges are
  * an SVG drawn over them from the chips' measured boxes, re-measured on resize. Not the circuit

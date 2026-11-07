@@ -9,7 +9,7 @@ export interface ReadingProps {
 }
 
 /**
- * **Job.** (Compendium mockup stub.) A long-form column at a reading measure with a margin column
+ * **Job.** A long-form column at a reading measure with a margin column
  * to its right. Its children are the text; a `Sidenote` or `Mark` inside a paragraph hangs into
  * the margin beside the line it belongs to (a float, Tufte-style), so notes stay anchored without
  * any measuring. The root is a size container: below `46rem` the margin folds away and notes sit

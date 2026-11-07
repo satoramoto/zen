@@ -3,9 +3,9 @@ import { Stack } from '../primitives/Stack';
 import { Text } from '../primitives/Text';
 import './Mark.css';
 
-/** How firmly a claim stands, strongest first. */
-export const STANDINGS = ['established', 'consequence', 'interpretation', 'conjecture', 'speculation'] as const;
-export type Standing = (typeof STANDINGS)[number];
+import { STANDINGS, type Standing } from './model/standing';
+
+export { STANDINGS, type Standing };
 
 type Shape = 'disc' | 'square' | 'half' | 'triangle' | 'ring';
 
@@ -46,7 +46,7 @@ export interface MarkProps {
 }
 
 /**
- * **Job.** (Compendium mockup stub.) A margin mark for a claim's epistemic standing: a shape and a
+ * **Job.** A margin mark for a claim's epistemic standing: a shape and a
  * colour slot (`STANDING_LOOK`), never colour alone. Put it at the start of the claim inside a
  * `Reading` paragraph; it floats into the left gutter beside that line. Its accessible name is
  * the standing.

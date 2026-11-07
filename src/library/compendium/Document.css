@@ -1,25 +1,29 @@
-/* The entry page (compendium mockup story): the page surface and its few blocks. */
+/* Document: the entry page drawn from its data, the page surface and its few blocks. */
 
-.cmp-entry {
+.cmp-document {
   min-block-size: 100vh;
   padding: var(--space-6) var(--space-4);
 }
 
-.cmp-entry__head {
+.cmp-document__head {
   padding-block-end: var(--space-3);
 }
 
-.cmp-entry__lede {
+.cmp-document__lede {
   --text-leading: 1.5;
   max-width: 60ch;
 }
 
-.cmp-entry__code {
+.cmp-document__section {
+  min-width: 0;
+}
+
+.cmp-document__code {
   padding: var(--space-3);
   min-width: 0;
 }
 
-.cmp-entry__pre {
+.cmp-document__pre {
   margin: 0;
   overflow-x: auto;
   white-space: pre;

@@ -19,7 +19,7 @@ export interface FigureProps {
 }
 
 /**
- * **Job.** (Compendium mockup stub.) A live illustration with its control, a "what changes" line
+ * **Job.** A live illustration with its control, a "what changes" line
  * and a source: the field guide card's pattern (`src/PrincipleExample.tsx`: brief, toolbar,
  * stage, teaching notes, reference) built from the primitives. The card is a raised `Surface`;
  * the stage a `well`, so the illustration reads as a screen set into it.
