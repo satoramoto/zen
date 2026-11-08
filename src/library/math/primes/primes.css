@@ -1,0 +1,129 @@
+/* The prime-wave figures: line drawings in the contract's colours, rasters painted from them,
+   and the controls under each. */
+
+.zen-primes {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.zen-primes__controls {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.zen-primes__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  min-width: 0;
+}
+
+.zen-primes__caption {
+  margin: 0;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  line-height: 1.5;
+}
+
+/* The swatches a raster reads its colours from: present, never seen. */
+.zen-primes__swatches {
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  overflow: hidden;
+}
+
+.zen-primes__raster {
+  position: relative;
+  max-inline-size: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.zen-primes__canvas {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 30rem;
+  block-size: auto;
+  margin-inline: auto;
+  aspect-ratio: auto;
+  background: var(--surface-1);
+}
+.zen-primes__canvas[data-pixelated] {
+  image-rendering: pixelated;
+}
+.zen-primes__raster[data-shape='disc'] .zen-primes__canvas {
+  border-radius: 50%;
+}
+.zen-primes__raster--wide .zen-primes__canvas {
+  max-inline-size: none;
+}
+
+/* A wide drawing keeps a legible size and scrolls sideways in its own box on a narrow column. */
+.zen-primes__scroll {
+  max-inline-size: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.zen-primes__svg--wide {
+  min-inline-size: 30rem;
+}
+
+/* Line drawings. */
+.zen-primes__svg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 28rem;
+  margin-inline: auto;
+}
+
+.zen-primes__wall {
+  stroke: var(--text-1);
+  stroke-width: 2;
+}
+
+.zen-primes__wave {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.zen-primes__mark {
+  stroke: var(--hue-1);
+  stroke-width: 1;
+}
+.zen-primes__mark--near {
+  stroke: var(--accent);
+  stroke-width: 2.4;
+}
+
+.zen-primes__axis {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.zen-primes__label {
+  fill: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.zen-primes__bar {
+  fill: var(--hue-2);
+}
+.zen-primes__bar--chosen {
+  fill: var(--accent);
+}
+
+.zen-primes__spike {
+  fill: none;
+  stroke: var(--hue-1);
+  stroke-width: 1.2;
+}
