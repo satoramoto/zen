@@ -19,6 +19,8 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Trig / Identity Squares | `IdentitySquares`: squares on the legs, sin²θ + cos²θ = 1 as areas |
 | Trig / Angle Sum | `AngleSum`: sin(α + β) as two stacked lengths |
 | Trig / General Triangle | `GeneralTriangle`: three draggable vertices, the laws of sines and cosines, area, the ambiguous case |
+| Physics / Apollo Descent | `ApolloDescentSimulator`: Apollo 11 Lunar Module powered descent (P63 braking, P64 approach, P66 manual rate of descent), Cherry-Klumpp guidance law, and AGC DSKY |
+| Physics / Orbit Transfer | `OrbitSimulator`: Translunar orbital mechanics (Apollo 8/11), restricted Earth-Moon gravity field, RK4 integration, free-return trajectories |
 | Wave Calculator | `WaveCalculator`: editable linked functions, automatic parameter scrubbing, time and comparison |
 | Circle to Sine | `SineExplorer`: linked orbit and wave, guided stops and comparisons |
 | Signal Playground | `SignalPlayground`: ten fields and manifolds with linked analysis |
