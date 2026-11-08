@@ -23,7 +23,8 @@ Nothing touches a filesystem: a story globs the folder, an app can fetch it, a t
 
 ## Dogfood
 
-This project is an OpenSpec project (`openspec/`, schema `spec-driven`). The viewer's own spec is
+This project is an OpenSpec project (`openspec/`, schema `zen-flow`, the family's fork of
+`spec-driven` that asks each change how it will be shown to work). The viewer's own spec is
 `openspec/specs/openspec-viewer/spec.md`, written as the change `openspec-stories`, validated with
 `openspec validate --strict` and archived with `openspec archive`; the `Openspec/Repo` story named
 **Zen** draws it. New work here should go the same way: propose, spec, build, archive, and the
