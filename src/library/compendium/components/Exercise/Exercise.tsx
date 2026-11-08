@@ -97,7 +97,7 @@ export function Exercise({ number, prompt, mode = 'typed', choices = [], reading
           ) : (
             <Stack direction="row" gap={2} wrap align="center">
               {mode === 'quantity' ? (
-                <Text as="output" role="numeral" tabular tone={correct ? 'success' : 'primary'} className="cmp-exercise__reading" aria-live="polite">
+                <Text as="output" role="numeral" size="body" tabular tone={correct ? 'success' : 'primary'} className="cmp-exercise__reading" aria-live="polite">
                   {reading}
                 </Text>
               ) : (

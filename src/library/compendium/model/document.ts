@@ -317,3 +317,6 @@ export function quantitiesIn(entry: Entry): string[] {
 export function exercisesIn(entry: Entry): ExerciseBlock[] {
   return entry.sections.flatMap((s) => s.blocks.filter((b): b is ExerciseBlock => b.kind === 'exercise'));
 }
+
+/** A quantity's unit as written after its number: a symbol (°, %, ′, ″) sits against it, a word one space off. */
+export const unitSuffix = (unit?: string) => (!unit ? '' : /^[°%′″]/.test(unit) ? unit : ` ${unit}`);

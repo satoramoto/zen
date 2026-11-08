@@ -36,6 +36,8 @@
 .cmp-document__title {
   --text-leading: 1.05;
   text-wrap: balance;
+  /* A last resort: one long word in a wide display face must not widen the page. */
+  overflow-wrap: break-word;
 }
 
 .cmp-document__lede {
@@ -75,5 +77,8 @@
   }
   .cmp-document__numeral {
     --text-size: calc(var(--size-display) * 1.8);
+  }
+  .cmp-document__title {
+    --text-size: calc(var(--size-display) * 0.62);
   }
 }
