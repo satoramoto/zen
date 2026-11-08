@@ -1,0 +1,19 @@
+/* ArcWrap: the arc and its unrolled copy drawn thick, so they read as the same length. */
+.zen-trig-arcwrap__arc {
+  fill: none;
+  stroke: var(--hue-4);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.zen-trig-arcwrap__ruler {
+  fill: none;
+  stroke: var(--text-3);
+  stroke-width: 1;
+}
+
+.zen-trig-arcwrap__tick {
+  fill: none;
+  stroke: var(--text-2);
+  stroke-width: 1.4;
+}
