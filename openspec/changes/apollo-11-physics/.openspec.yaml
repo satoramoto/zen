@@ -1,0 +1,7 @@
+schema: zen-flow
+created: 2026-11-08
+goal: Take over the unfinished Apollo 11 physics run and ground it in the Apollo 11 flight software, verifiable in Storybook
+affected_areas:
+  - zen
+  - story-spec
+x-review: look
