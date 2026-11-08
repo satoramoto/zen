@@ -36,14 +36,18 @@ describe('waves in a boundary', () => {
   });
   it('never lets two primes’ marks meet, and the closest pair is the two largest', () => {
     const ps = Array.from(firstPrimes(60));
+    // Every pair of marks of two different primes (about half a million): count meetings, assert once.
     let best = Infinity;
+    let meetings = 0;
     for (let a = 0; a < 25; a++)
       for (let b = a + 1; b < 25; b++)
         for (const x of nodeMarks(ps[a]))
           for (const y of nodeMarks(ps[b])) {
-            expect(Math.abs(x - y)).toBeGreaterThan(1e-12);
-            best = Math.min(best, Math.abs(x - y));
+            const d = Math.abs(x - y);
+            if (d <= 1e-12) meetings++;
+            if (d < best) best = d;
           }
+    expect(meetings).toBe(0);
     expect(best).toBeCloseTo(closestApproach(ps.slice(0, 25))!.distance, 12);
     const c = closestApproach([5, 7, 11, 13])!;
     expect(c).toMatchObject({ p: 11, q: 13 });
