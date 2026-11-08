@@ -12,7 +12,7 @@ import { Sidenote } from '../../components/Sidenote/Sidenote';
 import { Steps } from '../../components/Steps/Steps';
 import { Table } from '../../components/Table/Table';
 import { Timeline } from '../../components/Timeline/Timeline';
-import { answerOf, exercisesIn, figuresIn, type Block, type Entry, type EntryHead, type Quantity, type Run } from '../../model/document';
+import { answerOf, exercisesIn, figuresIn, unitSuffix, type Block, type Entry, type EntryHead, type Quantity, type Run } from '../../model/document';
 import { checkAnswer, type CheckerRegistry, type Progress, type Verdict } from '../../model/exercise';
 import { H, P, Reading, Wide } from '../Reading/Reading';
 import './Document.css';
@@ -184,7 +184,7 @@ function BlockView({ block, page, figureNumber, exerciseNumber }: { block: Block
             prompt={<Runs runs={block.prompt} page={page} />}
             mode={answer.kind}
             choices={answer.kind === 'choice' ? answer.options.map((o) => ({ id: o.id, prompt: <Runs runs={o.prompt} page={page} /> })) : undefined}
-            reading={q && answer.kind === 'quantity' ? `${q.label ?? answer.quantity} = ${q.value.toFixed(decimalsOf(q.step ?? 1))}${q.unit ? ` ${q.unit}` : ''}` : undefined}
+            reading={q && answer.kind === 'quantity' ? `${q.label ?? answer.quantity} = ${q.value.toFixed(decimalsOf(q.step ?? 1))}${unitSuffix(q.unit)}` : undefined}
             placeholder={answer.kind === 'typed' ? answer.placeholder : undefined}
             check={check}
             hint={block.hint && <Runs runs={block.hint} page={page} />}

@@ -5,7 +5,7 @@ import { Stack } from '../../../primitives/Stack';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
 import { bookIndex, chapterOf, chapterProgress, neighbours, type Book as BookData } from '../../model/book';
-import type { Quantity } from '../../model/document';
+import { unitSuffix, type Quantity } from '../../model/document';
 import type { CheckerRegistry, Progress } from '../../model/exercise';
 import { Document, type FigureRegistry } from '../Document/Document';
 import './Book.css';
@@ -25,7 +25,7 @@ export interface BookProps {
 }
 
 const decimals = (step: number) => Math.max(0, Math.min(6, -Math.floor(Math.log10(step))));
-const shown = (q: Quantity) => `${q.value.toFixed(decimals(q.step ?? 1))}${q.unit ? ` ${q.unit}` : ''}`;
+const shown = (q: Quantity) => `${q.value.toFixed(decimals(q.step ?? 1))}${unitSuffix(q.unit)}`;
 
 /**
  * **Job.** A book to the textbook's lock: a ruled ledger of its chapters down the side (number,

@@ -1,7 +1,7 @@
 import { useRef, type KeyboardEvent, type PointerEvent } from 'react';
 import { focusRing } from '../../../primitives/Ring';
 import { Text } from '../../../primitives/Text';
-import type { Quantity } from '../../model/document';
+import { unitSuffix, type Quantity } from '../../model/document';
 import './Scrub.css';
 
 export interface ScrubProps {
@@ -82,7 +82,7 @@ export function Scrub({ name, quantity, onChange }: ScrubProps) {
       aria-valuemin={min}
       aria-valuemax={max}
       aria-valuenow={value}
-      aria-valuetext={unit ? `${shown} ${unit}` : shown}
+      aria-valuetext={`${shown}${unitSuffix(unit)}`}
       onPointerDown={down}
       onPointerMove={move}
       onPointerUp={up}
@@ -91,7 +91,7 @@ export function Scrub({ name, quantity, onChange }: ScrubProps) {
       data-dragging={drag.current ? '' : undefined}
     >
       {shown}
-      {unit && <span className="cmp-scrub__unit"> {unit}</span>}
+      {unit && <span className="cmp-scrub__unit">{unitSuffix(unit)}</span>}
     </Text>
   );
 }
@@ -99,7 +99,7 @@ export function Scrub({ name, quantity, onChange }: ScrubProps) {
 /** A quantity's value in the text, read-only; `format` puts it where its `{}` is. */
 export function Ref({ quantity, format }: { quantity: Quantity; format?: string }) {
   const shown = quantity.value.toFixed(decimals(quantity.step ?? 1));
-  const text = format ? format.replace('{}', shown) : quantity.unit ? `${shown} ${quantity.unit}` : shown;
+  const text = format ? format.replace('{}', shown) : `${shown}${unitSuffix(quantity.unit)}`;
   return (
     <Text as="span" role="numeral" size="inherit" tabular className="cmp-ref" aria-live="polite">
       {text}

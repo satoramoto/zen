@@ -56,10 +56,10 @@ export const Live: Story = {
   render: () => <Document entry={LIVE} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    expect(within(canvas.getByRole('table')).getByText('30 °')).toBeInTheDocument();
+    expect(within(canvas.getByRole('table')).getByText('30°')).toBeInTheDocument();
     const s = canvasElement.querySelector<HTMLElement>('.cmp-scrub')!;
     s.focus();
     await userEvent.keyboard('{ArrowRight}');
-    await waitFor(() => expect(within(canvas.getByRole('table')).getByText('31 °')).toBeInTheDocument());
+    await waitFor(() => expect(within(canvas.getByRole('table')).getByText('31°')).toBeInTheDocument());
   },
 };

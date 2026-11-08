@@ -1,4 +1,4 @@
-// Every Compendium and Math/Fourier story's play against a served Storybook build, then screenshots
+// Every Compendium, Math/Fourier and Math/Trig story's play against a served Storybook build, then screenshots
 // of the books and the entry at wide and narrow widths: node scripts/compendium-stories.mjs [base-url] [shots-dir] [pack].
 // The pack is a theme id from themes/packs.ts; default textbook-console for the plays, and the
 // screenshots are taken in textbook-console dark and textbook-blueprint light.
@@ -13,9 +13,13 @@ const browser = await chromium.launch({ headless: true });
 let failed = 0;
 try {
   const index = await (await fetch(`${base}/index.json`)).json();
-  const stories = Object.values(index.entries).filter((e) => e.type === 'story' && (e.title.startsWith('Compendium/') || e.title.startsWith('Math/Fourier/')));
+  // ONLY=<id substring> plays just those stories (the screenshots still run).
+  const only = process.env.ONLY;
+  const stories = Object.values(index.entries).filter(
+    (e) => e.type === 'story' && ['Compendium/', 'Math/Fourier/', 'Math/Trig/'].some((t) => e.title.startsWith(t)) && (!only || e.id.includes(only)),
+  );
   assert.ok(stories.length > 0, 'no Compendium stories in the build');
-  console.log(stories.length, 'Compendium and Fourier stories');
+  console.log(stories.length, 'Compendium, Fourier and Trig stories');
   for (const story of stories) {
     const p = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
     const errors = [];
@@ -68,19 +72,34 @@ try {
     if (overflow > 0) failed++;
     await page.screenshot({ path: `${shots}/${name}-narrow.png`, fullPage: true });
   }
-  // Each Fourier chapter, wide, dark.
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  for (const [theme, mode] of [['textbook-console', 'dark'], ['textbook-blueprint', 'light']]) {
-  await page.goto(`${base}/iframe.html?id=compendium-book--fourier&viewMode=story&globals=theme:${theme};mode:${mode}`);
-  await page.locator('.cmp-document').waitFor();
-  for (let i = 1; i <= 7; i++) {
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: `${shots}/fourier-${theme}-chapter-${i}.png`, fullPage: true });
-    const next = page.getByRole('button', { name: /→$/ });
-    if ((await next.count()) === 0) break;
-    await next.click();
-    await page.locator('.cmp-document').waitFor();
-  }
+  // Each chapter of each book, wide in both packs; the trigonometry book at phone width too, where nothing may overflow.
+  for (const [book, id, narrow] of [
+    ['fourier', 'compendium-book--fourier', false],
+    ['trig', 'compendium-book--trigonometry', true],
+  ]) {
+    for (const [theme, mode] of [['textbook-console', 'dark'], ['textbook-blueprint', 'light']]) {
+      for (const width of narrow ? [1440, 390] : [1440]) {
+        await page.setViewportSize({ width, height: 1000 });
+        await page.goto(`${base}/iframe.html?id=${id}&viewMode=story&globals=theme:${theme};mode:${mode}`);
+        await page.locator('.cmp-document').waitFor();
+        for (let i = 1; i <= 12; i++) {
+          await page.waitForTimeout(600);
+          const suffix = width < 600 ? '-narrow' : '';
+          await page.screenshot({ path: `${shots}/${book}-${theme}-chapter-${i}${suffix}.png`, fullPage: true });
+          if (width < 600) {
+            const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+            if (overflow > 0) {
+              console.log(`${book} chapter ${i} ${theme} narrow overflow px`, overflow);
+              failed++;
+            }
+          }
+          const next = page.getByRole('button', { name: /→$/ });
+          if ((await next.count()) === 0) break;
+          await next.click();
+          await page.locator('.cmp-document').waitFor();
+        }
+      }
+    }
   }
   // The overtones chapter with its scrub, and the divergence chapter's exercises.
   await page.setViewportSize({ width: 1440, height: 1000 });

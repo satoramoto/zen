@@ -14,3 +14,6 @@ export * from './calculator';
 export * from './perspective';
 export * from './stereo';
 export * from './fourier';
+// The trigonometry figures (the trig models stay under math/trig: their names, such as TAU, would clash here).
+export { ArcWrap, RightTriangle, UnitCircle, WaveGraph, IdentitySquares, AngleSum, GeneralTriangle } from './trig';
+export type { ArcWrapProps, RightTriangleProps, UnitCircleProps, WaveGraphProps, WaveData, IdentitySquaresProps, AngleSumProps, GeneralTriangleProps } from './trig';

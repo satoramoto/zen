@@ -1,0 +1,219 @@
+/* The trigonometry figures: planes, triangles, circles and waves in the contract's colours.
+   Hue 1 is sine (the vertical), hue 2 cosine (the horizontal), hue 3 tangent, hue 4 the angle
+   and its arc, hue 5 a second thing (a second angle, a second triangle, the data). */
+
+.zen-trig {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.zen-trig__panes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-3);
+  min-width: 0;
+  align-items: start;
+}
+
+/* The drawing's box: it scrolls sideways when the column is narrower than the drawing's least size. */
+.zen-trig__scroll {
+  max-inline-size: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.zen-trig__plane {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 26rem;
+  margin-inline: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.zen-trig__axis {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.zen-trig__grid {
+  stroke: var(--border);
+  stroke-width: 0.5;
+  opacity: 0.6;
+}
+
+.zen-trig__unit {
+  fill: none;
+  stroke: var(--text-3);
+  stroke-width: 1;
+}
+
+.zen-trig__quiet {
+  fill: none;
+  stroke: var(--text-4);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.zen-trig__line {
+  fill: none;
+  stroke: var(--text-1);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.zen-trig__fill {
+  fill: var(--text-4);
+  opacity: 0.18;
+  stroke: none;
+}
+
+.zen-trig__sin,
+.zen-trig__sin .zen-trig__line {
+  stroke: var(--hue-1);
+}
+.zen-trig__cos,
+.zen-trig__cos .zen-trig__line {
+  stroke: var(--hue-2);
+}
+.zen-trig__tan,
+.zen-trig__tan .zen-trig__line {
+  stroke: var(--hue-3);
+}
+.zen-trig__angle,
+.zen-trig__angle .zen-trig__line {
+  stroke: var(--hue-4);
+}
+.zen-trig__second,
+.zen-trig__second .zen-trig__line {
+  stroke: var(--hue-5);
+}
+
+.zen-trig__sin-fill {
+  fill: var(--hue-1);
+  opacity: 0.22;
+  stroke: none;
+}
+.zen-trig__cos-fill {
+  fill: var(--hue-2);
+  opacity: 0.22;
+  stroke: none;
+}
+.zen-trig__angle-fill {
+  fill: var(--hue-4);
+  opacity: 0.25;
+  stroke: none;
+}
+.zen-trig__second-fill {
+  fill: var(--hue-5);
+  opacity: 0.22;
+  stroke: none;
+}
+
+.zen-trig__curve {
+  fill: none;
+  stroke: var(--hue-1);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.zen-trig__curve--cos {
+  stroke: var(--hue-2);
+}
+.zen-trig__curve--tan {
+  stroke: var(--hue-3);
+}
+.zen-trig__curve--ghost {
+  stroke: var(--text-4);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 3;
+}
+.zen-trig__curve--target {
+  stroke: var(--hue-5);
+  stroke-width: 1.6;
+  stroke-dasharray: 6 4;
+}
+
+.zen-trig__dot {
+  fill: var(--text-1);
+  stroke: none;
+}
+.zen-trig__dot--sin {
+  fill: var(--hue-1);
+}
+.zen-trig__dot--cos {
+  fill: var(--hue-2);
+}
+.zen-trig__dot--data {
+  fill: var(--hue-5);
+}
+
+.zen-trig__label {
+  fill: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.zen-trig__label--sin {
+  fill: var(--hue-1);
+}
+.zen-trig__label--cos {
+  fill: var(--hue-2);
+}
+.zen-trig__label--tan {
+  fill: var(--hue-3);
+}
+.zen-trig__label--angle {
+  fill: var(--hue-4);
+}
+.zen-trig__label--second {
+  fill: var(--hue-5);
+}
+
+.zen-trig__band {
+  fill: var(--hue-5);
+  opacity: 0.12;
+  stroke: none;
+}
+
+/* A draggable handle: a ring the reader grabs, focusable, with a focus ring from the contract. */
+.zen-trig__handle {
+  cursor: grab;
+  outline: none;
+  /* Only a handle takes a touch for itself; anywhere else on the drawing a finger scrolls. */
+  touch-action: none;
+}
+.zen-trig__handle circle {
+  fill: var(--surface-1);
+  stroke: var(--text-1);
+  stroke-width: 2;
+}
+.zen-trig__handle:focus-visible circle {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+.zen-trig__handle[data-dragging] {
+  cursor: grabbing;
+}
+
+.zen-trig__controls {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.zen-trig__readouts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  min-width: 0;
+}
+
+.zen-trig__readout {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: baseline;
+}

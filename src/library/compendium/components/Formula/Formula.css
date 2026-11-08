@@ -2,6 +2,8 @@
    wider than the column; the math element keeps the browser's math face. */
 
 .cmp-math[data-block] {
+  /* A block, so overflow applies: an inline box would let a wide formula widen the page. */
+  display: block;
   max-width: min(var(--cmp-measure, 100%), 100%);
   overflow-x: auto;
   padding-block: var(--space-1);

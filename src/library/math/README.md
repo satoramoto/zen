@@ -12,6 +12,13 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Fourier / Rotating Vector | `RotatingVector`: one term, c · e^(n·2πi·t), its turns, size and starting angle |
 | Fourier / Pair to Sine | `PairToSine`: mirrored arrows turning opposite ways summing to a cosine on the real line |
 | Fourier / Coefficient Finder | `CoefficientFinder`: the drawing's average is c₀; spun back n turns, its average is cₙ |
+| Trig / Arc Wrap | `ArcWrap`: the radius laid along the arc, so a radian is a length you can see |
+| Trig / Right Triangle | `RightTriangle`: drag the free vertex; opposite, adjacent and hypotenuse with the three ratios live |
+| Trig / Unit Circle | `UnitCircle`: the point at θ, its legs as sine and cosine, signs by quadrant, reference angle, tangent on request |
+| Trig / Wave Graph | `WaveGraph`: A·sin(B(x − C)) + D with brackets, the circle beside it, an inverse mode and a data-fitting mode |
+| Trig / Identity Squares | `IdentitySquares`: squares on the legs, sin²θ + cos²θ = 1 as areas |
+| Trig / Angle Sum | `AngleSum`: sin(α + β) as two stacked lengths |
+| Trig / General Triangle | `GeneralTriangle`: three draggable vertices, the laws of sines and cosines, area, the ambiguous case |
 | Wave Calculator | `WaveCalculator`: editable linked functions, automatic parameter scrubbing, time and comparison |
 | Circle to Sine | `SineExplorer`: linked orbit and wave, guided stops and comparisons |
 | Signal Playground | `SignalPlayground`: ten fields and manifolds with linked analysis |
@@ -57,6 +64,12 @@ The `fourier/` folder (`model/` pure and tested, plain-SVG figures, `useClock`) 
 compendium's Fourier textbook draws as its figures (`src/library/compendium/book/fourier/`);
 every figure takes its quantities as controlled props with `on<Prop>` callbacks so a page can
 bind them, and keeps its own state when the page doesn't.
+
+The `trig/` folder follows the same contract for the trigonometry course
+(`src/library/compendium/book/trig/`): `model/` (angles, triangles, waves; pure and tested),
+`parts.tsx` (frame, axes, arcs, labels, and a handle dragged by pointer or stepped by the arrow
+keys), and seven plain-SVG figures. Hue 1 is sine, hue 2 cosine, hue 3 tangent, hue 4 the angle,
+hue 5 a second thing (a second angle or triangle, data).
 
 ## Implementation references
 
