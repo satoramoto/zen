@@ -124,26 +124,68 @@ export interface StepsBlock {
   title?: string;
   steps: Run[][];
 }
+/** A typed answer, checked by name. `check` names a checker in the page's registry (`exact` and
+ *  `numeric` are built in, `model/exercise.ts`); `expect` is what it compares to, in the checker's
+ *  own terms; `tolerance` and `options` go to the checker as well. */
+export interface TypedAnswer {
+  kind: 'typed';
+  check: string;
+  expect: string;
+  tolerance?: number;
+  /** What the answer field suggests: "a whole number". */
+  placeholder?: string;
+  /** Anything else the checker reads (a variable, a range); the model never looks inside. */
+  options?: Record<string, unknown>;
+}
+/** One of listed options, by id. */
+export interface ChoiceAnswer {
+  kind: 'choice';
+  options: { id: string; prompt: Run[] }[];
+  expect: string;
+}
+/** A quantity of the entry set to within `tolerance` of `expect`, by scrubbing it or through a bound figure. */
+export interface QuantityAnswer {
+  kind: 'quantity';
+  quantity: string;
+  expect: number;
+  tolerance: number;
+}
+export type Answer = TypedAnswer | ChoiceAnswer | QuantityAnswer;
 /**
- * A question with one answer the page can check. `check` names a checker in the page's registry
- * (`exact` and `numeric` are built in, `model/exercise.ts`); `expect` is what it compares to, in
- * the checker's own terms; `tolerance` is for numeric ones.
+ * A question with one answer the page can check. The answer is typed, a choice, or a quantity
+ * (`answer`); the typed kind may be written in shorthand at the top level (`check`, `expect`,
+ * `tolerance`, `placeholder`), which `answerOf` reads either way.
  */
 export interface ExerciseBlock {
   kind: 'exercise';
   /** Unique in its entry: progress is kept by it. */
   id: string;
   prompt: Run[];
-  check: string;
-  expect: string;
+  answer?: Answer;
+  /** Typed shorthand: a checker's name. */
+  check?: string;
+  /** Typed shorthand: what it compares to. */
+  expect?: string;
   tolerance?: number;
-  /** What the answer field suggests: "a whole number". */
   placeholder?: string;
   hint?: Run[];
   solution?: Run[];
 }
+/** The block's answer, the typed shorthand normalised. */
+export function answerOf(block: ExerciseBlock): Answer {
+  if (block.answer) return block.answer;
+  return { kind: 'typed', check: block.check ?? '', expect: block.expect ?? '', tolerance: block.tolerance, placeholder: block.placeholder };
+}
+/** A table: a head row and rows of cells, each cell runs; `rowHeads` marks each row's first cell a head. */
+export interface TableBlock {
+  kind: 'table';
+  label: string;
+  head: Run[][];
+  rows: Run[][][];
+  rowHeads?: boolean;
+}
 
-export type Block = Paragraph | FormulaBlock | FigureBlock | CodeBlock | ProofBlock | TimelineBlock | StepsBlock | ExerciseBlock;
+export type Block = Paragraph | FormulaBlock | FigureBlock | CodeBlock | ProofBlock | TimelineBlock | StepsBlock | ExerciseBlock | TableBlock;
 
 export interface Section {
   heading: string;
@@ -187,6 +229,26 @@ export const exercise = (id: string, prompt: Run[], answer: Omit<ExerciseBlock, 
   prompt,
   ...answer,
 });
+/** A choice exercise: `options` by id, `expect` the right one's id. */
+export const choice = (
+  id: string,
+  prompt: Run[],
+  answer: { options: { id: string; prompt: Run[] }[]; expect: string; hint?: Run[]; solution?: Run[] },
+): ExerciseBlock => ({ kind: 'exercise', id, prompt, answer: { kind: 'choice', options: answer.options, expect: answer.expect }, hint: answer.hint, solution: answer.solution });
+/** A quantity exercise: the reader sets `quantity` to within `tolerance` of `expect`. */
+export const target = (
+  id: string,
+  prompt: Run[],
+  answer: { quantity: string; expect: number; tolerance: number; hint?: Run[]; solution?: Run[] },
+): ExerciseBlock => ({
+  kind: 'exercise',
+  id,
+  prompt,
+  answer: { kind: 'quantity', quantity: answer.quantity, expect: answer.expect, tolerance: answer.tolerance },
+  hint: answer.hint,
+  solution: answer.solution,
+});
+export const table = (label: string, head: Run[][], rows: Run[][][], options: { rowHeads?: boolean } = {}): TableBlock => ({ kind: 'table', label, head, rows, ...options });
 export const section = (heading: string, ...blocks: Block[]): Section => ({ heading, blocks });
 /** An inline formula run. */
 export const tex = (source: string, label?: string): Run => ({ tex: source, label });
@@ -199,14 +261,21 @@ export const ref = (quantity: string, format?: string): Run => ({ ref: quantity,
 
 /* Walks. */
 
-/** Every run in the entry, in reading order: paragraphs, steps, exercise prompts, hints and solutions. */
+/** Every run in the entry, in reading order: paragraphs, steps, table cells, exercise prompts, options, hints and solutions. */
 export function* runsIn(entry: Entry): Generator<{ run: Run; section: string }> {
   for (const s of entry.sections) for (const b of s.blocks) for (const runs of runLists(b)) for (const run of runs) yield { run, section: s.heading };
 }
 
 /** The runs a block holds, in reading order. */
 function runLists(b: Block): Run[][] {
-  return b.kind === 'paragraph' ? [b.runs] : b.kind === 'steps' ? b.steps : b.kind === 'exercise' ? [b.prompt, b.hint ?? [], b.solution ?? []] : [];
+  if (b.kind === 'paragraph') return [b.runs];
+  if (b.kind === 'steps') return b.steps;
+  if (b.kind === 'table') return [...b.head, ...b.rows.flat()];
+  if (b.kind === 'exercise') {
+    const a = answerOf(b);
+    return [b.prompt, ...(a.kind === 'choice' ? a.options.map((o) => o.prompt) : []), b.hint ?? [], b.solution ?? []];
+  }
+  return [];
 }
 
 /** Every formula in the entry, inline and displayed, in reading order, with the section it's in. */

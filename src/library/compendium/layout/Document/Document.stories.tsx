@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { CHECKERS } from '../../book/checkers';
 import { FIGURES } from '../../book/figures';
 import { HARMONIC } from '../../book/harmonic.entry';
 import { HARMONIC_BOOK } from '../../book/harmonic.book';
@@ -21,7 +22,7 @@ const meta = {
   component: Document,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
-  args: { entry: HARMONIC, figures: FIGURES, entries: ENTRIES },
+  args: { entry: HARMONIC, figures: FIGURES, entries: ENTRIES, checkers: CHECKERS },
   argTypes: { measure: { control: { type: 'range', min: 44, max: 76, step: 1 } } },
 } satisfies Meta<typeof Document>;
 export default meta;
@@ -31,11 +32,17 @@ type Story = StoryObj<typeof meta>;
 export const Entry: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    expect(validateEntry(HARMONIC, { figures: Object.keys(FIGURES), entries: Object.keys(ENTRIES) })).toEqual([]);
+    expect(validateEntry(HARMONIC, { figures: Object.keys(FIGURES), entries: Object.keys(ENTRIES), checkers: Object.keys(CHECKERS) })).toEqual([]);
     // Every formula is a MathML element (the displayed ones on their own line), every peek a
     // button, every note a sidenote, the figure resolved by name.
     const formulas = [...formulasIn(HARMONIC)];
-    expect(canvasElement.querySelectorAll('math')).toHaveLength(formulas.length);
+    // A hint's or solution's formula is drawn only on request.
+    const hidden = HARMONIC.sections
+      .flatMap((s) => s.blocks)
+      .filter((b) => b.kind === 'exercise')
+      .flatMap((b) => [...(b.hint ?? []), ...(b.solution ?? [])])
+      .filter((r) => typeof r !== 'string' && 'tex' in r).length;
+    expect(canvasElement.querySelectorAll('math')).toHaveLength(formulas.length - hidden);
     expect(canvasElement.querySelectorAll('math[display="block"]')).toHaveLength(formulas.filter((f) => f.display).length);
     const runs = [...runsIn(HARMONIC)].map((r) => r.run);
     expect(canvas.getAllByRole('button', { name: /overtones|Pythagorean tuning|diverges/ })).toHaveLength(runs.filter((r) => typeof r !== 'string' && 'peek' in r).length);

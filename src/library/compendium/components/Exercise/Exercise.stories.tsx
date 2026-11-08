@@ -72,3 +72,54 @@ export const Done: Story = {
     expect(within(canvasElement).getByText(/correct/i)).toBeInTheDocument();
   },
 };
+
+/** One of four options: the wrong one says not yet, the right one locks the group. */
+export const Choice: Story = {
+  args: {
+    number: 'Exercise 3',
+    prompt: 'An angle of 210° has its terminal side in which quadrant?',
+    mode: 'choice',
+    choices: [
+      { id: 'i', prompt: 'Quadrant I' },
+      { id: 'ii', prompt: 'Quadrant II' },
+      { id: 'iii', prompt: 'Quadrant III' },
+      { id: 'iv', prompt: 'Quadrant IV' },
+    ],
+    check: (given: string) => ({ correct: given === 'iii' }),
+    hint: '180° is straight left; 210° is 30° further round, anticlockwise.',
+    solution: 'Between 180° and 270°: the third quadrant.',
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Check' }));
+    expect(canvas.getByText(/choose an answer/i)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('radio', { name: 'Quadrant II' }));
+    await userEvent.click(canvas.getByRole('button', { name: 'Check' }));
+    expect(canvas.getByText(/not yet/i)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('radio', { name: 'Quadrant III' }));
+    await userEvent.click(canvas.getByRole('button', { name: 'Check' }));
+    expect(canvas.getByText(/correct/i)).toBeInTheDocument();
+    expect(canvas.getByRole('radio', { name: 'Quadrant III' })).toBeDisabled();
+    expect(args.onResult).toHaveBeenLastCalledWith({ correct: true });
+  },
+};
+
+/** Answered by a quantity the page reads at Check: the reading shows where it stands. */
+export const Quantity: Story = {
+  args: {
+    number: 'Exercise 4',
+    prompt: 'Drag the point to where sin θ = ½.',
+    mode: 'quantity',
+    reading: 'θ = 31°',
+    check: () => ({ correct: true }),
+    hint: 'Half way up the circle.',
+    solution: '30°, or 150° on the other side.',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByRole('status')).toHaveTextContent('θ = 31°');
+    expect(canvas.queryByRole('textbox')).toBeNull();
+    await userEvent.click(canvas.getByRole('button', { name: 'Check' }));
+    expect(canvas.getByText(/correct/i)).toBeInTheDocument();
+  },
+};

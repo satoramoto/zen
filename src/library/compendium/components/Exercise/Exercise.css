@@ -60,3 +60,22 @@
   display: inline-block;
   margin-inline-end: var(--space-2);
 }
+
+.cmp-exercise__choices {
+  margin: 0;
+}
+
+.cmp-exercise__choice {
+  --lib-text-face: var(--font-reading);
+  --text-leading: 1.5;
+}
+
+.cmp-exercise__reading {
+  display: inline-block;
+  min-inline-size: 8ch;
+  padding: 0 var(--space-3);
+  line-height: var(--control-h);
+  border-radius: var(--radius-input);
+  background: var(--input-fill);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border);
+}

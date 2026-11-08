@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
+import { CHECKERS } from '../../book/checkers';
 import { FIGURES } from '../../book/figures';
 import { FOURIER_FIGURES } from '../../book/fourier/figures';
 import { FOURIER_BOOK } from '../../book/fourier/fourier.book';
@@ -21,7 +22,7 @@ const meta = {
   component: Book,
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
-  args: { book: HARMONIC_BOOK, figures: FIGURES, onProgress: fn(), onChapter: fn() },
+  args: { book: HARMONIC_BOOK, figures: FIGURES, checkers: CHECKERS, onProgress: fn(), onChapter: fn() },
 } satisfies Meta<typeof Book>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -68,11 +69,19 @@ export const HarmonicSeries: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const index = Object.keys(bookIndex(args.book));
-    for (const chapter of args.book.chapters) expect(validateEntry(chapter, { figures: Object.keys(FIGURES), entries: index })).toEqual([]);
+    for (const chapter of args.book.chapters) expect(validateEntry(chapter, { figures: Object.keys(FIGURES), entries: index, checkers: Object.keys(CHECKERS) })).toEqual([]);
     const contents = within(canvas.getByRole('navigation', { name: 'Contents' }));
     expect(contents.getAllByRole('listitem')).toHaveLength(args.book.chapters.length);
     expect(contents.getByRole('button', { name: /overtones/i }).closest('li')).toHaveTextContent('0/2');
     expect(contents.getByRole('button', { name: /the harmonic series/i })).toHaveAttribute('aria-current', 'page');
+    // The expression checker, registered by the book: a spelling the grammar folds, equal across the range.
+    const field = canvas.getByRole('textbox', { name: 'Your answer' });
+    await userEvent.type(field, 'n^2{Enter}');
+    expect(canvas.getByText(/not yet/i)).toBeInTheDocument();
+    await userEvent.clear(field);
+    await userEvent.type(field, '1 ÷ n{Enter}');
+    expect(canvas.getByText(/correct/i)).toBeInTheDocument();
+    expect(contents.getByRole('button', { name: /the harmonic series/i }).closest('li')).toHaveTextContent('1/1');
   },
 };
 

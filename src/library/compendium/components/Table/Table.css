@@ -1,0 +1,42 @@
+/* Table: a ruled table in the reading column; heads in the label face, cells in the body face,
+   hairlines from the pack's border. Wider than the column, the box scrolls sideways. */
+
+.cmp-table {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+.cmp-table__table {
+  border-collapse: collapse;
+  inline-size: 100%;
+  min-inline-size: max-content;
+}
+
+.cmp-table__caption {
+  text-align: start;
+  padding-block-end: var(--space-2);
+  caption-side: top;
+}
+
+.cmp-table__head,
+.cmp-table__cell {
+  text-align: start;
+  padding: var(--space-2) var(--space-3);
+  border-block-end: var(--border-width) solid var(--border);
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.cmp-table__head {
+  border-block-end-color: var(--border-strong);
+}
+
+.cmp-table__head:first-child,
+.cmp-table__cell:first-child {
+  padding-inline-start: 0;
+}
+
+.cmp-table__rowhead {
+  padding-inline-end: var(--space-4);
+}
