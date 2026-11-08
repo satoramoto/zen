@@ -4,3 +4,5 @@ export { WaveCalculator, calculatorPresets, type WaveCalculatorProps } from './W
 export { compileExpressions, sampleCurve, ExpressionError, type Equations, type ExpressionProgram, type FunctionName } from './expression';
 /** Typeset equation input with touch keyboard, source fallback and bounded expression conversion. */
 export { EquationInput, type EquationInputProps } from './EquationInput';
+/** An exercise checker: the reader's expression equal to the expected one at a point or across a range, common spellings folded. */
+export { expressionChecker, foldSpelling, type ExpressionOptions, type ExpressionVerdict } from './checker';

@@ -1,7 +1,7 @@
 // The entry "The harmonic series" as data: the sample book's first chapter. Short and
 // meant to be accurate; the Lean names are plausible Mathlib names, marked as sample.
 import { LEAN_SAMPLE, PROOF, TIMELINE, TIMELINE_AXIS } from './harmonic.sample';
-import { cite, code, figure, formula, mark, note, paragraph, peek, proof, section, tex, timeline, type Entry } from '../model/document';
+import { cite, code, exercise, figure, formula, mark, note, paragraph, peek, proof, section, tex, timeline, type Entry } from '../model/document';
 
 export const HARMONIC: Entry = {
   id: 'harmonic-series',
@@ -111,6 +111,15 @@ export const HARMONIC: Entry = {
         'People and works in the history of the harmonic series',
         'Lives as bars (lighter where the dates are approximate), works as dots. The axis breaks between antiquity and 1300.',
       ),
+    ),
+    section(
+      'Try it',
+      exercise('nth-term', ['Write the ', tex('n'), 'th term of the series as an expression in ', tex('n'), '.'],
+        {
+          answer: { kind: 'typed', check: 'expression', expect: '1/n', placeholder: 'an expression in n', options: { variable: 'n', range: [1, 20] } },
+          hint: ['The first term is 1, the second ½, the third ⅓.'],
+          solution: ['The reciprocal: ', tex('1/n'), '.'],
+        }),
     ),
   ],
 };

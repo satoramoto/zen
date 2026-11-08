@@ -42,9 +42,9 @@ every chapter ends in exercises the page checks.
 | Folder | What's in it |
 | --- | --- |
 | `model/` | The document (`document.ts`), checkers and progress (`exercise.ts`), the book (`book.ts`), TeX to MathML (`formula.ts`), `validateEntry`, and their unit tests. No React. |
-| `components/<Name>/` | One part each, with its stylesheet and stories: Formula, Mark, Peek, Sidenote, Figure, ProofGraph, Timeline, Scrub, Steps, Exercise. |
+| `components/<Name>/` | One part each, with its stylesheet and stories: Formula, Mark, Peek, Sidenote, Figure, ProofGraph, Timeline, Scrub, Steps, Exercise, Table. |
 | `layout/<Name>/` | Reading (the column, `P`, `H`, `Wide`), Document (an entry), Book (entries with contents and a pager). |
-| `book/` | Content, not primitives. `fourier/`: the litmus textbook, seven chapters on Fourier series as rotating arrows (`chapters.ts`, `fourier.book.ts`), each driven by a figure from `src/library/math/fourier/` framed in `figures.tsx`. The harmonic series book (`harmonic.book.ts`, `*.entry.ts`, `figures.ts`, HarmonicString) exercises every part in a few pages. |
+| `book/` | Content, not primitives. `fourier/`: the litmus textbook, seven chapters on Fourier series as rotating arrows (`chapters.ts`, `fourier.book.ts`), each driven by a figure from `src/library/math/fourier/` framed in `figures.tsx`. The harmonic series book (`harmonic.book.ts`, `*.entry.ts`, `figures.ts`, HarmonicString) exercises every part in a few pages. `checkers.ts` registers the math area's expression checker for both. **A course goes under `book/<course>/`** (`chapters/`, `glossary.ts`, `figures.tsx`, `checkers.ts`, `<course>.book.ts`), with its figures in `src/library/math/<family>/`; a primitive it lacks becomes its own change first, never a special case inside the course. |
 
 ## The model
 
@@ -53,13 +53,15 @@ every chapter ends in exercises the page checks.
 | `Entry` | `id`, `title`, `kind`, `standing`, `summary` (its `EntryHead`, also what a peek shows), `path`, `quantities`, `sections`. |
 | `Quantity` | A named number with a range and step. The page holds it: a `scrub` run sets it, a `ref` run shows it, a figure `bind` ties a prop to it (`{ harmonic: 'n' }` gives the figure `harmonic` and `onHarmonic`). |
 | `Paragraph` | Runs: text, `{ tex }`, `{ peek }`, `{ mark }`, `{ note, cite? }`, `{ scrub }`, `{ ref, format? }`. |
-| Blocks | `formula` (displayed TeX), `figure` (by registry name, with `props` and `bind`), `code`, `proof`, `timeline`, `steps` (paragraphs revealed one at a time), `exercise` (prompt, `check` by name, `expect`, `tolerance`, `hint`, `solution`). |
+| Blocks | `formula` (displayed TeX), `figure` (by registry name, with `props` and `bind`), `code`, `proof`, `timeline`, `steps` (paragraphs revealed one at a time), `table` (a head row and rows of cells, each cell runs; `rowHeads`), `exercise` (prompt, `hint`, `solution`, and an `answer`). |
+| `Answer` | How an exercise is answered. **Typed**: `check` by name (`exact`, `numeric` built in; a page registers more, such as the math area's `expression`), `expect`, `tolerance`, `placeholder`, `options` for the checker; written in shorthand at the block's top level. **Choice**: `options` (id and prompt) and the expected id, drawn as a radio group. **Quantity**: a quantity of the entry within `tolerance` of `expect` when Check is pressed, however the reader set it. `answerOf` normalises. Every kind counts the same for progress. |
 | `Book` | `chapters` in order and `heads`, a glossary of entries peeked at but not contained. `bookIndex` is what every page resolves peeks against. Progress is kept by `<chapter id>/<exercise id>`. |
 
 Builders (`paragraph`, `tex`, `peek`, `mark`, `note`, `cite`, `scrub`, `ref`, `formula`, `figure`,
-`code`, `proof`, `timeline`, `steps`, `exercise`, `section`) keep an entry close to how it's
+`code`, `proof`, `timeline`, `steps`, `table`, `exercise`, `choice`, `target`, `section`) keep an entry close to how it's
 written. `validateEntry` names what would stop it rendering (TeX temml rejects, a figure, entry,
-quantity or checker the page lacks, a repeated exercise id, an empty paragraph); the book's
+quantity or checker the page lacks, a choice whose expected option isn't listed, a repeated
+exercise id, a ragged table or an empty cell, an empty paragraph); the book's
 stories and `model/book.test.ts` hold every sample chapter to it.
 
 ## Verification
@@ -73,6 +75,5 @@ Chromium and takes screenshots at wide and narrow widths. The library rules in
 
 - A figure face for the math explorers (they carry their own headings today), so a scene can sit
   in a page without breaking its outline.
-- Checkers from the math area (an expression equal to another), registered by the page.
 - A glossary page drawn from the book's heads; search across a book.
 - Exporting the area once its model settles.

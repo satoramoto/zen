@@ -10,8 +10,9 @@ import { ProofGraph } from '../../components/ProofGraph/ProofGraph';
 import { Ref, Scrub } from '../../components/Scrub/Scrub';
 import { Sidenote } from '../../components/Sidenote/Sidenote';
 import { Steps } from '../../components/Steps/Steps';
+import { Table } from '../../components/Table/Table';
 import { Timeline } from '../../components/Timeline/Timeline';
-import { exercisesIn, figuresIn, type Block, type Entry, type EntryHead, type Quantity, type Run } from '../../model/document';
+import { answerOf, exercisesIn, figuresIn, type Block, type Entry, type EntryHead, type Quantity, type Run } from '../../model/document';
 import { checkAnswer, type CheckerRegistry, type Progress, type Verdict } from '../../model/exercise';
 import { H, P, Reading, Wide } from '../Reading/Reading';
 import './Document.css';
@@ -73,6 +74,9 @@ function RunView({ run, page }: { run: Run; page: Page }) {
   if (!head) return <span data-missing-entry={run.peek}>{run.text ?? run.peek}</span>;
   return <Peek entry={head}>{run.text}</Peek>;
 }
+
+/** How many decimals a step needs: 1 → 0, 0.5 → 1, 0.25 → 2. */
+const decimalsOf = (step: number) => Math.max(0, Math.min(6, -Math.floor(Math.log10(step))));
 
 const Runs = ({ runs, page }: { runs: Run[]; page: Page }) => runs.map((run, i) => <RunView key={i} run={run} page={page} />);
 
@@ -149,15 +153,39 @@ function BlockView({ block, page, figureNumber, exerciseNumber }: { block: Block
           <Steps title={block.title} steps={block.steps.map((runs, i) => <Runs key={i} runs={runs} page={page} />)} />
         </Wide>
       );
+    case 'table':
+      return (
+        <Wide>
+          <Table
+            label={block.label}
+            head={block.head.map((cell, i) => <Runs key={i} runs={cell} page={page} />)}
+            rows={block.rows.map((row) => row.map((cell, i) => <Runs key={i} runs={cell} page={page} />))}
+            rowHeads={block.rowHeads}
+          />
+        </Wide>
+      );
     case 'exercise': {
       const key = `${page.entry.id}/${block.id}`;
-      const check = (given: string): Verdict => checkAnswer(page.checkers, block.check, given, block.expect, { tolerance: block.tolerance });
+      const answer = answerOf(block);
+      const check = (given: string): Verdict => {
+        if (answer.kind === 'choice') return { correct: given === answer.expect };
+        if (answer.kind === 'quantity') {
+          const q = page.quantities[answer.quantity];
+          if (!q) return { correct: false, feedback: `No quantity “${answer.quantity}” on this page.` };
+          return { correct: Math.abs(q.value - answer.expect) <= answer.tolerance + 1e-9 };
+        }
+        return checkAnswer(page.checkers, answer.check, given, answer.expect, { tolerance: answer.tolerance, ...answer.options });
+      };
+      const q = answer.kind === 'quantity' ? page.quantities[answer.quantity] : undefined;
       return (
         <Wide>
           <Exercise
             number={exerciseNumber ? `Exercise ${exerciseNumber}` : undefined}
             prompt={<Runs runs={block.prompt} page={page} />}
-            placeholder={block.placeholder}
+            mode={answer.kind}
+            choices={answer.kind === 'choice' ? answer.options.map((o) => ({ id: o.id, prompt: <Runs runs={o.prompt} page={page} /> })) : undefined}
+            reading={q && answer.kind === 'quantity' ? `${q.label ?? answer.quantity} = ${q.value.toFixed(decimalsOf(q.step ?? 1))}${q.unit ? ` ${q.unit}` : ''}` : undefined}
+            placeholder={answer.kind === 'typed' ? answer.placeholder : undefined}
             check={check}
             hint={block.hint && <Runs runs={block.hint} page={page} />}
             solution={block.solution && <Runs runs={block.solution} page={page} />}

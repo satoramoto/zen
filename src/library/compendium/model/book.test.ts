@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { CHECKERS } from '../book/checkers';
 import { FIGURES } from '../book/figures';
 import { HARMONIC_BOOK } from '../book/harmonic.book';
 import { bookIndex, chapterOf, chapterProgress, neighbours, progressKey } from './book';
@@ -8,7 +9,7 @@ import { validateEntry } from './validate';
 describe('the sample book', () => {
   const index = Object.keys(bookIndex(HARMONIC_BOOK));
   it('validates every chapter against the book', () => {
-    for (const c of HARMONIC_BOOK.chapters) expect(validateEntry(c, { figures: Object.keys(FIGURES), entries: index })).toEqual([]);
+    for (const c of HARMONIC_BOOK.chapters) expect(validateEntry(c, { figures: Object.keys(FIGURES), entries: index, checkers: Object.keys(CHECKERS) })).toEqual([]);
   });
   it('indexes its chapters and glossary for peeks', () => {
     expect(index).toEqual(['harmonic-series', 'overtones', 'divergence', 'pythagorean']);

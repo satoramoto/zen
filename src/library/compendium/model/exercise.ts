@@ -9,8 +9,11 @@ export interface Verdict {
   feedback?: string;
 }
 
+/** What a block hands its checker besides the answer: a tolerance, and anything else the block names. */
+export type CheckOptions = { tolerance?: number } & Record<string, unknown>;
+
 export interface Checker {
-  (given: string, expect: string, options: { tolerance?: number }): Verdict;
+  (given: string, expect: string, options: CheckOptions): Verdict;
 }
 
 export type CheckerRegistry = Record<string, Checker>;
@@ -53,7 +56,7 @@ export function checkAnswer(
   check: string,
   given: string,
   expect: string,
-  options: { tolerance?: number } = {},
+  options: CheckOptions = {},
 ): Verdict {
   const checker = registry[check] ?? builtinCheckers[check];
   if (!checker) return { correct: false, feedback: `No checker “${check}” on this page.` };
