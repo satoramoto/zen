@@ -66,7 +66,7 @@ export const Zen: Story = {
   args: { repo: ZEN, name: 'zen' },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
-    expect(args.repo.schema).toBe('spec-driven');
+    expect(args.repo.schema).toBe('zen-flow');
     expect(args.repo.specs.map((s) => s.capability)).toContain('openspec-viewer');
     await userEvent.click(canvas.getByRole('button', { name: /openspec-viewer/ }));
     expect(canvas.getByRole('heading', { level: 1 })).toHaveTextContent(/openspec-viewer/);

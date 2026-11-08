@@ -6,7 +6,7 @@ import { readRepo } from './repo';
 describe('zen’s own openspec root', () => {
   const repo = readRepo(ZEN_FILES);
   it('has the viewer’s spec with its requirements and scenarios', () => {
-    expect(repo.schema).toBe('spec-driven');
+    expect(repo.schema).toBe('zen-flow');
     const spec = repo.specs.find((s) => s.capability === 'openspec-viewer');
     expect(spec).toBeDefined();
     expect(spec!.requirements.length).toBeGreaterThanOrEqual(5);
