@@ -24,6 +24,17 @@ export type Block =
   | { kind: 'code'; text: string; language?: string }
   | { kind: 'quote'; children: Inline[] };
 
+// Sticky (`y`) patterns tried at an index, and only where the character can open one: no slice of
+// the rest per character, which some embedded engines scan in full and turn quadratic.
+const CODE = /`([^`]+)`/y;
+const STRONG = /\*\*(.+?)\*\*/y;
+const EM = /(?:\*|_)([^*_]+?)(?:\*|_)/y;
+const LINK = /\[([^\]]+)\]\(([^)]+)\)/y;
+const at = (re: RegExp, text: string, i: number) => {
+  re.lastIndex = i;
+  return re.exec(text);
+};
+
 /** Inline Markdown: code spans, bold, italics and links, in that precedence. */
 export function parseInline(text: string): Inline[] {
   const out: Inline[] = [];
@@ -34,26 +45,26 @@ export function parseInline(text: string): Inline[] {
     buf = '';
   };
   while (i < text.length) {
-    const rest = text.slice(i);
-    let m: RegExpMatchArray | null;
-    if ((m = rest.match(/^`([^`]+)`/))) {
+    const c = text[i];
+    let m: RegExpExecArray | null = null;
+    if (c === '`' && (m = at(CODE, text, i))) {
       flush();
       out.push({ kind: 'code', text: m[1] });
       i += m[0].length;
-    } else if ((m = rest.match(/^\*\*(.+?)\*\*/))) {
+    } else if (c === '*' && (m = at(STRONG, text, i))) {
       flush();
       out.push({ kind: 'strong', children: parseInline(m[1]) });
       i += m[0].length;
-    } else if ((m = rest.match(/^(?:\*|_)([^*_]+?)(?:\*|_)/))) {
+    } else if ((c === '*' || c === '_') && (m = at(EM, text, i))) {
       flush();
       out.push({ kind: 'em', children: parseInline(m[1]) });
       i += m[0].length;
-    } else if ((m = rest.match(/^\[([^\]]+)\]\(([^)]+)\)/))) {
+    } else if (c === '[' && (m = at(LINK, text, i))) {
       flush();
       out.push({ kind: 'link', text: m[1], href: m[2] });
       i += m[0].length;
     } else {
-      buf += text[i];
+      buf += c;
       i++;
     }
   }
