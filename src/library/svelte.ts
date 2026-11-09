@@ -248,6 +248,8 @@ export interface WorkspaceProps extends Omit<WorkspaceModelProps, 'className'> {
 export const Workspace = WorkspaceSvelte as unknown as Component<WorkspaceProps>;
 export * from './layout/Workspace/Workspace.types';
 export * from './layout/Workspace/surface';
+export * from './layout/Workspace/surfaceMode';
+export { getSurfaceMode } from './layout/Workspace/surfaceMode.svelte';
 export { contentSlot, surfaceUi, workspaceContent, type WorkspaceModelProps } from './layout/Workspace/Workspace.model';
 export { getForm, getChosenForm, setFormContext } from './layout/assembly/forms.svelte';
 export { scopePrinciples } from './layout/assembly/principles.svelte';

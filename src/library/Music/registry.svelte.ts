@@ -38,6 +38,7 @@ import MusicOrbitClock from './live/OrbitClock/OrbitClock.svelte';
 import MusicSignalSpine from './live/SignalSpine/SignalSpine.svelte';
 import MusicProgressionStrip from './live/ProgressionStrip/ProgressionStrip.svelte';
 import MusicCutPads from './live/CutPads/CutPads.svelte';
+import MusicControlPanel from './live/ControlPanel/ControlPanel.svelte';
 import MusicSectionBar from './live/SectionBar/SectionBar.svelte';
 import MusicStemDeck from './live/StemDeck/StemDeck.svelte';
 import MusicSongCard from './live/SongCard/SongCard.svelte';
@@ -54,6 +55,6 @@ export function musicSvelteComponents() {
     MusicContextControls, MusicPhonesIcon, MusicPowerIcon, MusicMomentary, MusicSeparator, MusicMixerSection,
     MusicKnobStack, MusicStemConnections, MusicFrameMeter, MusicFramePlayhead, MusicFrameWaveform, MusicWaveControls,
     MusicDeckStrip, MusicMasterStrip, MusicMixerView,
-    MusicRigHealth, MusicTrackStrips, MusicLaunchGrid, MusicThrowPads, MusicCutPads, MusicSectionBar, MusicStemDeck, MusicSongCard, MusicDicePad, MusicProgressionStrip, MusicSignalSpine, MusicOrbitClock, MusicPushTwin, MusicSetlistRiver, MusicLandingDial, MusicChordCompass,
+    MusicRigHealth, MusicTrackStrips, MusicLaunchGrid, MusicThrowPads, MusicCutPads, MusicControlPanel, MusicSectionBar, MusicStemDeck, MusicSongCard, MusicDicePad, MusicProgressionStrip, MusicSignalSpine, MusicOrbitClock, MusicPushTwin, MusicSetlistRiver, MusicLandingDial, MusicChordCompass,
   };
 }

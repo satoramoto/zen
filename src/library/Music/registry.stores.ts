@@ -16,6 +16,7 @@ import { bindDeckHost } from './mixer/DeckStrip.host';
 import { bindSeekBar } from './music/SeekBar.input';
 import { bindTransportPosition } from './music/Transport.input';
 import { bindFrameVar } from './live/frame.bind';
+import { bindCellDrag } from './live/ControlPanel/cellDrag';
 
 /** One set of lifecycle adapters for both renderers, with callback params resolved by handler key. */
 export function musicStores() {
@@ -42,5 +43,6 @@ export function musicStores() {
     musicDeckHost: keyed(bindDeckHost, ['onCapture']),
     musicTransportPosition: keyed(bindTransportPosition, ['onUnit']),
     liveFrameVar: keyed(bindFrameVar, ['sample']),
+    liveCellDrag: keyed(bindCellDrag, ['onPreview', 'onCommit']),
   };
 }

@@ -113,6 +113,12 @@ describe('settings', () => {
     expect(resolveSettings(pane, region('m'), workspaceTargets)).toEqual({ tracks: ['drums', 'bass', 'keys'], sends: true, size: 4 });
     expect(resolveSettings(pane, { ...region('m'), settings: { tracks: ['bass'], sends: false } }, workspaceTargets)).toEqual({ tracks: ['bass'], sends: false, size: 4 });
   });
+  it('passes a data setting through as plain data, its default when the region has none', () => {
+    const panel: PaneDefinition = { ...pane, settings: [{ key: 'cells', label: 'Cells', type: 'data', default: [] }] };
+    expect(resolveSettings(panel, region('p'))).toEqual({ cells: [] });
+    const cells = [{ id: 'c1', control: 'fader', x: 0, y: 0, w: 1, h: 2 }];
+    expect(resolveSettings(panel, { ...region('p'), settings: { cells } })).toEqual({ cells });
+  });
   it('shows only what the kind declares', () => {
     expect(resolveSettings(pane, { ...region('m'), settings: { gone: 'x' } }, workspaceTargets)).not.toHaveProperty('gone');
     expect(resolveSettings(undefined, region('m'))).toEqual({});

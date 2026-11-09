@@ -65,6 +65,7 @@ type SettingSpec = { key: string; label: string } & (
   | { type: 'choice'; options; default } | { type: 'choices'; options; default }
   | { type: 'toggle'; default } | { type: 'number'; min; max; step?; default }
   | { type: 'targets'; of: string; default: 'all' | string[] }   // a pick of the app's targets
+  | { type: 'data'; default: JsonValue }                          // plain data the pane edits itself
 );
 ```
 
@@ -73,8 +74,18 @@ Definitions are plain data, so they import no renderer. The app draws each insta
 arguments in Svelte. `target` is the region's fixed target, or else the app's `selected`;
 `settings` are the region's values with every default filled in (`resolveSettings`; `'all'`
 targets expanded). The palette lists exactly the definitions, in order, by label and description.
-`Music.livePanes` is a ready-made set: the sixteen live panes (`Music/live/panes.ts`); the launch
-grid and the strips pick their tracks, the cut pads their cuts, the dice pad its moves.
+`Music.livePanes` is a ready-made set: the live panes (`Music/live/panes.ts`); the launch grid and
+the strips pick their tracks, the cut pads their cuts, the dice pad its moves, the control panel
+its grid and its cells.
+
+A `data` setting is plain JSON the pane edits itself (a control panel's cells): it reaches `pane`
+with the others and is never listed in the settings sheet. The pane asks for a change and the app
+sends it on as `configureRegion` with the region's whole next settings.
+
+**Surface mode.** Each pane is drawn inside the surface's mode, `{ editing, locked }`:
+`useSurfaceMode()` in React, `getSurfaceMode()` in Svelte (`building(mode)` is `editing && !locked`).
+A pane with building tools of its own shows them only while the surface is building, so one edit
+mode and one lock govern the whole panel.
 
 ## Edit mode
 

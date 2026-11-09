@@ -10,8 +10,11 @@ import type { Rank } from '../../contract';
 /** What a region follows: whatever the app has selected, or one target the app names. */
 export type SurfaceBinding = { mode: 'selected' } | { mode: 'fixed'; target: string };
 
-/** A setting's value as a region stores it: plain data. */
-export type SettingValue = string | number | boolean | readonly string[];
+/** Plain JSON: what a document can hold. */
+export type JsonValue = string | number | boolean | null | readonly JsonValue[] | { readonly [key: string]: JsonValue };
+
+/** A setting's value as a region stores it: plain data (a `data` setting's is any plain JSON). */
+export type SettingValue = JsonValue;
 
 /** One region instance: its own id, the pane kind it is (never read from the id), its title, its binding, its settings. */
 export interface SurfaceRegion {
@@ -89,6 +92,8 @@ export type SettingSpec = { key: string; label: string } & (
   | { type: 'number'; min: number; max: number; step?: number; default: number }
   /** A pick of the app's targets of kind `of`; `'all'` picks every one. */
   | { type: 'targets'; of: string; default: 'all' | readonly string[] }
+  /** Plain data the pane edits itself (a control panel's cells): it reaches the pane, never the settings sheet. */
+  | { type: 'data'; default: JsonValue }
 );
 
 /** A region's settings with every default filled in, by key. */

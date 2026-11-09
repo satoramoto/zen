@@ -1,0 +1,247 @@
+/* ControlPanel: the person's own controls on a grid, in the live panes' face. Each cell holds its
+   Music control at full size; building draws the grid's empty positions as faint add buttons and
+   puts a tag and a corner on every control; learning covers each control with a learn button and
+   pulses the one the app waits on (a steady outline under reduced motion). */
+
+:where(.zen-music).live-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+:where(.zen-music) .live-controls-grid {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 6px;
+  min-width: 0;
+  min-height: 0;
+}
+
+:where(.zen-music) .live-controls-cell {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  place-items: stretch;
+  padding: 2px;
+  border-radius: var(--wdg-radius);
+}
+
+:where(.zen-music) .live-controls-cell > :first-child {
+  min-width: 0;
+  min-height: 0;
+}
+
+:where(.zen-music) .live-controls-cell[data-clipped] {
+  outline: 1px dashed var(--caution);
+  outline-offset: -1px;
+}
+
+/* A fader fills its cell's height: the strips' stretch (TrackStrips.css), its ticks left out. */
+:where(.zen-music) .live-controls-cell > .wdg-slider {
+  --wdg-track: 28px;
+  --wdg-thumb: 10px;
+  --wdg-marker: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+  padding: 6px 4px;
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+}
+:where(.zen-music) .live-controls-cell > .wdg-slider > .wdg-body {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  min-height: 0;
+}
+:where(.zen-music) .live-controls-cell > .wdg-slider .wdg-slider-body {
+  flex: 1;
+  height: auto;
+}
+
+/* A knob sits centred in its cell. */
+:where(.zen-music) .live-controls-cell > .wdg-knob {
+  place-self: center;
+}
+
+/* Pads, buttons and toggles: their face fills the cell, the word on it once. */
+:where(.zen-music) .live-controls-pad,
+:where(.zen-music) .live-controls-button,
+:where(.zen-music) .live-controls-switch {
+  display: grid;
+  height: 100%;
+  min-height: 0;
+}
+:where(.zen-music) .live-controls-pad > .wdg-body,
+:where(.zen-music) .live-controls-button > .wdg-body,
+:where(.zen-music) .live-controls-switch > .wdg-body {
+  width: 100%;
+  height: 100%;
+  min-height: 32px;
+}
+
+:where(.zen-music) .live-controls-unbound {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  border: 1px dashed var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  opacity: 0.7;
+}
+
+/* The mapping mark: the app's words for what moves this control, small in the corner. */
+:where(.zen-music) .live-controls-map {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  z-index: 1;
+  font-family: var(--mono);
+  font-variation-settings: var(--wdg-mono-axes);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--wdg-caption);
+  pointer-events: none;
+}
+
+/* Building: empty positions to add at, a tag to drag or open, a corner to resize. */
+:where(.zen-music) .live-controls-empty {
+  min-width: 0;
+  min-height: 24px;
+  border: 1px dashed var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: transparent;
+  color: var(--wdg-caption);
+  font-family: var(--mono);
+  cursor: pointer;
+}
+
+:where(.zen-music) .live-controls-empty:hover,
+:where(.zen-music) .live-controls-empty:focus-visible {
+  border-color: var(--primary);
+  color: var(--wdg-text-strong);
+  outline: none;
+}
+
+:where(.zen-music) .live-controls-edit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: color-mix(in oklab, var(--bg) 35%, transparent);
+}
+
+:where(.zen-music) .live-controls-cell[data-selected] .live-controls-edit {
+  border-color: var(--primary);
+}
+
+:where(.zen-music) .live-controls-tag {
+  position: absolute;
+  inset: 0 0 auto 0;
+  min-height: 24px;
+  padding: 2px 6px;
+  border: 0;
+  border-bottom: 1px solid var(--wdg-edge);
+  background: var(--wdg-face);
+  color: var(--wdg-text-strong);
+  font-family: var(--wdg-sans);
+  font-size: var(--text-label);
+  text-align: left;
+  cursor: grab;
+  touch-action: none;
+}
+
+:where(.zen-music) .live-controls-tag:focus-visible {
+  outline: 2px solid var(--wdg-focus);
+  outline-offset: -2px;
+}
+
+:where(.zen-music) .live-controls-corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  border-right: 3px solid var(--primary);
+  border-bottom: 3px solid var(--primary);
+  border-bottom-right-radius: var(--wdg-radius);
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
+:where(.zen-music) .live-controls-label {
+  min-width: 0;
+  width: 14ch;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-well);
+  color: var(--wdg-text-strong);
+  font-family: var(--wdg-sans);
+  font-size: var(--text-label);
+}
+
+:where(.zen-music) .live-controls-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Learning: every control is a learn button; the pending one pulses. */
+:where(.zen-music) .live-controls-learn {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+:where(.zen-music) .live-controls-learnhit {
+  width: 100%;
+  height: 100%;
+  border: 1px dashed var(--caution);
+  border-radius: var(--wdg-radius);
+  background: color-mix(in oklab, var(--caution) 8%, transparent);
+  cursor: pointer;
+}
+
+:where(.zen-music) .live-controls-forget {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  min-width: 24px;
+  min-height: 24px;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-face);
+  color: var(--wdg-text-strong);
+  cursor: pointer;
+}
+
+:where(.zen-music) .live-controls-cell[data-pending] .live-controls-learnhit {
+  border-style: solid;
+  border-width: 2px;
+  animation: live-controls-pending 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes live-controls-pending {
+  from {
+    background: color-mix(in oklab, var(--caution) 8%, transparent);
+  }
+  to {
+    background: color-mix(in oklab, var(--caution) 30%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.zen-music) .live-controls-cell[data-pending] .live-controls-learnhit {
+    animation: none;
+    background: color-mix(in oklab, var(--caution) 22%, transparent);
+  }
+}
