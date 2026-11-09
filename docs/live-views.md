@@ -71,7 +71,7 @@ press queues it; a stem toggle mutes it.
 
 | Tab | Rows (each a row of region instances) | For |
 |---|---|---|
-| Looper | song · loop + (cuts over throws) · four strips · rig, locked | the panel to play: built through the builder's intents |
+| Looper | song · loop + (cuts over throws) · four strips + macros · rig, locked | the panel to play: built through the builder's intents |
 | ONE | river · song + dice · loop + compass · sections + landing · mix + stems · rig | the whole set on one page |
 | Follow | compass + orbits · follow + dice · rig | the harmony: place, time, the loop and the dice |
 | Track | spine · stems · throws + cuts · rig | one column as its signal path |
@@ -122,6 +122,26 @@ remount it (**Remounted**).
 
 No pane schedules, plays, follows harmony or measures anything: what is playing, queued, muted or
 measured is always the host's to say.
+
+### Control panels and MIDI learn
+
+`ControlPanel` (`Music/live/ControlPanel/`, kind `controls`) is the person's own controls on a
+grid: faders, knobs, toggles, buttons, pads and XYs, each bound to one of the app's parameters
+(`params`: id, label, group, the Music `Param`, and its role, continuous, switch or trigger) and
+standing on the app's value (`values`). A move asks `onParam({ param, value })`, a button or pad
+`onTrigger({ param, down })` on press and release; a control the app doesn't move snaps back.
+
+While the surface builds (an unlocked tab in edit mode), the panel is built in place: an empty
+position adds a control, a control's tag drags it on the grid (arrows step it, Shift+arrows resize
+it) or opens its sheet (kind, the parameters of its role, label, remove), its corner resizes it.
+Controls never overlap (`layout/cells.ts`). Every change asks `onCells(next)`, which the app saves
+as the region's `cells` setting; `columns` and `rows` are ordinary settings.
+
+**Learn** is the app's: with `learning` on, a press asks `onLearn(param)` instead of moving; the
+control the app waits on (`learnTarget`) pulses; a mapped control wears its mapping's first word
+group (`CC 21`) from `mappings`, and learning, a forget button (`onForget`). The app captures the
+MIDI and moves the values, so a controller's move is just a reading. Learning is playing, not
+building: it works on a locked board. **Looper · learn** plays it with a stand-in MIDI strip.
 
 ### Fast values: the frame reader
 
