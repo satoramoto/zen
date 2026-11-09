@@ -1,18 +1,24 @@
+# live-host-contract Spec Delta
+
+## Purpose
+
+What a pane in a composed DAW reads from its host, what it asks for, and how values that change every frame reach it.
+
 ## ADDED Requirements
 
 ### Requirement: A pane draws what the host says
 
-A pane SHALL draw only the readings its host gives it (what is playing, queued, muted, selected or measured), and SHALL show a reading the host doesn't give as missing rather than as a made-up value.
+A pane SHALL draw only the readings its host gives it (what is playing, queued, muted, selected or measured), and SHALL show a reading the host doesn’t give as missing rather than as a made-up value.
 
 #### Scenario: A press without a host change
-- **WHEN** a person launches a clip and the host doesn't queue it
+- **WHEN** a person launches a clip and the host doesn’t queue it
 - **THEN** the clip still reads as it did before the press
 
 #### Scenario: The host confirms
 - **WHEN** a person launches a clip and the host queues it
 - **THEN** the clip reads queued
 
-#### Scenario: A measurement the host doesn't give
+#### Scenario: A measurement the host doesn’t give
 - **WHEN** the host gives no DSP load
 - **THEN** the pane shows the load as missing, not as zero
 
@@ -37,13 +43,9 @@ A pane SHALL turn each gesture into one named intent with one plain-data argumen
 The host SHALL be able to give a pane a frame reader for values that change every frame (meters, playheads, beat), and only the leaf parts that draw those values SHALL read it, each animation frame, without the rest of the pane drawing again.
 
 #### Scenario: Meters move on the frame
-- **WHEN** the host's frame reader reports new levels on each frame
-- **THEN** the meters follow them while the pane's other parts are not redrawn
+- **WHEN** the host’s frame reader reports new levels on each frame
+- **THEN** the meters follow them while the pane’s other parts are not redrawn
 
-#### Scenario: No frame reader
-- **WHEN** a pane is given no frame reader
-- **THEN** its meters and playheads show as missing and nothing else in the pane changes
-
-#### Scenario: Reduced motion
-- **WHEN** the person prefers reduced motion
-- **THEN** frame-driven parts update without animated transitions and still show the host's current values
+#### Scenario: No frame reader and no measurement
+- **WHEN** a pane is given no frame reader and no measured level or position
+- **THEN** its meters and playhead are not drawn, and the rest of the pane is

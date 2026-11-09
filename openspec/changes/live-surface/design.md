@@ -31,9 +31,11 @@ new panes; new binding modes; changing any Music live pane's look.
 `{ id, title, rows: string[][], regions: SurfaceRegion[] }`, `SurfaceRegion` =
 `{ id, kind: string, title, binding: SurfaceBinding }`, `SurfaceBinding` = `{ mode: 'selected' } |
 { mode: 'fixed'; target: string }`. These are mix's names and fields, so mix's values are already
-assignable (mix's `kind` is a narrower union of strings). They live in
-`src/library/live/surface/document.ts`, framework-free. `LiveDocument`, `LiveTab`, `LiveRegion`
-and `LiveBinding` become aliases for one release of zen's own stories, then go.
+assignable (mix's `kind` is a narrower union of strings; `surface.test.ts` holds that at the type
+level). They live beside the component that draws them, in `layout/Workspace/Workspace.types.ts`
+(framework-free): the surface is generic layout, and a layout file never imports `live/`.
+`LiveDocument`, `LiveTab`, `LiveRegion` and `LiveBinding` are gone; zen's own stories were their
+only users.
 
 *Rejected:* keeping `ScreenSpec` tabs as the document. A `ScreenSpec` is the solver's input (forms,
 priorities, nests); it is derived from the document and the definitions, never stored.
@@ -91,22 +93,27 @@ prop is passed. A passed prop wins and a change asks through `onIntent({ type: '
 ### D5. Readings, intents, frame
 
 A pane's props are readings plus `on<Verb>` callbacks (already true of all sixteen). The new part
-is `frame?: () => SurfaceFrame` (`{ beat?: number; levels?: Record<string, number>; master?: number }`),
-mix's `readFrame`. A registered `frame` store samples it on animation frames and writes the values
-into the leaf elements that draw them (meter fills, playheads) as CSS custom properties, so a
-pane's tree isn't rebuilt every frame. Panes that take `beat` as a prop keep working; the reference
-views move to `frame`. Only meters and playheads in `TrackStrips`, `StemDeck`, `OrbitClock`,
-`LandingDial` and `RigHealth` read it in this change.
+is `readFrame?: () => LiveFrame` (`{ beat?, position?, levels? }`, in `Music/live/live.model.ts`),
+mix's `readFrame`. The Music family already samples frames in its mixer (`mixer/frames.bind.ts`:
+`frameLoop`, `bindFrameMeter`), so the live panes reuse that. `TrackStrips` draws each meter with
+the frame meter store, sampling `levels[track.id]`. `StemDeck` draws its playhead with a small new
+store, `liveFrameVar`, which writes `position` to a custom property and hides the playhead while
+there is none. Neither pane's tree is rebuilt per frame. Panes that take `beat` as a prop
+(`OrbitClock`, `LandingDial`, `ProgressionStrip`) keep it in this change: their hands are SVG
+geometry computed in the model, and moving them to the frame is its own piece of work.
 
 ### D6. Where things live
 
-- `src/library/live/surface/`: `document.ts`, `intents.ts` (`applySurfaceIntent`), `definitions.ts`
-  (`PaneDefinition`, `surfaceScreen`), `frame.ts`, and `music.ts` (`musicLivePanes`, the sixteen
-  definitions that were `PANE_KINDS`). All framework-free, unit-tested.
-- `layout/Workspace/` stays the component (it is the surface; renaming it would churn every story
-  title for nothing) and takes `document`, `panes`, `targets`, `canUndo`, `canRedo`, `onIntent`.
-- `live/views.ts` keeps the reference documents only; `LiveSet.story.tsx` applies intents through
-  `applySurfaceIntent`.
+- `layout/Workspace/`: `Workspace.types.ts` (the document, `PaneDefinition`, `SurfaceIntent`,
+  `SurfaceUi`) and `surface.ts` (`openTab`, `surfaceScreen`, `applySurfaceIntent`…), framework-free
+  and unit-tested; the component stays `Workspace` (it is the surface; renaming it would churn every
+  story title for nothing) and takes `document`, `panes`, `targets`, `selected`, `canUndo`,
+  `canRedo`, `onIntent` and `pane`.
+- `Music/live/panes.ts`: `LIVE_PANES` and `livePanes`, the sixteen definitions that were
+  `PANE_KINDS`, exported as `Music.livePanes` from both entries. `Music/live/live.model.ts` gains
+  the frame type (D5).
+- `live/views.ts` keeps the reference documents only; `Live/Views` applies intents through
+  `applySurfaceIntent` in a story host with its own undo history (`layout/Workspace/host.story.ts`).
 - `live/stories/MixRig.stories.tsx`: a fixture in mix's document shape and kinds (copied as data;
   nothing imports across repos) with stand-in panes, edited through a mix-shaped store stand-in.
 
@@ -125,3 +132,4 @@ views move to `frame`. Only meters and playheads in `TrackStrips`, `StemDeck`, `
 
 - Should region titles be editable in perform mode (a long-press), or only in edit mode? This
   change: edit mode only.
+- Frame-driven hands for `OrbitClock`, `LandingDial` and `ProgressionStrip` (D5).
