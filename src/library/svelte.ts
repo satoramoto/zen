@@ -520,7 +520,7 @@ export { default as ExpressionField } from "./math/view/ExpressionField/Expressi
 export { default as PlotViewport } from "./math/view/PlotViewport/PlotViewport.svelte";
 export type { ExactValueProps } from "./math/view/ExactValue/ExactValue.model";
 export type { ExpressionFieldProps } from "./math/view/ExpressionField/ExpressionField.model";
-export type { PlotViewportProps, PlotPoint, PlotCamera } from "./math/view/PlotViewport/PlotViewport.model";
+export type { PlotViewportProps, PlotPoint, PlotCamera, PlotRegion } from "./math/view/PlotViewport/PlotViewport.model";
 export { default as MathInspector } from "./math/view/MathInspector/MathInspector.svelte";
 export type { MathInspectorProps, MathProperty, MathMembership } from "./math/view/MathInspector/MathInspector.model";
 export { default as DistributionPlot } from './math/view/DistributionPlot/DistributionPlot.svelte';

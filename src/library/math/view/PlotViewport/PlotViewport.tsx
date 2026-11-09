@@ -4,4 +4,4 @@ import '../../../primitives/Text.css';
 import './PlotViewport.css';
 /** Controlled scientific viewport. Object IDs survive layout changes. Tuning knobs: none. */
 export function PlotViewport(props:PlotViewportProps){return <Tree tree={plotViewportView(props)} handlers={plotViewportHandlers(props)}/>;}
-export type { PlotViewportProps, PlotPoint, PlotCamera } from './PlotViewport.model';
+export type { PlotViewportProps, PlotPoint, PlotCamera, PlotRegion } from './PlotViewport.model';
