@@ -1,5 +1,9 @@
 /**
- * Earth-Moon translunar orbital trajectory simulation (Apollo 8 / Apollo 11).
+ * Earth-Moon translunar trajectories in a planar model: the Earth fixed, the Moon on a circular
+ * orbit about it, the spacecraft a test particle in their combined gravity, integrated with RK4 (the
+ * Moon moving within each step). In this model the Jacobi integral, the spacecraft's energy measured
+ * in the frame that turns with the Moon, is conserved exactly, so its drift measures the
+ * integrator's error: ordinary energy is not conserved, since the Moon's pull changes with time.
  * Pure model: zero React/framework dependencies.
  */
 
@@ -12,7 +16,7 @@ import {
   RADIUS_MOON,
 } from './gravity';
 import { stepRK4, type State2D } from './integrator';
-import { add, dist, mag, norm, rotate, scale, vec2, type Vec2 } from './vector2';
+import { dist, dot, mag, sub, vec2, type Vec2 } from './vector2';
 
 export interface TrajectoryPoint {
   readonly t: number; // seconds
@@ -45,12 +49,41 @@ export const DEFAULT_TRANSLUNAR_CONFIG: TranslunarConfig = {
 };
 
 /**
+ * A free return in this model: a tangential burn of 3,165 m/s from the 185 km parking orbit at
+ * −132° (the Moon starting at 0°) swings behind the Moon about 4,000 km above its surface near 69 h
+ * and comes back to Earth's atmosphere near 182 h with no further burn. Found by searching angle and
+ * burn; wider than Apollo's (about 250 km), since the Earth here is fixed and the motion planar.
+ */
+export const FREE_RETURN_CONFIG: TranslunarConfig = {
+  parkingAltitude: 185_000,
+  tliDeltaV: 3165,
+  injectionAngle: (-132 * Math.PI) / 180,
+  durationHours: 200,
+  dt: 60,
+};
+
+/** The altitude at which a returning spacecraft meets the atmosphere: 400,000 ft. */
+export const ENTRY_INTERFACE = 121_920;
+
+/** The Moon's angular speed about the Earth in this model. */
+export const MOON_OMEGA = (2 * Math.PI) / 2.36e6;
+
+/**
+ * The Jacobi integral: energy in the frame turning with the Moon, ½|v − ω×r|² − ½ω²|r|² − μE/|r| −
+ * μM/|r − rM|. Conserved exactly by the model's motion; the integrator's drift in it is its error.
+ */
+export function jacobiIntegral(pos: Vec2, vel: Vec2, t: number): number {
+  const w = MOON_OMEGA;
+  const vRot = vec2(vel.x + w * pos.y, vel.y - w * pos.x);
+  const moon = getMoonPosition(t);
+  return 0.5 * dot(vRot, vRot) - 0.5 * w * w * dot(pos, pos) - MU_EARTH / mag(pos) - MU_MOON / dist(pos, moon);
+}
+
+/**
  * Computes Moon's 2D position at time t (seconds) assuming circular orbit in XY plane.
  */
 export function getMoonPosition(t: number): Vec2 {
-  // Angular rate omega = 2*PI / period
-  const omega = (2 * Math.PI) / 2.36e6; // ~27.32 days
-  const theta = omega * t;
+  const theta = MOON_OMEGA * t;
   return vec2(DISTANCE_EARTH_MOON * Math.cos(theta), DISTANCE_EARTH_MOON * Math.sin(theta));
 }
 
@@ -69,6 +102,12 @@ export function simulateTranslunarTrajectory(
   };
   readonly isLunarCaptureCapable: boolean;
   readonly isFreeReturn: boolean;
+  /** Whether the closest approach to the Moon was on its far side, seen from the Earth. */
+  readonly passedBehindMoon: boolean;
+  /** When the spacecraft reached the atmosphere on its way back, if it did (seconds). */
+  readonly returnedAt: number | null;
+  /** The largest change in the Jacobi integral over the flight, relative to its starting value. */
+  readonly jacobiDrift: number;
 } {
   const cfg = { ...DEFAULT_TRANSLUNAR_CONFIG, ...config };
 
@@ -85,6 +124,9 @@ export function simulateTranslunarTrajectory(
 
   let state: State2D = { pos: pos0, vel: vel0 };
   let t = 0;
+  const jacobi0 = jacobiIntegral(pos0, vel0, 0);
+  let jacobiDrift = 0;
+  let returnedAt: number | null = null;
   const maxT = cfg.durationHours * 3600;
 
   const trajectory: TrajectoryPoint[] = [];
@@ -118,14 +160,21 @@ export function simulateTranslunarTrajectory(
       minMoonPoint = pt;
     }
 
+    jacobiDrift = Math.max(jacobiDrift, Math.abs((jacobiIntegral(state.pos, state.vel, t) - jacobi0) / jacobi0));
+
+    // Back at the atmosphere after the flyby: a free return ends here.
+    if (minMoonPoint && t > minMoonPoint.t + 3600 && dEarth < RADIUS_EARTH + ENTRY_INTERFACE) {
+      returnedAt = t;
+      if (!trajectory.includes(pt)) trajectory.push(pt);
+      break;
+    }
     // Stop if collided with Earth or Moon surface
     if (dEarth < RADIUS_EARTH || dMoon < RADIUS_MOON) {
       break;
     }
 
-    // Step physics using combined Earth-Moon gravity
-    const accelFn = (p: Vec2) => earthMoonAccel(p, moonPos);
-    state = stepRK4(state, accelFn, cfg.dt, t);
+    // Step physics using combined Earth-Moon gravity, the Moon moving within the step.
+    state = stepRK4(state, (p, _v, tt) => earthMoonAccel(p, getMoonPosition(tt)), cfg.dt, t);
     t += cfg.dt;
     stepIndex++;
   }
@@ -133,9 +182,9 @@ export function simulateTranslunarTrajectory(
   const bestApproach = minMoonPoint ?? trajectory[0];
   const lunarAlt = bestApproach.distMoon - RADIUS_MOON;
 
-  // Free return check: does trajectory sling around moon and head back towards Earth (< 50,000 km)
-  const finalEarthDist = trajectory[trajectory.length - 1].distEarth;
-  const isFreeReturn = lunarAlt < 20_000_000 && finalEarthDist < 80_000_000;
+  const passedBehindMoon = dot(sub(bestApproach.pos, bestApproach.moonPos), bestApproach.moonPos) > 0;
+  // A free return: around the far side of the Moon and back to the atmosphere with no burn.
+  const isFreeReturn = passedBehindMoon && returnedAt !== null;
   const isLunarCaptureCapable = lunarAlt > 50_000 && lunarAlt < 2_000_000;
 
   return {
@@ -148,5 +197,8 @@ export function simulateTranslunarTrajectory(
     },
     isLunarCaptureCapable,
     isFreeReturn,
+    passedBehindMoon,
+    returnedAt,
+    jacobiDrift,
   };
 }
