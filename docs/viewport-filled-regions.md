@@ -63,6 +63,8 @@ correctly rejected the logged assertion.
 - Eight scenarios × two renderers × two widths: **32 passing browser plays**,
   plus real mouse click/drag and native Enter/Space checks in both renderers.
 - `npm run typecheck`: exit 0.
+- Full library regression, `npx vitest run src/library`: **102 files, 1,826 tests
+  passed** in 30.58s.
 - `npx vitest run src/library/view src/library/parity.test.tsx src/library/tiers.test.ts src/library/math/view/PlotViewport/PlotViewport.test.ts`:
   **6 files, 141 tests passed**, including all 13 existing viewport model checks
   and unchanged no-region snapshots. There were no pre-existing dedicated
@@ -85,5 +87,6 @@ NODE_PATH="$PWD/node_modules" npx story-spec sync \
 openspec validate viewport-filled-regions --strict --store zen-flow
 ```
 
+`zen-flow doctor zen --merge-path` returned `pull-request`.
 Public-API approval and the gated merge remain pending. No immutable consumer
 release is claimed until those steps finish.
