@@ -152,7 +152,7 @@ function LiveOne() {
 export const TheLiveViewsUseTheSet: Story = scenario(
   {
     requirement: 'The Music live panes are a ready-made set',
-    shall: 'Zen SHALL provide the sixteen Music live panes as one set of pane definitions an app may use whole, use in part, or combine with its own, and the live views SHALL be built from that set.',
+    shall: 'Zen SHALL provide the Music live panes as one set of pane definitions an app may use whole, use in part, or combine with its own, and the live views SHALL be built from that set.',
     name: 'The live views use the set',
     when: 'the ONE tab of the live views is opened',
     then: 'every region on it is a Music live pane drawn from the ready-made set',
@@ -171,16 +171,16 @@ export const TheLiveViewsUseTheSet: Story = scenario(
 export const AnAppMixesTheSetWithItsOwn: Story = scenario(
   {
     requirement: 'The Music live panes are a ready-made set',
-    shall: 'Zen SHALL provide the sixteen Music live panes as one set of pane definitions an app may use whole, use in part, or combine with its own, and the live views SHALL be built from that set.',
+    shall: 'Zen SHALL provide the Music live panes as one set of pane definitions an app may use whole, use in part, or combine with its own, and the live views SHALL be built from that set.',
     name: 'An app mixes the set with its own',
     when: 'an app gives the surface the ready-made set plus one kind of its own',
-    then: 'the palette lists the sixteen live panes and the app’s kind, and a tab can hold both',
+    then: 'the palette lists every live pane and the app’s kind, and a tab can hold both',
     act: async ({ canvasElement }) => {
       await userEvent.click(within(canvasElement).getByRole('button', { name: 'open the palette' }));
     },
     check: async ({ canvasElement }) => {
       const palette = within(within(canvasElement).getByRole('group', { name: 'Palette' }));
-      await expect(palette.getAllByRole('button')).toHaveLength(17);
+      await expect(palette.getAllByRole('button')).toHaveLength(livePanes.length + 1);
       await expect(palette.getByRole('button', { name: 'add Set notes to this tab' })).toBeTruthy();
       await expect(within(canvasElement).getByTestId('pane-mixed-2')).toHaveTextContent('notes');
       await expect(canvasElement.querySelector('[data-testid="pane-mixed-1"] .live-pane')).toBeTruthy();
