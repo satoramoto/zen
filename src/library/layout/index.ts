@@ -38,6 +38,7 @@ export {
   workspaceContent,
   type ApplyOptions,
   type DockZone,
+  type JsonValue,
   type LayoutNode,
   type PaneDefinition,
   type ResolvedSettings,
@@ -62,3 +63,5 @@ export {
   type WorkspacePane,
   type WorkspaceProps,
 } from './Workspace/Workspace';
+export { SURFACE_PLAYING, building, type SurfaceMode } from './Workspace/surfaceMode';
+export { useSurfaceMode } from './Workspace/surfaceMode.react';

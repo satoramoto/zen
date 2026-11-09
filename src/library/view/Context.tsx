@@ -6,6 +6,7 @@ import { createElement, type Context as ReactContext, type ReactNode } from 'rea
 import { ControlContext } from '../primitives/Stack';
 import { OpaqueContext } from '../primitives/opaque';
 import { FormContext } from '../layout/assembly/forms';
+import { SurfaceModeContext } from '../layout/Workspace/surfaceMode.react';
 
 /** Every context a tree can provide, by name. A new one is one line here and in `Context.svelte`.
  *  Built on first use, since the files holding the contexts import this one (an import cycle). */
@@ -18,6 +19,8 @@ const registry = (): Record<string, ReactContext<any>> =>
     opaque: OpaqueContext,
     /** The assembled region's form store (`FormStore`, `FormProvider` in layout/assembly/forms.tsx; `FormScope.svelte` in Svelte). */
     form: FormContext,
+    /** The surface's mode round each pane it draws (`SurfaceMode`, layout/Workspace/surfaceMode.ts). */
+    surface: SurfaceModeContext,
   });
 
 export interface ContextProps {

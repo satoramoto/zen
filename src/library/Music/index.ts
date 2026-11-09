@@ -46,6 +46,7 @@ export * from './live/SignalSpine/SignalSpine';
 export * from './live/RigHealth/RigHealth';
 export * from './live/ProgressionStrip/ProgressionStrip';
 export * from './live/CutPads/CutPads';
+export * from './live/ControlPanel/ControlPanel';
 export * from './live/SectionBar/SectionBar';
 export * from './live/StemDeck/StemDeck';
 export * from './live/SongCard/SongCard';

@@ -32,6 +32,7 @@ import { OrbitClock as MusicOrbitClock } from './live/OrbitClock/OrbitClock';
 import { SignalSpine as MusicSignalSpine } from './live/SignalSpine/SignalSpine';
 import { ProgressionStrip as MusicProgressionStrip } from './live/ProgressionStrip/ProgressionStrip';
 import { CutPads as MusicCutPads } from './live/CutPads/CutPads';
+import { ControlPanel as MusicControlPanel } from './live/ControlPanel/ControlPanel';
 import { SectionBar as MusicSectionBar } from './live/SectionBar/SectionBar';
 import { StemDeck as MusicStemDeck } from './live/StemDeck/StemDeck';
 import { SongCard as MusicSongCard } from './live/SongCard/SongCard';
@@ -49,6 +50,6 @@ export function musicReactComponents() {
     MusicContextControls, MusicPhonesIcon, MusicPowerIcon, MusicMomentary, MusicSeparator, MusicMixerSection,
     MusicKnobStack, MusicStemConnections, MusicFrameMeter, MusicFramePlayhead, MusicFrameWaveform, MusicWaveControls,
     MusicDeckStrip, MusicMasterStrip, MusicMixerView,
-    MusicRigHealth, MusicTrackStrips, MusicLaunchGrid, MusicThrowPads, MusicCutPads, MusicSectionBar, MusicStemDeck, MusicSongCard, MusicDicePad, MusicProgressionStrip, MusicSignalSpine, MusicOrbitClock, MusicPushTwin, MusicSetlistRiver, MusicLandingDial, MusicChordCompass,
+    MusicRigHealth, MusicTrackStrips, MusicLaunchGrid, MusicThrowPads, MusicCutPads, MusicControlPanel, MusicSectionBar, MusicStemDeck, MusicSongCard, MusicDicePad, MusicProgressionStrip, MusicSignalSpine, MusicOrbitClock, MusicPushTwin, MusicSetlistRiver, MusicLandingDial, MusicChordCompass,
   };
 }
