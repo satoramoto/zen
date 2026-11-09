@@ -9,7 +9,9 @@ native MathML (temml, `model/formula.ts`); a figure is the name of a component t
 in its registry (`src/library/math/` supplies those; this folder never imports it); an exercise's
 answer goes to a checker by name (`exact` and `numeric` are built in; a page registers the rest).
 
-The area is React-only and not yet exported from the package (`index.ts` is its own entry).
+The reader is React-only, exported through `@satoramoto/zen/compendium`; pure authoring
+helpers use `@satoramoto/zen/compendium/model`. Import `@satoramoto/zen/zen.css` once.
+See [the package guide](../../../docs/compendium-package.md) for SSR and local-source use.
 Stories are under a top-level **Compendium** section: `Compendium/Book` holds the two sample
 textbooks (the Fourier book first), `Compendium/Layout/…` the page and column,
 `Compendium/Components/…` each part on its own.
@@ -76,4 +78,3 @@ Chromium and takes screenshots at wide and narrow widths. The library rules in
 - A figure face for the math explorers (they carry their own headings today), so a scene can sit
   in a page without breaking its outline.
 - A glossary page drawn from the book's heads; search across a book.
-- Exporting the area once its model settles.

@@ -1,4 +1,4 @@
-import { useState, type ComponentType, type ReactNode } from 'react';
+import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import { Stack } from '../../../primitives/Stack';
 import { Surface } from '../../../primitives/Surface';
 import { Text } from '../../../primitives/Text';
@@ -217,6 +217,8 @@ export function Document({ entry, figures = {}, entries = {}, checkers = {}, pro
   const [held, setHeld] = useState<{ id: string; quantities: Quantities }>(() => ({ id: entry.id, quantities: { ...entry.quantities } }));
   if (held.id !== entry.id) setHeld({ id: entry.id, quantities: { ...entry.quantities } });
   const quantities = held.id === entry.id ? held.quantities : { ...entry.quantities };
+  // Notify the host after commit: state updaters can run during rendering.
+  useEffect(() => { onQuantities?.(held.quantities); }, [held, onQuantities]);
   const page: Page = {
     figures,
     entries,
@@ -226,7 +228,6 @@ export function Document({ entry, figures = {}, entries = {}, checkers = {}, pro
       setHeld((h) => {
         if (!h.quantities[name]) return h;
         const next = { ...h, quantities: { ...h.quantities, [name]: { ...h.quantities[name], value } } };
-        onQuantities?.(next.quantities);
         return next;
       }),
     progress,

@@ -42,6 +42,6 @@ export type SliderProps = SliderModelProps;
  */
 export function Slider(props: SliderProps) {
   const [entry] = useState(() => viewState<SliderEntry>(null));
-  const text = useSyncExternalStore(entry.subscribe, entry.get);
+  const text = useSyncExternalStore(entry.subscribe, entry.get, entry.get);
   return <Tree tree={sliderView(props, text)} handlers={sliderHandlers(props, entry.set)} />;
 }

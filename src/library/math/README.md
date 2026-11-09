@@ -107,3 +107,10 @@ and run `node scripts/math-catalog.mjs` against its preview (default port 6027) 
 navigation inventory, moved behavior stories, isolated components and a narrow layout.
 The focused `math-stories.mjs`, `signal-stories.mjs`, `signal-analysis.mjs` and
 `lab-stories.mjs` runners use the same updated story IDs.
+# Public book imports
+
+Applications import React figures from `@satoramoto/zen/math/trig`, pure calculations
+from `@satoramoto/zen/math/trig/model`, and expression parsing/checking from
+`@satoramoto/zen/math/expression`. Load `@satoramoto/zen/zen.css` for figures.
+The reader is React-only; the model and expression entries are framework-free.
+See `docs/compendium-package.md` for the consumer contract.
