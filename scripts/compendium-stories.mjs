@@ -72,10 +72,9 @@ try {
     if (overflow > 0) failed++;
     await page.screenshot({ path: `${shots}/${name}-narrow.png`, fullPage: true });
   }
-  // Each chapter of each book, wide in both packs; the trigonometry book at phone width too, where nothing may overflow.
+  // Generic sample books; human-free owns the full trigonometry course evidence.
   for (const [book, id, narrow] of [
     ['fourier', 'compendium-book--fourier', false],
-    ['trig', 'compendium-book--trigonometry', true],
     ['prime-waves', 'compendium-book--prime-waves', true],
   ]) {
     for (const [theme, mode] of [['textbook-console', 'dark'], ['textbook-blueprint', 'light']]) {
