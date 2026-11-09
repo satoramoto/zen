@@ -4,6 +4,15 @@ import { binProjectedPoints } from '../../model/distribution';
 
 export interface PlotPoint { id: string; x: number; y: number; z?: number; label?: string; hue?: 1|2|3|4|5; outline?: boolean; outlineHue?: 1|2|3|4|5; size?: number; opacity?: number; outlineOpacity?: number }
 export interface PlotCamera { zoom: number; x: number; y: number; rotation: number }
+/** Caller-owned ordered polygon boundary. Interaction is explicit opt-in. */
+export interface PlotRegion {
+  readonly id:string;
+  readonly boundary:readonly string[];
+  readonly label?:string;
+  readonly hue?:1|2|3|4|5;
+  readonly opacity?:number;
+  readonly interactive?:boolean;
+}
 export interface PlotBinSummary {
   count: number;
   minNumericId?: string;
@@ -17,6 +26,9 @@ export interface PlotViewportProps {
   selectedId?: string|null;
   hoveredId?: string|null;
   edges?: readonly [string,string][];
+  regions?: readonly PlotRegion[];
+  selectedRegionId?:string|null;
+  onRegionSelect?(id:string):void;
   camera: PlotCamera;
   volume?: boolean;
   labels?: boolean;
@@ -63,7 +75,7 @@ export function projectPoints(points:readonly PlotPoint[],rotation:number,volume
   const angle=finite(rotation,0)*Math.PI/180,cos=Math.cos(angle),sin=Math.sin(angle);
   const project=(p:PlotPoint)=>({px:volume?p.x*cos-p.y*sin:p.x,py:volume?(p.x*sin+p.y*cos)*.45-(p.z??0)*1.7:p.y});
   let minX=0,maxX=1,minY=0,maxY=1;
-  for(const point of boundsPoints){const b=project(point);minX=Math.min(minX,b.px);maxX=Math.max(maxX,b.px);minY=Math.min(minY,b.py);maxY=Math.max(maxY,b.py);}
+   for(const point of boundsPoints){const b=project(point);if(!Number.isFinite(b.px)||!Number.isFinite(b.py))continue;minX=Math.min(minX,b.px);maxX=Math.max(maxX,b.px);minY=Math.min(minY,b.py);maxY=Math.max(maxY,b.py);}
   const scale=Math.min(900/(maxX-minX+2),900/(maxY-minY+2));
   const result=points.map(p=>{const b=project(p);return {...p,px:500+(b.px-(minX+maxX)/2)*scale,py:500+(b.py-(minY+maxY)/2)*scale};});
   projectionCache.set(points,[{rotation,volume,bounds:boundsPoints,result},...entries].slice(0,4));
@@ -117,9 +129,23 @@ export function plotViewportView(p:PlotViewportProps):Node {
     );
   });
   const edges=(p.edges??[]).flatMap(([a,b])=>{const x=byId.get(a),y=byId.get(b);if(!x||!y)return [];const sx=screenPosition(x,camera),sy=screenPosition(y,camera);return [h('line',{x1:String(sx.x),y1:String(sx.y),x2:String(sy.x),y2:String(sy.y),class:'zen-math-viewport__edge'})];});
+  const regions=(p.regions??[]).flatMap(region=>{
+    if(region.boundary.length<3||new Set(region.boundary).size!==region.boundary.length)return [];
+    const boundary=region.boundary.map(id=>byId.get(id));
+    if(boundary.some(v=>!v||![v.x,v.y,v.z??0,v.px,v.py].every(Number.isFinite)))return [];
+    return [h('polygon',{
+      'data-region-id':region.id,'data-selected':String(p.selectedRegionId===region.id),
+      points:boundary.map(v=>`${v!.px},${v!.py}`).join(' '),class:'zen-math-viewport__region',
+      style:`--region-color: var(--${region.hue?`hue-${region.hue}`:'text-3'})`,
+      'fill-opacity':String(clamp(finite(region.opacity??.25,.25),0,1)),
+      'vector-effect':'non-scaling-stroke',
+      ...(region.interactive?{role:'button',tabindex:'0','aria-label':region.label??region.id,'aria-pressed':String(p.selectedRegionId===region.id),'data-region-interactive':'true','pointer-events':'all'}:{'pointer-events':'none','aria-hidden':'true'}),
+    })];
+  });
   return wire(h('svg',{class:'zen-math-viewport',viewBox:'0 0 1000 1000',preserveAspectRatio:'xMidYMid meet',role:'group','aria-label':p.label??'Mathematical plot',tabindex:'0','data-render-mode':density?'density':'points','data-visible-count':String(visible.length)},
     h('title',{},p.label??'Mathematical plot'),
     h('desc',{},'Hover to inspect, click to pin. Drag to pan; scroll to zoom at the pointer. Plus and minus zoom, arrows move selection, Home fits, Escape clears the pin. Density cells summarize multiple objects; click a cell to zoom.'),
+    regions.length?h('g',{transform:`translate(${camera.x} ${camera.y}) translate(500 500) scale(${camera.zoom}) translate(-500 -500)`},regions):null,
     h('g',{},edges),
     h('g',density?{}:{transform:`translate(${camera.x} ${camera.y}) translate(500 500) scale(${camera.zoom}) translate(-500 -500)`},marks),
     selected&&onScreen(selected,camera)?indicator(selected,camera,'selection'):null,
@@ -127,7 +153,7 @@ export function plotViewportView(p:PlotViewportProps):Node {
   ),{on:{pointerdown:'down',pointermove:'move',pointerup:'up',pointercancel:'cancel',lostpointercapture:'cancel',pointerleave:'leave',wheel:'wheel',keydown:'key'}});
 }
 
-type Drag={x:number;y:number;camera:PlotCamera;id:string|null;bin:PlotPosition|null;pointerId:number;moved:boolean};
+type Drag={x:number;y:number;camera:PlotCamera;id:string|null;regionId:string|null;bin:PlotPosition|null;pointerId:number;moved:boolean};
 const drags=new WeakMap<EventTarget,Drag>();
 const hoverStates=new WeakMap<EventTarget,{id:string|null;binId:string|null}>();
 const liveCameras=new WeakMap<EventTarget,{source:PlotCamera;current:PlotCamera}>();
@@ -155,20 +181,21 @@ export function plotViewportHandlers(p:PlotViewportProps):Handlers {
     down:(e:PointerEvent)=>{
       if(e.button!==0)return;
       const svg=e.currentTarget as SVGSVGElement,element=pointedElement(e),bin=element?.closest('[data-bin-id]');
-      svg.focus();svg.setPointerCapture(e.pointerId);
-      drags.set(svg,{x:e.clientX,y:e.clientY,camera:{...liveCamera(svg,p.camera)},id:element?.closest('[data-point-id]')?.getAttribute('data-point-id')??null,bin:bin?{x:Number(bin.getAttribute('data-bin-x')),y:Number(bin.getAttribute('data-bin-y'))}:null,pointerId:e.pointerId,moved:false});
+      const region=element?.closest<SVGElement>('[data-region-interactive]');
+      (region??svg).focus();svg.setPointerCapture(e.pointerId);
+      drags.set(svg,{x:e.clientX,y:e.clientY,camera:{...liveCamera(svg,p.camera)},id:element?.closest('[data-point-id]')?.getAttribute('data-point-id')??null,regionId:region?.getAttribute('data-region-id')??null,bin:bin?{x:Number(bin.getAttribute('data-bin-x')),y:Number(bin.getAttribute('data-bin-y'))}:null,pointerId:e.pointerId,moved:false});
     },
     move:(e:PointerEvent)=>{
       const target=e.currentTarget!,drag=drags.get(target);
       if(!drag){const element=pointedElement(e);hover(target,p,element?.closest('[data-point-id]')?.getAttribute('data-point-id')??null,element?.closest('[data-bin-id]')?.getAttribute('data-bin-id')??null);return;}
       if(e.pointerId!==drag.pointerId)return;
       const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.moved ||= Math.hypot(dx,dy)>4;
-      if(drag.moved){hover(target,p,null,null);const rect=(target as SVGSVGElement).getBoundingClientRect(),scale=Math.min(rect.width,rect.height)/1000;if(scale>0)emitCamera(target,p,{...drag.camera,x:drag.camera.x+dx/scale,y:drag.camera.y+dy/scale});}
+      if(drag.moved&&drag.regionId===null){hover(target,p,null,null);const rect=(target as SVGSVGElement).getBoundingClientRect(),scale=Math.min(rect.width,rect.height)/1000;if(scale>0)emitCamera(target,p,{...drag.camera,x:drag.camera.x+dx/scale,y:drag.camera.y+dy/scale});}
     },
     up:(e:PointerEvent)=>{
       const target=e.currentTarget!,drag=drags.get(target);if(!drag||e.pointerId!==drag.pointerId)return;
       const moved=drag.moved||Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>4;drags.delete(target);release(target as SVGSVGElement,e.pointerId);
-      if(!moved){if(drag.id)p.onSelect?.(drag.id);else if(drag.bin)emitCamera(target,p,zoomAt(liveCamera(target,p.camera),liveCamera(target,p.camera).zoom*2,drag.bin));}
+      if(!moved){if(drag.regionId!==null){if(p.regions?.some(r=>r.id===drag.regionId&&r.interactive))p.onRegionSelect?.(drag.regionId);}else if(drag.id)p.onSelect?.(drag.id);else if(drag.bin)emitCamera(target,p,zoomAt(liveCamera(target,p.camera),liveCamera(target,p.camera).zoom*2,drag.bin));}
     },
     cancel:(e:PointerEvent)=>{const target=e.currentTarget!,drag=drags.get(target);if(drag&&drag.pointerId===e.pointerId){drags.delete(target);release(target as SVGSVGElement,e.pointerId);}hover(target,p,null,null);},
     leave:(e:PointerEvent)=>hover(e.currentTarget!,p,null,null),
@@ -178,6 +205,12 @@ export function plotViewportHandlers(p:PlotViewportProps):Handlers {
       hover(svg,p,null,null);emitCamera(svg,p,zoomAt(current,current.zoom*wheelZoomFactor(e.deltaY,e.deltaMode,rect.height),anchor));
     },
     key:(e:KeyboardEvent)=>{
+      const region=e.target instanceof Element?e.target.closest('[data-region-interactive]'):null;
+      if(region&&(e.key==='Enter'||e.key===' ')){
+        e.preventDefault();const id=region.getAttribute('data-region-id');
+        if(!e.repeat&&id!==null&&p.regions?.some(r=>r.id===id&&r.interactive))p.onRegionSelect?.(id);
+        return;
+      }
       if(['+','=','-','Home','Escape','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))e.preventDefault();
       const current=liveCamera(e.currentTarget,p.camera);
       if(e.key==='Home')emitCamera(e.currentTarget,p,{...current,x:0,y:0,zoom:1});

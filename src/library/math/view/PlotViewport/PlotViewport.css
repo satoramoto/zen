@@ -19,3 +19,7 @@
 .zen-math-viewport__bin[data-hue='3'] { fill:var(--hue-3); }
 .zen-math-viewport__bin[data-hue='4'] { fill:var(--hue-4); }
 .zen-math-viewport__bin[data-hue='5'] { fill:var(--hue-5); }
+.zen-math-viewport__region { fill:var(--region-color); stroke:var(--region-color); stroke-width:1.5; }
+.zen-math-viewport__region[data-region-interactive] { cursor:pointer; }
+.zen-math-viewport__region[data-selected='true'] { stroke:var(--text-1); stroke-width:3; }
+.zen-math-viewport__region:focus-visible { outline:none; stroke:var(--accent); stroke-width:4; }
