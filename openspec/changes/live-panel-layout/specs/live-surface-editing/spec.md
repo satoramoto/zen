@@ -1,3 +1,19 @@
+# live-surface-editing Spec Delta
+
+## ADDED Requirements
+
+### Requirement: Layout intents apply without a store
+
+The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.
+
+#### Scenario: Docking through the applier
+- **WHEN** a story applies a dock intent placing one region below another
+- **THEN** the returned layout holds a column of the two where the target was, and the region is gone from where it was
+
+#### Scenario: A resize naming no split
+- **WHEN** a resize intent names a split the tab doesn’t hold
+- **THEN** the applier returns the document unchanged
+
 ## MODIFIED Requirements
 
 ### Requirement: Every edit leaves as one intent
@@ -23,17 +39,3 @@ Every change a person makes through the surface SHALL leave it as exactly one in
 #### Scenario: Renaming a tab
 - **WHEN** a person renames a tab and confirms
 - **THEN** the surface sends one rename intent with the new title, and cancelling sends nothing
-
-## ADDED Requirements
-
-### Requirement: Layout intents apply without a store
-
-The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn't hold.
-
-#### Scenario: Docking through the applier
-- **WHEN** a story applies a dock intent placing one region below another
-- **THEN** the returned layout holds a column of the two where the target was, and the region is gone from where it was
-
-#### Scenario: A resize naming no split
-- **WHEN** a resize intent names a split the tab doesn't hold
-- **THEN** the applier returns the document unchanged
