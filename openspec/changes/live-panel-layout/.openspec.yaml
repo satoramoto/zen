@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-09
+goal: Build panels you would actually play live from: arrange, size, dock, configure and lock panes, proven by the looper performance board
+affected_areas:
+  - zen
+x-review: look
