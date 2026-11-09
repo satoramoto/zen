@@ -146,7 +146,7 @@ export const NoDefinitionsNoPalette: Story = scenario(
 
 function LiveOne() {
   const live = useLiveSet({ running: false });
-  return <Workspace name="Hidden Signals" document={LIVE_DOCUMENT} panes={livePanes} selected={live.selected} pane={(region, target) => <div data-testid={`pane-${region.id}`} data-kind={region.kind} style={{ height: '100%' }}>{live.content(region, target)}</div>} />;
+  return <Workspace name="Hidden Signals" document={LIVE_DOCUMENT} panes={livePanes} selected={live.selected} pane={(region, target, settings) => <div data-testid={`pane-${region.id}`} data-kind={region.kind} style={{ height: '100%' }}>{live.content(region, target, settings)}</div>} />;
 }
 
 export const TheLiveViewsUseTheSet: Story = scenario(
@@ -158,7 +158,7 @@ export const TheLiveViewsUseTheSet: Story = scenario(
     then: 'every region on it is a Music live pane drawn from the ready-made set',
     check: async ({ canvasElement }) => {
       const panes = [...canvasElement.querySelectorAll<HTMLElement>('[data-testid^="pane-"]')];
-      await expect(panes.length).toBe(LIVE_DOCUMENT.tabs[0].regions.length);
+      await expect(panes.length).toBe(LIVE_DOCUMENT.tabs.find((t) => t.id === 'one')!.regions.length);
       for (const p of panes) {
         await expect(isLivePaneKind(p.dataset.kind!)).toBe(true);
         await expect(p.querySelector('.live-pane')).toBeTruthy();
@@ -206,7 +206,7 @@ function MixedApp({ document }: { document: SurfaceDocument }) {
       document={document}
       panes={[...livePanes, NOTES]}
       editing
-      pane={(region, target) => (isLivePaneKind(region.kind) ? <div data-testid={`pane-${region.id}`} style={{ height: '100%' }}>{live.content(region, target)}</div> : workspacePane(region, target))}
+      pane={(region, target, settings) => (isLivePaneKind(region.kind) ? <div data-testid={`pane-${region.id}`} style={{ height: '100%' }}>{live.content(region, target, settings)}</div> : workspacePane(region, target))}
     />
   );
 }

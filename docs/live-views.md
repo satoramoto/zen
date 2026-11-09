@@ -58,6 +58,12 @@ There are two generations of views, and both stay:
 
 ### `Music/Live/Views`
 
+**Looper** is the performance board, the first panel built to be played (`LOOPER_TAB` in
+`views.ts`): every step that made it is an intent applied to an empty tab (add, dock, configure,
+resize, lock), so the builder alone can make it. It opens locked; **Looper · retuned** plays a
+between-songs edit: hold to unlock, widen the grid, dock the cuts under the throws, drop Vox from
+the strips, lock again.
+
 All tabs share one linked set (`LiveSet.story.tsx`, a story harness: its clock, queue and mutes
 are scenario data, not a scheduler or an engine). Select a track anywhere and the grid, strips,
 orbits, spine and Push follow; a compass wedge overrides the chord the orbits follow; a section
@@ -65,6 +71,7 @@ press queues it; a stem toggle mutes it.
 
 | Tab | Rows (each a row of region instances) | For |
 |---|---|---|
+| Looper | song · loop + (cuts over throws) · four strips · rig, locked | the panel to play: built through the builder's intents |
 | ONE | river · song + dice · loop + compass · sections + landing · mix + stems · rig | the whole set on one page |
 | Follow | compass + orbits · follow + dice · rig | the harmony: place, time, the loop and the dice |
 | Track | spine · stems · throws + cuts · rig | one column as its signal path |

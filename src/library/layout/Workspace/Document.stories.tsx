@@ -8,6 +8,7 @@ import { Workspace } from './Workspace';
 import WorkspaceSvelte from './Workspace.svelte';
 import { workspacePane } from './content.story';
 import { useSurfaceHost } from './host.story';
+import { applySurfaceIntent, readDocument, splits } from './surface';
 import { MIX_STORE_INTENTS, mixDefaultDocument, mixPanes, mixTargets } from './mix.fixtures';
 import { opened, tabOf, workspaceDocument, workspacePanes, workspaceStories as s, workspaceTargets } from './Workspace.fixtures';
 import type { SurfaceDocument, SurfaceIntent, SurfaceRegion } from './Workspace.types';
@@ -27,7 +28,7 @@ const meta = {
       capability: 'live-surface-document',
       purpose: 'The document an app owns and the surface draws: its shape, its version, and how the surface treats an id or kind it doesn’t know.',
       requirement: 'The app owns the surface document',
-      shall: 'The surface SHALL draw the surface document it is given, a version 1 value of tabs, each tab rows of region instance ids and the instances (each with its own id, a pane kind, a title and a binding), and the open tab’s id, and SHALL never store, save or alter that document itself.',
+      shall: 'The surface SHALL draw the surface document it is given, a version 2 value of tabs, each tab a layout tree of splits and region instance ids, the instances (each with its own id, a pane kind, a title, a binding and its settings) and whether the tab is locked, and the open tab’s id, and SHALL never store, save or alter that document itself.',
     },
   },
   args: { name: 'Live', document: workspaceDocument },
@@ -47,7 +48,7 @@ export const TheSurfaceDrawsTheAppsDocument: Story = scenario(
   {
     name: 'The surface draws the app’s document',
     when: 'an app gives the surface a document with three tabs and opens the second',
-    then: 'the tab strip shows the three titles with the second selected and its regions drawn in its rows, in order',
+    then: 'the tab strip shows the three titles with the second selected and its regions drawn in its layout, in order',
     check: async ({ canvasElement }) => {
       const canvas = within(canvasElement);
       await expect(canvas.getAllByRole('tab').map((t) => t.textContent)).toEqual(['My stage', 'Session grid', 'Arp & follow']);
@@ -258,4 +259,43 @@ export const MixsDefaultDocument: Story = scenario(
     },
   },
   { render: () => <MixRig /> },
+) as Story;
+
+export const MixsDocumentToday: Story = scenario(
+  {
+    requirement: 'Version 1 documents still draw',
+    shall: 'The surface SHALL draw a version 1 document (rows of region instance ids) as a column of its rows, each row’s regions taking equal shares, and an intent that changes the layout of a version 1 document SHALL be applied as on its version 2 reading.',
+    name: 'Mix’s document today',
+    when: 'the surface is given mix’s version 1 default document',
+    then: 'every tab draws as before, its rows top to bottom and each row’s regions side by side in equal shares',
+    check: async ({ canvasElement }) => {
+      // Hybrid: waveforms · session + throws · channels + signal · health.
+      const at = (id: string) => canvasElement.querySelector(`[data-leaf="${id}"]`)!.getBoundingClientRect();
+      await waitFor(() => expect(canvasElement.querySelector('[data-leaf="hybrid-region-6"]')).toBeTruthy());
+      const tops = [1, 2, 4, 6].map((n) => at(`hybrid-region-${n}`).top);
+      await expect([...tops].sort((a, b) => a - b)).toEqual(tops);
+      await expect(Math.abs(at('hybrid-region-2').top - at('hybrid-region-3').top)).toBeLessThan(1);
+      await expect(at('hybrid-region-2').width).toBeCloseTo(at('hybrid-region-3').width, 0);
+    },
+  },
+  { render: () => <Workspace name="Rig" document={{ ...mixDefaultDocument(), active: 'hybrid' }} panes={mixPanes} pane={workspacePane} /> },
+) as Story;
+
+export const TheFirstResizeUpgrades: Story = scenario(
+  {
+    requirement: 'Version 1 documents still draw',
+    shall: 'The surface SHALL draw a version 1 document (rows of region instance ids) as a column of its rows, each row’s regions taking equal shares, and an intent that changes the layout of a version 1 document SHALL be applied as on its version 2 reading.',
+    name: 'The first resize upgrades',
+    when: 'an app applies a resize intent to a version 1 document',
+    then: 'the result is a version 2 document with the same regions and the new shares',
+    check: async () => {
+      const v1 = mixDefaultDocument();
+      const next = applySurfaceIntent(v1, { type: 'resizeSplit', tab: 'hybrid', split: 'hybrid-row-2', shares: [3, 1] });
+      await expect(next.version).toBe(2);
+      const tab = readDocument(next).tabs.find((t) => t.id === 'hybrid')!;
+      await expect(tab.regions.map((r) => r.id)).toEqual(v1.tabs[2].regions.map((r) => r.id));
+      await expect(splits(tab.layout).find((s) => s.id === 'hybrid-row-2')!.children.map((c) => c.share)).toEqual([3, 1]);
+    },
+  },
+  { render: () => <Workspace name="Rig" document={mixDefaultDocument()} panes={mixPanes} pane={workspacePane} /> },
 ) as Story;

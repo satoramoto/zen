@@ -202,6 +202,8 @@
 
 .yh-workspace__handle {
   position: relative;
+  /* Above the panes either side and their frame bars (z 1), so its finger-wide reach (::before) wins over their edges. */
+  z-index: 2;
   min-width: 0;
   min-height: 0;
   touch-action: none;
@@ -267,7 +269,7 @@
    outline colour, never a fill, so the pane under it stays readable. */
 .yh-workspace__drop {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
   outline: 2px solid var(--selected);
   outline-offset: -2px;

@@ -4,6 +4,15 @@
 // ends, the one edit it makes (an intent the surface sends). Pointer capture makes touch and mouse
 // one path.
 
+/** Capture a pointer for the gesture; a pointer the browser doesn't know (a synthetic one) is followed without it. */
+function capture(node: HTMLElement, pointer: number): void {
+  try {
+    node.setPointerCapture(pointer);
+  } catch {
+    // Not an active pointer: the gesture still follows events dispatched to the node.
+  }
+}
+
 /** Pointer travel before a press on a tag becomes a drag. */
 export const DRAG_THRESHOLD_PX = 6;
 /** One arrow press moves a handle this share of its pair. */
@@ -58,7 +67,7 @@ export function bindSplitHandle(node: HTMLElement, initial: SplitHandleParams) {
     const sizes = neighbours(node, params.axis);
     if (!sizes) return;
     e.preventDefault();
-    node.setPointerCapture?.(e.pointerId);
+    capture(node, e.pointerId);
     drag = { pointer: e.pointerId, start: at(e), a: sizes.a, b: sizes.b, last: null };
   };
   const move = (e: PointerEvent) => {
@@ -165,7 +174,7 @@ export function bindDockDrag(node: HTMLElement, initial: DockDragParams) {
     if (!press.dragging) {
       if (Math.hypot(e.clientX - press.x, e.clientY - press.y) < DRAG_THRESHOLD_PX) return;
       press.dragging = true;
-      node.setPointerCapture?.(e.pointerId);
+      capture(node, e.pointerId);
     }
     e.preventDefault();
     const hit = over(e.clientX, e.clientY);
