@@ -36,9 +36,9 @@ Splits carry ids so a resize names the split it changes. Shares are relative (an
 the applier keeps them summing to the child count). A tiling tree, as VS Code, Bitwig and i3 use,
 expresses everything rows did plus columns and sizes, and stays a value you can diff. `readDocument(doc)`
 gives a v1 document's v2 reading: a root column of row splits (a one-region row is the leaf itself),
-equal shares, deterministic split ids (`<tab>-row-<n>`). The applier writes v2 whenever it changes
-a v1 layout. Every other intent leaves the version as it was, so mix's documents stay v1 until mix
-resizes or docks.
+equal shares, deterministic split ids (`<tab>-row-<n>`). The applier reads a v1 document as v2 and
+returns v2 whenever it changes anything (one code path; mix applies its own intents with its own
+store, so the applier's output version never reaches mix uninvited).
 
 *Rejected:* a grid with spans (Lemur pages, CSS grid areas). Dragging and docking on a grid needs
 collision rules; a tree needs none.
@@ -59,11 +59,13 @@ target's share. `swap` exchanges the two leaves.
 
 ### D3. Drawing: a split view with measured rooms
 
-The Workspace draws a tab with a new `Splits` model (each split a CSS grid whose tracks are `fr`
-from the shares), not `Screen`. Each leaf measures its room with the existing `room` store and picks
-the largest form whose `min` fits (`formForRoom(forms, room, principles)`, resolving `Length` with
-the assembly's `resolveLength`). It then hands that form to the pane through `FormScope`, as
-`Screen` does, so panes keep `useForm`. A handle is drawn between siblings in edit mode only.
+The Workspace model draws the tree itself (each split a CSS grid whose tracks are `minmax(0, Nfr)`
+from the shares), not `Screen`; no separate composite was needed. Each leaf measures its room with
+the existing `room` store into the surface's visual state (read at call time, since every leaf
+reports in the same tick) and picks the richest form whose `min` fits (`formForRoom(forms, room,
+principles)`, the principles handed in by the binding from the nearest theme scope). It then hands
+that form to the pane through `FormScope`, as `Screen` does, so panes keep `useForm`. A form whose
+`min` fits is honest: the dice pad's `full` draws 300 px against a 268 px `min`. A handle is drawn between siblings in edit mode only.
 `Screen` stays for everything else in zen.
 
 ### D4. Gestures as stores, previews as visual state
@@ -83,7 +85,7 @@ Both are framework-free stores registered in `view/stores.ts`, so both renderers
 
 `tab.locked` is document data, so it travels with the panel. A locked tab shows only an Unlock
 button in the head: no Edit, no frames, no handles, no tags. On a pointer the Unlock is a hold
-(the Button's `onLongPress`, 600 ms); from the keyboard Enter unlocks, which is deliberate already.
+(the Button's `onLongPress`, the system's 350 ms long press); from the keyboard Enter unlocks, which is deliberate already.
 Lock and unlock send `lockTab`. Locking also leaves edit mode.
 
 ### D6. Settings
@@ -100,13 +102,14 @@ type SettingSpec = { key: string; label: string } & (
 
 `PaneDefinition.settings?: SettingSpec[]`. `resolveSettings(definition, region, targets)` fills
 defaults. The app's `pane` gets the resolved settings as a third argument:
-`pane(region, target, settings)` (a slot takes up to three args). The sheet is the registered
-`Sheet` with one field per spec (`Segmented` or `Select` for a choice, `Checkbox`es for choices
+`pane(region, target, settings)` (a slot takes up to three args). The sheet is an inline plate
+under the region's tools (a modal would hide the pane being configured) with one field per spec (`Segmented` or `Select` for a choice, `Checkbox`es for choices
 and targets, `Checkbox` for a toggle, `NumberField` for a number). Each change sends
 `configureRegion` with the whole next settings object.
 
-The live panes declare: `mix` and `loop` the tracks shown (`targets` of `track`), `cuts` the pads
-offered (`choices`), `dice` the moves offered (`choices`). The live views read them.
+The live panes declare: `mix` and `loop` the tracks shown (`targets` of `track`), `cuts` the cuts
+offered (`targets` of `cut`, since which cuts exist is the host's), `dice` the moves offered
+(`choices`). The live views read them.
 
 ### D7. The looper board
 
