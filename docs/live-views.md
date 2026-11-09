@@ -52,11 +52,11 @@ There are two generations of views, and both stay:
   `components/music/` parts (LoopGrid, MixBand, StemLanes, TransitionRow…). Its tabs are My stage,
   Session grid, Arp & follow, Mix & sends and Stem deck. Its stories are the editing scenarios
   (`live-surface-editing`, `live-surface-document`).
-- **`Live/Views`** (`src/library/live/`): the live looper's pages, built from the Music family's
+- **`Music/Live/Views`** (`src/library/Music/live/views/`): the live looper's pages, built from the Music family's
   live panes in mix[flow]'s face (`src/library/Music/live/`, stories under **Music/Live**). These
   are the views the wireframes asked for.
 
-### `Live/Views`
+### `Music/Live/Views`
 
 All tabs share one linked set (`LiveSet.story.tsx`, a story harness: its clock, queue and mutes
 are scenario data, not a scheduler or an engine). Select a track anywhere and the grid, strips,
@@ -78,7 +78,7 @@ fresh (`one-region-3`) and name an instance, never a component type: nothing rea
 an id. The panes are `Music.livePanes`, the ready-made set of definitions; the story's host
 keeps the document and an undo history and applies every intent the Workspace sends with
 `applySurfaceIntent` (`docs/workspace.md`), the way an app's store would. The rig's line is an
-ordinary last row, as mix's Health is, not a footer. `Live/Host contract` and `Live/Pane registry`
+ordinary last row, as mix's Health is, not a footer. `Music/Live/Host contract` and `Music/Live/Pane registry`
 hold the framework's scenarios (`live-host-contract`, `live-pane-registry`).
 
 The views are React-only renders, since region content is app content. Their plays are overviews;

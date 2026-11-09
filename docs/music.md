@@ -113,8 +113,8 @@ the port's zero-difference evidence below does not cover them.
   guarantees is listed in `docs/live-views.md`.
 - Panes take time as a `beat` prop and hold no state; the app owns the clock and every value. A
   reading the host doesn't supply (a meter, a load, a waveform) is drawn as missing, never as zero.
-- The composed pages (tabs of panes in the Workspace, one linked set) are `Live/Views`
-  (`src/library/live/`), React-only story harnesses. Each tab is a document of region instances in
+- The composed pages (tabs of panes in the Workspace, one linked set) are `Music/Live/Views`
+  (`src/library/Music/live/views/`), React-only story harnesses. Each tab is a document of region instances in
   mix's surface shape, each naming its pane kind and binding.
 
 ## Storybook catalog
