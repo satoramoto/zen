@@ -27,17 +27,30 @@ document it was given.
 
 ```ts
 type SurfaceBinding = { mode: 'selected' } | { mode: 'fixed'; target: string };
-interface SurfaceRegion { id: string; kind: string; title: string; binding: SurfaceBinding }
-interface SurfaceTab { id: string; title: string; rows: readonly (readonly string[])[]; regions: readonly SurfaceRegion[] }
-interface SurfaceDocument { version: 1; active: string; tabs: readonly SurfaceTab[] }
+interface SurfaceRegion { id: string; kind: string; title: string; binding: SurfaceBinding; settings?: Record<string, SettingValue> }
+type LayoutNode = string | { id: string; split: 'row' | 'column'; children: { node: LayoutNode; share: number }[] };
+interface SurfaceTab { id: string; title: string; layout: LayoutNode | null; regions: readonly SurfaceRegion[]; locked?: boolean }
+interface SurfaceDocumentV2 { version: 2; active: string; tabs: readonly SurfaceTab[] }
+type SurfaceDocument = SurfaceDocumentV1 | SurfaceDocumentV2;
 ```
 
-This is mix[flow]'s rig document field for field (mix `src/rig/contract.ts`, version 1), so mix's
-values are zen's as they are. A tab is rows of region **instance ids**, top to bottom, and the
-instances they name. A region's kind is read from `kind`, never from its id, so a tab can hold
-two instances of one kind. A row entry naming an instance the tab doesn't hold is skipped. A
-`kind` the app never defined draws a placeholder that names it and can still be moved and
-removed. An `active` id that matches no tab shows the first tab.
+A tab is a **split tree**: a split lays its children side by side (`row`) or stacked (`column`),
+each taking its **share** of the split's room, to any depth; a leaf is a region **instance id**.
+Shares are relative, so a panel keeps its proportions in any window. A region's kind is read from
+`kind`, never from its id, so a tab can hold two instances of one kind. A leaf naming an instance
+the tab doesn't hold is skipped. A `kind` the app never defined draws a placeholder that names it
+and can still be moved and removed. An `active` id that matches no tab shows the first tab.
+
+**Version 1** is mix[flow]'s rig document field for field (mix `src/rig/contract.ts`: a tab is rows of
+instance ids). The surface draws it through its version 2 reading (`readDocument`): a column of
+its rows, each row's regions side by side, equal shares. `applySurfaceIntent` returns version 2
+whenever it changes a document, so an app that applies layout edits to mix's documents ends up on
+version 2 and must be able to store it.
+
+Each region draws the **richest form its room fits**: the surface measures every leaf and picks
+the first of its kind's forms whose least room (`min`) fits (`formForRoom`); a region too small even
+for its smallest form draws that form and is marked `data-cramped`. Nothing reflows: a panel sized
+by hand keeps its sizes.
 
 ## Pane definitions
 
@@ -45,38 +58,64 @@ removed. An `active` id that matches no tab shows the first tab.
 interface PaneDefinition {
   kind: string; label: string; description?: string;
   forms: Forms; priority?: Rank; plate?: boolean; head?: boolean;
-  targets?: string; // what a fixed binding can point at, in the app's words ('track')
+  targets?: string;            // what a fixed binding can point at, in the app's words ('track')
+  settings?: SettingSpec[];    // what a region of this kind can be told
 }
+type SettingSpec = { key: string; label: string } & (
+  | { type: 'choice'; options; default } | { type: 'choices'; options; default }
+  | { type: 'toggle'; default } | { type: 'number'; min; max; step?; default }
+  | { type: 'targets'; of: string; default: 'all' | string[] }   // a pick of the app's targets
+);
 ```
 
-Definitions are plain data, so they import no renderer. The surface lays each region out by its
-kind's forms (`surfaceScreen(tab, panes)` is the ScreenSpec the solver draws) and asks the app to
-draw the instance: `pane={(region, target) => …}` in React, or a `pane` snippet with the same two
-arguments in Svelte. `target` is the region's fixed target, or else the app's `selected`. The
-palette lists exactly the definitions, in order, by label and description.
-`Music.livePanes` is a ready-made set: the sixteen live panes (`Music/live/panes.ts`).
+Definitions are plain data, so they import no renderer. The app draws each instance:
+`pane={(region, target, settings) => …}` in React, or a `pane` snippet with the same three
+arguments in Svelte. `target` is the region's fixed target, or else the app's `selected`;
+`settings` are the region's values with every default filled in (`resolveSettings`; `'all'`
+targets expanded). The palette lists exactly the definitions, in order, by label and description.
+`Music.livePanes` is a ready-made set: the sixteen live panes (`Music/live/panes.ts`); the launch
+grid and the strips pick their tracks, the cut pads their cuts, the dice pad its moves.
+
+## Edit mode
+
+- **Resize.** A handle sits between every two siblings of a split, a finger wide. Dragging it
+  previews the two shares (visual state) and sends one `resizeSplit` on release; the arrow keys on
+  a focused handle send one per step (5% of the pair). Neither gives a region less room than its
+  smallest form.
+- **Dock.** A region's tag is its grip: dragged past 6 px onto another region it shows the zone
+  under the pointer (an outer quarter of an edge: left, right, above, below; else swap) and sends
+  one `dockRegion` on release; a drop outside every region sends nothing. Pressed, the tag opens
+  the region's tools in a row under the head: step moves (left and right within the nearest row,
+  up and down within the nearest column), rename, settings, remove, bind.
+- **Settings.** The sheet lists the kind's settings with their values; each change sends one
+  `configureRegion` with the region's whole next settings (values the kind no longer declares are
+  kept).
+- **Lock.** Lock sends `lockTab` and leaves edit mode. A locked tab shows only "Locked · hold to
+  unlock" in the head: no Edit, frames, handles or tags, and every pane takes every touch. A hold
+  (the system's long press) or Enter unlocks it; a brief press does nothing. Tabs still switch.
+
+Every tool is at least the minimum target, nothing appears only on hover, and every step works
+from the keyboard alone.
 
 ## The intents
 
 | Intent | From |
 |---|---|
 | `selectTab { tab }` | the tab strip |
-| `addTab { title? }`, `renameTab { tab, title }`, `duplicateTab { tab }`, `removeTab { tab }` | the head's tools while editing |
-| `addRegion { tab, kind, row, index? }` | the palette: beside the open region, else on the last row (the app picks the id) |
-| `removeRegion`, `moveRegion { direction }`, `retitleRegion { title }`, `bindRegion { binding }` | the open region's tools |
+| `addTab`, `renameTab`, `duplicateTab`, `removeTab`, `lockTab { tab, locked }` | the head's tools |
+| `addRegion { tab, kind, beside?, zone? }` | the palette: beside the open region, else at the end of the tab (the app picks the id) |
+| `removeRegion`, `moveRegion { direction }`, `retitleRegion`, `bindRegion`, `configureRegion { settings }` | the open region's tools and sheet |
+| `dockRegion { region, target, zone }` | dragging a tag |
+| `resizeSplit { split, shares }` | a handle |
 | `setEditing { editing }` | Edit / Done |
 | `undo`, `redo` | shown only when the app passes `canUndo` / `canRedo` |
 
-They are named after mix's `SurfaceStore` methods. Mix's store has no `retitleRegion` yet, and
-its `addRegion` takes no position. In edit mode a region's frame carries only its tag. Pressing
-the tag opens that region's tools in a row under the head, so a narrow pane never cuts them off.
-Regions move one step at a time: left and right within the row, or up and down into the
-neighbouring row. A region that shares the top or bottom row leaves it for a new row of its own.
+They are named after mix's `SurfaceStore` methods. Mix's store has no `retitleRegion`,
+`configureRegion`, `dockRegion`, `resizeSplit` or `lockTab` yet; its follow-up adds them with
+version 2.
 
 ## What the workspace does not do
 
-- No sizes, ever. A region's forms are its kind's; the solver picks one per placement.
-- No per-use colour. Frames are plates, tags and tools are buttons, the field is a well.
+- No pixels. Shares and forms, never coordinates, so a panel re-themes and fits another window.
+- No per-use colour. Frames, the sheet and the handles' nubs are plates; tags and tools are buttons.
 - No document state, no history, no saving: those are the app's (above).
-- No nesting. Mix's documents are flat rows; a split that stacks two regions in one column is not
-  offered.

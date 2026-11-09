@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { Workspace } from '../../../layout/Workspace/Workspace';
 import { useSurfaceHost } from '../../../layout/Workspace/host.story';
 import { LIVE_PANES, isLivePaneKind, livePanes } from '../panes';
 import { spineTracks } from '../SignalSpine/SignalSpine.fixtures';
+import { cutPadsBoard } from '../CutPads/CutPads.fixtures';
 import { useLiveSet } from './LiveSet.story';
 import { LIVE_DOCUMENT } from './views';
 
@@ -23,7 +24,8 @@ interface LiveProps {
   running?: boolean;
 }
 
-const TARGETS = spineTracks.map((t) => ({ id: t.id, label: t.name, kind: 'track' }));
+/** What a region can follow or pick: the set's tracks, and its cuts. */
+export const LIVE_TARGETS = [...spineTracks.map((t) => ({ id: t.id, label: t.name, kind: 'track' })), ...cutPadsBoard.map((p) => ({ id: p.id, label: p.label, kind: 'cut' }))];
 
 function Live({ start, editing = false, running = true }: LiveProps) {
   const host = useSurfaceHost({ ...LIVE_DOCUMENT, active: start }, { keepEditing: true, editing, titleOf: (kind) => (isLivePaneKind(kind) ? LIVE_PANES[kind].label : kind) });
@@ -33,13 +35,13 @@ function Live({ start, editing = false, running = true }: LiveProps) {
       name="Hidden Signals"
       document={host.document}
       panes={livePanes}
-      targets={TARGETS}
+      targets={LIVE_TARGETS}
       selected={live.selected}
       canUndo={host.canUndo}
       canRedo={host.canRedo}
       editing={host.editing}
       onIntent={host.onIntent}
-      pane={(region, target) => live.content(region, target)}
+      pane={(region, target, settings) => live.content(region, target, settings)}
     />
   );
 }
@@ -58,6 +60,56 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+/**
+ * Looper: the performance board, built only through the builder's intents (views.ts) and locked
+ * for the gig. The song now along the top; the launch grid on four tracks, the cuts and throws
+ * stacked at its right; the four strips under them; the rig's line last. Hold Locked to unlock it.
+ */
+export const Looper: Story = {
+  args: { start: 'looper' },
+  parameters: { frame: { w: 1280, h: 800 } },
+};
+
+/** The board retuned between songs: unlocked by a hold, its grid widened, the cuts docked under the throws, Vox dropped from the strips, locked again. */
+export const LooperRetuned: Story = {
+  name: 'Looper · retuned',
+  args: { start: 'looper' },
+  parameters: { frame: { w: 1280, h: 800 } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const leaf = (kind: string) => canvasElement.querySelector<HTMLElement>(`[data-leaf] [data-kind="${kind}"]`)?.closest<HTMLElement>('[data-leaf]') ?? null;
+    // A brief press leaves it locked; a hold unlocks it.
+    const unlock = canvas.getByRole('button', { name: 'unlock Looper' });
+    await fireEvent.pointerDown(unlock, { pointerId: 3, button: 0, clientX: 1, clientY: 1 });
+    await new Promise((r) => setTimeout(r, 450));
+    await fireEvent.pointerUp(window, { pointerId: 3, clientX: 1, clientY: 1 });
+    await userEvent.click(await canvas.findByRole('button', { name: 'edit the views' }));
+    // Widen the grid against the cuts and throws.
+    const handle = await canvas.findByRole('separator', { name: 'Resize Launch grid and Cut pads' });
+    const before = leaf('loop')!.getBoundingClientRect().width;
+    handle.focus();
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}');
+    await waitFor(() => expect(leaf('loop')!.getBoundingClientRect().width).toBeGreaterThan(before + 20));
+    // Dock the cuts under the throws.
+    const grip = leaf('cuts')!.querySelector<HTMLElement>('[data-part="grip"]')!;
+    const throws = leaf('throws')!.getBoundingClientRect();
+    const g = grip.getBoundingClientRect();
+    await fireEvent.pointerDown(grip, { pointerId: 4, button: 0, clientX: g.left + 8, clientY: g.top + 8 });
+    for (const f of [0.25, 0.5, 0.75, 1]) await fireEvent.pointerMove(grip, { pointerId: 4, clientX: g.left + 8 + (throws.left + throws.width / 2 - g.left - 8) * f, clientY: g.top + 8 + (throws.bottom - 6 - g.top - 8) * f });
+    await fireEvent.pointerUp(grip, { pointerId: 4 });
+    await waitFor(() => expect(leaf('cuts')!.getBoundingClientRect().top).toBeGreaterThan(leaf('throws')!.getBoundingClientRect().top));
+    // Drop Vox from the strips.
+    await userEvent.click(canvas.getByRole('button', { name: 'Track strips tools' }));
+    await userEvent.click(canvas.getByRole('button', { name: 'Track strips settings' }));
+    await userEvent.click(within(canvas.getByRole('group', { name: 'Tracks' })).getByRole('checkbox', { name: 'Vox' }));
+    await waitFor(() => expect([...canvasElement.querySelectorAll<HTMLElement>('.live-track-strips [data-track]')].map((s) => s.dataset.track)).toEqual(['drums', 'bass', 'keys']));
+    // Locked again for the next song.
+    await userEvent.click(canvas.getByRole('button', { name: 'lock Looper' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'unlock Looper' })).toBeTruthy());
+    await expect(canvasElement.querySelectorAll('[data-part="handle"]')).toHaveLength(0);
+  },
+};
 
 /**
  * ONE: the unified board. The night along the top (tempo contour, the song now open into its

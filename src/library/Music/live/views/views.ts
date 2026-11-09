@@ -2,11 +2,12 @@
 // Every tab is rows of region instance ids and the instances, each naming its Music live pane by
 // `kind` (never by id), its title and its binding. The app owns this value: the Workspace draws it
 // and sends every edit as an intent, which the stories apply with `applySurfaceIntent`.
-import type { SurfaceDocument, SurfaceRegion, SurfaceTab } from '../../../layout/Workspace/Workspace.types';
+import { applySurfaceIntent, readDocument, readTab, splits } from '../../../layout/Workspace/surface';
+import type { SurfaceDocument, SurfaceDocumentV2, SurfaceIntent, SurfaceRegion, SurfaceTab } from '../../../layout/Workspace/Workspace.types';
 import { LIVE_PANES, type LivePaneKind } from '../panes';
 
-/** A tab from rows of kinds, as mix's `defaultDocument` builds its presets: fresh instance ids, each bound to the selection. */
-function preset(id: string, title: string, layout: readonly (readonly LivePaneKind[])[]): SurfaceTab {
+/** A tab from rows of kinds, as mix's `defaultDocument` builds its presets (read as a column of rows): fresh instance ids, each bound to the selection. */
+function preset(id: string, title: string, layout: readonly (readonly LivePaneKind[])[], heights?: readonly number[]): SurfaceTab {
   const regions: SurfaceRegion[] = [];
   const rows = layout.map((row) =>
     row.map((kind) => {
@@ -15,7 +16,11 @@ function preset(id: string, title: string, layout: readonly (readonly LivePaneKi
       return region.id;
     }),
   );
-  return { id, title, rows, regions };
+  const tab = readTab({ id, title, rows, regions });
+  // Each row's share of the height: the board's proportions, the rig's line thin.
+  const root = tab.layout;
+  if (!heights || root === null || typeof root === 'string' || root.split !== 'column') return tab;
+  return { ...tab, layout: { ...root, children: root.children.map((c, i) => ({ ...c, share: heights[i] ?? 1 })) } };
 }
 
 /**
@@ -23,19 +28,51 @@ function preset(id: string, title: string, layout: readonly (readonly LivePaneKi
  * header), the clips beside where the harmony is, the song's sections beside where the set lands
  * next, the strips beside the stems, the rig's line last.
  */
-export const ONE_TAB = preset('one', 'ONE', [['river'], ['song', 'dice'], ['loop', 'compass'], ['sections', 'landing'], ['mix', 'stems'], ['rig']]);
+export const ONE_TAB = preset('one', 'ONE', [['river'], ['song', 'dice'], ['loop', 'compass'], ['sections', 'landing'], ['mix', 'stems'], ['rig']], [1.9, 1.1, 2.1, 1.2, 2.9, 0.33]);
 
 /** Follow: the harmony as a place (compass), in time (orbits), the loop that plays it, and the dice. */
-export const FOLLOW_TAB = preset('follow', 'Follow', [['compass', 'orbits'], ['follow', 'dice'], ['rig']]);
+export const FOLLOW_TAB = preset('follow', 'Follow', [['compass', 'orbits'], ['follow', 'dice'], ['rig']], [4, 2, 0.3]);
 
 /** Track: one column as its signal path, the song's stems under it, the throws and the cuts under the hands. */
-export const TRACK_TAB = preset('track', 'Track', [['spine'], ['stems'], ['throws', 'cuts'], ['rig']]);
+export const TRACK_TAB = preset('track', 'Track', [['spine'], ['stems'], ['throws', 'cuts'], ['rig']], [3, 2, 2.6, 0.35]);
 
 /** Hands: the controller twin beside the orbits, the sections and the landing under them. */
-export const HANDS_TAB = preset('hands', 'Hands', [['push', 'orbits'], ['sections', 'landing'], ['rig']]);
+export const HANDS_TAB = preset('hands', 'Hands', [['push', 'orbits'], ['sections', 'landing'], ['rig']], [4, 1.6, 0.3]);
 
 /** A blank page to build on: the river alone, the palette ready. */
-export const MINE_TAB = preset('mine', 'Mine', [['river'], ['rig']]);
+export const MINE_TAB = preset('mine', 'Mine', [['river'], ['rig']], [6, 1]);
+
+/** The four tracks the looper board carries. */
+export const LOOPER_TRACKS = ['drums', 'bass', 'keys', 'vox'] as const;
+
+/**
+ * The looper performance board, built the way a person builds it: every step an intent the builder
+ * sends, applied to an empty tab. The song now along the top; the launch grid with the cuts and the
+ * throws stacked at its right; four track strips under them; the rig's line last; then locked.
+ */
+function looperTab(): SurfaceTab {
+  const title = (kind: string) => (kind in LIVE_PANES ? LIVE_PANES[kind as LivePaneKind].label : kind);
+  let doc: SurfaceDocument = { version: 2, active: 'looper', tabs: [{ id: 'looper', title: 'Looper', layout: null, regions: [] }] };
+  const apply = (intent: SurfaceIntent) => {
+    doc = applySurfaceIntent(doc, intent, { titleOf: title });
+  };
+  const tab = () => readDocument(doc).tabs[0];
+  const idOf = (kind: string) => tab().regions.find((r) => r.kind === kind)!.id;
+  for (const kind of ['song', 'loop', 'mix'] as const) apply({ type: 'addRegion', tab: 'looper', kind });
+  apply({ type: 'addRegion', tab: 'looper', kind: 'cuts', beside: idOf('loop'), zone: 'right' });
+  apply({ type: 'addRegion', tab: 'looper', kind: 'throws', beside: idOf('cuts'), zone: 'below' });
+  apply({ type: 'addRegion', tab: 'looper', kind: 'rig' });
+  apply({ type: 'configureRegion', tab: 'looper', region: idOf('loop'), settings: { tracks: [...LOOPER_TRACKS] } });
+  apply({ type: 'configureRegion', tab: 'looper', region: idOf('mix'), settings: { tracks: [...LOOPER_TRACKS] } });
+  const [root, row] = splits(tab().layout);
+  apply({ type: 'resizeSplit', tab: 'looper', split: root.id, shares: [1, 3.4, 2.8, 0.35] });
+  apply({ type: 'resizeSplit', tab: 'looper', split: row.id, shares: [2.2, 1] });
+  apply({ type: 'lockTab', tab: 'looper', locked: true });
+  return tab();
+}
+
+/** The looper performance board: the first panel built to be played. */
+export const LOOPER_TAB = looperTab();
 
 /** The live views, opening on ONE. */
-export const LIVE_DOCUMENT: SurfaceDocument = { version: 1, active: 'one', tabs: [ONE_TAB, FOLLOW_TAB, TRACK_TAB, HANDS_TAB, MINE_TAB] };
+export const LIVE_DOCUMENT: SurfaceDocumentV2 = { version: 2, active: 'one', tabs: [LOOPER_TAB, ONE_TAB, FOLLOW_TAB, TRACK_TAB, HANDS_TAB, MINE_TAB] };

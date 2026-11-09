@@ -7,7 +7,7 @@ import { Workspace } from './Workspace';
 import WorkspaceSvelte from './Workspace.svelte';
 import { workspacePane } from './content.story';
 import { useSurfaceHost } from './host.story';
-import { applySurfaceIntent } from './surface';
+import { applySurfaceIntent, readDocument } from './surface';
 import { workspaceArgTypes, workspaceDocument, workspaceStories as s } from './Workspace.fixtures';
 import type { SurfaceDocument, SurfaceIntent } from './Workspace.types';
 
@@ -28,7 +28,7 @@ const meta = {
       capability: 'live-surface-editing',
       purpose: 'Perform and edit modes of the surface an app composes its DAW on: every edit as one intent the app applies, undo and redo as the app’s, and the visual state zen keeps.',
       requirement: 'Every edit leaves as one intent',
-      shall: 'Every change a person makes through the surface SHALL leave it as exactly one intent naming the edit and its target: choosing, adding, renaming, duplicating or removing a tab; adding, removing, moving (left, right, up, down), retitling or rebinding a region; and undo and redo.',
+      shall: 'Every change a person makes through the surface SHALL leave it as exactly one intent naming the edit and its target: choosing, adding, renaming, duplicating, removing, locking or unlocking a tab; adding, removing, moving (left, right, up, down), docking, retitling, rebinding or configuring a region; resizing a split; and undo and redo.',
     },
   },
   args: { name: 'Live', document: workspaceDocument },
@@ -81,16 +81,16 @@ export const MovingARegion: Story = scenario(
 export const AddingFromThePalette: Story = scenario(
   {
     name: 'Adding from the palette',
-    when: 'a person adds a kind from the palette to a row',
+    when: 'a person adds a kind from the palette beside a region',
     then: 'the surface sends one add intent naming the tab, the kind and where it goes, and the app picks the new instance’s id',
     act: async ({ canvasElement }) => {
-      await userEvent.click(within(canvasElement).getByRole('button', { name: 'add Transitions to this tab' }));
+      await userEvent.click(within(canvasElement).getByRole('button', { name: 'add Transitions beside Loop grid' }));
     },
     check: async ({ args }) => {
-      await expect(sent(args)).toEqual([{ type: 'addRegion', tab: 'stage', kind: 'cuts', row: 1 }]);
+      await expect(sent(args)).toEqual([{ type: 'addRegion', tab: 'stage', kind: 'cuts', beside: 'stage-1', zone: 'right' }]);
     },
   },
-  spied(s.Palette),
+  spied(s.Palette, { args: { editingRegion: 'stage-1' } }),
 );
 
 export const RebindingARegion: Story = scenario(
@@ -191,10 +191,10 @@ export const ApplyingTheSurfacesOwnIntents: Story = scenario(
     },
     check: async ({ canvasElement }) => {
       const canvas = within(canvasElement);
-      // Mix joined the grid's row, and Stems sits beside it.
+      // Mix stepped up above the grid, and Stems sits beside it.
       const frames = [...canvasElement.querySelectorAll<HTMLElement>('[data-part="frame"]')].map((f) => f.dataset.kind);
-      await expect(frames).toEqual(['loopGrid', 'mix', 'stems']);
-      await waitFor(() => expect(canvas.getByTestId('pane-stage-1').parentElement!.closest('[data-region]')).toBeTruthy());
+      await expect(frames).toEqual(['mix', 'stems', 'loopGrid']);
+      await expect(canvasElement.querySelector('[data-leaf="stage-2"]')!.parentElement).toHaveAttribute('data-split', 'row');
       // The app's history: undo takes the add back.
       await userEvent.click(canvas.getByRole('button', { name: 'undo' }));
       await waitFor(() => expect(canvasElement.querySelectorAll('[data-part="frame"]').length).toBe(2));
@@ -220,6 +220,38 @@ export const AnIntentThatCantApply: Story = scenario(
         { type: 'selectTab', tab: 'nowhere' },
       ];
       for (const intent of stale) await expect(applySurfaceIntent(doc, intent)).toBe(doc);
+    },
+  },
+  { render: () => <Workspace name="Live" document={workspaceDocument} panes={s.Edit.args!.panes} pane={workspacePane} /> },
+) as Story;
+
+export const DockingThroughTheApplier: Story = scenario(
+  {
+    requirement: 'Layout intents apply without a store',
+    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
+    name: 'Docking through the applier',
+    when: 'a story applies a dock intent placing one region below another',
+    then: 'the returned layout holds a column of the two where the target was, and the region is gone from where it was',
+    check: async () => {
+      const next = readDocument(applySurfaceIntent(workspaceDocument, { type: 'dockRegion', tab: 'grid', region: 'grid-2', target: 'grid-1', zone: 'below' }));
+      const layout = next.tabs.find((t) => t.id === 'grid')!.layout;
+      await expect(layout).toMatchObject({ split: 'column', children: [{ node: 'grid-1' }, { node: 'grid-2' }] });
+      const stage = readDocument(applySurfaceIntent(workspaceDocument, { type: 'dockRegion', tab: 'stage', region: 'stage-2', target: 'stage-1', zone: 'left' })).tabs[0].layout;
+      await expect(stage).toMatchObject({ split: 'row', children: [{ node: 'stage-2' }, { node: 'stage-1' }] });
+    },
+  },
+  { render: () => <Workspace name="Live" document={workspaceDocument} panes={s.Edit.args!.panes} pane={workspacePane} /> },
+) as Story;
+
+export const AResizeNamingNoSplit: Story = scenario(
+  {
+    requirement: 'Layout intents apply without a store',
+    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
+    name: 'A resize naming no split',
+    when: 'a resize intent names a split the tab doesn’t hold',
+    then: 'the applier returns the document unchanged',
+    check: async () => {
+      await expect(applySurfaceIntent(workspaceDocument, { type: 'resizeSplit', tab: 'stage', split: 'nowhere', shares: [1, 1] })).toBe(workspaceDocument);
     },
   },
   { render: () => <Workspace name="Live" document={workspaceDocument} panes={s.Edit.args!.panes} pane={workspacePane} /> },

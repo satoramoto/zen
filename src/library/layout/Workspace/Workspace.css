@@ -6,6 +6,7 @@
 .yh-workspace {
   --yh-workspace-gap: var(--space-2);
   --yh-workspace-frame-gap: var(--space-1);
+  --yh-workspace-handle: var(--space-2);
 
   display: flex;
   flex-direction: column;
@@ -146,4 +147,183 @@
   height: 100%;
   /* Clearance for the floating frame bar (edit chrome never covers the region's top). */
   padding-top: calc(var(--control-h) + var(--space-1));
+}
+
+/* The layout: each split a grid of its children's shares; a leaf fills its track and is measured. */
+.yh-workspace__layout {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+}
+
+.yh-workspace__split {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  gap: var(--yh-workspace-gap);
+}
+
+.yh-workspace__split[data-split='row'] {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.yh-workspace__split[data-split='column'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.yh-workspace[data-editing] .yh-workspace__split {
+  gap: 0;
+}
+
+.yh-workspace__leaf {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.yh-workspace__leaf > * {
+  min-width: 0;
+  min-height: 0;
+}
+
+.yh-workspace__leaf[data-dragging] {
+  opacity: 0.5;
+}
+
+/* While editing, a handle is a finger-wide track between two children: it takes the pointer and
+   the arrow keys. Its line is drawn by the frames either side; the handle itself only shows focus. */
+.yh-workspace[data-editing] {
+  --yh-workspace-handle: max(var(--space-3), calc(var(--control-h) / 2));
+}
+
+.yh-workspace__handle {
+  position: relative;
+  /* Above the panes either side and their frame bars (z 1), so its finger-wide reach (::before) wins over their edges. */
+  z-index: 2;
+  min-width: 0;
+  min-height: 0;
+  touch-action: none;
+}
+
+.yh-workspace__handle[aria-orientation='vertical'] {
+  cursor: col-resize;
+}
+
+.yh-workspace__handle[aria-orientation='horizontal'] {
+  cursor: row-resize;
+}
+
+/* The handle's target reaches the minimum target without taking that much room from the panes. */
+.yh-workspace__handle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.yh-workspace__handle[aria-orientation='vertical']::before {
+  inset-inline: calc((var(--yh-workspace-handle) - max(var(--yh-workspace-handle), var(--control-h))) / 2);
+}
+
+.yh-workspace__handle[aria-orientation='horizontal']::before {
+  inset-block: calc((var(--yh-workspace-handle) - max(var(--yh-workspace-handle), var(--control-h))) / 2);
+}
+
+.yh-workspace__handle {
+  display: grid;
+  place-items: center;
+}
+
+/* The handle's nub: a raised pill across its middle, long along the seam, so the seam reads as
+   something to take hold of. */
+.yh-workspace__nub {
+  pointer-events: none;
+}
+
+.yh-workspace__handle[aria-orientation='vertical'] > .yh-workspace__nub {
+  width: calc(var(--space-1) * 1.5);
+  height: calc(var(--control-h) * 1.5);
+}
+
+.yh-workspace__handle[aria-orientation='horizontal'] > .yh-workspace__nub {
+  width: calc(var(--control-h) * 1.5);
+  height: calc(var(--space-1) * 1.5);
+}
+
+.yh-workspace__handle:focus-visible > .yh-workspace__nub,
+.yh-workspace__handle:hover > .yh-workspace__nub {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.yh-workspace__grip {
+  display: inline-flex;
+  touch-action: none;
+  cursor: grab;
+}
+
+/* A drop zone: the part of the target the dragged region will take. Drawn with the frame's own
+   outline colour, never a fill, so the pane under it stays readable. */
+.yh-workspace__drop {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  outline: 2px solid var(--selected);
+  outline-offset: -2px;
+  border-radius: var(--radius-card);
+}
+
+.yh-workspace__drop[data-zone='left'] {
+  inset: 0 50% 0 0;
+}
+
+.yh-workspace__drop[data-zone='right'] {
+  inset: 0 0 0 50%;
+}
+
+.yh-workspace__drop[data-zone='above'] {
+  inset: 0 0 50% 0;
+}
+
+.yh-workspace__drop[data-zone='below'] {
+  inset: 50% 0 0 0;
+}
+
+.yh-workspace__drop[data-zone='swap'] {
+  inset: 0;
+}
+
+.yh-workspace__leaf[data-cramped] .yh-workspace__frame {
+  outline: 1px dashed var(--border-strong);
+  outline-offset: -1px;
+}
+
+/* The settings sheet: a row of fields under the region's tools. */
+.yh-workspace__sheet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  align-items: flex-start;
+  min-width: 0;
+  padding: var(--space-2);
+}
+
+.yh-workspace__setting {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.yh-workspace__picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+
+.yh-workspace__unlock {
+  display: inline-flex;
 }

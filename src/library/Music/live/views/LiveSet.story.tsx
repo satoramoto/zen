@@ -36,7 +36,8 @@ import { throwPads } from '../ThrowPads/ThrowPads.fixtures';
 import { TrackStrips, type TrackStrip } from '../TrackStrips/TrackStrips';
 import { stripReturns, stripTracks } from '../TrackStrips/TrackStrips.fixtures';
 import { useBeat } from './clock';
-import type { SurfaceRegion } from '../../../layout/Workspace/Workspace.types';
+import type { ResolvedSettings, SurfaceRegion } from '../../../layout/Workspace/Workspace.types';
+import type { DiceMove } from '../DicePad/DicePad';
 
 /** The set's tempo: Hidden Signals. */
 export const TEMPO = 112;
@@ -101,18 +102,24 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
   };
 
   const content = useMemo(() => {
-    return (region: SurfaceRegion, bound?: string): ReactNode => {
+    return (region: SurfaceRegion, bound?: string, settings: ResolvedSettings = {}): ReactNode => {
       const trackId = bound ?? selected;
+      // What the region's settings pick of the set: its tracks, its cuts, its moves (all when unset).
+      const picks = (key: string): readonly string[] | undefined => (Array.isArray(settings[key]) ? (settings[key] as readonly string[]) : undefined);
+      const only = <T extends { id: string }>(all: readonly T[], key: string): readonly T[] => {
+        const ids = picks(key);
+        return ids ? all.filter((x) => ids.includes(x.id)) : all;
+      };
       const track = spineTracks.find((t) => t.id === trackId) ?? spineTracks[2];
       switch (region.kind) {
         case 'river':
           return <SetlistRiver songs={riverSongs} progress={0.38 + (beat % 64) / 640} barsToCue={barsLeft} onPick={fn()} onScene={(s) => setScene(Math.max(0, ['bed', 'bass', 'full', 'break', 'kept'].indexOf(s)))} />;
         case 'loop':
-          return <LaunchGrid songs={launchSongs} tracks={launchTracks} loop={{ phase: (beat % 32) / 32, bars: 8 }} selected={selected} onLaunch={fn()} onStop={fn()} onStopTrack={fn()} onSelectTrack={setSelected} onToggleSong={fn()} />;
+          return <LaunchGrid songs={launchSongs} tracks={only(launchTracks, 'tracks')} loop={{ phase: (beat % 32) / 32, bars: 8 }} selected={selected} onLaunch={fn()} onStop={fn()} onStopTrack={fn()} onSelectTrack={setSelected} onToggleSong={fn()} />;
         case 'mix':
           return (
             <TrackStrips
-              tracks={strips}
+              tracks={only(strips, 'tracks')}
               returns={stripReturns}
               selected={selected}
               onLevel={({ track: t, level }) => setStrips((all) => all.map((s) => (s.id === t ? { ...s, level } : s)))}
@@ -136,7 +143,7 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
             />
           );
         case 'dice':
-          return <DicePad target={track.name} scaleLock={scaleLock} onScaleLock={setScaleLock} chaos={chaos} onChaos={setChaos} onDice={fn()} />;
+          return <DicePad target={track.name} moves={picks('moves') as readonly DiceMove[] | undefined} scaleLock={scaleLock} onScaleLock={setScaleLock} chaos={chaos} onChaos={setChaos} onDice={fn()} />;
         case 'sections':
           return <SectionBar sections={songSections} current="verse" queued={queuedSection} hint="change on phrase" onSection={setQueuedSection} />;
         case 'stems':
@@ -208,7 +215,7 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
         case 'landing':
           return <LandingDial via="RISER" lands="Wire" landsHint="118 · G" hit="DROP" target={target} onTarget={setTarget} length={length} onLength={setLength} barsLeft={Math.min(barsLeft, length)} beat={beat} armed onCancel={fn()} />;
         case 'cuts':
-          return <CutPads pads={cuts} selected="riser" onFire={(c) => setCuts((all) => all.map((p) => (p.id === c ? { ...p, state: p.state === 'fired' ? 'idle' : 'fired' } : p)))} />;
+          return <CutPads pads={only(cuts, 'pads')} selected="riser" onFire={(c) => setCuts((all) => all.map((p) => (p.id === c ? { ...p, state: p.state === 'fired' ? 'idle' : 'fired' } : p)))} />;
         case 'throws':
           return <ThrowPads pads={throws} onMove={({ id: pad, x, y }) => setThrows((all) => all.map((p) => (p.id === pad ? { ...p, x, y, trail: [...(p.trail ?? []).slice(-23), { x: p.x, y: p.y }] } : p)))} />;
         case 'rig':
