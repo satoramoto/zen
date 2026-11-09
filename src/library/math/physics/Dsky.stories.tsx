@@ -23,7 +23,7 @@ async function raise1202(el: HTMLElement) {
   await press(el, 'Advance 10 s', 2);
 }
 
-export const BrakingDisplaysItsNoun = scenario(
+export const BrakingDisplaysItsNoun: Story = scenario(
   {
     name: 'Braking displays its noun',
     when: 'P63 is running and displaying its monitor noun',
@@ -46,9 +46,9 @@ export const BrakingDisplaysItsNoun = scenario(
     },
   },
   {},
-) as Story;
+);
 
-export const AProgramAlarmLightsTheLamp = scenario(
+export const AProgramAlarmLightsTheLamp: Story = scenario(
   {
     name: 'A program alarm lights the lamp',
     when: 'a 1202 is raised',
@@ -65,9 +65,9 @@ export const AProgramAlarmLightsTheLamp = scenario(
     },
   },
   { args: { load: 'radar' } },
-) as Story;
+);
 
-export const KeyRelAfterAnAlarm = scenario(
+export const KeyRelAfterAnAlarm: Story = scenario(
   {
     name: 'KEY REL after an alarm',
     given: 'a 1202 has been raised and the crew has called up its code with V05N09',
@@ -88,4 +88,4 @@ export const KeyRelAfterAnAlarm = scenario(
     },
   },
   { args: { load: 'radar' } },
-) as Story;
+);

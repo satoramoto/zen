@@ -16,7 +16,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const EnergyIsKept = scenario(
+export const EnergyIsKept: Story = scenario(
   {
     name: 'Energy is kept',
     when: 'a transfer is integrated for its full duration at the default step',
@@ -29,9 +29,9 @@ export const EnergyIsKept = scenario(
     },
   },
   {},
-) as Story;
+);
 
-export const FreeReturn = scenario(
+export const FreeReturn: Story = scenario(
   {
     name: 'Free return',
     when: 'the free-return trajectory runs to its end',
@@ -49,4 +49,4 @@ export const FreeReturn = scenario(
     },
   },
   {},
-) as Story;
+);
