@@ -1,300 +1,316 @@
-/* Zen Physics & Apollo Guidance Simulator styling */
+/* The physics module's views: the descent simulator, the DSKY, the sources table and the orbit
+   simulator. Colours, faces, sizes and radii come from the contract only. */
 
 .zen-physics {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4, 1.25rem);
-  color: var(--text-1, #f0f0f0);
-  background: var(--surface, #121316);
-  padding: var(--space-4, 1.25rem);
-  border-radius: 8px;
-  border: 1px solid var(--border, #26282e);
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  container-type: inline-size;
+  display: grid;
+  gap: var(--space-4);
   min-width: 0;
-  box-sizing: border-box;
+  color: var(--text-1);
 }
 
 .zen-physics__layout {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: var(--space-4, 1.25rem);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
   min-width: 0;
 }
-
-@media (max-width: 860px) {
+@container (min-width: 52rem) {
   .zen-physics__layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   }
 }
 
-.zen-physics__viewport {
-  position: relative;
-  background: var(--surface-sunken, #0a0b0d);
-  border: 1px solid var(--border, #26282e);
-  border-radius: 6px;
-  overflow: hidden;
+.zen-physics__panel {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border);
+}
+
+.zen-physics__row {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: var(--space-2);
   align-items: center;
-  justify-content: center;
-  min-height: 420px;
+  min-width: 0;
+}
+/* A long label wraps inside its button rather than pushing past the panel at phone width. */
+.zen-physics__row > .yh-button {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  white-space: normal;
+}
+.zen-physics__row > .yh-button .yh-button__label {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  white-space: normal;
+}
+
+/* The DSKY's panel: its rows keep their height when the panel is stretched to its neighbour's. */
+.zen-physics__panel[data-dsky] {
+  align-content: start;
 }
 
 .zen-physics__svg {
   display: block;
-  width: 100%;
-  height: 100%;
-  max-height: 520px;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 26rem;
+  border-radius: var(--radius-input);
+  background: var(--surface-0);
+}
+.zen-physics__surface {
+  fill: var(--surface-3);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+.zen-physics__grid {
+  stroke: var(--border);
+  stroke-width: 0.6;
+}
+.zen-physics__trail {
+  fill: none;
+  stroke: var(--hue-1);
+  stroke-width: 1.6;
+}
+.zen-physics__thrust {
+  stroke: var(--warning);
+  stroke-width: 2;
+}
+.zen-physics__craft {
+  fill: var(--text-1);
+}
+.zen-physics__site {
+  fill: var(--accent);
+}
+.zen-physics__label {
+  fill: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.zen-physics__body {
+  fill: var(--surface-3);
+  stroke: var(--text-3);
+}
+.zen-physics__orbit {
+  fill: none;
+  stroke: var(--border);
+  stroke-dasharray: 4 4;
+}
+.zen-physics__path {
+  fill: none;
+  stroke: var(--hue-2);
+  stroke-width: 1.5;
+}
+.zen-physics__mark {
+  fill: var(--hue-3);
 }
 
-.zen-physics__sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3, 0.75rem);
-}
-
-/* DSKY Display (Apollo Guidance Computer UI) */
-.zen-dsky {
-  background: #18191c;
-  border: 2px solid #2e3037;
-  border-radius: 8px;
-  padding: 12px;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7), 0 4px 12px rgba(0, 0, 0, 0.4);
-  font-family: var(--font-mono, "Courier New", monospace);
-}
-
-.zen-dsky__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #8e929b;
-}
-
-.zen-dsky__annunciators {
+.zen-physics__readouts {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-  margin-bottom: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
 }
-
-.zen-dsky__lamp {
-  background: #0f1012;
-  color: #383a42;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-align: center;
-  padding: 3px 2px;
-  border-radius: 2px;
-  border: 1px solid #202227;
-  user-select: none;
-  transition: all 0.15s ease;
-}
-
-.zen-dsky__lamp--active {
-  background: #f59e0b;
-  color: #000;
-  box-shadow: 0 0 8px #f59e0b;
-  border-color: #fbbf24;
-}
-
-.zen-dsky__lamp--alarm {
-  background: #ef4444;
-  color: #fff;
-  box-shadow: 0 0 8px #ef4444;
-  border-color: #f87171;
-}
-
-.zen-dsky__lamp--success {
-  background: #10b981;
-  color: #000;
-  box-shadow: 0 0 8px #10b981;
-  border-color: #34d399;
-}
-
-.zen-dsky__screen {
-  background: #060807;
-  border: 1px solid #1c221e;
-  border-radius: 4px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.zen-dsky__row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.zen-dsky__label {
-  font-size: 0.7rem;
-  color: #526359;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-}
-
-.zen-dsky__digits {
-  color: #6ee7b7;
-  font-size: 1.35rem;
-  font-weight: bold;
-  letter-spacing: 0.18em;
-  text-shadow: 0 0 8px rgba(110, 231, 183, 0.45);
-}
-
-.zen-dsky__digits--amber {
-  color: #fbbf24;
-  text-shadow: 0 0 8px rgba(251, 191, 36, 0.45);
-}
-
-.zen-dsky__registers {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 4px;
-  border-top: 1px dashed #1a2720;
-  padding-top: 6px;
-}
-
-.zen-dsky__reg {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.zen-dsky__reg-val {
-  color: #a7f3d0;
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-shadow: 0 0 6px rgba(167, 243, 208, 0.35);
-}
-
-/* Control panels and gauges */
-.zen-physics__panel {
-  background: var(--surface-sunken, #0d0e12);
-  border: 1px solid var(--border, #26282e);
-  border-radius: 6px;
-  padding: var(--space-3, 0.75rem);
-}
-
-.zen-physics__stats {
+.zen-physics__readouts div {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2, 0.5rem);
-  font-size: 0.8rem;
-}
-
-.zen-physics__stat-item {
-  display: flex;
-  flex-direction: column;
   gap: 2px;
+  min-width: 0;
+}
+.zen-physics__readouts dt {
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+.zen-physics__readouts dd {
+  margin: 0;
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: var(--size-body);
+  font-variant-numeric: tabular-nums;
 }
 
-.zen-physics__stat-label {
-  color: var(--text-3, #767c8b);
-  font-size: 0.7rem;
-  text-transform: uppercase;
+.zen-physics__log {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  max-block-size: 14rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--size-caption);
+  color: var(--text-2);
+}
+.zen-physics__log li[data-kind='alarm'] {
+  color: var(--warning);
+}
+.zen-physics__log li[data-kind='touchdown'] {
+  color: var(--success);
 }
 
-.zen-physics__stat-value {
-  color: var(--text-1, #f0f0f0);
-  font-family: var(--font-mono, monospace);
-  font-weight: 600;
+.zen-physics__caption {
+  margin: 0;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  line-height: 1.5;
 }
 
-.zen-physics__controls {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3, 0.75rem);
+/* The sources table. */
+.zen-physics__scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+.zen-physics__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+.zen-physics__table caption {
+  padding-block-end: var(--space-2);
+  color: var(--text-2);
+  text-align: start;
+}
+.zen-physics__table th,
+.zen-physics__table td {
+  padding: var(--space-1) var(--space-2);
+  border-block-end: var(--border-width) solid var(--border);
+  color: var(--text-1);
+  text-align: start;
+  vertical-align: top;
+}
+.zen-physics__table th {
+  color: var(--text-3);
+  font-weight: 500;
+}
+.zen-physics__table code {
+  font-family: var(--font-mono);
 }
 
-.zen-physics__control-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2, 0.5rem);
+/* The DSKY: the electroluminescent panel on the left, the keyboard below. */
+.zen-dsky {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
+  min-width: 0;
 }
-
-.zen-physics__buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.zen-dsky__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
 }
-
-.zen-physics__btn {
-  background: var(--surface, #1e2026);
-  color: var(--text-1, #e2e4e9);
-  border: 1px solid var(--border, #353842);
-  border-radius: 4px;
-  padding: 6px 10px;
-  font-size: 0.75rem;
-  font-weight: 600;
+.zen-dsky__lamps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-1);
+  align-content: start;
+}
+/* With room, the lamps sit beside the display panel in two columns, as on the DSKY. */
+@container (min-width: 30rem) {
+  .zen-dsky__top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  }
+  .zen-dsky__lamps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.zen-dsky__lamp {
+  padding: var(--space-1);
+  border-radius: var(--radius-input);
+  background: var(--surface-0);
+  color: var(--text-4);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  text-align: center;
+}
+.zen-dsky__lamp[data-lit] {
+  background: var(--warning);
+  color: var(--warning-text);
+}
+.zen-dsky__lamp[data-lamp='comp-acty'][data-lit] {
+  background: var(--success);
+  color: var(--success-text);
+}
+.zen-dsky__panel {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-radius: var(--radius-input);
+  background: var(--surface-0);
+}
+.zen-dsky__windows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+.zen-dsky__window,
+.zen-dsky__register {
+  display: grid;
+  justify-items: end;
+}
+.zen-dsky__name {
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+.zen-dsky__digits {
+  color: var(--success);
+  font-family: var(--font-mono);
+  font-size: var(--size-heading);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  min-block-size: 1.2em;
+}
+.zen-dsky__window[data-flashing] .zen-dsky__digits {
+  animation: zen-dsky-flash 1s steps(2, start) infinite;
+}
+@keyframes zen-dsky-flash {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zen-dsky__window[data-flashing] .zen-dsky__digits {
+    animation: none;
+    text-decoration: underline;
+  }
+}
+.zen-dsky__keys {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+.zen-dsky__key {
+  min-block-size: var(--control-h);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  padding-inline: 0;
   cursor: pointer;
-  transition: all 0.12s ease;
 }
-
-.zen-physics__btn:hover {
-  background: #2b2e38;
-  border-color: var(--accent, #6366f1);
+.zen-dsky__key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
-
-.zen-physics__btn--primary {
-  background: var(--accent, #4f46e5);
-  border-color: #6366f1;
-  color: #fff;
+.zen-dsky__key:active {
+  background: var(--surface-3);
 }
-
-.zen-physics__btn--primary:hover {
-  background: #4338ca;
-}
-
-.zen-physics__btn--alarm {
-  background: #451a1a;
-  color: #fca5a5;
-  border-color: #7f1d1d;
-}
-
-.zen-physics__btn--alarm:hover {
-  background: #7f1d1d;
-  color: #fff;
-}
-
-.zen-physics__badge {
-  display: inline-block;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.zen-physics__badge--braking {
-  background: #1e3a8a;
-  color: #93c5fd;
-}
-
-.zen-physics__badge--approach {
-  background: #3730a3;
-  color: #c7d2fe;
-}
-
-.zen-physics__badge--rod {
-  background: #065f46;
-  color: #6ee7b7;
-}
-
-.zen-physics__badge--touchdown {
-  background: #064e3b;
-  color: #34d399;
-}
-
-.zen-physics__badge--crash {
-  background: #7f1d1d;
-  color: #fca5a5;
+@container (min-width: 30rem) {
+  .zen-dsky__key {
+    font-size: var(--size-label);
+  }
 }

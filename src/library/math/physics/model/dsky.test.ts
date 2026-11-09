@@ -34,6 +34,8 @@ describe('the keys', () => {
     const r = pressKey(startDsky(), 'PRO');
     expect(r.proceed).toBe(true);
     expect(r.dsky.flashing).toBe(false);
+    // Once lit, the display moves to P63's monitor noun.
+    expect([followDescent(r.dsky, 'P63', [], true).verb, followDescent(r.dsky, 'P63', [], true).noun]).toEqual([6, 63]);
   });
   it('an alarm lights PROG, V05N09 shows its code, KEY REL gives the monitor noun back, RSET puts the lamp out', () => {
     let d = followDescent(startDsky(), 'P63', [], true);

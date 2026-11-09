@@ -114,7 +114,8 @@ export const startDsky = (): DskyState => ({ program: 'P63', verb: 99, noun: 62,
 /** Follow the descent: its program, and any new alarms. */
 export function followDescent(d: DskyState, program: DescentProgram, alarms: number[], ignited: boolean): DskyState {
   let next = { ...d };
-  if (ignited && d.flashing) next = { ...next, flashing: false, verb: 6, noun: MONITOR_NOUN[program] };
+  // Once the engine is lit, V99N62 (flashing or answered with PRO) gives way to the program's monitor noun.
+  if (ignited && (d.flashing || (d.verb === 99 && d.noun === 62))) next = { ...next, flashing: false, verb: 6, noun: MONITOR_NOUN[program] };
   if (program !== d.program) {
     next = { ...next, program };
     if (!next.called && !next.flashing) next = { ...next, verb: 6, noun: MONITOR_NOUN[program] };

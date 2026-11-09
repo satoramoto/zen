@@ -1,5 +1,6 @@
 /**
- * Zen Physics module: numerical mechanics, orbital dynamics, and Apollo guidance simulation.
+ * Zen Physics module: numerical mechanics, orbital dynamics, and Apollo 11's descent as Luminary 099
+ * guided it. `SOURCES.md` lists where every number comes from.
  */
 
 // Core models
@@ -8,9 +9,13 @@ export * from './model/integrator';
 export * from './model/gravity';
 export * from './model/rocket';
 export * from './model/earthMoonTransfer';
-export * from './model/apolloDescent';
+export * from './model/sources';
+export * from './model/executive';
+export * from './model/lunarDescent';
+export * from './model/dsky';
 
 // Interactive UI components
-export * from './DskyDisplay';
+export * from './Dsky';
+export * from './DescentSources';
 export * from './ApolloDescentSimulator';
 export * from './OrbitSimulator';

@@ -1,320 +1,255 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '../../components/core/Button/Button';
+import { Segmented } from '../../components/core/Segmented/Segmented';
+import { Dsky } from './Dsky';
+import { followDescent, pressKey, startDsky, type DskyKey, type DskyState } from './model/dsky';
 import {
-  ApolloDescentState,
-  getApolloTelemetry,
-  INITIAL_APOLLO_11_DESCENT_STATE,
-  stepApolloDescent,
-} from './model/apolloDescent';
-import { DskyDisplay } from './DskyDisplay';
+  APOLLO_11_LOAD,
+  dskyReadout,
+  flyToEnd,
+  ignite,
+  ignitionState,
+  NO_LOAD,
+  rangeToSite,
+  altitude,
+  stepDescent,
+  type DescentLoad,
+  type DescentState,
+} from './model/lunarDescent';
+import { src } from './model/sources';
 import './physics.css';
 
+const FT = 0.3048;
+
+export type DescentLoadName = 'none' | 'radar' | 'apollo-11';
+const LOADS: Record<DescentLoadName, DescentLoad> = {
+  none: NO_LOAD,
+  radar: { radarSteal: src('radarSteal'), monitorRequests: [] },
+  'apollo-11': APOLLO_11_LOAD,
+};
+const LOAD_NAMES: DescentLoadName[] = ['none', 'radar', 'apollo-11'];
+const SPEEDS = [1, 10, 50];
+
 export interface ApolloDescentSimulatorProps {
-  /** Optional initial custom state */
-  readonly initialState?: ApolloDescentState;
-  /** Whether simulation auto-plays on load */
-  readonly autoPlay?: boolean;
+  /** The executive's extra load: none, the rendezvous radar's steal, or Apollo 11's (the radar and the crew's displays). Default none. */
+  load?: DescentLoadName;
+  /** Start playing at once. Default false. */
+  autoPlay?: boolean;
 }
 
-export const ApolloDescentSimulator: React.FC<ApolloDescentSimulatorProps> = ({
-  initialState = INITIAL_APOLLO_11_DESCENT_STATE,
-  autoPlay = false,
-}) => {
-  const [state, setState] = useState<ApolloDescentState>(initialState);
-  const [playing, setPlaying] = useState<boolean>(autoPlay);
-  const [simSpeed, setSimSpeed] = useState<number>(1);
-  const [trail, setTrail] = useState<Array<{ x: number; y: number }>>([
-    { x: initialState.pos.x, y: initialState.pos.y },
-  ]);
+interface Sim {
+  descent: DescentState;
+  dsky: DskyState;
+}
 
-  const animFrame = useRef<number | null>(null);
-  const lastTime = useRef<number | null>(null);
+const start = (load: DescentLoadName): Sim => ({ descent: ignitionState(LOADS[load]), dsky: startDsky() });
 
-  const resetFlight = useCallback(() => {
-    setState(initialState);
-    setTrail([{ x: initialState.pos.x, y: initialState.pos.y }]);
-    setPlaying(false);
-  }, [initialState]);
+/** Bring the DSKY up to date with the descent. */
+const sync = (sim: Sim): Sim => ({ ...sim, dsky: followDescent(sim.dsky, sim.descent.program, sim.descent.alarms, sim.descent.status !== 'awaiting-ignition') });
 
-  const stepSim = useCallback((dt: number, manual?: { pitchCommand?: number; rodDelta?: number }) => {
-    setState((curr) => {
-      if (curr.flightStatus === 'TOUCHDOWN_SUCCESS' || curr.flightStatus === 'CRASH_VELOCITY_HIGH') {
-        return curr;
-      }
-      const next = stepApolloDescent(
-        curr,
-        {
-          pitchCommand: manual?.pitchCommand,
-          rodCommandDelta: manual?.rodDelta,
-        },
-        dt
-      );
+/** The profile: altitude against range, at a scale that follows the phase. */
+function Profile({ descent, trail }: { descent: DescentState; trail: { x: number; y: number }[] }) {
+  const range = rangeToSite(descent);
+  const alt = altitude(descent);
+  const [rx, ry] = Math.abs(range) > 25_000 || alt > 4000 ? [480_000, 16_000] : Math.abs(range) > 1200 || alt > 400 ? [25_000, 4_000] : [1200, 400];
+  const W = 600;
+  const H = 260;
+  const x = (r: number) => 20 + ((r + rx) / (rx * 1.04)) * (W - 40);
+  const y = (h: number) => H - 24 - (h / ry) * (H - 50);
+  const points = trail.filter((p) => p.x >= -rx * 1.02).map((p) => `${x(p.x).toFixed(1)},${y(p.y).toFixed(1)}`);
+  const d = dskyReadout(descent);
+  const pitchRad = (d.pitch * Math.PI) / 180;
+  const label = `${descent.program}: ${Math.round(alt / FT).toLocaleString('en')} ft up, ${Math.round(Math.abs(range) / 1000)} km from the landing site, ${Math.round(Math.abs(d.horizontal) / FT)} ft/s across, ${Math.round(-d.altitudeRate / FT)} ft/s down`;
+  return (
+    <svg className="zen-physics__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label}>
+      <line x1={x(-rx)} y1={y(0)} x2={x(rx * 0.04)} y2={y(0)} className="zen-physics__surface" />
+      {[0.25, 0.5, 0.75, 1].map((f) => (
+        <g key={f}>
+          <line x1={x(-rx)} y1={y(ry * f)} x2={x(rx * 0.04)} y2={y(ry * f)} className="zen-physics__grid" />
+          <text x={x(-rx)} y={y(ry * f) - 3} className="zen-physics__label">
+            {Math.round((ry * f) / FT).toLocaleString('en')} ft
+          </text>
+        </g>
+      ))}
+      <polyline points={points.join(' ')} className="zen-physics__trail" />
+      <circle cx={x(0)} cy={y(0)} r={5} className="zen-physics__site" />
+      <text x={x(0) - 4} y={y(0) + 16} textAnchor="end" className="zen-physics__label">
+        site
+      </text>
+      <g transform={`translate(${x(range).toFixed(1)}, ${y(alt).toFixed(1)})`}>
+        {d.throttle > 0 && <line x1={0} y1={0} x2={Math.sin(pitchRad) * 18} y2={Math.cos(pitchRad) * 18} className="zen-physics__thrust" />}
+        <circle r={5} className="zen-physics__craft" />
+      </g>
+      <text x={W - 12} y={18} textAnchor="end" className="zen-physics__label">
+        {rx >= 100_000 ? 'braking: the whole descent' : rx >= 10_000 ? 'approach: the last 25 km' : 'landing: the last 1.2 km'}
+      </text>
+    </svg>
+  );
+}
+
+/**
+ * The Lunar Module's powered descent, flown by the Luminary 099 guidance model, with the DSKY the
+ * crew used. Press PRO on the DSKY (V99N62) to light the engine; play, or jump to high gate, low
+ * gate or touchdown. In P64 or P65 a click of the rate switch takes over into P66. The load choice
+ * adds the rendezvous radar's stolen time (and, for Apollo 11, the crew's monitor displays at the
+ * times the alarms followed); calling up V16N68 with that load running overflows the executive.
+ */
+export function ApolloDescentSimulator({ load: loadProp = 'none', autoPlay = false }: ApolloDescentSimulatorProps) {
+  const [load, setLoad] = useState<DescentLoadName>(loadProp);
+  const [sim, setSim] = useState<Sim>(() => start(loadProp));
+  const [playing, setPlaying] = useState(autoPlay);
+  const [speed, setSpeed] = useState(10);
+  const [trail, setTrail] = useState<{ x: number; y: number }[]>([]);
+  const last = useRef<number | null>(null);
+
+  const advance = (next: (s: DescentState) => DescentState) =>
+    setSim((cur) => {
+      const descent = next(cur.descent);
       setTrail((t) => {
-        const last = t[t.length - 1];
-        if (!last || Math.hypot(next.pos.x - last.x, next.pos.y - last.y) > 250) {
-          return [...t, { x: next.pos.x, y: next.pos.y }];
-        }
-        return t;
+        const p = { x: rangeToSite(descent), y: altitude(descent) };
+        const prev = t[t.length - 1];
+        return !prev || Math.hypot(p.x - prev.x, (p.y - prev.y) * 10) > Math.max(5, Math.abs(p.x) / 200) ? [...t, p] : t;
       });
-      return next;
+      return sync({ ...cur, descent });
     });
-  }, []);
 
   useEffect(() => {
     if (!playing) {
-      lastTime.current = null;
+      last.current = null;
       return;
     }
-    const loop = (now: number) => {
-      if (lastTime.current !== null) {
-        const deltaSec = Math.min(0.1, (now - lastTime.current) / 1000);
-        stepSim(deltaSec * simSpeed);
+    let frame = 0;
+    const tick = (now: number) => {
+      if (last.current !== null) {
+        const dt = Math.min(0.25, (now - last.current) / 1000) * speed;
+        advance((d) => (d.status === 'flying' ? stepDescent(d, dt) : d));
       }
-      lastTime.current = now;
-      animFrame.current = requestAnimationFrame(loop);
+      last.current = now;
+      frame = requestAnimationFrame(tick);
     };
-    animFrame.current = requestAnimationFrame(loop);
-    return () => {
-      if (animFrame.current) cancelAnimationFrame(animFrame.current);
-    };
-  }, [playing, simSpeed, stepSim]);
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [playing, speed]);
 
-  const telemetry = getApolloTelemetry(state);
-
-  // SVG coordinate transformation for descent view
-  // World: x in [-52000, 2000], y in [0, 16000]
-  // In terminal phases (P64/P66), we zoom into the landing area
-  const isTerminalZoom = state.pos.y < 1200 && state.pos.x > -4000;
-
-  const viewWidth = 600;
-  const viewHeight = 360;
-
-  let xMin = -52000;
-  let xMax = 4000;
-  let yMin = -500;
-  let yMax = 16500;
-
-  if (isTerminalZoom) {
-    xMin = Math.min(-1500, state.pos.x - 400);
-    xMax = Math.max(1000, state.pos.x + 800);
-    yMin = -50;
-    yMax = Math.max(250, state.pos.y * 1.8);
-  }
-
-  const toSvgX = (wx: number) => ((wx - xMin) / (xMax - xMin)) * viewWidth;
-  const toSvgY = (wy: number) => viewHeight - ((wy - yMin) / (yMax - yMin)) * viewHeight;
-
-  const lmX = toSvgX(state.pos.x);
-  const lmY = toSvgY(state.pos.y);
-
-  // SVG trail path
-  const trailD = trail
-    .map((pt, i) => `${i === 0 ? 'M' : 'L'} ${toSvgX(pt.x).toFixed(1)},${toSvgY(pt.y).toFixed(1)}`)
-    .join(' ');
-
-  const getStatusBadge = () => {
-    switch (state.flightStatus) {
-      case 'BRAKING':
-        return <span className="zen-physics__badge zen-physics__badge--braking">P63 Braking</span>;
-      case 'APPROACH':
-        return <span className="zen-physics__badge zen-physics__badge--approach">P64 Approach</span>;
-      case 'TERMINAL_ROD':
-        return <span className="zen-physics__badge zen-physics__badge--rod">P66 Rate of Descent</span>;
-      case 'TOUCHDOWN_SUCCESS':
-        return <span className="zen-physics__badge zen-physics__badge--touchdown">Tranquility Base Touchdown</span>;
-      case 'CRASH_VELOCITY_HIGH':
-        return <span className="zen-physics__badge zen-physics__badge--crash">Hard Impact / Crash</span>;
-      default:
-        return null;
-    }
+  const restart = (name: DescentLoadName) => {
+    setLoad(name);
+    setSim(start(name));
+    setTrail([]);
+    setPlaying(false);
   };
+  const key = (k: DskyKey) =>
+    setSim((cur) => {
+      const r = pressKey(cur.dsky, k);
+      let descent = cur.descent;
+      if (r.proceed) descent = ignite(descent);
+      if (r.monitor && descent.status === 'flying') descent = { ...descent, load: { ...descent.load, monitorRequests: [...descent.load.monitorRequests, descent.t] } };
+      return sync({ descent, dsky: r.dsky });
+    });
+  const flyUntil = (until: (s: DescentState) => boolean) => advance((d) => flyToEnd(d.status === 'awaiting-ignition' ? ignite(d) : d, 1500, until));
 
+  const d = dskyReadout(sim.descent);
+  const s = sim.descent;
+  const canClick = s.status === 'flying' && (s.program === 'P64' || s.program === 'P65' || s.program === 'P66');
+  const status =
+    s.status === 'awaiting-ignition'
+      ? 'Waiting for ignition: press PRO on the DSKY'
+      : s.status === 'flying'
+        ? `${s.program}: ${{ P63: 'braking', P64: 'approach', P65: 'automatic vertical descent', P66: 'rate of descent, crew in control' }[s.program]}`
+        : s.status === 'landed'
+          ? 'Landed'
+          : s.status === 'crashed'
+            ? 'Crashed'
+            : 'Out of propellant';
   return (
-    <div className="zen-physics" aria-label="Apollo 11 Powered Descent Simulator">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>
-            Apollo 11 Lunar Module Descent Guidance
-          </h3>
-          <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--text-3, #8e929b)' }}>
-            MIT Draper Apollo Guidance Computer (P63 Braking · P64 Approach · P66 Manual ROD)
-          </p>
-        </div>
-        <div>{getStatusBadge()}</div>
-      </div>
-
+    <div className="zen-physics" aria-label="Apollo 11 powered descent">
       <div className="zen-physics__layout">
-        {/* Left: Interactive Flight Viewport */}
-        <div className="zen-physics__viewport">
-          <svg className="zen-physics__svg" viewBox={`0 0 ${viewWidth} ${viewHeight}`}>
-            {/* Stars / Moon sky */}
-            <rect x="0" y="0" width={viewWidth} height={viewHeight} fill="#090a0f" />
-
-            {/* Lunar surface ground line */}
-            <line
-              x1="0"
-              y1={toSvgY(0)}
-              x2={viewWidth}
-              y2={toSvgY(0)}
-              stroke="#595c68"
-              strokeWidth="2"
-            />
-            {/* Lunar terrain fill */}
-            <rect
-              x="0"
-              y={toSvgY(0)}
-              width={viewWidth}
-              height={viewHeight - toSvgY(0)}
-              fill="#181a20"
-            />
-
-            {/* Landing Site Marker */}
-            <g transform={`translate(${toSvgX(0)}, ${toSvgY(0)})`}>
-              <line x1="0" y1="0" x2="0" y2="-20" stroke="#f59e0b" strokeWidth="1.5" />
-              <polygon points="0,-20 12,-15 0,-10" fill="#f59e0b" />
-              <circle cx="0" cy="0" r="3" fill="#fbbf24" />
-              <text x="6" y="-2" fill="#fbbf24" fontSize="9" fontFamily="monospace">
-                Tranquility Site
-              </text>
-            </g>
-
-            {/* West Crater hazard obstacle */}
-            <ellipse
-              cx={toSvgX(-350)}
-              cy={toSvgY(0) + 4}
-              rx={Math.max(6, (120 / (xMax - xMin)) * viewWidth)}
-              ry="4"
-              fill="#0d0e12"
-              stroke="#3a3d47"
-            />
-
-            {/* Historical trajectory trail */}
-            {trail.length > 1 && (
-              <path d={trailD} fill="none" stroke="#6366f1" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.75" />
-            )}
-
-            {/* Current Lunar Module */}
-            <g transform={`translate(${lmX}, ${lmY})`}>
-              {/* Attitude rotation (LM pitch angle: 90 deg is vertical up) */}
-              <g transform={`rotate(${90 - (state.pitchAngle * 180) / Math.PI})`}>
-                {/* Engine thrust plume */}
-                {state.throttle > 0.05 && (
-                  <polygon
-                    points={`-3,10 0,${10 + state.throttle * 22} 3,10`}
-                    fill="#38bdf8"
-                    opacity="0.85"
-                  />
-                )}
-                {/* LM Ascent / Descent Stage Body */}
-                <rect x="-7" y="0" width="14" height="10" rx="1" fill="#eab308" stroke="#ca8a04" strokeWidth="1" />
-                <rect x="-5" y="-8" width="10" height="8" rx="2" fill="#d1d5db" stroke="#9ca3af" strokeWidth="1" />
-                {/* Landing gear legs */}
-                <line x1="-7" y1="10" x2="-12" y2="15" stroke="#9ca3af" strokeWidth="1.2" />
-                <line x1="7" y1="10" x2="12" y2="15" stroke="#9ca3af" strokeWidth="1.2" />
-              </g>
-
-              {/* Contact probe */}
-              {state.pos.y <= 2.5 && (
-                <line x1="0" y1="15" x2="0" y2="22" stroke="#34d399" strokeWidth="2" />
-              )}
-            </g>
-
-            {/* Altitude readout on canvas */}
-            <text x="12" y="24" fill="#9ca3af" fontSize="11" fontFamily="monospace">
-              T+{Math.round(state.t)}s · Phase: {state.program} {state.flightStatus}
-            </text>
-          </svg>
-        </div>
-
-        {/* Right: AGC DSKY & Flight Director */}
-        <div className="zen-physics__sidebar">
-          <DskyDisplay
-            telemetry={telemetry}
-            onTriggerAlarm={() => setState((s) => ({ ...s, alarm1202: true }))}
-            onResetAlarm={() => setState((s) => ({ ...s, alarm1202: false }))}
-          />
-
-          <div className="zen-physics__panel">
-            <div className="zen-physics__stats">
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Descent Fuel</span>
-                <span className="zen-physics__stat-value">{telemetry.fuelPercent}%</span>
-              </div>
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Throttle</span>
-                <span className="zen-physics__stat-value">{telemetry.throttlePercent}%</span>
-              </div>
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Pitch Attitude</span>
-                <span className="zen-physics__stat-value">{telemetry.pitchAngleDeg.toFixed(1)}°</span>
-              </div>
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Downrange</span>
-                <span className="zen-physics__stat-value">{(telemetry.downrangeDistance / 1000).toFixed(2)} km</span>
-              </div>
+        <div className="zen-physics__panel">
+          <Profile descent={s} trail={trail} />
+          <p className="zen-physics__caption" role="status">
+            {status}
+          </p>
+          <dl className="zen-physics__readouts">
+            <div>
+              <dt>Time from ignition</dt>
+              <dd>{s.t.toFixed(0)} s</dd>
             </div>
-
-            <div style={{ marginTop: 12 }} className="zen-physics__controls">
-              <div className="zen-physics__control-row">
-                <div className="zen-physics__buttons">
-                  <button
-                    type="button"
-                    className="zen-physics__btn zen-physics__btn--primary"
-                    onClick={() => setPlaying(!playing)}
-                  >
-                    {playing ? 'Pause' : 'Simulate'}
-                  </button>
-                  <button
-                    type="button"
-                    className="zen-physics__btn"
-                    onClick={() => stepSim(1.0)}
-                  >
-                    +1s Step
-                  </button>
-                  <button
-                    type="button"
-                    className="zen-physics__btn"
-                    onClick={resetFlight}
-                  >
-                    Reset PDI
-                  </button>
-                </div>
-              </div>
-
-              {/* P66 Manual Control Takeover (Armstrong mode) */}
-              <div style={{ borderTop: '1px solid var(--border, #26282e)', paddingTop: 8 }}>
-                <div style={{ fontSize: '0.7rem', color: '#8e929b', marginBottom: 4, fontWeight: 600 }}>
-                  ASTRONAUT MANUAL CONTROLS (P66 ROD)
-                </div>
-                <div className="zen-physics__buttons">
-                  <button
-                    type="button"
-                    className="zen-physics__btn"
-                    onClick={() => setState((s) => ({ ...s, program: 'P66', flightStatus: 'TERMINAL_ROD' }))}
-                  >
-                    P66 Takeover
-                  </button>
-                  <button
-                    type="button"
-                    className="zen-physics__btn"
-                    onClick={() => stepSim(0.2, { rodDelta: +0.3 })}
-                    title="Click ROD switch UP: decreases descent rate (+1 ft/s)"
-                  >
-                    ROD +1 fps
-                  </button>
-                  <button
-                    type="button"
-                    className="zen-physics__btn"
-                    onClick={() => stepSim(0.2, { rodDelta: -0.3 })}
-                    title="Click ROD switch DOWN: increases descent rate (-1 ft/s)"
-                  >
-                    ROD -1 fps
-                  </button>
-                </div>
-              </div>
+            <div>
+              <dt>Altitude</dt>
+              <dd>{Math.round(d.altitude / FT).toLocaleString('en')} ft</dd>
             </div>
+            <div>
+              <dt>Altitude rate</dt>
+              <dd>{(d.altitudeRate / FT).toFixed(1)} ft/s</dd>
+            </div>
+            <div>
+              <dt>Horizontal</dt>
+              <dd>{(d.horizontal / FT).toFixed(1)} ft/s</dd>
+            </div>
+            <div>
+              <dt>Throttle</dt>
+              <dd>{Math.round(d.throttle * 100)}%</dd>
+            </div>
+            <div>
+              <dt>Pitch from vertical</dt>
+              <dd data-readout="pitch" data-value={d.pitch.toFixed(2)}>
+                {Math.round(d.pitch)}°
+              </dd>
+            </div>
+            <div>
+              <dt>Propellant</dt>
+              <dd>{Math.round(d.propellant).toLocaleString('en')} kg</dd>
+            </div>
+            <div>
+              <dt>Commanded descent rate</dt>
+              <dd data-readout="commanded-rate" data-value={(s.desiredRate / FT).toFixed(3)}>
+                {s.program === 'P65' || s.program === 'P66' ? `${(s.desiredRate / FT).toFixed(1)} ft/s` : '—'}
+              </dd>
+            </div>
+            <div>
+              <dt>Core sets in use</dt>
+              <dd>
+                {d.coreSets} of {src('coreSets')}
+              </dd>
+            </div>
+          </dl>
+          <div className="zen-physics__row">
+            <Button
+              label={playing ? 'Pause' : 'Play'}
+              on={playing}
+              onPress={() => {
+                if (s.status === 'awaiting-ignition') key('PRO');
+                setPlaying((p) => !p);
+              }}
+            />
+            <Segmented items={SPEEDS.map((x) => `${x}×`)} index={SPEEDS.indexOf(speed)} onChange={(i) => setSpeed(SPEEDS[i])} label="Speed" />
+            <Button label="Advance 10 s" onPress={() => advance((x) => stepDescent(x.status === 'awaiting-ignition' ? ignite(x) : x, 10))} />
           </div>
+          <div className="zen-physics__row">
+            <Button label="Fly to high gate" onPress={() => flyUntil((x) => x.program !== 'P63')} />
+            <Button label="Fly to low gate" onPress={() => flyUntil((x) => x.program === 'P65' || x.program === 'P66' || altitude(x) < 150)} />
+            <Button label="Fly to touchdown" onPress={() => flyUntil(() => false)} />
+            <Button label="Restart" onPress={() => restart(load)} />
+          </div>
+          <div className="zen-physics__row">
+            <Button label="Rate switch up: slower descent" disabled={!canClick} onPress={() => advance((x) => stepDescent(x, 0.1, { rodClicks: 1 }))} />
+            <Button label="Rate switch down: faster descent" disabled={!canClick} onPress={() => advance((x) => stepDescent(x, 0.1, { rodClicks: -1 }))} />
+          </div>
+          <div className="zen-physics__row">
+            <Segmented items={['None', 'Radar', 'Apollo 11']} index={LOAD_NAMES.indexOf(load)} onChange={(i) => restart(LOAD_NAMES[i])} label="Executive load" />
+          </div>
+        </div>
+        <div className="zen-physics__panel" data-dsky="">
+          <Dsky dsky={sim.dsky} readout={d} onKey={key} />
+          <h3 className="zen-physics__caption">Flight log</h3>
+          <ol className="zen-physics__log" aria-label="Flight log" aria-live="polite">
+            {s.log.map((e, i) => (
+              <li key={i} data-kind={e.kind}>
+                {e.get} {e.text}
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </div>
   );
-};
+}

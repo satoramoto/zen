@@ -1,255 +1,116 @@
-import React, { useMemo, useState } from 'react';
-import {
-  DISTANCE_EARTH_MOON,
-  MOON_SOI_RADIUS,
-  RADIUS_EARTH,
-  RADIUS_MOON,
-} from './model/gravity';
-import {
-  DEFAULT_TRANSLUNAR_CONFIG,
-  simulateTranslunarTrajectory,
-  TranslunarConfig,
-} from './model/earthMoonTransfer';
+import { useMemo, useState } from 'react';
+import type { Param } from '../../components/core/Param/param';
+import { Segmented } from '../../components/core/Segmented/Segmented';
+import { Slider } from '../../components/core/Slider/Slider';
+import { DEFAULT_TRANSLUNAR_CONFIG, FREE_RETURN_CONFIG, simulateTranslunarTrajectory, type TranslunarConfig } from './model/earthMoonTransfer';
+import { DISTANCE_EARTH_MOON, RADIUS_EARTH, RADIUS_MOON } from './model/gravity';
 import './physics.css';
 
+export type TranslunarPreset = 'transfer' | 'free-return';
+const PRESETS: Record<TranslunarPreset, TranslunarConfig> = { transfer: DEFAULT_TRANSLUNAR_CONFIG, 'free-return': FREE_RETURN_CONFIG };
+const PRESET_NAMES: TranslunarPreset[] = ['transfer', 'free-return'];
+
 export interface OrbitSimulatorProps {
-  readonly initialConfig?: Partial<TranslunarConfig>;
+  /** Which trajectory to start from: a transfer that reaches the Moon, or a free return. Default the transfer. */
+  preset?: TranslunarPreset;
 }
 
-export const OrbitSimulator: React.FC<OrbitSimulatorProps> = ({
-  initialConfig = {},
-}) => {
-  const [tliDeltaV, setTliDeltaV] = useState<number>(
-    initialConfig.tliDeltaV ?? DEFAULT_TRANSLUNAR_CONFIG.tliDeltaV
+const DV: Param = { kind: 'float', min: 3080, max: 3250, defaultValue: 3180, name: 'Injection burn' };
+const ANGLE: Param = { kind: 'int', min: -180, max: 180, defaultValue: -137, steps: 361, name: 'Injection angle' };
+
+/**
+ * A translunar trajectory in the Earth–Moon field, integrated with RK4 (the Moon moving within each
+ * step). Choose the injection burn and where round the parking orbit it happens, or start from the
+ * free return, which swings behind the Moon and comes home with no further burn. The accuracy
+ * shown is the drift of the Jacobi integral, the energy the model conserves.
+ */
+export function OrbitSimulator({ preset: presetProp = 'transfer' }: OrbitSimulatorProps) {
+  const [preset, setPreset] = useState<TranslunarPreset>(presetProp);
+  const [dv, setDv] = useState(PRESETS[presetProp].tliDeltaV);
+  const [angle, setAngle] = useState(Math.round((PRESETS[presetProp].injectionAngle * 180) / Math.PI));
+  const [scrub, setScrub] = useState(1);
+  const choose = (p: TranslunarPreset) => {
+    setPreset(p);
+    setDv(PRESETS[p].tliDeltaV);
+    setAngle(Math.round((PRESETS[p].injectionAngle * 180) / Math.PI));
+    setScrub(1);
+  };
+  const sim = useMemo(
+    () => simulateTranslunarTrajectory({ ...PRESETS[preset], tliDeltaV: dv, injectionAngle: (angle * Math.PI) / 180 }),
+    [preset, dv, angle],
   );
-  const [injectionAngleDeg, setInjectionAngleDeg] = useState<number>(-137);
-  const [scrubIndex, setScrubIndex] = useState<number>(0);
-
-  // Compute full trajectory
-  const sim = useMemo(() => {
-    return simulateTranslunarTrajectory({
-      tliDeltaV,
-      injectionAngle: (injectionAngleDeg * Math.PI) / 180,
-      durationHours: 72,
-      dt: 60,
-    });
-  }, [tliDeltaV, injectionAngleDeg]);
-
-  const trajectory = sim.trajectory;
-  const currentPt = trajectory[Math.min(scrubIndex, trajectory.length - 1)] ?? trajectory[0];
-
-  // SVG coordinate transformation for Earth-Moon system
-  // Scale: Distance is ~384,400 km. We frame [-100k km, 450k km] in X, [-200k km, 200k km] in Y.
-  const viewWidth = 600;
-  const viewHeight = 400;
-
-  const worldExtent = 480e6; // 480,000 km
-  const toSvgX = (x: number) => viewWidth / 2 + (x / worldExtent) * (viewWidth * 0.9);
-  const toSvgY = (y: number) => viewHeight / 2 - (y / worldExtent) * (viewWidth * 0.9);
-
-  const earthX = toSvgX(0);
-  const earthY = toSvgY(0);
-  const earthR = Math.max(5, (RADIUS_EARTH / worldExtent) * (viewWidth * 0.9) * 4); // scaled for visibility
-
-  const moonX = toSvgX(currentPt.moonPos.x);
-  const moonY = toSvgY(currentPt.moonPos.y);
-  const moonR = Math.max(3, (RADIUS_MOON / worldExtent) * (viewWidth * 0.9) * 4);
-  const moonSoiR = (MOON_SOI_RADIUS / worldExtent) * (viewWidth * 0.9);
-
-  const shipX = toSvgX(currentPt.pos.x);
-  const shipY = toSvgY(currentPt.pos.y);
-
-  // Trajectory SVG path
-  const trajD = trajectory
-    .map((pt, i) => `${i === 0 ? 'M' : 'L'} ${toSvgX(pt.pos.x).toFixed(1)},${toSvgY(pt.pos.y).toFixed(1)}`)
-    .join(' ');
-
-  const closestApproachAltKm = Math.round(sim.closestMoonApproach.altitude / 1000);
-  const transitHours = (sim.closestMoonApproach.time / 3600).toFixed(1);
-
+  const traj = sim.trajectory;
+  const current = traj[Math.min(traj.length - 1, Math.round(scrub * (traj.length - 1)))];
+  const W = 600;
+  const H = 420;
+  const extent = 480e6;
+  const k = (W * 0.45) / extent;
+  const x = (v: number) => W / 2 - 60 + v * k;
+  const y = (v: number) => H / 2 - v * k;
+  const path = traj.map((p, i) => `${i ? 'L' : 'M'}${x(p.pos.x).toFixed(1)} ${y(p.pos.y).toFixed(1)}`).join('');
+  const perilune = Math.round(sim.closestMoonApproach.altitude / 1000);
+  const label = `${sim.isFreeReturn ? 'A free return' : 'A transfer'}: closest to the Moon ${perilune.toLocaleString('en')} km above it at ${(sim.closestMoonApproach.time / 3600).toFixed(1)} h${sim.passedBehindMoon ? ', behind it' : ', on the near side'}${sim.returnedAt ? `, back at Earth's atmosphere at ${(sim.returnedAt / 3600).toFixed(1)} h` : ''}`;
   return (
-    <div className="zen-physics" aria-label="Apollo Translunar Trajectory Simulator">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>
-            Translunar Orbital Transfer (Apollo 8 / 11)
-          </h3>
-          <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--text-3, #8e929b)' }}>
-            Restricted Earth-Moon Gravitational Field · Runge-Kutta 4 Numerical Propagation
-          </p>
-        </div>
-        <div>
-          {sim.isFreeReturn ? (
-            <span className="zen-physics__badge zen-physics__badge--touchdown">Free-Return Trajectory</span>
-          ) : sim.isLunarCaptureCapable ? (
-            <span className="zen-physics__badge zen-physics__badge--approach">Lunar Capture Corridor</span>
-          ) : (
-            <span className="zen-physics__badge zen-physics__badge--braking">Translunar Transfer</span>
-          )}
-        </div>
-      </div>
-
+    <div className="zen-physics" aria-label="Translunar trajectory">
       <div className="zen-physics__layout">
-        {/* Trajectory Canvas */}
-        <div className="zen-physics__viewport">
-          <svg className="zen-physics__svg" viewBox={`0 0 ${viewWidth} ${viewHeight}`}>
-            {/* Background space */}
-            <rect x="0" y="0" width={viewWidth} height={viewHeight} fill="#06070a" />
-
-            {/* Moon Orbit Path */}
-            <circle
-              cx={earthX}
-              cy={earthY}
-              r={(DISTANCE_EARTH_MOON / worldExtent) * (viewWidth * 0.9)}
-              fill="none"
-              stroke="#22252e"
-              strokeDasharray="4 4"
-            />
-
-            {/* Earth */}
-            <circle cx={earthX} cy={earthY} r={earthR * 2} fill="#1e3a8a" opacity="0.3" />
-            <circle cx={earthX} cy={earthY} r={earthR} fill="#3b82f6" />
-            <text x={earthX} y={earthY + earthR + 14} fill="#93c5fd" fontSize="9" textAnchor="middle" fontFamily="monospace">
+        <div className="zen-physics__panel">
+          <svg className="zen-physics__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label}>
+            <circle cx={x(0)} cy={y(0)} r={DISTANCE_EARTH_MOON * k} className="zen-physics__orbit" />
+            <circle cx={x(0)} cy={y(0)} r={Math.max(5, RADIUS_EARTH * k * 3)} className="zen-physics__body" />
+            <text x={x(0)} y={y(0) + 22} textAnchor="middle" className="zen-physics__label">
               Earth
             </text>
-
-            {/* Moon Sphere of Influence (SOI) */}
-            <circle
-              cx={moonX}
-              cy={moonY}
-              r={moonSoiR}
-              fill="#fbbf24"
-              fillOpacity="0.04"
-              stroke="#fbbf24"
-              strokeOpacity="0.3"
-              strokeDasharray="3 3"
-            />
-
-            {/* Moon */}
-            <circle cx={moonX} cy={moonY} r={moonR} fill="#e5e7eb" />
-            <text x={moonX} y={moonY + moonR + 14} fill="#e5e7eb" fontSize="9" textAnchor="middle" fontFamily="monospace">
+            <circle cx={x(current.moonPos.x)} cy={y(current.moonPos.y)} r={Math.max(3, RADIUS_MOON * k * 3)} className="zen-physics__body" />
+            <text x={x(current.moonPos.x)} y={y(current.moonPos.y) + 18} textAnchor="middle" className="zen-physics__label">
               Moon
             </text>
-
-            {/* Trajectory Line */}
-            <path d={trajD} fill="none" stroke="#6366f1" strokeWidth="1.5" opacity="0.85" />
-
-            {/* Spacecraft icon */}
-            <circle cx={shipX} cy={shipY} r="4" fill="#f43f5e" />
-            <circle cx={shipX} cy={shipY} r="8" fill="none" stroke="#f43f5e" strokeWidth="1" opacity="0.6" />
-
-            {/* Closest Approach Marker */}
-            <g transform={`translate(${toSvgX(sim.closestMoonApproach.point.pos.x)}, ${toSvgY(sim.closestMoonApproach.point.pos.y)})`}>
-              <circle cx="0" cy="0" r="3" fill="#10b981" />
-              <text x="6" y="-6" fill="#34d399" fontSize="9" fontFamily="monospace">
-                Perilune ({closestApproachAltKm} km)
-              </text>
-            </g>
-
-            {/* Mission elapsed time readout */}
-            <text x="14" y="24" fill="#9ca3af" fontSize="11" fontFamily="monospace">
-              T+{(currentPt.t / 3600).toFixed(1)} hrs · Distance to Moon: {Math.round(currentPt.distMoon / 1000)} km
+            <path d={path} className="zen-physics__path" />
+            <circle cx={x(sim.closestMoonApproach.point.pos.x)} cy={y(sim.closestMoonApproach.point.pos.y)} r={3} className="zen-physics__mark" />
+            <circle cx={x(current.pos.x)} cy={y(current.pos.y)} r={4} className="zen-physics__craft" />
+            <text x={12} y={H - 12} className="zen-physics__label">
+              {(current.t / 3600).toFixed(1)} h · {Math.round(current.distEarth / 1000).toLocaleString('en')} km from Earth
             </text>
           </svg>
+          <Slider param={{ kind: 'float', min: 0, max: 1, defaultValue: 1, name: 'Flight time' }} value={scrub} onChange={setScrub} orientation="horizontal" layout="row" length="auto" name="Flight time" display={`${(current.t / 3600).toFixed(1)} h`} />
         </div>
-
-        {/* Controls Sidebar */}
-        <div className="zen-physics__sidebar">
-          <div className="zen-physics__panel">
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: 8, color: '#f3f4f6' }}>
-              TRANSLUNAR INJECTION (TLI) PARAMETERS
+        <div className="zen-physics__panel">
+          <Segmented items={['Transfer', 'Free return']} index={PRESET_NAMES.indexOf(preset)} onChange={(i) => choose(PRESET_NAMES[i])} label="Trajectory" />
+          <Slider param={DV} value={dv} onChange={(v) => setDv(Math.round(v))} orientation="horizontal" layout="row" length="auto" name="Injection burn" display={`${dv} m/s`} />
+          <Slider param={ANGLE} value={angle} onChange={(v) => setAngle(Math.round(v))} orientation="horizontal" layout="row" length="auto" name="Injection angle" display={`${angle}°`} />
+          <dl className="zen-physics__readouts">
+            <div>
+              <dt>Closest to the Moon</dt>
+              <dd>{perilune.toLocaleString('en')} km</dd>
             </div>
-
-            <div className="zen-physics__controls">
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: 2 }}>
-                  <span style={{ color: '#8e929b' }}>TLI Burn Δv</span>
-                  <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{tliDeltaV} m/s</span>
-                </div>
-                <input
-                  type="range"
-                  min="3080"
-                  max="3250"
-                  step="2"
-                  value={tliDeltaV}
-                  onChange={(e) => setTliDeltaV(Number(e.target.value))}
-                  style={{ width: '100%' }}
-                />
-              </div>
-
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: 2 }}>
-                  <span style={{ color: '#8e929b' }}>Injection Angle (Phase)</span>
-                  <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{injectionAngleDeg}°</span>
-                </div>
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  step="1"
-                  value={injectionAngleDeg}
-                  onChange={(e) => setInjectionAngleDeg(Number(e.target.value))}
-                  style={{ width: '100%' }}
-                />
-              </div>
-
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: 2 }}>
-                  <span style={{ color: '#8e929b' }}>Scrub Flight Time</span>
-                  <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>
-                    {(currentPt.t / 3600).toFixed(1)} / 72.0 hrs
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max={Math.max(1, trajectory.length - 1)}
-                  step="1"
-                  value={scrubIndex}
-                  onChange={(e) => setScrubIndex(Number(e.target.value))}
-                  style={{ width: '100%' }}
-                />
-              </div>
+            <div>
+              <dt>At</dt>
+              <dd>{(sim.closestMoonApproach.time / 3600).toFixed(1)} h</dd>
             </div>
-          </div>
-
-          <div className="zen-physics__panel">
-            <div className="zen-physics__stats">
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Lunar Perilune</span>
-                <span className="zen-physics__stat-value">{closestApproachAltKm} km</span>
-              </div>
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Transit Time</span>
-                <span className="zen-physics__stat-value">{transitHours} hrs</span>
-              </div>
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Earth Distance</span>
-                <span className="zen-physics__stat-value">{Math.round(currentPt.distEarth / 1000)} km</span>
-              </div>
-              <div className="zen-physics__stat-item">
-                <span className="zen-physics__stat-label">Moon Distance</span>
-                <span className="zen-physics__stat-value">{Math.round(currentPt.distMoon / 1000)} km</span>
-              </div>
+            <div>
+              <dt>Behind the Moon</dt>
+              <dd data-readout="behind">{sim.passedBehindMoon ? 'yes' : 'no'}</dd>
             </div>
-
-            <div style={{ marginTop: 10 }}>
-              <button
-                type="button"
-                className="zen-physics__btn"
-                style={{ width: '100%' }}
-                onClick={() => {
-                  setTliDeltaV(DEFAULT_TRANSLUNAR_CONFIG.tliDeltaV);
-                  setInjectionAngleDeg(-137);
-                  setScrubIndex(0);
-                }}
-              >
-                Reset to Apollo 11 Trajectory
-              </button>
+            <div>
+              <dt>Back at the atmosphere</dt>
+              <dd data-readout="returned">{sim.returnedAt ? `${(sim.returnedAt / 3600).toFixed(1)} h` : 'no'}</dd>
             </div>
-          </div>
+            <div>
+              <dt>Free return</dt>
+              <dd data-readout="free-return">{sim.isFreeReturn ? 'yes' : 'no'}</dd>
+            </div>
+            <div>
+              <dt>Jacobi drift (step {PRESETS[preset].dt} s)</dt>
+              <dd data-readout="jacobi" data-value={sim.jacobiDrift}>
+                {sim.jacobiDrift.toExponential(1)}
+              </dd>
+            </div>
+          </dl>
+          <p className="zen-physics__caption">
+            The Earth is fixed and the Moon circles it, so in the frame that turns with the Moon the spacecraft’s energy, the Jacobi integral, is conserved exactly: its drift is the
+            integrator’s error.
+          </p>
         </div>
       </div>
     </div>
   );
-};
+}
