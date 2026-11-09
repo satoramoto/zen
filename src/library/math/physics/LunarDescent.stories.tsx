@@ -27,7 +27,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ANominalDescentLands = scenario(
+export const ANominalDescentLands: Story = scenario(
   {
     name: 'A nominal descent lands',
     when: 'the descent runs from the start of braking with no crew input',
@@ -47,9 +47,9 @@ export const ANominalDescentLands = scenario(
     },
   },
   {},
-) as Story;
+);
 
-export const EveryNumberHasASource = scenario(
+export const EveryNumberHasASource: Story = scenario(
   {
     name: 'Every number has a source',
     when: 'a reader opens `SOURCES.md`',
@@ -67,9 +67,9 @@ export const EveryNumberHasASource = scenario(
     },
   },
   { render: () => <DescentSources /> },
-) as Story;
+);
 
-export const BrakingGivesWayToApproach = scenario(
+export const BrakingGivesWayToApproach: Story = scenario(
   {
     name: 'Braking gives way to approach',
     when: 'the braking phase meets the source’s criterion for high gate',
@@ -89,9 +89,9 @@ export const BrakingGivesWayToApproach = scenario(
     },
   },
   {},
-) as Story;
+);
 
-export const TheCrewTakesOverTheRateOfDescent = scenario(
+export const TheCrewTakesOverTheRateOfDescent: Story = scenario(
   {
     name: 'The crew takes over the rate of descent',
     when: 'the crew selects P66 during approach',
@@ -113,9 +113,9 @@ export const TheCrewTakesOverTheRateOfDescent = scenario(
     },
   },
   {},
-) as Story;
+);
 
-export const ExtraLoadRaisesA1202 = scenario(
+export const ExtraLoadRaisesA1202: Story = scenario(
   {
     name: 'Extra load raises a 1202',
     given: 'the rendezvous radar is stealing time, as its switch let it on Apollo 11',
@@ -139,9 +139,9 @@ export const ExtraLoadRaisesA1202 = scenario(
     },
   },
   { args: { load: 'radar' } },
-) as Story;
+);
 
-export const TheDescentSurvivesTheAlarm = scenario(
+export const TheDescentSurvivesTheAlarm: Story = scenario(
   {
     name: 'The descent survives the alarm',
     when: '1202 alarms occur during braking as they did on Apollo 11',
@@ -159,4 +159,4 @@ export const TheDescentSurvivesTheAlarm = scenario(
     },
   },
   { args: { load: 'apollo-11' } },
-) as Story;
+);
