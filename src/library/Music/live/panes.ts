@@ -7,6 +7,7 @@ import type { PaneDefinition, SettingSpec } from '../../layout/Workspace/Workspa
 import { DICE_MOVES } from './DicePad/DicePad.model';
 import { CHORD_COMPASS_FORMS } from './ChordCompass/ChordCompass.forms';
 import { CUT_PADS_FORMS } from './CutPads/CutPads.forms';
+import { CONTROL_PANEL_FORMS } from './ControlPanel/ControlPanel.forms';
 import { DICE_PAD_FORMS } from './DicePad/DicePad.forms';
 import { LANDING_DIAL_FORMS } from './LandingDial/LandingDial.forms';
 import { LAUNCH_GRID_FORMS } from './LaunchGrid/LaunchGrid.forms';
@@ -50,6 +51,18 @@ export const LIVE_PANES = {
   landing: { kind: 'landing', label: 'Landing', description: 'A transition’s countdown: when it lands, and on what', forms: LANDING_DIAL_FORMS, priority: 'next' },
   cuts: { kind: 'cuts', label: 'Cut pads', description: 'The transitions as the biggest targets', forms: CUT_PADS_FORMS, priority: 'controls', settings: [{ key: 'pads', label: 'Cuts', type: 'targets', of: 'cut', default: 'all' }] },
   throws: { kind: 'throws', label: 'Throws', description: 'Named XY throws, the finger’s trail behind', forms: THROW_PADS_FORMS, priority: 'controls' },
+  controls: {
+    kind: 'controls',
+    label: 'Controls',
+    description: 'Your own faders, knobs, pads and XYs on the app’s parameters',
+    forms: CONTROL_PANEL_FORMS,
+    priority: 'controls',
+    settings: [
+      { key: 'columns', label: 'Columns', type: 'number', min: 1, max: 16, step: 1, default: 8 },
+      { key: 'rows', label: 'Rows', type: 'number', min: 1, max: 8, step: 1, default: 4 },
+      { key: 'cells', label: 'Controls', type: 'data', default: [] },
+    ],
+  },
   rig: { kind: 'rig', label: 'Rig health', description: 'Quantize, inputs, controllers, DSP load', forms: RIG_HEALTH_FORMS, priority: 'chrome' },
 } as const satisfies Record<string, PaneDefinition>;
 

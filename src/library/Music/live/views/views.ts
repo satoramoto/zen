@@ -3,6 +3,8 @@
 // `kind` (never by id), its title and its binding. The app owns this value: the Workspace draws it
 // and sends every edit as an intent, which the stories apply with `applySurfaceIntent`.
 import { applySurfaceIntent, readDocument, readTab, splits } from '../../../layout/Workspace/surface';
+import { place } from '../../../layout/cells';
+import { KIND_SIZE, type ControlCell, type ControlKind } from '../ControlPanel/ControlPanel.model';
 import type { SurfaceDocument, SurfaceDocumentV2, SurfaceIntent, SurfaceRegion, SurfaceTab } from '../../../layout/Workspace/Workspace.types';
 import { LIVE_PANES, type LivePaneKind } from '../panes';
 
@@ -45,10 +47,29 @@ export const MINE_TAB = preset('mine', 'Mine', [['river'], ['rig']], [6, 1]);
 /** The four tracks the looper board carries. */
 export const LOOPER_TRACKS = ['drums', 'bass', 'keys', 'vox'] as const;
 
+/** The looper's macros: four faders on the FX the set rides, four pads it fires, a freeze toggle. Each placed as the panel places it. */
+export const LOOPER_MACROS: readonly ControlCell[] = (
+  [
+    ['fader', 'cutoff', 0, 0],
+    ['fader', 'delay', 1, 0],
+    ['fader', 'reverb', 2, 0],
+    ['fader', 'drive', 3, 0],
+    ['pad', 'riser', 4, 0],
+    ['pad', 'drop', 5, 0],
+    ['pad', 'stutter', 4, 1],
+    ['pad', 'kill', 5, 1],
+    ['toggle', 'freeze', 4, 2],
+  ] as const
+).reduce<readonly ControlCell[]>((cells, [control, param, x, y], i) => {
+  const size = control === 'fader' ? { w: 1, h: 3 } : control === 'toggle' ? { w: 2, h: 1 } : KIND_SIZE[control as ControlKind];
+  return place(cells, { id: `m${i + 1}`, control, param, x, y, ...size }, { columns: 6, rows: 3 }) ?? cells;
+}, []);
+
 /**
  * The looper performance board, built the way a person builds it: every step an intent the builder
  * sends, applied to an empty tab. The song now along the top; the launch grid with the cuts and the
- * throws stacked at its right; four track strips under them; the rig's line last; then locked.
+ * throws stacked at its right; four track strips under them beside the macros; the rig's line last;
+ * then locked.
  */
 function looperTab(): SurfaceTab {
   const title = (kind: string) => (kind in LIVE_PANES ? LIVE_PANES[kind as LivePaneKind].label : kind);
@@ -61,12 +82,15 @@ function looperTab(): SurfaceTab {
   for (const kind of ['song', 'loop', 'mix'] as const) apply({ type: 'addRegion', tab: 'looper', kind });
   apply({ type: 'addRegion', tab: 'looper', kind: 'cuts', beside: idOf('loop'), zone: 'right' });
   apply({ type: 'addRegion', tab: 'looper', kind: 'throws', beside: idOf('cuts'), zone: 'below' });
+  apply({ type: 'addRegion', tab: 'looper', kind: 'controls', beside: idOf('mix'), zone: 'right' });
   apply({ type: 'addRegion', tab: 'looper', kind: 'rig' });
   apply({ type: 'configureRegion', tab: 'looper', region: idOf('loop'), settings: { tracks: [...LOOPER_TRACKS] } });
   apply({ type: 'configureRegion', tab: 'looper', region: idOf('mix'), settings: { tracks: [...LOOPER_TRACKS] } });
-  const [root, row] = splits(tab().layout);
-  apply({ type: 'resizeSplit', tab: 'looper', split: root.id, shares: [1, 3.4, 2.8, 0.35] });
-  apply({ type: 'resizeSplit', tab: 'looper', split: row.id, shares: [2.2, 1] });
+  apply({ type: 'configureRegion', tab: 'looper', region: idOf('controls'), settings: { columns: 6, rows: 3, cells: LOOPER_MACROS as never } });
+  const holding = (id: string) => splits(tab().layout).find((s) => s.children.some((c) => c.node === id))!;
+  apply({ type: 'resizeSplit', tab: 'looper', split: holding(idOf('song')).id, shares: [1, 3.2, 3, 0.35] });
+  apply({ type: 'resizeSplit', tab: 'looper', split: holding(idOf('loop')).id, shares: [2.2, 1] });
+  apply({ type: 'resizeSplit', tab: 'looper', split: holding(idOf('mix')).id, shares: [1.6, 1] });
   apply({ type: 'lockTab', tab: 'looper', locked: true });
   return tab();
 }

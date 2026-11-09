@@ -16,6 +16,7 @@ export {
   SURFACE_INTENTS,
   SURFACE_UI_REST,
   type DockZone,
+  type JsonValue,
   type LayoutNode,
   type PaneDefinition,
   type ResolvedSettings,

@@ -139,6 +139,8 @@ interface Cx {
   ui: SurfaceUi;
   /** Edit mode on an unlocked tab. */
   editing: boolean;
+  /** The open tab is locked. */
+  locked: boolean;
   inert: boolean;
   index: Map<string, PaneDefinition>;
   byId: Map<string, SurfaceRegion>;
@@ -151,7 +153,11 @@ function leafNode(region: SurfaceRegion, cx: Cx): Node {
   const { form, cramped } = formForRoom(pane?.forms ?? PLACEHOLDER_FORMS, room, cx.env.principles);
   const target = resolveTarget(region.binding, cx.props.selected);
   const content: Child = pane
-    ? component('FormScope', { form }, { slots: { children: [slot(contentSlot(region.id), [region, target, resolveSettings(pane, region, cx.props.targets)])] } })
+    ? component(
+        'Context',
+        { name: 'surface', value: { editing: cx.editing, locked: cx.locked } },
+        { slots: { children: [component('FormScope', { form }, { slots: { children: [slot(contentSlot(region.id), [region, target, resolveSettings(pane, region, cx.props.targets)])] } })] } },
+      )
     : placeholderNode(region);
   const docking = cx.ui.docking;
   const zone = docking?.target === region.id ? docking.zone : undefined;
@@ -274,7 +280,7 @@ function regionToolsNode(region: SurfaceRegion, pane: PaneDefinition | undefined
   } else {
     for (const d of SURFACE_DIRECTIONS) items.push(tool({ left: '←', right: '→', up: '↑', down: '↓' }[d], `move:${d}:${id}`, `move ${region.title} ${d}`, inert));
     items.push(tool('Rename', `retitle:${id}`, `rename ${region.title}`, inert));
-    if ((pane?.settings ?? []).length > 0) items.push(tool('Settings', 'sheet', `${region.title} settings`, inert, { expanded: ui.sheet === true }));
+    if ((pane?.settings ?? []).some((x) => x.type !== 'data')) items.push(tool('Settings', 'sheet', `${region.title} settings`, inert, { expanded: ui.sheet === true }));
     items.push(tool('✕', `remove:${id}`, `remove ${region.title}`, inert));
     if (targets.length > 0) {
       const binding = region.binding;
@@ -331,7 +337,7 @@ function sheetNode(region: SurfaceRegion, pane: PaneDefinition, targets: readonl
   return h(
     'div',
     { class: plate.className, ...plate.attrs, 'data-part': 'sheet', role: 'group', 'aria-label': `${region.title} settings` },
-    ...(pane.settings ?? []).map((spec) => fieldNode(spec, values[spec.key], targets, inert)),
+    ...(pane.settings ?? []).filter((spec) => spec.type !== 'data').map((spec) => fieldNode(spec, values[spec.key], targets, inert)),
     tool('Done', 'sheet', `close ${region.title} settings`, inert),
   );
 }
@@ -405,7 +411,7 @@ export function workspaceView(props: WorkspaceModelProps, ui: SurfaceUi, env: Wo
   const index = paneIndex(panes);
   const regions = tab ? tabRegions(tab) : [];
   const byId = new Map((tab?.regions ?? []).map((r) => [r.id, r]));
-  const cx: Cx = { props, env, ui, editing, inert, index, byId };
+  const cx: Cx = { props, env, ui, editing, locked: tab?.locked === true, inert, index, byId };
   const picked = editing ? regions.find((r) => r.id === ui.region) : undefined;
   const pickedPane = picked ? index.get(picked.kind) : undefined;
   const empty = textView({ role: 'body', tone: 'muted', className: 'yh-workspace__empty' });
@@ -427,7 +433,7 @@ export function workspaceView(props: WorkspaceModelProps, ui: SurfaceUi, env: Wo
       toolbarNode(props, tab, ui, editing, inert),
     ),
     picked ? regionToolsNode(picked, pickedPane, targetsFor(pickedPane, targets), ui, inert) : null,
-    picked && pickedPane && ui.sheet && (pickedPane.settings ?? []).length > 0 ? sheetNode(picked, pickedPane, targets, inert) : null,
+    picked && pickedPane && ui.sheet && (pickedPane.settings ?? []).some((x) => x.type !== 'data') ? sheetNode(picked, pickedPane, targets, inert) : null,
     editing && ui.palette && tab ? paletteNode(panes ?? [], picked, inert) : null,
     tab && tab.layout !== null && regions.length > 0
       ? h('div', { class: 'yh-workspace__layout', 'data-part': 'layout', role: 'group', 'aria-label': tab.title }, layoutNode(tab.layout, cx))

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
-import { Workspace } from '../../../layout/Workspace/Workspace';
+import { Workspace, openTab, type ResolvedSettings } from '../../../layout/Workspace/Workspace';
 import { useSurfaceHost } from '../../../layout/Workspace/host.story';
 import { LIVE_PANES, isLivePaneKind, livePanes } from '../panes';
 import { spineTracks } from '../SignalSpine/SignalSpine.fixtures';
@@ -22,15 +22,35 @@ interface LiveProps {
   /** Open in edit mode (the host keeps edit mode, as mix's store does). */
   editing?: boolean;
   running?: boolean;
+  /** Show the stand-in for the app's MIDI: a learn switch and four controller CCs. */
+  midi?: boolean;
+}
+
+/** The story's stand-in for a controller and the app's learn switch: scenario data, not part of zen. */
+function MidiStrip({ learning, onLearning, onMove }: { learning: boolean; onLearning: (on: boolean) => void; onMove: (cc: number, value: number) => void }) {
+  return (
+    <div role="group" aria-label="Story: MIDI stand-in" style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', padding: 'var(--space-1) var(--space-2)', fontSize: 12 }}>
+      <button type="button" aria-pressed={learning} onClick={() => onLearning(!learning)}>
+        {learning ? 'Story: learn mode on' : 'Story: learn mode off'}
+      </button>
+      {[21, 22, 23, 24].map((cc) => (
+        <label key={cc} style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
+          CC {cc}
+          <input type="range" min={0} max={127} defaultValue={0} aria-label={`Story: controller CC ${cc}`} onInput={(e) => onMove(cc, Number((e.target as HTMLInputElement).value) / 127)} />
+        </label>
+      ))}
+    </div>
+  );
 }
 
 /** What a region can follow or pick: the set's tracks, and its cuts. */
 export const LIVE_TARGETS = [...spineTracks.map((t) => ({ id: t.id, label: t.name, kind: 'track' })), ...cutPadsBoard.map((p) => ({ id: p.id, label: p.label, kind: 'cut' }))];
 
-function Live({ start, editing = false, running = true }: LiveProps) {
+function Live({ start, editing = false, running = true, midi = false }: LiveProps) {
   const host = useSurfaceHost({ ...LIVE_DOCUMENT, active: start }, { keepEditing: true, editing, titleOf: (kind) => (isLivePaneKind(kind) ? LIVE_PANES[kind].label : kind) });
   const live = useLiveSet({ running });
-  return (
+  const configure = (region: string) => (settings: ResolvedSettings) => host.onIntent({ type: 'configureRegion', tab: openTab(host.document)!.id, region, settings });
+  const surface = (
     <Workspace
       name="Hidden Signals"
       document={host.document}
@@ -41,8 +61,15 @@ function Live({ start, editing = false, running = true }: LiveProps) {
       canRedo={host.canRedo}
       editing={host.editing}
       onIntent={host.onIntent}
-      pane={(region, target, settings) => live.content(region, target, settings)}
+      pane={(region, target, settings) => live.content(region, target, settings, configure(region.id))}
     />
+  );
+  if (!midi) return surface;
+  return (
+    <div style={{ display: 'grid', gridTemplateRows: 'auto minmax(0, 1fr)', height: '100%' }}>
+      <MidiStrip learning={live.learning} onLearning={live.setLearning} onMove={live.midi} />
+      {surface}
+    </div>
   );
 }
 
@@ -55,6 +82,7 @@ const meta = {
     start: { control: 'select', options: LIVE_DOCUMENT.tabs.map((t) => t.id) },
     editing: { control: 'boolean' },
     running: { control: 'boolean' },
+    midi: { control: 'boolean' },
   },
 } satisfies Meta<typeof Live>;
 
@@ -69,6 +97,34 @@ type Story = StoryObj<typeof meta>;
 export const Looper: Story = {
   args: { start: 'looper' },
   parameters: { frame: { w: 1280, h: 800 } },
+};
+
+/**
+ * The board learning a controller: learn mode on, press the Filter, move CC 21: the Filter is mapped
+ * to it and shows its mark; moving CC 21 again rides the Filter. The board stays locked: learning
+ * is playing, not building.
+ */
+export const LooperLearn: Story = {
+  name: 'Looper · learn',
+  args: { start: 'looper', midi: true },
+  parameters: { frame: { w: 1280, h: 840 } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Story: learn mode off' }));
+    await userEvent.click(await canvas.findByRole('button', { name: 'learn Filter' }));
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Filter: waiting for a control' })).toBeTruthy());
+    const cc21 = canvas.getByLabelText('Story: controller CC 21');
+    await fireEvent.input(cc21, { target: { value: '30' } });
+    await waitFor(() => expect(within(canvasElement.querySelector<HTMLElement>('[data-cell="m1"]')!).getByText('CC 21')).toBeTruthy());
+    await userEvent.click(canvas.getByRole('button', { name: 'Story: learn mode on' }));
+    // Learn off: the controller now rides the Filter.
+    const filter = () => canvasElement.querySelector<HTMLElement>('[data-cell="m1"]')!.textContent ?? '';
+    const before = filter();
+    await fireEvent.input(cc21, { target: { value: '127' } });
+    await waitFor(() => expect(filter()).not.toBe(before));
+    await expect(filter()).toMatch(/20\.00\s*kHz/);
+    await expect(canvas.getByRole('button', { name: 'unlock Looper' })).toBeTruthy();
+  },
 };
 
 /** The board retuned between songs: unlocked by a hold, its grid widened, the cuts docked under the throws, Vox dropped from the strips, locked again. */

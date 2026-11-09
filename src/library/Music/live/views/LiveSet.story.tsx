@@ -36,6 +36,8 @@ import { throwPads } from '../ThrowPads/ThrowPads.fixtures';
 import { TrackStrips, type TrackStrip } from '../TrackStrips/TrackStrips';
 import { stripReturns, stripTracks } from '../TrackStrips/TrackStrips.fixtures';
 import { useBeat } from './clock';
+import { ControlPanel, type ControlCell } from '../ControlPanel/ControlPanel';
+import { controlParams, controlValues } from '../ControlPanel/ControlPanel.fixtures';
 import type { ResolvedSettings, SurfaceRegion } from '../../../layout/Workspace/Workspace.types';
 import type { DiceMove } from '../DicePad/DicePad';
 
@@ -90,6 +92,11 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
   const [jam, setJam] = useState(false);
   const [scaleLock, setScaleLock] = useState<ScaleLock>('chord');
   const [chaos, setChaos] = useState(0.25);
+  // The controls' parameters and MIDI learn, as the app keeps them: values, learn mode, the parameter waited on, the mappings.
+  const [values, setValues] = useState<Readonly<Record<string, number>>>(controlValues);
+  const [learning, setLearning] = useState(false);
+  const [learnTarget, setLearnTarget] = useState<string | undefined>(undefined);
+  const [mappings, setMappings] = useState<Readonly<Record<string, string>>>({});
   const [cuts, setCuts] = useState<readonly CutPad[]>(cutPadsBoard.map((p) => (p.id === 'riser' ? { ...p, state: 'armed' } : p)));
 
   const { index, toNext } = chordAt(beat);
@@ -102,7 +109,7 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
   };
 
   const content = useMemo(() => {
-    return (region: SurfaceRegion, bound?: string, settings: ResolvedSettings = {}): ReactNode => {
+    return (region: SurfaceRegion, bound?: string, settings: ResolvedSettings = {}, configure?: (next: ResolvedSettings) => void): ReactNode => {
       const trackId = bound ?? selected;
       // What the region's settings pick of the set: its tracks, its cuts, its moves (all when unset).
       const picks = (key: string): readonly string[] | undefined => (Array.isArray(settings[key]) ? (settings[key] as readonly string[]) : undefined);
@@ -218,11 +225,45 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
           return <CutPads pads={only(cuts, 'pads')} selected="riser" onFire={(c) => setCuts((all) => all.map((p) => (p.id === c ? { ...p, state: p.state === 'fired' ? 'idle' : 'fired' } : p)))} />;
         case 'throws':
           return <ThrowPads pads={throws} onMove={({ id: pad, x, y }) => setThrows((all) => all.map((p) => (p.id === pad ? { ...p, x, y, trail: [...(p.trail ?? []).slice(-23), { x: p.x, y: p.y }] } : p)))} />;
+        case 'controls':
+          return (
+            <ControlPanel
+              cells={(settings.cells ?? []) as unknown as readonly ControlCell[]}
+              columns={(settings.columns as number) ?? 8}
+              rows={(settings.rows as number) ?? 4}
+              params={controlParams}
+              values={values}
+              onParam={({ param, value }) => setValues((v) => ({ ...v, [param]: value }))}
+              onTrigger={({ param, down }) => setValues((v) => ({ ...v, [param]: down ? 1 : 0 }))}
+              onCells={configure ? (next) => configure({ ...settings, cells: next as never }) : undefined}
+              learning={learning}
+              learnTarget={learnTarget}
+              mappings={mappings}
+              onLearn={setLearnTarget}
+              onForget={(param) => setMappings(({ [param]: _gone, ...rest }) => rest)}
+            />
+          );
         case 'rig':
           return <RigHealth {...rigHealthBoard} onOpen={fn()} />;
       }
     };
-  }, [beat, selected, queuedSection, stems, jam, scaleLock, chaos, follow, loopFollow, bassLock, target, length, held, scene, layers, picked, strips, throws, cuts, index, toNext, chordName, barsLeft]);
+  }, [values, learning, learnTarget, mappings, beat, selected, queuedSection, stems, jam, scaleLock, chaos, follow, loopFollow, bassLock, target, length, held, scene, layers, picked, strips, throws, cuts, index, toNext, chordName, barsLeft]);
 
-  return { beat, selected, setSelected, content };
+  /**
+   * The stand-in for the app's MIDI: a controller's CC moved to `value` (0–1). Waiting on a
+   * parameter, the CC is mapped to it; otherwise a mapped CC moves its parameter across its range.
+   */
+  const midi = (cc: number, value: number) => {
+    const name = `CC ${cc} · ch 1`;
+    if (learnTarget) {
+      setMappings((m) => ({ ...Object.fromEntries(Object.entries(m).filter(([, v]) => v !== name)), [learnTarget]: name }));
+      setLearnTarget(undefined);
+      return;
+    }
+    const param = Object.entries(mappings).find(([, v]) => v === name)?.[0];
+    const p = controlParams.find((x) => x.id === param);
+    if (p) setValues((v) => ({ ...v, [p.id]: p.param.min + value * (p.param.max - p.param.min) }));
+  };
+
+  return { beat, selected, setSelected, content, learning, setLearning: (on: boolean) => { setLearning(on); if (!on) setLearnTarget(undefined); }, midi };
 }

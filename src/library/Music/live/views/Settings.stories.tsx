@@ -23,7 +23,7 @@ const meta = {
       capability: 'live-pane-settings',
       purpose: 'Settings a pane kind declares, the sheet that edits a region’s, and the values a region carries to the app.',
       requirement: 'A pane kind declares its settings',
-      shall: 'A pane definition SHALL be able to declare settings as plain data, each a choice, a toggle, a number in a range or a pick of the app’s targets, with a label and a default, and a region SHALL carry its own values for them in the document.',
+      shall: 'A pane definition SHALL be able to declare settings as plain data, each a choice, a toggle, a number in a range, a pick of the app’s targets, or plain data the pane edits itself, with a label and a default, and a region SHALL carry its own values for them in the document; a plain-data setting SHALL reach the pane and SHALL never be listed in the settings sheet.',
     },
   },
 } satisfies Meta;
@@ -85,6 +85,42 @@ export const AValueTheDefinitionNoLongerDeclares: Story = scenario(
     },
   },
   { render: () => <Workspace name="Notes" document={notesDoc({ colour: 'red' })} panes={[NOTES]} targets={LIVE_TARGETS} editing onIntent={onNotesIntent} pane={() => <p>notes</p>} /> },
+) as Story;
+
+/** A kind with a plain-data setting beside an ordinary one. */
+const SKETCH: PaneDefinition = {
+  kind: 'sketch',
+  label: 'Sketch',
+  forms: NOTES.forms,
+  settings: [
+    { key: 'ink', label: 'Ink', type: 'choice', options: [{ value: 'dark', label: 'Dark' }, { value: 'light', label: 'Light' }], default: 'dark' },
+    { key: 'strokes', label: 'Strokes', type: 'data', default: [] },
+  ],
+};
+const sketchDoc: SurfaceDocument = {
+  version: 2,
+  active: 't',
+  tabs: [{ id: 't', title: 'Sketch', layout: 's', regions: [{ id: 's', kind: 'sketch', title: 'Sketch', binding: { mode: 'selected' }, settings: { strokes: [{ from: [0, 0], to: [1, 1] }] } }] }],
+};
+
+export const APlainDataSetting: Story = scenario(
+  {
+    name: 'A plain-data setting',
+    when: 'a pane kind declares a plain-data setting and a region carries a value for it',
+    then: 'the pane receives the value and the settings sheet doesn’t list it',
+    act: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      await userEvent.click(canvas.getByRole('button', { name: 'Sketch tools' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Sketch settings' }));
+    },
+    check: async ({ canvasElement }) => {
+      await expect(shown(canvasElement)).toEqual({ ink: 'dark', strokes: [{ from: [0, 0], to: [1, 1] }] });
+      const sheet = within(canvasElement).getByRole('group', { name: 'Sketch settings' });
+      await expect(sheet.querySelector('[data-setting="ink"]')).toBeTruthy();
+      await expect(sheet.querySelector('[data-setting="strokes"]')).toBeNull();
+    },
+  },
+  { render: () => <Workspace name="Sketch" document={sketchDoc} panes={[SKETCH]} editing pane={(_r, _t, settings) => <pre data-testid="settings">{JSON.stringify(settings)}</pre>} /> },
 ) as Story;
 
 /** The live set with one strips region, its settings applied by the host. */
