@@ -18,6 +18,12 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Trig / Wave Graph | `WaveGraph`: A·sin(B(x − C)) + D with brackets, the circle beside it, an inverse mode and a data-fitting mode |
 | Trig / Identity Squares | `IdentitySquares`: squares on the legs, sin²θ + cos²θ = 1 as areas |
 | Trig / Angle Sum | `AngleSum`: sin(α + β) as two stacked lengths |
+| Primes / Boundary Waves | `BoundaryWaves`: prime p as p half-waves between walls, stacked or overlaid; node marks that never meet |
+| Primes / Wrapped Waves | `WrappedWaves`: the same waves round a circle, from a few curves to a shaded disc of 100,000 |
+| Primes / Ring Field | `RingField`: thousands of prime waves summed by radius, with the pixel grid's own pattern shown for what it is |
+| Primes / Gap Spectrum | `GapSpectrum`: prime gaps played as tones, their spectrum beside the gap histogram; the prime indicator's peaks at simple fractions |
+| Primes / Box Field | `BoxField`: the waves as standing waves in a square, summed and painted |
+| Primes / Field Shape | `FieldShape`: the box field as a 3D surface or wrapped onto a sphere |
 | Trig / General Triangle | `GeneralTriangle`: three draggable vertices, the laws of sines and cosines, area, the ambiguous case |
 | Physics / Apollo Descent | `ApolloDescentSimulator`: Apollo 11 Lunar Module powered descent (P63 braking, P64 approach, P66 manual rate of descent), Cherry-Klumpp guidance law, and AGC DSKY |
 | Physics / Orbit Transfer | `OrbitSimulator`: Translunar orbital mechanics (Apollo 8/11), restricted Earth-Moon gravity field, RK4 integration, free-return trajectories |
@@ -72,6 +78,13 @@ The `trig/` folder follows the same contract for the trigonometry course
 `parts.tsx` (frame, axes, arcs, labels, and a handle dragged by pointer or stepped by the arrow
 keys), and seven plain-SVG figures. Hue 1 is sine, hue 2 cosine, hue 3 tangent, hue 4 the angle,
 hue 5 a second thing (a second angle or triangle, data).
+
+The `primes/` folder draws primes as waves for the Prime waves chapter
+(`src/library/compendium/book/prime-waves/`), after a video that showed such pictures without its
+code: `model/` (a sieve, waves in a boundary, the ring and box fields, an FFT and the gap and
+indicator spectra; pure and tested), `parts.tsx` (a count slider on round numbers and a `Raster`
+that paints a canvas with the contract's colours), and six figures. Each figure says where its
+pattern comes from: the arithmetic, the pixel grid, or the shape it is wrapped on.
 
 ## Implementation references
 

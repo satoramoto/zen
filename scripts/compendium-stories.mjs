@@ -16,10 +16,10 @@ try {
   // ONLY=<id substring> plays just those stories (the screenshots still run).
   const only = process.env.ONLY;
   const stories = Object.values(index.entries).filter(
-    (e) => e.type === 'story' && ['Compendium/', 'Math/Fourier/', 'Math/Trig/'].some((t) => e.title.startsWith(t)) && (!only || e.id.includes(only)),
+    (e) => e.type === 'story' && ['Compendium/', 'Math/Fourier/', 'Math/Trig/', 'Math/Primes/'].some((t) => e.title.startsWith(t)) && (!only || e.id.includes(only)),
   );
   assert.ok(stories.length > 0, 'no Compendium stories in the build');
-  console.log(stories.length, 'Compendium, Fourier and Trig stories');
+  console.log(stories.length, 'Compendium, Fourier, Trig and Primes stories');
   for (const story of stories) {
     const p = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
     const errors = [];
@@ -76,6 +76,7 @@ try {
   for (const [book, id, narrow] of [
     ['fourier', 'compendium-book--fourier', false],
     ['trig', 'compendium-book--trigonometry', true],
+    ['prime-waves', 'compendium-book--prime-waves', true],
   ]) {
     for (const [theme, mode] of [['textbook-console', 'dark'], ['textbook-blueprint', 'light']]) {
       for (const width of narrow ? [1440, 390] : [1440]) {

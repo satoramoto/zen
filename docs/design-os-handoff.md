@@ -2,6 +2,8 @@
 
 Where the design OS stands, and how to pick it up. The code is in [satoramoto/zen](https://github.com/satoramoto/zen) (`~/Code/satoramoto/zen`), next to the field guide. Why things are the way they are: `docs/design-os-decisions.md`. Checks: `AGENTS.md`.
 
+The [mission and theme-quality contract](mission.md) guides future decisions: **Swap the theme, change the character, preserve the quality.**
+
 ## The idea
 
 Every visual decision is a named choice in one token contract, and every widget is rebuilt from what its user needs. Components read only the contract's CSS variables (`toCssVars()` in `src/library/contract.ts`), never a literal colour or radius; `library.test.tsx` enforces it.

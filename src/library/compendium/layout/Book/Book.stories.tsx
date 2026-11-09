@@ -6,6 +6,8 @@ import { FIGURES } from '../../book/figures';
 import { FOURIER_FIGURES } from '../../book/fourier/figures';
 import { FOURIER_BOOK } from '../../book/fourier/fourier.book';
 import { HARMONIC_BOOK } from '../../book/harmonic.book';
+import { PRIME_WAVES_FIGURES } from '../../book/prime-waves/figures';
+import { PRIME_WAVES_BOOK } from '../../book/prime-waves/prime-waves.book';
 import { TRIG_CHECKERS } from '../../book/trig/checkers';
 import { TRIG_FIGURES } from '../../book/trig/figures';
 import { TRIG_BOOK } from '../../book/trig/trig.book';
@@ -64,6 +66,53 @@ export const FourierChapters: Story = {
     // The last chapter's exercise checks.
     await userEvent.type(canvas.getByRole('textbox', { name: 'Your answer' }), '0{Enter}');
     expect(canvas.getByText(/correct/i)).toBeInTheDocument();
+  },
+};
+
+/** Prime waves, to read: a video's pictures of primes as waves, rebuilt and moved by hand. */
+export const PrimeWaves: Story = {
+  args: { book: PRIME_WAVES_BOOK, figures: PRIME_WAVES_FIGURES },
+};
+
+/** Prime waves: every scrub moves its figure; one exercise of each kind is answered. */
+export const PrimeWavesChapter: Story = {
+  args: { book: PRIME_WAVES_BOOK, figures: PRIME_WAVES_FIGURES },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const index = Object.keys(bookIndex(args.book));
+    expect(validateEntry(args.book.chapters[0], { figures: Object.keys(PRIME_WAVES_FIGURES), entries: index })).toEqual([]);
+    expect(canvasElement.querySelector('[data-missing-figure], [data-missing-entry], [data-missing-quantity]')).toBeNull();
+    // Every drawing's description (images, and FieldShape's group).
+    const described = () => [...canvasElement.querySelectorAll('[role="img"][aria-label], [role="group"][aria-label]')].map((el) => el.getAttribute('aria-label'));
+    for (const scrub of [...canvasElement.querySelectorAll<HTMLElement>('.cmp-scrub')]) {
+      const before = described();
+      scrub.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(described()).not.toEqual(before), { timeout: 8000 });
+    }
+    const section = (heading: string) => canvas.getByRole('heading', { name: new RegExp(heading) }).closest('section')!;
+    const exercise = (name: RegExp) => within(canvas.getByRole('region', { name }));
+    // Quantity: the fewest primes whose marks come closer than 1/1000 is 12.
+    const marks = within(section('Marks that never meet'));
+    const marked = marks.getAllByRole('slider', { name: 'Primes' }).find((el) => el.classList.contains('cmp-scrub'))!;
+    marked.focus();
+    await userEvent.keyboard('{Home}');
+    for (let i = 0; i < 10; i++) await userEvent.keyboard('{ArrowRight}');
+    await waitFor(() => expect(marked).toHaveAttribute('aria-valuenow', '12'));
+    const fewest = exercise(/fewest primes/);
+    await userEvent.click(fewest.getByRole('button', { name: 'Check' }));
+    expect(fewest.getByText(/correct/i)).toBeInTheDocument();
+    // Typed (numeric).
+    const fiveSeven = exercise(/marks of 5 and 7/);
+    await userEvent.type(fiveSeven.getByRole('textbox', { name: 'Your answer' }), '0.029{Enter}');
+    expect(fiveSeven.getByText(/correct/i)).toBeInTheDocument();
+    // Choice.
+    const six = exercise(/gaps of 6 commoner/);
+    await userEvent.click(six.getByRole('radio', { name: /either kind/ }));
+    await userEvent.click(six.getByRole('button', { name: 'Check' }));
+    expect(six.getByText(/correct/i)).toBeInTheDocument();
+    const contents = within(canvas.getByRole('navigation', { name: 'Contents' }));
+    expect(contents.getByRole('button', { name: /prime waves/i }).closest('li')).toHaveTextContent('3/4');
   },
 };
 

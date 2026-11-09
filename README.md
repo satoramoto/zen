@@ -5,6 +5,12 @@ Interface design from first principles. Two parts:
 - **A field guide**: an interactive React/TypeScript guide to typography, grids, colour and interface styling. Six books, eighteen original illustrations, and a Storybook workshop for inspecting each principle.
 - **A design OS**: a token contract whose theme facets (palette, type, chrome, density) mix freely, and the [Yahaha](https://github.com/satoramoto/yahaha) arranger app's interface redesigned on it, widget by widget and then the whole Stage screen. [docs/design-os-handoff.md](docs/design-os-handoff.md) explains the ideas and where the work stands.
 
+## Mission
+
+Zen makes good interfaces easy to compose, with less infrastructure to maintain.
+
+**Swap the theme, change the character, preserve the quality.** Read the [mission and theme-quality contract](docs/mission.md) for the distinction between quality and stylistic preference.
+
 ## Development
 
 Use Node.js 22.12+ and npm. Run `npm install`, then `npm run dev`.
