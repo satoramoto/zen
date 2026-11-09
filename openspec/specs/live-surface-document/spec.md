@@ -1,6 +1,7 @@
 # live-surface-document Specification
 
 ## Purpose
+
 The document an app owns and the surface draws: its shape, its version, and how the surface treats an id or kind it doesn’t know.
 
 ## Requirements
