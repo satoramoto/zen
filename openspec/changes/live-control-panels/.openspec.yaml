@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-09
+goal: Panels of your own controls (faders, knobs, buttons, pads, XY) bound to the app's parameters, with MIDI learn, proven on the looper board
+affected_areas:
+  - zen
+x-review: look
