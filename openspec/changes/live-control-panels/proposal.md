@@ -54,6 +54,8 @@ person moved, and makes building them as direct as building the panel around the
 ### Modified Capabilities
 
 - `live-pane-settings`: a pane kind can declare plain-data settings the pane edits itself.
+- `live-pane-registry`: the ready-made set is no longer sixteen panes (it gains `controls`); the
+  requirement names the set, not its count.
 
 ## Validation
 
