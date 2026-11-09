@@ -31,7 +31,14 @@ that branch rather than starting over.
   git dependency, so `scenario()` works in zen's CI. This makes story-spec an affected area.
 - **No vendoring.** The flight software is cited, never copied into zen.
 
-## Open questions
+## Resolved while building
 
-- Which mission timeline source to cite for the historical checks (the Apollo 11 Flight Journal
-  or the mission transcript); either is acceptable if it is named.
+- **Timeline source:** NASA SP-4029, the Apollo by the Numbers mission timeline (ignition
+  102:33:05, the alarms, P64, P66 and touchdown), named as `TIMELINE_SOURCE` in
+  `model/sources.ts` and in `SOURCES.md`.
+- **The translunar accuracy measure** is the Jacobi integral, not the energy: with a moving Moon
+  the energy in the Earth's frame is not conserved, but the Jacobi integral is in the frame
+  turning with the Moon, so its drift is the integrator's error. The bounds are 1e-5 for the
+  default transfer at a 30 s step and 1e-4 for the free return at 60 s.
+- **Known deviations** from the flight, written down in `SOURCES.md`: the model throttles down
+  at about 200 s (the flight at 386 s), and its alarms are all 1202 (the flight had one 1201).

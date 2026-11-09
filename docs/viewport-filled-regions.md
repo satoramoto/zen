@@ -48,10 +48,10 @@ Use the preview registry with this checkout's absolute path, then run
 390px and 1280px, rejects console assertions and browser exceptions, and saves
 screenshots/results in ignored `.shots/viewport-regions/`.
 
-The story tooling is vendored at immutable story-spec source commit
-`c96187f1cfd07fe826ceb2a8b1dfc1f3a1074736` in
-`vendor/story-spec-c96187f1.tgz`, the same approved artifact used by Harmonigram.
-Its source repository has no remote; the lockfile records archive integrity.
+The story tooling is pinned to immutable public story-spec source commit
+`c96187f1cfd07fe826ceb2a8b1dfc1f3a1074736`, the same source as the approved
+artifact used by Harmonigram. Its repository became public during implementation;
+the manifest and lockfile now both pin that revision.
 
 Baseline negative control: before model implementation, the first scenario failed
 with `Unable to find an accessible element with the role "button" and name
