@@ -1,7 +1,8 @@
 import {camera,clipPolygon,imagePoint,type Point,type Projection,type Settings} from './projection';
+import {contactCompare} from './surfaceVisibility';
 
-export interface IdentifiedFace {points:Point[];id?:string;label?:string;hue?:1|2|3|4}
-export interface ProjectedFace {face:IdentifiedFace;index:number;id?:string;points:Point[];meanDepth:number}
+export interface IdentifiedFace {points:Point[];id?:string;label?:string;hue?:1|2|3|4;contactSides?:Readonly<Record<string,1|-1>>}
+export interface ProjectedFace {face:IdentifiedFace;index:number;id?:string;points:Point[];meanDepth:number;facing?:number}
 /** Shared drawing/hit geometry in SVG coordinates; invalid identities remain decorative. */
 export function projectFaces(faces:IdentifiedFace[],settings:Settings,mode:Projection,offset={x:0,y:0}):ProjectedFace[]{
  const counts=new Map<string,number>();
@@ -15,7 +16,8 @@ export function projectFaces(faces:IdentifiedFace[],settings:Settings,mode:Proje
   const area=vertices.reduce((sum,a,i)=>{const b=vertices[(i+1)%vertices.length];return sum+a.x*b.y-b.x*a.y;},0);
   if(Math.abs(area)<1e-12)return [];
   const id=face.id?.trim()&&counts.get(face.id)===1?face.id:undefined;
-  return [{face,index,id,points:vertices,meanDepth:vertices.reduce((sum,p)=>sum+p.z,0)/vertices.length}];
+  // Projection reverses the vertical axis: positive screen winding faces us.
+  return [{face,index,id,points:vertices,meanDepth:vertices.reduce((sum,p)=>sum+p.z,0)/vertices.length,facing:area>0?1:-1}];
  });
 }
 function inside(points:Point[],p:{x:number;y:number}){
@@ -42,11 +44,11 @@ function depthAt(points:Point[],p:{x:number;y:number},mode:Projection):number|nu
  return null;
 }
 /** All spatial candidates, nearest first; exact depth ties retain caller order. */
-export function faceCandidates(faces:ProjectedFace[],p:{x:number;y:number},mode:Projection):string[]{
+export function faceCandidates(faces:ProjectedFace[],p:{x:number;y:number},mode:Projection,contacts=false):string[]{
  if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return [];
  return faces.flatMap(face=>{
   if(!face.id||!inside(face.points,p))return [];
   const depth=depthAt(face.points,p,mode);
-  return depth===null?[]:[{id:face.id,depth,index:face.index}];
- }).sort((a,b)=>a.depth-b.depth||a.index-b.index).map(face=>face.id);
+  return depth===null?[]:[{id:face.id,depth,index:face.index,face}];
+ }).sort((a,b)=>contacts&&Math.abs(a.depth-b.depth)<1e-7?contactCompare(a.face,b.face):a.depth-b.depth||a.index-b.index).map(face=>face.id);
 }
