@@ -120,6 +120,7 @@ export * from './live/OrbitClock/OrbitClock.forms';
 export * from './live/SignalSpine/SignalSpine.model';
 export * from './live/SignalSpine/SignalSpine.forms';
 export { STEM_INKS, type StemInk, type LiveTrackRef } from './live/live.model';
+export { LIVE_PANES, livePanes, isLivePaneKind, type LivePaneKind } from './live/panes';
 export * from './live/ProgressionStrip/ProgressionStrip.model';
 export * from './live/ProgressionStrip/ProgressionStrip.forms';
 export * from './live/CutPads/CutPads.model';
