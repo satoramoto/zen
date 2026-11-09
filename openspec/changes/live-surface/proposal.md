@@ -28,8 +28,8 @@ has to fit, unchanged in what it owns.
   the surface as one typed `SurfaceIntent`, named like mix's `SurfaceStore` methods. The app
   applies it. A pure `applySurfaceIntent(document, intent)` is exported for apps and stories that
   have no store of their own; it holds no state.
-- **Zen keeps only visual state.** Edit mode, the region being edited, a drag in progress and
-  the palette's open state are kept by the surface unless the app passes them, and each can be
+- **Zen keeps only visual state.** Edit mode, the region being edited and the palette's open
+  state are kept by the surface unless the app passes them, and each can be
   passed (controlled) when an app tracks it. Nothing zen keeps reaches the document.
 - **The host contract, written down.** A pane takes readings (plain data the host sends when
   they change) and a frame reader (values the host samples every frame, such as meters and
@@ -77,15 +77,15 @@ has to fit, unchanged in what it owns.
 ## Impact
 
 - Changed: `src/library/layout/Workspace/` (document in, intents out, visual state, its model,
-  fixtures, snapshot and stories); `src/library/live/` (gains `surface/` for the document,
-  intents, applier and Music live definitions; `views.ts` becomes documents only;
-  `LiveSet.story.tsx` applies intents through the applier); `docs/live-views.md`,
+  fixtures and stories, plus `surface.ts` for the pure helpers and the applier);
+  `src/library/Music/live/panes.ts` (the ready-made set); `src/library/live/` (`views.ts` becomes
+  documents only; the stories apply intents through the applier); `docs/live-views.md`,
   `docs/live-workspace.md`, `src/library/live/README.md`.
 - Public entries: `@satoramoto/zen` and `@satoramoto/zen/svelte` export the surface types,
-  intents, `applySurfaceIntent` and `musicLivePanes`. Those are framework-free files, so the
+  intents, `applySurfaceIntent`, the Workspace (now in Svelte too) and `Music.livePanes`. Those are framework-free files, so the
   Svelte entry never reaches React through them (`check:lib` holds that).
-- Shared files touched in their own first commit: `src/library/index.ts`, `src/library/svelte.ts`,
-  `layout/index.ts`, `view/snapshot.test.ts` and the Workspace's tree snapshot.
+- Shared files touched in their own first commit: `src/library/svelte.ts`, `layout/index.ts`,
+  `Music/index.ts`, `Music/svelte.ts`.
 - Not in this change: mix adopting it (deleting its `SurfaceEditor`, `RegionEditor` and closed
   `REGION_KINDS`) is a follow-up change in `openflowfm/mix`. Zen keeps no document store,
   persistence, undo history, scheduler or engine.
