@@ -59,9 +59,10 @@ new `data` setting: `{ type: 'data'; default: JsonValue }`). `SettingValue` wide
 `resolveSettings` passes a data setting through, and the sheet skips it. The app hands
 `settings.cells` to `ControlPanel` and turns `onCells(next)` into
 `configureRegion({ …settings, cells: next })`. The grid edits are pure functions in
-`ControlPanel/grid.ts`: place (first free cell from a point), move (stop at the last free cell on
-the path), resize (clamped to the grid and to free cells), remove. They are unit-tested and never
-let two controls overlap.
+`layout/cells.ts` (not in the Music family: it is plain geometry, and `docs/music.md` keeps new
+helper unit suites out of Music): place, move (stop at the last free cell on the path), resize
+(clamped to the grid and to free cells), remove. They are unit-tested and never let two controls
+overlap.
 
 *Rejected:* a separate document field for controls. Settings already travel with the region and
 through `configureRegion`, and mix's store needs no new method.
@@ -79,9 +80,9 @@ While building: the grid draws as faint cell outlines, and every empty cell is a
 control here") opening the six kinds. A placed control shows a tag (its label, or its kind). The
 tag drags the control on the grid, and its corner handle resizes it. With the tag focused, the
 arrows move it and Shift+arrows resize it. Pressing the tag opens the control's sheet (kind,
-parameter, label, remove), inline under the panel's top edge as the surface's region sheet is.
-Gestures go through the framework-free stores `bindCellDrag` and `bindCellResize`, registered in
-the Music store registry. A control's own gesture is off while building, so a drag on a fader
+parameter, label, remove), inline under the panel's top edge as the surface's region sheet is; the
+label field saves when left or on Enter. Both gestures go through one framework-free store,
+`liveCellDrag` (mode `move` or `resize`), registered in the Music store registry. A control's own gesture is off while building, so a drag on a fader
 moves the cell, not the value.
 
 ### D5. Learn mode is the app's
@@ -95,9 +96,10 @@ each mapped one sets the value through the host, and learn maps the next slider 
 
 ### D6. The looper's macros
 
-`LOOPER_TAB` gains a `controls` region, docked right of the strips (shares 2.4 : 1). Its cells are
-four faders (filter, delay send, reverb send, drive) and four pads (riser, drop, stutter, kill),
-placed by the panel's own grid edits applied through `configureRegion`. The story host lists those
+`LOOPER_TAB` gains a `controls` region, docked right of the strips (shares 1.6 : 1). Its cells, on
+6 × 3, are four faders (filter, delay send, reverb send, drive), four pads (riser, drop, stutter,
+kill) and a freeze toggle, placed with the grid's `place` and applied through `configureRegion`.
+No XY: the board's throws pane already carries the delay throw. The story host lists those
 eight parameters and keeps their values.
 
 ## Risks / Trade-offs

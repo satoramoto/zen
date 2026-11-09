@@ -1,3 +1,5 @@
+# live-pane-settings Spec Delta
+
 ## MODIFIED Requirements
 
 ### Requirement: A pane kind declares its settings
@@ -14,4 +16,4 @@ A pane definition SHALL be able to declare settings as plain data, each a choice
 
 #### Scenario: A plain-data setting
 - **WHEN** a pane kind declares a plain-data setting and a region carries a value for it
-- **THEN** the pane receives the value and the settings sheet doesn't list it
+- **THEN** the pane receives the value and the settings sheet doesn’t list it
