@@ -74,7 +74,7 @@ every figure takes its quantities as controlled props with `on<Prop>` callbacks 
 bind them, and keeps its own state when the page doesn't.
 
 The `trig/` folder follows the same contract for the trigonometry course
-(`src/library/compendium/book/trig/`): `model/` (angles, triangles, waves; pure and tested),
+(owned by human-free at `src/books/trigonometry/`): `model/` (angles, triangles, waves; pure and tested),
 `parts.tsx` (frame, axes, arcs, labels, and a handle dragged by pointer or stepped by the arrow
 keys), and seven plain-SVG figures. Hue 1 is sine, hue 2 cosine, hue 3 tangent, hue 4 the angle,
 hue 5 a second thing (a second angle or triangle, data).
@@ -107,3 +107,10 @@ and run `node scripts/math-catalog.mjs` against its preview (default port 6027) 
 navigation inventory, moved behavior stories, isolated components and a narrow layout.
 The focused `math-stories.mjs`, `signal-stories.mjs`, `signal-analysis.mjs` and
 `lab-stories.mjs` runners use the same updated story IDs.
+# Public book imports
+
+Applications import React figures from `@satoramoto/zen/math/trig`, pure calculations
+from `@satoramoto/zen/math/trig/model`, and expression parsing/checking from
+`@satoramoto/zen/math/expression`. Load `@satoramoto/zen/zen.css` for figures.
+The reader is React-only; the model and expression entries are framework-free.
+See `docs/compendium-package.md` for the consumer contract.

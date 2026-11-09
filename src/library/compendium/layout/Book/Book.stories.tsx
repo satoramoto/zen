@@ -8,9 +8,6 @@ import { FOURIER_BOOK } from '../../book/fourier/fourier.book';
 import { HARMONIC_BOOK } from '../../book/harmonic.book';
 import { PRIME_WAVES_FIGURES } from '../../book/prime-waves/figures';
 import { PRIME_WAVES_BOOK } from '../../book/prime-waves/prime-waves.book';
-import { TRIG_CHECKERS } from '../../book/trig/checkers';
-import { TRIG_FIGURES } from '../../book/trig/figures';
-import { TRIG_BOOK } from '../../book/trig/trig.book';
 import { bookIndex } from '../../model/book';
 import { validateEntry } from '../../model/validate';
 import { Book } from './Book';
@@ -113,80 +110,6 @@ export const PrimeWavesChapter: Story = {
     expect(six.getByText(/correct/i)).toBeInTheDocument();
     const contents = within(canvas.getByRole('navigation', { name: 'Contents' }));
     expect(contents.getByRole('button', { name: /prime waves/i }).closest('li')).toHaveTextContent('3/4');
-  },
-};
-
-/** The trigonometry book, to read: high-school trigonometry in eight chapters, every idea moved by hand before it is written down. */
-export const Trigonometry: Story = {
-  args: { book: TRIG_BOOK, figures: TRIG_FIGURES, checkers: TRIG_CHECKERS },
-};
-
-/** Every trigonometry chapter: it validates, draws, and a scrub in its text moves a figure. */
-export const TrigonometryChapters: Story = {
-  args: { book: TRIG_BOOK, figures: TRIG_FIGURES, checkers: TRIG_CHECKERS },
-  play: async ({ canvasElement, args }) => {
-    const canvas = within(canvasElement);
-    const index = Object.keys(bookIndex(args.book));
-    for (const chapter of args.book.chapters)
-      expect(validateEntry(chapter, { figures: Object.keys(TRIG_FIGURES), entries: index, checkers: Object.keys(TRIG_CHECKERS) })).toEqual([]);
-    const contents = within(canvas.getByRole('navigation', { name: 'Contents' }));
-    expect(contents.getAllByRole('listitem')).toHaveLength(8);
-    expect(canvas.getByText('Chapter 1 of 8')).toBeInTheDocument();
-    const labels = () => canvas.getAllByRole('img').map((el) => el.getAttribute('aria-label'));
-    for (const [i, chapter] of args.book.chapters.entries()) {
-      if (i > 0) await userEvent.click(canvas.getByRole('button', { name: `${chapter.title} →` }));
-      expect(canvas.getByRole('heading', { level: 1 })).toHaveTextContent(chapter.title);
-      expect(canvasElement.querySelector('[data-missing-figure], [data-missing-entry], [data-missing-quantity]')).toBeNull();
-      // A scrub in the text moves a figure: some drawing's description changes.
-      const before = labels();
-      const scrub = canvasElement.querySelector<HTMLElement>('.cmp-scrub')!;
-      scrub.focus();
-      await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}{ArrowRight}');
-      await waitFor(() => expect(labels()).not.toEqual(before));
-    }
-  },
-};
-
-/** One exercise of every kind, in the first two chapters: numeric, exact, choice, quantity, expression. */
-export const TrigonometryExercises: Story = {
-  args: { book: TRIG_BOOK, figures: TRIG_FIGURES, checkers: TRIG_CHECKERS },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const contents = within(canvas.getByRole('navigation', { name: 'Contents' }));
-    const row = () => contents.getByRole('button', { name: /angles and turns/i }).closest('li')!;
-    expect(row()).toHaveTextContent('0/4');
-    const exercise = (name: RegExp) => within(canvas.getByRole('region', { name }));
-    // Numeric.
-    const radians = exercise(/2 radians/);
-    await userEvent.type(radians.getByRole('textbox', { name: 'Your answer' }), '114.6{Enter}');
-    expect(radians.getByText(/correct/i)).toBeInTheDocument();
-    // Exact.
-    const word = exercise(/word for angles like that/);
-    await userEvent.type(word.getByRole('textbox', { name: 'Your answer' }), 'Coterminal{Enter}');
-    expect(word.getByText(/correct/i)).toBeInTheDocument();
-    // Choice.
-    const quadrant = exercise(/200°/);
-    await userEvent.click(quadrant.getByRole('radio', { name: 'III' }));
-    await userEvent.click(quadrant.getByRole('button', { name: 'Check' }));
-    expect(quadrant.getByText(/correct/i)).toBeInTheDocument();
-    // Quantity: not yet at 90°, then the figure's own button sets one radian.
-    const oneRadian = exercise(/arc is one radius long/);
-    await userEvent.click(oneRadian.getByRole('button', { name: 'Check' }));
-    expect(oneRadian.getByText(/not yet/i)).toBeInTheDocument();
-    await userEvent.click(canvas.getByRole('button', { name: 'One radian' }));
-    await waitFor(() => expect(oneRadian.getByRole('status')).toHaveTextContent('Angle = 57°'));
-    await userEvent.click(oneRadian.getByRole('button', { name: 'Check' }));
-    expect(oneRadian.getByText(/correct/i)).toBeInTheDocument();
-    expect(row()).toHaveTextContent('4/4');
-    // Expression, in chapter 2: an exact value in a spelling of the reader's own.
-    await userEvent.click(canvas.getByRole('button', { name: 'Right triangles →' }));
-    const sin60 = exercise(/exact value of/);
-    const field = sin60.getByRole('textbox', { name: 'Your answer' });
-    await userEvent.type(field, '1/2{Enter}');
-    expect(sin60.getByText(/not yet/i)).toBeInTheDocument();
-    await userEvent.clear(field);
-    await userEvent.type(field, '√3/2{Enter}');
-    expect(sin60.getByText(/correct/i)).toBeInTheDocument();
   },
 };
 

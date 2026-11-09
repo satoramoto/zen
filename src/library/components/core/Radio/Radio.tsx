@@ -29,7 +29,7 @@ export type RadioProps = CheckProps;
 export function Radio({ children, ...props }: RadioProps) {
   // Its own mixed state (uncontrolled): from `defaultChecked`, ended by the first pick.
   const [ownMixed] = useState(() => viewState(props.defaultChecked === 'mixed'));
-  const mixed = useSyncExternalStore(ownMixed.subscribe, ownMixed.get);
+  const mixed = useSyncExternalStore(ownMixed.subscribe, ownMixed.get, ownMixed.get);
   return <Tree tree={radioView(props, { label: children !== undefined }, mixed)} slots={{ children }} handlers={radioHandlers(props, ownMixed.set)} />;
 }
 

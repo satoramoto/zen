@@ -5,16 +5,20 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 
 const LIB = resolve('lib');
-const ENTRIES = ['svelte.js', 'themes.js'];
+const ENTRIES = [
+  { file: 'svelte.js', frameworks: /^react(?:-dom)?(?:\/.*)?$/ },
+  ...['themes.js', 'compendium-model.js', 'math-trig-model.js', 'math-expression.js'].map((file) => ({
+    file, frameworks: /^(?:react(?:-dom)?|svelte|storybook|@storybook\/[^/]+)(?:\/.*)?$/,
+  })),
+];
 /** A static or dynamic import of a module specifier. */
 const IMPORT = /(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"']+)["']/g;
-const REACT = /^react(?:-dom)?(?:\/.*)?$/;
 
 const failures: string[] = [];
 let checked = 0;
-for (const entry of ENTRIES) {
+for (const { file: entry, frameworks } of ENTRIES) {
   const start = join(LIB, entry);
-  if (!existsSync(start)) continue;
+  if (!existsSync(start)) { failures.push(`Missing required entry ${entry}`); continue; }
   checked++;
   const seen = new Set<string>();
   const queue: { file: string; via: string[] }[] = [{ file: start, via: [entry] }];
@@ -24,7 +28,7 @@ for (const entry of ENTRIES) {
     seen.add(file);
     const src = readFileSync(file, 'utf8');
     for (const [, spec] of src.matchAll(IMPORT)) {
-      if (REACT.test(spec)) failures.push(`${via.join(' → ')} imports "${spec}"`);
+      if (frameworks.test(spec)) failures.push(`${via.join(' → ')} imports "${spec}"`);
       else if (spec.startsWith('.')) {
         const next = resolve(dirname(file), spec);
         queue.push({ file: next, via: [...via, relative(LIB, next)] });
@@ -38,7 +42,7 @@ if (checked === 0) {
   process.exit(1);
 }
 if (failures.length) {
-  console.error(`React reached from a non-React entry:\n${[...new Set(failures)].map((f) => `  ${f}`).join('\n')}`);
+  console.error(`Package boundary failures:\n${[...new Set(failures)].map((f) => `  ${f}`).join('\n')}`);
   process.exit(1);
 }
-console.log(`check-lib-entries: ${checked} entr${checked === 1 ? 'y' : 'ies'} free of React`);
+console.log(`check-lib-entries: ${checked} entries respect their framework boundaries`);
