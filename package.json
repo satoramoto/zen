@@ -28,6 +28,31 @@
       "types": "./lib/themes.d.ts",
       "import": "./lib/themes.js"
     },
+    "./compendium": {
+      "zen-source": "./src/library/compendium/index.ts",
+      "types": "./lib/compendium/index.d.ts",
+      "import": "./lib/compendium.js"
+    },
+    "./compendium/model": {
+      "zen-source": "./src/library/compendium/model/index.ts",
+      "types": "./lib/compendium/model/index.d.ts",
+      "import": "./lib/compendium-model.js"
+    },
+    "./math/trig": {
+      "zen-source": "./src/library/math/trig/index.ts",
+      "types": "./lib/math/trig/index.d.ts",
+      "import": "./lib/math-trig.js"
+    },
+    "./math/trig/model": {
+      "zen-source": "./src/library/math/trig/model/index.ts",
+      "types": "./lib/math/trig/model/index.d.ts",
+      "import": "./lib/math-trig-model.js"
+    },
+    "./math/expression": {
+      "zen-source": "./src/library/math/calculator/public.ts",
+      "types": "./lib/math/calculator/public.d.ts",
+      "import": "./lib/math-expression.js"
+    },
     "./harness/*": "./src/harness/*",
     "./package.json": "./package.json"
   },

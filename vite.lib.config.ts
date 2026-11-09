@@ -1,4 +1,4 @@
-// The library build: five ES-module entries in `lib/`, React, Svelte and Storybook left to the app.
+// The library build: explicit ES-module entries in `lib/`, rendering frameworks left to the app.
 // Types come from tsconfig.lib.json.
 //
 // - `index` (`src/library/index.ts`, the package's `.`) → `lib/index.js`, and every library
@@ -65,6 +65,11 @@ export default defineConfig({
         storybook: 'src/library/storybook.tsx',
         svelte: 'src/library/svelte.ts',
         themes: 'src/library/themes.ts',
+        compendium: 'src/library/compendium/index.ts',
+        'compendium-model': 'src/library/compendium/model/index.ts',
+        'math-trig': 'src/library/math/trig/index.ts',
+        'math-trig-model': 'src/library/math/trig/model/index.ts',
+        'math-expression': 'src/library/math/calculator/public.ts',
       },
       formats: ['es'],
       fileName: (_format, name) => `${name}.js`,
