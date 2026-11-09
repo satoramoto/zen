@@ -1,7 +1,7 @@
-/* Workspace: a tab strip, an edit palette, and the open tab's screen, each region framed while
-   editing. The frame's plate is a Surface (its own hairline border); the tools are Buttons and the
-   binding a Segmented — this file only lays them out, never paints. Local spacing under
-   **Tuning knobs** in Workspace.tsx. */
+/* Workspace: the head (tab strip and tools), the palette while open, and the open tab's screen,
+   each region framed while editing. The frame's and the placeholder's plates are Surfaces; the
+   tools are Buttons and the binding a Segmented — this file only lays them out, never paints.
+   Local spacing under **Tuning knobs** in Workspace.tsx. */
 
 .yh-workspace {
   --yh-workspace-gap: var(--space-2);
@@ -17,16 +17,85 @@
   margin: 0;
 }
 
-.yh-workspace[data-editing] {
+.yh-workspace[data-palette] {
   grid-template-rows: auto auto minmax(0, 1fr);
 }
 
-.yh-workspace__palette {
+.yh-workspace__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.yh-workspace__head > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.yh-workspace__tools,
+.yh-workspace__naming {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
   align-items: center;
   min-width: 0;
+}
+
+.yh-workspace__naming {
+  flex-wrap: nowrap;
+  margin: 0;
+}
+
+.yh-workspace__well {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  height: var(--control-h);
+}
+
+.yh-workspace__field {
+  min-width: 0;
+  width: calc(var(--control-h) * 6);
+  height: 100%;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  outline-offset: 2px;
+}
+
+.yh-workspace__kind {
+  display: grid;
+  gap: 0;
+  justify-items: start;
+  min-width: 0;
+}
+
+.yh-workspace__placeholder {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: var(--space-2);
+}
+
+.yh-workspace__empty {
+  margin: 0;
+  padding: var(--space-4) var(--space-2);
+}
+
+.yh-workspace__palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--control-h) * 5), 1fr));
+  gap: var(--space-1) var(--space-2);
+  align-items: start;
+  min-width: 0;
+  max-height: calc(var(--control-h) * 5);
+  overflow-y: auto;
 }
 
 /* The frame is the region's edit plate; its bar floats over the region's top edge so the slot's

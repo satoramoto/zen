@@ -1,135 +1,95 @@
-// Workspace's stories as plain data: Workspace.stories.tsx draws them (React or Svelte, by the
-// toolbar's Renderer). Tabs are screens: each tab's spec is rows of regions using the widgets'
-// own forms, so the solver still decides.
+// Workspace's stories as plain data: Workspace.stories.tsx (and the Document and Panes stories) draw
+// them, React or Svelte by the toolbar's Renderer. The document is the app's (rows of region
+// instances, each naming its kind); the panes are the app's definitions, here the Workspace's own
+// five Lemur tabs over the zen-styled `components/music` parts, so the solver still decides sizes.
 import { defineFixtures } from '../../fixtures';
-import { LOOP_GRID_FORMS } from '../../components/music/LoopGrid/LoopGrid.forms';
-import { MIX_BAND_FORMS } from '../../components/music/MixBand/MixBand.forms';
 import { ARP_SEQUENCER_FORMS } from '../../components/music/ArpSequencer/ArpSequencer.forms';
 import { CHORD_STRIP_FORMS } from '../../components/music/ChordStrip/ChordStrip.forms';
+import { LOOP_GRID_FORMS } from '../../components/music/LoopGrid/LoopGrid.forms';
 import { MACRO_PADS_FORMS } from '../../components/music/MacroPads/MacroPads.forms';
+import { MIX_BAND_FORMS } from '../../components/music/MixBand/MixBand.forms';
 import { STEM_LANES_FORMS } from '../../components/music/StemLanes/StemLanes.forms';
 import { TRANSITION_ROW_FORMS } from '../../components/music/TransitionRow/TransitionRow.forms';
-import type { ScreenSpec } from '../assembly/types';
 import type { WorkspaceModelProps } from './Workspace.model';
-import type { WorkspaceRegion } from './Workspace.types';
+import type { PaneDefinition, SurfaceDocument, SurfaceRegion, SurfaceTab, SurfaceTarget } from './Workspace.types';
 
-/** The palette's kinds: the widgets' own forms, so the solver still decides. */
-export const workspacePalette: readonly WorkspaceRegion[] = [
-  { kind: 'loopGrid', label: 'Loop grid', forms: LOOP_GRID_FORMS },
-  { kind: 'mix', label: 'Mix', forms: MIX_BAND_FORMS },
-  { kind: 'arp', label: 'Arp', forms: ARP_SEQUENCER_FORMS },
-  { kind: 'cuts', label: 'Transitions', forms: TRANSITION_ROW_FORMS },
+/** The app's pane kinds, in palette order: the widgets' own forms. */
+export const workspacePanes: readonly PaneDefinition[] = [
+  { kind: 'loopGrid', label: 'Loop grid', description: 'Songs and tracks, stops under', forms: LOOP_GRID_FORMS, priority: 'now', targets: 'track' },
+  { kind: 'mix', label: 'Mix', description: 'Levels, sends and lamps per track', forms: MIX_BAND_FORMS, priority: 'controls', head: true, targets: 'track' },
+  { kind: 'follow', label: 'Follow', description: 'The progression, now and next', forms: CHORD_STRIP_FORMS, priority: 'now' },
+  { kind: 'arp', label: 'Arp', description: 'Sixteen steps of chord degrees', forms: ARP_SEQUENCER_FORMS, priority: 'controls', head: true, targets: 'track' },
+  { kind: 'throws', label: 'Throws', description: 'Two XY macro pads', forms: MACRO_PADS_FORMS, priority: 'controls', head: true },
+  { kind: 'cuts', label: 'Transitions', description: 'Riser, drop, crash, holds, cut', forms: TRANSITION_ROW_FORMS, priority: 'controls' },
+  { kind: 'stems', label: 'Stems', description: 'Four lanes, cues and the loop window', forms: STEM_LANES_FORMS, priority: 'now' },
 ];
 
-/** The bindable tracks: the set's eight columns. */
-export const workspaceTracks = [
-  { id: 'drums', label: 'Drums' },
-  { id: 'bass', label: 'Bass' },
-  { id: 'keys', label: 'Keys' },
-] as const;
+/** What a region can be bound to: the set's tracks. */
+export const workspaceTargets: readonly SurfaceTarget[] = [
+  { id: 'drums', label: 'Drums', kind: 'track' },
+  { id: 'bass', label: 'Bass', kind: 'track' },
+  { id: 'keys', label: 'Keys', kind: 'track' },
+];
 
-/** My stage: the loop grid over the mix — launch and levels, one glance. */
-export const stageSpec: ScreenSpec = {
-  rows: [
-    [{ id: 'loop', forms: LOOP_GRID_FORMS, priority: 'now' }],
-    [{ id: 'mix', forms: MIX_BAND_FORMS, priority: 'controls', head: true }],
+const label = (kind: string): string => workspacePanes.find((p) => p.kind === kind)?.label ?? kind;
+
+/** A tab from rows of kinds: instance ids `<tab>-<n>`, each following the selection. */
+export function tabOf(id: string, title: string, layout: readonly (readonly string[])[]): SurfaceTab {
+  const regions: SurfaceRegion[] = [];
+  const rows = layout.map((row) =>
+    row.map((kind) => {
+      const region: SurfaceRegion = { id: `${id}-${regions.length + 1}`, kind, title: label(kind), binding: { mode: 'selected' } };
+      regions.push(region);
+      return region.id;
+    }),
+  );
+  return { id, title, rows, regions };
+}
+
+/** The Workspace's own five tabs: stage, grid, arp, mix, stems. */
+export const workspaceDocument: SurfaceDocument = {
+  version: 1,
+  active: 'stage',
+  tabs: [
+    tabOf('stage', 'My stage', [['loopGrid'], ['mix']]),
+    tabOf('grid', 'Session grid', [['loopGrid'], ['cuts']]),
+    tabOf('arp', 'Arp & follow', [['follow'], ['arp', 'throws']]),
+    tabOf('mix', 'Mix & sends', [['mix']]),
+    tabOf('stems', 'Stem deck', [['stems'], ['cuts']]),
   ],
 };
 
-/** Session grid: the loop grid with the transitions under it. */
-export const gridSpec: ScreenSpec = {
-  rows: [
-    [{ id: 'loop', forms: LOOP_GRID_FORMS, priority: 'now' }],
-    [{ id: 'cuts', forms: TRANSITION_ROW_FORMS, priority: 'controls' }],
-  ],
-};
-
-/** Mix & sends: the band alone. */
-export const mixSpec: ScreenSpec = {
-  rows: [[{ id: 'mix', forms: MIX_BAND_FORMS, priority: 'controls', head: true }]],
-};
-
-/** Arp & follow: the progression strip over the arp beside the macro pads. */
-export const arpSpec: ScreenSpec = {
-  rows: [
-    [{ id: 'follow', forms: CHORD_STRIP_FORMS, priority: 'now' }],
-    [
-      { id: 'keys', forms: ARP_SEQUENCER_FORMS, priority: 'controls', head: true },
-      { id: 'pads', forms: MACRO_PADS_FORMS, priority: 'controls', head: true },
-    ],
-  ],
-};
-
-/** Stem deck: the lanes with the transitions under them. */
-export const stemsSpec: ScreenSpec = {
-  rows: [
-    [{ id: 'stems', forms: STEM_LANES_FORMS, priority: 'now' }],
-    [{ id: 'cuts', forms: TRANSITION_ROW_FORMS, priority: 'controls' }],
-  ],
-};
-
-/** The five Lemur tabs: stage, grid, arp, mix, stems. */
-export const liveTabs = [
-  { id: 'stage', title: 'My stage', spec: stageSpec },
-  { id: 'grid', title: 'Session grid', spec: gridSpec },
-  { id: 'arp', title: 'Arp & follow', spec: arpSpec },
-  { id: 'mix', title: 'Mix & sends', spec: mixSpec },
-  { id: 'stems', title: 'Stem deck', spec: stemsSpec },
-] as const;
+/** The document opened on another tab. */
+export const opened = (doc: SurfaceDocument, active: string): SurfaceDocument => ({ ...doc, active });
 
 /** The controls, the same in both Storybooks. */
 export const workspaceArgTypes = {
   name: { control: 'text' },
-  workspace: { control: 'object' },
-  active: { control: 'text' },
-  palette: { control: 'object' },
-  bindings: { control: 'object' },
-  tracks: { control: 'object' },
+  document: { control: 'object' },
+  panes: { control: 'object' },
+  targets: { control: 'object' },
+  selected: { control: 'text' },
+  canUndo: { control: 'boolean' },
+  canRedo: { control: 'boolean' },
   editing: { control: 'boolean' },
-  onTab: { control: false },
-  onSpec: { control: false },
-  onBinding: { control: false },
+  editingRegion: { control: 'text' },
+  paletteOpen: { control: 'boolean' },
+  onIntent: { control: false },
+  onUi: { control: false },
   disabled: { control: 'boolean' },
 } as const;
 
-/** Every story's args by export name (region contents join in the stories file). */
+/** Every story's args by export name (region contents join in the stories files). */
 export const workspaceStories = defineFixtures<WorkspaceModelProps>()({
-  Perform: {
-    args: {
-      name: 'Live',
-      workspace: { tabs: [...liveTabs], start: 'stage' },
-      active: 'grid',
-      bindings: { loop: { track: 'drums' }, mix: { track: 'keys' } },
-      tracks: [...workspaceTracks],
-    },
-  },
-  Edit: {
-    args: {
-      name: 'Live',
-      workspace: { tabs: [...liveTabs], start: 'stage' },
-      active: 'stage',
-      palette: workspacePalette,
-      bindings: { loop: { track: 'drums' } },
-      tracks: [...workspaceTracks],
-      editing: true,
-    },
-  },
-  Narrow: {
-    args: {
-      name: 'Live',
-      workspace: { tabs: [{ id: 'stage', title: 'My stage', spec: stageSpec }], start: 'stage' },
-      active: 'stage',
-    },
-  },
-  Empty: { args: { name: 'Live', workspace: { tabs: [] }, active: 'stage' } },
-  Disabled: {
-    args: {
-      name: 'Live',
-      workspace: { tabs: [{ id: 'stage', title: 'My stage', spec: stageSpec }], start: 'stage' },
-      active: 'stage',
-      editing: true,
-      palette: workspacePalette,
-      disabled: true,
-    },
-  },
+  Perform: { args: { name: 'Live', document: opened(workspaceDocument, 'grid'), panes: workspacePanes, targets: workspaceTargets, selected: 'keys' } },
+  Edit: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, targets: workspaceTargets, selected: 'keys', editing: true } },
+  EditOwn: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, targets: workspaceTargets, selected: 'keys' } },
+  Picked: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, targets: workspaceTargets, editing: true, editingRegion: 'stage-1' } },
+  Palette: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, editing: true, paletteOpen: true } },
+  History: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, canUndo: true, canRedo: false } },
+  NoHistory: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, canUndo: false, canRedo: false } },
+  Bare: { args: { name: 'Live', document: workspaceDocument, editing: true } },
+  Narrow: { args: { name: 'Live', document: { version: 1, active: 'stage', tabs: [workspaceDocument.tabs[0]] }, panes: workspacePanes } },
+  Empty: { args: { name: 'Live', document: { version: 1, active: 'new', tabs: [{ id: 'new', title: 'New view', rows: [], regions: [] }] }, panes: workspacePanes } },
+  Disabled: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, editing: true, editingRegion: 'stage-1', disabled: true } },
 });

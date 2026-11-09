@@ -1,5 +1,5 @@
 // The stories' stand-in for the app: one live set's state, a running clock, and the content for
-// every region instance, by the pane kind it names, all Music-family panes in mix[flow]'s face and
+// every region instance, by the pane kind it names and the target the Workspace resolved, all Music-family panes in mix[flow]'s face and
 // linked (the selected track is the grid's column, the strip, the orbit ring, the spine and the
 // Push column; a compass wedge overrides the chord the orbits follow). A region bound to a fixed
 // track shows that track whatever is selected. Story harness only: the panes hold no state, and
@@ -36,7 +36,7 @@ import { throwPads } from '../Music/live/ThrowPads/ThrowPads.fixtures';
 import { TrackStrips, type TrackStrip } from '../Music/live/TrackStrips/TrackStrips';
 import { stripReturns, stripTracks } from '../Music/live/TrackStrips/TrackStrips.fixtures';
 import { useBeat } from './clock';
-import type { LiveRegion } from './views';
+import type { SurfaceRegion } from '../layout/Workspace/Workspace.types';
 
 /** The set's tempo: Hidden Signals. */
 export const TEMPO = 112;
@@ -101,8 +101,8 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
   };
 
   const content = useMemo(() => {
-    return (region: LiveRegion): ReactNode => {
-      const trackId = region.binding.mode === 'fixed' ? region.binding.target : selected;
+    return (region: SurfaceRegion, bound?: string): ReactNode => {
+      const trackId = bound ?? selected;
       const track = spineTracks.find((t) => t.id === trackId) ?? spineTracks[2];
       switch (region.kind) {
         case 'river':
