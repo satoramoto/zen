@@ -42,3 +42,4 @@
 
 .zen-perspective__projection:focus-visible { outline:2px solid var(--hue-4); outline-offset:-3px; }
 .zen-perspective__bench line { fill:none; }
+.zen-perspective__face:focus-visible { outline:none; stroke:var(--focus-ring); stroke-width:3; }
