@@ -22,6 +22,7 @@ import { bindParamGesture, type ParamGestureParams } from '../components/core/Pa
 import { bindSliderEntry, type SliderEntryParams } from '../components/core/Slider/sliderEntry';
 import { bindDialogEscape, bindFocusTrap, type DialogEscapeParams, type FocusTrapParams } from '../components/core/Modal/dialog';
 import { bindRoom, type RoomParams } from '../layout/assembly/room';
+import { bindDockDrag, bindSplitHandle, type DockDragParams, type SplitHandleParams } from '../layout/Workspace/gestures';
 import { bindReport, type ReportParams } from './report';
 import { bindRef, type RefParams } from './ref';
 import { bindDisplayFit, bindDisplayWide, type DisplayFitParams, type DisplayWideParams } from '../yahaha/Display/fit';
@@ -131,6 +132,9 @@ export const stores = {
   dialogEscape: keyed<DialogEscapeParams, 'onClose'>(bindDialogEscape, ['onClose']),
   /** An assembled screen's measured room (`layout/assembly/room.ts`). */
   room: keyed<RoomParams, 'onRoom'>(bindRoom, ['onRoom']),
+  /** The Workspace's split handles and region drags (`layout/Workspace/gestures.ts`). */
+  splitHandle: keyed<SplitHandleParams, 'onPreview' | 'onCommit'>(bindSplitHandle, ['onPreview', 'onCommit']),
+  dockDrag: keyed<DockDragParams, 'onDrag' | 'onDock'>(bindDockDrag, ['onDrag', 'onDock']),
   /** An assembled screen's placement, reported once per change (`report.ts`). */
   report: keyed<ReportParams, 'onReport'>(bindReport, ['onReport']),
   /** Screen's `gridRef`: the element on mount, null on unmount (`ref.ts`). */
