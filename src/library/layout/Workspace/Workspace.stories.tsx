@@ -126,7 +126,8 @@ export const RenamingATab: Story = scenario(
       await userEvent.click(canvas.getByRole('button', { name: 'rename My stage' }));
       const field = canvas.getByRole('textbox', { name: 'Name for My stage' });
       await userEvent.clear(field);
-      await userEvent.type(field, 'Opener{Enter}');
+      await userEvent.type(field, 'Opener');
+      await userEvent.click(canvas.getByRole('button', { name: 'Save name for My stage' }));
     },
     check: async ({ canvasElement, args }) => {
       await expect(sent(args)).toEqual([{ type: 'renameTab', tab: 'stage', title: 'Opener' }]);
@@ -148,7 +149,7 @@ export const UndoTheAppCanDo: Story = scenario(
     },
     check: async ({ canvasElement, args }) => {
       await expect(sent(args)).toEqual([{ type: 'undo' }]);
-      await expect(within(canvasElement).getByRole('button', { name: 'redo' })).toBeDisabled();
+      await expect(within(canvasElement).getByRole('button', { name: 'redo' })).toHaveAttribute('aria-disabled', 'true');
     },
   },
   spied(s.History),
@@ -164,7 +165,7 @@ export const NothingToUndo: Story = scenario(
       await userEvent.click(within(canvasElement).getByRole('button', { name: 'undo' }), { pointerEventsCheck: 0 });
     },
     check: async ({ canvasElement, args }) => {
-      await expect(within(canvasElement).getByRole('button', { name: 'undo' })).toBeDisabled();
+      await expect(within(canvasElement).getByRole('button', { name: 'undo' })).toHaveAttribute('aria-disabled', 'true');
       await expect(sent(args)).toEqual([]);
     },
   },
@@ -276,7 +277,7 @@ export const PerformModeIsPlayedNotEdited: Story = scenario(
       await expect(within(grid).getAllByRole('button').some((b) => !(b as HTMLButtonElement).disabled)).toBe(true);
     },
   },
-  { ...spied(s.Perform), render: (args) => <Workspace {...args} pane={workspacePane} /> },
+  spied(s.Perform, { render: (args) => <Workspace {...args} pane={workspacePane} /> }),
 );
 
 /** My stage at 900 × 700: the tabs step down and nothing overflows. */

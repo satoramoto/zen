@@ -80,27 +80,24 @@ export function workspaceContent(props: Pick<WorkspaceModelProps, 'document' | '
 const tool = (label: string, key: string, name: string, inert: boolean, extra: Record<string, unknown> = {}): Child =>
   component('Button', { label, name, size: 'sm', variant: 'quiet', disabled: inert, ...extra }, { on: { onPress: key }, key });
 
-/** A title being typed: the field, Save and Cancel. Enter saves, Escape cancels. */
+/** A title being typed: the field in its well, Save and Cancel. Enter saves, Escape cancels (the field's own keys). */
 function namingNode(what: string, text: string, inert: boolean): Node {
   const field = textView({ role: 'body', className: 'yh-workspace__field' });
   // The field's well is a Surface; the input inside it is bare.
   const well = surfaceView({ layer: 'ground', border: true, radius: 'control', className: 'yh-workspace__well' });
-  return wire(
+  return h(
+    'div',
+    { class: 'yh-workspace__naming', 'data-part': 'naming', role: 'group', 'aria-label': `Rename ${what}` },
     h(
-      'form',
-      { class: 'yh-workspace__naming', 'data-part': 'naming', 'aria-label': `Rename ${what}` },
-      h(
-        'span',
-        { class: well.className, ...well.attrs, 'data-part': 'well' },
-        wire(h('input', { class: field.className, ...field.attrs, 'data-part': 'field', value: text, 'aria-label': `Name for ${what}`, disabled: inert ? '' : undefined }), {
-          on: { input: 'naming:input', keydown: 'naming:key' },
-          bind: [['ref', { onRef: 'naming:ref' }]],
-        }),
-      ),
-      component('Button', { label: 'Save', name: `Save name for ${what}`, size: 'sm', disabled: inert || text.trim() === '' }, { on: { onPress: 'naming:save' } }),
-      component('Button', { label: 'Cancel', name: `Cancel renaming ${what}`, size: 'sm', variant: 'quiet', disabled: inert }, { on: { onPress: 'naming:cancel' } }),
+      'span',
+      { class: well.className, ...well.attrs, 'data-part': 'well' },
+      wire(h('input', { class: field.className, ...field.attrs, 'data-part': 'field', value: text, 'aria-label': `Name for ${what}`, disabled: inert ? '' : undefined }), {
+        on: { input: 'naming:input', keydown: 'naming:key' },
+        bind: [['ref', { onRef: 'naming:ref' }]],
+      }),
     ),
-    { on: { submit: 'naming:submit' } },
+    component('Button', { label: 'Save', name: `Save name for ${what}`, size: 'sm', disabled: inert || text.trim() === '' }, { on: { onPress: 'naming:save' } }),
+    component('Button', { label: 'Cancel', name: `Cancel renaming ${what}`, size: 'sm', variant: 'quiet', disabled: inert }, { on: { onPress: 'naming:cancel' } }),
   );
 }
 
@@ -120,27 +117,42 @@ function contentNode(region: SurfaceRegion, known: boolean, target: string | und
   return known ? slot(contentSlot(region.id), [region, target]) : placeholderNode(region);
 }
 
-/** A region's frame while editing: its tag (which opens its tools), its tools when open, its content. */
-function frameNode(region: SurfaceRegion, pane: PaneDefinition | undefined, targets: SurfaceTarget[], ui: SurfaceUi, selected: string | undefined, inert: boolean): Node {
+/** A region's frame while editing: its tag over its content. The tag opens the region's tools (`regionToolsNode`). */
+function frameNode(region: SurfaceRegion, known: boolean, ui: SurfaceUi, selected: string | undefined, inert: boolean): Node {
   const open = ui.region === region.id;
   const plate = surfaceView({ border: true, radius: 'card', className: 'yh-workspace__frame' });
-  const id = region.id;
-  const bar: Child[] = [
-    component(
-      'Button',
-      { label: region.title, name: `${region.title} tools`, size: 'sm', variant: open ? 'secondary' : 'quiet', expanded: open, disabled: inert },
-      { on: { onPress: `pick:${id}` }, key: 'tag' },
+  return h(
+    'div',
+    { class: plate.className, ...plate.attrs, 'data-part': 'frame', 'data-region': region.id, 'data-kind': region.kind, 'data-open': open ? 'true' : undefined },
+    h(
+      'div',
+      { class: 'yh-workspace__bar', 'data-part': 'framebar' },
+      component(
+        'Button',
+        { label: region.title, name: `${region.title} tools`, size: 'sm', variant: open ? 'secondary' : 'quiet', expanded: open, controls: 'yh-workspace-region-tools', disabled: inert },
+        { on: { onPress: `pick:${region.id}` } },
+      ),
     ),
-  ];
-  if (open && ui.naming?.target === 'region' && ui.naming.id === id) {
-    bar.push(namingNode(region.title, ui.naming.text, inert));
-  } else if (open) {
-    for (const d of SURFACE_DIRECTIONS) bar.push(tool({ left: '←', right: '→', up: '↑', down: '↓' }[d], `move:${d}:${id}`, `move ${region.title} ${d}`, inert));
-    bar.push(tool('Rename', `retitle:${id}`, `rename ${region.title}`, inert));
-    bar.push(tool('✕', `remove:${id}`, `remove ${region.title}`, inert));
+    h('div', { class: 'yh-workspace__body', 'data-part': 'framebody' }, contentNode(region, known, resolveTarget(region.binding, selected))),
+  );
+}
+
+/** The open region's tools, in a row of their own under the head so a narrow pane never cuts them off. */
+function regionToolsNode(region: SurfaceRegion, targets: SurfaceTarget[], ui: SurfaceUi, inert: boolean): Node {
+  const id = region.id;
+  const items: Child[] = [];
+  const name = textView({ role: 'label', className: 'yh-workspace__which' });
+  items.push(h('span', { class: name.className, ...name.attrs, 'data-part': 'which' }, region.title));
+  if (ui.naming?.target === 'region' && ui.naming.id === id) {
+    items.push(namingNode(region.title, ui.naming.text, inert));
+  } else {
+    for (const d of SURFACE_DIRECTIONS) items.push(tool({ left: '←', right: '→', up: '↑', down: '↓' }[d], `move:${d}:${id}`, `move ${region.title} ${d}`, inert));
+    items.push(tool('Rename', `retitle:${id}`, `rename ${region.title}`, inert));
+    items.push(tool('✕', `remove:${id}`, `remove ${region.title}`, inert));
     if (targets.length > 0) {
-      const index = region.binding.mode === 'fixed' ? targets.findIndex((t) => t.id === (region.binding as { target: string }).target) + 1 : 0;
-      bar.push(
+      const binding = region.binding;
+      const index = binding.mode === 'fixed' ? targets.findIndex((t) => t.id === binding.target) + 1 : 0;
+      items.push(
         component(
           'Segmented',
           { items: ['Selected', ...targets.map((t) => t.label)], index: Math.max(0, index), label: `Bind ${region.title}`, disabled: inert },
@@ -149,15 +161,10 @@ function frameNode(region: SurfaceRegion, pane: PaneDefinition | undefined, targ
       );
     }
   }
-  return h(
-    'div',
-    { class: plate.className, ...plate.attrs, 'data-part': 'frame', 'data-region': id, 'data-kind': region.kind, 'data-open': open ? 'true' : undefined },
-    h('div', { class: 'yh-workspace__bar', 'data-part': 'framebar' }, ...bar),
-    h('div', { class: 'yh-workspace__body', 'data-part': 'framebody' }, contentNode(region, pane !== undefined, resolveTarget(region.binding, selected))),
-  );
+  return h('div', { class: 'yh-workspace__region', id: 'yh-workspace-region-tools', 'data-part': 'regiontools', role: 'toolbar', 'aria-label': `${region.title} tools` }, ...items);
 }
 
-/** The bar over the tabs: edit mode's switch, the open tab's tools while editing, undo and redo when the app offers them. */
+/** The bar beside the tabs: edit mode's switch, the open tab's tools while editing, undo and redo when the app offers them. */
 function toolbarNode(props: WorkspaceModelProps, tab: SurfaceTab | undefined, ui: SurfaceUi, inert: boolean): Node {
   const { canUndo, canRedo, document } = props;
   const items: Child[] = [];
@@ -170,8 +177,7 @@ function toolbarNode(props: WorkspaceModelProps, tab: SurfaceTab | undefined, ui
       items.push(tool('Duplicate', 'tab:duplicate', `duplicate ${tab.title}`, inert));
       items.push(tool('Remove', 'tab:remove', `remove ${tab.title}`, inert || document.tabs.length <= 1));
     }
-    if ((props.panes ?? []).length > 0 && tab)
-      items.push(tool('+ Pane', 'palette', ui.palette ? 'close the palette' : 'open the palette', inert, { expanded: ui.palette, popup: 'menu' }));
+    if ((props.panes ?? []).length > 0 && tab) items.push(tool('+ Pane', 'palette', ui.palette ? 'close the palette' : 'open the palette', inert, { expanded: ui.palette }));
   }
   if (canUndo !== undefined) items.push(tool('Undo', 'undo', 'undo', inert || !canUndo));
   if (canRedo !== undefined) items.push(tool('Redo', 'redo', 'redo', inert || !canRedo));
@@ -198,10 +204,10 @@ function paletteNode(panes: readonly PaneDefinition[], region: SurfaceRegion | u
 }
 
 /**
- * The tree Workspace draws: the tools and the tab strip, while editing the palette when open, then
- * the open tab's Screen, each region framed while editing and bare otherwise. A known kind's
- * content is the app's `content:<id>` slot (its args: the instance and its target); an unknown
- * kind is a placeholder that names it.
+ * The tree Workspace draws: the tab strip and the tools, while editing the open region's tools and
+ * the palette when open, then the open tab's Screen, each region framed while editing and bare
+ * otherwise. A known kind's content is the app's `content:<id>` slot (its args: the instance and
+ * its target); an unknown kind is a placeholder that names it.
  */
 export function workspaceView(props: WorkspaceModelProps, ui: SurfaceUi): Node {
   const { name, document, panes, targets, selected, disabled, className } = props;
@@ -209,12 +215,11 @@ export function workspaceView(props: WorkspaceModelProps, ui: SurfaceUi): Node {
   const tab = openTab(document);
   const index = paneIndex(panes);
   const regions = tab ? tabRegions(tab) : [];
+  const picked = regions.find((r) => r.id === ui.region);
   const screenSlots: Record<string, Child[]> = {};
   for (const region of regions) {
-    const pane = index.get(region.kind);
-    screenSlots[`region:${region.id}`] = [
-      ui.editing ? frameNode(region, pane, targetsFor(pane, targets), ui, selected, inert) : contentNode(region, pane !== undefined, resolveTarget(region.binding, selected)),
-    ];
+    const known = index.has(region.kind);
+    screenSlots[`region:${region.id}`] = [ui.editing ? frameNode(region, known, ui, selected, inert) : contentNode(region, known, resolveTarget(region.binding, selected))];
   }
   const empty = textView({ role: 'body', tone: 'muted', className: 'yh-workspace__empty' });
   return h(
@@ -232,7 +237,8 @@ export function workspaceView(props: WorkspaceModelProps, ui: SurfaceUi): Node {
       component('Tabs', { name: `${name} tabs`, items: document.tabs.map((t) => ({ id: t.id, label: t.title, disabled: inert })), value: tab?.id ?? null }, { on: { onChange: 'tab' } }),
       toolbarNode(props, tab, ui, inert),
     ),
-    ui.palette && tab ? paletteNode(panes ?? [], regions.find((r) => r.id === ui.region), inert) : null,
+    picked ? regionToolsNode(picked, targetsFor(index.get(picked.kind), targets), ui, inert) : null,
+    ui.palette && tab ? paletteNode(panes ?? [], picked, inert) : null,
     tab && regions.length > 0
       ? component('Screen', { name: tab.title, spec: surfaceScreen(tab, panes) }, { slots: screenSlots })
       : tab
@@ -241,10 +247,10 @@ export function workspaceView(props: WorkspaceModelProps, ui: SurfaceUi): Node {
   );
 }
 
-/** The visual state's writer: the surface's own value and, when it changes, `onUi`. */
+/** The visual state's writer: the surface's own value. */
 export type SetUi = (ui: SurfaceUi) => void;
 
-/** The callbacks `workspaceView`'s tree names. Every edit is one intent; visual changes go through `setOwn`. */
+/** The callbacks `workspaceView`'s tree names. Every edit is one intent; visual changes go through `setOwn` and `onUi`. */
 export function workspaceHandlers(props: WorkspaceModelProps, ui: SurfaceUi, own: SurfaceUi, setOwn: SetUi): Handlers {
   const { document, panes, targets, onIntent, onUi, disabled } = props;
   const handlers: Handlers = {};
@@ -283,8 +289,8 @@ export function workspaceHandlers(props: WorkspaceModelProps, ui: SurfaceUi, own
     for (const p of panes ?? []) {
       handlers[`add:${p.kind}`] = () => {
         if (picked) {
-          const at = tab.rows.findIndex((row) => row.includes(picked.id));
-          send({ type: 'addRegion', tab: tab.id, kind: p.kind, row: at, index: tab.rows[at].indexOf(picked.id) + 1 });
+          const row = tab.rows.findIndex((ids) => ids.includes(picked.id));
+          send({ type: 'addRegion', tab: tab.id, kind: p.kind, row, index: tab.rows[row].indexOf(picked.id) + 1 });
         } else {
           send({ type: 'addRegion', tab: tab.id, kind: p.kind, row: Math.max(0, tab.rows.length - 1) });
         }
@@ -308,7 +314,7 @@ export function workspaceHandlers(props: WorkspaceModelProps, ui: SurfaceUi, own
     }
   }
 
-  // A title being typed: the text is visual state; only Save sends the rename.
+  // A title being typed: the text is visual state; only Save (or Enter) sends the rename.
   const naming = ui.naming;
   const save = () => {
     if (!naming || naming.text.trim() === '') return;
@@ -323,11 +329,10 @@ export function workspaceHandlers(props: WorkspaceModelProps, ui: SurfaceUi, own
     if (event.key === 'Escape') {
       event.preventDefault();
       visual({ naming: undefined });
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      save();
     }
-  };
-  handlers['naming:submit'] = (event: Event) => {
-    event.preventDefault();
-    save();
   };
   handlers['naming:save'] = save;
   handlers['naming:cancel'] = () => visual({ naming: undefined });

@@ -7,18 +7,36 @@
   --yh-workspace-gap: var(--space-2);
   --yh-workspace-frame-gap: var(--space-1);
 
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: var(--yh-workspace-gap);
-  align-content: stretch;
   min-width: 0;
   min-height: 0;
   height: 100%;
   margin: 0;
 }
 
-.yh-workspace[data-palette] {
-  grid-template-rows: auto auto minmax(0, 1fr);
+/* The head, the region's tools and the palette take what they need; the screen takes the rest. */
+.yh-workspace > * {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.yh-workspace > :last-child {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.yh-workspace__region {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+  min-width: 0;
+}
+
+.yh-workspace__which {
+  padding-inline: var(--space-2);
 }
 
 .yh-workspace__head {
@@ -94,7 +112,7 @@
   gap: var(--space-1) var(--space-2);
   align-items: start;
   min-width: 0;
-  max-height: calc(var(--control-h) * 5);
+  max-height: calc(var(--control-h) * 6);
   overflow-y: auto;
 }
 
