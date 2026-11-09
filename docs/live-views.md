@@ -40,9 +40,9 @@ density: nobody plays a set from a screen that looks like a Bitwig screenshot. T
   a 10 px playhead line doesn't.
 - **The hinge.** Sends sit at +0 dB most of the night; the 0.75 detent is a target the finger finds
   without looking.
-- **Tabs are screens.** A Lemur page is a fixed canvas; our tabs are `ScreenSpec` values, so an
-  edited tab re-themes and steps its forms down on a small window. The layout builder stores
-  specs, not screenshots.
+- **Tabs are documents.** A Lemur page is a fixed canvas; our tabs are rows of region instances
+  laid out by each pane's forms, so an edited tab re-themes and steps its forms down on a small
+  window. The app stores the document, not screenshots (`docs/workspace.md`).
 
 ## Two sets of views
 
@@ -50,8 +50,8 @@ There are two generations of views, and both stay:
 
 - **`Design OS/Layout/Workspace`**: the Workspace's own fixtures, built from the zen-styled
   `components/music/` parts (LoopGrid, MixBand, StemLanes, TransitionRow…). Its tabs are My stage,
-  Session grid, Arp & follow, Mix & sends and Stem deck. Edit mode frames every region with the six
-  structural edits (move, moveRow, split, remove, add, bind).
+  Session grid, Arp & follow, Mix & sends and Stem deck. Its stories are the editing scenarios
+  (`live-surface-editing`, `live-surface-document`).
 - **`Live/Views`** (`src/library/live/`): the live looper's pages, built from the Music family's
   live panes in mix[flow]'s face (`src/library/Music/live/`, stories under **Music/Live**). These
   are the views the wireframes asked for.
@@ -75,9 +75,11 @@ Each tab is a **document in mix's surface shape** (`views.ts`; mix `src/rig/cont
 version 1): rows of region instance ids, and the instances, each naming its pane `kind`, its
 `title` and a `binding` (`{ mode: 'selected' }`, or `{ mode: 'fixed', target }`). Instance ids are
 fresh (`one-region-3`) and name an instance, never a component type: nothing reads a kind out of
-an id. `liveScreen(tab)` turns a tab into the ScreenSpec the solver draws. When the Workspace adds
-or splits, its `onSpec` names the instance it placed and its kind (`placed`), and the host records
-that. The rig's line is an ordinary last row, as mix's Health is, not a footer.
+an id. The panes are `Music.livePanes`, the ready-made set of definitions; the story's host
+keeps the document and an undo history and applies every intent the Workspace sends with
+`applySurfaceIntent` (`docs/workspace.md`), the way an app's store would. The rig's line is an
+ordinary last row, as mix's Health is, not a footer. `Live/Host contract` and `Live/Pane registry`
+hold the framework's scenarios (`live-host-contract`, `live-pane-registry`).
 
 The views are React-only renders, since region content is app content. Their plays are overviews;
 what each pane guarantees is held by the pane's own stories (below), not by the pages.
@@ -113,3 +115,12 @@ remount it (**Remounted**).
 
 No pane schedules, plays, follows harmony or measures anything: what is playing, queued, muted or
 measured is always the host's to say.
+
+### Fast values: the frame reader
+
+Values that change every frame (meters, playheads) reach a pane through `readFrame`, the host's
+frame reader (`LiveFrame`: `beat`, `position`, `levels` by track, in `Music/live/live.model.ts`;
+mix's `readFrame`). Only the leaf part that draws a value reads it, on each animation frame, so
+the pane isn't redrawn for it. `TrackStrips` (meters, through the Music frame meter store) and
+`StemDeck` (the playhead, through `liveFrameVar`) take it today. `OrbitClock`, `LandingDial` and
+`ProgressionStrip` still take `beat` as a prop.

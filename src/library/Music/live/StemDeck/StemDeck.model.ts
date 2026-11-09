@@ -6,9 +6,9 @@
 // It holds no state and plays nothing: a toggle only asks `onMute`. The playhead, the section
 // marks and whether a stem is audible are the host's to say; a lane with no peaks says so rather
 // than drawing a waveform it doesn't have.
-import { component, each, h, styleText, when, type ChildArg, type Handlers, type Node } from '../../../view/Tree.model';
+import { component, each, h, styleText, when, wire, type ChildArg, type Handlers, type Node } from '../../../view/Tree.model';
 import type { Peak } from '../../music/levels';
-import { inkStyle, liveHead, livePane, liveReading, type StemInk } from '../live.model';
+import { inkStyle, liveHead, livePane, liveReading, type ReadLiveFrame, type StemInk } from '../live.model';
 import { dbText } from '../TrackStrips/TrackStrips.model';
 import type { StemDeckForm } from './StemDeck.forms';
 
@@ -47,6 +47,12 @@ export interface StemDeckProps {
   markers?: readonly DeckMarker[];
   /** The playhead, 0–1 of the song. Left out (or non-finite): none is drawn. */
   position?: number;
+  /**
+   * The host's frame reader. Given, the playhead follows the frame's `position` on each animation
+   * frame (hidden while the frame has none) and the deck is never redrawn for it; `position` is
+   * then ignored.
+   */
+  readFrame?: ReadLiveFrame;
   /** A stem's toggle was pressed: ask to mute or unmute it. Without it the deck is read-only. */
   onMute?: (id: string) => void;
   /** Draw this form outside an assembled screen (a screen's own choice wins inside one). */
@@ -122,7 +128,7 @@ function lane(stem: DeckStem, inert: boolean): Node {
  * waveform in a well — with the host's playhead across them. `toggles`: the ONE board's deck strip,
  * a toggle per stem (its first letter) in a row. `form` is the binding's (`useForm` / `getForm`).
  */
-export function stemDeckView({ title, sub, stems, markers = [], position, onMute, className }: StemDeckProps, form: StemDeckForm): Node {
+export function stemDeckView({ title, sub, stems, markers = [], position, readFrame, onMute, className }: StemDeckProps, form: StemDeckForm): Node {
   const inert = onMute === undefined;
   if (form === 'toggles') {
     return livePane(
@@ -149,16 +155,21 @@ export function stemDeckView({ title, sub, stems, markers = [], position, onMute
             ...each(markers, (m) => `${m.name}@${m.at}`, (m) => h('span', { class: 'live-stems-mark', role: 'listitem', style: styleText({ left: pct(m.at) }) }, m.name)),
           ),
           h('div', { class: 'live-stems-lanes', 'data-part': 'lanes' }, ...each(stems, (st) => st.id, (st) => lane(st, inert))),
-          when(finite(position), () =>
-            h('span', { class: 'live-stems-playhead', 'data-part': 'playhead', 'aria-hidden': 'true', style: styleText({ '--live-stems-at': pct(position!) }) }),
-          ),
+          readFrame
+            ? wire(h('span', { class: 'live-stems-playhead', 'data-part': 'playhead', 'data-frame': 'true', 'aria-hidden': 'true', hidden: '' }), {
+                bind: [['liveFrameVar', { name: '--live-stems-at', sample: 'position' }]],
+              })
+            : when(finite(position), () =>
+                h('span', { class: 'live-stems-playhead', 'data-part': 'playhead', 'aria-hidden': 'true', style: styleText({ '--live-stems-at': pct(position!) }) }),
+              ),
         ),
   );
 }
 
 /** The callbacks the tree names: one mute per stem (`mute:<id>`), carrying its id. An unavailable stem asks nothing. */
-export function stemDeckHandlers({ stems, onMute }: StemDeckProps): Handlers {
+export function stemDeckHandlers({ stems, onMute, readFrame }: StemDeckProps): Handlers {
   const handlers: Handlers = {};
+  if (readFrame) handlers['position'] = () => readFrame().position;
   for (const st of stems) handlers[`mute:${st.id}`] = () => {
     if (st.available !== false) onMute?.(st.id);
   };

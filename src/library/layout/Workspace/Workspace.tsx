@@ -1,56 +1,83 @@
-import type { ReactNode } from 'react';
+import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Tree } from '../../view/Tree';
-import { workspaceHandlers, workspaceSlots, workspaceTab, workspaceView, type WorkspaceModelProps } from './Workspace.model';
+import { viewState } from '../../view/viewState';
+import { contentSlot, surfaceUi, workspaceContent, workspaceHandlers, workspaceView, type WorkspaceModelProps } from './Workspace.model';
+import { SURFACE_UI_REST, type SurfaceRegion, type SurfaceUi } from './Workspace.types';
 // The tabs and the edit tools read as Text; the frame is a plate. Before Workspace.css.
 import '../../primitives/Text.css';
 import './Workspace.css';
 
-// The props, the edits and the tree are framework-free (Workspace.model.ts, Workspace.edit.ts,
-// Workspace.types.ts); `Workspace.svelte` draws the same tree.
-export { addRegion, moveRegion, moveRegionToRow, removeRegion, splitRegion, workspaceFixedIds, workspaceRegionIds } from './Workspace.edit';
-export { WORKSPACE_EDITS, paletteRegion, type WorkspaceBinding, type WorkspaceEdit, type WorkspacePlacement, type WorkspaceRegion, type WorkspaceSpec, type WorkspaceTab } from './Workspace.types';
-export { contentSlot, newRegionId, workspaceSlots, workspaceTab, type WorkspaceModelProps, type WorkspaceTrack } from './Workspace.model';
+// The contract, the helpers and the tree are framework-free (Workspace.types.ts, surface.ts,
+// Workspace.model.ts); `Workspace.svelte` draws the same tree.
+export {
+  SURFACE_DIRECTIONS,
+  SURFACE_INTENTS,
+  SURFACE_UI_REST,
+  type PaneDefinition,
+  type SurfaceBinding,
+  type SurfaceDirection,
+  type SurfaceDocument,
+  type SurfaceIntent,
+  type SurfaceIntentType,
+  type SurfaceRegion,
+  type SurfaceTab,
+  type SurfaceTarget,
+  type SurfaceUi,
+} from './Workspace.types';
+export {
+  PLACEHOLDER_FORMS,
+  applySurfaceIntent,
+  freshId,
+  openTab,
+  regionSpec,
+  resolveTarget,
+  surfaceScreen,
+  tabRegions,
+  tabRows,
+  targetsFor,
+  type ApplyOptions,
+} from './surface';
+export { contentSlot, surfaceUi, workspaceContent, type WorkspaceModelProps } from './Workspace.model';
 
-/** What goes in each region, by region id: the app's content for the tab's `content:<id>` slots. */
-export type WorkspaceContent = ReactNode;
+/** What the app draws in a region: the instance and the target it resolves to (its fixed one, else the selection). */
+export type WorkspacePane = (region: SurfaceRegion, target: string | undefined) => ReactNode;
 
 export interface WorkspaceProps extends WorkspaceModelProps {
-  /** What goes in each region, by region id. */
-  content?: Record<string, WorkspaceContent>;
-}
-
-/** A region's content: `content[regionId]`. */
-function contentFor(props: WorkspaceProps, id: string): WorkspaceContent {
-  return props.content?.[id];
+  /** Draws each region of a kind the app defined. */
+  pane?: WorkspacePane;
 }
 
 /**
- * **Job.** A tabbed surface over self-assembling screens: a persistent tab strip, the open tab's
- * `<Screen spec>` beneath it, and — while `editing` — a frame round every region offering the six
- * structural edits (move within its row, move to a neighbouring row, split its slot with a new
- * region, remove it, add a palette kind to the tab, bind it to a track). Docs: `docs/workspace.md`.
+ * **Job.** The surface an app composes its DAW on: a tab strip over the open tab's self-assembling
+ * screen, and edit mode, where every region wears a frame whose tag opens its tools (move, rename,
+ * remove, bind) and the palette adds the app's own pane kinds. Docs: `docs/live-workspace.md`.
  *
- * **Changed.** *Tabs are screens*: a tab **is** a `ScreenSpec`, and an edit returns a new one
- * through `onSpec(tabId, next, why, placed)` — never a grid, never a pixel (`placed` names the instance
- * an add or a split made, and its kind, so the app never reads a kind out of an id). The solver still owns sizes,
- * so an edited tab re-themes and steps its forms down like any other screen.
+ * **The line.** The app owns the document (`SurfaceDocument`), its history and its saving: every
+ * edit leaves as one `SurfaceIntent` through `onIntent`, and the surface shows it only when the
+ * app passes the next document. The surface keeps only what the app doesn't track (`SurfaceUi`:
+ * edit mode, the open frame, the palette, a title being typed), and each can be the app's
+ * (`editing`, `editingRegion`, `paletteOpen`, with `onUi`). Undo and redo are offered only when
+ * the app says (`canUndo`, `canRedo`).
  *
- * **Kept.** The workspace holds no state: the open tab, the specs and the bindings stay the app's.
- * Region contents travel as `content:<id>` slots, so a frame wraps the app's content without the
- * app knowing.
+ * **Panes.** The app's `panes` are plain data (kind, label, forms…); `pane(region, target)` draws
+ * each instance. A kind the app never defined draws a placeholder naming it, still movable and
+ * removable. Kinds are read from `region.kind`, never from ids.
  *
- * **Built from.** `Tabs` (the strip) and `Screen` (the tab) by name, `Button` for the edit
- * tools, `Segmented` for the binding, Texts for frame tags. The frame's plate is a `Surface`;
- * this tier only lays the chrome out, never paints it.
+ * **Built from.** `Tabs` and `Screen` by name, `Button` for the tools, `Segmented` for the
+ * binding, `Surface` for the frame's plate, `Text` for words. This tier lays the chrome out,
+ * never paints it.
  *
  * **Tuning knobs.**
- * - `--yh-workspace-gap`: between the strip, the palette bar and the screen.
+ * - `--yh-workspace-gap`: between the head, the palette and the screen.
  * - `--yh-workspace-frame-gap`: the frame's inset round its region.
  */
-export function Workspace({ content, ...props }: WorkspaceProps) {
-  const tab = workspaceTab(props);
-  const slots = workspaceSlots(tab, content);
-  return <Tree tree={workspaceView(props, tab)} slots={slots} handlers={workspaceHandlers(props)} />;
+export function Workspace({ pane, ...props }: WorkspaceProps) {
+  const [own] = useState(() => viewState<SurfaceUi>(SURFACE_UI_REST));
+  const value = useSyncExternalStore(own.subscribe, own.get);
+  const ui = surfaceUi(props, value);
+  const slots: Record<string, (region: SurfaceRegion, target: string | undefined) => ReactNode> = {};
+  if (pane) for (const { region } of workspaceContent(props)) slots[contentSlot(region.id)] = pane;
+  return <Tree tree={workspaceView(props, ui)} slots={slots} handlers={workspaceHandlers(props, ui, value, own.set)} />;
 }
 
 export default Workspace;

@@ -43,6 +43,9 @@ import GroupSvelte from './layout/Group.svelte';
 import LayerSvelte from './layout/Layer.svelte';
 import ScreenSvelte from './layout/Screen.svelte';
 import AssembledScreenSvelte from './layout/assembly/AssembledScreen.svelte';
+import WorkspaceSvelte from './layout/Workspace/Workspace.svelte';
+import type { WorkspaceModelProps } from './layout/Workspace/Workspace.model';
+import type { SurfaceRegion } from './layout/Workspace/Workspace.types';
 import type { AmbientRegion } from './contract';
 import type { RegionModelProps } from './layout/Region.model';
 import type { TabItemModel } from './layout/Tabs.model';
@@ -237,6 +240,15 @@ export interface AssembledScreenProps {
   style?: string;
 }
 export const AssembledScreen = AssembledScreenSvelte as unknown as Component<AssembledScreenProps>;
+/** The surface an app composes its DAW on (see the React `Workspace`): `pane` is a snippet of the instance and its target. */
+export interface WorkspaceProps extends Omit<WorkspaceModelProps, 'className'> {
+  class?: string;
+  pane?: Snippet<[SurfaceRegion, string | undefined]>;
+}
+export const Workspace = WorkspaceSvelte as unknown as Component<WorkspaceProps>;
+export * from './layout/Workspace/Workspace.types';
+export * from './layout/Workspace/surface';
+export { contentSlot, surfaceUi, workspaceContent, type WorkspaceModelProps } from './layout/Workspace/Workspace.model';
 export { getForm, getChosenForm, setFormContext } from './layout/assembly/forms.svelte';
 export { scopePrinciples } from './layout/assembly/principles.svelte';
 export { measureRoom } from './layout/assembly/room.svelte';

@@ -7,6 +7,23 @@ import { h, styleText, type ChildArg, type Node } from '../../view/Tree.model';
 export const STEM_INKS = ['drums', 'bass', 'other', 'vocals', 'guitar', 'piano'] as const;
 export type StemInk = (typeof STEM_INKS)[number];
 
+/**
+ * What the host samples every frame (mix's `readFrame`): the values that change faster than a pane
+ * should redraw. Only the leaf parts that draw them read it, each animation frame; a value left out
+ * is not measured, and its part shows as missing.
+ */
+export interface LiveFrame {
+  /** The set clock in beats. */
+  beat?: number;
+  /** The playhead through the song, 0–1. */
+  position?: number;
+  /** Each track's measured peak, 0–1, by track id. */
+  levels?: Readonly<Record<string, number>>;
+}
+
+/** The host's frame reader: called by the leaf parts on every animation frame. */
+export type ReadLiveFrame = () => LiveFrame;
+
 /** A track as every pane names it: an id, a name and the stem ink it wears. */
 export interface LiveTrackRef {
   id: string;

@@ -21,6 +21,7 @@ export { SeekBar, type SeekBarProps } from './music/SeekBar';
 export { MixerView } from './mixer/MixerView';
 export { RigHealth, RIG_HEALTH_FORMS, SIGNAL_STATES, loadPath, type RigHealthProps, type RigHealthForm, type RigInput, type RigDevice, type SignalState } from './live/RigHealth/RigHealth';
 export { STEM_INKS, type StemInk, type LiveTrackRef } from './live/live.model';
+export { LIVE_PANES, livePanes, isLivePaneKind, type LivePaneKind } from './live/panes';
 export { DeckStrip } from './mixer/DeckStrip';
 export { MasterStrip } from './mixer/MasterStrip';
 export { Momentary } from './mixer/Momentary';

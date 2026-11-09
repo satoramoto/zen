@@ -4,16 +4,19 @@ The live looper as Lemur pages: tabs of panes in the `Workspace`, one linked set
 The panes themselves are Music-family components in mix[flow]'s face (`src/library/Music/live/`,
 stories under **Music/Live**, `docs/music.md` → "Live"); this folder only composes them.
 
-- `views.ts`: every pane kind the palette can place (`PANE_KINDS`, `PANE_PALETTE`) and the views
-  as a document in mix's surface shape (`LIVE_DOCUMENT`): **ONE**, **Follow**, **Track**, **Hands**,
-  and **Mine**, a blank page to build on. Each tab is rows of region instance ids and the instances,
-  each naming its pane `kind`, `title` and `binding`; `liveScreen(tab)` is its ScreenSpec. The rig
-  health strip is every tab's last row.
+- `views.ts`: the views as a surface document (`LIVE_DOCUMENT`, `docs/workspace.md`): **ONE**,
+  **Follow**, **Track**, **Hands**, and **Mine**, a blank page to build on. Each tab is rows of
+  region instance ids and the instances, each naming its pane `kind`, `title` and `binding`. The
+  kinds are `Music.livePanes` (`Music/live/panes.ts`). The rig health strip is every tab's last
+  row.
 - `LiveSet.story.tsx`: the stories' stand-in app — one set's state, a running clock (`clock.ts`)
   and the pane for every region instance, by its kind and binding, linked (select a track anywhere and the grid, strips, orbits,
   spine and Push follow; pick a compass wedge and the orbits follow that chord).
-- `Views.stories.tsx`: `Live/Views`, React-only (region content is app content); **Mine** opens in
-  edit mode with every pane kind in the palette.
+- `Views.stories.tsx`: `Live/Views`, React-only (region content is app content). The story's host
+  keeps the document and its undo history and applies every intent with `applySurfaceIntent`;
+  **Mine** opens in edit mode with every pane kind in the palette.
+- `HostContract.stories.tsx`, `Panes.stories.tsx`: the `live-host-contract` and
+  `live-pane-registry` scenarios.
 
 | Pane | The idea |
 | --- | --- |

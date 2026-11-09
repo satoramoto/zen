@@ -9,7 +9,6 @@ import { MIX_BAND_FORMS } from '../../components/music/MixBand/MixBand.forms';
 import { STEM_LANES_FORMS } from '../../components/music/StemLanes/StemLanes.forms';
 import { TRANSITION_ROW_FORMS } from '../../components/music/TransitionRow/TransitionRow.forms';
 import type { ScreenSpec } from '../../layout/assembly/types';
-import type { WorkspaceTab } from '../../layout/Workspace/Workspace.types';
 
 /** My stage: the loop grid over the mix — launch and levels, one glance. */
 export const SHOW_STAGE_SPEC: ScreenSpec = {
@@ -51,8 +50,15 @@ export const SHOW_STEMS_SPEC: ScreenSpec = {
   ],
 };
 
+/** One of the show's tabs: a title and the screen it holds. */
+export interface ShowTab {
+  id: string;
+  title: string;
+  spec: ScreenSpec;
+}
+
 /** The show's five tabs, in strip order. */
-export const SHOW_TABS: readonly WorkspaceTab[] = [
+export const SHOW_TABS: readonly ShowTab[] = [
   { id: 'stage', title: 'My stage', spec: SHOW_STAGE_SPEC },
   { id: 'grid', title: 'Session grid', spec: SHOW_GRID_SPEC },
   { id: 'arp', title: 'Arp & follow', spec: SHOW_ARP_SPEC },

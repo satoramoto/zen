@@ -1,5 +1,9 @@
 # The Live Workspace: a set you can lay out
 
+> **History.** This is the plan the lanes built the first Workspace and its widgets from. The
+> surface it describes is now `live-surface` (`docs/workspace.md`): the app's document in mix's
+> shape, app-defined panes, and every edit as an intent. The Lane 7 shape below is superseded.
+
 A solo looping performer needs one screen for seven songs and a jam: launch loops, ride sends,
 follow a chord, throw a delay, cut to the next part. No single fixed arrangement serves all of
 that, so the screen is **tabs of self-assembling regions** — the `Screen` + `assemble()` machinery
@@ -281,18 +285,17 @@ Settled:
 - **A tab's header and footer**: the Workspace fills a tab's own `spec.header` / `spec.footer`
   regions (`56f511a`), fixed, never framed. `Live/Views` puts the rig's line in an ordinary last
   row instead, to match mix's flat documents.
-- **Edit mode in the app**: mix ships its own surface editor (mix `src/rig/editor/`). Zen's
-  Workspace edit mode stays the Storybook prototype; it is not a second production builder.
-- **Region kinds**: a region instance names its kind; nothing infers one from an id. The
-  Workspace's `onSpec` reports `placed: { id, kind }` for an add or a split.
+- **Edit mode in the app** (superseded by `live-surface`): the Workspace is the production
+  surface. It draws the app's document (mix's shape) and sends every edit as an intent the app's
+  store applies (`docs/workspace.md`). Mix's own `SurfaceEditor` and `RegionEditor` go when mix
+  adopts it.
+- **Region kinds**: a region instance names its kind; nothing infers one from an id. The app picks
+  a new instance's id when it applies `addRegion`.
 
 Open (each is a product decision, not taken here):
 
-- **Nesting.** Zen's Screen lets a split stack two regions in one column; mix's version-1 document
-  is flat rows. `Live/Views` stays flat. Either mix's document gains stacked columns, or a host
-  with flat documents (mix) doesn't offer split.
-- **Instance ids.** The Workspace's `newRegionId` still mints `kind`, `kind-2`. Nothing reads them
-  any more; whether it should mint mix-style fresh ids (`tab-region-n`) is open.
+- **Nesting.** Zen's Screen can stack two regions in one column; the surface document is mix's
+  flat rows, so the Workspace offers no split. Stacked columns would be a version 2 document.
 - **Sections.** What FILL, VAR ▸ and NO FORM do, how a song advances (manual, after N bars, on the
   chord), and whether a second press replaces or cancels a queued section are the host's.
   SectionBar draws them as ordinary sections and shows the host's `hint`.

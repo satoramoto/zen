@@ -7,8 +7,9 @@
 // `onSend`, a return `onReturn`, a toggle `onMute` / `onSolo` / `onArm`, a name `onSelect`. A
 // part with no callback is drawn but can't be moved.
 import { component, each, h, wire, type ChildArg, type Handlers, type Node } from '../../../view/Tree.model';
+import { meterView } from '../../music/Meter.model';
 import type { Param } from '../../param/param';
-import { inkStyle, livePane, liveReading, type LiveTrackRef } from '../live.model';
+import { inkStyle, livePane, liveReading, type LiveTrackRef, type ReadLiveFrame } from '../live.model';
 import type { TrackStripsForm } from './TrackStrips.forms';
 
 /** One track's channel. */
@@ -57,6 +58,12 @@ export interface TrackStripsProps {
   onArm?: (trackId: string) => void;
   /** A track's name was pressed: select it. */
   onSelect?: (trackId: string) => void;
+  /**
+   * The host's frame reader. Given, every track's meter reads `levels[track.id]` on each animation
+   * frame (a track the frame leaves out reads silent) and the strips are never redrawn for it; each
+   * strip's `meter` is then ignored. Left out, the meters show `meter`.
+   */
+  readFrame?: ReadLiveFrame;
   /** Draw this form outside an assembled screen (a screen's own choice wins inside one). */
   form?: TrackStripsForm;
   className?: string;
@@ -82,12 +89,20 @@ const SEND_NAMES = ['A', 'B'] as const;
 
 const keyed = (child: ReturnType<typeof component>, key: string): ChildArg => ({ ...child, key });
 
-function fader(label: string, level: number, key: string, inert: boolean, meter: number | undefined): Node {
+/** A strip's meter: the host's reading, or (`sample`, a handler key) the frame's, sampled by the Music frame meter store. */
+type MeterSource = { value: number } | { sample: string } | undefined;
+
+function fader(label: string, level: number, key: string, inert: boolean, meter: MeterSource): Node {
+  const name = `${label.replace(/ level$/, '')} meter`;
   return h(
     'div',
     { class: 'live-track-strips-fader', 'data-part': 'fader' },
     keyed(component('MusicSlider', { name: '', showValue: false, label, param: STRIP_LEVEL, value: level, length: 'auto', disabled: inert }, { on: { onChange: key } }), 'slider'),
-    meter === undefined ? null : keyed(component('MusicMeter', { value: meter, orientation: 'vertical', label: `${label.replace(/ level$/, '')} meter` }), 'meter'),
+    meter === undefined
+      ? null
+      : 'sample' in meter
+        ? { ...wire(meterView({ name: '', label: name, orientation: 'vertical', value: 0 }), { bind: [['musicFrameMeter', { sample: meter.sample }]] }), key: 'frame-meter' }
+        : keyed(component('MusicMeter', { value: meter.value, orientation: 'vertical', label: name }), 'meter'),
   );
 }
 
@@ -142,7 +157,13 @@ function trackStrip(track: TrackStrip, props: TrackStripsProps, tall: boolean): 
           ),
         )
       : null,
-    fader(`${track.name} level`, track.level, `level:${track.id}`, onLevel === undefined, Number.isFinite(track.meter) ? track.meter : undefined),
+    fader(
+      `${track.name} level`,
+      track.level,
+      `level:${track.id}`,
+      onLevel === undefined,
+      props.readFrame ? { sample: `sample:${track.id}` } : Number.isFinite(track.meter) ? { value: track.meter! } : undefined,
+    ),
     liveReading(dbText(track.level), { class: 'live-reading live-track-strips-db', 'data-part': 'db' }),
     h(
       'div',
@@ -190,10 +211,11 @@ export function trackStripsView(props: TrackStripsProps, form: TrackStripsForm):
 
 const clamp01 = (v: number): number => Math.max(0, Math.min(1, v));
 
-/** The callbacks the tree names: `select:`, `level:`, `send:<id>:<0|1>`, `mute:`, `solo:`, `arm:` per track, `return:` per return. */
-export function trackStripsHandlers({ tracks, returns, onLevel, onSend, onReturn, onMute, onSolo, onArm, onSelect }: TrackStripsProps): Handlers {
+/** The callbacks the tree names: `sample:` (with a frame reader), `select:`, `level:`, `send:<id>:<0|1>`, `mute:`, `solo:`, `arm:` per track, `return:` per return. */
+export function trackStripsHandlers({ tracks, returns, onLevel, onSend, onReturn, onMute, onSolo, onArm, onSelect, readFrame }: TrackStripsProps): Handlers {
   const handlers: Handlers = {};
   for (const { id } of tracks) {
+    if (readFrame) handlers[`sample:${id}`] = () => readFrame().levels?.[id] ?? 0;
     handlers[`select:${id}`] = () => onSelect?.(id);
     handlers[`level:${id}`] = (level: number) => onLevel?.({ track: id, level: clamp01(level) });
     handlers[`send:${id}:0`] = (level: number) => onSend?.({ track: id, send: 0, level: clamp01(level) });
