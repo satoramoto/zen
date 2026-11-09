@@ -1,36 +1,98 @@
-// The surface's contract (docs/live-workspace.md): the document the app owns and the surface draws,
+// The surface's contract (docs/workspace.md): the document the app owns and the surface draws,
 // the pane kinds the app defines, the intents every edit leaves as, and the visual state the surface
 // keeps for itself. Plain data, no framework: the same values feed React, Svelte and an app's store.
-// The document is mix[flow]'s rig document (`src/rig/contract.ts`, version 1) field for field, so
-// mix's values are assignable as they are.
+// Version 1 is mix[flow]'s rig document (`src/rig/contract.ts`) field for field, so mix's values are
+// assignable as they are; version 2 makes a tab a split tree with shares, lockable, and gives a
+// region its settings. The surface draws a v1 document through its v2 reading (`readDocument`).
 import type { Forms } from '../assembly/types';
 import type { Rank } from '../../contract';
 
 /** What a region follows: whatever the app has selected, or one target the app names. */
 export type SurfaceBinding = { mode: 'selected' } | { mode: 'fixed'; target: string };
 
-/** One region instance: its own id, the pane kind it is (never read from the id), its title, its binding. */
+/** A setting's value as a region stores it: plain data. */
+export type SettingValue = string | number | boolean | readonly string[];
+
+/** One region instance: its own id, the pane kind it is (never read from the id), its title, its binding, its settings. */
 export interface SurfaceRegion {
   id: string;
   kind: string;
   title: string;
   binding: SurfaceBinding;
+  /** Its values for its kind's settings, by key. Left out: every default. */
+  settings?: Readonly<Record<string, SettingValue>>;
 }
 
-/** One tab: rows of instance ids, top to bottom, and the instances they name. */
+/** A layout leaf (a region instance id) or a split. */
+export type LayoutNode = string | SplitNode;
+
+/** One child of a split and its share of the split's room (relative to its siblings'). */
+export interface SplitChild {
+  node: LayoutNode;
+  share: number;
+}
+
+/** A split: children side by side (`row`) or stacked (`column`). Its id is what a resize names. */
+export interface SplitNode {
+  id: string;
+  split: 'row' | 'column';
+  children: readonly SplitChild[];
+}
+
+/** One tab, version 2: a layout tree of the instances, the instances, and whether it is locked. */
 export interface SurfaceTab {
+  id: string;
+  title: string;
+  /** Null: an empty tab. */
+  layout: LayoutNode | null;
+  regions: readonly SurfaceRegion[];
+  /** Locked for the gig: no edit tools until it is unlocked. */
+  locked?: boolean;
+}
+
+/** One tab, version 1 (mix's today): rows of instance ids, top to bottom. */
+export interface SurfaceTabV1 {
   id: string;
   title: string;
   rows: readonly (readonly string[])[];
   regions: readonly SurfaceRegion[];
 }
 
-/** The whole surface, as the app stores it: its tabs and the open one. */
-export interface SurfaceDocument {
-  version: 1;
+/** The whole surface, version 2. */
+export interface SurfaceDocumentV2 {
+  version: 2;
   active: string;
   tabs: readonly SurfaceTab[];
 }
+
+/** The whole surface, version 1: mix[flow]'s rig document as it stores it today. */
+export interface SurfaceDocumentV1 {
+  version: 1;
+  active: string;
+  tabs: readonly SurfaceTabV1[];
+}
+
+/** The whole surface, as the app stores it: either version. The surface draws a v1 document through its v2 reading. */
+export type SurfaceDocument = SurfaceDocumentV1 | SurfaceDocumentV2;
+
+/** A choice's option. */
+export interface SettingOption {
+  value: string;
+  label: string;
+}
+
+/** One setting a pane kind declares, with its default. Plain data. */
+export type SettingSpec = { key: string; label: string } & (
+  | { type: 'choice'; options: readonly SettingOption[]; default: string }
+  | { type: 'choices'; options: readonly SettingOption[]; default: readonly string[] }
+  | { type: 'toggle'; default: boolean }
+  | { type: 'number'; min: number; max: number; step?: number; default: number }
+  /** A pick of the app's targets of kind `of`; `'all'` picks every one. */
+  | { type: 'targets'; of: string; default: 'all' | readonly string[] }
+);
+
+/** A region's settings with every default filled in, by key. */
+export type ResolvedSettings = Readonly<Record<string, SettingValue>>;
 
 /** One kind of pane the app can place: plain data, so the definitions import no renderer. */
 export interface PaneDefinition {
@@ -50,6 +112,8 @@ export interface PaneDefinition {
   head?: boolean;
   /** What a fixed binding can point at, in the app's words (`'track'`): the targets of that kind. None: it can't be bound. */
   targets?: string;
+  /** The settings a region of this kind carries, in the order the settings sheet lists them. */
+  settings?: readonly SettingSpec[];
 }
 
 /** Something a region can be bound to: a track, a song, a deck, in the app's words. */
@@ -60,7 +124,11 @@ export interface SurfaceTarget {
   kind: string;
 }
 
-/** The ways a region moves: within its row, or into the row above or below. */
+/** Where a dragged region lands on another: beside it, above or below it, or in its place (the two trade). */
+export const DOCK_ZONES = ['left', 'right', 'above', 'below', 'swap'] as const;
+export type DockZone = (typeof DOCK_ZONES)[number];
+
+/** The ways a region steps: within the nearest row split (left, right) or column split (up, down). */
 export const SURFACE_DIRECTIONS = ['left', 'right', 'up', 'down'] as const;
 export type SurfaceDirection = (typeof SURFACE_DIRECTIONS)[number];
 
@@ -75,12 +143,16 @@ export type SurfaceIntent =
   | { type: 'renameTab'; tab: string; title: string }
   | { type: 'duplicateTab'; tab: string }
   | { type: 'removeTab'; tab: string }
-  /** `row` past the last row starts a new one; `index` defaults to the row's end. */
-  | { type: 'addRegion'; tab: string; kind: string; row: number; index?: number }
+  | { type: 'lockTab'; tab: string; locked: boolean }
+  /** Beside `beside` on its `zone` side (default right); without `beside`, at the end of the tab. */
+  | { type: 'addRegion'; tab: string; kind: string; beside?: string; zone?: Exclude<DockZone, 'swap'> }
   | { type: 'removeRegion'; tab: string; region: string }
   | { type: 'moveRegion'; tab: string; region: string; direction: SurfaceDirection }
+  | { type: 'dockRegion'; tab: string; region: string; target: string; zone: DockZone }
+  | { type: 'resizeSplit'; tab: string; split: string; shares: readonly number[] }
   | { type: 'retitleRegion'; tab: string; region: string; title: string }
   | { type: 'bindRegion'; tab: string; region: string; binding: SurfaceBinding }
+  | { type: 'configureRegion'; tab: string; region: string; settings: Readonly<Record<string, SettingValue>> }
   | { type: 'setEditing'; editing: boolean }
   | { type: 'undo' }
   | { type: 'redo' };
@@ -94,11 +166,15 @@ export const SURFACE_INTENTS = [
   'renameTab',
   'duplicateTab',
   'removeTab',
+  'lockTab',
   'addRegion',
   'removeRegion',
   'moveRegion',
+  'dockRegion',
+  'resizeSplit',
   'retitleRegion',
   'bindRegion',
+  'configureRegion',
   'setEditing',
   'undo',
   'redo',
@@ -117,6 +193,14 @@ export interface SurfaceUi {
   palette: boolean;
   /** A title being typed: the tab's (`tab`) or a region's, and the text so far. */
   naming?: { target: 'tab' | 'region'; id: string; text: string };
+  /** The open region's settings sheet is showing. */
+  sheet?: boolean;
+  /** A handle being dragged: the split and its previewed shares. */
+  resizing?: { split: string; shares: readonly number[] };
+  /** A tag being dragged: the region, and the region and zone under the pointer. */
+  docking?: { region: string; target?: string; zone?: DockZone };
+  /** Each region's measured room, by id: what its form is picked from. */
+  rooms?: Readonly<Record<string, { w: number; h: number }>>;
 }
 
 export const SURFACE_UI_REST: SurfaceUi = { editing: false, palette: false };

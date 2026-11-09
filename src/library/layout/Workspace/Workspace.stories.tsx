@@ -81,16 +81,16 @@ export const MovingARegion: Story = scenario(
 export const AddingFromThePalette: Story = scenario(
   {
     name: 'Adding from the palette',
-    when: 'a person adds a kind from the palette to a row',
+    when: 'a person adds a kind from the palette beside a region',
     then: 'the surface sends one add intent naming the tab, the kind and where it goes, and the app picks the new instance’s id',
     act: async ({ canvasElement }) => {
-      await userEvent.click(within(canvasElement).getByRole('button', { name: 'add Transitions to this tab' }));
+      await userEvent.click(within(canvasElement).getByRole('button', { name: 'add Transitions beside Loop grid' }));
     },
     check: async ({ args }) => {
-      await expect(sent(args)).toEqual([{ type: 'addRegion', tab: 'stage', kind: 'cuts', row: 1 }]);
+      await expect(sent(args)).toEqual([{ type: 'addRegion', tab: 'stage', kind: 'cuts', beside: 'stage-1', zone: 'right' }]);
     },
   },
-  spied(s.Palette),
+  spied(s.Palette, { args: { editingRegion: 'stage-1' } }),
 );
 
 export const RebindingARegion: Story = scenario(
@@ -191,10 +191,10 @@ export const ApplyingTheSurfacesOwnIntents: Story = scenario(
     },
     check: async ({ canvasElement }) => {
       const canvas = within(canvasElement);
-      // Mix joined the grid's row, and Stems sits beside it.
+      // Mix stepped up above the grid, and Stems sits beside it.
       const frames = [...canvasElement.querySelectorAll<HTMLElement>('[data-part="frame"]')].map((f) => f.dataset.kind);
-      await expect(frames).toEqual(['loopGrid', 'mix', 'stems']);
-      await waitFor(() => expect(canvas.getByTestId('pane-stage-1').parentElement!.closest('[data-region]')).toBeTruthy());
+      await expect(frames).toEqual(['mix', 'stems', 'loopGrid']);
+      await expect(canvasElement.querySelector('[data-leaf="stage-2"]')!.parentElement).toHaveAttribute('data-split', 'row');
       // The app's history: undo takes the add back.
       await userEvent.click(canvas.getByRole('button', { name: 'undo' }));
       await waitFor(() => expect(canvasElement.querySelectorAll('[data-part="frame"]').length).toBe(2));

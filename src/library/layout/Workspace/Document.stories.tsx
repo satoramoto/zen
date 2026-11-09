@@ -58,10 +58,10 @@ export const TheSurfaceDrawsTheAppsDocument: Story = scenario(
   { render: () => <Workspace name="Live" document={THREE} panes={workspacePanes} pane={workspacePane} /> },
 ) as Story;
 
-const OTHER: SurfaceDocument = { version: 1, active: 'jam', tabs: [tabOf('jam', 'Jam', [['stems', 'cuts']])] };
+const OTHER: SurfaceDocument = { version: 2, active: 'jam', tabs: [tabOf('jam', 'Jam', [['stems', 'cuts']])] };
 
 function Swapping() {
-  const [doc, setDoc] = useState(workspaceDocument);
+  const [doc, setDoc] = useState<SurfaceDocument>(workspaceDocument);
   return (
     <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100%' }}>
       <button type="button" onClick={() => setDoc(OTHER)}>
@@ -172,7 +172,8 @@ export const AnUnknownKind: Story = scenario(
       await expect(drawn(canvasElement)).toEqual(['a', 'c']);
       await userEvent.click(canvas.getByRole('button', { name: 'Theremin tools' }));
       await userEvent.click(canvas.getByRole('button', { name: 'move Theremin down' }));
-      await waitFor(() => expect([...canvasElement.querySelectorAll<HTMLElement>('[data-part="frame"]')].map((f) => f.dataset.region)).toEqual(['a', 'c', 'b']));
+      // It stepped out of its row: now stacked on its own between the grid and the cuts.
+      await waitFor(() => expect(canvasElement.querySelector('[data-leaf="b"]')!.parentElement).toHaveAttribute('data-split', 'column'));
       // Its tools stay open after the move.
       await userEvent.click(canvas.getByRole('button', { name: 'remove Theremin' }));
       await waitFor(() => expect(canvas.queryByRole('note')).toBeNull());

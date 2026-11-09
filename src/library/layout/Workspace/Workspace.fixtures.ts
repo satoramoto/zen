@@ -11,7 +11,8 @@ import { MIX_BAND_FORMS } from '../../components/music/MixBand/MixBand.forms';
 import { STEM_LANES_FORMS } from '../../components/music/StemLanes/StemLanes.forms';
 import { TRANSITION_ROW_FORMS } from '../../components/music/TransitionRow/TransitionRow.forms';
 import type { WorkspaceModelProps } from './Workspace.model';
-import type { PaneDefinition, SurfaceDocument, SurfaceRegion, SurfaceTab, SurfaceTarget } from './Workspace.types';
+import { readTab } from './surface';
+import type { PaneDefinition, SurfaceDocument, SurfaceDocumentV2, SurfaceRegion, SurfaceTab, SurfaceTarget } from './Workspace.types';
 
 /** The app's pane kinds, in palette order: the widgets' own forms. */
 export const workspacePanes: readonly PaneDefinition[] = [
@@ -33,7 +34,7 @@ export const workspaceTargets: readonly SurfaceTarget[] = [
 
 const label = (kind: string): string => workspacePanes.find((p) => p.kind === kind)?.label ?? kind;
 
-/** A tab from rows of kinds: instance ids `<tab>-<n>`, each following the selection. */
+/** A tab from rows of kinds (read as a column of rows, equal shares): instance ids `<tab>-<n>`, each following the selection. */
 export function tabOf(id: string, title: string, layout: readonly (readonly string[])[]): SurfaceTab {
   const regions: SurfaceRegion[] = [];
   const rows = layout.map((row) =>
@@ -43,12 +44,12 @@ export function tabOf(id: string, title: string, layout: readonly (readonly stri
       return region.id;
     }),
   );
-  return { id, title, rows, regions };
+  return readTab({ id, title, rows, regions });
 }
 
 /** The Workspace's own five tabs: stage, grid, arp, mix, stems. */
-export const workspaceDocument: SurfaceDocument = {
-  version: 1,
+export const workspaceDocument: SurfaceDocumentV2 = {
+  version: 2,
   active: 'stage',
   tabs: [
     tabOf('stage', 'My stage', [['loopGrid'], ['mix']]),
@@ -60,7 +61,7 @@ export const workspaceDocument: SurfaceDocument = {
 };
 
 /** The document opened on another tab. */
-export const opened = (doc: SurfaceDocument, active: string): SurfaceDocument => ({ ...doc, active });
+export const opened = <D extends SurfaceDocument>(doc: D, active: string): D => ({ ...doc, active });
 
 /** The controls, the same in both Storybooks. */
 export const workspaceArgTypes = {
@@ -89,7 +90,7 @@ export const workspaceStories = defineFixtures<WorkspaceModelProps>()({
   History: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, canUndo: true, canRedo: false } },
   NoHistory: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, canUndo: false, canRedo: false } },
   Bare: { args: { name: 'Live', document: workspaceDocument, editing: true } },
-  Narrow: { args: { name: 'Live', document: { version: 1, active: 'stage', tabs: [workspaceDocument.tabs[0]] }, panes: workspacePanes } },
+  Narrow: { args: { name: 'Live', document: { version: 2, active: 'stage', tabs: [workspaceDocument.tabs[0]] }, panes: workspacePanes } },
   Empty: { args: { name: 'Live', document: { version: 1, active: 'new', tabs: [{ id: 'new', title: 'New view', rows: [], regions: [] }] }, panes: workspacePanes } },
   Disabled: { args: { name: 'Live', document: workspaceDocument, panes: workspacePanes, editing: true, editingRegion: 'stage-1', disabled: true } },
 });

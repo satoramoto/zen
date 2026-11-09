@@ -1,6 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { PLACEHOLDER_FORMS, applySurfaceIntent, freshId, openTab, resolveTarget, surfaceScreen, tabRegions, targetsFor } from './surface';
-import { SURFACE_INTENTS, type PaneDefinition, type SurfaceDocument, type SurfaceIntent } from './Workspace.types';
+import type { Forms, Principles } from '../assembly/types';
+import { applySurfaceIntent, cleanLayout, formForRoom, freshId, leaves, openTab, readDocument, readTab, resolveSettings, resolveTarget, splits, tabRegions, targetsFor } from './surface';
+import { SURFACE_INTENTS, type LayoutNode, type PaneDefinition, type SurfaceDocument, type SurfaceDocumentV2, type SurfaceIntent, type SurfaceTab } from './Workspace.types';
 import { workspaceDocument, workspacePanes, workspaceTargets } from './Workspace.fixtures';
 
 // Mix's rig document, as mix declares it (openflowfm/mix src/rig/contract.ts, version 1), copied as
@@ -11,52 +12,54 @@ interface MixRegion { id: string; kind: MixRegionKind; title: string; binding: M
 interface MixTab { id: string; title: string; rows: readonly (readonly string[])[]; regions: readonly MixRegion[] }
 interface MixDocument { version: 1; active: string; tabs: readonly MixTab[] }
 
-const doc: SurfaceDocument = {
-  version: 1,
+const region = (id: string, kind = 'mix') => ({ id, kind, title: id, binding: { mode: 'selected' as const } });
+
+/** A: a row of a-1 and a column (a-2 over a-3), shares 2 and 1. B: one region. */
+const doc: SurfaceDocumentV2 = {
+  version: 2,
   active: 'a',
   tabs: [
     {
       id: 'a',
       title: 'A',
-      rows: [['a-1', 'a-2'], ['a-3']],
-      regions: [
-        { id: 'a-1', kind: 'mix', title: 'Mix', binding: { mode: 'selected' } },
-        { id: 'a-2', kind: 'cuts', title: 'Cuts', binding: { mode: 'selected' } },
-        { id: 'a-3', kind: 'loopGrid', title: 'Grid', binding: { mode: 'fixed', target: 'bass' } },
-      ],
+      layout: { id: 'a-split', split: 'row', children: [{ node: 'a-1', share: 2 }, { node: { id: 'a-col', split: 'column', children: [{ node: 'a-2', share: 1 }, { node: 'a-3', share: 1 }] }, share: 1 }] },
+      regions: [region('a-1'), region('a-2', 'cuts'), { ...region('a-3', 'loopGrid'), binding: { mode: 'fixed', target: 'bass' } }],
     },
-    { id: 'b', title: 'B', rows: [['b-1']], regions: [{ id: 'b-1', kind: 'mix', title: 'Mix', binding: { mode: 'selected' } }] },
+    { id: 'b', title: 'B', layout: 'b-1', regions: [region('b-1')] },
   ],
 };
-const tabA = (d: SurfaceDocument) => d.tabs.find((t) => t.id === 'a')!;
+const tabA = (d: SurfaceDocument): SurfaceTab => readDocument(d).tabs.find((t) => t.id === 'a')!;
+const apply = (intent: SurfaceIntent, d: SurfaceDocument = doc) => applySurfaceIntent(d, intent);
+
+/** A layout as nested arrays, ids only: `['row', 'a-1', ['column', 'a-2', 'a-3']]`. */
+function shape(node: LayoutNode | null): unknown {
+  if (node === null || typeof node === 'string') return node;
+  return [node.split, ...node.children.map((c) => shape(c.node))];
+}
 
 describe('the document', () => {
   it('takes mix’s rig document as it is', () => {
     expectTypeOf<MixDocument>().toMatchTypeOf<SurfaceDocument>();
   });
 
-  it('opens the active tab, else the first', () => {
+  it('reads a version 1 tab as a column of rows with equal shares', () => {
+    const read = readTab({ id: 't', title: 'T', rows: [['x', 'ghost', 'y'], ['ghost'], ['z']], regions: [region('x'), region('y'), region('z')] });
+    expect(shape(read.layout)).toEqual(['column', ['row', 'x', 'y'], 'z']);
+    expect(splits(read.layout).map((s) => s.id)).toEqual(['t-rows', 't-row-1']);
+    expect(readTab({ id: 't', title: 'T', rows: [['x']], regions: [region('x')] }).layout).toBe('x');
+    expect(readTab({ id: 't', title: 'T', rows: [], regions: [] }).layout).toBeNull();
+  });
+
+  it('opens the active tab, else the first, read as version 2', () => {
     expect(openTab(doc)?.id).toBe('a');
     expect(openTab({ ...doc, active: 'nowhere' })?.id).toBe('a');
     expect(openTab({ ...doc, tabs: [] })).toBeUndefined();
+    expect(openTab({ version: 1, active: 'v', tabs: [{ id: 'v', title: 'V', rows: [['x', 'y']], regions: [region('x'), region('y')] }] })?.layout).toMatchObject({ split: 'row' });
   });
 
-  it('skips a row entry naming an instance the tab doesn’t hold, and the row it empties', () => {
-    const tab = { ...tabA(doc), rows: [['a-1', 'ghost', 'a-2'], ['ghost'], ['a-3']] };
-    expect(tabRegions(tab).map((r) => r.id)).toEqual(['a-1', 'a-2', 'a-3']);
-    expect(surfaceScreen(tab, workspacePanes).rows.length).toBe(2);
-  });
-
-  it('places a kind it doesn’t know with the placeholder’s form, and a known kind with its own', () => {
-    const tab = { ...tabA(doc), regions: tabA(doc).regions.map((r) => (r.id === 'a-2' ? { ...r, kind: 'mystery' } : r)) };
-    const [[mix, mystery]] = surfaceScreen(tab, workspacePanes).rows as { id: string; forms: unknown }[][];
-    expect(mix.forms).toBe(workspacePanes.find((p) => p.kind === 'mix')!.forms);
-    expect(mystery.forms).toBe(PLACEHOLDER_FORMS);
-  });
-
-  it('reads a kind from `kind`, never from the id', () => {
-    const tab = { id: 't', title: 'T', rows: [['mix-1']], regions: [{ id: 'mix-1', kind: 'loopGrid', title: 'G', binding: { mode: 'selected' as const } }] };
-    expect(surfaceScreen(tab, workspacePanes).rows[0][0]).toMatchObject({ id: 'mix-1', forms: workspacePanes[0].forms });
+  it('draws the leaves it holds an instance for, in reading order', () => {
+    expect(tabRegions(tabA(doc)).map((r) => r.id)).toEqual(['a-1', 'a-2', 'a-3']);
+    expect(tabRegions({ ...tabA(doc), regions: tabA(doc).regions.filter((r) => r.id !== 'a-2') }).map((r) => r.id)).toEqual(['a-1', 'a-3']);
   });
 
   it('resolves a region’s target from its binding', () => {
@@ -66,120 +69,181 @@ describe('the document', () => {
     expect(targetsFor(workspacePanes.find((p) => p.kind === 'cuts'), workspaceTargets)).toEqual([]);
   });
 
-  it('makes ids nothing in the document uses', () => {
+  it('makes ids nothing in the document uses, splits included', () => {
     expect(freshId(doc, 'a')).toBe('a-4');
-    expect(freshId(doc, 'c')).toBe('c-1');
+    expect(freshId({ ...doc, tabs: [{ ...doc.tabs[0], layout: { id: 'c-1', split: 'row', children: [{ node: 'a-1', share: 1 }] } }] }, 'c')).toBe('c-2');
+  });
+});
+
+describe('the layout', () => {
+  it('collapses a split of one and merges a child running the same way, keeping shares', () => {
+    const merged = cleanLayout({ id: 'r', split: 'row', children: [{ node: 'x', share: 1 }, { node: { id: 'r2', split: 'row', children: [{ node: 'y', share: 1 }, { node: 'z', share: 3 }] }, share: 2 }] });
+    expect(merged).toEqual({ id: 'r', split: 'row', children: [{ node: 'x', share: 1 }, { node: 'y', share: 0.5 }, { node: 'z', share: 1.5 }] });
+    expect(cleanLayout({ id: 'r', split: 'row', children: [{ node: 'x', share: 1 }, { node: 'y', share: 1 }] }, (id) => id !== 'y')).toBe('x');
+    expect(leaves(doc.tabs[0].layout)).toEqual(['a-1', 'a-2', 'a-3']);
+  });
+});
+
+describe('forms by room', () => {
+  const p = { scale: { unit: 4, control: 32, sizes: {} }, minTarget: 32 } as unknown as Principles;
+  const forms: Forms = [
+    { id: 'tall', min: { w: { px: 300 }, h: { px: 200 } }, ideal: { w: { px: 400 }, h: { px: 300 } } },
+    { id: 'short', min: { w: { px: 200 }, h: { px: 80 } }, ideal: { w: { px: 300 }, h: { px: 100 } } },
+  ];
+  it('picks the richest form whose least room fits, the smallest (cramped) when none does', () => {
+    expect(formForRoom(forms, { w: 320, h: 220 }, p)).toEqual({ form: 'tall', cramped: false });
+    expect(formForRoom(forms, { w: 320, h: 120 }, p)).toEqual({ form: 'short', cramped: false });
+    expect(formForRoom(forms, { w: 100, h: 50 }, p)).toEqual({ form: 'short', cramped: true });
+    expect(formForRoom(forms, undefined, p).form).toBe('tall');
+  });
+});
+
+describe('settings', () => {
+  const pane: PaneDefinition = {
+    kind: 'mix',
+    label: 'Mix',
+    forms: workspacePanes[0].forms,
+    settings: [
+      { key: 'tracks', label: 'Tracks', type: 'targets', of: 'track', default: 'all' },
+      { key: 'sends', label: 'Sends', type: 'toggle', default: true },
+      { key: 'size', label: 'Size', type: 'number', min: 1, max: 8, default: 4 },
+    ],
+  };
+  it('fills defaults, expands all targets, and keeps a region’s own values', () => {
+    expect(resolveSettings(pane, region('m'), workspaceTargets)).toEqual({ tracks: ['drums', 'bass', 'keys'], sends: true, size: 4 });
+    expect(resolveSettings(pane, { ...region('m'), settings: { tracks: ['bass'], sends: false } }, workspaceTargets)).toEqual({ tracks: ['bass'], sends: false, size: 4 });
+  });
+  it('shows only what the kind declares', () => {
+    expect(resolveSettings(pane, { ...region('m'), settings: { gone: 'x' } }, workspaceTargets)).not.toHaveProperty('gone');
+    expect(resolveSettings(undefined, region('m'))).toEqual({});
   });
 });
 
 describe('applySurfaceIntent', () => {
-  const apply = (intent: SurfaceIntent, d = doc) => applySurfaceIntent(d, intent);
-
-  it('selects a tab', () => {
+  it('selects, adds, renames, locks and removes tabs', () => {
     expect(apply({ type: 'selectTab', tab: 'b' }).active).toBe('b');
-  });
-
-  it('adds a tab, opened, with a fresh id', () => {
-    const next = apply({ type: 'addTab', title: 'Jam' });
-    expect(next.tabs.at(-1)).toMatchObject({ id: 'tab-1', title: 'Jam', rows: [], regions: [] });
-    expect(next.active).toBe('tab-1');
-  });
-
-  it('renames a tab, ignoring an empty title', () => {
-    expect(apply({ type: 'renameTab', tab: 'a', title: ' Opener ' }).tabs[0].title).toBe('Opener');
+    const added = apply({ type: 'addTab', title: 'Jam' });
+    expect(readDocument(added).tabs.at(-1)).toMatchObject({ id: 'tab-1', title: 'Jam', layout: null, regions: [] });
+    expect(tabA(apply({ type: 'renameTab', tab: 'a', title: ' Opener ' })).title).toBe('Opener');
     expect(apply({ type: 'renameTab', tab: 'a', title: '  ' })).toBe(doc);
+    expect(tabA(apply({ type: 'lockTab', tab: 'a', locked: true })).locked).toBe(true);
+    expect(apply({ type: 'lockTab', tab: 'a', locked: false })).toBe(doc);
+    const removed = readDocument(apply({ type: 'removeTab', tab: 'a' }));
+    expect(removed.tabs.map((t) => t.id)).toEqual(['b']);
+    expect(removed.active).toBe('b');
+    expect(apply({ type: 'removeTab', tab: 'b' }, removed)).toBe(removed);
   });
 
-  it('duplicates a tab beside it, with fresh instance ids and the same layout', () => {
-    const next = apply({ type: 'duplicateTab', tab: 'a' });
+  it('duplicates a tab beside it: fresh region and split ids, the same layout and bindings', () => {
+    const next = readDocument(apply({ type: 'duplicateTab', tab: 'a' }));
     const copy = next.tabs[1];
     expect(copy.title).toBe('A copy');
     expect(next.active).toBe(copy.id);
     expect(copy.regions.map((r) => r.kind)).toEqual(['mix', 'cuts', 'loopGrid']);
-    const ids = new Set(doc.tabs.flatMap((t) => t.regions.map((r) => r.id)));
-    for (const r of copy.regions) expect(ids.has(r.id)).toBe(false);
-    expect(copy.rows.map((row) => row.length)).toEqual([2, 1]);
+    const old = new Set(['a-1', 'a-2', 'a-3', 'a-split', 'a-col']);
+    for (const id of [...leaves(copy.layout), ...splits(copy.layout).map((s) => s.id)]) expect(old.has(id)).toBe(false);
+    expect(shape(copy.layout)).toEqual(['row', expect.any(String), ['column', expect.any(String), expect.any(String)]]);
     expect(copy.regions[2].binding).toEqual({ mode: 'fixed', target: 'bass' });
   });
 
-  it('removes a tab, opening its neighbour, never the last', () => {
-    const next = apply({ type: 'removeTab', tab: 'a' });
-    expect(next.tabs.map((t) => t.id)).toEqual(['b']);
-    expect(next.active).toBe('b');
-    expect(apply({ type: 'removeTab', tab: 'b' }, next)).toBe(next);
+  it('adds a region at the tab’s end, beside a region, or as the first of an empty tab', () => {
+    const end = tabA(apply({ type: 'addRegion', tab: 'a', kind: 'stems' }));
+    expect(shape(end.layout)).toEqual(['column', ['row', 'a-1', ['column', 'a-2', 'a-3']], 'a-region-1']);
+    expect(end.regions.at(-1)).toEqual({ id: 'a-region-1', kind: 'stems', title: 'stems', binding: { mode: 'selected' } });
+    const beside = tabA(apply({ type: 'addRegion', tab: 'a', kind: 'stems', beside: 'a-2', zone: 'above' }));
+    expect(shape(beside.layout)).toEqual(['row', 'a-1', ['column', 'a-region-1', 'a-2', 'a-3']]);
+    const empty = readDocument(apply({ type: 'addRegion', tab: 'tab-1', kind: 'mix' }, apply({ type: 'addTab' }))).tabs.at(-1)!;
+    expect(empty.layout).toBe('tab-1-region-1');
+    const titled = tabA(applySurfaceIntent(doc, { type: 'addRegion', tab: 'a', kind: 'stems' }, { titleOf: () => 'Stems', newId: (_d, base) => `${base}-x` }));
+    expect(titled.regions.at(-1)).toMatchObject({ id: 'a-region-x', title: 'Stems' });
   });
 
-  it('adds a region at a row and index, or in a new row past the last', () => {
-    const at = apply({ type: 'addRegion', tab: 'a', kind: 'stems', row: 0, index: 1 });
-    expect(tabA(at).rows[0]).toEqual(['a-1', 'a-region-1', 'a-2']);
-    expect(tabA(at).regions.at(-1)).toEqual({ id: 'a-region-1', kind: 'stems', title: 'stems', binding: { mode: 'selected' } });
-    const below = apply({ type: 'addRegion', tab: 'a', kind: 'stems', row: 9 });
-    expect(tabA(below).rows).toEqual([['a-1', 'a-2'], ['a-3'], ['a-region-1']]);
-    const titled = applySurfaceIntent(doc, { type: 'addRegion', tab: 'a', kind: 'stems', row: 0 }, { titleOf: () => 'Stems', newId: () => 'mine' });
-    expect(tabA(titled).regions.at(-1)).toMatchObject({ id: 'mine', title: 'Stems' });
+  it('removes a region; a split left with one child collapses; a tab may be left empty', () => {
+    expect(shape(tabA(apply({ type: 'removeRegion', tab: 'a', region: 'a-3' })).layout)).toEqual(['row', 'a-1', 'a-2']);
+    expect(readDocument(apply({ type: 'removeRegion', tab: 'b', region: 'b-1' })).tabs[1]).toMatchObject({ layout: null, regions: [] });
   });
 
-  it('removes a region and the row it empties; a tab may be left empty', () => {
-    const next = apply({ type: 'removeRegion', tab: 'a', region: 'a-3' });
-    expect(tabA(next).rows).toEqual([['a-1', 'a-2']]);
-    expect(tabA(next).regions.map((r) => r.id)).toEqual(['a-1', 'a-2']);
-    const b = apply({ type: 'removeRegion', tab: 'b', region: 'b-1' });
-    expect(b.tabs[1]).toMatchObject({ rows: [], regions: [] });
+  it('docks a region beside, above, below or in place of another', () => {
+    expect(shape(tabA(apply({ type: 'dockRegion', tab: 'a', region: 'a-1', target: 'a-3', zone: 'below' })).layout)).toEqual(['column', 'a-2', 'a-3', 'a-1']);
+    expect(shape(tabA(apply({ type: 'dockRegion', tab: 'a', region: 'a-3', target: 'a-1', zone: 'left' })).layout)).toEqual(['row', 'a-3', 'a-1', 'a-2']);
+    expect(shape(tabA(apply({ type: 'dockRegion', tab: 'a', region: 'a-2', target: 'a-1', zone: 'above' })).layout)).toEqual(['row', ['column', 'a-2', 'a-1'], 'a-3']);
+    expect(shape(tabA(apply({ type: 'dockRegion', tab: 'a', region: 'a-1', target: 'a-3', zone: 'swap' })).layout)).toEqual(['row', 'a-3', ['column', 'a-2', 'a-1']]);
+    expect(apply({ type: 'dockRegion', tab: 'a', region: 'a-1', target: 'a-1', zone: 'left' })).toBe(doc);
   });
 
-  it('moves a region within its row and between rows', () => {
-    expect(tabA(apply({ type: 'moveRegion', tab: 'a', region: 'a-1', direction: 'right' })).rows[0]).toEqual(['a-2', 'a-1']);
+  it('gives a docked region half its target’s share', () => {
+    const next = tabA(apply({ type: 'dockRegion', tab: 'a', region: 'a-3', target: 'a-1', zone: 'right' })).layout as unknown as { children: { share: number }[] };
+    expect(next.children.map((c) => c.share)).toEqual([1, 1, 1]);
+  });
+
+  it('resizes a split by its id; a resize naming no split, or the wrong count, changes nothing', () => {
+    const next = tabA(apply({ type: 'resizeSplit', tab: 'a', split: 'a-col', shares: [3, 1] }));
+    expect(splits(next.layout).find((s) => s.id === 'a-col')!.children.map((c) => c.share)).toEqual([3, 1]);
+    expect(apply({ type: 'resizeSplit', tab: 'a', split: 'nowhere', shares: [1, 1] })).toBe(doc);
+    expect(apply({ type: 'resizeSplit', tab: 'a', split: 'a-col', shares: [1] })).toBe(doc);
+    expect(apply({ type: 'resizeSplit', tab: 'a', split: 'a-col', shares: [1, 0] })).toBe(doc);
+  });
+
+  it('steps a region within its split, out of a branch, or to a new edge; one already at the edge stays', () => {
+    expect(shape(tabA(apply({ type: 'moveRegion', tab: 'a', region: 'a-2', direction: 'down' })).layout)).toEqual(['row', 'a-1', ['column', 'a-3', 'a-2']]);
+    expect(shape(tabA(apply({ type: 'moveRegion', tab: 'a', region: 'a-2', direction: 'left' })).layout)).toEqual(['row', 'a-1', 'a-2', 'a-3']);
+    expect(shape(tabA(apply({ type: 'moveRegion', tab: 'a', region: 'a-1', direction: 'up' })).layout)).toEqual(['column', 'a-1', 'a-2', 'a-3']);
     expect(apply({ type: 'moveRegion', tab: 'a', region: 'a-1', direction: 'left' })).toBe(doc);
-    expect(tabA(apply({ type: 'moveRegion', tab: 'a', region: 'a-3', direction: 'up' })).rows).toEqual([['a-1', 'a-2', 'a-3']]);
-    expect(tabA(apply({ type: 'moveRegion', tab: 'a', region: 'a-2', direction: 'down' })).rows).toEqual([['a-1'], ['a-3', 'a-2']]);
+    expect(apply({ type: 'moveRegion', tab: 'b', region: 'b-1', direction: 'up' })).toBe(doc);
   });
 
-  it('moves a region that shares the edge row into a new row of its own; one alone stays', () => {
-    expect(tabA(apply({ type: 'moveRegion', tab: 'a', region: 'a-1', direction: 'up' })).rows).toEqual([['a-1'], ['a-2'], ['a-3']]);
-    expect(apply({ type: 'moveRegion', tab: 'a', region: 'a-3', direction: 'down' })).toBe(doc);
-  });
-
-  it('retitles and rebinds a region', () => {
+  it('retitles, rebinds and configures a region', () => {
     expect(tabA(apply({ type: 'retitleRegion', tab: 'a', region: 'a-1', title: 'Main mix' })).regions[0].title).toBe('Main mix');
     expect(tabA(apply({ type: 'bindRegion', tab: 'a', region: 'a-1', binding: { mode: 'fixed', target: 'drums' } })).regions[0].binding).toEqual({ mode: 'fixed', target: 'drums' });
+    expect(tabA(apply({ type: 'configureRegion', tab: 'a', region: 'a-1', settings: { tracks: ['bass'] } })).regions[0].settings).toEqual({ tracks: ['bass'] });
   });
 
-  it('leaves the document as it is for an intent naming what it doesn’t hold', () => {
+  it('upgrades a version 1 document when it changes it', () => {
+    const v1: SurfaceDocument = { version: 1, active: 'v', tabs: [{ id: 'v', title: 'V', rows: [['x', 'y'], ['z']], regions: [region('x'), region('y'), region('z')] }] };
+    const next = applySurfaceIntent(v1, { type: 'resizeSplit', tab: 'v', split: 'v-row-1', shares: [3, 1] });
+    expect(next.version).toBe(2);
+    expect(shape(readDocument(next).tabs[0].layout)).toEqual(['column', ['row', 'x', 'y'], 'z']);
+    expect(applySurfaceIntent(v1, { type: 'undo' })).toBe(v1);
+  });
+
+  it('leaves the document as given for an intent naming what it doesn’t hold', () => {
     for (const intent of [
       { type: 'removeRegion', tab: 'a', region: 'ghost' },
       { type: 'moveRegion', tab: 'ghost', region: 'a-1', direction: 'left' },
+      { type: 'dockRegion', tab: 'a', region: 'ghost', target: 'a-1', zone: 'left' },
       { type: 'retitleRegion', tab: 'a', region: 'ghost', title: 'X' },
       { type: 'bindRegion', tab: 'a', region: 'ghost', binding: { mode: 'selected' } },
-      { type: 'addRegion', tab: 'ghost', kind: 'mix', row: 0 },
+      { type: 'configureRegion', tab: 'a', region: 'ghost', settings: {} },
+      { type: 'addRegion', tab: 'ghost', kind: 'mix' },
+      { type: 'addRegion', tab: 'a', kind: 'mix', beside: 'ghost' },
+      { type: 'lockTab', tab: 'ghost', locked: true },
       { type: 'duplicateTab', tab: 'ghost' },
       { type: 'selectTab', tab: 'ghost' },
     ] satisfies SurfaceIntent[])
       expect(apply(intent)).toBe(doc);
   });
 
-  it('edits nothing for edit mode, undo and redo', () => {
-    for (const type of ['undo', 'redo'] as const) expect(apply({ type })).toBe(doc);
-    expect(apply({ type: 'setEditing', editing: true })).toBe(doc);
-  });
-
   it('applies every intent the surface can send', () => {
-    // A sample of each, against the Workspace's own document: none throws, each returns a document.
     const samples: Record<(typeof SURFACE_INTENTS)[number], SurfaceIntent> = {
       selectTab: { type: 'selectTab', tab: 'grid' },
       addTab: { type: 'addTab' },
       renameTab: { type: 'renameTab', tab: 'stage', title: 'X' },
       duplicateTab: { type: 'duplicateTab', tab: 'stage' },
       removeTab: { type: 'removeTab', tab: 'stage' },
-      addRegion: { type: 'addRegion', tab: 'stage', kind: 'cuts', row: 1 },
+      lockTab: { type: 'lockTab', tab: 'stage', locked: true },
+      addRegion: { type: 'addRegion', tab: 'stage', kind: 'cuts' },
       removeRegion: { type: 'removeRegion', tab: 'stage', region: 'stage-1' },
       moveRegion: { type: 'moveRegion', tab: 'stage', region: 'stage-2', direction: 'up' },
+      dockRegion: { type: 'dockRegion', tab: 'stage', region: 'stage-2', target: 'stage-1', zone: 'left' },
+      resizeSplit: { type: 'resizeSplit', tab: 'stage', split: 'stage-rows', shares: [2, 1] },
       retitleRegion: { type: 'retitleRegion', tab: 'stage', region: 'stage-1', title: 'X' },
       bindRegion: { type: 'bindRegion', tab: 'stage', region: 'stage-1', binding: { mode: 'fixed', target: 'bass' } },
+      configureRegion: { type: 'configureRegion', tab: 'stage', region: 'stage-1', settings: { tracks: ['bass'] } },
       setEditing: { type: 'setEditing', editing: true },
       undo: { type: 'undo' },
       redo: { type: 'redo' },
     };
-    for (const name of SURFACE_INTENTS) expect(applySurfaceIntent(workspaceDocument, samples[name]).version).toBe(1);
+    for (const name of SURFACE_INTENTS) expect([1, 2]).toContain(applySurfaceIntent(workspaceDocument, samples[name]).version);
   });
 });
 

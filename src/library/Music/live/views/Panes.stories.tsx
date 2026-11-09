@@ -40,7 +40,7 @@ const NOTES: PaneDefinition = {
   forms: [{ id: 'card', min: { w: { chars: { body: 24 } }, h: { control: 3 } }, ideal: { w: { chars: { body: 40 } }, h: { control: 5 } }, grow: { w: true } }],
   priority: 'context',
 };
-const NOTES_DOC: SurfaceDocument = { version: 1, active: 'n', tabs: [tabOf('n', 'Notes', [['loopGrid', 'notes']])] };
+const NOTES_DOC: SurfaceDocument = { version: 2, active: 'n', tabs: [tabOf('n', 'Notes', [['loopGrid', 'notes']])] };
 
 export const AnAppsOwnPane: Story = scenario(
   {
@@ -49,7 +49,7 @@ export const AnAppsOwnPane: Story = scenario(
     then: 'the region shows the app’s content for that instance at a size from the kind’s own forms',
     check: async ({ canvasElement }) => {
       await expect(within(canvasElement).getByTestId('pane-n-2')).toHaveTextContent('notes');
-      await expect(canvasElement.querySelector('[data-region="n-2"]')).toHaveAttribute('data-form', 'card');
+      await expect(canvasElement.querySelector('[data-leaf="n-2"]')).toHaveAttribute('data-form', 'card');
     },
   },
   { render: () => <Workspace name="Live" document={NOTES_DOC} panes={[...workspacePanes, NOTES]} pane={workspacePane} /> },
@@ -91,11 +91,11 @@ export const FormsStepDownOnASmallWindow: Story = scenario(
     when: 'the surface is narrowed until a region’s widest form no longer fits',
     then: 'the region steps down to its next form, as the kind’s forms list them, and no region overflows',
     check: async ({ canvasElement }) => {
-      const placed = [...canvasElement.querySelectorAll<HTMLElement>('[data-region][data-form]')];
+      const placed = [...canvasElement.querySelectorAll<HTMLElement>('[data-leaf][data-form]')];
       const firstForm = (kind: string) => workspacePanes.find((p) => p.kind === kind)!.forms[0].id;
       const kinds = workspaceDocument.tabs[0].regions.map((r) => r.kind);
       await expect(placed.some((el, i) => el.dataset.form !== firstForm(kinds[i]))).toBe(true);
-      await expect(canvasElement.querySelector('[data-overflow="true"]')).toBeNull();
+      await expect(canvasElement.querySelector('[data-cramped]')).toBeNull();
     },
   },
   {
