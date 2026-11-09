@@ -45,12 +45,6 @@ const spied = (fixture: Parameters<typeof story>[0], extra: Partial<Story> = {})
 /** The intents the spy heard. */
 const sent = (args: { onIntent?: unknown }): SurfaceIntent[] => ((args.onIntent as { mock: { calls: [SurfaceIntent][] } }).mock.calls ?? []).map(([i]) => i);
 
-const UNDO = { requirement: 'Undo and redo are the app’s', shall: 'The surface SHALL offer undo and redo only when the app says each is possible, and SHALL send them as intents without keeping any history of its own.' };
-const APPLY = { requirement: 'Intents can be applied without a store', shall: 'Zen SHALL provide a pure function that returns the next document for a document and an intent, keeping no state, so an app or a story without a store of its own can apply what the surface sends.' };
-const VISUAL = {
-  requirement: 'Zen keeps only visual state',
-  shall: 'The surface SHALL keep edit mode, the region being edited and whether the palette is open as its own state when the app passes none of them, SHALL follow the app’s value for each one the app passes, and SHALL never write any of them into the document.',
-};
 
 export const ChoosingATab: Story = scenario(
   {
@@ -140,7 +134,8 @@ export const RenamingATab: Story = scenario(
 
 export const UndoTheAppCanDo: Story = scenario(
   {
-    ...UNDO,
+    requirement: 'Undo and redo are the app’s',
+    shall: 'The surface SHALL offer undo and redo only when the app says each is possible, and SHALL send them as intents without keeping any history of its own.',
     name: 'Undo the app can do',
     when: 'the app says undo is possible and a person presses undo',
     then: 'the surface sends one undo intent',
@@ -157,7 +152,8 @@ export const UndoTheAppCanDo: Story = scenario(
 
 export const NothingToUndo: Story = scenario(
   {
-    ...UNDO,
+    requirement: 'Undo and redo are the app’s',
+    shall: 'The surface SHALL offer undo and redo only when the app says each is possible, and SHALL send them as intents without keeping any history of its own.',
     name: 'Nothing to undo',
     when: 'the app says undo is not possible',
     then: 'undo is shown disabled and pressing it sends nothing',
@@ -180,7 +176,8 @@ function Applied() {
 
 export const ApplyingTheSurfacesOwnIntents: Story = scenario(
   {
-    ...APPLY,
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and an intent, keeping no state, so an app or a story without a store of its own can apply what the surface sends.',
     name: 'Applying the surface’s own intents',
     when: 'a story applies every intent the surface sends to the document it gives back',
     then: 'each edit appears in the surface as soon as it is made',
@@ -208,7 +205,8 @@ export const ApplyingTheSurfacesOwnIntents: Story = scenario(
 
 export const AnIntentThatCantApply: Story = scenario(
   {
-    ...APPLY,
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and an intent, keeping no state, so an app or a story without a store of its own can apply what the surface sends.',
     name: 'An intent that can’t apply',
     when: 'an intent names a tab or region the document doesn’t hold',
     then: 'the function returns the document unchanged',
@@ -229,7 +227,8 @@ export const AnIntentThatCantApply: Story = scenario(
 
 export const EditModeTheSurfaceKeeps: Story = scenario(
   {
-    ...VISUAL,
+    requirement: 'Zen keeps only visual state',
+    shall: 'The surface SHALL keep edit mode, the region being edited and whether the palette is open as its own state when the app passes none of them, SHALL follow the app’s value for each one the app passes, and SHALL never write any of them into the document.',
     name: 'Edit mode the surface keeps',
     when: 'the app passes no edit mode and a person turns editing on',
     then: 'every region shows its edit frame and the document is unchanged',
@@ -248,7 +247,8 @@ export const EditModeTheSurfaceKeeps: Story = scenario(
 
 export const EditModeTheAppKeeps: Story = scenario(
   {
-    ...VISUAL,
+    requirement: 'Zen keeps only visual state',
+    shall: 'The surface SHALL keep edit mode, the region being edited and whether the palette is open as its own state when the app passes none of them, SHALL follow the app’s value for each one the app passes, and SHALL never write any of them into the document.',
     name: 'Edit mode the app keeps',
     when: 'the app passes edit mode off and a person turns editing on',
     then: 'the surface asks the app to turn editing on and stays in perform mode until the app does',
@@ -265,7 +265,8 @@ export const EditModeTheAppKeeps: Story = scenario(
 
 export const PerformModeIsPlayedNotEdited: Story = scenario(
   {
-    ...VISUAL,
+    requirement: 'Zen keeps only visual state',
+    shall: 'The surface SHALL keep edit mode, the region being edited and whether the palette is open as its own state when the app passes none of them, SHALL follow the app’s value for each one the app passes, and SHALL never write any of them into the document.',
     name: 'Perform mode is played, not edited',
     when: 'the surface is in perform mode',
     then: 'no region shows an edit frame, the palette is closed and every pane takes its own input',
