@@ -273,7 +273,7 @@ and `ArpSequencer` (3), `XYPad` and `MacroPads` (4), `StemLanes` (5), `Transitio
 `Workspace` (7, `layout/Workspace/`) and the Show (8, `yahaha/Show/`).
 
 They were followed by the live looper's own panes in mix[flow]'s face (`src/library/Music/live/`,
-`docs/live-views.md`), and the `Live/Views` pages composed from them, which are where this work now
+`docs/live-views.md`), and the `Music/Live/Views` pages composed from them, which are where this work now
 continues. SectionBar, StemDeck, SongCard and DicePad are the first parts built from the wireframes' gaps.
 
 ## Decisions
@@ -283,7 +283,7 @@ Settled:
 - **`LoopGrid`'s cell count**: the widest `cells.length`, never fewer than eight
   (`LoopGrid.model.ts`).
 - **A tab's header and footer**: the Workspace fills a tab's own `spec.header` / `spec.footer`
-  regions (`56f511a`), fixed, never framed. `Live/Views` puts the rig's line in an ordinary last
+  regions (`56f511a`), fixed, never framed. `Music/Live/Views` puts the rig's line in an ordinary last
   row instead, to match mix's flat documents.
 - **Edit mode in the app** (superseded by `live-surface`): the Workspace is the production
   surface. It draws the app's document (mix's shape) and sends every edit as an intent the app's

@@ -2,20 +2,20 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useRef, useState } from 'react';
 import { scenario } from 'story-spec';
 import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
-import { withLibraryTheme, withStoryFrame } from '../storybook';
-import { Workspace } from '../layout/Workspace/Workspace';
-import type { SurfaceDocument } from '../layout/Workspace/Workspace.types';
-import { DicePad, type DiceMove } from '../Music/live/DicePad/DicePad';
-import { LaunchGrid } from '../Music/live/LaunchGrid/LaunchGrid';
-import { launchSongs, launchTracks } from '../Music/live/LaunchGrid/LaunchGrid.fixtures';
-import type { LaunchTrack } from '../Music/live/LaunchGrid/LaunchGrid.model';
-import { LIVE_PANES } from '../Music/live/panes';
-import { RigHealth } from '../Music/live/RigHealth/RigHealth';
-import { rigHealthBoard } from '../Music/live/RigHealth/RigHealth.fixtures';
-import { StemDeck } from '../Music/live/StemDeck/StemDeck';
-import { deckMarkers, deckStems } from '../Music/live/StemDeck/StemDeck.fixtures';
-import { TrackStrips } from '../Music/live/TrackStrips/TrackStrips';
-import { stripReturns, stripTracks } from '../Music/live/TrackStrips/TrackStrips.fixtures';
+import { withLibraryTheme, withStoryFrame } from '../../../storybook';
+import { Workspace } from '../../../layout/Workspace/Workspace';
+import type { SurfaceDocument } from '../../../layout/Workspace/Workspace.types';
+import { DicePad, type DiceMove } from '../DicePad/DicePad';
+import { LaunchGrid } from '../LaunchGrid/LaunchGrid';
+import { launchSongs, launchTracks } from '../LaunchGrid/LaunchGrid.fixtures';
+import type { LaunchTrack } from '../LaunchGrid/LaunchGrid.model';
+import { LIVE_PANES } from '../panes';
+import { RigHealth } from '../RigHealth/RigHealth';
+import { rigHealthBoard } from '../RigHealth/RigHealth.fixtures';
+import { StemDeck } from '../StemDeck/StemDeck';
+import { deckMarkers, deckStems } from '../StemDeck/StemDeck.fixtures';
+import { TrackStrips } from '../TrackStrips/TrackStrips';
+import { stripReturns, stripTracks } from '../TrackStrips/TrackStrips.fixtures';
 
 // The host contract: what a pane reads, what it asks for, and how the fast values reach it. Each
 // story stands in for the app as briefly as the scenario needs: a pane drawn bare (no host), a
@@ -23,7 +23,7 @@ import { stripReturns, stripTracks } from '../Music/live/TrackStrips/TrackStrips
 // only: these are hosts, and every pane's own stories already play it in both renderers.
 
 const meta = {
-  title: 'Live/Host contract',
+  title: 'Music/Live/Host contract',
   decorators: [withStoryFrame, withLibraryTheme],
   parameters: {
     layout: 'fullscreen',

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { withLibraryTheme, withStoryFrame } from '../storybook';
-import { Workspace } from '../layout/Workspace/Workspace';
-import { useSurfaceHost } from '../layout/Workspace/host.story';
-import { LIVE_PANES, isLivePaneKind, livePanes } from '../Music/live/panes';
-import { spineTracks } from '../Music/live/SignalSpine/SignalSpine.fixtures';
+import { withLibraryTheme, withStoryFrame } from '../../../storybook';
+import { Workspace } from '../../../layout/Workspace/Workspace';
+import { useSurfaceHost } from '../../../layout/Workspace/host.story';
+import { LIVE_PANES, isLivePaneKind, livePanes } from '../panes';
+import { spineTracks } from '../SignalSpine/SignalSpine.fixtures';
 import { useLiveSet } from './LiveSet.story';
 import { LIVE_DOCUMENT } from './views';
 
@@ -45,7 +45,7 @@ function Live({ start, editing = false, running = true }: LiveProps) {
 }
 
 const meta = {
-  title: 'Live/Views',
+  title: 'Music/Live/Views',
   component: Live,
   decorators: [withStoryFrame, withLibraryTheme],
   parameters: { layout: 'fullscreen', frame: { w: 1440, h: 900 } },

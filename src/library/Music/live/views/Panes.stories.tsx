@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { scenario } from 'story-spec';
 import { expect, userEvent, within } from 'storybook/test';
-import { withLibraryTheme, withStoryFrame } from '../storybook';
-import { Workspace } from '../layout/Workspace/Workspace';
-import { workspacePane } from '../layout/Workspace/content.story';
-import { tabOf, workspaceDocument, workspacePanes, workspaceTargets } from '../layout/Workspace/Workspace.fixtures';
-import type { PaneDefinition, SurfaceDocument } from '../layout/Workspace/Workspace.types';
-import { isLivePaneKind, livePanes } from '../Music/live/panes';
+import { withLibraryTheme, withStoryFrame } from '../../../storybook';
+import { Workspace } from '../../../layout/Workspace/Workspace';
+import { workspacePane } from '../../../layout/Workspace/content.story';
+import { tabOf, workspaceDocument, workspacePanes, workspaceTargets } from '../../../layout/Workspace/Workspace.fixtures';
+import type { PaneDefinition, SurfaceDocument } from '../../../layout/Workspace/Workspace.types';
+import { isLivePaneKind, livePanes } from '../panes';
 import { useLiveSet } from './LiveSet.story';
 import { LIVE_DOCUMENT } from './views';
 
@@ -14,7 +14,7 @@ import { LIVE_DOCUMENT } from './views';
 // palette made of exactly the definitions, and the Music live panes as one ready-made set.
 
 const meta = {
-  title: 'Live/Pane registry',
+  title: 'Music/Live/Pane registry',
   decorators: [withStoryFrame, withLibraryTheme],
   parameters: {
     layout: 'fullscreen',

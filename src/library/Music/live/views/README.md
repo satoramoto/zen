@@ -12,7 +12,7 @@ stories under **Music/Live**, `docs/music.md` → "Live"); this folder only comp
 - `LiveSet.story.tsx`: the stories' stand-in app — one set's state, a running clock (`clock.ts`)
   and the pane for every region instance, by its kind and binding, linked (select a track anywhere and the grid, strips, orbits,
   spine and Push follow; pick a compass wedge and the orbits follow that chord).
-- `Views.stories.tsx`: `Live/Views`, React-only (region content is app content). The story's host
+- `Views.stories.tsx`: `Music/Live/Views`, React-only (region content is app content). The story's host
   keeps the document and its undo history and applies every intent with `applySurfaceIntent`;
   **Mine** opens in edit mode with every pane kind in the palette.
 - `HostContract.stories.tsx`, `Panes.stories.tsx`: the `live-host-contract` and

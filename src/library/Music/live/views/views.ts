@@ -2,8 +2,8 @@
 // Every tab is rows of region instance ids and the instances, each naming its Music live pane by
 // `kind` (never by id), its title and its binding. The app owns this value: the Workspace draws it
 // and sends every edit as an intent, which the stories apply with `applySurfaceIntent`.
-import type { SurfaceDocument, SurfaceRegion, SurfaceTab } from '../layout/Workspace/Workspace.types';
-import { LIVE_PANES, type LivePaneKind } from '../Music/live/panes';
+import type { SurfaceDocument, SurfaceRegion, SurfaceTab } from '../../../layout/Workspace/Workspace.types';
+import { LIVE_PANES, type LivePaneKind } from '../panes';
 
 /** A tab from rows of kinds, as mix's `defaultDocument` builds its presets: fresh instance ids, each bound to the selection. */
 function preset(id: string, title: string, layout: readonly (readonly LivePaneKind[])[]): SurfaceTab {
