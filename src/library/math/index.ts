@@ -14,6 +14,10 @@ export * from './calculator';
 export * from './perspective';
 export * from './stereo';
 export * from './fourier';
+// The physics module and Apollo simulators
+export * as Physics from './physics';
+export { ApolloDescentSimulator, OrbitSimulator, Dsky, DescentSources } from './physics';
+export type { ApolloDescentSimulatorProps, OrbitSimulatorProps, DskyProps, DescentLoadName, TranslunarPreset } from './physics';
 // The trigonometry figures (the trig models stay under math/trig: their names, such as TAU, would clash here).
 export { ArcWrap, RightTriangle, UnitCircle, WaveGraph, IdentitySquares, AngleSum, GeneralTriangle } from './trig';
 export type { ArcWrapProps, RightTriangleProps, UnitCircleProps, WaveGraphProps, WaveData, IdentitySquaresProps, AngleSumProps, GeneralTriangleProps } from './trig';

@@ -1,0 +1,316 @@
+/* The physics module's views: the descent simulator, the DSKY, the sources table and the orbit
+   simulator. Colours, faces, sizes and radii come from the contract only. */
+
+.zen-physics {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  color: var(--text-1);
+}
+
+.zen-physics__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  min-width: 0;
+}
+@container (min-width: 52rem) {
+  .zen-physics__layout {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}
+
+.zen-physics__panel {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border);
+}
+
+.zen-physics__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  min-width: 0;
+}
+/* A long label wraps inside its button rather than pushing past the panel at phone width. */
+.zen-physics__row > .yh-button {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  white-space: normal;
+}
+.zen-physics__row > .yh-button .yh-button__label {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  white-space: normal;
+}
+
+/* The DSKY's panel: its rows keep their height when the panel is stretched to its neighbour's. */
+.zen-physics__panel[data-dsky] {
+  align-content: start;
+}
+
+.zen-physics__svg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 26rem;
+  border-radius: var(--radius-input);
+  background: var(--surface-0);
+}
+.zen-physics__surface {
+  fill: var(--surface-3);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+.zen-physics__grid {
+  stroke: var(--border);
+  stroke-width: 0.6;
+}
+.zen-physics__trail {
+  fill: none;
+  stroke: var(--hue-1);
+  stroke-width: 1.6;
+}
+.zen-physics__thrust {
+  stroke: var(--warning);
+  stroke-width: 2;
+}
+.zen-physics__craft {
+  fill: var(--text-1);
+}
+.zen-physics__site {
+  fill: var(--accent);
+}
+.zen-physics__label {
+  fill: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.zen-physics__body {
+  fill: var(--surface-3);
+  stroke: var(--text-3);
+}
+.zen-physics__orbit {
+  fill: none;
+  stroke: var(--border);
+  stroke-dasharray: 4 4;
+}
+.zen-physics__path {
+  fill: none;
+  stroke: var(--hue-2);
+  stroke-width: 1.5;
+}
+.zen-physics__mark {
+  fill: var(--hue-3);
+}
+
+.zen-physics__readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+}
+.zen-physics__readouts div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.zen-physics__readouts dt {
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+.zen-physics__readouts dd {
+  margin: 0;
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: var(--size-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.zen-physics__log {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  max-block-size: 14rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--size-caption);
+  color: var(--text-2);
+}
+.zen-physics__log li[data-kind='alarm'] {
+  color: var(--warning);
+}
+.zen-physics__log li[data-kind='touchdown'] {
+  color: var(--success);
+}
+
+.zen-physics__caption {
+  margin: 0;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  line-height: 1.5;
+}
+
+/* The sources table. */
+.zen-physics__scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+.zen-physics__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+.zen-physics__table caption {
+  padding-block-end: var(--space-2);
+  color: var(--text-2);
+  text-align: start;
+}
+.zen-physics__table th,
+.zen-physics__table td {
+  padding: var(--space-1) var(--space-2);
+  border-block-end: var(--border-width) solid var(--border);
+  color: var(--text-1);
+  text-align: start;
+  vertical-align: top;
+}
+.zen-physics__table th {
+  color: var(--text-3);
+  font-weight: 500;
+}
+.zen-physics__table code {
+  font-family: var(--font-mono);
+}
+
+/* The DSKY: the electroluminescent panel on the left, the keyboard below. */
+.zen-dsky {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
+  min-width: 0;
+}
+.zen-dsky__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+.zen-dsky__lamps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-1);
+  align-content: start;
+}
+/* With room, the lamps sit beside the display panel in two columns, as on the DSKY. */
+@container (min-width: 30rem) {
+  .zen-dsky__top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  }
+  .zen-dsky__lamps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.zen-dsky__lamp {
+  padding: var(--space-1);
+  border-radius: var(--radius-input);
+  background: var(--surface-0);
+  color: var(--text-4);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  text-align: center;
+}
+.zen-dsky__lamp[data-lit] {
+  background: var(--warning);
+  color: var(--warning-text);
+}
+.zen-dsky__lamp[data-lamp='comp-acty'][data-lit] {
+  background: var(--success);
+  color: var(--success-text);
+}
+.zen-dsky__panel {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-radius: var(--radius-input);
+  background: var(--surface-0);
+}
+.zen-dsky__windows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+.zen-dsky__window,
+.zen-dsky__register {
+  display: grid;
+  justify-items: end;
+}
+.zen-dsky__name {
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+}
+.zen-dsky__digits {
+  color: var(--success);
+  font-family: var(--font-mono);
+  font-size: var(--size-heading);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  min-block-size: 1.2em;
+}
+.zen-dsky__window[data-flashing] .zen-dsky__digits {
+  animation: zen-dsky-flash 1s steps(2, start) infinite;
+}
+@keyframes zen-dsky-flash {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zen-dsky__window[data-flashing] .zen-dsky__digits {
+    animation: none;
+    text-decoration: underline;
+  }
+}
+.zen-dsky__keys {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+.zen-dsky__key {
+  min-block-size: var(--control-h);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 var(--border-width) var(--border-strong);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: var(--size-caption);
+  padding-inline: 0;
+  cursor: pointer;
+}
+.zen-dsky__key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.zen-dsky__key:active {
+  background: var(--surface-3);
+}
+@container (min-width: 30rem) {
+  .zen-dsky__key {
+    font-size: var(--size-label);
+  }
+}

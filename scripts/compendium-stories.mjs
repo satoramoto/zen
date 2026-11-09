@@ -16,7 +16,7 @@ try {
   // ONLY=<id substring> plays just those stories (the screenshots still run).
   const only = process.env.ONLY;
   const stories = Object.values(index.entries).filter(
-    (e) => e.type === 'story' && ['Compendium/', 'Math/Fourier/', 'Math/Trig/', 'Math/Primes/'].some((t) => e.title.startsWith(t)) && (!only || e.id.includes(only)),
+    (e) => e.type === 'story' && ['Compendium/', 'Math/Fourier/', 'Math/Trig/', 'Math/Primes/', 'Math/Physics/'].some((t) => e.title.startsWith(t)) && (!only || e.id.includes(only)),
   );
   assert.ok(stories.length > 0, 'no Compendium stories in the build');
   console.log(stories.length, 'Compendium, Fourier, Trig and Primes stories');

@@ -25,6 +25,8 @@ interpretations. Entries are grouped by component rather than by implementation 
 | Primes / Box Field | `BoxField`: the waves as standing waves in a square, summed and painted |
 | Primes / Field Shape | `FieldShape`: the box field as a 3D surface or wrapped onto a sphere |
 | Trig / General Triangle | `GeneralTriangle`: three draggable vertices, the laws of sines and cosines, area, the ambiguous case |
+| Physics / Lunar Descent, DSKY | `ApolloDescentSimulator`, `Dsky`, `DescentSources`: Apollo 11's powered descent from Luminary 099 (quadratic guidance, P63 to P64 to P65, P66 on the rate switch), the executive's core sets and VAC areas with 1201/1202 alarms and restarts, and the DSKY's descent nouns; every number cited or marked an approximation in `physics/SOURCES.md` |
+| Physics / Translunar | `OrbitSimulator`: the transfer in the Earth-Moon field with a moving Moon (RK4), its Jacobi-integral drift as the stated accuracy, and a free-return trajectory |
 | Wave Calculator | `WaveCalculator`: editable linked functions, automatic parameter scrubbing, time and comparison |
 | Circle to Sine | `SineExplorer`: linked orbit and wave, guided stops and comparisons |
 | Signal Playground | `SignalPlayground`: ten fields and manifolds with linked analysis |
