@@ -1,6 +1,7 @@
 # live-host-contract Specification
 
 ## Purpose
+
 What a pane in a composed DAW reads from its host, what it asks for, and how values that change every frame reach it.
 
 ## Requirements

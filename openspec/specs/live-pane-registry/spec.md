@@ -1,6 +1,7 @@
 # live-pane-registry Specification
 
 ## Purpose
+
 How an app defines the pane kinds its surface can hold, how they reach the palette, and the ready-made Music live set.
 
 ## Requirements

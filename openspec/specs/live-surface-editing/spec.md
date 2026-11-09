@@ -1,6 +1,7 @@
 # live-surface-editing Specification
 
 ## Purpose
+
 Perform and edit modes of the surface an app composes its DAW on: every edit as one intent the app applies, undo and redo as the app’s, and the visual state zen keeps.
 
 ## Requirements
