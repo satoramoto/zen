@@ -8,7 +8,7 @@ Perform and edit modes of the surface an app composes its DAW on: every edit as 
 
 ### Requirement: Every edit leaves as one intent
 
-Every change a person makes through the surface SHALL leave it as exactly one intent naming the edit and its target: choosing, adding, renaming, duplicating or removing a tab; adding, removing, moving (left, right, up, down), retitling or rebinding a region; and undo and redo.
+Every change a person makes through the surface SHALL leave it as exactly one intent naming the edit and its target: choosing, adding, renaming, duplicating, removing, locking or unlocking a tab; adding, removing, moving (left, right, up, down), docking, retitling, rebinding or configuring a region; resizing a split; and undo and redo.
 
 #### Scenario: Choosing a tab
 - **WHEN** a person chooses the third tab
@@ -19,7 +19,7 @@ Every change a person makes through the surface SHALL leave it as exactly one in
 - **THEN** the surface sends one move intent naming the tab, the region and the direction
 
 #### Scenario: Adding from the palette
-- **WHEN** a person adds a kind from the palette to a row
+- **WHEN** a person adds a kind from the palette beside a region
 - **THEN** the surface sends one add intent naming the tab, the kind and where it goes, and the app picks the new instance’s id
 
 #### Scenario: Rebinding a region
@@ -69,3 +69,15 @@ The surface SHALL keep edit mode, the region being edited and whether the palett
 #### Scenario: Perform mode is played, not edited
 - **WHEN** the surface is in perform mode
 - **THEN** no region shows an edit frame, the palette is closed and every pane takes its own input
+
+### Requirement: Layout intents apply without a store
+
+The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.
+
+#### Scenario: Docking through the applier
+- **WHEN** a story applies a dock intent placing one region below another
+- **THEN** the returned layout holds a column of the two where the target was, and the region is gone from where it was
+
+#### Scenario: A resize naming no split
+- **WHEN** a resize intent names a split the tab doesn’t hold
+- **THEN** the applier returns the document unchanged
