@@ -54,6 +54,14 @@ Zen SHALL provide a pure function that returns the next document for a document 
 - **WHEN** an intent names a tab or region the document doesn’t hold
 - **THEN** the function returns the document unchanged
 
+#### Scenario: Docking through the applier
+- **WHEN** a story applies a dock intent placing one region below another
+- **THEN** the returned layout holds a column of the two where the target was, and the region is gone from where it was
+
+#### Scenario: A resize naming no split
+- **WHEN** a resize intent names a split the tab doesn’t hold
+- **THEN** the applier returns the document unchanged
+
 #### Scenario: The applier names what it adds
 - **WHEN** an app applies an add-region intent twice with no namer of its own
 - **THEN** the two new instances have different ids that no tab, region or split of the document used
@@ -65,18 +73,6 @@ Zen SHALL provide a pure function that returns the next document for a document 
 #### Scenario: The last tab stays
 - **WHEN** a document has one tab and the surface is editing
 - **THEN** the tab’s Remove is disabled, and a remove-tab intent applied anyway returns the document unchanged
-
-### Requirement: Layout intents apply without a store
-
-The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.
-
-#### Scenario: Docking through the applier
-- **WHEN** a story applies a dock intent placing one region below another
-- **THEN** the returned layout holds a column of the two where the target was, and the region is gone from where it was
-
-#### Scenario: A resize naming no split
-- **WHEN** a resize intent names a split the tab doesn’t hold
-- **THEN** the applier returns the document unchanged
 
 ### Requirement: Zen keeps only visual state
 

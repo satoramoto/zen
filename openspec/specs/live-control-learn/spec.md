@@ -1,8 +1,8 @@
-# live-midi-learn Specification
+# live-control-learn Specification
 
 ## Purpose
 
-Learn mode on a control panel: asking to learn a control’s parameter, the control the app waits on, and showing and forgetting mappings.
+Learn mode on a control: asking the app to learn a control’s parameter from whatever it listens to (a MIDI controller, OSC, a key), the control the app waits on, and showing and forgetting mappings in the app’s words.
 
 ## Requirements
 

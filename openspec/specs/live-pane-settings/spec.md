@@ -38,14 +38,6 @@ A region’s tools SHALL open a sheet listing its kind’s settings with their c
 - **WHEN** a person opens the tools of a region whose kind declares no settings
 - **THEN** there is no settings button
 
-### Requirement: The live panes declare their settings
-
-The Music live panes SHALL declare the settings their own props already allow (which tracks a pane shows, which pads or moves it offers), and the live views SHALL draw each pane from its region’s settings.
-
-#### Scenario: The strips follow their settings
-- **WHEN** a track strips region’s settings name two tracks
-- **THEN** the strips draw those two tracks and their returns, and nothing else
-
 ### Requirement: A value that no longer fits reads as the default
 
 A region’s value that its setting no longer allows SHALL reach the pane as the setting’s default (a choice that is no longer an option, a toggle that isn’t on or off, a number that isn’t one), a number outside its range SHALL reach it held to the range, a pick of several SHALL keep only the values still offered, and the document SHALL keep the value it holds until a person changes it.

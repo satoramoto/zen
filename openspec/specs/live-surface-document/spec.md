@@ -59,19 +59,15 @@ The surface SHALL draw a region whose kind the app has not defined as a placehol
 - **WHEN** a tab holds an instance its layout doesn’t name
 - **THEN** the instance is not drawn and is still in the document after another region is edited
 
-### Requirement: Mix’s rig documents fit unchanged
+### Requirement: A version 1 document draws
 
-The surface SHALL accept a document in exactly the shape mix’s rig stores (its version 1 surface document and its own region kinds), without conversion.
+The surface SHALL draw a version 1 document (rows of region instance ids, the shape mix’s rig stores, with the app’s own region kinds) without conversion, as a column of its rows with each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.
 
-#### Scenario: Mix’s default document
+#### Scenario: An app’s own version 1 document, edited
 - **WHEN** the surface is given mix’s rig document with mix’s region kinds and definitions for them, and a person edits it
 - **THEN** every tab and region of it is drawn, and each edit made (choosing, adding, duplicating and removing a tab; moving, binding and adding a region; undo and redo) sends an intent mix’s store already has a method for
 
-### Requirement: Version 1 documents still draw
-
-The surface SHALL draw a version 1 document (rows of region instance ids) as a column of its rows, each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.
-
-#### Scenario: Mix’s document today
+#### Scenario: Rows become a column of rows
 - **WHEN** the surface is given mix’s version 1 default document
 - **THEN** every tab draws its rows top to bottom and each row’s regions side by side in equal shares
 
