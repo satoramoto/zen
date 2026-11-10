@@ -87,7 +87,7 @@
     "test:music:hooks": "vitest run src/library/Music",
     "tiers": "tsx scripts/tiers.ts",
     "build": "tsc --noEmit && vite build",
-    "build:storybook": "storybook build --disable-telemetry"
+    "build:storybook": "node scripts/build-storybook.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -133,7 +133,6 @@
     "pngjs": "7.0.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "story-spec": "github:satoramoto/story-spec#8a46dd814a22953f409116f295edc33e23a45eef",
     "storybook": "10.6.1",
     "svelte": "5.57.2",
     "tsx": "4.23.15",
@@ -142,6 +141,7 @@
     "vitest": "4.1.11"
   },
   "dependencies": {
+    "story-spec": "github:satoramoto/story-spec#37b7f3fd670beee2d23f996f6349830968007070",
     "@cortex-js/compute-engine": "0.182.0",
     "mafs": "0.21.0",
     "marked": "18.2.0",

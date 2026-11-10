@@ -5,12 +5,14 @@ import { readFile, stat, mkdir } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 import assert from 'node:assert/strict';
 import { parseArgs } from 'node:util';
+import { execFileSync } from 'node:child_process';
 
 const { values } = parseArgs({ options: {
   dir: { type: 'string', default: 'fixtures/site/dist' },
   base: { type: 'string', default: '/project/' },
   output: { type: 'string', default: '.shots/site' },
   stories: { type: 'string' },
+  'manual-evidence': { type: 'string' },
 } });
 const root = resolve(values.dir);
 const base = values.base;
@@ -97,6 +99,9 @@ try {
     }
   }
   console.log('Static docs: project-base links, reference/asset requests, search keyboard access, no-JS reading and 1440/390px layout PASS');
+  if (values['manual-evidence']) {
+    execFileSync(process.execPath, ['scripts/check-manual-stories.mjs', '--stories', values.stories ?? 'storybook-static', '--evidence', values['manual-evidence'], '--preview', root], { stdio: 'inherit' });
+  }
 } finally {
   await browser.close();
   await new Promise(done => server.close(done));

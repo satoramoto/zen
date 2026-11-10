@@ -43,7 +43,7 @@ export const FindAConcept: Story = scenario({
   walkthrough: {
     id: 'find-documentation', title: 'Find documentation', chapter: 'Getting started', order: 1,
     checkpoints: [
-      { id: 'start', caption: 'Type a topic in Search.', alt: 'Documentation page with an empty search field.',
+      { id: 'start', caption: 'Enter a topic in Search.', alt: 'Documentation page with an empty search field.',
         callouts: [{ number: 1, rect: [0.0375, 0.32125, 0.2, 0.07875], text: 'Search the documentation' }] },
       { id: 'result', caption: 'Choose the matching page.', alt: 'Search results offering the Architecture page.' },
     ],
