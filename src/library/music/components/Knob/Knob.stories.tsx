@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { ParameterHarness } from './KnobHarness.story';
 import ParameterHarnessSvelte from './KnobHarness.svelte';
 import { exerciseDisabled, exerciseParameter, percentage } from './Knob.interactions';

@@ -1,6 +1,6 @@
 // Display's sample data and its stories as plain props: Display.stories.tsx builds every story from
 // them (drawn by React's or Svelte's `Tree`), and the tree snapshot prints `displayView` for each.
-import type { ChordReadoutModelProps as ChordReadoutProps } from '../../../instrument/components/ChordReadout/ChordReadout.model';
+import type { ChordReadoutModelProps as ChordReadoutProps } from '../../../music/components/ChordReadout/ChordReadout.model';
 import { defineFixtures } from '../../../fixtures';
 import type { DisplayModelProps, DisplayPart } from './Display.model';
 

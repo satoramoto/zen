@@ -32,7 +32,6 @@ export const TIERS: Record<string, string | null> = {
 
 /** Every area and sub-area, by folder, with its sidebar name. */
 export const AREAS: Record<string, string> = {
-  instrument: 'Instrument',
   music: 'Music',
   'music/live': 'Music/Live',
   graph: 'Graph',

@@ -3,7 +3,7 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, treeStory, withRenderer } from '../../../foundation/stories/story';
 import { component, h } from '../../../foundation/view/Tree.model';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { Toggle, type ToggleProps } from './Toggle';
 import { PressableHarness } from './ToggleHarness';
 import PressableHarnessSvelte from './ToggleHarness.svelte';

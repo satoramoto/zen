@@ -15,7 +15,7 @@ What is delivered already:
 - Compact component specimens; organized Music sidebar; all 132 existing story IDs preserved.
 
 **Not delivered:** an Arrange screen/composition, its timeline/ruler/slice/warp interactions,
-or migration of the real mix[flow] app to consume Zen. The old `instrument/components/` remains
+or migration of the real mix[flow] app to consume Zen. The token-drawn music parts remain
 intact; consolidation is separately deferred.
 
 The prior request was to merge the mixer work to `main`. Check the PR/branch state before
@@ -158,7 +158,7 @@ tolerances, alter reference data, or claim visual fidelity from a compile/test p
 - Mixer baseline, FX menu and waveform-settings popup matched the original with **zero
   differing pixels** at all three sizes in React/Svelte; built public entries matched too.
 - Original legacy Knob/Fader/Meter/Yahaha Show samples remained pixel-identical. No old
-  `instrument/components/` files were changed.
+  token-drawn music part files were changed.
 
 Read `docs/music.md`, `docs/music-story-evidence.md`, `docs/music-layout-reference.md`, and
 the relevant `Music/**/PORT*.md` notes. `.shots/` and temporary browser evidence are ignored,

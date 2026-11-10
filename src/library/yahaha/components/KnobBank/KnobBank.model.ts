@@ -3,8 +3,8 @@
 // bank as its body). No framework: `KnobBank.tsx` (React) and `KnobBank.svelte` /
 // `KnobBankRegion.svelte` (Svelte) each hand one of these to their `Tree`.
 import type { TipAction } from '../../../foundation/view/tip';
-import type { KnobModelProps } from '../../../instrument/components/Knob/Knob.model';
-import { BOX, START, SWEEP, arc } from '../../../instrument/components/Knob/geometry';
+import type { KnobReadoutModelProps } from '../../../music/components/KnobReadout/KnobReadout.model';
+import { BOX, START, SWEEP, arc } from '../../../music/components/KnobReadout/geometry';
 import { lengthMax, lengthSum } from '../../../layouts/Assembly/units';
 import type { Forms, Length } from '../../../layouts/Assembly/types';
 import type { Step } from '../../../primitives/step';
@@ -156,7 +156,7 @@ const TRACK = arc(START, START + SWEEP);
 const KNOB_TIP = 'knobs.knob';
 
 /** The Knob's data props for a mapped slot (its callbacks and `tipAction` are this tree's handlers). */
-function knobProps(knob: KnobItem, name: string): Omit<KnobModelProps, 'tipAction' | 'onpress' | 'onstep'> {
+function knobProps(knob: KnobItem, name: string): Omit<KnobReadoutModelProps, 'tipAction' | 'onpress' | 'onstep'> {
   return {
     label: knob.label,
     // The Genos code stays in the spoken name (knobName) but is not drawn on the Stage.
@@ -203,7 +203,7 @@ export function knobBankView({ knobs }: Pick<KnobBankProps, 'knobs'>, form: Knob
             { class: 'yh-knobbank__slot', 'data-part': 'slot', 'data-unused': knob.unused ? 'true' : undefined },
             knob.unused
               ? emptyFace(name)
-              : component('Knob', knobProps(knob, name), { on: { onpress: `press${i}`, onstep: `step${i}`, tipAction: 'tipAction' } }),
+              : component('KnobReadout', knobProps(knob, name), { on: { onpress: `press${i}`, onstep: `step${i}`, tipAction: 'tipAction' } }),
           );
         },
       ),

@@ -1,4 +1,5 @@
-// The new music toolkit. Legacy root-level music exports remain unchanged until consolidation.
+// The mix[flow] toolkit: the `Music` namespace. The token-drawn parts in `components/` are
+// exported flat through `root.ts`.
 export { Scope } from './components/Scope/Scope';
 export type { MusicScopeProps as ScopeProps } from './components/Scope/Scope.model';
 export { Button, type ButtonProps } from './components/Button/Button';

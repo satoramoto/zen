@@ -4,7 +4,7 @@ import { withLibraryTheme } from '../../../storybook';
 import { treeStory, withRenderer } from '../../../foundation/stories/story';
 import type { StoryFixture } from '../../../fixtures';
 import { h } from '../../../foundation/view/Tree.model';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { WaveControls } from './WaveControls';
 import { waveControlsHandlers, waveControlsView, type WaveControlsProps as ModelProps } from './WaveControls.model';
 import { frameWaveformHandlers, frameWaveformView } from '../Frames/frames.model';

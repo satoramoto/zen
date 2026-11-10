@@ -3,7 +3,7 @@ import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { treeStory, withRenderer } from '../../../foundation/stories/story';
 import { component, h } from '../../../foundation/view/Tree.model';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { Label, type LabelProps } from './Label';
 
 const meta = {

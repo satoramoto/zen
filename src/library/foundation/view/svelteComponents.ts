@@ -25,33 +25,33 @@ import Sheet from '../../components/Modal/Sheet.svelte';
 import Separator from '../../components/Separator/Separator.svelte';
 import SettingsRow from '../../components/SettingsRow/SettingsRow.svelte';
 import StatusDot from '../../components/StatusDot/StatusDot.svelte';
-import BarBeat from '../../instrument/components/BarBeat/BarBeat.svelte';
-import ChordReadout from '../../instrument/components/ChordReadout/ChordReadout.svelte';
-import Fader from '../../instrument/components/Fader/Fader.svelte';
-import Keys from '../../instrument/components/Keys/Keys.svelte';
-import Knob from '../../instrument/components/Knob/Knob.svelte';
-import Pad from '../../instrument/components/Pad/Pad.svelte';
-import PartMarks from '../../instrument/components/PartMarks/PartMarks.svelte';
-import SectionName from '../../instrument/components/SectionName/SectionName.svelte';
-import TempoReadout from '../../instrument/components/TempoReadout/TempoReadout.svelte';
-import Meter from '../../instrument/components/Meter/Meter.svelte';
-import LoopPie from '../../instrument/components/LoopPie/LoopPie.svelte';
-import LoopGrid from '../../instrument/components/LoopGrid/LoopGrid.svelte';
-import SendBars from '../../instrument/components/SendBars/SendBars.svelte';
-import MixBand from '../../instrument/components/MixBand/MixBand.svelte';
-import ChordStrip from '../../instrument/components/ChordStrip/ChordStrip.svelte';
-import ArpSequencer from '../../instrument/components/ArpSequencer/ArpSequencer.svelte';
-import XYPad from '../../instrument/components/XYPad/XYPad.svelte';
-import MacroPads from '../../instrument/components/MacroPads/MacroPads.svelte';
-import StemLanes from '../../instrument/components/StemLanes/StemLanes.svelte';
-import TransitionRow from '../../instrument/components/TransitionRow/TransitionRow.svelte';
-import Transport from '../../instrument/components/Transport/Transport.svelte';
-import DeviceFace from '../../instrument/components/DeviceFace/DeviceFace.svelte';
-import PianoRoll from '../../instrument/components/PianoRoll/PianoRoll.svelte';
-import BarReadout from '../../instrument/components/BarReadout/BarReadout.svelte';
-import SendReadout from '../../instrument/components/SendReadout/SendReadout.svelte';
-import SoundCell from '../../instrument/components/SoundCell/SoundCell.svelte';
-import RackCell from '../../instrument/components/RackCell/RackCell.svelte';
+import BarBeat from '../../music/components/BarBeat/BarBeat.svelte';
+import ChordReadout from '../../music/components/ChordReadout/ChordReadout.svelte';
+import Fader from '../../music/components/Fader/Fader.svelte';
+import Keys from '../../music/components/Keys/Keys.svelte';
+import KnobReadout from '../../music/components/KnobReadout/KnobReadout.svelte';
+import Pad from '../../music/components/Pad/Pad.svelte';
+import PartMarks from '../../music/components/PartMarks/PartMarks.svelte';
+import SectionName from '../../music/components/SectionName/SectionName.svelte';
+import TempoReadout from '../../music/components/TempoReadout/TempoReadout.svelte';
+import LevelMeter from '../../music/components/LevelMeter/LevelMeter.svelte';
+import LoopPie from '../../music/components/LoopPie/LoopPie.svelte';
+import LoopGrid from '../../music/components/LoopGrid/LoopGrid.svelte';
+import SendBars from '../../music/components/SendBars/SendBars.svelte';
+import MixBand from '../../music/components/MixBand/MixBand.svelte';
+import ChordStrip from '../../music/components/ChordStrip/ChordStrip.svelte';
+import ArpSequencer from '../../music/components/ArpSequencer/ArpSequencer.svelte';
+import XYPad from '../../music/components/XYPad/XYPad.svelte';
+import MacroPads from '../../music/components/MacroPads/MacroPads.svelte';
+import StemLanes from '../../music/components/StemLanes/StemLanes.svelte';
+import TransitionRow from '../../music/components/TransitionRow/TransitionRow.svelte';
+import TransportBar from '../../music/components/TransportBar/TransportBar.svelte';
+import DeviceFace from '../../music/components/DeviceFace/DeviceFace.svelte';
+import PianoRoll from '../../music/components/PianoRoll/PianoRoll.svelte';
+import BarReadout from '../../music/components/BarReadout/BarReadout.svelte';
+import SendReadout from '../../music/components/SendReadout/SendReadout.svelte';
+import SoundCell from '../../music/components/SoundCell/SoundCell.svelte';
+import RackCell from '../../music/components/RackCell/RackCell.svelte';
 import PageList from '../../components/PageList/PageList.svelte';
 import FolderList from '../../components/FolderList/FolderList.svelte';
 import Group from '../../layouts/Group/Group.svelte';
@@ -100,7 +100,7 @@ export function svelteComponent(name: string): Component<any> {
     Button,
     ActionButton,
     SearchField,
-    Knob,
+    KnobReadout,
     LampButton,
     LineSlider,
     Segmented,
@@ -150,7 +150,7 @@ export function svelteComponent(name: string): Component<any> {
     Stage,
     StatusLine,
     WaitingChip,
-    Meter,
+    LevelMeter,
     LoopPie,
     LoopGrid,
     SendBars,
@@ -161,7 +161,7 @@ export function svelteComponent(name: string): Component<any> {
     MacroPads,
     StemLanes,
     TransitionRow,
-    Transport,
+    TransportBar,
     DeviceFace,
     PianoRoll,
     BarReadout,

@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { MasterStrip } from './MasterStrip';
 import { MasterStripHost } from './MasterStripHost.react.story';
 import MasterStripHostSvelte from './MasterStripHost.story.svelte';

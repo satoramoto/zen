@@ -1,5 +1,5 @@
 import type { PadItem } from '../../components/PadBank/PadBank.model';
-import type { PadFamily } from '../../../instrument/components/Pad/Pad.model';
+import type { PadFamily } from '../../../music/components/Pad/Pad.model';
 import { SECTION_LABEL, type SectionId, type SongFormProps } from '../../components/SongForm/SongForm.model';
 
 /** The Sections bank's name, as PadBank's tabs and the Launchkey call it. */

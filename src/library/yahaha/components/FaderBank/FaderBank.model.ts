@@ -4,9 +4,9 @@
 // framework: `FaderBank.tsx` (React) and `FaderBank.svelte` (Svelte) both pass `faderBankView` to
 // their `Tree`; the name button's tooltip is the kernel's `tip` store. See FaderBank.tsx for the job.
 import { PART_HUE_INDEX, type Part } from '../../hues';
-import type { FaderHue } from '../../../instrument/components/Fader/Fader.model';
+import type { FaderHue } from '../../../music/components/Fader/Fader.model';
 import type { LampHue } from '../../../components/LampButton/LampButton.model';
-import { visibleMarks } from '../../../instrument/components/PartMarks/marks';
+import { visibleMarks } from '../../../music/components/PartMarks/marks';
 import type { TabItemModel } from '../../../layouts/Tabs/Tabs.model';
 import { stackView } from '../../../primitives/Stack/Stack.model';
 import { textView } from '../../../primitives/Text/Text.model';

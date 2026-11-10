@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../../../components/Button/Button';
 import type { Param } from '../../../../components/Param/param';
 import { Slider } from '../../../../components/Slider/Slider';
-import { Keys } from '../../../../instrument/components/Keys/Keys';
+import { Keys } from '../../../../music/components/Keys/Keys';
 import { Stack } from '../../../../primitives/Stack/Stack';
 import { Figure } from '../../../components/Figure/Figure';
 import { harmonicFacts } from '../../harmonic.sample';

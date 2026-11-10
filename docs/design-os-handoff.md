@@ -32,7 +32,7 @@ The contract tests hold, in both modes of every palette: every meaning-bearing p
 ## Components
 
 - **Core** (`components/`): Button, LampButton, ActionButton, Select, Segmented, Popover, Toggle/Switch, Checkbox, Radio, Disclosure, NumberField, Slider, Param, Modal/Sheet, SearchField, StatusDot, StepValue, LineSlider, Readout, SettingsRow, FolderList, PageList, Separator.
-- **Music** (`instrument/components/`): Fader, Knob, Pad, Keys, Meter, BarBeat and the readouts and cells an instrument shows.
+- **Music** (`music/components/`): Fader, Knob, Pad, Keys, Meter, BarBeat and the readouts and cells an instrument shows.
 
 A colour slot is a hue number 1–4 or a role (`role-1`, `role-2`); the app decides what it means.
 

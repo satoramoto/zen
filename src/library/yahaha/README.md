@@ -6,7 +6,7 @@ Each Yahaha widget, redesigned from first principles on the library's token cont
 
 ## What lives here, and what doesn't
 
-Only Yahaha's own concepts live here: the regions (AppBar, Display, SongForm, FaderBank, KnobBank, PadBank), the Stage, and the widgets that mean something only in Yahaha (OneTouchPicker, WaitingChip, AccentBlock, DisplayArt, HealthSlot, StatusLine, HueLegend). Every generic primitive the redesign started with now lives in the library: controls in `src/library/components/` (Button, LampButton, StepValue, …) and instrument parts in `src/library/instrument/components/` (Fader, Knob, Pad, Keys, the readouts, …), under "Design OS/Components". Those take generic colour slots (`hue` 1–5, a `role-1`/`role-2` tone; `components/hue.ts`), never a part, the style or the transport: the Yahaha callers map their meanings onto the slots with `hues.ts` (`PART_HUE_INDEX`, transport → `role-2`). Tabs, groups and region headers are the layout primitives (`src/library/layouts/`: `Region`, `Group`, `Tabs`, which take the app's `tipAction`).
+Only Yahaha's own concepts live here: the regions (AppBar, Display, SongForm, FaderBank, KnobBank, PadBank), the Stage, and the widgets that mean something only in Yahaha (OneTouchPicker, WaitingChip, AccentBlock, DisplayArt, HealthSlot, StatusLine, HueLegend). Every generic primitive the redesign started with now lives in the library: controls in `src/library/components/` (Button, LampButton, StepValue, …) and instrument parts in `src/library/music/components/` (Fader, Knob, Pad, Keys, the readouts, …), under "Design OS/Components". Those take generic colour slots (`hue` 1–5, a `role-1`/`role-2` tone; `components/hue.ts`), never a part, the style or the transport: the Yahaha callers map their meanings onto the slots with `hues.ts` (`PART_HUE_INDEX`, transport → `role-2`). Tabs, groups and region headers are the layout primitives (`src/library/layouts/`: `Region`, `Group`, `Tabs`, which take the app's `tipAction`).
 
 ## One folder per widget
 
@@ -23,7 +23,7 @@ The sidebar group is the folder's tier: `Components` or `Screens` (the original'
 ## Rules
 
 - Read only contract variables (`toCssVars()` in `../contract.ts`) or ones the widget declares itself. No literal colours or radii; `library.test.tsx` checks every file here.
-- A widget may import another redesigned widget, `../../components/ or ../../instrument/components/...` or `../../layouts/...` once that code is on the base branch; never one still on another lane's branch.
+- A widget may import another redesigned widget, `../../components/ or ../../music/components/...` or `../../layouts/...` once that code is on the base branch; never one still on another lane's branch.
 - Keep the original's stories: the same story names and the same sample data, so each pair can be compared one to one. Add stories for states the original lacks.
 - Keep what the original does for people: keyboard steps, wheel, press, a11y names. Change how it looks and is laid out.
 - It must read well under every theme pack in the toolbar, not only `yahaha-push`.

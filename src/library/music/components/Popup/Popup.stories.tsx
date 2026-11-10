@@ -3,7 +3,7 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { treeStory, withRenderer } from '../../../foundation/stories/story';
 import { h } from '../../../foundation/view/Tree.model';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { buttonFaceView } from '../ButtonFace/ButtonFace.model';
 import { popupHandlers, popupView, type PopupModelProps } from './Popup.model';
 import { Popup } from './Popup';

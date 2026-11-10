@@ -4,8 +4,8 @@
 // pass `displayView` to their `Tree`; the fit and the auto form's measuring are the stores beside
 // it (`fit.ts`), the measured width the binding's `wideState` (`wide.ts`).
 import type { TipAction } from '../../../foundation/view/tip';
-import type { ChordReadoutModelProps } from '../../../instrument/components/ChordReadout/ChordReadout.model';
-import { marksText } from '../../../instrument/components/PartMarks/marks';
+import type { ChordReadoutModelProps } from '../../../music/components/ChordReadout/ChordReadout.model';
+import { marksText } from '../../../music/components/PartMarks/marks';
 import { stackView, type StackModelProps } from '../../../primitives/Stack/Stack.model';
 import { textView, type ElementView, type TextModelProps } from '../../../primitives/Text/Text.model';
 import { component, each, h, styleText, when, wire, type Handlers, type Node } from '../../../foundation/view/Tree.model';
