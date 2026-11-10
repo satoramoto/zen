@@ -24,10 +24,11 @@ const meta = {
     spec: {
       capability: 'live-pane-registry',
       purpose: 'How an app defines the pane kinds its surface can hold, how they reach the palette, what the app’s pane is told for each instance, and what a region shows when its target is gone.',
-      requirement: 'The app defines its pane kinds',
+      requirement: 'An app defines its own pane kinds',
       shall: 'The surface SHALL take the app’s pane definitions as plain data, each naming its kind, its label, an optional description, its forms, its priority and whether it brings its own plate and head, and the binding targets it can follow, and SHALL draw each region in a slot the app fills for that instance.',
       // Decisions a person made: `story-spec sync` writes these as REMOVED or RENAMED. Spent once the spec no longer has them.
       retires: [
+        { requirement: 'The app defines its pane kinds', reason: 'Restated as “An app defines its own pane kinds” without its form scenario: which form a region draws is the layout’s rule.', migration: 'Read “An app defines its own pane kinds” here, and “A region draws the largest form its room fits” in live-panel-layout for the form scenario.' },
         { requirement: 'The Music live panes are a ready-made set', reason: 'Moved to live-reference-kit: the registry is the framework’s and names no particular pane.', migration: 'Read “The Music live panes are a ready-made set” in live-reference-kit.' },
       ],
     },
@@ -89,25 +90,6 @@ export const TheSlotKnowsItsInstance: Story = scenario(
     },
   },
   { render: () => <Workspace name="Live" document={TWO} panes={workspacePanes} selected="keys" pane={workspacePane} /> },
-) as Story;
-
-export const FormsStepDownOnASmallWindow: Story = scenario(
-  {
-    name: 'Forms step down on a small window',
-    when: 'the surface is narrowed until a region’s widest form no longer fits',
-    then: 'the region steps down to its next form, as the kind’s forms list them, and no region overflows',
-    check: async ({ canvasElement }) => {
-      const placed = [...canvasElement.querySelectorAll<HTMLElement>('[data-leaf][data-form]')];
-      const firstForm = (kind: string) => workspacePanes.find((p) => p.kind === kind)!.forms[0].id;
-      const kinds = workspaceDocument.tabs[0].regions.map((r) => r.kind);
-      await expect(placed.some((el, i) => el.dataset.form !== firstForm(kinds[i]))).toBe(true);
-      await expect(canvasElement.querySelector('[data-cramped]')).toBeNull();
-    },
-  },
-  {
-    parameters: { frame: { w: 900, h: 700 } },
-    render: () => <Workspace name="Live" document={{ ...workspaceDocument, tabs: [workspaceDocument.tabs[0]] }} panes={workspacePanes} pane={workspacePane} />,
-  },
 ) as Story;
 
 export const ThePaletteListsTheDefinitions: Story = scenario(
