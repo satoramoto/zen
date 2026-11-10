@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-10
+goal: State the form rule in one Live spec only
+affected_areas:
+  - zen
+x-review: none
