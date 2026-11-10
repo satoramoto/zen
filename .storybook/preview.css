@@ -1,0 +1,11 @@
+/* Neutral preview resets formerly supplied by the field guide. Themes own
+   typography, colour and focus treatments inside their scopes. */
+* { box-sizing: border-box; }
+body { margin: 0; }
+:where(button, input, select) { font: inherit; }
+button, a, input, select { touch-action: manipulation; }
+button { cursor: pointer; }
+:where(a, button) { color: inherit; }
+[hidden] { display: none !important; }
+p, h1, h2, h3 { margin: 0; }
+p { overflow-wrap: break-word; }

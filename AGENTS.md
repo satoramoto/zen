@@ -1,8 +1,7 @@
 # AGENTS.md
 
-Zen: React + TypeScript (TSX), Vite, Vitest, Storybook. Two things live here:
+Zen: React + TypeScript (TSX), Vite, Vitest, Storybook.
 
-- **The field guide**: six books, eighteen principle demonstrations (`src/catalog.ts`, `src/PrincipleExample.tsx`, `src/App.tsx`, `src/stories/`).
 - **The design OS**: a token contract with mixable theme facets (`src/library/`), and the Yahaha app redesigned on it (`src/library/yahaha/`). `docs/design-os-handoff.md` explains the ideas and where the work stands.
 - **Agent harnesses** (`src/harness/<name>/`, shared parts in `src/harness/shared/`): UI kits for mods of agent apps, coloured by zen's packs. Claude Code is the first (`src/harness/claude-code/`, stories under `Harness/Claude Code/…`); `docs/harness-claude-code.md` is the reference for making a Claude Code mod with zen.
 
@@ -16,7 +15,7 @@ For zen on its own, use only the unified launcher:
 PREVIEW_LABEL="Zen" PREVIEW_PORT=4191 STORYBOOK_PORT=6022 npm run dev
 ```
 
-It starts the app and the one Storybook (`.storybook/`: the field guide, the library and the Yahaha redesigns), and stops them together. If one child fails, stop and restart the whole launcher group; don't start a replacement child on its own. Never stop unrelated processes or use occupied ports. Give each isolated worktree its own ports.
+It serves the static root notice and the one Storybook (`.storybook/`: the library, harnesses and Yahaha redesigns), and stops them together. If one child fails, stop and restart the whole launcher group; don't start a replacement child on its own. Never stop unrelated processes or use occupied ports. Give each isolated worktree its own ports.
 
 ## Checks
 
@@ -30,8 +29,8 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npx vitest run src/library` | Library tokens, themes, layout, components, or anything under `src/library/yahaha/`. |
 | `npx vitest run src/library/tiers.test.ts` | Any CSS or TSX under `src/library/{components,layout,yahaha,primitives}`: the tier rules hold their baseline (`npm run tiers` prints the table; `npm run tiers -- --write` records a lower one). |
 | `npm test` | Anything else under `src/` (it includes the above). |
-| `npm run build` | The field guide app. |
-| `npm run build:storybook` | Any stories (field guide, library, Yahaha), `.storybook/`. |
+| `npm run build` | The static root page. |
+| `npm run build:storybook` | Any stories (library, harnesses, Yahaha), `.storybook/`. |
 | `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/themes.ts`, `src/library/storybook.tsx`, `src/library/svelte.ts` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
 | `npm run check:lib` (after `build:lib`) | The same: `lib/svelte.js`, `lib/themes.js` and every chunk they import never import React (`scripts/check-lib-entries.ts`). A model or other framework-free file never imports a value from a `.tsx`. |
 | `npx vitest run src/library/parity.test.tsx` | Any unconverted component's model, React or Svelte renderer, or fixtures: both renderers draw the same DOM for every story. |
@@ -41,14 +40,9 @@ UI is tested by exercising behaviours in Storybook stories, never by unit tests;
 
 Builds and unit tests are not browser evidence: look at layout and perceptual effects in a browser (the invisible-keyboard bug passed every test).
 
-## Field guide quality
+## Retired field guide
 
-- Preserve all eighteen stable example IDs and their source references.
-- Keep comparisons honest: state which variables change and what stays fixed.
-- Book summaries are paraphrases. Publisher descriptions support topic alignment, not exact full-text fidelity.
-- Storybook Controls must affect the specimen. Canvas interactions must work in both the app and Storybook.
-- Validate at narrow widths. Sliders must change the actual drawing, not just the displayed number.
-- Review conceptual fidelity separately from interaction and layout checks.
+The original six-book field guide and its eighteen examples have been removed. Its old reviews in `docs/` are historical, not requirements to restore it. The root page is a static notice; maintained examples live in Storybook.
 
 ## Library rules
 
