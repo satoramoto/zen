@@ -8,6 +8,7 @@ import { spineTracks } from '../SignalSpine/SignalSpine.fixtures';
 import { cutPadsBoard } from '../CutPads/CutPads.fixtures';
 import { useLiveSet } from './LiveSet.story';
 import { LIVE_DOCUMENT } from './views';
+import { LIVE_TARGETS } from './targets';
 
 // The live views: the reference DAW built on the surface. The document (views.ts) is the app's: the
 // host here keeps it with its undo history and applies every intent the Workspace sends; the panes
@@ -43,8 +44,6 @@ function MidiStrip({ learning, onLearning, onMove }: { learning: boolean; onLear
   );
 }
 
-/** What a region can follow or pick: the set's tracks, and its cuts. */
-export const LIVE_TARGETS = [...spineTracks.map((t) => ({ id: t.id, label: t.name, kind: 'track' })), ...cutPadsBoard.map((p) => ({ id: p.id, label: p.label, kind: 'cut' }))];
 
 function Live({ start, editing = false, running = true, midi = false }: LiveProps) {
   const host = useSurfaceHost({ ...LIVE_DOCUMENT, active: start }, { keepEditing: true, editing, titleOf: (kind) => (isLivePaneKind(kind) ? LIVE_PANES[kind].label : kind) });

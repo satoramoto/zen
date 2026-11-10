@@ -3,19 +3,17 @@ import { scenario } from 'story-spec';
 import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { Workspace } from '../../../layout/Workspace/Workspace';
-import { useSurfaceHost } from '../../../layout/Workspace/host.story';
-import type { SurfaceDocument } from '../../../layout/Workspace/Workspace.types';
-import { LIVE_PANES } from '../panes';
 import { host, withHost } from '../host.story';
-import { ControlPanel, type ControlCell } from './ControlPanel';
+import { ControlPanel } from './ControlPanel';
+import { Building, cellsOf } from './Building.story';
+import { dragUp } from './drag.story';
 import ControlPanelSvelte from './ControlPanel.svelte';
 import { controlPanelArgTypes, controlPanelStories as s, controlParams, controlValues, macroCells } from './ControlPanel.fixtures';
 import type { ControlPanelProps } from './ControlPanel.model';
 
 // The person's own controls on the app's parameters. The playing stories run in both renderers
 // (the toolbar's Renderer) with `withHost` standing in for the app: it applies `onParam` to the
-// values, as an app would. The building stories put the panel in a Workspace that is editing, with
+// values, as an app would. The catalogue and touch are `Parameters.stories.tsx` (`live-parameters`). The building stories put the panel in a Workspace that is editing, with
 // a story host that applies every intent, since building follows the surface's edit mode.
 
 const meta = {
@@ -90,16 +88,6 @@ export const AParameterTheAppNoLongerLists: Story = scenario(
   spied(s.Missing),
 ) as Story;
 
-/** A drag on a fader's track, upward. */
-async function dragUp(el: HTMLElement, by = 60) {
-  const r = el.getBoundingClientRect();
-  const x = r.left + r.width / 2;
-  const y = r.top + r.height * 0.7;
-  await fireEvent.pointerDown(el, { pointerId: 5, button: 0, clientX: x, clientY: y });
-  for (let i = 1; i <= 4; i++) await fireEvent.pointerMove(el, { pointerId: 5, clientX: x, clientY: y - (by * i) / 4 });
-  await fireEvent.pointerUp(el, { pointerId: 5, clientX: x, clientY: y - by });
-}
-
 export const AFaderDrag: Story = scenario(
   {
     requirement: 'A control asks; the app moves the value',
@@ -162,42 +150,6 @@ export const AMoveTheAppIgnores: Story = scenario(
   },
   spied(s.Default),
 ) as Story;
-
-/** The panel inside an editing surface, its cells and grid in the region's settings, every intent applied. */
-function Building({ cells = macroCells, columns = 8, rows = 4, editing = true }: { cells?: readonly ControlCell[]; columns?: number; rows?: number; editing?: boolean }) {
-  const doc: SurfaceDocument = {
-    version: 2,
-    active: 't',
-    tabs: [{ id: 't', title: 'Macros', layout: 'panel', regions: [{ id: 'panel', kind: 'controls', title: 'Controls', binding: { mode: 'selected' }, settings: { cells: cells as never, columns, rows } }] }],
-  };
-  const surface = useSurfaceHost(doc, { keepEditing: true, editing });
-  const region = (surface.document.tabs[0] as (typeof doc.tabs)[0] & { regions: { settings?: Record<string, unknown> }[] }).regions[0];
-  return (
-    <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100%' }}>
-      <output aria-label="Story: cells">{JSON.stringify(region.settings?.cells ?? [])}</output>
-      <Workspace
-        name="Macros"
-        document={surface.document}
-        panes={[LIVE_PANES.controls]}
-        editing={surface.editing}
-        onIntent={surface.onIntent}
-        pane={(r, _t, settings) => (
-          <ControlPanel
-            cells={settings.cells as unknown as readonly ControlCell[]}
-            columns={settings.columns as number}
-            rows={settings.rows as number}
-            params={controlParams}
-            values={controlValues}
-            onParam={fn()}
-            onTrigger={fn()}
-            onCells={(next) => surface.onIntent({ type: 'configureRegion', tab: 't', region: r.id, settings: { ...(r.settings ?? {}), cells: next as never } })}
-          />
-        )}
-      />
-    </div>
-  );
-}
-const cellsOf = (el: HTMLElement): ControlCell[] => JSON.parse(within(el).getByLabelText('Story: cells').textContent || '[]');
 
 export const AddingAKnob: Story = scenario(
   {

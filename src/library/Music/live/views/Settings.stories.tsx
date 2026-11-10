@@ -3,11 +3,10 @@ import { scenario } from 'story-spec';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { Workspace } from '../../../layout/Workspace/Workspace';
-import { useSurfaceHost } from '../../../layout/Workspace/host.story';
 import type { PaneDefinition, SurfaceDocument, SurfaceIntent } from '../../../layout/Workspace/Workspace.types';
-import { LIVE_PANES, livePanes } from '../panes';
-import { useLiveSet } from './LiveSet.story';
-import { LIVE_TARGETS } from './Views.stories';
+import { LIVE_PANES } from '../panes';
+import { Strips, strips } from './Strips.story';
+import { LIVE_TARGETS } from './targets';
 
 // A pane's settings: what of the app's it shows. A kind declares them as plain data; a region carries
 // its values; the sheet edits them, one configure per change; the app's `pane` draws from them. The
@@ -23,7 +22,7 @@ const meta = {
       capability: 'live-pane-settings',
       purpose: 'Settings a pane kind declares, the sheet that edits a region’s, and the values a region carries to the app.',
       requirement: 'A pane kind declares its settings',
-      shall: 'A pane definition SHALL be able to declare settings as plain data, each a choice, a toggle, a number in a range, a pick of the app’s targets, or plain data the pane edits itself, with a label and a default, and a region SHALL carry its own values for them in the document; a plain-data setting SHALL reach the pane and SHALL never be listed in the settings sheet.',
+      shall: 'A pane definition SHALL be able to declare settings as plain data, each a choice, several of a set of choices, a toggle, a number in a range, a pick of the app’s targets, or plain data the pane edits itself, with a label and a default, and a region SHALL carry its own values for them in the document; a plain-data setting SHALL reach the pane and SHALL never be listed in the settings sheet.',
     },
   },
 } satisfies Meta;
@@ -42,6 +41,12 @@ const NOTES: PaneDefinition = {
     { key: 'lines', label: 'Lines', type: 'number', min: 1, max: 12, step: 1, default: 4 },
     { key: 'tracks', label: 'Tracks', type: 'targets', of: 'track', default: 'all' },
   ],
+};
+
+/** The same card with a pick of several: which of the night's lists it shows. */
+const LISTS: PaneDefinition = {
+  ...NOTES,
+  settings: [...NOTES.settings!, { key: 'lists', label: 'Lists', type: 'choices', options: [{ value: 'cues', label: 'Cues' }, { value: 'keys', label: 'Keys' }, { value: 'guests', label: 'Guests' }], default: ['cues'] }],
 };
 
 const notesDoc = (settings?: Record<string, unknown>): SurfaceDocument => ({
@@ -123,34 +128,6 @@ export const APlainDataSetting: Story = scenario(
   { render: () => <Workspace name="Sketch" document={sketchDoc} panes={[SKETCH]} editing pane={(_r, _t, settings) => <pre data-testid="settings">{JSON.stringify(settings)}</pre>} /> },
 ) as Story;
 
-/** The live set with one strips region, its settings applied by the host. */
-function Strips({ settings }: { settings?: Record<string, readonly string[]> }) {
-  const doc: SurfaceDocument = {
-    version: 2,
-    active: 'm',
-    tabs: [
-      {
-        id: 'm',
-        title: 'Mix',
-        layout: { id: 'm-col', split: 'column', children: [{ node: 'm-1', share: 4 }, { node: 'm-2', share: 1 }] },
-        regions: [
-          { id: 'm-1', kind: 'mix', title: 'Track strips', binding: { mode: 'selected' }, ...(settings ? { settings } : {}) },
-          { id: 'm-2', kind: 'rig', title: 'Rig health', binding: { mode: 'selected' } },
-        ],
-      },
-    ],
-  };
-  const host = useSurfaceHost(doc, { keepEditing: true, editing: settings === undefined });
-  const live = useLiveSet({ running: false });
-  return (
-    <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100%' }}>
-      <output aria-label="Story: intents sent">{JSON.stringify(host.intents.filter((i) => i.type === 'configureRegion'))}</output>
-      <Workspace name="Mix" document={host.document} panes={livePanes} targets={LIVE_TARGETS} editing={host.editing} onIntent={host.onIntent} pane={(r, t, s) => live.content(r, t, s)} />
-    </div>
-  );
-}
-const strips = (el: HTMLElement): string[] => [...el.querySelectorAll<HTMLElement>('.live-track-strips [data-track]')].map((s) => s.dataset.track!);
-
 export const ChoosingWhichTracksTheStripsShow: Story = scenario(
   {
     requirement: 'The settings sheet edits a region’s settings',
@@ -207,4 +184,53 @@ export const TheStripsFollowTheirSettings: Story = scenario(
     },
   },
   { render: () => <Strips settings={{ tracks: ['bass', 'vox'] }} /> },
+) as Story;
+
+export const SeveralOfASetOfChoices: Story = scenario(
+  {
+    name: 'Several of a set of choices',
+    when: 'a pane kind declares a setting that picks several of its options and a person ticks a second one in the settings sheet',
+    then: 'one configure intent is sent with both values, in the options’ order',
+    act: async ({ canvasElement }) => {
+      onNotesIntent.mockClear();
+      const canvas = within(canvasElement);
+      await userEvent.click(canvas.getByRole('button', { name: 'Set notes tools' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Set notes settings' }));
+      await userEvent.click(within(canvas.getByRole('group', { name: 'Lists' })).getByRole('checkbox', { name: 'Guests' }));
+    },
+    check: async () => {
+      await expect(sent().filter((i) => i.type === 'configureRegion')).toEqual([{ type: 'configureRegion', tab: 't', region: 'n', settings: { lists: ['cues', 'guests'] } }]);
+    },
+  },
+  { render: () => <Workspace name="Notes" document={notesDoc()} panes={[LISTS]} targets={LIVE_TARGETS} editing onIntent={onNotesIntent} pane={() => <p>notes</p>} /> },
+) as Story;
+
+export const AnOptionThatIsGone: Story = scenario(
+  {
+    requirement: 'A value that no longer fits reads as the default',
+    shall: 'A region’s value that its setting no longer allows SHALL reach the pane as the setting’s default (a choice that is no longer an option, a toggle that isn’t on or off, a number that isn’t one), a number outside its range SHALL reach it held to the range, a pick of several SHALL keep only the values still offered, and the document SHALL keep the value it holds until a person changes it.',
+    name: 'An option that is gone',
+    when: 'a region carries a text size its kind no longer offers, and a list that is no longer one of the options',
+    then: 'the pane receives the default text size and only the lists still offered',
+    check: async ({ canvasElement }) => {
+      await expect(shown(canvasElement)).toMatchObject({ size: 'l', lists: ['keys'] });
+    },
+  },
+  { render: () => <Workspace name="Notes" document={notesDoc({ size: 'huge', lists: ['keys', 'encores'] })} panes={[LISTS]} targets={LIVE_TARGETS} pane={(_r, _t, settings) => <pre data-testid="settings">{JSON.stringify(settings)}</pre>} /> },
+) as Story;
+
+export const ANumberOutOfRange: Story = scenario(
+  {
+    requirement: 'A value that no longer fits reads as the default',
+    shall: 'A region’s value that its setting no longer allows SHALL reach the pane as the setting’s default (a choice that is no longer an option, a toggle that isn’t on or off, a number that isn’t one), a number outside its range SHALL reach it held to the range, a pick of several SHALL keep only the values still offered, and the document SHALL keep the value it holds until a person changes it.',
+    name: 'A number out of range',
+    when: 'a region carries forty lines for a setting that allows one to twelve, and a toggle that is neither on nor off',
+    then: 'the pane receives twelve lines and the toggle’s default',
+    and: ['the document still holds the forty'],
+    check: async ({ canvasElement }) => {
+      await expect(shown(canvasElement)).toMatchObject({ lines: 12, dim: false });
+      await expect(notesDoc({ lines: 40, dim: 'maybe' }).tabs[0].regions[0].settings).toEqual({ lines: 40, dim: 'maybe' });
+    },
+  },
+  { render: () => <Workspace name="Notes" document={notesDoc({ lines: 40, dim: 'maybe' })} panes={[LISTS]} targets={LIVE_TARGETS} pane={(_r, _t, settings) => <pre data-testid="settings">{JSON.stringify(settings)}</pre>} /> },
 ) as Story;

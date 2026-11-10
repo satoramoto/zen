@@ -136,7 +136,7 @@ const asked = (el: HTMLElement): unknown => JSON.parse(within(el).getByLabelText
 export const ABoundRegionAsksForItsTarget: Story = scenario(
   {
     requirement: 'A pane asks with one intent per gesture',
-    shall: 'A pane SHALL turn each gesture into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
+    shall: 'A pane SHALL turn each discrete gesture (a press, a pick, a toggle) into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), and a continuous gesture (a drag) into one such intent per step, each aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
     name: 'A bound region asks for its target',
     when: 'a region fixed to the second track is pressed',
     then: 'its intent names the second track whatever track is selected',
@@ -153,7 +153,7 @@ export const ABoundRegionAsksForItsTarget: Story = scenario(
 export const FollowingTheSelection: Story = scenario(
   {
     requirement: 'A pane asks with one intent per gesture',
-    shall: 'A pane SHALL turn each gesture into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
+    shall: 'A pane SHALL turn each discrete gesture (a press, a pick, a toggle) into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), and a continuous gesture (a drag) into one such intent per step, each aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
     name: 'Following the selection',
     when: 'a region bound to the selected track is pressed after the selection changes',
     then: 'its intent names the newly selected track',
@@ -187,7 +187,7 @@ const onLevelSpy = fn();
 export const ADragCutOffByRemoval: Story = scenario(
   {
     requirement: 'A pane asks with one intent per gesture',
-    shall: 'A pane SHALL turn each gesture into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
+    shall: 'A pane SHALL turn each discrete gesture (a press, a pick, a toggle) into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), and a continuous gesture (a drag) into one such intent per step, each aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
     name: 'A drag cut off by removal',
     when: 'a region is removed while a fader in it is being dragged',
     then: 'no further intent arrives from that drag',

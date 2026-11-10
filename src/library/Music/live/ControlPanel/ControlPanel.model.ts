@@ -68,6 +68,12 @@ export interface ControlPanelProps {
   onParam?: (move: { param: string; value: number }) => void;
   /** A button or pad was pressed (`down`) or released. */
   onTrigger?: (press: { param: string; down: boolean }) => void;
+  /**
+   * A gesture on a continuous control (a fader, a knob, an XY: both its parameters) began (`down`) or
+   * ended: every `onParam` of that gesture falls between the two, so the app can make one undo step
+   * of a drag, or write automation while a hand is on the control.
+   */
+  onTouch?: (touch: { param: string; down: boolean }) => void;
   /** Building: the panel's next cells (the app saves them as the region's settings). */
   onCells?: (next: readonly ControlCell[]) => void;
   /** Learn mode is on (the app's). A press asks to learn instead of moving. */
@@ -204,7 +210,8 @@ export function controlPanelView(props: ControlPanelProps, ui: ControlPanelUi, b
         const mapping = cell.param !== undefined ? mappings?.[cell.param] : undefined;
         const pending = learning && cell.param !== undefined && cell.param === learnTarget;
         const learnable = learning === true && !building && cell.param !== undefined;
-        return h(
+        const playing = !(inert || building || learnable);
+        const node = h(
           'div',
           {
             class: 'live-controls-cell',
@@ -216,7 +223,7 @@ export function controlPanelView(props: ControlPanelProps, ui: ControlPanelUi, b
             'data-clipped': clipped(cell, size) ? 'true' : undefined,
             style: gridArea(cell, columns, rows),
           },
-          controlNode(cell, props, inert || building || learnable),
+          controlNode(cell, props, !playing),
           mapping ? h('span', { class: 'live-controls-map', 'data-part': 'mapping', title: mapping }, shortMapping(mapping)) : null,
           learnable
             ? h(
@@ -240,6 +247,8 @@ export function controlPanelView(props: ControlPanelProps, ui: ControlPanelUi, b
               )
             : null,
         );
+        // A continuous control tells the app when a hand is on it (`onTouch`), while it is played.
+        return ROLE_OF[cell.control] === 'continuous' && props.onTouch ? wire(node, { bind: [['liveTouch', { disabled: !playing, onTouch: `touch:${cell.id}` }]] }) : node;
       }),
     ),
   );
@@ -260,7 +269,7 @@ const nextId = (cells: readonly ControlCell[]): string => {
 
 /** The callbacks the tree names. Every building edit asks `onCells` with the whole next cells. */
 export function controlPanelHandlers(props: ControlPanelProps, store: ControlPanelStore): Handlers {
-  const { cells, columns, rows, params, onParam, onTrigger, onCells, onLearn, onForget } = props;
+  const { cells, columns, rows, params, onParam, onTrigger, onTouch, onCells, onLearn, onForget } = props;
   const size = { columns, rows };
   const visual = (change: Partial<ControlPanelUi>) => store.set({ ...store.get(), ...change });
   const save = (next: readonly ControlCell[]) => {
@@ -294,6 +303,12 @@ export function controlPanelHandlers(props: ControlPanelProps, store: ControlPan
         handlers[`xy:${id}`] = ({ x, y }: { x: number; y: number }) => {
           onParam?.({ param: p.id, value: p.param.min + x * (p.param.max - p.param.min) });
           onParam?.({ param: py.id, value: py.param.min + y * (py.param.max - py.param.min) });
+        };
+      // A continuous control's gesture: its parameter (an XY's two) touched, then let go.
+      if (ROLE_OF[cell.control] === 'continuous')
+        handlers[`touch:${id}`] = (down: boolean) => {
+          onTouch?.({ param: p.id, down });
+          if (cell.control === 'xy' && py) onTouch?.({ param: py.id, down });
         };
       handlers[`learn:${id}`] = () => onLearn?.(p.id);
       handlers[`forget:${id}`] = () => onForget?.(p.id);

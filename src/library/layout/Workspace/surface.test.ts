@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import type { Forms, Principles } from '../assembly/types';
-import { applySurfaceIntent, cleanLayout, formForRoom, freshId, leaves, openTab, readDocument, readTab, resolveSettings, resolveTarget, splits, tabRegions, targetsFor } from './surface';
-import { SURFACE_INTENTS, type LayoutNode, type PaneDefinition, type SurfaceDocument, type SurfaceDocumentV2, type SurfaceIntent, type SurfaceTab } from './Workspace.types';
+import { applySurfaceIntent, checkDocument, cleanLayout, intentKind, knownVersion, formForRoom, freshId, leaves, openTab, readDocument, readTab, resolveSettings, resolveTarget, splits, tabRegions, targetsFor } from './surface';
+import { INTENT_KINDS, SURFACE_INTENTS, type LayoutNode, type PaneDefinition, type SurfaceDocument, type SurfaceDocumentV2, type SurfaceIntent, type SurfaceTab } from './Workspace.types';
 import { workspaceDocument, workspacePanes, workspaceTargets } from './Workspace.fixtures';
 
 // Mix's rig document, as mix declares it (openflowfm/mix src/rig/contract.ts, version 1), copied as
@@ -256,4 +256,108 @@ describe('applySurfaceIntent', () => {
 it('keeps the pane definitions plain data', () => {
   const pane: PaneDefinition = workspacePanes[0];
   expect(JSON.parse(JSON.stringify(pane))).toEqual(pane);
+});
+
+describe('a document the surface can’t trust', () => {
+  const v3 = { version: 3, active: 'a', tabs: [{ id: 'a', title: 'A', grid: [] }] } as unknown as SurfaceDocument;
+
+  it('reads versions 1 and 2 and no other', () => {
+    expect(knownVersion(doc)).toBe(true);
+    expect(knownVersion({ version: 1 })).toBe(true);
+    expect(knownVersion(v3)).toBe(false);
+    expect(openTab(v3)).toBeUndefined();
+  });
+
+  it('returns a version it doesn’t read as given, whatever the intent', () => {
+    for (const intent of [{ type: 'addTab' }, { type: 'selectTab', tab: 'a' }, { type: 'removeTab', tab: 'a' }] as SurfaceIntent[]) expect(applySurfaceIntent(v3, intent)).toBe(v3);
+    expect(checkDocument(v3)).toEqual([{ issue: 'unknown-version', id: '3' }]);
+  });
+
+  it('draws a leaf named twice once, and leaves an instance no leaf names undrawn', () => {
+    const tab: SurfaceTab = { id: 't', title: 'T', layout: { id: 's', split: 'row', children: [{ node: 'x', share: 1 }, { node: 'x', share: 1 }] }, regions: [region('x'), region('y')] };
+    expect(tabRegions(tab).map((r) => r.id)).toEqual(['x']);
+    const issues = checkDocument({ version: 2, active: 't', tabs: [tab] });
+    expect(issues).toEqual([
+      { issue: 'repeated-leaf', tab: 't', id: 'x' },
+      { issue: 'orphan-region', tab: 't', id: 'y' },
+    ]);
+    // The orphan is kept until the app removes it.
+    const removed = applySurfaceIntent({ version: 2, active: 't', tabs: [tab] }, { type: 'removeRegion', tab: 't', region: 'y' });
+    expect(readDocument(removed).tabs[0].regions.map((r) => r.id)).toEqual(['x']);
+  });
+
+  it('lists every other problem and finds none in a sound document', () => {
+    expect(checkDocument(doc)).toEqual([]);
+    expect(checkDocument(workspaceDocument)).toEqual([]);
+    const bad: SurfaceDocument = {
+      version: 2,
+      active: 'gone',
+      tabs: [
+        { id: 'a', title: 'A', layout: { id: 's', split: 'row', children: [{ node: 'a-1', share: 0 }, { node: 'nope', share: 1 }] }, regions: [region('a-1'), region('a-1')] },
+        { id: 'a', title: 'Again', layout: null, regions: [] },
+      ],
+    };
+    expect(checkDocument(bad).map((i) => i.issue)).toEqual(['duplicate-tab', 'unknown-active', 'duplicate-region', 'dangling-leaf', 'bad-share']);
+    // A version 1 row naming an instance the tab doesn't hold is found before the reading drops it.
+    expect(checkDocument({ version: 1, active: 'm', tabs: [{ id: 'm', title: 'M', rows: [['m-1', 'ghost']], regions: [region('m-1')] }] })).toEqual([{ issue: 'dangling-leaf', tab: 'm', id: 'ghost' }]);
+  });
+
+  it('carries fields it doesn’t know through every edit', () => {
+    const extra = {
+      ...doc,
+      appNote: 'mine',
+      tabs: doc.tabs.map((t) => ({ ...t, colour: 'teal', regions: t.regions.map((r) => ({ ...r, pinned: true })) })),
+    } as unknown as SurfaceDocumentV2;
+    const next = readDocument(applySurfaceIntent(applySurfaceIntent(extra, { type: 'renameTab', tab: 'a', title: 'Renamed' }), { type: 'duplicateTab', tab: 'a' })) as unknown as { appNote: string; tabs: { colour: string; regions: { pinned: boolean }[] }[] };
+    expect(next.appNote).toBe('mine');
+    expect(next.tabs.map((t) => t.colour)).toEqual(['teal', 'teal', 'teal']);
+    expect(next.tabs.flatMap((t) => t.regions).every((r) => r.pinned)).toBe(true);
+    // A version 1 document's own fields reach its version 2 reading.
+    const v1 = { version: 1, active: 'm', saved: 'today', tabs: [{ id: 'm', title: 'M', rows: [['m-1']], regions: [region('m-1')], scene: 4 }] } as unknown as SurfaceDocument;
+    const read = readDocument(v1) as unknown as { saved: string; tabs: { scene: number; rows?: unknown }[] };
+    expect(read.saved).toBe('today');
+    expect(read.tabs[0].scene).toBe(4);
+    expect(read.tabs[0].rows).toBeUndefined();
+  });
+});
+
+describe('what an intent is', () => {
+  it('sorts every intent into one kind', () => {
+    const kinds = Object.fromEntries(SURFACE_INTENTS.map((type) => [type, intentKind({ type } as SurfaceIntent)]));
+    expect(kinds.selectTab).toBe('navigation');
+    expect(kinds.undo).toBe('history');
+    expect(kinds.redo).toBe('history');
+    expect(kinds.setEditing).toBe('mode');
+    expect(Object.entries(kinds).filter(([, k]) => k === 'edit').map(([t]) => t)).toEqual(['addTab', 'renameTab', 'duplicateTab', 'removeTab', 'lockTab', 'addRegion', 'removeRegion', 'moveRegion', 'dockRegion', 'resizeSplit', 'retitleRegion', 'bindRegion', 'configureRegion']);
+    for (const k of Object.values(kinds)) expect(INTENT_KINDS).toContain(k);
+  });
+
+  it('names what it adds itself, or lets the app', () => {
+    const own = readDocument(apply({ type: 'addRegion', tab: 'b', kind: 'cuts' }));
+    expect(own.tabs[1].regions.map((r) => r.id)).toEqual(['b-1', 'b-region-1']);
+    const named = readDocument(applySurfaceIntent(doc, { type: 'addRegion', tab: 'b', kind: 'cuts' }, { newId: (_d, base) => `app:${base}` }));
+    expect(named.tabs[1].regions.map((r) => r.id)).toEqual(['b-1', 'app:b-region']);
+  });
+});
+
+describe('a setting’s value that no longer fits', () => {
+  const pane: PaneDefinition = {
+    kind: 'k',
+    label: 'K',
+    forms: workspacePanes[0].forms,
+    settings: [
+      { key: 'view', label: 'View', type: 'choice', options: [{ value: 'bars', label: 'Bars' }, { value: 'dots', label: 'Dots' }], default: 'bars' },
+      { key: 'show', label: 'Show', type: 'choices', options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }], default: ['a'] },
+      { key: 'on', label: 'On', type: 'toggle', default: true },
+      { key: 'n', label: 'N', type: 'number', min: 1, max: 8, default: 4 },
+    ],
+  };
+  const read = (settings: Record<string, unknown>) => resolveSettings(pane, { ...region('r', 'k'), settings: settings as never });
+
+  it('reads as the default, and a number is held to its range', () => {
+    expect(read({ view: 'rings', show: 'a', on: 'yes', n: 'four' })).toEqual({ view: 'bars', show: ['a'], on: true, n: 4 });
+    expect(read({ view: 'dots', show: ['b', 'gone'], on: false, n: 99 })).toEqual({ view: 'dots', show: ['b'], on: false, n: 8 });
+    expect(read({ n: Number.NaN }).n).toBe(4);
+    expect(read({ n: -3 }).n).toBe(1);
+  });
 });

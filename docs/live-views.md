@@ -137,11 +137,34 @@ it) or opens its sheet (kind, the parameters of its role, label, remove), its co
 Controls never overlap (`layout/cells.ts`). Every change asks `onCells(next)`, which the app saves
 as the region's `cells` setting; `columns` and `rows` are ordinary settings.
 
+**Touch.** A fader, a knob and an XY (for both its parameters) tell the app when a gesture
+begins and ends: `onTouch({ param, down })`, with every `onParam` of the gesture between the two.
+A key that steps the value is a whole gesture; a control taken away mid-drag still ends its touch;
+a toggle, a button and a pad send none. An app makes one undo step of a drag with it, or writes
+automation while a hand is on the control (`Music/live/touch.bind.ts`, stories under
+`Music/Live/Parameters`).
+
 **Learn** is the app's: with `learning` on, a press asks `onLearn(param)` instead of moving; the
 control the app waits on (`learnTarget`) pulses; a mapped control wears its mapping's first word
 group (`CC 21`) from `mappings`, and learning, a forget button (`onForget`). The app captures the
 MIDI and moves the values, so a controller's move is just a reading. Learning is playing, not
 building: it works on a locked board. **Looper · learn** plays it with a stand-in MIDI strip.
+
+### Whole DAWs (`Music/Live/DAWs`)
+
+Four DAWs composed from the kit alone, each a surface document built through the surface's own
+intents (`Music/live/daws/daws.ts`), worn in its own pack, at the window it is made for, and
+played by the stand-in set:
+
+| DAW | What it is | Pack | Window |
+|---|---|---|---|
+| **Dub desk** | a mixing desk played as an instrument: eight channels, a bank of sends and filter with an XY, echo throws and drops | `yahaha-elektron`, dark | 1440 × 900 |
+| **Orbit lab** | a generative rig: two orbit clocks fixed to Drums and Keys either side of the compass, dice and the landing, the progression under them | `linear`, light | 1440 × 900 |
+| **Stem booth** | a deck for finished songs: the song now and its sections, the stems wide, cuts and a blend panel, four strips | `big-red`, dark | 1440 × 900 |
+| **Pocket** | a phone on the mic stand: the song now, the cuts, four pads and two faders | `mixflow`, dark | 390 × 780 |
+
+Each is locked for the gig: hold "Locked" to unlock it and rebuild it. A new one is a document in
+`daws.ts`: no component is written for it.
 
 ### Fast values: the frame reader
 

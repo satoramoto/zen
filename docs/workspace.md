@@ -41,11 +41,29 @@ Shares are relative, so a panel keeps its proportions in any window. A region's 
 the tab doesn't hold is skipped. A `kind` the app never defined draws a placeholder that names it
 and can still be moved and removed. An `active` id that matches no tab shows the first tab.
 
+**What a document may get wrong.** The surface draws a document as well as it can and never
+repairs it: the document is the app's.
+
+- A **version** it doesn't read (any but 1 and 2, `knownVersion`) draws a notice naming it, with
+  no tabs or tools, and no intent leaves it; `applySurfaceIntent` returns it as given.
+- A leaf the layout names **twice** is drawn once, at its first place. An instance **no leaf
+  names** is kept and not drawn.
+- **Fields the surface doesn't know**, on the document, a tab or an instance, are carried through
+  every reading and edit, so an app can keep its own data there.
+- `checkDocument(document)` lists a saved document's problems as plain data (`{ issue, tab?, id? }`:
+  `unknown-version`, `duplicate-tab`, `unknown-active`, `duplicate-region`, `dangling-leaf`,
+  `repeated-leaf`, `orphan-region`, `bad-share`), for an app loading one. Empty means sound.
+
 **Version 1** is mix[flow]'s rig document field for field (mix `src/rig/contract.ts`: a tab is rows of
 instance ids). The surface draws it through its version 2 reading (`readDocument`): a column of
 its rows, each row's regions side by side, equal shares. `applySurfaceIntent` returns version 2
 whenever it changes a document, so an app that applies layout edits to mix's documents ends up on
 version 2 and must be able to store it.
+
+**A missing target.** A region fixed to a target says "bound to a target that is gone" in place
+of its pane when its kind can be bound, the app passes `targets`, and none of that kind has the
+binding's id. Edit mode's tools still work on it and its bind control shows nothing picked. An
+app that passes no `targets` gets the pane with the target as written: the surface can't know.
 
 Each region draws the **richest form its room fits**: the surface measures every leaf and picks
 the first of its kind's forms whose least room (`min`) fits (`formForRoom`); a region too small even
@@ -81,6 +99,16 @@ its grid and its cells.
 A `data` setting is plain JSON the pane edits itself (a control panel's cells): it reaches `pane`
 with the others and is never listed in the settings sheet. The pane asks for a change and the app
 sends it on as `configureRegion` with the region's whole next settings.
+
+**What a pane is told.** For each instance: the instance, its resolved target, its settings with
+defaults filled in, the surface's mode and the form its room fits (`useForm`). A value its setting
+no longer allows reads as the default (a choice that is gone, a toggle that isn't one, a number
+that isn't one), a number is held to its range, and a pick of several keeps only what is still
+offered; the document keeps what it holds.
+
+**A pane that fails.** Each pane is drawn inside `Contain` (`view/Contain.tsx`, `.svelte`): if
+drawing it throws, a note takes its place ("Loudness stopped", with Retry), `onPaneError({ region,
+message })` tells the app, and every other region plays on.
 
 **Surface mode.** Each pane is drawn inside the surface's mode, `{ editing, locked }`:
 `useSurfaceMode()` in React, `getSurfaceMode()` in Svelte (`building(mode)` is `editing && !locked`).
@@ -121,9 +149,25 @@ from the keyboard alone.
 | `setEditing { editing }` | Edit / Done |
 | `undo`, `redo` | shown only when the app passes `canUndo` / `canRedo` |
 
+Every intent is plain data: it reads back the same after `JSON.stringify`, so an app can log it,
+replay it or send it to another process. `intentKind(intent)` says what to do with one: an `edit`
+changes the document and belongs in the app's history; `navigation` (`selectTab`) changes which
+tab is open and doesn't; `history` is undo and redo; `mode` is `setEditing`, never in the
+document. The applier names each tab, region and split it adds (`freshId`) unless the app passes
+`newId`, returns the document as given for an intent it can't apply, and never removes the last
+tab.
+
 They are named after mix's `SurfaceStore` methods. Mix's store has no `retitleRegion`,
 `configureRegion`, `dockRegion`, `resizeSplit` or `lockTab` yet; its follow-up adds them with
 version 2.
+
+## The least a host gives
+
+A document, one pane kind, a `pane` and a way to apply intents (`applySurfaceIntent` in a
+`useState` will do). Everything else is offered only when the host gives it: no `targets`, no bind
+control; no `canUndo`, no undo; no `settings`, no sheet; no `panes`, no palette. `Design
+OS/Layout/Workspace/Host` plays that host, and two surfaces on one document: an edit in one
+appears in the other, and each keeps its own edit mode.
 
 ## What the workspace does not do
 

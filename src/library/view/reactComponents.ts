@@ -63,6 +63,7 @@ import { Layer } from '../layout/Layer';
 import { Screen } from '../layout/Screen';
 import { Surface } from '../primitives/Surface';
 import { Context } from './Context';
+import { Contain } from './Contain';
 import { AssembledScreen } from '../layout/assembly/AssembledScreen';
 import { FormProvider as FormScope } from '../layout/assembly/forms';
 import { AccentBlock } from '../yahaha/AccentBlock/AccentBlock';
@@ -92,6 +93,7 @@ export function reactComponent(name: string): ComponentType<any> {
     Screen,
     Surface,
     Context,
+    Contain,
     Button,
     ActionButton,
     SearchField,

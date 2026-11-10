@@ -11,7 +11,7 @@ import type { Principles } from '../assembly/types';
 import { surfaceView } from '../../primitives/Surface.model';
 import { textView } from '../../primitives/Text.model';
 import { component, h, slot, styleText, wire, type Child, type ChildArg, type Handlers, type Node } from '../../view/Tree.model';
-import { formForRoom, isSplit, leastRoom, leaves, openTab, paneIndex, resolveSettings, resolveTarget, tabRegions, targetsFor, PLACEHOLDER_FORMS } from './surface';
+import { formForRoom, isSplit, knownVersion, leastRoom, leaves, openTab, paneIndex, resolveSettings, resolveTarget, tabRegions, targetsFor, PLACEHOLDER_FORMS } from './surface';
 import {
   SURFACE_DIRECTIONS,
   type DockZone,
@@ -55,6 +55,8 @@ export interface WorkspaceModelProps {
   paletteOpen?: boolean;
   /** The surface's visual state changed (whoever keeps it). */
   onUi?: (ui: SurfaceUi) => void;
+  /** A pane failed while drawing: the surface drew a note in its place and the rest plays on. */
+  onPaneError?: (failure: { region: string; message: string }) => void;
   /** Shown, dimmed, deaf: the surface is read, not played. */
   disabled?: boolean;
   /** Classes added to the root, after the workspace's own. */
@@ -79,13 +81,25 @@ export function surfaceUi(props: Pick<WorkspaceModelProps, 'editing' | 'editingR
     resizing: editing ? own.resizing : undefined,
     docking: editing ? own.docking : undefined,
     rooms: own.rooms,
+    retries: own.retries,
   };
 }
 
 /** The content slot a region's app content reaches the binding through; its args are the instance, its target and its settings. */
 export const contentSlot = (id: string): string => `content:${id}`;
 
-/** The regions whose content the app fills on the open tab: every known kind's instance, with its target and settings. */
+/**
+ * Whether a region is fixed to a target that is gone: its kind can be bound, the app says what the
+ * targets are, and none of that kind has the binding's id. Without the app's targets the surface
+ * can't know, and the pane is drawn with the target as written.
+ */
+export function unbound(region: SurfaceRegion, pane: PaneDefinition | undefined, targets: readonly SurfaceTarget[] | undefined): boolean {
+  const binding = region.binding;
+  if (binding.mode !== 'fixed' || pane?.targets === undefined || targets === undefined) return false;
+  return !targets.some((t) => t.kind === pane.targets && t.id === binding.target);
+}
+
+/** The regions whose content the app fills on the open tab: every known kind's instance (bar one fixed to a target that is gone), with its target and settings. */
 export function workspaceContent(
   props: Pick<WorkspaceModelProps, 'document' | 'panes' | 'selected' | 'targets'>,
 ): { region: SurfaceRegion; target: string | undefined; settings: ResolvedSettings }[] {
@@ -93,7 +107,7 @@ export function workspaceContent(
   if (!tab) return [];
   const known = paneIndex(props.panes);
   return tabRegions(tab)
-    .filter((r) => known.has(r.kind))
+    .filter((r) => known.has(r.kind) && !unbound(r, known.get(r.kind), props.targets))
     .map((region) => ({ region, target: resolveTarget(region.binding, props.selected), settings: resolveSettings(known.get(region.kind), region, props.targets) }));
 }
 
@@ -121,16 +135,28 @@ function namingNode(what: string, text: string, inert: boolean): Node {
   );
 }
 
-/** A region drawn for a kind the app never defined: it names the kind and keeps its place. */
-function placeholderNode(region: SurfaceRegion): Node {
+/** A note drawn in a region's place, keeping it: what it says, the part it is, and anything drawn after the words. */
+function noteNode(part: string, label: string, words: string, role: 'note' | 'alert' = 'note', ...more: ChildArg[]): Node {
   const plate = surfaceView({ border: true, radius: 'card', className: 'yh-workspace__placeholder' });
   const word = textView({ role: 'caption', tone: 'muted' });
-  return h(
-    'div',
-    { class: plate.className, ...plate.attrs, 'data-part': 'placeholder', role: 'note', 'aria-label': `${region.title}: unknown pane ${region.kind}` },
-    h('span', { class: word.className, ...word.attrs }, `Unknown pane “${region.kind}”`),
-  );
+  return h('div', { class: plate.className, ...plate.attrs, 'data-part': part, role, 'aria-label': label }, h('span', { class: word.className, ...word.attrs }, words), ...more);
 }
+
+/** A region drawn for a kind the app never defined: it names the kind and keeps its place. */
+const placeholderNode = (region: SurfaceRegion): Node => noteNode('placeholder', `${region.title}: unknown pane ${region.kind}`, `Unknown pane “${region.kind}”`);
+
+/** A region fixed to a target the app no longer offers: it says so and keeps its place. */
+const unboundNode = (region: SurfaceRegion): Node => noteNode('unbound', `${region.title}: its target is gone`, `${region.title} is bound to a target that is gone`);
+
+/** A region whose pane failed while drawing: it says so, and Retry draws the pane again. */
+const failedNode = (region: SurfaceRegion, inert: boolean): Node =>
+  noteNode(
+    'failed',
+    `${region.title} stopped`,
+    `${region.title} stopped`,
+    'alert',
+    component('Button', { label: 'Retry', name: `retry ${region.title}`, size: 'sm', variant: 'quiet', disabled: inert }, { on: { onPress: `retry:${region.id}` } }),
+  );
 
 /** What every part of the tree reads. */
 interface Cx {
@@ -144,6 +170,8 @@ interface Cx {
   inert: boolean;
   index: Map<string, PaneDefinition>;
   byId: Map<string, SurfaceRegion>;
+  /** The leaves drawn so far: a leaf the layout names twice is drawn at its first place only. */
+  drawn: Set<string>;
 }
 
 /** One region's place in the tree: its measured box, its content in the form its room fits, and (editing) its frame and drop zone. */
@@ -152,13 +180,37 @@ function leafNode(region: SurfaceRegion, cx: Cx): Node {
   const room = cx.ui.rooms?.[region.id];
   const { form, cramped } = formForRoom(pane?.forms ?? PLACEHOLDER_FORMS, room, cx.env.principles);
   const target = resolveTarget(region.binding, cx.props.selected);
-  const content: Child = pane
-    ? component(
-        'Context',
-        { name: 'surface', value: { editing: cx.editing, locked: cx.locked } },
-        { slots: { children: [component('FormScope', { form }, { slots: { children: [slot(contentSlot(region.id), [region, target, resolveSettings(pane, region, cx.props.targets)])] } })] } },
-      )
-    : placeholderNode(region);
+  // The pane, inside the surface's mode and its form, and contained: if drawing it throws, a note
+  // takes its place and every other region plays on.
+  const content: Child = !pane
+    ? placeholderNode(region)
+    : unbound(region, pane, cx.props.targets)
+      ? unboundNode(region)
+      : component(
+          'Context',
+          { name: 'surface', value: { editing: cx.editing, locked: cx.locked } },
+          {
+            slots: {
+              children: [
+                component(
+                  'FormScope',
+                  { form },
+                  {
+                    slots: {
+                      children: [
+                        component(
+                          'Contain',
+                          { resetKey: cx.ui.retries?.[region.id] ?? 0 },
+                          { on: { onError: `failed:${region.id}` }, slots: { children: [slot(contentSlot(region.id), [region, target, resolveSettings(pane, region, cx.props.targets)])], failed: [failedNode(region, cx.inert)] } },
+                        ),
+                      ],
+                    },
+                  },
+                ),
+              ],
+            },
+          },
+        );
   const docking = cx.ui.docking;
   const zone = docking?.target === region.id ? docking.zone : undefined;
   const open = cx.ui.region === region.id;
@@ -266,7 +318,9 @@ function splitNode(split: SplitNode, cx: Cx): Node {
 function layoutNode(node: LayoutNode, cx: Cx): ChildArg {
   if (isSplit(node)) return splitNode(node, cx);
   const region = cx.byId.get(node);
-  return region ? leafNode(region, cx) : null;
+  if (!region || cx.drawn.has(node)) return null;
+  cx.drawn.add(node);
+  return leafNode(region, cx);
 }
 
 /** The open region's tools, in a row of their own under the head so a narrow pane never cuts them off. */
@@ -284,11 +338,12 @@ function regionToolsNode(region: SurfaceRegion, pane: PaneDefinition | undefined
     items.push(tool('✕', `remove:${id}`, `remove ${region.title}`, inert));
     if (targets.length > 0) {
       const binding = region.binding;
-      const index = binding.mode === 'fixed' ? targets.findIndex((t) => t.id === binding.target) + 1 : 0;
+      // A fixed target that is gone picks nothing (-1), so the control doesn't say it follows the selection.
+      const index = binding.mode === 'fixed' ? targets.findIndex((t) => t.id === binding.target) + 1 || -1 : 0;
       items.push(
         component(
           'Segmented',
-          { items: ['Selected', ...targets.map((t) => t.label)], index: Math.max(0, index), label: `Bind ${region.title}`, disabled: inert },
+          { items: ['Selected', ...targets.map((t) => t.label)], index, label: `Bind ${region.title}`, disabled: inert },
           { on: { onChange: `bind:${id}` }, key: 'bind' },
         ),
       );
@@ -406,12 +461,21 @@ function paletteNode(panes: readonly PaneDefinition[], region: SurfaceRegion | u
 export function workspaceView(props: WorkspaceModelProps, ui: SurfaceUi, env: WorkspaceEnv): Node {
   const { name, document, panes, targets, disabled, className } = props;
   const inert = disabled === true;
+  // A version the surface doesn't read: a notice, and nothing that could edit or misdraw it.
+  if (!knownVersion(document)) {
+    const version = String((document as { version: unknown }).version);
+    return h(
+      'div',
+      { class: `yh-workspace${className ? ` ${className}` : ''}`, 'data-part': 'root', 'data-unknown-version': version },
+      noteNode('unknown-version', `${name}: saved by a newer version`, `This surface was saved by a newer version (${version}) and can’t be drawn here.`, 'alert'),
+    );
+  }
   const tab = openTab(document);
   const editing = ui.editing && !tab?.locked;
   const index = paneIndex(panes);
   const regions = tab ? tabRegions(tab) : [];
   const byId = new Map((tab?.regions ?? []).map((r) => [r.id, r]));
-  const cx: Cx = { props, env, ui, editing, locked: tab?.locked === true, inert, index, byId };
+  const cx: Cx = { props, env, ui, editing, locked: tab?.locked === true, inert, index, byId, drawn: new Set() };
   const picked = editing ? regions.find((r) => r.id === ui.region) : undefined;
   const pickedPane = picked ? index.get(picked.kind) : undefined;
   const empty = textView({ role: 'body', tone: 'muted', className: 'yh-workspace__empty' });
@@ -453,7 +517,7 @@ export interface UiStore {
 export function workspaceHandlers(props: WorkspaceModelProps, ui: SurfaceUi, store: UiStore): Handlers {
   const { document, panes, targets, onIntent, onUi, disabled } = props;
   const handlers: Handlers = {};
-  if (disabled) return handlers;
+  if (disabled || !knownVersion(document)) return handlers;
   const send = (intent: SurfaceIntent) => onIntent?.(intent);
   const visual = (change: Partial<SurfaceUi> | ((now: SurfaceUi) => Partial<SurfaceUi>), announce = true) => {
     const now = store.get();
@@ -512,6 +576,9 @@ export function workspaceHandlers(props: WorkspaceModelProps, ui: SurfaceUi, sto
     }
     handlers['drag'] = (state: SurfaceUi['docking'] | null) => visual({ docking: state ?? undefined }, false);
     for (const r of regions) {
+      // A pane that failed: the app is told; Retry draws it again (visual state, not announced).
+      handlers[`failed:${r.id}`] = (message: string) => props.onPaneError?.({ region: r.id, message });
+      handlers[`retry:${r.id}`] = () => visual((now) => ({ retries: { ...now.retries, [r.id]: (now.retries?.[r.id] ?? 0) + 1 } }), false);
       handlers[`pick:${r.id}`] = () => visual({ region: ui.region === r.id ? undefined : r.id, naming: undefined, sheet: undefined });
       for (const d of SURFACE_DIRECTIONS) handlers[`move:${d}:${r.id}`] = () => send({ type: 'moveRegion', tab: tab.id, region: r.id, direction: d });
       handlers[`remove:${r.id}`] = () => {

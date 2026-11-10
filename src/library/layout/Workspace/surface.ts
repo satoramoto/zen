@@ -17,7 +17,9 @@ import type {
   SurfaceDirection,
   SurfaceDocument,
   SurfaceDocumentV2,
+  IntentKind,
   SurfaceIntent,
+  SurfaceIssue,
   SurfaceRegion,
   SurfaceTab,
   SurfaceTabV1,
@@ -33,17 +35,26 @@ export function readTab(tab: SurfaceTab | SurfaceTabV1): SurfaceTab {
   const rows = tab.rows.map((row) => row.filter((id) => held.has(id))).filter((row) => row.length > 0);
   const nodes: LayoutNode[] = rows.map((row, i) => (row.length === 1 ? row[0] : { id: `${tab.id}-row-${i + 1}`, split: 'row', children: row.map((node) => ({ node, share: 1 })) }));
   const layout: LayoutNode | null = nodes.length === 0 ? null : nodes.length === 1 ? nodes[0] : { id: `${tab.id}-rows`, split: 'column', children: nodes.map((node) => ({ node, share: 1 })) };
-  return { id: tab.id, title: tab.title, layout, regions: tab.regions };
+  // Whatever else the app keeps on its tab is carried over: the surface only reads what it knows.
+  const { rows: _rows, ...rest } = tab;
+  return { ...rest, layout };
 }
 
-/** A document's version 2 reading. A v2 document is returned as it is. */
+/** The versions the surface reads. A document of any other is drawn as a notice and never edited. */
+export const SURFACE_VERSIONS = [1, 2] as const;
+
+/** Whether the surface reads this document's version. */
+export const knownVersion = (doc: { version: number }): boolean => (SURFACE_VERSIONS as readonly number[]).includes(doc.version);
+
+/** A document's version 2 reading. A v2 document is returned as it is; whatever else a v1 document holds is carried over. */
 export function readDocument(doc: SurfaceDocument): SurfaceDocumentV2 {
   if (doc.version === 2) return doc;
-  return { version: 2, active: doc.active, tabs: doc.tabs.map(readTab) };
+  return { ...doc, version: 2, tabs: doc.tabs.map(readTab) };
 }
 
 /** The tab the surface shows, read as version 2: the document's `active`, else the first. */
 export function openTab(doc: SurfaceDocument): SurfaceTab | undefined {
+  if (!knownVersion(doc)) return undefined;
   const tab = (doc.tabs as readonly (SurfaceTab | SurfaceTabV1)[]).find((t) => t.id === doc.active) ?? doc.tabs[0];
   return tab ? readTab(tab) : undefined;
 }
@@ -54,11 +65,11 @@ export function leaves(node: LayoutNode | null): string[] {
   return isSplit(node) ? node.children.flatMap((c) => leaves(c.node)) : [node];
 }
 
-/** Every instance a tab draws, in reading order: the leaves the tab holds an instance for. */
+/** Every instance a tab draws, in reading order: the leaves the tab holds an instance for, each once (a leaf named twice is drawn at its first place). */
 export function tabRegions(tab: SurfaceTab | SurfaceTabV1): SurfaceRegion[] {
   const read = readTab(tab);
   const byId = new Map(read.regions.map((r) => [r.id, r]));
-  return leaves(read.layout).flatMap((id) => (byId.has(id) ? [byId.get(id)!] : []));
+  return [...new Set(leaves(read.layout))].flatMap((id) => (byId.has(id) ? [byId.get(id)!] : []));
 }
 
 /** Every split of a layout, outermost first. */
@@ -99,20 +110,82 @@ export function resolveTarget(binding: SurfaceBinding, selected: string | undefi
 export const targetsFor = (pane: PaneDefinition | undefined, targets: readonly SurfaceTarget[] | undefined): SurfaceTarget[] =>
   pane?.targets === undefined ? [] : (targets ?? []).filter((t) => t.kind === pane.targets);
 
-/** A region's settings: each its kind declares, the region's value or the default (`'all'` targets expand to every one). */
+/**
+ * A region's settings: each its kind declares, the region's value or the default (`'all'` targets
+ * expand to every one). A value its setting no longer allows reads as the default (a choice that is
+ * no longer an option, a toggle that isn't a boolean, a number that isn't one); a number outside its
+ * range is held to it; a multi-choice keeps only the values that are still options. The document
+ * keeps what it holds: only the reading changes.
+ */
 export function resolveSettings(pane: PaneDefinition | undefined, region: SurfaceRegion, targets?: readonly SurfaceTarget[]): ResolvedSettings {
   const out: Record<string, SettingValue> = {};
   for (const spec of pane?.settings ?? []) {
     const given = region.settings?.[spec.key];
     if (spec.type === 'targets') {
       const all = (targets ?? []).filter((t) => t.kind === spec.of).map((t) => t.id);
-      const value = given ?? spec.default;
+      const value = given === 'all' || Array.isArray(given) ? given : spec.default;
       out[spec.key] = value === 'all' ? all : (value as readonly string[]);
+    } else if (spec.type === 'choice') {
+      out[spec.key] = spec.options.some((o) => o.value === given) ? given! : spec.default;
+    } else if (spec.type === 'choices') {
+      out[spec.key] = Array.isArray(given) ? given.filter((v) => spec.options.some((o) => o.value === v)) : spec.default;
+    } else if (spec.type === 'toggle') {
+      out[spec.key] = typeof given === 'boolean' ? given : spec.default;
+    } else if (spec.type === 'number') {
+      out[spec.key] = typeof given === 'number' && Number.isFinite(given) ? Math.min(spec.max, Math.max(spec.min, given)) : spec.default;
     } else {
       out[spec.key] = given ?? spec.default;
     }
   }
   return out;
+}
+
+/**
+ * What kind of thing an intent is, so an app knows what to do with it: an `edit` changes the
+ * document and belongs in its history; `navigation` (choosing a tab) changes which tab is open and
+ * doesn't; `history` is undo and redo, the app's own; `mode` is edit mode, never in the document.
+ */
+export function intentKind(intent: SurfaceIntent): IntentKind {
+  if (intent.type === 'selectTab') return 'navigation';
+  if (intent.type === 'undo' || intent.type === 'redo') return 'history';
+  if (intent.type === 'setEditing') return 'mode';
+  return 'edit';
+}
+
+/**
+ * A saved document's problems, for an app loading one: plain data, in the order found. It repairs
+ * nothing (the document is the app's); the surface draws a document with any of these as well as
+ * it can. Empty: the document is sound.
+ */
+export function checkDocument(doc: SurfaceDocument): SurfaceIssue[] {
+  if (!knownVersion(doc)) return [{ issue: 'unknown-version', id: String((doc as { version: unknown }).version) }];
+  const issues: SurfaceIssue[] = [];
+  const read = readDocument(doc);
+  const tabIds = new Set<string>();
+  for (const t of read.tabs) {
+    if (tabIds.has(t.id)) issues.push({ issue: 'duplicate-tab', tab: t.id, id: t.id });
+    tabIds.add(t.id);
+  }
+  if (read.tabs.length > 0 && !tabIds.has(read.active)) issues.push({ issue: 'unknown-active', id: read.active });
+  // A version 1 tab's rows are read before `readTab` drops what it can't hold.
+  doc.tabs.forEach((given: SurfaceTab | SurfaceTabV1, i) => {
+    const tab = read.tabs[i];
+    const held = new Set<string>();
+    for (const r of tab.regions) {
+      if (held.has(r.id)) issues.push({ issue: 'duplicate-region', tab: tab.id, id: r.id });
+      held.add(r.id);
+    }
+    const named = 'rows' in given ? given.rows.flat() : leaves(tab.layout);
+    const seen = new Set<string>();
+    for (const id of named) {
+      if (!held.has(id)) issues.push({ issue: 'dangling-leaf', tab: tab.id, id });
+      else if (seen.has(id)) issues.push({ issue: 'repeated-leaf', tab: tab.id, id });
+      seen.add(id);
+    }
+    for (const id of held) if (!seen.has(id)) issues.push({ issue: 'orphan-region', tab: tab.id, id });
+    for (const s of splits(tab.layout)) if (s.children.some((c) => !(c.share > 0))) issues.push({ issue: 'bad-share', tab: tab.id, id: s.id });
+  });
+  return issues;
 }
 
 /** An id no tab, region or split in the document uses yet: `<base>-<n>`. */
@@ -264,10 +337,12 @@ export interface ApplyOptions {
 /**
  * The next document for an intent, always version 2 when anything changed (a v1 document is read as
  * v2 first). An intent naming a tab, region or split the document doesn't hold returns the document
- * as given, as do `setEditing`, `undo` and `redo` (none edits the document). The last tab is never
- * removed; a tab may be left empty.
+ * as given, as do `setEditing`, `undo` and `redo` (none edits the document), and any intent on a
+ * document whose version the surface doesn't read. The last tab is never removed; a tab may be left
+ * empty. Fields the surface doesn't know (on the document, a tab or an instance) are carried over.
  */
 export function applySurfaceIntent(given: SurfaceDocument, intent: SurfaceIntent, options: ApplyOptions = {}): SurfaceDocument {
+  if (!knownVersion(given)) return given;
   const doc = readDocument(given);
   const fresh = options.newId ?? freshId;
   const titleOf = options.titleOf ?? ((kind: string) => kind);
@@ -308,11 +383,11 @@ export function applySurfaceIntent(given: SurfaceDocument, intent: SurfaceIntent
       const id = newId(source.id);
       const ids = new Map(source.regions.map((r) => [r.id, newId(`${id}-region`)]));
       const copy: SurfaceTab = {
+        ...source,
         id,
         title: `${source.title} copy`,
         layout: copyLayout(cleanLayout(source.layout, (x) => ids.has(x)), (x) => ids.get(x)!, () => newId(`${id}-split`)),
         regions: source.regions.map((r) => ({ ...r, id: ids.get(r.id)! })),
-        ...(source.locked ? { locked: true } : {}),
       };
       const at = doc.tabs.indexOf(source);
       return { ...doc, active: id, tabs: [...doc.tabs.slice(0, at + 1), copy, ...doc.tabs.slice(at + 1)] };
