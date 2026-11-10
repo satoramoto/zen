@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { packs } from '../../foundation/themes/packs';
+import { packs } from '../themes/packs';
 import { FROM_THEME } from '../../resolve';
 import {
   applyOverrides,

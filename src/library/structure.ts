@@ -3,7 +3,7 @@
  * Pure string work: it is given the files' paths (relative to `src/library`) and a way to read one.
  *
  * - The root holds {@link ROOT_FILES}, `foundation/` (shared machinery, not checked), the generic
- *   tiers {@link ROOT_TIERS} and the areas in {@link AREAS}.
+ *   tiers {@link ROOT_TIERS} and the areas in {@link AREAS}. `foundation/` holds no stories.
  * - An area holds lower-case files, the tier folders {@link TIERS} and declared sub-areas.
  * - In `components/`, `layouts/` and `screens/` each part is a `<Name>/` folder. A file named for a
  *   part (a capitalised name: `Fader.tsx`, `Fader.model.ts`) is never loose in a tier folder or at
@@ -20,6 +20,7 @@ export const ROOT_TIERS: Record<string, string> = {
   primitives: 'Core/Primitives',
   components: 'Core/Components',
   layouts: 'Core/Layouts',
+  screens: 'Core/Screens',
 };
 
 /** The tier folders an area may have, and the sidebar name of each that holds parts. */
@@ -37,7 +38,6 @@ export const AREAS: Record<string, string> = {
   graph: 'Graph',
   shader: 'Shader',
   report: 'Report',
-  'theme-editor': 'Theme Editor',
   math: 'Math',
   'math/calculator': 'Math/Calculator',
   'math/cymatics': 'Math/Cymatics',
@@ -59,7 +59,7 @@ export const AREAS: Record<string, string> = {
   yahaha: 'Yahaha',
 };
 
-/** The shared machinery: themes, the view tree, the Svelte helpers, story helpers, dev tools. */
+/** The shared machinery: themes, skins, the view tree, the Svelte helpers, story helpers. */
 export const FOUNDATION = 'foundation';
 
 /** The files at the root: the public entries, the repo-wide checks and what those read. */
@@ -113,7 +113,10 @@ export function checkStructure(files: string[], read: (file: string) => string):
       if (!ROOT_FILES.includes(name)) problems.add(`${file}: not a root file — put it in an area or foundation/, or add it to ROOT_FILES in structure.ts (${WHERE})`);
       continue;
     }
-    if (parts[0] === FOUNDATION) continue;
+    if (parts[0] === FOUNDATION) {
+      if (isStories(name)) problems.add(`${file}: foundation/ is machinery and has no stories — a whole view of the core is a screen, screens/<Name>/ (${WHERE})`);
+      continue;
+    }
 
     let tierAt: number; // index in `parts` of the tier folder, or -1 at an area's root
     let home: string;

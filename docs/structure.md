@@ -10,10 +10,11 @@ outside the rule fails with the place it belongs.
 src/library/
   index.ts  themes.ts  svelte.ts  storybook.tsx  source.css  library.css    the public entries
   contract.ts  theme.tsx  tiers.ts  structure.ts  *.test.tsx  …             the repo-wide checks and what the entries and checks read
-  foundation/        shared machinery: themes/, view/, svelte/, stories/, inspector/, preview-catalog/
+  foundation/        shared machinery: themes/, skins/, view/, svelte/, stories/. It has no stories of its own.
   primitives/<Name>/ how a thing looks: Surface, Text, Icon, Stack, Ring
   components/<Name>/ generic controls: Button, Select, Slider, Popover, …
   layouts/<Name>/    generic arrangement: Group, Region, Screen, Tabs, Layer, Assembly, Workspace
+  screens/<Name>/    whole views of the core: Bring your own app, the theme inspector, the preview catalog
   <area>/
     index.ts         the area's entry
     *.ts  *.css  *.md   lower-case files: registries, stylesheets, helpers, notes
@@ -28,13 +29,12 @@ src/library/
 
 | Folder | Sidebar | What it is |
 |---|---|---|
-| `primitives`, `components`, `layouts` | `Core/Primitives`, `Core/Components`, `Core/Layouts` | the generic tiers every area builds on |
+| `primitives`, `components`, `layouts`, `screens` | `Core/Primitives`, `Core/Components`, `Core/Layouts`, `Core/Screens` | the generic tiers every area builds on, the theme picker and editor among the components, and the core's own whole views |
 | `music` | `Music` | every music part: the token-drawn ones (Fader, Pad, Keys, the readouts) and the mix[flow] toolkit (controls, strips, the four-deck mixer) |
 | `music/live` | `Music/Live` | the live surface: panes, the control panel, the boards and DAWs |
 | `graph` | `Graph` | the node graph and the Circuit model |
 | `shader` | `Shader` | the shader runner and its materials |
 | `report` | `Report` | the research report |
-| `theme-editor` | `Theme Editor` | skins, the picker and the editor |
 | `math`, `math/<topic>` | `Math`, `Math/<Topic>` | the math components; each topic (trig, fourier, primes, …) is a sub-area |
 | `compendium`, `compendium/book` | `Compendium`, `Compendium/Book` | the book primitives and the sample books |
 | `openspec` | `Openspec` | an OpenSpec root, read and drawn |

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Facets, Mode } from '../../contract';
 import { toCssVars } from '../../contract';
-import type { ThemePack } from '../themes/packs';
+import type { ThemePack } from '../../foundation/themes/packs';
 import { Group } from '../../layouts';
 import './ThemeInspector.css';
 

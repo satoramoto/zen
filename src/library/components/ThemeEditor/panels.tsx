@@ -1,16 +1,16 @@
 // The editor's facet tabs: palette, type, scale, materials and shader. Each reads the values in
 // force (`resolved`) and the base's (`base`, where a double-click resets to) and writes overrides.
 import type { ChangeEvent } from 'react';
-import { Text } from '../../../primitives/Text/Text';
-import { Stack } from '../../../primitives/Stack/Stack';
-import { Group } from '../../../layouts/Group/Group';
-import { Button } from '../../../components/Button/Button';
-import { Segmented } from '../../../components/Segmented/Segmented';
-import { Select } from '../../../components/Select/Select';
-import { LAYERS, type Facets, type Mode, type Scheme } from '../../../contract';
-import { faces as FACES } from '../../../foundation/themes/faces';
-import { paletteWarnings } from '../../model/colour';
-import { SHADER_NAMES, clearOverride, editableFacets, getOverride, setOverride, type OverridePath, type ShaderName, type Skin } from '../../model/skin';
+import { Text } from '../../primitives/Text/Text';
+import { Stack } from '../../primitives/Stack/Stack';
+import { Group } from '../../layouts/Group/Group';
+import { Button } from '../Button/Button';
+import { Segmented } from '../Segmented/Segmented';
+import { Select } from '../Select/Select';
+import { LAYERS, type Facets, type Mode, type Scheme } from '../../contract';
+import { faces as FACES } from '../../foundation/themes/faces';
+import { paletteWarnings } from '../../foundation/skins/colour';
+import { SHADER_NAMES, clearOverride, editableFacets, getOverride, setOverride, type OverridePath, type ShaderName, type Skin } from '../../foundation/skins/skin';
 import { ColourRow, FacetHead, LengthField, NumberRowField, Row } from './fields';
 
 export interface PanelProps {

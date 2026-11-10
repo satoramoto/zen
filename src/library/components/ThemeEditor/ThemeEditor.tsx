@@ -1,11 +1,11 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { Text } from '../../../primitives/Text/Text';
-import { Stack } from '../../../primitives/Stack/Stack';
-import { Tabs, type TabItem } from '../../../layouts/Tabs/Tabs';
-import { Select } from '../../../components/Select/Select';
-import type { Mode } from '../../../contract';
-import { packs } from '../../../foundation/themes/packs';
-import { FACET_NAMES, baseFacets, isCustom, rebaseSkin, resolveSkin, type Skin } from '../../model/skin';
+import { Text } from '../../primitives/Text/Text';
+import { Stack } from '../../primitives/Stack/Stack';
+import { Tabs, type TabItem } from '../../layouts/Tabs/Tabs';
+import { Select } from '../Select/Select';
+import type { Mode } from '../../contract';
+import { packs } from '../../foundation/themes/packs';
+import { FACET_NAMES, baseFacets, isCustom, rebaseSkin, resolveSkin, type Skin } from '../../foundation/skins/skin';
 import { FACET_TITLES, Row, facetDiffers } from './fields';
 import { ImportExport, type Status } from './ImportExport';
 import { MaterialsPanel, PalettePanel, ScalePanel, ShaderPanel, TypePanel } from './panels';

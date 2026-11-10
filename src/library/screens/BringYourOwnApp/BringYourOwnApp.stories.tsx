@@ -1,14 +1,14 @@
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { Button, LineSlider, Segmented, Select, StatusDot, Toggle } from '../../../components';
-import { Group, Region } from '../../../layouts';
-import { Stack, Surface, Text } from '../../../primitives';
-import { useSystemMode, type ModeChoice } from '../../../theme';
-import { packs } from '../../../foundation/themes/packs';
+import { Button, LineSlider, Segmented, Select, StatusDot, Toggle } from '../../components';
+import { Group, Region } from '../../layouts';
+import { Stack, Surface, Text } from '../../primitives';
+import { useSystemMode, type ModeChoice } from '../../theme';
+import { packs } from '../../foundation/themes/packs';
 import { SkinProvider } from '../../components/SkinScope/SkinScope';
 import { ThemeSettings } from '../../components/ThemeSettings';
-import { resolveSkin, skinFromPack } from '../../model/skin';
+import { resolveSkin, skinFromPack } from '../../foundation/skins/skin';
 
 /**
  * A sample app wearing a skin. It is built only from zen's components and contract variables,
@@ -114,7 +114,7 @@ function Page({ globals }: { globals: Record<string, unknown> }) {
 const packOr = (id: unknown) => (typeof id === 'string' && packs.some((p) => p.id === id) ? id : packs[0].id);
 
 const meta: Meta = {
-  title: 'Theme Editor/Screens/Bring your own app',
+  title: 'Core/Screens/Bring your own app',
   parameters: { layout: 'fullscreen' },
   render: (_args, { globals }) => <Page globals={globals} />,
 };

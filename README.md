@@ -32,4 +32,4 @@ Do not start independent child servers. If a preview fails, stop its entire owne
 
 The original six-book interactive field guide has been retired. Its earlier reviews in `docs/` are historical records. The design system and its examples continue in Storybook.
 
-`Development/Preview catalog` contains the retirement scenarios. The root scenario reads the running root preview at port 4191 by default (override with the `rootPreview` iframe query parameter). `node scripts/check-preview-catalog.mjs` exercises the scenarios and built root page against a managed Storybook; see [verification](docs/field-guide-retirement.md) for the catalog baseline and browser evidence.
+`Core/Screens/Preview catalog` contains the retirement scenarios. The root scenario reads the running root preview at port 4191 by default (override with the `rootPreview` iframe query parameter). `node scripts/check-preview-catalog.mjs` exercises the scenarios and built root page against a managed Storybook; see [verification](docs/field-guide-retirement.md) for the catalog baseline and browser evidence.

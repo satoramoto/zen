@@ -12,7 +12,7 @@ describe('structure checker', () => {
     expect(areaOf('nowhere/X/X.tsx')).toBeNull();
     expect(titlePrefix('music/live/screens/Daws/DAWs.stories.tsx')).toBe('Music/Live/Screens');
     expect(titlePrefix('components/Button/Button.stories.tsx')).toBe('Core/Components');
-    expect(titlePrefix('theme-editor/components/ThemePicker/ThemePicker.stories.tsx')).toBe('Theme Editor/Components');
+    expect(titlePrefix('report/components/Report/Report.stories.tsx')).toBe('Report/Components');
     expect(titleIn("const meta = { title: 'Graph/Screens/Circuit/Samples', args: { title: 'A/B' } }")).toBe('Graph/Screens/Circuit/Samples');
   });
 
@@ -74,7 +74,8 @@ describe('structure checker', () => {
     expect(checkStructure([file], () => "export default { title: 'Music/Live/Screens/DAWs' };")).toEqual([]);
     expect(checkStructure([file], () => "export default { title: 'Music/Live/DAWs' };")[0]).toContain("it starts with 'Music/Live/Screens/'");
     expect(checkStructure(['music/live/screens/DAWs.stories.tsx'], none)[0]).toContain("stories sit in their part's folder");
-    expect(checkStructure(['foundation/inspector/ThemeInspector.stories.tsx'], () => "title: 'Foundation/Theme inspector'")).toEqual([]);
+    expect(checkStructure(['foundation/view/Tree.stories.tsx'], none)[0]).toContain('has no stories');
+    expect(checkStructure(['screens/ThemeInspector/ThemeInspector.stories.tsx'], () => "title: 'Core/Screens/Theme inspector'")).toEqual([]);
   });
 });
 

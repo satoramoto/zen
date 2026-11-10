@@ -2,10 +2,10 @@
 // current skin (in localStorage, guarded) for the picker and editor to change. Everything it
 // computes comes from skin.ts and persist.ts, which have no React.
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import { ThemeScope, type ModeChoice } from '../../../theme';
-import { packs } from '../../../foundation/themes/packs';
-import { resolveSkin, skinFromPack, type Skin } from '../../model/skin';
-import { forgetSkin, loadSkin, saveSkin, type SkinStorage } from '../../model/persist';
+import { ThemeScope, type ModeChoice } from '../../theme';
+import { packs } from '../../foundation/themes/packs';
+import { resolveSkin, skinFromPack, type Skin } from '../../foundation/skins/skin';
+import { forgetSkin, loadSkin, saveSkin, type SkinStorage } from '../../foundation/skins/persist';
 
 /** A `ThemeScope` wearing a skin. */
 export function SkinScope({ skin, mode = 'system', bleed = false, children }: { skin: Skin; mode?: ModeChoice; bleed?: boolean; children: ReactNode }) {
