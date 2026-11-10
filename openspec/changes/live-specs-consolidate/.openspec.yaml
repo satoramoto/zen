@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-10
+goal: State each Live rule once: merge, rename and move the requirements live-daw-framework had to leave duplicated
+affected_areas:
+  - zen
+x-review: look
