@@ -1,5 +1,5 @@
 // Resolving a theme choice to facets, with no React: `theme.tsx` re-exports it beside `ThemeScope`,
-// and framework-free code (the skin helpers in `theme-editor/skin.ts`, a future Vue or Svelte
+// and framework-free code (the skin helpers in `foundation/skins/skin.ts`, a future Vue or Svelte
 // binding) imports it from here.
 import type { Facets } from './contract';
 import { packs, type ThemePack } from './foundation/themes/packs';

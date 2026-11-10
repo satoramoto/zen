@@ -1,11 +1,11 @@
 // The editor's actions on the whole skin: export it (a download, or the clipboard), import one (a
 // file, or pasted JSON), or reset to the pack. The host owns persistence; this only calls onChange.
 import { useId, useRef, useState, type ChangeEvent } from 'react';
-import { Text } from '../../../primitives/Text/Text';
-import { Stack } from '../../../primitives/Stack/Stack';
-import { Button } from '../../../components/Button/Button';
-import { isCustom, parseSkin, serializeSkin, skinFromPack, type Skin } from '../../model/skin';
-import { packs } from '../../../foundation/themes/packs';
+import { Text } from '../../primitives/Text/Text';
+import { Stack } from '../../primitives/Stack/Stack';
+import { Button } from '../Button/Button';
+import { isCustom, parseSkin, serializeSkin, skinFromPack, type Skin } from '../../foundation/skins/skin';
+import { packs } from '../../foundation/themes/packs';
 
 /** What the last action did, for the status region. */
 export type Status = { tone: 'ok'; text: string } | { tone: 'error'; text: string; errors?: string[] } | null;

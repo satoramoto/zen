@@ -5,11 +5,11 @@
 import { LAYERS, instrumentFinish, instrumentScale, instrumentScheme, type Facets, type Faces, type LayerName, type Materials, type Scale, type Scheme } from '../../contract';
 import { parseCssHsl } from './colour';
 import { FROM_THEME, resolveTheme } from '../../resolve';
-import { packs, type ThemePack } from '../../foundation/themes/packs';
-import { palettes } from '../../foundation/themes/palettes';
-import { faces } from '../../foundation/themes/faces';
-import { scales } from '../../foundation/themes/scales';
-import { materials } from '../../foundation/themes/materials';
+import { packs, type ThemePack } from '../themes/packs';
+import { palettes } from '../themes/palettes';
+import { faces } from '../themes/faces';
+import { scales } from '../themes/scales';
+import { materials } from '../themes/materials';
 
 export const SKIN_FORMAT = 'zen-skin';
 export const SKIN_VERSION = 1;

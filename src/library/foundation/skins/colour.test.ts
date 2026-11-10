@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Mode, Palette } from '../../contract';
-import { packs } from '../../foundation/themes/packs';
+import { packs } from '../themes/packs';
 import { contrast, hexToHsl, hslToHex, paletteWarnings } from './colour';
 
 const channels = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));

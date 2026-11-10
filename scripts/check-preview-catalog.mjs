@@ -12,14 +12,14 @@ await mkdir(output, { recursive: true });
 const index = await (await fetch(`${base}/index.json`)).json();
 const entries = Object.values(index.entries);
 const retired = /^(Overview|Thinking with Type|Grid Systems|Interaction of Color|Refactoring UI|On Web Typography|Practical Typography)(\/|$)/;
-const ids = entries.filter(entry => !retired.test(entry.title) && !entry.title.startsWith('Development/Preview catalog')).map(entry => entry.id).sort();
+const ids = entries.filter(entry => !retired.test(entry.title) && !entry.title.startsWith('Core/Screens/Preview catalog')).map(entry => entry.id).sort();
 if (baseline) await writeFile(`${output}/catalog-before.json`, JSON.stringify(ids, null, 2));
 else {
   assert.deepEqual(ids, JSON.parse(await readFile(`${output}/catalog-before.json`, 'utf8')));
   assert.equal(entries.filter(entry => retired.test(entry.title)).length, 0);
   const built = Object.values(JSON.parse(await readFile('storybook-static/index.json', 'utf8')).entries);
   assert.equal(built.filter(entry => retired.test(entry.title)).length, 0);
-  assert.deepEqual(built.filter(entry => !entry.title.startsWith('Development/Preview catalog')).map(entry => entry.id).sort(), ids);
+  assert.deepEqual(built.filter(entry => !entry.title.startsWith('Core/Screens/Preview catalog')).map(entry => entry.id).sort(), ids);
 }
 const browser = await chromium.launch({ headless: true });
 const server = createServer(async (_req, res) => {
@@ -57,7 +57,7 @@ try {
     }
   }
   const results = [];
-  for (const entry of entries.filter(entry => entry.type === 'story' && entry.title === 'Development/Preview catalog')) {
+  for (const entry of entries.filter(entry => entry.type === 'story' && entry.title === 'Core/Screens/Preview catalog')) {
     await page.goto(`${base}/iframe.html?id=${entry.id}&viewMode=story&rootPreview=${encodeURIComponent(`http://127.0.0.1:${server.address().port}`)}`);
     await page.waitForFunction(() => window.__STORYBOOK_PREVIEW__?.currentRender?.phase === 'finished');
     const errors = await page.evaluate(() => {

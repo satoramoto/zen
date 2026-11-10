@@ -1,4 +1,11 @@
 {
   "components/AxisPicker/AxisPicker.tsx": 8,
-  "components/Popover/Popover.tsx": 1
+  "components/Popover/Popover.tsx": 1,
+  "components/SkinScope/SkinScope.tsx": 3,
+  "components/ThemeEditor/fields.tsx": 21,
+  "components/ThemeEditor/ImportExport.tsx": 19,
+  "components/ThemeEditor/panels.tsx": 102,
+  "components/ThemeEditor/ThemeEditor.tsx": 18,
+  "components/ThemePicker/ThemePicker.tsx": 20,
+  "components/ThemeSettings/ThemeSettings.tsx": 9
 }

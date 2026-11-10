@@ -1,15 +1,15 @@
 import { useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
-import type { Mode } from '../../../contract';
-import type { ModeChoice } from '../../../theme';
-import { packs } from '../../../foundation/themes/packs';
-import { Button } from '../../../components/Button/Button';
-import { Toggle } from '../../../components/Toggle/Toggle';
-import { LineSlider } from '../../../components/LineSlider/LineSlider';
-import { focusRing } from '../../../primitives/Ring/Ring';
-import { Stack } from '../../../primitives/Stack/Stack';
-import { Text } from '../../../primitives/Text/Text';
+import type { Mode } from '../../contract';
+import type { ModeChoice } from '../../theme';
+import { packs } from '../../foundation/themes/packs';
+import { Button } from '../Button/Button';
+import { Toggle } from '../Toggle/Toggle';
+import { LineSlider } from '../LineSlider/LineSlider';
+import { focusRing } from '../../primitives/Ring/Ring';
+import { Stack } from '../../primitives/Stack/Stack';
+import { Text } from '../../primitives/Text/Text';
 import { SkinScope } from '../SkinScope/SkinScope';
-import { isCustom, resolveSkin, skinFromPack, type Skin } from '../../model/skin';
+import { isCustom, resolveSkin, skinFromPack, type Skin } from '../../foundation/skins/skin';
 import './ThemePicker.css';
 
 interface Entry {

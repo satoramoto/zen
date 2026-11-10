@@ -27,7 +27,7 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npx vitest run src/harness` | The harness's colour maths and skins (`src/harness/`), or any palette or pack change. |
 | `npx tsx scripts/harness-skins.ts` | Writes `src/harness/claude-code/kit/skins.ts` after a palette, pack or `src/harness/claude-code/skins.ts` change (the harness tests fail until it's run). |
 | `npx vitest run src/library` | Library tokens, themes, layout, components, or anything under `src/library/yahaha/`. |
-| `npx vitest run src/library/tiers.test.ts` | Any CSS or TSX under `src/library/{components,music,layouts,yahaha,primitives,graph,report,theme-editor}`: the tier rules hold their baseline (`npm run tiers` prints the table; `npm run tiers -- --write` records a lower one). |
+| `npx vitest run src/library/tiers.test.ts` | Any CSS or TSX under `src/library/{components,music,layouts,yahaha,primitives,graph,report}`: the tier rules hold their baseline (`npm run tiers` prints the table; `npm run tiers -- --write` records a lower one). |
 | `npx vitest run src/library/structure.test.ts` | Any file added, moved or renamed under `src/library`, or a story's title: every file is where `docs/structure.md` says it goes. |
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The static root page. |
@@ -48,11 +48,12 @@ Every section of `src/library` has the same folders. `docs/structure.md` is the 
 ```
 src/library/
   index.ts, themes.ts, svelte.ts, storybook.tsx, …   the public entries, the repo-wide checks and what they read
-  foundation/                    themes/, view/, svelte/, stories/: shared machinery
+  foundation/                    themes/, skins/, view/, svelte/, stories/: shared machinery, no stories of its own
   primitives/<Name>/             the generic tiers
   components/<Name>/
   layouts/<Name>/
-  <area>/                        music, graph, shader, report, theme-editor, math, compendium, openspec, site, yahaha
+  screens/<Name>/                whole views of the core: Bring your own app, the theme inspector, the preview catalog
+  <area>/                        music, graph, shader, report, math, compendium, openspec, site, yahaha
     index.ts, lower-case files   the area's entry, registries, stylesheets, helpers
     model/                       data and pure functions: no React, no Svelte
     components/<Name>/           one interaction or one drawn thing
@@ -63,7 +64,7 @@ src/library/
 
 - **A part is a folder.** Its model, renderers, stylesheet, fixtures, stories and tests sit together in `<tier>/<Name>/`. A file with a capitalised name is a part's file and is never loose in a tier folder or at an area's root; lower-case helpers may be.
 - **No `stories/`, `view/` or `fixtures/` folders.** Stories sit in the part they show; a story of the whole area is a screen.
-- **The sidebar mirrors the path.** A stories file's `title` starts with its area's sidebar name and its tier: `music/live/screens/Daws/` is `Music/Live/Screens/…`, `components/Button/` is `Core/Components/Button`.
+- **The sidebar mirrors the path.** A stories file's `title` starts with its area's sidebar name and its tier: `music/live/screens/Daws/` is `Music/Live/Screens/…`, `components/Button/` is `Core/Components/Button`. The sidebar's top level is `Core`, then one group per area, then `Harness`: nothing of the library sits outside them.
 - **A new area, sub-area or root file is declared** in `src/library/structure.ts` (`AREAS`, `ROOT_FILES`), in its own small commit. Don't add a folder beside the tiers to hold something that fits one of them.
 - **There is no baseline.** The check has no exceptions list; if a file cannot go where the rule says, change the rule in an OpenSpec change (`library-structure`), not the file's neighbours.
 
@@ -114,7 +115,7 @@ The original six-book field guide and its eighteen examples have been removed. I
 - Colour, type, shape and spacing values live only in `src/library/foundation/themes/` (one file per facet). Mark any value the source style doesn't define with `// added`.
 - The compendium is its own area, `src/library/compendium/` (`src/library/compendium/README.md`): the book primitives for an interactive textbook. `model/` (no React) holds the document (an entry is plain data: sections, paragraphs of runs, formulas as TeX, figures by registry name, quantities a scrub sets and a figure binds to, exercises checked by name, notes, peeks at other entries), the checkers, the book and `validateEntry`; `components/<Name>/` one part each with its stories; `layouts/<Name>/` Reading, Document and Book; `book/` the sample textbooks (content, not primitives: the Fourier book, the trigonometry book in `book/trig/` with its figures in `math/trig/`, the harmonic series). It never knows what an entry is about and never imports `math/`; a page hands it the math components as figures and checkers. Its two packs are `textbook-console` and `textbook-blueprint` (the `airy` scale, the `reading` face for running text). React-only, not exported yet. Stories are titled `Compendium/Layouts/<Name>` and `Compendium/Components/<Name>`; `library.test.tsx` holds its CSS and TSX to the contract.
 - OpenSpec is its own area, `src/library/openspec/` (`src/library/openspec/README.md`): a root read from its files (`model/`, no React: Markdown to blocks, specs with requirements and scenarios, changes with proposal, tasks and deltas, the archive) and drawn (`components/<Name>/`: `Markdown`, `Spec`, `Change`, `Repo`). Stories are titled `Openspec/Components/<Name>`; the `Repo` story named Zen draws this project's own `openspec/` folder, read at build time. This project is an OpenSpec project (`openspec/`, schema `spec-driven`): plan work there as a change (`openspec validate --strict`), archive it when done, and the stories show it. React-only, not exported yet; `library.test.tsx` holds its CSS and TSX to the contract.
-- The theme editor is its own area, `src/library/theme-editor/` (`docs/theme-editor.md`): skins (a pack as portable JSON) in `model/` (`skin.ts`, `colour.ts` and `persist.ts`, which never import React: a Vue or Svelte binding wraps them), and the React parts in `components/` (`SkinScope`/`SkinProvider`, `ThemePicker`, `ThemeEditor` and `ThemeSettings`), all exported from `theme-editor/index.ts`, which the package root re-exports. Stories are titled `Theme Editor/Components/<Name>`. The tier rules and `library.test.tsx` hold it to the controls' rules.
+- The theme editor is part of the core (`docs/theme-editor.md`): skins (a pack as portable JSON) in `src/library/foundation/skins/` (`skin.ts`, `colour.ts` and `persist.ts`, which never import React: a Vue or Svelte binding wraps them), and the React parts in `src/library/components/` (`SkinScope`/`SkinProvider`, `ThemePicker`, `ThemeEditor` and `ThemeSettings`), all exported from `components/theme-editor.ts`, which the package root re-exports. Stories are `Core/Components/Theme picker`, `Core/Components/Theme editor` and `Core/Screens/Bring your own app`. They are React-only: their markup is counted in `view.baseline.json` like any unconverted component's.
 - A theme pack (`foundation/themes/packs.ts`) names its Refero style id and the source rules it keeps.
 - `vendor/` holds the few modules the bundlers resolve in place of a dependency's dependency, each with its reason in its own `package.json`, aliased for every Vite build in `vite.aliases.ts` (the app, Vitest, the library build and Storybook all import it). Today: `use-resize-observer`, which mafs 0.21 imports as a v9 default export while v9's peer range stops at React 18 and v10 has no default export; npm installs v10 through `package.json` `overrides` so the install is clean, and the alias serves the vendored hook. Remove the alias and the override when mafs imports the named export.
 - Shared files: `contract.ts`, `foundation/themes/`, `storybook.tsx`, `.storybook/`, `library.test.tsx`, `structure.ts`, `index.ts`, `components/index.ts`, `music/root.ts`, `graph/index.ts`, `library.css`, `yahaha/hues.ts`, `yahaha/STAGE.md`. Change them in their own small commit first.

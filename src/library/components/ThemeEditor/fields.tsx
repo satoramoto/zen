@@ -1,16 +1,16 @@
 // The editor's rows: a labelled row, a colour row (swatch, hex, H/S/L), a field for a CSS length
 // held as text ('6px', '-0.01em', '180deg', '70%'), and the head every facet tab starts with.
 import { useId, useRef, useState, type ReactNode } from 'react';
-import { Text } from '../../../primitives/Text/Text';
-import { Stack } from '../../../primitives/Stack/Stack';
-import { Button } from '../../../components/Button/Button';
-import { NumberField } from '../../../components/NumberField/NumberField';
-import { Select } from '../../../components/Select/Select';
-import type { Param } from '../../../components/Param/param';
-import { FROM_THEME } from '../../../resolve';
-import { packs } from '../../../foundation/themes/packs';
-import { colourFields, hslToHex, isHex, type Hsl } from '../../model/colour';
-import { FACET_LISTS, clearOverride, getOverride, resetFacet, setOverride, swapFacet, type FacetName, type OverridePath, type Skin } from '../../model/skin';
+import { Text } from '../../primitives/Text/Text';
+import { Stack } from '../../primitives/Stack/Stack';
+import { Button } from '../Button/Button';
+import { NumberField } from '../NumberField/NumberField';
+import { Select } from '../Select/Select';
+import type { Param } from '../Param/param';
+import { FROM_THEME } from '../../resolve';
+import { packs } from '../../foundation/themes/packs';
+import { colourFields, hslToHex, isHex, type Hsl } from '../../foundation/skins/colour';
+import { FACET_LISTS, clearOverride, getOverride, resetFacet, setOverride, swapFacet, type FacetName, type OverridePath, type Skin } from '../../foundation/skins/skin';
 
 /** One setting: its name in the label column, its controls after it (under it when narrow). */
 export function Row({ label, children, className }: { label: string; children: ReactNode; className?: string }) {

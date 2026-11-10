@@ -4,7 +4,7 @@ import { scenario } from 'story-spec';
 
 const retiredGroups = ['Overview', 'Thinking with Type', 'Grid Systems', 'Interaction of Color', 'Refactoring UI', 'On Web Typography', 'Practical Typography'];
 const meta = {
-  title: 'Development/Preview catalog',
+  title: 'Core/Screens/Preview catalog',
   render: () => <iframe title="Root preview" style={{ width: '100%', height: 240, border: 0 }} />,
   parameters: { spec: {
     capability: 'preview-catalog',

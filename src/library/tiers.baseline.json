@@ -137,6 +137,12 @@
     "pixels": 0,
     "type": 0
   },
+  "components/SkinScope": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
   "components/Slider": {
     "knobs": 0,
     "margins": 0,
@@ -150,6 +156,24 @@
     "type": 0
   },
   "components/StepValue": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "components/ThemeEditor": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "components/ThemePicker": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "components/ThemeSettings": {
     "knobs": 0,
     "margins": 0,
     "pixels": 0,
@@ -781,42 +805,6 @@
     "type": 0
   },
   "report/model": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "theme-editor": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "theme-editor/components/SkinScope": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "theme-editor/components/ThemeEditor": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "theme-editor/components/ThemePicker": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "theme-editor/components/ThemeSettings": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "theme-editor/model": {
     "knobs": 0,
     "margins": 0,
     "pixels": 0,

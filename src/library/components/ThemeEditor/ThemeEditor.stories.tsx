@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import type { Mode } from '../../../contract';
-import { useSystemMode, type ModeChoice } from '../../../theme';
-import { packs } from '../../../foundation/themes/packs';
-import { palettes } from '../../../foundation/themes/palettes';
-import { MIXFLOW_DEFAULT_THEME, mixflowColor, mixflowDeckTones } from '../../../foundation/themes/mixflow-reference';
+import type { Mode } from '../../contract';
+import { useSystemMode, type ModeChoice } from '../../theme';
+import { packs } from '../../foundation/themes/packs';
+import { palettes } from '../../foundation/themes/palettes';
+import { MIXFLOW_DEFAULT_THEME, mixflowColor, mixflowDeckTones } from '../../foundation/themes/mixflow-reference';
 import { SkinScope } from '../SkinScope/SkinScope';
-import { FACET_LISTS, FACET_NAMES, resolveSkin, serializeSkin, skinFromPack, swapFacet, type Skin } from '../../model/skin';
+import { FACET_LISTS, FACET_NAMES, resolveSkin, serializeSkin, skinFromPack, swapFacet, type Skin } from '../../foundation/skins/skin';
 import { ThemeEditor } from './ThemeEditor';
 
 const packOr = (id: unknown) => (typeof id === 'string' && packs.some((p) => p.id === id) ? id : packs[0].id);
@@ -48,7 +48,7 @@ function Host({ globals, width, inspect = false }: { globals: Record<string, unk
 }
 
 const meta: Meta = {
-  title: 'Theme Editor/Components/Editor',
+  title: 'Core/Components/Theme editor',
   parameters: { layout: 'fullscreen' },
   render: (_args, { globals }) => <Host globals={globals} />,
 };

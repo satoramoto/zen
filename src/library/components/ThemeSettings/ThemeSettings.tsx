@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Segmented } from '../../../components';
-import { Group } from '../../../layouts';
-import { Stack, Text } from '../../../primitives';
-import { useSystemMode, type ModeChoice } from '../../../theme';
+import { Segmented } from '..';
+import { Group } from '../../layouts';
+import { Stack, Text } from '../../primitives';
+import { useSystemMode, type ModeChoice } from '../../theme';
 import { ThemeEditor } from '../ThemeEditor';
 import { ThemePicker } from '../ThemePicker';
-import { isCustom } from '../../model/skin';
+import { isCustom } from '../../foundation/skins/skin';
 import { useSkin } from '../SkinScope/SkinScope';
 import './ThemeSettings.css';
 

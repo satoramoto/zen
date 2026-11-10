@@ -4,7 +4,7 @@ import {
   MIXFLOW_DARK_SURFACES, MIXFLOW_DEFAULT_SPECTRAL, MIXFLOW_ROLES, mixflowColor, mixflowOnPrimary,
   type MixflowReferenceTheme,
 } from '../../../foundation/themes/mixflow-reference';
-import { SKIN_FORMAT, SKIN_VERSION, normalizeSkin, validateSkin, type Skin } from '../../../theme-editor/model/skin';
+import { SKIN_FORMAT, SKIN_VERSION, normalizeSkin, validateSkin, type Skin } from '../../../foundation/skins/skin';
 import { isSpectralStyle, type SpectralStyle } from './spectral';
 
 type Obj = Record<string, unknown>;

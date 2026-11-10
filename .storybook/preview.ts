@@ -25,12 +25,11 @@ const preview: Preview = {
     options: {
       storySort: {
         order: [
-          'Core', ['Primitives', 'Components', 'Layouts'],
+          'Core', ['Primitives', 'Components', 'Layouts', 'Screens'],
           'Music', ['Screens', 'Layouts', 'Components', 'Live', ['Screens', 'Layouts', 'Components']],
           'Graph', ['Screens', 'Layouts', 'Components'],
           'Shader',
           'Report', ['Screens', 'Layouts', 'Components'],
-          'Theme Editor', ['Screens', 'Layouts', 'Components'],
           'Math', ['Screens', 'Layouts', 'Components'],
           'Compendium', ['Screens', 'Layouts', 'Components', 'Book'],
           'Openspec', ['Screens', 'Layouts', 'Components'],
@@ -38,8 +37,6 @@ const preview: Preview = {
           'Harness',
           ['Claude Code', ['Kit', 'Skins', 'Sample mod']],
           'Yahaha', ['Screens', 'Layouts', 'Components'],
-          'Foundation',
-          'Development',
         ],
       },
     },

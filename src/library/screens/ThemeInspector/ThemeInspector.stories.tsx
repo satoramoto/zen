@@ -12,7 +12,7 @@ function Inspect({ globals }: { globals: ThemeChoice & { mode?: ModeChoice } }) 
 }
 
 const meta: Meta = {
-  title: 'Foundation/Theme inspector',
+  title: 'Core/Screens/Theme inspector',
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   render: (_args, { globals }) => <Inspect globals={globals} />,

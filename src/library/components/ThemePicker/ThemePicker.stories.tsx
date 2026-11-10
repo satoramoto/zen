@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { withLibraryTheme } from '../../../storybook';
-import type { ModeChoice } from '../../../theme';
-import { Stack } from '../../../primitives/Stack/Stack';
-import { Text } from '../../../primitives/Text/Text';
-import { packs } from '../../../foundation/themes/packs';
-import { setOverride, skinFromPack, type Skin } from '../../model/skin';
+import { withLibraryTheme } from '../../storybook';
+import type { ModeChoice } from '../../theme';
+import { Stack } from '../../primitives/Stack/Stack';
+import { Text } from '../../primitives/Text/Text';
+import { packs } from '../../foundation/themes/packs';
+import { setOverride, skinFromPack, type Skin } from '../../foundation/skins/skin';
 import { ThemePicker } from './ThemePicker';
 
 type Globals = { theme?: string; mode?: ModeChoice };
@@ -27,7 +27,7 @@ function Demo({ start, mode, width }: { start: Skin; mode?: ModeChoice; width?: 
 }
 
 const meta: Meta = {
-  title: 'Theme Editor/Components/Picker',
+  title: 'Core/Components/Theme picker',
   decorators: [withLibraryTheme],
 };
 export default meta;
