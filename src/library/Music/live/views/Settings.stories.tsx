@@ -23,6 +23,10 @@ const meta = {
       purpose: 'Settings a pane kind declares, the sheet that edits a region’s, and the values a region carries to the app.',
       requirement: 'A pane kind declares its settings',
       shall: 'A pane definition SHALL be able to declare settings as plain data, each a choice, several of a set of choices, a toggle, a number in a range, a pick of the app’s targets, or plain data the pane edits itself, with a label and a default, and a region SHALL carry its own values for them in the document; a plain-data setting SHALL reach the pane and SHALL never be listed in the settings sheet.',
+      // Decisions a person made: `story-spec sync` writes these as REMOVED or RENAMED. Spent once the spec no longer has them.
+      retires: [
+        { requirement: 'The live panes declare their settings', reason: 'Moved to live-reference-kit: what the Music panes declare is the kit’s, not the framework’s.', migration: 'Read “The live panes declare their settings” in live-reference-kit.' },
+      ],
     },
   },
 } satisfies Meta;
@@ -169,21 +173,6 @@ export const AKindWithoutSettings: Story = scenario(
     },
   },
   { render: () => <Strips /> },
-) as Story;
-
-export const TheStripsFollowTheirSettings: Story = scenario(
-  {
-    requirement: 'The live panes declare their settings',
-    shall: 'The Music live panes SHALL declare the settings their own props already allow (which tracks a pane shows, which pads or moves it offers), and the live views SHALL draw each pane from its region’s settings.',
-    name: 'The strips follow their settings',
-    when: 'a track strips region’s settings name two tracks',
-    then: 'the strips draw those two tracks and their returns, and nothing else',
-    check: async ({ canvasElement }) => {
-      await waitFor(() => expect(strips(canvasElement)).toEqual(['bass', 'vox']));
-      await expect(canvasElement.querySelectorAll('.live-track-strips [data-return]').length).toBeGreaterThan(0);
-    },
-  },
-  { render: () => <Strips settings={{ tracks: ['bass', 'vox'] }} /> },
 ) as Story;
 
 export const SeveralOfASetOfChoices: Story = scenario(

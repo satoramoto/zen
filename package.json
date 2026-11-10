@@ -141,7 +141,7 @@
     "vitest": "4.1.11"
   },
   "dependencies": {
-    "story-spec": "github:satoramoto/story-spec#1227aaebc5a33adc817be3451a9c491476cfd5ae",
+    "story-spec": "github:satoramoto/story-spec#cbfaa1b6d1b5dcb80ae0d03184d46241d96f8a76",
     "@cortex-js/compute-engine": "0.182.0",
     "mafs": "0.21.0",
     "marked": "18.2.0",

@@ -27,7 +27,7 @@ const meta = {
     frame: { w: 960, h: 360 },
     spec: {
       capability: 'live-parameters',
-      purpose: 'The app’s parameters as a control meets them: the catalogue the app lists, and touch around a continuous gesture, so an app knows when a hand is on a control.',
+      purpose: 'The app’s parameters as a control meets them: the catalogue the app lists, values as readings, moves and triggers as asks, and touch around a continuous gesture.',
       requirement: 'The app lists its parameters',
       shall: 'The app SHALL give its parameters as plain data, each with an id, a label, an optional group, a range with its unit, and whether it moves along a range, switches or fires, and each parameter’s value now; a control SHALL be offered only the parameters of the kind it can move.',
     },
@@ -89,6 +89,69 @@ export const APadIsOfferedOnlyWhatItCanFire: Story = scenario(
     },
   },
   { parameters: { frame: { w: 1280, h: 800 } }, render: () => <Building /> },
+) as Story;
+
+export const AFaderDrag: Story = scenario(
+  {
+    requirement: 'A control asks; the app moves the value',
+    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
+    name: 'A fader drag',
+    when: 'a person drags a fader up',
+    then: 'each step sends a parameter intent with the fader’s parameter and a value in its range, and the fader reads back what the app gives',
+    act: async ({ canvasElement }) => {
+      await dragUp(within(canvasElement).getByRole('slider', { name: 'Delay send' }));
+    },
+    check: async ({ canvasElement, args }) => {
+      const calls = (args.onParam as ReturnType<typeof fn>).mock.calls as [{ param: string; value: number }][];
+      await expect(calls.length).toBeGreaterThan(0);
+      for (const [move] of calls) {
+        await expect(move.param).toBe('delay');
+        await expect(move.value).toBeGreaterThanOrEqual(0);
+        await expect(move.value).toBeLessThanOrEqual(100);
+      }
+      const last = calls.at(-1)![0].value;
+      await expect(last).toBeGreaterThan(35);
+      await waitFor(() => expect(Number(within(canvasElement).getByRole('slider', { name: 'Delay send' }).getAttribute('aria-valuenow'))).toBeCloseTo(last, 2));
+    },
+  },
+  spied(s.Default, app),
+) as Story;
+
+export const APadPressAndRelease: Story = scenario(
+  {
+    requirement: 'A control asks; the app moves the value',
+    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
+    name: 'A pad press and release',
+    when: 'a person presses a pad and lets go',
+    then: 'one trigger intent with down is sent on the press and one with up on the release',
+    act: async ({ canvasElement }) => {
+      const pad = within(canvasElement.querySelector<HTMLElement>('[data-cell="c6"]')!).getByRole('button');
+      await fireEvent.pointerDown(pad, { pointerId: 6, button: 0 });
+      await fireEvent.pointerUp(pad, { pointerId: 6, button: 0 });
+    },
+    check: async ({ args }) => {
+      await expect((args.onTrigger as ReturnType<typeof fn>).mock.calls).toEqual([[{ param: 'drop', down: true }], [{ param: 'drop', down: false }]]);
+    },
+  },
+  spied(s.Default),
+) as Story;
+
+export const AMoveTheAppIgnores: Story = scenario(
+  {
+    requirement: 'A control asks; the app moves the value',
+    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
+    name: 'A move the app ignores',
+    when: 'a person moves a fader and the app gives no new value',
+    then: 'the fader returns to the app’s value once the gesture ends',
+    act: async ({ canvasElement }) => {
+      await dragUp(within(canvasElement).getByRole('slider', { name: 'Reverb send' }));
+    },
+    check: async ({ canvasElement, args }) => {
+      await expect((args.onParam as ReturnType<typeof fn>).mock.calls.length).toBeGreaterThan(0);
+      await waitFor(() => expect(Number(within(canvasElement).getByRole('slider', { name: 'Reverb send' }).getAttribute('aria-valuenow'))).toBeCloseTo(20, 1));
+    },
+  },
+  spied(s.Default),
 ) as Story;
 
 export const AFaderDragIsOneTouch: Story = scenario(

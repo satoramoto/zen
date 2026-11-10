@@ -21,7 +21,7 @@ const meta = {
     layout: 'fullscreen',
     spec: {
       capability: 'live-reference-kit',
-      purpose: 'Whole DAWs composed from the Music live panes alone: the proof that the surface, its document and the kit are enough to build one.',
+      purpose: 'The Music live panes as a ready-made set an app may use whole, in part or beside its own, the settings they declare, and the whole DAWs composed from them.',
       requirement: 'Whole DAWs are composed from the kit',
       shall: 'Zen SHALL show whole DAWs composed from the reference kit alone, each a surface document built through the surface’s own intents and drawn by one linked host, in its own pack and at the window size it is made for; in each, every region SHALL draw a pane of the kit with none cramped, and the DAW SHALL be played as it stands.',
     },
