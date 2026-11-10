@@ -20,12 +20,11 @@ const engineJsx = (): Plugin => ({
   },
 });
 
-// The one Storybook: the field guide, the library's own components, the Yahaha redesigns on
+// The one Storybook: the library's own components, the Yahaha redesigns on
 // the library's token contract (primitives, the Stage's regions and the Stage itself), and the
 // harnesses (the Claude Code kit and a sample mod, drawn by its bench).
 const config: StorybookConfig = {
   stories: [
-    '../src/stories/**/*.stories.@(ts|tsx)',
     '../src/library/**/*.stories.@(ts|tsx)',
     '../src/harness/**/*.stories.@(ts|tsx)',
     ...(process.env.OMARCHY_PLUGIN_SOURCE ? [`${process.env.OMARCHY_PLUGIN_SOURCE}/preview/**/*.stories.@(ts|tsx)`] : []),
