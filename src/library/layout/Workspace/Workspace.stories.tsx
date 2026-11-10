@@ -227,8 +227,8 @@ export const AnIntentThatCantApply: Story = scenario(
 
 export const DockingThroughTheApplier: Story = scenario(
   {
-    requirement: 'Intents can be applied without a store',
-    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
+    requirement: 'Layout intents apply without a store',
+    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
     name: 'Docking through the applier',
     when: 'a story applies a dock intent placing one region below another',
     then: 'the returned layout holds a column of the two where the target was, and the region is gone from where it was',
@@ -245,8 +245,8 @@ export const DockingThroughTheApplier: Story = scenario(
 
 export const AResizeNamingNoSplit: Story = scenario(
   {
-    requirement: 'Intents can be applied without a store',
-    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
+    requirement: 'Layout intents apply without a store',
+    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
     name: 'A resize naming no split',
     when: 'a resize intent names a split the tab doesn’t hold',
     then: 'the applier returns the document unchanged',

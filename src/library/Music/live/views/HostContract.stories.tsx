@@ -30,7 +30,7 @@ const meta = {
     frame: { w: 1200, h: 640 },
     spec: {
       capability: 'live-host-contract',
-      purpose: 'What a pane in a composed DAW reads from its host, what it asks for, how values that change every frame reach it, and what a host can count on: a failing pane contained, and nothing of the document kept in the surface.',
+      purpose: 'What a pane in a composed DAW reads from its host, what it asks for, and how values that change every frame reach it.',
       requirement: 'A pane draws what the host says',
       shall: 'A pane SHALL draw only the readings its host gives it (what is playing, queued, muted, selected or measured), and SHALL show a reading the host doesn’t give as missing rather than as a made-up value.',
     },
@@ -135,7 +135,7 @@ const asked = (el: HTMLElement): unknown => JSON.parse(within(el).getByLabelText
 
 export const ABoundRegionAsksForItsTarget: Story = scenario(
   {
-    requirement: 'A pane asks with plain intents',
+    requirement: 'A pane asks with one intent per gesture',
     shall: 'A pane SHALL turn each discrete gesture (a press, a pick, a toggle) into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), and a continuous gesture (a drag) into one such intent per step, each aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
     name: 'A bound region asks for its target',
     when: 'a region fixed to the second track is pressed',
@@ -152,7 +152,7 @@ export const ABoundRegionAsksForItsTarget: Story = scenario(
 
 export const FollowingTheSelection: Story = scenario(
   {
-    requirement: 'A pane asks with plain intents',
+    requirement: 'A pane asks with one intent per gesture',
     shall: 'A pane SHALL turn each discrete gesture (a press, a pick, a toggle) into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), and a continuous gesture (a drag) into one such intent per step, each aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
     name: 'Following the selection',
     when: 'a region bound to the selected track is pressed after the selection changes',
@@ -186,7 +186,7 @@ const onLevelSpy = fn();
 
 export const ADragCutOffByRemoval: Story = scenario(
   {
-    requirement: 'A pane asks with plain intents',
+    requirement: 'A pane asks with one intent per gesture',
     shall: 'A pane SHALL turn each discrete gesture (a press, a pick, a toggle) into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), and a continuous gesture (a drag) into one such intent per step, each aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.',
     name: 'A drag cut off by removal',
     when: 'a region is removed while a fader in it is being dragged',

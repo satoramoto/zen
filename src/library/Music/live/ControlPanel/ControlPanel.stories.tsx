@@ -6,13 +6,14 @@ import { fixtureStories, withRenderer } from '../../../stories/story';
 import { host, withHost } from '../host.story';
 import { ControlPanel } from './ControlPanel';
 import { Building, cellsOf } from './Building.story';
+import { dragUp } from './drag.story';
 import ControlPanelSvelte from './ControlPanel.svelte';
 import { controlPanelArgTypes, controlPanelStories as s, controlParams, controlValues, macroCells } from './ControlPanel.fixtures';
 import type { ControlPanelProps } from './ControlPanel.model';
 
 // The person's own controls on the app's parameters. The playing stories run in both renderers
-// (the toolbar's Renderer) with `withHost` standing in for the app. What a control asks of a
-// parameter, and touch, are `Parameters.stories.tsx` (`live-parameters`). The building stories put the panel in a Workspace that is editing, with
+// (the toolbar's Renderer) with `withHost` standing in for the app: it applies `onParam` to the
+// values, as an app would. The catalogue and touch are `Parameters.stories.tsx` (`live-parameters`). The building stories put the panel in a Workspace that is editing, with
 // a story host that applies every intent, since building follows the surface's edit mode.
 
 const meta = {
@@ -85,6 +86,69 @@ export const AParameterTheAppNoLongerLists: Story = scenario(
     },
   },
   spied(s.Missing),
+) as Story;
+
+export const AFaderDrag: Story = scenario(
+  {
+    requirement: 'A control asks; the app moves the value',
+    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
+    name: 'A fader drag',
+    when: 'a person drags a fader up',
+    then: 'each step sends a parameter intent with the fader’s parameter and a value in its range, and the fader reads back what the app gives',
+    act: async ({ canvasElement }) => {
+      await dragUp(within(canvasElement).getByRole('slider', { name: 'Delay send' }));
+    },
+    check: async ({ canvasElement, args }) => {
+      const calls = (args.onParam as ReturnType<typeof fn>).mock.calls as [{ param: string; value: number }][];
+      await expect(calls.length).toBeGreaterThan(0);
+      for (const [move] of calls) {
+        await expect(move.param).toBe('delay');
+        await expect(move.value).toBeGreaterThanOrEqual(0);
+        await expect(move.value).toBeLessThanOrEqual(100);
+      }
+      const last = calls.at(-1)![0].value;
+      await expect(last).toBeGreaterThan(35);
+      await waitFor(() => expect(Number(within(canvasElement).getByRole('slider', { name: 'Delay send' }).getAttribute('aria-valuenow'))).toBeCloseTo(last, 2));
+    },
+  },
+  spied(s.Default, app),
+) as Story;
+
+export const APadPressAndRelease: Story = scenario(
+  {
+    requirement: 'A control asks; the app moves the value',
+    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
+    name: 'A pad press and release',
+    when: 'a person presses a pad and lets go',
+    then: 'one trigger intent with down is sent on the press and one with up on the release',
+    act: async ({ canvasElement }) => {
+      const pad = within(canvasElement.querySelector<HTMLElement>('[data-cell="c6"]')!).getByRole('button');
+      await fireEvent.pointerDown(pad, { pointerId: 6, button: 0 });
+      await fireEvent.pointerUp(pad, { pointerId: 6, button: 0 });
+    },
+    check: async ({ args }) => {
+      await expect((args.onTrigger as ReturnType<typeof fn>).mock.calls).toEqual([[{ param: 'drop', down: true }], [{ param: 'drop', down: false }]]);
+    },
+  },
+  spied(s.Default),
+) as Story;
+
+export const AMoveTheAppIgnores: Story = scenario(
+  {
+    requirement: 'A control asks; the app moves the value',
+    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
+    name: 'A move the app ignores',
+    when: 'a person moves a fader and the app gives no new value',
+    then: 'the fader returns to the app’s value once the gesture ends',
+    act: async ({ canvasElement }) => {
+      await dragUp(within(canvasElement).getByRole('slider', { name: 'Reverb send' }));
+    },
+    check: async ({ canvasElement, args }) => {
+      await expect((args.onParam as ReturnType<typeof fn>).mock.calls.length).toBeGreaterThan(0);
+      await waitFor(() => expect(Number(within(canvasElement).getByRole('slider', { name: 'Reverb send' }).getAttribute('aria-valuenow'))).toBeCloseTo(20, 1));
+    },
+  },
+  spied(s.Default),
 ) as Story;
 
 export const AddingAKnob: Story = scenario(

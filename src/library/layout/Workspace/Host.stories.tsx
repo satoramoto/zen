@@ -24,7 +24,7 @@ const meta = {
     frame: { w: 1280, h: 800 },
     spec: {
       capability: 'live-host-contract',
-      purpose: 'What a pane in a composed DAW reads from its host, what it asks for, how values that change every frame reach it, and what a host can count on: a failing pane contained, and nothing of the document kept in the surface.',
+      purpose: 'What a pane in a composed DAW reads from its host, what it asks for, and how values that change every frame reach it.',
       requirement: 'A failing pane is contained',
       shall: 'When drawing a region’s pane throws, the surface SHALL draw a note in that region’s place naming it as stopped, with a retry that draws the pane again, SHALL tell the app which region failed and what the error said, and SHALL keep drawing and playing every other region.',
     },

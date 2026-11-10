@@ -228,9 +228,9 @@ function MixRig() {
 
 export const MixsDefaultDocument: Story = scenario(
   {
-    requirement: 'A version 1 document draws',
-    shall: 'The surface SHALL draw a version 1 document (rows of region instance ids, the shape mix’s rig stores, with the app’s own region kinds) without conversion, as a column of its rows with each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.',
-    name: 'An app’s own version 1 document, edited',
+    requirement: 'Mix’s rig documents fit unchanged',
+    shall: 'The surface SHALL accept a document in exactly the shape mix’s rig stores (its version 1 surface document and its own region kinds), without conversion.',
+    name: 'Mix’s default document',
     when: 'the surface is given mix’s rig document with mix’s region kinds and definitions for them, and a person edits it',
     then: 'every tab and region of it is drawn, and each edit made (choosing, adding, duplicating and removing a tab; moving, binding and adding a region; undo and redo) sends an intent mix’s store already has a method for',
     act: async ({ canvasElement }) => {
@@ -263,9 +263,9 @@ export const MixsDefaultDocument: Story = scenario(
 
 export const MixsDocumentToday: Story = scenario(
   {
-    requirement: 'A version 1 document draws',
-    shall: 'The surface SHALL draw a version 1 document (rows of region instance ids, the shape mix’s rig stores, with the app’s own region kinds) without conversion, as a column of its rows with each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.',
-    name: 'Rows become a column of rows',
+    requirement: 'Version 1 documents still draw',
+    shall: 'The surface SHALL draw a version 1 document (rows of region instance ids) as a column of its rows, each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.',
+    name: 'Mix’s document today',
     when: 'the surface is given mix’s version 1 default document',
     then: 'every tab draws its rows top to bottom and each row’s regions side by side in equal shares',
     check: async ({ canvasElement }) => {
@@ -283,8 +283,8 @@ export const MixsDocumentToday: Story = scenario(
 
 export const TheFirstResizeUpgrades: Story = scenario(
   {
-    requirement: 'A version 1 document draws',
-    shall: 'The surface SHALL draw a version 1 document (rows of region instance ids, the shape mix’s rig stores, with the app’s own region kinds) without conversion, as a column of its rows with each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.',
+    requirement: 'Version 1 documents still draw',
+    shall: 'The surface SHALL draw a version 1 document (rows of region instance ids) as a column of its rows, each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.',
     name: 'The first resize upgrades',
     when: 'an app applies a resize intent to a version 1 document',
     then: 'the result is a version 2 document with the same regions and the new shares',

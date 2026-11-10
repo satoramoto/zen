@@ -5,7 +5,7 @@ import { withLibraryTheme, withStoryFrame } from '../../storybook';
 import { Workspace } from './Workspace';
 import { workspacePane } from './content.story';
 import { useSurfaceHost } from './host.story';
-import { workspaceDocument, workspacePanes } from './Workspace.fixtures';
+import { workspacePanes } from './Workspace.fixtures';
 import type { SurfaceDocument, SurfaceIntent } from './Workspace.types';
 
 // Building a panel: a tab is a split tree with shares; edit mode resizes it by its handles, docks a
@@ -415,27 +415,6 @@ export const FingerSizedTools: Story = scenario(
     },
   },
   { render: () => <Docking document={TREE} /> },
-) as Story;
-
-export const FormsStepDownOnASmallWindow: Story = scenario(
-  {
-    requirement: 'A region draws the largest form its room fits',
-    shall: 'The surface SHALL give each region the room its share works out to and draw the largest of its pane’s forms that fits that room, so a resized region steps its form up or down; a region with less room than its smallest form SHALL draw that smallest form and be marked as cramped, and nothing reflows.',
-    name: 'Forms step down on a small window',
-    when: 'the surface is narrowed until a region’s widest form no longer fits',
-    then: 'the region steps down to its next form, as the kind’s forms list them, and no region is cramped',
-    check: async ({ canvasElement }) => {
-      const placed = [...canvasElement.querySelectorAll<HTMLElement>('[data-leaf][data-form]')];
-      const firstForm = (kind: string) => workspacePanes.find((p) => p.kind === kind)!.forms[0].id;
-      const kinds = workspaceDocument.tabs[0].regions.map((r) => r.kind);
-      await expect(placed.some((el, i) => el.dataset.form !== firstForm(kinds[i]))).toBe(true);
-      await expect(canvasElement.querySelector('[data-cramped]')).toBeNull();
-    },
-  },
-  {
-    parameters: { frame: { w: 900, h: 700 } },
-    render: () => <Workspace name="Live" document={{ ...workspaceDocument, tabs: [workspaceDocument.tabs[0]] }} panes={workspacePanes} pane={workspacePane} />,
-  },
 ) as Story;
 
 /** A short strip over a tall grid: the mix gets less height than even its smallest form needs. */

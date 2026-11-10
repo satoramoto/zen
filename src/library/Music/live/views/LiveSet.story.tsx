@@ -97,6 +97,8 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
   const [learning, setLearning] = useState(false);
   const [learnTarget, setLearnTarget] = useState<string | undefined>(undefined);
   const [mappings, setMappings] = useState<Readonly<Record<string, string>>>({});
+  // The parameters a hand is on now: what an app would group into one undo step, or write automation for.
+  const [touched, setTouched] = useState<readonly string[]>([]);
   const [cuts, setCuts] = useState<readonly CutPad[]>(cutPadsBoard.map((p) => (p.id === 'riser' ? { ...p, state: 'armed' } : p)));
 
   const { index, toNext } = chordAt(beat);
@@ -235,6 +237,7 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
               values={values}
               onParam={({ param, value }) => setValues((v) => ({ ...v, [param]: value }))}
               onTrigger={({ param, down }) => setValues((v) => ({ ...v, [param]: down ? 1 : 0 }))}
+              onTouch={({ param, down }) => setTouched((all) => (down ? [...all.filter((p) => p !== param), param] : all.filter((p) => p !== param)))}
               onCells={configure ? (next) => configure({ ...settings, cells: next as never }) : undefined}
               learning={learning}
               learnTarget={learnTarget}
@@ -265,5 +268,5 @@ export function useLiveSet({ running = true }: LiveSetOptions = {}) {
     if (p) setValues((v) => ({ ...v, [p.id]: p.param.min + value * (p.param.max - p.param.min) }));
   };
 
-  return { beat, selected, setSelected, content, learning, setLearning: (on: boolean) => { setLearning(on); if (!on) setLearnTarget(undefined); }, midi };
+  return { beat, selected, setSelected, content, touched, learning, setLearning: (on: boolean) => { setLearning(on); if (!on) setLearnTarget(undefined); }, midi };
 }

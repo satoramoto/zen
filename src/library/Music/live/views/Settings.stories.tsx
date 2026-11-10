@@ -171,6 +171,21 @@ export const AKindWithoutSettings: Story = scenario(
   { render: () => <Strips /> },
 ) as Story;
 
+export const TheStripsFollowTheirSettings: Story = scenario(
+  {
+    requirement: 'The live panes declare their settings',
+    shall: 'The Music live panes SHALL declare the settings their own props already allow (which tracks a pane shows, which pads or moves it offers), and the live views SHALL draw each pane from its region’s settings.',
+    name: 'The strips follow their settings',
+    when: 'a track strips region’s settings name two tracks',
+    then: 'the strips draw those two tracks and their returns, and nothing else',
+    check: async ({ canvasElement }) => {
+      await waitFor(() => expect(strips(canvasElement)).toEqual(['bass', 'vox']));
+      await expect(canvasElement.querySelectorAll('.live-track-strips [data-return]').length).toBeGreaterThan(0);
+    },
+  },
+  { render: () => <Strips settings={{ tracks: ['bass', 'vox'] }} /> },
+) as Story;
+
 export const SeveralOfASetOfChoices: Story = scenario(
   {
     name: 'Several of a set of choices',
