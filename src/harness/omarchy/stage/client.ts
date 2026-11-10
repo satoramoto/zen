@@ -19,7 +19,8 @@ export type Target = string | {
 
 export type Shown = { name: string; text: string; x: number; y: number; width: number; height: number; enabled: boolean; checked: boolean | null; focused: boolean; value: unknown };
 export type ShownText = { text: string; x: number; y: number; width: number; height: number; name: string };
-export type Call = { name: string; argv: string[]; stdin: string; answered: boolean; by: 'fixture' | 'stage' | null; code?: number; at: number };
+/** A command the plugin ran. `stdout` and `stderr` are kept when the fixture passed it through to a real program. */
+export type Call = { name: string; argv: string[]; stdin: string; answered: boolean; by: 'fixture' | 'stage' | null; code?: number; at: number; exec?: string[]; stdout?: string; stderr?: string };
 export type LogEntry = { at: number; kind: string; [key: string]: unknown };
 
 export function target(t: Target): object {
@@ -32,10 +33,10 @@ export function target(t: Target): object {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export class StageClient {
-  constructor(readonly id: string) {}
+  constructor(readonly id: string, readonly route: string = ROUTE) {}
 
   private async post<T>(what: string, body: unknown): Promise<T> {
-    const res = await fetch(`${ROUTE}/sessions/${this.id}/${what}`, {
+    const res = await fetch(`${this.route}/sessions/${this.id}/${what}`, {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
     });
     const data = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
@@ -122,7 +123,7 @@ export class StageClient {
 
   /** The session's log: commands, reports from fakes, and Qt's warnings. */
   async log(after = 0): Promise<{ log: LogEntry[]; calls: Call[] }> {
-    const res = await fetch(`${ROUTE}/sessions/${this.id}/log?after=${after}`);
+    const res = await fetch(`${this.route}/sessions/${this.id}/log?after=${after}`);
     return res.json();
   }
 
@@ -179,5 +180,13 @@ export class StageClient {
     return this.post('input', { op: 'key', kind, key, modifiers });
   }
 
-  close() { return fetch(`${ROUTE}/sessions/${this.id}`, { method: 'DELETE', keepalive: true }); }
+  close() { return fetch(`${this.route}/sessions/${this.id}`, { method: 'DELETE', keepalive: true }); }
+
+  /** After the session closed: whether its Quickshell still runs and its folders remain. */
+  async leftBehind(): Promise<{ running: boolean; folder: boolean; runtime: boolean }> {
+    const res = await fetch(`${this.route}/closed/${this.id}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+    return data;
+  }
 }

@@ -8,6 +8,10 @@ export interface Answer {
   code?: number;
   /** Milliseconds before answering. */
   delay?: number;
+  /** Run this real program instead, inside the sandbox (session HOME, fakes on PATH), with the call's input. */
+  exec?: string[];
+  /** Environment for `exec`. */
+  env?: Record<string, string>;
   /** Lines over time, until the session ends or the plugin stops the command; resolves to the exit code. */
   stream?: (write: (chunk: string) => void, signal: AbortSignal) => Promise<number | void>;
 }
@@ -18,6 +22,8 @@ export interface Fixture {
   commands?: Record<string, (call: Call, session: Session) => Answer | void | Promise<Answer | void>>;
   /** More names to fake, unanswered (logged, exit 127). */
   alsoFake?: string[];
+  /** Files laid over the sandbox, read-only, by absolute path (an /etc/passwd with its accounts). */
+  overlays?: Record<string, string>;
   /** The fake services' first state, by service (upower, pipewire, mpris, polkit, hyprland). */
   services?: Record<string, unknown> | (() => Record<string, unknown>);
   /** Operations a play runs with `stage.fixture(op, data)`. */

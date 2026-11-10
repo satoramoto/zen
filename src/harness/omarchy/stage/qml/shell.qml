@@ -339,14 +339,19 @@ ShellRoot {
     }
   }
 
-  function find(spec) {
+  // Every shown match, looking only inside `within` when the spec gives one.
+  function scoped(spec) {
     var scope = null
     if (spec.within) {
-      var scopes = host.findAll(spec.within)
+      var scopes = host.scoped(spec.within)
       if (!scopes.length) throw new Error("nothing shown matches " + JSON.stringify(spec.within))
       scope = scopes[spec.within.index || 0]
     }
-    var all = host.findAll(spec, scope)
+    return host.findAll(spec, scope)
+  }
+
+  function find(spec) {
+    var all = host.scoped(spec)
     var label = JSON.stringify(spec)
     if (!all.length) throw new Error("nothing shown matches " + label)
     if (spec.index !== undefined) {
@@ -464,8 +469,11 @@ ShellRoot {
       }
       case "frame":
         return host.grab(function(n) { host.reply(id, { n: n }) })
-      case "find":
-        return host.reply(id, host.findAll(req.target).map(host.describe))
+      case "find": {
+        var found
+        try { found = host.scoped(req.target) } catch (e) { found = [] }
+        return host.reply(id, found.map(host.describe))
+      }
       case "click": {
         var item = host.find(req.target)
         if (!host.enabledChain(item)) throw new Error(JSON.stringify(req.target) + " is disabled")

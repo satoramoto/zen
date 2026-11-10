@@ -22,5 +22,5 @@ export interface PluginEntry {
 }
 
 /** The stage's Vite plugin: runs one headless Quickshell per open story under /__omarchy-stage/. */
-export function omarchyStage(options: { plugins: Record<string, PluginEntry>; root?: string }): Plugin;
+export function omarchyStage(options: { plugins: Record<string, PluginEntry> | (() => Record<string, PluginEntry> | Promise<Record<string, PluginEntry>>); root?: string }): Plugin;
 export default omarchyStage;

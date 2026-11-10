@@ -273,6 +273,16 @@ export class Session {
     const names = new Set([...GUARDED, ...Object.keys(answers), ...(this.fixture.alsoFake ?? [])]);
     for (const name of names) this.addFake(name);
 
+    // Files the fixture lays over the sandbox, read-only (an /etc/passwd with its accounts).
+    this.overlays = [];
+    for (const [target, content] of Object.entries(this.fixture.overlays ?? {})) {
+      if (!path.isAbsolute(target)) throw new Error(`an overlay needs an absolute path, not ${target}`);
+      const file = path.join(this.dir, 'overlays', String(this.overlays.length));
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, content);
+      this.overlays.push(['--ro-bind', file, target]);
+    }
+
     // The fixture's initial service state rides in the config; later changes go over the socket.
     const services = typeof this.fixture.services === 'function' ? this.fixture.services() : (this.fixture.services ?? {});
 
@@ -329,6 +339,7 @@ export class Session {
       '--ro-bind', '/', '/', '--dev', '/dev', '--proc', '/proc',
       '--tmpfs', '/tmp', '--tmpfs', '/run/user', '--tmpfs', '/run/dbus',
       '--bind', this.runtime, this.runtime, '--bind', this.dir, this.dir,
+      ...this.overlays.flat(),
       '--chdir', this.home, '--clearenv',
       ...Object.entries(env).flatMap(([k, v]) => ['--setenv', k, v]),
     ];
@@ -413,6 +424,14 @@ export class Session {
     /** @type {Answer} */
     const a = (await handler(call, this)) ?? {};
     if (a.delay) await new Promise((r) => setTimeout(r, a.delay));
+    if (a.exec) {
+      entry.exec = a.exec;
+      fs.mkdirSync(path.join(this.dir, 'captures'), { recursive: true });
+      entry.capture = path.join(this.dir, 'captures', `${this.calls.length}.json`);
+      send({ exec: a.exec, env: a.env ?? {}, capture: entry.capture });
+      socket.end();
+      return;
+    }
     if (a.stdout) send({ out: a.stdout });
     if (a.stderr) send({ err: a.stderr });
     let code = a.code ?? 0;
@@ -511,6 +530,15 @@ export class Session {
         reject: (e) => { clearTimeout(timer); reject(e); },
       });
       this.control.write(JSON.stringify({ ...request, id }) + '\n');
+    });
+  }
+
+  /** Every call so far, with what a passed-through program printed once it has finished. */
+  callLog() {
+    return this.calls.map((c) => {
+      if (!c.capture || c.code !== undefined) return c;
+      try { Object.assign(c, JSON.parse(fs.readFileSync(c.capture, 'utf8'))); } catch { /* still running */ }
+      return c;
     });
   }
 

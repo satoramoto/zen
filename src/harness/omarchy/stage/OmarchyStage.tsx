@@ -25,6 +25,8 @@ export type OmarchyStageProps = {
   section?: 'left' | 'center' | 'right';
   /** Show the commands the plugin ran beside the screen. */
   log?: boolean;
+  /** Where the stage server is; its own route by default. */
+  server?: string;
 };
 
 const handles = new WeakMap<Element, Promise<StageClient>>();
@@ -67,7 +69,7 @@ const BUTTONS = ['left', 'middle', 'right'];
  * An Omarchy plugin running in real Quickshell with Omarchy's kit, drawn as
  * Qt draws it. Point, click, scroll and type on it as on the bar.
  */
-export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760, scale = 1, theme = 'current', animations = false, settings, section, log = true }: OmarchyStageProps) {
+export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760, scale = 1, theme = 'current', animations = false, settings, section, log = true, server = ROUTE }: OmarchyStageProps) {
   const ref = useRef<HTMLDivElement>(null);
   const img = useRef<HTMLImageElement>(null);
   const client = useRef<StageClient | null>(null);
@@ -75,7 +77,7 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
   const [failure, setFailure] = useState<string | null>(null);
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const [calls, setCalls] = useState<Call[]>([]);
-  const key = JSON.stringify({ plugin, state, roles, width, height, scale, theme, animations, settings, section });
+  const key = JSON.stringify({ plugin, state, roles, width, height, scale, theme, animations, settings, section, server });
 
   useEffect(() => {
     const el = ref.current!;
@@ -88,7 +90,7 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
     const ready = (async () => {
       let res: Response;
       try {
-        res = await fetch(`${ROUTE}/sessions`, {
+        res = await fetch(`${server}/sessions`, {
           method: 'POST', headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ plugin, state, roles, width, height, scale, theme, animations, settings, section }),
         });
@@ -105,13 +107,13 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
       }
       id = data.id;
       if (data.errors?.length) throw new Error(`The plugin didn't load:\n${data.errors.join('\n')}`);
-      if (cancelled) { void fetch(`${ROUTE}/sessions/${id}`, { method: 'DELETE', keepalive: true }); throw new Error('closed'); }
-      return new StageClient(data.id);
+      if (cancelled) { void fetch(`${server}/sessions/${id}`, { method: 'DELETE', keepalive: true }); throw new Error('closed'); }
+      return new StageClient(data.id, server);
     })();
     handles.set(el, ready);
     ready.catch(() => {});
     // Leaving the page runs no React cleanup: say goodbye on the way out.
-    const onHide = () => { if (id) navigator.sendBeacon(`${ROUTE}/sessions/${id}/close`); };
+    const onHide = () => { if (id) navigator.sendBeacon(`${server}/sessions/${id}/close`); };
     window.addEventListener('pagehide', onHide);
 
     ready.then(async (c) => {
@@ -120,7 +122,7 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
       let last: string | null = null;
       while (!cancelled) {
         let res: Response;
-        try { res = await fetch(`${ROUTE}/sessions/${c.id}/frame?after=${n}`); } catch { break; }
+        try { res = await fetch(`${server}/sessions/${c.id}/frame?after=${n}`); } catch { break; }
         if (res.status === 410) { if (!cancelled) setFailure('This story\'s session has ended. Reload the story.'); break; }
         if (res.status !== 200) continue;
         n = Number(res.headers.get('x-frame'));
@@ -153,7 +155,7 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
       if (logTimer) clearInterval(logTimer);
       handles.delete(el);
       client.current = null;
-      if (id) void fetch(`${ROUTE}/sessions/${id}`, { method: 'DELETE', keepalive: true });
+      if (id) void fetch(`${server}/sessions/${id}`, { method: 'DELETE', keepalive: true });
     };
   }, [key]);
 

@@ -26,6 +26,13 @@ const IDLE_MS = 90_000;
 export function omarchyStage(options) {
   const sessions = new Map();
   let reaper = null;
+  // The registry: an object, or a function (sync or async) read on every
+  // request, so plugins added while Storybook runs are found.
+  let current = {};
+  async function refresh() {
+    current = typeof options.plugins === 'function' ? await options.plugins() : options.plugins;
+    return current;
+  }
 
   function resolveSource(entry) {
     const source = typeof entry.source === 'function' ? entry.source() : entry.source;
@@ -33,7 +40,7 @@ export function omarchyStage(options) {
   }
 
   function describe(id) {
-    const entry = options.plugins[id];
+    const entry = current[id];
     if (!entry) return { id, available: false, reason: `no plugin ${id} in the stage's registry` };
     const source = resolveSource(entry);
     const manifestFile = path.join(source, 'manifest.json');
@@ -50,11 +57,12 @@ export function omarchyStage(options) {
   }
 
   async function open(body) {
+    await refresh();
     const why = unavailable();
     if (why) throw Object.assign(new Error(why), { status: 503 });
     const info = describe(body.plugin);
     if (!info.available) throw Object.assign(new Error(info.reason), { status: 404 });
-    const entry = options.plugins[body.plugin];
+    const entry = current[body.plugin];
     const points = info.manifest.entryPoints ?? {};
     const roles = body.roles ?? entry.roles ?? Object.keys(points);
     const entries = roles.filter((r) => points[r]).map((role) => ({ role, file: points[role] }));
@@ -84,11 +92,23 @@ export function omarchyStage(options) {
     return session;
   }
 
+  // What closed sessions left behind, for a story that checks they left nothing.
+  const closed = new Map();
   async function close(key) {
     const s = sessions.get(key);
     if (!s) return;
     sessions.delete(key);
     await s.close();
+    closed.set(key, { dir: s.dir, runtime: s.runtime, pid: s.proc?.pid });
+    if (closed.size > 200) closed.delete(closed.keys().next().value);
+  }
+
+  function leftBehind(key) {
+    const c = closed.get(key);
+    if (!c) return null;
+    let running = false;
+    try { if (c.pid) { process.kill(-c.pid, 0); running = true; } } catch { /* gone */ }
+    return { running, folder: fs.existsSync(c.dir), runtime: fs.existsSync(c.runtime) };
   }
 
   function closeAllNow() {
@@ -135,12 +155,17 @@ export function omarchyStage(options) {
     const parts = url.pathname.slice(ROUTE.length).split('/').filter(Boolean);
     try {
       if (parts[0] === 'status' && req.method === 'GET') {
+        await refresh();
         const why = unavailable();
-        const plugins = Object.keys(options.plugins).map((id) => {
+        const plugins = Object.keys(current).map((id) => {
           const d = describe(id);
           return { id, available: d.available, reason: d.reason ?? null, name: d.manifest?.name ?? id };
         });
         return json(res, 200, { available: !why, reason: why, plugins, sessions: sessions.size });
+      }
+      if (parts[0] === 'closed' && parts[1] && req.method === 'GET') {
+        const left = leftBehind(parts[1]);
+        return left ? json(res, 200, left) : json(res, 404, { error: 'no session by that id has closed here' });
       }
       if (parts[0] !== 'sessions') return json(res, 404, { error: 'no such route' });
       if (parts.length === 1 && req.method === 'POST') {
@@ -180,7 +205,7 @@ export function omarchyStage(options) {
       }
       if (what === 'log') {
         const after = Number(url.searchParams.get('after') ?? 0);
-        return json(res, 200, { log: s.log.filter((e) => e.at > after), calls: s.calls });
+        return json(res, 200, { log: s.log.filter((e) => e.at > after), calls: s.callLog() });
       }
       return json(res, 404, { error: 'no such route' });
     } catch (error) {

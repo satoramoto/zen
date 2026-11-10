@@ -3,6 +3,8 @@
 // prints what the fixture answers and exits with its code. With no broker it
 // fails rather than reach for the real command.
 import net from 'node:net';
+import { spawn } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
 
 const [name, ...argv] = process.argv.slice(2);
 const broker = process.env.OMARCHY_STAGE_BROKER;
@@ -50,9 +52,33 @@ socket.on('data', (d) => {
     if (m.out !== undefined) process.stdout.write(m.out);
     if (m.err !== undefined) process.stderr.write(m.err);
     if (m.exit !== undefined) exitCode = m.exit;
+    if (m.exec) passThrough(m.exec, m.env, m.capture);
   }
 });
-socket.on('error', (e) => fail(`the Omarchy stage broker is gone (${e.code})`));
+
+// The fixture asked for the real program: run it here, inside the sandbox,
+// with this command's input, and leave with its code.
+let passing = false;
+function passThrough(argv, env, capture) {
+  passing = true;
+  socket.removeAllListeners('close');
+  socket.destroy();
+  const child = spawn(argv[0], argv.slice(1), { stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, ...(env ?? {}) } });
+  child.stdin.end(stdin);
+  // What it prints goes to the caller and, for the story's log, to the capture file.
+  const out = [], err = [];
+  child.stdout.on('data', (d) => { out.push(d); process.stdout.write(d); });
+  child.stderr.on('data', (d) => { err.push(d); process.stderr.write(d); });
+  child.on('error', (e) => fail(`couldn't run ${argv[0]}: ${e.message}`, 127));
+  child.on('close', (code, signal) => {
+    const exit = code ?? (signal ? 128 : 1);
+    if (capture) {
+      try { writeFileSync(capture, JSON.stringify({ stdout: Buffer.concat(out).toString(), stderr: Buffer.concat(err).toString(), code: exit })); } catch { /* the session is gone */ }
+    }
+    process.exit(exit);
+  });
+}
+socket.on('error', (e) => { if (!passing) fail(`the Omarchy stage broker is gone (${e.code})`); });
 socket.on('close', () => {
   const code = exitCode ?? 70;
   // Let stdout drain before leaving.
