@@ -41,8 +41,10 @@ export function useSurfaceHost(initial: SurfaceDocument, { keepEditing = false, 
         return;
       }
       setState(({ past, now, future }) => {
-        if (intent.type === 'undo') return past.length ? { past: past.slice(0, -1), now: past[past.length - 1], future: [now, ...future] } : { past, now, future };
-        if (intent.type === 'redo') return future.length ? { past: [...past, now], now: future[0], future: future.slice(1) } : { past, now, future };
+        // History walks the edits only: the tab that is open now stays open (if the document it lands on still has it).
+        const keepOpen = (to: SurfaceDocument): SurfaceDocument => (to.tabs.some((t) => t.id === now.active) && to.active !== now.active ? ({ ...to, active: now.active } as SurfaceDocument) : to);
+        if (intent.type === 'undo') return past.length ? { past: past.slice(0, -1), now: keepOpen(past[past.length - 1]), future: [now, ...future] } : { past, now, future };
+        if (intent.type === 'redo') return future.length ? { past: [...past, now], now: keepOpen(future[0]), future: future.slice(1) } : { past, now, future };
         const next = applySurfaceIntent(now, intent, applyRef.current);
         if (next === now) return { past, now, future };
         if (intentKind(intent) === 'navigation') return { past, now: next, future };

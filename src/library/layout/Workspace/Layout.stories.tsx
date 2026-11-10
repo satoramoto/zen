@@ -5,7 +5,7 @@ import { withLibraryTheme, withStoryFrame } from '../../storybook';
 import { Workspace } from './Workspace';
 import { workspacePane } from './content.story';
 import { useSurfaceHost } from './host.story';
-import { workspacePanes } from './Workspace.fixtures';
+import { workspaceDocument, workspacePanes } from './Workspace.fixtures';
 import type { SurfaceDocument, SurfaceIntent } from './Workspace.types';
 
 // Building a panel: a tab is a split tree with shares; edit mode resizes it by its handles, docks a
@@ -322,7 +322,7 @@ function Growing() {
 export const GrowingARegionStepsItsFormUp: Story = scenario(
   {
     requirement: 'A region draws the largest form its room fits',
-    shall: 'The surface SHALL give each region the room its share works out to and draw the largest of its pane’s forms that fits that room, so a resized region steps its form up or down.',
+    shall: 'The surface SHALL give each region the room its share works out to and draw the largest of its pane’s forms that fits that room, so a resized region steps its form up or down; a region with less room than its smallest form SHALL draw that smallest form and be marked as cramped, and nothing reflows.',
     name: 'Growing a region steps its form up',
     when: 'the mix is resized from a short share to a tall one',
     then: 'it changes from its short form to its tall form',
@@ -415,4 +415,88 @@ export const FingerSizedTools: Story = scenario(
     },
   },
   { render: () => <Docking document={TREE} /> },
+) as Story;
+
+export const FormsStepDownOnASmallWindow: Story = scenario(
+  {
+    requirement: 'A region draws the largest form its room fits',
+    shall: 'The surface SHALL give each region the room its share works out to and draw the largest of its pane’s forms that fits that room, so a resized region steps its form up or down; a region with less room than its smallest form SHALL draw that smallest form and be marked as cramped, and nothing reflows.',
+    name: 'Forms step down on a small window',
+    when: 'the surface is narrowed until a region’s widest form no longer fits',
+    then: 'the region steps down to its next form, as the kind’s forms list them, and no region is cramped',
+    check: async ({ canvasElement }) => {
+      const placed = [...canvasElement.querySelectorAll<HTMLElement>('[data-leaf][data-form]')];
+      const firstForm = (kind: string) => workspacePanes.find((p) => p.kind === kind)!.forms[0].id;
+      const kinds = workspaceDocument.tabs[0].regions.map((r) => r.kind);
+      await expect(placed.some((el, i) => el.dataset.form !== firstForm(kinds[i]))).toBe(true);
+      await expect(canvasElement.querySelector('[data-cramped]')).toBeNull();
+    },
+  },
+  {
+    parameters: { frame: { w: 900, h: 700 } },
+    render: () => <Workspace name="Live" document={{ ...workspaceDocument, tabs: [workspaceDocument.tabs[0]] }} panes={workspacePanes} pane={workspacePane} />,
+  },
+) as Story;
+
+/** A short strip over a tall grid: the mix gets less height than even its smallest form needs. */
+const SQUEEZED: SurfaceDocument = {
+  version: 2,
+  active: 't',
+  tabs: [{ id: 't', title: 'Squeezed', layout: { id: 't-col', split: 'column', children: [{ node: 'mix', share: 1 }, { node: 'grid', share: 30 }] }, regions: [region('mix', 'mix', 'Mix'), region('grid', 'loopGrid', 'Loop grid')] }],
+};
+
+export const LessRoomThanTheSmallestForm: Story = scenario(
+  {
+    requirement: 'A region draws the largest form its room fits',
+    shall: 'The surface SHALL give each region the room its share works out to and draw the largest of its pane’s forms that fits that room, so a resized region steps its form up or down; a region with less room than its smallest form SHALL draw that smallest form and be marked as cramped, and nothing reflows.',
+    name: 'Less room than the smallest form',
+    when: 'a document gives a region a share too small for even its smallest form',
+    then: 'the region draws its smallest form and is marked as cramped, and the region beside it keeps its own share',
+    check: async ({ canvasElement }) => {
+      await waitFor(() => expect(leaf(canvasElement, 'mix')).toHaveAttribute('data-cramped', 'true'));
+      const forms = workspacePanes.find((p) => p.kind === 'mix')!.forms;
+      await expect(leaf(canvasElement, 'mix')).toHaveAttribute('data-form', forms[forms.length - 1].id);
+      await expect(leaf(canvasElement, 'grid')).not.toHaveAttribute('data-cramped');
+    },
+  },
+  { render: () => <Workspace name="Panel" document={SQUEEZED} panes={workspacePanes} pane={workspacePane} /> },
+) as Story;
+
+/** Two tabs, the second locked, in an app that is editing. */
+const HALF_LOCKED: SurfaceDocument = {
+  version: 2,
+  active: 'open',
+  tabs: [
+    { id: 'open', title: 'Open', layout: 'o-1', regions: [region('o-1', 'loopGrid', 'Loop grid')] },
+    { id: 'gig', title: 'Gig', layout: 'g-1', regions: [region('g-1', 'mix', 'Mix')], locked: true },
+  ],
+};
+function HalfLocked() {
+  const host = useSurfaceHost(HALF_LOCKED, { keepEditing: true, editing: true });
+  return <Workspace name="Panel" document={host.document} panes={workspacePanes} editing={host.editing} onIntent={host.onIntent} pane={workspacePane} />;
+}
+
+export const ALockedTabOpenedWhileEditing: Story = scenario(
+  {
+    requirement: 'A locked tab can’t be edited',
+    shall: 'A tab SHALL carry whether it is locked; a locked tab SHALL show no edit tools, handles or drop zones, and its panes SHALL take every touch, until a person deliberately unlocks it.',
+    name: 'A locked tab opened while editing',
+    when: 'the surface is editing one tab and a person opens another that is locked',
+    then: 'the locked tab shows no frames, handles, palette or tab tools (it can’t be renamed, duplicated or removed), only the hold to unlock',
+    and: ['going back to the first tab finds it still in edit mode'],
+    act: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      await expect(canvasElement.querySelectorAll('[data-part="frame"]').length).toBe(1);
+      await userEvent.click(canvas.getByRole('tab', { name: 'Gig' }));
+    },
+    check: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      await waitFor(() => expect(canvas.getByRole('button', { name: 'unlock Gig' })).toBeTruthy());
+      await expect(canvasElement.querySelectorAll('[data-part="frame"], [data-part="handle"], [data-part="palette"]')).toHaveLength(0);
+      for (const name of ['rename Gig', 'duplicate Gig', 'remove Gig', 'finish editing']) await expect(canvas.queryByRole('button', { name })).toBeNull();
+      await userEvent.click(canvas.getByRole('tab', { name: 'Open' }));
+      await waitFor(() => expect(canvasElement.querySelectorAll('[data-part="frame"]').length).toBe(1));
+    },
+  },
+  { render: () => <HalfLocked /> },
 ) as Story;

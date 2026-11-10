@@ -7,7 +7,7 @@ import { Workspace } from './Workspace';
 import WorkspaceSvelte from './Workspace.svelte';
 import { workspacePane } from './content.story';
 import { useSurfaceHost } from './host.story';
-import { applySurfaceIntent, readDocument } from './surface';
+import { intentKind, applySurfaceIntent, readDocument } from './surface';
 import { workspaceArgTypes, workspaceDocument, workspaceStories as s } from './Workspace.fixtures';
 import type { SurfaceDocument, SurfaceIntent } from './Workspace.types';
 
@@ -28,7 +28,7 @@ const meta = {
       capability: 'live-surface-editing',
       purpose: 'Perform and edit modes of the surface an app composes its DAW on: every edit as one intent the app applies, undo and redo as the app’s, and the visual state zen keeps.',
       requirement: 'Every edit leaves as one intent',
-      shall: 'Every change a person makes through the surface SHALL leave it as exactly one intent naming the edit and its target: choosing, adding, renaming, duplicating, removing, locking or unlocking a tab; adding, removing, moving (left, right, up, down), docking, retitling, rebinding or configuring a region; resizing a split; and undo and redo.',
+      shall: 'Every change a person makes through the surface SHALL leave it as exactly one intent naming the edit and its target: choosing, adding, renaming, duplicating, removing, locking or unlocking a tab; adding, removing, moving (left, right, up, down), docking, retitling, rebinding or configuring a region; resizing a split; turning edit mode on or off; and undo and redo.',
     },
   },
   args: { name: 'Live', document: workspaceDocument },
@@ -177,7 +177,7 @@ function Applied() {
 export const ApplyingTheSurfacesOwnIntents: Story = scenario(
   {
     requirement: 'Intents can be applied without a store',
-    shall: 'Zen SHALL provide a pure function that returns the next document for a document and an intent, keeping no state, so an app or a story without a store of its own can apply what the surface sends.',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
     name: 'Applying the surface’s own intents',
     when: 'a story applies every intent the surface sends to the document it gives back',
     then: 'each edit appears in the surface as soon as it is made',
@@ -206,7 +206,7 @@ export const ApplyingTheSurfacesOwnIntents: Story = scenario(
 export const AnIntentThatCantApply: Story = scenario(
   {
     requirement: 'Intents can be applied without a store',
-    shall: 'Zen SHALL provide a pure function that returns the next document for a document and an intent, keeping no state, so an app or a story without a store of its own can apply what the surface sends.',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
     name: 'An intent that can’t apply',
     when: 'an intent names a tab or region the document doesn’t hold',
     then: 'the function returns the document unchanged',
@@ -227,8 +227,8 @@ export const AnIntentThatCantApply: Story = scenario(
 
 export const DockingThroughTheApplier: Story = scenario(
   {
-    requirement: 'Layout intents apply without a store',
-    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
     name: 'Docking through the applier',
     when: 'a story applies a dock intent placing one region below another',
     then: 'the returned layout holds a column of the two where the target was, and the region is gone from where it was',
@@ -245,8 +245,8 @@ export const DockingThroughTheApplier: Story = scenario(
 
 export const AResizeNamingNoSplit: Story = scenario(
   {
-    requirement: 'Layout intents apply without a store',
-    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
     name: 'A resize naming no split',
     when: 'a resize intent names a split the tab doesn’t hold',
     then: 'the applier returns the document unchanged',
@@ -324,3 +324,116 @@ export const Empty: Story = story(s.Empty);
 
 /** Drawn but deaf: dimmed, tools inert. */
 export const Disabled: Story = { ...story(s.Disabled, { render: (args) => <Workspace {...args} pane={workspacePane} /> }) };
+
+export const TheApplierNamesWhatItAdds: Story = scenario(
+  {
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
+    name: 'The applier names what it adds',
+    when: 'an app applies an add-region intent twice with no namer of its own',
+    then: 'the two new instances have different ids that no tab, region or split of the document used',
+    check: async () => {
+      const add: SurfaceIntent = { type: 'addRegion', tab: 'stage', kind: 'stems' };
+      const before = new Set(readDocument(workspaceDocument).tabs.flatMap((t) => [t.id, ...t.regions.map((r) => r.id)]));
+      const next = readDocument(applySurfaceIntent(applySurfaceIntent(workspaceDocument, add), add));
+      const added = next.tabs[0].regions.map((r) => r.id).filter((id) => !before.has(id));
+      await expect(added).toHaveLength(2);
+      await expect(new Set(added).size).toBe(2);
+    },
+  },
+  { render: () => <Workspace name="Live" document={workspaceDocument} panes={s.Edit.args!.panes} pane={workspacePane} /> },
+) as Story;
+
+export const TheAppNamesWhatIsAdded: Story = scenario(
+  {
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
+    name: 'The app names what is added',
+    when: 'an app applies an add-tab intent with a namer of its own',
+    then: 'the new tab has the id the app’s namer gave',
+    check: async () => {
+      const next = applySurfaceIntent(workspaceDocument, { type: 'addTab', title: 'Encore' }, { newId: () => 'rig:encore' });
+      await expect(next.active).toBe('rig:encore');
+      await expect(next.tabs.at(-1)).toMatchObject({ id: 'rig:encore', title: 'Encore' });
+    },
+  },
+  { render: () => <Workspace name="Live" document={workspaceDocument} panes={s.Edit.args!.panes} pane={workspacePane} /> },
+) as Story;
+
+const ONE_TAB: SurfaceDocument = { version: 2, active: 'stage', tabs: [readDocument(workspaceDocument).tabs[0]] };
+
+export const TheLastTabStays: Story = scenario(
+  {
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
+    name: 'The last tab stays',
+    when: 'a document has one tab and the surface is editing',
+    then: 'the tab’s Remove is disabled, and a remove-tab intent applied anyway returns the document unchanged',
+    check: async ({ canvasElement }) => {
+      await expect(within(canvasElement).getByRole('button', { name: 'remove My stage' })).toHaveAttribute('aria-disabled', 'true');
+      await expect(applySurfaceIntent(ONE_TAB, { type: 'removeTab', tab: 'stage' })).toBe(ONE_TAB);
+    },
+  },
+  { render: () => <Workspace name="Live" document={ONE_TAB} panes={s.Edit.args!.panes} pane={workspacePane} editing /> },
+) as Story;
+
+/** Every intent the surface sends, written down as JSON and read back before the host applies it. */
+function Wired() {
+  const host = useSurfaceHost(workspaceDocument);
+  const overTheWire = (intent: SurfaceIntent) => host.onIntent(JSON.parse(JSON.stringify(intent)) as SurfaceIntent);
+  return (
+    <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100%' }}>
+      <output aria-label="Story: kinds sent">{JSON.stringify(host.intents.map((i) => intentKind(i)))}</output>
+      <Workspace name="Live" document={host.document} panes={s.Edit.args!.panes} targets={s.Edit.args!.targets} selected="keys" canUndo={host.canUndo} canRedo={host.canRedo} onIntent={overTheWire} pane={workspacePane} />
+    </div>
+  );
+}
+
+export const AnIntentWrittenDownAndReadBack: Story = scenario(
+  {
+    requirement: 'Intents are plain data in four kinds',
+    shall: 'Every intent SHALL be plain data that reads back the same after being written as JSON, and SHALL be one of four kinds an app can ask zen for: an edit (it changes the document and belongs in the app’s history), navigation (choosing a tab), history (undo and redo) or mode (edit mode, never in the document).',
+    name: 'An intent written down and read back',
+    when: 'every intent the surface sends is written as JSON and read back before the app applies it, and a person moves a region and adds another',
+    then: 'each edit appears in the surface as it would have without the round trip',
+    act: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      await userEvent.click(canvas.getByRole('button', { name: 'edit the views' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Mix tools' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'move Mix up' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'open the palette' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'add Stems beside Mix' }));
+    },
+    check: async ({ canvasElement }) => {
+      await waitFor(() => expect([...canvasElement.querySelectorAll<HTMLElement>('[data-part="frame"]')].map((f) => f.dataset.kind)).toEqual(['mix', 'stems', 'loopGrid']));
+    },
+  },
+  { render: () => <Wired /> },
+) as Story;
+
+export const WhatBelongsInUndo: Story = scenario(
+  {
+    requirement: 'Intents are plain data in four kinds',
+    shall: 'Every intent SHALL be plain data that reads back the same after being written as JSON, and SHALL be one of four kinds an app can ask zen for: an edit (it changes the document and belongs in the app’s history), navigation (choosing a tab), history (undo and redo) or mode (edit mode, never in the document).',
+    name: 'What belongs in undo',
+    when: 'a person turns editing on, moves a region and then chooses another tab, in an app that keeps only edits in its history',
+    then: 'the three intents are a mode, an edit and navigation, and undo takes back the move while the chosen tab stays open',
+    act: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      await userEvent.click(canvas.getByRole('button', { name: 'edit the views' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Mix tools' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'move Mix up' }));
+      await userEvent.click(canvas.getByRole('tab', { name: 'Session grid' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'undo' }));
+    },
+    check: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      const kinds = JSON.parse(canvas.getByLabelText('Story: kinds sent').textContent || '[]') as string[];
+      await expect(kinds).toEqual(['mode', 'edit', 'navigation', 'history']);
+      await expect(canvas.getByRole('tab', { name: 'Session grid' })).toHaveAttribute('aria-selected', 'true');
+      await userEvent.click(canvas.getByRole('tab', { name: 'My stage' }));
+      await waitFor(() => expect([...canvasElement.querySelectorAll<HTMLElement>('[data-part="frame"]')].map((f) => f.dataset.kind)).toEqual(['loopGrid', 'mix']));
+    },
+  },
+  { render: () => <Wired /> },
+) as Story;
