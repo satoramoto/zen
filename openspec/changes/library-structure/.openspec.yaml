@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-10
+goal: Give every section of the library the same folders, and hold them to it
+affected_areas:
+  - zen
+x-review: look
