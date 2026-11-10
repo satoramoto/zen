@@ -43,9 +43,8 @@ src/library/
 
 `music/components` holds two kinds of part side by side: the token-drawn ones, exported flat
 from the package root (`music/root.ts`), and the mix[flow] toolkit, exported as the `Music`
-namespace (`music/index.ts`). A part's folder name is unique in the folder, so where both kinds
-had a `Knob`, a `Meter` and a `Transport` the token-drawn ones are `KnobReadout`, `LevelMeter`
-and `TransportBar`. `docs/music.md` says which part is which.
+namespace (`music/index.ts`). A part's folder name is unique in the folder: the token-drawn knob is
+`KnobReadout` and the toolkit's is `Knob`. There is one meter and one transport, the toolkit's. `docs/music.md` says which part is which.
 
 ## Where does this go?
 

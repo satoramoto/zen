@@ -11,5 +11,8 @@ export const transportStories = defineFixtures<TransportStoryArgs>()({
   ClockToggle: { args: {} },
   TempoField: { args: { withNormalSpeed: true } },
   TempoDisabled: { args: { tempoDisabled: true } },
+  Compact: { args: { form: 'compact', playing: true, withNormalSpeed: true, latency: 0.012 } },
+  HostUnit: { args: { hostUnit: true } },
+  LoopAsData: { args: { loopAsData: true, plainTempo: true } },
   Minimal: { args: { withStop: false, withLoop: false, tempo: 'none', withBeats: false, seconds: 0 } },
 });

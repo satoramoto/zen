@@ -17,7 +17,7 @@ const meta = {
     layout: 'centered',
     docs: { description: { component: 'Playback, tempo and position: the original mix[flow] header group, not an audio engine. Optional stop, loop, editable or read-only tempo, normal speed and latency. Press the beat counter to switch to the clock. Renderer and theme toolbars affect the same shared model.' } },
   },
-  args: { ...s.Default.args, onPlay: fn(), onStop: fn(), onLoopChange: fn(), onTempoChange: fn() },
+  args: { ...s.Default.args, onPlay: fn(), onStop: fn(), onLoopChange: fn(), onTempoChange: fn(), onUnitChange: fn() },
   argTypes: {
     playing: { control: 'boolean' },
     disabled: { control: 'boolean', description: 'Nothing to play: disables play/stop, not loop or tempo.' },
@@ -36,7 +36,9 @@ const meta = {
     fine: { control: 'boolean', table: { category: 'Position' } },
     latency: { control: { type: 'range', min: 0, max: 0.2, step: 0.001 } },
     playTitle: { control: 'text' }, stopTitle: { control: 'text' }, remember: { control: 'text' },
-    onPlay: { control: false }, onStop: { control: false }, onLoopChange: { control: false }, onTempoChange: { control: false }, className: { control: false },
+    onPlay: { control: false }, onStop: { control: false }, onLoopChange: { control: false }, onTempoChange: { control: false }, onUnitChange: { control: false },
+    hostUnit: { control: 'boolean', table: { category: 'Host' } }, loopAsData: { control: 'boolean', table: { category: 'Host' } }, plainTempo: { control: 'boolean', table: { category: 'Host' } },
+    form: { control: 'inline-radio', options: ['bar', 'compact'] }, className: { control: false },
   },
 } satisfies Meta<typeof TransportHarness>;
 export default meta;
@@ -154,6 +156,45 @@ export const TempoDisabled: Story = story(s.TempoDisabled, {
     await expect(tempo).toHaveAttribute('aria-disabled', 'true');
     await fireEvent.keyDown(tempo, { key: 'ArrowUp' });
     await expect(args.onTempoChange).not.toHaveBeenCalled();
+  },
+});
+
+/** The `compact` form: play and the reading alone, for a strip that holds tempo elsewhere. */
+export const Compact: Story = story(s.Compact, {
+  async play({ canvasElement, args }) {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('group', { name: 'Transport' })).toHaveAttribute('data-form', 'compact');
+    await expect(canvas.queryByRole('button', { name: 'Stop' })).toBeNull();
+    await expect(canvas.queryByRole('button', { name: 'Loop' })).toBeNull();
+    await expect(canvas.queryByRole('slider', { name: 'Tempo' })).toBeNull();
+    await expect(canvas.queryByRole('button', { name: 'Normal speed' })).toBeNull();
+    await userEvent.click(canvas.getByRole('button', { name: 'Pause' }));
+    await expect(args.onPlay).toHaveBeenLastCalledWith(false);
+    await expect(canvas.getByRole('button', { name: /^Beat position 3\.2\.2/ })).toBeVisible();
+  },
+});
+
+/** The host keeps the unit: a press asks for the other one and the reading follows the host. */
+export const HostUnit: Story = story(s.HostUnit, {
+  async play({ canvasElement, args }) {
+    const canvas = within(canvasElement);
+    await expect(args.onUnitChange).not.toHaveBeenCalled();
+    await userEvent.click(canvas.getByRole('button', { name: 'Beat position 3.2.2. Show elapsed time' }));
+    await expect(args.onUnitChange).toHaveBeenLastCalledWith('seconds');
+    await userEvent.click(await canvas.findByRole('button', { name: 'Elapsed time 3:07. Show beat position' }));
+    await expect(args.onUnitChange).toHaveBeenLastCalledWith('beats');
+    await canvas.findByRole('button', { name: 'Beat position 3.2.2. Show elapsed time' });
+  },
+});
+
+/** The loop as plain data, flipped through `onLoop`; the tempo with no range of its own. */
+export const LoopAsData: Story = story(s.LoopAsData, {
+  async play({ canvasElement, args }) {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Loop' }));
+    await expect(args.onLoopChange).toHaveBeenLastCalledWith(true);
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Loop' })).toHaveAttribute('aria-pressed', 'true'));
+    await expect(canvas.getByRole('slider', { name: 'Tempo' })).toHaveAttribute('aria-valuemax', '300');
   },
 });
 

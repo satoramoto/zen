@@ -16,7 +16,10 @@ export { NumberField, type NumberFieldProps } from './components/NumberField/Num
 export { Widget } from './components/Widget/Widget';
 export { Meter, type MeterProps } from './components/Meter/Meter';
 export { Waveform, type WaveformProps } from './components/Waveform/Waveform';
-export { Transport, type TransportProps } from './components/Transport/Transport';
+export {
+  Transport, TRANSPORT_FORMS, TRANSPORT_UNITS, TEMPO_PARAM, clockText, positionText, readingText,
+  type TransportProps, type TransportForm, type TransportLoop, type TransportPosition, type TransportTempo, type TransportNormalSpeed, type TransportUnit,
+} from './components/Transport/Transport';
 /** Controlled seconds-based seek requests and host position readback. */
 export { SeekBar, type SeekBarProps } from './components/SeekBar/SeekBar';
 export { MixerView } from './layouts/MixerView/MixerView';

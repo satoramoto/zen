@@ -158,16 +158,23 @@ export function showView({ data = LIVE_SHOW, jam, disabled, className }: ShowMod
         { name: 'Show tabs', items: SHOW_TABS.map((t) => ({ id: t.id, label: t.title })) },
         { on: { onChange: 'tab' } },
       ),
-      component(
-        'TransportBar',
-        {
-          playing: transport.playing,
-          tempo: { value: transport.tempo },
-          position: transport.position,
-          loop: { on: jamming, title: 'JAM: the grid stays live past the arrangement', partial: true },
+      // The toolkit's transport, inside its own vocabulary boundary.
+      component('MusicScope', { className: 'yh-show__transport' }, {
+        slots: {
+          children: [
+            component(
+              'MusicTransport',
+              {
+                playing: transport.playing,
+                tempo: { value: transport.tempo },
+                position: transport.position,
+                loop: { on: jamming, label: 'JAM', title: 'JAM: the grid stays live past the arrangement', partial: true },
+              },
+              { on: { onPlay: 'play', onStop: 'halt', onLoop: 'jam', onUnit: 'unit' } },
+            ),
+          ],
         },
-        { on: { onPlay: 'play', onStop: 'halt', onLoop: 'jam', onUnit: 'unit' } },
-      ),
+      }),
       h('span', { class: tag.className, ...tag.attrs, 'data-part': 'setname' }, 'Hidden Signals · 112 · 17.3'),
     ),
     component('Screen', { name: tab.title, spec: tab.spec }, { slots }),

@@ -7,7 +7,6 @@ import '../../../primitives/Text/Text.css';
 import '../../../primitives/Surface/Surface.css';
 // The strips wrap Fader, Meter, LampButton and the SendBars subtree's own styles.
 import '../Fader/Fader.css';
-import '../LevelMeter/LevelMeter.css';
 import '../../../components/LampButton/LampButton.css';
 import '../SendBars/SendBars.css';
 import './MixBand.css';

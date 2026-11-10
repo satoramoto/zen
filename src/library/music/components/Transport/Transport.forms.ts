@@ -1,5 +1,5 @@
-// TransportBar's forms (docs/assembly.md): the play row, in scale units. `bar` keeps play, stop,
-// loop, tempo and the reading; `compact` keeps play and the reading for a strip too narrow for
+// Transport's forms (docs/assembly.md): the play row, in scale units. `bar` keeps play, stop,
+// loop, tempo, speed, the reading and latency; `compact` keeps play and the reading for a strip too narrow for
 // tempo. The Region's plate is the solver's.
 import type { Forms } from '../../../layouts/Assembly/types';
 
@@ -8,7 +8,7 @@ export type TransportForm = 'bar' | 'compact';
 /**
  * The transport's forms, most room first:
  *
- * - `bar`: the whole row — play, stop, loop, tempo and the position reading.
+ * - `bar`: the whole row — play, stop, loop, tempo, speed, the position reading and latency.
  * - `compact`: play and the reading alone, for a strip holding tempo elsewhere.
  */
 export const TRANSPORT_FORMS: Forms<TransportForm> = [
