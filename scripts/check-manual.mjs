@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir, mkdtemp, stat, realpath, cp, rm, symlink } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
 import assert from 'node:assert/strict';
@@ -12,7 +13,7 @@ import { readWalkthrough } from 'story-spec/walkthrough/node';
 import { manualSources, manualSettings } from './manual-sources.mjs';
 import { readContent } from '../src/site/content.mjs';
 
-const { values } = parseArgs({ options: { native: { type: 'string' }, before: { type: 'string' } } });
+const { values } = parseArgs({ options: { native: { type: 'string' }, 'native-headless': { type: 'boolean', default: false }, before: { type: 'string' } } });
 await mkdir('.shots', { recursive: true });
 const run = await mkdtemp(resolve('.shots/manual-check-'));
 const evidenceDir = resolve(run, 'evidence');
@@ -59,6 +60,21 @@ try {
   assert(failure.captured.length > 0, failure.message);
   await assert.rejects(stat(failedOutput), { code: 'ENOENT' });
   await save('web-failure', { exitCode: 1, captured: failure.captured, publishable: false, reusedPrevious: false, error: failure.message });
+  await assert.rejects(captureStory({ ...captureOptions, output: resolve(run, 'timeout'), timeout: 1 }), /timed out/);
+  assert.equal(browser.contexts().length, 0, 'Timeout leaked a browser context');
+  const hiddenBrowser = {
+    version: () => browser.version(),
+    newContext: async options => {
+      const context = await browser.newContext(options);
+      await context.addInitScript(() => document.addEventListener('DOMContentLoaded', () => {
+        const style = document.createElement('style'); style.textContent = '#storybook-root { display:none !important; }'; document.head.append(style);
+      }));
+      return context;
+    },
+  };
+  await assert.rejects(captureStory({ ...captureOptions, browser: hiddenBrowser, output: resolve(run, 'screenshot-failure'), timeout: 2000 }));
+  await assert.rejects(stat(resolve(run, 'screenshot-failure')), { code: 'ENOENT' });
+  assert.equal(browser.contexts().length, 0, 'Screenshot failure leaked a browser context');
   const changedSources = structuredClone(sources);
   changedSources.product.digest = 'f'.repeat(64);
   await assert.rejects(captureStory({ ...captureOptions, sources: changedSources, output: resolve(run, 'stale-build') }), /stale Storybook/);
@@ -83,7 +99,7 @@ try {
   await save('compatibility', { typecheckExitCode: 0, steps: phases, specUnchanged: true, docsUnchanged: true });
 
   const fixture = resolve('fixtures/site');
-  const siteOptions = directory => ({ base: '/project/', content: [{ file: 'content/overview.md', slug: '' }], manuals: [{ from: directory, sources }] });
+  const siteOptions = directory => ({ base: '/project/', content: [{ file: 'content/overview.md', slug: '' }, { file: 'content/architecture.md', slug: 'architecture' }], manuals: [{ from: directory, sources }] });
   async function invalid(name, mutate, fileEdit) {
     const directory = resolve(run, name);
     await cp(result.directory, directory, { recursive: true });
@@ -110,7 +126,7 @@ try {
   await save('stale', stale);
   await save('unverified', { stale, failed: await invalid('failed', b => b.run.status = 'failed'), incomplete: await invalid('incomplete', b => b.steps.pop()) });
   let collision;
-  try { await readContent({ ...siteOptions(result.directory), content: [{ file: 'content/overview.md', slug: 'manual/find-documentation' }] }, fixture); }
+  try { await readContent({ ...siteOptions(result.directory), content: [{ file: 'content/overview.md', slug: 'manual/find-documentation' }, { file: 'content/architecture.md', slug: 'architecture' }] }, fixture); }
   catch (error) { collision = error; }
   assert.match(collision?.message ?? '', /manual\/find-documentation/);
   await save('collision', { exitCode: 1, error: collision.message });
@@ -163,10 +179,14 @@ try {
   }
   await page.close();
   if (values.native) {
+    const nativeRoot = resolve(values.native, '../..');
+    const { manualSources: nativeSources } = await import(pathToFileURL(resolve(nativeRoot, 'site/manual-sources.mjs')).href);
+    const expectedNativeSources = await nativeSources(nativeRoot, values['native-headless']);
     for (const name of ['native', 'native-timeout']) {
       const data = JSON.parse(await readFile(resolve(values.native, `${name}.json`), 'utf8'));
       assert.deepEqual(data.ownedProcessesRemaining, []);
-      if (name === 'native') data.bundle = await readWalkthrough(data.directory, data.sources);
+      assert.deepEqual(data.sources, expectedNativeSources, `Stale ${name} evidence; rerun native validation`);
+      if (name === 'native') data.bundle = await readWalkthrough(data.directory, expectedNativeSources);
       await save(name, data);
     }
   }
