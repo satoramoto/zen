@@ -36,7 +36,7 @@ The surface SHALL read each region’s pane kind from the instance’s `kind` al
 
 ### Requirement: What the surface doesn’t know is drawn, not dropped
 
-The surface SHALL draw a region whose kind the app has not defined as a placeholder that names the kind and can still be moved and removed in edit mode, and SHALL skip a row entry naming an instance the tab doesn’t hold without failing the rest of the tab.
+The surface SHALL draw a region whose kind the app has not defined as a placeholder that names the kind and can still be moved and removed in edit mode; SHALL skip a layout leaf naming an instance the tab doesn’t hold without failing the rest of the tab; SHALL draw an instance the layout names twice once, at its first place; and SHALL keep, without drawing it, an instance no leaf names.
 
 #### Scenario: An unknown kind
 - **WHEN** a document names a kind the app gave no definition for
@@ -44,29 +44,73 @@ The surface SHALL draw a region whose kind the app has not defined as a placehol
 - **AND** in edit mode the placeholder can still be moved and removed
 
 #### Scenario: A dangling instance id
-- **WHEN** a tab’s row names an instance id the tab doesn’t hold
-- **THEN** the row draws its other regions and nothing is drawn for the missing one
+- **WHEN** a tab’s layout names an instance id the tab doesn’t hold
+- **THEN** the tab draws its other regions and nothing is drawn for the missing one
 
 #### Scenario: An open tab id no tab has
 - **WHEN** the document’s open tab id matches no tab
 - **THEN** the surface shows the first tab
+
+#### Scenario: A leaf named twice
+- **WHEN** a tab’s layout names the same instance in two places
+- **THEN** the instance is drawn once, at its first place, and the rest of the tab draws normally
+
+#### Scenario: An instance no leaf names
+- **WHEN** a tab holds an instance its layout doesn’t name
+- **THEN** the instance is not drawn and is still in the document after another region is edited
 
 ### Requirement: Mix’s rig documents fit unchanged
 
 The surface SHALL accept a document in exactly the shape mix’s rig stores (its version 1 surface document and its own region kinds), without conversion.
 
 #### Scenario: Mix’s default document
-- **WHEN** the surface is given a document in mix’s shape with mix’s region kinds and definitions for them
-- **THEN** every tab and region of it is drawn, and every edit it offers sends an intent mix’s store has a method for, retitling a region aside
+- **WHEN** the surface is given mix’s rig document with mix’s region kinds and definitions for them, and a person edits it
+- **THEN** every tab and region of it is drawn, and each edit made (choosing, adding, duplicating and removing a tab; moving, binding and adding a region; undo and redo) sends an intent mix’s store already has a method for
 
 ### Requirement: Version 1 documents still draw
 
-The surface SHALL draw a version 1 document (rows of region instance ids) as a column of its rows, each row’s regions taking equal shares, and an intent that changes the layout of a version 1 document SHALL be applied as on its version 2 reading.
+The surface SHALL draw a version 1 document (rows of region instance ids) as a column of its rows, each row’s regions taking equal shares, and an intent that changes a version 1 document SHALL be applied as on its version 2 reading, returning a version 2 document.
 
 #### Scenario: Mix’s document today
 - **WHEN** the surface is given mix’s version 1 default document
-- **THEN** every tab draws as before, its rows top to bottom and each row’s regions side by side in equal shares
+- **THEN** every tab draws its rows top to bottom and each row’s regions side by side in equal shares
 
 #### Scenario: The first resize upgrades
 - **WHEN** an app applies a resize intent to a version 1 document
 - **THEN** the result is a version 2 document with the same regions and the new shares
+
+### Requirement: A version the surface doesn’t read is not drawn
+
+The surface SHALL draw a document whose version it doesn’t read (any but 1 and 2) as a notice naming that version, with no tabs, regions or tools, SHALL send no intent for it, and the pure applier SHALL return such a document as given.
+
+#### Scenario: A newer document
+- **WHEN** the surface is given a version 3 document
+- **THEN** it shows a notice that the surface was saved by a newer version (3), and no tab, region or tool
+
+#### Scenario: Nothing edits a newer document
+- **WHEN** an app applies intents to a version 3 document
+- **THEN** the applier returns the very document it was given each time
+
+### Requirement: Fields the surface doesn’t know are kept
+
+The surface and the pure applier SHALL carry every field they don’t know, on the document, a tab or an instance, through every reading and edit unchanged, so an app can keep its own data in the document.
+
+#### Scenario: An app’s own fields survive an edit
+- **WHEN** an app keeps a field of its own on the document, on a tab and on an instance, then applies a rename and a duplicate
+- **THEN** all three fields are still there, and the duplicated tab and its instances carry them too
+
+#### Scenario: A version 1 document’s own fields
+- **WHEN** a version 1 document with a field of the app’s own on it and on a tab is upgraded by a resize
+- **THEN** the version 2 result still carries both fields
+
+### Requirement: A saved document can be checked
+
+Zen SHALL provide a pure function that lists a document’s problems as plain data (a version it doesn’t read, an open tab id no tab has, a repeated tab or instance id, a leaf naming no instance, an instance no leaf names, a leaf named twice, a share that isn’t positive), and that repairs nothing.
+
+#### Scenario: A saved document with problems
+- **WHEN** an app checks a document whose layout names one instance twice and leaves another out
+- **THEN** the check lists a repeated leaf and an orphan instance, each with its tab and id, and the document is as it was
+
+#### Scenario: A sound document
+- **WHEN** an app checks a document with nothing wrong, in either version
+- **THEN** the check lists nothing
