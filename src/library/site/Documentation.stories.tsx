@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { scenario } from 'story-spec';
+import { scenario, captureCheckpoint } from 'story-spec';
 import { Documentation } from './Documentation';
 import { withLibraryTheme } from '../storybook';
 
@@ -40,18 +40,30 @@ export const ReadSourceDocumentation: Story = scenario({
 });
 
 export const FindAConcept: Story = scenario({
+  walkthrough: {
+    id: 'find-documentation', title: 'Find documentation', chapter: 'Getting started', order: 1,
+    checkpoints: [
+      { id: 'start', caption: 'Enter a topic in Search.', alt: 'Documentation page with an empty search field.',
+        callouts: [{ number: 1, rect: [0.0375, 0.32125, 0.2, 0.07875], text: 'Search the documentation' }] },
+      { id: 'result', caption: 'Choose the matching page.', alt: 'Search results offering the Architecture page.' },
+    ],
+  },
   requirement: 'Search generated page text',
   shall: 'Readers SHALL be able to search generated documentation titles and text and follow matching page links with a keyboard.',
   when: 'a reader searches for a concept in the documentation',
   then: 'the matching architecture page is offered as a keyboard-reachable link',
-  act: async ({ canvasElement }) => {
+  act: async (context) => {
+    const { canvasElement } = context;
+    await captureCheckpoint(context, 'start');
     await userEvent.type(within(canvasElement).getByRole('searchbox'), 'ownership');
     await userEvent.tab();
   },
-  check: async ({ canvasElement }) => {
+  check: async (context) => {
+    const { canvasElement } = context;
     const search = within(within(canvasElement).getByRole('region', { name: 'Documentation search' }));
     await expect(search.getByRole('status')).toHaveTextContent('1 matching pages');
     await expect(search.getByRole('link', { name: 'Architecture' })).toHaveFocus();
+    await captureCheckpoint(context, 'result');
   },
 });
 

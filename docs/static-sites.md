@@ -63,6 +63,33 @@ and 1440px/390px layout in Chromium. Screenshots go to `.shots/site/`.
 Storybook with `node scripts/check-site.mjs --stories storybook-static`.
 The bounded test runner closes its browser and ephemeral server in `finally`.
 
+## Visual manuals
+
+Opt a `scenario()` into a walkthrough and call `captureCheckpoint(context, id)`
+inside its existing play. See story-spec's README for the declaration contract.
+`npm run build:storybook` stamps source identity into the compiled artifact;
+`node scripts/capture-manual.mjs` rejects stale builds and prints a completed
+`bundles.json` path. Screenshots stay in ignored `.shots/` run directories.
+
+Pass completed producer output to the site builder:
+
+```js
+manuals: [{ from: './captures/my-task', sources: independentlyComputedSources }]
+```
+
+Zen validates the manifest and image hashes, then supplies task navigation,
+caption search, responsive figures and accessible numbered highlights. Reading
+needs no JavaScript. Producer commands run before Astro, never inside its renderer.
+Native adapters use the same bundle format and keep their UI/runtime independent.
+
+`node scripts/check-manual.mjs --native <native-evidence-directory> --before
+<earlier-web-bundle>` verifies capture failures, stale builds, publication errors,
+caption regeneration and browser reading. Pass its printed evidence directory to
+`node scripts/check-manual-stories.mjs --evidence <directory>` to run all 17 plays.
+For the site fixture, set `MANUAL_BUNDLES` to the printed bundle-list path before
+`npm run build:site-fixture`. Native evidence comes from Pichii's
+`node site/check-manual.mjs` (add `--headless` on a machine with lavapipe/Xvfb).
+
 ## Flowcharts in Markdown
 
 Use a top-level `zen-flowchart` fence containing JSON (not nested in a list or quote):
