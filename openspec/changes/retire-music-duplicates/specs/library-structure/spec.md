@@ -18,10 +18,10 @@ toolkit's.
 - **WHEN** a token-drawn part such as the mix band shows a level, or a screen such as Yahaha's Show shows a transport
 - **THEN** it draws the toolkit's meter or transport inside the toolkit's scope
 
-#### Scenario: The two knobs
+#### Scenario: Two parts had the same name
 - **WHEN** a reader looks for the token-drawn knob
 - **THEN** it is `KnobReadout`, and `Knob` in that folder is the toolkit's
 
-#### Scenario: An app imports the token-drawn knob by its old name
+#### Scenario: An app imports a renamed part by its old name
 - **WHEN** an app imports `Knob` from the package root
 - **THEN** it gets the token-drawn `KnobReadout`
