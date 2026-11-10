@@ -7,7 +7,7 @@ assert.ok(base, 'Set ANGLE_PREVIEW_URL to the registered Storybook URL');
 const output = process.env.ANGLE_ARTIFACTS ?? '.shots/angles';
 await mkdir(output, { recursive: true });
 const index = await (await fetch(new URL('index.json', base))).json();
-const stories = Object.values(index.entries).filter((entry) => entry.type === 'story' && /^math-trig-(signedturn|radiusstrips)--/.test(entry.id));
+const stories = Object.values(index.entries).filter((entry) => entry.type === 'story' && /^math-trig-components-(signedturn|radiusstrips)--/.test(entry.id));
 assert.ok(stories.length >= 2, 'Expected signed-turn stories');
 const browser = await chromium.launch({ headless: true });
 const results = [];

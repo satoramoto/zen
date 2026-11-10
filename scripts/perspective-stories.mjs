@@ -8,13 +8,13 @@ try{
  for(const story of ['projection-explorer--break-the-illusion','optical-paths--rescue-the-ray','spatial-optics--inspect-a-path','stereo-explorer--cross-the-zero-plane']){
   const page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(()=>{let channel;window.__plays=[];Object.defineProperty(window,'__STORYBOOK_ADDONS_CHANNEL__',{configurable:true,get:()=>channel,set:c=>{channel=c;for(const name of ['storyFinished','storyThrewException','playFunctionThrewException'])c.on(name,e=>window.__plays.push({name,status:e?.status,message:e?.message}));}});});
-  await page.goto(`${base}/iframe.html?id=math-${story}&viewMode=story&globals=theme:linear;mode:dark`);
+  await page.goto(`${base}/iframe.html?id=math-perspective-components-${story.replace(/^components-/,"")}&viewMode=story&globals=theme:linear;mode:dark`);
   await page.waitForFunction(()=>window.__plays.some(e=>e.name==='storyFinished'),{},{timeout:45000});
   const events=await page.evaluate(()=>window.__plays);assert.ok(events.every(e=>e.name==='storyFinished'&&e.status==='success'),JSON.stringify(events));assert.deepEqual(errors,[]);console.log('PASS play',story);await page.close();
  }
  const page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  for(const story of ['projection-explorer--anamorphic-message','projection-explorer--forced-perspective','optical-paths--finite-pupil','spatial-optics--solid-prism','spatial-optics--out-of-plane','stereo-explorer--binocular-depth','components-projection-view--cabinet','components-ray-path-view--glass','components-stereo-pair--parallel']){
-  await page.goto(`${base}/iframe.html?id=math-${story}&viewMode=story&globals=theme:linear;mode:dark`);await page.locator('.zen-perspective svg').first().waitFor();await page.evaluate(()=>document.fonts.ready);
+  await page.goto(`${base}/iframe.html?id=math-perspective-components-${story.replace(/^components-/,"")}&viewMode=story&globals=theme:linear;mode:dark`);await page.locator('.zen-perspective svg').first().waitFor();await page.evaluate(()=>document.fonts.ready);
   await page.screenshot({path:`.shots/perspective/${story}.png`,fullPage:true});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));console.log('PASS specimen',story);
  }
  await page.goto(`${base}/iframe.html?id=math-perspective-components-projection-explorer--four-projections&viewMode=story&globals=theme:linear;mode:dark`);
@@ -32,7 +32,7 @@ try{
  const steer=page.getByRole('group',{name:'Steer spatial ray',exact:true});await steer.waitFor();await steer.focus();await page.keyboard.press('ArrowUp');assert.ok(Number(await page.getByRole('slider',{name:'Ray elevation',exact:true}).inputValue())>0);
  console.log('PASS spatial ray keyboard steering');
  for(const story of ['projection-explorer--anamorphic-message','optical-paths--mirrors-and-glass','spatial-optics--solid-prism','stereo-explorer--convergence-plane']){
-  await page.setViewportSize({width:390,height:844});await page.goto(`${base}/iframe.html?id=math-${story}&viewMode=story&globals=theme:linear;mode:light`);await page.locator('.zen-perspective svg').first().waitFor();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:`.shots/perspective/narrow-${story}.png`,fullPage:true});console.log('PASS narrow light',story);
+  await page.setViewportSize({width:390,height:844});await page.goto(`${base}/iframe.html?id=math-perspective-components-${story.replace(/^components-/,"")}&viewMode=story&globals=theme:linear;mode:light`);await page.locator('.zen-perspective svg').first().waitFor();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:`.shots/perspective/narrow-${story}.png`,fullPage:true});console.log('PASS narrow light',story);
  }
  assert.deepEqual(errors,[]);
 }finally{await browser.close();}
