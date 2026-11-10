@@ -16,6 +16,7 @@ export interface DocumentationProps {
   source?: string;
   html: string;
   search?: ReactNode;
+  content?: ReactNode;
 }
 
 /** A small optional island: all document links remain available without hydration. */
@@ -37,7 +38,7 @@ export function Search({ pages }: { pages: SitePage[] }) {
 }
 
 /** Shared static reading shell. html is trusted, repository-authored Markdown output. */
-export function Documentation({ title, description, home, current, pages, references = [], revision, source, html, search }: DocumentationProps) {
+export function Documentation({ title, description, home, current, pages, references = [], revision, source, html, search, content }: DocumentationProps) {
   return <div className="zen-site">
     <a className="zen-site__skip" href="#content">Skip to content</a>
     <header className="zen-site__header">
@@ -59,7 +60,8 @@ export function Documentation({ title, description, home, current, pages, refere
         </nav>}
       </aside>
       <main id="content" tabIndex={-1}>
-        <article className="zen-site__prose" dangerouslySetInnerHTML={{ __html: html }} />
+        {content ? <article className="zen-site__prose">{content}</article>
+          : <article className="zen-site__prose" dangerouslySetInnerHTML={{ __html: html }} />}
         <footer className="zen-site__footer">
           <Text role="caption" tone="secondary">Built from source{revision ? ` · ${revision}` : ''}</Text>
           {source && <a href={source}>View source</a>}
