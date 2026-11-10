@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-10
+goal: Sharpen the Live specs into a UI framework to build your own DAW, and prove it with four showcase DAWs
+affected_areas:
+  - zen
+x-review: look
