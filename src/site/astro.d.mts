@@ -1,4 +1,5 @@
 import type { AstroUserConfig } from 'astro';
+import type { SourceIdentity } from 'story-spec/walkthrough';
 
 export interface SiteOptions {
   title: string;
@@ -16,5 +17,7 @@ export interface SiteOptions {
   content: Array<{ file: string; slug?: string; title?: string } | { directory: string; prefix?: string }>;
   /** Generated beforehand by the consumer; copied verbatim into the static output. */
   generated?: Array<{ from: string; to: string; title: string; entry?: string }>;
+  /** Completed producer output plus independently computed expected source identities. */
+  manuals?: Array<{ from: string; prefix?: string; sources: Record<string, SourceIdentity> }>;
 }
 export function defineSite(options: SiteOptions): AstroUserConfig;

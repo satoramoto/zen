@@ -1,0 +1,14 @@
+.zen-walkthrough { min-width: 0; }
+.zen-walkthrough__chapter { color: var(--text-2); }
+.zen-walkthrough__steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 2rem; }
+.zen-walkthrough__steps > li { min-width: 0; }
+.zen-walkthrough figure { margin: 0; }
+.zen-walkthrough__image { position: relative; line-height: 0; }
+.zen-walkthrough__image img { display: block; width: 100%; height: auto; }
+.zen-walkthrough__callout { position: absolute; box-sizing: border-box; border: 2px solid currentColor; color: var(--text-1); }
+.zen-walkthrough__callout > span { display: inline-block; line-height: 1.3; padding: .1em .4em; background: var(--surface-1); font-weight: bold; }
+.zen-walkthrough figcaption { margin-top: .75rem; }
+.zen-walkthrough__number { font-weight: bold; }
+.zen-walkthrough__explanations { margin-top: .5rem; }
+.zen-walkthrough__provenance { margin-top: 2rem; font-size: .8em; overflow-wrap: anywhere; }
+.zen-walkthrough__provenance p { margin: .25rem 0; }

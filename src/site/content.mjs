@@ -78,6 +78,36 @@ export async function readContent(options, root) {
     delete page.markdown;
   }
   const mounts = [];
+  if (options.manuals?.length) {
+    const { readWalkthrough } = await import('story-spec/walkthrough/node');
+    const { validateWalkthroughs } = await import('story-spec/walkthrough');
+    const { createElement } = await import('react');
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const { Walkthrough } = await import('@satoramoto/zen/site');
+    const manuals = [];
+    for (const input of options.manuals) {
+      const directory = resolve(root, input.from);
+      const bundle = await readWalkthrough(directory, input.sources);
+      manuals.push({ input, directory, bundle });
+    }
+    validateWalkthroughs(manuals.map(item => item.bundle));
+    manuals.sort((a, b) => a.bundle.task.chapter.localeCompare(b.bundle.task.chapter) || a.bundle.task.order - b.bundle.task.order || a.bundle.task.id.localeCompare(b.bundle.task.id));
+    for (const { input, directory, bundle } of manuals) {
+      const slug = routePath(`${input.prefix ?? 'manual'}/${bundle.task.id}`);
+      if (routes.has(slug)) throw new Error(`Duplicate site route: ${slug}`);
+      routes.add(slug);
+      const images = {};
+      for (const step of bundle.steps) {
+        const file = resolve(directory, step.image);
+        const destination = `assets/manual-${bundle.task.id}-${step.id}-${step.digest.slice(0, 12)}.png`;
+        assets.set(file, destination);
+        images[step.image] = base + destination;
+      }
+      const html = renderToStaticMarkup(createElement(Walkthrough, { bundle, images }));
+      pages.push({ slug, title: bundle.task.title, href: siteUrl(base, slug), html,
+        text: [bundle.task.title, bundle.task.chapter, ...bundle.steps.flatMap(step => [step.caption, step.alt, ...(step.callouts ?? []).map(callout => callout.text)])].join(' ') });
+    }
+  }
   for (const mount of options.generated ?? []) {
     const to = routePath(mount.to);
     if (!to || routes.has(to) || pages.some(page => page.slug.startsWith(to + '/')) || ['assets', '_astro'].includes(to)) throw new Error(`Conflicting generated mount: ${to}`);

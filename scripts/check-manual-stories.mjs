@@ -18,7 +18,7 @@ const server = createServer(async (request, response) => {
   try {
     const path = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
     let base = root, suffix = path.slice(1);
-    for (const [prefix, directory] of [['/manual-evidence/', values.evidence], ['/manual-preview/', values.preview]]) {
+    for (const [prefix, directory] of [['/manual-evidence/', values.evidence], ['/manual-preview/', values.preview], ['/project/', values.preview]]) {
       if (path.startsWith(prefix)) { base = resolve(directory); suffix = path.slice(prefix.length); break; }
     }
     let file = resolve(base, suffix);
