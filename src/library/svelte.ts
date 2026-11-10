@@ -59,7 +59,6 @@ import PadSvelte from './music/components/Pad/Pad.svelte';
 import KnobSvelte from './music/components/KnobReadout/KnobReadout.svelte';
 import FaderSvelte from './music/components/Fader/Fader.svelte';
 import KeysSvelte from './music/components/Keys/Keys.svelte';
-import MeterSvelte from './music/components/LevelMeter/LevelMeter.svelte';
 import BarBeatSvelte from './music/components/BarBeat/BarBeat.svelte';
 import ChordReadoutSvelte from './music/components/ChordReadout/ChordReadout.svelte';
 import PartMarksSvelte from './music/components/PartMarks/PartMarks.svelte';
@@ -73,7 +72,6 @@ import type { PadModelProps } from './music/components/Pad/Pad.model';
 import type { KnobReadoutModelProps as KnobModelProps } from './music/components/KnobReadout/KnobReadout.model';
 import type { FaderModelProps } from './music/components/Fader/Fader.model';
 import type { KeysModelProps } from './music/components/Keys/Keys.model';
-import type { LevelMeterModelProps as MeterModelProps } from './music/components/LevelMeter/LevelMeter.model';
 import type { BarBeatModelProps } from './music/components/BarBeat/BarBeat.model';
 import type { ChordReadoutModelProps } from './music/components/ChordReadout/ChordReadout.model';
 import type { PartMarksModelProps } from './music/components/PartMarks/PartMarks.model';
@@ -281,13 +279,7 @@ export const Fader = FaderSvelte as unknown as Component<FaderProps>;
 export const faderInput = actionOf(bindFader);
 export type KeysProps = KeysModelProps;
 export const Keys = KeysSvelte as unknown as Component<KeysProps>;
-export interface MeterProps extends Omit<MeterModelProps, 'className'> {
-  class?: string;
-}
-export const Meter = MeterSvelte as unknown as Component<MeterProps>;
 /** The token-drawn level meter under its own name; `Meter` stays as its alias. */
-export const LevelMeter = Meter;
-export type LevelMeterProps = MeterProps;
 export interface BarBeatProps extends BarBeatModelProps {}
 export const BarBeat = BarBeatSvelte as unknown as Component<BarBeatProps>;
 export interface ChordReadoutProps extends ChordReadoutModelProps {}

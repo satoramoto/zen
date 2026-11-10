@@ -5,18 +5,21 @@
 
 | | Token-drawn parts | The mix[flow] toolkit |
 |---|---|---|
-| What | Fader, Pad, Keys, KnobReadout, LevelMeter, TransportBar, the readouts and cells, and the live workspace's parts (LoopGrid, MixBand, StemLanes, XYPad, …) | the controlled mix[flow] face and its controls, ported from `openflowfm/widgets` at `7edeedc37e5e4a33315d98ddb93a5a21d6e68eb8` without redesign, and the live panes built in that face (`music/live/`) |
+| What | Fader, Pad, Keys, KnobReadout, the readouts and cells, and the live workspace's parts (LoopGrid, MixBand, StemLanes, XYPad, …) | the controlled mix[flow] face and its controls, ported from `openflowfm/widgets` at `7edeedc37e5e4a33315d98ddb93a5a21d6e68eb8` without redesign, and the live panes built in that face (`music/live/`) |
 | Reads | zen's token contract; the tier rules hold each at zero | the reference's own vocabulary (`--wdg-*`) inside `Music.Scope`; its tier findings are recorded in the baseline and its contract excuses in `library.test.tsx` (`PORT_VOCABULARY`) |
 | Exported | flat from the package root, through `music/root.ts` (`Fader`, `Pad`, `KnobReadout`, …) | as the `Music` namespace, through `music/index.ts` and `music/svelte.ts` (`Music.Knob`, `Music.MixerView`, …) |
 | Used by | Yahaha's redesign, the Workspace samples, apps' own boards | mix[flow], the live surface and its DAWs |
 
-Both kinds once had a `Knob`, a `Meter` and a `Transport`. The token-drawn ones are now
-`KnobReadout` (a dial that shows a value the host formats), `LevelMeter` and `TransportBar`; the
-package root still exports them under the old names (`Knob`, `Meter`, `Transport`) as aliases, so
-an app's imports did not change. `Fader` at the root is the token-drawn fader; `Music.Fader` is
-the toolkit's slider. `LevelMeter` and `TransportBar` follow the same mix[flow] reference as
-`Music.Meter` and `Music.Transport`; retiring one of each pair is a separate change that has not
-been asked for.
+There is one meter and one transport: the toolkit's. The token-drawn copies were retired, and a
+token-drawn part that shows a level or a transport draws `Music.Meter` or `Music.Transport` inside a
+`Music.Scope` (MixBand's meters, Yahaha's Show bar). `Music.Transport` took on what the retired one
+could do: the host may keep the reading's unit (`unit`, `onUnit`), pass the loop as plain data and
+hear flips through `onLoop`, name the loop switch (`loop.label`), give a tempo without a range
+(20 to 300 BPM), and seat it by form (`bar`, or `compact`: play and the reading alone).
+
+The two knobs are different controls and both stay. `KnobReadout` is the token-drawn dial that
+shows a value the host formats; the package root also exports it as `Knob`. `Music.Knob` turns a
+`Param`. `Fader` at the root is the token-drawn fader; `Music.Fader` is the toolkit's slider.
 
 The rest of this guide is about the toolkit.
 

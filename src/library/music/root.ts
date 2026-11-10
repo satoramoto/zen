@@ -1,8 +1,8 @@
 // The token-drawn music parts, exported flat from the package root (`src/library/index.ts`):
 // faders, knobs, pads, keys and the readouts an instrument shows. Generic: a part, a style or a
 // transport is an app's meaning, given to them as a hue or role slot. The mix[flow] toolkit beside
-// them in `components/` is the `Music` namespace (`index.ts`). Where both had a name, the part here
-// has its own (`KnobReadout`, `LevelMeter`, `TransportBar`) and keeps the old one as an alias.
+// them in `components/` is the `Music` namespace (`index.ts`): the meter and the transport are
+// there only (`Music.Meter`, `Music.Transport`). `KnobReadout` keeps its old name `Knob` as an alias.
 export { Fader, type FaderProps, type FaderHue, type FaderKind } from './components/Fader/Fader';
 export { KnobReadout, KnobReadout as Knob, type KnobReadoutProps, type KnobReadoutProps as KnobProps } from './components/KnobReadout/KnobReadout';
 export { Pad, padTone, tieLastWord, type PadProps, type PadFamily, type PadState, type PadTone, type PadOnFace } from './components/Pad/Pad';
@@ -16,7 +16,6 @@ export { SectionName, type SectionNameProps, type SectionState } from './compone
 export { PartMarks, type PartMarksProps } from './components/PartMarks/PartMarks';
 export { SoundCell, type SoundCellProps } from './components/SoundCell/SoundCell';
 export { RackCell, type RackCellProps } from './components/RackCell/RackCell';
-export { LevelMeter, LevelMeter as Meter, type LevelMeterProps, type LevelMeterProps as MeterProps, type MeterLayout, type MeterSide } from './components/LevelMeter/LevelMeter';
 
 // The live workspace's parts, and the plain data they share (docs/live-workspace.md).
 export * from './model/live.model';
@@ -42,6 +41,5 @@ export {
   type MixBandProps,
   type MixBandForm,
 } from './components/MixBand/MixBand';
-export { TransportBar, TransportBar as Transport, TRANSPORT_FORMS, TRANSPORT_UNITS, clockText, positionText, readingText, type TransportBarProps, type TransportBarProps as TransportProps, type TransportForm, type TransportLoop, type TransportPosition, type TransportTempo, type TransportUnit } from './components/TransportBar/TransportBar';
 export { DeviceFace, DEVICE_FACE_FORMS, type DeviceFaceProps, type DeviceFaceForm } from './components/DeviceFace/DeviceFace';
 export { PianoRoll, PIANO_ROLL_FORMS, type PianoRollProps, type PianoRollForm, type PianoRollKey, type PianoRollNote } from './components/PianoRoll/PianoRoll';

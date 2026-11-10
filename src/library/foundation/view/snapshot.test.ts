@@ -18,8 +18,6 @@ import { lampButtonView } from '../../components/LampButton/LampButton.model';
 import { lampButtonStories } from '../../components/LampButton/LampButton.fixtures';
 import { padView } from '../../music/components/Pad/Pad.model';
 import { padStories } from '../../music/components/Pad/Pad.fixtures';
-import { meterView } from '../../music/components/LevelMeter/LevelMeter.model';
-import { meterStories } from '../../music/components/LevelMeter/LevelMeter.fixtures';
 import { barBeatView } from '../../music/components/BarBeat/BarBeat.model';
 import { barBeatStories } from '../../music/components/BarBeat/BarBeat.fixtures';
 import { faderView } from '../../music/components/Fader/Fader.model';
@@ -160,7 +158,6 @@ snapshot('LampButton', (props) => lampButtonView(props as Parameters<typeof lamp
 snapshot('SettingsRow', (props) => settingsRowView(props as Parameters<typeof settingsRowView>[0], 'uid'), settingsRowStories);
 // A composite: SettingsRow holding a LampButton (component nodes, a callback by key, a filled slot).
 snapshot('Pad', (props) => padView(props as Parameters<typeof padView>[0]), padStories);
-snapshot('LevelMeter', (props) => meterView(props as Parameters<typeof meterView>[0]), meterStories);
 snapshot('BarBeat', (props) => barBeatView(props), barBeatStories);
 snapshot('Fader', (props) => faderView(props as Parameters<typeof faderView>[0]), faderStories);
 snapshot('SendReadout', (props) => sendReadoutView(props as Parameters<typeof sendReadoutView>[0]), sendReadoutStories);
@@ -272,8 +269,6 @@ import { stemLanesView } from '../../music/components/StemLanes/StemLanes.model'
 import { stemLanesStories } from '../../music/components/StemLanes/StemLanes.fixtures';
 import { transitionRowView } from '../../music/components/TransitionRow/TransitionRow.model';
 import { transitionRowStories } from '../../music/components/TransitionRow/TransitionRow.fixtures';
-import { transportView } from '../../music/components/TransportBar/TransportBar.model';
-import { transportStories } from '../../music/components/TransportBar/TransportBar.fixtures';
 import { deviceFaceView } from '../../music/components/DeviceFace/DeviceFace.model';
 import { deviceFaceStories } from '../../music/components/DeviceFace/DeviceFace.fixtures';
 import { pianoRollView } from '../../music/components/PianoRoll/PianoRoll.model';
@@ -292,6 +287,5 @@ snapshot('MacroPads', (props) => macroPadsView(props as Parameters<typeof macroP
 snapshot('StemLanes', (props) => stemLanesView(props as Parameters<typeof stemLanesView>[0], 'four'), stemLanesStories);
 snapshot('TransitionRow', (props) => transitionRowView(props as Parameters<typeof transitionRowView>[0], 'row'), transitionRowStories);
 snapshot('Show', (props) => showView(props as Parameters<typeof showView>[0], showTab((props as { active?: string }).active)), showStories);
-snapshot('TransportBar', (props) => transportView(props as Parameters<typeof transportView>[0], 'bar'), transportStories);
 snapshot('DeviceFace', (props) => deviceFaceView(props as Parameters<typeof deviceFaceView>[0], 'face'), deviceFaceStories);
 snapshot('PianoRoll', (props) => pianoRollView(props as Parameters<typeof pianoRollView>[0], 'full'), pianoRollStories);

@@ -10,7 +10,6 @@
   import '../../../primitives/Text/Text.css';
   import '../../../primitives/Surface/Surface.css';
   import '../Fader/Fader.css';
-  import '../LevelMeter/LevelMeter.css';
   import '../../../components/LampButton/LampButton.css';
   import '../SendBars/SendBars.css';
   import './MixBand.css';

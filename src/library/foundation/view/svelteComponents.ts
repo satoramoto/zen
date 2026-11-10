@@ -34,7 +34,6 @@ import Pad from '../../music/components/Pad/Pad.svelte';
 import PartMarks from '../../music/components/PartMarks/PartMarks.svelte';
 import SectionName from '../../music/components/SectionName/SectionName.svelte';
 import TempoReadout from '../../music/components/TempoReadout/TempoReadout.svelte';
-import LevelMeter from '../../music/components/LevelMeter/LevelMeter.svelte';
 import LoopPie from '../../music/components/LoopPie/LoopPie.svelte';
 import LoopGrid from '../../music/components/LoopGrid/LoopGrid.svelte';
 import SendBars from '../../music/components/SendBars/SendBars.svelte';
@@ -45,7 +44,6 @@ import XYPad from '../../music/components/XYPad/XYPad.svelte';
 import MacroPads from '../../music/components/MacroPads/MacroPads.svelte';
 import StemLanes from '../../music/components/StemLanes/StemLanes.svelte';
 import TransitionRow from '../../music/components/TransitionRow/TransitionRow.svelte';
-import TransportBar from '../../music/components/TransportBar/TransportBar.svelte';
 import DeviceFace from '../../music/components/DeviceFace/DeviceFace.svelte';
 import PianoRoll from '../../music/components/PianoRoll/PianoRoll.svelte';
 import BarReadout from '../../music/components/BarReadout/BarReadout.svelte';
@@ -150,7 +148,6 @@ export function svelteComponent(name: string): Component<any> {
     Stage,
     StatusLine,
     WaitingChip,
-    LevelMeter,
     LoopPie,
     LoopGrid,
     SendBars,
@@ -161,7 +158,6 @@ export function svelteComponent(name: string): Component<any> {
     MacroPads,
     StemLanes,
     TransitionRow,
-    TransportBar,
     DeviceFace,
     PianoRoll,
     BarReadout,

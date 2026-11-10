@@ -359,12 +359,6 @@
     "pixels": 0,
     "type": 0
   },
-  "music/components/LevelMeter": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
   "music/components/LoopGrid": {
     "knobs": 0,
     "margins": 0,
@@ -538,12 +532,6 @@
     "margins": 0,
     "pixels": 4,
     "type": 4
-  },
-  "music/components/TransportBar": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
   },
   "music/components/WaveControls": {
     "knobs": 0,

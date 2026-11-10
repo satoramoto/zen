@@ -72,3 +72,6 @@
 .yh-mixband[data-disabled] .yh-mixband__strip {
   opacity: 0.7;
 }
+
+/* The meter's vocabulary boundary takes no box: the meter itself is the strip's child. */
+.yh-mixband__meter { display: contents; }

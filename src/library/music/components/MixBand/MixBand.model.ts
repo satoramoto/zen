@@ -6,7 +6,7 @@
 // `LampButton` and the SendBars subtree, so no registered component is re-drawn.
 import type { HueSlot } from '../../../components/hue';
 import { textView } from '../../../primitives/Text/Text.model';
-import { component, each, h, wire, type Handlers, type Node } from '../../../foundation/view/Tree.model';
+import { component, type ComponentNode, each, h, wire, type Handlers, type Node } from '../../../foundation/view/Tree.model';
 import { sendBarsHandlers, sendBarsView } from '../SendBars/SendBars.model';
 import type { LiveSend, LiveTrack } from '../../model/live.model';
 import type { MixBandForm } from './MixBand.forms';
@@ -41,6 +41,10 @@ export interface MixBandModelProps {
 
 const sendPrefix = (id: string): string => `t${id}:`;
 
+/** A level, read-only: the toolkit's meter inside its own vocabulary boundary, which takes no box of its own. */
+const meter = (value: number, label: string): ComponentNode =>
+  component('MusicScope', { className: 'yh-mixband__meter' }, { slots: { children: [component('MusicMeter', { value, label, name: '' })] } });
+
 function stripNode(track: LiveTrack, selected: string | undefined, inert: boolean): Node {
   const name = textView({ role: 'label', leading: 'tight', className: 'yh-mixband__name' });
   const sends: readonly [number, number] = track.sends ?? [0, 0];
@@ -71,11 +75,7 @@ function stripNode(track: LiveTrack, selected: string | undefined, inert: boolea
       ),
       { on: { click: `select:${track.id}` } },
     ),
-    component(
-      'LevelMeter',
-      { value: track.meter ?? 0, label: `${track.name} meter` },
-      undefined,
-    ),
+    meter(track.meter ?? 0, `${track.name} meter`),
     component(
       'Fader',
       {
@@ -110,7 +110,7 @@ function returnNode(send: LiveSend, inert: boolean): Node {
       'data-hue': send.hue === undefined ? undefined : String(send.hue),
     },
     h('span', { class: name.className, ...name.attrs, 'data-part': 'headname' }, send.name),
-    component('LevelMeter', { value: send.level, label: `${send.name} meter` }, undefined),
+    meter(send.level, `${send.name} meter`),
     component(
       'Fader',
       {

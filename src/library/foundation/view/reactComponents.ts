@@ -34,7 +34,6 @@ import { Pad } from '../../music/components/Pad/Pad';
 import { PartMarks } from '../../music/components/PartMarks/PartMarks';
 import { SectionName } from '../../music/components/SectionName/SectionName';
 import { TempoReadout } from '../../music/components/TempoReadout/TempoReadout';
-import { LevelMeter } from '../../music/components/LevelMeter/LevelMeter';
 import { LoopPie } from '../../music/components/LoopPie/LoopPie';
 import { LoopGrid } from '../../music/components/LoopGrid/LoopGrid';
 import { SendBars } from '../../music/components/SendBars/SendBars';
@@ -45,7 +44,6 @@ import { XYPad } from '../../music/components/XYPad/XYPad';
 import { MacroPads } from '../../music/components/MacroPads/MacroPads';
 import { StemLanes } from '../../music/components/StemLanes/StemLanes';
 import { TransitionRow } from '../../music/components/TransitionRow/TransitionRow';
-import { TransportBar } from '../../music/components/TransportBar/TransportBar';
 import { DeviceFace } from '../../music/components/DeviceFace/DeviceFace';
 import { PianoRoll } from '../../music/components/PianoRoll/PianoRoll';
 import { BarReadout } from '../../music/components/BarReadout/BarReadout';
@@ -147,7 +145,6 @@ export function reactComponent(name: string): ComponentType<any> {
     Stage,
     StatusLine,
     WaitingChip,
-    LevelMeter,
     LoopPie,
     LoopGrid,
     SendBars,
@@ -158,7 +155,6 @@ export function reactComponent(name: string): ComponentType<any> {
     MacroPads,
     StemLanes,
     TransitionRow,
-    TransportBar,
     DeviceFace,
     PianoRoll,
     BarReadout,
