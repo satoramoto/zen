@@ -33,6 +33,8 @@ export interface Fixture {
 }
 
 export class Session {
+  /** The session's own folder (the only place it can write, with its runtime folder). */
+  dir: string;
   /** The staged plugin's folder. */
   pluginDir: string;
   /** The session's HOME. */

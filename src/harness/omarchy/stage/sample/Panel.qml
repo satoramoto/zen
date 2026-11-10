@@ -90,6 +90,30 @@ Panel {
         }
       }
 
+      // Probes of the sandbox: a write outside the session (the fixture names
+      // the place), and a look for the person's own runtime folders.
+      Row {
+        spacing: Style.space(8)
+        Button {
+          objectName: "writeOutside"
+          text: "Write outside"
+          foreground: root.foreground
+          fontFamily: root.fontFamily
+          bordered: true
+          focusable: true
+          onClicked: root.ask(["sh", "-c", "p=$(stage-sample where); if echo probe > \"$p\" 2>/dev/null; then echo \"wrote $p\"; else echo \"refused $p\"; fi"])
+        }
+        Button {
+          objectName: "lookAround"
+          text: "Look around"
+          foreground: root.foreground
+          fontFamily: root.fontFamily
+          bordered: true
+          focusable: true
+          onClicked: root.ask(["sh", "-c", "echo \"$(ls -A /run/user | wc -l) runtime folders, system bus $(test -e /run/dbus/system_bus_socket && echo present || echo absent)\""])
+        }
+      }
+
       Text {
         objectName: "answer"
         visible: root.answer !== ""
