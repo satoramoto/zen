@@ -13,14 +13,19 @@ spec says what an app gets if it brings its own panes.
 
 ## What Changes
 
-**The specs say what is already true, once.**
+**The specs say what is true.**
 
-- The two applier requirements become one; the two version 1 requirements become one, stated as
-  "a version 1 document draws" with mix's default document as its example, not as the definition.
-- The form-picking rule lives in `live-panel-layout` only, and gains the cramped case (a region
-  with less room than its smallest form draws that form and is marked).
-- The intent list names `setEditing`; the settings list names the multi-choice type; the
-  unknown-kind rule speaks of leaves, not rows.
+- The unknown-kind rule speaks of leaves, not rows, and covers a leaf named twice and an instance
+  no leaf names. The stale claim that mix lacks only `retitleRegion` is replaced by the edits the
+  scenario actually makes.
+- The intent list names `setEditing`; the settings list names the multi-choice type; the form rule
+  gains the cramped case (a region with less room than its smallest form draws that form and is
+  marked).
+- **Not merged or moved.** The review asked for duplicated requirements to be merged and the kit's
+  requirements to move to their own capability. `story-spec sync` writes only added and modified
+  requirements and never removes one, and OpenSpec refuses a modified requirement that drops a
+  scenario, so a merge or a move can't be written in this loop. Every existing requirement stays
+  where it is, under its name. See design D11.
 
 **The contract an app author hits is written and held.**
 
@@ -47,15 +52,13 @@ spec says what an app gets if it brings its own panes.
 - **Lock.** A locked tab opened while editing shows no edit chrome and can't be renamed or
   removed.
 
-**The framework and the reference kit are separate.**
+**The premise is shown.**
 
-- `live-reference-kit` (new) takes the Music live set, its declared settings, and what is built
-  from it. The framework specs name no particular pane.
-- **Proof of the premise:** a minimal host (a document, one pane of the app's own, the applier,
-  nothing else), and two surfaces drawing one document.
-- **Showcase DAWs.** Four whole DAWs composed on the framework, each a surface document, a pack
-  and a stand-in host: a dub desk, a generative orbit lab, a stem booth and a pocket remote.
-  Stories under `Music/Live/DAWs`.
+- `live-reference-kit` (new): whole DAWs composed from the Music live panes alone. Four of them,
+  each a surface document, a pack and a stand-in host: a dub desk, a generative orbit lab, a stem
+  booth and a pocket remote. Stories under `Music/Live/DAWs`.
+- A minimal host (a document, one pane of the app's own, the applier, nothing else), and two
+  surfaces drawing one document.
 
 **Not in this change:** learn mode beyond the control panel (the strips' faders name no
 parameters yet; it needs them to, which is its own change, and the capability keeps its name
@@ -66,32 +69,28 @@ changing mix.
 
 ### New Capabilities
 
-- `live-parameters`: the app's parameter catalogue, values as readings, moves and triggers as
-  asks, and touch on a continuous gesture.
-- `live-reference-kit`: the Music live panes as a ready-made set, their settings, and the whole
-  DAWs composed from them.
+- `live-parameters`: the app's parameter catalogue as plain data, and touch around a continuous
+  gesture.
+- `live-reference-kit`: the whole DAWs composed from the Music live panes.
 
 ### Modified Capabilities
 
-- `live-surface-document`: version 1 as one requirement; unknown versions; orphan and repeated
-  leaves; unknown fields kept; `checkDocument`.
-- `live-surface-editing`: one applier requirement; intents as plain data in four kinds; who names
-  ids; the last tab; `setEditing` in the list.
+- `live-surface-document`: unknown versions; orphan and repeated leaves; unknown fields kept;
+  `checkDocument`; the version 1 wording.
+- `live-surface-editing`: intents as plain data in four kinds; who names ids; the last tab;
+  `setEditing` in the list.
 - `live-host-contract`: discrete and continuous gestures; a failing pane is contained; a minimal
   host; two surfaces on one document.
-- `live-pane-registry`: the pane author's contract; a missing target; the reference kit and the
-  form rule move out.
-- `live-pane-settings`: the multi-choice type; invalid values read as the default; the kit's
-  settings move out.
-- `live-panel-layout`: the cramped case; a locked tab while editing.
-- `live-control-panels`: the parameter requirements move to `live-parameters`.
+- `live-pane-registry`: the pane author's contract; a missing target.
+- `live-pane-settings`: the multi-choice type; values that no longer fit read as the default.
+- `live-panel-layout`: the cramped case; a locked tab opened while editing.
 
 ## Impact
 
 - `src/library/layout/Workspace/` (`surface.ts`, `Workspace.model.ts`, `Workspace.types.ts`, the
   bindings, the stories); `src/library/view/` (a registered `Contain` component, both renderers).
-- `src/library/Music/live/ControlPanel/` (`onTouch`); `src/library/Music/live/daws/` (new: the
-  showcase documents, their host and stories).
+- `src/library/Music/live/ControlPanel/` (`onTouch`), `src/library/Music/live/touch.bind.ts`;
+  `src/library/Music/live/daws/` (new: the showcase documents, their host and stories).
 - Public API, additive only: `checkDocument`, `intentKind`, `knownVersion`, `onTouch`. No export
   is removed or renamed. A document of an unknown version stops drawing (it drew wrongly before).
 - `docs/workspace.md`, `docs/live-views.md`.
@@ -102,7 +101,9 @@ changing mix.
 src/library/tiers.test.ts src/library/parity.test.tsx src/library/library.test.tsx`;
 `npm run build:lib && npm run check:lib`; `npm run build:storybook`; every play under
 `Design OS/Layout/Workspace`, `Music/Live` passing; `story-spec sync --change live-daw-framework
---check` reporting nothing; `openspec validate live-daw-framework --strict`; the PR's required
+--dir src/library/layout --dir src/library/Music/live --check` reporting nothing (the two folders
+that hold the Live stories: zen's other stories belong to capabilities planned in the `zen-flow`
+store); `openspec validate live-daw-framework --strict`; the PR's required
 `checks` job (main is gated: `pull-request`). Each showcase DAW looked at in a browser at its
 frame size.
 

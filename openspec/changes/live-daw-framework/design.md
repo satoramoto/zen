@@ -14,9 +14,8 @@ three changes over the same eight capabilities could not be synced apart.
 
 ## Goals / Non-Goals
 
-**Goals:** specs that state each rule once; the app author's contract written and enforced;
-parameters and touch as a framework concept; a contained pane failure; a kit capability apart
-from the framework; four showcase DAWs.
+**Goals:** the app author's contract written and enforced; touch around a continuous gesture; a
+contained pane failure; document integrity; four showcase DAWs.
 
 **Non-goals:** a store, persistence or undo in zen; MIDI or OSC I/O; learn mode outside the
 control panel; per-target-kind selection; frame-driven clock hands; changing mix; renaming
@@ -90,9 +89,11 @@ onTouch?(touch: { param: string; down: boolean }): void
 shaped like `onTrigger`. A fader, knob or XY sends `down: true` before its first `onParam` of a
 gesture and `down: false` after its last (an XY for both of its parameters). A keyboard step is a
 whole gesture: down, the move, up. A toggle, button and pad send no touch (a switch is one move; a
-trigger already has down and up). The bracket comes from pointer and key events on the control's
-cell, captured in the model's handlers, so the Music controls themselves don't change. If the
-control is removed mid-gesture, the up is still sent.
+trigger already has down and up). The bracket is a framework-free store on the control's cell
+(`Music/live/touch.bind.ts`, registered as `liveTouch`): it listens in the capture phase so the
+down precedes the control's first move, and tells the up a task after the lift so the control's
+last move comes first. The Music controls themselves don't change. If the control is removed
+mid-gesture, the up is still sent.
 
 ### D8. Settings that no longer fit
 
@@ -101,22 +102,22 @@ isn't a boolean, and a `number` that isn't finite; a finite `number` is clamped 
 `choices` value keeps only values that are options. The document keeps what it holds: only the
 resolved value changes.
 
-### D9. The reference kit and the showcase DAWs
+### D9. The showcase DAWs
 
-`live-reference-kit` owns the two Music requirements that sat in the registry and settings specs,
-and a third: whole DAWs are composed from the kit. `Music/live/daws/` holds, per DAW, a surface
-document built by intents (as the looper board is), its pack and its frame size:
+`live-reference-kit` holds one requirement: whole DAWs are composed from the kit. `Music/live/daws/`
+holds, per DAW, a surface document built by intents (as the looper board is), its pack and its
+window:
 
-| DAW | What it is | Pack | Frame |
+| DAW | What it is | Pack | Window |
 |---|---|---|---|
-| Dub desk | strips, a wide control panel of sends and filters, throws and cuts under the hands | a dark console pack | 1440 × 900 |
-| Orbit lab | two orbit clocks fixed to different tracks, the compass, the progression, dice, a landing | a light pack | 1440 × 900 |
-| Stem booth | the stem deck, sections, cuts, four strips and a crossfade panel | a high-contrast pack | 1280 × 800 |
-| Pocket | song card, cut pads and four macro pads on a phone | any | 390 × 780 |
+| Dub desk | channels, a wide bank of sends and filter with an XY, echo throws and drops under the hands | `yahaha-elektron`, dark | 1440 × 900 |
+| Orbit lab | two orbit clocks fixed to different tracks either side of the compass, dice, the landing, the progression | `linear`, light | 1440 × 900 |
+| Stem booth | the song now and its sections, the stem deck wide, cuts and a blend panel, four strips | `big-red`, dark | 1440 × 900 |
+| Pocket | song card, cut pads, four pads and two faders on a phone | `mixflow`, dark | 390 × 780 |
 
-They share the live views' stand-in host (`useLiveSet`), so each is linked and running. One play
-per DAW checks every region draws a pane of the kit and none is cramped. The packs are picked
-from `themes/packs.ts` when building; no new pack is added.
+They share the live views' stand-in host (`useLiveSet`), so each is linked and running. A story
+sets its pack through Storybook's `globals`. One scenario per DAW checks every region draws a pane
+of the kit, none cramped, and plays one thing on it. No pack and no component is added.
 
 ### D10. The proof scenarios
 
@@ -126,6 +127,25 @@ from `themes/packs.ts` when building; no new pack is added.
 - **Two surfaces, one document:** two Workspaces on one host. An edit in the first appears in the
   second; edit mode in one leaves the other playing.
 
+### D11. What the loop can't write: removing, renaming or moving a requirement
+
+The review proposed merging the two applier requirements and the two version 1 requirements,
+renaming "A pane asks with one intent per gesture", dropping the form-step scenario from the
+registry, and moving the kit's and the parameters' requirements to their own capabilities. None of
+that can be written here:
+
+- `story-spec sync --change` renders a delta with ADDED and MODIFIED sections only, and rewrites
+  the file whole; a requirement no story covers is reported "not removed". A hand-written REMOVED
+  or RENAMED section would make `--check` fail.
+- `openspec validate --strict` refuses a MODIFIED requirement that omits a scenario the spec has.
+
+So every existing requirement keeps its name, its capability and its scenarios' names; their texts
+are sharpened in place (MODIFIED), and new rules are ADDED beside them. `live-reference-kit` and
+`live-parameters` hold only what is new. A capability's Purpose can't change either: sync takes it
+from the main spec. Closing this needs story-spec to carry removals a person has decided (for
+example a `removes` list on a file's `parameters.spec`), which is a change to story-spec, not to
+zen.
+
 ## Risks / Trade-offs
 
 - **`Contain` hides bugs.** A thrown error becomes a small note. `onPaneError` and the console
@@ -133,8 +153,7 @@ from `themes/packs.ts` when building; no new pack is added.
 - **Touch from DOM events.** Bracketing by pointer and key events on the cell could miss a
   gesture a control ends another way. The scenarios cover pointer drag, keyboard step and removal
   mid-gesture.
-- **Moving requirements between capabilities** shows as removed in one delta and added in
-  another. The scenarios and their plays are the same stories.
+- **Duplicated requirements stay** (D11) until story-spec can remove one.
 
 ## Open Questions
 
