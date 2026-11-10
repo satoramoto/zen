@@ -3,7 +3,8 @@
 // so an app can group a drag into one undo step or write automation while a hand is on the control.
 // A gesture is a pointer held down on the element (until it lifts or is cancelled, wherever it has
 // gone) or a key that moves a value held down (until it is let go, or focus leaves). It listens in
-// the capture phase, so the begin reaches the app before the control's first move. A control taken
+// the capture phase, so the begin reaches the app before the control's first move, and tells the end
+// a moment after the lift, so the control's last move comes first. A control taken
 // away mid-gesture still ends it: no touch is left down.
 
 export interface TouchParams {
@@ -34,10 +35,20 @@ export function bindTouch(node: HTMLElement, initial: TouchParams) {
     pointers++;
     tell();
   };
+  // The end of a gesture is told once the event that ended it has reached the control: a control that
+  // sends its last move on the lift (or on the key's release) still sends it inside the touch.
+  let pending: number | undefined;
+  const later = () => {
+    if (pending !== undefined) return;
+    pending = win.setTimeout(() => {
+      pending = undefined;
+      tell();
+    }, 0);
+  };
   const pointerUp = () => {
     if (pointers === 0) return;
     pointers--;
-    tell();
+    later();
   };
   const keyDown = (e: KeyboardEvent) => {
     if (params.disabled || !MOVING_KEYS.has(e.key)) return;
@@ -47,7 +58,7 @@ export function bindTouch(node: HTMLElement, initial: TouchParams) {
   const keyUp = (e: KeyboardEvent) => {
     if (!MOVING_KEYS.has(e.key)) return;
     key = false;
-    tell();
+    later();
   };
   const blur = () => {
     key = false;
@@ -73,6 +84,7 @@ export function bindTouch(node: HTMLElement, initial: TouchParams) {
       if (next.disabled) end();
     },
     destroy() {
+      if (pending !== undefined) win.clearTimeout(pending);
       end();
       node.removeEventListener('pointerdown', pointerDown, true);
       win.removeEventListener('pointerup', pointerUp, true);

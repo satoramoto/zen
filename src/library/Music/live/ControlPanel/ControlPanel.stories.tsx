@@ -3,19 +3,16 @@ import { scenario } from 'story-spec';
 import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme, withStoryFrame } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../stories/story';
-import { Workspace } from '../../../layout/Workspace/Workspace';
-import { useSurfaceHost } from '../../../layout/Workspace/host.story';
-import type { SurfaceDocument } from '../../../layout/Workspace/Workspace.types';
-import { LIVE_PANES } from '../panes';
 import { host, withHost } from '../host.story';
-import { ControlPanel, type ControlCell } from './ControlPanel';
+import { ControlPanel } from './ControlPanel';
+import { Building, cellsOf } from './Building.story';
 import ControlPanelSvelte from './ControlPanel.svelte';
 import { controlPanelArgTypes, controlPanelStories as s, controlParams, controlValues, macroCells } from './ControlPanel.fixtures';
 import type { ControlPanelProps } from './ControlPanel.model';
 
 // The person's own controls on the app's parameters. The playing stories run in both renderers
-// (the toolbar's Renderer) with `withHost` standing in for the app: it applies `onParam` to the
-// values, as an app would. The building stories put the panel in a Workspace that is editing, with
+// (the toolbar's Renderer) with `withHost` standing in for the app. What a control asks of a
+// parameter, and touch, are `Parameters.stories.tsx` (`live-parameters`). The building stories put the panel in a Workspace that is editing, with
 // a story host that applies every intent, since building follows the surface's edit mode.
 
 const meta = {
@@ -89,115 +86,6 @@ export const AParameterTheAppNoLongerLists: Story = scenario(
   },
   spied(s.Missing),
 ) as Story;
-
-/** A drag on a fader's track, upward. */
-async function dragUp(el: HTMLElement, by = 60) {
-  const r = el.getBoundingClientRect();
-  const x = r.left + r.width / 2;
-  const y = r.top + r.height * 0.7;
-  await fireEvent.pointerDown(el, { pointerId: 5, button: 0, clientX: x, clientY: y });
-  for (let i = 1; i <= 4; i++) await fireEvent.pointerMove(el, { pointerId: 5, clientX: x, clientY: y - (by * i) / 4 });
-  await fireEvent.pointerUp(el, { pointerId: 5, clientX: x, clientY: y - by });
-}
-
-export const AFaderDrag: Story = scenario(
-  {
-    requirement: 'A control asks; the app moves the value',
-    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
-    name: 'A fader drag',
-    when: 'a person drags a fader up',
-    then: 'each step sends a parameter intent with the fader’s parameter and a value in its range, and the fader reads back what the app gives',
-    act: async ({ canvasElement }) => {
-      await dragUp(within(canvasElement).getByRole('slider', { name: 'Delay send' }));
-    },
-    check: async ({ canvasElement, args }) => {
-      const calls = (args.onParam as ReturnType<typeof fn>).mock.calls as [{ param: string; value: number }][];
-      await expect(calls.length).toBeGreaterThan(0);
-      for (const [move] of calls) {
-        await expect(move.param).toBe('delay');
-        await expect(move.value).toBeGreaterThanOrEqual(0);
-        await expect(move.value).toBeLessThanOrEqual(100);
-      }
-      const last = calls.at(-1)![0].value;
-      await expect(last).toBeGreaterThan(35);
-      await waitFor(() => expect(Number(within(canvasElement).getByRole('slider', { name: 'Delay send' }).getAttribute('aria-valuenow'))).toBeCloseTo(last, 2));
-    },
-  },
-  spied(s.Default, app),
-) as Story;
-
-export const APadPressAndRelease: Story = scenario(
-  {
-    requirement: 'A control asks; the app moves the value',
-    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
-    name: 'A pad press and release',
-    when: 'a person presses a pad and lets go',
-    then: 'one trigger intent with down is sent on the press and one with up on the release',
-    act: async ({ canvasElement }) => {
-      const pad = within(canvasElement.querySelector<HTMLElement>('[data-cell="c6"]')!).getByRole('button');
-      await fireEvent.pointerDown(pad, { pointerId: 6, button: 0 });
-      await fireEvent.pointerUp(pad, { pointerId: 6, button: 0 });
-    },
-    check: async ({ args }) => {
-      await expect((args.onTrigger as ReturnType<typeof fn>).mock.calls).toEqual([[{ param: 'drop', down: true }], [{ param: 'drop', down: false }]]);
-    },
-  },
-  spied(s.Default),
-) as Story;
-
-export const AMoveTheAppIgnores: Story = scenario(
-  {
-    requirement: 'A control asks; the app moves the value',
-    shall: 'Moving a continuous control or a switch SHALL send one parameter intent with the parameter and the requested value; pressing and releasing a button or a pad SHALL send a trigger intent on the press and another on the release; and a control SHALL show a new value only when the app gives it.',
-    name: 'A move the app ignores',
-    when: 'a person moves a fader and the app gives no new value',
-    then: 'the fader returns to the app’s value once the gesture ends',
-    act: async ({ canvasElement }) => {
-      await dragUp(within(canvasElement).getByRole('slider', { name: 'Reverb send' }));
-    },
-    check: async ({ canvasElement, args }) => {
-      await expect((args.onParam as ReturnType<typeof fn>).mock.calls.length).toBeGreaterThan(0);
-      await waitFor(() => expect(Number(within(canvasElement).getByRole('slider', { name: 'Reverb send' }).getAttribute('aria-valuenow'))).toBeCloseTo(20, 1));
-    },
-  },
-  spied(s.Default),
-) as Story;
-
-/** The panel inside an editing surface, its cells and grid in the region's settings, every intent applied. */
-function Building({ cells = macroCells, columns = 8, rows = 4, editing = true }: { cells?: readonly ControlCell[]; columns?: number; rows?: number; editing?: boolean }) {
-  const doc: SurfaceDocument = {
-    version: 2,
-    active: 't',
-    tabs: [{ id: 't', title: 'Macros', layout: 'panel', regions: [{ id: 'panel', kind: 'controls', title: 'Controls', binding: { mode: 'selected' }, settings: { cells: cells as never, columns, rows } }] }],
-  };
-  const surface = useSurfaceHost(doc, { keepEditing: true, editing });
-  const region = (surface.document.tabs[0] as (typeof doc.tabs)[0] & { regions: { settings?: Record<string, unknown> }[] }).regions[0];
-  return (
-    <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100%' }}>
-      <output aria-label="Story: cells">{JSON.stringify(region.settings?.cells ?? [])}</output>
-      <Workspace
-        name="Macros"
-        document={surface.document}
-        panes={[LIVE_PANES.controls]}
-        editing={surface.editing}
-        onIntent={surface.onIntent}
-        pane={(r, _t, settings) => (
-          <ControlPanel
-            cells={settings.cells as unknown as readonly ControlCell[]}
-            columns={settings.columns as number}
-            rows={settings.rows as number}
-            params={controlParams}
-            values={controlValues}
-            onParam={fn()}
-            onTrigger={fn()}
-            onCells={(next) => surface.onIntent({ type: 'configureRegion', tab: 't', region: r.id, settings: { ...(r.settings ?? {}), cells: next as never } })}
-          />
-        )}
-      />
-    </div>
-  );
-}
-const cellsOf = (el: HTMLElement): ControlCell[] => JSON.parse(within(el).getByLabelText('Story: cells').textContent || '[]');
 
 export const AddingAKnob: Story = scenario(
   {
