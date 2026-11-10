@@ -6,7 +6,7 @@ How an app defines the pane kinds its surface can hold, how they reach the palet
 
 ## Requirements
 
-### Requirement: The app defines its pane kinds
+### Requirement: An app defines its own pane kinds
 
 The surface SHALL take the app’s pane definitions as plain data, each naming its kind, its label, an optional description, its forms, its priority and whether it brings its own plate and head, and the binding targets it can follow, and SHALL draw each region in a slot the app fills for that instance.
 
@@ -17,10 +17,6 @@ The surface SHALL take the app’s pane definitions as plain data, each naming i
 #### Scenario: The slot knows its instance
 - **WHEN** a tab holds two instances of one kind with different bindings
 - **THEN** the app’s slot is asked for each instance with that instance’s id, title and resolved target
-
-#### Scenario: Forms step down on a small window
-- **WHEN** the surface is narrowed until a region’s widest form no longer fits
-- **THEN** the region steps down to its next form, as the kind’s forms list them, and no region overflows
 
 ### Requirement: The palette is the app’s definitions
 
