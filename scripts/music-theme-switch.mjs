@@ -15,11 +15,11 @@ try {
   await page.evaluate(() => document.fonts.ready);
   await page.getByRole('button', { name: 'Deck 1: Verse Drums', exact: true }).click();
   const lists = await page.evaluate(async () => {
-    const { packs } = await import('/src/library/themes/packs.ts');
-    const { palettes } = await import('/src/library/themes/palettes.ts');
-    const { faces } = await import('/src/library/themes/faces.ts');
-    const { scales } = await import('/src/library/themes/scales.ts');
-    const { materials } = await import('/src/library/themes/materials.ts');
+    const { packs } = await import('/src/library/foundation/themes/packs.ts');
+    const { palettes } = await import('/src/library/foundation/themes/palettes.ts');
+    const { faces } = await import('/src/library/foundation/themes/faces.ts');
+    const { scales } = await import('/src/library/foundation/themes/scales.ts');
+    const { materials } = await import('/src/library/foundation/themes/materials.ts');
     window.__musicThemeCanvas = document.querySelector('.play-example canvas');
     window.__musicThemeRoot = document.querySelector('.play-example');
     return { theme: packs.map((item) => item.id), palette: palettes.map((item) => item.id), faces: faces.map((item) => item.id), scale: scales.map((item) => item.id), materials: materials.map((item) => item.id) };

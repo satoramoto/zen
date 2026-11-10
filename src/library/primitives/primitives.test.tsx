@@ -3,12 +3,13 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { LAYERS, SCOPE_VARS, toCssVars } from '../contract';
-import { packs } from '../themes/packs';
+import { packs } from '../foundation/themes/packs';
 import { Hole, Icon, Opaque, STEPS, Stack, Surface, Text } from '.';
 
 const dir = join(process.cwd(), 'src/library/primitives');
-const css = (name: string) => readFileSync(join(dir, name), 'utf8');
-const cssFiles = readdirSync(dir).filter((f) => f.endsWith('.css'));
+// Each primitive's stylesheet is in its own folder: `Text.css` is `Text/Text.css`.
+const css = (name: string) => readFileSync(join(dir, name.replace(/\.css$/, ''), name), 'utf8');
+const cssFiles = readdirSync(dir, { recursive: true, encoding: 'utf8' }).filter((f) => f.endsWith('.css')).map((f) => f.split('/').at(-1)!);
 
 describe('Text', () => {
   it('renders its role and tone as data attributes, on the element `as` names', () => {

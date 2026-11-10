@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useId, useRef, useState, type PointerEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { focusRing } from '../../../primitives/Ring';
-import { Popover } from '../../../components/core/Popover/Popover';
-import { Stack } from '../../../primitives/Stack';
-import { Text } from '../../../primitives/Text';
+import { focusRing } from '../../../primitives/Ring/Ring';
+import { Popover } from '../../../components/Popover/Popover';
+import { Stack } from '../../../primitives/Stack/Stack';
+import { Text } from '../../../primitives/Text/Text';
 import { Mark } from '../Mark/Mark';
 import './Peek.css';
 

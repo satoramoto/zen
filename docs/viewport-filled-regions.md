@@ -65,7 +65,7 @@ correctly rejected the logged assertion.
 - `npm run typecheck`: exit 0.
 - Full library regression, `npx vitest run src/library`: **102 files, 1,826 tests
   passed** in 30.58s.
-- `npx vitest run src/library/view src/library/parity.test.tsx src/library/tiers.test.ts src/library/math/view/PlotViewport/PlotViewport.test.ts`:
+- `npx vitest run src/library/foundation/view src/library/parity.test.tsx src/library/tiers.test.ts src/library/math/components/PlotViewport/PlotViewport.test.ts`:
   **6 files, 141 tests passed**, including all 13 existing viewport model checks
   and unchanged no-region snapshots. There were no pre-existing dedicated
   PlotViewport story plays; new point/density compatibility plays exercise those
@@ -82,7 +82,7 @@ checkout's dependency path, keeping generation owned by story-spec:
 NODE_PATH="$PWD/node_modules" npx story-spec sync \
   --change viewport-filled-regions \
   --root "$HOME/Projects/satoramoto/zen-flow" \
-  --dir "$PWD/src/library/math/view/PlotViewport"
+  --dir "$PWD/src/library/math/components/PlotViewport"
 # Repeat with --check to verify drift.
 openspec validate viewport-filled-regions --strict --store zen-flow
 ```

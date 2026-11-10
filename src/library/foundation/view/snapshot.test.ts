@@ -1,0 +1,297 @@
+// The tree each converted component draws for every story's fixture, as text (`printTree`), one
+// file per component in `__snapshots__/`. With `Tree.parity.test.tsx` proving both renderers draw
+// any tree the same, this is a converted component's whole DOM check. One line per component:
+// `snapshot('Name', (props) => nameView(props), nameStories)`. A changed tree shows as a diff;
+// `npx vitest run src/library/foundation/view/snapshot.test.ts -u` records a deliberate change.
+import { describe, expect, it } from 'vitest';
+import { instances, type Fixtures } from '../../fixtures';
+import { printTree, type Root } from './Tree.model';
+import { buttonView } from '../../components/Button/Button.model';
+import { buttonStories } from '../../components/Button/Button.fixtures';
+import { actionButtonView } from '../../components/ActionButton/ActionButton.model';
+import { actionButtonStories } from '../../components/ActionButton/ActionButton.fixtures';
+import { searchFieldView } from '../../components/SearchField/SearchField.model';
+import { searchFieldStories } from '../../components/SearchField/SearchField.fixtures';
+import { knobView } from '../../instrument/components/Knob/Knob.model';
+import { knobStories } from '../../instrument/components/Knob/Knob.fixtures';
+import { lampButtonView } from '../../components/LampButton/LampButton.model';
+import { lampButtonStories } from '../../components/LampButton/LampButton.fixtures';
+import { padView } from '../../instrument/components/Pad/Pad.model';
+import { padStories } from '../../instrument/components/Pad/Pad.fixtures';
+import { meterView } from '../../instrument/components/Meter/Meter.model';
+import { meterStories } from '../../instrument/components/Meter/Meter.fixtures';
+import { barBeatView } from '../../instrument/components/BarBeat/BarBeat.model';
+import { barBeatStories } from '../../instrument/components/BarBeat/BarBeat.fixtures';
+import { faderView } from '../../instrument/components/Fader/Fader.model';
+import { faderStories } from '../../instrument/components/Fader/Fader.fixtures';
+import { sendReadoutView } from '../../instrument/components/SendReadout/SendReadout.model';
+import { sendReadoutStories } from '../../instrument/components/SendReadout/SendReadout.fixtures';
+import { keysView } from '../../instrument/components/Keys/Keys.model';
+import { keysStories } from '../../instrument/components/Keys/Keys.fixtures';
+import { chordReadoutView, type ChordReadoutModelProps } from '../../instrument/components/ChordReadout/ChordReadout.model';
+import { chordReadoutStories } from '../../instrument/components/ChordReadout/ChordReadout.fixtures';
+import { partMarksView, type PartMarksModelProps } from '../../instrument/components/PartMarks/PartMarks.model';
+import { partMarksStories } from '../../instrument/components/PartMarks/PartMarks.fixtures';
+import { sectionNameView, type SectionNameModelProps } from '../../instrument/components/SectionName/SectionName.model';
+import { sectionNameStories } from '../../instrument/components/SectionName/SectionName.fixtures';
+import { tempoReadoutView } from '../../instrument/components/TempoReadout/TempoReadout.model';
+import { tempoReadoutStories } from '../../instrument/components/TempoReadout/TempoReadout.fixtures';
+import { barReadoutView } from '../../instrument/components/BarReadout/BarReadout.model';
+import { barReadoutStories } from '../../instrument/components/BarReadout/BarReadout.fixtures';
+import { soundCellView } from '../../instrument/components/SoundCell/SoundCell.model';
+import { soundCellStories } from '../../instrument/components/SoundCell/SoundCell.fixtures';
+import { rackCellView } from '../../instrument/components/RackCell/RackCell.model';
+import { rackCellStories } from '../../instrument/components/RackCell/RackCell.fixtures';
+import { settingsRowView } from '../../components/SettingsRow/SettingsRow.model';
+import { controlArgs, settingsRowSample, settingsRowStories, type SampleArgs } from '../../components/SettingsRow/SettingsRow.fixtures';
+import { accentBlockView } from '../../yahaha/components/AccentBlock/AccentBlock.model';
+import { accentBlockStories } from '../../yahaha/components/AccentBlock/AccentBlock.fixtures';
+import { waitingChipView } from '../../yahaha/components/WaitingChip/WaitingChip.model';
+import { waitingChipDrawn } from '../../yahaha/components/WaitingChip/WaitingChip.fixtures';
+import { statusLineView } from '../../yahaha/components/StatusLine/StatusLine.model';
+import { statusLineStories } from '../../yahaha/components/StatusLine/StatusLine.fixtures';
+import { displayArtView } from '../../yahaha/components/DisplayArt/DisplayArt.model';
+import { displayArtStories } from '../../yahaha/components/DisplayArt/DisplayArt.fixtures';
+import { hueLegendView } from '../../yahaha/components/HueLegend/HueLegend.model';
+import { hueLegendStories } from '../../yahaha/components/HueLegend/HueLegend.fixtures';
+import { oneTouchPickerView } from '../../yahaha/components/OneTouchPicker/OneTouchPicker.model';
+import { oneTouchPickerStories } from '../../yahaha/components/OneTouchPicker/OneTouchPicker.fixtures';
+import { healthSlotView } from '../../yahaha/components/HealthSlot/HealthSlot.model';
+import { healthSlotStories } from '../../yahaha/components/HealthSlot/HealthSlot.fixtures';
+import { appBarView } from '../../yahaha/components/AppBar/AppBar.model';
+import { metronomePopoverView } from '../../yahaha/components/AppBar/MetronomePopover.model';
+import { appBarStories, metronomePopoverStories } from '../../yahaha/components/AppBar/AppBar.fixtures';
+import { textNode } from '../../primitives/Text/Text.model';
+import { textStories } from '../../primitives/Text/Text.fixtures';
+import { stackNode } from '../../primitives/Stack/Stack.model';
+import { stackStories } from '../../primitives/Stack/Stack.fixtures';
+import { surfaceNode } from '../../primitives/Surface/Surface.model';
+import { surfaceStories } from '../../primitives/Surface/Surface.fixtures';
+import { iconNode } from '../../primitives/Icon/Icon.model';
+import { iconStories } from '../../primitives/Icon/Icon.fixtures';
+import { holeNode, opaqueNode } from '../../primitives/Hole/Hole.model';
+import { holeStories, opaqueStories } from '../../layouts/Layer/Layer.fixtures';
+import { statusDotView } from '../../components/StatusDot/StatusDot.model';
+import { statusDotStories } from '../../components/StatusDot/StatusDot.fixtures';
+import { separatorView } from '../../components/Separator/Separator.model';
+import { separatorStories } from '../../components/Separator/Separator.fixtures';
+import { lineSliderView } from '../../components/LineSlider/LineSlider.model';
+import { lineSliderStories } from '../../components/LineSlider/LineSlider.fixtures';
+import { segmentedView } from '../../components/Segmented/Segmented.model';
+import { segmentedStories } from '../../components/Segmented/Segmented.fixtures';
+import { selectView } from '../../components/Select/Select.model';
+import { selectStories } from '../../components/Select/Select.fixtures';
+import { switchView, toggleView, type SwitchModelProps, type ToggleModelProps } from '../../components/Toggle/Toggle.model';
+import { switchStories, toggleStories } from '../../components/Toggle/Toggle.fixtures';
+import { disclosureView, type DisclosureModelProps } from '../../components/Disclosure/Disclosure.model';
+import { disclosureStories } from '../../components/Disclosure/Disclosure.fixtures';
+import { stepValueView } from '../../components/StepValue/StepValue.model';
+import { stepValueStories } from '../../components/StepValue/StepValue.fixtures';
+import { readoutView } from '../../components/Readout/Readout.model';
+import { readoutStories } from '../../components/Readout/Readout.fixtures';
+import { numberFieldView } from '../../components/NumberField/NumberField.model';
+import { numberFieldStories } from '../../components/NumberField/NumberField.fixtures';
+import { checkboxView } from '../../components/Checkbox/Checkbox.model';
+import { checkboxStories } from '../../components/Checkbox/Checkbox.fixtures';
+import { radioView } from '../../components/Radio/Radio.model';
+import { radioStories } from '../../components/Radio/Radio.fixtures';
+import { sliderView } from '../../components/Slider/Slider.model';
+import { sliderStories } from '../../components/Slider/Slider.fixtures';
+import { popoverView } from '../../components/Popover/Popover.model';
+import { popoverStories } from '../../components/Popover/Popover.fixtures';
+import { modalView, sheetView } from '../../components/Modal/Modal.model';
+import { modalSample, modalStories, sheetStories } from '../../components/Modal/Modal.fixtures';
+import { tabsView } from '../../layouts/Tabs/Tabs.model';
+import { tabsStories } from '../../layouts/Tabs/Tabs.fixtures';
+import { displayView } from '../../yahaha/components/Display/Display.model';
+import { displayStories } from '../../yahaha/components/Display/Display.fixtures';
+import { songFormView } from '../../yahaha/components/SongForm/SongForm.model';
+import { songFormStories } from '../../yahaha/components/SongForm/SongForm.fixtures';
+import { faderBankView, faderBankRegionView, type FaderBankModelProps } from '../../yahaha/components/FaderBank/FaderBank.model';
+import { faderBankStories } from '../../yahaha/components/FaderBank/FaderBank.fixtures';
+import { knobBankView, knobBankRegionView, type KnobBankRegionModelProps } from '../../yahaha/components/KnobBank/KnobBank.model';
+import { knobBankStories } from '../../yahaha/components/KnobBank/KnobBank.fixtures';
+import { padBankRegionView, padBankView, type PadBankProps, type PadBankRegionProps } from '../../yahaha/components/PadBank/PadBank.model';
+import { padBankStories } from '../../yahaha/components/PadBank/PadBank.fixtures';
+import { stageView } from '../../yahaha/screens/Stage/Stage.model';
+import { stageSample, stageSlotStories, stageStories } from '../../yahaha/screens/Stage/Stage.fixtures';
+import { pageListView } from '../../components/PageList/PageList.model';
+import { pageListStories } from '../../components/PageList/PageList.fixtures';
+import { folderListView } from '../../components/FolderList/FolderList.model';
+import { folderListStories } from '../../components/FolderList/FolderList.fixtures';
+
+/** A primitive fixture's text children, as the tree builders take them. */
+const kids = (props: unknown): string[] => {
+  const children = (props as { children?: unknown }).children;
+  return typeof children === 'string' ? [children] : [];
+};
+
+import { regionView, type RegionDrawProps } from '../../layouts/Region/Region.model';
+import { regionSample, regionSampleStories, regionStories, type RegionSampleArgs } from '../../layouts/Region/Region.fixtures';
+import { groupView, type GroupDrawProps } from '../../layouts/Group/Group.model';
+import { groupSample, groupSampleStories, groupStories, type GroupSampleArgs } from '../../layouts/Group/Group.fixtures';
+import { layerView, type LayerViewProps } from '../../layouts/Layer/Layer.model';
+import { layerStories } from '../../layouts/Layer/Layer.fixtures';
+import { screenView } from '../../layouts/Screen/Screen.model';
+import { screenArgs, screenSample, screenStories, screenStoryArgs, type ScreenArgs } from '../../layouts/Screen/Screen.fixtures';
+import { assembledPlacement, assembledScreenView } from '../../layouts/Assembly/AssembledScreen.model';
+import { assemblyStories } from '../../layouts/Assembly/Assembly.fixtures';
+import { scopePrinciples } from '../../layouts/Assembly/principles';
+
+function snapshot<P>(name: string, view: (props: P) => Root, fixtures: Fixtures<P>): void {
+  describe(name, () => {
+    it('draws the same tree for every fixture', async () => {
+      const text = Object.entries(fixtures)
+        .flatMap(([story, fixture]) => {
+          const all = instances(fixture);
+          return all.map((props, i) => `## ${story}${all.length > 1 ? ` #${i + 1}` : ''}\n${printTree(view(props as P))}`);
+        })
+        .join('\n\n');
+      await expect(`${text}\n`).toMatchFileSnapshot(`__snapshots__/${name}.tree`);
+    });
+  });
+}
+
+snapshot('Button', (props) => buttonView(props), buttonStories);
+snapshot('ActionButton', (props) => actionButtonView(props), actionButtonStories);
+snapshot('SearchField', (props) => searchFieldView(props as Parameters<typeof searchFieldView>[0]), searchFieldStories);
+snapshot('Knob', (props) => knobView(props as Parameters<typeof knobView>[0]), knobStories);
+snapshot('LampButton', (props) => lampButtonView(props as Parameters<typeof lampButtonView>[0]), lampButtonStories);
+snapshot('SettingsRow', (props) => settingsRowView(props as Parameters<typeof settingsRowView>[0], 'uid'), settingsRowStories);
+// A composite: SettingsRow holding a LampButton (component nodes, a callback by key, a filled slot).
+snapshot('Pad', (props) => padView(props as Parameters<typeof padView>[0]), padStories);
+snapshot('Meter', (props) => meterView(props as Parameters<typeof meterView>[0]), meterStories);
+snapshot('BarBeat', (props) => barBeatView(props), barBeatStories);
+snapshot('Fader', (props) => faderView(props as Parameters<typeof faderView>[0]), faderStories);
+snapshot('SendReadout', (props) => sendReadoutView(props as Parameters<typeof sendReadoutView>[0]), sendReadoutStories);
+snapshot('Keys', (props) => keysView(props as Parameters<typeof keysView>[0]), keysStories);
+snapshot('ChordReadout', (props) => chordReadoutView(props as ChordReadoutModelProps), chordReadoutStories);
+snapshot('PartMarks', (props) => partMarksView(props as PartMarksModelProps)!, partMarksStories);
+snapshot('SectionName', (props) => sectionNameView(props as SectionNameModelProps), sectionNameStories);
+snapshot('TempoReadout', (props) => tempoReadoutView(props as Parameters<typeof tempoReadoutView>[0]), tempoReadoutStories);
+snapshot('BarReadout', (props) => barReadoutView(props as Parameters<typeof barReadoutView>[0]), barReadoutStories);
+snapshot('SoundCell', (props) => soundCellView(props as Parameters<typeof soundCellView>[0]), soundCellStories);
+snapshot('RackCell', (props) => rackCellView(props as Parameters<typeof rackCellView>[0]), rackCellStories);
+snapshot('SettingsRow sample', (props) => settingsRowSample({ ...controlArgs, ...props } as SampleArgs), settingsRowStories);
+snapshot('AccentBlock', (props) => accentBlockView(props as Parameters<typeof accentBlockView>[0]), accentBlockStories);
+snapshot('WaitingChip', (props) => waitingChipView(props as Parameters<typeof waitingChipView>[0])!, waitingChipDrawn);
+snapshot('StatusLine', (props) => statusLineView(props), statusLineStories);
+snapshot('DisplayArt', (props) => displayArtView(props), displayArtStories);
+snapshot('HueLegend', (props) => hueLegendView(props), hueLegendStories);
+// OneTouchPicker draws several roots in its `cells` mode: a fragment, printed one root after another.
+snapshot('OneTouchPicker', (props) => oneTouchPickerView(props), oneTouchPickerStories);
+snapshot('HealthSlot', (props) => healthSlotView(props), healthSlotStories);
+snapshot('AppBar', (props) => appBarView(props), appBarStories);
+snapshot('MetronomePopover', (props) => metronomePopoverView(props), metronomePopoverStories);
+// The primitives' tree builders (their components stay polymorphic bindings, held by parity.test.tsx).
+snapshot('Text', (props) => textNode(props as Parameters<typeof textNode>[0], {}, ...kids(props)), textStories);
+snapshot('Stack', (props) => stackNode(props as Parameters<typeof stackNode>[0], {}, ...kids(props)), stackStories);
+snapshot('Surface', (props) => surfaceNode(props as Parameters<typeof surfaceNode>[0], {}, ...kids(props)), surfaceStories);
+snapshot('Icon', (props) => iconNode(props as Parameters<typeof iconNode>[0], {}, ...kids(props)), iconStories);
+snapshot('Opaque', (props) => opaqueNode(undefined, {}, ...kids(props)), opaqueStories);
+snapshot('Hole', (props) => holeNode(undefined, (props as { name?: string }).name, {}, ...kids(props)), holeStories);
+snapshot('StatusDot', (props) => statusDotView(props), statusDotStories);
+snapshot('Separator', (props) => separatorView(props), separatorStories);
+snapshot('LineSlider', (props) => lineSliderView(props as Parameters<typeof lineSliderView>[0]), lineSliderStories);
+snapshot('Segmented', (props) => segmentedView(props as Parameters<typeof segmentedView>[0]), segmentedStories);
+// Select open (unless disabled), the held member highlighted: the menu is the part only a tree shows.
+snapshot('Select', (props) => selectView(props as Parameters<typeof selectView>[0], { open: !props.disabled, active: props.index ?? 0, quiet: false, id: 'uid' }), selectStories);
+// Toggle and Switch: the face, reading or name is the `children` slot; Switch and Disclosure drawn at their starting own value.
+snapshot('Toggle', (props: ToggleModelProps) => toggleView(props, kids(props).length > 0), toggleStories);
+snapshot('Switch', (props: SwitchModelProps) => switchView(props, props.defaultChecked ?? false, kids(props).length > 0), switchStories);
+snapshot('Disclosure', (props: DisclosureModelProps) => disclosureView(props, props.defaultExpanded ?? false), disclosureStories);
+snapshot('StepValue', (props) => stepValueView(props as Parameters<typeof stepValueView>[0]), stepValueStories);
+snapshot('Readout', (props) => readoutView(props as Parameters<typeof readoutView>[0]), readoutStories);
+snapshot('NumberField', (props) => numberFieldView(props as Parameters<typeof numberFieldView>[0]), numberFieldStories);
+snapshot('Checkbox', (props) => checkboxView(props, { label: 'children' in props }), checkboxStories);
+snapshot('Radio', (props) => radioView(props, { label: 'children' in props }, props.defaultChecked === 'mixed'), radioStories);
+snapshot('Slider', (props) => sliderView(props as Parameters<typeof sliderView>[0]), sliderStories);
+snapshot('Popover', (props) => popoverView(props), popoverStories);
+snapshot('Modal', (props) => modalView(props as Parameters<typeof modalView>[0]), modalStories);
+// A composite: a Modal holding action buttons in its `actions` slot.
+snapshot('Modal sample', (props) => modalSample(props), { WithActions: modalStories.WithActions });
+snapshot('Sheet', (props) => sheetView(props as Parameters<typeof sheetView>[0]), sheetStories);
+snapshot('Tabs', (props) => tabsView(props), tabsStories);
+snapshot('Region',(props) => regionView(props as RegionDrawProps, {}, { uid: 'uid' }), regionStories);
+// A composite: Regions holding Groups of Buttons, and Regions with views (Tabs by name).
+snapshot('Region sample', (props) => regionSample(props as RegionSampleArgs), regionSampleStories);
+snapshot('Group', (props) => groupView(props as GroupDrawProps), groupStories);
+snapshot('Group sample', (props) => groupSample(props as GroupSampleArgs), groupSampleStories);
+snapshot('Layer', (props) => layerView(props as LayerViewProps), layerStories);
+snapshot('Screen', (props) => screenView(props, props), screenStories);
+snapshot('Screen (assembled)', (props) => screenView(props), assemblyStories);
+snapshot('Screen sample', (args: Partial<ScreenArgs>) => screenSample({ ...screenArgs, ...args }),{ Default: { args: screenStoryArgs.Default }, GridOnly: { args: screenStoryArgs.GridOnly } });
+snapshot('AssembledScreen', (props) => assembledScreenView(props, assembledPlacement(props, { room: null, principles: scopePrinciples(null) })), assemblyStories as Fixtures<Parameters<typeof assembledScreenView>[0]>);
+snapshot('Display', (props) => displayView(props as Parameters<typeof displayView>[0], { fromScreen: props.form ?? 'compact', chosen: null }, false), displayStories);
+snapshot('SongForm', (props) => songFormView(props, props.formForm ?? 'strip', props.transportForm ?? 'keys'), songFormStories);
+snapshot('FaderBank', (props) => faderBankView(props as FaderBankModelProps, (props as FaderBankModelProps).form ?? 'tall'), faderBankStories);
+// The region composites' roots are component nodes (a Region holding the bank).
+snapshot('FaderBankRegion', (props) => faderBankRegionView(props as Parameters<typeof faderBankRegionView>[0]), faderBankStories);
+snapshot('KnobBank', (props) => knobBankView(props as KnobBankRegionModelProps, (props as KnobBankRegionModelProps).form ?? 'labelled'), knobBankStories);
+snapshot('KnobBankRegion', (props) => knobBankRegionView(props as KnobBankRegionModelProps), knobBankStories);
+snapshot('PadBank', (props) => padBankView(props as PadBankProps, (props as PadBankProps).form ?? 'two-rows', null), padBankStories);
+snapshot('PadBankRegion', (props) => padBankRegionView(props as PadBankRegionProps), padBankStories);
+// The Stage: the frame holding the Screen, each region's content in its slot by id (`region:<id>`).
+snapshot('Stage', (props) => stageView(props, {}, { left: 0, right: 0 }), stageStories);
+// Its `page` and `side` slots: the Stage's tree with that slot filled, then the story's sample (the slot's fixture content).
+snapshot('Stage slots', (props) => [stageView(props, {}, { left: 0, right: 0 }, { [props.slot]: true }), stageSample(props)], stageSlotStories);
+snapshot('PageList', (props) => pageListView(props as Parameters<typeof pageListView>[0]), pageListStories);
+snapshot('FolderList', (props) => folderListView(props as Parameters<typeof folderListView>[0]), folderListStories);
+import { exactValueView } from "../../math/components/ExactValue/ExactValue.model";
+import { exactValueStories } from "../../math/components/ExactValue/ExactValue.fixtures";
+import { expressionFieldView } from "../../math/components/ExpressionField/ExpressionField.model";
+import { expressionFieldStories } from "../../math/components/ExpressionField/ExpressionField.fixtures";
+import { plotViewportView } from "../../math/components/PlotViewport/PlotViewport.model";
+import { plotViewportStories } from "../../math/components/PlotViewport/PlotViewport.fixtures";
+snapshot("ExactValue", exactValueView, exactValueStories);
+snapshot("ExpressionField", expressionFieldView, expressionFieldStories);
+snapshot("PlotViewport", plotViewportView, plotViewportStories);
+import { mathInspectorView } from "../../math/components/MathInspector/MathInspector.model";
+import { mathInspectorStories } from "../../math/components/MathInspector/MathInspector.fixtures";
+snapshot("MathInspector", mathInspectorView, mathInspectorStories);
+import { distributionPlotView } from '../../math/components/DistributionPlot/DistributionPlot.model';
+import { distributionPlotStories } from '../../math/components/DistributionPlot/DistributionPlot.fixtures';
+snapshot('DistributionPlot', distributionPlotView, distributionPlotStories);
+import { loopPieView } from '../../instrument/components/LoopPie/LoopPie.model';
+import { loopPieStories } from '../../instrument/components/LoopPie/LoopPie.fixtures';
+import { loopGridView } from '../../instrument/components/LoopGrid/LoopGrid.model';
+import { loopGridStories } from '../../instrument/components/LoopGrid/LoopGrid.fixtures';
+import { sendBarsView } from '../../instrument/components/SendBars/SendBars.model';
+import { sendBarsStories } from '../../instrument/components/SendBars/SendBars.fixtures';
+import { mixBandView } from '../../instrument/components/MixBand/MixBand.model';
+import { mixBandStories } from '../../instrument/components/MixBand/MixBand.fixtures';
+import { chordStripView } from '../../instrument/components/ChordStrip/ChordStrip.model';
+import { chordStripStories } from '../../instrument/components/ChordStrip/ChordStrip.fixtures';
+import { arpSequencerView } from '../../instrument/components/ArpSequencer/ArpSequencer.model';
+import { arpSequencerStories } from '../../instrument/components/ArpSequencer/ArpSequencer.fixtures';
+import { xyPadView } from '../../instrument/components/XYPad/XYPad.model';
+import { xyPadStories } from '../../instrument/components/XYPad/XYPad.fixtures';
+import { macroPadsView } from '../../instrument/components/MacroPads/MacroPads.model';
+import { macroPadsStories } from '../../instrument/components/MacroPads/MacroPads.fixtures';
+import { stemLanesView } from '../../instrument/components/StemLanes/StemLanes.model';
+import { stemLanesStories } from '../../instrument/components/StemLanes/StemLanes.fixtures';
+import { transitionRowView } from '../../instrument/components/TransitionRow/TransitionRow.model';
+import { transitionRowStories } from '../../instrument/components/TransitionRow/TransitionRow.fixtures';
+import { transportView } from '../../instrument/components/Transport/Transport.model';
+import { transportStories } from '../../instrument/components/Transport/Transport.fixtures';
+import { deviceFaceView } from '../../instrument/components/DeviceFace/DeviceFace.model';
+import { deviceFaceStories } from '../../instrument/components/DeviceFace/DeviceFace.fixtures';
+import { pianoRollView } from '../../instrument/components/PianoRoll/PianoRoll.model';
+import { pianoRollStories } from '../../instrument/components/PianoRoll/PianoRoll.fixtures';
+import { showView, showTab } from '../../yahaha/screens/Show/Show.model';
+import { showStories } from '../../yahaha/screens/Show/Show.fixtures';
+
+snapshot('LoopPie', (props) => loopPieView(props as Parameters<typeof loopPieView>[0], 'pie'), loopPieStories);
+snapshot('LoopGrid', (props) => loopGridView(props as Parameters<typeof loopGridView>[0], 'full'), loopGridStories);
+snapshot('SendBars', (props) => sendBarsView(props as Parameters<typeof sendBarsView>[0], 'bars'), sendBarsStories);
+snapshot('MixBand', (props) => mixBandView(props as Parameters<typeof mixBandView>[0], 'tall'), mixBandStories);
+snapshot('ChordStrip', (props) => chordStripView(props as Parameters<typeof chordStripView>[0], 'full'), chordStripStories);
+snapshot('ArpSequencer', (props) => arpSequencerView(props as Parameters<typeof arpSequencerView>[0], 'full'), arpSequencerStories);
+snapshot('XYPad', (props) => xyPadView(props as Parameters<typeof xyPadView>[0], 'square'), xyPadStories);
+snapshot('MacroPads', (props) => macroPadsView(props as Parameters<typeof macroPadsView>[0], 'two-up'), macroPadsStories);
+snapshot('StemLanes', (props) => stemLanesView(props as Parameters<typeof stemLanesView>[0], 'four'), stemLanesStories);
+snapshot('TransitionRow', (props) => transitionRowView(props as Parameters<typeof transitionRowView>[0], 'row'), transitionRowStories);
+snapshot('Show', (props) => showView(props as Parameters<typeof showView>[0], showTab((props as { active?: string }).active)), showStories);
+snapshot('Transport', (props) => transportView(props as Parameters<typeof transportView>[0], 'bar'), transportStories);
+snapshot('DeviceFace', (props) => deviceFaceView(props as Parameters<typeof deviceFaceView>[0], 'face'), deviceFaceStories);
+snapshot('PianoRoll', (props) => pianoRollView(props as Parameters<typeof pianoRollView>[0], 'full'), pianoRollStories);

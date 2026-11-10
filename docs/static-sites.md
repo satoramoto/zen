@@ -59,7 +59,7 @@ the ordinary React/Svelte entries. Types ship beside the integration.
 After `build:lib`, `npm run check:site` exercises path helpers, builds the fixture
 at `/project/`, and checks keyboard search, internal resources, no-JS reading,
 and 1440px/390px layout in Chromium. Screenshots go to `.shots/site/`.
-`Site/Documentation` and `Site/Flowchart` hold seven scenario stories; run them against a built
+`Site/Components/Documentation` and `Site/Components/Flowchart` hold seven scenario stories; run them against a built
 Storybook with `node scripts/check-site.mjs --stories storybook-static`.
 The bounded test runner closes its browser and ephemeral server in `finally`.
 

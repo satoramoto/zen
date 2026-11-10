@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { Text } from '../../../primitives/Text';
+import { Text } from '../../../primitives/Text/Text';
 import { Formula } from './Formula';
 
 /** A formula in native MathML: TeX typeset by temml, set in the contract's math face. */

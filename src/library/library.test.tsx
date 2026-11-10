@@ -3,11 +3,11 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { LAYERS, SCOPE_VARS, toCssVars, type Layer, type Mode, type Palette, type Scheme } from './contract';
-import { packs } from './themes/packs';
-import { palettes } from './themes/palettes';
-import { materials } from './themes/materials';
+import { packs } from './foundation/themes/packs';
+import { palettes } from './foundation/themes/palettes';
+import { materials } from './foundation/themes/materials';
 import { ThemeScope, resolveTheme } from './theme';
-import { Region, Screen } from './layout';
+import { Region, Screen } from './layouts';
 
 // jsdom gives import.meta.url a non-file scheme; tests run from the repo root.
 const dir = join(process.cwd(), 'src/library');
@@ -24,8 +24,9 @@ const filesUnder = (rel: string, ext: RegExp) =>
 const COMPONENT_SOURCES = [
   'library.css',
   ...filesUnder('components', /\.(tsx?|css)$/),
+  ...filesUnder('instrument', /\.(tsx?|css)$/),
   ...filesUnder('graph', /\.(tsx?|css)$/),
-  ...filesUnder('layout', /\.(tsx?|css)$/),
+  ...filesUnder('layouts', /\.(tsx?|css)$/),
   ...filesUnder('yahaha', /\.(tsx?|css)$/),
   ...filesUnder('theme-editor', /\.(tsx?|css)$/),
   ...filesUnder('report', /\.(tsx?|css)$/),
@@ -136,9 +137,9 @@ describe('token contract', () => {
   });
 
   it('scrolling behind a pinned region is declared (`under`, `over`), never painted', () => {
-    // The assembled screen clips and fades a slot that scrolls behind (layout/assembly/Assembly.css).
+    // The assembled screen clips and fades a slot that scrolls behind (layouts/Assembly/Assembly.css).
     // Anywhere else, a vertical fade mask or a clip read from the scroll-behind room is that look hand-rolled.
-    for (const file of COMPONENT_SOURCES.filter((f) => !f.startsWith('layout/assembly/'))) {
+    for (const file of COMPONENT_SOURCES.filter((f) => !f.startsWith('layouts/Assembly/'))) {
       const src = read(file).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
       expect(src, `${file} hand-rolls a scroll fade: declare under/over instead`).not.toMatch(/\bmask(-image)?\s*:[^;]*linear-gradient\(\s*(to (top|bottom)|0deg|180deg)/);
       expect(src, `${file} hand-rolls a scroll fade: declare under/over instead`).not.toMatch(/\bmaskImage\b/);

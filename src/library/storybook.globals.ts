@@ -1,10 +1,10 @@
 // The Storybook toolbar, framework-free: `storybook.tsx` re-exports it.
 import { FROM_THEME } from './resolve';
-import { packs } from './themes/packs';
-import { palettes } from './themes/palettes';
-import { faces } from './themes/faces';
-import { scales } from './themes/scales';
-import { materials } from './themes/materials';
+import { packs } from './foundation/themes/packs';
+import { palettes } from './foundation/themes/palettes';
+import { faces } from './foundation/themes/faces';
+import { scales } from './foundation/themes/scales';
+import { materials } from './foundation/themes/materials';
 
 const facetMenu = (title: string, icon: string, list: { id: string; label: string }[]) => ({
   description: `${title} facet (overrides the theme's)`,
@@ -43,7 +43,7 @@ export const libraryGlobalTypes = {
 
 /** Zen's own Storybook only (not in `libraryGlobalTypes`, so an app's Storybook doesn't get it): which
  *  renderer draws a component converted to a view tree, React's `Tree` or Svelte's (`withRenderer`,
- *  `src/library/stories/story.tsx`). Other stories draw in React either way. */
+ *  `src/library/foundation/stories/story.tsx`). Other stories draw in React either way. */
 export const rendererGlobalTypes = {
   renderer: {
     description: 'Which renderer draws the components drawn by a view tree',

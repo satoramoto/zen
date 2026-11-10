@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { HarmonicString } from '../../book/HarmonicString';
+import { HarmonicString } from '../../book/components/HarmonicString/HarmonicString';
 
 /**
  * A live illustration with its control, a "what changes" line and a source: the frame every

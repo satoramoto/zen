@@ -78,7 +78,7 @@ Start the unified preview in an isolated worktree on free ports:
 PREVIEW_LABEL="Zen Signals" PREVIEW_PORT=4197 STORYBOOK_PORT=6027 npm run dev
 ```
 
-Open `/iframe.html?id=math-signal-playground--interference&viewMode=story` on Storybook.
+Open `/iframe.html?id=math-signals-components-signal-playground--interference&viewMode=story` on Storybook.
 The two additional behavior stories are Explore Interference and Switch Dimensions.
 
 ```sh

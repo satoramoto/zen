@@ -24,7 +24,7 @@ export function useThemeScope(): { facets: Facets; principles?: PackPrinciples }
 }
 
 /** `bleed`: the scope is a whole screen (an app's window), so it runs to the edges with no padding.
- *  `principles`: the pack's layout principles, for screens assembled inside it (`layout/assembly`). */
+ *  `principles`: the pack's layout principles, for screens assembled inside it (`layouts/Assembly`). */
 export function ThemeScope({
   facets,
   principles,

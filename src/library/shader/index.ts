@@ -24,7 +24,7 @@ export { compileCircuit, paramValues, structureKey } from './compile';
 /** Compile a circuit, recompiling only when its structure changes; params update every change. */
 export { useShaderMaterial, type ShaderMaterial } from './useShaderMaterial';
 /** The runner: a canvas drawing a fragment shader through the page's one shared WebGL2 context. */
-export { ShaderCanvas } from './ShaderCanvas';
+export { ShaderCanvas } from './components/ShaderCanvas/ShaderCanvas';
 /** Whether a shader material should draw here (WebGL2, no reduced motion or transparency). */
 export { useShaderSupport } from './support';
 /** The same, framework-free: the current answer and a change subscription (Svelte reads these). */
@@ -32,4 +32,4 @@ export { shaderSupported, subscribeShaderSupport } from './supported';
 /** The runner as a framework-free store: a canvas bound to the shared context (the tree's `shader` store). */
 export { bindShader, type ShaderParams, type ShaderBinding } from './bindShader';
 /** The three materials, as Circuits, and a named material compiled once per page. */
-export { SHADER_MATERIALS, compiledMaterial } from './materials';
+export { SHADER_MATERIALS, compiledMaterial } from './model/materials';

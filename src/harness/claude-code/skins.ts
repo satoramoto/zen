@@ -21,7 +21,7 @@
 // kit/skins.ts holds the result for every pack, as plain data a plugin carries; skins.test.ts
 // checks it matches, and `npx tsx scripts/harness-skins.ts` writes it again.
 import type { Palette } from '../../library/contract';
-import { packs } from '../../library/themes/packs';
+import { packs } from '../../library/foundation/themes/packs';
 import { apart, chroma, fromOklch, hex, hue, hueDistance, mix, oklch } from '../shared/color';
 import type { Skin } from './kit/skin';
 

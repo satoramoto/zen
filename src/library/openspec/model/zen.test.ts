@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ZEN_FILES } from '../stories/zen';
+import { ZEN_FILES } from './zen';
 import { readRepo } from './repo';
 
 // The dogfood: this project's own openspec folder, read the way the stories read it.

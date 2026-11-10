@@ -39,9 +39,9 @@ Sync only this change's scenarios into the shared store (from the Zen checkout):
 
 ```sh
 NODE_PATH="$PWD/node_modules" npx story-spec sync --change remove-field-guide \
-  --root ../zen-flow --dir "$PWD/src/library/preview-catalog"
+  --root ../zen-flow --dir "$PWD/src/library/foundation/preview-catalog"
 NODE_PATH="$PWD/node_modules" npx story-spec sync --change remove-field-guide \
-  --root ../zen-flow --dir "$PWD/src/library/preview-catalog" --check
+  --root ../zen-flow --dir "$PWD/src/library/foundation/preview-catalog" --check
 openspec validate remove-field-guide --strict --store zen-flow
 ```
 

@@ -2,11 +2,11 @@
 // and framework-free code (the skin helpers in `theme-editor/skin.ts`, a future Vue or Svelte
 // binding) imports it from here.
 import type { Facets } from './contract';
-import { packs, type ThemePack } from './themes/packs';
-import { palettes } from './themes/palettes';
-import { faces } from './themes/faces';
-import { scales } from './themes/scales';
-import { materials } from './themes/materials';
+import { packs, type ThemePack } from './foundation/themes/packs';
+import { palettes } from './foundation/themes/palettes';
+import { faces } from './foundation/themes/faces';
+import { scales } from './foundation/themes/scales';
+import { materials } from './foundation/themes/materials';
 
 export const FROM_THEME = 'theme';
 

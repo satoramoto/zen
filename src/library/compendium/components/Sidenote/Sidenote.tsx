@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Text } from '../../../primitives/Text';
+import { Text } from '../../../primitives/Text/Text';
 import './Sidenote.css';
 
 export interface SidenoteProps {

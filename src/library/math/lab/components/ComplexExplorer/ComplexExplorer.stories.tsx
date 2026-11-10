@@ -1,0 +1,10 @@
+import type {Meta,StoryObj} from '@storybook/react-vite';
+import {withLibraryTheme} from '../../../../storybook';
+import {expect,userEvent,within,fireEvent} from 'storybook/test';
+import {ComplexExplorer} from './ComplexExplorer';
+const meta={title:'Math/Lab/Components/Complex Explorer',component:ComplexExplorer,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{functionKind:'zeta'},argTypes:{functionKind:{control:'select',options:['square','reciprocal','zeta']}},} satisfies Meta<typeof ComplexExplorer>;
+export default meta;type Story=StoryObj<typeof meta>;
+export const ComplexSquare:Story={args:{functionKind:'square'}};
+export const ComplexReciprocal:Story={args:{functionKind:'reciprocal'}};
+export const RiemannZeta:Story={};
+export const VisitZero:Story={play:async({canvasElement})=>{const c=within(canvasElement);await userEvent.click(c.getByRole('button',{name:/Zero 2/}));await expect(Number(c.getByLabelText('Output magnitude').textContent)).toBeLessThan(1e-10);await userEvent.click(c.getByRole('button',{name:'Move to σ = 0.7'}));await expect(Number(c.getByLabelText('Output magnitude').textContent)).toBeGreaterThan(.01);await userEvent.click(c.getByRole('button',{name:'Snap to critical line'}));await expect(Number(c.getByLabelText('Output magnitude').textContent)).toBeLessThan(1e-10);await fireEvent.change(c.getByRole('slider',{name:'Imaginary input'}),{target:{value:18}});await expect(c.getByLabelText('Complex input value')).toHaveTextContent('18.000000');}};

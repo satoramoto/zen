@@ -1,0 +1,28 @@
+<!--
+  Display: the model's tree (`displayView`, Display.model.ts) drawn by the Svelte `Tree`, as
+  `Display.tsx` draws it with the React one; see Display.tsx for the job and the tuning knobs. The
+  form comes from `getForm`/`getChosenForm` (the assembled screen) and, for `density="auto"`, the
+  measured width (`wideState`, written by the `displayWide` store through `onWide`).
+-->
+<script lang="ts">
+  import { fromStore } from 'svelte/store';
+  import { getChosenForm, getForm } from '../../../layouts/Assembly/forms.svelte';
+  import Tree from '../../../foundation/view/Tree.svelte';
+  import { DISPLAY_FORMS, DISPLAY_PART } from './Display.forms';
+  import { displayHandlers, displayView, type DisplayModelProps } from './Display.model';
+  import { wideState } from './wide';
+  import '../../../primitives/Stack/Stack.css';
+  import '../../../primitives/Text/Text.css';
+  import './Display.css';
+
+  let props: DisplayModelProps = $props();
+
+  // The form: the `form` prop, then the assembled screen's choice (its `display` part's, in a hero
+  // shared with a side panel), then `density` (auto: the width).
+  const fromScreen = getForm(DISPLAY_FORMS, () => props.form, DISPLAY_PART);
+  const chosen = getChosenForm();
+  const wide = wideState();
+  const isWide = fromStore(wide);
+</script>
+
+<Tree tree={displayView(props, { fromScreen: fromScreen.current, chosen: chosen.current }, isWide.current)} handlers={displayHandlers(props, wide)} />

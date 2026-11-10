@@ -1,7 +1,7 @@
 # Editable wave calculator
 
 **Math / Wave Calculator** is the first authorable workspace on the React math framework.
-Open `?path=/story/math-wave-calculator--playground` in the unified Storybook preview.
+Open `?path=/story/math-calculator-components-wave-calculator--playground` in the unified Storybook preview.
 
 Three editable definitions, `f(x)`, `g(x)`, and `h(x)`, share a position, a clock and named
 parameters. The initial result is `f(x)+g(x)`, but all three definitions can change. For
@@ -96,7 +96,7 @@ equalities, matrices and non-square roots) get explicit feedback. The previous e
 parameter and evaluation budgets still apply; the typeset input is additionally limited
 to 1200 LaTeX characters and a 150-node conversion budget.
 
-`Math/Components/Equation Input` has wave, fraction, envelope and composition specimens.
+`Math/Calculator/Components/Equation Input` has wave, fraction, envelope and composition specimens.
 `node scripts/equation-input-stories.mjs` checks physical typing, caret preservation,
 undo/redo, incomplete fractions, domain errors, inline quantities, touch key insertion,
 local editor assets and keyboard ownership inside Storybook's iframe. Pure bridge tests

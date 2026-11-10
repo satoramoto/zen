@@ -85,7 +85,7 @@ try {
   await noJS.close();
   if (values.stories) {
     const index = JSON.parse(await readFile(resolve(values.stories, 'index.json'), 'utf8'));
-    const stories = Object.values(index.entries).filter(entry => entry.type === 'story' && ['Site/Documentation', 'Site/Flowchart'].includes(entry.title));
+    const stories = Object.values(index.entries).filter(entry => entry.type === 'story' && ['Site/Components/Documentation', 'Site/Components/Flowchart'].includes(entry.title));
     assert.equal(stories.length, 7);
     for (const story of stories) {
       const page = await browser.newPage();

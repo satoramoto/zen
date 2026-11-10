@@ -1,10 +1,10 @@
 # Svelte bindings: one view tree, two renderers
 
-Every zen component renders in React and in Svelte 5 from one framework-free model, with the same markup, classes and data attributes, so one stylesheet styles both. **React and Svelte are bindings only**: every behaviour and every visual is shared. A model returns a **view tree** (plain data: elements, attributes, text, slots, handler keys and store names), and one renderer per framework draws any tree: `src/library/view/Tree.tsx` and `src/library/view/Tree.svelte`. A component's `.tsx` and `.svelte` are one `<Tree …/>` each.
+Every zen component renders in React and in Svelte 5 from one framework-free model, with the same markup, classes and data attributes, so one stylesheet styles both. **React and Svelte are bindings only**: every behaviour and every visual is shared. A model returns a **view tree** (plain data: elements, attributes, text, slots, handler keys and store names), and one renderer per framework draws any tree: `src/library/foundation/view/Tree.tsx` and `src/library/foundation/view/Tree.svelte`. A component's `.tsx` and `.svelte` are one `<Tree …/>` each.
 
-Button (`src/library/components/core/Button/`) is the worked example; Knob, LampButton and SettingsRow (a slot for its control, and stories that are composites) are converted too. Components not yet converted still render their model by hand in both files (the older way, below) and are held by the DOM parity test until a conversion lane moves them.
+Button (`src/library/components/Button/`) is the worked example; Knob, LampButton and SettingsRow (a slot for its control, and stories that are composites) are converted too. Components not yet converted still render their model by hand in both files (the older way, below) and are held by the DOM parity test until a conversion lane moves them.
 
-## The kernel (`src/library/view/`)
+## The kernel (`src/library/foundation/view/`)
 
 | File | What it holds |
 |---|---|
@@ -42,7 +42,7 @@ No function ever appears in a tree, so a tree prints as text (`printTree`) and s
 | File | What it holds |
 |---|---|
 | `Button.model.ts` | The props (`ButtonModelProps`: everything but slots), `buttonView(props, slots): Node` (the face's classes, `data-*`, ARIA, label, glyph, the icon slot, `on: { click: 'press' }` and the `longPress`, `hold` and `tip` stores) and `buttonHandlers(props)`. Pure helpers (`clickPresses`). No React, no Svelte. |
-| `longPress.ts`, `hold.ts` | The stores: `bindLongPress(node, params)` and `bindHold(node, params)`, each returning `{ update, destroy }`, registered in `view/stores.ts`. |
+| `longPress.ts`, `hold.ts` | The stores: `bindLongPress(node, params)` and `bindHold(node, params)`, each returning `{ update, destroy }`, registered in `foundation/view/stores.ts`. |
 | `Button.tsx` | `<Tree tree={buttonView(props, { icon: icon !== undefined })} slots={{ icon }} handlers={buttonHandlers(props)} />`, its doc comment (job, changes, tuning knobs) and its CSS imports. |
 | `Button.svelte` | The same line with the Svelte `Tree` and the `icon` snippet. |
 | `Button.css` | Shared as is (contract variables only). |
@@ -53,15 +53,15 @@ No per-component hooks (`useX.ts`) or actions (`x.svelte.ts`).
 
 ## Stories: one Storybook, a Renderer toggle
 
-The React Storybook (`.storybook/`) draws every story. Its toolbar's **Renderer** (`react` | `svelte`, `rendererGlobalTypes` in `src/library/storybook.globals.ts`) picks who draws a converted component: `withRenderer` (`src/library/stories/story.tsx`, first in the component's `decorators`, so inside the theme) mounts the Svelte component with the story's args and fixture through Svelte's `mount()`, and unmounts it on change. Story ids, controls, the theme toolbar and play functions are unchanged, so the plays exercise whichever renderer is chosen. A story with a layout of its own (`render`, e.g. Button's Faces grid) has no fixture to draw in Svelte and stays React, with a note.
+The React Storybook (`.storybook/`) draws every story. Its toolbar's **Renderer** (`react` | `svelte`, `rendererGlobalTypes` in `src/library/storybook.globals.ts`) picks who draws a converted component: `withRenderer` (`src/library/foundation/stories/story.tsx`, first in the component's `decorators`, so inside the theme) mounts the Svelte component with the story's args and fixture through Svelte's `mount()`, and unmounts it on change. Story ids, controls, the theme toolbar and play functions are unchanged, so the plays exercise whichever renderer is chosen. A story with a layout of its own (`render`, e.g. Button's Faces grid) has no fixture to draw in Svelte and stays React, with a note.
 
 There is no separate Svelte Storybook. A story's own harness (state the story keeps) is a `*.story.tsx` (`StagePlayground.story.tsx`), outside the bindings-only rule.
 
 ## Rules
 
-- **Bindings only.** A component's `.tsx` and `.svelte` under `src/library/{primitives,components,layout,yahaha}` write no element markup but `<Tree …/>`. `src/library/view/bindings-only.test.ts` counts the other tags (and `createElement(` / `h(` calls, and Svelte's `{@html}`) per file against `view.baseline.json`: a count may go down, never up, and a file not listed must have none. Converting a component deletes its lines there.
+- **Bindings only.** A component's `.tsx` and `.svelte` under `src/library/{primitives,components,layout,yahaha}` write no element markup but `<Tree …/>`. `src/library/foundation/view/bindings-only.test.ts` counts the other tags (and `createElement(` / `h(` calls, and Svelte's `{@html}`) per file against `view.baseline.json`: a count may go down, never up, and a file not listed must have none. Converting a component deletes its lines there.
 - **Nothing either renderer would copy.** If a binding would compute it, it goes in the model (the tree, the handlers) or a store.
-- **Theme.** `ThemeScope.svelte` and the `theme` action (`src/library/svelte/theme.svelte.ts`) draw `scopeView` from `src/library/theme.model.ts`, as React's `ThemeScope` does.
+- **Theme.** `ThemeScope.svelte` and the `theme` action (`src/library/foundation/svelte/theme.svelte.ts`) draw `scopeView` from `src/library/theme.model.ts`, as React's `ThemeScope` does.
 - **Tiers.** `src/library/tiers.ts` scans `.svelte` files: `<script>` as TS, `<style>` as CSS, `style="…"` and `style:prop` like `style={{}}`. New files keep every count at 0.
 
 ## Converting a component
@@ -69,12 +69,12 @@ There is no separate Svelte Storybook. A story's own harness (state the story ke
 A lane converts whole component folders; it owns the folder and adds one line to each of the shared lists below.
 
 1. **Model returns a tree.** In `<Name>.model.ts`, make `<name>View(props, slots?)` return a `Node` built with `h`/`when`/`each`/`slot`, drawing exactly the DOM the `.tsx` draws today (a primitive such as `Text` or `Surface` becomes its element with `textView(...)`'s or the surface model's class and attributes spread in). Export `<name>Handlers(props)` for every callback the tree names.
-2. **Behaviour into stores.** Each hook or action becomes (or already is) a plain `bindX(node, params)` store; register it in `src/library/view/stores.ts` with `keyed(bindX, [callback fields])` (one line); bind it from the tree (`wire(node, { on, bind })`). Delete the `useX.ts` hook and the `x.svelte.ts` action; if `src/library/svelte.ts` exported the action, export `actionOf(bindX)` under the same name instead.
-3. **Register it, and draw children by name.** Add one line each to `src/library/view/reactComponents.ts` and `svelteComponents.ts`. A composite draws the components inside it as `component('Child', props, { on, slots })` nodes (register them too, converted or not), never by importing them in the model.
-4. **Bindings.** `<Name>.tsx` becomes `<Tree tree={…} slots={…} handlers={…} />` (keep its doc comment and CSS imports, add `primitives/Text.css` or `Surface.css` if it drew those primitives); `<Name>.svelte` the same with `view/Tree.svelte`.
+2. **Behaviour into stores.** Each hook or action becomes (or already is) a plain `bindX(node, params)` store; register it in `src/library/foundation/view/stores.ts` with `keyed(bindX, [callback fields])` (one line); bind it from the tree (`wire(node, { on, bind })`). Delete the `useX.ts` hook and the `x.svelte.ts` action; if `src/library/svelte.ts` exported the action, export `actionOf(bindX)` under the same name instead.
+3. **Register it, and draw children by name.** Add one line each to `src/library/foundation/view/reactComponents.ts` and `svelteComponents.ts`. A composite draws the components inside it as `component('Child', props, { on, slots })` nodes (register them too, converted or not), never by importing them in the model.
+4. **Bindings.** `<Name>.tsx` becomes `<Tree tree={…} slots={…} handlers={…} />` (keep its doc comment and CSS imports, add `primitives/Text.css` or `Surface.css` if it drew those primitives); `<Name>.svelte` the same with `foundation/view/Tree.svelte`.
 5. **Same DOM.** Before deleting the old renderers, compare: the parity line for the component must still pass against the new renderers, and the new React DOM must equal the old one for every fixture.
-6. **Tests move.** Delete its line from `src/library/parity.test.tsx`; add `snapshot('<Name>', (props) => <name>View(props), <name>Stories)` to `src/library/view/snapshot.test.ts` and record it (`npx vitest run src/library/view/snapshot.test.ts -u`, then read the `.tree` file). Delete its entries from `src/library/view/view.baseline.json`. Its own tests stay and pass.
-7. **Stories.** In `<Name>.stories.tsx`: `decorators: [withRenderer, withLibraryTheme]`, `const story = fixtureStories<Story>(<Name>, <Name>Svelte)`, each story `story(s.X)` or `{ ...story(s.X), play }`. A story that composes components (what a `<Name>.story.svelte` did) is a view tree built in the fixtures and drawn with `treeStory((args) => ({ tree, handlers }))`.8. **Checks** (each exits 0): `npm run typecheck`, `npx vitest run src/library/view src/library/parity.test.tsx src/library/tiers.test.ts <its folder>`, `npm run build:lib`, `npm run build:storybook`.
+6. **Tests move.** Delete its line from `src/library/parity.test.tsx`; add `snapshot('<Name>', (props) => <name>View(props), <name>Stories)` to `src/library/foundation/view/snapshot.test.ts` and record it (`npx vitest run src/library/foundation/view/snapshot.test.ts -u`, then read the `.tree` file). Delete its entries from `src/library/foundation/view/view.baseline.json`. Its own tests stay and pass.
+7. **Stories.** In `<Name>.stories.tsx`: `decorators: [withRenderer, withLibraryTheme]`, `const story = fixtureStories<Story>(<Name>, <Name>Svelte)`, each story `story(s.X)` or `{ ...story(s.X), play }`. A story that composes components (what a `<Name>.story.svelte` did) is a view tree built in the fixtures and drawn with `treeStory((args) => ({ tree, handlers }))`.8. **Checks** (each exits 0): `npm run typecheck`, `npx vitest run src/library/foundation/view src/library/parity.test.tsx src/library/tiers.test.ts <its folder>`, `npm run build:lib`, `npm run build:storybook`.
 
 ## Unconverted components (the older way)
 

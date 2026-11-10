@@ -1,7 +1,7 @@
 import { useId, type ReactNode } from 'react';
-import { Stack } from '../../../primitives/Stack';
-import { Surface } from '../../../primitives/Surface';
-import { Text } from '../../../primitives/Text';
+import { Stack } from '../../../primitives/Stack/Stack';
+import { Surface } from '../../../primitives/Surface/Surface';
+import { Text } from '../../../primitives/Text/Text';
 import './Figure.css';
 
 export interface FigureProps {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { STANDINGS } from '../../model/standing';
-import { P, Reading } from '../../layout/Reading/Reading';
+import { P, Reading } from '../../layouts/Reading/Reading';
 import { Mark, MarkLegend } from './Mark';
 
 /** A claim's standing as a shape and a colour slot, hung in the margin beside the claim. */

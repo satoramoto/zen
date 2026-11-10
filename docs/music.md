@@ -1,9 +1,9 @@
 # Music: the reference-faithful instrument toolkit
 
-`src/library/Music/` is the new high-level music family. It ports the controlled mix[flow]
+`src/library/music/` is the new high-level music family. It ports the controlled mix[flow]
 face and its controls from `openflowfm/widgets` at
 `7edeedc37e5e4a33315d98ddb93a5a21d6e68eb8`, without redesigning them. The original
-`src/library/components/music/` and its public exports remain unchanged. Consolidation is a
+`src/library/instrument/components/` and its public exports remain unchanged. Consolidation is a
 separate task, not part of this port.
 
 **Next gap: Arrange.** The arranging/timeline view is not part of this mixer delivery.
@@ -93,7 +93,7 @@ playback.
 
 ## Live: the looper's panes (new parts, not ports)
 
-`src/library/Music/live/` holds parts that mix[flow] never had: the live looper's panes, built
+`src/library/music/live/` holds parts that mix[flow] never had: the live looper's panes, built
 **in** the family's face rather than ported from it — the same aliases, controls (`MusicKnob`,
 `MusicSlider`, `MusicMeter`, `MusicToggle`, `MusicSegmented`, `MusicButton`), deck anatomy, 24px
 launch cells and stem inks. They are not fidelity-locked: no reference screenshot governs them, and
@@ -113,8 +113,8 @@ the port's zero-difference evidence below does not cover them.
   guarantees is listed in `docs/live-views.md`.
 - Panes take time as a `beat` prop and hold no state; the app owns the clock and every value. A
   reading the host doesn't supply (a meter, a load, a waveform) is drawn as missing, never as zero.
-- The composed pages (tabs of panes in the Workspace, one linked set) are `Music/Live/Views`
-  (`src/library/Music/live/views/`), React-only story harnesses. Each tab is a document of region instances in
+- The composed pages (tabs of panes in the Workspace, one linked set) are `Music/Live/Screens/Views`
+  (`src/library/music/live/screens/Views/`), React-only story harnesses. Each tab is a document of region instances in
   mix's surface shape, each naming its pane kind and binding.
 
 ## Storybook catalog
@@ -127,7 +127,7 @@ The Music sidebar is grouped by use, not by implementation folders:
 - **Overlays**: context panels and popups.
 - **Themes**: the existing theme editor with live Music specimens.
 - **Foundations**: button faces, labels and technical frame bindings.
-- **Live**: the looper's panes (`Music/live/`, above).
+- **Live**: the looper's panes (`music/live/`, above).
 
 Each component sits directly inside its category, with variants beneath it. The full mixer
 opens with **Default**, followed by **Interactive** and the fixed reference/host-state examples.
@@ -148,7 +148,7 @@ PREVIEW_LABEL="Zen Music" PREVIEW_PORT=4192 STORYBOOK_PORT=6023 npm run dev
 ```
 
 The original widgets Storybook is the before reference (`PORT=6024 npm run dev` in widgets).
-It is not a production dependency of Zen. `Music/Mixer/Four-deck mixer/Default` preserves the
+It is not a production dependency of Zen. `Music/Layouts/Four-deck mixer/Default` preserves the
 original paused simulation without an automatic interaction play. Its `Reference` story uses
 the same fixed input with either renderer; additional stories exercise interaction and host
 states. Do not change reference data or add a redesign to make a screenshot test pass.
@@ -199,6 +199,6 @@ important difference between the standalone story and mix[flow]'s app-only Play 
   frame transforms do not repaint the cached waveform.
 - Original Zen Knob, Fader, Meter and Yahaha Show samples remain **pixel-identical** in both
   renderers to the original checkout (`.shots/music-legacy/report.json`). No legacy
-  `components/music/` source was changed.
+  `instrument/components/` source was changed.
 - Typecheck, library/Storybook builds, framework-free entry checks and whitespace checks pass.
   General unit suites were not run.

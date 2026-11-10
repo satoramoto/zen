@@ -15,7 +15,7 @@ export * from './model/lunarDescent';
 export * from './model/dsky';
 
 // Interactive UI components
-export * from './Dsky';
-export * from './DescentSources';
-export * from './ApolloDescentSimulator';
-export * from './OrbitSimulator';
+export * from './components/Dsky/Dsky';
+export * from './components/DescentSources/DescentSources';
+export * from './components/ApolloDescentSimulator/ApolloDescentSimulator';
+export * from './components/OrbitSimulator/OrbitSimulator';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SAMPLE_FILES } from '../fixtures/sample';
+import { SAMPLE_FILES } from './sample';
 import { parseChange, parseTasks, taskProgress } from './change';
 import { parseInline, parseMarkdown, plain, section, sections } from './markdown';
 import { readRepo, summarize, touched } from './repo';

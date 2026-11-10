@@ -3,15 +3,15 @@
 // a data model with modules. Re-exported unchanged from the package root.
 
 // The node graph and the device face a node wears (the lab editor's stage graph; APIs mirroring @openflow/widgets).
-export { Graph, GraphNode, cordPath, cordInk, type GraphProps, type GraphNodeProps, type GraphCord, type GraphView, type PortSide } from './view/Graph/Graph';
+export { Graph, GraphNode, cordPath, cordInk, type GraphProps, type GraphNodeProps, type GraphCord, type GraphView, type PortSide } from './components/Graph/Graph';
 /** The canvas layers: bus rails, zone frames, faced ports and cord words (labels, amounts). */
-export { amountText, type GraphBus, type GraphZone, type GraphFace } from './view/Graph/Graph';
-export { Port, type PortProps } from './view/Graph/Port';
-export { Device, DevicePortRow, DeviceMore, type DeviceProps, type DevicePortRowProps, type DeviceMoreProps } from './view/Device/Device';
+export { amountText, type GraphBus, type GraphZone, type GraphFace } from './components/Graph/Graph';
+export { Port, type PortProps } from './components/Graph/Port';
+export { Device, DevicePortRow, DeviceMore, type DeviceProps, type DevicePortRowProps, type DeviceMoreProps } from './components/Device/Device';
 /** A port placed anywhere on a Device's outline (pin `placement`). */
-export { DeviceEdge, type DeviceEdgeProps } from './view/Device/Device';
+export { DeviceEdge, type DeviceEdgeProps } from './components/Device/Device';
 /** Where a graph view is among nested modules: a breadcrumb trail. */
-export { GraphPath, type GraphPathProps, type GraphPathStep } from './view/GraphPath/GraphPath';
+export { GraphPath, type GraphPathProps, type GraphPathStep } from './components/GraphPath/GraphPath';
 /** A node's whole face hung beside it at screen scale (ported from @openflow/widgets' Sheet; `Sheet` here is Modal's). */
 export {
   NodeSheet,
@@ -21,7 +21,7 @@ export {
   type NodeSheetPlace,
   type NodeSheetSectionProps,
   type NodeSheetRowProps,
-} from './view/NodeSheet/NodeSheet';
+} from './components/NodeSheet/NodeSheet';
 
 // The Circuit model (docs/circuit-model.md): one plain-JSON circuit of modules, chips, pins, traces
 // and buses, pure operations on it, and the hook that binds one module to the Graph above.
@@ -56,4 +56,4 @@ export {
   type CircuitErrorCode,
   type Issue,
 } from './model/circuit';
-export { useCircuit, type CircuitBinding } from './model/useCircuit';
+export { useCircuit, type CircuitBinding } from './components/useCircuit';

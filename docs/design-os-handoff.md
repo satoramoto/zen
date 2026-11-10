@@ -10,7 +10,7 @@ Every visual decision is a named choice in one token contract, and every widget 
 
 ## Facets
 
-A design system is four facets, mixed freely (`src/library/themes/`, one file each):
+A design system is four facets, mixed freely (`src/library/foundation/themes/`, one file each):
 
 | Facet | What it holds | Sets |
 |---|---|---|
@@ -21,18 +21,18 @@ A design system is four facets, mixed freely (`src/library/themes/`, one file ea
 
 **Layers** are the depth stack: `ground`, `base`, `raised`, `float`, `overlay`, `top`, each with a fill, an opaque `solid`, texture, backdrop, cast shadow and edge, plus one light angle. Flat sets step tones; hardware casts shadows; frost is glass.
 
-A **pack** (`themes/packs.ts`) is a named mix with its source: `yahaha-elektron`, `yahaha-classic`, `yahaha-push`, `visuals`, `elektron`, `ableton`, `linear`. The scope follows the system's light/dark preference unless a mode is chosen. The Storybook toolbar mixes facets and modes; `Design OS/Systems/Theme inspector` shows each pack's variables.
+A **pack** (`themes/packs.ts`) is a named mix with its source: `yahaha-elektron`, `yahaha-classic`, `yahaha-push`, `visuals`, `elektron`, `ableton`, `linear`. The scope follows the system's light/dark preference unless a mode is chosen. The Storybook toolbar mixes facets and modes; `Theme Editor/Components/Theme inspector` shows each pack's variables.
 
 The contract tests hold, in both modes of every palette: every meaning-bearing pair at least 0.12 apart in OKLab, AA text on every solid state and role fill, keys light over dark, and every layer and material filled.
 
 ## Layout primitives
 
-`src/library/layout/`, shared by every design system: `Screen` (fixed header and footer, regions in a named grid), `Region` (a titled area, with switchable views), `Tabs`, `Group`, and `Layer` / `Opaque` / `Hole` (draw on a layer; make everything inside solid; cut a hole for a native view). Stories: `Design OS/Layout/*`.
+`src/library/layouts/`, shared by every design system: `Screen` (fixed header and footer, regions in a named grid), `Region` (a titled area, with switchable views), `Tabs`, `Group`, and `Layer` / `Opaque` / `Hole` (draw on a layer; make everything inside solid; cut a hole for a native view). Stories: `Core/Layouts/*`.
 
 ## Components
 
-- **Core** (`components/core/`): Button, LampButton, ActionButton, Select, Segmented, Popover, Toggle/Switch, Checkbox, Radio, Disclosure, NumberField, Slider, Param, Modal/Sheet, SearchField, StatusDot, StepValue, LineSlider, Readout, SettingsRow, FolderList, PageList, Separator.
-- **Music** (`components/music/`): Fader, Knob, Pad, Keys, Meter, BarBeat and the readouts and cells an instrument shows.
+- **Core** (`components/`): Button, LampButton, ActionButton, Select, Segmented, Popover, Toggle/Switch, Checkbox, Radio, Disclosure, NumberField, Slider, Param, Modal/Sheet, SearchField, StatusDot, StepValue, LineSlider, Readout, SettingsRow, FolderList, PageList, Separator.
+- **Music** (`instrument/components/`): Fader, Knob, Pad, Keys, Meter, BarBeat and the readouts and cells an instrument shows.
 
 A colour slot is a hue number 1–4 or a role (`role-1`, `role-2`); the app decides what it means.
 

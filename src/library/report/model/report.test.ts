@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CHANNELS, TIERS, countBy, filterLeads, formatReportDate, isReady, safeHref, safeContactHref, leadsByChannel, leadsByTier, readyLeads, type Lead } from './report';
-import { REPORT } from '../stories/report.fixtures';
+import { REPORT } from './report.fixtures';
 
 const lead = (name: string, over: Partial<Lead> = {}): Lead => ({ name, tier: 'A', location: 'Somewhere', status: 'new', channel: 'email', ...over });
 

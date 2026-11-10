@@ -4,7 +4,7 @@
 
 - Face: `/home/ryan/Projects/openflowfm/widgets/src/mixer/mixer.css` (all rules).
 - Specimen: `widgets/src/mixer/MixerView.stories.tsx`, `Music/Four-deck mixer` → `FourDecks`; it renders `Preview` → `MixerView` directly, not the app's `PlayView`.
-- Port: `src/library/Music/mixer/mixer.css`. Root contract: **`class="zen-music wdg play-example"`**. The explicit `&.play-example` styles that same root; all other rules apply below it. Keep context popovers inside this DOM subtree, including when shown in the browser's top layer.
+- Port: `src/library/music/components/mixer.css`. Root contract: **`class="zen-music wdg play-example"`**. The explicit `&.play-example` styles that same root; all other rules apply below it. Keep context popovers inside this DOM subtree, including when shown in the browser's top layer.
 - The `:where(.zen-music)` nesting adds **zero specificity**, preserving each original selector's specificity against controls. Original rule order and overrides are retained, including repeated `.play-*` rules; do not consolidate them by copying only the first declaration.
 - Only palette literals and the context menu's 5px radius become theme-owned aliases. `transparent`, zero-radius resets and the dot's `50%` circle retain their structural meaning. Animation names gain `zen-music-` to prevent global name collisions; keyframes, durations and reduced-motion rules are unchanged.
 
@@ -20,7 +20,7 @@ The source face is a normal content-height block:
 - Six shared subgrid rows: **30px + five auto rows**. The footer spans the last two rows. Transport columns are **44px**, separators are **1px + 6px margin on each side**, fader maximum is **88px** with a **75%** minimum, and meter gap is **6px**.
 - `.play-scroll` provides horizontal overflow around the controls, not the timeline; the page can scroll vertically naturally. Do not scale controls or replace intrinsic sizing with equal `minmax(0,1fr)` deck tracks.
 
-**Lead integration:** import `Music/base.css` (theme aliases and shared control anatomy) before control/mixer styles. Keep `layout: 'fullscreen'`; do not add a fixed height, `height:100vh`, a constrained-height/overflow-hidden frame, app shell, padding, or `frame: { w, h }` scaling to the baseline story. Zen's `withLibraryTheme`/Renderer integration must retain the toolbar's actual selected theme, not pin an inner `mixflow` scope. Ensure the scoped mixer inherits the source sans family/variation axes and source typography metrics from the theme/base lane rather than the field-guide body's defaults. `base.css` must retain border-box sizing on `.wdg, .wdg *` so borders are included in control dimensions; `.play-separator` deliberately overrides it to `content-box`.
+**Lead integration:** import `music/base.css` (theme aliases and shared control anatomy) before control/mixer styles. Keep `layout: 'fullscreen'`; do not add a fixed height, `height:100vh`, a constrained-height/overflow-hidden frame, app shell, padding, or `frame: { w, h }` scaling to the baseline story. Zen's `withLibraryTheme`/Renderer integration must retain the toolbar's actual selected theme, not pin an inner `mixflow` scope. Ensure the scoped mixer inherits the source sans family/variation axes and source typography metrics from the theme/base lane rather than the field-guide body's defaults. `base.css` must retain border-box sizing on `.wdg, .wdg *` so borders are included in control dimensions; `.play-separator` deliberately overrides it to `content-box`.
 
 In particular, `library.css` gives `.lib-scope` a **1.4 line-height** and facet tracking; the reference preview does not set either, so it uses **`normal` line-height and `normal` letter-spacing** except where a component explicitly overrides them. The theme/base lane needs to restore those inherited defaults locally for source fidelity, alongside source `font-weight:400`, sans variation axes (`'MONO' 0, 'CASL' 0.38` for mixflow), body `user-select:none` and `input/select { user-select:text }`. Do not change the global `.lib-scope` or body to accomplish this. A family alias alone cannot select Recursive's proportional/monospaced cut: the source axes inheritance must remain intact (including mixer labels that set `--mono` as the family without explicitly changing axes).
 
@@ -60,7 +60,7 @@ These conditions use the **`.mf-play` content box**, not window dimensions; app 
 
 ## Theme-lane alias requirements
 
-Define these aliases in the scoped **`Music/theme.css` / theme facets**, inherited by the mixer and its context popovers. The port intentionally has no literal fallback colors, so missing aliases are an integration blocker. Values below are the exact source values for `mixflow`; other packs may derive equivalents from their own tokens.
+Define these aliases in the scoped **`music/theme.css` / theme facets**, inherited by the mixer and its context popovers. The port intentionally has no literal fallback colors, so missing aliases are an integration blocker. Values below are the exact source values for `mixflow`; other packs may derive equivalents from their own tokens.
 
 | Local alias consumed by `mixer.css` | Exact source value | Source use |
 | --- | --- | --- |
@@ -79,6 +79,6 @@ Keep the original reference aliases available too: **`--wdg-{text,text-strong,ca
 
 ## Lane delivery and evidence
 
-This lane owns only `src/library/Music/mixer/mixer.css` and this document; it does not modify themes, component CSS, models, registries or Storybook config. No unit tests, commits, worktrees or servers are created/run by this lane. Lead/theme follow-up is the alias table and root/import/typography integration above; actual browser evidence remains the lead's responsibility.
+This lane owns only `src/library/music/components/mixer.css` and this document; it does not modify themes, component CSS, models, registries or Storybook config. No unit tests, commits, worktrees or servers are created/run by this lane. Lead/theme follow-up is the alias table and root/import/typography integration above; actual browser evidence remains the lead's responsibility.
 
 **Actually checked:** a one-off PostCSS structural comparison of the source and port passed for **238 rules and 726 declarations**. After reversing only the documented root scope, animation names and ten aliases (and normalizing selector indentation), all selectors, declaration values/order/importance, media/container queries and keyframes match. This is a static source-fidelity audit, not a unit test, build or browser/layout check.

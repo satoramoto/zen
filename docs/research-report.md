@@ -3,8 +3,8 @@
 `src/library/report/` is a **market research report**: one plain-JSON document about a market, a goal, what the research found and the leads it turned up, and the views that render it as a readable document. It is generic: nothing in it knows what the market is (festivals, clients, suppliers). Every word on the page except the section headings comes from the data.
 
 - `model/report.ts`: the types below and pure helpers (`leadsByTier`, `leadsByChannel`, `readyLeads`, `isReady`, `filterLeads`, `countBy`, `formatReportDate`), unit-tested in `report.test.ts`. No React.
-- `view/<Name>/`: `Report` (the whole document), and its parts `Brief`, `Summary`, `Segments`, `Findings`, `LeadTable`, `Sources`, each usable alone; `LeadList`, the leads as rows built for importance, in place of the table; and `LeadDetail`, one opened lead, for an app's board.
-- `stories/`: the fixture and the stories under `Design OS/Report/…` (`Report`, `Lead Table`, `Lead Detail`, `Parts`).
+- `components/<Name>/`: `Report` (the whole document), and its parts `Brief`, `Summary`, `Segments`, `Findings`, `LeadTable`, `Sources`, each usable alone; `LeadList`, the leads as rows built for importance, in place of the table; and `LeadDetail`, one opened lead, for an app's board.
+- The fixture is `model/report.fixtures.ts`; each part's stories sit in its folder (`Report/Components/…`) and the page of all the parts is `screens/Parts/` (`Report/Screens/Parts`).
 
 Everything is exported from `report/index.ts`, which the package root re-exports. The model's `Report` type is exported as `ReportData` (and `Brief`, `Stat`, `Segment`, `Finding`, `Source` as `ReportBrief`, `ReportStat`, …), since the view names are taken by the components.
 
@@ -105,9 +105,9 @@ const lead = open === null ? null : leads[open];
 )}
 ```
 
-A field's `href` links its value when it is `http`, `https` or `mailto` (`safeContactHref`); blank values are the app's to drop. The story `Design OS/Report/Lead Detail` → `In A Board` is this board on the fixture.
+A field's `href` links its value when it is `http`, `https` or `mailto` (`safeContactHref`); blank values are the app's to drop. The story `Report/Components/Lead Detail` → `In A Board` is this board on the fixture.
 
 ## Writing to a lead
 
 `DraftFlow` writes one outgoing message from the app's `proposals` in four stages its props decide: no `draft` shows the proposals as cards ("Use this" calls `onUse(id)`); a draft not `approved` is edited and saved through `onSave` (on blur and on Save), and Approve calls `onApprove(true)`; an approved draft is read back with To, Subject and Body to copy, Edit again (`onApprove(false)`) and Mark as sent (`onSent()`); `sent` shows "Sent <at>" over the collapsed email.
-The app holds the data and saves; a rejected promise shows its message in the stage's status line and the stage stays. Every built-in word is in `words`. Stories: `Design OS/Report/Draft Flow`.
+The app holds the data and saves; a rejected promise shows its message in the stage's status line and the stage stays. Every built-in word is in `words`. Stories: `Report/Components/Draft Flow`.

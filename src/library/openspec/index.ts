@@ -3,7 +3,7 @@
  * (`view/`). React-only; not yet exported from the package's public entries.
  */
 export * from './model';
-export { Markdown, Inlines, type MarkdownProps } from './view/Markdown/Markdown';
-export { Spec, RequirementView, ScenarioView, Badge, type SpecProps, type DeltaKind } from './view/Spec/Spec';
-export { Change, DeltaView, Tasks, Progress, type ChangeProps } from './view/Change/Change';
-export { Repo, type RepoProps, type Open } from './view/Repo/Repo';
+export { Markdown, Inlines, type MarkdownProps } from './components/Markdown/Markdown';
+export { Spec, RequirementView, ScenarioView, Badge, type SpecProps, type DeltaKind } from './components/Spec/Spec';
+export { Change, DeltaView, Tasks, Progress, type ChangeProps } from './components/Change/Change';
+export { Repo, type RepoProps, type Open } from './components/Repo/Repo';

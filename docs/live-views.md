@@ -48,15 +48,15 @@ density: nobody plays a set from a screen that looks like a Bitwig screenshot. T
 
 There are two generations of views, and both stay:
 
-- **`Design OS/Layout/Workspace`**: the Workspace's own fixtures, built from the zen-styled
-  `components/music/` parts (LoopGrid, MixBand, StemLanes, TransitionRow…). Its tabs are My stage,
+- **`Core/Layouts/Workspace`**: the Workspace's own fixtures, built from the zen-styled
+  `instrument/components/` parts (LoopGrid, MixBand, StemLanes, TransitionRow…). Its tabs are My stage,
   Session grid, Arp & follow, Mix & sends and Stem deck. Its stories are the editing scenarios
   (`live-surface-editing`, `live-surface-document`).
-- **`Music/Live/Views`** (`src/library/Music/live/views/`): the live looper's pages, built from the Music family's
-  live panes in mix[flow]'s face (`src/library/Music/live/`, stories under **Music/Live**). These
+- **`Music/Live/Screens/Views`** (`src/library/music/live/screens/Views/`): the live looper's pages, built from the Music family's
+  live panes in mix[flow]'s face (`src/library/music/live/`, stories under **Music/Live**). These
   are the views the wireframes asked for.
 
-### `Music/Live/Views`
+### `Music/Live/Screens/Views`
 
 **Looper** is the performance board, the first panel built to be played (`LOOPER_TAB` in
 `views.ts`): every step that made it is an intent applied to an empty tab (add, dock, configure,
@@ -85,7 +85,7 @@ fresh (`one-region-3`) and name an instance, never a component type: nothing rea
 an id. The panes are `Music.livePanes`, the ready-made set of definitions; the story's host
 keeps the document and an undo history and applies every intent the Workspace sends with
 `applySurfaceIntent` (`docs/workspace.md`), the way an app's store would. The rig's line is an
-ordinary last row, as mix's Health is, not a footer. `Music/Live/Host contract` and `Music/Live/Pane registry`
+ordinary last row, as mix's Health is, not a footer. `Music/Live/Screens/Host contract` and `Music/Live/Screens/Pane registry`
 hold the framework's scenarios (`live-host-contract`, `live-pane-registry`).
 
 The views are React-only renders, since region content is app content. Their plays are overviews;
@@ -95,7 +95,7 @@ what each pane guarantees is held by the pane's own stories (below), not by the 
 
 Every pane is an exported component with React and Svelte bindings and several stories whose
 plays run in both renderers (`npm run test:music:stories -- --prefix music-live`). Beyond Default,
-Every state, Dense, Empty and Disabled, each has a **Hosted** story: `Music/live/host.story.tsx`
+Every state, Dense, Empty and Disabled, each has a **Hosted** story: `music/live/host.story.tsx`
 stands in for the app, applying each intent to the pane's props as a host would, so a play presses
 the real control (pointer and keyboard where the pane has both) and reads the pane back. A spy call
 alone is not taken as evidence. The host can also rebind a pane (**Rebound**) and remove and
@@ -125,7 +125,7 @@ measured is always the host's to say.
 
 ### Control panels and MIDI learn
 
-`ControlPanel` (`Music/live/ControlPanel/`, kind `controls`) is the person's own controls on a
+`ControlPanel` (`music/live/layouts/ControlPanel/`, kind `controls`) is the person's own controls on a
 grid: faders, knobs, toggles, buttons, pads and XYs, each bound to one of the app's parameters
 (`params`: id, label, group, the Music `Param`, and its role, continuous, switch or trigger) and
 standing on the app's value (`values`). A move asks `onParam({ param, value })`, a button or pad
@@ -134,15 +134,15 @@ standing on the app's value (`values`). A move asks `onParam({ param, value })`,
 While the surface builds (an unlocked tab in edit mode), the panel is built in place: an empty
 position adds a control, a control's tag drags it on the grid (arrows step it, Shift+arrows resize
 it) or opens its sheet (kind, the parameters of its role, label, remove), its corner resizes it.
-Controls never overlap (`layout/cells.ts`). Every change asks `onCells(next)`, which the app saves
+Controls never overlap (`layouts/cells.ts`). Every change asks `onCells(next)`, which the app saves
 as the region's `cells` setting; `columns` and `rows` are ordinary settings.
 
 **Touch.** A fader, a knob and an XY (for both its parameters) tell the app when a gesture
 begins and ends: `onTouch({ param, down })`, with every `onParam` of the gesture between the two.
 A key that steps the value is a whole gesture; a control taken away mid-drag still ends its touch;
 a toggle, a button and a pad send none. An app makes one undo step of a drag with it, or writes
-automation while a hand is on the control (`Music/live/touch.bind.ts`, stories under
-`Music/Live/Parameters`).
+automation while a hand is on the control (`music/live/touch.bind.ts`, stories under
+`Music/Live/Layouts/Parameters`).
 
 **Learn** is the app's: with `learning` on, a press asks `onLearn(param)` instead of moving; the
 control the app waits on (`learnTarget`) pulses; a mapped control wears its mapping's first word
@@ -150,10 +150,10 @@ group (`CC 21`) from `mappings`, and learning, a forget button (`onForget`). The
 MIDI and moves the values, so a controller's move is just a reading. Learning is playing, not
 building: it works on a locked board. **Looper · learn** plays it with a stand-in MIDI strip.
 
-### Whole DAWs (`Music/Live/DAWs`)
+### Whole DAWs (`Music/Live/Screens/DAWs`)
 
 Four DAWs composed from the kit alone, each a surface document built through the surface's own
-intents (`Music/live/daws/daws.ts`), worn in its own pack, at the window it is made for, and
+intents (`music/live/screens/Daws/daws.ts`), worn in its own pack, at the window it is made for, and
 played by the stand-in set:
 
 | DAW | What it is | Pack | Window |
@@ -169,7 +169,7 @@ Each is locked for the gig: hold "Locked" to unlock it and rebuild it. A new one
 ### Fast values: the frame reader
 
 Values that change every frame (meters, playheads) reach a pane through `readFrame`, the host's
-frame reader (`LiveFrame`: `beat`, `position`, `levels` by track, in `Music/live/live.model.ts`;
+frame reader (`LiveFrame`: `beat`, `position`, `levels` by track, in `music/live/live.model.ts`;
 mix's `readFrame`). Only the leaf part that draws a value reads it, on each animation frame, so
 the pane isn't redrawn for it. `TrackStrips` (meters, through the Music frame meter store) and
 `StemDeck` (the playhead, through `liveFrameVar`) take it today. `OrbitClock`, `LandingDial` and

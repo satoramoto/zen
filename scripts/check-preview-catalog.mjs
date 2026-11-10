@@ -43,7 +43,7 @@ try {
       },
     });
   });
-  for (const title of ['Design OS/Components/Core/Button', 'Harness/Claude Code/Kit']) {
+  for (const title of ['Core/Components/Button', 'Harness/Claude Code/Kit']) {
     const entry = entries.find(entry => entry.type === 'story' && entry.title.startsWith(title));
     assert.ok(entry, `Missing specimen: ${title}`);
     for (const width of [1440, 390]) {

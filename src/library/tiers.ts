@@ -3,16 +3,17 @@
  * `tiers.test.ts` can hold every count to its recorded baseline (`tiers.baseline.json`).
  * Pure node:fs and string work, no React.
  *
- * **What is scanned.** `src/library/{components,graph,layout,yahaha,primitives,theme-editor,report}`: CSS, TSX, TS
+ * **What is scanned.** `src/library/{components,instrument,graph,layouts,yahaha,primitives,theme-editor,report}`: CSS, TSX, TS
  * and Svelte files, except stories, tests and story/test data (`*.fixtures.ts`, `*.stories.svelte.ts`,
  * `*.story.svelte`). A `.svelte` file is read as its parts (`scanSvelte`): `<script>` as TS,
  * `<style>` as CSS, and its markup's `style="…"` and `style:prop` as `style={{}}`. `themes/` is never
  * scanned: values live there. Comments are stripped before matching (line numbers are kept).
  *
- * **Folders** (what counts are per): `components/<core|music>/<Name>`, `graph/<view|model>/<Name>`
- * and `report/<view|model>/<Name>` (both held to the controls' rules), `yahaha/<Name>`, `theme-editor/<Name>` (also held to
- * the controls' rules), `layout`, `primitives`. A file directly in a folder keys to that folder
- * (`yahaha/tokens.css` → `yahaha`, `components/core/hue.ts` → `components/core`).
+ * **Folders** (what counts are per): `components/<Name>`, and in an area (`instrument`, `graph`,
+ * `report`, `theme-editor`, all held to the controls' rules, and `yahaha`) `<area>/<tier>/<Name>`
+ * (`instrument/components/Fader`, `yahaha/screens/Stage`); `layouts`, `primitives`. A file directly
+ * in a folder keys to that folder (`yahaha/tokens.css` → `yahaha`, `components/hue.ts` →
+ * `components`, `graph/model/circuit.ts` → `graph/model`).
  *
  * **pixels** (every folder but `primitives`). CSS: each `px` length in a declaration value
  * (custom properties included) whose absolute value isn't 0, 1 or 2. Media and container query
@@ -21,7 +22,7 @@
  * a bare number other than 0, 1 or 2 on a length key (width, height, padding, gap, top,
  * fontSize, …), which React reads as px.
  *
- * **margins** (`components/**`, the controls). A `margin*` declaration counts when its rule
+ * **margins** (`components/**`, `instrument/**`, the controls). A `margin*` declaration counts when its rule
  * targets the control's root block: some selector in the list is a single compound (no
  * descendant, child or sibling combinator outside brackets and parentheses) whose first class
  * has no `__` (`.yh-rackcell`, `.yh-pad[data-state='x']`, `.lib-x:hover`). Margins on inner
@@ -33,13 +34,13 @@
  * `border-collapse`, `border-spacing`), unless the value is `none`, `0`, `transparent`,
  * `inherit`, `initial` or `unset`. Which rules count is {@link PAINTING_TIERS}.
  *
- * **knobs** (`components`, `layout`, `yahaha`). Each distinct `--yh-*`
+ * **knobs** (`components`, `instrument`, `layouts`, `yahaha`). Each distinct `--yh-*`
  * custom property declared in a folder's CSS and not listed under a **Tuning knobs** heading in a
  * doc comment of a TSX file in the same directory (or, for a CSS file with no sibling TSX, in that
  * CSS file's own comments). The list runs to the next `**Heading**` or the comment's end; a
  * trailing `*` (`--yh-fader-*`) lists a family by prefix. A name counts once per folder.
  *
- * **type** (`components`, `layout`, `yahaha`): type belongs to `Text`. CSS: each
+ * **type** (`components`, `instrument`, `layouts`, `yahaha`): type belongs to `Text`. CSS: each
  * `font`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, `text-transform` or
  * `font-variant-numeric` declaration, unless its value is only a CSS-wide keyword (`inherit`,
  * `initial`, `unset`, `revert`: `button { font: inherit }` is a reset, not a decision). TS/TSX:
@@ -67,16 +68,16 @@ export const RULES: Record<RuleId, { fix: string }> = {
 export const RULE_IDS = Object.keys(RULES) as RuleId[];
 
 /** The folders scanned, under `src/library`. */
-export const TOP_FOLDERS = ['components', 'graph', 'layout', 'yahaha', 'primitives', 'theme-editor', 'report'] as const;
+export const TOP_FOLDERS = ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'primitives', 'theme-editor', 'report'] as const;
 
 /** Which top folders each rule applies to. `graph` (the node graph and its faces),
  *  `theme-editor` (the picker and editor) and `report` (the research report) are read as controls. */
 export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
-  pixels: ['components', 'graph', 'layout', 'yahaha', 'theme-editor', 'report'],
-  margins: ['components', 'graph', 'theme-editor', 'report'],
-  painting: ['layout', 'yahaha'],
-  knobs: ['components', 'graph', 'layout', 'yahaha', 'theme-editor', 'report'],
-  type: ['components', 'graph', 'layout', 'yahaha', 'theme-editor', 'report'],
+  pixels: ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
+  margins: ['components', 'instrument', 'graph', 'theme-editor', 'report'],
+  painting: ['layouts', 'yahaha'],
+  knobs: ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
+  type: ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
 };
 
 /**
@@ -90,17 +91,18 @@ export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
  * - `app` (yahaha): a rule counts when any selector names a layout primitive's class
  *   (`.lib-screen`, `.lib-region`, `.lib-group`, `.lib-stack`, or their `__` parts) or
  *   `[data-part='region'|'group']`: that is the app's outer layout CSS. Other app CSS is widget CSS.
- * `components/**` and `primitives/**` are never counted. A layout file not listed reads as `all`.
+ * `components/**`, `instrument/**` and `primitives/**` are never counted. A layout file not listed reads as `all`.
  */
 export const PAINTING_TIERS = {
-  'layout/Group.css': 'all',
-  'layout/Screen.css': 'all',
-  'layout/Region.css': 'region',
-  'layout/Layer.css': 'none',
-  'layout/Tabs.css': 'none',
-  'layout/*': 'all',
+  'layouts/Group/Group.css': 'all',
+  'layouts/Screen/Screen.css': 'all',
+  'layouts/Region/Region.css': 'region',
+  'layouts/Layer/Layer.css': 'none',
+  'layouts/Tabs/Tabs.css': 'none',
+  'layouts/*': 'all',
   'yahaha/**': 'app',
   'components/**': 'none',
+  'instrument/**': 'none',
   'primitives/**': 'none',
 } as const;
 export type PaintingTier = (typeof PAINTING_TIERS)[keyof typeof PAINTING_TIERS];
@@ -118,12 +120,15 @@ export interface Finding {
 
 const top = (file: string) => file.split('/')[0];
 
+/** The scanned areas: their counts are per `<area>/<tier>/<Name>`. */
+const AREA_TOPS = ['instrument', 'graph', 'report', 'yahaha', 'theme-editor'];
+
 /** The folder a file's counts belong to. */
 export function folderOf(file: string): string {
   const parts = file.split('/');
   const t = parts[0];
-  if (t === 'components' || t === 'graph' || t === 'report') return parts.length >= 4 ? parts.slice(0, 3).join('/') : parts.slice(0, -1).join('/');
-  if (t === 'yahaha' || t === 'theme-editor') return parts.length >= 3 ? parts.slice(0, 2).join('/') : t;
+  if (t === 'components') return parts.length >= 3 ? parts.slice(0, 2).join('/') : t;
+  if (AREA_TOPS.includes(t)) return parts.length >= 4 ? parts.slice(0, 3).join('/') : parts.slice(0, -1).join('/');
   return t;
 }
 
@@ -132,7 +137,7 @@ const applies = (rule: RuleId, file: string) => RULE_FOLDERS[rule].includes(top(
 export function paintingTier(file: string): PaintingTier {
   const t = top(file);
   if (t === 'yahaha') return 'app';
-  if (t === 'layout') return (PAINTING_TIERS as Record<string, PaintingTier>)[file] ?? 'all';
+  if (t === 'layouts') return (PAINTING_TIERS as Record<string, PaintingTier>)[file] ?? 'all';
   return 'none';
 }
 
@@ -715,10 +720,10 @@ export function compare(counts: Counts, baseline: Counts, findings: Finding[] = 
 /* ---------- adoption ---------- */
 
 /** The top folders whose widget folders are counted for adoption. */
-export const ADOPTION_TOPS = ['components', 'graph', 'yahaha'] as const;
+export const ADOPTION_TOPS = ['components', 'instrument', 'graph', 'yahaha'] as const;
 
 export interface Adoption {
-  /** Widget folders (`components/core/<Name>`, `yahaha/<Name>`) with a TSX file. */
+  /** Widget folders (`components/<Name>`, `yahaha/components/<Name>`) with a TSX file. */
   components: string[];
   /** Of those, the ones whose TSX renders `<Text` / `<Surface`. */
   text: string[];
@@ -737,8 +742,8 @@ export function adoption(root: string): Adoption {
       const rel = `${t}/${f.split('\\').join('/')}`;
       if (!rel.endsWith('.tsx') || excluded(rel)) continue;
       const folder = folderOf(rel);
-      // A group folder (`components/core`, `graph/view`) holds widgets; it isn't one.
-      if (folder === t || (t !== 'yahaha' && folder.split('/').length < 3)) continue;
+      // A tier folder (`components`, `graph/components`) holds widgets; it isn't one.
+      if (!/^[A-Z]/.test(folder.split('/').at(-1)!)) continue;
       components.add(folder);
       const src = stripTsComments(readFileSync(join(root, rel), 'utf8'));
       if (/<Text\b/.test(src)) text.add(folder);

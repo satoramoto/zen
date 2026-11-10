@@ -8,14 +8,14 @@ not a request to redesign it or to invent an arrangement editor from the mixer w
 
 What is delivered already:
 
-- `src/library/Music/`: controlled four-deck mixer, deck/master strips, transport, controls,
+- `src/library/music/`: controlled four-deck mixer, deck/master strips, transport, controls,
   measured waveforms, frame stores, React and Svelte bindings.
 - Public `Music` namespace in `@satoramoto/zen` and `@satoramoto/zen/svelte`.
 - `mixflow` pack/facets and integration with the existing Zen theme editor.
 - Compact component specimens; organized Music sidebar; all 132 existing story IDs preserved.
 
 **Not delivered:** an Arrange screen/composition, its timeline/ruler/slice/warp interactions,
-or migration of the real mix[flow] app to consume Zen. The old `components/music/` remains
+or migration of the real mix[flow] app to consume Zen. The old `instrument/components/` remains
 intact; consolidation is separately deferred.
 
 The prior request was to merge the mixer work to `main`. Check the PR/branch state before
@@ -58,7 +58,7 @@ Read `mix/README.md` and these source files/docs:
 1. Inventory the confirmed view and capture **before** screenshots before changing code.
    Build one deterministic, paused, source-faithful story, not only isolated component demos.
    Establish the scope of app chrome versus the reusable arranging region explicitly.
-2. Put reusable arranging UI in `src/library/Music/` (an `arrange/` area is a suggested
+2. Put reusable arranging UI in `src/library/music/` (an `arrange/` area is a suggested
    location, not an API already present). App-specific library/analysis/export/engine behavior
    belongs in mix; expose controlled data and semantic callbacks rather than importing `useMix`.
 3. Reuse current Music controls, scoped theme vocabulary, parameter stores and waveform
@@ -158,7 +158,7 @@ tolerances, alter reference data, or claim visual fidelity from a compile/test p
 - Mixer baseline, FX menu and waveform-settings popup matched the original with **zero
   differing pixels** at all three sizes in React/Svelte; built public entries matched too.
 - Original legacy Knob/Fader/Meter/Yahaha Show samples remained pixel-identical. No old
-  `components/music/` files were changed.
+  `instrument/components/` files were changed.
 
 Read `docs/music.md`, `docs/music-story-evidence.md`, `docs/music-layout-reference.md`, and
 the relevant `Music/**/PORT*.md` notes. `.shots/` and temporary browser evidence are ignored,

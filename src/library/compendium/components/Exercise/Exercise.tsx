@@ -1,10 +1,10 @@
 import { useId, useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react';
-import { Button } from '../../../components/core/Button/Button';
-import { Radio } from '../../../components/core/Radio/Radio';
-import { focusRing } from '../../../primitives/Ring';
-import { Stack } from '../../../primitives/Stack';
-import { Surface } from '../../../primitives/Surface';
-import { Text } from '../../../primitives/Text';
+import { Button } from '../../../components/Button/Button';
+import { Radio } from '../../../components/Radio/Radio';
+import { focusRing } from '../../../primitives/Ring/Ring';
+import { Stack } from '../../../primitives/Stack/Stack';
+import { Surface } from '../../../primitives/Surface/Surface';
+import { Text } from '../../../primitives/Text/Text';
 import type { Verdict } from '../../model/exercise';
 import './Exercise.css';
 

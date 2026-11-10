@@ -1,11 +1,13 @@
 # Music: mix[flow] fidelity port
 
+> Paths in this note predate the library restructure of 2026-11; `docs/structure.md` says where things are now.
+
 Worktree: `zen-music`, branch `feat/music-port`. All lanes share this worktree; no lane creates a worktree, commits, starts/stops a server, or changes another lane's files. The original `components/music/` stays untouched.
 
 ## Contract
 
 - Reference: `/home/ryan/Projects/openflowfm/widgets`, especially `src/mixer/` and its Four-deck mixer story. Preserve appearance, geometry, classes and behaviour; this is not a redesign.
-- New implementation: `src/library/Music/`. Mirror the reference's `controls/`, `param/`, `gesture/`, `music/`, `mixer/` structure while converting to Zen's shared view-tree models, plain-TS binding stores, and thin React/Svelte bindings.
+- New implementation: `src/library/music/`. Mirror the reference's `controls/`, `param/`, `gesture/`, `music/`, `mixer/` structure while converting to Zen's shared view-tree models, plain-TS binding stores, and thin React/Svelte bindings.
 - New stories: `Music/…`, using Zen's `withLibraryTheme` and Renderer toolbar. The `mixflow` pack must look like the original; other packs/facets must work without an inner forced theme.
 - Keep reference component export names at their local paths (`Button`, `Knob`, `Slider`, `Meter`, `Waveform`, `DeckStrip`, `MasterStrip`, `MixerView`). Central public exports will use `Music…` aliases to avoid disturbing legacy names.
 - View-tree component names are prefixed `Music` (e.g. `MusicKnob`). Store names are prefixed `music` (e.g. `musicParamGesture`). Give the lead exact registry entries needed; do not edit central registries.

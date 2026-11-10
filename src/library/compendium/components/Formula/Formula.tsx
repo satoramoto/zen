@@ -1,5 +1,5 @@
 import type { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
-import { Text, type TextTone } from '../../../primitives/Text';
+import { Text, type TextTone } from '../../../primitives/Text/Text';
 import { toMathML } from '../../model/formula';
 import './Formula.css';
 
