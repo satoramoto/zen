@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./astro": "./src/site/astro.mjs",
+    "./site": {
+      "zen-source": "./src/library/site/index.ts",
+      "types": "./lib/site/index.d.ts",
+      "import": "./lib/site.js"
+    },
     ".": {
       "zen-source": "./src/library/index.ts",
       "types": "./lib/index.d.ts",
@@ -59,6 +65,7 @@
   "types": "./lib/index.d.ts",
   "files": [
     "lib",
+    "src/site",
     "src/harness"
   ],
   "sideEffects": [
@@ -84,16 +91,25 @@
     "node": ">=22.12.0"
   },
   "peerDependencies": {
+    "@astrojs/react": "^7.1.0",
+    "astro": "^7.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "svelte": "^5.57.0"
   },
   "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    },
+    "@astrojs/react": {
+      "optional": true
+    },
     "svelte": {
       "optional": true
     }
   },
   "devDependencies": {
+    "@astrojs/react": "7.1.5",
     "@fontsource-variable/recursive": "5.3.0",
     "@storybook/addon-a11y": "10.6.1",
     "@storybook/addon-docs": "10.6.1",
@@ -109,6 +125,7 @@
     "@types/react-dom": "19.3.0",
     "@types/three": "0.139.0",
     "@vitejs/plugin-react": "6.1.2",
+    "astro": "7.4.8",
     "jsdom": "30.1.2",
     "playwright": "1.64.1",
     "pngjs": "7.0.0",
@@ -125,6 +142,7 @@
   "dependencies": {
     "@cortex-js/compute-engine": "0.182.0",
     "mafs": "0.21.0",
+    "marked": "18.2.0",
     "mathbox": "2.3.2-rc1",
     "mathlive": "0.111.4",
     "temml": "0.14.0",
