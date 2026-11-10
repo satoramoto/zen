@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-10
+goal: Put every music part in one area, with one folder of components
+affected_areas:
+  - zen
+x-review: look
