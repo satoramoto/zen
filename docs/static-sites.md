@@ -43,7 +43,8 @@ Static URLs support direct loads; no SPA rewrite is needed. Node 24 is used in C
 - Generated directories are copied unchanged and must use portable internal links.
   Zen never invokes language tools or executes document content.
 - Search indexes page titles/text; mounted references retain their own search.
-  Only the search island hydrates. Reading/navigation work without JavaScript.
+  Search and authored flowchart islands hydrate. Reading/navigation and flowchart
+  text work without JavaScript.
 - `astro dev` serves source assets and mounts; restart after content/discovery
   changes. Production builds always reread all source files.
 
@@ -58,6 +59,42 @@ the ordinary React/Svelte entries. Types ship beside the integration.
 After `build:lib`, `npm run check:site` exercises path helpers, builds the fixture
 at `/project/`, and checks keyboard search, internal resources, no-JS reading,
 and 1440px/390px layout in Chromium. Screenshots go to `.shots/site/`.
-`Site/Documentation` holds four scenario stories; run them against a built
+`Site/Documentation` and `Site/Flowchart` hold seven scenario stories; run them against a built
 Storybook with `node scripts/check-site.mjs --stories storybook-static`.
 The bounded test runner closes its browser and ephemeral server in `finally`.
+
+## Flowcharts in Markdown
+
+Use a top-level `zen-flowchart` fence containing JSON (not nested in a list or quote):
+
+````md
+```zen-flowchart
+{
+  "title": "Request flow",
+  "description": "A request becomes scheduled work.",
+  "nodes": [
+    {"id":"request","label":"Request","detail":"Validate input","x":0,"y":0},
+    {"id":"work","label":"Worker","detail":"Run accepted work","x":0,"y":190}
+  ],
+  "edges": [{"from":"request","to":"work","label":"accepted"}]
+}
+```
+````
+
+Nodes require unique identifier IDs, labels and finite x/y coordinates in graph
+units. Optional `detail` is plain text. Edges require existing distinct endpoints
+and a label. Self-edges are not supported; use an explicit continuation stage.
+Title and description are required. Invalid data fails the build with its source
+file. Diagram labels/descriptions participate in page search.
+
+The public `Flowchart` view composes Zen's existing Graph, GraphNode and disabled
+Ports. It supplies arrowheads, read-only stages, pan/zoom, keyboard-accessible
+zoom/fit controls and resize fitting. Authored positions are stable across builds;
+use roughly 190–240 units vertically and 370 horizontally between 210-unit-wide
+nodes, and inspect crossings and labels in the rendered diagram.
+
+The textual stage/relationship list is server-rendered and open without JavaScript.
+After hydration it is available under “Read diagram as text.” The canvas is mounted
+only after hydration because Graph measures DOM ports; it does not pretend a
+server-rendered canvas already has measured edges. The AST preserves document
+order by rendering HTML and diagram islands inside the reading shell's content slot.

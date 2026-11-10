@@ -4,6 +4,31 @@ import { mkdtemp, writeFile, mkdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { readContent, siteUrl } from './content.mjs';
+import { parseFlowchart } from './flowchart.mjs';
+
+test('flowcharts reject malformed stages and unresolved edges with source context', () => {
+  const chart = { title: 'Flow', description: 'A flow', nodes: [{ id: 'a', label: 'A', x: 0, y: 0 }, { id: 'b', label: 'B', x: 0, y: 180 }], edges: [{ from: 'a', to: 'b', label: 'next' }] };
+  assert.deepEqual(parseFlowchart(JSON.stringify(chart), 'architecture.md'), chart);
+  assert.throws(() => parseFlowchart('{', 'architecture.md'), /architecture.md.*JSON/);
+  assert.throws(() => parseFlowchart(JSON.stringify({ ...chart, nodes: [chart.nodes[0], chart.nodes[0]] }), 'source'), /unique/);
+  assert.throws(() => parseFlowchart(JSON.stringify({ ...chart, edges: [{ from: 'a', to: 'missing', label: 'next' }] }), 'source'), /endpoints/);
+});
+
+test('flowcharts preserve Markdown order, references and searchable labels', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'zen-flowchart-'));
+  try {
+    const chart = JSON.stringify({ title: 'Flow', description: 'Ownership', nodes: [{ id: 'a', label: 'Compile', x: 0, y: 0 }], edges: [] });
+    const fence = '```zen-flowchart\n' + chart + '\n```';
+    await writeFile(join(root, 'README.md'), '# Before\n\n' + fence + '\n\n## After\n\n[Start](README.md#before)');
+    const { pages } = await readContent({ content: [{ file: 'README.md' }] }, root);
+    assert.match(pages[0].blocks[0].html, /Before/);
+    assert.equal(pages[0].blocks[1].chart.nodes[0].label, 'Compile');
+    assert.match(pages[0].blocks[2].html, /href="\/#before"/);
+    assert.match(pages[0].text, /Ownership Compile/);
+    await writeFile(join(root, 'README.md'), '# Nested\n\n' + fence.split('\n').map(line => '> ' + line).join('\n'));
+    await assert.rejects(() => readContent({ content: [{ file: 'README.md' }] }, root), /top-level/);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
 
 test('project-base URLs reject traversal', () => {
   assert.equal(siteUrl('/project/', 'architecture'), '/project/architecture/');

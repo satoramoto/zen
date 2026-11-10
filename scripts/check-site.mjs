@@ -40,7 +40,7 @@ try {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(origin + base);
-    await page.locator('astro-island[ssr]').waitFor({ state: 'detached' });
+    await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
     const links = await page.getByRole('navigation', { name: 'Documentation', exact: true }).getByRole('link').evaluateAll(nodes => nodes.map(node => node.href));
     for (const link of links) {
       await page.goto(link);
@@ -54,7 +54,18 @@ try {
       }
     }
     await page.goto(origin + base + 'architecture/');
-    await page.locator('astro-island[ssr]').waitFor({ state: 'detached' });
+    await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
+    const chart = page.getByRole('figure', { name: 'From input to frame' });
+    await chart.locator('[data-part="cord"]').first().waitFor({ state: 'attached' });
+    assert.equal(await chart.locator('[data-part="cord"]').count(), 2);
+    await chart.getByRole('button', { name: 'Fit diagram' }).click();
+    const zoom = () => chart.locator('.lib-graph').evaluate(node => Number(node.style.getPropertyValue('--lib-graph-zoom')));
+    const initial = await zoom();
+    await chart.getByRole('button', { name: 'Zoom in', exact: true }).focus();
+    await page.keyboard.press('Enter');
+    assert(await zoom() > initial);
+    await chart.getByRole('button', { name: 'Fit diagram' }).click();
+    await chart.screenshot({ path: `${output}/flowchart-${width}.png` });
     const search = page.getByRole('region', { name: 'Documentation search' });
     await search.getByRole('searchbox').fill('ownership');
     await search.getByRole('link', { name: /architecture/i }).first().waitFor();
@@ -67,12 +78,13 @@ try {
   const noJS = await browser.newPage({ javaScriptEnabled: false });
   await noJS.goto(origin + base + 'architecture/');
   assert.match(await noJS.locator('main').innerText(), /ownership/i);
+  assert.match(await noJS.locator('main').innerText(), /Input → State machine: action/);
   assert(await noJS.getByRole('navigation', { name: 'Documentation', exact: true }).isVisible());
   await noJS.close();
   if (values.stories) {
     const index = JSON.parse(await readFile(resolve(values.stories, 'index.json'), 'utf8'));
-    const stories = Object.values(index.entries).filter(entry => entry.type === 'story' && entry.title === 'Site/Documentation');
-    assert.equal(stories.length, 4);
+    const stories = Object.values(index.entries).filter(entry => entry.type === 'story' && ['Site/Documentation', 'Site/Flowchart'].includes(entry.title));
+    assert.equal(stories.length, 7);
     for (const story of stories) {
       const page = await browser.newPage();
       await page.addInitScript(() => {

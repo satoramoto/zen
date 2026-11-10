@@ -1,0 +1,21 @@
+.zen-flowchart { margin: var(--space-6) 0; border: 1px solid var(--border); background: var(--surface-0); min-width: 0; }
+.zen-flowchart figcaption { padding: var(--space-4); border-bottom: 1px solid var(--border); }
+.zen-flowchart figcaption p { margin: var(--space-2) 0 0; font-size: var(--size-caption); }
+.zen-flowchart__tools { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-3); align-items: center; }
+.zen-flowchart__tools button { font: inherit; color: var(--text-1); background: var(--surface-1); border: 1px solid var(--border); padding: var(--space-2) var(--space-3); cursor: pointer; }
+.zen-flowchart__tools span { font-size: var(--size-caption); color: var(--text-3); }
+.zen-flowchart__canvas { height: 620px; position: relative; }
+.zen-flowchart__defs { position: absolute; }
+.zen-flowchart__graph { height: 100%; --lib-cord: var(--accent); --lib-graph-word-fill: var(--surface-0); }
+.zen-flowchart__graph [data-part='cord'] { marker-end: var(--flowchart-arrow); }
+.zen-flowchart__node { position: relative; display: grid; gap: var(--space-2); width: 210px; min-height: 82px; padding: var(--space-3); background: var(--surface-1); border: 1px solid var(--border); color: var(--text-1); line-height: 1.35; }
+.zen-flowchart__port { position: absolute; transform: translate(-50%, -50%); }
+.zen-flowchart__port--n { left: 50%; top: 0; }
+.zen-flowchart__port--s { left: 50%; top: 100%; }
+.zen-flowchart__port--e { left: 100%; top: 50%; }
+.zen-flowchart__port--w { left: 0; top: 50%; }
+.zen-flowchart__text { padding: var(--space-4); border-top: 1px solid var(--border); }
+.zen-flowchart__text summary { cursor: pointer; }
+.zen-flowchart__text dt { font-weight: var(--weight-label); }
+.zen-flowchart__text dd { margin: 0 0 var(--space-3); color: var(--text-2); }
+@media (max-width: 760px) { .zen-flowchart__canvas { height: 520px; } }

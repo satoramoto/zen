@@ -2,6 +2,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { resolve, relative, dirname, extname, basename } from 'node:path';
 import { createHash } from 'node:crypto';
 import { Marked } from 'marked';
+import { parseFlowchart } from './flowchart.mjs';
 
 export function routePath(value = '') {
   const route = value.replace(/^\/+|\/+$/g, '');
@@ -48,6 +49,17 @@ export async function readContent(options, root) {
   for (const page of pages) {
     const parser = new Marked({ async: true });
     const headings = new Map();
+    const charts = [];
+    const marker = `zen-flowchart-${createHash('sha256').update(page.markdown).digest('hex')}`;
+    let topLevel;
+    parser.use({ hooks: { processAllTokens(tokens) { topLevel = new Set(tokens); return tokens; } }, renderer: {
+      code(token) {
+        if (token.lang !== 'zen-flowchart') return false;
+        if (!topLevel.has(token)) throw new Error(`zen-flowchart must be a top-level block in ${page.file}`);
+        charts.push(parseFlowchart(token.text, page.file));
+        return `<!--${marker}:${charts.length - 1}-->`;
+      },
+    } });
     parser.use({ renderer: { heading({ tokens, depth }) {
       const text = this.parser.parseInline(tokens);
       const key = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^\p{L}\p{N}\s_-]/gu, '').trim().replace(/\s+/g, '-');
@@ -74,7 +86,12 @@ export async function readContent(options, root) {
       token.href = base + destination + suffix;
     } });
     page.html = await parser.parse(page.markdown);
-    page.text = page.html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (charts.length) {
+      const pieces = page.html.split(new RegExp(`<!--${marker}:(\\d+)-->`));
+      page.blocks = pieces.map((part, i) => i % 2 ? { chart: charts[Number(part)] } : { html: part });
+    }
+    page.text = [page.html.replace(/<[^>]*>/g, ' '), ...charts.map(chart =>
+      [chart.title, chart.description, ...chart.nodes.flatMap(node => [node.label, node.detail ?? '']), ...chart.edges.map(edge => edge.label)].join(' '))].join(' ').replace(/\s+/g, ' ').trim();
     delete page.markdown;
   }
   const mounts = [];

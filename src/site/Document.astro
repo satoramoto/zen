@@ -1,6 +1,6 @@
 ---
 import '@satoramoto/zen/zen.css';
-import { Documentation, Search } from '@satoramoto/zen/site';
+import { Documentation, Search, Flowchart } from '@satoramoto/zen/site';
 import { packs, scopeView } from '@satoramoto/zen/themes';
 import site from 'virtual:zen-site';
 
@@ -29,6 +29,11 @@ const references = site.mounts.map(mount => ({ title: mount.title, href: mount.h
       current={page.href} pages={pages} references={references} html={page.html}
       revision={site.revision} source={site.source}>
       <Search slot="search" pages={pages} client:load />
+      <div slot="content">
+        {(page.blocks ?? [{ html: page.html }]).map(block => block.chart
+          ? <Flowchart chart={block.chart} client:load />
+          : <Fragment set:html={block.html} />)}
+      </div>
     </Documentation>
   </body>
 </html>
