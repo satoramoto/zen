@@ -37,7 +37,7 @@ try {
   browser = await chromium.launch();
   const origin = `http://127.0.0.1:${server.address().port}`;
   const index = JSON.parse(await readFile(resolve(root, 'index.json'), 'utf8'));
-  const stories = Object.values(index.entries).filter(entry => entry.type === 'story' && ['Site/Manual', 'Site/WalkthroughValidation', 'Site/ScenarioCapture'].includes(entry.title));
+  const stories = Object.values(index.entries).filter(entry => entry.type === 'story' && ['Site/Screens/Manual', 'Site/Screens/WalkthroughValidation', 'Site/Screens/ScenarioCapture'].includes(entry.title));
   assert.equal(stories.length, 17);
   for (const story of stories) {
     const page = await browser.newPage();

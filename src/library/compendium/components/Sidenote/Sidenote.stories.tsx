@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { P, Reading } from '../../layout/Reading/Reading';
+import { P, Reading } from '../../layouts/Reading/Reading';
 import { Sidenote } from './Sidenote';
 
 /** A numbered note hung in the margin beside its line; a citation reads the same, as a source. */

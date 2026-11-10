@@ -9,14 +9,14 @@ try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
     const errors = []; page.on('pageerror', error => errors.push(error.message));
     await page.addInitScript(() => { let channel; window.__plays = []; Object.defineProperty(window, '__STORYBOOK_ADDONS_CHANNEL__', { configurable: true, get: () => channel, set: value => { channel = value; for (const name of ['storyFinished', 'storyThrewException', 'playFunctionThrewException']) value.on(name, event => window.__plays.push({ name, status: event?.status, message: event?.message })); } }); });
-    await page.goto(`${base}/iframe.html?id=math-wave-calculator--${story}&viewMode=story&globals=theme:linear;mode:dark`);
+    await page.goto(`${base}/iframe.html?id=math-calculator-components-wave-calculator--${story}&viewMode=story&globals=theme:linear;mode:dark`);
     await page.waitForFunction(() => window.__plays.some(event => event.name === 'storyFinished'), {}, { timeout: 45000 });
     const events = await page.evaluate(() => window.__plays);
     assert.ok(events.every(event => event.name === 'storyFinished' && event.status === 'success'), JSON.stringify(events));
     assert.deepEqual(errors, []); console.log('PASS interaction', story); await page.close();
   }
   const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
-  await page.goto(`${base}/iframe.html?id=math-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:dark`);
+  await page.goto(`${base}/iframe.html?id=math-calculator-components-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:dark`);
   const a = page.getByRole('slider', { name: 'Parameter a' }); await a.waitFor();
   await page.waitForFunction(() => [...document.querySelectorAll('.zen-equation-input')].every(el => el.dataset.ready === 'true'));
   await page.evaluate(() => document.fonts.ready);
@@ -43,7 +43,7 @@ try {
   await page.getByRole('textbox', { name: 'f(x) expression' }).fill('sin(');
   await page.getByRole('alert').waitFor();
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-  await page.goto(`${base}/iframe.html?id=math-wave-calculator--function-composition&viewMode=story&globals=theme:linear;mode:light`);
+  await page.goto(`${base}/iframe.html?id=math-calculator-components-wave-calculator--function-composition&viewMode=story&globals=theme:linear;mode:light`);
   await page.getByRole('slider', { name: 'Parameter a' }).waitFor();
   await page.screenshot({ path: '.shots/calculator/light.png', fullPage: true });
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));

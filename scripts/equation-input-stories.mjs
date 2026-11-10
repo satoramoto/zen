@@ -7,7 +7,7 @@ const browser=await chromium.launch({headless:true});
 try {
  const page=await browser.newPage({viewport:{width:1440,height:1100}});
  const errors=[],remote=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(base)&&!r.url().startsWith('data:')&&!/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(r.url()))remote.push(r.url())});
- await page.goto(`${base}/iframe.html?id=math-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:dark`);
+ await page.goto(`${base}/iframe.html?id=math-calculator-components-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:dark`);
  const field=page.locator('math-field').first();await field.waitFor();await page.evaluate(()=>document.fonts.ready);
  await page.screenshot({path:'.shots/equation-input/desktop.png',fullPage:true});
  async function type(value){await field.click();await page.waitForFunction(()=>document.activeElement?.tagName==='MATH-FIELD');await page.keyboard.press('ControlOrMeta+A');await page.keyboard.type(value);}
@@ -30,13 +30,13 @@ try {
  await page.screenshot({path:'.shots/equation-input/keyboard.png'});
  assert.deepEqual(errors,[]);assert.deepEqual(remote,[],'Fonts and editor must not depend on a runtime CDN');console.log('PASS typing, cursor, undo/redo, incomplete fractions, domain errors, linked quantities, keyboard and local assets');
  const touch=await browser.newPage({viewport:{width:390,height:844},hasTouch:true,isMobile:true});touch.on('pageerror',e=>errors.push(e.message));
- await touch.goto(`${base}/iframe.html?id=math-components-equation-input--fraction&viewMode=story&globals=theme:linear;mode:light`);
+ await touch.goto(`${base}/iframe.html?id=equation-specimen--fraction&viewMode=story&globals=theme:linear;mode:light`);
  const touchField=touch.locator('math-field');await touchField.waitFor();await touchField.tap();
  const two=touch.locator('.ML__keyboard .MLK__layer.is-visible .MLK__keycap').filter({hasText:/^2$/});await two.waitFor();
  await touchField.evaluate(e=>e.executeCommand('selectAll'));await two.tap();
  await touch.waitForFunction(()=>document.querySelector('math-field').value==='2');
  assert.ok(await touch.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await touch.screenshot({path:'.shots/equation-input/touch-keyboard.png'});console.log('PASS touch keyboard inserts into the equation');
- await page.goto(`${base}/?path=/story/math-wave-calculator--playground`);
+ await page.goto(`${base}/?path=/story/math-calculator-components-wave-calculator--playground`);
  const frame=page.frameLocator('#storybook-preview-iframe');await frame.locator('math-field').first().waitFor();
  await frame.getByRole('button',{name:'Math keyboard',exact:true}).first().click();await frame.locator('.ML__keyboard .MLK__keycap').first().waitFor();
  assert.deepEqual(errors,[]);console.log('PASS keyboard in the Storybook preview iframe');

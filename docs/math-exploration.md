@@ -1,6 +1,6 @@
 # Mathematical relationships: first explorable scene
 
-`Math/Circle to Sine` is the first acceptance scene for an
+`Math/Explore/Components/Circle to Sine` is the first acceptance scene for an
 interactive math exploration framework. The main object is a relationship: several
 representations share its quantities and expose ways to change them. A form is not the
 primary interaction.
@@ -13,7 +13,7 @@ Use the unified launcher, with unoccupied ports for your worktree:
 PREVIEW_LABEL="Zen Math Play" PREVIEW_PORT=4197 STORYBOOK_PORT=6027 npm run dev
 ```
 
-Open `http://127.0.0.1:6027/?path=/story/math-circle-to-sine--playground`.
+Open `http://127.0.0.1:6027/?path=/story/math-explore-components-circle-to-sine--playground`.
 The stories are Playground, Twice Around, Tall And Slow, Linked Handles, Compare And Reset,
 Play And Pause, and Follow One Turn. The last four execute interaction assertions in the browser.
 

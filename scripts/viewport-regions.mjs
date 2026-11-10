@@ -4,7 +4,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const base=process.env.STORYBOOK_URL??execFileSync('node',[`${process.env.HOME}/Projects/satoramoto/zen-flow/herdr/scripts/previews.mjs`,'url',process.cwd()],{encoding:'utf8'}).trim();
 const index=await (await fetch(new URL('index.json',base))).json();
-const stories=Object.values(index.entries).filter(s=>s.type==='story'&&s.id.startsWith('math-plotviewport-regions--'));
+const stories=Object.values(index.entries).filter(s=>s.type==='story'&&s.id.startsWith('math-components-plotviewport-regions--'));
 if(!stories.length)throw Error('No region scenarios discovered');
 const output='.shots/viewport-regions';await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true}),results=[];

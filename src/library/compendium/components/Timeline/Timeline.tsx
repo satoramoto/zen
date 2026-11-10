@@ -1,4 +1,4 @@
-import { Text } from '../../../primitives/Text';
+import { Text } from '../../../primitives/Text/Text';
 import './Timeline.css';
 
 import type { AxisPiece, TimelineRow, Year } from '../../model/document';

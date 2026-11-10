@@ -2,7 +2,7 @@
 // circle, an angle arc, a labelled length, and a handle the reader drags with a pointer or
 // steps with the arrow keys. Plain SVG, the contract's colours (trig.css).
 import { useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode, type RefObject } from 'react';
-import { Text } from '../../primitives/Text';
+import { Text } from '../../primitives/Text/Text';
 import './trig.css';
 
 /** Maths coordinates to pixels for a drawing `width` × `height` showing x in [x0, x1] and y in [y0, y1]. */

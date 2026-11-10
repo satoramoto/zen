@@ -1,6 +1,6 @@
 # Measured, glasses-free stereo illusions
 
-`Math/Stereo Illusion Lab` adds five random-dot scenes: a ring, bowl/dome reversal,
+`Math/Stereo/Components/Stereo Illusion Lab` adds five random-dot scenes: a ring, bowl/dome reversal,
 saddle, radial ripples and hidden ZEN lettering. Parallel and crossed viewing share
 the same physical geometry. Phase and patterns change only on explicit interaction;
 there is no autoplay or flicker. The default is now Look & Tune, a visual sitting-distance and spacing setup. The large,

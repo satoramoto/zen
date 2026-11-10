@@ -4,8 +4,8 @@
 // moves from here to `view/snapshot.test.ts`. The Stage stays as the whole-screen check: every
 // region and component drawn together by both renderers.
 import { parity } from './parity';
-import { Stage } from './yahaha/Stage/Stage';
-import StageSvelte from './yahaha/Stage/Stage.svelte';
-import { stageStories } from './yahaha/Stage/Stage.fixtures';
+import { Stage } from './yahaha/screens/Stage/Stage';
+import StageSvelte from './yahaha/screens/Stage/Stage.svelte';
+import { stageStories } from './yahaha/screens/Stage/Stage.fixtures';
 
 parity('Stage', Stage, StageSvelte, stageStories);

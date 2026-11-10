@@ -445,7 +445,7 @@ export type Rank = (typeof RANKS)[number];
 export type Density = 'roomy' | 'balanced' | 'dense';
 
 /**
- * A system's layout principles: data the assembly solver (`layout/assembly`) reads, beside the
+ * A system's layout principles: data the assembly solver (`layouts/Assembly`) reads, beside the
  * facets it resolves sizes from. Each theme pack carries one.
  */
 export interface PackPrinciples {

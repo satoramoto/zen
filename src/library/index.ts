@@ -33,26 +33,26 @@ export { SCOPE_VARS } from './contract';
 export { ThemeScope, useThemeScope, resolveTheme, useSystemMode, FROM_THEME, type ModeChoice, type ThemeChoice } from './theme';
 
 // The facet lists.
-export { packs, type ThemePack } from './themes/packs';
-export { palettes } from './themes/palettes';
-export { faces } from './themes/faces';
-export { scales } from './themes/scales';
-export { materials } from './themes/materials';
+export { packs, type ThemePack } from './foundation/themes/packs';
+export { palettes } from './foundation/themes/palettes';
+export { faces } from './foundation/themes/faces';
+export { scales } from './foundation/themes/scales';
+export { materials } from './foundation/themes/materials';
 
 // Primitives: how a thing looks (Text, Surface, Icon, the rings, the spacing steps). See docs/tiers.md.
 export * from './primitives';
 
 // Layout: Stack and Group arrange controls, Regions are blocks, a Screen places them.
-export * from './layout';
+export * from './layouts';
 
 // Components: core controls any app builds with, and the music ones an instrument shows.
 // Renamed in core: ActionButton's `ButtonFace` is `ActionButtonFace` (Button's face type keeps
 // `ButtonFace`), and Param's `format` is `formatParam`.
-export * from './components/core';
-export * from './components/music';
+export * from './components';
+export * from './instrument';
 
 // New reference-faithful music toolkit; the legacy component names above are not replaced.
-export * as Music from './Music';
+export * as Music from './music';
 
 // The graph: the node-graph view (Graph, GraphNode, Port, Device, NodeSheet) and the Circuit model it draws.
 export * from './graph';
@@ -71,12 +71,12 @@ export * from './report';
 
 // Dialog behaviour for an app's own overlays (a help sheet, a settings dialog) that aren't a Modal.
 /** Esc closes a dialog unless an open menu inside it takes the key first; `useModal` is the whole dialog behaviour. */
-export { closesOnKey, useModal } from './components/core/Modal/useModal';
+export { closesOnKey, useModal } from './components/Modal/useModal';
 /** Tab stays inside a dialog; `isTopTrap` says whether a trap is the topmost one, the one keys are for. */
-export { useFocusTrap, isTopTrap } from './components/core/Modal/focusTrap';
+export { useFocusTrap, isTopTrap } from './components/Modal/focusTrap';
 
 /** The look a cluster asks of its controls: `CONTROL_TOOLBAR` (quiet) in a toolbar, `CONTROL_FIELD` (fields) in a panel that floats out of one. */
-export { ControlContext, CONTROL_FIELD, CONTROL_TOOLBAR, useControlContext, type ControlContextValue } from './primitives/Stack';
+export { ControlContext, CONTROL_FIELD, CONTROL_TOOLBAR, useControlContext, type ControlContextValue } from './primitives/Stack/Stack';
 
 /** The design window a Storybook frame draws a view at, or null in an app (`@satoramoto/zen/storybook` provides it). */
 export { useFrameRoom, type StoryFrame, type StoryFrameParam } from './frame';

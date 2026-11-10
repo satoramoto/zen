@@ -8,7 +8,7 @@
 import type { Decorator } from '@storybook/react-vite';
 import { createContext, useContext, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { ThemeScope, resolveTheme, useSystemMode, type ModeChoice } from './theme';
-import { packs } from './themes/packs';
+import { packs } from './foundation/themes/packs';
 import { toCssVars } from './contract';
 
 // The toolbar is framework-free (`storybook.globals.ts`).

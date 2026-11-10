@@ -219,7 +219,7 @@ export function removeBus(circuit: Circuit, module: string, bus: string): Circui
 export function flatten(circuit: Circuit, module: string): Trace[];
 ```
 
-New file `src/library/graph/model/useCircuit.ts`, exported from
+New file `src/library/graph/components/useCircuit.ts`, exported from
 `graph/index.ts`:
 
 ```ts
@@ -385,7 +385,7 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 
 ### Story
 
-29. `Design OS/Graph/Circuit` shows a circuit drawn by the Graph
+29. `Graph/Screens/Circuit` shows a circuit drawn by the Graph
     view with:
     - two chips and a modulation trace;
     - a chip that is a module instance, with module pins;
@@ -396,16 +396,16 @@ selected (click or keyboard focus) and deleted with Delete or Backspace.
 ## Files
 
 The graph has its own area, `src/library/graph/` (moved out of
-`components/core`): `model/` (the Circuit model), `view/` (`Graph`, `Port`,
+`components`): `model/` (the Circuit model), `view/` (`Graph`, `Port`,
 `graphContext`, `Device`, `NodeSheet`), `stories/` (fixtures, Samples and
 Behaviours), and `index.ts`, which the package root re-exports, so every
 import from `@satoramoto/zen` is unchanged. Its stories sit under
-`Design OS/Graph/…`.
+`Graph/Components/…`.
 
 | File | Side |
 | --- | --- |
-| `graph/model/circuit.ts`, `graph/model/useCircuit.ts`, additions to `graph/view/Graph/Graph.tsx` / `Graph.css` / `Port.tsx`, `graph/index.ts` exports, `graph/stories/Circuit.stories.tsx` | developer |
-| `graph/model/circuit.test.ts`, `graph/stories/Circuit.behaviours.stories.tsx`, cord-delete cases in `graph/view/Graph/Graph.test.tsx` | test-engineer |
+| `graph/model/circuit.ts`, `graph/components/useCircuit.ts`, additions to `graph/components/Graph/Graph.tsx` / `Graph.css` / `Port.tsx`, `graph/index.ts` exports, `graph/screens/Circuit/Circuit.stories.tsx` | developer |
+| `graph/model/circuit.test.ts`, `graph/screens/Circuit/Circuit.behaviours.stories.tsx`, cord-delete cases in `graph/components/Graph/Graph.test.tsx` | test-engineer |
 
 ## Open questions
 

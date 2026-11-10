@@ -22,9 +22,9 @@ because the editor's `Library` pulled it in. Nothing the app people get rendered
 | `views.tsx` | `controls/Segmented` | the view switch | core `Segmented` (exists; zen's `Views/ViewSwitch`) |
 | `views.tsx` | `controls/Button` | the notice banner's ✕ | core `ActionButton` (exists; zen's `Views/NoticeBanner`) |
 | `views.tsx` | `chrome/HintFooter` | the hint strip: what the pointer or focus is on | exists, folded into zen's `Views/Hints` |
-| `StageGraph.tsx` | `chrome/Graph`, `GraphNode`, `GraphView` | the pannable, zoomable canvas of the MilkDrop pipeline, nodes placed by the host, cords between ports | **missing → built**: core `Graph` (`components/core/Graph/`), with `GraphView.fit()` added (the host had been shrinking faces to fit because the widget had no setter) |
+| `StageGraph.tsx` | `chrome/Graph`, `GraphNode`, `GraphView` | the pannable, zoomable canvas of the MilkDrop pipeline, nodes placed by the host, cords between ports | **missing → built**: core `Graph` (`components/Graph/`), with `GraphView.fit()` added (the host had been shrinking faces to fit because the widget had no setter) |
 | `StageGraph.tsx` | `chrome/Port` | a stage's inlet and outlet dots | **missing → built**: core `Port` (same folder) |
-| `StageGraph.tsx` | `chrome/Device`, `DevicePortRow` | each stage's face: head, picture, one wiring row, body | **missing → built**: core `Device` (`components/core/Device/`), no fold or power switch |
+| `StageGraph.tsx` | `chrome/Device`, `DevicePortRow` | each stage's face: head, picture, one wiring row, body | **missing → built**: core `Device` (`components/Device/`), no fold or power switch |
 | `StageGraph.tsx` | `chrome/Popup` | the "+ add layer" menu | core `Popup` / `Popover` (exists) |
 | `StageGraph.tsx`, `graph/RemoveLayer.tsx`, `Inspector.tsx` | `controls/Button` | fit, write my own, remove, × | core `ActionButton` (exists) |
 | `Inspector.tsx` | `controls/NumberField` | the file's loose values | core `NumberField` (exists) |

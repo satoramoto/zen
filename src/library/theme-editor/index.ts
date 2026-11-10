@@ -30,13 +30,13 @@ export {
   type FacetName,
   type ShaderName,
   type OverridePath,
-} from './skin';
-export { hexToHsl, hslToHex, contrast, distance as colourDistance, paletteWarnings, isHex, type Hsl } from './colour';
-export { loadSkin, saveSkin, forgetSkin, type SkinStorage } from './persist';
-export { SkinScope, SkinProvider, useSkin, type SkinProviderProps, type SkinContextValue } from './SkinScope';
+} from './model/skin';
+export { hexToHsl, hslToHex, contrast, distance as colourDistance, paletteWarnings, isHex, type Hsl } from './model/colour';
+export { loadSkin, saveSkin, forgetSkin, type SkinStorage } from './model/persist';
+export { SkinScope, SkinProvider, useSkin, type SkinProviderProps, type SkinContextValue } from './components/SkinScope/SkinScope';
 /** Every pack with a live preview; choosing one hands back its skin. */
-export { ThemePicker } from './ThemePicker';
+export { ThemePicker } from './components/ThemePicker';
 /** Edits a skin facet by facet: palette, type, scale, materials, shader. Controlled; the host keeps it. */
-export { ThemeEditor, type ThemeEditorProps } from './ThemeEditor';
+export { ThemeEditor, type ThemeEditorProps } from './components/ThemeEditor';
 /** The picker and editor as one settings section, bound to the nearest `SkinProvider`. */
-export { ThemeSettings } from './ThemeSettings';
+export { ThemeSettings } from './components/ThemeSettings';

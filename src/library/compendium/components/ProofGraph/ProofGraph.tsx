@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Stack } from '../../../primitives/Stack';
-import { Surface } from '../../../primitives/Surface';
-import { Text } from '../../../primitives/Text';
+import { Stack } from '../../../primitives/Stack/Stack';
+import { Surface } from '../../../primitives/Surface/Surface';
+import { Text } from '../../../primitives/Text/Text';
 import './ProofGraph.css';
 
 import type { ProofGraphData, ProofNode } from '../../model/document';

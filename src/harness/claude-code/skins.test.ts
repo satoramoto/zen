@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import file from './kit/skins.ts?raw';
-import { packs } from '../../library/themes/packs';
+import { packs } from '../../library/foundation/themes/packs';
 import { SKINS } from './kit/skins';
 import { C, FILL, GRAY, INK, MUTED, RAMP, SKIN, STATUS, THEME_KEY, isKitColor, levelColor, termInk, wear } from './kit/tokens';
 import { packSkins, skinsSource } from './skins';

@@ -54,7 +54,7 @@ try {
   // A real assertion failure occurs after the initial screenshot: no matching search result.
   const failedOutput = resolve(run, 'web-failure');
   let failure;
-  try { await captureStory({ ...captureOptions, storyId: 'site-manualfailure--missing-match', output: failedOutput }); }
+  try { await captureStory({ ...captureOptions, storyId: 'site-screens-manualfailure--missing-match', output: failedOutput }); }
   catch (error) { failure = error; }
   assert(failure, 'The negative story must fail');
   assert(failure.captured.length > 0, failure.message);

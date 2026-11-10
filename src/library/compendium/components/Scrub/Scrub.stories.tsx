@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { P, Reading } from '../../layout/Reading/Reading';
+import { P, Reading } from '../../layouts/Reading/Reading';
 import type { Quantity } from '../../model/document';
 import { Ref, Scrub } from './Scrub';
 

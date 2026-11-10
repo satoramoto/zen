@@ -2,7 +2,7 @@
 
 Every zen app can offer zen's packs and a theme editor, and a skin made in one zen app works in
 any other. The code is in `src/library/theme-editor/`. The stories are under
-`Design OS/Theme Editor/`: Picker, Editor, and Bring your own app.
+`Theme Editor/`: `Components/Picker`, `Components/Editor`, and `Screens/Bring your own app`.
 
 | Part | What it is | React? |
 |---|---|---|

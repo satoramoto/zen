@@ -1,6 +1,6 @@
 import { useRef, type KeyboardEvent, type PointerEvent } from 'react';
-import { focusRing } from '../../../primitives/Ring';
-import { Text } from '../../../primitives/Text';
+import { focusRing } from '../../../primitives/Ring/Ring';
+import { Text } from '../../../primitives/Text/Text';
 import { unitSuffix, type Quantity } from '../../model/document';
 import './Scrub.css';
 

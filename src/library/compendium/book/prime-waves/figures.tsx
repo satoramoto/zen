@@ -1,13 +1,13 @@
 // The Prime waves book's figures: the math area's prime-wave components, each in the compendium's
 // Figure frame. Content: the compendium's primitives never import math; the book does.
-import { BoundaryWaves, type BoundaryWavesProps } from '../../../math/primes/BoundaryWaves';
-import { BoxField, type BoxFieldProps } from '../../../math/primes/BoxField';
-import { FieldShape, type FieldShapeProps } from '../../../math/primes/FieldShape';
-import { GapSpectrum, type GapSpectrumProps } from '../../../math/primes/GapSpectrum';
-import { RingField, type RingFieldProps } from '../../../math/primes/RingField';
-import { WrappedWaves, type WrappedWavesProps } from '../../../math/primes/WrappedWaves';
+import { BoundaryWaves, type BoundaryWavesProps } from '../../../math/primes/components/BoundaryWaves/BoundaryWaves';
+import { BoxField, type BoxFieldProps } from '../../../math/primes/components/BoxField/BoxField';
+import { FieldShape, type FieldShapeProps } from '../../../math/primes/components/FieldShape/FieldShape';
+import { GapSpectrum, type GapSpectrumProps } from '../../../math/primes/components/GapSpectrum/GapSpectrum';
+import { RingField, type RingFieldProps } from '../../../math/primes/components/RingField/RingField';
+import { WrappedWaves, type WrappedWavesProps } from '../../../math/primes/components/WrappedWaves/WrappedWaves';
 import { Figure } from '../../components/Figure/Figure';
-import type { FigureRegistry } from '../../layout/Document/Document';
+import type { FigureRegistry } from '../../layouts/Document/Document';
 
 type Framed<P> = P & { number?: string };
 

@@ -18,17 +18,17 @@ Storybook is the evidence. **No new unit tests**; every behaviour is exercised b
 
 | Piece | Where | Use it as |
 |---|---|---|
-| `Screen spec={…} regions={…}` | `src/library/layout/Screen` | a tab. A tab **is** a `ScreenSpec`. |
-| `assemble()` + `Form`/`RegionSpec` | `src/library/layout/assembly` | every widget declares its forms; the solver picks one. |
-| `Tabs` | `src/library/layout/Tabs` | the tab strip (labels → short → menu). |
-| `Fader`, `Meter`, `SendReadout`, `Knob`, `Pad`, `Keys` | `components/music/` | inside the new banks, never duplicated. |
+| `Screen spec={…} regions={…}` | `src/library/layouts/Screen` | a tab. A tab **is** a `ScreenSpec`. |
+| `assemble()` + `Form`/`RegionSpec` | `src/library/layouts/Assembly` | every widget declares its forms; the solver picks one. |
+| `Tabs` | `src/library/layouts/Tabs` | the tab strip (labels → short → menu). |
+| `Fader`, `Meter`, `SendReadout`, `Knob`, `Pad`, `Keys` | `instrument/components/` | inside the new banks, never duplicated. |
 | `Surface`, `Text`, `Stack`, `Ring`, `Icon` | `primitives/` | every plate, well, word and glyph. |
 | `FaderBank`, `KnobBank`, `PadBank`, `Display`, `SongForm` | `yahaha/` | the Yahaha Stage; leave it alone. |
 
 ## The contract every widget shares
 
-`src/library/components/music/live.model.ts` — plain data, no framework, exported from
-`components/music/index.ts`. **No lane may change it after wave 1 starts**; propose a change to
+`src/library/instrument/live.model.ts` — plain data, no framework, exported from
+`instrument/index.ts`. **No lane may change it after wave 1 starts**; propose a change to
 the orchestrator instead.
 
 ```ts
@@ -167,21 +167,21 @@ export interface LiveCue {
 ## Lanes
 
 Each lane is one worktree, one branch, **one folder**, and its own ports. A lane never edits
-`components/music/index.ts`, `layout/index.ts`, `src/library/index.ts`, `tiers.baseline.json`,
+`instrument/index.ts`, `layouts/index.ts`, `src/library/index.ts`, `tiers.baseline.json`,
 `view/*`, or another lane's folder. The orchestrator lands the shared files first and adds the
 exports at merge.
 
 | Lane | Owns | Builds |
 |---|---|---|
-| **0 · contract** (orchestrator) | `components/music/live.model.ts`, `docs/live-workspace.md` | the types above, the export line, the fixtures every lane copies |
-| **1 · grid** | `components/music/LoopPie/`, `LoopGrid/` | the 20 fps pie (SVG arc, one form), the folded song header + 8 track columns + cells + stop row. Forms: `full` (songs, tracks, stop) → `rows` (no song headers) |
-| **2 · mix** | `components/music/SendBars/`, `MixBand/` | two horizontal send bars per strip (0–1, unity hinge at 0.75) and the column-aligned band of `Meter` + `Fader` + `SendBars` + `A/S/Arm`. Forms: `tall` → `short` (match `FaderBank`) |
-| **3 · harmony** | `components/music/ChordStrip/`, `ArpSequencer/` | the progression strip (`LiveChord[]`, now/next, `MUTATE/KEEP/REVERT` as slots) and the 16-step chord-degree arp (`ARP_DEGREES` rows × 16 columns, `ARP_MODES`, rate/oct/gate/swing). Forms: `full` → `compact` (no degree labels) |
-| **4 · pads** | `components/music/XYPad/`, `MacroPads/` | the XY pad (0–1 both axes, crosshair, trails as state, two axis labels) and a two-up macro pair. Forms: `square` → `wide` |
-| **5 · stems** | `components/music/StemLanes/` | four peak lanes + cue flags + a loop window (`LiveStem[]`, `LiveCue[]`). Forms: `four` → `stacked` → `one` |
-| **6 · transitions** | `components/music/TransitionRow/` | six armed pads (`RISER/DROP/CRASH/HOLD A/HOLD B/CUT`) with `armed`/`fired` states. Forms: `row` → `grid` |
-| **7 · workspace** | `layout/Workspace/` + `docs/workspace.md` | `WorkspaceSpec` (tabs of `ScreenSpec`), the tab strip, perform mode, and edit mode: palette of region kinds, add/remove/reorder/re-split rows, bind a region to a track, snap to the spec's own rows — **never pixels** |
-| **8 · show** | `yahaha/Show/` (or an app screen) | the composition: 7 songs, JAM, transitions, a `Show.spec.ts`, stories at 16:9 in every pack |
+| **0 · contract** (orchestrator) | `instrument/live.model.ts`, `docs/live-workspace.md` | the types above, the export line, the fixtures every lane copies |
+| **1 · grid** | `instrument/components/LoopPie/`, `LoopGrid/` | the 20 fps pie (SVG arc, one form), the folded song header + 8 track columns + cells + stop row. Forms: `full` (songs, tracks, stop) → `rows` (no song headers) |
+| **2 · mix** | `instrument/components/SendBars/`, `MixBand/` | two horizontal send bars per strip (0–1, unity hinge at 0.75) and the column-aligned band of `Meter` + `Fader` + `SendBars` + `A/S/Arm`. Forms: `tall` → `short` (match `FaderBank`) |
+| **3 · harmony** | `instrument/components/ChordStrip/`, `ArpSequencer/` | the progression strip (`LiveChord[]`, now/next, `MUTATE/KEEP/REVERT` as slots) and the 16-step chord-degree arp (`ARP_DEGREES` rows × 16 columns, `ARP_MODES`, rate/oct/gate/swing). Forms: `full` → `compact` (no degree labels) |
+| **4 · pads** | `instrument/components/XYPad/`, `MacroPads/` | the XY pad (0–1 both axes, crosshair, trails as state, two axis labels) and a two-up macro pair. Forms: `square` → `wide` |
+| **5 · stems** | `instrument/components/StemLanes/` | four peak lanes + cue flags + a loop window (`LiveStem[]`, `LiveCue[]`). Forms: `four` → `stacked` → `one` |
+| **6 · transitions** | `instrument/components/TransitionRow/` | six armed pads (`RISER/DROP/CRASH/HOLD A/HOLD B/CUT`) with `armed`/`fired` states. Forms: `row` → `grid` |
+| **7 · workspace** | `layouts/Workspace/` + `docs/workspace.md` | `WorkspaceSpec` (tabs of `ScreenSpec`), the tab strip, perform mode, and edit mode: palette of region kinds, add/remove/reorder/re-split rows, bind a region to a track, snap to the spec's own rows — **never pixels** |
+| **8 · show** | `yahaha/screens/Show/` (or an app screen) | the composition: 7 songs, JAM, transitions, a `Show.spec.ts`, stories at 16:9 in every pack |
 
 Waves: **0 → (1,2,3,4,5,6 in parallel) → 7 → 8.**
 
@@ -239,7 +239,7 @@ states**, then express it in zen's primitives. In this order:
 | `XYPad`, `MacroPads` | `openflowfm/widgets/src/controls/XYPad.tsx` (drag, trails, axis labels) | widgets `Controls/XY pad`; yahaha `Screens/Effects`, `Screens/QuickRacks` |
 | `StemLanes` | `openflowfm/mix/src/components/Waveform.tsx`, `Lanes.tsx`, `Ruler.tsx`; widgets `Waveform` | widgets `Music/Waveform`; yahaha `Screens/Looper` |
 | `TransitionRow` | yahaha `TransportColumn`, `MultiPads` | yahaha `Components/TransportColumn`, `Screens/MultiPads` |
-| `Workspace` | zen `Tabs` + the assembly demos | `Design OS/Layout/Assembly` |
+| `Workspace` | zen `Tabs` + the assembly demos | `Core/Layouts/Assembly` |
 
 Where each Storybook is:
 
@@ -261,8 +261,8 @@ A lane that cannot find a reference says so in its report, rather than inventing
 - `npm run typecheck` and `npm run build:storybook` exit 0.
 - `<Name>.model.ts` + `<Name>.tsx` + `<Name>.svelte` (each one `<Tree …/>`), `<Name>.css`,
   `<Name>.forms.ts`, `<Name>.fixtures.ts`, `<Name>.stories.tsx`.
-- Stories: `Design OS/Components/Music/<Name>` — *Default*, *Every state*, *Dense* (the `short`
-  form at 900 px), *Empty*, *Disabled*. Layout lane: `Design OS/Layout/Workspace`.
+- Stories: `Instrument/Components/<Name>` — *Default*, *Every state*, *Dense* (the `short`
+  form at 900 px), *Empty*, *Disabled*. Layout lane: `Core/Layouts/Workspace`.
 - Read in a browser in three packs and both modes. Say which pack and which story you checked.
 - No `.test.tsx`, no new baseline lines, no edit outside the lane's folders.
 
@@ -270,10 +270,10 @@ A lane that cannot find a reference says so in its report, rather than inventing
 
 All eight lanes landed: `LoopPie` and `LoopGrid` (1), `SendBars` and `MixBand` (2), `ChordStrip`
 and `ArpSequencer` (3), `XYPad` and `MacroPads` (4), `StemLanes` (5), `TransitionRow` (6), the
-`Workspace` (7, `layout/Workspace/`) and the Show (8, `yahaha/Show/`).
+`Workspace` (7, `layouts/Workspace/`) and the Show (8, `yahaha/screens/Show/`).
 
-They were followed by the live looper's own panes in mix[flow]'s face (`src/library/Music/live/`,
-`docs/live-views.md`), and the `Music/Live/Views` pages composed from them, which are where this work now
+They were followed by the live looper's own panes in mix[flow]'s face (`src/library/music/live/`,
+`docs/live-views.md`), and the `Music/Live/Screens/Views` pages composed from them, which are where this work now
 continues. SectionBar, StemDeck, SongCard and DicePad are the first parts built from the wireframes' gaps.
 
 ## Decisions
@@ -283,7 +283,7 @@ Settled:
 - **`LoopGrid`'s cell count**: the widest `cells.length`, never fewer than eight
   (`LoopGrid.model.ts`).
 - **A tab's header and footer**: the Workspace fills a tab's own `spec.header` / `spec.footer`
-  regions (`56f511a`), fixed, never framed. `Music/Live/Views` puts the rig's line in an ordinary last
+  regions (`56f511a`), fixed, never framed. `Music/Live/Screens/Views` puts the rig's line in an ordinary last
   row instead, to match mix's flat documents.
 - **Edit mode in the app** (superseded by `live-surface`): the Workspace is the production
   surface. It draws the app's document (mix's shape) and sends every edit as an intent the app's

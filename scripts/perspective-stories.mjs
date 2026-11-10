@@ -17,7 +17,7 @@ try{
   await page.goto(`${base}/iframe.html?id=math-${story}&viewMode=story&globals=theme:linear;mode:dark`);await page.locator('.zen-perspective svg').first().waitFor();await page.evaluate(()=>document.fonts.ready);
   await page.screenshot({path:`.shots/perspective/${story}.png`,fullPage:true});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));console.log('PASS specimen',story);
  }
- await page.goto(`${base}/iframe.html?id=math-projection-explorer--four-projections&viewMode=story&globals=theme:linear;mode:dark`);
+ await page.goto(`${base}/iframe.html?id=math-perspective-components-projection-explorer--four-projections&viewMode=story&globals=theme:linear;mode:dark`);
  const probe=page.getByRole('button',{name:'Move probe in Perspective view'});await probe.waitFor();await page.evaluate(()=>document.fonts.ready);
  const before=await page.getByLabel('Probe world coordinates').textContent(),box=await probe.boundingBox();
  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+box.width/2+45,box.y+box.height/2-15,{steps:8});await page.mouse.up();
@@ -28,7 +28,7 @@ try{
  await page.getByRole('button',{name:'The dolly zoom',exact:true}).click();const width=await page.getByLabel('Reference plane width').textContent();await page.getByRole('slider',{name:'Camera distance'}).focus();await page.keyboard.press('ArrowRight');assert.equal(await page.getByLabel('Reference plane width').textContent(),width);
  await page.getByRole('slider',{name:'Scene turn'}).focus();await page.keyboard.press('End');assert.notEqual(await page.getByLabel('Reference plane width').textContent(),width);
  console.log('PASS pointer probe, shared orbit, dolly scale');
- await page.goto(`${base}/iframe.html?id=math-spatial-optics--solid-prism&viewMode=story&globals=theme:linear;mode:dark`);
+ await page.goto(`${base}/iframe.html?id=math-perspective-components-spatial-optics--solid-prism&viewMode=story&globals=theme:linear;mode:dark`);
  const steer=page.getByRole('group',{name:'Steer spatial ray',exact:true});await steer.waitFor();await steer.focus();await page.keyboard.press('ArrowUp');assert.ok(Number(await page.getByRole('slider',{name:'Ray elevation',exact:true}).inputValue())>0);
  console.log('PASS spatial ray keyboard steering');
  for(const story of ['projection-explorer--anamorphic-message','optical-paths--mirrors-and-glass','spatial-optics--solid-prism','stereo-explorer--convergence-plane']){

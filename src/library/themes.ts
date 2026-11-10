@@ -5,11 +5,11 @@
 //
 // Sources: the packs and facets in `themes/`, the contract (`contract.ts`), resolving a choice
 // (`resolve.ts`) and the scope element (`theme.model.ts`).
-export { packs, type ThemePack } from './themes/packs';
-export { palettes } from './themes/palettes';
-export { faces } from './themes/faces';
-export { scales } from './themes/scales';
-export { materials } from './themes/materials';
+export { packs, type ThemePack } from './foundation/themes/packs';
+export { palettes } from './foundation/themes/palettes';
+export { faces } from './foundation/themes/faces';
+export { scales } from './foundation/themes/scales';
+export { materials } from './foundation/themes/materials';
 export {
   toCssVars,
   LAYERS,

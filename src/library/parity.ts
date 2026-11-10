@@ -15,7 +15,7 @@ import { render as renderSvelte } from '@testing-library/svelte';
 import type { Component } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { instances, type Fixtures } from './fixtures';
-import Render from './svelte/stories/Render.svelte';
+import Render from './foundation/svelte/stories/Render.svelte';
 
 const sortedTokens = (value: string, separator: RegExp) =>
   value

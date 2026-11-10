@@ -7,7 +7,7 @@ const browser = await chromium.launch({headless:true});
 try {
  const page = await browser.newPage({viewport:{width:1440,height:1100}});
  const errors=[];page.on('pageerror', e=>errors.push(e.message));
- await page.goto(`${base}/iframe.html?id=math-wave-calculator--function-composition&viewMode=story&globals=theme:linear;mode:dark`);
+ await page.goto(`${base}/iframe.html?id=math-calculator-components-wave-calculator--function-composition&viewMode=story&globals=theme:linear;mode:dark`);
  await page.waitForFunction(()=>[...document.querySelectorAll('.zen-equation-input')].every(e=>e.dataset.ready==='true'));
  const field=page.locator('math-field').first();
  await field.locator('[data-zen-math-token="parameter"]').first().click();
@@ -42,7 +42,7 @@ try {
  await page.getByRole('button',{name:'Back to selected part ↑',exact:true}).click();
  await page.getByRole('button',{name:'Close equation exploration',exact:true}).click();
  await page.getByRole('button',{name:'Typeset',exact:true}).first().click();
- await page.goto(`${base}/iframe.html?id=math-wave-calculator--function-composition&viewMode=story&globals=theme:linear;mode:light`);
+ await page.goto(`${base}/iframe.html?id=math-calculator-components-wave-calculator--function-composition&viewMode=story&globals=theme:linear;mode:light`);
  await page.getByRole('button',{name:'Explore parts of f',exact:true}).click();
  await page.getByRole('button',{name:'Twice as large',exact:true}).click();
  await page.screenshot({path:'.shots/terms/light.png',fullPage:true});

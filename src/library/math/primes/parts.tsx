@@ -1,9 +1,9 @@
 // Shared parts for the prime-wave figures: a slider for a prime count that steps through round
 // numbers, and a canvas that paints with the contract's colours and repaints on a theme change.
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import type { Param } from '../../components/core/Param/param';
-import { stepDetent, type ParamKeyStep } from '../../components/core/Param/paramGesture';
-import { Slider } from '../../components/core/Slider/Slider';
+import type { Param } from '../../components/Param/param';
+import { stepDetent, type ParamKeyStep } from '../../components/Param/paramGesture';
+import { Slider } from '../../components/Slider/Slider';
 import './primes.css';
 
 /** Round numbers from 1 to 100,000, for the arrow keys to step a count through. */

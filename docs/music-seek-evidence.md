@@ -6,7 +6,7 @@ Local verification (2026-11-01):
 - `npm run typecheck`: exit 0.
 - `npm run build:lib`, `npm run check:lib`: exit 0; framework-free entries remain free of React.
 - `npm run build:storybook`: exit 0.
-- `npx vitest run src/library/Music/gesture/paramGesture.lifecycle.test.ts src/library/tiers.test.ts src/library/library.test.tsx`: 32 tests pass.
+- `npx vitest run src/library/music/model/gesture/paramGesture.lifecycle.test.ts src/library/tiers.test.ts src/library/library.test.tsx`: 32 tests pass.
 - Built Storybook, `node scripts/music-stories.mjs --prefix music-seek-bar --url http://127.0.0.1:6048 --output .shots/seek-reviewed-built --workers 2 --retries 0`: 12/12 pass, React and Svelte, no retries or HMR recovery. Local evidence: `.shots/seek-reviewed-built/stories-2026-11-01T19-44-30-196Z.json`.
 - Chromium 390x320 screenshot manually inspected: seek surface 324px wide, approximately 20px tall, no page horizontal overflow. Local screenshot `.shots/seek-reviewed-built/narrow.png`.
 - `git diff --check`: exit 0.

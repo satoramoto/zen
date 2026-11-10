@@ -52,9 +52,9 @@ try {
   }
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   for (const [id, name] of [
-    ['compendium-book--fourier', 'fourier'],
-    ['compendium-book--harmonic-series', 'book'],
-    ['compendium-layout-document--entry', 'entry'],
+    ['presentation--fourier', 'fourier'],
+    ['presentation--harmonic-series', 'book'],
+    ['compendium-layouts-document--entry', 'entry'],
   ]) {
     for (const [theme, mode] of [['textbook-console', 'dark'], ['textbook-blueprint', 'light']]) {
       await page.setViewportSize({ width: 1440, height: 1000 });
@@ -74,8 +74,8 @@ try {
   }
   // Generic sample books; human-free owns the full trigonometry course evidence.
   for (const [book, id, narrow] of [
-    ['fourier', 'compendium-book--fourier', false],
-    ['prime-waves', 'compendium-book--prime-waves', true],
+    ['fourier', 'presentation--fourier', false],
+    ['prime-waves', 'presentation--prime-waves', true],
   ]) {
     for (const [theme, mode] of [['textbook-console', 'dark'], ['textbook-blueprint', 'light']]) {
       for (const width of narrow ? [1440, 390] : [1440]) {
@@ -103,11 +103,11 @@ try {
   }
   // The overtones chapter with its scrub, and the divergence chapter's exercises.
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto(`${base}/iframe.html?id=compendium-book--linked-quantity&viewMode=story&globals=theme:textbook-console;mode:dark`);
+  await page.goto(`${base}/iframe.html?id=presentation--linked-quantity&viewMode=story&globals=theme:textbook-console;mode:dark`);
   await page.locator('.cmp-scrub').waitFor();
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${shots}/overtones.png`, fullPage: true });
-  await page.goto(`${base}/iframe.html?id=compendium-book--progress&viewMode=story&globals=theme:textbook-blueprint;mode:light`);
+  await page.goto(`${base}/iframe.html?id=presentation--progress&viewMode=story&globals=theme:textbook-blueprint;mode:light`);
   await page.locator('.cmp-exercise').first().waitFor();
   await page.waitForTimeout(1500);
   await page.screenshot({ path: `${shots}/progress.png`, fullPage: true });

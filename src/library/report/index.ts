@@ -27,22 +27,22 @@ export {
 } from './model/report';
 
 /** The whole report as one document: masthead, brief, summary, segments, findings, leads, sources. */
-export { Report, type ReportProps, type ReportMeasure } from './view/Report/Report';
+export { Report, type ReportProps, type ReportMeasure } from './components/Report/Report';
 /** Market and goal as prose, scope and method as lists. */
-export { Brief, type BriefProps } from './view/Brief/Brief';
+export { Brief, type BriefProps } from './components/Brief/Brief';
 /** The headline numbers as stat tiles. */
-export { Summary, type SummaryProps } from './view/Summary/Summary';
+export { Summary, type SummaryProps } from './components/Summary/Summary';
 /** How the whole divides: a proportional bar and a legend, one hue slot per segment. */
-export { Segments, type SegmentsProps } from './view/Segments/Segments';
+export { Segments, type SegmentsProps } from './components/Segments/Segments';
 /** Numbered headed paragraphs. */
-export { Findings, type FindingsProps } from './view/Findings/Findings';
+export { Findings, type FindingsProps } from './components/Findings/Findings';
 /** The leads grouped by tier, narrowed by a filter; rows openable and selectable, columns chosen by the app. */
-export { LeadTable, type LeadTableProps, type LeadColumn } from './view/LeadTable/LeadTable';
+export { LeadTable, type LeadTableProps, type LeadColumn } from './components/LeadTable/LeadTable';
 /** The leads as rows built for importance: an action, a date block, the lead, its details; openable, selectable, optionally grouped or compact. */
-export { LeadList, type LeadListProps, type LeadAction, type LeadActionTone, type WhenBlock } from './view/LeadList/LeadList';
+export { LeadList, type LeadListProps, type LeadAction, type LeadActionTone, type WhenBlock } from './components/LeadList/LeadList';
 /** One opened lead: its header, the app's research fields as a definition list, sources and anything the app adds. */
-export { LeadDetail, type LeadDetailProps, type DetailField } from './view/LeadDetail/LeadDetail';
+export { LeadDetail, type LeadDetailProps, type DetailField } from './components/LeadDetail/LeadDetail';
 /** One outgoing message written from proposals, in four stages driven by props: pick a proposal, edit the draft, read it back ready to send, sent. */
-export { DraftFlow, type DraftFlowProps, type DraftProposal, type DraftWorking, type DraftFlowWords } from './view/DraftFlow/DraftFlow';
+export { DraftFlow, type DraftFlowProps, type DraftProposal, type DraftWorking, type DraftFlowWords } from './components/DraftFlow/DraftFlow';
 /** A footnote list of sources. */
-export { Sources, type SourcesProps } from './view/Sources/Sources';
+export { Sources, type SourcesProps } from './components/Sources/Sources';

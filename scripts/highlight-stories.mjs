@@ -8,7 +8,7 @@ try {
  const page=await browser.newPage({viewport:{width:1280,height:1000}}), errors=[];
  page.on('pageerror',error=>errors.push(error.message));
  const tokens=field=>field.evaluate(e=>[...e.shadowRoot.querySelectorAll('[data-zen-math-token]')].map(n=>({text:n.textContent,kind:n.dataset.zenMathToken,active:n.hasAttribute('data-zen-math-active'),color:getComputedStyle(n).color,decoration:getComputedStyle(n).textDecorationLine})));
- await page.goto(`${base}/iframe.html?id=math-components-equation-input--syntax-colors&viewMode=story&globals=theme:linear;mode:dark`);
+ await page.goto(`${base}/iframe.html?id=equation-specimen--syntax-colors&viewMode=story&globals=theme:linear;mode:dark`);
  const field=page.locator('math-field');await field.waitFor();await page.waitForFunction(()=>document.querySelector('math-field')?.dataset.zenSyntax==='true');
  const colored=await tokens(field);for(const kind of ['function','parameter','position','time','reference-f','constant'])assert.ok(colored.some(t=>t.kind===kind),kind);
  assert.equal(new Set(['function','parameter','position','time'].map(kind=>colored.find(t=>t.kind===kind).color)).size,4);
@@ -24,7 +24,7 @@ try {
  await page.waitForFunction(()=>document.querySelector('math-field').shadowRoot.querySelector('[data-zen-math-token="parameter"]')?.textContent==='q');
  assert.ok((await tokens(field)).some(t=>t.text==='cos'&&t.kind==='function'));
  assert.ok(!(await field.evaluate(e=>e.value)).includes('color'));
- await page.goto(`${base}/iframe.html?id=math-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:light`);
+ await page.goto(`${base}/iframe.html?id=math-calculator-components-wave-calculator--playground&viewMode=story&globals=theme:linear;mode:light`);
  await page.locator('math-field').first().waitFor();await page.getByRole('button',{name:'Explore a in h'}).click();
  await page.waitForFunction(()=>document.querySelector('math-field').shadowRoot.querySelector('[data-zen-math-active]'));
  const first=await tokens(page.locator('math-field').first());assert.ok(first.some(t=>t.text==='a'&&t.active));assert.ok(first.filter(t=>t.text!=='a').every(t=>!t.active));

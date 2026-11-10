@@ -10,151 +10,151 @@
 // the declaration build can't read). A lane adds its components here, one block each.
 import type { Component, Snippet } from 'svelte';
 // New Music namespace; legacy music names in this entry remain untouched.
-export * as Music from './Music/svelte';
+export * as Music from './music/svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { Facets, PackPrinciples } from './contract';
 import type { ModeChoice } from './theme.model';
-import ThemeScopeSvelte from './svelte/ThemeScope.svelte';
-import TextSvelte from './primitives/Text.svelte';
-import StackSvelte from './primitives/Stack.svelte';
-import ButtonSvelte from './components/core/Button/Button.svelte';
-import { actionOf } from './view/bridge';
-import { bindDismiss } from './yahaha/AppBar/popover';
-import { bindLineSlider } from './components/core/LineSlider/slide';
-import { bindSegmented } from './components/core/Segmented/segmentedInput';
-import SegmentedSvelte from './components/core/Segmented/Segmented.svelte';
-import type { SegmentedModelProps } from './components/core/Segmented/Segmented.model';
-import SelectSvelte from './components/core/Select/Select.svelte';
-import type { SelectModelProps } from './components/core/Select/Select.model';
-import { bindLongPress } from './components/core/Button/longPress';
-import { bindKnob } from './components/music/Knob/knobInput';
-import { bindPad } from './components/music/Pad/padPress';
-import { bindFader } from './components/music/Fader/faderInput';
-import { bindFit } from './components/music/ChordReadout/fit';
-import { bindTempoNumber, bindTempoStep } from './components/music/TempoReadout/tempoGestures';
-import { bindBarInput } from './components/music/BarReadout/barInput';
-import type { TextModelProps } from './primitives/Text.model';
-import type { StackModelProps } from './primitives/Stack.model';
-import type { ButtonModelProps } from './components/core/Button/Button.model';
-import OpaqueSvelte from './primitives/Opaque.svelte';
-import HoleSvelte from './primitives/Hole.svelte';
-import RegionSvelte from './layout/Region.svelte';
-import GroupSvelte from './layout/Group.svelte';
-import LayerSvelte from './layout/Layer.svelte';
-import ScreenSvelte from './layout/Screen.svelte';
-import AssembledScreenSvelte from './layout/assembly/AssembledScreen.svelte';
-import WorkspaceSvelte from './layout/Workspace/Workspace.svelte';
-import type { WorkspaceModelProps } from './layout/Workspace/Workspace.model';
-import type { SurfaceRegion } from './layout/Workspace/Workspace.types';
+import ThemeScopeSvelte from './foundation/svelte/ThemeScope.svelte';
+import TextSvelte from './primitives/Text/Text.svelte';
+import StackSvelte from './primitives/Stack/Stack.svelte';
+import ButtonSvelte from './components/Button/Button.svelte';
+import { actionOf } from './foundation/view/bridge';
+import { bindDismiss } from './yahaha/components/AppBar/popover';
+import { bindLineSlider } from './components/LineSlider/slide';
+import { bindSegmented } from './components/Segmented/segmentedInput';
+import SegmentedSvelte from './components/Segmented/Segmented.svelte';
+import type { SegmentedModelProps } from './components/Segmented/Segmented.model';
+import SelectSvelte from './components/Select/Select.svelte';
+import type { SelectModelProps } from './components/Select/Select.model';
+import { bindLongPress } from './components/Button/longPress';
+import { bindKnob } from './instrument/components/Knob/knobInput';
+import { bindPad } from './instrument/components/Pad/padPress';
+import { bindFader } from './instrument/components/Fader/faderInput';
+import { bindFit } from './instrument/components/ChordReadout/fit';
+import { bindTempoNumber, bindTempoStep } from './instrument/components/TempoReadout/tempoGestures';
+import { bindBarInput } from './instrument/components/BarReadout/barInput';
+import type { TextModelProps } from './primitives/Text/Text.model';
+import type { StackModelProps } from './primitives/Stack/Stack.model';
+import type { ButtonModelProps } from './components/Button/Button.model';
+import OpaqueSvelte from './primitives/Opaque/Opaque.svelte';
+import HoleSvelte from './primitives/Hole/Hole.svelte';
+import RegionSvelte from './layouts/Region/Region.svelte';
+import GroupSvelte from './layouts/Group/Group.svelte';
+import LayerSvelte from './layouts/Layer/Layer.svelte';
+import ScreenSvelte from './layouts/Screen/Screen.svelte';
+import AssembledScreenSvelte from './layouts/Assembly/AssembledScreen.svelte';
+import WorkspaceSvelte from './layouts/Workspace/Workspace.svelte';
+import type { WorkspaceModelProps } from './layouts/Workspace/Workspace.model';
+import type { SurfaceRegion } from './layouts/Workspace/Workspace.types';
 import type { AmbientRegion } from './contract';
-import type { RegionModelProps } from './layout/Region.model';
-import type { TabItemModel } from './layout/Tabs.model';
-import type { TipAction } from './view/tip';
+import type { RegionModelProps } from './layouts/Region/Region.model';
+import type { TabItemModel } from './layouts/Tabs/Tabs.model';
+import type { TipAction } from './foundation/view/tip';
 import type { SurfaceShader } from './primitives/surfaceShader';
-import type { GroupModelProps } from './layout/Group.model';
-import type { LayerModelProps } from './layout/Layer.model';
-import type { ScreenModelProps } from './layout/Screen.model';
-import type { Placed, Placement, Principles, ScreenSpec } from './layout/assembly/types';
-import PadSvelte from './components/music/Pad/Pad.svelte';
-import KnobSvelte from './components/music/Knob/Knob.svelte';
-import FaderSvelte from './components/music/Fader/Fader.svelte';
-import KeysSvelte from './components/music/Keys/Keys.svelte';
-import MeterSvelte from './components/music/Meter/Meter.svelte';
-import BarBeatSvelte from './components/music/BarBeat/BarBeat.svelte';
-import ChordReadoutSvelte from './components/music/ChordReadout/ChordReadout.svelte';
-import PartMarksSvelte from './components/music/PartMarks/PartMarks.svelte';
-import SectionNameSvelte from './components/music/SectionName/SectionName.svelte';
-import TempoReadoutSvelte from './components/music/TempoReadout/TempoReadout.svelte';
-import BarReadoutSvelte from './components/music/BarReadout/BarReadout.svelte';
-import SendReadoutSvelte from './components/music/SendReadout/SendReadout.svelte';
-import SoundCellSvelte from './components/music/SoundCell/SoundCell.svelte';
-import RackCellSvelte from './components/music/RackCell/RackCell.svelte';
-import type { PadModelProps } from './components/music/Pad/Pad.model';
-import type { KnobModelProps } from './components/music/Knob/Knob.model';
-import type { FaderModelProps } from './components/music/Fader/Fader.model';
-import type { KeysModelProps } from './components/music/Keys/Keys.model';
-import type { MeterModelProps } from './components/music/Meter/Meter.model';
-import type { BarBeatModelProps } from './components/music/BarBeat/BarBeat.model';
-import type { ChordReadoutModelProps } from './components/music/ChordReadout/ChordReadout.model';
-import type { PartMarksModelProps } from './components/music/PartMarks/PartMarks.model';
-import type { SectionNameModelProps } from './components/music/SectionName/SectionName.model';
-import type { TempoReadoutModelProps } from './components/music/TempoReadout/TempoReadout.model';
-import type { BarReadoutModelProps } from './components/music/BarReadout/BarReadout.model';
-import type { SendReadoutModelProps } from './components/music/SendReadout/SendReadout.model';
-import type { SoundCellModelProps } from './components/music/SoundCell/SoundCell.model';
-import type { RackCellModelProps } from './components/music/RackCell/RackCell.model';
-import SurfaceSvelte from './primitives/Surface.svelte';
-import IconSvelte from './primitives/Icon.svelte';
-import LampButtonSvelte from './components/core/LampButton/LampButton.svelte';
-import LineSliderSvelte from './components/core/LineSlider/LineSlider.svelte';
-import ToggleSvelte from './components/core/Toggle/Toggle.svelte';
-import SwitchSvelte from './components/core/Toggle/Switch.svelte';
-import DisclosureSvelte from './components/core/Disclosure/Disclosure.svelte';
-import StepValueSvelte from './components/core/StepValue/StepValue.svelte';
-import ReadoutSvelte from './components/core/Readout/Readout.svelte';
-import type { StepValueModelProps } from './components/core/StepValue/StepValue.model';
-import type { ReadoutModelProps } from './components/core/Readout/Readout.model';
-import NumberFieldSvelte from './components/core/NumberField/NumberField.svelte';
-import type { NumberFieldModelProps } from './components/core/NumberField/NumberField.model';
-import CheckboxSvelte from './components/core/Checkbox/Checkbox.svelte';
-import RadioSvelte from './components/core/Radio/Radio.svelte';
-import type { CheckModelProps } from './components/core/Checkbox/Checkbox.model';
-import StatusDotSvelte from './components/core/StatusDot/StatusDot.svelte';
-import SeparatorSvelte from './components/core/Separator/Separator.svelte';
-import SettingsRowSvelte from './components/core/SettingsRow/SettingsRow.svelte';
-import TabsSvelte from './layout/Tabs.svelte';
-import type { SurfaceModelProps } from './primitives/Surface.model';
-import type { IconModelProps } from './primitives/Icon.model';
-import type { LampButtonModelProps } from './components/core/LampButton/LampButton.model';
-import type { LineSliderModelProps } from './components/core/LineSlider/LineSlider.model';
-import type { SwitchModelProps, ToggleModelProps } from './components/core/Toggle/Toggle.model';
-import type { DisclosureModelProps } from './components/core/Disclosure/Disclosure.model';
-import type { StatusDotModelProps } from './components/core/StatusDot/StatusDot.model';
-import type { SeparatorModelProps } from './components/core/Separator/Separator.model';
-import type { SettingsRowModelProps } from './components/core/SettingsRow/SettingsRow.model';
-import type { TabsModelProps } from './layout/Tabs.model';
-import HealthSlotSvelte from './yahaha/HealthSlot/HealthSlot.svelte';
-import MetronomePopoverSvelte from './yahaha/AppBar/MetronomePopover.svelte';
-import AppBarSvelte from './yahaha/AppBar/AppBar.svelte';
-import type { HealthSlotModelProps } from './yahaha/HealthSlot/HealthSlot.model';
-import type { MetronomePopoverModelProps } from './yahaha/AppBar/MetronomePopover.model';
-import type { AppBarModelProps } from './yahaha/AppBar/AppBar.model';
-import AccentBlockSvelte from './yahaha/AccentBlock/AccentBlock.svelte';
-import WaitingChipSvelte from './yahaha/WaitingChip/WaitingChip.svelte';
-import StatusLineSvelte from './yahaha/StatusLine/StatusLine.svelte';
-import DisplayArtSvelte from './yahaha/DisplayArt/DisplayArt.svelte';
-import HueLegendSvelte from './yahaha/HueLegend/HueLegend.svelte';
-import OneTouchPickerSvelte from './yahaha/OneTouchPicker/OneTouchPicker.svelte';
-import type { AccentBlockModelProps } from './yahaha/AccentBlock/AccentBlock.model';
-import type { WaitingChipModelProps } from './yahaha/WaitingChip/WaitingChip.model';
-import type { StatusLineModelProps } from './yahaha/StatusLine/StatusLine.model';
-import type { DisplayArtModelProps } from './yahaha/DisplayArt/DisplayArt.model';
-import type { HueLegendProps } from './yahaha/HueLegend/HueLegend.model';
-import type { OneTouchPickerProps } from './yahaha/OneTouchPicker/OneTouchPicker.model';
-import DisplaySvelte from './yahaha/Display/Display.svelte';
-import SongFormSvelte from './yahaha/SongForm/SongForm.svelte';
-import FaderBankSvelte from './yahaha/FaderBank/FaderBank.svelte';
-import FaderBankRegionSvelte from './yahaha/FaderBank/FaderBankRegion.svelte';
-import KnobBankSvelte from './yahaha/KnobBank/KnobBank.svelte';
-import KnobBankRegionSvelte from './yahaha/KnobBank/KnobBankRegion.svelte';
-import PadBankSvelte from './yahaha/PadBank/PadBank.svelte';
-import PadBankRegionSvelte from './yahaha/PadBank/PadBankRegion.svelte';
-import StageSvelte from './yahaha/Stage/Stage.svelte';
-import type { StageModelProps } from './yahaha/Stage/Stage.model';
-import type { DisplayModelProps } from './yahaha/Display/Display.model';
-import type { SongFormProps as SongFormModelProps } from './yahaha/SongForm/SongForm.model';
-import type { FaderBankModelProps, FaderBankRegionModelProps } from './yahaha/FaderBank/FaderBank.model';
-import type { KnobBankProps as KnobBankModelProps, KnobBankRegionModelProps } from './yahaha/KnobBank/KnobBank.model';
-import type { PadBankProps as PadBankModelProps, PadBankRegionProps as PadBankRegionModelProps } from './yahaha/PadBank/PadBank.model';
-import PageListSvelte from './components/core/PageList/PageList.svelte';
-import SliderSvelte from './components/core/Slider/Slider.svelte';
-import type { SliderModelProps } from './components/core/Slider/Slider.model';
-import FolderListSvelte from './components/core/FolderList/FolderList.svelte';
-import type { PageListModelProps } from './components/core/PageList/PageList.model';
-import type { FolderListModelProps } from './components/core/FolderList/FolderList.model';
+import type { GroupModelProps } from './layouts/Group/Group.model';
+import type { LayerModelProps } from './layouts/Layer/Layer.model';
+import type { ScreenModelProps } from './layouts/Screen/Screen.model';
+import type { Placed, Placement, Principles, ScreenSpec } from './layouts/Assembly/types';
+import PadSvelte from './instrument/components/Pad/Pad.svelte';
+import KnobSvelte from './instrument/components/Knob/Knob.svelte';
+import FaderSvelte from './instrument/components/Fader/Fader.svelte';
+import KeysSvelte from './instrument/components/Keys/Keys.svelte';
+import MeterSvelte from './instrument/components/Meter/Meter.svelte';
+import BarBeatSvelte from './instrument/components/BarBeat/BarBeat.svelte';
+import ChordReadoutSvelte from './instrument/components/ChordReadout/ChordReadout.svelte';
+import PartMarksSvelte from './instrument/components/PartMarks/PartMarks.svelte';
+import SectionNameSvelte from './instrument/components/SectionName/SectionName.svelte';
+import TempoReadoutSvelte from './instrument/components/TempoReadout/TempoReadout.svelte';
+import BarReadoutSvelte from './instrument/components/BarReadout/BarReadout.svelte';
+import SendReadoutSvelte from './instrument/components/SendReadout/SendReadout.svelte';
+import SoundCellSvelte from './instrument/components/SoundCell/SoundCell.svelte';
+import RackCellSvelte from './instrument/components/RackCell/RackCell.svelte';
+import type { PadModelProps } from './instrument/components/Pad/Pad.model';
+import type { KnobModelProps } from './instrument/components/Knob/Knob.model';
+import type { FaderModelProps } from './instrument/components/Fader/Fader.model';
+import type { KeysModelProps } from './instrument/components/Keys/Keys.model';
+import type { MeterModelProps } from './instrument/components/Meter/Meter.model';
+import type { BarBeatModelProps } from './instrument/components/BarBeat/BarBeat.model';
+import type { ChordReadoutModelProps } from './instrument/components/ChordReadout/ChordReadout.model';
+import type { PartMarksModelProps } from './instrument/components/PartMarks/PartMarks.model';
+import type { SectionNameModelProps } from './instrument/components/SectionName/SectionName.model';
+import type { TempoReadoutModelProps } from './instrument/components/TempoReadout/TempoReadout.model';
+import type { BarReadoutModelProps } from './instrument/components/BarReadout/BarReadout.model';
+import type { SendReadoutModelProps } from './instrument/components/SendReadout/SendReadout.model';
+import type { SoundCellModelProps } from './instrument/components/SoundCell/SoundCell.model';
+import type { RackCellModelProps } from './instrument/components/RackCell/RackCell.model';
+import SurfaceSvelte from './primitives/Surface/Surface.svelte';
+import IconSvelte from './primitives/Icon/Icon.svelte';
+import LampButtonSvelte from './components/LampButton/LampButton.svelte';
+import LineSliderSvelte from './components/LineSlider/LineSlider.svelte';
+import ToggleSvelte from './components/Toggle/Toggle.svelte';
+import SwitchSvelte from './components/Toggle/Switch.svelte';
+import DisclosureSvelte from './components/Disclosure/Disclosure.svelte';
+import StepValueSvelte from './components/StepValue/StepValue.svelte';
+import ReadoutSvelte from './components/Readout/Readout.svelte';
+import type { StepValueModelProps } from './components/StepValue/StepValue.model';
+import type { ReadoutModelProps } from './components/Readout/Readout.model';
+import NumberFieldSvelte from './components/NumberField/NumberField.svelte';
+import type { NumberFieldModelProps } from './components/NumberField/NumberField.model';
+import CheckboxSvelte from './components/Checkbox/Checkbox.svelte';
+import RadioSvelte from './components/Radio/Radio.svelte';
+import type { CheckModelProps } from './components/Checkbox/Checkbox.model';
+import StatusDotSvelte from './components/StatusDot/StatusDot.svelte';
+import SeparatorSvelte from './components/Separator/Separator.svelte';
+import SettingsRowSvelte from './components/SettingsRow/SettingsRow.svelte';
+import TabsSvelte from './layouts/Tabs/Tabs.svelte';
+import type { SurfaceModelProps } from './primitives/Surface/Surface.model';
+import type { IconModelProps } from './primitives/Icon/Icon.model';
+import type { LampButtonModelProps } from './components/LampButton/LampButton.model';
+import type { LineSliderModelProps } from './components/LineSlider/LineSlider.model';
+import type { SwitchModelProps, ToggleModelProps } from './components/Toggle/Toggle.model';
+import type { DisclosureModelProps } from './components/Disclosure/Disclosure.model';
+import type { StatusDotModelProps } from './components/StatusDot/StatusDot.model';
+import type { SeparatorModelProps } from './components/Separator/Separator.model';
+import type { SettingsRowModelProps } from './components/SettingsRow/SettingsRow.model';
+import type { TabsModelProps } from './layouts/Tabs/Tabs.model';
+import HealthSlotSvelte from './yahaha/components/HealthSlot/HealthSlot.svelte';
+import MetronomePopoverSvelte from './yahaha/components/AppBar/MetronomePopover.svelte';
+import AppBarSvelte from './yahaha/components/AppBar/AppBar.svelte';
+import type { HealthSlotModelProps } from './yahaha/components/HealthSlot/HealthSlot.model';
+import type { MetronomePopoverModelProps } from './yahaha/components/AppBar/MetronomePopover.model';
+import type { AppBarModelProps } from './yahaha/components/AppBar/AppBar.model';
+import AccentBlockSvelte from './yahaha/components/AccentBlock/AccentBlock.svelte';
+import WaitingChipSvelte from './yahaha/components/WaitingChip/WaitingChip.svelte';
+import StatusLineSvelte from './yahaha/components/StatusLine/StatusLine.svelte';
+import DisplayArtSvelte from './yahaha/components/DisplayArt/DisplayArt.svelte';
+import HueLegendSvelte from './yahaha/components/HueLegend/HueLegend.svelte';
+import OneTouchPickerSvelte from './yahaha/components/OneTouchPicker/OneTouchPicker.svelte';
+import type { AccentBlockModelProps } from './yahaha/components/AccentBlock/AccentBlock.model';
+import type { WaitingChipModelProps } from './yahaha/components/WaitingChip/WaitingChip.model';
+import type { StatusLineModelProps } from './yahaha/components/StatusLine/StatusLine.model';
+import type { DisplayArtModelProps } from './yahaha/components/DisplayArt/DisplayArt.model';
+import type { HueLegendProps } from './yahaha/components/HueLegend/HueLegend.model';
+import type { OneTouchPickerProps } from './yahaha/components/OneTouchPicker/OneTouchPicker.model';
+import DisplaySvelte from './yahaha/components/Display/Display.svelte';
+import SongFormSvelte from './yahaha/components/SongForm/SongForm.svelte';
+import FaderBankSvelte from './yahaha/components/FaderBank/FaderBank.svelte';
+import FaderBankRegionSvelte from './yahaha/components/FaderBank/FaderBankRegion.svelte';
+import KnobBankSvelte from './yahaha/components/KnobBank/KnobBank.svelte';
+import KnobBankRegionSvelte from './yahaha/components/KnobBank/KnobBankRegion.svelte';
+import PadBankSvelte from './yahaha/components/PadBank/PadBank.svelte';
+import PadBankRegionSvelte from './yahaha/components/PadBank/PadBankRegion.svelte';
+import StageSvelte from './yahaha/screens/Stage/Stage.svelte';
+import type { StageModelProps } from './yahaha/screens/Stage/Stage.model';
+import type { DisplayModelProps } from './yahaha/components/Display/Display.model';
+import type { SongFormProps as SongFormModelProps } from './yahaha/components/SongForm/SongForm.model';
+import type { FaderBankModelProps, FaderBankRegionModelProps } from './yahaha/components/FaderBank/FaderBank.model';
+import type { KnobBankProps as KnobBankModelProps, KnobBankRegionModelProps } from './yahaha/components/KnobBank/KnobBank.model';
+import type { PadBankProps as PadBankModelProps, PadBankRegionProps as PadBankRegionModelProps } from './yahaha/components/PadBank/PadBank.model';
+import PageListSvelte from './components/PageList/PageList.svelte';
+import SliderSvelte from './components/Slider/Slider.svelte';
+import type { SliderModelProps } from './components/Slider/Slider.model';
+import FolderListSvelte from './components/FolderList/FolderList.svelte';
+import type { PageListModelProps } from './components/PageList/PageList.model';
+import type { FolderListModelProps } from './components/FolderList/FolderList.model';
 
 // The theme: the `theme` action, the scope, and the system mode.
-export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './svelte/theme.svelte';
+export { theme, systemMode, getThemeScope, setThemeScope, type ThemeParams, type ThemeScopeValue } from './foundation/svelte/theme.svelte';
 export interface ThemeScopeProps {
   facets: Facets;
   principles?: PackPrinciples;
@@ -246,14 +246,14 @@ export interface WorkspaceProps extends Omit<WorkspaceModelProps, 'className'> {
   pane?: Snippet<[SurfaceRegion, string | undefined]>;
 }
 export const Workspace = WorkspaceSvelte as unknown as Component<WorkspaceProps>;
-export * from './layout/Workspace/Workspace.types';
-export * from './layout/Workspace/surface';
-export * from './layout/Workspace/surfaceMode';
-export { getSurfaceMode } from './layout/Workspace/surfaceMode.svelte';
-export { contentSlot, surfaceUi, workspaceContent, type WorkspaceModelProps } from './layout/Workspace/Workspace.model';
-export { getForm, getChosenForm, setFormContext } from './layout/assembly/forms.svelte';
-export { scopePrinciples } from './layout/assembly/principles.svelte';
-export { measureRoom } from './layout/assembly/room.svelte';
+export * from './layouts/Workspace/Workspace.types';
+export * from './layouts/Workspace/surface';
+export * from './layouts/Workspace/surfaceMode';
+export { getSurfaceMode } from './layouts/Workspace/surfaceMode.svelte';
+export { contentSlot, surfaceUi, workspaceContent, type WorkspaceModelProps } from './layouts/Workspace/Workspace.model';
+export { getForm, getChosenForm, setFormContext } from './layouts/Assembly/forms.svelte';
+export { scopePrinciples } from './layouts/Assembly/principles.svelte';
+export { measureRoom } from './layouts/Assembly/room.svelte';
 
 // Controls.
 export interface ButtonProps extends ButtonModelProps {
@@ -330,7 +330,7 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'childr
 }
 export const Icon = IconSvelte as unknown as Component<IconProps>;
 
-export { focusRing, pressRing } from './primitives/Ring';
+export { focusRing, pressRing } from './primitives/Ring/Ring';
 
 export type LampButtonProps = LampButtonModelProps;
 export const LampButton = LampButtonSvelte as unknown as Component<LampButtonProps>;
@@ -358,7 +358,7 @@ export interface SwitchProps extends SwitchModelProps {
 export const Switch = SwitchSvelte as unknown as Component<SwitchProps>;
 export type DisclosureProps = DisclosureModelProps;
 export const Disclosure = DisclosureSvelte as unknown as Component<DisclosureProps>;
-export { CONTROL_SIZES, type ControlSize } from './components/core/Toggle/sizes';
+export { CONTROL_SIZES, type ControlSize } from './components/Toggle/sizes';
 
 export type StepValueProps = StepValueModelProps;
 export const StepValue = StepValueSvelte as unknown as Component<StepValueProps>;
@@ -378,10 +378,10 @@ export type RadioProps = CheckboxProps;
 export const Radio = RadioSvelte as unknown as Component<RadioProps>;
 
 // Lane S1-B: Modal and its Sheet form (body and actions as snippets).
-import ModalSvelte from './components/core/Modal/Modal.svelte';
-import SheetSvelte from './components/core/Modal/Sheet.svelte';
-import type { ModalModelProps, SheetModelProps } from './components/core/Modal/Modal.model';
-export type { SheetSide } from './components/core/Modal/Modal.model';
+import ModalSvelte from './components/Modal/Modal.svelte';
+import SheetSvelte from './components/Modal/Sheet.svelte';
+import type { ModalModelProps, SheetModelProps } from './components/Modal/Modal.model';
+export type { SheetSide } from './components/Modal/Modal.model';
 export interface ModalProps extends ModalModelProps {
   actions?: Snippet;
   children?: Snippet;
@@ -394,11 +394,11 @@ export interface SheetProps extends SheetModelProps {
 export const Sheet = SheetSvelte as unknown as Component<SheetProps>;
 
 // Lane S1-B: ActionButton (its face's content as a snippet) and SearchField (`bind:ref` is the input).
-import ActionButtonSvelte from './components/core/ActionButton/ActionButton.svelte';
-import SearchFieldSvelte from './components/core/SearchField/SearchField.svelte';
-import type { ActionButtonModelProps } from './components/core/ActionButton/ActionButton.model';
-import type { SearchFieldModelProps } from './components/core/SearchField/SearchField.model';
-export type { ActionTone } from './components/core/ActionButton/ActionButton.model';
+import ActionButtonSvelte from './components/ActionButton/ActionButton.svelte';
+import SearchFieldSvelte from './components/SearchField/SearchField.svelte';
+import type { ActionButtonModelProps } from './components/ActionButton/ActionButton.model';
+import type { SearchFieldModelProps } from './components/SearchField/SearchField.model';
+export type { ActionTone } from './components/ActionButton/ActionButton.model';
 export interface ActionButtonProps extends ActionButtonModelProps {
   children?: Snippet;
 }
@@ -409,8 +409,8 @@ export interface SearchFieldProps extends SearchFieldModelProps {
 export const SearchField = SearchFieldSvelte as unknown as Component<SearchFieldProps, {}, 'ref'>;
 
 // Gate: one shared key before an app shows anything (title, message and extra content as snippets).
-import GateSvelte from './components/core/Gate/Gate.svelte';
-import type { GateModelProps } from './components/core/Gate/Gate.model';
+import GateSvelte from './components/Gate/Gate.svelte';
+import type { GateModelProps } from './components/Gate/Gate.model';
 export interface GateProps extends GateModelProps {
   title?: Snippet;
   message?: Snippet;
@@ -419,15 +419,15 @@ export interface GateProps extends GateModelProps {
 export const Gate = GateSvelte as unknown as Component<GateProps>;
 
 // VoteControl: a vote among a few choices with their meanings, and the tally.
-import VoteControlSvelte from './components/core/VoteControl/VoteControl.svelte';
-import type { VoteControlModelProps } from './components/core/VoteControl/VoteControl.model';
-export type { VoteChoice, Voter } from './components/core/VoteControl/VoteControl.model';
+import VoteControlSvelte from './components/VoteControl/VoteControl.svelte';
+import type { VoteControlModelProps } from './components/VoteControl/VoteControl.model';
+export type { VoteChoice, Voter } from './components/VoteControl/VoteControl.model';
 export type VoteControlProps = VoteControlModelProps;
 export const VoteControl = VoteControlSvelte as unknown as Component<VoteControlProps>;
 
 // NamePicker: pick your own name from a list, once (title, message and extra content as snippets).
-import NamePickerSvelte from './components/core/NamePicker/NamePicker.svelte';
-import type { NamePickerModelProps } from './components/core/NamePicker/NamePicker.model';
+import NamePickerSvelte from './components/NamePicker/NamePicker.svelte';
+import type { NamePickerModelProps } from './components/NamePicker/NamePicker.model';
 export interface NamePickerProps extends NamePickerModelProps {
   title?: Snippet;
   message?: Snippet;
@@ -436,10 +436,10 @@ export interface NamePickerProps extends NamePickerModelProps {
 export const NamePicker = NamePickerSvelte as unknown as Component<NamePickerProps>;
 
 // Lane S1-B: Popover (the panel as a snippet; `createHoverIntent` for a hover-opened one).
-import PopoverSvelte from './components/core/Popover/Popover.svelte';
-import type { PopoverBindingProps } from './components/core/Popover/Popover.model';
-export type { Dismissal, PopupBox, PopoverAnchor } from './components/core/Popover/placement';
-export { createHoverIntent, type HoverIntentStore, type HoverIntentOptions, type HoverPanel } from './components/core/Popover/hoverIntent';
+import PopoverSvelte from './components/Popover/Popover.svelte';
+import type { PopoverBindingProps } from './components/Popover/Popover.model';
+export type { Dismissal, PopupBox, PopoverAnchor } from './components/Popover/placement';
+export { createHoverIntent, type HoverIntentStore, type HoverIntentOptions, type HoverPanel } from './components/Popover/hoverIntent';
 export interface PopoverProps extends PopoverBindingProps {
   children?: Snippet;
 }
@@ -456,18 +456,18 @@ export interface SettingsRowProps extends SettingsRowModelProps {
 }
 export const SettingsRow = SettingsRowSvelte as unknown as Component<SettingsRowProps>;
 
-export type { TabItemModel as TabItem, TipAction as TabsTipAction } from './layout/Tabs.model';
+export type { TabItemModel as TabItem, TipAction as TabsTipAction } from './layouts/Tabs/Tabs.model';
 export type TabsProps = TabsModelProps<string | Snippet>;
 export const Tabs = TabsSvelte as unknown as Component<TabsProps>;
 // Lane S1-B: Slider (the Param gesture and the typed readout are stores its tree binds).
-export type { SliderLayout, SliderSide, SliderTyping } from './components/core/Slider/Slider.model';
+export type { SliderLayout, SliderSide, SliderTyping } from './components/Slider/Slider.model';
 export type SliderProps = SliderModelProps;
 export const Slider = SliderSvelte as unknown as Component<SliderProps>;
 // Lane S1-B: PageList and FolderList.
-export type { PageItem } from './components/core/PageList/PageList.model';
+export type { PageItem } from './components/PageList/PageList.model';
 export type PageListProps = PageListModelProps;
 export const PageList = PageListSvelte as unknown as Component<PageListProps>;
-export type { FolderItem } from './components/core/FolderList/FolderList.model';
+export type { FolderItem } from './components/FolderList/FolderList.model';
 export type FolderListProps = FolderListModelProps;
 export const FolderList = FolderListSvelte as unknown as Component<FolderListProps>;
 // Lane D2: Yahaha's AppBar, MetronomePopover and HealthSlot.
@@ -480,7 +480,7 @@ export interface AppBarProps extends AppBarModelProps<string | Snippet> {
 }
 export const AppBar = AppBarSvelte as unknown as Component<AppBarProps>;
 export const dismiss = actionOf(bindDismiss);
-export { createFocusReturn, type DismissParams } from './yahaha/AppBar/popover';
+export { createFocusReturn, type DismissParams } from './yahaha/components/AppBar/popover';
 
 // Yahaha widgets: Yahaha's own concepts, mapped onto the library's slots through `yahaha/hues.ts`.
 export type AccentBlockProps = AccentBlockModelProps;
@@ -524,18 +524,18 @@ export const PadBankRegion = PadBankRegionSvelte as unknown as Component<PadBank
 /** The Stage's props: the model's, and its two slots as snippets (`page`: a display page in the Display's place; `side`: a panel in the hero's right third). */
 export type StageProps = StageModelProps<string | Snippet> & { page?: Snippet; side?: Snippet };
 export const Stage = StageSvelte as unknown as Component<StageProps>;
-export { TEMPO_MAX, TEMPO_MIN, STAGE_SPECS, STAGE_HERO_SPECS, type StageBackdrop, type StageFit, type StageHero, type StageLayout, type StageTipAction } from './yahaha/Stage/Stage.model';
-export { tapTempo, createTapTempo, TAP_COUNT, TAP_RESET_MS, type TapTempo } from './yahaha/Stage/tapTempo';
-export { sectionPads, pressSectionPad, SECTIONS_BANK, SECTION_PAD_LAYOUT, type SectionPadAction, type SectionPadHandlers } from './yahaha/Stage/sectionPads';
+export { TEMPO_MAX, TEMPO_MIN, STAGE_SPECS, STAGE_HERO_SPECS, type StageBackdrop, type StageFit, type StageHero, type StageLayout, type StageTipAction } from './yahaha/screens/Stage/Stage.model';
+export { tapTempo, createTapTempo, TAP_COUNT, TAP_RESET_MS, type TapTempo } from './yahaha/screens/Stage/tapTempo';
+export { sectionPads, pressSectionPad, SECTIONS_BANK, SECTION_PAD_LAYOUT, type SectionPadAction, type SectionPadHandlers } from './yahaha/screens/Stage/sectionPads';
 
 // Mathematical presentation uses the same view trees as the React binding.
-export { default as ExactValue } from "./math/view/ExactValue/ExactValue.svelte";
-export { default as ExpressionField } from "./math/view/ExpressionField/ExpressionField.svelte";
-export { default as PlotViewport } from "./math/view/PlotViewport/PlotViewport.svelte";
-export type { ExactValueProps } from "./math/view/ExactValue/ExactValue.model";
-export type { ExpressionFieldProps } from "./math/view/ExpressionField/ExpressionField.model";
-export type { PlotViewportProps, PlotPoint, PlotCamera, PlotRegion } from "./math/view/PlotViewport/PlotViewport.model";
-export { default as MathInspector } from "./math/view/MathInspector/MathInspector.svelte";
-export type { MathInspectorProps, MathProperty, MathMembership } from "./math/view/MathInspector/MathInspector.model";
-export { default as DistributionPlot } from './math/view/DistributionPlot/DistributionPlot.svelte';
-export type { DistributionPlotProps, DistributionBin } from './math/view/DistributionPlot/DistributionPlot.model';
+export { default as ExactValue } from "./math/components/ExactValue/ExactValue.svelte";
+export { default as ExpressionField } from "./math/components/ExpressionField/ExpressionField.svelte";
+export { default as PlotViewport } from "./math/components/PlotViewport/PlotViewport.svelte";
+export type { ExactValueProps } from "./math/components/ExactValue/ExactValue.model";
+export type { ExpressionFieldProps } from "./math/components/ExpressionField/ExpressionField.model";
+export type { PlotViewportProps, PlotPoint, PlotCamera, PlotRegion } from "./math/components/PlotViewport/PlotViewport.model";
+export { default as MathInspector } from "./math/components/MathInspector/MathInspector.svelte";
+export type { MathInspectorProps, MathProperty, MathMembership } from "./math/components/MathInspector/MathInspector.model";
+export { default as DistributionPlot } from './math/components/DistributionPlot/DistributionPlot.svelte';
+export type { DistributionPlotProps, DistributionBin } from './math/components/DistributionPlot/DistributionPlot.model';

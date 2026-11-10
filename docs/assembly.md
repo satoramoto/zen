@@ -2,7 +2,7 @@
 
 A screen is put together from what its parts say about themselves, not tuned by hand for each size. Parts **declare** how much room they need; the screen **declares** what it holds and what matters most; the system's **principles** say how to trade one against the other. A pure function, `assemble()`, turns those three into a placement. Because it reads only data, never the DOM, every layout can be unit-tested in jsdom.
 
-Code: `src/library/layout/assembly/`. Story: `Design OS/Layout/Assembly`. Tests: `assembly.test.tsx`.
+Code: `src/library/layouts/Assembly/`. Story: `Core/Layouts/Assembly`. Tests: `assembly.test.tsx`.
 
 ## The parts declare forms
 
@@ -92,7 +92,7 @@ Regions sit `--mat-plate-gap` apart, and the header and footer are that far from
 
 ## The principles
 
-Each theme pack has `principles` (`PackPrinciples` in `contract.ts`, values in `src/library/themes/principles/`):
+Each theme pack has `principles` (`PackPrinciples` in `contract.ts`, values in `src/library/foundation/themes/principles/`):
 
 | Field | Means |
 |---|---|
@@ -156,7 +156,7 @@ With a 28 px control, a 4 px unit, a 12 px plate inset, an 8 px gap and `dense`:
 
 ## The Stage
 
-`yahaha/Stage/Stage.spec.ts` is the whole of the Stage's layout: header `bar`; footer `keys` (just the keys, `ruler={false}`: 1.75 control heights) then `status`; rows `[hero, transport]`, `[mixer, { rows: [[knobs], [pads]] }]` (no song form strip: the sections are the Pads region's Sections bank, its default view); the pair `hero`/`mixer`; edge `--space-2`; `aspect: { ratio: 16 / 9, fit: 'contain' }`. The split spec is `[hero]`, `[mixer, controls, transport]` with no pair. The stories draw `STAGE_SCALED_SPEC` (`fit: 'scale'`, design 1920 × 1080) by default and have a `fit` control. `Stage.assembly.test.ts` proves it in five windows, 1440 × 1200, 2560 × 1080, 1920 × 1080 (the board), 1217 × 752 and 900 × 700, under every pack: the room exactly 16:9, centred, bands on the right axis; the forms chosen; no overflow, zoom ≥ the floor, every region at least its form's least, nothing overlapping, the hero stepping only after the controls. Two cases scroll at the floor: 900 × 700 gives a 900 × 506 room, below the Stage's least under every pack, and visual[flow]'s frost materials (32 px gaps, 22 px insets) can't afford the 1217 × 684.6 room.
+`yahaha/screens/Stage/Stage.spec.ts` is the whole of the Stage's layout: header `bar`; footer `keys` (just the keys, `ruler={false}`: 1.75 control heights) then `status`; rows `[hero, transport]`, `[mixer, { rows: [[knobs], [pads]] }]` (no song form strip: the sections are the Pads region's Sections bank, its default view); the pair `hero`/`mixer`; edge `--space-2`; `aspect: { ratio: 16 / 9, fit: 'contain' }`. The split spec is `[hero]`, `[mixer, controls, transport]` with no pair. The stories draw `STAGE_SCALED_SPEC` (`fit: 'scale'`, design 1920 × 1080) by default and have a `fit` control. `Stage.assembly.test.ts` proves it in five windows, 1440 × 1200, 2560 × 1080, 1920 × 1080 (the board), 1217 × 752 and 900 × 700, under every pack: the room exactly 16:9, centred, bands on the right axis; the forms chosen; no overflow, zoom ≥ the floor, every region at least its form's least, nothing overlapping, the hero stepping only after the controls. Two cases scroll at the floor: 900 × 700 gives a 900 × 506 room, below the Stage's least under every pack, and visual[flow]'s frost materials (32 px gaps, 22 px insets) can't afford the 1217 × 684.6 room.
 
 ## What it doesn't do yet
 

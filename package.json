@@ -84,7 +84,7 @@
     "test:music:stories": "node scripts/music-stories.mjs",
     "test:music:visual": "node scripts/music-visual.mjs",
     "test:music:themes": "node scripts/music-theme-switch.mjs",
-    "test:music:hooks": "vitest run src/library/Music",
+    "test:music:hooks": "vitest run src/library/music",
     "tiers": "tsx scripts/tiers.ts",
     "build": "tsc --noEmit && vite build",
     "build:storybook": "node scripts/build-storybook.mjs"

@@ -92,7 +92,7 @@ Definitions are plain data, so they import no renderer. The app draws each insta
 arguments in Svelte. `target` is the region's fixed target, or else the app's `selected`;
 `settings` are the region's values with every default filled in (`resolveSettings`; `'all'`
 targets expanded). The palette lists exactly the definitions, in order, by label and description.
-`Music.livePanes` is a ready-made set: the live panes (`Music/live/panes.ts`); the launch grid and
+`Music.livePanes` is a ready-made set: the live panes (`music/live/panes.ts`); the launch grid and
 the strips pick their tracks, the cut pads their cuts, the dice pad its moves, the control panel
 its grid and its cells.
 
@@ -106,7 +106,7 @@ no longer allows reads as the default (a choice that is gone, a toggle that isn'
 that isn't one), a number is held to its range, and a pick of several keeps only what is still
 offered; the document keeps what it holds.
 
-**A pane that fails.** Each pane is drawn inside `Contain` (`view/Contain.tsx`, `.svelte`): if
+**A pane that fails.** Each pane is drawn inside `Contain` (`foundation/view/Contain.tsx`, `.svelte`): if
 drawing it throws, a note takes its place ("Loudness stopped", with Retry), `onPaneError({ region,
 message })` tells the app, and every other region plays on.
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { Document } from '../../layout/Document/Document';
+import { Document } from '../../layouts/Document/Document';
 import { paragraph, ref, scrub, section, table, tex, type Entry } from '../../model/document';
 import { Formula } from '../Formula/Formula';
 import { Table } from './Table';

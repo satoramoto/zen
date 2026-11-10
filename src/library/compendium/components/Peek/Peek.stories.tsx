@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
-import { P, Reading } from '../../layout/Reading/Reading';
+import { P, Reading } from '../../layouts/Reading/Reading';
 import { Peek } from './Peek';
 
 /** A mention of another entry with its head as a preview: hover to peek, tap or click to toggle. */

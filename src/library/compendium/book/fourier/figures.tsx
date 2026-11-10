@@ -1,13 +1,13 @@
 // The Fourier book's figures: the math area's components, each in the compendium's Figure frame.
 // This is content: the compendium's primitives never import math; the book does.
-import { CoefficientFinder, type CoefficientFinderProps } from '../../../math/fourier/CoefficientFinder';
-import { Epicycles, type EpicyclesProps } from '../../../math/fourier/Epicycles';
-import { HeatModes, type HeatModesProps } from '../../../math/fourier/HeatModes';
-import { PairToSine, type PairToSineProps } from '../../../math/fourier/PairToSine';
-import { RotatingVector, type RotatingVectorProps } from '../../../math/fourier/RotatingVector';
-import { StepSeries, type StepSeriesProps } from '../../../math/fourier/StepSeries';
+import { CoefficientFinder, type CoefficientFinderProps } from '../../../math/fourier/components/CoefficientFinder/CoefficientFinder';
+import { Epicycles, type EpicyclesProps } from '../../../math/fourier/components/Epicycles/Epicycles';
+import { HeatModes, type HeatModesProps } from '../../../math/fourier/components/HeatModes/HeatModes';
+import { PairToSine, type PairToSineProps } from '../../../math/fourier/components/PairToSine/PairToSine';
+import { RotatingVector, type RotatingVectorProps } from '../../../math/fourier/components/RotatingVector/RotatingVector';
+import { StepSeries, type StepSeriesProps } from '../../../math/fourier/components/StepSeries/StepSeries';
 import { Figure } from '../../components/Figure/Figure';
-import type { FigureRegistry } from '../../layout/Document/Document';
+import type { FigureRegistry } from '../../layouts/Document/Document';
 
 type Framed<P> = P & { number?: string };
 

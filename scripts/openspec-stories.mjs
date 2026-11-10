@@ -45,9 +45,9 @@ try {
   }
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   for (const [id, name] of [
-    ['openspec-repo--sample', 'sample'],
-    ['openspec-repo--zen', 'zen'],
-    ['openspec-change--active', 'change'],
+    ['openspec-components-repo--sample', 'sample'],
+    ['openspec-components-repo--zen', 'zen'],
+    ['openspec-components-change--active', 'change'],
   ]) {
     for (const mode of ['dark', 'light']) {
       await page.setViewportSize({ width: 1440, height: 1000 });

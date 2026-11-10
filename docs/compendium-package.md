@@ -23,7 +23,7 @@ export const Reader = () => <Book book={book} checkers={{ expression: expression
 Use a `ThemeScope` with the `textbook-console` or `textbook-blueprint` pack around
 the reader. `Figure` frames application-owned registry components such as
 `UnitCircle`; the book binds named quantities to their props and callbacks.
-The executable example in `src/library/compendium/package/Package.stories.tsx` exercises
+The executable example in `src/library/compendium/screens/Package/Package.stories.tsx` exercises
 this boundary with a figure and checker.
 
 ## Supported entries

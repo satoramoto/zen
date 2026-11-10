@@ -6,13 +6,15 @@ Every visual and structural decision in a zen app belongs to exactly one tier. E
 
 | Tier | Where | Decides | Never decides | Builds from |
 |---|---|---|---|---|
-| **Tokens** | `src/library/themes/` | values: colour, type, scale, materials, layers | anything about a screen | — |
+| **Tokens** | `src/library/foundation/themes/` | values: colour, type, scale, materials, layers | anything about a screen | — |
 | **Primitives** | `src/library/primitives/` | how a thing looks: a `Surface` (a layer, a material; `Opaque` makes the layers inside solid, `Hole` is a cut-out), `Text` in a role, an `Icon`, a `Stack` (a flex line with a gap step), a focus or press `Ring` | behaviour | tokens |
-| **Controls** | `src/library/components/core`, `components/music` | one interaction: state, keys, accessibility, its own size on the scale (`size`), its colour slot (`tone`, `hue`), its **forms** and what each needs in scale units ([`assembly.md`](assembly.md)) | its outer margin or position; picking a colour by hand | primitives |
-| **Groups** | `src/library/layout/Group` (a `Stack` plus a label) | arranging controls: direction, gap step, alignment, the label | painting anything | controls |
-| **Regions** | `src/library/layout/Region` | a block of a screen: plate, header, views; its forms are its contents' needs added up | arranging controls inside it (that's a Group) | groups |
-| **Screens** | `src/library/layout/Screen`, an app's screens | intent: header, footer, rows of regions, priorities, pairs (a `spec`); `assemble()` decides forms, sizes and zoom from it and the pack's principles | styling a region; grid ratios or breakpoints by hand | regions |
+| **Controls** | `src/library/components`, `src/library/instrument/components` | one interaction: state, keys, accessibility, its own size on the scale (`size`), its colour slot (`tone`, `hue`), its **forms** and what each needs in scale units ([`assembly.md`](assembly.md)) | its outer margin or position; picking a colour by hand | primitives |
+| **Groups** | `src/library/layouts/Group` (a `Stack` plus a label) | arranging controls: direction, gap step, alignment, the label | painting anything | controls |
+| **Regions** | `src/library/layouts/Region` | a block of a screen: plate, header, views; its forms are its contents' needs added up | arranging controls inside it (that's a Group) | groups |
+| **Screens** | `src/library/layouts/Screen`, an app's screens | intent: header, footer, rows of regions, priorities, pairs (a `spec`); `assemble()` decides forms, sizes and zoom from it and the pack's principles | styling a region; grid ratios or breakpoints by hand | regions |
 | **App** | an app's root | data, behaviour, which screen and system | CSS | screens |
+
+The tiers decide who decides what; [`structure.md`](structure.md) says which folder each thing is in.
 
 ## Where does this go?
 
@@ -37,4 +39,4 @@ Ask in order and stop at the first yes:
 
 - **Global element resets have no specificity.** Any reset that can apply under the library (`src/styles.css`, `.storybook/`, an app's base CSS) is wrapped in `:where()`. The primitives' own rules are zero-specificity, so a bare `button { font: inherit }` would beat a `<Text as="button">` and silently undo its role.
 
-`npm run tiers` also prints an **adoption** line: how many component folders (`components/<core|music>/<Name>`, `yahaha/<Name>`) render `Text` and `Surface`.
+`npm run tiers` also prints an **adoption** line: how many component folders (`components/<Name>`, `instrument/components/<Name>`, `graph/<tier>/<Name>`, `yahaha/<tier>/<Name>`) render `Text` and `Surface`.

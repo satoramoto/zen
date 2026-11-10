@@ -26,11 +26,11 @@ A new area, `src/library/shader/`, exported from the package root (`src/library/
 | --- | --- | --- |
 | `shader/types.ts` | every type below | contract |
 | `shader/index.ts` | the area's exports | contract |
-| `shader/gl.ts`, `shader/context.ts`, `shader/supported.ts`, `shader/support.ts`, `shader/bindShader.ts`, `shader/ShaderCanvas.tsx` | the runner: `bindShader` is the framework-free store (registered as `shader` in `view/stores.ts`, which both Surfaces bind through `primitives/surfaceShader.ts`); `ShaderCanvas` is its React binding | runner |
+| `shader/gl.ts`, `shader/context.ts`, `shader/supported.ts`, `shader/support.ts`, `shader/bindShader.ts`, `shader/ShaderCanvas.tsx` | the runner: `bindShader` is the framework-free store (registered as `shader` in `foundation/view/stores.ts`, which both Surfaces bind through `primitives/surfaceShader.ts`); `ShaderCanvas` is its React binding | runner |
 | `shader/glsl.ts`, `shader/nodes.ts`, `shader/compile.ts`, `shader/compile.test.ts`, `shader/useShaderMaterial.ts` | the compiler and node library | compiler |
 | `shader/materials/{water,ether,glass}.ts`, `shader/materials/index.ts` | the three materials, as Circuits | materials |
 | `primitives/Surface.tsx`, `primitives/Surface.css`, `themes/materials.ts` (frost) | the material layer, its fallback, the new glass | surface |
-| `graph/stories/Materials.stories.tsx`, `graph/stories/MaterialLab.tsx` (+ `.css`) | the stories | stories |
+| `graph/screens/Materials/Materials.stories.tsx`, `graph/screens/Materials/MaterialLab.tsx` (+ `.css`) | the stories | stories |
 
 GLSL lives in TS strings. Two library rules reach it: `library.test.tsx` refuses `rgb(`, `rgba(`,
 `hsl(` and `#` followed by 3–8 hex digits in component sources, and the tier scanner counts any
@@ -263,7 +263,7 @@ glass on a layer through a skin's `materials.shaders` or a Surface's `shader` pr
 
 ## Stories
 
-`Design OS/Graph/Materials/<Water|Ether|Glass|Meta>` (`graph/stories/Materials.stories.tsx`).
+`Graph/Screens/Materials/<Water|Ether|Glass|Meta>` (`graph/screens/Materials/Materials.stories.tsx`).
 Each shows the material's circuit in the graph editor (`Graph` + `useCircuit`, as
 `Circuit.stories.tsx` does) beside a live `Surface` wearing it, with a control per param slot:
 editing a param updates live, rewiring recompiles, errors are listed. **Meta** is a graph board

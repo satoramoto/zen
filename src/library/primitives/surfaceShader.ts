@@ -1,9 +1,9 @@
 // Surface's shader material, framework-free: which source it draws (or none) and the canvas as a
 // view-tree node. `Surface.tsx` and `Surface.svelte` both call these and draw the node with `Tree`.
 import type { LayerName, Materials } from '../contract';
-import { compiledMaterial } from '../shader/materials';
+import { compiledMaterial } from '../shader/model/materials';
 import type { ShaderMaterialName, ShaderSource } from '../shader/types';
-import { h, wire, type Node } from '../view/Tree.model';
+import { h, wire, type Node } from '../foundation/view/Tree.model';
 
 /** What a surface's `shader` prop takes: a named material, a compiled source, or `false` for none. */
 export type SurfaceShader = ShaderMaterialName | ShaderSource | false;

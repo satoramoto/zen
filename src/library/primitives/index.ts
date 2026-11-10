@@ -16,7 +16,7 @@ export {
   type TextWeight,
   type TextCase,
   type TextSize,
-} from './Text';
+} from './Text/Text';
 export {
   Surface,
   Opaque,
@@ -28,10 +28,10 @@ export {
   type MaterialRole,
   type LitSlot,
   type SurfaceRadius,
-} from './Surface';
-export { Icon, ICON_SIZES, type IconProps, type IconSize } from './Icon';
-export { Stack, type StackProps, type StackAlign, type StackJustify } from './Stack';
-export { focusRing, pressRing } from './Ring';
+} from './Surface/Surface';
+export { Icon, ICON_SIZES, type IconProps, type IconSize } from './Icon/Icon';
+export { Stack, type StackProps, type StackAlign, type StackJustify } from './Stack/Stack';
+export { focusRing, pressRing } from './Ring/Ring';
 export { STEPS, stepVar, type Step } from './step';
-export { Ambient, type AmbientProps, type AmbientSource } from './Ambient';
-export { sampleRegions, easeFactor, smoothToward, oklabCss, regionBuffer, scratchBuffer, type Pixels as AmbientPixels } from './Ambient.model';
+export { Ambient, type AmbientProps, type AmbientSource } from './Ambient/Ambient';
+export { sampleRegions, easeFactor, smoothToward, oklabCss, regionBuffer, scratchBuffer, type Pixels as AmbientPixels } from './Ambient/Ambient.model';

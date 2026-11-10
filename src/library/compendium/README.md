@@ -12,7 +12,7 @@ answer goes to a checker by name (`exact` and `numeric` are built in; a page reg
 The reader is React-only, exported through `@satoramoto/zen/compendium`; pure authoring
 helpers use `@satoramoto/zen/compendium/model`. Import `@satoramoto/zen/zen.css` once.
 See [the package guide](../../../docs/compendium-package.md) for SSR and local-source use.
-Stories are under a top-level **Compendium** section: `Compendium/Book` holds the two sample
+Stories are under a top-level **Compendium** section: `Compendium/Layouts/Book` holds the two sample
 textbooks (the Fourier book first), `Compendium/Layout/…` the page and column,
 `Compendium/Components/…` each part on its own.
 

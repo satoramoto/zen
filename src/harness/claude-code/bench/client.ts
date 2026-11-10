@@ -62,7 +62,7 @@ export type ClientSurface = {
 
 // ---- resolving modules ----
 
-/** A path with `.` and `..` folded and any leading `./` or `../` dropped: `mods/lab/hooks/x.tsx`. */
+/** A path with `.` and `..` folded and any leading `.//` or `../` dropped: `mods/lab/hooks/x.tsx`. */
 const normal = (path: string) => {
   const out: string[] = []
   for (const part of path.split('/')) {
@@ -88,7 +88,7 @@ const componentOf = (mod: ModuleLike): ClientModuleFn | undefined => {
 /**
  * A resolver over a map of modules: path → module, or path → loader
  * (`() => import(...)`, as `import.meta.glob` gives). Paths may start with
- * `../` or `./`; `module` is looked up relative to `from`, then by its own
+ * `../` or `.//`; `module` is looked up relative to `from`, then by its own
  * path, then as the end of any path in the map (within `from`'s mod, if given).
  */
 export const resolverFrom = (map: Record<string, ModuleLike | (() => Promise<unknown>)>): ClientResolver => {

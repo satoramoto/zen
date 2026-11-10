@@ -1,6 +1,6 @@
-import type { HueSlot } from '../../../components/core/hue';
-import { Stack } from '../../../primitives/Stack';
-import { Text } from '../../../primitives/Text';
+import type { HueSlot } from '../../../components/hue';
+import { Stack } from '../../../primitives/Stack/Stack';
+import { Text } from '../../../primitives/Text/Text';
 import './Mark.css';
 
 import { STANDINGS, type Standing } from '../../model/standing';
