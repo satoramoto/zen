@@ -7,16 +7,13 @@ import { useSurfaceHost } from '../../../layout/Workspace/host.story';
 import { useSurfaceMode } from '../../../layout/Workspace/surfaceMode.react';
 import { building } from '../../../layout/Workspace/surfaceMode';
 import { useForm } from '../../../layout/assembly/forms';
-import { isLivePaneKind, livePanes } from '../panes';
-import { useLiveSet } from './LiveSet.story';
-import { LIVE_DOCUMENT } from './views';
 import { workspacePane } from '../../../layout/Workspace/content.story';
 import { tabOf, workspaceDocument, workspacePanes, workspaceTargets } from '../../../layout/Workspace/Workspace.fixtures';
 import type { PaneDefinition, SurfaceDocument } from '../../../layout/Workspace/Workspace.types';
 
 // The app's pane kinds: plain data the surface lays out by, a slot per instance the app fills, the
-// palette made of exactly the definitions, the Music live panes as one ready-made set, what the
-// slot is told, and what a missing target shows.
+// palette made of exactly the definitions, what the slot is told, and what a missing target shows.
+// (The Music live panes as a ready-made set: `Kit.stories.tsx`, `live-reference-kit`.)
 
 const meta = {
   title: 'Music/Live/Pane registry',
@@ -26,9 +23,13 @@ const meta = {
     frame: { w: 1440, h: 900 },
     spec: {
       capability: 'live-pane-registry',
-      purpose: 'How an app defines the pane kinds its surface can hold, how they reach the palette, and the ready-made Music live set.',
+      purpose: 'How an app defines the pane kinds its surface can hold, how they reach the palette, what the app’s pane is told for each instance, and what a region shows when its target is gone.',
       requirement: 'The app defines its pane kinds',
       shall: 'The surface SHALL take the app’s pane definitions as plain data, each naming its kind, its label, an optional description, its forms, its priority and whether it brings its own plate and head, and the binding targets it can follow, and SHALL draw each region in a slot the app fills for that instance.',
+      // Decisions a person made: `story-spec sync` writes these as REMOVED or RENAMED. Spent once the spec no longer has them.
+      retires: [
+        { requirement: 'The Music live panes are a ready-made set', reason: 'Moved to live-reference-kit: the registry is the framework’s and names no particular pane.', migration: 'Read “The Music live panes are a ready-made set” in live-reference-kit.' },
+      ],
     },
   },
 } satisfies Meta;
@@ -148,73 +149,6 @@ export const NoDefinitionsNoPalette: Story = scenario(
   },
   { render: () => <Workspace name="Live" document={workspaceDocument} targets={workspaceTargets} editing /> },
 ) as Story;
-
-function LiveOne() {
-  const live = useLiveSet({ running: false });
-  return <Workspace name="Hidden Signals" document={LIVE_DOCUMENT} panes={livePanes} selected={live.selected} pane={(region, target, settings) => <div data-testid={`pane-${region.id}`} data-kind={region.kind} style={{ height: '100%' }}>{live.content(region, target, settings)}</div>} />;
-}
-
-export const TheLiveViewsUseTheSet: Story = scenario(
-  {
-    requirement: 'The Music live panes are a ready-made set',
-    shall: 'Zen SHALL provide the Music live panes as one set of pane definitions an app may use whole, use in part, or combine with its own, and the live views SHALL be built from that set.',
-    name: 'The live views use the set',
-    when: 'the ONE tab of the live views is opened',
-    then: 'every region on it is a Music live pane drawn from the ready-made set',
-    check: async ({ canvasElement }) => {
-      const panes = [...canvasElement.querySelectorAll<HTMLElement>('[data-testid^="pane-"]')];
-      await expect(panes.length).toBe(LIVE_DOCUMENT.tabs.find((t) => t.id === 'one')!.regions.length);
-      for (const p of panes) {
-        await expect(isLivePaneKind(p.dataset.kind!)).toBe(true);
-        await expect(p.querySelector('.live-pane')).toBeTruthy();
-      }
-    },
-  },
-  { render: () => <LiveOne /> },
-) as Story;
-
-export const AnAppMixesTheSetWithItsOwn: Story = scenario(
-  {
-    requirement: 'The Music live panes are a ready-made set',
-    shall: 'Zen SHALL provide the Music live panes as one set of pane definitions an app may use whole, use in part, or combine with its own, and the live views SHALL be built from that set.',
-    name: 'An app mixes the set with its own',
-    when: 'an app gives the surface the ready-made set plus one kind of its own',
-    then: 'the palette lists every live pane and the app’s kind, and a tab can hold both',
-    act: async ({ canvasElement }) => {
-      await userEvent.click(within(canvasElement).getByRole('button', { name: 'open the palette' }));
-    },
-    check: async ({ canvasElement }) => {
-      const palette = within(within(canvasElement).getByRole('group', { name: 'Palette' }));
-      await expect(palette.getAllByRole('button')).toHaveLength(livePanes.length + 1);
-      await expect(palette.getByRole('button', { name: 'add Set notes to this tab' })).toBeTruthy();
-      await expect(within(canvasElement).getByTestId('pane-mixed-2')).toHaveTextContent('notes');
-      await expect(canvasElement.querySelector('[data-testid="pane-mixed-1"] .live-pane')).toBeTruthy();
-    },
-  },
-  {
-    render: () => {
-      const doc: SurfaceDocument = {
-        version: 1,
-        active: 'mixed',
-        tabs: [{ id: 'mixed', title: 'Mixed', rows: [['mixed-1', 'mixed-2']], regions: [{ id: 'mixed-1', kind: 'rig', title: 'Rig health', binding: { mode: 'selected' } }, { id: 'mixed-2', kind: 'notes', title: 'Set notes', binding: { mode: 'selected' } }] }],
-      };
-      return <MixedApp document={doc} />;
-    },
-  },
-) as Story;
-
-function MixedApp({ document }: { document: SurfaceDocument }) {
-  const live = useLiveSet({ running: false });
-  return (
-    <Workspace
-      name="Mine"
-      document={document}
-      panes={[...livePanes, NOTES]}
-      editing
-      pane={(region, target, settings) => (isLivePaneKind(region.kind) ? <div data-testid={`pane-${region.id}`} style={{ height: '100%' }}>{live.content(region, target, settings)}</div> : workspacePane(region, target))}
-    />
-  );
-}
 
 /** A kind of the story's own with two forms, so a pane can read which one its room fits. */
 const PROBE: PaneDefinition = {

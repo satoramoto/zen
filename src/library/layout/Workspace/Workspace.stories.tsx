@@ -29,6 +29,10 @@ const meta = {
       purpose: 'Perform and edit modes of the surface an app composes its DAW on: every edit as one intent the app applies, undo and redo as the app’s, and the visual state zen keeps.',
       requirement: 'Every edit leaves as one intent',
       shall: 'Every change a person makes through the surface SHALL leave it as exactly one intent naming the edit and its target: choosing, adding, renaming, duplicating, removing, locking or unlocking a tab; adding, removing, moving (left, right, up, down), docking, retitling, rebinding or configuring a region; resizing a split; turning edit mode on or off; and undo and redo.',
+      // Decisions a person made: `story-spec sync` writes these as REMOVED or RENAMED. Spent once the spec no longer has them.
+      retires: [
+        { requirement: 'Layout intents apply without a store', reason: 'Merged into “Intents can be applied without a store”: the applier applies every intent the same way.', migration: 'Read “Intents can be applied without a store”, which now holds its scenarios.' },
+      ],
     },
   },
   args: { name: 'Live', document: workspaceDocument },
@@ -227,8 +231,8 @@ export const AnIntentThatCantApply: Story = scenario(
 
 export const DockingThroughTheApplier: Story = scenario(
   {
-    requirement: 'Layout intents apply without a store',
-    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
     name: 'Docking through the applier',
     when: 'a story applies a dock intent placing one region below another',
     then: 'the returned layout holds a column of the two where the target was, and the region is gone from where it was',
@@ -245,8 +249,8 @@ export const DockingThroughTheApplier: Story = scenario(
 
 export const AResizeNamingNoSplit: Story = scenario(
   {
-    requirement: 'Layout intents apply without a store',
-    shall: 'The pure applier SHALL apply the resize, dock, configure and lock intents as it applies the others, returning the next version 2 document, and the document unchanged for an intent naming a split, region or tab it doesn’t hold.',
+    requirement: 'Intents can be applied without a store',
+    shall: 'Zen SHALL provide a pure function that returns the next document for a document and any intent the surface sends, keeping no state, so an app or a story without a store of its own can apply what the surface sends; it SHALL return the document as given for an intent naming a tab, region or split the document doesn’t hold, SHALL name each tab, region and split it adds with an id the document doesn’t use unless the app gives it a namer, and SHALL never remove the last tab.',
     name: 'A resize naming no split',
     when: 'a resize intent names a split the tab doesn’t hold',
     then: 'the applier returns the document unchanged',

@@ -23,10 +23,15 @@ const meta = {
     layout: 'fullscreen',
     frame: { w: 960, h: 360 },
     spec: {
-      capability: 'live-midi-learn',
-      purpose: 'Learn mode on a control panel: asking to learn a control’s parameter, the control the app waits on, and showing and forgetting mappings.',
+      capability: 'live-control-learn',
+      purpose: 'Learn mode on a control: asking the app to learn a control’s parameter from whatever it listens to (a MIDI controller, OSC, a key), the control the app waits on, and showing and forgetting mappings in the app’s words.',
       requirement: 'Learn mode asks to learn a control’s parameter',
       shall: 'While the app says learn mode is on, pressing a control SHALL ask to learn its parameter instead of moving it, and the control the app is waiting on SHALL be marked until the app maps it or learn mode ends.',
+      // Decisions a person made: `story-spec sync` writes these as REMOVED or RENAMED. Spent once the spec no longer has them.
+      retires: [
+        { capability: 'live-midi-learn', requirement: 'Learn mode asks to learn a control’s parameter', reason: 'The capability is renamed live-control-learn: zen does no MIDI, the app decides what a control is learned from.', migration: 'Read the same requirement in live-control-learn.' },
+        { capability: 'live-midi-learn', requirement: 'Mappings are shown and can be forgotten', reason: 'The capability is renamed live-control-learn: zen does no MIDI, the app decides what a control is learned from.', migration: 'Read the same requirement in live-control-learn.' },
+      ],
     },
   },
   args: s.Default.args,
