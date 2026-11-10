@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-10
+goal: One meter and one transport in the music library
+affected_areas:
+  - zen
+x-review: look
