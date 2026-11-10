@@ -32,7 +32,10 @@ const config: StorybookConfig = {
   ],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   framework: { name: '@storybook/react-vite', options: {} },
-  core: { disableTelemetry: true },
+  core: {
+    disableTelemetry: true,
+    disableWhatsNewNotifications: true
+  },
   viteFinal: async (config) => {
     // Svelte's plugin too: the Renderer toolbar draws view-tree components with the Svelte `Tree`.
     config.plugins = [engineJsx(), ...(config.plugins ?? []), svelte()];
