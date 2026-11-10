@@ -2,3 +2,4 @@
 export * from './angle';
 export * from './triangle';
 export * from './wave';
+export * from './turn';

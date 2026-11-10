@@ -29,6 +29,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+export const ChapterPresentation: Story = {
+  args: {
+    book: { id: 'presentation', title: 'Presentation', chapters: [
+      { id: 'custom', title: 'Custom chapter', summary: 'A chapter-owned presentation.', sections: [{ heading: 'Practice', blocks: [{ kind: 'exercise', id: 'answer', prompt: ['Answer'], check: 'exact', expect: 'yes' }] }] },
+      { id: 'ordinary', title: 'Ordinary chapter', summary: 'The default document renderer.', sections: [] },
+    ] },
+    renderChapter: (props) => props.entry.id === 'custom' ? <article><h1>Custom chapter</h1><button onClick={() => props.onProgress?.('custom/answer')}>Complete answer</button><p>{props.progress?.['custom/answer'] ? 'Answer retained' : 'Not answered'}</p>{props.footer}</article> : undefined,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Complete answer' }));
+    expect(canvas.getByLabelText('1 of 1 exercises done')).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Ordinary chapter →' }));
+    expect(canvas.getByText('The default document renderer.')).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: '← Custom chapter' }));
+    expect(canvas.getByText('Answer retained')).toBeVisible();
+  },
+};
+
 /** The Fourier book: every chapter validates against it; every chapter has a figure bound to a quantity the text scrubs. */
 export const Fourier: Story = {
   args: { book: FOURIER_BOOK, figures: FOURIER_FIGURES },

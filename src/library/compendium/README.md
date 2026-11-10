@@ -50,6 +50,14 @@ every chapter ends in exercises the page checks.
 
 ## The model
 
+`Book.renderChapter?: (props: DocumentProps) => ReactNode` optionally supplies a
+chapter-owned presentation. Return `undefined` for the ordinary Document renderer.
+Render `props.footer` to retain the pager, report completed exercise keys through
+`props.onProgress`, and report live quantities through `props.onQuantities`. Book
+continues to own navigation and progress; retain exercise metadata in the Entry
+so validation and ledger totals match the custom presentation. Mount a component
+from this callback rather than calling React hooks inside the callback itself.
+
 | Piece | What it is |
 | --- | --- |
 | `Entry` | `id`, `title`, `kind`, `standing`, `summary` (its `EntryHead`, also what a peek shows), `path`, `quantities`, `sections`. |

@@ -1,0 +1,24 @@
+.zen-signed-turn__start {
+  stroke: var(--text-3);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+.zen-signed-turn__sweep {
+  stroke: var(--hue-4);
+  stroke-width: 3;
+  fill: none;
+}
+.zen-signed-turn__input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+}
+.zen-signed-turn__input input {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+  inline-size: 7em;
+  padding: 0.3em;
+}

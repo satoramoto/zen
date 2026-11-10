@@ -7,3 +7,5 @@ export { IdentitySquares, type IdentitySquaresProps } from './IdentitySquares';
 export { RightTriangle, type RightTriangleProps } from './RightTriangle';
 export { UnitCircle, type UnitCircleProps } from './UnitCircle';
 export { WaveGraph, type WaveGraphProps, type WaveData } from './WaveGraph';
+export { SignedTurn, type SignedTurnProps } from './SignedTurn';
+export { RadiusStrips, type RadiusStripsProps } from './RadiusStrips';
