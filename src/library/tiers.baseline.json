@@ -215,178 +215,496 @@
     "pixels": 0,
     "type": 0
   },
-  "instrument": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/ArpSequencer": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/BarBeat": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/BarReadout": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/ChordReadout": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/ChordStrip": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/DeviceFace": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/Fader": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/Keys": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/Knob": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/LoopGrid": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/LoopPie": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/MacroPads": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/Meter": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/MixBand": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/Pad": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/PartMarks": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/PianoRoll": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/RackCell": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/SectionName": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/SendBars": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/SendReadout": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/SoundCell": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/StemLanes": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/TempoReadout": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/TransitionRow": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/Transport": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
-  "instrument/components/XYPad": {
-    "knobs": 0,
-    "margins": 0,
-    "pixels": 0,
-    "type": 0
-  },
   "layouts": {
     "knobs": 0,
     "painting": 0,
     "pixels": 0,
+    "type": 0
+  },
+  "music": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 17,
+    "type": 15
+  },
+  "music/components": {
+    "knobs": 0,
+    "margins": 2,
+    "pixels": 183,
+    "type": 58
+  },
+  "music/components/ArpSequencer": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/BarBeat": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/BarReadout": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Button": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/ButtonFace": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/ChordReadout": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/ChordStrip": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/ContextControls": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/DeckStrip": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/DeviceFace": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Fader": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Frames": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 2,
+    "type": 0
+  },
+  "music/components/Keys": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Knob": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 2,
+    "type": 0
+  },
+  "music/components/KnobReadout": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/KnobStack": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Label": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/LevelMeter": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/LoopGrid": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/LoopPie": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/MacroPads": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/MasterStrip": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Meter": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/MixBand": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Momentary": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/NumberField": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Pad": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/PartMarks": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/PianoRoll": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Popup": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/RackCell": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Scope": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/SectionName": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/SeekBar": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Segmented": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Select": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/SendBars": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/SendReadout": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Separator": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Slider": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/SoundCell": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/StemConnections": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/StemLanes": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/TempoReadout": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Toggle": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 1,
+    "type": 0
+  },
+  "music/components/TransitionRow": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Transport": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 4,
+    "type": 4
+  },
+  "music/components/TransportBar": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/WaveControls": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Waveform": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/Widget": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/components/XYPad": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/layouts/MixerView": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/live": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 19,
+    "type": 16
+  },
+  "music/live/components/ChordCompass": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 9,
+    "type": 3
+  },
+  "music/live/components/CutPads": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 14,
+    "type": 8
+  },
+  "music/live/components/DicePad": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 5,
+    "type": 2
+  },
+  "music/live/components/LandingDial": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 9,
+    "type": 7
+  },
+  "music/live/components/LaunchGrid": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 27,
+    "type": 14
+  },
+  "music/live/components/OrbitClock": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 22,
+    "type": 15
+  },
+  "music/live/components/ProgressionStrip": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 15,
+    "type": 5
+  },
+  "music/live/components/PushTwin": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 21,
+    "type": 11
+  },
+  "music/live/components/RigHealth": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 10,
+    "type": 1
+  },
+  "music/live/components/SectionBar": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 11,
+    "type": 8
+  },
+  "music/live/components/SetlistRiver": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 18,
+    "type": 14
+  },
+  "music/live/components/SignalSpine": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 44,
+    "type": 14
+  },
+  "music/live/components/SongCard": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 3,
+    "type": 4
+  },
+  "music/live/components/StemDeck": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 13,
+    "type": 4
+  },
+  "music/live/components/ThrowPads": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 20,
+    "type": 5
+  },
+  "music/live/components/TrackStrips": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 23,
+    "type": 8
+  },
+  "music/live/layouts/ControlPanel": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 21,
+    "type": 4
+  },
+  "music/live/screens/Daws": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/live/screens/Views": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/model": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/model/gesture": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/model/param": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/model/theme": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/screens/PreviewMixer": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 0,
+    "type": 0
+  },
+  "music/screens/Theme": {
+    "knobs": 0,
+    "margins": 0,
+    "pixels": 2,
     "type": 0
   },
   "primitives": {},

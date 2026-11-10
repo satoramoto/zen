@@ -25,33 +25,33 @@ import { Modal, Sheet } from '../../components/Modal/Modal';
 import { Separator } from '../../components/Separator/Separator';
 import { SettingsRow } from '../../components/SettingsRow/SettingsRow';
 import { StatusDot } from '../../components/StatusDot/StatusDot';
-import { BarBeat } from '../../instrument/components/BarBeat/BarBeat';
-import { ChordReadout } from '../../instrument/components/ChordReadout/ChordReadout';
-import { Fader } from '../../instrument/components/Fader/Fader';
-import { Keys } from '../../instrument/components/Keys/Keys';
-import { Knob } from '../../instrument/components/Knob/Knob';
-import { Pad } from '../../instrument/components/Pad/Pad';
-import { PartMarks } from '../../instrument/components/PartMarks/PartMarks';
-import { SectionName } from '../../instrument/components/SectionName/SectionName';
-import { TempoReadout } from '../../instrument/components/TempoReadout/TempoReadout';
-import { Meter } from '../../instrument/components/Meter/Meter';
-import { LoopPie } from '../../instrument/components/LoopPie/LoopPie';
-import { LoopGrid } from '../../instrument/components/LoopGrid/LoopGrid';
-import { SendBars } from '../../instrument/components/SendBars/SendBars';
-import { MixBand } from '../../instrument/components/MixBand/MixBand';
-import { ChordStrip } from '../../instrument/components/ChordStrip/ChordStrip';
-import { ArpSequencer } from '../../instrument/components/ArpSequencer/ArpSequencer';
-import { XYPad } from '../../instrument/components/XYPad/XYPad';
-import { MacroPads } from '../../instrument/components/MacroPads/MacroPads';
-import { StemLanes } from '../../instrument/components/StemLanes/StemLanes';
-import { TransitionRow } from '../../instrument/components/TransitionRow/TransitionRow';
-import { Transport } from '../../instrument/components/Transport/Transport';
-import { DeviceFace } from '../../instrument/components/DeviceFace/DeviceFace';
-import { PianoRoll } from '../../instrument/components/PianoRoll/PianoRoll';
-import { BarReadout } from '../../instrument/components/BarReadout/BarReadout';
-import { SendReadout } from '../../instrument/components/SendReadout/SendReadout';
-import { SoundCell } from '../../instrument/components/SoundCell/SoundCell';
-import { RackCell } from '../../instrument/components/RackCell/RackCell';
+import { BarBeat } from '../../music/components/BarBeat/BarBeat';
+import { ChordReadout } from '../../music/components/ChordReadout/ChordReadout';
+import { Fader } from '../../music/components/Fader/Fader';
+import { Keys } from '../../music/components/Keys/Keys';
+import { KnobReadout } from '../../music/components/KnobReadout/KnobReadout';
+import { Pad } from '../../music/components/Pad/Pad';
+import { PartMarks } from '../../music/components/PartMarks/PartMarks';
+import { SectionName } from '../../music/components/SectionName/SectionName';
+import { TempoReadout } from '../../music/components/TempoReadout/TempoReadout';
+import { LevelMeter } from '../../music/components/LevelMeter/LevelMeter';
+import { LoopPie } from '../../music/components/LoopPie/LoopPie';
+import { LoopGrid } from '../../music/components/LoopGrid/LoopGrid';
+import { SendBars } from '../../music/components/SendBars/SendBars';
+import { MixBand } from '../../music/components/MixBand/MixBand';
+import { ChordStrip } from '../../music/components/ChordStrip/ChordStrip';
+import { ArpSequencer } from '../../music/components/ArpSequencer/ArpSequencer';
+import { XYPad } from '../../music/components/XYPad/XYPad';
+import { MacroPads } from '../../music/components/MacroPads/MacroPads';
+import { StemLanes } from '../../music/components/StemLanes/StemLanes';
+import { TransitionRow } from '../../music/components/TransitionRow/TransitionRow';
+import { TransportBar } from '../../music/components/TransportBar/TransportBar';
+import { DeviceFace } from '../../music/components/DeviceFace/DeviceFace';
+import { PianoRoll } from '../../music/components/PianoRoll/PianoRoll';
+import { BarReadout } from '../../music/components/BarReadout/BarReadout';
+import { SendReadout } from '../../music/components/SendReadout/SendReadout';
+import { SoundCell } from '../../music/components/SoundCell/SoundCell';
+import { RackCell } from '../../music/components/RackCell/RackCell';
 import { PageList } from '../../components/PageList/PageList';
 import { FolderList } from '../../components/FolderList/FolderList';
 import { Group } from '../../layouts/Group/Group';
@@ -97,7 +97,7 @@ export function reactComponent(name: string): ComponentType<any> {
     Button,
     ActionButton,
     SearchField,
-    Knob,
+    KnobReadout,
     LampButton,
     LineSlider,
     Segmented,
@@ -147,7 +147,7 @@ export function reactComponent(name: string): ComponentType<any> {
     Stage,
     StatusLine,
     WaitingChip,
-    Meter,
+    LevelMeter,
     LoopPie,
     LoopGrid,
     SendBars,
@@ -158,7 +158,7 @@ export function reactComponent(name: string): ComponentType<any> {
     MacroPads,
     StemLanes,
     TransitionRow,
-    Transport,
+    TransportBar,
     DeviceFace,
     PianoRoll,
     BarReadout,

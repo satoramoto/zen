@@ -21,14 +21,14 @@ Storybook is the evidence. **No new unit tests**; every behaviour is exercised b
 | `Screen spec={…} regions={…}` | `src/library/layouts/Screen` | a tab. A tab **is** a `ScreenSpec`. |
 | `assemble()` + `Form`/`RegionSpec` | `src/library/layouts/Assembly` | every widget declares its forms; the solver picks one. |
 | `Tabs` | `src/library/layouts/Tabs` | the tab strip (labels → short → menu). |
-| `Fader`, `Meter`, `SendReadout`, `Knob`, `Pad`, `Keys` | `instrument/components/` | inside the new banks, never duplicated. |
+| `Fader`, `Meter`, `SendReadout`, `Knob`, `Pad`, `Keys` | `music/components/` | inside the new banks, never duplicated. |
 | `Surface`, `Text`, `Stack`, `Ring`, `Icon` | `primitives/` | every plate, well, word and glyph. |
 | `FaderBank`, `KnobBank`, `PadBank`, `Display`, `SongForm` | `yahaha/` | the Yahaha Stage; leave it alone. |
 
 ## The contract every widget shares
 
-`src/library/instrument/live.model.ts` — plain data, no framework, exported from
-`instrument/index.ts`. **No lane may change it after wave 1 starts**; propose a change to
+`src/library/music/model/live.model.ts` — plain data, no framework, exported from
+`music/root.ts`. **No lane may change it after wave 1 starts**; propose a change to
 the orchestrator instead.
 
 ```ts
@@ -167,19 +167,19 @@ export interface LiveCue {
 ## Lanes
 
 Each lane is one worktree, one branch, **one folder**, and its own ports. A lane never edits
-`instrument/index.ts`, `layouts/index.ts`, `src/library/index.ts`, `tiers.baseline.json`,
+`music/root.ts`, `layouts/index.ts`, `src/library/index.ts`, `tiers.baseline.json`,
 `view/*`, or another lane's folder. The orchestrator lands the shared files first and adds the
 exports at merge.
 
 | Lane | Owns | Builds |
 |---|---|---|
-| **0 · contract** (orchestrator) | `instrument/live.model.ts`, `docs/live-workspace.md` | the types above, the export line, the fixtures every lane copies |
-| **1 · grid** | `instrument/components/LoopPie/`, `LoopGrid/` | the 20 fps pie (SVG arc, one form), the folded song header + 8 track columns + cells + stop row. Forms: `full` (songs, tracks, stop) → `rows` (no song headers) |
-| **2 · mix** | `instrument/components/SendBars/`, `MixBand/` | two horizontal send bars per strip (0–1, unity hinge at 0.75) and the column-aligned band of `Meter` + `Fader` + `SendBars` + `A/S/Arm`. Forms: `tall` → `short` (match `FaderBank`) |
-| **3 · harmony** | `instrument/components/ChordStrip/`, `ArpSequencer/` | the progression strip (`LiveChord[]`, now/next, `MUTATE/KEEP/REVERT` as slots) and the 16-step chord-degree arp (`ARP_DEGREES` rows × 16 columns, `ARP_MODES`, rate/oct/gate/swing). Forms: `full` → `compact` (no degree labels) |
-| **4 · pads** | `instrument/components/XYPad/`, `MacroPads/` | the XY pad (0–1 both axes, crosshair, trails as state, two axis labels) and a two-up macro pair. Forms: `square` → `wide` |
-| **5 · stems** | `instrument/components/StemLanes/` | four peak lanes + cue flags + a loop window (`LiveStem[]`, `LiveCue[]`). Forms: `four` → `stacked` → `one` |
-| **6 · transitions** | `instrument/components/TransitionRow/` | six armed pads (`RISER/DROP/CRASH/HOLD A/HOLD B/CUT`) with `armed`/`fired` states. Forms: `row` → `grid` |
+| **0 · contract** (orchestrator) | `music/model/live.model.ts`, `docs/live-workspace.md` | the types above, the export line, the fixtures every lane copies |
+| **1 · grid** | `music/components/LoopPie/`, `LoopGrid/` | the 20 fps pie (SVG arc, one form), the folded song header + 8 track columns + cells + stop row. Forms: `full` (songs, tracks, stop) → `rows` (no song headers) |
+| **2 · mix** | `music/components/SendBars/`, `MixBand/` | two horizontal send bars per strip (0–1, unity hinge at 0.75) and the column-aligned band of `Meter` + `Fader` + `SendBars` + `A/S/Arm`. Forms: `tall` → `short` (match `FaderBank`) |
+| **3 · harmony** | `music/components/ChordStrip/`, `ArpSequencer/` | the progression strip (`LiveChord[]`, now/next, `MUTATE/KEEP/REVERT` as slots) and the 16-step chord-degree arp (`ARP_DEGREES` rows × 16 columns, `ARP_MODES`, rate/oct/gate/swing). Forms: `full` → `compact` (no degree labels) |
+| **4 · pads** | `music/components/XYPad/`, `MacroPads/` | the XY pad (0–1 both axes, crosshair, trails as state, two axis labels) and a two-up macro pair. Forms: `square` → `wide` |
+| **5 · stems** | `music/components/StemLanes/` | four peak lanes + cue flags + a loop window (`LiveStem[]`, `LiveCue[]`). Forms: `four` → `stacked` → `one` |
+| **6 · transitions** | `music/components/TransitionRow/` | six armed pads (`RISER/DROP/CRASH/HOLD A/HOLD B/CUT`) with `armed`/`fired` states. Forms: `row` → `grid` |
 | **7 · workspace** | `layouts/Workspace/` + `docs/workspace.md` | `WorkspaceSpec` (tabs of `ScreenSpec`), the tab strip, perform mode, and edit mode: palette of region kinds, add/remove/reorder/re-split rows, bind a region to a track, snap to the spec's own rows — **never pixels** |
 | **8 · show** | `yahaha/screens/Show/` (or an app screen) | the composition: 7 songs, JAM, transitions, a `Show.spec.ts`, stories at 16:9 in every pack |
 
@@ -261,7 +261,7 @@ A lane that cannot find a reference says so in its report, rather than inventing
 - `npm run typecheck` and `npm run build:storybook` exit 0.
 - `<Name>.model.ts` + `<Name>.tsx` + `<Name>.svelte` (each one `<Tree …/>`), `<Name>.css`,
   `<Name>.forms.ts`, `<Name>.fixtures.ts`, `<Name>.stories.tsx`.
-- Stories: `Instrument/Components/<Name>` — *Default*, *Every state*, *Dense* (the `short`
+- Stories: `Music/Components/<Name>` — *Default*, *Every state*, *Dense* (the `short`
   form at 900 px), *Empty*, *Disabled*. Layout lane: `Core/Layouts/Workspace`.
 - Read in a browser in three packs and both modes. Say which pack and which story you checked.
 - No `.test.tsx`, no new baseline lines, no edit outside the lane's folders.

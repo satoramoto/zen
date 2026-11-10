@@ -3,7 +3,7 @@
 // LampButton drawn by name). No framework: `SongForm.tsx` (React) and `SongForm.svelte` (Svelte)
 // both pass `songFormView` to their `Tree`, after reading each half's form (`useForm` / `getForm`).
 import type { ButtonModelProps } from '../../../components/Button/Button.model';
-import type { PadState } from '../../../instrument/components/Pad/Pad.model';
+import type { PadState } from '../../../music/components/Pad/Pad.model';
 import type { TipAction } from '../../../foundation/view/tip';
 import { stackView, type StackModelProps } from '../../../primitives/Stack/Stack.model';
 import { textView, type TextModelProps } from '../../../primitives/Text/Text.model';

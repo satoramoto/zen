@@ -3,21 +3,21 @@
 // instance and the target the Workspace resolved for it. Story harness only.
 import type { ReactNode } from 'react';
 import { fn } from 'storybook/test';
-import { ArpSequencer } from '../../instrument/components/ArpSequencer/ArpSequencer';
-import { arpSequencerBoard } from '../../instrument/components/ArpSequencer/ArpSequencer.fixtures';
-import { ChordStrip } from '../../instrument/components/ChordStrip/ChordStrip';
-import { chordStripBoard } from '../../instrument/components/ChordStrip/ChordStrip.fixtures';
-import type { LiveTrack } from '../../instrument/live.model';
-import { LoopGrid } from '../../instrument/components/LoopGrid/LoopGrid';
-import { loopBoard, loopSongs } from '../../instrument/components/LoopGrid/LoopGrid.fixtures';
-import { MacroPads } from '../../instrument/components/MacroPads/MacroPads';
-import { MACRO_PADS } from '../../instrument/components/MacroPads/MacroPads.fixtures';
-import { MixBand } from '../../instrument/components/MixBand/MixBand';
-import { mixBoard, mixReturns } from '../../instrument/components/MixBand/MixBand.fixtures';
-import { StemLanes } from '../../instrument/components/StemLanes/StemLanes';
-import { stemLanesBoard } from '../../instrument/components/StemLanes/StemLanes.fixtures';
-import { TransitionRow } from '../../instrument/components/TransitionRow/TransitionRow';
-import { transitionBoard } from '../../instrument/components/TransitionRow/TransitionRow.fixtures';
+import { ArpSequencer } from '../../music/components/ArpSequencer/ArpSequencer';
+import { arpSequencerBoard } from '../../music/components/ArpSequencer/ArpSequencer.fixtures';
+import { ChordStrip } from '../../music/components/ChordStrip/ChordStrip';
+import { chordStripBoard } from '../../music/components/ChordStrip/ChordStrip.fixtures';
+import type { LiveTrack } from '../../music/model/live.model';
+import { LoopGrid } from '../../music/components/LoopGrid/LoopGrid';
+import { loopBoard, loopSongs } from '../../music/components/LoopGrid/LoopGrid.fixtures';
+import { MacroPads } from '../../music/components/MacroPads/MacroPads';
+import { MACRO_PADS } from '../../music/components/MacroPads/MacroPads.fixtures';
+import { MixBand } from '../../music/components/MixBand/MixBand';
+import { mixBoard, mixReturns } from '../../music/components/MixBand/MixBand.fixtures';
+import { StemLanes } from '../../music/components/StemLanes/StemLanes';
+import { stemLanesBoard } from '../../music/components/StemLanes/StemLanes.fixtures';
+import { TransitionRow } from '../../music/components/TransitionRow/TransitionRow';
+import { transitionBoard } from '../../music/components/TransitionRow/TransitionRow.fixtures';
 import { Text } from '../../primitives/Text/Text';
 import type { SurfaceRegion } from './Workspace.types';
 /** The set's eight tracks: the grid's cells with the mixer's levels, meters, sends and lamps. */

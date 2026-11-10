@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { Segmented } from './Segmented';
 import SegmentedSvelte from './Segmented.svelte';
 import { segmentedStories as s } from './Segmented.fixtures';

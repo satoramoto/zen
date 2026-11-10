@@ -8,7 +8,7 @@ import type { AppBarModelProps } from '../../components/AppBar/AppBar.model';
 import { DISPLAY_FORMS, DISPLAY_PART, DISPLAY_SIDE_PANEL_FORMS, displayLengthCss, type DisplayForm } from '../../components/Display/Display.forms';
 import type { DisplayModelProps } from '../../components/Display/Display.model';
 import type { FaderBankModelProps } from '../../components/FaderBank/FaderBank.model';
-import type { KeysModelProps } from '../../../instrument/components/Keys/Keys.model';
+import type { KeysModelProps } from '../../../music/components/Keys/Keys.model';
 import type { KnobBankProps } from '../../components/KnobBank/KnobBank.model';
 import type { PadBankProps } from '../../components/PadBank/PadBank.model';
 import type { SongFormProps } from '../../components/SongForm/SongForm.model';

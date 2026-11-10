@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { Meter } from './Meter';
 import MeterSvelte from './Meter.svelte';
 import { meterArgTypes, meterStories as s } from './Meter.fixtures';

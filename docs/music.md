@@ -1,10 +1,24 @@
-# Music: the reference-faithful instrument toolkit
+# Music: one area, two kinds of part
 
-`src/library/music/` is the new high-level music family. It ports the controlled mix[flow]
-face and its controls from `openflowfm/widgets` at
-`7edeedc37e5e4a33315d98ddb93a5a21d6e68eb8`, without redesigning them. The original
-`src/library/instrument/components/` and its public exports remain unchanged. Consolidation is a
-separate task, not part of this port.
+`src/library/music/` holds every music part. Two kinds sit side by side in
+`music/components/`, and a part is one or the other:
+
+| | Token-drawn parts | The mix[flow] toolkit |
+|---|---|---|
+| What | Fader, Pad, Keys, KnobReadout, LevelMeter, TransportBar, the readouts and cells, and the live workspace's parts (LoopGrid, MixBand, StemLanes, XYPad, …) | the controlled mix[flow] face and its controls, ported from `openflowfm/widgets` at `7edeedc37e5e4a33315d98ddb93a5a21d6e68eb8` without redesign, and the live panes built in that face (`music/live/`) |
+| Reads | zen's token contract; the tier rules hold each at zero | the reference's own vocabulary (`--wdg-*`) inside `Music.Scope`; its tier findings are recorded in the baseline and its contract excuses in `library.test.tsx` (`PORT_VOCABULARY`) |
+| Exported | flat from the package root, through `music/root.ts` (`Fader`, `Pad`, `KnobReadout`, …) | as the `Music` namespace, through `music/index.ts` and `music/svelte.ts` (`Music.Knob`, `Music.MixerView`, …) |
+| Used by | Yahaha's redesign, the Workspace samples, apps' own boards | mix[flow], the live surface and its DAWs |
+
+Both kinds once had a `Knob`, a `Meter` and a `Transport`. The token-drawn ones are now
+`KnobReadout` (a dial that shows a value the host formats), `LevelMeter` and `TransportBar`; the
+package root still exports them under the old names (`Knob`, `Meter`, `Transport`) as aliases, so
+an app's imports did not change. `Fader` at the root is the token-drawn fader; `Music.Fader` is
+the toolkit's slider. `LevelMeter` and `TransportBar` follow the same mix[flow] reference as
+`Music.Meter` and `Music.Transport`; retiring one of each pair is a separate change that has not
+been asked for.
+
+The rest of this guide is about the toolkit.
 
 **Next gap: Arrange.** The arranging/timeline view is not part of this mixer delivery.
 See [the next-agent handoff](music-arrange-handoff.md) for source locations, scope questions,
@@ -198,7 +212,7 @@ important difference between the standalone story and mix[flow]'s app-only Play 
   paint and shadows. Paused skin/colour edits repaint canvas without remounting it; ordinary
   frame transforms do not repaint the cached waveform.
 - Original Zen Knob, Fader, Meter and Yahaha Show samples remain **pixel-identical** in both
-  renderers to the original checkout (`.shots/music-legacy/report.json`). No legacy
-  `instrument/components/` source was changed.
+  renderers to the original checkout (`.shots/music-legacy/report.json`). No token-drawn
+  part's source was changed by the port.
 - Typecheck, library/Storybook builds, framework-free entry checks and whitespace checks pass.
   General unit suites were not run.

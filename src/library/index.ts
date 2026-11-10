@@ -49,9 +49,10 @@ export * from './layouts';
 // Renamed in core: ActionButton's `ButtonFace` is `ActionButtonFace` (Button's face type keeps
 // `ButtonFace`), and Param's `format` is `formatParam`.
 export * from './components';
-export * from './instrument';
+export * from './music/root';
 
-// New reference-faithful music toolkit; the legacy component names above are not replaced.
+// The reference-faithful mix[flow] toolkit, as a namespace; the flat music names above are the
+// token-drawn parts.
 export * as Music from './music';
 
 // The graph: the node-graph view (Graph, GraphNode, Port, Device, NodeSheet) and the Circuit model it draws.

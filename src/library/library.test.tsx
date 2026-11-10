@@ -24,7 +24,7 @@ const filesUnder = (rel: string, ext: RegExp) =>
 const COMPONENT_SOURCES = [
   'library.css',
   ...filesUnder('components', /\.(tsx?|css)$/),
-  ...filesUnder('instrument', /\.(tsx?|css)$/),
+  ...filesUnder('music', /\.(tsx?|css)$/),
   ...filesUnder('graph', /\.(tsx?|css)$/),
   ...filesUnder('layouts', /\.(tsx?|css)$/),
   ...filesUnder('yahaha', /\.(tsx?|css)$/),
@@ -35,6 +35,58 @@ const COMPONENT_SOURCES = [
 ];
 const MODES: Mode[] = ['light', 'dark'];
 const CONTRACT = new Set([...Object.keys(toCssVars(packs[0].facets, 'dark')), ...SCOPE_VARS]);
+
+/**
+ * The mix[flow] port and the live panes built in its face still speak the reference's own
+ * vocabulary (`--wdg-*`, values a model sets inline, the reference's radii and spectral colours;
+ * `docs/music.md`). These files of `music/` are excused from the two rules below; every other file
+ * there, the older token-drawn parts among them, is held like any component. A file comes off the
+ * list when it meets the contract, and none is added: a new music file reads the contract.
+ */
+const PORT_VOCABULARY = new Set([
+  'music/base.css',
+  'music/components/DeckStrip/DeckStrip.fixtures.ts',
+  'music/components/Frames/frames.fixtures.ts',
+  'music/components/Frames/frames.model.ts',
+  'music/components/Meter/Meter.css',
+  'music/components/SeekBar/SeekBar.css',
+  'music/components/mixer.css',
+  'music/components/parameters.css',
+  'music/components/pressables.css',
+  'music/live/components/CutPads/CutPads.css',
+  'music/live/components/LaunchGrid/LaunchGrid.css',
+  'music/live/components/SectionBar/SectionBar.css',
+  'music/live/components/SetlistRiver/SetlistRiver.css',
+  'music/live/components/StemDeck/StemDeck.css',
+  'music/live/components/StemDeck/StemDeck.model.ts',
+  'music/live/components/ThrowPads/ThrowPads.css',
+  'music/live/live.css',
+  'music/live/live.model.ts',
+  'music/model/spectralOutline.ts',
+  'music/model/spectralPainter.ts',
+  'music/model/theme/resolve.ts',
+  'music/model/theme/spectral.ts',
+  'music/preview.css',
+  'music/theme.css',
+]);
+
+/** What a component source reads or writes outside the contract. */
+const DECLARED = new Set<string>();
+for (const file of COMPONENT_SOURCES) for (const m of read(file).matchAll(/(--[a-z0-9-]+)\s*:/g)) DECLARED.add(m[1]);
+function contractProblems(file: string): string[] {
+  const problems: string[] = [];
+  for (const m of read(file).matchAll(/var\((--[a-z0-9-]+)/g)) {
+    if (!CONTRACT.has(m[1]) && !DECLARED.has(m[1])) problems.push(`${file} reads ${m[1]}`);
+  }
+  const src = read(file).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
+  if (/#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/.test(src)) problems.push(`${file} has a colour literal`);
+  // `0` (no rounding) and `inherit` aren't radii a theme chooses.
+  if (/border-radius:(?!\s*(var\(|0(px)?\s*[;}]|inherit\s*[;}]))/.test(src)) problems.push(`${file} has a literal radius`);
+  // The build rewrites light-dark() into variables only a literal color-scheme sets; the
+  // library's scheme comes from var(--scheme), so it renders transparent.
+  if (/\blight-dark\(/.test(src)) problems.push(`${file} uses light-dark()`);
+  return problems;
+}
 /** Each mode of a palette, named for messages. */
 const schemes = (p: Palette): [string, Scheme][] => MODES.map((mode) => [`${p.id} ${mode}`, p[mode]]);
 
@@ -114,25 +166,15 @@ describe('token contract', () => {
       }
   });
 
-  it('components only read contract variables or ones they declare', () => {
-    const declared = new Set<string>();
-    for (const file of COMPONENT_SOURCES) for (const m of read(file).matchAll(/(--[a-z0-9-]+)\s*:/g)) declared.add(m[1]);
-    for (const file of COMPONENT_SOURCES) {
-      for (const m of read(file).matchAll(/var\((--[a-z0-9-]+)/g)) {
-        expect(CONTRACT.has(m[1]) || declared.has(m[1]), `${file} reads ${m[1]}`).toBe(true);
-      }
-    }
+  it('components only read contract variables or ones they declare, and contain no literal colours or radii', () => {
+    const problems = COMPONENT_SOURCES.filter((f) => !PORT_VOCABULARY.has(f)).flatMap(contractProblems);
+    expect(problems).toEqual([]);
   });
 
-  it('components contain no literal colours or radii', () => {
-    for (const file of COMPONENT_SOURCES) {
-      const src = read(file).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
-      expect(src, `${file} has a colour literal`).not.toMatch(/#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/);
-      // `0` (no rounding) and `inherit` aren't radii a theme chooses.
-      expect(src, `${file} has a literal radius`).not.toMatch(/border-radius:(?!\s*(var\(|0(px)?\s*[;}]|inherit\s*[;}]))/);
-      // The build rewrites light-dark() into variables only a literal color-scheme sets; the
-      // library's scheme comes from var(--scheme), so it renders transparent.
-      expect(src, `${file} uses light-dark()`).not.toMatch(/\blight-dark\(/);
+  it('every file excused as the mix[flow] port still needs the excuse (the list only shrinks)', () => {
+    for (const file of PORT_VOCABULARY) {
+      expect(COMPONENT_SOURCES, `${file} is listed in PORT_VOCABULARY but is not a component source`).toContain(file);
+      expect(contractProblems(file), `${file} now meets the contract: take it off PORT_VOCABULARY`).not.toEqual([]);
     }
   });
 

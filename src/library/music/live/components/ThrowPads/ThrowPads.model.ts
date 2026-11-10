@@ -1,7 +1,7 @@
 // ThrowPads' model: named pairs of XY throws (a delay's feedback × time, a filter's cutoff ×
 // resonance), and the tree both renderers draw from them. No framework: `ThrowPads.tsx` and
 // `ThrowPads.svelte` both pass `throwPadsView` and `throwPadsHandlers` to their `Tree`. The drag
-// and the arrow keys are zen's `xyInput` store (`instrument/components/XYPad/xyInput.ts`, registered by
+// and the arrow keys are zen's `xyInput` store (`music/components/XYPad/xyInput.ts`, registered by
 // that name), bound to each pad's field: it only asks `onMove({ id, x, y })` and moves nothing.
 import { each, h, styleText, when, wire, type Handlers, type Node } from '../../../../foundation/view/Tree.model';
 import { inkStyle, livePane, liveReading, type StemInk } from '../../live.model';

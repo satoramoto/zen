@@ -3,7 +3,7 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { treeStory, withRenderer } from '../../../foundation/stories/story';
 import { component, h } from '../../../foundation/view/Tree.model';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { ContextControls, type ContextControlsProps } from './ContextControls';
 import { powerIconView } from './ContextControls.model';
 import '../mixer.css';

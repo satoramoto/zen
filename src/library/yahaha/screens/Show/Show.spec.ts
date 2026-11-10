@@ -1,13 +1,13 @@
 // The show's tabs (docs/assembly.md, docs/live-views.md): five Lemur pages over the seven-song
 // set, each a ScreenSpec of widget forms. View 8's shape (grid on top, the chain beneath) with
 // the tab strip the mockups wrap it in. Every form is the widget's own, so the solver decides.
-import { ARP_SEQUENCER_FORMS } from '../../../instrument/components/ArpSequencer/ArpSequencer.forms';
-import { CHORD_STRIP_FORMS } from '../../../instrument/components/ChordStrip/ChordStrip.forms';
-import { LOOP_GRID_FORMS } from '../../../instrument/components/LoopGrid/LoopGrid.forms';
-import { MACRO_PADS_FORMS } from '../../../instrument/components/MacroPads/MacroPads.forms';
-import { MIX_BAND_FORMS } from '../../../instrument/components/MixBand/MixBand.forms';
-import { STEM_LANES_FORMS } from '../../../instrument/components/StemLanes/StemLanes.forms';
-import { TRANSITION_ROW_FORMS } from '../../../instrument/components/TransitionRow/TransitionRow.forms';
+import { ARP_SEQUENCER_FORMS } from '../../../music/components/ArpSequencer/ArpSequencer.forms';
+import { CHORD_STRIP_FORMS } from '../../../music/components/ChordStrip/ChordStrip.forms';
+import { LOOP_GRID_FORMS } from '../../../music/components/LoopGrid/LoopGrid.forms';
+import { MACRO_PADS_FORMS } from '../../../music/components/MacroPads/MacroPads.forms';
+import { MIX_BAND_FORMS } from '../../../music/components/MixBand/MixBand.forms';
+import { STEM_LANES_FORMS } from '../../../music/components/StemLanes/StemLanes.forms';
+import { TRANSITION_ROW_FORMS } from '../../../music/components/TransitionRow/TransitionRow.forms';
 import type { ScreenSpec } from '../../../layouts/Assembly/types';
 
 /** My stage: the loop grid over the mix — launch and levels, one glance. */

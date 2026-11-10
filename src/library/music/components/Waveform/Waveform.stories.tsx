@@ -3,7 +3,7 @@ import { expect, fn, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, treeStory, withRenderer } from '../../../foundation/stories/story';
 import { h, wire } from '../../../foundation/view/Tree.model';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { DEFAULT_SPECTRAL } from '../../model/theme/spectral';
 import { Waveform } from './Waveform';
 import WaveformSvelte from './Waveform.svelte';

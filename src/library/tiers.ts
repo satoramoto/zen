@@ -3,15 +3,15 @@
  * `tiers.test.ts` can hold every count to its recorded baseline (`tiers.baseline.json`).
  * Pure node:fs and string work, no React.
  *
- * **What is scanned.** `src/library/{components,instrument,graph,layouts,yahaha,primitives,theme-editor,report}`: CSS, TSX, TS
+ * **What is scanned.** `src/library/{components,music,graph,layouts,yahaha,primitives,theme-editor,report}`: CSS, TSX, TS
  * and Svelte files, except stories, tests and story/test data (`*.fixtures.ts`, `*.stories.svelte.ts`,
  * `*.story.svelte`). A `.svelte` file is read as its parts (`scanSvelte`): `<script>` as TS,
  * `<style>` as CSS, and its markup's `style="…"` and `style:prop` as `style={{}}`. `themes/` is never
  * scanned: values live there. Comments are stripped before matching (line numbers are kept).
  *
- * **Folders** (what counts are per): `components/<Name>`, and in an area (`instrument`, `graph`,
+ * **Folders** (what counts are per): `components/<Name>`, and in an area (`music`, `graph`,
  * `report`, `theme-editor`, all held to the controls' rules, and `yahaha`) `<area>/<tier>/<Name>`
- * (`instrument/components/Fader`, `yahaha/screens/Stage`); `layouts`, `primitives`. A file directly
+ * (`music/components/Fader`, `yahaha/screens/Stage`); `layouts`, `primitives`. A file directly
  * in a folder keys to that folder (`yahaha/tokens.css` → `yahaha`, `components/hue.ts` →
  * `components`, `graph/model/circuit.ts` → `graph/model`).
  *
@@ -22,7 +22,7 @@
  * a bare number other than 0, 1 or 2 on a length key (width, height, padding, gap, top,
  * fontSize, …), which React reads as px.
  *
- * **margins** (`components/**`, `instrument/**`, the controls). A `margin*` declaration counts when its rule
+ * **margins** (`components/**`, `music/**`, the controls). A `margin*` declaration counts when its rule
  * targets the control's root block: some selector in the list is a single compound (no
  * descendant, child or sibling combinator outside brackets and parentheses) whose first class
  * has no `__` (`.yh-rackcell`, `.yh-pad[data-state='x']`, `.lib-x:hover`). Margins on inner
@@ -34,13 +34,13 @@
  * `border-collapse`, `border-spacing`), unless the value is `none`, `0`, `transparent`,
  * `inherit`, `initial` or `unset`. Which rules count is {@link PAINTING_TIERS}.
  *
- * **knobs** (`components`, `instrument`, `layouts`, `yahaha`). Each distinct `--yh-*`
+ * **knobs** (`components`, `music`, `layouts`, `yahaha`). Each distinct `--yh-*`
  * custom property declared in a folder's CSS and not listed under a **Tuning knobs** heading in a
  * doc comment of a TSX file in the same directory (or, for a CSS file with no sibling TSX, in that
  * CSS file's own comments). The list runs to the next `**Heading**` or the comment's end; a
  * trailing `*` (`--yh-fader-*`) lists a family by prefix. A name counts once per folder.
  *
- * **type** (`components`, `instrument`, `layouts`, `yahaha`): type belongs to `Text`. CSS: each
+ * **type** (`components`, `music`, `layouts`, `yahaha`): type belongs to `Text`. CSS: each
  * `font`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, `text-transform` or
  * `font-variant-numeric` declaration, unless its value is only a CSS-wide keyword (`inherit`,
  * `initial`, `unset`, `revert`: `button { font: inherit }` is a reset, not a decision). TS/TSX:
@@ -68,16 +68,16 @@ export const RULES: Record<RuleId, { fix: string }> = {
 export const RULE_IDS = Object.keys(RULES) as RuleId[];
 
 /** The folders scanned, under `src/library`. */
-export const TOP_FOLDERS = ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'primitives', 'theme-editor', 'report'] as const;
+export const TOP_FOLDERS = ['components', 'music', 'graph', 'layouts', 'yahaha', 'primitives', 'theme-editor', 'report'] as const;
 
 /** Which top folders each rule applies to. `graph` (the node graph and its faces),
  *  `theme-editor` (the picker and editor) and `report` (the research report) are read as controls. */
 export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
-  pixels: ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
-  margins: ['components', 'instrument', 'graph', 'theme-editor', 'report'],
+  pixels: ['components', 'music', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
+  margins: ['components', 'music', 'graph', 'theme-editor', 'report'],
   painting: ['layouts', 'yahaha'],
-  knobs: ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
-  type: ['components', 'instrument', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
+  knobs: ['components', 'music', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
+  type: ['components', 'music', 'graph', 'layouts', 'yahaha', 'theme-editor', 'report'],
 };
 
 /**
@@ -91,7 +91,7 @@ export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
  * - `app` (yahaha): a rule counts when any selector names a layout primitive's class
  *   (`.lib-screen`, `.lib-region`, `.lib-group`, `.lib-stack`, or their `__` parts) or
  *   `[data-part='region'|'group']`: that is the app's outer layout CSS. Other app CSS is widget CSS.
- * `components/**`, `instrument/**` and `primitives/**` are never counted. A layout file not listed reads as `all`.
+ * `components/**`, `music/**` and `primitives/**` are never counted. A layout file not listed reads as `all`.
  */
 export const PAINTING_TIERS = {
   'layouts/Group/Group.css': 'all',
@@ -102,7 +102,7 @@ export const PAINTING_TIERS = {
   'layouts/*': 'all',
   'yahaha/**': 'app',
   'components/**': 'none',
-  'instrument/**': 'none',
+  'music/**': 'none',
   'primitives/**': 'none',
 } as const;
 export type PaintingTier = (typeof PAINTING_TIERS)[keyof typeof PAINTING_TIERS];
@@ -121,14 +121,21 @@ export interface Finding {
 const top = (file: string) => file.split('/')[0];
 
 /** The scanned areas: their counts are per `<area>/<tier>/<Name>`. */
-const AREA_TOPS = ['instrument', 'graph', 'report', 'yahaha', 'theme-editor'];
+const AREA_TOPS = ['music', 'graph', 'report', 'yahaha', 'theme-editor'];
+
+/** Scanned sub-areas: their counts are per `<area>/<sub-area>/<tier>/<Name>`. */
+const SUB_AREAS = ['music/live'];
 
 /** The folder a file's counts belong to. */
 export function folderOf(file: string): string {
   const parts = file.split('/');
   const t = parts[0];
   if (t === 'components') return parts.length >= 3 ? parts.slice(0, 2).join('/') : t;
-  if (AREA_TOPS.includes(t)) return parts.length >= 4 ? parts.slice(0, 3).join('/') : parts.slice(0, -1).join('/');
+  if (AREA_TOPS.includes(t)) {
+    // A sub-area (`music/live`) is an area one folder down.
+    const n = SUB_AREAS.includes(parts.slice(0, 2).join('/')) ? 4 : 3;
+    return parts.length > n ? parts.slice(0, n).join('/') : parts.slice(0, -1).join('/');
+  }
   return t;
 }
 
@@ -720,7 +727,7 @@ export function compare(counts: Counts, baseline: Counts, findings: Finding[] = 
 /* ---------- adoption ---------- */
 
 /** The top folders whose widget folders are counted for adoption. */
-export const ADOPTION_TOPS = ['components', 'instrument', 'graph', 'yahaha'] as const;
+export const ADOPTION_TOPS = ['components', 'music', 'graph', 'yahaha'] as const;
 
 export interface Adoption {
   /** Widget folders (`components/<Name>`, `yahaha/components/<Name>`) with a TSX file. */

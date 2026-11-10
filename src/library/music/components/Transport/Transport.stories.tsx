@@ -3,7 +3,7 @@ import { act } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { TransportHarness } from './TransportHarness.story';
 import TransportHarnessSvelte from './TransportHarness.svelte';
 import { transportStories as s } from './Transport.fixtures';

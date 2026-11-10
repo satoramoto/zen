@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
-import { Pad } from '../../../instrument';
+import { Pad } from '../../../music/root';
 import { Group } from '../../../layouts';
 import { PART_HUE_INDEX } from '../../hues';
 import { HueLegend, PART_LEGEND } from './HueLegend';

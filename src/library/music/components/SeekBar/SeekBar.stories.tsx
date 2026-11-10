@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, waitFor, within } from 'storybook/test';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
 import { withLibraryTheme } from '../../../storybook';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { SeekBar } from './SeekBar';
 import SeekBarSvelte from './SeekBar.svelte';
 import { SeekBarHost } from './SeekBarHost.story';

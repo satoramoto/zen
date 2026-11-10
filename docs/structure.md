@@ -29,8 +29,7 @@ src/library/
 | Folder | Sidebar | What it is |
 |---|---|---|
 | `primitives`, `components`, `layouts` | `Core/Primitives`, `Core/Components`, `Core/Layouts` | the generic tiers every area builds on |
-| `instrument` | `Instrument` | the older music parts (Fader, Pad, Keys, the readouts) Yahaha is built from |
-| `music` | `Music` | the mix[flow] toolkit: controls, strips, the four-deck mixer |
+| `music` | `Music` | every music part: the token-drawn ones (Fader, Pad, Keys, the readouts) and the mix[flow] toolkit (controls, strips, the four-deck mixer) |
 | `music/live` | `Music/Live` | the live surface: panes, the control panel, the boards and DAWs |
 | `graph` | `Graph` | the node graph and the Circuit model |
 | `shader` | `Shader` | the shader runner and its materials |
@@ -42,8 +41,11 @@ src/library/
 | `site` | `Site` | the documentation site's views |
 | `yahaha` | `Yahaha` | Yahaha's redesign |
 
-`instrument` and `music` are two families that have not been merged: `Knob`, `Meter` and
-`Transport` exist in both. Merging them is its own change.
+`music/components` holds two kinds of part side by side: the token-drawn ones, exported flat
+from the package root (`music/root.ts`), and the mix[flow] toolkit, exported as the `Music`
+namespace (`music/index.ts`). A part's folder name is unique in the folder, so where both kinds
+had a `Knob`, a `Meter` and a `Transport` the token-drawn ones are `KnobReadout`, `LevelMeter`
+and `TransportBar`. `docs/music.md` says which part is which.
 
 ## Where does this go?
 

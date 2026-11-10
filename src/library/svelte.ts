@@ -9,7 +9,7 @@
 // Each component is exported as a typed `Component<Props>` (the `.svelte` file's own props, which
 // the declaration build can't read). A lane adds its components here, one block each.
 import type { Component, Snippet } from 'svelte';
-// New Music namespace; legacy music names in this entry remain untouched.
+// The mix[flow] toolkit as a namespace; the flat music names in this entry are the token-drawn parts.
 export * as Music from './music/svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { Facets, PackPrinciples } from './contract';
@@ -27,12 +27,12 @@ import type { SegmentedModelProps } from './components/Segmented/Segmented.model
 import SelectSvelte from './components/Select/Select.svelte';
 import type { SelectModelProps } from './components/Select/Select.model';
 import { bindLongPress } from './components/Button/longPress';
-import { bindKnob } from './instrument/components/Knob/knobInput';
-import { bindPad } from './instrument/components/Pad/padPress';
-import { bindFader } from './instrument/components/Fader/faderInput';
-import { bindFit } from './instrument/components/ChordReadout/fit';
-import { bindTempoNumber, bindTempoStep } from './instrument/components/TempoReadout/tempoGestures';
-import { bindBarInput } from './instrument/components/BarReadout/barInput';
+import { bindKnob } from './music/components/KnobReadout/knobInput';
+import { bindPad } from './music/components/Pad/padPress';
+import { bindFader } from './music/components/Fader/faderInput';
+import { bindFit } from './music/components/ChordReadout/fit';
+import { bindTempoNumber, bindTempoStep } from './music/components/TempoReadout/tempoGestures';
+import { bindBarInput } from './music/components/BarReadout/barInput';
 import type { TextModelProps } from './primitives/Text/Text.model';
 import type { StackModelProps } from './primitives/Stack/Stack.model';
 import type { ButtonModelProps } from './components/Button/Button.model';
@@ -55,34 +55,34 @@ import type { GroupModelProps } from './layouts/Group/Group.model';
 import type { LayerModelProps } from './layouts/Layer/Layer.model';
 import type { ScreenModelProps } from './layouts/Screen/Screen.model';
 import type { Placed, Placement, Principles, ScreenSpec } from './layouts/Assembly/types';
-import PadSvelte from './instrument/components/Pad/Pad.svelte';
-import KnobSvelte from './instrument/components/Knob/Knob.svelte';
-import FaderSvelte from './instrument/components/Fader/Fader.svelte';
-import KeysSvelte from './instrument/components/Keys/Keys.svelte';
-import MeterSvelte from './instrument/components/Meter/Meter.svelte';
-import BarBeatSvelte from './instrument/components/BarBeat/BarBeat.svelte';
-import ChordReadoutSvelte from './instrument/components/ChordReadout/ChordReadout.svelte';
-import PartMarksSvelte from './instrument/components/PartMarks/PartMarks.svelte';
-import SectionNameSvelte from './instrument/components/SectionName/SectionName.svelte';
-import TempoReadoutSvelte from './instrument/components/TempoReadout/TempoReadout.svelte';
-import BarReadoutSvelte from './instrument/components/BarReadout/BarReadout.svelte';
-import SendReadoutSvelte from './instrument/components/SendReadout/SendReadout.svelte';
-import SoundCellSvelte from './instrument/components/SoundCell/SoundCell.svelte';
-import RackCellSvelte from './instrument/components/RackCell/RackCell.svelte';
-import type { PadModelProps } from './instrument/components/Pad/Pad.model';
-import type { KnobModelProps } from './instrument/components/Knob/Knob.model';
-import type { FaderModelProps } from './instrument/components/Fader/Fader.model';
-import type { KeysModelProps } from './instrument/components/Keys/Keys.model';
-import type { MeterModelProps } from './instrument/components/Meter/Meter.model';
-import type { BarBeatModelProps } from './instrument/components/BarBeat/BarBeat.model';
-import type { ChordReadoutModelProps } from './instrument/components/ChordReadout/ChordReadout.model';
-import type { PartMarksModelProps } from './instrument/components/PartMarks/PartMarks.model';
-import type { SectionNameModelProps } from './instrument/components/SectionName/SectionName.model';
-import type { TempoReadoutModelProps } from './instrument/components/TempoReadout/TempoReadout.model';
-import type { BarReadoutModelProps } from './instrument/components/BarReadout/BarReadout.model';
-import type { SendReadoutModelProps } from './instrument/components/SendReadout/SendReadout.model';
-import type { SoundCellModelProps } from './instrument/components/SoundCell/SoundCell.model';
-import type { RackCellModelProps } from './instrument/components/RackCell/RackCell.model';
+import PadSvelte from './music/components/Pad/Pad.svelte';
+import KnobSvelte from './music/components/KnobReadout/KnobReadout.svelte';
+import FaderSvelte from './music/components/Fader/Fader.svelte';
+import KeysSvelte from './music/components/Keys/Keys.svelte';
+import MeterSvelte from './music/components/LevelMeter/LevelMeter.svelte';
+import BarBeatSvelte from './music/components/BarBeat/BarBeat.svelte';
+import ChordReadoutSvelte from './music/components/ChordReadout/ChordReadout.svelte';
+import PartMarksSvelte from './music/components/PartMarks/PartMarks.svelte';
+import SectionNameSvelte from './music/components/SectionName/SectionName.svelte';
+import TempoReadoutSvelte from './music/components/TempoReadout/TempoReadout.svelte';
+import BarReadoutSvelte from './music/components/BarReadout/BarReadout.svelte';
+import SendReadoutSvelte from './music/components/SendReadout/SendReadout.svelte';
+import SoundCellSvelte from './music/components/SoundCell/SoundCell.svelte';
+import RackCellSvelte from './music/components/RackCell/RackCell.svelte';
+import type { PadModelProps } from './music/components/Pad/Pad.model';
+import type { KnobReadoutModelProps as KnobModelProps } from './music/components/KnobReadout/KnobReadout.model';
+import type { FaderModelProps } from './music/components/Fader/Fader.model';
+import type { KeysModelProps } from './music/components/Keys/Keys.model';
+import type { LevelMeterModelProps as MeterModelProps } from './music/components/LevelMeter/LevelMeter.model';
+import type { BarBeatModelProps } from './music/components/BarBeat/BarBeat.model';
+import type { ChordReadoutModelProps } from './music/components/ChordReadout/ChordReadout.model';
+import type { PartMarksModelProps } from './music/components/PartMarks/PartMarks.model';
+import type { SectionNameModelProps } from './music/components/SectionName/SectionName.model';
+import type { TempoReadoutModelProps } from './music/components/TempoReadout/TempoReadout.model';
+import type { BarReadoutModelProps } from './music/components/BarReadout/BarReadout.model';
+import type { SendReadoutModelProps } from './music/components/SendReadout/SendReadout.model';
+import type { SoundCellModelProps } from './music/components/SoundCell/SoundCell.model';
+import type { RackCellModelProps } from './music/components/RackCell/RackCell.model';
 import SurfaceSvelte from './primitives/Surface/Surface.svelte';
 import IconSvelte from './primitives/Icon/Icon.svelte';
 import LampButtonSvelte from './components/LampButton/LampButton.svelte';
@@ -270,6 +270,9 @@ export const Pad = PadSvelte as unknown as Component<PadProps>;
 export const padPress = actionOf(bindPad);
 export interface KnobProps extends KnobModelProps {}
 export const Knob = KnobSvelte as unknown as Component<KnobProps>;
+/** The older value knob under its own name; `Knob` stays as its alias. */
+export const KnobReadout = Knob;
+export type KnobReadoutProps = KnobProps;
 /** Knob's input as an action, for an app's own knob (`use:knobInput={{ onstep }}`). */
 export const knobInput = actionOf(bindKnob);
 export interface FaderProps extends FaderModelProps {}
@@ -282,6 +285,9 @@ export interface MeterProps extends Omit<MeterModelProps, 'className'> {
   class?: string;
 }
 export const Meter = MeterSvelte as unknown as Component<MeterProps>;
+/** The token-drawn level meter under its own name; `Meter` stays as its alias. */
+export const LevelMeter = Meter;
+export type LevelMeterProps = MeterProps;
 export interface BarBeatProps extends BarBeatModelProps {}
 export const BarBeat = BarBeatSvelte as unknown as Component<BarBeatProps>;
 export interface ChordReadoutProps extends ChordReadoutModelProps {}

@@ -324,10 +324,10 @@
   <div class="yh-arp__foot" data-part="foot">
     <Segmented disabled=false index=2 items=["up","down","updown","converge","random"] label="Arpeggiator mode" name="Mode" @onChange=mode>
     <div class="yh-arp__knobs" data-part="knobs">
-      <Knob fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
-      <Knob fraction=0.3333333333333333 label="Oct" name="Arpeggiator octaves" value="2" @onstep=oct>
-      <Knob fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
-      <Knob fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
+      <KnobReadout fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
+      <KnobReadout fraction=0.3333333333333333 label="Oct" name="Arpeggiator octaves" value="2" @onstep=oct>
+      <KnobReadout fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
+      <KnobReadout fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
 
 ## EveryState
 <div aria-label="Arpeggiator on C" class="yh-arp" data-form="full" data-part="root" role="group">
@@ -653,10 +653,10 @@
   <div class="yh-arp__foot" data-part="foot">
     <Segmented disabled=false index=3 items=["up","down","updown","converge","random"] label="Arpeggiator mode" name="Mode" @onChange=mode>
     <div class="yh-arp__knobs" data-part="knobs">
-      <Knob fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
-      <Knob fraction=0.6666666666666666 label="Oct" name="Arpeggiator octaves" value="3" @onstep=oct>
-      <Knob fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
-      <Knob fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
+      <KnobReadout fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
+      <KnobReadout fraction=0.6666666666666666 label="Oct" name="Arpeggiator octaves" value="3" @onstep=oct>
+      <KnobReadout fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
+      <KnobReadout fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
 
 ## Dense
 <div aria-label="Arpeggiator on Fmaj7" class="yh-arp" data-form="full" data-part="root" role="group">
@@ -984,10 +984,10 @@
   <div class="yh-arp__foot" data-part="foot">
     <Segmented disabled=false index=2 items=["up","down","updown","converge","random"] label="Arpeggiator mode" name="Mode" @onChange=mode>
     <div class="yh-arp__knobs" data-part="knobs">
-      <Knob fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
-      <Knob fraction=0.3333333333333333 label="Oct" name="Arpeggiator octaves" value="2" @onstep=oct>
-      <Knob fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
-      <Knob fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
+      <KnobReadout fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
+      <KnobReadout fraction=0.3333333333333333 label="Oct" name="Arpeggiator octaves" value="2" @onstep=oct>
+      <KnobReadout fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
+      <KnobReadout fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
 
 ## Empty
 <div aria-label="Arpeggiator" class="yh-arp" data-form="full" data-part="root" role="group">
@@ -1281,10 +1281,10 @@
   <div class="yh-arp__foot" data-part="foot">
     <Segmented disabled=false index=0 items=["up","down","updown","converge","random"] label="Arpeggiator mode" name="Mode" @onChange=mode>
     <div class="yh-arp__knobs" data-part="knobs">
-      <Knob fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
-      <Knob fraction=0 label="Oct" name="Arpeggiator octaves" value="1" @onstep=oct>
-      <Knob fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
-      <Knob fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
+      <KnobReadout fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%" @onstep=rate>
+      <KnobReadout fraction=0 label="Oct" name="Arpeggiator octaves" value="1" @onstep=oct>
+      <KnobReadout fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%" @onstep=gate>
+      <KnobReadout fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%" @onstep=swing>
 
 ## Disabled
 <div aria-label="Arpeggiator on Am7" class="yh-arp" data-disabled="true" data-form="full" data-part="root" role="group">
@@ -1612,7 +1612,7 @@
   <div class="yh-arp__foot" data-part="foot">
     <Segmented disabled=true index=2 items=["up","down","updown","converge","random"] label="Arpeggiator mode" name="Mode">
     <div class="yh-arp__knobs" data-part="knobs">
-      <Knob fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%">
-      <Knob fraction=0.3333333333333333 label="Oct" name="Arpeggiator octaves" value="2">
-      <Knob fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%">
-      <Knob fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%">
+      <KnobReadout fraction=0.4 label="Rate" name="Arpeggiator rate" value="40%">
+      <KnobReadout fraction=0.3333333333333333 label="Oct" name="Arpeggiator octaves" value="2">
+      <KnobReadout fraction=0.5 label="Gate" name="Arpeggiator gate" value="50%">
+      <KnobReadout fraction=0.25 label="Swing" name="Arpeggiator swing" value="25%">

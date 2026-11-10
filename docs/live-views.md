@@ -49,7 +49,7 @@ density: nobody plays a set from a screen that looks like a Bitwig screenshot. T
 There are two generations of views, and both stay:
 
 - **`Core/Layouts/Workspace`**: the Workspace's own fixtures, built from the zen-styled
-  `instrument/components/` parts (LoopGrid, MixBand, StemLanes, TransitionRow…). Its tabs are My stage,
+  `music/components/` parts (LoopGrid, MixBand, StemLanes, TransitionRow…). Its tabs are My stage,
   Session grid, Arp & follow, Mix & sends and Stem deck. Its stories are the editing scenarios
   (`live-surface-editing`, `live-surface-document`).
 - **`Music/Live/Screens/Views`** (`src/library/music/live/screens/Views/`): the live looper's pages, built from the Music family's

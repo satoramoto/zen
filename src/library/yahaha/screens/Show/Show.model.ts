@@ -6,7 +6,7 @@
 // nothing itself.
 import { textView } from '../../../primitives/Text/Text.model';
 import { component, h, slot, type Handlers, type Node } from '../../../foundation/view/Tree.model';
-import type { ArpState, LiveCellRef, LiveLoop } from '../../../instrument/live.model';
+import type { ArpState, LiveCellRef, LiveLoop } from '../../../music/model/live.model';
 import type { ScreenSpec } from '../../../layouts/Assembly/types';
 import { SHOW_START, SHOW_TABS } from './Show.spec';
 import { LIVE_SHOW, type ShowData, type ShowTransport } from './Show.data';
@@ -159,7 +159,7 @@ export function showView({ data = LIVE_SHOW, jam, disabled, className }: ShowMod
         { on: { onChange: 'tab' } },
       ),
       component(
-        'Transport',
+        'TransportBar',
         {
           playing: transport.playing,
           tempo: { value: transport.tempo },

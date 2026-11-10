@@ -5,7 +5,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Drums"
-    <Meter label="Drums meter" value=0.7>
+    <LevelMeter label="Drums meter" value=0.7>
     <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -33,7 +33,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Bass"
-    <Meter label="Bass meter" value=0.6>
+    <LevelMeter label="Bass meter" value=0.6>
     <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -61,7 +61,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Keys"
-    <Meter label="Keys meter" value=0.5>
+    <LevelMeter label="Keys meter" value=0.5>
     <Fader hue=3 kind="part" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -89,7 +89,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Vox"
-    <Meter label="Vox meter" value=0.65>
+    <LevelMeter label="Vox meter" value=0.65>
     <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -117,7 +117,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Gtr"
-    <Meter label="Gtr meter" value=0.4>
+    <LevelMeter label="Gtr meter" value=0.4>
     <Fader hue=5 kind="part" level=76 meter=0.4 name="Gtr level" value="76" @onlevel=level:gtr>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -145,7 +145,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Perc"
-    <Meter label="Perc meter" value=0.45>
+    <LevelMeter label="Perc meter" value=0.45>
     <Fader hue=1 kind="part" level=70 meter=0.45 name="Perc level" value="70" @onlevel=level:perc>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -173,7 +173,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Syn"
-    <Meter label="Syn meter" value=0.5>
+    <LevelMeter label="Syn meter" value=0.5>
     <Fader hue=2 kind="part" level=83 meter=0.5 name="Syn level" value="83" @onlevel=level:syn>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -201,7 +201,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "FX"
-    <Meter label="FX meter" value=0.3>
+    <LevelMeter label="FX meter" value=0.3>
     <Fader hue=3 kind="parked" level=64 meter=0.3 name="FX level" value="64" @onlevel=level:fx>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -227,12 +227,12 @@
   <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
     <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
       "FX A"
-    <Meter label="FX A meter" value=0.7>
+    <LevelMeter label="FX A meter" value=0.7>
     <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
   <div key=fxb class="yh-mixband__strip yh-mixband__strip--return" data-hue="2" data-part="return" data-send="fxb">
     <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
       "FX B"
-    <Meter label="FX B meter" value=0.6>
+    <LevelMeter label="FX B meter" value=0.6>
     <Fader hue=2 kind="group" level=76 name="FX B level" value="76" @onlevel=return:fxb>
 
 ## EveryState
@@ -242,7 +242,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Drums"
-    <Meter label="Drums meter" value=0.7>
+    <LevelMeter label="Drums meter" value=0.7>
     <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -270,7 +270,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Bass"
-    <Meter label="Bass meter" value=0.6>
+    <LevelMeter label="Bass meter" value=0.6>
     <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -298,7 +298,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Keys"
-    <Meter label="Keys meter" value=0.5>
+    <LevelMeter label="Keys meter" value=0.5>
     <Fader hue=3 kind="parked" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -326,7 +326,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Vox"
-    <Meter label="Vox meter" value=0.65>
+    <LevelMeter label="Vox meter" value=0.65>
     <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -352,12 +352,12 @@
   <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
     <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
       "FX A"
-    <Meter label="FX A meter" value=0.7>
+    <LevelMeter label="FX A meter" value=0.7>
     <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
   <div key=fxb class="yh-mixband__strip yh-mixband__strip--return" data-hue="2" data-part="return" data-send="fxb">
     <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
       "FX B"
-    <Meter label="FX B meter" value=0.6>
+    <LevelMeter label="FX B meter" value=0.6>
     <Fader hue=2 kind="group" level=76 name="FX B level" value="76" @onlevel=return:fxb>
 
 ## Dense
@@ -367,7 +367,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Drums"
-    <Meter label="Drums meter" value=0.7>
+    <LevelMeter label="Drums meter" value=0.7>
     <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -395,7 +395,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Bass"
-    <Meter label="Bass meter" value=0.6>
+    <LevelMeter label="Bass meter" value=0.6>
     <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -423,7 +423,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Keys"
-    <Meter label="Keys meter" value=0.5>
+    <LevelMeter label="Keys meter" value=0.5>
     <Fader hue=3 kind="part" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -451,7 +451,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Vox"
-    <Meter label="Vox meter" value=0.65>
+    <LevelMeter label="Vox meter" value=0.65>
     <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
     <div class="yh-sendbars" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -477,7 +477,7 @@
   <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
     <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
       "FX A"
-    <Meter label="FX A meter" value=0.7>
+    <LevelMeter label="FX A meter" value=0.7>
     <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
 
 ## Empty
@@ -490,7 +490,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Drums"
-    <Meter label="Drums meter" value=0.7>
+    <LevelMeter label="Drums meter" value=0.7>
     <Fader hue=1 kind="part" level=102 meter=0.7 name="Drums level" value="102" @onlevel=level:drums>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -518,7 +518,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Bass"
-    <Meter label="Bass meter" value=0.6>
+    <LevelMeter label="Bass meter" value=0.6>
     <Fader hue=2 kind="part" level=95 meter=0.6 name="Bass level" value="95" @onlevel=level:bass>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -546,7 +546,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Keys"
-    <Meter label="Keys meter" value=0.5>
+    <LevelMeter label="Keys meter" value=0.5>
     <Fader hue=3 kind="part" level=89 meter=0.5 name="Keys level" value="89" @onlevel=level:keys>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -574,7 +574,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Vox"
-    <Meter label="Vox meter" value=0.65>
+    <LevelMeter label="Vox meter" value=0.65>
     <Fader hue=4 kind="part" level=102 meter=0.65 name="Vox level" value="102" @onlevel=level:vox>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -602,7 +602,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Gtr"
-    <Meter label="Gtr meter" value=0.4>
+    <LevelMeter label="Gtr meter" value=0.4>
     <Fader hue=5 kind="part" level=76 meter=0.4 name="Gtr level" value="76" @onlevel=level:gtr>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -630,7 +630,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Perc"
-    <Meter label="Perc meter" value=0.45>
+    <LevelMeter label="Perc meter" value=0.45>
     <Fader hue=1 kind="part" level=70 meter=0.45 name="Perc level" value="70" @onlevel=level:perc>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -658,7 +658,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "Syn"
-    <Meter label="Syn meter" value=0.5>
+    <LevelMeter label="Syn meter" value=0.5>
     <Fader hue=2 kind="part" level=83 meter=0.5 name="Syn level" value="83" @onlevel=level:syn>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -686,7 +686,7 @@
       <span aria-hidden="true" class="yh-mixband__mark" data-part="mark">
       <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
         "FX"
-    <Meter label="FX meter" value=0.3>
+    <LevelMeter label="FX meter" value=0.3>
     <Fader hue=3 kind="parked" level=64 meter=0.3 name="FX level" value="64" @onlevel=level:fx>
     <div class="yh-sendbars" data-disabled="true" data-form="bars" data-part="root">
       <div class="yh-sendbars__row" data-part="row" data-send="0">
@@ -712,10 +712,10 @@
   <div key=fxa class="yh-mixband__strip yh-mixband__strip--return" data-hue="1" data-part="return" data-send="fxa">
     <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
       "FX A"
-    <Meter label="FX A meter" value=0.7>
+    <LevelMeter label="FX A meter" value=0.7>
     <Fader hue=1 kind="group" level=89 name="FX A level" value="89" @onlevel=return:fxa>
   <div key=fxb class="yh-mixband__strip yh-mixband__strip--return" data-hue="2" data-part="return" data-send="fxb">
     <span class="lib-text lib-tone yh-mixband__name" data-part="headname" data-role="label" data-text-leading="tight">
       "FX B"
-    <Meter label="FX B meter" value=0.6>
+    <LevelMeter label="FX B meter" value=0.6>
     <Fader hue=2 kind="group" level=76 name="FX B level" value="76" @onlevel=return:fxb>

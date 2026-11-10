@@ -1,7 +1,7 @@
 import { boardAppBar } from '../../components/AppBar/AppBar.fixtures';
 import { displayBoard, displayStopped } from '../../components/Display/Display.fixtures';
 import { faderPageTabs, functionLamps, layerTabs, panelStrips, partLamps, reverbStrips } from '../../components/FaderBank/FaderBank.fixtures';
-import { boardKeys } from '../../../instrument/components/Keys/Keys.fixtures';
+import { boardKeys } from '../../../music/components/Keys/Keys.fixtures';
 import { chorusKnobs, delayKnobs, knobPages, panKnobs, rackKnobs, reverbKnobs, styleKnobs } from '../../components/KnobBank/KnobBank.fixtures';
 import { allPadBanks, allPadsByBank, quickRackPads } from '../../components/PadBank/PadBank.fixtures';
 import { songFormBoard, songFormStopped } from '../../components/SongForm/SongForm.fixtures';

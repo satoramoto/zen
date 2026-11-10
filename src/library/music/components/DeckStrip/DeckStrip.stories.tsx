@@ -3,7 +3,7 @@ import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/tes
 import { withLibraryTheme } from '../../../storybook';
 import { treeStory, withRenderer } from '../../../foundation/stories/story';
 import { h } from '../../../foundation/view/Tree.model';
-import { withMusicScope } from '../../preview';
+import { withMusicScope } from '../../preview.story';
 import { DeckStrip } from './DeckStrip';
 import { deckStripModel, type DeckStripProps } from './DeckStrip.model';
 import { deckFixtures as f, deckParams, deckReading, deckTheme, readyDeck } from './DeckStrip.fixtures';

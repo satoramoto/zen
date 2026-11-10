@@ -1,9 +1,9 @@
 // The show's dataset (docs/live-views.md): seven songs and a jam, as plain data. No framework:
 // the same values feed a React story, a Svelte story and the app's own store. The set is the
 // wireframes' band context (APC40-style eight tracks, Demucs stems, hot cues, six transitions).
-import type { ArpState, LiveChord, LiveCue, LiveLoop, LiveSend, LiveSong, LiveStem, LiveTrack, LiveWindow } from '../../../instrument/live.model';
-import type { TransitionPad } from '../../../instrument/components/TransitionRow/TransitionRow.model';
-import type { MacroPad } from '../../../instrument/components/MacroPads/MacroPads.model';
+import type { ArpState, LiveChord, LiveCue, LiveLoop, LiveSend, LiveSong, LiveStem, LiveTrack, LiveWindow } from '../../../music/model/live.model';
+import type { TransitionPad } from '../../../music/components/TransitionRow/TransitionRow.model';
+import type { MacroPad } from '../../../music/components/MacroPads/MacroPads.model';
 
 /** Where the head is: elapsed seconds and the bar.beat position. */
 export interface ShowTransport {

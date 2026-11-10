@@ -3,13 +3,13 @@
 // instances, each naming its kind); the panes are the app's definitions, here the Workspace's own
 // five Lemur tabs over the zen-styled `instrument` parts, so the solver still decides sizes.
 import { defineFixtures } from '../../fixtures';
-import { ARP_SEQUENCER_FORMS } from '../../instrument/components/ArpSequencer/ArpSequencer.forms';
-import { CHORD_STRIP_FORMS } from '../../instrument/components/ChordStrip/ChordStrip.forms';
-import { LOOP_GRID_FORMS } from '../../instrument/components/LoopGrid/LoopGrid.forms';
-import { MACRO_PADS_FORMS } from '../../instrument/components/MacroPads/MacroPads.forms';
-import { MIX_BAND_FORMS } from '../../instrument/components/MixBand/MixBand.forms';
-import { STEM_LANES_FORMS } from '../../instrument/components/StemLanes/StemLanes.forms';
-import { TRANSITION_ROW_FORMS } from '../../instrument/components/TransitionRow/TransitionRow.forms';
+import { ARP_SEQUENCER_FORMS } from '../../music/components/ArpSequencer/ArpSequencer.forms';
+import { CHORD_STRIP_FORMS } from '../../music/components/ChordStrip/ChordStrip.forms';
+import { LOOP_GRID_FORMS } from '../../music/components/LoopGrid/LoopGrid.forms';
+import { MACRO_PADS_FORMS } from '../../music/components/MacroPads/MacroPads.forms';
+import { MIX_BAND_FORMS } from '../../music/components/MixBand/MixBand.forms';
+import { STEM_LANES_FORMS } from '../../music/components/StemLanes/StemLanes.forms';
+import { TRANSITION_ROW_FORMS } from '../../music/components/TransitionRow/TransitionRow.forms';
 import type { WorkspaceModelProps } from './Workspace.model';
 import { readTab } from './surface';
 import type { PaneDefinition, SurfaceDocument, SurfaceDocumentV2, SurfaceRegion, SurfaceTab, SurfaceTarget } from './Workspace.types';

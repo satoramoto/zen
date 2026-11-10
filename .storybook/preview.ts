@@ -26,7 +26,6 @@ const preview: Preview = {
       storySort: {
         order: [
           'Core', ['Primitives', 'Components', 'Layouts'],
-          'Instrument',
           'Music', ['Screens', 'Layouts', 'Components', 'Live', ['Screens', 'Layouts', 'Components']],
           'Graph', ['Screens', 'Layouts', 'Components'],
           'Shader',
