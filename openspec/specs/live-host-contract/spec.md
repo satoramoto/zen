@@ -2,7 +2,7 @@
 
 ## Purpose
 
-What a pane in a composed DAW reads from its host, what it asks for, and how values that change every frame reach it.
+What a pane in a composed DAW reads from its host, what it asks for, how values that change every frame reach it, and what a host can count on: a failing pane contained, and nothing of the document kept in the surface.
 
 ## Requirements
 
@@ -56,7 +56,7 @@ A pane SHALL draw only the readings its host gives it (what is playing, queued, 
 - **WHEN** the host gives no DSP load
 - **THEN** the pane shows the load as missing, not as zero
 
-### Requirement: A pane asks with one intent per gesture
+### Requirement: A pane asks with plain intents
 
 A pane SHALL turn each discrete gesture (a press, a pick, a toggle) into one named intent with one plain-data argument (an id, a reference such as a track and cell, or a 0–1 value), and a continuous gesture (a drag) into one such intent per step, each aimed at the target its region is bound to, and SHALL send nothing more once its region is removed mid-gesture.
 
