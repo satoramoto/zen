@@ -61,6 +61,7 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: {
+        site: 'src/library/site/index.ts',
         index: 'src/library/index.ts',
         storybook: 'src/library/storybook.tsx',
         svelte: 'src/library/svelte.ts',

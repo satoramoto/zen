@@ -52,6 +52,12 @@ Builds and unit tests are not browser evidence: look at layout and perceptual ef
 
 ## Library rules
 
+- Static documentation sites use `@satoramoto/zen/astro` and `@satoramoto/zen/site`;
+  see `docs/static-sites.md`. Astro templates/build helpers ship as source under
+  `src/site/`; React views are built from `src/library/site/`. Run `check:site` and
+  the `Site/Documentation` plays after changing this surface. Consumers own
+  language-specific generators, content, site configuration and deployment.
+
 - Apps consume zen from GitHub: `"@satoramoto/zen": "github:satoramoto/zen#<sha>"`; npm runs `prepare` (`build:lib`) on install, then `import { ThemeScope } from '@satoramoto/zen'` and `import '@satoramoto/zen/zen.css'`.
 - The public entries (`package.json` `exports`, built by `vite.lib.config.ts`) are the only way an app reaches zen; nothing imports a deeper path:
   - `@satoramoto/zen` (`src/library/index.ts`): the tokens, themes, primitives, layout and components; its stylesheet is `@satoramoto/zen/zen.css`.

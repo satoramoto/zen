@@ -1,0 +1,35 @@
+---
+import '@satoramoto/zen/zen.css';
+import { Documentation, Search } from '@satoramoto/zen/site';
+import { packs, scopeView } from '@satoramoto/zen/themes';
+import site from 'virtual:zen-site';
+
+export function getStaticPaths() {
+  return site.pages.map(page => ({ params: { slug: page.slug || undefined }, props: { page } }));
+}
+const { page } = Astro.props;
+const pack = packs.find(pack => pack.id === (site.theme ?? 'textbook-console'));
+if (!pack) throw new Error(`Unknown Zen theme pack: ${site.theme}`);
+const scope = scopeView(pack.facets, site.mode ?? 'dark', true);
+const style = Object.entries(scope.vars).map(([key, value]) => `${key}:${value}`).join(';');
+const pages = site.pages.map(({ title, href, text }) => ({ title, href, text }));
+const references = site.mounts.map(mount => ({ title: mount.title, href: mount.href }));
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={site.description} />
+    <title>{page.title} · {site.title}</title>
+    {site.site && <link rel="canonical" href={new URL(page.href, site.site)} />}
+  </head>
+  <body class={scope.className} {...scope.attrs} style={style}>
+    <Documentation title={site.title} description={site.description} home={site.base}
+      current={page.href} pages={pages} references={references} html={page.html}
+      revision={site.revision} source={site.source}>
+      <Search slot="search" pages={pages} client:load />
+    </Documentation>
+  </body>
+</html>
+<style is:global>body { margin: 0; }</style>
