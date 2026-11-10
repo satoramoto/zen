@@ -164,6 +164,20 @@ export type SurfaceIntent =
 
 export type SurfaceIntentType = SurfaceIntent['type'];
 
+/** What kind of thing an intent is (`intentKind`): a document edit, choosing a tab, undo or redo, or edit mode. */
+export const INTENT_KINDS = ['edit', 'navigation', 'history', 'mode'] as const;
+export type IntentKind = (typeof INTENT_KINDS)[number];
+
+/** The problems `checkDocument` finds in a saved document. */
+export const SURFACE_ISSUES = ['unknown-version', 'duplicate-tab', 'unknown-active', 'duplicate-region', 'dangling-leaf', 'repeated-leaf', 'orphan-region', 'bad-share'] as const;
+
+/** One problem in a document: what it is, the tab it is in, and the id it is about (a tab, an instance, a split, or the version). */
+export interface SurfaceIssue {
+  issue: (typeof SURFACE_ISSUES)[number];
+  tab?: string;
+  id?: string;
+}
+
 /** Every intent's name, in the order the surface offers them. */
 export const SURFACE_INTENTS = [
   'selectTab',
@@ -206,6 +220,8 @@ export interface SurfaceUi {
   docking?: { region: string; target?: string; zone?: DockZone };
   /** Each region's measured room, by id: what its form is picked from. */
   rooms?: Readonly<Record<string, { w: number; h: number }>>;
+  /** How many times a failed region's pane has been tried again, by id. */
+  retries?: Readonly<Record<string, number>>;
 }
 
 export const SURFACE_UI_REST: SurfaceUi = { editing: false, palette: false };

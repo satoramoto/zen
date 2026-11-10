@@ -15,7 +15,11 @@ export {
   SURFACE_DIRECTIONS,
   SURFACE_INTENTS,
   SURFACE_UI_REST,
+  INTENT_KINDS,
+  SURFACE_ISSUES,
   type DockZone,
+  type IntentKind,
+  type SurfaceIssue,
   type JsonValue,
   type LayoutNode,
   type PaneDefinition,
@@ -40,8 +44,12 @@ export {
 } from './Workspace.types';
 export {
   PLACEHOLDER_FORMS,
+  SURFACE_VERSIONS,
   applySurfaceIntent,
+  checkDocument,
   cleanLayout,
+  intentKind,
+  knownVersion,
   formForRoom,
   freshId,
   isSplit,
@@ -57,7 +65,7 @@ export {
   targetsFor,
   type ApplyOptions,
 } from './surface';
-export { contentSlot, surfaceUi, workspaceContent, type WorkspaceModelProps } from './Workspace.model';
+export { contentSlot, surfaceUi, unbound, workspaceContent, type WorkspaceModelProps } from './Workspace.model';
 
 /** What the app draws in a region: the instance, the target it resolves to (its fixed one, else the selection) and its settings with defaults filled. */
 export type WorkspacePane = (region: SurfaceRegion, target: string | undefined, settings: ResolvedSettings) => ReactNode;

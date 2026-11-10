@@ -3,7 +3,7 @@
 // (`keepEditing`), the way mix's `SurfaceStore` does. Story harness only: zen ships no store; this
 // shows the line between what the app keeps and what the surface keeps.
 import { useCallback, useRef, useState } from 'react';
-import { applySurfaceIntent, type ApplyOptions } from './surface';
+import { applySurfaceIntent, intentKind, type ApplyOptions } from './surface';
 import type { SurfaceDocument, SurfaceIntent } from './Workspace.types';
 
 export interface SurfaceHostOptions extends ApplyOptions {
@@ -33,6 +33,9 @@ export function useSurfaceHost(initial: SurfaceDocument, { keepEditing = false, 
   const onIntent = useCallback(
     (intent: SurfaceIntent) => {
       setIntents((all) => [...all, intent]);
+      // What an app's store does with each kind of intent (`intentKind`): mode is kept apart from the
+      // document, history walks the app's own stack, navigation changes the document without a
+      // history entry, and only an edit is worth undoing.
       if (intent.type === 'setEditing') {
         if (keepEditing) setEditing(intent.editing);
         return;
@@ -42,8 +45,7 @@ export function useSurfaceHost(initial: SurfaceDocument, { keepEditing = false, 
         if (intent.type === 'redo') return future.length ? { past: [...past, now], now: future[0], future: future.slice(1) } : { past, now, future };
         const next = applySurfaceIntent(now, intent, applyRef.current);
         if (next === now) return { past, now, future };
-        // Choosing a tab is not an edit worth undoing.
-        if (intent.type === 'selectTab') return { past, now: next, future };
+        if (intentKind(intent) === 'navigation') return { past, now: next, future };
         return { past: [...past, now], now: next, future: [] };
       });
     },
