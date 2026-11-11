@@ -187,7 +187,7 @@ and 1440×900, 1280×720 and 900×700 windows. It saves screenshots, exact pixel
 layout measurements in ignored `.shots/music/`; any nonzero difference is reported as a
 failure, not hidden behind a loose tolerance. `MUSIC_REFERENCE_URL`, `MUSIC_PREVIEW_URL`,
 `MUSIC_STORY_ID` and `MUSIC_ARTIFACTS` override its inputs/output. Install the browser once
-with `npx playwright install chromium`.
+with `npx playwright install --only-shell chromium`.
 
 `MUSIC_RENDERER=svelte MUSIC_TARGET_STORY_ID=music-four-deck-mixer--reference` compares
 the Svelte fixed fixture against the original React story. `MUSIC_VISUAL_STATE=wave-settings`
