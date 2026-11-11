@@ -84,6 +84,8 @@ function drumRack(id: string): Device {
     choke: name.startsWith('Hat') ? 1 : 0,
     transpose: 0,
     devices: [simpler(`${id}.pad${36 + i}`, name, 'one-shot')],
+    volume: param(`${id}.pad${36 + i}.volume`, 'Volume', 0.85, db(0.85)),
+    pan: pan(`${id}.pad${36 + i}.pan`),
   }));
   // The next bank up has two filled pads and the rest empty.
   for (let i = 16; i < 32; i++) pads.push(i < 18 ? { note: 36 + i, name: `FX ${i - 15}`, colour: 11, kind: 'other', devices: [simpler(`${id}.pad${36 + i}`, `FX ${i - 15}`, 'one-shot')] } : { note: 36 + i, name: '', empty: true });
@@ -229,7 +231,7 @@ function unit(): Unit {
       'Record Count-In': { value: '1 bar', choices: ['none', '1 bar', '2 bars', '4 bars'] },
     },
     software: { version: '12.3', licence: 'Live 12 Suite', authorized: true, usageData: false },
-    volumeTarget: 'Main', volumeTargets: ['Main', 'Phones', 'Cue'],
+    volumeTarget: 'Main Out', volumeTargets: ['Main Out', 'Phones', 'Main Track', 'Cue'],
     volume: { value: 0.8, display: '-6.0 dB' },
   };
 }

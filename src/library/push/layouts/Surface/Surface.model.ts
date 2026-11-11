@@ -11,7 +11,7 @@
 import { lampVars } from '../../../foundation/themes/lamps';
 import { component, h, styleText, wire, type Child, type ChildArg, type Handlers, type Node } from '../../../foundation/view/Tree.model';
 import { BODY, CONTROLS, controlsIn, regionBox, type Control, type Region } from '../../model/layout';
-import type { Lamp, PushInput, Screen, StripLamps, Unit } from '../../model/types';
+import type { Lamp, PushFrame, PushInput, Screen, StripLamps, Unit } from '../../model/types';
 import { lampCss } from '../lamp';
 import type { Beat } from './lampClock';
 import type { Sensitivity } from './padInput';
@@ -36,6 +36,8 @@ export interface SurfaceModelProps {
   /** The pads' expression settings and velocity curve, from the unit's readings. */
   expression?: Pick<Unit['expression'], 'inTune' | 'inTuneWidth' | 'slideRange' | 'trace'>;
   sensitivity?: Sensitivity;
+  /** The app's fast values (levels, the song position), read once a frame by the parts that move at their own rate. */
+  frame?: () => PushFrame | undefined;
   /** Called with every input a person makes. The surface changes nothing else itself. */
   onInput?: (input: PushInput) => void;
   /** Classes added to the root. */
@@ -108,7 +110,7 @@ function inner(c: Control, props: SurfaceModelProps, lamp: Lamp): ChildArg {
   if (c.kind === 'encoder') return knob(c);
   if (c.kind === 'wheel') return jog(c);
   if (c.kind === 'strip') return strip(props.strip ?? { kind: 'off' });
-  return h('div', { class: 'push-surface__glass' }, component('PushDisplay', { screen: props.screen, dark: props.darkDisplay !== false, light: props.displayLight }, { on: { onInput: 'input' } }));
+  return h('div', { class: 'push-surface__glass' }, component('PushDisplay', { screen: props.screen, dark: props.darkDisplay !== false, light: props.displayLight }, { on: { onInput: 'input', frame: 'frame' } }));
 }
 
 const percent = (n: number | undefined) => String(Math.min(100, Math.max(0, n ?? 100)) / 100);
@@ -158,7 +160,7 @@ const PRESSES = new Set(['volume', 'tempo', 'jog']);
 /** The callbacks `surfaceView`'s tree names: every input, and each rotary control's turn and press. */
 export function surfaceHandlers(props: SurfaceModelProps): Handlers {
   const now = () => (typeof performance === 'undefined' ? Date.now() : performance.now());
-  const handlers: Handlers = { input: props.onInput, none: () => {} };
+  const handlers: Handlers = { input: props.onInput, frame: props.frame, none: () => {} };
   for (const c of CONTROLS) {
     if (c.kind !== 'encoder' && c.kind !== 'wheel') continue;
     handlers[`step:${c.id}`] = (delta: number) => props.onInput?.({ control: c.id, kind: 'turn', time: now(), value: delta });

@@ -59,7 +59,7 @@ describe('User Mode', () => {
     const after = run(set, press('user', 400), inside).at(-1)!.state;
     expect(after.user).toBe(false);
     expect([after.display, after.pads]).toEqual(['mix', 'session']);
-    expect(project(after, set).screen.kind).toBe('mix');
+    expect(project(after, set).screen.kind).toBe('mix-global');
   });
 
   it('lists what every control sends', () => {

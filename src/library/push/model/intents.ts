@@ -110,6 +110,7 @@ export const INTENTS = {
   'ungroup-devices': 'edit',
   'map-macro': 'edit',
   'unmap-macro': 'edit',
+  'set-macro': 'edit',
   'randomize-macros': 'edit',
   'macro-variation': 'edit',
   'set-drum-pad': 'edit',

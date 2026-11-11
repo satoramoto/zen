@@ -11,9 +11,9 @@
 import { toCssVars, type Facets } from '../../../contract';
 import { lampVars } from '../../../foundation/themes/lamps';
 import { textNode } from '../../../primitives/Text/Text.model';
-import { component, h, styleText, type Child, type ChildArg, type Handlers, type Node } from '../../../foundation/view/Tree.model';
+import { component, h, styleText, wire, type Child, type ChildArg, type Handlers, type Node } from '../../../foundation/view/Tree.model';
 import { DISPLAY, encoderId } from '../../model/layout';
-import type { BodyCell, ListCell, ListItem, Overlay, ParamCell, PushInput, RowCell, Screen } from '../../model/types';
+import type { BodyCell, ListCell, ListItem, Overlay, ParamCell, PushFrame, PushInput, RowCell, Screen } from '../../model/types';
 import { colourCss } from '../lamp';
 
 export interface DisplayModelProps {
@@ -25,6 +25,8 @@ export interface DisplayModelProps {
   light?: number;
   /** Called when a parameter on the screen is turned or switched with the pointer or keys: reported as its column's encoder. */
   onInput?: (input: PushInput) => void;
+  /** The app's fast values (levels, the song position), read once a frame by the parts that move at their own rate. */
+  frame?: () => PushFrame | undefined;
   className?: string;
 }
 
@@ -84,6 +86,12 @@ function param(cell: ParamCell & { col: number }): ChildArg {
       component('FolderList', { label: name, items: view.items, chosen: String(cell.chosen ?? 0) }),
     ];
   }
+  if (cell.style === 'value') {
+    return [
+      textNode({ role: 'caption', weight: 'strong', truncate: true, leading: 'tight' }, { 'data-part': 'name' }, cell.name),
+      textNode({ role: 'numeral', truncate: true, leading: 'tight' }, { 'data-part': 'value', 'aria-label': name }, `${cell.value}${cell.unit ?? ''}`),
+    ];
+  }
   if (cell.style === 'switch') {
     return component('Toggle', { on: cell.fraction >= 0.5, name: cell.name, label: name, layout: 'stacked', disabled: cell.disabled, ink: 'var(--push-lit)' }, { on: { onChange: `switch:${cell.col}` }, slots: { children: [cell.value] } });
   }
@@ -128,8 +136,22 @@ function content(cell: BodyCell): ChildArg {
         ...(cell.colour === undefined ? {} : { hue: 1 }),
       });
     }
+    case 'meter':
+      // A stereo meter the frame reader moves, a mark at the volume, and the reading.
+      return [
+        wire(
+          h(
+            'div',
+            { class: 'push-display__meter', 'data-part': 'meter', 'data-track': cell.track },
+            component('MusicScope', { className: 'push-display__meters' }, { slots: { children: [component('MusicMeter', { name: '', label: 'Level, left', value: 0, peak: 0, orientation: 'vertical', ink: 'var(--push-lit)' }), component('MusicMeter', { name: '', label: 'Level, right', value: 0, peak: 0, orientation: 'vertical', ink: 'var(--push-lit)' })] } }),
+            component('Slider', { param: LEVEL, value: cell.fraction, name: '', label: `${cell.name} ${cell.value}`, orientation: 'vertical', length: 'auto', showValue: false, fill: false, ink: 'var(--push-lit)' }, { on: { onChange: 'none' } }),
+          ),
+          { bind: [['pushFrameMeter', { track: cell.track, frame: 'frame' }]] },
+        ),
+        textNode({ role: 'numeral', leading: 'tight', truncate: true }, { 'data-part': 'value' }, cell.value),
+      ];
     default:
-      // Meters, the piano roll and the clip grid are drawn by the views that use them.
+      // The piano roll and the clip grid are drawn by the views that use them.
       return textNode({ role: 'caption', tone: 'muted' }, { 'data-part': 'text' }, cell.type);
   }
 }
@@ -146,9 +168,10 @@ function body(cell: BodyCell): Node {
       'data-style': p?.style,
       'data-col': String(cell.col),
       'data-span': String(span),
-      'data-touched': p?.touched ? 'true' : undefined,
+      'data-touched': p?.touched || (cell.type === 'meter' && cell.touched) ? 'true' : undefined,
       'data-enclosing': cell.type === 'list' && cell.enclosing ? 'true' : undefined,
-      'data-disabled': p?.disabled || (cell.type === 'text' && cell.tone === 'dim') ? 'true' : undefined,
+      'data-under': cell.type === 'trace' && cell.under ? 'true' : undefined,
+      'data-disabled': p?.disabled || (cell.type === 'text' && cell.tone === 'dim') || (cell.type === 'meter' && cell.dim) ? 'true' : undefined,
       'data-align': cell.type === 'text' ? (cell.align ?? 'start') : undefined,
       'data-size': cell.type === 'text' ? (cell.size ?? 'label') : undefined,
       style: styleText({ 'grid-column': `${cell.col} / span ${span}`, '--push-lamp': lamp(colour) }),
@@ -226,7 +249,7 @@ export function displayView({ screen, dark = true, light = 100, className }: Dis
 /** The callbacks the tree names: a parameter turned or switched on the screen is its column's encoder turning. */
 export function displayHandlers(props: DisplayModelProps): Handlers {
   const now = () => (typeof performance === 'undefined' ? Date.now() : performance.now());
-  const handlers: Handlers = { none: () => {} };
+  const handlers: Handlers = { none: () => {}, frame: props.frame };
   for (const c of eight) {
     handlers[`turn:${c}`] = (delta: number) => props.onInput?.({ control: encoderId(c), kind: 'turn', time: now(), value: delta });
     handlers[`switch:${c}`] = (on: boolean) => props.onInput?.({ control: encoderId(c), kind: 'turn', time: now(), value: on ? 1 : -1 });

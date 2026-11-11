@@ -10,7 +10,7 @@ import { component, h, wire, type Handlers, type Node } from '../../../foundatio
 import type { ViewState } from '../../../foundation/view/viewState';
 import { applyIntent } from '../../model/host';
 import type { Region } from '../../model/layout';
-import type { PushInput, PushIntent, PushSet, PushState, Screen } from '../../model/types';
+import type { PushFrame, PushInput, PushIntent, PushSet, PushState, Screen } from '../../model/types';
 
 export interface EmulatorModelProps {
   /** The Set the emulator starts with. Read once: after that the stand-in host keeps it. */
@@ -29,6 +29,8 @@ export interface EmulatorModelProps {
   panels?: boolean;
   /** The display keeps a dark ground whatever the mode. Default true. */
   darkDisplay?: boolean;
+  /** The app's fast values. Default: none, so every meter reads as not measured. */
+  frame?: () => PushFrame | undefined;
   onIntent?: (intent: PushIntent) => void;
   onInput?: (input: PushInput) => void;
   onState?: (state: PushState) => void;
@@ -74,10 +76,10 @@ export function emulatorView(props: EmulatorModelProps, own: EmulatorState): Nod
         own.gone
           ? null
           : props.part === 'display'
-          ? component('PushDisplay', { screen: props.screen, dark: props.darkDisplay, light: own.set.unit.displayLight }, { on: { onInput: 'input' } })
+          ? component('PushDisplay', { screen: props.screen, dark: props.darkDisplay, light: own.set.unit.displayLight }, { on: { onInput: 'input', frame: 'frame' } })
           : props.part === 'rear'
             ? component('PushRearPanel', { jacks: own.set.unit.jacks }, { on: { onInput: 'input' } })
-            : component('PushDevice', { set: own.set, initialState: props.initialState, region: props.region, darkDisplay: props.darkDisplay }, { on: { onIntent: 'intent', onInput: 'input', onState: 'state' } }),
+            : component('PushDevice', { set: own.set, initialState: props.initialState, region: props.region, darkDisplay: props.darkDisplay }, { on: { onIntent: 'intent', onInput: 'input', onState: 'state', frame: 'frame' } }),
       ),
       panels
         ? h(
@@ -127,6 +129,8 @@ export function emulatorHandlers(props: EmulatorModelProps, own: ViewState<Emula
       props.onIntent?.(intent);
     },
     input: props.onInput,
+    // A script on the page may set `pushFrame` on the window to feed the meters.
+    frame: () => props.frame?.() ?? (globalThis as { pushFrame?: PushFrame }).pushFrame,
     state: (state: PushState) => {
       keep({ device: state });
       props.onState?.(state);

@@ -21,7 +21,7 @@ describe('a scripted session', () => {
     expect(steps.map((s) => s.intents.map((i) => i.action))).toEqual([['play'], [], [], [], ['stop'], [], [], ['redo'], []]);
     expect(steps[0].lamps.play).toEqual({ state: 'lit', colour: 'play' });
     expect(steps[4].lamps.play.state).toBe('dim');
-    expect(steps[2].screen.kind).toBe('mix');
+    expect(steps[2].screen.kind).toBe('mix-global');
     expect(JSON.parse(JSON.stringify(steps))).toEqual(steps);
   });
 

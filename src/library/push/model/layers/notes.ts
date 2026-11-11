@@ -115,12 +115,6 @@ export const scaleMenu: Layer = {
   paint(paint) {
     scaleScreen(paint);
     paint.lamps.scale = lamp('lit');
-    for (let c = 1; c <= 8; c++) {
-      const top = paint.screen.top[c - 1];
-      const bottom = paint.screen.bottom[c - 1];
-      paint.lamps[`upper-${c}`] = top ? choice(!!top.selected) : OFF;
-      paint.lamps[`lower-${c}`] = bottom ? choice(!!bottom.selected) : OFF;
-    }
     const at = SCALE_NAMES.indexOf(paint.set.scale.scale);
     paint.lamps['dpad-up'] = choice(false, at > 0);
     paint.lamps['dpad-down'] = choice(false, at < SCALE_NAMES.length - 1);

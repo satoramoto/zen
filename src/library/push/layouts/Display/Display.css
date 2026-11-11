@@ -147,6 +147,11 @@
   --control-h: calc(var(--push-px) * 21);
 }
 .push-display__cell[data-type='trace'] { padding: calc(var(--push-px) * 10) calc(var(--push-px) * 6); align-items: stretch; }
+/* Every cell is on the body's one row, so a drawing can lie under the parameters of the columns it spans. */
+.push-display__cell { grid-row: 1; }
+.push-display__cell[data-under] { padding-top: calc(var(--push-px) * 44); }
+/* A parameter over a drawing: its name and its value, at the top of its column. */
+.push-display__cell[data-style='value'] { justify-content: flex-start; padding-top: calc(var(--push-px) * 6); z-index: 1; }
 /* A menu the highlight has passed through: its chosen row is marked, not highlighted. */
 .push-display__cell[data-enclosing] {
   --selected: var(--surface-3);
@@ -238,3 +243,26 @@
   height: calc(var(--push-px) * 4);
   background: linear-gradient(to right, var(--text-1) calc(var(--push-fraction) * 100%), var(--surface-3) 0);
 }
+
+/* A track's level: two meters, a mark at its volume, and the reading under them. */
+.push-display__cell[data-type='meter'] {
+  --space-2: calc(var(--push-px) * 5);
+  gap: calc(var(--push-px) * 3);
+  padding: calc(var(--push-px) * 5) 0;
+}
+.push-display__meter {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: calc(var(--push-px) * 6);
+  min-height: 0;
+}
+.push-display__meters {
+  display: flex;
+  gap: calc(var(--push-px) * 2);
+  --wdg-meter-width: calc(var(--push-px) * 5);
+  --wdg-meter-length: calc(var(--push-px) * 62);
+}
+/* Not measured: the meters are drawn empty and marked. */
+.push-display__meter[data-unmeasured] .push-display__meters { opacity: 0.35; outline: calc(var(--push-px) * 1) dashed var(--text-3); }

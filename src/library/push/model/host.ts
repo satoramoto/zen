@@ -16,6 +16,10 @@ export function everyParameter(set: PushSet): Parameter[] {
   for (const t of tracksOf(set)) {
     out.push(t.volume, t.pan, ...t.sends, ...(t.extras ?? []));
     for (const d of everyDevice(t.devices)) {
+      for (const pad of d.pads ?? []) for (const p of [pad.volume, pad.pan]) if (p) out.push(p);
+      for (const chain of d.chains ?? []) for (const p of [chain.volume, chain.pan]) if (p) out.push(p);
+    }
+    for (const d of everyDevice(t.devices)) {
       for (const b of d.banks) for (const p of b.parameters) if (p) out.push(p);
       for (const m of d.macros ?? []) if (m) out.push(m);
     }
@@ -75,6 +79,61 @@ const APPLY: Record<string, Apply> = {
   },
   'set-volume-target': (s, i) => void (s.unit.volumeTarget = String(i.target)),
   power: (s, i) => void (s.unit.power = i.on ? 'on' : 'off'),
+  'toggle-device': (s, i) => {
+    const d = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device);
+    if (d) d.on = typeof i.on === 'boolean' ? i.on : !d.on;
+  },
+  'fold-track': (s, i) => {
+    const t = track(s, i.track);
+    if (t) t.folded = Boolean(i.folded);
+  },
+  'select-drum-pad': (s, i) => {
+    const d = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device);
+    if (!d) return;
+    d.selectedPad = Number(i.note);
+    const pad = d.pads?.find((p) => p.note === d.selectedPad);
+    if (pad?.devices?.[0]) s.selection.device = pad.devices[0].id;
+  },
+  'set-drum-pad': (s, i) => {
+    const pad = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device)?.pads?.find((p) => p.note === i.note);
+    if (!pad) return;
+    if (typeof i.choke === 'number') pad.choke = i.choke;
+    if (typeof i.transpose === 'number') pad.transpose = i.transpose;
+  },
+  rename: (s, i) => {
+    const t = track(s, i.track);
+    if (t && typeof i.text === 'string') t.name = i.text;
+  },
+  'set-colour': (s, i) => {
+    const t = track(s, i.track);
+    if (!t || typeof i.colour !== 'number') return;
+    if (i.of === 'track') t.colour = i.colour;
+    else if (i.of === 'clip') {
+      const clip = t.clips[Number(i.scene)];
+      if (clip) clip.colour = i.colour;
+    } else {
+      const pad = everyDevice(t.devices).flatMap((d) => d.pads ?? []).find((p) => p.note === i.note);
+      if (pad) pad.colour = i.colour;
+    }
+  },
+  'freeze-track': (s, i) => {
+    const t = track(s, i.track);
+    if (t) t.frozen = true;
+  },
+  'flatten-track': (s, i) => {
+    const t = track(s, i.track);
+    if (t) t.frozen = false;
+  },
+  'set-monitor': (s, i) => {
+    const t = track(s, i.track);
+    if (t?.routing) t.routing.monitor = i.monitor as 'in' | 'auto' | 'off';
+  },
+  'set-routing': (s, i) => {
+    const t = track(s, i.track);
+    if (!t?.routing) return;
+    const { kind: _k, action: _a, track: _t, ...change } = i;
+    Object.assign(t.routing, change);
+  },
   'set-scale': (s, i) => {
     const { kind: _k, action: _a, ...change } = i;
     Object.assign(s.scale, change);

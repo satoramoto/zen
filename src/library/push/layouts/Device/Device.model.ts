@@ -9,7 +9,7 @@ import { component, h, wire, type Handlers, type Node } from '../../../foundatio
 import type { PushDevice } from '../../model/device';
 import type { Region } from '../../model/layout';
 import { project } from '../../model/project';
-import type { PushInput, PushIntent, PushSet, PushState } from '../../model/types';
+import type { PushFrame, PushInput, PushIntent, PushSet, PushState } from '../../model/types';
 import type { Beat } from '../Surface/lampClock';
 
 export interface DeviceModelProps {
@@ -21,6 +21,8 @@ export interface DeviceModelProps {
   region?: Region;
   /** The display keeps a dark ground whatever the mode. Default true. */
   darkDisplay?: boolean;
+  /** The app's fast values (levels, the song position), read once a frame without the device being redrawn. */
+  frame?: () => PushFrame | undefined;
   /** Called with each thing the device asks of the app, in order. */
   onIntent?: (intent: PushIntent) => void;
   /** Called with the device's state after each change, for an app that keeps it. */
@@ -62,7 +64,7 @@ export function deviceView(props: DeviceModelProps, state: PushState, now = 0): 
         beat: beatOf(set, now),
         className: props.className,
       },
-      { on: { onInput: 'input' } },
+      { on: { onInput: 'input', frame: 'frame' } },
       ),
     ),
     { bind: [['pushLifetime', { onGone: 'gone' }]] },
@@ -81,5 +83,6 @@ export function deviceHandlers(props: DeviceModelProps, device: PushDevice): Han
       device.input(input);
     },
     gone: () => device.destroy(),
+    frame: props.frame,
   };
 }

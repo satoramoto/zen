@@ -5,6 +5,11 @@ import { power } from './power';
 import { user } from './user';
 import { global } from './global';
 import { overlays } from './overlays';
+import { codeDialog, confirm, textEntry } from './dialogs';
 import { notes64, playing, scaleMenu } from './notes';
+import { tracks } from './tracks';
+import { colourPicker, trackOptions } from './trackOptions';
+import { deviceView } from './deviceView';
+import { mixView } from './mixView';
 
-export const LAYERS: readonly Layer[] = [power, user, overlays, scaleMenu, global, playing, notes64];
+export const LAYERS: readonly Layer[] = [power, user, overlays, codeDialog, confirm, textEntry, scaleMenu, trackOptions, colourPicker, deviceView, mixView, tracks, global, playing, notes64];

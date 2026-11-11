@@ -1,7 +1,8 @@
 // The buttons that mean the same everywhere: transport, undo, the buttons that choose what the
 // display shows and what the pads do, and the pedals. Shift and Select do nothing alone.
 import { PEDAL_DOUBLE_MS, POWER_HOLD_MS } from '../timing';
-import { choice, DIM, isDown, lamp, pressed, push, screen, type Combo, type Ctx, type Layer } from '../engine';
+import { choice, DIM, isDown, lamp, pressed, push, screen, shift, type Combo, type Ctx, type Layer } from '../engine';
+import { notify } from './overlays';
 import type { DisplayMode, PushSet } from '../types';
 import { padMode } from './modes';
 
@@ -73,6 +74,31 @@ export const global: Layer = {
     }
 
     if (id === 'shift' || id === 'select') return true;
+
+    // The Volume encoder: 1 dB a step (0.1 with Shift); a press steps to the next thing it controls.
+    if (id === 'volume') {
+      const unit = set.unit;
+      if (input.kind === 'turn') push(ctx, 'set-volume', { target: unit.volumeTarget, db: Math.round((input.value ?? 0) * (shift(ctx) ? 0.1 : 1) * 10) / 10, ...(shift(ctx) ? { fine: true } : {}) });
+      else if (input.kind === 'down') {
+        const next = unit.volumeTargets[(unit.volumeTargets.indexOf(unit.volumeTarget) + 1) % unit.volumeTargets.length];
+        push(ctx, 'set-volume-target', { target: next });
+        notify(ctx, 'Volume', next);
+      }
+      return true;
+    }
+    // The Swing & Tempo encoder: 1 BPM a step (0.1 with Shift), or 1 percent of swing between 0 and 100; a press switches between the two.
+    if (id === 'tempo') {
+      const steps = input.value ?? 0;
+      if (input.kind === 'down') {
+        state.tempoMode = state.tempoMode === 'tempo' ? 'swing' : 'tempo';
+        notify(ctx, state.tempoMode === 'tempo' ? 'Tempo' : 'Swing', state.tempoMode === 'tempo' ? `${set.transport.tempo.toFixed(2)} BPM` : `${set.transport.swing} %`);
+      } else if (input.kind === 'turn' && state.tempoMode === 'tempo') push(ctx, 'set-tempo', { delta: Math.round(steps * (shift(ctx) ? 0.1 : 1) * 10) / 10, ...(shift(ctx) ? { fine: true } : {}) });
+      else if (input.kind === 'turn') {
+        const next = Math.min(100, Math.max(0, set.transport.swing + steps));
+        if (next !== set.transport.swing) push(ctx, 'set-swing', { delta: next - set.transport.swing });
+      }
+      return true;
+    }
 
     if (isDown(ctx, 'play')) {
       push(ctx, set.transport.playing ? 'stop' : 'play');

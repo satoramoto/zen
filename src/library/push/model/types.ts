@@ -42,8 +42,10 @@ export interface Parameter {
   disabled?: boolean;
   /** The macro (1 to 16) this parameter is mapped to, in a Rack. */
   macro?: number;
-  /** How many columns it takes on the display, when it is a drawing's control. Default 1. */
-  span?: number;
+  /** A macro's range over what it is mapped to, each 0 to 1, and how many parameters it is mapped to. */
+  min?: number;
+  max?: number;
+  mappings?: number;
 }
 
 /** A named page of up to eight parameters. A `null` leaves its column empty. */
@@ -82,6 +84,9 @@ export interface Chain {
   devices: Device[];
   muted?: boolean;
   soloed?: boolean;
+  /** The chain's own mixer, when the Rack is unfolded in the mixer. */
+  volume?: Parameter;
+  pan?: Parameter;
 }
 
 /** One pad of a Drum Rack: its note, and its chain's devices when it has any. */
@@ -100,6 +105,9 @@ export interface DrumPad {
   /** What kind of sound it is, for an expressive kit's shading. */
   kind?: 'kick' | 'snare' | 'hat' | 'cymbal' | 'tom' | 'perc' | 'other';
   devices?: Device[];
+  /** The pad's own mixer, when the Rack is unfolded in the mixer. */
+  volume?: Parameter;
+  pan?: Parameter;
 }
 
 /** Simpler's own readings. */
@@ -147,6 +155,8 @@ export interface Device {
   mpe?: boolean;
   /** A frozen track's device cannot be changed. */
   frozen?: boolean;
+  /** A device described only by its parameters, in order: shown in banks of eight. */
+  parameters?: Parameter[];
 }
 
 export interface Note {
@@ -209,6 +219,9 @@ export interface Routing {
   outputChannel: string;
   outputChannels: string[];
   monitor: 'in' | 'auto' | 'off';
+  /** Where an input taken from another track is tapped, and what the Set offers. */
+  inputTap?: string;
+  inputTaps?: string[];
 }
 
 export interface Track {
@@ -544,7 +557,8 @@ export interface ParamCell {
   value: string;
   unit?: string;
   fraction: number;
-  style: 'arc' | 'bipolar' | 'bar' | 'switch' | 'choice';
+  /** `value` is a name and a value with no drawing of its own, for a column a drawing lies under. */
+  style: 'arc' | 'bipolar' | 'bar' | 'switch' | 'choice' | 'value';
   choices?: string[];
   chosen?: number;
   colour?: number | LampMeaning;
@@ -589,13 +603,15 @@ export interface TextCell {
 
 export interface TraceCell {
   type: 'trace';
+  /** Drawn behind the parameters of the columns it spans. */
+  under?: boolean;
   drawing: Drawing;
   colour?: number | LampMeaning;
 }
 
 export interface MeterCell {
   type: 'meter';
-  /** The track the frame reader has levels for. */
+  /** Whose levels the frame reader is asked for: a track's id, or a chain's or pad's. */
   track: string;
   name: string;
   value: string;
@@ -657,6 +673,17 @@ export interface Screen {
   close?: boolean;
   /** Arrows at the row's ends: more to the left or right. */
   paging?: { top?: { left: boolean; right: boolean }; bottom?: { left: boolean; right: boolean } };
+}
+
+/**
+ * What changes faster than a Set should: the app gives a function that returns this, and the parts
+ * that need it read it once a frame, without the screen being redrawn.
+ */
+export interface PushFrame {
+  /** Each track's level, left and right, 0 to 1, by track id. A track not named is not measured. */
+  levels?: Record<string, [number, number] | undefined>;
+  /** The song position in beats, for playheads. */
+  beat?: number;
 }
 
 /** What a pad plays when struck, by pad id: a pitch, or nothing. The surface's input store reads it for glissando. */
@@ -724,18 +751,42 @@ export interface PushState {
   momentary?: { pads?: PadMode; display?: DisplayMode };
   /** An action tied to the lower display buttons by Lock. */
   lock?: 'mute' | 'solo' | 'stop-clip';
+  /** The track that was selected before Main was pressed, to return to. */
+  beforeMain?: string;
+  /** A track whose Rack is unfolded in the track row: its chains or pads follow it. */
+  unfoldedTrack?: string;
   /** A question on the display, and what answering yes asks. */
   confirm?: { text: string; yes: PushIntent };
   /** Text being entered, and what it is for. */
-  textEntry?: { title: string; text: string; highlighted: number; then: PushIntent };
+  textEntry?: { title: string; text: string; highlighted: number; caret?: number; then: PushIntent };
   /** Colours offered on the pads, for a track, a clip or a drum pad. */
   colourPick?: { of: 'track' | 'clip' | 'pad'; track?: string; scene?: number; note?: number };
   /** The Scale menu is open. */
   scaleMenu?: boolean;
   /** Mix View. */
-  mix: { mode: 'global' | 'track'; parameter: number; page: number; io?: boolean };
+  mix: { mode: 'global' | 'track'; parameter: number; page: number; io?: boolean; side?: 'input' | 'output' };
   /** Device View: the bank shown per device, what is unfolded, and its modes. */
-  device: { banks: Record<string, number>; unfolded: string[]; chain?: Record<string, string>; macroMap?: boolean; macroEdit?: number; page: number; edit?: boolean };
+  device: {
+    /** The bank shown, by device. */
+    banks: Record<string, number>;
+    /** Racks unfolded in the top row, and the chain chosen in each. */
+    unfolded: string[];
+    chains?: Record<string, string>;
+    /** The bottom row lists the selected device's banks. */
+    bankList?: boolean;
+    /** A drum pad's choke group and transpose are shown in place of its device's parameters. */
+    padSettings?: boolean;
+    /** Macro Map mode: the parameter being mapped, and the page of macros. */
+    macroMap?: { parameter: string; page: number };
+    /** The macro being edited, 1 to 16. */
+    macroEdit?: number;
+    /** Devices marked with Shift, for grouping. */
+    marked?: string[];
+    /** The Rack's list of Randomize, Add Variation and the variations: the highlighted row, and whether a variation's own menu is open. */
+    variations?: { highlight: number; menu?: number };
+    /** The first device of the top row in view. */
+    page: number;
+  };
   /** Clip View. */
   clip: { noteEdit?: boolean; highlighted?: string; selected: string[]; zoomAt?: number; audioEdit?: boolean };
   /** The Session window's top left, shared by the pads and the display, and the overview. */
@@ -756,8 +807,8 @@ export interface PushState {
   sets: { highlight: number; sort: 'date' | 'name'; menu?: boolean };
   setup: { tab: number; highlight: number; advanced?: boolean; network?: string };
   learn: { highlight: number; lesson?: string; step?: number };
-  /** Track options (Shift and a track's button). */
-  trackOptions?: string;
+  /** Track options (Shift and a track's button): the tracks marked, the first being the one whose options show. */
+  trackOptions?: string[];
   /** The Volume and the Swing & Tempo encoders' own modes. */
   tempoMode: 'tempo' | 'swing';
   /** The touch strip while playing: pitch bend that springs back, or a modulation wheel that stays; and where it is. */

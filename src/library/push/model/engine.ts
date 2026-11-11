@@ -97,11 +97,13 @@ export function use(ctx: Ctx, ...ids: ControlId[]) {
   for (const id of ids) if (ctx.state.held[id]) ctx.state.held[id].used = true;
 }
 
-/** Begin the hold job of every hold button that has been down long enough. */
+/** Whether a control has a hold job: the buttons the manual gives two jobs, and the upper display buttons (a Rack's chains). */
+export const canHold = (id: ControlId) => (HOLD_BUTTONS as readonly string[]).includes(id) || id.startsWith('upper-');
+
+/** Begin the hold job of every such button that has been down long enough. */
 export function matureHolds(state: PushState, time: number) {
-  for (const id of HOLD_BUTTONS) {
-    const held = state.held[id];
-    if (held && !held.holding && !held.used && time - held.at >= HOLD_MS) held.holding = true;
+  for (const [id, held] of Object.entries(state.held)) {
+    if (canHold(id) && !held.holding && !held.used && time - held.at >= HOLD_MS) held.holding = true;
   }
 }
 

@@ -2,7 +2,7 @@
 // what the device asks (openspec: push-device-model). Nothing else is read and nothing else is
 // changed: time comes with the input, and the Set is never touched.
 import { control } from './layout';
-import { findCombo, matureHolds, use, HOLD_BUTTONS, type Ctx } from './engine';
+import { canHold, findCombo, matureHolds, use, type Ctx } from './engine';
 import { LAYERS } from './layers';
 import { copyState } from './state';
 import { HOLD_MS, PEDAL_DOUBLE_MS, POWER_HOLD_MS } from './timing';
@@ -76,10 +76,7 @@ export function step(state: PushState, set: PushSet, input: PushInput): StepResu
  */
 export function nextTick(state: PushState): number | undefined {
   const times: number[] = [];
-  for (const id of HOLD_BUTTONS) {
-    const held = state.held[id];
-    if (held && !held.holding && !held.used) times.push(held.at + HOLD_MS);
-  }
+  for (const [id, held] of Object.entries(state.held)) if (canHold(id) && !held.holding && !held.used) times.push(held.at + HOLD_MS);
   if (state.notice) times.push(state.notice.until);
   if (state.pedalTap !== undefined) times.push(state.pedalTap + PEDAL_DOUBLE_MS);
   if (state.held.power && !state.held.power.used) times.push(state.held.power.at + POWER_HOLD_MS);

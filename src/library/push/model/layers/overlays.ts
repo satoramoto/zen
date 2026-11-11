@@ -15,7 +15,10 @@ export const overlays: Layer = {
   name: 'overlays',
   paint(paint) {
     const { state, set, screen } = paint;
-    if (state.notice) screen.overlays.push({ type: 'notice', text: state.notice.text, ...(state.notice.value === undefined ? {} : { value: state.notice.value }) });
+    // A touched Volume or Swing & Tempo encoder shows what it is set to, for as long as it is touched.
+    if (state.touched.includes('volume')) screen.overlays.push({ type: 'notice', text: `Volume: ${set.unit.volumeTarget}`, value: set.unit.volume.display });
+    else if (state.touched.includes('tempo')) screen.overlays.push(state.tempoMode === 'tempo' ? { type: 'notice', text: 'Tempo', value: `${set.transport.tempo.toFixed(2)} BPM` } : { type: 'notice', text: 'Swing', value: `${set.transport.swing} %` });
+    else if (state.notice) screen.overlays.push({ type: 'notice', text: state.notice.text, ...(state.notice.value === undefined ? {} : { value: state.notice.value }) });
     const battery = set.unit.battery;
     if (battery && battery.percent < LOW_BATTERY) screen.overlays.push({ type: 'battery', percent: battery.percent, charging: battery.charging, low: true });
     if (set.transport.countingIn !== undefined) screen.overlays.push({ type: 'count-in', fraction: set.transport.countingIn });
