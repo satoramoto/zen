@@ -12,7 +12,11 @@ Zen SHALL have a theme pack named `push-3` that names the Push 3 manual as its s
 
 #### Scenario: The pack is offered
 - **WHEN** a person opens the theme picker
-- **THEN** push-3 is among the packs, with its source and the rules it keeps
+- **THEN** push-3 is among the packs it lists
+
+#### Scenario: The pack names its source
+- **WHEN** a person opens the theme inspector with push-3 chosen
+- **THEN** it shows the manual as the pack's source and the rules the pack keeps
 
 #### Scenario: The device in its own pack
 - **WHEN** the assembled device is drawn in the push-3 pack in dark mode

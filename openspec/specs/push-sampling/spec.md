@@ -8,7 +8,7 @@ Working with samples on the device through Simpler: its waveform on the display,
 
 ### Requirement: Simpler shows its sample
 
-Device View on a Simpler with a sample SHALL draw the sample's waveform across the display with its start and end markers, the playing position while a note sounds, and the main bank's parameters over it, with Mode on its own encoder.
+Device View on a Simpler with a sample SHALL draw the sample's waveform across the display with its start and end markers, the playing position while a note sounds, and the main bank's parameters over it: Zoom, Start and End on the first three encoders and Mode on the eighth, in every mode.
 
 #### Scenario: A loaded sample
 - **WHEN** Device View shows a Simpler holding a sample
@@ -17,6 +17,10 @@ Device View on a Simpler with a sample SHALL draw the sample's waveform across t
 #### Scenario: An empty Simpler
 - **WHEN** Device View shows a Simpler with no sample
 - **THEN** the display invites loading one with Swap
+
+#### Scenario: Mode is last
+- **WHEN** Device View shows a Simpler in each of its three modes
+- **THEN** the eighth column reads Mode and the first three read Zoom, Start and End
 
 ### Requirement: Mode changes the parameters shown
 
@@ -44,11 +48,15 @@ In Classic mode the bank SHALL show S Start and Length as percentages of the reg
 
 ### Requirement: One-Shot mode shows its envelope and trigger
 
-In One-Shot mode the bank SHALL show Trigger or Gate, Fade In, Fade Out, Transpose up to 48 semitones either way, and Gain.
+In One-Shot mode the main bank SHALL show Fade In, Fade Out, Transpose up to 48 semitones either way and Gain on the fourth to seventh encoders, and Edit Mode SHALL offer Trigger and Gate as a pair at its second display button.
 
 #### Scenario: Gate
-- **WHEN** a person switches Trigger to Gate
+- **WHEN** Simpler's Edit Mode is shown in One-Shot mode and a person presses the display button at Trigger and Gate
 - **THEN** the app is asked to set the sample to fade out when the pad is released
+
+#### Scenario: Gain is at hand
+- **WHEN** Device View shows a Simpler in One-Shot mode
+- **THEN** the seventh column of its main bank reads Gain
 
 ### Requirement: Slicing mode slices four ways
 
@@ -72,7 +80,7 @@ With Slice By set to Manual and Pad Slicing on, pressing a pad that holds a slic
 
 ### Requirement: A slice is nudged, split and deleted
 
-Pressing a slice's pad SHALL select it; Nudge SHALL ask to move its marker, finer with Shift; Split Slice SHALL ask for a new slice in its middle; and holding Delete and tapping its pad SHALL ask to delete it.
+Pressing a slice's pad SHALL select it; Nudge, on the fourth encoder of the main bank in Slicing mode, SHALL ask to move its marker, finer with Shift; Split Slice SHALL ask for a new slice in its middle; and holding Delete and tapping its pad SHALL ask to delete it.
 
 #### Scenario: Deleting a slice
 - **WHEN** a person holds Delete and taps a slice's pad
@@ -81,6 +89,10 @@ Pressing a slice's pad SHALL select it; Nudge SHALL ask to move its marker, fine
 #### Scenario: Zooming to a slice
 - **WHEN** a person taps a slice's pad and turns Zoom clockwise
 - **THEN** the waveform zooms in around that slice
+
+#### Scenario: Nudging a slice
+- **WHEN** a person taps a slice's pad and turns the fourth encoder clockwise
+- **THEN** the app is asked to move that slice's marker later
 
 ### Requirement: Playback of slices is chosen
 
@@ -92,7 +104,7 @@ In Slicing mode Playback SHALL choose Mono, Poly or Through, alongside Trigger o
 
 ### Requirement: Edit Mode holds the sample actions
 
-Pressing Simpler's upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons Loop on or off (Classic), Warp as a number of bars, halve and double the speed, Crop (not in Slicing) and Reverse; pressing the button again SHALL leave.
+Pressing Simpler's upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons, each where the unit has it, Loop on or off (Classic), Trigger or Gate (One-Shot and Slicing), Warp as a number of bars, halve and double the speed, Crop (not in Slicing), Reset Slices and Split Slice (Slicing) and Reverse; pressing the first button SHALL leave.
 
 #### Scenario: Reversing
 - **WHEN** Simpler's Edit Mode is shown and a person presses the display button at Reverse
@@ -101,6 +113,10 @@ Pressing Simpler's upper display button SHALL enter its Edit Mode: further banks
 #### Scenario: Crop in Slicing
 - **WHEN** Simpler is in Slicing mode and its Edit Mode is shown
 - **THEN** Crop is not offered
+
+#### Scenario: Resetting the slices
+- **WHEN** Simpler's Edit Mode is shown in Slicing mode and a person presses the display button at Reset Slices
+- **THEN** the app is asked to reset the slices
 
 ### Requirement: The pads follow Simpler's mode
 
