@@ -56,6 +56,8 @@ export interface Layer {
   name: string;
   /** Whether the layer is in effect. Default: always. */
   active?(state: PushState, set: PushSet): boolean;
+  /** It takes the device over while it is in effect (a unit that is off, User Mode, a dialog): no combination of a layer under it applies. */
+  modal?: boolean;
   combos?: Combo[];
   /** Take the input (true) or pass it down (false). */
   step?(ctx: Ctx): boolean;

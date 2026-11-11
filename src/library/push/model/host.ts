@@ -41,7 +41,11 @@ type Apply = (set: PushSet, intent: PushIntent) => void;
 const APPLY: Record<string, Apply> = {
   play: (s) => void (s.transport.playing = true),
   stop: (s) => void ((s.transport.playing = false), (s.transport.recording = 'off')),
-  metronome: (s, i) => void (s.transport.metronome = typeof i.on === 'boolean' ? i.on : !s.transport.metronome),
+  metronome: (s, i) => {
+    if (typeof i.sound === 'string' && s.transport.click) s.transport.click.sound = i.sound;
+    else if (typeof i.rhythm === 'string' && s.transport.click) s.transport.click.rhythm = i.rhythm;
+    else s.transport.metronome = typeof i.on === 'boolean' ? i.on : !s.transport.metronome;
+  },
   'set-tempo': (s, i) => void (s.transport.tempo = Math.min(999, Math.max(20, Math.round((typeof i.value === 'number' ? i.value : s.transport.tempo + Number(i.delta ?? 0)) * 10) / 10))),
   'set-swing': (s, i) => void (s.transport.swing = Math.min(100, Math.max(0, typeof i.value === 'number' ? i.value : s.transport.swing + Number(i.delta ?? 0)))),
   'select-track': (s, i) => {
@@ -201,8 +205,80 @@ const APPLY: Record<string, Apply> = {
   },
   'delete-clip': (s, i) => {
     const t = track(s, i.track);
-    if (t) t.clips[Number(i.scene)] = null;
+    if (!t) return;
+    if (t.playing === Number(i.scene)) delete t.playing;
+    t.clips[Number(i.scene)] = null;
   },
+  'launch-clip': (s, i) => {
+    const t = track(s, i.track);
+    const scene = Number(i.scene);
+    if (!t?.clips[scene]) return;
+    for (const clip of t.clips) if (clip && clip.state !== 'stopped') clip.state = 'stopped';
+    t.clips[scene]!.state = 'playing';
+    t.clips[scene]!.position = 0;
+    t.playing = scene;
+    s.transport.playing = true;
+  },
+  'stop-clip': (s, i) => {
+    const t = track(s, i.track);
+    if (!t) return;
+    for (const clip of t.clips) if (clip) clip.state = 'stopped';
+    delete t.playing;
+  },
+  'stop-all-clips': (s) => {
+    for (const t of s.tracks) {
+      for (const clip of t.clips) if (clip) clip.state = 'stopped';
+      delete t.playing;
+    }
+  },
+  'launch-scene': (s, i) => {
+    const scene = Number(i.scene);
+    for (const t of s.tracks) {
+      for (const clip of t.clips) if (clip) clip.state = 'stopped';
+      delete t.playing;
+      if (t.clips[scene]) {
+        t.clips[scene]!.state = 'playing';
+        t.clips[scene]!.position = 0;
+        t.playing = scene;
+      }
+    }
+    s.selection.scene = scene;
+    s.transport.playing = true;
+  },
+  'select-clip': (s, i) => {
+    if (track(s, i.track)) s.selection = { ...s.selection, track: String(i.track), scene: Number(i.scene) };
+  },
+  record: (s, i) => {
+    const t = track(s, i.track);
+    if (i.on === false) {
+      s.transport.recording = 'off';
+      for (const any of s.tracks) for (const clip of any.clips) if (clip?.state === 'recording') clip.state = 'playing';
+      return;
+    }
+    s.transport.recording = 'session';
+    s.transport.playing = true;
+    if (!t || typeof i.scene !== 'number') return;
+    t.clips[i.scene] = { name: '', colour: t.colour, kind: t.kind === 'audio' ? 'audio' : 'midi', state: 'recording', length: 4, loop: { on: true, start: 0, end: 4 }, position: 0, ...(t.kind === 'audio' ? {} : { notes: [] }) };
+    t.playing = i.scene;
+  },
+  'record-clip': (s, i) => APPLY.record(s, { ...i, on: true }),
+  'record-arrangement': (s, i) => void (s.transport.recording = i.on ? 'arrangement' : 'off'),
+  overdub: (s, i) => void (s.transport.overdub = Boolean(i.on)),
+  'automation-arm': (s, i) => void (s.transport.automationArm = Boolean(i.on)),
+  'fixed-length': (s, i) => void (s.transport.fixedLength.on = Boolean(i.on)),
+  'set-fixed-length': (s, i) => {
+    if (typeof i.bars === 'string') s.transport.fixedLength.bars = i.bars;
+    if (typeof i.phrase === 'boolean') s.transport.fixedLength.phrase = i.phrase;
+  },
+  'set-quantize': (s, i) => {
+    const q = s.transport.quantize;
+    if (typeof i.to === 'string') q.to = i.to;
+    if (typeof i.amount === 'number') q.amount = i.amount;
+    if (typeof i.swing === 'number') q.swing = i.swing;
+    if (typeof i.record === 'string') q.recordTo = i.record;
+  },
+  'set-count-in': (s, i) => void (s.transport.countIn = i.value as PushSet['transport']['countIn']),
+  'set-signature': (s, i) => void (s.transport.signature = [Number(i.numerator), Number(i.denominator)]),
   'set-monitor': (s, i) => {
     const t = track(s, i.track);
     if (t?.routing) t.routing.monitor = i.monitor as 'in' | 'auto' | 'off';

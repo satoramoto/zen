@@ -6,22 +6,13 @@ import { notify } from './overlays';
 import { activeClip, selectedTrack } from '../state';
 import type { DisplayMode, PushSet } from '../types';
 import { padMode } from './modes';
+import { newJob, recordJob } from './recording';
 
 /** User Mode needs a computer running Live: it is offered in Control Mode only. */
 export const userModeAvailable = (set: PushSet) => set.unit.mode === 'control';
 
 const SCREEN_BUTTONS: Record<string, DisplayMode> = { device: 'device', mix: 'mix', clip: 'clip', 'session-screen': 'session' };
 const MENU_BUTTONS: Record<string, DisplayMode> = { sets: 'sets', setup: 'setup', learn: 'learn' };
-
-/** What the Record button asks. Pedal 1's tap asks the same. */
-export function recordJob(ctx: Ctx) {
-  push(ctx, 'record');
-}
-
-/** What the New button asks. Pedal 1's double tap asks the same. */
-export function newJob(ctx: Ctx) {
-  push(ctx, 'new-clip', { track: ctx.set.selection.track });
-}
 
 const combos: Combo[] = [
   {

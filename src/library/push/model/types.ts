@@ -289,6 +289,8 @@ export interface Transport {
   canRedo: boolean;
   /** Something was played that Capture can keep. */
   canCapture: boolean;
+  /** The metronome's sound and rhythm, and what the Set offers. */
+  click?: { sound: string; sounds: string[]; rhythm: string; rhythms: string[] };
   /** Link is on and has peers. */
   link?: { on: boolean; peers: number; playSync?: boolean };
   /** Which view Live shows (Control Mode). */
@@ -798,7 +800,15 @@ export interface PushState {
   /** Clip View. */
   clip: { noteEdit?: boolean; highlighted?: string; selected: string[]; zoomAt?: number; audioEdit?: boolean };
   /** The Session window's top left, shared by the pads and the display, and the overview. */
-  session: { track: number; scene: number; overview?: boolean; overviewLocked?: boolean; sceneNames?: boolean; workflow: 'scene' | 'clip' };
+  session: {
+    track: number;
+    scene: number;
+    /** The overview is locked on, and which block of 64 scenes it shows. */
+    overviewLocked?: boolean;
+    overviewBank?: number;
+    /** A clip picked up with Duplicate, waiting for where to put it. */
+    copied?: { track: string; scene: number };
+  };
   /** The note grid: octave per track, layout per track. */
   notes: { octave: Record<string, number>; layout: Record<string, string>; shift: number };
   /** Drum layouts: the bank's lowest note per track, the velocity pad chosen, the borrowed quarter. */
@@ -822,9 +832,15 @@ export interface PushState {
     /** The velocity the next step takes, from a velocity pad. */
     velocity?: number;
   };
-  /** Repeat and Accent, per track where the manual says so. */
-  repeat: { on: boolean; interval: number };
+  /** Note repeat, remembered per track: whether it is on, and the interval (an index into the scene buttons' intervals). */
+  repeats: Record<string, { on: boolean; interval: number }>;
+  /** When the next repeated note is due, while a pad is held with Repeat on. */
+  repeatAt?: number;
   accent: boolean;
+  /** The times of the Tap Tempo presses so far. */
+  taps?: number[];
+  /** The session grid is shown for a moment over another screen, until this time. */
+  peek?: number;
   /** Track selection's own scroll: the first track in the bottom row. */
   trackPage: number;
   /** The browser and the lists like it. */

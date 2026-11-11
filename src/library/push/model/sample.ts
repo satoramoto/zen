@@ -266,6 +266,7 @@ export function sampleSet(): PushSet {
       fixedLength: { on: false, bars: '2 Bars', choices: ['1 Beat', '2 Beats', '1 Bar', '2 Bars', '4 Bars', '8 Bars', '16 Bars', '32 Bars'] },
       quantize: { to: '1/16', choices: ['1/4', '1/8', '1/8t', '1/8 + t', '1/16', '1/16t', '1/16 + t', '1/32'], amount: 1, swing: 0, recordTo: 'Off', recordChoices: ['Off', '1/4', '1/8', '1/8t', '1/8 + t', '1/16', '1/16t', '1/16 + t', '1/32'] },
       canUndo: true, canRedo: false, canCapture: false, link: { on: false, peers: 0 }, view: 'session',
+      click: { sound: 'Classic', sounds: ['Classic', 'Click', 'Wood'], rhythm: 'Auto', rhythms: ['Auto', '1/4', '1/8', '1/8t', '1/16'] },
     },
     tracks: [drums, bass, keys, sampler, vocals, guitar, group, pad, lead, fx, emptyMidi, emptyAudio],
     returns,

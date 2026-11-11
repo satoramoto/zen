@@ -26,6 +26,7 @@ export const nudged = (ctx: Ctx) => (ctx.input.control === 'jog' && ctx.input.ki
 
 export const textEntry: Layer = {
   name: 'text-entry',
+  modal: true,
   active: (state) => !!state.textEntry,
   step(ctx) {
     const { state, input, target } = ctx;
@@ -69,6 +70,7 @@ export const textEntry: Layer = {
 
 export const confirm: Layer = {
   name: 'confirm',
+  modal: true,
   active: (state) => !!state.confirm,
   step(ctx) {
     const { state, target } = ctx;
@@ -94,6 +96,7 @@ const PURPOSE = { authorize: 'Authorize this Push', cloud: 'Connect to Ableton C
 /** A code or an address the app says to show, for a step finished on another device. */
 export const codeDialog: Layer = {
   name: 'code-dialog',
+  modal: true,
   active: (_state, set) => !!set.unit.software.code,
   step(ctx) {
     if (isDown(ctx, 'upper-1')) {

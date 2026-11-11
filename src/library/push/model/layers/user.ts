@@ -7,6 +7,7 @@ import { STRIP_TOUCH_NOTE, controlNumber, encoderNumbers, padNote, relativeValue
 
 export const user: Layer = {
   name: 'user',
+  modal: true,
   active: (state) => state.user,
   step(ctx) {
     const { input, target } = ctx;

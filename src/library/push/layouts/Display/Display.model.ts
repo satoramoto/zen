@@ -151,8 +151,36 @@ function content(cell: BodyCell): ChildArg {
         ),
         textNode({ role: 'numeral', leading: 'tight', truncate: true }, { 'data-part': 'value' }, cell.value),
       ];
+    case 'grid':
+      // The Set's clips: a row per scene, a block per clip in its colour, and the scene's number or name at the right.
+      return h(
+        'div',
+        { class: 'push-display__grid', 'data-part': 'grid', role: 'table', 'aria-label': 'Clips' },
+        ...cell.rows.map((row, r) =>
+          h(
+            'div',
+            { class: 'push-display__grid-row', role: 'row', 'data-row': String(r + 1) },
+            ...row.map((clip, c) =>
+              h(
+                'span',
+                {
+                  class: 'push-display__slot',
+                  role: 'cell',
+                  'data-col': String(c + 1),
+                  'data-state': clip?.state,
+                  'data-selected': clip?.selected ? 'true' : undefined,
+                  'data-empty': !clip || clip.colour === undefined ? 'true' : undefined,
+                  style: styleText({ '--push-lamp': clip?.colour === undefined ? undefined : colourCss(clip.colour) }),
+                },
+                clip && clip.colour !== undefined ? component('Pad', { label: clip.label, name: `${clip.label}${clip.state && clip.state !== 'stopped' ? `, ${clip.state}` : ''}`, fillCell: true, state: 'playing', hue: 1 }) : null,
+              ),
+            ),
+            textNode({ role: 'caption', leading: 'tight', truncate: true }, { class: 'push-display__scene', 'data-part': 'scene', role: 'rowheader' }, cell.labels?.[r] ?? ''),
+          ),
+        ),
+      );
     default:
-      // The piano roll and the clip grid are drawn by the views that use them.
+      // The piano roll is drawn by the view that uses it.
       return textNode({ role: 'caption', tone: 'muted' }, { 'data-part': 'text' }, cell.type);
   }
 }

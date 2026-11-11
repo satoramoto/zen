@@ -266,3 +266,53 @@
 }
 /* Not measured: the meters are drawn empty and marked. */
 .push-display__meter[data-unmeasured] .push-display__meters { opacity: 0.35; outline: calc(var(--push-px) * 1) dashed var(--text-3); }
+
+/* The clip grid: eight scenes down, eight tracks across under their columns, the scene's label at the right. */
+.push-display__cell[data-type='grid'] { align-items: stretch; justify-content: stretch; }
+.push-display__grid {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-rows: repeat(8, minmax(0, 1fr));
+  gap: calc(var(--push-px) * 1);
+  min-height: 0;
+  /* A clip's block is small: its print and its room are too. */
+  --size-label: calc(var(--push-px) * 9);
+  --space-1: 0px;
+  --space-2: 0px;
+  --bloom: 0px;
+}
+.push-display__grid-row {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: calc(var(--push-px) * 2);
+  min-height: 0;
+}
+.push-display__slot {
+  --push-lit: var(--push-lamp);
+  --hue-1: var(--push-lit);
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.push-display__slot[data-selected] { outline: calc(var(--push-px) * 1.5) solid var(--text-1); outline-offset: calc(var(--push-px) * -1.5); z-index: 1; }
+.push-display__slot:is([data-state='playing'], [data-state='recording'])::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--push-px) * 3);
+  background: var(--success);
+}
+.push-display__slot[data-state='recording']::after { background: var(--danger); }
+.push-display__slot:is([data-state='queued'], [data-state='queued-record'], [data-state='queued-stop']) { opacity: calc(0.4 + 0.6 * var(--push-blink)); }
+/* The scenes' labels sit over the right edge of the last column, as on the unit. */
+.push-display__scene {
+  position: absolute;
+  right: calc(var(--push-px) * 2);
+  padding: 0 calc(var(--push-px) * 3);
+  background: var(--surface-0);
+  color: var(--text-2);
+}
+.push-display__grid-row { position: relative; }

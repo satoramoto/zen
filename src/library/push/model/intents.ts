@@ -30,6 +30,7 @@ export const INTENTS = {
   'set-swing': 'transport',
   metronome: 'transport',
   'set-count-in': 'transport',
+  'set-signature': 'transport',
   'launch-clip': 'transport',
   'record-clip': 'transport',
   'stop-clip': 'transport',

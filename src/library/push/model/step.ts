@@ -2,7 +2,7 @@
 // what the device asks (openspec: push-device-model). Nothing else is read and nothing else is
 // changed: time comes with the input, and the Set is never touched.
 import { control } from './layout';
-import { canHold, findCombo, matureHolds, use, type Ctx } from './engine';
+import { canHold, findCombo, matureHolds, use, type Combo, type Ctx } from './engine';
 import { LAYERS } from './layers';
 import { copyState } from './state';
 import { HOLD_MS, PEDAL_DOUBLE_MS, POWER_HOLD_MS } from './timing';
@@ -46,18 +46,22 @@ export function stepTraced(state: PushState, set: PushSet, input: PushInput): St
   }
   if (input.kind === 'touch' && !next.touched.includes(id)) next.touched.push(id);
 
-  for (const layer of LAYERS) {
-    if (layer.active && !layer.active(next, set)) continue;
-    const combo = layer.combos ? findCombo(ctx, layer.combos, MODIFIERS) : undefined;
-    if (combo) {
-      // The held buttons were modifiers, and the control pressed with them did the combination's
-      // job: none of them also does its own when it comes up.
-      use(ctx, ...combo.hold, id);
-      combo.run(ctx);
-      ctx.combo = combo.id;
-      break;
-    }
-    if (layer.step?.(ctx)) break;
+  // A combination is looked for first, from the highest layer down to the first that has taken the
+  // device over; only when none applies does the input go to the layers' own handling.
+  const active = LAYERS.filter((layer) => !layer.active || layer.active(next, set));
+  let combo: Combo | undefined;
+  for (const layer of active) {
+    combo = layer.combos ? findCombo(ctx, layer.combos, MODIFIERS) : undefined;
+    if (combo || layer.modal) break;
+  }
+  if (combo) {
+    // The held buttons were modifiers, and the control pressed with them did the combination's
+    // job: none of them also does its own when it comes up.
+    use(ctx, ...combo.hold, id);
+    combo.run(ctx);
+    ctx.combo = combo.id;
+  } else {
+    for (const layer of active) if (layer.step?.(ctx)) break;
   }
 
   if (input.kind === 'up') delete next.held[id];
@@ -81,6 +85,8 @@ export function nextTick(state: PushState): number | undefined {
   for (const [id, held] of Object.entries(state.held)) if (canHold(id) && !held.holding && !held.used) times.push(held.at + HOLD_MS);
   if (state.notice) times.push(state.notice.until);
   if (state.pedalTap !== undefined) times.push(state.pedalTap + PEDAL_DOUBLE_MS);
+  if (state.repeatAt !== undefined) times.push(state.repeatAt);
+  if (state.peek !== undefined) times.push(state.peek);
   if (state.held.power && !state.held.power.used) times.push(state.held.power.at + POWER_HOLD_MS);
   return times.length ? Math.min(...times) : undefined;
 }

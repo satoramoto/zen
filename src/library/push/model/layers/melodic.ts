@@ -10,7 +10,7 @@ import { holdJob, isDown, isUp, lamp, OFF, push, screen, shift, use, type Combo,
 import type { Lamp, Note, PushSet, PushState } from '../types';
 import { columns as deviceColumns } from './deviceView';
 import { loopLamp, loopPad } from './drums';
-import { instrumentKind, padLayout } from './modes';
+import { instrumentKind, padLayout, repeatOf } from './modes';
 import { noteParamCell, noteParams } from './noteParams';
 import { noteLamp, sounding } from './notes';
 import { notify } from './overlays';
@@ -122,7 +122,7 @@ export const melodic: Layer = {
     const track = trackId(set);
 
     const scene = indexOf(target.id, 'scene');
-    if (scene !== undefined && !state.repeat.on) {
+    if (scene !== undefined && !repeatOf(state, set).on) {
       if (input.kind === 'down') state.seq.step = scene - 1;
       return true;
     }
@@ -241,7 +241,7 @@ export const melodic: Layer = {
         }
       }
 
-    if (!state.repeat.on) for (let r = 1; r <= 8; r++) lamps[`scene-${r}`] = lamp(state.seq.step === r - 1 ? 'lit' : 'dim');
+    if (!repeatOf(state, set).on) for (let r = 1; r <= 8; r++) lamps[`scene-${r}`] = lamp(state.seq.step === r - 1 ? 'lit' : 'dim');
     const page = pageInView(state, set, steps);
     lamps['page-left'] = lamp(page > 0 ? 'dim' : 'off');
     lamps['page-right'] = lamp(page < loopPages(state, set, steps) - 1 ? 'dim' : 'off');

@@ -38,8 +38,8 @@ export const colourPicker: Layer = {
     if (input.kind === 'down') {
       const { row, col } = padAt(target.id)!;
       const { of, track, scene, note, device } = state.colourPick!;
-      // A drum pad's colours are on the outer ring; a tap on one gives it and the grid returns to its layout.
-      const colour = of === 'pad' ? ringColour(row, col) : pickerColour(row, col);
+      // A drum pad's and a clip's colours are on the outer ring; a tap on one gives it and the grid returns to its layout.
+      const colour = of !== 'track' ? ringColour(row, col) : pickerColour(row, col);
       if (colour >= 0) push(ctx, 'set-colour', { of, track, ...(scene === undefined ? {} : { scene }), ...(note === undefined ? {} : { note }), ...(device === undefined ? {} : { device }), colour });
       if (of !== 'track') delete state.colourPick;
       // The tap chose a colour: when it comes up it is not also a press of what the pad is underneath.
@@ -51,7 +51,7 @@ export const colourPicker: Layer = {
     const now = currentColour(paint.state, paint.set);
     for (let row = 1; row <= 8; row++)
       for (let col = 1; col <= 8; col++) {
-        const colour = paint.state.colourPick!.of === 'pad' ? ringColour(row, col) : pickerColour(row, col);
+        const colour = paint.state.colourPick!.of !== 'track' ? ringColour(row, col) : pickerColour(row, col);
         paint.lamps[padId(row, col)] = colour < 0 ? { state: 'off' } : lamp(colour === now ? 'pulse' : 'lit', colour);
         paint.notes[padId(row, col)] = null;
       }

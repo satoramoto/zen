@@ -13,5 +13,7 @@ import { deviceView } from './deviceView';
 import { mixView } from './mixView';
 import { drums, slices } from './drums';
 import { melodic, stepEdit } from './melodic';
+import { sessionPads, sessionScreen } from './session';
+import { holdMenus, recording } from './recording';
 
-export const LAYERS: readonly Layer[] = [power, user, overlays, codeDialog, confirm, textEntry, scaleMenu, trackOptions, colourPicker, stepEdit, deviceView, mixView, tracks, global, drums, slices, melodic, playing, notes64];
+export const LAYERS: readonly Layer[] = [power, user, overlays, codeDialog, confirm, textEntry, scaleMenu, holdMenus, trackOptions, colourPicker, stepEdit, sessionScreen, deviceView, mixView, tracks, recording, global, sessionPads, drums, slices, melodic, playing, notes64];

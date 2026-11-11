@@ -61,3 +61,20 @@ export function padLayout(state: PushState, set: PushSet): PadLayout {
   const remembered = state.notes.layout[track.id] as PadLayout | undefined;
   return remembered && offered.includes(remembered) ? remembered : offered[0];
 }
+
+/** Note repeat for the selected track: off at sixteenths until it is switched on. */
+export function repeatOf(state: PushState, set: PushSet): { on: boolean; interval: number } {
+  const kept = state.repeats[selectedTrack(set).id] ?? { on: false, interval: 3 };
+  // Held, Repeat is on for as long as it is held.
+  return holdJob(state, 'repeat') ? { ...kept, on: true } : kept;
+}
+
+/**
+ * Whether a track is shown armed: armed by hand, or, in Note Mode, the selected MIDI track (and in
+ * Standalone the selected audio track too), which the unit arms by itself.
+ */
+export function shownArmed(state: PushState, set: PushSet, track: Track): boolean {
+  if (track.armed || track.implicitArm) return true;
+  if (padMode(state) !== 'note' || track.id !== set.selection.track) return false;
+  return track.kind === 'midi' || (track.kind === 'audio' && set.unit.mode === 'standalone');
+}

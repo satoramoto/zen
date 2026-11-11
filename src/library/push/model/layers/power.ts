@@ -5,6 +5,7 @@ import { OFF, push, screen, type Layer } from '../engine';
 
 export const power: Layer = {
   name: 'power',
+  modal: true,
   active: (_state, set) => set.unit.power !== 'on',
   step(ctx) {
     // Off, the power button switches the unit on. Nothing else is asked.

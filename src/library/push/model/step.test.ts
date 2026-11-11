@@ -178,7 +178,7 @@ describe('the pedals', () => {
 
   it('a quick double tap of Pedal 1 asks what New asks, and does not record', () => {
     const { intents } = play([...press('pedal-1', 0), ...press('pedal-1', 200), tick(1000)]);
-    expect(actions(intents)).toEqual(['new-clip']);
+    expect(actions(intents)).toEqual(['new-scene']);
   });
 
   it('Pedal 2 reports sustain down and up', () => {

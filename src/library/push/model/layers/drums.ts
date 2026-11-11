@@ -5,7 +5,7 @@ import { VELOCITIES, isTriplet, loopPages, notesAt, pageBeats, pageInView, playi
 import { clamp, selectedTrack } from '../state';
 import { holdJob, holding, isDouble, isDown, isUp, lamp, OFF, push, shift, use, type Combo, type Ctx, type Layer } from '../engine';
 import type { Device, DrumPad, Lamp, PushSet, PushState, Track } from '../types';
-import { instrumentKind, padLayout, type PadLayout } from './modes';
+import { instrumentKind, padLayout, repeatOf, type PadLayout } from './modes';
 import { notify } from './overlays';
 
 const GREY: Lamp = { state: 'lit', colour: 'white', shade: 'dark' };
@@ -312,7 +312,7 @@ export const drums: Layer = {
 
     // The scene buttons choose the step size, unless Repeat has them.
     const scene = indexOf(target.id, 'scene');
-    if (scene !== undefined && !state.repeat.on && layout !== '64-pads') {
+    if (scene !== undefined && !repeatOf(state, set).on && layout !== '64-pads') {
       if (input.kind === 'down') state.seq.step = scene - 1;
       return true;
     }
@@ -418,7 +418,7 @@ export const drums: Layer = {
         } else lamps[id] = OFF;
       }
 
-    if (layout !== '64-pads' && !state.repeat.on) for (let r = 1; r <= 8; r++) lamps[`scene-${r}`] = lamp(state.seq.step === r - 1 ? 'lit' : 'dim');
+    if (layout !== '64-pads' && !repeatOf(state, set).on) for (let r = 1; r <= 8; r++) lamps[`scene-${r}`] = lamp(state.seq.step === r - 1 ? 'lit' : 'dim');
     const base = drumBase(state, track);
     lamps['octave-up'] = lamp(base < 112 ? 'dim' : 'off');
     lamps['octave-down'] = lamp(base > 0 ? 'dim' : 'off');

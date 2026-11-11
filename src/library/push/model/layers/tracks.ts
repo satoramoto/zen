@@ -5,6 +5,8 @@ import { indexOf } from '../layout';
 import { clamp, instrumentOf, selectedTrack, trackById, visibleTracks } from '../state';
 import { holdJob, isDouble, isDown, lamp, pressed, push, shift, type Combo, type Ctx, type Layer } from '../engine';
 import type { Chain, DrumPad, PushSet, PushState, RowCell, Track } from '../types';
+import { padLayout, shownArmed } from './modes';
+import { peekScene } from './session';
 
 /** One thing in the track row: a track, or a chain or drum pad of the unfolded Rack track. */
 export interface RowItem {
@@ -88,7 +90,9 @@ function trackCell(item: RowItem, state: PushState, set: PushSet, selectedIndex:
     ...(selectedIndex ? { selected: true } : {}),
     ...(state.trackOptions?.includes(track.id) ? { lamp: { state: 'blink' as const, colour: track.colour } } : {}),
     ...(silent(track, set) ? { dim: true } : {}),
-    ...(track.armed || track.implicitArm ? { armed: true } : {}),
+    ...(shownArmed(state, set, track) ? { armed: true } : {}),
+    // While Stop Clip is held, the buttons of tracks with nothing playing are unlit.
+    ...('stop-clip' in state.held && track.playing === undefined ? { lamp: { state: 'off' as const } } : {}),
     ...(playing && (playing.state === 'playing' || playing.state === 'recording') ? { progress: clamp((((playing.position ?? 0) - playing.loop.start) % length) / length, 0, 1) } : {}),
     ...(open ? { fold: 'open' as const } : track.parent ? { fold: 'child' as const } : {}),
   };
@@ -236,8 +240,14 @@ export const tracks: Layer = {
 
     if (!SET_SCREENS.includes(state.display)) return false;
 
+    // In Clip View the up and down arrows step to the clip above or below: the grid shows for a moment.
+    if (state.display === 'clip' && padLayout(state, set) !== 'session' && (isDown(ctx, 'dpad-up') || isDown(ctx, 'dpad-down'))) {
+      peekScene(ctx, id === 'dpad-up' ? -1 : 1);
+      return true;
+    }
     if (isDown(ctx, 'dpad-left') || isDown(ctx, 'dpad-right')) {
-      if (state.display === 'session') return false;
+      // In Session, on the display or on the pads, the arrows are the session's own.
+      if (state.display === 'session' || padLayout(state, set) === 'session') return false;
       const items = rowItems(state, set);
       const at = selectedAt(items, state, set);
       const next = items[at + (id === 'dpad-left' ? -1 : 1)];
@@ -284,7 +294,7 @@ export const tracks: Layer = {
     lamps.main = lamp(set.selection.track === set.main.id ? 'lit' : 'dim');
     if (!SET_SCREENS.includes(state.display)) return;
     paint.screen.bottom = trackRow(state, set);
-    if (state.display !== 'session') {
+    if (state.display !== 'session' && padLayout(state, set) !== 'session') {
       const items = rowItems(state, set);
       const at = selectedAt(items, state, set);
       lamps['dpad-left'] = lamp(at > 0 ? 'dim' : 'off');
