@@ -88,6 +88,11 @@ None. `library-structure` gains a declared area, which its requirements already 
 
 ## Impact
 
+- **Existing parts first:** the device is drawn from zen's existing components (`LampButton`,
+  `Pad`, `KnobReadout`, `Fader`, `FolderList`, `PianoRoll`, `Music.Waveform`, `Music.Meter` and
+  others), themed by the pack. An existing component gains at most one prop at a time, each in
+  its own commit; a new component is written only where the pack and an existing part cannot
+  carry the use (design D10 lists each part and where it starts).
 - **New code:** `src/library/push/` (`model/`, `components/`, `layouts/`, `screens/`), exported as
   the `Push` namespace from `@satoramoto/zen` and `@satoramoto/zen/svelte`, with the model also
   reachable without a renderer.

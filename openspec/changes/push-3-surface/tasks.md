@@ -12,6 +12,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [ ] 1.4 Add `foundation/themes/lamps.ts`: the indexed lamp table, the neutral fallback and the derived-shade rules, with unit tests for an unknown index and for each derived shade of every entry
 - [ ] 1.5 Write `docs/push.md` (what the area is, the three shapes, the sources) and add the area's paragraph to `AGENTS.md`; both name only files that exist
 - [ ] 1.6 Run `npm run typecheck` and `npx vitest run src/library/structure.test.ts src/library/tiers.test.ts`; both exit 0
+- [ ] 1.7 Fit review (design D10): in a scratch story, draw every row of D10's table from its existing component in the `push-3` pack at the unit's size, in both renderers; record in `docs/push.md` one verdict per part (as it is, one named prop, or new) with its reason; no part in groups 3 and 4 is built before its verdict is written, and a part that would need more than one prop on a component is brought back to the person as a new-component decision
 
 ## 2. The model's core
 
@@ -28,11 +29,11 @@ both renderers. Each group ends by running the while-building checks from the pr
 
 ## 3. The surface
 
-- [ ] 3.1 Build `SurfaceButton` and `ButtonBar` (legend or icon, accessible name, lamp states, down and up with time, up on removal) as view-tree models with fixtures and stories; tree snapshots recorded
-- [ ] 3.2 Build `PadCell` and `PadGrid` (lamp colour and state from the lamp variables, pressed look, focus and arrow-key movement) with fixtures and stories
+- [ ] 3.1 Draw the labelled, display and scene buttons from `LampButton` per the fit review (legend or icon, accessible name, lamp states, down and up with time, up on removal); any prop it gains is one prop in `LampButton`'s own commit with its fixture, story and snapshot; `ButtonBar` is a layout
+- [ ] 3.2 Build `PadGrid` drawing `Pad` faces per the fit review (lamp colour and state as local variables on each cell, pressed look, focus and arrow-key movement) with fixtures and stories
 - [ ] 3.3 Build the pad input store (`pad.bind.ts`): velocity, pressure, slide, per-note bend across pads, multi-touch, the mouse and keyboard gestures of design D7, the sensitivity curve function; unit tests for the curve and bend maths, plays for the gestures
-- [ ] 3.4 Build `Encoder`, `JogWheel` (turn, press, touch, nudge), `TouchStrip` and `DPad` with their stores, fixtures and stories
-- [ ] 3.5 Build `SceneColumn` and `RearPanel` (ports with plugged state, the power button's hold) with fixtures and stories
+- [ ] 3.4 Draw the encoders from `KnobReadout` per the fit review; build the jog wheel (turn, press, touch, nudge) and the touch strip from an existing part or new as the review found, with their stores, fixtures and stories; the D-pad is a layout of buttons
+- [ ] 3.5 Build the `SceneColumn` layout and `RearPanel` (ports with plugged state, the power button's hold) with fixtures and stories
 - [ ] 3.6 Build the latch gesture for holding several controls with one pointer, and the lamp animation store (pulse and blink phase from the beat, free-running without one, steady marks under reduced motion)
 - [ ] 3.7 Build the `Surface` layout from the layout table with the single scale property, its smallest size, and the four region layouts
 - [ ] 3.8 Write the `push-surface`, `push-pads` and `push-encoders` scenario stories; they play in React and Svelte
@@ -42,9 +43,9 @@ both renderers. Each group ends by running the while-building checks from the pr
 ## 4. The display shell
 
 - [ ] 4.1 Build `Display` (the 960 by 160 box, eight columns, top row, body, bottom row, overlays, the pixel scale property, the three type sizes, the dark-ground option) from a `Screen`
-- [ ] 4.2 Build `ParamCell` (arc, bipolar arc, choice list, switch, bar, touched emphasis, greyed, automation dot, column spans) with fixtures for each kind
-- [ ] 4.3 Build `TabRow` and `TrackRow` (selected block, colours, kind icons, armed circle, clip progress bar, fold underline, paging arrows)
-- [ ] 4.4 Build `MenuColumns` (highlight, chevrons, enclosing columns, scrolling, loading), `TextEntry`, `CodeDialog`, the confirmation, and `Notice`
+- [ ] 4.2 Draw the parameter cell from `KnobReadout`, `Toggle`, `Segmented` and `SendBars` per the fit review (arc, bipolar arc, choice list, switch, bar, touched emphasis, greyed, automation dot, column spans) with fixtures for each kind
+- [ ] 4.3 Draw the tab row and the track row from existing parts per the fit review, new only where it says so (selected block, colours, kind icons, armed circle, clip progress bar, fold underline, paging arrows)
+- [ ] 4.4 Draw the menu columns from `FolderList` and `PageList` (highlight, chevrons, enclosing columns, scrolling, loading), and text entry, the code dialog, the confirmation and notices from existing parts, per the fit review
 - [ ] 4.5 Build the status overlays (battery mark, count-in bar, progress bar) and the empty, blank and User Mode states
 - [ ] 4.6 Wire display-button lamps to the top and bottom rows in `project`, and the jog wheel and D-pad list rule in `step`
 - [ ] 4.7 Write the `push-display` scenario stories; they play in both renderers
@@ -63,7 +64,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 ## 6. Tracks, mixing and recording
 
 - [ ] 6.1 Model: track selection, the row's scrolling, arming rules by mode, Mute, Solo, Stop Clip (with the held lamps), Lock, exclusive arm and solo, duplicate and delete from the row; table tests
-- [ ] 6.2 Build `MixStrip` (meter from the frame reader with peak hold, volume mark, dB reading) and the Global Mix, Track Mix, Input & Output and Main screens in `project`, with send paging and unfolding of groups and Racks
+- [ ] 6.2 Draw the mix strip from `Fader`, `Music.Meter` and `SendBars` per the fit review (meter from the frame reader with peak hold, volume mark, dB reading) and the Global Mix, Track Mix, Input & Output and Main screens in `project`, with send paging and unfolding of groups and Racks
 - [ ] 6.3 Model and screens: track options (Rename, Group, Freeze, Flatten, colours on the pads)
 - [ ] 6.4 Model: transport, Record's three-step cycle and lamp, New, Capture, Undo and redo, Delete and Duplicate alone, Tap Tempo, Automate, Arrangement recording in Control Mode
 - [ ] 6.5 Model and screens: the hold menus (Metronome, Quantize, Fixed Length), Repeat and Accent (latch and momentary, per track), the Volume and Swing & Tempo notices
@@ -88,7 +89,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 
 ## 9. Session
 
-- [ ] 9.1 Build `ClipGrid` and the Session Screen Mode screen (eight by eight, names, selection outline, scene numbers and names on jog touch, upper-button launch lamps)
+- [ ] 9.1 Draw the clip grid (from `LaunchGrid` or `LoopGrid` if the fit review found one fits, else new) and the Session Screen Mode screen (eight by eight, names, selection outline, scene numbers and names on jog touch, upper-button launch lamps)
 - [ ] 9.2 Model: Session Pad Mode's lamps and presses (launch, stop, record), scene launch from three places, the window's movement apart from selection, the shared window and its report for the Session Ring
 - [ ] 9.3 Model: Select, Duplicate, Delete and colour on pads and from the screen, Session Overview (momentary, locked, blocks of 64 scenes), the Scene and Clip workflows, the up and down arrows from Clip View
 - [ ] 9.4 Table tests, then the `push-session` scenario stories; they play in both renderers; run the while-building checks
@@ -100,13 +101,13 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [ ] 10.3 Model: delete, mute and move devices; Rack icons, unfolding, chains by hold, Drum Rack pads in the bottom row, a tapped pad's chain with choke and transpose; group and ungroup; save as preset
 - [ ] 10.4 Model and screens: macro banks, Macro Map mode, macro edit, unmap, randomize and variations with their menu
 - [ ] 10.5 Model: automation dots, Delete with an encoder, automation-marked intents while recording
-- [ ] 10.6 Build `WaveformView` and Simpler's screens: the three modes' banks, slice markers, manual pad slicing, nudge, split and delete, Edit Mode's actions, the Rack-wrapped preset
+- [ ] 10.6 Draw the waveform from `Music.Waveform` inside a `MusicScope` node per the fit review, and Simpler's screens: the three modes' banks, slice markers, manual pad slicing, nudge, split and delete, Edit Mode's actions, the Rack-wrapped preset
 - [ ] 10.7 Table tests, then the `push-device-view` and `push-sampling` scenario stories; they play in both renderers
 - [ ] 10.8 Browser evidence: Device View, an unfolded Rack and Simpler beside the manual's figures; run the while-building checks
 
 ## 11. Clip View
 
-- [ ] 11.1 Build `PianoRoll` (notes by velocity and pad colour, beat marks, markers, playhead from the frame reader, the sequenceable box, the pitch strip with density lines) and reuse `WaveformView` for audio
+- [ ] 11.1 Draw the piano roll from `music/components/PianoRoll` per the fit review (notes by velocity and pad colour, beat marks, markers, playhead from the frame reader, the sequenceable box, the pitch strip with density lines) and reuse the waveform for audio
 - [ ] 11.2 Model and screen: loop on and off with its parameters, Shift for sixteenths, Crop, Zoom around the last-moved position, real-time fit
 - [ ] 11.3 Model and screen: Note Edit mode (highlight, selection, the eight parameters, ranges, Select All, Delete), audio warp controls and audio edit (Set 1.1.1, Warp to Grid)
 - [ ] 11.4 Model: Convert's offers by selection and edition, Quantize's quick press, Double Loop, the empty audio slot
