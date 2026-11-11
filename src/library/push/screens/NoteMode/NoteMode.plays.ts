@@ -1,5 +1,6 @@
 // What each push-note-mode scenario does and checks. The words are in NoteMode.stories.tsx. The
 // bass track holds a synth: on it the pads are the 64 Notes layout.
+import { lampVar } from '../../../foundation/themes/lamps';
 import { noteName, padPitch } from '../../model/scales';
 import type { PushSet, ScaleSettings } from '../../model/types';
 import { all, app, cell, column, down, expect, given, intent, lamp, lampState, onTrack, overlay, pads, press, screenKind, tab, turn, wait } from '../play';
@@ -14,7 +15,7 @@ const strike = async (c: HTMLElement, ...ids: string[]) => {
   for (const id of ids) await press(c, id);
 };
 const pitchOf = (el: HTMLElement, scale: ScaleSettings) => padPitch(Number(el.dataset.row), Number(el.dataset.col), scale);
-const BLUE = 'var(--push-lamp-22)'; // the bass track's colour in the sample Set
+const BLUE = lampVar(22); // the bass track's colour in the sample Set
 
 export const plays = {
   TheDefaultGrid: {

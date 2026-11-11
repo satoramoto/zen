@@ -1,5 +1,6 @@
 // What each push-pads scenario does and checks. The words are in Pads.stories.tsx. Every scenario
 // plays the bass track's synth in the 64 Notes layout, where the bottom left pad is C1.
+import { lampVar } from '../../../foundation/themes/lamps';
 import { padPitch } from '../../model/scales';
 import { initialState } from '../../model/state';
 import type { Lamp, PushSet } from '../../model/types';
@@ -304,7 +305,7 @@ export const plays = {
     ...userLamps({ 'pad-4-4': { state: 'lit', colour: 20 }, 'pad-4-5': { state: 'off' } }),
     act: async () => {},
     check: ({ canvasElement: c }) => {
-      expect(lamp(c, 'pad-4-4')).toEqual({ state: 'lit', colour: 'var(--push-lamp-20)' });
+      expect(lamp(c, 'pad-4-4')).toEqual({ state: 'lit', colour: lampVar(20) });
       // The table's colour 20 is a teal: far more green and blue than red, and far from the unlit pad beside it.
       const [r, g, b] = rgb(face(c, 'pad-4-4'));
       expect(g).toBeGreaterThan(r * 3 + 60);
