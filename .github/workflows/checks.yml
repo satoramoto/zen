@@ -58,7 +58,7 @@ jobs:
       - if: steps.scope.outputs.docs_only != 'true'
         run: npm run check:lib
       - if: steps.scope.outputs.docs_only != 'true'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps --only-shell chromium
       - if: steps.scope.outputs.docs_only != 'true'
         run: npm run check:site && node scripts/check-site.mjs --stories storybook-static
       - if: steps.scope.outputs.docs_only != 'true'
