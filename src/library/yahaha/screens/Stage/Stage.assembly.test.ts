@@ -149,8 +149,10 @@ describe('the Stage assembles itself', () => {
    * shorter than the Stage's least at the floor under every pack. The textbook packs are pages,
    * not an instrument: on the airy scale (40 px controls, a 6 px unit, roomy gaps) the Stage's
    * five regions outgrow the 1440 and 1217 frames at the floor. Everything else is viable.
+   * The push-3 pack is the one that fits at 900 × 700 too: the compact scale under a flat material
+   * with no gaps to part its regions.
    */
-  const scrolls = (id: string, w: number) => w === 900 || (id === 'visuals' && w === 1217) || (id.startsWith('textbook') && w <= 1440);
+  const scrolls = (id: string, w: number) => (w === 900 && id !== 'push-3') || (id === 'visuals' && w === 1217) || (id.startsWith('textbook') && w <= 1440);
 
   for (const pack of packs)
     for (const [w, h] of SIZES) {
