@@ -16,16 +16,16 @@ both renderers. Each group ends by running the while-building checks from the pr
 
 ## 2. The model's core
 
-- [ ] 2.1 Write `push/model/layout.ts`: every control's id, cluster, legend, accessible name, centre and size in millimetres, measured from the manual's control figure; a unit test counts 64 pads, 11 rotary controls, 16 display buttons, 8 scene buttons, 5 D-pad parts, 42 labelled buttons and checks the eight columns share centre lines; confirm the body's 380 by 304 mm against Ableton's tech specs and record the source in the file
-- [ ] 2.2 Define `PushSet`, `PushState`, `PushInput`, `PushIntent`, `Lamp` and `Screen` as plain-data types with a JSON round-trip test for each
-- [ ] 2.3 Implement `step` and `project` as the layered composition of design D3 with only the power and global-button layers filled in; table tests cover purity (same inputs, same result), an unknown control, and time arriving with the input
+- [x] 2.1 Write `push/model/layout.ts`: every control's id, cluster, legend, accessible name, centre and size in millimetres, measured from the manual's control figure; a unit test counts 64 pads, 11 rotary controls, 16 display buttons, 8 scene buttons, 5 D-pad parts, 42 labelled buttons and checks the eight columns share centre lines; confirm the body's 380 by 304 mm against Ableton's tech specs and record the source in the file
+- [x] 2.2 Define `PushSet`, `PushState`, `PushInput`, `PushIntent`, `Lamp` and `Screen` as plain-data types with a JSON round-trip test for each
+- [x] 2.3 Implement `step` and `project` as the layered composition of design D3 with only the power and global-button layers filled in; table tests cover purity (same inputs, same result), an unknown control, and time arriving with the input
 - [ ] 2.4 Implement modifiers and timing: press versus hold, hold-as-modifier suppressing the press job, Shift and Select, momentary mode buttons, the `tick` input; the timing constants live in one file marked `// added`; table tests for each `push-device-model` requirement on presses and holds
-- [ ] 2.5 Implement the published combination list as the dispatch table itself, with a test that every entry is reachable by `step`
-- [ ] 2.6 Implement User Mode and the pedal inputs in the model, with table tests
-- [ ] 2.7 Add the scripted runner (a list of inputs in, intents and screens out) and a Node test that runs a session with no DOM
-- [ ] 2.8 Decide the renderer-free export for the model (design D11), add it to `package.json` exports and `vite.lib.config.ts`; `npm run build:lib && npm run check:lib` pass and show no React in its chunk
-- [ ] 2.9 Build a sample Set fixture (`push/model/sample.ts`): eight or more tracks of each kind, a synth, a Simpler, a Drum Rack, an Instrument Rack with macros, effects and Tuner, clips, scenes, a browser tree, unit readings; a test checks it against the `PushSet` type's invariants
-- [ ] 2.10 Run `npx vitest run src/library/push` and `npm run typecheck`; both exit 0
+- [x] 2.5 Implement the published combination list as the dispatch table itself, with a test that every entry is reachable by `step`
+- [x] 2.6 Implement User Mode and the pedal inputs in the model, with table tests
+- [x] 2.7 Add the scripted runner (a list of inputs in, intents and screens out) and a Node test that runs a session with no DOM
+- [x] 2.8 Decide the renderer-free export for the model (design D11), add it to `package.json` exports and `vite.lib.config.ts`; `npm run build:lib && npm run check:lib` pass and show no React in its chunk
+- [x] 2.9 Build a sample Set fixture (`push/model/sample.ts`): eight or more tracks of each kind, a synth, a Simpler, a Drum Rack, an Instrument Rack with macros, effects and Tuner, clips, scenes, a browser tree, unit readings; a test checks it against the `PushSet` type's invariants
+- [x] 2.10 Run `npx vitest run src/library/push` and `npm run typecheck`; both exit 0
 
 ## 3. The surface
 
