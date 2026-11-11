@@ -65,6 +65,22 @@ export async function press(canvas: HTMLElement, id: string, hold = 0, more: Par
   await touch.up();
 }
 
+/**
+ * Press a control twice in quick succession: both presses are sent at once, with nothing in
+ * between, so a busy page cannot space them past the double-press time.
+ */
+export async function pressTwice(canvas: HTMLElement, id: string): Promise<void> {
+  const el = cell(canvas, id);
+  const target = face(canvas, id);
+  const make = typeof PointerEvent === 'function' ? PointerEvent : MouseEvent;
+  for (let i = 0; i < 2; i++) {
+    const base = { pointerId: ++pointer, pointerType: 'mouse', button: 0, bubbles: true, cancelable: true, isPrimary: true, ...at(el) };
+    target.dispatchEvent(new make('pointerdown', { ...base, buttons: 1, pressure: 0.5 }));
+    target.dispatchEvent(new make('pointerup', { ...base, buttons: 0, pressure: 0 }));
+  }
+  await wait(20);
+}
+
 /** Latch a control down with the surface's hold gesture (a right-click), or let a latched one go. */
 export async function latch(canvas: HTMLElement, id: string): Promise<void> {
   await fireEvent.contextMenu(face(canvas, id), { bubbles: true });
@@ -127,6 +143,14 @@ export async function pedal(canvas: HTMLElement, n: 1 | 2, hold = 0): Promise<vo
   await report(canvas, `pedal-${n}`, 'down');
   if (hold) await wait(hold);
   await report(canvas, `pedal-${n}`, 'up');
+}
+
+/** Tap a footswitch twice in quick succession, both taps sent at once (see `pressTwice`). */
+export async function pedalTwice(canvas: HTMLElement, n: 1 | 2): Promise<void> {
+  const surface = canvas.querySelector('.push-surface');
+  if (!surface) throw new Error('No surface on the page');
+  for (const kind of ['down', 'up', 'down', 'up']) surface.dispatchEvent(new CustomEvent('pushinput', { detail: { control: `pedal-${n}`, kind } }));
+  await wait(20);
 }
 
 /* ---------- reading ---------- */

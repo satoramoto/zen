@@ -72,6 +72,16 @@ export function createDevice(options: DeviceOptions): PushDevice {
   }
 
   function apply(input: PushInput) {
+    // A timer can fire late, after an input that came later than its time (a busy page): what was
+    // due before the input happens first, so the outcome follows the inputs' times, not the timer's.
+    if (input.kind !== 'tick') {
+      for (let due = nextTick(state), n = 0; due !== undefined && due <= input.time && n < 1000; due = nextTick(state), n++) once(tick(due));
+    }
+    once(input);
+    schedule();
+  }
+
+  function once(input: PushInput) {
     const result = step(state, set, input);
     const changed = result.state !== state;
     state = result.state;
@@ -80,7 +90,6 @@ export function createDevice(options: DeviceOptions): PushDevice {
       onState?.(state);
     }
     for (const intent of result.intents) onIntent?.(intent);
-    schedule();
   }
 
   return {
