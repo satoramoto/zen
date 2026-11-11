@@ -17,23 +17,28 @@ function fail(message, code = 70) {
 if (!broker) fail('no Omarchy stage broker');
 
 // Input, when there is any: a closed stdin ends at once; an open one that
-// stays silent for 150 ms is taken as empty, since a fixture answers
-// arguments, not a live stream.
+// stays silent for 150 ms is taken as what the call says, since a fixture
+// answers arguments. A program the fixture passes through gets the rest live.
+let stdinEnded = false;
 function readInput() {
   return new Promise((resolve) => {
-    if (process.stdin.isTTY) return resolve('');
+    if (process.stdin.isTTY) { stdinEnded = true; return resolve(''); }
     let data = '';
     let timer = setTimeout(done, 150);
+    const onData = (d) => { data += d; clearTimeout(timer); timer = setTimeout(done, 150); };
+    const onEnd = () => { stdinEnded = true; done(); };
     function done() {
       clearTimeout(timer);
-      process.stdin.removeAllListeners();
+      process.stdin.off('data', onData);
+      process.stdin.off('end', onEnd);
+      process.stdin.off('error', onEnd);
       process.stdin.pause();
       resolve(data);
     }
     process.stdin.setEncoding('utf8');
-    process.stdin.on('data', (d) => { data += d; clearTimeout(timer); timer = setTimeout(done, 150); });
-    process.stdin.on('end', done);
-    process.stdin.on('error', done);
+    process.stdin.on('data', onData);
+    process.stdin.on('end', onEnd);
+    process.stdin.on('error', onEnd);
   });
 }
 
@@ -64,11 +69,22 @@ function passThrough(argv, env, capture) {
   socket.removeAllListeners('close');
   socket.destroy();
   const child = spawn(argv[0], argv.slice(1), { stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, ...(env ?? {}) } });
-  child.stdin.end(stdin);
+  // What arrived before the fixture answered, then the rest as it comes, until
+  // the caller closes it: a backend that talks over stdin keeps talking.
+  child.stdin.on('error', () => {});
+  if (stdin) child.stdin.write(stdin);
+  if (stdinEnded) child.stdin.end();
+  else process.stdin.pipe(child.stdin);
   // What it prints goes to the caller and, for the story's log, to the capture file.
+  // The log keeps the newest 256 KB of each, however long the program runs.
   const out = [], err = [];
-  child.stdout.on('data', (d) => { out.push(d); process.stdout.write(d); });
-  child.stderr.on('data', (d) => { err.push(d); process.stderr.write(d); });
+  const keep = (list, d) => {
+    list.push(d);
+    let size = list.reduce((n, b) => n + b.length, 0);
+    while (size > 262144 && list.length > 1) size -= list.shift().length;
+  };
+  child.stdout.on('data', (d) => { keep(out, d); process.stdout.write(d); });
+  child.stderr.on('data', (d) => { keep(err, d); process.stderr.write(d); });
   child.on('error', (e) => fail(`couldn't run ${argv[0]}: ${e.message}`, 127));
   child.on('close', (code, signal) => {
     const exit = code ?? (signal ? 128 : 1);

@@ -548,7 +548,11 @@ ShellRoot {
         var values = host.describe(it)
         for (var k = 0; k < props.length; k++) {
           var v = it[props[k]]
-          values[props[k]] = (v !== null && typeof v === "object") ? String(v) : v
+          if (v !== null && typeof v === "object") {
+            var plain
+            try { plain = JSON.parse(JSON.stringify(v)) } catch (e) { plain = undefined }
+            values[props[k]] = plain === undefined ? String(v) : plain
+          } else values[props[k]] = v
         }
         return host.reply(id, values)
       }
