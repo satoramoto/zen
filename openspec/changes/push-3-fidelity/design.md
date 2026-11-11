@@ -56,13 +56,17 @@ one prop. The display already draws its tab row and track row as `Text` in its o
 the choice list is the same: the display's layout, no new component. `Segmented` stays for a
 choice that is not touched (the two-option pairs on display buttons).
 
-### D3. Map on a held switch means a device's on/off
+### D3. Map on a held switch: a bank's switches over the upper display buttons
 
-The manual offers Map for "device activators and toggles" on a held upper display button. In
-Device View the upper display buttons are the devices, so the switch a button holds is that
-device's on/off. Holding a device's button therefore offers Map; pressing it enters Macro Map
-mode with the device's on/off as the parameter. A Rack keeps what its held button does today
-(its chains). A toggle inside a bank has an encoder and maps by touch, as it does now.
+*Changed while building.* This said the held switch was a device's on/off, from the manual's
+text alone. The manual's figure of mapping a toggle (a Hybrid Reverb with Freeze In, Freeze and
+Pre Algo over the upper display buttons, Map at the lower right) shows otherwise: while a
+device's banks are shown, the top row is the device and then the bank's own switches, and those
+are what a hold maps. So a bank carries its switches (`Bank.switches`), a press switches one and
+a hold offers Map; Map sits on the last lower display button for a held switch and for a touched
+parameter alike, as both of the manual's Map figures have it. A device's on/off is still switched
+with Mute and its button. The stories' new requirement, "A bank's switches sit over the upper
+display buttons", holds this.
 
 ### D4. Simpler's order, and Trigger and Gate as options
 
@@ -73,7 +77,7 @@ the last encoder. The mode's own parameters sit between:
 |---|---|---|
 | Classic | S Start, S Length, Loop Length, Loop Fade | |
 | One-Shot | Fade In, Fade Out, Transpose, Gain | Trigger, Gate |
-| Slicing | Nudge, Slice By, its companion, Playback | Trigger, Gate |
+| Slicing | Nudge, Playback, Slice By, its companion | Trigger, Gate |
 
 The manual calls Trigger and Gate "options", and nine parameters do not fit eight encoders, so
 they become a pair on two upper display buttons, as the figure shows options elsewhere. The first
