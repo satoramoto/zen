@@ -1,4 +1,4 @@
-# Spec Delta
+# push-theme Spec Delta
 
 ## Purpose
 

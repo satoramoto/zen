@@ -1,4 +1,4 @@
-# Spec Delta
+# push-sampling Spec Delta
 
 ## Purpose
 
