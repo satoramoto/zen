@@ -44,8 +44,13 @@ tree. Rejected: it would be a rewrite of every layout, and the two renderers wou
 
 ### D2. The storybook helpers join `@satoramoto/zen/storybook`
 
-`withRenderer`, `treeStory`, `fixtureStories` and `defineFixtures` move behind the existing
-storybook entry. The Renderer toolbar global is already exported there.
+`withRenderer`, `treeStory`, `fixtureStories` and `defineFixtures` are exported for an app's
+Storybook. *As built:* they are their own entry, `@satoramoto/zen/storybook/renderers`, beside
+`@satoramoto/zen/storybook` rather than in it, because they mount Svelte, an optional peer, and a
+React-only app (the source map site among them) imports `/storybook` without Svelte installed.
+`defineFixtures` also comes from `@satoramoto/zen/view`, so fixtures and the node tests that read
+them need no Svelte. The emulator also needed `ThemeInspector` (now in the main entry) and the
+lamp table (`/themes`).
 
 ### D3. The rule checks become functions over a folder
 

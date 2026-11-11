@@ -1,4 +1,4 @@
-# Spec Delta
+# library-extension Spec Delta
 
 ## Purpose
 
