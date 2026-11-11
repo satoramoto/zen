@@ -138,6 +138,16 @@ describe('zen-stories', () => {
     expect(last(r)).toBe('0 passed on the virtual DOM, 2 in the browser, 0 skipped, 0 failed');
   }, 90000);
 
+  it('fails a story that fails, and with --retries passes it as flaky when another try passes', async () => {
+    const once = await stories(['--no-browser', 'fixture-flaky']);
+    expect(once.output).toMatch(/^FAIL {2}Fixture\/Flaky \/ Fails Once/m);
+    expect(once.code).toBe(1);
+    const again = await stories(['--no-browser', '--retries', '1', 'fixture-flaky']);
+    expect(again.output).toMatch(/^pass {2}Fixture\/Flaky \/ Fails Once {2}\(\d+\.\d s\) {2}flaky: failed once, then passed$/m);
+    expect(last(again)).toBe('1 passed on the virtual DOM, 0 in the browser, 0 skipped, 0 failed, 1 flaky');
+    expect(again.code).toBe(0);
+  }, 60000);
+
   it('plays at most two stories at a time by default', async () => {
     const dir = mkdtempSync(join(scratch, 'busy-'));
     const r = await stories(['--no-browser', 'fixture-plain', 'fixture-measured', 'fixture-real', 'fixture-failing'], { ZEN_FIXTURE_BUSY_DIR: dir });

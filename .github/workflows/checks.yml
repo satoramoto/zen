@@ -67,3 +67,6 @@ jobs:
     uses: ./.github/workflows/stories.yml
     with:
       stories: npm run test:stories --
+      # 1,800 stories: four at a time on the runner's four cores, and room to finish.
+      workers: 4
+      timeout-minutes: 90

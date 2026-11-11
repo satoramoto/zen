@@ -76,7 +76,7 @@ const cutShort = (r) => r.reloaded || r.problems.some((p) => /storyHotUpdated|th
  * Plays `stories` in the headless shell against the Storybook at `base`, `workers` at a time.
  * Resolves to null, or to why nothing was played ({ why, fix }) when the shell is not installed.
  */
-export async function playInBrowser({ base, stories, workers, timeout, gpu = false, viewport = { width: 1600, height: 1000 }, report }) {
+export async function playInBrowser({ base, stories, workers, timeout, gpu = false, viewport = { width: 1600, height: 1000 }, retries = 0, report }) {
   if (!stories.length) return null;
   let chromium;
   // `playwright`, or `@playwright/test`, which a project with Playwright's test runner has instead.
@@ -98,7 +98,10 @@ export async function playInBrowser({ base, stories, workers, timeout, gpu = fal
       for (let s = queue.shift(); s; s = queue.shift()) {
         let r = await play(browser, viewport, base, s, timeout);
         for (let again = 0; !r.ok && cutShort(r) && again < 2; again++) r = await play(browser, viewport, base, s, timeout);
-        report({ story: r.story, ok: r.ok, ms: r.ms, problems: r.problems });
+        // A story that failed gets `retries` more tries; one that then passes is flaky, and says so.
+        let failed = 0;
+        for (; !r.ok && failed < retries; failed++) r = await play(browser, viewport, base, s, timeout);
+        report({ story: r.story, ok: r.ok, ms: r.ms, problems: r.problems, flaky: r.ok ? failed : 0 });
       }
     }));
   } finally { await browser.close(); }
