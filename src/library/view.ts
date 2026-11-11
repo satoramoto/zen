@@ -14,3 +14,5 @@ export { viewState, type ViewState } from './foundation/view/viewState';
 /** The store contract: `keyed` adapts a plain `bindX(node, params)` store to a tree, and
  *  `registerStores` adds an app's stores to the registry both renderers read. */
 export { keyed, registerStores, type Store, type Stores, type StoreBinding, type Keyed } from './foundation/view/stores';
+/** A part's story args as plain data (`<Name>.fixtures.ts`), framework-free so a node test can read them. */
+export { defineFixtures, instances, type Fixtures, type StoryFixture, type FixtureProps } from './fixtures';
