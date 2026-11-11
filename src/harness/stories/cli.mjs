@@ -3,13 +3,13 @@
 //
 //   zen-stories [prefix ...]             the virtual DOM, and the browser for `browser` stories
 //   zen-stories --no-browser [prefix ...]  the virtual DOM only; `browser` stories are skipped
-//   zen-stories --browser-all [prefix ...] every story in the browser, against a built Storybook
+//   zen-stories --browser-all [prefix ...] every story in the browser, against the served Storybook or a built one
 //
 //   --workers N      stories played at once (2)
 //   --timeout MS     per story (90000)
 //   --url URL        the served Storybook, for `browser` and `stage` stories (default: the port of
 //                    the project's `storybook` script, when something answers there)
-//   --static DIR     the built Storybook `--browser-all` serves (storybook-static)
+//   --static DIR     the built Storybook `--browser-all` serves when none is served (storybook-static)
 //   --config-dir DIR the Storybook config (.storybook)
 //   --list           print the stories and where each would be played, and play nothing
 //
@@ -48,6 +48,10 @@ const timeout = Number(values.timeout) || 90000;
 const answers = async (url, what) => {
   try { const res = await fetch(url, { signal: AbortSignal.timeout(3000) }); return res.ok && (res.headers.get('content-type') ?? '').includes(what); } catch { return false; }
 };
+// A stage that can run sessions: a dev server answers its route even where Quickshell is missing.
+const stageRuns = async (url) => {
+  try { const res = await fetch(url, { signal: AbortSignal.timeout(3000) }); return res.ok && (await res.json()).available === true; } catch { return false; }
+};
 
 /** The served Storybook: `--url`, STORYBOOK_URL, or whatever answers on the `storybook` script's port. */
 async function served() {
@@ -65,9 +69,11 @@ const all = await storyIndex(configDir);
 const stories = matching(all, positionals);
 if (!stories.length) { console.error(`no stories match ${positionals.join(', ') || '(all)'}`); process.exit(2); }
 
-const needsServed = mode !== 'browser-all' && stories.some((s) => s.tags?.includes('stage') || (mode === 'local' && s.tags?.includes('browser')));
-let base = mode === 'browser-all' && !values.url ? null : (needsServed || values.url ? await served() : null);
-const stage = base ? await answers(`${base}/__omarchy-stage/status`, 'json') : false;
+// The run for main plays against the served Storybook when one answers, else a built one: plays
+// are written against the dev server, and a build runs React's production code.
+const needsServed = mode === 'browser-all' || stories.some((s) => s.tags?.includes('stage') || (mode === 'local' && s.tags?.includes('browser')));
+let base = needsServed || values.url ? await served() : null;
+const stage = base ? await stageRuns(`${base}/__omarchy-stage/status`) : false;
 const todo = plan(stories, { mode, stage });
 
 const label = (s) => `${s.title} / ${s.name}`;

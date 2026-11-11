@@ -48,7 +48,7 @@ beforeAll(async () => {
 afterAll(async () => { await served?.close(); rmSync(scratch, { recursive: true, force: true }); });
 
 describe('which stories are played where', () => {
-  const story = (id: string, tags: string[] = []) => ({ id, title: id, name: id, tags, importPath: './x', exportName: 'X' });
+  const story = (id: string, tags: string[] = []) => ({ id, title: id, name: id, tags: ['dev', 'test', ...tags], importPath: './x', exportName: 'X' });
   const all = [story('a'), story('b', ['browser']), story('c', ['stage']), story('d', ['stage', 'browser'])];
   const ids = (list: { id: string }[]) => list.map((s) => s.id);
 
@@ -78,6 +78,14 @@ describe('which stories are played where', () => {
     const p = plan(all, { mode: 'browser-all', stage: false });
     expect(ids(p.browser)).toEqual(['a', 'b']);
     expect(p.virtual).toEqual([]);
+  });
+
+  it('leaves out a story that is not a test, in every run', () => {
+    const notATest = { ...story('e'), tags: ['dev'] };
+    for (const mode of ['local', 'no-browser', 'browser-all'] as const) {
+      const p = plan([notATest], { mode, stage: true });
+      expect(p.skipped.map((s) => [s.story.id, s.why])).toEqual([['e', 'not a test (tagged !test)']]);
+    }
   });
 
   it('matches a prefix of a story id or of a title', () => {

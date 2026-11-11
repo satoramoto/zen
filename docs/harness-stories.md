@@ -31,10 +31,13 @@ linked into its own `node_modules/.bin`.
 | --- | --- | --- |
 | `zen-stories` | on your machine | every story on the virtual DOM, and the `browser` stories in the headless shell against the served Storybook |
 | `zen-stories --no-browser` | on a pull request | every story on the virtual DOM; `browser` stories are skipped and counted |
-| `zen-stories --browser-all` | on `main` | every story in the headless shell, against the built Storybook (`storybook-static`, or `--static <dir>`) |
+| `zen-stories --browser-all` | on `main` | every story in the headless shell, against the served Storybook, or a built one (`storybook-static`, or `--static <dir>`) when none is served |
 
 The run on `main` is the check that a story which passes on the virtual DOM also passes in a
-real browser: hidden by CSS, off-screen, overlapped, or laid out wrong.
+real browser: hidden by CSS, off-screen, overlapped, or laid out wrong. Play it against the dev
+server: plays are written against it, and a built Storybook runs React's production code, where
+`act` does not exist and errors are minified. On zen's build, 183 stories that pass on the dev
+server failed for those reasons alone.
 
 Options:
 
@@ -59,6 +62,7 @@ missing, no Storybook is served).
 | --- | --- |
 | `browser` | the story needs a real browser. It never plays on the virtual DOM. |
 | `stage` | the story is drawn by the Omarchy stage in Qt (`harness-omarchy.md`). It needs a stage server and is skipped, with the reason, where none answers. |
+| `!test` | Storybook's own: the story is not a test. No run plays it; it is counted as skipped. For a story only a script of its own can play (zen's manual stories read evidence `scripts/check-manual-stories.mjs` serves). |
 
 Put a tag on a story (`tags: ['browser']`) or on a file's meta to cover every story in it.
 Storybook's sidebar can filter by tag, so a reader can list the stories that need a browser.
@@ -99,8 +103,9 @@ machine that has it.
 ## In CI
 
 zen's `.github/workflows/stories.yml` is a reusable workflow: on a pull request it runs
-`zen-stories --no-browser`; on a push to the default branch it builds the Storybook, installs
-only the headless shell, and runs `zen-stories --browser-all`. A repo calls it with:
+`zen-stories --no-browser`; on a push to the default branch it installs only the headless shell,
+serves the Storybook's dev server on port 6006, and runs `zen-stories --browser-all` against it.
+A repo calls it with:
 
 ```yaml
 name: Stories

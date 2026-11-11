@@ -19,7 +19,7 @@ const has = (story, tag) => (story.tags ?? []).includes(tag);
 
 /**
  * Sorts stories into `virtual` (played on the virtual DOM), `browser` (played in the headless
- * shell) and `skipped` ({ story, why }).
+ * shell) and `skipped` ({ story, why }). A story without Storybook's `test` tag is never played.
  *   mode 'local'       the default: `browser` stories in the browser, the rest on the virtual DOM
  *   mode 'no-browser'  `browser` stories are skipped
  *   mode 'browser-all' everything in the browser
@@ -30,7 +30,10 @@ export function plan(stories, { mode, stage }) {
   const out = { virtual: [], browser: [], skipped: [] };
   for (const story of stories) {
     const inBrowser = mode === 'browser-all' || has(story, 'browser');
-    if (has(story, 'stage') && !stage) out.skipped.push({ story, why: 'no stage server answers' });
+    // Storybook gives every story the `test` tag unless it is tagged `!test`: such a story is
+    // played by something else, or by no one.
+    if (!has(story, 'test')) out.skipped.push({ story, why: 'not a test (tagged !test)' });
+    else if (has(story, 'stage') && !stage) out.skipped.push({ story, why: 'no stage server answers' });
     else if (inBrowser && mode === 'no-browser') out.skipped.push({ story, why: 'needs a browser' });
     else (inBrowser ? out.browser : out.virtual).push(story);
   }

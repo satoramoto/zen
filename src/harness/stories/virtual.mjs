@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { fileOf } from './select.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
+/** zen's own folder, wherever it is: installed, or linked from a checkout. */
+const ZEN = path.resolve(here, '..', '..', '..');
 const REGISTER = path.join(here, 'runtime', 'register.js');
 const SETUP = [path.join(here, 'runtime', 'standins.js'), path.join(here, 'runtime', 'setup.js')];
 const FRAMEWORK = 'virtual:zen-stories/framework';
@@ -124,6 +126,7 @@ export async function playVirtual({ root, configDir, stories, workers, timeout, 
     },
   };
 
+  const vite = await import('vite');
   const base = await projectVite(root, main);
   const env = { ...(stageUrl ? { ZEN_STORIES_STAGE_URL: stageUrl } : {}) };
   const vitest = await startVitest('test', [], {
@@ -152,7 +155,9 @@ export async function playVirtual({ root, configDir, stories, workers, timeout, 
     plugins: [plugin, ...(base.plugins ?? [])],
     // Stories are browser code: packages are resolved as a browser would resolve them.
     resolve: { ...(base.resolve ?? {}), conditions: ['browser', 'module', 'import', 'default'] },
-    server: { ...(base.server ?? {}), watch: null },
+    // zen may be linked from a checkout rather than installed: its runner and harness are then
+    // outside the project, and Vite serves them only when allowed to.
+    server: { ...(base.server ?? {}), watch: null, fs: { ...(base.server?.fs ?? {}), allow: [...(base.server?.fs?.allow ?? [vite.searchForWorkspaceRoot(root)]), ZEN] } },
     clearScreen: false,
     logLevel: 'error',
   });
