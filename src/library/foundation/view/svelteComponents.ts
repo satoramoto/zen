@@ -3,6 +3,7 @@
 // first use, as the React side is.
 import type { Component } from 'svelte';
 import { musicSvelteComponents } from '../../music/registry.svelte';
+import { pushSvelteComponents } from '../../push/registry.svelte';
 import Button from '../../components/Button/Button.svelte';
 import ActionButton from '../../components/ActionButton/ActionButton.svelte';
 import SearchField from '../../components/SearchField/SearchField.svelte';
@@ -88,6 +89,7 @@ let registry: Record<string, Component<any>> | undefined;
 export function svelteComponent(name: string): Component<any> {
   registry ??= {
     ...musicSvelteComponents(),
+    ...pushSvelteComponents(),
     AssembledScreen,
     FormScope,
     Layer,
