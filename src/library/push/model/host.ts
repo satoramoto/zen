@@ -38,6 +38,16 @@ function word(p: Parameter): string {
 
 type Apply = (set: PushSet, intent: PushIntent) => void;
 
+/** An item of the browser's tree, by id. */
+function findItem(items: BrowserItem[], id: string): BrowserItem | undefined {
+  for (const item of items) {
+    if (item.id === id) return item;
+    const inside = item.children && findItem(item.children, id);
+    if (inside) return inside;
+  }
+  return undefined;
+}
+
 function packState(s: PushSet, id: unknown, state: PushSet['packs'][number]['state'], progress?: number): void {
   const pack = s.packs.find((p) => p.id === id);
   if (!pack) return;
@@ -360,6 +370,36 @@ const APPLY: Record<string, Apply> = {
       }
     };
     mark(s.browser.roots);
+  },
+  // A new track, like one the Set already has of that type, after the others; with the sound that was chosen for it, if one was.
+  'add-track': (s, i) => {
+    const type = i.type === 'audio' || i.type === 'return' ? i.type : 'midi';
+    const like = type === 'return' ? s.returns[0] : s.tracks.find((t) => t.kind === type);
+    if (!like) return;
+    const id = `t-new-${s.tracks.length + s.returns.length + 1}`;
+    const added = JSON.parse(JSON.stringify(like).split(`"${like.id}`).join(`"${id}`)) as typeof like;
+    const item = typeof i.load === 'string' ? findItem(s.browser.roots, i.load) : undefined;
+    const kit = item?.kind === 'drum' ? [...s.tracks, ...s.returns].flatMap((t) => t.devices).find((d) => d.kind === 'drum-rack') : undefined;
+    Object.assign(added, {
+      id,
+      name: item?.name ?? `${s.tracks.length + s.returns.length + 1} ${type === 'midi' ? 'MIDI' : type === 'audio' ? 'Audio' : 'Return'}`,
+      clips: like.clips.map(() => null),
+      armed: false,
+      muted: false,
+      soloed: false,
+      playing: undefined,
+      devices: !item
+        ? []
+        : kit
+          ? [{ ...(JSON.parse(JSON.stringify(kit).split(`"${kit.id}`).join(`"${id}.kit`)) as typeof kit), id: `${id}.kit`, name: item.name, preset: item.name }]
+          : [{ id: `${id}.device`, name: item.name, kind: item.kind === 'audio-effect' ? ('audio-effect' as const) : ('instrument' as const), on: true, banks: [] }],
+    });
+    if (type === 'return') {
+      s.returns.push(added);
+      for (const t of s.tracks) if (t.sends[0]) t.sends.push({ ...t.sends[0], id: `${t.id}.send-${id}`, name: added.name, value: 0, display: '-inf dB' });
+    } else s.tracks.push(added);
+    s.selection.track = id;
+    s.selection.device = added.devices[0]?.id;
   },
   load: (s, i) => {
     const t = track(s, i.track);
