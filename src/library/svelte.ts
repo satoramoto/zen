@@ -101,6 +101,7 @@ import RadioSvelte from './components/Radio/Radio.svelte';
 import type { CheckModelProps } from './components/Checkbox/Checkbox.model';
 import StatusDotSvelte from './components/StatusDot/StatusDot.svelte';
 import SeparatorSvelte from './components/Separator/Separator.svelte';
+import CodeImageSvelte from './components/CodeImage/CodeImage.svelte';
 import SettingsRowSvelte from './components/SettingsRow/SettingsRow.svelte';
 import TabsSvelte from './layouts/Tabs/Tabs.svelte';
 import type { SurfaceModelProps } from './primitives/Surface/Surface.model';
@@ -111,6 +112,7 @@ import type { SwitchModelProps, ToggleModelProps } from './components/Toggle/Tog
 import type { DisclosureModelProps } from './components/Disclosure/Disclosure.model';
 import type { StatusDotModelProps } from './components/StatusDot/StatusDot.model';
 import type { SeparatorModelProps } from './components/Separator/Separator.model';
+import type { CodeImageModelProps } from './components/CodeImage/CodeImage.model';
 import type { SettingsRowModelProps } from './components/SettingsRow/SettingsRow.model';
 import type { TabsModelProps } from './layouts/Tabs/Tabs.model';
 import HealthSlotSvelte from './yahaha/components/HealthSlot/HealthSlot.svelte';
@@ -450,6 +452,11 @@ export const StatusDot = StatusDotSvelte as unknown as Component<StatusDotProps>
 
 export type SeparatorProps = SeparatorModelProps;
 export const Separator = SeparatorSvelte as unknown as Component<SeparatorProps>;
+
+/** A text as a code a phone can scan (a QR code), dark on light in every pack. */
+export type CodeImageProps = CodeImageModelProps;
+export const CodeImage = CodeImageSvelte as unknown as Component<CodeImageProps>;
+export { encodeCode, CODE_IMAGE_MAX_BYTES } from './components/CodeImage/CodeImage.model';
 
 export interface SettingsRowProps extends SettingsRowModelProps {
   children?: Snippet;

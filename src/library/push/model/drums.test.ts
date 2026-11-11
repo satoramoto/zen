@@ -35,8 +35,9 @@ describe('the drum grid', () => {
     const all = withLayout('t-drums', '64-pads');
     expect(drumCell(all, set, 8, 1)).toEqual({ part: 'drum', note: 36 });
     expect(drumCell(all, set, 5, 4)).toEqual({ part: 'drum', note: 51 });
-    expect(drumCell(all, set, 8, 5)).toEqual({ part: 'drum', note: 52 });
-    expect(drumCell(all, set, 4, 1)).toEqual({ part: 'drum', note: 68 });
+    // The next sixteen are above the first, and the right half follows the left, as on the unit.
+    expect(drumCell(all, set, 4, 1)).toEqual({ part: 'drum', note: 52 });
+    expect(drumCell(all, set, 8, 5)).toEqual({ part: 'drum', note: 68 });
     expect(drumCell(all, set, 1, 8)).toEqual({ part: 'drum', note: 99 });
     const notes = new Set<number>();
     for (let r = 1; r <= 8; r++) for (let c = 1; c <= 8; c++) notes.add((drumCell(all, set, r, c) as { note: number }).note);

@@ -190,9 +190,12 @@ export const plays = {
       const colours = quarter([1, 2, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8]).map(([r, col]) => padColour(c, r, col));
       expect(colours.filter((colour) => colour === GREY)).toHaveLength(24);
       expect(colours.filter((colour) => colour !== GREY && colour !== '')).toHaveLength(40);
-      // The sixteen pads in view are still bottom left; the next sixteen bottom right.
+      // The sixteen pads in view are still bottom left; the next sixteen are above them, and the right half follows.
       expect(padColour(c, 8, 1)).toBe(tableLamp(0));
-      expect(padColour(c, 8, 5)).toBe(tableLamp(16 % 14));
+      expect(padColour(c, 4, 1)).toBe(tableLamp(16 % 14));
+      expect(padColour(c, 8, 5)).toBe(tableLamp(32 % 14));
+      // Forty pads: the left half and the bottom two rows of the right, as the unit lights a large kit.
+      expect(quarter([1, 2, 3, 4, 5, 6], [5, 6, 7, 8]).every(([r, col]) => padColour(c, r, col) === GREY)).toBe(true);
     },
   },
 

@@ -234,8 +234,9 @@
     <div class="push-display__body">
       <div class="push-display__cell" data-col="1" data-enclosing="true" data-span="2" data-type="list" style="grid-column: 1 / span 2">
         <FolderList chosen="sounds" items=[{"id":"sounds","label":"Sounds","count":"›"},{"id":"drums","label":"Drums","count":"›"},{"id":"instruments","label":"Instruments","count":"›"},{"id":"audio effects","label":"Audio Effects","count":"›"},{"id":"midi effects","label":"MIDI Effects","count":"›"}] label="Add">
-        <span aria-label="more below" class="push-display__more" data-more="below" data-role="caption" data-tone="muted">
-          "▾"
+        <span aria-label="more below" class="push-display__more" data-more="below" role="img">
+          <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+            "▾"
       <div class="push-display__cell" data-col="3" data-enclosing="true" data-span="2" data-type="list" style="grid-column: 3 / span 2">
         <FolderList chosen="bass" items=[{"id":"bass","label":"Bass","count":"›"},{"id":"piano & keys","label":"Piano & Keys","count":"›"},{"id":"pad","label":"Pad","count":"›"},{"id":"synth lead","label":"Synth Lead","count":"›"}] label="Sounds">
       <div class="push-display__cell" data-col="5" data-span="2" data-type="list" style="grid-column: 5 / span 2">
@@ -269,8 +270,9 @@
     <div class="push-display__body">
       <div class="push-display__cell" data-col="1" data-span="4" data-type="list" style="grid-column: 1 / span 4">
         <FolderList chosen="set-12" items=[{"id":"set-10","label":"Set 10"},{"id":"set-11","label":"Set 11"},{"id":"set-12","label":"Set 12"},{"id":"set-13","label":"Set 13"},{"id":"set-14","label":"Set 14"}] label="Sets">
-        <span aria-label="more above" class="push-display__more" data-more="above" data-role="caption" data-tone="muted">
-          "▴"
+        <span aria-label="more above" class="push-display__more" data-more="above" role="img">
+          <span class="lib-text lib-tone" data-role="caption" data-tone="muted">
+            "▴"
     <div class="push-display__row" data-row="bottom">
       <div class="push-display__tab" data-col="1" data-empty="true" data-row="bottom">
       <div class="push-display__tab" data-col="2" data-empty="true" data-row="bottom">
@@ -963,6 +965,271 @@
         <span class="lib-text lib-tone" data-part="text" data-role="label" data-text-leading="tight">
           "Downloading Grand Piano"
         <span aria-hidden="true" class="push-display__bar">
+
+## Settings
+<div aria-label="Display: setup" class="push-display" data-dark="true" data-kind="setup" role="group" style="--push-lamp-neutral: #d0d0d0; --push-lamp-0: #ff94a6; --push-lamp-1: #ffa529; --push-lamp-2: #cc9927; --push-lamp-3: #f7f47c; --push-lamp-4: #bffb00; --push-lamp-5: #1aff2f; --push-lamp-6: #25ffa8; --push-lamp-7: #5cffe8; --push-lamp-8: #8bc5ff; --push-lamp-9: #5480e4; --push-lamp-10: #92a7ff; --push-lamp-11: #d86ce4; --push-lamp-12: #e553a0; --push-lamp-13: #ffffff; --push-lamp-14: #ff3636; --push-lamp-15: #f66c03; --push-lamp-16: #99724b; --push-lamp-17: #fff034; --push-lamp-18: #87ff67; --push-lamp-19: #3dc300; --push-lamp-20: #00bfaf; --push-lamp-21: #19e9ff; --push-lamp-22: #10a4ee; --push-lamp-23: #007dc0; --push-lamp-24: #886ce4; --push-lamp-25: #b677c6; --push-lamp-26: #ff39d4; --push-lamp-27: #d0d0d0; --push-lamp-28: #e2675a; --push-lamp-29: #ffa374; --push-lamp-30: #d3ad71; --push-lamp-31: #edffae; --push-lamp-32: #d2e498; --push-lamp-33: #bad074; --push-lamp-34: #9bc48d; --push-lamp-35: #d4fde1; --push-lamp-36: #cdf1f8; --push-lamp-37: #b9c1e3; --push-lamp-38: #cdbbe4; --push-lamp-39: #ae98e5; --push-lamp-40: #e5dce1; --push-lamp-41: #a9a9a9; --push-lamp-42: #c6928b; --push-lamp-43: #b78256; --push-lamp-44: #99836a; --push-lamp-45: #bfba69; --push-lamp-46: #a6be00; --push-lamp-47: #7db04d; --push-lamp-48: #88c2ba; --push-lamp-49: #9bb3c4; --push-lamp-50: #85a5c2; --push-lamp-51: #8393cc; --push-lamp-52: #a595b5; --push-lamp-53: #bf9fbe; --push-lamp-54: #bc7196; --push-lamp-55: #7b7b7b; --push-lamp-56: #af3333; --push-lamp-57: #a95131; --push-lamp-58: #724f41; --push-lamp-59: #dbc300; --push-lamp-60: #85961f; --push-lamp-61: #539f31; --push-lamp-62: #0a9c8e; --push-lamp-63: #236384; --push-lamp-64: #1a2f96; --push-lamp-65: #2f52a2; --push-lamp-66: #624bad; --push-lamp-67: #a34bad; --push-lamp-68: #cc2e6e; --push-lamp-69: #3c3c3c; --push-light: 1">
+  <div class="push-display__screen">
+    <div class="push-display__row" data-row="top">
+      <div class="push-display__tab" data-col="1" data-icon="left" data-row="top" data-selected="true">
+        <span aria-label="more to the left" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "‹"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Filter"
+      <div class="push-display__tab" data-col="2" data-icon="switch-on" data-row="top">
+        <span aria-label="on" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "■"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Track"
+      <div class="push-display__tab" data-col="3" data-dim="true" data-icon="switch-off" data-row="top">
+        <span aria-label="off" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "□"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Sync"
+      <div class="push-display__tab" data-col="4" data-row="top">
+        <span aria-label="Trigger: Gate" class="push-display__options" data-part="options" role="group">
+          <span class="lib-text lib-tone" data-part="option" data-role="label" data-text-leading="tight" key="0">
+            "Trigger"
+          <span class="lib-text lib-tone" data-current="true" data-part="option" data-role="label" data-text-leading="tight" key="1">
+            "Gate"
+      <div class="push-display__tab" data-col="5" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="6" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="7" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="8" data-empty="true" data-row="top">
+    <div class="push-display__body">
+      <div class="push-display__cell" data-col="1" data-span="2" data-style="choice" data-type="param" style="grid-column: 1 / span 2">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Expression Mode"
+        <div aria-label="Expression Mode MPE" class="push-display__choices" data-layout="stack" data-part="choices" role="group">
+          <span class="lib-text lib-tone" data-current="true" data-part="value" data-role="display" data-text-leading="tight" data-truncate="" key="0">
+            "MPE"
+          <span class="lib-text lib-tone" data-part="choice" data-role="display" data-text-leading="tight" data-tone="muted" data-truncate="" key="1">
+            "Poly Aftertouch"
+          <span class="lib-text lib-tone" data-part="choice" data-role="display" data-text-leading="tight" data-tone="muted" data-truncate="" key="2">
+            "Mono Aftertouch"
+      <div class="push-display__cell" data-col="3" data-span="1" data-style="choice" data-type="param" style="grid-column: 3 / span 1">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Note Pitch Bend"
+        <div aria-label="Note Pitch Bend On" class="push-display__choices" data-layout="list" data-part="choices" role="group">
+          <span class="lib-text lib-tone" data-part="choice" data-role="label" data-text-leading="tight" data-tone="muted" data-truncate="" key="0">
+            "Automatic"
+          <span class="lib-text lib-tone" data-current="true" data-part="value" data-role="label" data-text-leading="tight" data-text-weight="strong" data-truncate="" key="1">
+            "On"
+          <span class="lib-text lib-tone" data-part="choice" data-role="label" data-text-leading="tight" data-tone="muted" data-truncate="" key="2">
+            "Off"
+      <div class="push-display__cell" data-col="4" data-span="1" data-style="choice" data-type="param" style="grid-column: 4 / span 1">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "In Tune Location"
+        <div aria-label="In Tune Location Finger" class="push-display__reading" data-part="reading" role="group">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "Finger"
+        <span aria-label="finger" class="lib-icon lib-tone" data-part="picture" data-picture="finger" role="img">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M2 4h14v11H2z" key="0">
+            <path d="M9 6h5v5H9z" data-fill="true" key="1">
+            <path d="M12 10v8l-2-2M12 13l5 2v4l-2 3" key="2">
+      <div class="push-display__cell" data-col="5" data-span="1" data-style="arc" data-type="param" style="grid-column: 5 / span 1">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "In Tune Width"
+        <div aria-label="In Tune Width 10 mm" class="push-display__reading" data-part="reading" role="group">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "10"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            "mm"
+        <span aria-label="width" class="lib-icon lib-tone" data-part="picture" data-picture="width" role="img">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M2 4h20v16H2z" key="0">
+            <path d="M9 4h6v16H9z" data-fill="true" key="1">
+      <div class="push-display__cell" data-col="6" data-span="1" data-style="choice" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Shape"
+        <div aria-label="Shape Saw" class="push-display__choices" data-layout="single" data-part="choices" role="group">
+          <span class="lib-text lib-tone" data-current="true" data-part="value" data-role="display" data-text-leading="tight" data-truncate="" key="1">
+            "Saw"
+      <div class="push-display__cell" data-col="7" data-span="2" data-style="value" data-type="param" style="grid-column: 7 / span 2; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Mode"
+        <div aria-label="Mode Classic" class="push-display__choices" data-layout="row" data-part="choices" role="group">
+          <span class="lib-text lib-tone" data-current="true" data-part="value" data-role="numeral" data-text-leading="tight" key="0">
+            "Classic"
+          <span class="lib-text lib-tone" data-part="choice" data-role="numeral" data-text-leading="tight" data-tone="muted" key="1">
+            "One-Shot"
+          <span class="lib-text lib-tone" data-part="choice" data-role="numeral" data-text-leading="tight" data-tone="muted" key="2">
+            "Slicing"
+    <div class="push-display__row" data-row="bottom">
+      <div class="push-display__tab" data-col="1" data-row="bottom">
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Status"
+      <div class="push-display__tab" data-col="2" data-row="bottom" data-selected="true">
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Expression"
+      <div class="push-display__tab" data-col="3" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="4" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="5" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="6" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="7" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="8" data-empty="true" data-row="bottom">
+
+## Code
+<div aria-label="Display: lesson" class="push-display" data-dark="true" data-kind="lesson" role="group" style="--push-lamp-neutral: #d0d0d0; --push-lamp-0: #ff94a6; --push-lamp-1: #ffa529; --push-lamp-2: #cc9927; --push-lamp-3: #f7f47c; --push-lamp-4: #bffb00; --push-lamp-5: #1aff2f; --push-lamp-6: #25ffa8; --push-lamp-7: #5cffe8; --push-lamp-8: #8bc5ff; --push-lamp-9: #5480e4; --push-lamp-10: #92a7ff; --push-lamp-11: #d86ce4; --push-lamp-12: #e553a0; --push-lamp-13: #ffffff; --push-lamp-14: #ff3636; --push-lamp-15: #f66c03; --push-lamp-16: #99724b; --push-lamp-17: #fff034; --push-lamp-18: #87ff67; --push-lamp-19: #3dc300; --push-lamp-20: #00bfaf; --push-lamp-21: #19e9ff; --push-lamp-22: #10a4ee; --push-lamp-23: #007dc0; --push-lamp-24: #886ce4; --push-lamp-25: #b677c6; --push-lamp-26: #ff39d4; --push-lamp-27: #d0d0d0; --push-lamp-28: #e2675a; --push-lamp-29: #ffa374; --push-lamp-30: #d3ad71; --push-lamp-31: #edffae; --push-lamp-32: #d2e498; --push-lamp-33: #bad074; --push-lamp-34: #9bc48d; --push-lamp-35: #d4fde1; --push-lamp-36: #cdf1f8; --push-lamp-37: #b9c1e3; --push-lamp-38: #cdbbe4; --push-lamp-39: #ae98e5; --push-lamp-40: #e5dce1; --push-lamp-41: #a9a9a9; --push-lamp-42: #c6928b; --push-lamp-43: #b78256; --push-lamp-44: #99836a; --push-lamp-45: #bfba69; --push-lamp-46: #a6be00; --push-lamp-47: #7db04d; --push-lamp-48: #88c2ba; --push-lamp-49: #9bb3c4; --push-lamp-50: #85a5c2; --push-lamp-51: #8393cc; --push-lamp-52: #a595b5; --push-lamp-53: #bf9fbe; --push-lamp-54: #bc7196; --push-lamp-55: #7b7b7b; --push-lamp-56: #af3333; --push-lamp-57: #a95131; --push-lamp-58: #724f41; --push-lamp-59: #dbc300; --push-lamp-60: #85961f; --push-lamp-61: #539f31; --push-lamp-62: #0a9c8e; --push-lamp-63: #236384; --push-lamp-64: #1a2f96; --push-lamp-65: #2f52a2; --push-lamp-66: #624bad; --push-lamp-67: #a34bad; --push-lamp-68: #cc2e6e; --push-lamp-69: #3c3c3c; --push-light: 1">
+  <div class="push-display__screen">
+    <div class="push-display__row" data-row="top">
+      <div class="push-display__tab" data-col="1" data-icon="close" data-row="top">
+        <span aria-label="close" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "✕"
+      <div class="push-display__tab" data-col="2" data-row="top" data-selected="true">
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "A tour of Push"
+      <div class="push-display__tab" data-col="3" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="4" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="5" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="6" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="7" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="8" data-empty="true" data-row="top">
+    <div class="push-display__body">
+      <div class="push-display__cell" data-align="start" data-col="1" data-size="value" data-span="5" data-type="text" style="grid-column: 1 / span 5">
+        <span class="lib-text lib-tone" data-part="text" data-role="numeral" data-text-leading="tight">
+          "The pads play notes and launch clips."
+      <div class="push-display__cell" data-col="6" data-span="1" data-type="code" style="grid-column: 6 / span 1">
+        <CodeImage text="https://example.com/learn">
+      <div class="push-display__cell" data-align="start" data-col="7" data-size="label" data-span="2" data-type="text" style="grid-column: 7 / span 2">
+        <span class="lib-text lib-tone" data-part="text" data-role="label" data-text-leading="tight">
+          "More at https://example.com/learn"
+    <div class="push-display__row" data-row="bottom">
+      <div class="push-display__tab" data-col="1" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="2" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="3" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="4" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="5" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="6" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="7" data-empty="true" data-row="bottom">
+      <div class="push-display__tab" data-col="8" data-empty="true" data-row="bottom">
+
+## CodeDialog
+<div aria-label="Display: device" class="push-display" data-dark="true" data-kind="device" role="group" style="--push-lamp-neutral: #d0d0d0; --push-lamp-0: #ff94a6; --push-lamp-1: #ffa529; --push-lamp-2: #cc9927; --push-lamp-3: #f7f47c; --push-lamp-4: #bffb00; --push-lamp-5: #1aff2f; --push-lamp-6: #25ffa8; --push-lamp-7: #5cffe8; --push-lamp-8: #8bc5ff; --push-lamp-9: #5480e4; --push-lamp-10: #92a7ff; --push-lamp-11: #d86ce4; --push-lamp-12: #e553a0; --push-lamp-13: #ffffff; --push-lamp-14: #ff3636; --push-lamp-15: #f66c03; --push-lamp-16: #99724b; --push-lamp-17: #fff034; --push-lamp-18: #87ff67; --push-lamp-19: #3dc300; --push-lamp-20: #00bfaf; --push-lamp-21: #19e9ff; --push-lamp-22: #10a4ee; --push-lamp-23: #007dc0; --push-lamp-24: #886ce4; --push-lamp-25: #b677c6; --push-lamp-26: #ff39d4; --push-lamp-27: #d0d0d0; --push-lamp-28: #e2675a; --push-lamp-29: #ffa374; --push-lamp-30: #d3ad71; --push-lamp-31: #edffae; --push-lamp-32: #d2e498; --push-lamp-33: #bad074; --push-lamp-34: #9bc48d; --push-lamp-35: #d4fde1; --push-lamp-36: #cdf1f8; --push-lamp-37: #b9c1e3; --push-lamp-38: #cdbbe4; --push-lamp-39: #ae98e5; --push-lamp-40: #e5dce1; --push-lamp-41: #a9a9a9; --push-lamp-42: #c6928b; --push-lamp-43: #b78256; --push-lamp-44: #99836a; --push-lamp-45: #bfba69; --push-lamp-46: #a6be00; --push-lamp-47: #7db04d; --push-lamp-48: #88c2ba; --push-lamp-49: #9bb3c4; --push-lamp-50: #85a5c2; --push-lamp-51: #8393cc; --push-lamp-52: #a595b5; --push-lamp-53: #bf9fbe; --push-lamp-54: #bc7196; --push-lamp-55: #7b7b7b; --push-lamp-56: #af3333; --push-lamp-57: #a95131; --push-lamp-58: #724f41; --push-lamp-59: #dbc300; --push-lamp-60: #85961f; --push-lamp-61: #539f31; --push-lamp-62: #0a9c8e; --push-lamp-63: #236384; --push-lamp-64: #1a2f96; --push-lamp-65: #2f52a2; --push-lamp-66: #624bad; --push-lamp-67: #a34bad; --push-lamp-68: #cc2e6e; --push-lamp-69: #3c3c3c; --push-light: 1">
+  <div class="push-display__screen">
+    <div class="push-display__row" data-row="top">
+      <div class="push-display__tab" data-col="1" data-row="top" style="--push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Oscillator"
+      <div class="push-display__tab" data-col="2" data-row="top" data-selected="true" style="--push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Filter"
+      <div class="push-display__tab" data-col="3" data-row="top" style="--push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Envelope"
+      <div class="push-display__tab" data-col="4" data-row="top" style="--push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "LFO"
+      <div class="push-display__tab" data-col="5" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="6" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="7" data-empty="true" data-row="top">
+      <div class="push-display__tab" data-col="8" data-empty="true" data-row="top">
+    <div class="push-display__body">
+      <div class="push-display__cell" data-col="1" data-span="1" data-style="arc" data-type="param" style="grid-column: 1 / span 1; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Frequency"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "20.0"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " kHz"
+        <KnobReadout fraction=1 hue=1 label="" name="Frequency 20.0 kHz" unit="" value="" @onstep=turn:1>
+      <div class="push-display__cell" data-col="2" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 2 / span 1; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Pan"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "C"
+        <KnobReadout fraction=0.5 hue=1 label="" name="Pan C" origin="center" unit="" value="" @onstep=turn:2>
+      <div class="push-display__cell" data-col="3" data-span="1" data-style="choice" data-type="param" style="grid-column: 3 / span 1; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Type"
+        <FolderList chosen="2" items=[{"id":"0","label":"Low-pass"},{"id":"1","label":"High-pass"},{"id":"2","label":"Band-pass"},{"id":"3","label":"Notch"}] label="Type Band-pass">
+      <div class="push-display__cell" data-col="4" data-span="1" data-style="switch" data-type="param" style="grid-column: 4 / span 1; --push-lamp: var(--push-lamp-26)">
+        <Toggle ink="var(--push-lit)" label="Retrig On" layout="stacked" name="Retrig" on=true @onChange=switch:4>
+          #children
+            "On"
+      <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
+        <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
+      <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
+      <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Drive"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "2.4"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            "dB"
+        <KnobReadout fraction=0.2 hue=1 label="" name="Drive 2.4 dB" unit="" value="" @onstep=turn:7>
+      <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
+        <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+          "Env Amount"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "40"
+        <KnobReadout fraction=0.7 hue=1 label="" name="Env Amount 40" origin="center" unit="" value="" @onstep=turn:8>
+        <span class="push-display__dot" data-part="automation">
+          <StatusDot hue="t" name="automated" size="sm">
+    <div class="push-display__row" data-row="bottom">
+      <div class="push-display__tab" data-col="1" data-icon="drum-rack" data-row="bottom" style="--push-lamp: var(--push-lamp-14)">
+        <span aria-label="Drum Rack" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "▦"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Drums"
+      <div class="push-display__tab" data-col="2" data-icon="midi" data-row="bottom" data-selected="true" style="--push-lamp: var(--push-lamp-26)">
+        <span aria-label="MIDI track" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "♪"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Bass"
+        <span aria-label="clip progress" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="push-display__progress" data-part="progress" role="progressbar" style="--push-fraction: 0.5">
+      <div class="push-display__tab" data-col="3" data-icon="rack" data-row="bottom" style="--push-lamp: var(--push-lamp-8)">
+        <span aria-label="Rack" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "▤"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Keys"
+      <div class="push-display__tab" data-col="4" data-dim="true" data-icon="audio" data-row="bottom" style="--push-lamp: var(--push-lamp-3)">
+        <span aria-label="audio track" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "∿"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Vocals"
+      <div class="push-display__tab" data-col="5" data-icon="audio" data-row="bottom" style="--push-lamp: var(--push-lamp-17)">
+        <span aria-label="audio track" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "∿"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Guitar"
+        <span aria-label="armed" class="push-display__armed" data-part="armed" role="img">
+      <div class="push-display__tab" data-col="6" data-fold="open" data-icon="group" data-row="bottom" style="--push-lamp: var(--push-lamp-10)">
+        <span aria-label="group" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "▣"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "Synths"
+      <div class="push-display__tab" data-col="7" data-icon="return" data-row="bottom" style="--push-lamp: var(--push-lamp-36)">
+        <span aria-label="return" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "↩"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "A Reverb"
+      <div class="push-display__tab" data-col="8" data-icon="return" data-row="bottom" style="--push-lamp: var(--push-lamp-37)">
+        <span aria-label="return" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
+          "↩"
+        <span class="lib-text lib-tone" data-part="label" data-role="label" data-text-leading="tight" data-truncate="">
+          "B Delay"
+    <div class="push-display__overlays">
+      <div aria-label="Authorize this Push" class="push-display__overlay" data-overlay="dialog" role="dialog">
+        <span class="lib-text lib-tone" data-part="title" data-role="numeral" data-text-leading="tight">
+          "Authorize this Push"
+        <span class="lib-text lib-tone" data-part="code" data-role="display" data-text-leading="tight">
+          "481 205"
+        <CodeImage text="https://example.com/authorize">
+        <span class="lib-text lib-tone" data-part="address" data-role="label" data-text-leading="tight">
+          "https://example.com/authorize"
 
 ## Blank
 <div aria-label="Display, blank" class="push-display" data-dark="true" data-kind="blank" role="group" style="--push-lamp-neutral: #d0d0d0; --push-lamp-0: #ff94a6; --push-lamp-1: #ffa529; --push-lamp-2: #cc9927; --push-lamp-3: #f7f47c; --push-lamp-4: #bffb00; --push-lamp-5: #1aff2f; --push-lamp-6: #25ffa8; --push-lamp-7: #5cffe8; --push-lamp-8: #8bc5ff; --push-lamp-9: #5480e4; --push-lamp-10: #92a7ff; --push-lamp-11: #d86ce4; --push-lamp-12: #e553a0; --push-lamp-13: #ffffff; --push-lamp-14: #ff3636; --push-lamp-15: #f66c03; --push-lamp-16: #99724b; --push-lamp-17: #fff034; --push-lamp-18: #87ff67; --push-lamp-19: #3dc300; --push-lamp-20: #00bfaf; --push-lamp-21: #19e9ff; --push-lamp-22: #10a4ee; --push-lamp-23: #007dc0; --push-lamp-24: #886ce4; --push-lamp-25: #b677c6; --push-lamp-26: #ff39d4; --push-lamp-27: #d0d0d0; --push-lamp-28: #e2675a; --push-lamp-29: #ffa374; --push-lamp-30: #d3ad71; --push-lamp-31: #edffae; --push-lamp-32: #d2e498; --push-lamp-33: #bad074; --push-lamp-34: #9bc48d; --push-lamp-35: #d4fde1; --push-lamp-36: #cdf1f8; --push-lamp-37: #b9c1e3; --push-lamp-38: #cdbbe4; --push-lamp-39: #ae98e5; --push-lamp-40: #e5dce1; --push-lamp-41: #a9a9a9; --push-lamp-42: #c6928b; --push-lamp-43: #b78256; --push-lamp-44: #99836a; --push-lamp-45: #bfba69; --push-lamp-46: #a6be00; --push-lamp-47: #7db04d; --push-lamp-48: #88c2ba; --push-lamp-49: #9bb3c4; --push-lamp-50: #85a5c2; --push-lamp-51: #8393cc; --push-lamp-52: #a595b5; --push-lamp-53: #bf9fbe; --push-lamp-54: #bc7196; --push-lamp-55: #7b7b7b; --push-lamp-56: #af3333; --push-lamp-57: #a95131; --push-lamp-58: #724f41; --push-lamp-59: #dbc300; --push-lamp-60: #85961f; --push-lamp-61: #539f31; --push-lamp-62: #0a9c8e; --push-lamp-63: #236384; --push-lamp-64: #1a2f96; --push-lamp-65: #2f52a2; --push-lamp-66: #624bad; --push-lamp-67: #a34bad; --push-lamp-68: #cc2e6e; --push-lamp-69: #3c3c3c; --push-light: 1">

@@ -5,7 +5,7 @@ import { indexOf } from '../layout';
 import { clamp } from '../state';
 import { shapeForce } from '../velocity';
 import { holding, isDown, lamp, push, screen, type Ctx, type Layer } from '../engine';
-import type { BodyCell, DisplayMode, Overlay, PushSet, PushState, RowCell } from '../types';
+import type { BodyCell, DisplayMode, Overlay, Picture, PushSet, PushState, RowCell } from '../types';
 import { listChoose, listMove } from './dialogs';
 import { gather } from './params';
 
@@ -32,11 +32,17 @@ interface Tab {
 
 const setting = (ctx: Ctx, name: string, value: unknown, more: Record<string, unknown> = {}) => push(ctx, 'set-setting', { setting: name, value, ...more });
 const onOff = (on: boolean) => (on ? 'On' : 'Off');
+/** The picture of a switch's state: a filled circle, or a struck one. */
+const lit = (value: string): { picture: Picture } => ({ picture: value === 'On' ? 'on' : 'off' });
 
-/** A field that chooses among words. */
+/**
+ * A field that chooses among words: the current one large with the ones after it dim beneath, as
+ * on the unit. `more.layout: 'list'` shows them all small; `more.picture` shows the current one
+ * alone with its picture.
+ */
 function choice(col: number, name: string, value: string, choices: string[], ask: (ctx: Ctx, next: string) => void, more: Partial<BodyCell> = {}): Field {
   return {
-    cell: { type: 'param', col, name, value, fraction: 0, style: 'choice', choices, chosen: Math.max(0, choices.indexOf(value)), ...more } as BodyCell,
+    cell: { type: 'param', col, name, value, fraction: 0, style: 'choice', layout: 'stack', choices, chosen: Math.max(0, choices.indexOf(value)), ...more } as BodyCell,
     turn: (ctx, moved) => {
       if ((more as { disabled?: boolean }).disabled) return;
       const next = choices[clamp(Math.max(0, choices.indexOf(value)) + moved, 0, choices.length - 1)];
@@ -57,7 +63,8 @@ function level(col: number, name: string, value: number, low: number, high: numb
 }
 const text = (col: number, span: number, words: string, more: Partial<BodyCell> = {}): Field => ({ cell: { type: 'text', col, span, text: words, size: 'label', ...more } as BodyCell });
 const button = (col: number, label: string, press?: (ctx: Ctx) => void, more: Partial<RowCell> = {}): Button => ({ col, cell: { label, ...more }, press });
-const switchButton = (col: number, label: string, on: boolean, press: (ctx: Ctx) => void): Button => button(col, `${label}: ${onOff(on)}`, press, { selected: on });
+/** A switch over a display button, as the unit prints one: a box, filled when it is on, and its name. */
+const switchButton = (col: number, label: string, on: boolean, press: (ctx: Ctx) => void): Button => button(col, label, press, { icon: on ? 'switch-on' : 'switch-off', ...(on ? {} : { dim: true }) });
 
 /** A pad is 26.5 mm wide: the in-tune width is kept as a share of it, and shown in millimetres. */
 const PAD_MM = 26.5;
@@ -77,7 +84,7 @@ function status(state: PushState, set: PushSet): Tab {
       cell: { type: 'list', col: 5, span: 2, label: 'Wi-Fi', items: networks.map((n) => ({ id: n.name, label: n.name, mark: n.connected ? 'Connected' : n.secured ? '' : 'Open', ...(n.connected ? { colour: 5 } : {}) })), chosen: chosen?.name },
       turn: (ctx, moved) => void (ctx.state.setup.highlight = clamp(ctx.state.setup.highlight + moved, 0, Math.max(0, networks.length - 1))),
     },
-    choice(8, 'Link', onOff(!!set.transport.link?.on), ['Off', 'On'], (ctx, next) => setting(ctx, 'link', next === 'On')),
+    choice(8, 'Link', onOff(!!set.transport.link?.on), ['Off', 'On'], (ctx, next) => setting(ctx, 'link', next === 'On'), lit(onOff(!!set.transport.link?.on))),
   ];
   const buttons: Button[] = [
     // A unit with no processor is always a controller: there is no mode to switch.
@@ -111,10 +118,11 @@ function expression(_state: PushState, set: PushSet): Tab {
   if (e.mode === 'mpe') {
     const bends = { auto: 'Automatic', on: 'On', off: 'Off' } as const;
     fields.push(
-      choice(3, 'Note Pitch Bend', bends[e.noteBend], ['Automatic', 'On', 'Off'], (ctx, next) => setting(ctx, 'note-pitch-bend', next === 'Automatic' ? 'auto' : next.toLowerCase())),
-      choice(4, 'In Tune Location', e.inTune === 'finger' ? 'Finger' : 'Pad', ['Finger', 'Pad'], (ctx, next) => setting(ctx, 'in-tune-location', next.toLowerCase())),
-      level(5, 'In Tune Width', Math.round(e.inTuneWidth * PAD_MM), 0, 20, ' mm', (ctx, v) => setting(ctx, 'in-tune-width', v, { unit: 'mm' })),
-      level(6, 'Slide Height', e.slideHeight ?? 16, 10, 16, ' mm', (ctx, v) => setting(ctx, 'slide-height', v, { unit: 'mm' })),
+      choice(3, 'Note Pitch Bend', bends[e.noteBend], ['Automatic', 'On', 'Off'], (ctx, next) => setting(ctx, 'note-pitch-bend', next === 'Automatic' ? 'auto' : next.toLowerCase()), { layout: 'list' }),
+      // Where a note is in tune, and the two lengths, each with its picture in place of a dial.
+      choice(4, 'In Tune Location', e.inTune === 'finger' ? 'Finger' : 'Pad', ['Finger', 'Pad'], (ctx, next) => setting(ctx, 'in-tune-location', next.toLowerCase()), { picture: e.inTune === 'finger' ? 'finger' : 'pad' }),
+      level(5, 'In Tune Width', Math.round(e.inTuneWidth * PAD_MM), 0, 20, ' mm', (ctx, v) => setting(ctx, 'in-tune-width', v, { unit: 'mm' }), 1, { picture: 'width' }),
+      level(6, 'Slide Height', e.slideHeight ?? 16, 10, 16, ' mm', (ctx, v) => setting(ctx, 'slide-height', v, { unit: 'mm' }), 1, { picture: 'height' }),
     );
   }
   return { fields, buttons: [] };
@@ -170,8 +178,8 @@ function audio(_state: PushState, set: PushSet): Tab {
       choice(1, 'Sample Rate', a.sampleRate, a.sampleRates, (ctx, next) => setting(ctx, 'sample-rate', next)),
       choice(2, 'Buffer Size', a.buffer, a.buffers, (ctx, next) => setting(ctx, 'buffer-size', next)),
       ...inputs,
-      choice(7, a.outputs[0]?.name ?? 'Output', a.outputs[0]?.source ?? '', a.outputs[0]?.sources ?? [], (ctx, next) => setting(ctx, 'output-source', next, { output: a.outputs[0]?.name })),
-      choice(8, 'Clock', a.clock, a.clocks, (ctx, next) => setting(ctx, 'clock-source', next)),
+      choice(7, a.outputs[0]?.name ?? 'Output', a.outputs[0]?.source ?? '', a.outputs[0]?.sources ?? [], (ctx, next) => setting(ctx, 'output-source', next, { output: a.outputs[0]?.name }), { layout: 'list' }),
+      choice(8, 'Clock', a.clock, a.clocks, (ctx, next) => setting(ctx, 'clock-source', next), { layout: 'list' }),
     ],
     buttons: [switchButton(3, 'Link 1 & 2', linked, (ctx) => setting(ctx, 'link-inputs', !linked))],
   };
@@ -188,35 +196,40 @@ function midi(state: PushState, set: PushSet): Tab {
   return {
     fields: [
       {
-        cell: { type: 'param', col: 1, name: 'I/O', value: side === 'input' ? 'Input' : 'Output', fraction: 0, style: 'choice', choices: ['Input', 'Output'], chosen: side === 'input' ? 0 : 1 },
+        // The direction with its sign: an arrow into the port, or out of it.
+        cell: { type: 'param', col: 1, name: 'I/O', value: side === 'input' ? 'Input' : 'Output', fraction: 0, style: 'choice', choices: ['Input', 'Output'], chosen: side === 'input' ? 0 : 1, picture: side },
         turn: (ctx, moved) => void (ctx.state.setup.side = moved > 0 ? 'output' : 'input'),
       },
-      { cell: { type: 'list', col: 2, span: 4, label: 'Port', items: ports.map((p) => ({ id: p.id, label: p.name })), chosen: port?.id }, turn: (ctx, moved) => void (ctx.state.setup.port = clamp((ctx.state.setup.port ?? 0) + moved, 0, Math.max(0, ports.length - 1))) },
+      // The port, large, with the ports after it beneath: it is a choice like the others.
+      { cell: { type: 'param', col: 2, span: 4, name: 'Port', value: port?.name ?? '', fraction: 0, style: 'choice', layout: 'stack', choices: ports.map((p) => p.name), chosen: Math.max(0, ports.indexOf(port)) }, turn: (ctx, moved) => void (ctx.state.setup.port = clamp((ctx.state.setup.port ?? 0) + moved, 0, Math.max(0, ports.length - 1))) },
       // Sync Delay shifts the clock an input follows: it is there when one does.
       ...(anySync ? [level(6, 'Sync Delay', set.unit.midi.syncDelay ?? 0, -100, 100, ' ms', (ctx, v) => setting(ctx, 'sync-delay', v, { unit: 'ms' }))] : []),
       // External Sync follows an input's clock: with no input's Sync on there is nothing to follow, and it is greyed.
-      choice(7, 'External Sync', onOff(!!set.unit.midi.externalSync), ['Off', 'On'], (ctx, next) => setting(ctx, 'external-sync', next === 'On'), anySync ? {} : { disabled: true }),
+      choice(7, 'External Sync', onOff(!!set.unit.midi.externalSync), ['Off', 'On'], (ctx, next) => setting(ctx, 'external-sync', next === 'On'), { ...lit(onOff(!!set.unit.midi.externalSync)), ...(anySync ? {} : { disabled: true }) }),
     ],
     buttons: port && flags ? [flag(2, 'Track', 'track'), flag(3, 'Sync', 'sync'), flag(4, 'Remote', 'remote'), ...(side === 'input' ? [switchButton(5, 'MPE', false, (ctx) => setting(ctx, 'midi-port', true, { port: port.id, side, flag: 'mpe' }))] : [])] : [],
   };
 }
 
 function pedals(_state: PushState, set: PushSet): Tab {
-  const jack = (col: number, name: string, outputs: string): Field[] => {
+  // The unit's columns: each jack takes half the display, its job at the left and what it carries beside it.
+  const jack = (col: number, name: string, label: string, outputs: string): Field[] => {
     const j = set.unit.jacks[name] ?? {};
     const jobs = j.jobs ?? ['Footswitch', 'CV Out'];
     const now = j.job ?? jobs[0];
-    return [choice(col, name, now, jobs, (ctx, next) => setting(ctx, 'jack', next, { jack: name })), text(col + 1, 1, now === 'CV Out' ? `CV outputs ${outputs}` : (j.plugged ?? 'Nothing plugged in'))];
+    return [choice(col, label, now, jobs, (ctx, next) => setting(ctx, 'jack', next, { jack: name }), { span: 2 }), text(col + 2, 2, now === 'CV Out' ? `CV outputs ${outputs}` : (j.plugged ?? 'Nothing plugged in'), { tone: 'dim' })];
   };
-  return { fields: [...jack(1, 'Pedal 1', '5 and 6'), ...jack(3, 'Pedal 2', '7 and 8')], buttons: [] };
+  return { fields: [...jack(1, 'Pedal 1', 'Pedal & CV 1', '5 and 6'), ...jack(5, 'Pedal 2', 'Pedal & CV 2', '7 and 8')], buttons: [] };
 }
 
 function preferences(_state: PushState, set: PushSet): Tab {
-  const names = ['Workflow', 'Exclusive Arm', 'Exclusive Solo', 'Select on Launch'];
+  // The unit's columns: Workflow first, the two exclusive switches third and fourth, Select on Launch sixth.
+  const places: [string, number][] = [['Workflow', 1], ['Exclusive Arm', 3], ['Exclusive Solo', 4], ['Select on Launch', 6]];
+  const pictures: Record<string, Picture> = { On: 'on', Off: 'off', Scene: 'scene', Clip: 'clip' };
   return {
-    fields: names.flatMap((name, i) => {
+    fields: places.flatMap(([name, col]) => {
       const p = set.unit.preferences[name];
-      return p ? [choice(i + 1, name, p.value, p.choices, (ctx, next) => setting(ctx, 'preference', next, { preference: name }))] : [];
+      return p ? [choice(col, name, p.value, p.choices, (ctx, next) => setting(ctx, 'preference', next, { preference: name }), pictures[p.value] ? { picture: pictures[p.value] } : {})] : [];
     }),
     buttons: [],
   };
@@ -246,7 +259,7 @@ function software(state: PushState, set: PushSet): Tab {
       ];
   const overlays: Overlay[] = [];
   if (busy) overlays.push({ type: 'progress', label: `${update!.state === 'installing' ? 'Installing' : 'Downloading'} version ${update!.version}`, fraction: update!.progress ?? 0 });
-  if (state.setup.info) overlays.push({ type: 'dialog', title: INFO[state.setup.info].title, address: INFO[state.setup.info].address });
+  if (state.setup.info) overlays.push({ type: 'dialog', title: INFO[state.setup.info].title, address: INFO[state.setup.info].address, image: true });
   return { fields, buttons, overlays };
 }
 
@@ -359,11 +372,12 @@ export const learn: Layer = {
       const pages = lesson.steps?.length ?? 1;
       const page = clamp(l.step ?? 0, 0, pages - 1);
       paint.screen = screen('lesson', {
-        top: [X, { label: lesson.name, selected: true }, null, null, null, null, { label: 'Previous', ...(page > 0 ? {} : { dim: true }) }, { label: 'Next', ...(page < pages - 1 ? {} : { dim: true }) }],
+        // The page's place is in the top row, beside the two buttons that turn it.
+        top: [X, { label: lesson.name, selected: true }, null, null, null, { label: `Page ${page + 1} of ${pages}`, dim: true }, { label: 'Previous', ...(page > 0 ? {} : { dim: true }) }, { label: 'Next', ...(page < pages - 1 ? {} : { dim: true }) }],
         body: [
-          { type: 'text', col: 1, span: lesson.link ? 6 : 8, text: lesson.steps?.[page] ?? '', size: 'value' },
-          { type: 'text', col: 1, span: 2, text: `Page ${page + 1} of ${pages}`, size: 'label', tone: 'dim' },
-          ...(lesson.link ? [{ type: 'text' as const, col: 7, span: 2, text: `More at ${lesson.link}`, size: 'label' as const }] : []),
+          { type: 'text', col: 1, span: lesson.link ? 5 : 8, text: lesson.steps?.[page] ?? '', size: 'value' },
+          // Further material: a code a phone can scan, and the address in text beside it.
+          ...(lesson.link ? [{ type: 'code' as const, col: 6, text: lesson.link, label: `Code for more about ${lesson.name}` }, { type: 'text' as const, col: 7, span: 2, text: `More at ${lesson.link}`, size: 'label' as const }] : []),
         ],
         close: true,
       });

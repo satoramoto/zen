@@ -21,7 +21,7 @@ export function everyParameter(set: PushSet): Parameter[] {
       for (const chain of d.chains ?? []) for (const p of [chain.volume, chain.pan]) if (p) out.push(p);
     }
     for (const d of everyDevice(t.devices)) {
-      for (const b of d.banks) for (const p of b.parameters) if (p) out.push(p);
+      for (const b of d.banks) for (const p of [...b.parameters, ...(b.switches ?? [])]) if (p) out.push(p);
       for (const m of d.macros ?? []) if (m) out.push(m);
     }
   }
@@ -154,6 +154,7 @@ const APPLY: Record<string, Apply> = {
     if (!sampler) return;
     if (typeof i.at === 'number') sampler.slices = [...(sampler.slices ?? []), i.at].sort((a, b) => a - b);
     if (typeof i.delete === 'number') sampler.slices = (sampler.slices ?? []).filter((_, n) => n !== i.delete);
+    if (typeof i.move === 'number' && sampler.slices?.[i.move] !== undefined) sampler.slices = sampler.slices.map((at, n) => (n === i.move ? clamp01(at + Number(i.by ?? 0)) : at));
   },
   'sample-action': (s, i) => {
     const device = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device);
@@ -163,7 +164,8 @@ const APPLY: Record<string, Apply> = {
     else if (i.what === 'loop' && sampler.loop) {
       sampler.loop.on = !sampler.loop.on;
       device.banks = simplerBanks(device.id, sampler);
-    } else if (i.what === 'split-slice') {
+    } else if (i.what === 'reset-slices') sampler.slices = evenSlices(sampler, 8);
+    else if (i.what === 'split-slice') {
       const at = sampler.selectedSlice ?? 0;
       const slices = sampler.slices ?? [];
       sampler.slices = [...slices, ((slices[at] ?? sampler.start) + (slices[at + 1] ?? sampler.end)) / 2].sort((a, b) => a - b);

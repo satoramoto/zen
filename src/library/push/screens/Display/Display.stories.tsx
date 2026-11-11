@@ -117,7 +117,7 @@ export const AContinuousParameter: Story = { ...scenario(
     when: 'a column shows a filter frequency of 20.0 kHz',
     then: 'it reads its name, 20.0 kHz, and an arc filled to its place in the range',
     requirement: 'A parameter cell shows a name, a value and a drawing',
-    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, a list with the current choice marked for a choice, a switch for an on or off, and a bar for a level.',
+    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, the current choice at the large size for a choice, a switch for an on or off, and a bar for a level.',
     act: plays.AContinuousParameter.act,
     check: plays.AContinuousParameter.check,
   },
@@ -128,9 +128,9 @@ export const AChoice: Story = scenario(
   {
     name: 'A choice',
     when: 'a column shows a parameter with four named choices',
-    then: 'the choices are listed with the current one marked',
+    then: 'the current choice is shown alone at the large size',
     requirement: 'A parameter cell shows a name, a value and a drawing',
-    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, a list with the current choice marked for a choice, a switch for an on or off, and a bar for a level.',
+    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, the current choice at the large size for a choice, a switch for an on or off, and a bar for a level.',
     act: plays.AChoice.act,
     check: plays.AChoice.check,
   },
@@ -143,7 +143,7 @@ export const ABipolarValue: Story = { ...scenario(
     when: 'a column shows a pan at centre',
     then: 'its arc is empty from the centre and reads C',
     requirement: 'A parameter cell shows a name, a value and a drawing',
-    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, a list with the current choice marked for a choice, a switch for an on or off, and a bar for a level.',
+    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, the current choice at the large size for a choice, a switch for an on or off, and a bar for a level.',
     act: plays.ABipolarValue.act,
     check: plays.ABipolarValue.check,
   },
@@ -473,4 +473,95 @@ export const UserMode: Story = scenario(
     check: plays.UserMode.check,
   },
   scenarioStory(plays.UserMode),
+);
+
+export const ChoicesBeneathASetting: Story = scenario(
+  {
+    name: 'Choices beneath a setting',
+    when: 'the Expression tab shows Expression Mode at MPE',
+    then: 'MPE is large and lit, with Poly Aftertouch and Mono Aftertouch dim beneath it',
+    requirement: 'A choice shows the choices after it',
+    shall: 'A parameter that takes one of a list of choices SHALL show the current choice lit; a setting SHALL show the choices after it dim beneath it, and a parameter over a drawing SHALL show them dim beside it in a row.',
+    act: plays.ChoicesBeneathASetting.act,
+    check: plays.ChoicesBeneathASetting.check,
+  },
+  scenarioStory(plays.ChoicesBeneathASetting),
+);
+
+export const ChoicesBesideAParameter: Story = scenario(
+  {
+    name: 'Choices beside a parameter',
+    when: 'Device View shows a Simpler in Classic mode',
+    then: 'Mode reads Classic lit, with One-Shot dim beside it on the same line',
+    requirement: 'A choice shows the choices after it',
+    shall: 'A parameter that takes one of a list of choices SHALL show the current choice lit; a setting SHALL show the choices after it dim beneath it, and a parameter over a drawing SHALL show them dim beside it in a row.',
+    act: plays.ChoicesBesideAParameter.act,
+    check: plays.ChoicesBesideAParameter.check,
+  },
+  scenarioStory(plays.ChoicesBesideAParameter),
+);
+
+export const TheLastChoice: Story = scenario(
+  {
+    name: 'The last choice',
+    when: 'a setting is at the last of its choices',
+    then: 'it is shown alone',
+    requirement: 'A choice shows the choices after it',
+    shall: 'A parameter that takes one of a list of choices SHALL show the current choice lit; a setting SHALL show the choices after it dim beneath it, and a parameter over a drawing SHALL show them dim beside it in a row.',
+    act: plays.TheLastChoice.act,
+    check: plays.TheLastChoice.check,
+  },
+  scenarioStory(plays.TheLastChoice),
+);
+
+export const ACodeForAnAddress: Story = scenario(
+  {
+    name: 'A code for an address',
+    when: 'the app gives a dialog an address to show as a code',
+    then: 'the display shows a code image that reads back as that address, and the address in text',
+    requirement: 'An address can be shown as a code image',
+    shall: 'The display SHALL be able to show an address as a code image a phone can scan, dark on a light ground with a clear margin in every pack and mode, with the address in text beside it; an address too long to draw SHALL be shown as text alone.',
+    act: plays.ACodeForAnAddress.act,
+    check: plays.ACodeForAnAddress.check,
+  },
+  scenarioStory(plays.ACodeForAnAddress),
+);
+
+export const ScannableInADarkPack: Story = scenario(
+  {
+    name: 'Scannable in a dark pack',
+    when: 'the code image is drawn in the push-3 pack in dark mode',
+    then: 'its marks are dark on a light ground with a clear margin around them',
+    requirement: 'An address can be shown as a code image',
+    shall: 'The display SHALL be able to show an address as a code image a phone can scan, dark on a light ground with a clear margin in every pack and mode, with the address in text beside it; an address too long to draw SHALL be shown as text alone.',
+    act: plays.ScannableInADarkPack.act,
+    check: plays.ScannableInADarkPack.check,
+  },
+  scenarioStory(plays.ScannableInADarkPack),
+);
+
+export const AnAddressTooLong: Story = scenario(
+  {
+    name: 'An address too long',
+    when: 'the app gives an address longer than the code can hold',
+    then: 'the display shows the address as text and no code image',
+    requirement: 'An address can be shown as a code image',
+    shall: 'The display SHALL be able to show an address as a code image a phone can scan, dark on a light ground with a clear margin in every pack and mode, with the address in text beside it; an address too long to draw SHALL be shown as text alone.',
+    act: plays.AnAddressTooLong.act,
+    check: plays.AnAddressTooLong.check,
+  },
+  scenarioStory(plays.AnAddressTooLong),
+);
+
+export const AValueWithAPicture: Story = scenario(
+  {
+    name: 'A value with a picture',
+    when: 'the app gives a setting\'s value with the picture of a finger',
+    then: 'a finger is drawn under the value, in its colour, where a dial would be',
+    requirement: 'A value may carry a small picture',
+    shall: 'A setting\'s value SHALL be able to name a small picture, drawn under the value in the value\'s colour in place of a dial, and a value that names none SHALL be drawn as before.',
+    act: plays.AValueWithAPicture.act,
+    check: plays.AValueWithAPicture.check,
+  },
+  scenarioStory(plays.AValueWithAPicture),
 );

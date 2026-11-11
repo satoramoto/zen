@@ -73,6 +73,8 @@ import { statusDotView } from '../../components/StatusDot/StatusDot.model';
 import { statusDotStories } from '../../components/StatusDot/StatusDot.fixtures';
 import { separatorView } from '../../components/Separator/Separator.model';
 import { separatorStories } from '../../components/Separator/Separator.fixtures';
+import { codeImageView } from '../../components/CodeImage/CodeImage.model';
+import { codeImageStories } from '../../components/CodeImage/CodeImage.fixtures';
 import { lineSliderView } from '../../components/LineSlider/LineSlider.model';
 import { lineSliderStories } from '../../components/LineSlider/LineSlider.fixtures';
 import { segmentedView } from '../../components/Segmented/Segmented.model';
@@ -189,6 +191,7 @@ snapshot('Opaque', (props) => opaqueNode(undefined, {}, ...kids(props)), opaqueS
 snapshot('Hole', (props) => holeNode(undefined, (props as { name?: string }).name, {}, ...kids(props)), holeStories);
 snapshot('StatusDot', (props) => statusDotView(props), statusDotStories);
 snapshot('Separator', (props) => separatorView(props), separatorStories);
+snapshot('CodeImage', (props) => codeImageView(props as Parameters<typeof codeImageView>[0]), codeImageStories);
 snapshot('LineSlider', (props) => lineSliderView(props as Parameters<typeof lineSliderView>[0]), lineSliderStories);
 snapshot('Segmented', (props) => segmentedView(props as Parameters<typeof segmentedView>[0]), segmentedStories);
 // Select open (unless disabled), the held member highlighted: the menu is the part only a tree shows.

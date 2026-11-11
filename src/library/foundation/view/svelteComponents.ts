@@ -24,6 +24,7 @@ import Popover from '../../components/Popover/Popover.svelte';
 import Modal from '../../components/Modal/Modal.svelte';
 import Sheet from '../../components/Modal/Sheet.svelte';
 import Separator from '../../components/Separator/Separator.svelte';
+import CodeImage from '../../components/CodeImage/CodeImage.svelte';
 import SettingsRow from '../../components/SettingsRow/SettingsRow.svelte';
 import StatusDot from '../../components/StatusDot/StatusDot.svelte';
 import BarBeat from '../../music/components/BarBeat/BarBeat.svelte';
@@ -118,6 +119,7 @@ export function svelteComponent(name: string): Component<any> {
     Modal,
     Sheet,
     Separator,
+    CodeImage,
     SettingsRow,
     Stack,
     StatusDot,
