@@ -55,6 +55,7 @@ export const AREAS: Record<string, string> = {
   'compendium/book/fourier': 'Compendium/Book/Fourier',
   'compendium/book/prime-waves': 'Compendium/Book/Prime Waves',
   openspec: 'Openspec',
+  push: 'Push',
   site: 'Site',
   yahaha: 'Yahaha',
 };

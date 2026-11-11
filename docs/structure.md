@@ -38,6 +38,7 @@ src/library/
 | `math`, `math/<topic>` | `Math`, `Math/<Topic>` | the math components; each topic (trig, fourier, primes, …) is a sub-area |
 | `compendium`, `compendium/book` | `Compendium`, `Compendium/Book` | the book primitives and the sample books |
 | `openspec` | `Openspec` | an OpenSpec root, read and drawn |
+| `push` | `Push` | the Push 3 surface, its display and the device model (`docs/push.md`) |
 | `site` | `Site` | the documentation site's views |
 | `yahaha` | `Yahaha` | Yahaha's redesign |
 
