@@ -65,7 +65,7 @@ export const FOUNDATION = 'foundation';
 
 /** The files at the root: the public entries, the repo-wide checks and what those read. */
 export const ROOT_FILES = [
-  'index.ts', 'themes.ts', 'svelte.ts', 'storybook.tsx', 'storybook-renderers.tsx', 'view.ts', 'view-react.ts', 'view-svelte.ts', 'source.css', 'library.css',
+  'index.ts', 'themes.ts', 'svelte.ts', 'storybook.tsx', 'storybook-renderers.tsx', 'view.ts', 'view-react.ts', 'view-svelte.ts', 'checks.ts', 'source.css', 'library.css',
   'contract.ts', 'theme.tsx', 'theme.model.ts', 'resolve.ts', 'frame.ts', 'fixtures.ts', 'storybook.globals.ts',
   'library.test.tsx', 'parity.ts', 'parity.test.tsx',
   'tiers.ts', 'tiers.test.ts', 'tiers.baseline.json',

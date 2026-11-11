@@ -6,13 +6,13 @@ import {
   countByFolder,
   folderOf,
   scanCss,
-  scanLibrary,
   scanTsx,
   stripTsComments,
   type Counts,
   type Finding,
 } from './tiers';
 import baseline from './tiers.baseline.json';
+import { checkTiers, diskFiles } from './checks';
 
 const rules = (fs: Finding[], rule: Finding['rule']) => fs.filter((f) => f.rule === rule);
 
@@ -142,7 +142,7 @@ export const Y = () => <div style={{ '--text-size': '1em' } as React.CSSProperti
 
 describe('tiers adoption', () => {
   it('counts the widget folders that render Text and Surface', () => {
-    const a = adoption(join(process.cwd(), 'src/library'));
+    const a = adoption(diskFiles(join(process.cwd(), 'src/library')));
     expect(a.components).toContain('components/Button');
     expect(a.components).toContain('yahaha/screens/Stage');
     expect(a.components.some((f) => f === 'components' || f === 'yahaha')).toBe(false);
@@ -155,7 +155,7 @@ describe('tiers adoption', () => {
 describe('tiers ratchet', () => {
   it('no folder breaks a rule more than its baseline (tiers.baseline.json)', () => {
     // jsdom gives import.meta.url a non-file scheme; tests run from the repo root.
-    const failures = compare(countByFolder(scanLibrary(join(process.cwd(), 'src/library'))), baseline as Counts);
+    const { failures } = checkTiers(join(process.cwd(), 'src/library'), { baseline: baseline as Counts });
     expect(failures, `\n${failures.join('\n\n')}\n(after a deliberate improvement, run \`npm run tiers -- --write\`)`).toEqual([]);
   });
 });

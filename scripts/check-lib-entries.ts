@@ -9,7 +9,7 @@ const ENTRIES = [
   { file: 'svelte.js', frameworks: /^react(?:-dom)?(?:\/.*)?$/ },
   { file: 'view-svelte.js', frameworks: /^react(?:-dom)?(?:\/.*)?$/ },
   { file: 'view-react.js', frameworks: /^svelte(?:\/.*)?$/ },
-  ...['themes.js', 'view.js', 'compendium-model.js', 'math-trig-model.js', 'math-expression.js', 'push-model.js'].map((file) => ({
+  ...['themes.js', 'view.js', 'checks.js', 'compendium-model.js', 'math-trig-model.js', 'math-expression.js', 'push-model.js'].map((file) => ({
     file, frameworks: /^(?:react(?:-dom)?|svelte|storybook|@storybook\/[^/]+)(?:\/.*)?$/,
   })),
 ];

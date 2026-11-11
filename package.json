@@ -57,6 +57,11 @@
       "types": "./lib/view-svelte.d.ts",
       "import": "./lib/view-svelte.js"
     },
+    "./checks": {
+      "zen-source": "./src/library/checks.ts",
+      "types": "./lib/checks.d.ts",
+      "import": "./lib/checks.js"
+    },
     "./compendium": {
       "zen-source": "./src/library/compendium/index.ts",
       "types": "./lib/compendium/index.d.ts",

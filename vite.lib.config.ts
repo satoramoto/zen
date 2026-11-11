@@ -17,6 +17,8 @@
 //   are its renderers with their registries.
 // - `storybook-renderers` (`./storybook/renderers`: the Renderer decorator and the fixture story
 //   helpers) → `lib/storybook-renderers.js`; it needs Svelte, so it is apart from `storybook`.
+// - `checks` (`./checks`: the contract, tier and bindings-only rules over a folder) → `lib/checks.js`,
+//   for node (an app's tests).
 //
 // - `push-model` (`src/library/push/model/index.ts`, `./push/model`: the Push device model, its layout
 //   table and sample Set) → `lib/push-model.js`. Framework-free, as `themes` is.
@@ -79,6 +81,7 @@ export default defineConfig({
         'view-react': 'src/library/view-react.ts',
         'view-svelte': 'src/library/view-svelte.ts',
         'storybook-renderers': 'src/library/storybook-renderers.tsx',
+        checks: 'src/library/checks.ts',
         compendium: 'src/library/compendium/index.ts',
         'compendium-model': 'src/library/compendium/model/index.ts',
         'math-trig': 'src/library/math/trig/index.ts',
@@ -90,7 +93,7 @@ export default defineConfig({
       fileName: (_format, name) => `${name}.js`,
     },
     rollupOptions: {
-      external: [/^react(\/.*)?$/, /^react-dom(\/.*)?$/, /^svelte(\/.*)?$/, /^storybook(\/.*)?$/, /^@storybook\//],
+      external: [/^node:/, /^react(\/.*)?$/, /^react-dom(\/.*)?$/, /^svelte(\/.*)?$/, /^storybook(\/.*)?$/, /^@storybook\//],
       output: { chunkFileNames: 'chunks/zen-[hash].js', assetFileNames: '[name][extname]' },
     },
   },
