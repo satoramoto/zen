@@ -37,7 +37,7 @@ const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PAT
 
 function observe() {
   const run = (window.__STAGE_RUN__ = { events: [] });
-  const types = ['storyFinished', 'storyRendered', 'storyThrewException', 'storyErrored', 'playFunctionThrewException', 'unhandledErrorsWhilePlaying', 'storyMissing'];
+  const types = ['storyFinished', 'storyRendered', 'storyThrewException', 'storyErrored', 'playFunctionThrewException', 'unhandledErrorsWhilePlaying', 'storyMissing', 'storyHotUpdated'];
   const attached = new WeakSet();
   const attach = (channel) => {
     if (!channel?.on || attached.has(channel)) return;
@@ -78,12 +78,13 @@ async function play(context, story) {
     }, story.id, { timeout, polling: 100 });
     const events = await page.evaluate(() => window.__STAGE_RUN__.events);
     const problems = [];
+    const hot = events.some((e) => e.type === 'storyHotUpdated');
     for (const e of events) {
       if (failing.has(e.type)) problems.push(`${e.type}: ${JSON.stringify(e.args).slice(0, 1500)}`);
       if (e.type === 'storyFinished' && e.args[0]?.status !== 'success') problems.push(`storyFinished ${e.args[0]?.status}`);
     }
     problems.push(...errors.map((m) => `page error: ${m}`));
-    return { story, ok: problems.length === 0, problems, ms: Date.now() - started };
+    return { story, ok: problems.length === 0, problems, hot, ms: Date.now() - started };
   } catch (e) {
     return { story, ok: false, problems: [`no result within ${timeout} ms: ${e.message.split('\n')[0]}`, ...errors], ms: Date.now() - started };
   } finally {
@@ -93,12 +94,20 @@ async function play(context, story) {
   }
 }
 
+// A story Storybook reloaded mid-play (a file changed while it ran) is played
+// again, up to twice: the reload, not the story, cut it short.
+const reloaded = (r) => r.problems.some((p) => /storyHotUpdated|the session has ended|"closed"|no result within/.test(p)) || r.hot;
+
 const queue = [...stories];
 const results = [];
 await Promise.all(Array.from({ length: Math.max(1, Number(values.workers)) }, async () => {
   const context = await browser.newContext({ viewport: { width: 1600, height: 1000 } });
   for (let s = queue.shift(); s; s = queue.shift()) {
-    const r = await play(context, s);
+    let r = await play(context, s);
+    for (let again = 0; !r.ok && reloaded(r) && again < 2; again++) {
+      console.log(`again ${s.title} / ${s.name}  (reloaded while it played)`);
+      r = await play(context, s);
+    }
     results.push(r);
     console.log(`${r.ok ? 'pass' : 'FAIL'}  ${s.title} / ${s.name}  (${(r.ms / 1000).toFixed(1)} s)`);
     for (const p of r.problems) console.log(`        ${p.replace(/\\n/g, '\n        ')}`);

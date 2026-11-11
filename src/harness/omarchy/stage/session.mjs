@@ -70,6 +70,26 @@ function copyTree(from, to, { transform, skip }) {
   }
 }
 
+/**
+ * Quickshell writes qmldirs only for `qs.` modules a file under its config root
+ * imports. A fake only a plugin imports (the plugin is outside the root) would
+ * not be found, so each fake gets its own, singletons marked.
+ */
+function writeFakeQmldirs(fakes) {
+  if (!fs.existsSync(fakes)) return;
+  for (const name of fs.readdirSync(fakes)) {
+    const dir = path.join(fakes, name);
+    if (!fs.statSync(dir).isDirectory() || fs.existsSync(path.join(dir, 'qmldir'))) continue;
+    const lines = [`module qs.stage.fakes.${name}`];
+    for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.qml')).sort()) {
+      const type = file.slice(0, -4);
+      const singleton = /^\s*pragma\s+Singleton\b/m.test(fs.readFileSync(path.join(dir, file), 'utf8'));
+      lines.push(`${singleton ? 'singleton ' : ''}${type} 1.0 ${file}`);
+    }
+    fs.writeFileSync(path.join(dir, 'qmldir'), lines.join('\n') + '\n');
+  }
+}
+
 /** The kit's own home: OMARCHY_PATH, else the package. */
 export function omarchyRoot() {
   return process.env.OMARCHY_PATH && fs.existsSync(path.join(process.env.OMARCHY_PATH, 'shell'))
@@ -105,7 +125,7 @@ function stageDefaults(options) {
     hyprctl(call) {
       const args = call.argv.filter((a) => a !== '-j');
       if (args[0] === 'getoption') {
-        if (args[1] === 'animations:enabled' && !options.animations) return { stdout: JSON.stringify({ option: args[1], int: 0, set: true }) };
+        if (args[1] === 'animations:enabled' && !options.animations) return { stdout: JSON.stringify({ option: args[1], bool: false, set: true }) };
         const snap = hyprOptions()[args[1]];
         return snap ? { stdout: JSON.stringify(snap) } : { code: 1, stderr: `no such option ${args[1]}` };
       }
@@ -250,6 +270,7 @@ export class Session {
       skip: (n) => n === '.git' || n === 'node_modules' || n === '__pycache__' || n === 'preview' || /\.bak|\.orig$|~$/.test(n),
     });
     copyTree(path.join(QML, 'stage'), path.join(cfg, 'stage'), {});
+    writeFakeQmldirs(path.join(cfg, 'stage', 'fakes'));
     fs.copyFileSync(path.join(QML, 'shell.qml'), path.join(cfg, 'shell.qml'));
     o.prepare?.(pluginDir, this);
     this.note('staged', { rewrites });
@@ -557,7 +578,7 @@ export class Session {
   /** Calls one of the plugin's IPC handlers, as `quickshell ipc call` would from a keybind. */
   ipc(target, fn, args = []) {
     return new Promise((resolve, reject) => {
-      const p = spawn('quickshell', ['ipc', '-p', path.join(this.dir, 'cfg', 'shell.qml'), '--any-display', 'call', '--', target, fn, ...args.map(String)], { env: this.env });
+      const p = spawn(which('quickshell'), ['ipc', '-p', path.join(this.dir, 'cfg', 'shell.qml'), '--any-display', 'call', '--', target, fn, ...args.map(String)], { env: this.env });
       let out = '', err = '';
       p.stdout.on('data', (d) => { out += d; });
       p.stderr.on('data', (d) => { err += d; });

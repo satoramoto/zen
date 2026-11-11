@@ -9,6 +9,8 @@ export const ROUTE = '/__omarchy-stage';
  * in reading order, or look only within another target.
  */
 export type Target = string | {
+  /** The item's QML type: Canvas, Image, Rectangle, a plugin's own Sparkline, … */
+  type?: string;
   name?: string;
   text?: string;
   textContains?: string;
@@ -17,7 +19,7 @@ export type Target = string | {
   within?: Target;
 };
 
-export type Shown = { name: string; text: string; x: number; y: number; width: number; height: number; enabled: boolean; checked: boolean | null; focused: boolean; value: unknown };
+export type Shown = { name: string; type: string; text: string; x: number; y: number; width: number; height: number; enabled: boolean; checked: boolean | null; focused: boolean; value: unknown };
 export type ShownText = { text: string; x: number; y: number; width: number; height: number; name: string };
 /** A command the plugin ran. `stdout` and `stderr` are kept when the fixture passed it through to a real program. */
 export type Call = { name: string; argv: string[]; stdin: string; answered: boolean; by: 'fixture' | 'stage' | null; code?: number; at: number; exec?: string[]; stdout?: string; stderr?: string };

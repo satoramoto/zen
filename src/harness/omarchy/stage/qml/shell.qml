@@ -300,7 +300,14 @@ ShellRoot {
     return typeof item.text === "string" && (item.elide !== undefined || item.cursorPosition !== undefined)
   }
 
+  // An item's QML type, as Qt names it: "Canvas" matches QQuickCanvasItem, "Sparkline" a Sparkline.qml.
+  function typeOf(item) {
+    return String(item).split("(")[0].replace(/_QMLTYPE_\d+$/, "").replace(/^QQuick/, "").replace(/Item$/, "")
+  }
+
   function matches(item, spec) {
+    if (spec.type !== undefined && host.typeOf(item) !== spec.type) return false
+    if (spec.type !== undefined && spec.name === undefined && spec.text === undefined && spec.textContains === undefined && spec.placeholder === undefined) return true
     if (spec.name !== undefined) return item.objectName === spec.name
     if (spec.placeholder !== undefined) return item.placeholderText === spec.placeholder
     if (spec.text !== undefined) return host.textOf(item) === spec.text
@@ -330,6 +337,7 @@ ShellRoot {
     var r = host.rectOf(item)
     return {
       name: item.objectName || "",
+      type: host.typeOf(item),
       text: host.textOf(item),
       x: Math.round(r.x), y: Math.round(r.y), width: Math.round(r.width), height: Math.round(r.height),
       enabled: item.enabled !== false,
