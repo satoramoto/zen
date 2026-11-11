@@ -26,6 +26,7 @@ See proposal.md for why. What shapes the approach:
 
 - One layout table, one model, one display description: three plain-data things a developer can
   read, test and replace.
+- Built from zen's existing components; a new one only where D10 says why.
 - The model usable with no renderer (Node, a worker, another framework).
 - A device that an app can drive at 60 frames a second without re-rendering 64 pads per frame.
 - Every scenario playable in Storybook in both renderers.
@@ -151,14 +152,63 @@ grotesque for legends and display, tabular numerals), scale `compact`, material 
 stay Yahaha's. The display keeps a dark ground by default in any mode (`push-theme`), done by a
 nested scope with the pack's dark values.
 
-### D10. Parts, by tier
+### D10. Existing parts first
 
-- **components/** `PadCell`, `PadGrid`, `Encoder`, `JogWheel`, `TouchStrip`, `DPad`,
-  `SurfaceButton`, `ButtonBar`, `SceneColumn`, `RearPanel`, and the display's parts:
-  `Display`, `ParamCell`, `TabRow`, `TrackRow`, `MenuColumns`, `PianoRoll`, `WaveformView`,
-  `ClipGrid`, `MixStrip`, `TextEntry`, `CodeDialog`, `Notice`.
-- **layouts/** `Surface` (the whole unit from the table), `DisplayBlock`, `PadBlock`,
-  `LeftColumn`, `RightColumn`.
+The device is built from zen's existing components wherever they can do the job. Each part is
+decided in this order, and the first that works is taken:
+
+1. **An existing component as it is**, made to look right by the `push-3` pack and by local
+   variables the enclosing layout sets (a pad's lamp colour is a variable on its cell, not a new
+   prop).
+2. **An existing component with one more prop.** The prop is generic (it names what the control
+   does, never the Push), lands in that component's own small commit with its fixture, story and
+   tree snapshot, and is added one at a time: a second prop on the same component is a second
+   decision, made after the first is in use.
+3. **A new component in `push/components/`**, only when the pack and an existing component cannot
+   carry the use, or the difference is one of function and is large (a different interaction,
+   not a different look). Needing several props at once on one component is the sign of this.
+
+Arranging existing parts is a layout, not a component: a row of buttons, the D-pad, the scene
+column and the regions of the unit are `push/layouts/`.
+
+The table is where each part starts. The fit is read from each component's props, not yet tried
+in a browser; task 1.7 tries every row in the `push-3` pack at the unit's size and records the
+verdict and its reason in `docs/push.md`, before anything in groups 3 and 4 is built.
+
+| Part of the device | Starts from | Known gap |
+|---|---|---|
+| Labelled buttons, display buttons, scene buttons, D-pad parts | `LampButton` (label, lit, hue, disabled, long press) | Reports a toggle, not down and up; text labels only (several legends are icons); pulse and blink |
+| Pad face | `Pad` (label, hue, state, lit, fill or ring) | Colour is a hue slot, the unit's is an indexed lamp: set as local variables by the grid. Its press is a click |
+| Pad grid and expressive input | New: `PadGrid` with its store | Velocity, pressure, slide and bend across 64 pads is one interaction no part has. It draws `Pad` faces if the face can be passive |
+| Encoders, Volume, Swing & Tempo | `KnobReadout` (turn steps, press) | No touch report; the unit's caps show no value |
+| Jog wheel | `KnobReadout` | Nudge left and right as well as turn, press and touch: likely new |
+| Touch strip | `Slider` or `LineSlider` | A lit column with a touch position and no thumb: likely new |
+| Rear panel | New: `RearPanel`, with `StatusDot` for a plugged port | Nothing draws ports |
+| Display box | New: `Display` | The 960 by 160 shell, columns, rows and overlays |
+| Parameter cell | `KnobReadout` (arc, label, value, unit), `Toggle`, `Segmented`, `SendBars` by kind | Bipolar arc; touched emphasis; automation dot |
+| Tab row | `Tabs` or `Segmented` | Eight fixed columns |
+| Track row | New, unless `Segmented` carries colour, kind icon and the armed mark | To be tried |
+| Menus of the browser, Setup and Sets | `FolderList` per column, `PageList` | Chevrons for enclosing columns; a loading row |
+| Setup's rows | `SettingsRow` with `Toggle`, `Select`, `StepValue` | None known |
+| Piano roll | `music/components/PianoRoll` (keys, notes, ruling, playhead) | Velocity shading; the sequenceable box; the pitch strip |
+| Waveform | `Music.Waveform`, inside a `MusicScope` node | Slice and loop markers |
+| Mix strip | `Fader` (level, two meters, peak), `Music.Meter`, `SendBars` | None known |
+| Session overview | `LaunchGrid` or `LoopGrid` | Both read the live model's songs, not a clip matrix: likely new |
+| Text entry, the code dialog, confirmations, notices | `SearchField`, `Modal`'s face, `Text` | These are drawn on the display, not focused in the page: to be tried |
+| The unit as a whole | New layout: `Surface`, from the layout table | `Assembly` solves app screens, not a fixed drawing |
+| Emulator's inspector and legend | Core parts only | None |
+
+An earlier draft of this plan listed twenty-two new components. The names it used for display
+parts (`ParamCell`, `TabRow`, `MenuColumns`, `MixStrip`, `WaveformView`, a second `PianoRoll`)
+are now names for what the display draws, not for components to write.
+
+Adding a prop to a component that has a spec is a change to that capability. None of the
+candidates above has one today (`openspec/specs/` holds no spec for a core or music control), so
+the proposal still lists no modified capability; if task 1.7 finds otherwise the change is
+updated before the prop is written.
+
+- **layouts/** `Surface`, `DisplayBlock`, `PadBlock`, `LeftColumn`, `RightColumn`, `ButtonBar`,
+  `SceneColumn`, `DPad`.
 - **screens/** `Emulator` (surface, stand-in host, sample Set, gesture legend, state
   inspector), and one screen per capability whose stories are that capability's scenarios.
 
