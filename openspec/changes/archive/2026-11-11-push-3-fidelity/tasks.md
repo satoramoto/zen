@@ -50,7 +50,7 @@ Branch `change/push-3-fidelity`. The stories own the specs: each scenario below 
 ## 8. Merge
 
 - [x] 8.1 `node scripts/push-stories.mjs --renderer both` passes whole; `npx story-spec sync --change push-3-fidelity --dir src/library/push --check` reports nothing; `openspec validate push-3-fidelity --strict` passes
-- [ ] 8.2 `npm run typecheck`, `npm test`, `npm run build:storybook`, `npm run build:lib` and `npm run check:lib` pass; CI's `checks` passes on the pull request; merged by a pull request set to merge itself, branch deleted
+- [x] 8.2 `npm run typecheck`, `npm test`, `npm run build:storybook`, `npm run build:lib` and `npm run check:lib` pass; CI's `checks` passes on the pull request; merged by a pull request set to merge itself, branch deleted
 
 ## Workflow follow-up
 

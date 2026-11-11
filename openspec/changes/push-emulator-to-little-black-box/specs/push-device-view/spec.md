@@ -85,3 +85,7 @@
 ### Requirement: The bottom row selects tracks in Device View
 **Reason**: The Push 3 emulator moves to little-black-box; zen keeps only what any app can use.
 **Migration**: The requirement is unchanged in little-black-box's main spec `push-device-view` (`openspec/specs/push-device-view/spec.md` there), written from the same stories by `story-spec sync --specs`.
+
+### Requirement: A bank's switches sit over the upper display buttons
+**Reason**: The Push 3 emulator moves to little-black-box; zen keeps only what any app can use.
+**Migration**: The requirement is unchanged in little-black-box's main spec `push-device-view` (`openspec/specs/push-device-view/spec.md` there), written from the same stories by `story-spec sync --specs`.

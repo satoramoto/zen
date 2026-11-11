@@ -85,3 +85,15 @@
 ### Requirement: The display has an empty and a blank state
 **Reason**: The Push 3 emulator moves to little-black-box; zen keeps only what any app can use.
 **Migration**: The requirement is unchanged in little-black-box's main spec `push-display` (`openspec/specs/push-display/spec.md` there), written from the same stories by `story-spec sync --specs`.
+
+### Requirement: A choice shows the choices after it
+**Reason**: The Push 3 emulator moves to little-black-box; zen keeps only what any app can use.
+**Migration**: The requirement is unchanged in little-black-box's main spec `push-display` (`openspec/specs/push-display/spec.md` there), written from the same stories by `story-spec sync --specs`.
+
+### Requirement: An address can be shown as a code image
+**Reason**: The Push 3 emulator moves to little-black-box; zen keeps only what any app can use.
+**Migration**: The requirement is unchanged in little-black-box's main spec `push-display` (`openspec/specs/push-display/spec.md` there), written from the same stories by `story-spec sync --specs`.
+
+### Requirement: A value may carry a small picture
+**Reason**: The Push 3 emulator moves to little-black-box; zen keeps only what any app can use.
+**Migration**: The requirement is unchanged in little-black-box's main spec `push-display` (`openspec/specs/push-display/spec.md` there), written from the same stories by `story-spec sync --specs`.
