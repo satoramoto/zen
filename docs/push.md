@@ -16,6 +16,67 @@ something the app is asked to do.
 - Nothing was measured on a unit. What the manual does not give (colour values, hold times,
   encoder acceleration, the typeface) is a named value marked `// added`, to be tuned later.
 
+## The model
+
+`src/library/push/model/` holds the device with no renderer. It is also its own package entry,
+`@satoramoto/zen/push/model`, which imports neither React nor Svelte, so a script, a worker or a
+test can run the device alone.
+
+Three plain-data shapes cross it (`types.ts`). Each survives JSON.
+
+| Shape | Whose | What it holds |
+|---|---|---|
+| `PushSet` | the app's | tracks, devices and parameters, clips, scenes and notes, transport, the browser's content, and the unit's own readings (settings, battery, storage, networks, ports) |
+| `PushState` | the device's, held by the app | the display mode and the pad mode, the layout per track, what is held, what is locked, the highlight in a list, the page of steps in view |
+| `PushInput` | a person's | one control, what happened to it (`down`, `up`, `turn`, `touch`, `release`, `move`, `nudge`, `pressure`, `slide`, `bend`, or a `tick` of time), and when |
+
+Two pure functions use them:
+
+```ts
+import { initialState, project, sampleSet, step } from '@satoramoto/zen/push/model';
+
+const set = sampleSet();
+let state = initialState();
+const { state: next, intents } = step(state, set, { control: 'play', kind: 'down', time: 0 });
+// intents: [{ kind: 'transport', action: 'play' }]
+const { lamps, screen, notes } = project(next, set);
+```
+
+- `step(state, set, input)` gives the next state and the intents: what the device asks of the
+  app. It never changes the Set. The device shows a change only when the app gives a Set that has
+  it, so a refused intent is shown truthfully.
+- `project(state, set)` gives every control's lamp, the screen as data, and what each pad plays.
+- Time comes with the input. A hold that matures with nothing touched is a `tick`:
+  `nextTick(state)` says when the next one is due, and `tick(time)` makes it.
+- An intent is one of six kinds (`note`, `edit`, `transport`, `navigate`, `file`, `setting`), and
+  its `action` is one of the names in `intents.ts` (`intentList()` gives them all).
+- `run(set, inputs)` applies a script of inputs and returns the intents, lamps and screen after
+  each (`run.ts`). `combinations()` lists every hold-and-press the model knows; it is read from
+  the table the model dispatches on (`combos.ts`).
+- `sampleSet()` is a Set with a little of everything, for stories, tests and a first run.
+
+The model is layers, highest first (`layers/`): a unit that is not on, User Mode, then the
+buttons that mean the same everywhere. A layer takes an input or passes it down, and paints the
+lamps and screen parts it owns.
+
+### The layout table
+
+`model/layout.ts` is the unit's face as data: 147 controls, each with a stable id (`pad-3-5`,
+`encoder-4`, `capture`), its cluster, legend, spoken name and box in millimetres. Rows and columns
+count from the top left. The face is 380 by 318 mm (Ableton's technical specifications); places
+are measured from the manual's control figure. The plan's design said 304 mm deep, from memory;
+the technical specifications say 318.
+
+### Values to tune on a unit
+
+The manual gives no numbers for these. Each is a named constant marked `// added`.
+
+| What | Where | Now |
+|---|---|---|
+| Hold time, double-press time, the pedal's double tap, how long a notice stays | `model/timing.ts` | 450, 350, 350 and 1500 ms |
+| Lamp colours | `foundation/themes/lamps.ts` | Live's colour chart |
+| User Mode numbers of the Push 3's new controls (Sets, Learn, Save, Lock, Capture, Session Screen, the D-pad's centre, the jog wheel, the encoders' presses) | `model/midi.ts` | free control numbers; the shared controls keep the Push 2's published ones |
+
 ## The look
 
 - The pack is `push-3` (`src/library/foundation/themes/packs.ts`): the `push-3` palette, face and
