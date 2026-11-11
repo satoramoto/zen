@@ -68,6 +68,9 @@
     "./package.json": "./package.json"
   },
   "types": "./lib/index.d.ts",
+  "bin": {
+    "zen-stories": "./src/harness/stories/cli.mjs"
+  },
   "files": [
     "lib",
     "src/site",
@@ -102,9 +105,21 @@
     "astro": "^7.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "svelte": "^5.57.0"
+    "svelte": "^5.57.0",
+    "jsdom": ">=26",
+    "playwright": ">=1.64",
+    "vitest": ">=4"
   },
   "peerDependenciesMeta": {
+    "jsdom": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    },
+    "vitest": {
+      "optional": true
+    },
     "astro": {
       "optional": true
     },
