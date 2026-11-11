@@ -1,4 +1,4 @@
-# Spec Delta
+# push-step-sequencing Spec Delta
 
 ## Purpose
 

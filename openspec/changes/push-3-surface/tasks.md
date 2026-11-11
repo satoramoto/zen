@@ -37,7 +37,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 3.6 Build the latch gesture for holding several controls with one pointer, and the lamp animation store (pulse and blink phase from the beat, free-running without one, steady marks under reduced motion)
 - [x] 3.7 Build the `Surface` layout from the layout table with the single scale property, its smallest size, and the four region layouts
 - [x] 3.8 Write the `push-surface`, `push-pads` and `push-encoders` scenario stories; they play in React and Svelte
-- [ ] 3.9 Browser evidence: overlay `Surface` on the manual's control figure at three widths and save the comparison under `docs/push/`; every control's centre falls inside its outline
+- [x] 3.9 Browser evidence: overlay `Surface` on the manual's control figure at three widths and save the comparison under `docs/push/`; every control's centre falls inside its outline
 - [x] 3.10 Run the while-building checks; all exit 0
 
 ## 4. The display shell
@@ -57,8 +57,8 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 5.2 Build the `Emulator` screen: `Surface`, the host over the sample Set, the gesture legend and a state and intent inspector; it loads in Storybook and a play presses Play and sees the intent
 - [x] 5.3 Write the `push-device-model` scenario stories against the host; they play in both renderers
 - [x] 5.4 Write the `push-theme` scenario stories (the pack, another pack, light mode with the dark display, lamp table, picker, reduced motion, bloom with brightness); they play
-- [ ] 5.5 Browser evidence: the emulator in `push-3` and one other pack, dark and light, saved under `docs/push/`; legends and display text meet the library's contrast check
-- [ ] 5.6 Export the `Push` namespace from `index.ts` and `svelte.ts` and register the parts in the view registries, one line per part, in their own commit; `npm run build:lib && npm run check:lib` pass
+- [x] 5.5 Browser evidence: the emulator in `push-3` and one other pack, dark and light, saved under `docs/push/`; legends and display text meet the library's contrast check
+- [x] 5.6 Export the `Push` namespace from `index.ts` and `svelte.ts` and register the parts in the view registries, one line per part, in their own commit; `npm run build:lib && npm run check:lib` pass
 - [x] 5.7 Run the while-building checks; all exit 0
 
 ## 6. Tracks, mixing and recording
@@ -69,7 +69,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 6.4 Model: transport, Record's three-step cycle and lamp, New, Capture, Undo and redo, Delete and Duplicate alone, Tap Tempo, Automate, Arrangement recording in Control Mode
 - [x] 6.5 Model and screens: the hold menus (Metronome, Quantize, Fixed Length), Repeat and Accent (latch and momentary, per track), the Volume and Swing & Tempo notices
 - [x] 6.6 Write the `push-mix-view` and `push-recording` scenario stories; they play in both renderers
-- [ ] 6.7 Add the Mix and recording sections to `docs/push.md`; run the while-building checks
+- [x] 6.7 Add the Mix and recording sections to `docs/push.md`; run the while-building checks
 
 ## 7. Playing: notes and drums
 
@@ -77,7 +77,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 7.2 Model and screen: the Scale menu, the octave notice, layout cycling and per-track memory, sounding-note lamps from the Set, the touch strip's pitch bend and modulation
 - [x] 7.3 Model: the drum layouts (Loop Selector, 16 Velocities, 64 Pads, 64 Slices' fill order), pad state colours, banks and rows, Select, Mute, Solo, Delete, Duplicate, Quantize and the colour picker on pads, Layout's momentary and locked borrowing; table tests
 - [x] 7.4 Write the `push-note-mode` and `push-drum-mode` scenario stories; they play in both renderers
-- [ ] 7.5 Browser evidence: the pads in 64 Notes, Loop Selector and 64 Pads beside the manual's figures, saved under `docs/push/`; run the while-building checks
+- [x] 7.5 Browser evidence: the pads in 64 Notes, Loop Selector and 64 Pads beside the manual's figures, saved under `docs/push/`; run the while-building checks
 
 ## 8. Step sequencing
 
@@ -103,7 +103,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 10.5 Model: automation dots, Delete with an encoder, automation-marked intents while recording
 - [x] 10.6 Draw the waveform from `Music.Waveform` inside a `MusicScope` node per the fit review, and Simpler's screens: the three modes' banks, slice markers, manual pad slicing, nudge, split and delete, Edit Mode's actions, the Rack-wrapped preset
 - [x] 10.7 Table tests, then the `push-device-view` and `push-sampling` scenario stories; they play in both renderers
-- [ ] 10.8 Browser evidence: Device View, an unfolded Rack and Simpler beside the manual's figures; run the while-building checks
+- [x] 10.8 Browser evidence: Device View, an unfolded Rack and Simpler beside the manual's figures; run the while-building checks
 
 ## 11. Clip View
 
@@ -129,15 +129,15 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 13.4 Model and screens: starting up and onboarding, low battery and safe shutdown, off; Learn's lessons; the User button's availability and the User Mode notice; the Volume encoder's choices from the Set
 - [x] 13.5 Wire brightness and display light to the surface, and the Expression and Sensitivity settings to the pad input store
 - [x] 13.6 Table tests, then the `push-setup` scenario stories; they play in both renderers
-- [ ] 13.7 Browser evidence: each Setup tab beside its manual figure, saved under `docs/push/`; run the while-building checks
+- [x] 13.7 Browser evidence: each Setup tab beside its manual figure, saved under `docs/push/`; run the while-building checks
 
 ## 14. Integration
 
-- [ ] 14.1 A scripted end-to-end session in the `Emulator` screen as one play: add a drum track from the browser, sequence a beat, record a melody, launch scenes, mix, save; every step's intent is seen by the host
-- [ ] 14.2 A play asserts that changing one pad's pressure sets a property and re-renders no other pad, and that a meter update re-renders no screen cell
-- [ ] 14.3 `story-spec sync --change push-3-surface`, then `--check` reports nothing; review the regenerated deltas against this change's and reconcile any requirement text the stories sharpened
-- [ ] 14.4 Finish `docs/push.md`: the gesture table, the timing constants to tune on a unit, the manual's inconsistencies and how the spec resolved them, how to build an emulator app on the entries; every command and import in it runs as written
-- [ ] 14.5 Final browser pass of the whole device against the manual's control figure and each main screen's figure in `push-3` and one other pack, dark and light, at three widths; the images are in `docs/push/`
+- [x] 14.1 A scripted end-to-end session in the `Emulator` screen as one play: add a drum track from the browser, sequence a beat, record a melody, launch scenes, mix, save; every step's intent is seen by the host
+- [x] 14.2 A play asserts that changing one pad's pressure sets a property and re-renders no other pad, and that a meter update re-renders no screen cell
+- [x] 14.3 `story-spec sync --change push-3-surface`, then `--check` reports nothing; review the regenerated deltas against this change's and reconcile any requirement text the stories sharpened
+- [x] 14.4 Finish `docs/push.md`: the gesture table, the timing constants to tune on a unit, the manual's inconsistencies and how the spec resolved them, how to build an emulator app on the entries; every command and import in it runs as written
+- [x] 14.5 Final browser pass of the whole device against the manual's control figure and each main screen's figure in `push-3` and one other pack, dark and light, at three widths; the images are in `docs/push/`
 
 ## 15. Merge
 

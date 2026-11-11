@@ -1,4 +1,4 @@
-# Spec Delta
+# push-setup Spec Delta
 
 ## Purpose
 
