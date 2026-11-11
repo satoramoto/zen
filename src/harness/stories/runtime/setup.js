@@ -4,8 +4,9 @@ import { afterEach, beforeAll } from 'vitest';
 import { composeStory, setProjectAnnotations } from 'virtual:zen-stories/framework';
 import * as preview from 'virtual:zen-stories/preview';
 
-// Where the Omarchy stage is served, for stage stories: there is no page whose origin it could be.
-if (process.env.ZEN_STORIES_STAGE_URL) globalThis.__OMARCHY_STAGE_URL__ = process.env.ZEN_STORIES_STAGE_URL;
+// For stage stories: where the Omarchy stage is served (there is no page whose origin it could
+// be), that nothing draws here, and the requests that close sessions, awaited after each story.
+globalThis.__OMARCHY_STAGE__ = { url: process.env.ZEN_STORIES_STAGE_URL || undefined, headless: true, closing: new Set() };
 
 const { default: byDefault, ...named } = preview;
 const annotations = setProjectAnnotations([byDefault ?? named]);
@@ -16,5 +17,5 @@ beforeAll(() => annotations.beforeAll?.());
 const nothing = composeStory({ render: () => null }, { title: 'zen-stories/nothing' });
 afterEach(async () => {
   await nothing.run().catch(() => {});
-  await Promise.allSettled([...(globalThis.__OMARCHY_STAGE_CLOSING__ ?? [])]);
+  await Promise.allSettled([...globalThis.__OMARCHY_STAGE__.closing]);
 });
