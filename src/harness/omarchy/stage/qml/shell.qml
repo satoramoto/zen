@@ -463,6 +463,19 @@ ShellRoot {
   function reply(id, result) { host.send({ id: id, ok: true, result: result === undefined ? null : result }) }
   function fail(id, error) { host.send({ id: id, ok: false, error: String(error && error.message ? error.message : error) }) }
 
+  property var queue: []
+  function enqueue(line) {
+    host.queue = host.queue.concat([line])
+    if (host.queue.length === 1) Qt.callLater(host.drain)
+  }
+  function drain() {
+    while (host.queue.length) {
+      var line = host.queue[0]
+      host.queue = host.queue.slice(1)
+      host.handle(line)
+    }
+  }
+
   function handle(line) {
     var req
     try { req = JSON.parse(line) } catch (e) { return }
@@ -571,8 +584,11 @@ ShellRoot {
     handler: Socket {
       id: socket
       onConnectedChanged: if (connected) host.client = socket
+      // Each request runs on its own turn of the event loop, not inside the
+      // socket's read: input sent from here would otherwise be handled while
+      // the read is still on the stack, and a reply it causes could be lost.
       parser: SplitParser {
-        onRead: line => host.handle(line)
+        onRead: line => host.enqueue(line)
       }
     }
   }

@@ -97,7 +97,14 @@ export function omarchyRoot() {
 }
 
 /** Why the stage can't run here, or null. */
+let availability;
 export function unavailable() {
+  if (availability !== undefined) return availability;
+  availability = check();
+  return availability;
+}
+
+function check() {
   try { execFileSync('quickshell', ['--version'], { stdio: 'ignore' }); } catch { return 'quickshell is not installed'; }
   try { execFileSync('dbus-run-session', ['--version'], { stdio: 'ignore' }); } catch { return 'dbus-run-session is not installed'; }
   try { execFileSync('bwrap', ['--version'], { stdio: 'ignore' }); } catch { return 'bubblewrap (bwrap) is not installed'; }
@@ -296,7 +303,13 @@ export class Session {
 
     // Files the fixture lays over the sandbox, read-only (an /etc/passwd with its accounts).
     this.overlays = [];
-    for (const [target, content] of Object.entries(this.fixture.overlays ?? {})) {
+    // A login shell (`bash -lc`, as Omarchy's own execDetached runs) would read
+    // /etc/profile and put /usr/bin back on PATH, past the fakes: it reads
+    // nothing here. A fixture's overlays come after and win.
+    const quiet = '# The Omarchy stage: a login shell keeps the stage\'s PATH.\n';
+    const startup = Object.fromEntries(['/etc/profile', '/etc/zsh/zprofile', '/etc/zsh/zshenv', '/etc/zprofile', '/etc/zshenv']
+      .filter((f) => fs.existsSync(f)).map((f) => [f, quiet]));
+    for (const [target, content] of Object.entries({ ...startup, ...(this.fixture.overlays ?? {}) })) {
       if (!path.isAbsolute(target)) throw new Error(`an overlay needs an absolute path, not ${target}`);
       const file = path.join(this.dir, 'overlays', String(this.overlays.length));
       fs.mkdirSync(path.dirname(file), { recursive: true });

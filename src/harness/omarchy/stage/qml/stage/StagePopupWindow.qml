@@ -56,6 +56,9 @@ QtObject {
     readonly property var stageWindow: win
     parent: Stage.layer(3)
     visible: win.visible
+    // A hidden window takes no input and holds no keyboard focus, as an
+    // unmapped surface doesn't on a compositor.
+    enabled: win.visible
     x: win._origin.x
     y: win._origin.y
     width: win.implicitWidth
