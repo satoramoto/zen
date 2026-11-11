@@ -48,18 +48,18 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 4.4 Draw the menu columns from `FolderList` and `PageList` (highlight, chevrons, enclosing columns, scrolling, loading), and text entry, the code dialog, the confirmation and notices from existing parts, per the fit review
 - [x] 4.5 Build the status overlays (battery mark, count-in bar, progress bar) and the empty, blank and User Mode states
 - [x] 4.6 Wire display-button lamps to the top and bottom rows in `project`, and the jog wheel and D-pad list rule in `step`
-- [ ] 4.7 Write the `push-display` scenario stories; they play in both renderers
-- [ ] 4.8 Run the while-building checks; all exit 0
+- [x] 4.7 Write the `push-display` scenario stories; they play in both renderers
+- [x] 4.8 Run the while-building checks; all exit 0
 
 ## 5. The assembled device and its look
 
 - [x] 5.1 Build `bindPushDevice` (the store that holds state, calls `step`, schedules `tick`, feeds the frame reader) and the stand-in host used by every screen's stories
 - [x] 5.2 Build the `Emulator` screen: `Surface`, the host over the sample Set, the gesture legend and a state and intent inspector; it loads in Storybook and a play presses Play and sees the intent
-- [ ] 5.3 Write the `push-device-model` scenario stories against the host; they play in both renderers
-- [ ] 5.4 Write the `push-theme` scenario stories (the pack, another pack, light mode with the dark display, lamp table, picker, reduced motion, bloom with brightness); they play
+- [x] 5.3 Write the `push-device-model` scenario stories against the host; they play in both renderers
+- [x] 5.4 Write the `push-theme` scenario stories (the pack, another pack, light mode with the dark display, lamp table, picker, reduced motion, bloom with brightness); they play
 - [ ] 5.5 Browser evidence: the emulator in `push-3` and one other pack, dark and light, saved under `docs/push/`; legends and display text meet the library's contrast check
 - [ ] 5.6 Export the `Push` namespace from `index.ts` and `svelte.ts` and register the parts in the view registries, one line per part, in their own commit; `npm run build:lib && npm run check:lib` pass
-- [ ] 5.7 Run the while-building checks; all exit 0
+- [x] 5.7 Run the while-building checks; all exit 0
 
 ## 6. Tracks, mixing and recording
 
