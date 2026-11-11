@@ -27,6 +27,7 @@ export type PianoRollProps = PianoRollModelProps;
  * **Tuning knobs.**
  * - `--yh-roll-rows`: how many rows the grid holds (set inline from the keys).
  * - `--yh-roll-ink`: a note's fill (a hue slot's `--hue-N`, else `--text-2`).
+ * - `--yh-roll-level`: how strongly a note is drawn, 0 to 1 (set inline from the note's `level`).
  */
 export function PianoRoll(props: PianoRollProps) {
   const form = useForm(PIANO_ROLL_FORMS);

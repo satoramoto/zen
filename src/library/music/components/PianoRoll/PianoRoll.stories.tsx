@@ -1,4 +1,5 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
 import { PianoRoll } from './PianoRoll';
@@ -41,6 +42,18 @@ const story = fixtureStories<Story>(PianoRoll, PianoRollSvelte);
 export const Default: Story = story(s.Default);
 
 /** An emphasized passing tone, a note off the keys (drawn nowhere), and a late playhead. */
+/** `level` on a note: how strongly it is drawn. A lower level is plainly fainter. */
+export const Levels: Story = {
+  ...story(s.Levels),
+  play: async ({ canvasElement }) => {
+    const notes = [...canvasElement.querySelectorAll<HTMLElement>('[data-part="note"]')];
+    await expect(notes.map((n) => n.dataset.level)).toEqual(['0.2', '0.5', '0.8', '1']);
+    const opacity = notes.map((n) => Number(getComputedStyle(n).opacity));
+    await expect([...opacity].sort((a, b) => a - b)).toEqual(opacity);
+    await expect(opacity[3] - opacity[0]).toBeGreaterThan(0.4);
+  },
+};
+
 export const EveryState: Story = story(s.EveryState);
 
 /** The `compact` form in a 900 px frame: grid and notes alone. */

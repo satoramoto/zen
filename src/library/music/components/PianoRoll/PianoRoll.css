@@ -69,7 +69,9 @@
   white-space: nowrap;
   border-radius: var(--radius-control);
   background: var(--yh-roll-ink);
-  opacity: 0.85;
+  /* Full strength unless the note says its level (set inline): a fainter block for a lower one. */
+  --yh-roll-level: 1;
+  opacity: calc(0.25 + 0.6 * var(--yh-roll-level));
   color: var(--text-1);
 }
 

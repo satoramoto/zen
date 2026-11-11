@@ -36,6 +36,8 @@ const NOTES = [
 
 export const pianoRollStories = defineFixtures<PianoRollModelProps>()({
   Default: { args: { keys: [...KEYS], notes: [...NOTES], from: 0, to: 16, beatsPerBar: 4, playhead: 0.3 } },
+  /** Each note at its own level: the same hue, fainter for a lower one. */
+  Levels: { args: { keys: [...KEYS], notes: [0.2, 0.5, 0.8, 1].map((level, i) => ({ id: `l${i}`, from: i * 4, to: i * 4 + 4, pitch: [72, 69, 67, 65][i], hue: 1 as const, level })), from: 0, to: 16, beatsPerBar: 4 } },
   EveryState: {
     args: {
       keys: [...KEYS],
