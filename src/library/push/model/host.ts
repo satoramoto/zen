@@ -4,7 +4,7 @@
 // engine. It is also the reference for what each intent means.
 import { simplerBanks } from './sample';
 import { everyDevice } from './state';
-import type { Parameter, PushIntent, PushSet, Track } from './types';
+import type { BrowserItem, Parameter, PushIntent, PushSet, Track } from './types';
 
 const copy = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
@@ -37,6 +37,14 @@ function word(p: Parameter): string {
 }
 
 type Apply = (set: PushSet, intent: PushIntent) => void;
+
+function packState(s: PushSet, id: unknown, state: PushSet['packs'][number]['state'], progress?: number): void {
+  const pack = s.packs.find((p) => p.id === id);
+  if (!pack) return;
+  pack.state = state;
+  if (progress === undefined) delete pack.progress;
+  else pack.progress = progress;
+}
 
 /** `count` slices spread evenly between a sample's Start and End. */
 const evenSlices = (sampler: { start: number; end: number }, count: number): number[] => Array.from({ length: count }, (_, n) => sampler.start + ((sampler.end - sampler.start) * n) / count);
@@ -340,6 +348,56 @@ const APPLY: Record<string, Apply> = {
   },
   'set-count-in': (s, i) => void (s.transport.countIn = i.value as PushSet['transport']['countIn']),
   'set-signature': (s, i) => void (s.transport.signature = [Number(i.numerator), Number(i.denominator)]),
+  preview: (s, i) => {
+    if (typeof i.on === 'boolean') s.browser.preview = i.on;
+    else if (typeof i.item === 'string') s.browser.previewing = i.item;
+  },
+  favourite: (s, i) => {
+    const mark = (items: BrowserItem[]) => {
+      for (const item of items) {
+        if (item.id === i.item) item.favourite = Boolean(i.on);
+        if (item.children) mark(item.children);
+      }
+    };
+    mark(s.browser.roots);
+  },
+  load: (s, i) => {
+    const t = track(s, i.track);
+    if (!t || typeof i.item !== 'string') return;
+    const name = (function find(items: BrowserItem[]): string | undefined {
+      for (const item of items) {
+        if (item.id === i.item) return item.name;
+        const inside = item.children && find(item.children);
+        if (inside) return inside;
+      }
+      return undefined;
+    })(s.browser.roots);
+    const selected = everyDevice(t.devices).find((d) => d.id === s.selection.device);
+    // A swap replaces what is selected (here, its name); a load adds a device to the track.
+    if (i.replace && selected) {
+      selected.name = name ?? selected.name;
+      selected.preset = name;
+      s.browser.hotSwapItem = i.item;
+    } else {
+      const device = { id: `loaded-${t.devices.length + 1}`, name: name ?? 'Device', kind: i.content === 'audio-effect' ? ('audio-effect' as const) : ('instrument' as const), on: true, banks: [] };
+      t.devices.push(device);
+      s.selection.device = device.id;
+    }
+  },
+  'download-pack': (s, i) => packState(s, i.pack, 'downloading', 0.1),
+  'pause-pack': (s, i) => packState(s, i.pack, 'paused'),
+  'install-pack': (s, i) => packState(s, i.pack, 'installing', 0),
+  'cancel-pack': (s, i) => packState(s, i.pack, 'available'),
+  'delete-pack-download': (s, i) => packState(s, i.pack, 'available'),
+  'uninstall-pack': (s, i) => packState(s, i.pack, 'available'),
+  'rename-file': (s, i) => {
+    const file = s.sets.find((x) => x.id === i.set);
+    if (file && typeof i.text === 'string') file.name = i.text;
+  },
+  'delete-file': (s, i) => void (s.sets = s.sets.filter((x) => x.id !== i.set)),
+  'open-set': (s, i) => {
+    for (const file of s.sets) file.current = file.id === i.set;
+  },
   'set-monitor': (s, i) => {
     const t = track(s, i.track);
     if (t?.routing) t.routing.monitor = i.monitor as 'in' | 'auto' | 'off';

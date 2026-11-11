@@ -183,7 +183,7 @@ function track(id: string, name: string, colour: number, kind: Track['kind'], mo
 function browserTree(): BrowserItem[] {
   const leaf = (id: string, name: string, kind: BrowserItem['kind'], more: Partial<BrowserItem> = {}): BrowserItem => ({ id, name, loadable: true, kind, preview: true, ...more });
   const folder = (id: string, name: string, children?: BrowserItem[], more: Partial<BrowserItem> = {}): BrowserItem => ({ id, name, folder: true, ...(children ? { children } : {}), ...more });
-  return [
+  const devices: BrowserItem[] = [
     folder('sounds', 'Sounds', [
       folder('sounds.bass', 'Bass', [leaf('sounds.bass.sub', 'Sub Bass', 'preset', { favourite: true }), leaf('sounds.bass.acid', 'Acid Bass', 'preset'), leaf('sounds.bass.reese', 'Reese Bass', 'preset', { collections: [14] })]),
       folder('sounds.keys', 'Piano & Keys', [leaf('sounds.keys.warm', 'Warm Keys', 'preset'), leaf('sounds.keys.grand', 'Grand Piano', 'preset'), leaf('sounds.keys.rhodes', 'Electric Piano', 'preset')]),
@@ -204,8 +204,17 @@ function browserTree(): BrowserItem[] {
     folder('clips', 'Clips', [leaf('clips.beat', 'House Beat 120', 'clip'), leaf('clips.bass', 'Bassline 120', 'clip')]),
     folder('samples', 'Samples', [leaf('samples.break', 'Funk Break 98', 'sample'), leaf('samples.vox', 'Vocal Chop', 'sample'), leaf('samples.pad', 'Texture Loop', 'sample')]),
     folder('packs', 'Packs', []),
-    folder('user', 'User Library', [leaf('user.mybass', 'My Bass', 'preset', { favourite: true }), folder('user.recordings', 'Recordings', [leaf('user.recordings.take1', 'Take 1', 'sample')])]),
-    folder('favourites', 'Favorites', [leaf('sounds.bass.sub', 'Sub Bass', 'preset', { favourite: true }), leaf('user.mybass', 'My Bass', 'preset', { favourite: true })]),
+    folder('user', 'User Library', [leaf('user.mybass', 'My Bass', 'preset', { favourite: true, editable: true }), folder('user.recordings', 'Recordings', [leaf('user.recordings.take1', 'Take 1', 'sample', { editable: true })])]),
+    folder('favourites', 'Favorites', [leaf('sounds.bass.sub', 'Sub Bass', 'preset', { favourite: true }), leaf('user.mybass', 'My Bass', 'preset', { favourite: true, editable: true })]),
+  ];
+  const find = (id: string) => devices.find((d) => d.id === id)!;
+  const under = (prefix: string, items: BrowserItem[]): BrowserItem[] => JSON.parse(JSON.stringify(items).replace(/"id":"/g, `"id":"${prefix}.`)) as BrowserItem[];
+  // The Add menu: a device for the selected track, or a new track with or without one.
+  return [
+    folder('device', 'Device', devices),
+    folder('midi-track', 'MIDI Track', [leaf('midi-track.default', 'Default MIDI Track', 'track', { preview: false }), ...under('midi-track', [find('sounds'), find('drums'), find('instruments')])]),
+    folder('audio-track', 'Audio Track', [leaf('audio-track.default', 'Default Audio Track', 'track', { preview: false }), ...under('audio-track', [find('audio-effects'), find('samples')])]),
+    folder('return-track', 'Return Track', [leaf('return-track.default', 'Default Return Track', 'track', { preview: false }), ...under('return-track', [find('audio-effects')])]),
   ];
 }
 
@@ -288,7 +297,7 @@ export function sampleSet(): PushSet {
     scenes,
     selection: { track: 't-drums', scene: 0, device: 'd-kit' },
     scale: { root: 0, scale: 'Major', inKey: true, fixed: false, layout: '4ths' },
-    browser: { roots: browserTree(), preview: true, hotSwapPath: ['drums', 'drums.808'] },
+    browser: { roots: browserTree(), preview: false, hotSwapPath: ['device', 'drums'], hotSwapItem: 'drums.808', labels: ['Favorites', 'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Gray'] },
     sets: [
       { id: 'set-1', name: 'Night Drive', modified: '2025-09-12', current: true },
       { id: 'set-2', name: 'Sketch 14', modified: '2025-09-10' },

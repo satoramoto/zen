@@ -46,7 +46,8 @@ describe('the sample Set', () => {
     expect(set.tracks.flatMap((t) => t.devices).some((d) => d.name === 'Tuner')).toBe(true);
     expect(set.tracks.find((t) => t.id === 't-keys')!.devices[0].macros).toHaveLength(8);
     expect(set.scenes).toHaveLength(8);
-    expect(set.browser.roots.length).toBeGreaterThan(5);
+    expect(set.browser.roots.map((r) => r.name)).toEqual(['Device', 'MIDI Track', 'Audio Track', 'Return Track']);
+    expect(set.browser.roots[0].children!.length).toBeGreaterThan(5);
     expect(set.unit.battery?.percent).toBe(72);
   });
 

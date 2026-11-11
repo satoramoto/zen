@@ -158,7 +158,11 @@ export const INTENTS = {
 export type IntentAction = keyof typeof INTENTS;
 
 /** An intent: its kind comes from the list, the rest names what it is asked of. */
-export const ask = (action: IntentAction, detail: Record<string, unknown> = {}): PushIntent => ({ kind: INTENTS[action], action, ...detail });
+export function ask(action: IntentAction, detail: Record<string, unknown> = {}): PushIntent {
+  // `kind` and `action` are the intent's own: a detail may not be called either.
+  if ('kind' in detail || 'action' in detail) throw new Error(`The intent ${action} was given a detail named kind or action`);
+  return { kind: INTENTS[action], action, ...detail };
+}
 
 /** Every action the model can ask, with its kind. */
 export const intentList = (): { action: string; kind: IntentKind }[] => Object.entries(INTENTS).map(([action, kind]) => ({ action, kind }));

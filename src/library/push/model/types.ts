@@ -332,6 +332,8 @@ export interface BrowserItem {
   collections?: number[];
   /** A small label after the name ("Cloud"). */
   tag?: string;
+  /** The person's own content: it can be renamed and deleted. Factory content cannot. */
+  editable?: boolean;
 }
 
 export interface Browser {
@@ -339,8 +341,11 @@ export interface Browser {
   roots: BrowserItem[];
   previewing?: string;
   preview: boolean;
-  /** Where the loaded device or preset of the selected thing lives, as ids from the top, for Hot-Swap. */
+  /** Where the loaded device, preset, drum pad's sound or sample of the selection lives, as folder ids from the top, for Hot-Swap; and the item itself. */
   hotSwapPath?: string[];
+  hotSwapItem?: string;
+  /** The Collections labels an item can be marked with: Favorites first. */
+  labels?: string[];
 }
 
 export interface PushSetFile {
@@ -888,8 +893,23 @@ export interface PushState {
   /** Track selection's own scroll: the first track in the bottom row. */
   trackPage: number;
   /** The browser and the lists like it. */
-  browse: ListPlace & { hotSwap?: boolean; target?: 'device' | 'track' | 'pad'; places: Record<string, ListPlace> };
-  sets: { highlight: number; sort: 'date' | 'name'; menu?: boolean };
+  browse: ListPlace & {
+    /** The deepest path opened, so the first encoder can step forward again. */
+    trail?: string[];
+    /** Hot-Swap Mode, and whether the person has moved from the folder the selection came from. */
+    hotSwap?: boolean;
+    navigated?: boolean;
+    /** The screen to return to on leaving. */
+    from?: DisplayMode;
+    /** The Packs list is shown: the group opened (0 installed, 1 available) and the highlight. */
+    packs?: { group?: number; highlight: number };
+    /** The highlighted item's own menu (Delete, Rename) is open, with its highlight. */
+    menu?: number;
+    /** The Collections label the Favorites button uses. */
+    label?: number;
+    places: Record<string, ListPlace>;
+  };
+  sets: { highlight: number; sort: 'date' | 'name'; ascending?: boolean; menu?: number; cloud?: boolean };
   setup: { tab: number; highlight: number; advanced?: boolean; network?: string };
   learn: { highlight: number; lesson?: string; step?: number };
   /** Track options (Shift and a track's button): the tracks marked, the first being the one whose options show. */

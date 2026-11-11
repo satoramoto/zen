@@ -243,3 +243,16 @@ export function words(el: Element | null | undefined): string {
 }
 /** The parameter cell that starts at a column, as words. */
 export const paramText = (canvas: HTMLElement, col: number) => words(display(canvas).querySelector(`[data-type="param"][data-col="${col}"]`));
+
+/** The lists on the display, left to right: each one's name, its rows, the row marked in it, and whether it is an enclosing menu. */
+export function lists(canvas: HTMLElement): { label: string; rows: string[]; chosen: string; enclosing: boolean }[] {
+  return [...display(canvas).querySelectorAll<HTMLElement>('.push-display__cell[data-type="list"]')].map((el) => {
+    const rows = [...el.querySelectorAll<HTMLElement>('.yh-folder-list__row')];
+    const name = (row: HTMLElement | undefined) => (row?.querySelector('.yh-folder-list__label')?.textContent ?? '').replace(/\s+/g, ' ').trim();
+    return { label: el.querySelector('[aria-label]')?.getAttribute('aria-label') ?? '', rows: rows.map(name), chosen: name(rows.find((r) => r.getAttribute('aria-current') === 'true')), enclosing: el.hasAttribute('data-enclosing') };
+  });
+}
+/** Press D-pad buttons in turn: `go(c, 'down', 'down', 'centre')`. */
+export async function go(canvas: HTMLElement, ...ways: ('up' | 'down' | 'left' | 'right' | 'centre')[]): Promise<void> {
+  for (const way of ways) await press(canvas, `dpad-${way}`);
+}

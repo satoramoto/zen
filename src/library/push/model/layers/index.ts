@@ -16,5 +16,6 @@ import { melodic, stepEdit } from './melodic';
 import { sessionPads, sessionScreen } from './session';
 import { holdMenus, recording } from './recording';
 import { clipView, convert } from './clipView';
+import { browser, library, setLibrary } from './browser';
 
-export const LAYERS: readonly Layer[] = [power, user, overlays, codeDialog, confirm, textEntry, scaleMenu, holdMenus, trackOptions, colourPicker, convert, stepEdit, sessionScreen, clipView, deviceView, mixView, tracks, recording, global, sessionPads, drums, slices, melodic, playing, notes64];
+export const LAYERS: readonly Layer[] = [power, user, overlays, codeDialog, confirm, textEntry, scaleMenu, holdMenus, trackOptions, colourPicker, convert, browser, setLibrary, stepEdit, sessionScreen, clipView, deviceView, mixView, tracks, library, recording, global, sessionPads, drums, slices, melodic, playing, notes64];
