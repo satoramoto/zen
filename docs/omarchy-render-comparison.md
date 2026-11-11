@@ -59,8 +59,9 @@ two narrow scenes. Those are now hard assertion failures in the capture command.
 ## Inspect/reproduce
 
 Start the unified launcher with Patchy's external stories as described in
-`harness-omarchy.md`. Capture tooling also needs Playwright, system Chromium and
-ImageMagick. Keep the optional Playwright install outside Zen's dependencies:
+`harness-omarchy.md`. Capture tooling also needs Playwright, its Chromium headless
+shell (`npx playwright install --only-shell chromium`) and ImageMagick. Keep the
+optional Playwright install outside Zen's dependencies:
 
 ```sh
 npm install --prefix /tmp/opencode/omarchy-browser --no-save playwright
@@ -68,7 +69,7 @@ PLAYWRIGHT_MODULE=/tmp/opencode/omarchy-browser/node_modules/playwright/index.mj
   node scripts/omarchy-compare.mjs /absolute/path/to/patchy
 ```
 
-`STORYBOOK_URL` and `CHROMIUM_PATH` override defaults. Refresh the viewer after
+`STORYBOOK_URL` overrides the default. Refresh the viewer after
 capture generation. Avoid running interactive browser tests concurrently with
 capture generation: Storybook HMR can reinitialize stories while tests navigate.
 
