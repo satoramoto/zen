@@ -35,9 +35,9 @@ on:
         type: number
         default: 2
       retries:
-        description: More tries for a story that fails in the browser on main; one that then passes is reported flaky
+        description: More tries for a story that fails in the browser on main; one that then passes is reported flaky (zen-stories --retries, zen 6886cb5 or later)
         type: number
-        default: 1
+        default: 0
       timeout-minutes:
         description: How long the browser run on main may take
         type: number
@@ -102,4 +102,5 @@ jobs:
           done
           cat "$RUNNER_TEMP/storybook.log"; exit 1
       - name: Every story in the headless shell
-        run: ${{ inputs.stories }} --browser-all --url http://127.0.0.1:6006 --workers ${{ inputs.workers }} --retries ${{ inputs.retries }}
+        # An option goes on the command only when it is asked for: a repo's zen may predate it.
+        run: ${{ inputs.stories }} --browser-all --url http://127.0.0.1:6006 --workers ${{ inputs.workers }}${{ inputs.retries > 0 && format(' --retries {0}', inputs.retries) || '' }}
