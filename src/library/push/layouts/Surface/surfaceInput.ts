@@ -20,7 +20,8 @@
  *   (`--push-blink`, `--push-pulse`); the stylesheet reads them. Not under reduced motion.
  *
  * What it writes to the DOM is decoration only: `data-held` and `data-latched` on a cell, and a
- * held pad's `--push-pressure`, `--push-touch-x` and `--push-touch-y`.
+ * held pad's `--push-pressure`, `--push-touch-x` and `--push-touch-y` (on the cell's
+ * `.push-surface__feel`, which the tree gives no style of its own).
  */
 import type { InputKind, PushInput } from '../../model/types';
 import { blinkAt, pulseAt, type Beat } from './lampClock';
@@ -75,6 +76,8 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
   let frame = 0;
 
   const now = () => performance.now();
+  /** A pointer's force is a 32-bit float: three places are all it means. */
+  const force = (event: PointerEvent) => Math.round(event.pressure * 1000) / 1000;
   const emit = (control: string, kind: InputKind, more: Partial<PushInput> = {}) => params.onInput?.({ control, kind, time: now(), ...more });
   const cellOf = (target: EventTarget | null): HTMLElement | null => (target instanceof Element ? (target.closest('[data-control]') as HTMLElement | null) : null);
   const kindOf = (cell: HTMLElement) => cell.dataset.kind as CellKind;
@@ -101,7 +104,7 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
     }
     counts.delete(hold.control);
     delete hold.cell.dataset.held;
-    for (const p of ['--push-pressure', '--push-touch-x', '--push-touch-y']) hold.cell.style.removeProperty(p);
+    for (const p of ['--push-pressure', '--push-touch-x', '--push-touch-y']) feel(hold.cell).style.removeProperty(p);
     if (rotary(hold.kind) || hold.kind === 'strip') emit(hold.control, 'release');
     else emit(hold.control, 'up');
   }
@@ -135,10 +138,14 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
     return { rect, x, y: Math.min(1, Math.max(0, y)) };
   }
 
+  /** Where a held pad's touch is written: an element of the cell the tree gives no style, so a redraw cannot wipe it. */
+  const feel = (cell: HTMLElement): HTMLElement => cell.querySelector<HTMLElement>('.push-surface__feel') ?? cell;
+
   function trace(hold: Hold, x: number, y: number): void {
-    hold.cell.style.setProperty('--push-touch-x', String(x));
-    hold.cell.style.setProperty('--push-touch-y', String(y));
-    hold.cell.style.setProperty('--push-pressure', String(hold.pad?.pressure ?? 0));
+    const el = feel(hold.cell);
+    el.style.setProperty('--push-touch-x', String(x));
+    el.style.setProperty('--push-touch-y', String(y));
+    el.style.setProperty('--push-pressure', String(hold.pad?.pressure ?? 0));
   }
 
   function onPointerDown(event: PointerEvent): void {
@@ -163,15 +170,15 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
     if (kind === 'pad') {
       const { rect, x, y } = place(cell, event);
       const real = hasForce(event.pointerType, event.pressure);
-      const velocity = real ? velocityOf(event.pressure, params.sensitivity ?? DEFAULT_SENSITIVITY) : event.altKey ? HARD_VELOCITY : MOUSE_VELOCITY;
+      const velocity = real ? velocityOf(force(event), params.sensitivity ?? DEFAULT_SENSITIVITY) : event.altKey ? HARD_VELOCITY : MOUSE_VELOCITY;
       // Under the threshold, nothing sounds and nothing is held.
       if (velocity === undefined) return;
       const offset = (params.inTune ?? 'pad') === 'pad' ? x - 0.5 : 0;
       const slide = slideOf(y, params.slideRange);
-      hold.pad = { inTuneX: event.clientX - offset * rect.width, startY: y, width: rect.width || 1, height: rect.height || 1, top: rect.top, real, sliding: false, pressure: real ? event.pressure : 0, slide, bend: 0 };
+      hold.pad = { inTuneX: event.clientX - offset * rect.width, startY: y, width: rect.width || 1, height: rect.height || 1, top: rect.top, real, sliding: false, pressure: real ? force(event) : 0, slide, bend: 0 };
       pointers.set(event.pointerId, hold);
-      begin(hold, { velocity });
-      emit(control, 'slide', { value: slide });
+      // The strike carries where on the pad's height it landed.
+      begin(hold, { velocity, value: slide });
       const bend = bendOf(offset, params.inTuneWidth ?? 0);
       if (bend !== 0) {
         hold.pad.bend = bend;
@@ -220,9 +227,9 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
         emit(hold.control, 'slide', { value: slide });
       }
     }
-    if (pad.real && event.pressure !== pad.pressure) {
-      pad.pressure = event.pressure;
-      emit(hold.control, 'pressure', { value: event.pressure });
+    if (pad.real && force(event) !== pad.pressure) {
+      pad.pressure = force(event);
+      emit(hold.control, 'pressure', { value: pad.pressure });
     }
     trace(hold, x + 0.5, y);
   }
@@ -264,8 +271,8 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
     for (const hold of pointers.values()) {
       if (hold.control !== control || !hold.pad || hold.pad.real) continue;
       event.preventDefault();
-      hold.pad.pressure = Math.min(1, Math.max(0, hold.pad.pressure + (event.deltaY < 0 ? WHEEL_PRESSURE : -WHEEL_PRESSURE)));
-      hold.cell.style.setProperty('--push-pressure', String(hold.pad.pressure));
+      hold.pad.pressure = Math.round(Math.min(1, Math.max(0, hold.pad.pressure + (event.deltaY < 0 ? WHEEL_PRESSURE : -WHEEL_PRESSURE))) * 1000) / 1000;
+      feel(hold.cell).style.setProperty('--push-pressure', String(hold.pad.pressure));
       emit(control, 'pressure', { value: hold.pad.pressure });
     }
   }

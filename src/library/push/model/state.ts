@@ -24,6 +24,7 @@ export function initialState(): PushState {
     setup: { tab: 0, highlight: 0 },
     learn: { highlight: 0 },
     tempoMode: 'tempo',
+    strip: { mode: 'bend', value: 0 },
   };
 }
 

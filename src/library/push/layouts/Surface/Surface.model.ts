@@ -103,7 +103,7 @@ function jog(c: Control): Child[] {
 }
 
 function inner(c: Control, props: SurfaceModelProps, lamp: Lamp): ChildArg {
-  if (c.kind === 'pad') return [key(c, lamp), h('span', { class: 'push-surface__touch', 'aria-hidden': 'true' })];
+  if (c.kind === 'pad') return [key(c, lamp), h('span', { class: 'push-surface__feel', 'aria-hidden': 'true' })];
   if (c.kind === 'button') return key(c, lamp);
   if (c.kind === 'encoder') return knob(c);
   if (c.kind === 'wheel') return jog(c);

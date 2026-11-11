@@ -165,3 +165,39 @@ export function intent(context: PlayContext, action: string): PushIntent {
 }
 
 export { expect, waitFor };
+
+/* ---------- setting a scenario up ---------- */
+
+/** Select a track in a Set (and its first device), as a play's `set`. */
+export const onTrack = (id: string, more: (set: PushSet) => void = () => {}) => (set: PushSet) => {
+  set.selection.track = id;
+  set.selection.device = [...set.tracks, ...set.returns, set.main].find((t) => t.id === id)?.devices[0]?.id;
+  more(set);
+};
+
+/** The intents asked with one action, in order. */
+export const all = (context: PlayContext, action: string): PushIntent[] => asked(context).filter((i) => i.action === action);
+
+/** The wheel on a control: `notches` up (positive) or down. */
+export async function wheel(canvas: HTMLElement, id: string, notches: number): Promise<void> {
+  for (let i = 0; i < Math.abs(notches); i++) await fireEvent.wheel(face(canvas, id), { deltaY: notches > 0 ? -100 : 100, bubbles: true });
+}
+
+/** The pads whose note is `pitch`, from the lamps' own colour is not enough: ask the model's grid through the Set. */
+export const pads = (canvas: HTMLElement): HTMLElement[] => [...canvas.querySelectorAll<HTMLElement>('[data-kind="pad"]')];
+
+/** A pad's feel element: where the input store writes a held pad's pressure and touch. */
+export const feel = (canvas: HTMLElement, id: string): HTMLElement => cell(canvas, id).querySelector<HTMLElement>('.push-surface__feel')!;
+
+/** A computed colour as red, green and blue, 0 to 255, whatever format the browser words it in. */
+export function rgbOf(colour: string): [number, number, number] {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1;
+  const context = canvas.getContext('2d', { willReadFrequently: true })!;
+  context.fillStyle = colour;
+  context.fillRect(0, 0, 1, 1);
+  const [r, g, b] = context.getImageData(0, 0, 1, 1).data;
+  return [r, g, b];
+}
+/** The colour an element is filled with. */
+export const fillOf = (el: Element) => rgbOf(getComputedStyle(el).backgroundColor);

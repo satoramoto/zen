@@ -468,7 +468,7 @@ export interface PushSet {
 /* ---------------------------------------------------------------- the input */
 
 export type InputKind =
-  | 'down' // a button, a pad (with `velocity`), a pressed encoder, a pedal
+  | 'down' // a button, a pad (with `velocity`, and `value` its slide where it was struck), a pressed encoder, a pedal
   | 'up'
   | 'turn' // an encoder or the jog wheel, `value` steps (positive: clockwise)
   | 'touch' // an encoder's cap or the touch strip (with `value`, 0 at the bottom to 1)
@@ -689,6 +689,9 @@ export interface Held {
   velocity?: number;
   /** A pad's pitch when it went down, so its release names the same note. */
   note?: number;
+  /** A held pad's pressure, and the pad it has slid on to (for a glissando). */
+  pressure?: number;
+  glide?: number;
 }
 
 /** A place in a list: the path of ids chosen so far and the highlighted row in the last column. */
@@ -757,4 +760,6 @@ export interface PushState {
   trackOptions?: string;
   /** The Volume and the Swing & Tempo encoders' own modes. */
   tempoMode: 'tempo' | 'swing';
+  /** The touch strip while playing: pitch bend that springs back, or a modulation wheel that stays; and where it is. */
+  strip: { mode: 'bend' | 'mod'; value: number; touched?: boolean };
 }

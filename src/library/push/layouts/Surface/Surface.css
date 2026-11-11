@@ -8,7 +8,8 @@
    --push-lamp            a cell's lamp colour (set inline on a lit cell)
    --push-lit             that colour at the LED brightness: what a cell's fill or legend takes
    --push-blink, --push-pulse   the beat's two phases, set each frame by the input store
-   --push-pressure, --push-touch-x, --push-touch-y   a held pad's, set by the input store
+   --push-pressure, --push-touch-x, --push-touch-y   a held pad's, set by the input store on its
+                          .push-surface__feel
    --x, --y, --w, --h     a cell's box in millimetres (set inline)
 
    A cell restates the variables its component already reads: --hue-1 (a Pad's fill), --text-1 (a
@@ -54,15 +55,12 @@
 }
 
 .push-surface__cell {
-  /* Set inline: the cell's box, its lamp's colour, and a held pad's touch. */
+  /* Set inline: the cell's box and its lamp's colour. */
   --x: 0;
   --y: 0;
   --w: 0;
   --h: 0;
   --push-lamp: var(--push-white);
-  --push-pressure: 0;
-  --push-touch-x: 0.5;
-  --push-touch-y: 0.5;
   --push-lit: color-mix(in oklab, var(--push-lamp) calc(var(--push-led) * 100%), var(--push-unlit));
   position: absolute;
   left: calc(var(--push-mm) * var(--x));
@@ -114,7 +112,7 @@
   .push-surface__cell[data-lamp='pulse']::after { border-style: dotted; }
 }
 
-/* Held: the cap presses in, deeper with pressure. Latched: a ring that stays. */
+/* Held: the cap presses in. Latched: a ring that stays. */
 .push-surface__cell[data-held]::before {
   content: '';
   position: absolute;
@@ -122,7 +120,7 @@
   z-index: 1;
   border-radius: var(--radius-control);
   background: var(--push-white);
-  opacity: calc(0.12 + 0.4 * var(--push-pressure));
+  opacity: 0.12;
   pointer-events: none;
 }
 .push-surface__cell[data-round][data-held]::before { border-radius: var(--radius-pill); }
@@ -132,12 +130,28 @@
   border-radius: var(--radius-control);
 }
 
-/* Where a held touch is, when the trace is on. */
-.push-surface__touch { display: none; }
-.push-surface[data-trace] .push-surface__cell[data-held] .push-surface__touch {
-  display: block;
+/* A held pad's feel: the press deepens with pressure, and with the trace on a mark shows where
+   the touch is. The input store writes the three properties on this element. */
+.push-surface__feel {
+  --push-pressure: 0;
+  --push-touch-x: 0.5;
+  --push-touch-y: 0.5;
   position: absolute;
+  inset: 0;
   z-index: 2;
+  pointer-events: none;
+}
+.push-surface__cell[data-held] .push-surface__feel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-control);
+  background: var(--push-white);
+  opacity: calc(0.4 * var(--push-pressure));
+}
+.push-surface[data-trace] .push-surface__cell[data-held] .push-surface__feel::after {
+  content: '';
+  position: absolute;
   left: calc(clamp(0, var(--push-touch-x), 1) * 100%);
   bottom: calc(var(--push-touch-y) * 100%);
   width: calc(var(--push-mm) * 3);
@@ -146,7 +160,6 @@
   border-radius: var(--radius-pill);
   background: var(--surface-0);
   box-shadow: 0 0 0 var(--border-width) var(--push-white);
-  pointer-events: none;
 }
 
 /* A rotary control: the knob's ring fills the cell, with no name row and no room around it. */

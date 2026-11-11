@@ -75,6 +75,10 @@ const APPLY: Record<string, Apply> = {
   },
   'set-volume-target': (s, i) => void (s.unit.volumeTarget = String(i.target)),
   power: (s, i) => void (s.unit.power = i.on ? 'on' : 'off'),
+  'set-scale': (s, i) => {
+    const { kind: _k, action: _a, ...change } = i;
+    Object.assign(s.scale, change);
+  },
 };
 
 /** The Set after the stand-in host has done what `intent` asks; the same Set when it does not know the action. */

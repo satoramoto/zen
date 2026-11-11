@@ -54,196 +54,196 @@
       <Pad fillCell=true label="" name="Lower display button 8" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-1-1" data-kind="pad" data-lamp="off" data-row="1" style="--x: 74; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-1-2" data-kind="pad" data-lamp="off" data-row="1" style="--x: 103; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-1-3" data-kind="pad" data-lamp="off" data-row="1" style="--x: 132; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-1-4" data-kind="pad" data-lamp="off" data-row="1" style="--x: 161; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-1-5" data-kind="pad" data-lamp="off" data-row="1" style="--x: 190; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-1-6" data-kind="pad" data-lamp="off" data-row="1" style="--x: 219; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-1-7" data-kind="pad" data-lamp="off" data-row="1" style="--x: 248; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-1-8" data-kind="pad" data-lamp="off" data-row="1" style="--x: 277; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-2-1" data-kind="pad" data-lamp="off" data-row="2" style="--x: 74; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-2-2" data-kind="pad" data-lamp="off" data-row="2" style="--x: 103; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-2-3" data-kind="pad" data-lamp="off" data-row="2" style="--x: 132; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-2-4" data-kind="pad" data-lamp="off" data-row="2" style="--x: 161; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-2-5" data-kind="pad" data-lamp="off" data-row="2" style="--x: 190; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-2-6" data-kind="pad" data-lamp="off" data-row="2" style="--x: 219; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-2-7" data-kind="pad" data-lamp="off" data-row="2" style="--x: 248; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-2-8" data-kind="pad" data-lamp="off" data-row="2" style="--x: 277; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-3-1" data-kind="pad" data-lamp="off" data-row="3" style="--x: 74; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-3-2" data-kind="pad" data-lamp="off" data-row="3" style="--x: 103; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-3-3" data-kind="pad" data-lamp="off" data-row="3" style="--x: 132; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-3-4" data-kind="pad" data-lamp="off" data-row="3" style="--x: 161; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-3-5" data-kind="pad" data-lamp="off" data-row="3" style="--x: 190; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-3-6" data-kind="pad" data-lamp="off" data-row="3" style="--x: 219; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-3-7" data-kind="pad" data-lamp="off" data-row="3" style="--x: 248; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-3-8" data-kind="pad" data-lamp="off" data-row="3" style="--x: 277; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-4-1" data-kind="pad" data-lamp="off" data-row="4" style="--x: 74; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-4-2" data-kind="pad" data-lamp="off" data-row="4" style="--x: 103; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-4-3" data-kind="pad" data-lamp="off" data-row="4" style="--x: 132; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-4-4" data-kind="pad" data-lamp="off" data-row="4" style="--x: 161; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-4-5" data-kind="pad" data-lamp="off" data-row="4" style="--x: 190; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-4-6" data-kind="pad" data-lamp="off" data-row="4" style="--x: 219; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-4-7" data-kind="pad" data-lamp="off" data-row="4" style="--x: 248; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-4-8" data-kind="pad" data-lamp="off" data-row="4" style="--x: 277; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-5-1" data-kind="pad" data-lamp="off" data-row="5" style="--x: 74; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-5-2" data-kind="pad" data-lamp="off" data-row="5" style="--x: 103; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-5-3" data-kind="pad" data-lamp="off" data-row="5" style="--x: 132; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-5-4" data-kind="pad" data-lamp="off" data-row="5" style="--x: 161; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-5-5" data-kind="pad" data-lamp="off" data-row="5" style="--x: 190; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-5-6" data-kind="pad" data-lamp="off" data-row="5" style="--x: 219; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-5-7" data-kind="pad" data-lamp="off" data-row="5" style="--x: 248; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-5-8" data-kind="pad" data-lamp="off" data-row="5" style="--x: 277; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-6-1" data-kind="pad" data-lamp="off" data-row="6" style="--x: 74; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-6-2" data-kind="pad" data-lamp="off" data-row="6" style="--x: 103; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-6-3" data-kind="pad" data-lamp="off" data-row="6" style="--x: 132; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-6-4" data-kind="pad" data-lamp="off" data-row="6" style="--x: 161; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-6-5" data-kind="pad" data-lamp="off" data-row="6" style="--x: 190; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-6-6" data-kind="pad" data-lamp="off" data-row="6" style="--x: 219; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-6-7" data-kind="pad" data-lamp="off" data-row="6" style="--x: 248; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-6-8" data-kind="pad" data-lamp="off" data-row="6" style="--x: 277; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-7-1" data-kind="pad" data-lamp="off" data-row="7" style="--x: 74; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-7-2" data-kind="pad" data-lamp="off" data-row="7" style="--x: 103; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-7-3" data-kind="pad" data-lamp="off" data-row="7" style="--x: 132; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-7-4" data-kind="pad" data-lamp="off" data-row="7" style="--x: 161; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-7-5" data-kind="pad" data-lamp="off" data-row="7" style="--x: 190; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-7-6" data-kind="pad" data-lamp="off" data-row="7" style="--x: 219; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-7-7" data-kind="pad" data-lamp="off" data-row="7" style="--x: 248; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-7-8" data-kind="pad" data-lamp="off" data-row="7" style="--x: 277; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-8-1" data-kind="pad" data-lamp="off" data-row="8" style="--x: 74; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-8-2" data-kind="pad" data-lamp="off" data-row="8" style="--x: 103; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-8-3" data-kind="pad" data-lamp="off" data-row="8" style="--x: 132; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-8-4" data-kind="pad" data-lamp="off" data-row="8" style="--x: 161; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-8-5" data-kind="pad" data-lamp="off" data-row="8" style="--x: 190; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-8-6" data-kind="pad" data-lamp="off" data-row="8" style="--x: 219; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-8-7" data-kind="pad" data-lamp="off" data-row="8" style="--x: 248; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-8-8" data-kind="pad" data-lamp="off" data-row="8" style="--x: 277; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-1" data-kind="button" data-lamp="off" data-row="1" style="--x: 313.4; --y: 132.7; --w: 12.5; --h: 18.9">
       <Pad fillCell=true label="1/32t" name="Scene 1, repeat interval 1/32t" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-2" data-kind="button" data-lamp="off" data-row="2" style="--x: 313.4; --y: 154.6; --w: 12.5; --h: 18.9">
@@ -340,7 +340,7 @@
       <Pad fillCell=true label="Session" name="Session" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="pad-mode" data-control="scale" data-kind="button" data-lamp="off" style="--x: 332.5; --y: 170.7; --w: 19.7; --h: 15.8">
       <Pad fillCell=true label="Scale" name="Scale" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="pad-mode" data-control="layout" data-kind="button" data-lamp="off" style="--x: 352.2; --y: 170.7; --w: 19.7; --h: 15.8">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="pad-mode" data-control="layout" data-kind="button" data-lamp="dim" style="--x: 352.2; --y: 170.7; --w: 19.7; --h: 15.8; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Layout" name="Layout" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="repeat" data-control="repeat" data-kind="button" data-lamp="off" style="--x: 332.5; --y: 198.7; --w: 19.7; --h: 18.9">
       <Pad fillCell=true label="Repeat" name="Repeat" state="idle">
@@ -423,196 +423,196 @@
       <Pad fillCell=true label="" name="Lower display button 8" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-1-1" data-kind="pad" data-lamp="off" data-row="1" style="--x: 74; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-1-2" data-kind="pad" data-lamp="off" data-row="1" style="--x: 103; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-1-3" data-kind="pad" data-lamp="off" data-row="1" style="--x: 132; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-1-4" data-kind="pad" data-lamp="off" data-row="1" style="--x: 161; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-1-5" data-kind="pad" data-lamp="off" data-row="1" style="--x: 190; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-1-6" data-kind="pad" data-lamp="off" data-row="1" style="--x: 219; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-1-7" data-kind="pad" data-lamp="off" data-row="1" style="--x: 248; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-1-8" data-kind="pad" data-lamp="off" data-row="1" style="--x: 277; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-2-1" data-kind="pad" data-lamp="off" data-row="2" style="--x: 74; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-2-2" data-kind="pad" data-lamp="off" data-row="2" style="--x: 103; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-2-3" data-kind="pad" data-lamp="off" data-row="2" style="--x: 132; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-2-4" data-kind="pad" data-lamp="off" data-row="2" style="--x: 161; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-2-5" data-kind="pad" data-lamp="off" data-row="2" style="--x: 190; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-2-6" data-kind="pad" data-lamp="off" data-row="2" style="--x: 219; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-2-7" data-kind="pad" data-lamp="off" data-row="2" style="--x: 248; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-2-8" data-kind="pad" data-lamp="off" data-row="2" style="--x: 277; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-3-1" data-kind="pad" data-lamp="off" data-row="3" style="--x: 74; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-3-2" data-kind="pad" data-lamp="off" data-row="3" style="--x: 103; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-3-3" data-kind="pad" data-lamp="off" data-row="3" style="--x: 132; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-3-4" data-kind="pad" data-lamp="off" data-row="3" style="--x: 161; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-3-5" data-kind="pad" data-lamp="off" data-row="3" style="--x: 190; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-3-6" data-kind="pad" data-lamp="off" data-row="3" style="--x: 219; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-3-7" data-kind="pad" data-lamp="off" data-row="3" style="--x: 248; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-3-8" data-kind="pad" data-lamp="off" data-row="3" style="--x: 277; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-4-1" data-kind="pad" data-lamp="off" data-row="4" style="--x: 74; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-4-2" data-kind="pad" data-lamp="off" data-row="4" style="--x: 103; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-4-3" data-kind="pad" data-lamp="off" data-row="4" style="--x: 132; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-4-4" data-kind="pad" data-lamp="off" data-row="4" style="--x: 161; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-4-5" data-kind="pad" data-lamp="off" data-row="4" style="--x: 190; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-4-6" data-kind="pad" data-lamp="off" data-row="4" style="--x: 219; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-4-7" data-kind="pad" data-lamp="off" data-row="4" style="--x: 248; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-4-8" data-kind="pad" data-lamp="off" data-row="4" style="--x: 277; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-5-1" data-kind="pad" data-lamp="off" data-row="5" style="--x: 74; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-5-2" data-kind="pad" data-lamp="off" data-row="5" style="--x: 103; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-5-3" data-kind="pad" data-lamp="off" data-row="5" style="--x: 132; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-5-4" data-kind="pad" data-lamp="off" data-row="5" style="--x: 161; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-5-5" data-kind="pad" data-lamp="off" data-row="5" style="--x: 190; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-5-6" data-kind="pad" data-lamp="off" data-row="5" style="--x: 219; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-5-7" data-kind="pad" data-lamp="off" data-row="5" style="--x: 248; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-5-8" data-kind="pad" data-lamp="off" data-row="5" style="--x: 277; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-6-1" data-kind="pad" data-lamp="off" data-row="6" style="--x: 74; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-6-2" data-kind="pad" data-lamp="off" data-row="6" style="--x: 103; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-6-3" data-kind="pad" data-lamp="off" data-row="6" style="--x: 132; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-6-4" data-kind="pad" data-lamp="off" data-row="6" style="--x: 161; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-6-5" data-kind="pad" data-lamp="off" data-row="6" style="--x: 190; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-6-6" data-kind="pad" data-lamp="off" data-row="6" style="--x: 219; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-6-7" data-kind="pad" data-lamp="off" data-row="6" style="--x: 248; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-6-8" data-kind="pad" data-lamp="off" data-row="6" style="--x: 277; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-7-1" data-kind="pad" data-lamp="off" data-row="7" style="--x: 74; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-7-2" data-kind="pad" data-lamp="off" data-row="7" style="--x: 103; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-7-3" data-kind="pad" data-lamp="off" data-row="7" style="--x: 132; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-7-4" data-kind="pad" data-lamp="off" data-row="7" style="--x: 161; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-7-5" data-kind="pad" data-lamp="off" data-row="7" style="--x: 190; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-7-6" data-kind="pad" data-lamp="off" data-row="7" style="--x: 219; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-7-7" data-kind="pad" data-lamp="off" data-row="7" style="--x: 248; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-7-8" data-kind="pad" data-lamp="off" data-row="7" style="--x: 277; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-8-1" data-kind="pad" data-lamp="off" data-row="8" style="--x: 74; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-8-2" data-kind="pad" data-lamp="off" data-row="8" style="--x: 103; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-8-3" data-kind="pad" data-lamp="off" data-row="8" style="--x: 132; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-8-4" data-kind="pad" data-lamp="off" data-row="8" style="--x: 161; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-8-5" data-kind="pad" data-lamp="off" data-row="8" style="--x: 190; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-8-6" data-kind="pad" data-lamp="off" data-row="8" style="--x: 219; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-8-7" data-kind="pad" data-lamp="off" data-row="8" style="--x: 248; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-8-8" data-kind="pad" data-lamp="off" data-row="8" style="--x: 277; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-1" data-kind="button" data-lamp="off" data-row="1" style="--x: 313.4; --y: 132.7; --w: 12.5; --h: 18.9">
       <Pad fillCell=true label="1/32t" name="Scene 1, repeat interval 1/32t" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-2" data-kind="button" data-lamp="off" data-row="2" style="--x: 313.4; --y: 154.6; --w: 12.5; --h: 18.9">
@@ -792,196 +792,196 @@
       <Pad fillCell=true hue=1 label="" name="Lower display button 8" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-1-1" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 74; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-16)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-1-2" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 103; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-17)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-1-3" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 132; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-18)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-1-4" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 161; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-19)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-1-5" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 190; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-20)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-1-6" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 219; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-21)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-1-7" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 248; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-22)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-1-8" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 277; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-23)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-2-1" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 74; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-24)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-2-2" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 103; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-25)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-2-3" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 132; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-26)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-2-4" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 161; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-27)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-2-5" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 190; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-28)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-2-6" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 219; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-29)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-2-7" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 248; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-30)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-2-8" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 277; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-31)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-3-1" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 74; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-32)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-3-2" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 103; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-33)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-3-3" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 132; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-34)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-3-4" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 161; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-35)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-3-5" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 190; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-36)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-3-6" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 219; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-37)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-3-7" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 248; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-38)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-3-8" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 277; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-39)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-4-1" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 74; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-40)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-4-2" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 103; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-41)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-4-3" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 132; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-42)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-4-4" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 161; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-43)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-4-5" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 190; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-44)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-4-6" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 219; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-45)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-4-7" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 248; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-46)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-4-8" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 277; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-47)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-5-1" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 74; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-48)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-5-2" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 103; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-49)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-5-3" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 132; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-50)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-5-4" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 161; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-51)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-5-5" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 190; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-52)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-5-6" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 219; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-53)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-5-7" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 248; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-54)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-5-8" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 277; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-55)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-6-1" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 74; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-56)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-6-2" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 103; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-57)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-6-3" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 132; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-58)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-6-4" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 161; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-59)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-6-5" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 190; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-60)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-6-6" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 219; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-61)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-6-7" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 248; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-62)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-6-8" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 277; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-63)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-7-1" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 74; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-64)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-7-2" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 103; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-65)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-7-3" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 132; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-66)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-7-4" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 161; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-67)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-7-5" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 190; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-68)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-7-6" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 219; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-69)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-7-7" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 248; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-0)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-7-8" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 277; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-1)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-8-1" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 74; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-2)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-8-2" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 103; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-3)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-8-3" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 132; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-4)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-8-4" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 161; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-5)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-8-5" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 190; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-6)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-8-6" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 219; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-7)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-8-7" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 248; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-8)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-8-8" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 277; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-9)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-1" data-kind="button" data-lamp="lit" data-row="1" style="--x: 313.4; --y: 132.7; --w: 12.5; --h: 18.9; --push-lamp: var(--push-lamp-10)">
       <Pad fillCell=true hue=1 label="1/32t" name="Scene 1, repeat interval 1/32t" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-2" data-kind="button" data-lamp="lit" data-row="2" style="--x: 313.4; --y: 154.6; --w: 12.5; --h: 18.9; --push-lamp: var(--push-lamp-11)">
@@ -1161,196 +1161,196 @@
       <Pad fillCell=true label="" name="Lower display button 8" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-1-1" data-kind="pad" data-lamp="off" data-row="1" style="--x: 74; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-1-2" data-kind="pad" data-lamp="dim" data-row="1" style="--x: 103; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: color-mix(in oklab, var(--push-lamp-20) 45%, var(--push-unlit))">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-1-3" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 132; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-20)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-1-4" data-kind="pad" data-lamp="pulse" data-row="1" style="--x: 161; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-20)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-1-5" data-kind="pad" data-lamp="blink" data-row="1" style="--x: 190; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-20)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-1-6" data-kind="pad" data-lamp="off" data-row="1" style="--x: 219; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-1-7" data-kind="pad" data-lamp="off" data-row="1" style="--x: 248; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-1-8" data-kind="pad" data-lamp="off" data-row="1" style="--x: 277; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-2-1" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 74; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: color-mix(in oklab, var(--push-lamp-14) 20%, var(--push-unlit))">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-2-2" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 103; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: color-mix(in oklab, var(--push-lamp-14) 45%, var(--push-unlit))">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-2-3" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 132; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-14)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-2-4" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 161; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: color-mix(in oklab, var(--push-lamp-14) 70%, white)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-2-5" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 190; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: color-mix(in oklab, var(--push-lamp-14) 45%, white)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-2-6" data-kind="pad" data-lamp="off" data-row="2" style="--x: 219; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-2-7" data-kind="pad" data-lamp="off" data-row="2" style="--x: 248; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-2-8" data-kind="pad" data-lamp="off" data-row="2" style="--x: 277; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-3-1" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 74; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--success)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-3-2" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 103; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--danger)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-3-3" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 132; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-select)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-3-4" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 161; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-solo)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-3-5" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 190; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--warning)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-3-6" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 219; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-neutral)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-3-7" data-kind="pad" data-lamp="off" data-row="3" style="--x: 248; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-3-8" data-kind="pad" data-lamp="off" data-row="3" style="--x: 277; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-4-1" data-kind="pad" data-lamp="off" data-row="4" style="--x: 74; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-4-2" data-kind="pad" data-lamp="off" data-row="4" style="--x: 103; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-4-3" data-kind="pad" data-lamp="off" data-row="4" style="--x: 132; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-4-4" data-kind="pad" data-lamp="off" data-row="4" style="--x: 161; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-4-5" data-kind="pad" data-lamp="off" data-row="4" style="--x: 190; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-4-6" data-kind="pad" data-lamp="off" data-row="4" style="--x: 219; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-4-7" data-kind="pad" data-lamp="off" data-row="4" style="--x: 248; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-4-8" data-kind="pad" data-lamp="off" data-row="4" style="--x: 277; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-5-1" data-kind="pad" data-lamp="off" data-row="5" style="--x: 74; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-5-2" data-kind="pad" data-lamp="off" data-row="5" style="--x: 103; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-5-3" data-kind="pad" data-lamp="off" data-row="5" style="--x: 132; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-5-4" data-kind="pad" data-lamp="off" data-row="5" style="--x: 161; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-5-5" data-kind="pad" data-lamp="off" data-row="5" style="--x: 190; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-5-6" data-kind="pad" data-lamp="off" data-row="5" style="--x: 219; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-5-7" data-kind="pad" data-lamp="off" data-row="5" style="--x: 248; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-5-8" data-kind="pad" data-lamp="off" data-row="5" style="--x: 277; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-6-1" data-kind="pad" data-lamp="off" data-row="6" style="--x: 74; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-6-2" data-kind="pad" data-lamp="off" data-row="6" style="--x: 103; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-6-3" data-kind="pad" data-lamp="off" data-row="6" style="--x: 132; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-6-4" data-kind="pad" data-lamp="off" data-row="6" style="--x: 161; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-6-5" data-kind="pad" data-lamp="off" data-row="6" style="--x: 190; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-6-6" data-kind="pad" data-lamp="off" data-row="6" style="--x: 219; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-6-7" data-kind="pad" data-lamp="off" data-row="6" style="--x: 248; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-6-8" data-kind="pad" data-lamp="off" data-row="6" style="--x: 277; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-7-1" data-kind="pad" data-lamp="off" data-row="7" style="--x: 74; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-7-2" data-kind="pad" data-lamp="off" data-row="7" style="--x: 103; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-7-3" data-kind="pad" data-lamp="off" data-row="7" style="--x: 132; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-7-4" data-kind="pad" data-lamp="off" data-row="7" style="--x: 161; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-7-5" data-kind="pad" data-lamp="off" data-row="7" style="--x: 190; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-7-6" data-kind="pad" data-lamp="off" data-row="7" style="--x: 219; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-7-7" data-kind="pad" data-lamp="off" data-row="7" style="--x: 248; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-7-8" data-kind="pad" data-lamp="off" data-row="7" style="--x: 277; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-8-1" data-kind="pad" data-lamp="off" data-row="8" style="--x: 74; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-8-2" data-kind="pad" data-lamp="off" data-row="8" style="--x: 103; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-8-3" data-kind="pad" data-lamp="off" data-row="8" style="--x: 132; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-8-4" data-kind="pad" data-lamp="off" data-row="8" style="--x: 161; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-8-5" data-kind="pad" data-lamp="off" data-row="8" style="--x: 190; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-8-6" data-kind="pad" data-lamp="off" data-row="8" style="--x: 219; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-8-7" data-kind="pad" data-lamp="off" data-row="8" style="--x: 248; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-8-8" data-kind="pad" data-lamp="off" data-row="8" style="--x: 277; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-1" data-kind="button" data-lamp="lit" data-row="1" style="--x: 313.4; --y: 132.7; --w: 12.5; --h: 18.9; --push-lamp: var(--success)">
       <Pad fillCell=true hue=1 label="1/32t" name="Scene 1, repeat interval 1/32t" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-2" data-kind="button" data-lamp="blink" data-row="2" style="--x: 313.4; --y: 154.6; --w: 12.5; --h: 18.9; --push-lamp: var(--success)">
@@ -1530,196 +1530,196 @@
       <Pad fillCell=true hue=1 label="" name="Lower display button 8" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-1-1" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 74; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-16)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-1-2" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 103; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-17)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-1-3" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 132; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-18)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-1-4" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 161; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-19)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-1-5" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 190; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-20)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-1-6" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 219; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-21)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-1-7" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 248; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-22)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-1-8" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 277; --y: 132.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-23)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-2-1" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 74; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-24)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-2-2" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 103; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-25)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-2-3" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 132; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-26)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-2-4" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 161; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-27)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-2-5" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 190; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-28)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-2-6" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 219; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-29)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-2-7" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 248; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-30)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-2-8" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 277; --y: 154.6; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-31)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-3-1" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 74; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-32)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-3-2" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 103; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-33)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-3-3" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 132; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-34)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-3-4" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 161; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-35)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-3-5" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 190; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-36)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-3-6" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 219; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-37)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-3-7" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 248; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-38)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-3-8" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 277; --y: 176.5; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-39)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-4-1" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 74; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-40)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-4-2" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 103; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-41)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-4-3" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 132; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-42)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-4-4" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 161; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-43)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-4-5" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 190; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-44)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-4-6" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 219; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-45)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-4-7" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 248; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-46)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-4-8" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 277; --y: 198.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-47)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-5-1" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 74; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-48)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-5-2" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 103; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-49)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-5-3" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 132; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-50)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-5-4" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 161; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-51)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-5-5" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 190; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-52)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-5-6" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 219; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-53)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-5-7" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 248; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-54)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-5-8" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 277; --y: 220.4; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-55)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-6-1" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 74; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-56)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-6-2" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 103; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-57)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-6-3" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 132; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-58)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-6-4" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 161; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-59)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-6-5" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 190; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-60)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-6-6" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 219; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-61)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-6-7" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 248; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-62)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-6-8" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 277; --y: 242.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-63)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-7-1" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 74; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-64)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-7-2" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 103; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-65)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-7-3" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 132; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-66)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-7-4" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 161; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-67)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-7-5" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 190; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-68)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-7-6" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 219; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-69)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-7-7" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 248; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-0)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-7-8" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 277; --y: 264.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-1)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-8-1" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 74; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-2)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-8-2" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 103; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-3)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-8-3" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 132; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-4)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-8-4" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 161; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-5)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-8-5" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 190; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-6)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-8-6" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 219; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-7)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-8-7" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 248; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-8)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-8-8" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 277; --y: 286.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-9)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-1" data-kind="button" data-lamp="lit" data-row="1" style="--x: 313.4; --y: 132.7; --w: 12.5; --h: 18.9; --push-lamp: var(--push-lamp-10)">
       <Pad fillCell=true hue=1 label="1/32t" name="Scene 1, repeat interval 1/32t" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-2" data-kind="button" data-lamp="lit" data-row="2" style="--x: 313.4; --y: 154.6; --w: 12.5; --h: 18.9; --push-lamp: var(--push-lamp-11)">
@@ -1899,196 +1899,196 @@
       <Pad fillCell=true label="" name="Lower display button 8" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-1-1" data-kind="pad" data-lamp="off" data-row="1" style="--x: 74; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-1-2" data-kind="pad" data-lamp="off" data-row="1" style="--x: 103; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-1-3" data-kind="pad" data-lamp="off" data-row="1" style="--x: 132; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-1-4" data-kind="pad" data-lamp="off" data-row="1" style="--x: 161; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-1-5" data-kind="pad" data-lamp="off" data-row="1" style="--x: 190; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-1-6" data-kind="pad" data-lamp="off" data-row="1" style="--x: 219; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-1-7" data-kind="pad" data-lamp="off" data-row="1" style="--x: 248; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-1-8" data-kind="pad" data-lamp="off" data-row="1" style="--x: 277; --y: 132.7; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 1 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-2-1" data-kind="pad" data-lamp="off" data-row="2" style="--x: 74; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-2-2" data-kind="pad" data-lamp="off" data-row="2" style="--x: 103; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-2-3" data-kind="pad" data-lamp="off" data-row="2" style="--x: 132; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-2-4" data-kind="pad" data-lamp="off" data-row="2" style="--x: 161; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-2-5" data-kind="pad" data-lamp="off" data-row="2" style="--x: 190; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-2-6" data-kind="pad" data-lamp="off" data-row="2" style="--x: 219; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-2-7" data-kind="pad" data-lamp="off" data-row="2" style="--x: 248; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-2-8" data-kind="pad" data-lamp="off" data-row="2" style="--x: 277; --y: 154.6; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 2 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-3-1" data-kind="pad" data-lamp="off" data-row="3" style="--x: 74; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-3-2" data-kind="pad" data-lamp="off" data-row="3" style="--x: 103; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-3-3" data-kind="pad" data-lamp="off" data-row="3" style="--x: 132; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-3-4" data-kind="pad" data-lamp="off" data-row="3" style="--x: 161; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-3-5" data-kind="pad" data-lamp="off" data-row="3" style="--x: 190; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-3-6" data-kind="pad" data-lamp="off" data-row="3" style="--x: 219; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-3-7" data-kind="pad" data-lamp="off" data-row="3" style="--x: 248; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-3-8" data-kind="pad" data-lamp="off" data-row="3" style="--x: 277; --y: 176.5; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 3 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-4-1" data-kind="pad" data-lamp="off" data-row="4" style="--x: 74; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-4-2" data-kind="pad" data-lamp="off" data-row="4" style="--x: 103; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-4-3" data-kind="pad" data-lamp="off" data-row="4" style="--x: 132; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-4-4" data-kind="pad" data-lamp="off" data-row="4" style="--x: 161; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-4-5" data-kind="pad" data-lamp="off" data-row="4" style="--x: 190; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-4-6" data-kind="pad" data-lamp="off" data-row="4" style="--x: 219; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-4-7" data-kind="pad" data-lamp="off" data-row="4" style="--x: 248; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-4-8" data-kind="pad" data-lamp="off" data-row="4" style="--x: 277; --y: 198.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 4 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-5-1" data-kind="pad" data-lamp="off" data-row="5" style="--x: 74; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-5-2" data-kind="pad" data-lamp="off" data-row="5" style="--x: 103; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-5-3" data-kind="pad" data-lamp="off" data-row="5" style="--x: 132; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-5-4" data-kind="pad" data-lamp="off" data-row="5" style="--x: 161; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-5-5" data-kind="pad" data-lamp="off" data-row="5" style="--x: 190; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-5-6" data-kind="pad" data-lamp="off" data-row="5" style="--x: 219; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-5-7" data-kind="pad" data-lamp="off" data-row="5" style="--x: 248; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-5-8" data-kind="pad" data-lamp="off" data-row="5" style="--x: 277; --y: 220.4; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 5 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-6-1" data-kind="pad" data-lamp="off" data-row="6" style="--x: 74; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-6-2" data-kind="pad" data-lamp="off" data-row="6" style="--x: 103; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-6-3" data-kind="pad" data-lamp="off" data-row="6" style="--x: 132; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-6-4" data-kind="pad" data-lamp="off" data-row="6" style="--x: 161; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-6-5" data-kind="pad" data-lamp="off" data-row="6" style="--x: 190; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-6-6" data-kind="pad" data-lamp="off" data-row="6" style="--x: 219; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-6-7" data-kind="pad" data-lamp="off" data-row="6" style="--x: 248; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-6-8" data-kind="pad" data-lamp="off" data-row="6" style="--x: 277; --y: 242.3; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 6 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-7-1" data-kind="pad" data-lamp="off" data-row="7" style="--x: 74; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-7-2" data-kind="pad" data-lamp="off" data-row="7" style="--x: 103; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-7-3" data-kind="pad" data-lamp="off" data-row="7" style="--x: 132; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-7-4" data-kind="pad" data-lamp="off" data-row="7" style="--x: 161; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-7-5" data-kind="pad" data-lamp="off" data-row="7" style="--x: 190; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-7-6" data-kind="pad" data-lamp="off" data-row="7" style="--x: 219; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-7-7" data-kind="pad" data-lamp="off" data-row="7" style="--x: 248; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-7-8" data-kind="pad" data-lamp="off" data-row="7" style="--x: 277; --y: 264.2; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 7 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-8-1" data-kind="pad" data-lamp="off" data-row="8" style="--x: 74; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 1" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-8-2" data-kind="pad" data-lamp="off" data-row="8" style="--x: 103; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 2" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-8-3" data-kind="pad" data-lamp="off" data-row="8" style="--x: 132; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 3" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-8-4" data-kind="pad" data-lamp="off" data-row="8" style="--x: 161; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 4" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-8-5" data-kind="pad" data-lamp="off" data-row="8" style="--x: 190; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 5" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-8-6" data-kind="pad" data-lamp="off" data-row="8" style="--x: 219; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 6" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-8-7" data-kind="pad" data-lamp="off" data-row="8" style="--x: 248; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 7" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-8-8" data-kind="pad" data-lamp="off" data-row="8" style="--x: 277; --y: 286.1; --w: 26.5; --h: 19.4">
       <Pad fillCell=true label="" name="Pad row 8 column 8" state="idle">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-1" data-kind="button" data-lamp="off" data-row="1" style="--x: 313.4; --y: 132.7; --w: 12.5; --h: 18.9">
       <Pad fillCell=true label="1/32t" name="Scene 1, repeat interval 1/32t" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-2" data-kind="button" data-lamp="off" data-row="2" style="--x: 313.4; --y: 154.6; --w: 12.5; --h: 18.9">
@@ -2185,7 +2185,7 @@
       <Pad fillCell=true label="Session" name="Session" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="pad-mode" data-control="scale" data-kind="button" data-lamp="off" style="--x: 332.5; --y: 170.7; --w: 19.7; --h: 15.8">
       <Pad fillCell=true label="Scale" name="Scale" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="pad-mode" data-control="layout" data-kind="button" data-lamp="off" style="--x: 352.2; --y: 170.7; --w: 19.7; --h: 15.8">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="pad-mode" data-control="layout" data-kind="button" data-lamp="dim" style="--x: 352.2; --y: 170.7; --w: 19.7; --h: 15.8; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Layout" name="Layout" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="repeat" data-control="repeat" data-kind="button" data-lamp="off" style="--x: 332.5; --y: 198.7; --w: 19.7; --h: 18.9">
       <Pad fillCell=true label="Repeat" name="Repeat" state="idle">
@@ -2272,196 +2272,196 @@
   <div class="push-surface__face" style="--push-lamp-neutral: #d0d0d0; --push-lamp-0: #ff94a6; --push-lamp-1: #ffa529; --push-lamp-2: #cc9927; --push-lamp-3: #f7f47c; --push-lamp-4: #bffb00; --push-lamp-5: #1aff2f; --push-lamp-6: #25ffa8; --push-lamp-7: #5cffe8; --push-lamp-8: #8bc5ff; --push-lamp-9: #5480e4; --push-lamp-10: #92a7ff; --push-lamp-11: #d86ce4; --push-lamp-12: #e553a0; --push-lamp-13: #ffffff; --push-lamp-14: #ff3636; --push-lamp-15: #f66c03; --push-lamp-16: #99724b; --push-lamp-17: #fff034; --push-lamp-18: #87ff67; --push-lamp-19: #3dc300; --push-lamp-20: #00bfaf; --push-lamp-21: #19e9ff; --push-lamp-22: #10a4ee; --push-lamp-23: #007dc0; --push-lamp-24: #886ce4; --push-lamp-25: #b677c6; --push-lamp-26: #ff39d4; --push-lamp-27: #d0d0d0; --push-lamp-28: #e2675a; --push-lamp-29: #ffa374; --push-lamp-30: #d3ad71; --push-lamp-31: #edffae; --push-lamp-32: #d2e498; --push-lamp-33: #bad074; --push-lamp-34: #9bc48d; --push-lamp-35: #d4fde1; --push-lamp-36: #cdf1f8; --push-lamp-37: #b9c1e3; --push-lamp-38: #cdbbe4; --push-lamp-39: #ae98e5; --push-lamp-40: #e5dce1; --push-lamp-41: #a9a9a9; --push-lamp-42: #c6928b; --push-lamp-43: #b78256; --push-lamp-44: #99836a; --push-lamp-45: #bfba69; --push-lamp-46: #a6be00; --push-lamp-47: #7db04d; --push-lamp-48: #88c2ba; --push-lamp-49: #9bb3c4; --push-lamp-50: #85a5c2; --push-lamp-51: #8393cc; --push-lamp-52: #a595b5; --push-lamp-53: #bf9fbe; --push-lamp-54: #bc7196; --push-lamp-55: #7b7b7b; --push-lamp-56: #af3333; --push-lamp-57: #a95131; --push-lamp-58: #724f41; --push-lamp-59: #dbc300; --push-lamp-60: #85961f; --push-lamp-61: #539f31; --push-lamp-62: #0a9c8e; --push-lamp-63: #236384; --push-lamp-64: #1a2f96; --push-lamp-65: #2f52a2; --push-lamp-66: #624bad; --push-lamp-67: #a34bad; --push-lamp-68: #cc2e6e; --push-lamp-69: #3c3c3c">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-1-1" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 30.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-16)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-1-2" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 59.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-17)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-1-3" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 88.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-18)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-1-4" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 117.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-19)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-1-5" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 146.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-20)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-1-6" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 175.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-21)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-1-7" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 204.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-22)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-1-8" data-kind="pad" data-lamp="lit" data-row="1" style="--x: 233.6; --y: 0.3; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-23)">
       <Pad fillCell=true hue=1 label="" name="Pad row 1 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-2-1" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 30.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-24)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-2-2" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 59.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-25)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-2-3" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 88.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-26)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-2-4" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 117.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-27)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-2-5" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 146.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-28)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-2-6" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 175.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-29)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-2-7" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 204.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-30)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-2-8" data-kind="pad" data-lamp="lit" data-row="2" style="--x: 233.6; --y: 22.2; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-31)">
       <Pad fillCell=true hue=1 label="" name="Pad row 2 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-3-1" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 30.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-32)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-3-2" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 59.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-33)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-3-3" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 88.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-34)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-3-4" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 117.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-35)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-3-5" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 146.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-36)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-3-6" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 175.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-37)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-3-7" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 204.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-38)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-3-8" data-kind="pad" data-lamp="lit" data-row="3" style="--x: 233.6; --y: 44.1; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-39)">
       <Pad fillCell=true hue=1 label="" name="Pad row 3 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-4-1" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 30.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-40)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-4-2" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 59.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-41)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-4-3" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 88.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-42)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-4-4" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 117.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-43)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-4-5" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 146.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-44)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-4-6" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 175.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-45)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-4-7" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 204.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-46)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-4-8" data-kind="pad" data-lamp="lit" data-row="4" style="--x: 233.6; --y: 66; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-47)">
       <Pad fillCell=true hue=1 label="" name="Pad row 4 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-5-1" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 30.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-48)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-5-2" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 59.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-49)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-5-3" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 88.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-50)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-5-4" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 117.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-51)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-5-5" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 146.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-52)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-5-6" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 175.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-53)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-5-7" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 204.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-54)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-5-8" data-kind="pad" data-lamp="lit" data-row="5" style="--x: 233.6; --y: 88; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-55)">
       <Pad fillCell=true hue=1 label="" name="Pad row 5 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-6-1" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 30.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-56)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-6-2" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 59.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-57)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-6-3" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 88.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-58)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-6-4" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 117.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-59)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-6-5" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 146.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-60)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-6-6" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 175.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-61)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-6-7" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 204.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-62)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-6-8" data-kind="pad" data-lamp="lit" data-row="6" style="--x: 233.6; --y: 109.9; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-63)">
       <Pad fillCell=true hue=1 label="" name="Pad row 6 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-7-1" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 30.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-64)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-7-2" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 59.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-65)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-7-3" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 88.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-66)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-7-4" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 117.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-67)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-7-5" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 146.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-68)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-7-6" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 175.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-69)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-7-7" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 204.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-0)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-7-8" data-kind="pad" data-lamp="lit" data-row="7" style="--x: 233.6; --y: 131.8; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-1)">
       <Pad fillCell=true hue=1 label="" name="Pad row 7 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="1" data-control="pad-8-1" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 30.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-2)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 1" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="2" data-control="pad-8-2" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 59.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-3)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 2" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="3" data-control="pad-8-3" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 88.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-4)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 3" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="4" data-control="pad-8-4" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 117.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-5)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 4" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="5" data-control="pad-8-5" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 146.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-6)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 5" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="6" data-control="pad-8-6" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 175.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-7)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 6" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="7" data-control="pad-8-7" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 204.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-8)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 7" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="pads" data-col="8" data-control="pad-8-8" data-kind="pad" data-lamp="lit" data-row="8" style="--x: 233.6; --y: 153.7; --w: 26.5; --h: 19.4; --push-lamp: var(--push-lamp-9)">
       <Pad fillCell=true hue=1 label="" name="Pad row 8 column 8" state="playing">
-      <span aria-hidden="true" class="push-surface__touch">
+      <span aria-hidden="true" class="push-surface__feel">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-1" data-kind="button" data-lamp="lit" data-row="1" style="--x: 270; --y: 0.3; --w: 12.5; --h: 18.9; --push-lamp: var(--push-lamp-10)">
       <Pad fillCell=true hue=1 label="1/32t" name="Scene 1, repeat interval 1/32t" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="scenes" data-control="scene-2" data-kind="button" data-lamp="lit" data-row="2" style="--x: 270; --y: 22.2; --w: 12.5; --h: 18.9; --push-lamp: var(--push-lamp-11)">

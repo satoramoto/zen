@@ -1,15 +1,9 @@
 // The buttons that mean the same everywhere: transport, undo, the buttons that choose what the
 // display shows and what the pads do, and the pedals. Shift and Select do nothing alone.
 import { PEDAL_DOUBLE_MS, POWER_HOLD_MS } from '../timing';
-import { choice, DIM, holdJob, isDown, lamp, pressed, push, screen, type Combo, type Ctx, type Layer } from '../engine';
-import type { DisplayMode, PadMode, PushSet, PushState } from '../types';
-
-/** What the pads do now: the mode chosen, or the other one while its button is held. */
-export function padMode(state: PushState): PadMode {
-  if (holdJob(state, 'session')) return 'session';
-  if (holdJob(state, 'note')) return 'note';
-  return state.pads;
-}
+import { choice, DIM, isDown, lamp, pressed, push, screen, type Combo, type Ctx, type Layer } from '../engine';
+import type { DisplayMode, PushSet } from '../types';
+import { padMode } from './modes';
 
 /** User Mode needs a computer running Live: it is offered in Control Mode only. */
 export const userModeAvailable = (set: PushSet) => set.unit.mode === 'control';
