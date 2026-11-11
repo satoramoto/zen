@@ -5,25 +5,35 @@
 //
 //   import { checkContract, checkTiers, checkBindingsOnly } from '@satoramoto/zen/checks';
 //   expect(checkContract('src', { folders: ['push'] })).toEqual([]);
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
 import type { FileSource } from './tiers';
 import * as rules from './foundation/checks/rules';
 
 export { memoryFiles, type FileSource, type Counts as TierCounts, type Finding as TierFinding } from './tiers';
 export { CONTRACT_VARS, type ContractFinding } from './foundation/checks/rules';
 
-/** A folder on disk as a `FileSource`. */
+/** Node's `fs`, loaded when a check first reads the disk: the entry imports nothing of node, so a
+ *  page can import it and run the checks on `memoryFiles`. */
+function nodeFs(): typeof import('node:fs') {
+  const fs = (globalThis as { process?: { getBuiltinModule?: (id: string) => unknown } }).process?.getBuiltinModule?.('node:fs');
+  if (!fs) throw new Error('checks: reading a folder needs node (22.3 or later); give a check memoryFiles(…) elsewhere');
+  return fs as typeof import('node:fs');
+}
+
+const join = (...parts: string[]) => parts.filter(Boolean).join('/').replace(/\/+/g, '/');
+
+/** A folder on disk as a `FileSource` (node). */
 export function diskFiles(root: string): FileSource {
   return {
     files(dir) {
+      const fs = nodeFs();
       const base = join(root, dir);
-      if (!existsSync(base)) return [];
-      return readdirSync(base, { recursive: true, encoding: 'utf8' })
-        .filter((f) => statSync(join(base, f)).isFile())
+      if (!fs.existsSync(base)) return [];
+      return fs
+        .readdirSync(base, { recursive: true, encoding: 'utf8' })
+        .filter((f) => fs.statSync(join(base, f)).isFile())
         .map((f) => f.split('\\').join('/'));
     },
-    read: (path) => readFileSync(join(root, path), 'utf8'),
+    read: (path) => nodeFs().readFileSync(join(root, path), 'utf8'),
   };
 }
 
