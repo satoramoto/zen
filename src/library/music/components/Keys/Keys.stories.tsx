@@ -35,6 +35,7 @@ function at(strip: HTMLElement, width: number, x: number, yShare: number) {
   return { clientX: box.left + x * scale, clientY: box.top + yShare * box.height, button: 0, pointerId: 1 };
 }
 
+// Stories tagged browser below need a laid-out page and read computed styles: they play in a real browser, not on zen-stories' virtual DOM.
 /** The Stage board: 61 keys, split F#2, the left hand's Am7 in hue 4, E4 and A4 in hue 1 ("Right 1"). */
 export const Board: Story = {
   ...story(s.Board),
@@ -60,6 +61,7 @@ export const Board: Story = {
     await expect(white).not.toBe('rgba(0, 0, 0, 0)');
     await expect(face('.yh-keys__black:not([data-held])')).not.toBe(white);
   },
+  tags: ['browser'],
 };
 
 /** Nothing held: the split and the zones' unlit lamps only. */
@@ -105,6 +107,7 @@ export const Drag: Story = {
     await fireEvent.pointerUp(handle, at(strip, width, c3, 0.5));
     await expect(args.onPick).toHaveBeenLastCalledWith(true);
   },
+  tags: ['browser'],
 };
 
 /**
@@ -133,6 +136,7 @@ export const Armed: Story = {
     await fireEvent.keyDown(window, { key: 'Escape' });
     await expect(args.onPick).toHaveBeenLastCalledWith(false);
   },
+  tags: ['browser'],
 };
 
 /** Locked: the flag is dashed with no grip, the arrows and a drag ask for nothing, and the pick won't arm. */
@@ -203,6 +207,7 @@ export const Fluid: Story = {
     await expect(Math.abs(last.right - root.getBoundingClientRect().right)).toBeLessThan(2);
     await expect(Math.abs(root.clientWidth - container.clientWidth)).toBeLessThan(2);
   },
+  tags: ['browser'],
 };
 
 /** Added: a narrow strip (49 keys at 480px), where the zone labels give way before the keys do. */

@@ -19,7 +19,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ADrag: Story = scenario(
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
+export const ADrag: Story = { ...scenario(
   {
     name: 'A drag',
     when: 'a person drags upward on encoder 2',
@@ -30,7 +31,7 @@ export const ADrag: Story = scenario(
     check: plays.ADrag.check,
   },
   scenarioStory(plays.ADrag),
-);
+), tags: ['browser'] };
 
 export const PastAFullTurn: Story = scenario(
   {
@@ -240,7 +241,7 @@ export const AtTheTop: Story = scenario(
   scenarioStory(plays.AtTheTop),
 );
 
-export const ASlide: Story = scenario(
+export const ASlide: Story = { ...scenario(
   {
     name: 'A slide',
     when: 'a person touches the strip in the middle and slides to the top',
@@ -251,9 +252,9 @@ export const ASlide: Story = scenario(
     check: plays.ASlide.check,
   },
   scenarioStory(plays.ASlide),
-);
+), tags: ['browser'] };
 
-export const PitchBendSpringsBack: Story = scenario(
+export const PitchBendSpringsBack: Story = { ...scenario(
   {
     name: 'Pitch bend springs back',
     when: 'the strip is in pitch bend and a person slides up and lets go',
@@ -264,9 +265,9 @@ export const PitchBendSpringsBack: Story = scenario(
     check: plays.PitchBendSpringsBack.check,
   },
   scenarioStory(plays.PitchBendSpringsBack),
-);
+), tags: ['browser'] };
 
-export const SwitchingToModWheel: Story = scenario(
+export const SwitchingToModWheel: Story = { ...scenario(
   {
     name: 'Switching to mod wheel',
     when: 'a person holds Select and taps the strip',
@@ -277,7 +278,7 @@ export const SwitchingToModWheel: Story = scenario(
     check: plays.SwitchingToModWheel.check,
   },
   scenarioStory(plays.SwitchingToModWheel),
-);
+), tags: ['browser'] };
 
 export const DrumRackPosition: Story = scenario(
   {

@@ -32,6 +32,22 @@ export type OmarchyStageProps = {
 const handles = new WeakMap<Element, Promise<StageClient>>();
 
 /**
+ * Set by whatever plays stories where there is no page (`zen-stories` on its virtual DOM): where
+ * the stage server is, that nothing can draw here, and the requests that close sessions, which
+ * the player awaits so a story's session has ended before the next story starts.
+ */
+type Headless = { url?: string; headless?: boolean; closing?: Set<Promise<unknown>> };
+declare global { var __OMARCHY_STAGE__: Headless | undefined; }
+const headless = (): Headless | undefined => globalThis.__OMARCHY_STAGE__;
+
+/** Closes a session; where nothing draws, the player is told so it can wait for it. */
+function closeSession(server: string, id: string) {
+  const closing = fetch(`${server}/sessions/${id}`, { method: 'DELETE', keepalive: true }).catch(() => {});
+  const pending = headless()?.closing;
+  if (pending) { pending.add(closing); void closing.finally(() => pending.delete(closing)); }
+}
+
+/**
  * The stage client for the story in `canvasElement`, once its plugin has
  * loaded. A play awaits this before acting.
  */
@@ -69,7 +85,7 @@ const BUTTONS = ['left', 'middle', 'right'];
  * An Omarchy plugin running in real Quickshell with Omarchy's kit, drawn as
  * Qt draws it. Point, click, scroll and type on it as on the bar.
  */
-export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760, scale = 1, theme = 'current', animations = false, settings, section, log = true, server = ROUTE }: OmarchyStageProps) {
+export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760, scale = 1, theme = 'current', animations = false, settings, section, log = true, server = `${headless()?.url ?? ''}${ROUTE}` }: OmarchyStageProps) {
   const ref = useRef<HTMLDivElement>(null);
   const img = useRef<HTMLImageElement>(null);
   const client = useRef<StageClient | null>(null);
@@ -107,7 +123,7 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
       }
       id = data.id;
       if (data.errors?.length) throw new Error(`The plugin didn't load:\n${data.errors.join('\n')}`);
-      if (cancelled) { void fetch(`${server}/sessions/${id}`, { method: 'DELETE', keepalive: true }); throw new Error('closed'); }
+      if (cancelled) { closeSession(server, data.id); throw new Error('closed'); }
       return new StageClient(data.id, server);
     })();
     handles.set(el, ready);
@@ -116,8 +132,12 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
     const onHide = () => { if (id) navigator.sendBeacon(`${server}/sessions/${id}/close`); };
     window.addEventListener('pagehide', onHide);
 
+    // Where nothing draws there are no frames to fetch or log to show: the play's own calls keep
+    // the session alive.
+    const draws = !headless()?.headless;
     ready.then(async (c) => {
       client.current = c;
+      if (!draws) return;
       let n = 0;
       let last: string | null = null;
       while (!cancelled) {
@@ -139,7 +159,7 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
     }, (e: Error) => { if (!cancelled && e.message !== 'closed') setFailure(e.message); });
 
     let logTimer: ReturnType<typeof setInterval> | null = null;
-    if (log) {
+    if (log && draws) {
       let after = 0;
       logTimer = setInterval(async () => {
         const c = client.current;
@@ -159,7 +179,7 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
       if (logTimer) clearInterval(logTimer);
       handles.delete(el);
       client.current = null;
-      if (id) void fetch(`${server}/sessions/${id}`, { method: 'DELETE', keepalive: true });
+      if (id) closeSession(server, id);
     };
   }, [key]);
 

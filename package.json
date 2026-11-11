@@ -71,6 +71,9 @@
     "./package.json": "./package.json"
   },
   "types": "./lib/index.d.ts",
+  "bin": {
+    "zen-stories": "./src/harness/stories/cli.mjs"
+  },
   "files": [
     "lib",
     "src/site",
@@ -89,6 +92,7 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p src/harness/claude-code",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:stories": "node src/harness/stories/cli.mjs",
     "test:music:stories": "node scripts/music-stories.mjs",
     "test:music:visual": "node scripts/music-visual.mjs",
     "test:music:themes": "node scripts/music-theme-switch.mjs",
@@ -105,9 +109,21 @@
     "astro": "^7.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "svelte": "^5.57.0"
+    "svelte": "^5.57.0",
+    "jsdom": ">=26",
+    "playwright": ">=1.64",
+    "vitest": ">=4"
   },
   "peerDependenciesMeta": {
+    "jsdom": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    },
+    "vitest": {
+      "optional": true
+    },
     "astro": {
       "optional": true
     },

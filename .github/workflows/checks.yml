@@ -61,3 +61,9 @@ jobs:
         run: npm run check:site && node scripts/check-site.mjs --stories storybook-static
       - if: steps.scope.outputs.docs_only != 'true'
         run: node scripts/check-manual.mjs
+
+  # Every story on a virtual DOM on a pull request, and in the headless shell on main.
+  stories:
+    uses: ./.github/workflows/stories.yml
+    with:
+      stories: npm run test:stories --

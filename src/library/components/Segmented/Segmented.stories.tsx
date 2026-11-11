@@ -67,6 +67,7 @@ export const Disabled: Story = {
   },
 };
 
+// Stories tagged browser below read computed styles: they play in a real browser, not on zen-stories' virtual DOM.
 /** Each system draws the chosen segment from its tabs materials. visual[flow]: type, the chosen
  *  one underlined straight in the accent (decision 68). */
 export const VisualsUnderline: Story = {
@@ -78,6 +79,7 @@ export const VisualsUnderline: Story = {
     // A straight line: the underline is an inset shadow on an unrounded segment.
     await expect(getComputedStyle(chosen).borderTopLeftRadius).toBe('0px');
   },
+  tags: ['browser'],
 };
 
 /** Ableton: printed labels, the chosen one underlined in ink. */

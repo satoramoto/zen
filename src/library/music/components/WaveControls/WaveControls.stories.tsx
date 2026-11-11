@@ -36,7 +36,8 @@ const story = (fixture: StoryFixture<ModelProps>, extra: Partial<Story>): Story 
   ...extra,
 });
 
-export const RelativeMovement: Story = story(s.RelativeMovement, { play: async ({ canvasElement, args }) => {
+// Stories tagged browser below move focus as a laid-out page does, need a laid-out page and open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
+export const RelativeMovement: Story = { ...story(s.RelativeMovement, { play: async ({ canvasElement, args }) => {
   const canvas = within(canvasElement);
   const slider = canvas.getByRole('slider');
   const rect = slider.getBoundingClientRect();
@@ -59,9 +60,9 @@ export const RelativeMovement: Story = story(s.RelativeMovement, { play: async (
   await expect(args.commands.setZoom).toHaveBeenLastCalledWith('a', 0);
   await fireEvent.click(canvas.getByRole('button', { name: 'Deck 1 focused play/pause' }));
   await expect(args.commands.setStemPlaying).toHaveBeenLastCalledWith('a', 'drums', false);
-} });
+} }), tags: ['browser'] };
 
-export const RollbackAndKeys: Story = story(s.RollbackAndKeys, { play: async ({ canvasElement, args }) => {
+export const RollbackAndKeys: Story = { ...story(s.RollbackAndKeys, { play: async ({ canvasElement, args }) => {
   const slider = within(canvasElement).getByRole('slider');
   const pointer = { button: 0, pointerId: 42, clientX: slider.getBoundingClientRect().left + 10 };
   const start = () => fireEvent.pointerDown(slider, pointer);
@@ -85,7 +86,7 @@ export const RollbackAndKeys: Story = story(s.RollbackAndKeys, { play: async ({ 
   await expect(args.commands.setFocus).toHaveBeenLastCalledWith('a', 'bass');
   await fireEvent.keyDown(slider, { key: 'ArrowUp' });
   await expect(args.commands.setFocus).toHaveBeenLastCalledWith('a', 'bass');
-} });
+} }), tags: ['browser'] };
 
 export const FullSource: Story = story(s.FullSource, {
   play: async ({ canvasElement, args }) => {
@@ -114,7 +115,7 @@ export const FocusedCueAndTakeover: Story = story(s.FocusedCueAndTakeover, {
   },
 });
 
-export const ScopeAndZoom: Story = story(s.ScopeAndZoom, {
+export const ScopeAndZoom: Story = { ...story(s.ScopeAndZoom, {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await fireEvent.click(canvas.getByRole('button', { name: 'Deck 1 waveform settings' }));
@@ -126,7 +127,7 @@ export const ScopeAndZoom: Story = story(s.ScopeAndZoom, {
     await fireEvent.click(dialog.getByRole('button', { name: 'Deck 1 zoom out' }));
     await expect(args.commands.setZoom).toHaveBeenLastCalledWith('a', 64);
   },
-});
+}), tags: ['browser'] };
 
 export const Loading: Story = story(s.Loading, {
   play: async ({ canvasElement }) => {

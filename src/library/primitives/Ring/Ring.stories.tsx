@@ -51,6 +51,7 @@ export const FocusAndPress: Story = {
   ),
 };
 
+// Stories tagged browser below read computed styles: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * The focus ring in every pack: `--focus-ring` and `--focus-ring-offset`, from the materials'
  * `focus` setting. The accent just outside the edge by default; in visuals the controls' ink
@@ -81,4 +82,5 @@ export const FocusInEveryPack: Story = {
       await expect(style.outlineOffset).toBe(pack.facets.materials.focus?.offset ?? '2px');
     }
   },
+  tags: ['browser'],
 };

@@ -23,11 +23,13 @@ function PickerHost() {
   return createElement(ThemePicker, { value: skin, onChange: setSkin });
 }
 
+// Stories tagged browser here measure layout, draw on a canvas and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   title: 'Push/Screens/Theme',
   component: Emulator,
   decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'fullscreen', spec: { capability: 'push-theme', purpose: 'The look of the device: a `push-3` theme pack that reproduces the unit from zen\'s tokens, the lamp colours that pads and buttons light in, and how any other pack recolours the whole device.' } },
+  tags: ['browser'],
 } satisfies Meta<typeof Emulator>;
 export default meta;
 type Story = StoryObj<typeof meta>;

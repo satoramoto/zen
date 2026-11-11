@@ -22,6 +22,7 @@ const sample = treeStory((args: ToggleProps) => {
   const { onChange, children, ...props } = args;
   return { tree: h('div', { style: args.layout === 'inside' ? 'min-width: 180px' : undefined }, component('MusicToggle', props, { on: { onChange: 'change' }, slots: { children: [String(children ?? 'Loop')] } })), handlers: { change: onChange } };
 });
+// Stories tagged browser below read computed styles: they play in a real browser, not on zen-stories' virtual DOM.
 export const Default: Story = {
   ...sample,
   play: async ({ canvasElement, args }) => {
@@ -37,6 +38,7 @@ export const Default: Story = {
     await userEvent.keyboard(' ');
     await expect(args.onChange).toHaveBeenCalledTimes(2);
   },
+  tags: ['browser'],
 };
 export const On: Story = { ...sample, args: { on: true } };
 export const Live: Story = {

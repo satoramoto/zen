@@ -40,8 +40,9 @@ const live = (fixture: Parameters<typeof story>[0], extra: Partial<Story> = {}):
 
 const cell = (canvas: ReturnType<typeof within>, name: string) => canvas.getByRole('button', { name: new RegExp(`^Section ${name.replace(/[▸]/g, '.')},`) });
 
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 /** The verse playing, the chorus queued. A press (or Enter) asks for that section by id; the cells keep the host's state. */
-export const Default: Story = live(s.Default, {
+export const Default: Story = { ...live(s.Default, {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Section VERSE, playing' })).toHaveAttribute('aria-current', 'true');
@@ -61,7 +62,7 @@ export const Default: Story = live(s.Default, {
     const w = (name: string) => cell(canvas, name).getBoundingClientRect().width;
     await expect(w('VERSE')).toBeGreaterThan(w('INTRO'));
   },
-});
+}), tags: ['browser'] };
 
 /** Every state; the bridge is unavailable, says why, and asks nothing when pressed. */
 export const EveryState: Story = live(s.EveryState, {

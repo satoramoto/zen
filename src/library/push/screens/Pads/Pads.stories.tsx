@@ -84,7 +84,8 @@ export const PressureWithAMouse: Story = scenario(
   scenarioStory(plays.PressureWithAMouse),
 );
 
-export const StrikingHighOnThePad: Story = scenario(
+// Stories tagged browser below draw on a canvas, need a laid-out page and measure layout: they play in a real browser, not on zen-stories' virtual DOM.
+export const StrikingHighOnThePad: Story = { ...scenario(
   {
     name: 'Striking high on the pad',
     when: 'a person presses a pad near its top edge',
@@ -95,9 +96,9 @@ export const StrikingHighOnThePad: Story = scenario(
     check: plays.StrikingHighOnThePad.check,
   },
   scenarioStory(plays.StrikingHighOnThePad),
-);
+), tags: ['browser'] };
 
-export const SlidingUp: Story = scenario(
+export const SlidingUp: Story = { ...scenario(
   {
     name: 'Sliding up',
     when: 'a person holds a pad and moves the pointer upward',
@@ -108,7 +109,7 @@ export const SlidingUp: Story = scenario(
     check: plays.SlidingUp.check,
   },
   scenarioStory(plays.SlidingUp),
-);
+), tags: ['browser'] };
 
 export const ASmallWobbleStaysInTune: Story = scenario(
   {
@@ -123,7 +124,7 @@ export const ASmallWobbleStaysInTune: Story = scenario(
   scenarioStory(plays.ASmallWobbleStaysInTune),
 );
 
-export const BendingToTheNextPad: Story = scenario(
+export const BendingToTheNextPad: Story = { ...scenario(
   {
     name: 'Bending to the next pad',
     when: 'a person holds a pad and drags to the centre of the pad to its right',
@@ -134,7 +135,7 @@ export const BendingToTheNextPad: Story = scenario(
     check: plays.BendingToTheNextPad.check,
   },
   scenarioStory(plays.BendingToTheNextPad),
-);
+), tags: ['browser'] };
 
 export const Finger: Story = scenario(
   {
@@ -149,7 +150,7 @@ export const Finger: Story = scenario(
   scenarioStory(plays.Finger),
 );
 
-export const Pad: Story = scenario(
+export const Pad: Story = { ...scenario(
   {
     name: 'Pad',
     when: 'In Tune Location is Pad and a person presses a pad at its left edge',
@@ -160,9 +161,9 @@ export const Pad: Story = scenario(
     check: plays.Pad.check,
   },
   scenarioStory(plays.Pad),
-);
+), tags: ['browser'] };
 
-export const AutomaticOnAnInstrumentWithoutBend: Story = scenario(
+export const AutomaticOnAnInstrumentWithoutBend: Story = { ...scenario(
   {
     name: 'Automatic on an instrument without bend',
     when: 'a person drags from one pad to the next on an instrument that does not take per-note bend',
@@ -173,7 +174,7 @@ export const AutomaticOnAnInstrumentWithoutBend: Story = scenario(
     check: plays.AutomaticOnAnInstrumentWithoutBend.check,
   },
   scenarioStory(plays.AutomaticOnAnInstrumentWithoutBend),
-);
+), tags: ['browser'] };
 
 export const ForcedOff: Story = scenario(
   {
@@ -279,7 +280,7 @@ export const AChord: Story = scenario(
   scenarioStory(plays.AChord),
 );
 
-export const ATrackColouredPad: Story = scenario(
+export const ATrackColouredPad: Story = { ...scenario(
   {
     name: 'A track-coloured pad',
     when: 'a pad is given the track\'s colour at full brightness',
@@ -290,9 +291,9 @@ export const ATrackColouredPad: Story = scenario(
     check: plays.ATrackColouredPad.check,
   },
   scenarioStory(plays.ATrackColouredPad),
-);
+), tags: ['browser'] };
 
-export const ADimmedPad: Story = scenario(
+export const ADimmedPad: Story = { ...scenario(
   {
     name: 'A dimmed pad',
     when: 'a pad is given the same colour at low brightness',
@@ -303,7 +304,7 @@ export const ADimmedPad: Story = scenario(
     check: plays.ADimmedPad.check,
   },
   scenarioStory(plays.ADimmedPad),
-);
+), tags: ['browser'] };
 
 export const Holding: Story = scenario(
   {
@@ -318,7 +319,7 @@ export const Holding: Story = scenario(
   scenarioStory(plays.Holding),
 );
 
-export const TheTraceIsOn: Story = scenario(
+export const TheTraceIsOn: Story = { ...scenario(
   {
     name: 'The trace is on',
     when: 'the touch trace is on and a person slides a held pad up and right',
@@ -329,9 +330,9 @@ export const TheTraceIsOn: Story = scenario(
     check: plays.TheTraceIsOn.check,
   },
   scenarioStory(plays.TheTraceIsOn),
-);
+), tags: ['browser'] };
 
-export const TheTraceIsOff: Story = scenario(
+export const TheTraceIsOff: Story = { ...scenario(
   {
     name: 'The trace is off',
     when: 'the touch trace is off and a pad is held',
@@ -342,7 +343,7 @@ export const TheTraceIsOff: Story = scenario(
     check: plays.TheTraceIsOff.check,
   },
   scenarioStory(plays.TheTraceIsOff),
-);
+), tags: ['browser'] };
 
 export const AnExternalKeyboard: Story = scenario(
   {

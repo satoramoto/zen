@@ -84,6 +84,7 @@ export default meta;
 
 type Story = StoryObj<typeof DraftFlow>;
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /** Stage 1: no working draft. A card per proposal; the long one is clamped with Show all. */
 export const Proposals: Story = {
   play: async ({ canvasElement, args }) => {
@@ -95,6 +96,7 @@ export const Proposals: Story = {
     await userEvent.click(c.getByRole('button', { name: `Use this: ${PROPOSALS[0]!.subject}` }));
     await expect(args.onUse).toHaveBeenCalledWith('warm');
   },
+  tags: ['browser'],
 };
 
 /** Stage 1 with nothing to pick from. */
@@ -135,12 +137,14 @@ export const SaveFails: Story = {
     await userEvent.click(c.getByRole('button', { name: 'Save' }));
     await expect(await c.findByText('Could not reach the server.')).toBeTruthy();
     await expect(c.getByLabelText('Subject')).toHaveValue(`${DRAFT.subject}!`);
+    // Leaving the field saves too, so count from here: each action below saves once more first.
+    const saves = (args.onSave as ReturnType<typeof fn>).mock.calls.length;
     await userEvent.click(c.getByRole('button', { name: 'Approve' }));
-    await waitFor(() => expect(args.onSave).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(args.onSave).toHaveBeenCalledTimes(saves + 1));
     await expect(args.onApprove).not.toHaveBeenCalled();
     // Start over saves first; the save fails, so the draft and its edits stay.
     await userEvent.click(c.getByRole('button', { name: 'Start over from a proposal' }));
-    await waitFor(() => expect(args.onSave).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(args.onSave).toHaveBeenCalledTimes(saves + 2));
     await expect(await c.findByText('Could not reach the server.')).toBeTruthy();
     await expect(c.getByLabelText('Subject')).toHaveValue(`${DRAFT.subject}!`);
     await expect(canvasElement.querySelector('[data-part="proposal"]')).toBeNull();

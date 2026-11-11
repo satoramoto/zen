@@ -42,6 +42,7 @@ export const Playground: Story = {
   },
 };
 
+// Stories tagged browser below read computed styles: they play in a real browser, not on zen-stories' virtual DOM.
 /** On: the box filled and lit, with a check. Every size, enabled and disabled. */
 export const Checked: Story = {
   ...story(s.Checked),
@@ -58,6 +59,7 @@ export const Checked: Story = {
     await userEvent.click(idle);
     await expect(idle).toBeChecked();
   },
+  tags: ['browser'],
 };
 
 /** Off: the empty well. Clicking the label checks it. */
@@ -72,6 +74,7 @@ export const Unchecked: Story = {
     await userEvent.click(idle);
     await expect(idle).not.toBeChecked();
   },
+  tags: ['browser'],
 };
 
 /** Mixed: a dash, for a box standing for things some of which are on. Clicking it checks it. */

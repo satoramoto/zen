@@ -49,7 +49,8 @@ const story = fixtureStories<Story>(ChordStrip, ChordStripSvelte);
 export const Default: Story = story(s.Default, {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByRole('button', { name: /^Dm7$/ }));
+    // A block's name is the chord, its state and its notes: "Dm7, next: D F A C".
+    await userEvent.click(canvas.getByRole('button', { name: /^Dm7\b/ }));
     await expect(args.onFollow).toHaveBeenLastCalledWith('dm7');
   },
 });

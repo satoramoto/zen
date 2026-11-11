@@ -178,7 +178,8 @@ export const TheModeReachesAnAppsOwnPane: Story = scenario(
   { render: () => <Probed /> },
 ) as Story;
 
-export const TheFormReachesAnAppsOwnPane: Story = scenario(
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const TheFormReachesAnAppsOwnPane: Story = { ...scenario(
   {
     requirement: 'A pane is told what it needs to draw',
     shall: 'The surface SHALL give the app’s pane, for each instance, the instance itself, the target it resolves to (its fixed target, else the app’s selection), its settings with every default filled in, the surface’s mode (editing or not, locked or not) and the form its room fits, and SHALL give them again whenever one changes.',
@@ -190,7 +191,7 @@ export const TheFormReachesAnAppsOwnPane: Story = scenario(
     },
   },
   { parameters: { frame: { w: 360, h: 500 } }, render: () => <Probed /> },
-) as Story;
+), tags: ['browser'] } as Story;
 
 const GONE: SurfaceDocument = {
   version: 2,

@@ -448,7 +448,8 @@ export const InputOrOutput: Story = scenario(
   scenarioStory(plays.InputOrOutput),
 );
 
-export const FurtherMaterial: Story = scenario(
+// Stories tagged browser below measure the drawn screen: they play in a real browser, not on zen-stories' virtual DOM.
+export const FurtherMaterial: Story = { ...scenario(
   {
     name: 'Further material',
     when: 'a lesson\'s page has a link to further material',
@@ -459,7 +460,7 @@ export const FurtherMaterial: Story = scenario(
     check: plays.FurtherMaterial.check,
   },
   scenarioStory(plays.FurtherMaterial),
-);
+), tags: ['browser'] };
 
 export const ALessonWithNoLink: Story = scenario(
   {

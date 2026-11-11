@@ -4,6 +4,7 @@ import { withLibraryTheme } from '../../../storybook';
 import { P, Reading } from '../../layouts/Reading/Reading';
 import { Peek } from './Peek';
 
+// Stories tagged browser here open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
 /** A mention of another entry with its head as a preview: hover to peek, tap or click to toggle. */
 const meta = {
   title: 'Compendium/Components/Peek',
@@ -25,6 +26,7 @@ const meta = {
       </P>
     </Reading>
   ),
+  tags: ['browser'],
 } satisfies Meta<typeof Peek>;
 export default meta;
 type Story = StoryObj<typeof meta>;

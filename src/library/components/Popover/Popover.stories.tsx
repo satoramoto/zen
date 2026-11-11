@@ -92,6 +92,7 @@ function Harness({ place, box = false, open: initial = true, rows = 4, controls 
 // Every story is a trigger with live state of its own (a harness) around the Popover, so they stay
 // React: the Renderer toolbar's Svelte draws them with React and says so. Their Popovers' props are
 // Popover.fixtures.ts, which the tree snapshot prints.
+// Stories tagged browser here open popovers and dialogs and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   title: 'Core/Components/Popover',
   component: Harness,
@@ -103,6 +104,7 @@ const meta = {
     box: { control: 'boolean' },
     rows: { control: { type: 'number', min: 1, max: 40 } },
   },
+  tags: ['browser'],
 } satisfies Meta<typeof Harness>;
 
 export default meta;

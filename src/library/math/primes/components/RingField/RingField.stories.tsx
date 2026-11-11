@@ -15,6 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 const painted = (el: HTMLElement) => Number(el.querySelector('canvas')?.dataset.painted ?? 0);
 
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 /** 20,000 waves; lowering the resolution repaints; the caption says what the rings are and what this construction does not make. */
 export const Rings: Story = {
   play: async ({ canvasElement }) => {
@@ -31,6 +32,7 @@ export const Rings: Story = {
     expect(canvas.getByText(/cancel to flat grey/)).toBeInTheDocument();
     expect(canvas.getByText(/this construction does not make them/)).toBeInTheDocument();
   },
+  tags: ['browser'],
 };
 
 /** Averaged over each pixel, the waves finer than a pixel cancel and rings at other simple fractions appear. */

@@ -10,6 +10,9 @@ async function evidence(name: string) {
 }
 const meta = {
   title: 'Site/Screens/Manual',
+  // Played by scripts/check-manual-stories.mjs, which serves the evidence and the built manual
+  // they read; no other run can, so they are not tests to Storybook's runners.
+  tags: ['!test'],
   render: () => <iframe title="Generated visual manual" src="/manual-preview/manual/find-documentation/" style={{ width: '100%', height: '85vh', border: 0 }} />,
   parameters: { layout: 'fullscreen', spec: { capability: 'site-documentation' } },
 } satisfies Meta;

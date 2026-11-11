@@ -3,12 +3,14 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { withLibraryTheme } from '../../../../storybook';
 import { BoxField } from './BoxField';
 
+// Stories tagged browser here measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 /** The 1D prime waves made two-dimensional: standing waves in a square, summed. */
 const meta = {
   title: 'Math/Primes/Components/Box Field',
   component: BoxField,
   decorators: [withLibraryTheme],
   args: {},
+  tags: ['browser'],
 } satisfies Meta<typeof BoxField>;
 export default meta;
 type Story = StoryObj<typeof meta>;

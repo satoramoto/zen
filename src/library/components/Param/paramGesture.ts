@@ -271,9 +271,11 @@ export function paramGesture(initial: ParamGestureParams, onDragging: (dragging:
       // Mixed: nothing has been said yet, so even landing where the drag started is a write.
       sent = now.mixed ? Number.NaN : now.value;
       const box = element.getBoundingClientRect();
-      // Screen pixels per CSS pixel here, so a zoomed canvas tracks the pointer.
+      // Screen pixels per CSS pixel here, so a zoomed canvas tracks the pointer. offsetWidth is
+      // rounded to a whole pixel: a difference rounding can make is no zoom, or a 26.7 px slider
+      // would run 1% off the pointer.
       const drawn = element.offsetWidth;
-      const scale = drawn > 0 ? box.width / drawn : 1;
+      const scale = drawn > 0 && Math.abs(box.width - drawn) > 1 ? box.width / drawn : 1;
       let fraction = fractionOf(now.param, now.value);
       if ((now.anchor ?? 'value') === 'pointer') {
         const along = axis() === 'vertical' ? (box.bottom - e.clientY) / (box.height || 1) : (e.clientX - box.left) / (box.width || 1);

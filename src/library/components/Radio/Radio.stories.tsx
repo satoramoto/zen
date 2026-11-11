@@ -80,6 +80,7 @@ export const Unchecked: Story = {
   },
 };
 
+// Stories tagged browser below read computed styles: they play in a real browser, not on zen-stories' virtual DOM.
 /** Mixed: a dash, drawn only (HTML's radios have none): the input reads as unchecked, and picking it checks it. */
 export const Mixed: Story = {
   ...story(s.Mixed),
@@ -92,4 +93,5 @@ export const Mixed: Story = {
     await expect(idle).toBeChecked();
     await expect(getComputedStyle(dash).display).toBe('none');
   },
+  tags: ['browser'],
 };

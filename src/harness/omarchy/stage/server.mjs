@@ -7,6 +7,25 @@ import { Session, STAGE_HOME, RUNTIME_PREFIX, removeOwned, unavailable } from '.
 
 export const ROUTE = '/__omarchy-stage';
 const IDLE_MS = 90_000;
+/** Sessions that may be starting at once, whoever asks: starting Quickshell is the burst. */
+export const MAX_STARTING = 4;
+
+/**
+ * Runs at most `max` of the tasks given to it at once; the rest wait their turn, in order.
+ * @param {number} max
+ * @returns {<T>(task: () => Promise<T>) => Promise<T>}
+ */
+export function limiter(max) {
+  let running = 0;
+  const waiting = [];
+  const next = () => {
+    if (running >= max || !waiting.length) return;
+    running++;
+    const { task, resolve, reject } = waiting.shift();
+    task().then(resolve, reject).finally(() => { running--; next(); });
+  };
+  return (task) => new Promise((resolve, reject) => { waiting.push({ task, resolve, reject }); next(); });
+}
 
 /**
  * @typedef {object} PluginEntry
@@ -20,11 +39,12 @@ const IDLE_MS = 90_000;
  */
 
 /**
- * @param {{ plugins: Record<string, PluginEntry>, root?: string }} options
+ * @param {{ plugins: Record<string, PluginEntry>, root?: string, maxStarting?: number }} options
  * @returns {import('vite').Plugin}
  */
 export function omarchyStage(options) {
   const sessions = new Map();
+  const starting = limiter(Math.max(1, options.maxStarting ?? MAX_STARTING));
   let reaper = null;
   // The registry: an object, or a function (sync or async) read on every
   // request, so plugins added while Storybook runs are found.
@@ -82,7 +102,7 @@ export function omarchyStage(options) {
     });
     sessions.set(session.key, session);
     try {
-      await session.start();
+      await starting(() => session.start());
     } catch (error) {
       sessions.delete(session.key);
       const log = session.log.slice(-40);
@@ -174,6 +194,8 @@ export function omarchyStage(options) {
       }
       const s = sessions.get(parts[1]);
       if (!s) return json(res, 410, { error: 'this story\'s session has ended; reload the story' });
+      // Any request keeps a session alive: a play where nothing draws fetches no frames.
+      s.lastSeen = Date.now();
       const what = parts[2];
       if (s.crashed && what !== 'log' && what !== 'close' && req.method !== 'DELETE') return json(res, 410, { error: s.crashed });
       if (req.method === 'DELETE' || what === 'close') { await close(s.key); return json(res, 200, { closed: true }); }

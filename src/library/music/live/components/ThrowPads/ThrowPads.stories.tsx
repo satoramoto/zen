@@ -46,8 +46,9 @@ function pointer(el: Element, type: string, fx: number, fy: number) {
   );
 }
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /** The delay throw beside the filter. A drag asks for the point under the finger; an arrow key nudges. */
-export const Default: Story = live(s.Default, {
+export const Default: Story = { ...live(s.Default, {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     const delay = canvas.getByRole('group', { name: /^Delay throw/ });
@@ -65,7 +66,7 @@ export const Default: Story = live(s.Default, {
     await userEvent.keyboard('{ArrowRight}');
     await expect(args.onMove).toHaveBeenLastCalledWith({ id: 'filter', x: 0.67, y: 0.7 });
   },
-});
+}), tags: ['browser'] };
 
 /** A pad in a corner with no trail beside one with no ink (the accent). */
 export const EveryState: Story = live(s.EveryState);
@@ -122,7 +123,7 @@ const reading = (pad: HTMLElement) => pad.closest('[data-part="pad"]')!.querySel
  * the crosshair under the finger (0–1, y up, so the top-left quarter reads x 25% y 75%); each arrow
  * press steps 5% from the point the host confirmed, not from where the pad started.
  */
-export const Hosted: Story = live(s.Default, {
+export const Hosted: Story = { ...live(s.Default, {
   parameters: { ...story(s.Default).parameters, ...moved },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -142,13 +143,13 @@ export const Hosted: Story = live(s.Default, {
     await expect(reading(canvas.getByRole('group', { name: /^Delay throw/ }))).toBe('x 25%  y 75%');
     await expect((args.onMove as ReturnType<typeof fn>).mock.calls.map(([m]) => (m as ThrowMove).id)).toEqual(['delay', 'filter', 'filter', 'filter']);
   },
-});
+}), tags: ['browser'] };
 
 /** A second pair a host could bind the pane to: the drums' space and drive. */
 const OTHER_PADS = s.EveryState.args!.pads!;
 
 /** Rebinding: the host hands the pane other pads. The old ones are gone, and an ask carries the new pad's id. */
-export const Rebound: Story = live(s.Default, {
+export const Rebound: Story = { ...live(s.Default, {
   parameters: { ...story(s.Default).parameters, host: { ...moved.host, presets: { 'Bind drums': { pads: OTHER_PADS } } } },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -161,10 +162,10 @@ export const Rebound: Story = live(s.Default, {
     await expect(args.onMove).toHaveBeenCalledTimes(1);
     await expect(args.onMove).toHaveBeenCalledWith({ id: 'space', x: 0.5, y: 0.5 });
   },
-});
+}), tags: ['browser'] };
 
 /** Removal: a drag cut off by removing the pane asks nothing more; remounted, the pad drags again. */
-export const Remounted: Story = live(s.Default, {
+export const Remounted: Story = { ...live(s.Default, {
   parameters: { ...story(s.Default).parameters, host: { ...moved.host, removable: true } },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -184,4 +185,4 @@ export const Remounted: Story = live(s.Default, {
     await waitFor(() => expect(reading(canvas.getByRole('group', { name: /^Delay throw/ }))).toBe('x 60%  y 40%'));
     await expect(args.onMove).toHaveBeenCalledTimes(2);
   },
-});
+}), tags: ['browser'] };

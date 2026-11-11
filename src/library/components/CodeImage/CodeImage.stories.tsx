@@ -19,6 +19,7 @@ type Story = StoryObj<typeof meta>;
 
 const story = (args: unknown) => ({ ...treeStory((a: CodeImageProps) => ({ tree: codeImageView(a) })), args: args as CodeImageProps });
 
+// Stories tagged browser below draw on a canvas: they play in a real browser, not on zen-stories' virtual DOM.
 /** An address: dark marks on a light ground, with its margin, whatever the pack and mode. */
 export const Address: Story = {
   ...story(s.Address.args),
@@ -35,7 +36,7 @@ export const Address: Story = {
     await expect(lightness(root.querySelector('[data-part="ground"]')!)).toBeGreaterThan(0.85);
     await expect(lightness(root.querySelector('[data-part="modules"]')!)).toBeLessThan(0.25);
   },
-};
+ tags: ['browser'] };
 
 /** A long address takes a denser code in the same box. */
 export const Long: Story = story(s.Long.args);

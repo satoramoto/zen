@@ -13,6 +13,7 @@ import { consumerBook } from './consumer.fixture';
 
 const figures = { triangle: RightTriangle };
 const checkers = { expression: expressionChecker };
+// Stories tagged browser here scroll: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   title: 'Compendium/Screens/Package', component: Book,
   decorators: [withLibraryTheme],
@@ -21,6 +22,7 @@ const meta = {
     capability: 'compendium-package',
     purpose: 'Applications can compose interactive books using supported Zen package entries, with reusable renderers and framework-free authoring and mathematical helpers.',
   } },
+  tags: ['browser'],
 } satisfies Meta<typeof Book>;
 export default meta;
 type Story = StoryObj<typeof meta>;

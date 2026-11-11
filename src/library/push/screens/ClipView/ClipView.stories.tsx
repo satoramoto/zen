@@ -45,7 +45,8 @@ export const AnUnnamedAudioClip: Story = scenario(
   scenarioStory(plays.AnUnnamedAudioClip),
 );
 
-export const ASoftNote: Story = scenario(
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
+export const ASoftNote: Story = { ...scenario(
   {
     name: 'A soft note',
     when: 'a clip holds one note at velocity 30 and one at 127',
@@ -56,7 +57,7 @@ export const ASoftNote: Story = scenario(
     check: plays.ASoftNote.check,
   },
   scenarioStory(plays.ASoftNote),
-);
+), tags: ['browser'] };
 
 export const ALongClip: Story = scenario(
   {

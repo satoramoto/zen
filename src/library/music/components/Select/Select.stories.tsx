@@ -21,7 +21,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 const story = fixtureStories<Story>(Select, SelectSvelte);
 
-export const Default: Story = story(s.Default, {
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
+export const Default: Story = { ...story(s.Default, {
   play: async ({ canvasElement, args }) => {
     const field = within(canvasElement).getByRole('combobox', { name: 'FX A effect' });
     field.focus();
@@ -39,8 +40,8 @@ export const Default: Story = story(s.Default, {
     await waitFor(() => expect(field).toHaveAttribute('aria-expanded', 'false'));
     await expect(field).toHaveFocus();
   },
-});
-export const PointerAndDismiss: Story = story(s.PointerAndDismiss, {
+}), tags: ['browser'] };
+export const PointerAndDismiss: Story = { ...story(s.PointerAndDismiss, {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByRole('combobox');
@@ -60,8 +61,8 @@ export const PointerAndDismiss: Story = story(s.PointerAndDismiss, {
     canvasElement.ownerDocument.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
     await waitFor(() => expect(field).toHaveAttribute('aria-expanded', 'false'));
   },
-});
-export const Typeahead: Story = story(s.Typeahead, {
+}), tags: ['browser'] };
+export const Typeahead: Story = { ...story(s.Typeahead, {
   play: async ({ canvasElement }) => {
     const field = within(canvasElement).getByRole('combobox');
     await userEvent.click(field);
@@ -72,7 +73,7 @@ export const Typeahead: Story = story(s.Typeahead, {
     await userEvent.keyboard('{Tab}');
     await waitFor(() => expect(field).toHaveAttribute('aria-expanded', 'false'));
   },
-});
+}), tags: ['browser'] };
 export const LongList: Story = story(s.LongList);
 export const Live: Story = {
   ...fixtureStories<Story>(PressableHarness, PressableHarnessSvelte)(pressableHostStories.Select),
@@ -88,6 +89,7 @@ export const Live: Story = {
     await expect(field).toHaveTextContent('Spring');
     await expect(field).toHaveFocus();
   },
+  tags: ['browser'],
 };
 export const Empty: Story = story(s.Empty);
 export const Disabled: Story = story(s.Disabled, {

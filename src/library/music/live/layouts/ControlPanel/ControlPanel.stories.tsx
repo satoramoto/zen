@@ -111,7 +111,8 @@ export const AddingAKnob: Story = scenario(
   { render: () => <Building /> },
 ) as Story;
 
-export const BindingAParameter: Story = scenario(
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
+export const BindingAParameter: Story = { ...scenario(
   {
     requirement: 'Controls are built in place',
     shall: 'While the surface is editing and the tab is unlocked, a control panel SHALL show its grid, let a person add a control to an empty cell, move and resize a control on the grid (by pointer, or arrows and Shift+arrows), and set a control’s kind, parameter and label or remove it, sending the panel’s whole next cells as one change each time and never overlapping two controls.',
@@ -133,7 +134,7 @@ export const BindingAParameter: Story = scenario(
     },
   },
   { render: () => <Building /> },
-) as Story;
+), tags: ['browser'] } as Story;
 
 export const MovingOntoAnotherControl: Story = scenario(
   {

@@ -55,6 +55,7 @@ const story = fixtureStories<Story>(Modal, ModalSvelte);
 /** WithActions' tree: the Modal with Delete and Keep (`modalSample`); the buttons do nothing. */
 const withActions: StoryView<ModalProps> = (args) => ({ tree: modalSample(args as never), handlers: { close: () => args.onClose(), act: () => {} } });
 
+// Stories tagged browser below move focus as a laid-out page does: they play in a real browser, not on zen-stories' virtual DOM.
 /** A question with its actions; the one that does the thing goes first. */
 export const WithActions: Story = {
   ...story(s.WithActions),
@@ -73,6 +74,7 @@ export const WithActions: Story = {
     await userEvent.keyboard('{Escape}');
     await expect(args.onClose).toHaveBeenCalledTimes(1);
   },
+  tags: ['browser'],
 };
 
 /** No `actions`: the row is left out; the × is always there. */

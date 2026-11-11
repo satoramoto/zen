@@ -36,6 +36,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 const story = fixtureStories<Story>(XYPad, XYPadSvelte);
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * The filter pad: Cutoff across, Resonance up, hue slot 2, the finger's path behind the crosshair.
  * Dragging to 30% across and 30% up asks for exactly that, not the point it started at.
@@ -61,6 +62,7 @@ export const Default: Story = {
     await expect(y).toBeCloseTo(0.3, 1);
     await expect(x).not.toBe(0.62);
   },
+  tags: ['browser'],
 };
 
 /** Every state: each hue slot, both bottom corners, the middle, a labelled pair and a bare field. */

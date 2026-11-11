@@ -143,7 +143,8 @@ export function bindNumberField(node: HTMLElement, initial: NumberFieldParams): 
     const box = node.getBoundingClientRect();
     // Screen pixels per CSS pixel here, so a zoomed canvas tracks the pointer.
     const drawn = node.offsetWidth;
-    const scale = drawn > 0 ? box.width / drawn : 1;
+    // offsetWidth is rounded to a whole pixel: a difference rounding can make is no zoom.
+    const scale = drawn > 0 && Math.abs(box.width - drawn) > 1 ? box.width / drawn : 1;
     wandered = false;
     keyed = null;
     drag = {
