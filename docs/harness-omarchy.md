@@ -166,8 +166,10 @@ the play's own calls keep the session alive. Where no stage server answers (a CI
 clicking and typing on the canvas) is tagged `stage` and `browser` and plays in Playwright's
 headless shell against the served Storybook.
 
-The tools it needs are `quickshell`, `bwrap`, `dbus-run-session` and Omarchy's shell kit. A
-story whose plugin or tools are missing shows why, and its play fails.
+The tools it needs are `quickshell`, `bwrap`, `dbus-run-session` and Omarchy's shell kit, and,
+for the stories tagged `browser`, Playwright's own Chromium headless shell, installed once with
+`npx playwright install --only-shell chromium`. A story whose plugin or tools are missing shows
+why, and its play fails.
 
 **Sessions start four at a time.** Starting Quickshell is the burst of CPU a run makes, so the
 server starts no more than four sessions at once, whoever asks: every page and every runner of

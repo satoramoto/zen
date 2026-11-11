@@ -1,4 +1,4 @@
-# Spec Delta
+# push-sampling Spec Delta
 
 ## MODIFIED Requirements
 
@@ -15,15 +15,15 @@ Device View on a Simpler with a sample SHALL draw the sample's waveform across t
 - **THEN** the display invites loading one with Swap
 
 #### Scenario: Mode is last
-- **WHEN** Device View shows a Simpler in any of its three modes
+- **WHEN** Device View shows a Simpler in each of its three modes
 - **THEN** the eighth column reads Mode and the first three read Zoom, Start and End
 
 ### Requirement: One-Shot mode shows its envelope and trigger
 
-In One-Shot mode the main bank SHALL show Fade In, Fade Out, Transpose up to 48 semitones either way and Gain on the fourth to seventh encoders, and Trigger and Gate as a pair of options on the display buttons.
+In One-Shot mode the main bank SHALL show Fade In, Fade Out, Transpose up to 48 semitones either way and Gain on the fourth to seventh encoders, and Edit Mode SHALL offer Trigger and Gate as a pair at its second display button.
 
 #### Scenario: Gate
-- **WHEN** a person presses the display button at Gate
+- **WHEN** Simpler's Edit Mode is shown in One-Shot mode and a person presses the display button at Trigger and Gate
 - **THEN** the app is asked to set the sample to fade out when the pad is released
 
 #### Scenario: Gain is at hand
@@ -45,3 +45,19 @@ Pressing a slice's pad SHALL select it; Nudge, on the fourth encoder of the main
 #### Scenario: Nudging a slice
 - **WHEN** a person taps a slice's pad and turns the fourth encoder clockwise
 - **THEN** the app is asked to move that slice's marker later
+
+### Requirement: Edit Mode holds the sample actions
+
+Pressing Simpler's upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons, each where the unit has it, Loop on or off (Classic), Trigger or Gate (One-Shot and Slicing), Warp as a number of bars, halve and double the speed, Crop (not in Slicing), Reset Slices and Split Slice (Slicing) and Reverse; pressing the first button SHALL leave.
+
+#### Scenario: Reversing
+- **WHEN** Simpler's Edit Mode is shown and a person presses the display button at Reverse
+- **THEN** the app is asked to reverse the sample
+
+#### Scenario: Crop in Slicing
+- **WHEN** Simpler is in Slicing mode and its Edit Mode is shown
+- **THEN** Crop is not offered
+
+#### Scenario: Resetting the slices
+- **WHEN** Simpler's Edit Mode is shown in Slicing mode and a person presses the display button at Reset Slices
+- **THEN** the app is asked to reset the slices
