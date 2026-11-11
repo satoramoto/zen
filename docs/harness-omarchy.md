@@ -157,10 +157,11 @@ node src/harness/omarchy/stage/play-stories.mjs --url http://127.0.0.1:6010 omar
 ```
 
 It needs `quickshell`, `bwrap`, `dbus-run-session`, Omarchy's shell kit, and
-Playwright with its own Chromium headless shell (`npx playwright install
---only-shell chromium`, once). The runner plays in that shell and no other
-browser: it reads no browser path, and says so when `CHROMIUM_PATH` is set. A
-story whose plugin or tools are missing shows why, and its play fails.
+Playwright with its own Chromium headless shell, installed once with
+`npx playwright install --only-shell chromium`. The runner plays in that shell
+and no other browser: it reads no browser path, and says so when
+`CHROMIUM_PATH` is set. A story whose plugin or tools are missing shows why, and
+its play fails.
 
 ## The portable kit
 
