@@ -28,6 +28,11 @@ export interface PianoRollNote {
   emphasis?: boolean;
   /** An exceptional note: the corner mark. */
   marked?: boolean;
+  /**
+   * How strongly the note is drawn, 0 to 1: a velocity, a confidence. A lower level is fainter.
+   * Default 1, the full strength.
+   */
+  level?: number;
 }
 
 /** Every PianoRoll prop (the roll has no framework children). */
@@ -136,8 +141,10 @@ export function pianoRollView({ keys, notes, from, to, beatsPerBar, playhead, la
               'data-emphasis': note.emphasis ? 'true' : undefined,
               'data-marked': note.marked ? 'true' : undefined,
               'data-hue': note.hue === undefined ? undefined : String(note.hue),
+              'data-level': note.level === undefined ? undefined : String(Math.round(Math.max(0, Math.min(1, note.level)) * 100) / 100),
               title: note.label,
               style: styleText({
+                '--yh-roll-level': note.level === undefined ? undefined : String(Math.max(0, Math.min(1, note.level))),
                 left: `${((note.from - from) / span) * 100}%`,
                 width: `${width}%`,
                 top: `${(row / rows) * 100}%`,

@@ -3,7 +3,7 @@
  * `tiers.test.ts` can hold every count to its recorded baseline (`tiers.baseline.json`).
  * Pure node:fs and string work, no React.
  *
- * **What is scanned.** `src/library/{components,music,graph,layouts,yahaha,primitives,report}`: CSS, TSX, TS
+ * **What is scanned.** `src/library/{components,music,graph,layouts,yahaha,primitives,report,push}`: CSS, TSX, TS
  * and Svelte files, except stories, tests and story/test data (`*.fixtures.ts`, `*.stories.svelte.ts`,
  * `*.story.svelte`). A `.svelte` file is read as its parts (`scanSvelte`): `<script>` as TS,
  * `<style>` as CSS, and its markup's `style="…"` and `style:prop` as `style={{}}`. `themes/` is never
@@ -68,16 +68,16 @@ export const RULES: Record<RuleId, { fix: string }> = {
 export const RULE_IDS = Object.keys(RULES) as RuleId[];
 
 /** The folders scanned, under `src/library`. */
-export const TOP_FOLDERS = ['components', 'music', 'graph', 'layouts', 'yahaha', 'primitives', 'report'] as const;
+export const TOP_FOLDERS = ['components', 'music', 'graph', 'layouts', 'yahaha', 'primitives', 'report', 'push'] as const;
 
 /** Which top folders each rule applies to. `graph` (the node graph and its faces),
- *  `report` (the research report) are read as controls. */
+ *  `report` (the research report) and `push` (the Push surface) are read as controls. */
 export const RULE_FOLDERS: Record<RuleId, readonly string[]> = {
-  pixels: ['components', 'music', 'graph', 'layouts', 'yahaha', 'report'],
-  margins: ['components', 'music', 'graph', 'report'],
+  pixels: ['components', 'music', 'graph', 'layouts', 'yahaha', 'report', 'push'],
+  margins: ['components', 'music', 'graph', 'report', 'push'],
   painting: ['layouts', 'yahaha'],
-  knobs: ['components', 'music', 'graph', 'layouts', 'yahaha', 'report'],
-  type: ['components', 'music', 'graph', 'layouts', 'yahaha', 'report'],
+  knobs: ['components', 'music', 'graph', 'layouts', 'yahaha', 'report', 'push'],
+  type: ['components', 'music', 'graph', 'layouts', 'yahaha', 'report', 'push'],
 };
 
 /**
@@ -121,7 +121,7 @@ export interface Finding {
 const top = (file: string) => file.split('/')[0];
 
 /** The scanned areas: their counts are per `<area>/<tier>/<Name>`. */
-const AREA_TOPS = ['music', 'graph', 'report', 'yahaha'];
+const AREA_TOPS = ['music', 'graph', 'report', 'yahaha', 'push'];
 
 /** Scanned sub-areas: their counts are per `<area>/<sub-area>/<tier>/<Name>`. */
 const SUB_AREAS = ['music/live'];

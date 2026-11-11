@@ -713,4 +713,66 @@ export const blueprint: Palette = {
   },
 };
 
-export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed, mixflow, console, blueprint];
+// The Push 3 unit (https://www.ableton.com/en/push/manual/). The manual gives no colour values: it
+// shows a matte black body, white legends, a dark display with white type and lamps in the track
+// colours. Every value here is read from its figures by eye, so every value is added. The meaning
+// colours are the yahaha Push palette's, which already hold the 0.12 OKLab spacing.
+export const push3: Palette = {
+  id: 'push-3',
+  label: 'Push 3',
+  dark: {
+    surface: ['#050505', '#0f0f10', '#1a1a1c', '#2a2a2d'], // added: body, display ground, control cap, raised cap
+    text: ['#ffffff', '#d8d8d8', '#8f8f92', '#4c4c50'], // added: lit legend, legend, dimmed legend, unlit print
+    border: '#232325', // added
+    borderStrong: '#4c4c50', // added
+    action: '#ffffff', // added: a lit white lamp
+    actionText: '#000000', // added
+    selected: '#ffffff', // added: the display's selected block
+    selectedText: '#000000', // added
+    accent: '#a58cff', // added
+    success: '#5fdc4a', // added: a playing clip's green
+    warning: '#ffd60a', // added
+    danger: '#e5534b', // added: record and arm
+    successText: '#000000', // added
+    warningText: '#000000', // added
+    dangerText: '#000000', // added
+    hues: ['#3b8eff', '#ff4f9e', '#ff9a2e', '#16c7a6', '#bd39ec'], // added
+    onHue: '#000000', // added
+    roles: ['#f57aff', '#3ff4ff'], // added
+    roleText: ['#000000', '#000000'], // added
+    bloom: '8px', // added: lamps spill light on the matte body
+    keys: {
+      white: '#ababab', // added
+      black: '#141414', // added
+    },
+  },
+  // The unit has one look. The light mode is a pale body of the same shape, for a page that is light.
+  light: {
+    surface: ['#ecebe8', '#dddcd8', '#d0cfcb', '#c1c0bc'], // added
+    text: ['#111111', '#2b2b2b', '#63635f', '#a5a4a0'], // added
+    border: '#c8c7c3', // added
+    borderStrong: '#a5a4a0', // added
+    action: '#111111', // added
+    actionText: '#ffffff', // added
+    selected: '#111111', // added
+    selectedText: '#ffffff', // added
+    accent: '#742fd3', // added
+    success: '#1a7316', // added
+    warning: '#c29a00', // added
+    danger: '#ac1b18', // added
+    successText: '#ffffff', // added
+    warningText: '#000000', // added
+    dangerText: '#ffffff', // added
+    hues: ['#1257d6', '#d0186f', '#c85f00', '#008f78', '#a377c3'], // added
+    onHue: '#ffffff', // added
+    roles: ['#932180', '#005b6b'], // added
+    roleText: ['#ffffff', '#ffffff'], // added
+    bloom: '0px', // added
+    keys: {
+      white: '#f9f8f6', // added
+      black: '#1f1f1d', // added
+    },
+  },
+};
+
+export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed, mixflow, console, blueprint, push3];

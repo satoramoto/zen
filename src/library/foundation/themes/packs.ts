@@ -74,6 +74,21 @@ export const packs: ThemePack[] = [
     principles: principles.yahaha,
   },
   {
+    id: 'push-3',
+    label: 'Push 3',
+    source: { name: 'Ableton Push 3 manual', url: 'https://www.ableton.com/en/push/manual/' },
+    northStar: 'The unit itself: a matte black body, white print, a dark display, and light only where a lamp is lit.',
+    keep: [
+      'The body is black and matte; nothing on it is boxed.',
+      'A legend is white print, dim until its control is available and bright when it is lit.',
+      'Colour comes only from lamps: a pad, a button or the display, never the body.',
+      'The display stays dark with white type in either mode.',
+      'A lit lamp spills a little light; an unlit one is flat.',
+    ],
+    facets: facets('push-3', 'push-3', 'compact', 'push-3'),
+    principles: principles.yahaha,
+  },
+  {
     id: 'visuals',
     label: 'visual[flow] (glass)',
     source: { name: 'openflowfm/visuals 1.0', url: 'https://github.com/openflowfm/visuals' },

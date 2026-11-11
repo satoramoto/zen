@@ -59,6 +59,11 @@
       "types": "./lib/math/calculator/public.d.ts",
       "import": "./lib/math-expression.js"
     },
+    "./push/model": {
+      "zen-source": "./src/library/push/model/index.ts",
+      "types": "./lib/push/model/index.d.ts",
+      "import": "./lib/push-model.js"
+    },
     "./harness/*": "./src/harness/*",
     "./package.json": "./package.json"
   },

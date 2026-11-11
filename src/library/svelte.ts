@@ -11,6 +11,8 @@
 import type { Component, Snippet } from 'svelte';
 // The mix[flow] toolkit as a namespace; the flat music names in this entry are the token-drawn parts.
 export * as Music from './music/svelte';
+/** The Ableton Push 3: its surface, display and device over a Set, with the device model (docs/push.md). */
+export * as Push from './push/svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { Facets, PackPrinciples } from './contract';
 import type { ModeChoice } from './theme.model';

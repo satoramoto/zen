@@ -13,6 +13,11 @@
   margin: 0;
 }
 
+/* Compact has no key column: the grid takes the whole width (in the first, `auto`, column it had none). */
+.yh-pianoroll[data-form='compact'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .yh-pianoroll__keys {
   display: grid;
   grid-template-rows: repeat(var(--yh-roll-rows), minmax(0, 1fr));
@@ -69,7 +74,9 @@
   white-space: nowrap;
   border-radius: var(--radius-control);
   background: var(--yh-roll-ink);
-  opacity: 0.85;
+  /* Full strength unless the note says its level (set inline): a fainter block for a lower one. */
+  --yh-roll-level: 1;
+  opacity: calc(0.25 + 0.6 * var(--yh-roll-level));
   color: var(--text-1);
 }
 

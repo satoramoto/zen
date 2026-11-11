@@ -1,0 +1,376 @@
+/* Display: the unit's 960 by 160 screen. Reads only contract variables, the lamp table's
+   (--push-lamp-N) and the locals below.
+
+   --push-px        one of the display's own pixels, from its width: everything inside is sized in
+                    these, so the screen scales as a whole and nothing reflows
+   --push-light     the display's light, 0 to 1 (set inline)
+   --push-lamp      the colour a cell belongs to (set inline; white by default)
+   --push-lit       that colour as drawn
+   --push-ground    the screen's own ground
+   --push-fraction  how far a bar is filled (set inline)
+   --push-blink     the beat's phase, when the display sits in a surface that sets it
+
+   A cell restates the variables its component reads: --hue-1 (a knob's arc, a trace's line) and
+   the type sizes, so text sits on the same lines as on the unit at any scale. The three sizes the
+   unit uses are --push-type-label, --push-type-value and --push-type-large. */
+
+.push-display {
+  --push-light: 1;
+  --push-blink: 1;
+  container-type: inline-size;
+  aspect-ratio: 6;
+  width: 100%;
+  /* The pack's ground, solid: a glass pack's is see-through, and a screen is not. Print on a lit block is this colour too. */
+  --push-ground: var(--layer-ground-solid);
+  background: var(--push-ground);
+  color: var(--text-1);
+  overflow: hidden;
+  border-radius: var(--radius-control);
+}
+/* A lit screen: whatever the pack's dark ground is (a red body, a tint over glass), the screen
+   is that ground no lighter than a screen is, and type in a lamp's colour no darker than can be
+   read on it. Both by rule from the one colour, so every pack and every colour of the table has them. */
+.push-display[data-dark] { --push-ground: oklch(from var(--layer-ground-solid) min(l, 0.2) c h); }
+.push-display[data-dark] :is(.push-display__tab, .push-display__cell, .push-display__slot):not([data-disabled]) {
+  --push-lit: oklch(from var(--push-lamp) max(l, 0.72) c h);
+}
+
+.push-display__screen {
+  --push-px: calc(100cqw / 960);
+  --push-white: var(--text-1);
+  --push-select: var(--selected);
+  --push-solo: var(--hue-1);
+  --push-unlit: var(--surface-1);
+  --push-lamp: var(--push-white);
+  --push-fraction: 0;
+  /* The unit's three sizes, in its own pixels. */
+  --push-type-label: calc(var(--push-px) * 12);
+  --push-type-value: calc(var(--push-px) * 15);
+  --push-type-large: calc(var(--push-px) * 26);
+  --size-caption: calc(var(--push-px) * 11);
+  --size-label: var(--push-type-label);
+  --size-body: calc(var(--push-px) * 13);
+  --size-numeral: var(--push-type-value);
+  --size-heading: var(--push-type-value);
+  --size-display: var(--push-type-large);
+  --control-h: calc(var(--push-px) * 21);
+  --space-1: calc(var(--push-px) * 2);
+  --space-2: calc(var(--push-px) * 3);
+  --space-3: calc(var(--push-px) * 6);
+  --space-4: calc(var(--push-px) * 8);
+  position: relative;
+  display: grid;
+  grid-template-rows: calc(var(--push-px) * 22) 1fr calc(var(--push-px) * 26);
+  width: 100%;
+  height: 100%;
+  opacity: calc(0.25 + 0.75 * var(--push-light));
+}
+
+/* The top and bottom rows: eight cells, one per display button. */
+.push-display__row {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  min-height: 0;
+}
+.push-display__tab {
+  --push-lit: var(--push-lamp);
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* From the column's left edge, as the unit's print is. */
+  justify-content: flex-start;
+  gap: calc(var(--push-px) * 4);
+  min-width: 0;
+  padding: 0 calc(var(--push-px) * 8);
+  color: var(--push-lit);
+}
+/* The selected one is a solid block of its colour with dark text. */
+.push-display__tab[data-selected] {
+  background: var(--push-lit);
+  color: var(--push-ground);
+}
+.push-display__tab[data-dim] { color: var(--text-3); }
+.push-display__tab[data-dim][data-selected] { background: var(--text-3); color: var(--push-ground); }
+/* An unfolded group or Rack: a line under it and its children. */
+.push-display__tab[data-fold] { box-shadow: inset 0 calc(var(--push-px) * -2) 0 var(--push-lit); }
+.push-display__armed {
+  flex: none;
+  width: calc(var(--push-px) * 8);
+  height: calc(var(--push-px) * 8);
+  border-radius: var(--radius-pill);
+  background: var(--danger);
+}
+.push-display__tab[data-selected] .push-display__armed { box-shadow: 0 0 0 calc(var(--push-px) * 1) var(--push-ground); }
+/* A playing clip's progress: a small bar under the name. */
+.push-display__progress {
+  position: absolute;
+  left: calc(var(--push-px) * 6);
+  right: calc(var(--push-px) * 6);
+  bottom: calc(var(--push-px) * 2);
+  height: calc(var(--push-px) * 2);
+  background: linear-gradient(to right, currentColor calc(var(--push-fraction) * 100%), color-mix(in oklab, currentColor 30%, transparent) 0);
+}
+
+/* The body: eight columns; a cell may span several. */
+.push-display__body {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  min-height: 0;
+  overflow: hidden;
+}
+.push-display__cell {
+  --push-lit: var(--push-lamp);
+  --hue-1: var(--push-lit);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--push-lit);
+}
+.push-display__cell[data-type='text'] { padding: 0 calc(var(--push-px) * 8); color: var(--push-lit); }
+.push-display__cell[data-type='text'][data-align='start'] { align-items: flex-start; }
+.push-display__cell[data-type='text'][data-align='centre'] { text-align: center; }
+.push-display__cell[data-disabled] { --push-lit: var(--text-3); opacity: 0.6; }
+/* A touched parameter stands out on a lifted ground. */
+.push-display__cell[data-touched] {
+  background: var(--surface-2);
+}
+/* A parameter, as on the unit: its name, its reading at the large size with the unit small beside
+   it, and its dial under them, all from the column's left edge. The name is plain print; the
+   reading and the arc are in the colour of what the parameter belongs to (a track's, white in a
+   menu, grey when off). */
+.push-display__cell[data-type='param'] {
+  --control-h: calc(var(--push-px) * 20);
+  /* Every parameter's name is at the label size, whichever way its reading is drawn. */
+  --size-caption: var(--push-type-label);
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: calc(var(--push-px) * 2);
+  padding: calc(var(--push-px) * 8) calc(var(--push-px) * 8) 0;
+}
+.push-display__cell[data-type='param'] > [data-part='name'] { flex: none; max-width: 100%; color: var(--text-2); }
+/* The dial has no name row of its own: its ring is all there is of it. */
+.push-display__cell[data-type='param'] .yh-knob { --size-caption: 0px; --space-1: 0px; }
+.push-display__cell[data-type='param'] .yh-knob__value { color: var(--push-lit); }
+.push-display__reading {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: calc(var(--push-px) * 3);
+  max-width: 100%;
+  white-space: nowrap;
+  color: var(--push-lit);
+}
+.push-display__cell[data-type='param'][data-style='choice'],
+.push-display__cell[data-type='list'] {
+  align-items: stretch;
+  justify-content: flex-start;
+  --control-h: calc(var(--push-px) * 21);
+}
+.push-display__cell[data-type='trace'] { padding: calc(var(--push-px) * 10) calc(var(--push-px) * 6); align-items: stretch; }
+/* Every cell is on the body's one row, so a drawing can lie under the parameters of the columns it spans. */
+.push-display__cell { grid-row: 1; }
+.push-display__cell[data-under] { padding-top: calc(var(--push-px) * 44); }
+/* A parameter over a drawing: its name and its value, at the top of its column. */
+.push-display__cell[data-style='value'] { justify-content: flex-start; padding-top: calc(var(--push-px) * 6); z-index: 1; }
+/* A menu the highlight has passed through: its chosen row is marked, not highlighted. */
+.push-display__cell[data-enclosing] {
+  --selected: var(--surface-3);
+  --selected-text: var(--text-1);
+}
+/* An automated parameter's dot, in its corner. */
+.push-display__dot {
+  position: absolute;
+  top: calc(var(--push-px) * 4);
+  right: calc(var(--push-px) * 6);
+}
+.push-display__more {
+  position: absolute;
+  right: calc(var(--push-px) * 3);
+}
+.push-display__more[data-more='above'] { top: 0; }
+.push-display__more[data-more='below'] { bottom: 0; }
+
+/* Overlays: over whatever screen is shown. */
+.push-display__overlays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.push-display__overlay { position: absolute; }
+.push-display__overlay:is([data-overlay='notice'], [data-overlay='confirm'], [data-overlay='dialog'], [data-overlay='text-entry']) {
+  inset: calc(var(--push-px) * 22) 0 calc(var(--push-px) * 26);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--push-px) * 4);
+  background: var(--push-ground);
+  text-align: center;
+}
+.push-display__overlay[data-overlay='notice'] {
+  inset: calc(var(--push-px) * 36) 25% calc(var(--push-px) * 40);
+  background: var(--surface-2);
+  box-shadow: 0 0 0 calc(var(--push-px) * 1) var(--border-strong);
+}
+.push-display__entry { display: flex; align-items: center; min-height: var(--push-type-large); }
+.push-display__caret {
+  width: calc(var(--push-px) * 2);
+  height: var(--push-type-value);
+  background: var(--text-1);
+  opacity: calc(0.3 + 0.7 * var(--push-blink));
+}
+.push-display__characters { display: flex; gap: calc(var(--push-px) * 2); }
+.push-display__character { min-width: calc(var(--push-px) * 18); padding: calc(var(--push-px) * 2) 0; color: var(--text-2); }
+.push-display__character[data-highlighted] { background: var(--selected); color: var(--selected-text); }
+/* The battery mark, top right. */
+.push-display__overlay[data-overlay='battery'] {
+  top: calc(var(--push-px) * 4);
+  right: calc(var(--push-px) * 6);
+  width: calc(var(--push-px) * 26);
+  height: calc(var(--push-px) * 12);
+  box-shadow: inset 0 0 0 calc(var(--push-px) * 1.5) var(--text-1);
+  background: var(--push-ground);
+}
+.push-display__overlay[data-overlay='battery'][data-low] { box-shadow: inset 0 0 0 calc(var(--push-px) * 1.5) var(--danger); }
+.push-display__battery-fill {
+  position: absolute;
+  inset: calc(var(--push-px) * 3);
+  right: auto;
+  width: calc((100% - var(--push-px) * 6) * var(--push-fraction));
+  background: var(--text-1);
+}
+.push-display__overlay[data-low] .push-display__battery-fill { background: var(--danger); }
+/* The count-in: a bar across the top that moves, and flashes on the beat. */
+.push-display__overlay[data-overlay='count-in'] {
+  top: 0;
+  left: 0;
+  width: calc(100% * var(--push-fraction));
+  height: calc(var(--push-px) * 4);
+  background: var(--danger);
+  opacity: calc(0.45 + 0.55 * var(--push-blink));
+}
+.push-display__overlay[data-overlay='progress'] {
+  left: 20%;
+  right: 20%;
+  bottom: calc(var(--push-px) * 34);
+  display: grid;
+  gap: calc(var(--push-px) * 4);
+  padding: calc(var(--push-px) * 8);
+  background: var(--surface-2);
+  text-align: center;
+}
+.push-display__bar {
+  height: calc(var(--push-px) * 4);
+  background: linear-gradient(to right, var(--text-1) calc(var(--push-fraction) * 100%), var(--surface-3) 0);
+}
+
+/* A track's level: two meters, a mark at its volume, and the reading under them. */
+.push-display__cell[data-type='meter'] {
+  --space-2: calc(var(--push-px) * 5);
+  gap: calc(var(--push-px) * 3);
+  padding: calc(var(--push-px) * 5) 0;
+}
+.push-display__meter {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: calc(var(--push-px) * 6);
+  min-height: 0;
+}
+.push-display__meters {
+  display: flex;
+  gap: calc(var(--push-px) * 2);
+  --wdg-meter-width: calc(var(--push-px) * 5);
+  --wdg-meter-length: calc(var(--push-px) * 62);
+}
+/* Not measured: the meters are drawn empty and marked. */
+.push-display__meter[data-unmeasured] .push-display__meters { opacity: 0.35; outline: calc(var(--push-px) * 1) dashed var(--text-3); }
+
+/* The clip grid: eight scenes down, eight tracks across under their columns, the scene's label at the right. */
+.push-display__cell[data-type='grid'] { align-items: stretch; justify-content: stretch; }
+.push-display__grid {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-rows: repeat(8, minmax(0, 1fr));
+  gap: calc(var(--push-px) * 1);
+  min-height: 0;
+  /* A clip's block is small: its print and its room are too. */
+  --size-label: calc(var(--push-px) * 9);
+  --space-1: 0px;
+  --space-2: 0px;
+  --bloom: 0px;
+}
+.push-display__grid-row {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: calc(var(--push-px) * 2);
+  min-height: 0;
+}
+.push-display__slot {
+  --push-lit: var(--push-lamp);
+  --hue-1: var(--push-lit);
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.push-display__slot[data-selected] { outline: calc(var(--push-px) * 1.5) solid var(--text-1); outline-offset: calc(var(--push-px) * -1.5); z-index: 1; }
+.push-display__slot:is([data-state='playing'], [data-state='recording'])::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--push-px) * 3);
+  background: var(--success);
+}
+.push-display__slot[data-state='recording']::after { background: var(--danger); }
+.push-display__slot:is([data-state='queued'], [data-state='queued-record'], [data-state='queued-stop']) { opacity: calc(0.4 + 0.6 * var(--push-blink)); }
+/* The scenes' labels sit over the right edge of the last column, as on the unit. */
+.push-display__scene {
+  position: absolute;
+  right: calc(var(--push-px) * 2);
+  padding: 0 calc(var(--push-px) * 3);
+  background: var(--push-ground);
+  color: var(--text-2);
+}
+.push-display__grid-row { position: relative; }
+
+/* A waveform across the body. */
+.push-display__cell[data-type='wave'] { align-items: stretch; padding: calc(var(--push-px) * 6) 0; }
+.push-display__cell[data-type='wave'][data-under] { padding-top: calc(var(--push-px) * 40); }
+
+/* The piano roll: the notes, with the loop, the clip's markers and the pads' reach over them, and the pitches' density at the left. */
+.push-display__cell[data-type='roll'] { align-items: stretch; justify-content: stretch; }
+.push-display__cell[data-type='roll'][data-under] { padding-top: calc(var(--push-px) * 38); }
+.push-display__roll {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 0;
+  --space-1: 0px;
+}
+.push-display__roll > .yh-pianoroll { grid-column: 2; min-height: 0; height: 100%; }
+/* The highlighted note's outline pulses with the beat, where the display sits in a surface that keeps one. */
+.push-display__roll[data-highlight] { --text-1: color-mix(in oklab, var(--push-white) calc((0.45 + 0.55 * var(--push-pulse, 1)) * 100%), transparent); }
+.push-display__density {
+  grid-column: 1;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  width: calc(var(--push-px) * 10);
+  margin-right: calc(var(--push-px) * 2);
+}
+.push-display__density > span { background: linear-gradient(to left, var(--push-lit) calc(var(--push-fraction) * 100%), transparent 0); opacity: 0.8; }
+.push-display__marks { position: absolute; inset: 0 0 0 calc(var(--push-px) * 12); pointer-events: none; }
+.push-display__roll:not(:has(.push-display__density)) .push-display__marks { inset: 0; }
+.push-display__loop { position: absolute; top: 0; height: calc(var(--push-px) * 3); background: var(--push-lit); }
+.push-display__mark { position: absolute; top: 0; bottom: 0; width: calc(var(--push-px) * 1); background: var(--text-2); }
+.push-display__box { position: absolute; background: color-mix(in oklab, var(--push-white) 14%, transparent); box-shadow: inset 0 0 0 calc(var(--push-px) * 1) color-mix(in oklab, var(--push-white) 45%, transparent); }

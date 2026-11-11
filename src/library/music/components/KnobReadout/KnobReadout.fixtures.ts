@@ -10,6 +10,7 @@ export const knobArgTypes = {
   value: { control: 'text' },
   unit: { control: 'text' },
   fraction: { control: { type: 'range', min: 0, max: 1, step: 0.01 } },
+  origin: { control: 'inline-radio', options: ['min', 'center'] },
   unused: { control: 'boolean' },
   hue: { control: 'select', options: [undefined, 1, 2, 3, 4, 5] },
   name: { control: 'text' },
@@ -33,6 +34,17 @@ export const knobStories = defineFixtures<KnobReadoutModelProps>()({
   Unit: { args: { ...board, label: 'Swing', code: 'Swing', value: '0', unit: '%', fraction: 0 } },
   Unused: { args: { ...board, label: '---', code: '', value: '', fraction: 0, unused: true } },
   Hue: { args: { ...board, label: 'Retrig rate', code: 'RtgRate', value: '1/8', fraction: 0.4, hue: 2 } },
+  /** A value with a middle: the arc grows from the top of the ring, left for less and right for more, and is empty at the middle. */
+  Center: {
+    args: { ...board, label: 'Pan', code: 'Pan', origin: 'center' },
+    items: [
+      { value: '50L', fraction: 0 },
+      { value: '20L', fraction: 0.3 },
+      { value: 'C', fraction: 0.5 },
+      { value: '30R', fraction: 0.8 },
+      { value: '50R', fraction: 1 },
+    ],
+  },
   BoardRow: {
     args: board,
     items: [

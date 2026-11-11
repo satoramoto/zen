@@ -6,7 +6,7 @@ import type { HueSlot } from '../../../components/hue';
 import { focusRing } from '../../../primitives/Ring/Ring';
 import { textView, type ElementView, type TextModelProps } from '../../../primitives/Text/Text.model';
 import { h, wire, type Handlers, type Node } from '../../../foundation/view/Tree.model';
-import { BOX, R, START, arc, point, sweepOf } from './geometry';
+import { BOX, R, START, arc, point, sweepOf, SWEEP } from './geometry';
 import type { TipAction } from '../../../foundation/view/tip';
 import { knobRootAttrs } from './knobInput';
 
@@ -24,6 +24,12 @@ export interface KnobReadoutModelProps {
   unit?: string;
   /** How far round the arc is, 0–1 of its 270°. */
   fraction?: number;
+  /**
+   * Where the arc grows from: `min`, the arc's start (the default), or `center`, the top of the
+   * ring, for a value with a middle (a pan, a detune): the arc then runs from the top to the
+   * value, either way, and is empty at 0.5.
+   */
+  origin?: 'min' | 'center';
   /** Nothing is mapped to this knob: dim name, an empty ring, no value. */
   unused?: boolean;
   /** A categorical hue slot (1–5, `--hue-n`) for what owns this knob; an app maps its meaning (e.g. Yahaha's parts). Its arc wears that hue. Default: ink. */
@@ -59,10 +65,12 @@ export function knobName({ label, code = '', value = '', unit = '', unused = fal
 /** The tree KnobReadout draws: the button (binding the `knob` store), its name, the dial (well, cap, ring,
  *  value and unit) and the Genos code. */
 export function knobView(props: KnobReadoutModelProps): Node {
-  const { code = '', value = '', unit = '', fraction = 0, unused = false, hue, tip } = props;
+  const { code = '', value = '', unit = '', fraction = 0, unused = false, hue, tip, origin = 'min' } = props;
   const name = knobName(props);
   const deg = unused ? 0 : sweepOf(fraction);
-  const lit = arc(START, START + deg);
+  // From the middle, the arc runs between the top of the ring and the value, whichever is first.
+  const middle = START + SWEEP / 2;
+  const lit = origin === 'center' && !unused ? arc(Math.min(middle, START + deg), Math.max(middle, START + deg)) : arc(START, START + deg);
   // The pointer: a short tick just outside the ring at the arc's end, so it never merges into the
   // lit arc (same ink on a neutral knob) and stays clear of the value in the centre.
   const tipOuter = point(START + deg, R + 7);
@@ -79,6 +87,7 @@ export function knobView(props: KnobReadoutModelProps): Node {
         'data-part': 'root',
         'data-unused': unused ? 'true' : undefined,
         'data-rest': rest ? 'true' : undefined,
+        'data-origin': origin === 'center' ? 'center' : undefined,
         'data-hue': hue === undefined ? undefined : String(hue),
         'data-tip': tip,
       },

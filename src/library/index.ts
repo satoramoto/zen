@@ -54,6 +54,8 @@ export * from './music/root';
 // The reference-faithful mix[flow] toolkit, as a namespace; the flat music names above are the
 // token-drawn parts.
 export * as Music from './music';
+/** The Ableton Push 3: its surface, display and device over a Set, with the device model (docs/push.md). */
+export * as Push from './push';
 
 // The graph: the node-graph view (Graph, GraphNode, Port, Device, NodeSheet) and the Circuit model it draws.
 export * from './graph';

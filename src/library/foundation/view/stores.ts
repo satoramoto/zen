@@ -4,6 +4,7 @@
 // `bind` entry up here, so there are no per-component hooks or actions.
 import type { Handler } from './Tree.model';
 import { musicStores } from '../../music/registry.stores';
+import { pushStores } from '../../push/registry.stores';
 import { bindLongPress, type LongPressParams } from '../../components/Button/longPress';
 import { bindHold, type HoldParams } from '../../components/Button/hold';
 import { bindKnob, type KnobParams } from '../../music/components/KnobReadout/knobInput';
@@ -86,6 +87,7 @@ export function keyed<P extends object, F extends keyof P & string>(
 /** Every store a tree can bind, by name. A new store is one line here. */
 export const stores = {
   ...musicStores(),
+  ...pushStores(),
   /** Button's long press (`longPress.ts`). */
   longPress: keyed<LongPressParams, 'onLongPress' | 'onLongRelease'>(bindLongPress, ['onLongPress', 'onLongRelease']),
   /** Button's repeat-while-held (`hold.ts`). */

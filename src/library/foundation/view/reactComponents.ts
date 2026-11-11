@@ -5,6 +5,7 @@
 // draws a `Tree`, which reads this) never sees a half-loaded module.
 import type { ComponentType } from 'react';
 import { musicReactComponents } from '../../music/registry.react';
+import { pushReactComponents } from '../../push/registry.react';
 import { Button } from '../../components/Button/Button';
 import { ActionButton } from '../../components/ActionButton/ActionButton';
 import { SearchField } from '../../components/SearchField/SearchField';
@@ -85,6 +86,7 @@ let registry: Record<string, ComponentType<any>> | undefined;
 export function reactComponent(name: string): ComponentType<any> {
   registry ??= {
     ...musicReactComponents(),
+    ...pushReactComponents(),
     AssembledScreen,
     FormScope,
     Layer,

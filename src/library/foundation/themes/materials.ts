@@ -140,6 +140,30 @@ export const pushMaterials: Materials = {
   ...flat,
 };
 
+// The Push 3 unit: a matte body, low square caps with a small radius, no boxes around groups. The
+// manual gives no measures, so every value is added.
+export const push3Materials: Materials = {
+  id: 'push-3',
+  label: 'Push 3 (matte body, small caps)',
+  radiusControl: '2px', // added: a button cap's corner
+  radiusCard: '4px', // added: the body's and the display's corner
+  radiusInput: '2px', // added
+  radiusPill: '999px', // added: the encoders are round
+  borderWidth: '1px', // added
+  input: 'underline', // added: the display's text entry is a line with a caret
+  layers: flatLayers(
+    plain('transparent', 'var(--surface-0)'), // added: the body is one matte surface, groups have no plate
+    plain('var(--surface-2)'), // added: a cap is one tone step up
+  ),
+  plate: {
+    inset: '0px', // added
+    gap: 'var(--space-2)', // added
+    head: { inset: '0px', rule: NO_SHADOW }, // added
+  },
+  tabs: underlineTabs, // added: the display's tabs are text, the chosen one marked
+  ...flat,
+};
+
 export const elektronMaterials: Materials = {
   id: 'elektron',
   label: 'Elektron (square, flat panels)',
@@ -805,6 +829,7 @@ export const blueprintMaterials: Materials = {
 
 export const materials: Materials[] = [
   pushMaterials,
+  push3Materials,
   elektronMaterials,
   abletonMaterials,
   linearMaterials,
