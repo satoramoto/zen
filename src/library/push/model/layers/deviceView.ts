@@ -263,6 +263,7 @@ function devicePress(ctx: Ctx, item: DeviceItem): void {
     delete d.bankList;
     delete d.padSettings;
     delete d.variations;
+    delete d.edit;
     return;
   }
   if (item.pad !== undefined) {
@@ -280,7 +281,33 @@ function devicePress(ctx: Ctx, item: DeviceItem): void {
     }
     return;
   }
-  d.bankList = !d.bankList;
+  // A Simpler's button opens its Edit Mode: its banks below, its sample actions above. Any other device's opens its banks.
+  if (device.kind === 'simpler' && device.sampler?.sample) d.edit = !d.edit;
+  else d.bankList = !d.bankList;
+}
+
+/** Simpler's sample actions, for its mode: what Edit Mode puts on the upper display buttons after the device's own. */
+export function sampleActions(device: Device): { id: string; label: string }[] {
+  const sampler = device.sampler;
+  if (!sampler) return [];
+  return [
+    ...(sampler.mode === 'classic' ? [{ id: 'loop', label: sampler.loop?.on ? 'Loop: On' : 'Loop: Off' }] : []),
+    { id: 'warp-as', label: `Warp as ${sampler.warpBars ?? 1} Bar${(sampler.warpBars ?? 1) === 1 ? '' : 's'}` },
+    { id: 'halve', label: ':2' },
+    { id: 'double', label: 'x2' },
+    // A sliced sample is not cropped: its slices would go with what is cut. It can be split at the selected slice instead.
+    sampler.mode === 'slicing' ? { id: 'split-slice', label: 'Split Slice' } : { id: 'crop', label: 'Crop' },
+    { id: 'reverse', label: sampler.reversed ? 'Reverse: On' : 'Reverse' },
+  ];
+}
+
+/** The part of a sample in view, 0 to 1: all of it, narrowed by Zoom around the selected slice (Slicing) or the start. */
+export function sampleWindow(device: Device): { from: number; to: number } {
+  const sampler = device.sampler!;
+  const width = 1 / (1 + sampler.zoom * 15);
+  const centre = sampler.mode === 'slicing' ? (sampler.slices?.[sampler.selectedSlice ?? 0] ?? sampler.start) : sampler.start;
+  const from = clamp(centre - width / 2, 0, 1 - width);
+  return { from, to: from + width };
 }
 
 const inView = (ctx: Ctx) => ctx.state.display === 'device';
@@ -381,6 +408,18 @@ export const deviceView: Layer = {
         return true;
       }
       if (d.macroMap || d.macroEdit !== undefined) return true;
+      // Simpler's Edit Mode: its own button leaves, the ones after it are its sample actions.
+      const editing = d.edit ? shownDevice(state, set) : undefined;
+      if (editing?.device.kind === 'simpler') {
+        if (input.kind !== 'down') return true;
+        const action = sampleActions(editing.device)[upper - 2];
+        // Leaving is this press's whole job: when the button comes up it does not open Edit Mode again.
+        if (upper === 1) {
+          delete d.edit;
+          use(ctx, target.id);
+        } else if (action) push(ctx, 'sample-action', { track: track.id, device: editing.device.id, what: action.id });
+        return true;
+      }
       const item = topItems(state, set)[upper - 1];
       if (!item) return true; // nothing above this button
       // Acting on release leaves room for a hold: a Rack's chains, or a turn that moves the device.
@@ -403,7 +442,7 @@ export const deviceView: Layer = {
         }
         return true;
       }
-      if (d.bankList) {
+      if (d.bankList || d.edit) {
         const item = shownDevice(state, set);
         if (input.kind === 'down' && item && banksOf(item.device)[lower - 1]) d.banks[item.device.id] = lower - 1;
         return true;
@@ -451,7 +490,7 @@ export const deviceView: Layer = {
         const chain = held.device.chains![i];
         return chain ? { label: chain.name, colour: chain.colour ?? colour, selected: chain.id === chosen } : null;
       });
-    } else if (d.bankList) {
+    } else if (d.bankList || d.edit) {
       const banks = banksOf(shown.device);
       paint.screen.bottom = Array.from({ length: 8 }, (_, i) => (banks[i] ? { label: banks[i].name, colour, selected: i === bankAt(state, shown.device) } : null));
     }
@@ -487,6 +526,31 @@ export const deviceView: Layer = {
         { type: 'param', col: 1, name: 'Macro', value: names[d.macroEdit - 1], fraction: 0, style: 'choice', choices: names, chosen: d.macroEdit - 1, colour },
         ...(macro ? cell({ ...macro, name: 'Value' }, 1) : []),
         ...(macro ? [{ type: 'param' as const, col: 3, name: 'Min', value: `${Math.round((macro.min ?? 0) * 100)} %`, fraction: macro.min ?? 0, style: 'arc' as const, colour }, { type: 'param' as const, col: 4, name: 'Max', value: `${Math.round((macro.max ?? 1) * 100)} %`, fraction: macro.max ?? 1, style: 'arc' as const, colour }] : []),
+      ];
+      return;
+    }
+
+    // A Simpler: its sample across the display, the bank's parameters over it; in Edit Mode its actions along the top.
+    const sampler = shown.device.kind === 'simpler' && !d.macroMap ? shown.device.sampler : undefined;
+    if (sampler && !sampler.sample) {
+      paint.screen.body = [{ type: 'text', col: 1, span: 8, text: 'No sample. Press Swap to load one.', size: 'value', align: 'centre', tone: 'dim' }];
+      return;
+    }
+    if (sampler) {
+      if (d.edit) paint.screen.top = [{ label: shown.device.name, colour, selected: true }, ...sampleActions(shown.device).map((a): RowCell => ({ label: a.label, colour })), null, null].slice(0, 8);
+      const window = sampleWindow(shown.device);
+      paint.screen.body = [
+        {
+          type: 'wave', col: 1, span: 8, under: true, colour, ...(off ? { dim: true } : {}), label: `${sampler.sample} waveform`, peaks: sampler.peaks, from: window.from, to: window.to,
+          region: sampler.mode === 'classic' && sampler.loop?.on ? [sampler.loop.start, sampler.loop.end] : [sampler.start, sampler.end],
+          markers: [
+            { at: sampler.start, kind: 'start' },
+            { at: sampler.end, kind: 'end' },
+            ...(sampler.mode === 'slicing' ? (sampler.slices ?? []).map((at, i) => ({ at, kind: i === sampler.selectedSlice ? ('selected' as const) : ('slice' as const) })) : []),
+            ...(sampler.playing === undefined ? [] : [{ at: sampler.playing, kind: 'playhead' as const }]),
+          ],
+        },
+        ...columns(state, set).flatMap((p, i) => cell(p, i, { style: 'value' })),
       ];
       return;
     }

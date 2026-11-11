@@ -26,6 +26,10 @@
   fill: color-mix(in oklab, var(--lit) 22%, transparent);
   stroke: none;
 }
+.push-trace__band {
+  fill: var(--lit);
+  stroke: none;
+}
 .push-trace__region {
   fill: color-mix(in oklab, var(--lit) 14%, transparent);
 }

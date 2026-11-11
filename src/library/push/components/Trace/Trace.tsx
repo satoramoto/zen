@@ -6,8 +6,8 @@ export type { TraceModelProps, TraceMarker } from './Trace.model';
 export type TraceProps = TraceModelProps;
 
 /**
- * A line through a list of points: an envelope, a filter's response, an oscillator's shape, a
- * spectrum.
+ * A line through a list of points, or a band between two edges: an envelope, a filter's response,
+ * an oscillator's shape, a spectrum, a sample's waveform.
  *
  * **Job.** Show the shape of something from numbers the app gives, in the room it is given. It is
  * read, not played: no state, no handlers.
@@ -16,7 +16,7 @@ export type TraceProps = TraceModelProps;
  * contract (the math plots are a plotting library). It is the one new component of the Push area.
  *
  * **Parts** (`data-part`): `root` (the SVG, stretched to its container), `region` (a lit stretch),
- * `fill` (the area under the line), `line`, `marker` (an upright mark, `data-strong` for the one
+ * `band` (a filled band between two edges: a sample's peaks), `fill` (the area under the line), `line`, `marker` (an upright mark, `data-strong` for the one
  * that matters). Colour is a slot: `hue` 1 to 5, else ink.
  */
 export function Trace(props: TraceProps) {

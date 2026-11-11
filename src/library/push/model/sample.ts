@@ -1,7 +1,7 @@
 // A sample Set: enough of everything for the stories, the tests and the emulator's first run. It
 // is a function, so every caller gets its own copy to change. Nothing here is special to the
 // model: it is what an app would give.
-import type { Bank, BrowserItem, Clip, Device, DrumPad, Note, Parameter, PushSet, Scene, Track, Unit } from './types';
+import type { Bank, BrowserItem, Clip, Device, DrumPad, Note, Parameter, PushSet, Sampler, Scene, Track, Unit } from './types';
 
 const db = (v: number) => (v <= 0 ? '-inf dB' : `${(v * 76 - 70).toFixed(1)} dB`);
 const pct = (v: number) => `${Math.round(v * 100)} %`;
@@ -60,20 +60,34 @@ const DRUM_NAMES = ['Kick', 'Rim', 'Snare', 'Clap', 'Snare 2', 'Tom Low', 'Hat C
 export const DRUM_KINDS: DrumPad['kind'][] = ['kick', 'perc', 'snare', 'snare', 'snare', 'tom', 'hat', 'tom', 'hat', 'tom', 'hat', 'perc', 'cymbal', 'perc', 'cymbal', 'perc'];
 const DRUM_COLOURS = [14, 1, 3, 3, 3, 15, 5, 15, 5, 15, 5, 9, 12, 9, 12, 9];
 
-function simpler(id: string, name: string, mode: 'classic' | 'one-shot' | 'slicing' = 'classic'): Device {
+/**
+ * Simpler's banks for its mode: Zoom, Start, End and Mode in every one, then the mode's own. The
+ * banks are the app's to give; the stand-in host gives these again when the mode changes.
+ */
+export function simplerBanks(id: string, sampler: Sampler): Bank[] {
   const p = (key: string, label: string, v: number, d?: string, more?: Partial<Parameter>) => param(`${id}.${key}`, label, v, d, more);
-  return {
-    id,
-    name,
-    kind: 'simpler',
-    on: true,
-    preset: name,
-    sampler: { mode, sample: `${name}.wav`, peaks: peaks(240, 2), start: 0.02, end: 0.9, loop: { start: 0.3, end: 0.7, on: mode === 'classic' }, zoom: 0, warped: false, sliceBy: 'transient', slices: [0.02, 0.14, 0.27, 0.4, 0.52, 0.66, 0.78], selectedSlice: 0, playback: 'mono', trigger: 'trigger' },
-    banks: [
-      bank('Sample', [p('zoom', 'Zoom', 0), p('start', 'Start', 0.02, '0.02'), p('end', 'End', 0.9, '0.90'), pick(`${id}.mode`, 'Mode', ['Classic', 'One-Shot', 'Slicing'], mode === 'classic' ? 0 : mode === 'one-shot' ? 1 : 2), sw(`${id}.warp`, 'Warp', false), p('gain', 'Gain', 0.5, '0.0 dB', { kind: 'bipolar' }), p('transp', 'Transpose', 0.5, '0 st', { kind: 'bipolar' }), p('detune', 'Detune', 0.5, '0 ct', { kind: 'bipolar' })]),
-      bank('Filter', [sw(`${id}.fon`, 'Filter', true), p('freq', 'Frequency', 0.8, '8.0 kHz'), p('res', 'Resonance', 0.1), null, null, null, null, p('vol', 'Volume', 0.75, '-6.0 dB')]),
-    ],
-  };
+  const mode = pick(`${id}.mode`, 'Mode', ['Classic', 'One-Shot', 'Slicing'], sampler.mode === 'classic' ? 0 : sampler.mode === 'one-shot' ? 1 : 2);
+  const common = [p('zoom', 'Zoom', sampler.zoom), p('start', 'Start', sampler.start, sampler.start.toFixed(2)), p('end', 'End', sampler.end, sampler.end.toFixed(2)), mode];
+  const loopOff = !sampler.loop?.on;
+  const trigger = pick(`${id}.trigger`, 'Trigger', ['Trigger', 'Gate'], sampler.trigger === 'gate' ? 1 : 0);
+  let own: (Parameter | null)[];
+  if (sampler.mode === 'classic') own = [p('sstart', 'S Start', 0, '0 %'), p('slength', 'S Length', 1, '100 %'), p('looplength', 'Loop Length', 0.5, '50 %', { disabled: loopOff }), p('loopfade', 'Loop Fade', 0, '0 %', { disabled: loopOff })];
+  else if (sampler.mode === 'one-shot') own = [trigger, p('fadein', 'Fade In', 0, '0 ms'), p('fadeout', 'Fade Out', 0.1, '10 ms'), p('transp', 'Transpose', 0.5, '0 st', { kind: 'bipolar' })];
+  else {
+    const by = sampler.sliceBy ?? 'transient';
+    const companion = by === 'transient' ? p('sensitivity', 'Sensitivity', 0.5) : by === 'beat' ? pick(`${id}.division`, 'Division', ['1/16', '1/8', '1/4', '1/2', '1 Bar'], 2) : by === 'region' ? p('regions', 'Regions', 0.25, '8') : sw(`${id}.padslicing`, 'Pad Slicing', !!sampler.padSlicing);
+    own = [pick(`${id}.sliceby`, 'Slice By', ['Transient', 'Beat', 'Region', 'Manual'], ['transient', 'beat', 'region', 'manual'].indexOf(by)), companion, pick(`${id}.playback`, 'Playback', ['Mono', 'Poly', 'Through'], ['mono', 'poly', 'thru'].indexOf(sampler.playback ?? 'mono')), trigger];
+  }
+  return [
+    bank('Sample', [...common, ...own]),
+    bank('Global', [p('gain', 'Gain', 0.5, '0.0 dB', { kind: 'bipolar' }), sw(`${id}.warp`, 'Warp', !!sampler.warped), p('detune', 'Detune', 0.5, '0 ct', { kind: 'bipolar' }), ...(sampler.mode === 'slicing' ? [p('nudge', 'Nudge', 0.5, '0', { kind: 'bipolar' })] : [null]), null, null, null, p('vol', 'Volume', 0.75, '-6.0 dB')]),
+    bank('Filter', [sw(`${id}.fon`, 'Filter', true), p('freq', 'Frequency', 0.8, '8.0 kHz'), p('res', 'Resonance', 0.1), null, null, null, null, null]),
+  ];
+}
+
+function simpler(id: string, name: string, mode: 'classic' | 'one-shot' | 'slicing' = 'classic'): Device {
+  const sampler: Sampler = { mode, sample: `${name}.wav`, peaks: peaks(240, 2), start: 0.02, end: 0.9, loop: { start: 0.3, end: 0.7, on: false }, zoom: 0, warped: false, sliceBy: 'transient', slices: [0.02, 0.14, 0.27, 0.4, 0.52, 0.66, 0.78], selectedSlice: 0, playback: 'mono', trigger: 'trigger', warpBars: 2 };
+  return { id, name, kind: 'simpler', on: true, preset: name, sampler, banks: simplerBanks(id, sampler) };
 }
 
 function drumRack(id: string): Device {
@@ -141,7 +155,7 @@ export const drumBeat = (): Note[] => [
 export const melody = (): Note[] => [note(60, 0, 1, 100), note(64, 1, 0.5, 80), note(67, 1.5, 0.5, 90), note(72, 2, 1, 110), note(71, 3, 0.5, 70), note(67, 3.5, 0.5, 85), note(65, 4, 2, 95), note(64, 6, 2, 60, { muted: true })];
 
 const midiClip = (name: string, colour: number, notes: Note[], length = 4, more: Partial<Clip> = {}): Clip => ({ name, colour, kind: 'midi', state: 'stopped', length, loop: { on: true, start: 0, end: length }, startMarker: 0, notes, ...more });
-const audioClip = (name: string, colour: number, length = 8, more: Partial<Clip> = {}): Clip => ({ name, colour, kind: 'audio', state: 'stopped', length, loop: { on: true, start: 0, end: length }, startMarker: 0, audio: { peaks: peaks(240, colour), warp: true, warpMode: 'Beats', gain: 0.5, transpose: 0.5, detune: 0.5, bpm: 120 }, ...more });
+const audioClip = (name: string, colour: number, length = 8, more: Partial<Clip> = {}): Clip => ({ name, colour, kind: 'audio', state: 'stopped', length, loop: { on: true, start: 0, end: length }, startMarker: 0, audio: { peaks: peaks(240, colour), warp: true, warpMode: 'Beats', gain: 0, transpose: 0, detune: 0, bpm: 120 }, ...more });
 
 const SCENES = 8;
 const slots = (filled: Record<number, Clip>): (Clip | null)[] => Array.from({ length: SCENES }, (_, i) => filled[i] ?? null);

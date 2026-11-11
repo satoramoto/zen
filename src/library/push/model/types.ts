@@ -127,8 +127,13 @@ export interface Sampler {
   selectedSlice?: number;
   playback?: 'mono' | 'poly' | 'thru';
   trigger?: 'trigger' | 'gate';
-  /** Whether the instrument can bend pitch per note (else a bend becomes a glissando). */
+  /** Where the sample is playing now, 0 to 1 across it, while a note sounds. */
   playing?: number;
+  /** Manual slicing: pressing an empty pad while the sample plays places a slice there. */
+  padSlicing?: boolean;
+  /** The length the sample would be warped to, in bars, for the Warp as action. */
+  warpBars?: number;
+  reversed?: boolean;
 }
 
 export interface Device {
@@ -198,6 +203,7 @@ export interface Clip {
     peaks: [number, number][];
     warp: boolean;
     warpMode?: string;
+    /** Gain in dB, transpose in semitones (minus 48 to 48), detune in cents. */
     gain: number;
     transpose: number;
     detune: number;
@@ -636,11 +642,35 @@ export interface RollCell {
   loop?: [number, number];
   /** The part of the clip the pads sequence, in beats and pitches. */
   box?: { from: number; to: number; low: number; high: number };
+  /** Where the clip starts and ends, in beats, when they are not the loop's ends. */
+  markers?: { at: number; kind: 'start' | 'end' }[];
+  /** Where playback is, in beats, when the clip plays. */
+  playhead?: number;
+  /** Drawn behind the parameters of the columns it spans. */
+  under?: boolean;
   /** Notes per pitch, for the strip beside the roll. */
   density?: number[];
   /** Whose playhead the frame reader moves. */
   track?: string;
   colour?: number;
+}
+
+/** A sample or an audio clip as a waveform, with what is marked on it. Places are 0 to 1 across the whole of it. */
+export interface WaveCell {
+  type: 'wave';
+  /** Peaks, low and high, 0 to 1. None draws an empty wave. */
+  peaks: [number, number][];
+  /** The part in view. */
+  from: number;
+  to: number;
+  markers: { at: number; kind: 'start' | 'end' | 'loop-start' | 'loop-end' | 'slice' | 'playhead' | 'selected' | 'cursor' }[];
+  /** A stretch lit between two places (the loop, the part that plays). */
+  region?: [number, number];
+  /** Drawn behind the parameters of the columns it spans. */
+  under?: boolean;
+  colour?: number;
+  dim?: boolean;
+  label?: string;
 }
 
 export interface GridCell {
@@ -650,7 +680,7 @@ export interface GridCell {
   labels?: string[];
 }
 
-export type BodyContent = ParamCell | ListCell | TextCell | TraceCell | MeterCell | RollCell | GridCell;
+export type BodyContent = ParamCell | ListCell | TextCell | TraceCell | MeterCell | RollCell | GridCell | WaveCell;
 
 /** One thing in the display's body: what it is, the first column it covers (1 to 8) and how many. */
 export type BodyCell = BodyContent & { col: number; span?: number };
@@ -796,9 +826,23 @@ export interface PushState {
     variations?: { highlight: number; menu?: number };
     /** The first device of the top row in view. */
     page: number;
+    /** Simpler's Edit Mode: its sample actions on the upper display buttons. */
+    edit?: boolean;
   };
   /** Clip View. */
-  clip: { noteEdit?: boolean; highlighted?: string; selected: string[]; zoomAt?: number; audioEdit?: boolean };
+  clip: {
+    /** Note Edit mode, the note highlighted, and the notes selected. */
+    noteEdit?: boolean;
+    highlighted?: string;
+    selected: string[];
+    /** How far the view is zoomed in (0: the whole clip), and the position it zooms around, in beats. */
+    zoom?: number;
+    zoomAt?: number;
+    /** An audio clip's edit options are open, with the position the jog wheel has moved to, in beats. */
+    audioEdit?: number;
+    /** Convert's offers are shown. */
+    convert?: boolean;
+  };
   /** The Session window's top left, shared by the pads and the display, and the overview. */
   session: {
     track: number;

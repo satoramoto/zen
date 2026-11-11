@@ -455,7 +455,18 @@ export const slices: Layer = {
     const device = rackOf(set)!;
     const track = selectedTrack(set).id;
     const held = state.held[target.id];
-    if (k >= (device.sampler?.slices?.length ?? 0)) return true;
+    const sampler = device.sampler;
+    if (k >= (sampler?.slices?.length ?? 0)) {
+      // Slicing by hand: an empty pad pressed while the sample plays places a slice where it is playing.
+      if (input.kind === 'down' && sampler?.sliceBy === 'manual' && sampler.padSlicing && sampler.playing !== undefined) push(ctx, 'slice', { track, device: device.id, at: sampler.playing });
+      return true;
+    }
+    if (input.kind === 'down' && holding(state, 'delete')) {
+      // Delete and a slice's pad removes the slice.
+      use(ctx, 'delete', target.id);
+      push(ctx, 'slice', { track, device: device.id, delete: k });
+      return true;
+    }
     if (input.kind === 'down') {
       held.note = SLICE_BASE + k;
       if (!holding(state, 'select')) push(ctx, 'note-on', { pitch: SLICE_BASE + k, velocity: state.accent ? 127 : (input.velocity ?? 100), track, pad: target.id });

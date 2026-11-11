@@ -2,6 +2,7 @@
 // intent and returns the Set that results, or the same Set for an intent it does not know. The
 // stories, the tests and the emulator's first run use it; a real app replaces it with its own
 // engine. It is also the reference for what each intent means.
+import { simplerBanks } from './sample';
 import { everyDevice } from './state';
 import type { Parameter, PushIntent, PushSet, Track } from './types';
 
@@ -36,6 +37,32 @@ function word(p: Parameter): string {
 }
 
 type Apply = (set: PushSet, intent: PushIntent) => void;
+
+/** `count` slices spread evenly between a sample's Start and End. */
+const evenSlices = (sampler: { start: number; end: number }, count: number): number[] => Array.from({ length: count }, (_, n) => sampler.start + ((sampler.end - sampler.start) * n) / count);
+
+/** A Simpler's own readings follow its parameters, and its banks follow its mode, as an app's would. */
+function simplerFollows(s: PushSet, p: Parameter): void {
+  const device = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((d) => d.sampler && p.id.startsWith(`${d.id}.`));
+  const sampler = device?.sampler;
+  if (!device || !sampler) return;
+  const key = p.id.slice(device.id.length + 1);
+  const chosen = p.choices ? Math.round(p.value * (p.choices.length - 1)) : 0;
+  if (key === 'mode') sampler.mode = (['classic', 'one-shot', 'slicing'] as const)[chosen];
+  else if (key === 'start') sampler.start = p.value;
+  else if (key === 'end') sampler.end = p.value;
+  else if (key === 'zoom') sampler.zoom = p.value;
+  else if (key === 'sliceby') sampler.sliceBy = (['transient', 'beat', 'region', 'manual'] as const)[chosen];
+  else if (key === 'playback') sampler.playback = (['mono', 'poly', 'thru'] as const)[chosen];
+  else if (key === 'trigger') sampler.trigger = chosen ? 'gate' : 'trigger';
+  else if (key === 'padslicing') sampler.padSlicing = p.value >= 0.5;
+  else if (key === 'sensitivity') sampler.slices = evenSlices(sampler, Math.max(1, Math.round(p.value * 64)));
+  else if (key === 'division') sampler.slices = evenSlices(sampler, [32, 16, 8, 4, 2][chosen]);
+  else return;
+  // Slicing by beat slices at each division: quarter notes of a two-bar sample until Division says otherwise.
+  if (key === 'sliceby' && sampler.sliceBy === 'beat') sampler.slices = evenSlices(sampler, 8);
+  if (key === 'mode' || key === 'sliceby') device.banks = simplerBanks(device.id, sampler);
+}
 
 /** What the stand-in does for each action it knows, on a copy of the Set. */
 const APPLY: Record<string, Apply> = {
@@ -76,6 +103,7 @@ const APPLY: Record<string, Apply> = {
     if (!p || p.disabled) return;
     p.value = clamp01(typeof i.value === 'number' ? i.value : p.value + Number(i.delta ?? 0));
     p.display = word(p);
+    simplerFollows(s, p);
   },
   'set-volume': (s, i) => {
     s.unit.volume.value = clamp01(s.unit.volume.value + Number(i.db ?? 0) / 76);
@@ -102,6 +130,26 @@ const APPLY: Record<string, Apply> = {
   'select-slice': (s, i) => {
     const d = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device);
     if (d?.sampler) d.sampler.selectedSlice = Number(i.slice);
+  },
+  slice: (s, i) => {
+    const sampler = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device)?.sampler;
+    if (!sampler) return;
+    if (typeof i.at === 'number') sampler.slices = [...(sampler.slices ?? []), i.at].sort((a, b) => a - b);
+    if (typeof i.delete === 'number') sampler.slices = (sampler.slices ?? []).filter((_, n) => n !== i.delete);
+  },
+  'sample-action': (s, i) => {
+    const device = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device);
+    const sampler = device?.sampler;
+    if (!device || !sampler) return;
+    if (i.what === 'reverse') sampler.reversed = !sampler.reversed;
+    else if (i.what === 'loop' && sampler.loop) {
+      sampler.loop.on = !sampler.loop.on;
+      device.banks = simplerBanks(device.id, sampler);
+    } else if (i.what === 'split-slice') {
+      const at = sampler.selectedSlice ?? 0;
+      const slices = sampler.slices ?? [];
+      sampler.slices = [...slices, ((slices[at] ?? sampler.start) + (slices[at + 1] ?? sampler.end)) / 2].sort((a, b) => a - b);
+    }
   },
   'set-drum-pad': (s, i) => {
     const pad = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device)?.pads?.find((p) => p.note === i.note);
@@ -191,6 +239,19 @@ const APPLY: Record<string, Apply> = {
     if (typeof i.end === 'number') clip.loop.end = i.end;
     if (typeof i.on === 'boolean') clip.loop.on = i.on;
     clip.length = Math.max(clip.length, clip.loop.end);
+  },
+  'set-clip': (s, i) => {
+    const clip = track(s, i.track)?.clips[Number(i.scene)];
+    if (!clip) return;
+    if (typeof i.startMarker === 'number') clip.startMarker = i.startMarker;
+    if (typeof i.end === 'number') clip.length = i.end;
+    if (typeof i.startAt === 'number') clip.startMarker = i.startAt;
+    if (!clip.audio) return;
+    if (typeof i.warp === 'boolean') clip.audio.warp = i.warp;
+    if (typeof i.warpMode === 'string') clip.audio.warpMode = i.warpMode;
+    if (typeof i.transpose === 'number') clip.audio.transpose = i.transpose;
+    if (typeof i.detune === 'number') clip.audio.detune = i.detune;
+    if (typeof i.gain === 'number') clip.audio.gain = i.gain;
   },
   'clear-steps': (s, i) => {
     const clip = track(s, i.track)?.clips[Number(i.scene)];

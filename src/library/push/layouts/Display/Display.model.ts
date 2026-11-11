@@ -151,6 +151,72 @@ function content(cell: BodyCell): ChildArg {
         ),
         textNode({ role: 'numeral', leading: 'tight', truncate: true }, { 'data-part': 'value' }, cell.value),
       ];
+    case 'wave': {
+      // A sample or an audio clip: its peaks in view as a band, the lit stretch and the markers where they fall in view.
+      const span = Math.max(1e-6, cell.to - cell.from);
+      const first = Math.floor(cell.from * (cell.peaks.length - 1));
+      const last = Math.ceil(cell.to * (cell.peaks.length - 1));
+      const place = (at: number) => (at - cell.from) / span;
+      const inView = (at: number) => at >= cell.from - 1e-9 && at <= cell.to + 1e-9;
+      return component('PushTrace', {
+        band: cell.peaks.slice(Math.max(0, first), Math.max(first + 2, last + 1)),
+        region: cell.region ? [Math.min(1, Math.max(0, place(cell.region[0]))), Math.min(1, Math.max(0, place(cell.region[1])))] : undefined,
+        markers: cell.markers.filter((m) => inView(m.at)).map((m) => ({ at: place(m.at), name: m.kind, strong: m.kind !== 'slice' })),
+        name: cell.label ?? 'Waveform',
+        disabled: cell.dim,
+        ...(cell.colour === undefined ? {} : { hue: 1 }),
+      });
+    }
+    case 'roll': {
+      // The clip's notes. A note's colour is a hue slot: the cell restates up to four slots as the colours the notes
+      // use (a Drum Rack's pads), and the fifth as white for a selected note.
+      const colours = [...new Set(cell.notes.map((n) => n.colour ?? cell.colour).filter((c): c is number => c !== undefined))].slice(0, 4);
+      const slot = (colour: number | undefined) => (colour === undefined ? undefined : ((Math.max(0, colours.indexOf(colour)) + 1) as 1 | 2 | 3 | 4));
+      const rows = cell.pitches.length;
+      const span = Math.max(1e-6, cell.to - cell.from);
+      const pct = (n: number) => `${Math.round(n * 10000) / 100}%`;
+      const row = (pitch: number) => cell.pitches.indexOf(pitch);
+      const most = Math.max(1, ...(cell.density ?? []));
+      return h(
+        'div',
+        {
+          class: 'push-display__roll',
+          'data-part': 'roll',
+          'data-highlight': cell.notes.some((n) => n.highlighted) ? 'true' : undefined,
+          style: styleText({ ...Object.fromEntries(colours.map((c, i) => [`--hue-${i + 1}`, colourCss(c)])), '--hue-5': 'var(--push-white)' }),
+        },
+        cell.density
+          ? h('div', { class: 'push-display__density', 'data-part': 'density', 'aria-hidden': 'true' }, ...cell.density.map((count, i) => h('span', { 'data-count': String(count), style: styleText({ '--push-fraction': String(count / most) }), key: String(i) })))
+          : null,
+        component('FormScope', { form: 'compact' }, {
+          slots: {
+            children: [
+              component('PianoRoll', {
+                keys: cell.pitches.map((pitch) => ({ pitch, label: '', black: [1, 3, 6, 8, 10].includes(((pitch % 12) + 12) % 12) })),
+                notes: cell.notes.filter((n) => n.start < cell.to && n.start + n.length > cell.from).map((n) => ({ id: n.id, from: Math.max(cell.from, n.start), to: Math.min(cell.to, n.start + n.length), pitch: n.pitch, hue: n.selected ? 5 : slot(n.colour ?? cell.colour), level: n.muted ? 0.15 : n.velocity / 127, ...(n.highlighted ? { emphasis: true } : {}) })),
+                from: cell.from,
+                to: cell.to,
+                beatsPerBar: cell.beatsPerBar,
+                ...(cell.playhead === undefined || cell.playhead < cell.from || cell.playhead > cell.to ? {} : { playhead: (cell.playhead - cell.from) / span }),
+              }),
+            ],
+          },
+        }),
+        h(
+          'div',
+          { class: 'push-display__marks', 'aria-hidden': 'true' },
+          cell.loop ? h('span', { class: 'push-display__loop', 'data-part': 'loop', style: styleText({ left: pct(Math.max(0, (cell.loop[0] - cell.from) / span)), width: pct(Math.max(0, (Math.min(cell.to, cell.loop[1]) - Math.max(cell.from, cell.loop[0])) / span)) }) }) : null,
+          ...(cell.markers ?? []).filter((m) => m.at >= cell.from && m.at <= cell.to).map((m) => h('span', { class: 'push-display__mark', 'data-part': 'mark', 'data-kind': m.kind, style: styleText({ left: pct((m.at - cell.from) / span) }) })),
+          cell.box && rows
+            ? h('span', {
+                class: 'push-display__box',
+                'data-part': 'box',
+                style: styleText({ left: pct(Math.max(0, (cell.box.from - cell.from) / span)), width: pct(Math.max(0, (Math.min(cell.to, cell.box.to) - Math.max(cell.from, cell.box.from)) / span)), top: pct(Math.max(0, row(cell.box.high)) / rows), height: pct((Math.max(0, row(cell.box.low)) - Math.max(0, row(cell.box.high)) + 1) / rows) }),
+              })
+            : null,
+        ),
+      );
+    }
     case 'grid':
       // The Set's clips: a row per scene, a block per clip in its colour, and the scene's number or name at the right.
       return h(
@@ -180,8 +246,7 @@ function content(cell: BodyCell): ChildArg {
         ),
       );
     default:
-      // The piano roll is drawn by the view that uses it.
-      return textNode({ role: 'caption', tone: 'muted' }, { 'data-part': 'text' }, cell.type);
+      return null;
   }
 }
 
@@ -199,8 +264,8 @@ function body(cell: BodyCell): Node {
       'data-span': String(span),
       'data-touched': p?.touched || (cell.type === 'meter' && cell.touched) ? 'true' : undefined,
       'data-enclosing': cell.type === 'list' && cell.enclosing ? 'true' : undefined,
-      'data-under': cell.type === 'trace' && cell.under ? 'true' : undefined,
-      'data-disabled': p?.disabled || (cell.type === 'text' && cell.tone === 'dim') || (cell.type === 'meter' && cell.dim) || (cell.type === 'trace' && cell.dim) ? 'true' : undefined,
+      'data-under': (cell.type === 'trace' || cell.type === 'wave' || cell.type === 'roll') && cell.under ? 'true' : undefined,
+      'data-disabled': p?.disabled || (cell.type === 'text' && cell.tone === 'dim') || (cell.type === 'meter' && cell.dim) || ((cell.type === 'trace' || cell.type === 'wave') && cell.dim) ? 'true' : undefined,
       'data-align': cell.type === 'text' ? (cell.align ?? 'start') : undefined,
       'data-size': cell.type === 'text' ? (cell.size ?? 'label') : undefined,
       style: styleText({ 'grid-column': `${cell.col} / span ${span}`, '--push-lamp': lamp(colour) }),

@@ -316,3 +316,35 @@
   color: var(--text-2);
 }
 .push-display__grid-row { position: relative; }
+
+/* A waveform across the body. */
+.push-display__cell[data-type='wave'] { align-items: stretch; padding: calc(var(--push-px) * 6) 0; }
+.push-display__cell[data-type='wave'][data-under] { padding-top: calc(var(--push-px) * 40); }
+
+/* The piano roll: the notes, with the loop, the clip's markers and the pads' reach over them, and the pitches' density at the left. */
+.push-display__cell[data-type='roll'] { align-items: stretch; justify-content: stretch; }
+.push-display__cell[data-type='roll'][data-under] { padding-top: calc(var(--push-px) * 38); }
+.push-display__roll {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 0;
+  --space-1: 0px;
+}
+.push-display__roll > .yh-pianoroll { grid-column: 2; min-height: 0; height: 100%; }
+/* The highlighted note's outline pulses with the beat, where the display sits in a surface that keeps one. */
+.push-display__roll[data-highlight] { --text-1: color-mix(in oklab, var(--push-white) calc((0.45 + 0.55 * var(--push-pulse, 1)) * 100%), transparent); }
+.push-display__density {
+  grid-column: 1;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  width: calc(var(--push-px) * 10);
+  margin-right: calc(var(--push-px) * 2);
+}
+.push-display__density > span { background: linear-gradient(to left, var(--push-lit) calc(var(--push-fraction) * 100%), transparent 0); opacity: 0.8; }
+.push-display__marks { position: absolute; inset: 0 0 0 calc(var(--push-px) * 12); pointer-events: none; }
+.push-display__roll:not(:has(.push-display__density)) .push-display__marks { inset: 0; }
+.push-display__loop { position: absolute; top: 0; height: calc(var(--push-px) * 3); background: var(--push-lit); }
+.push-display__mark { position: absolute; top: 0; bottom: 0; width: calc(var(--push-px) * 1); background: var(--text-2); }
+.push-display__box { position: absolute; background: color-mix(in oklab, var(--push-white) 14%, transparent); box-shadow: inset 0 0 0 calc(var(--push-px) * 1) color-mix(in oklab, var(--push-white) 45%, transparent); }

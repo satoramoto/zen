@@ -15,5 +15,6 @@ import { drums, slices } from './drums';
 import { melodic, stepEdit } from './melodic';
 import { sessionPads, sessionScreen } from './session';
 import { holdMenus, recording } from './recording';
+import { clipView, convert } from './clipView';
 
-export const LAYERS: readonly Layer[] = [power, user, overlays, codeDialog, confirm, textEntry, scaleMenu, holdMenus, trackOptions, colourPicker, stepEdit, sessionScreen, deviceView, mixView, tracks, recording, global, sessionPads, drums, slices, melodic, playing, notes64];
+export const LAYERS: readonly Layer[] = [power, user, overlays, codeDialog, confirm, textEntry, scaleMenu, holdMenus, trackOptions, colourPicker, convert, stepEdit, sessionScreen, clipView, deviceView, mixView, tracks, recording, global, sessionPads, drums, slices, melodic, playing, notes64];

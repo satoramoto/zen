@@ -19,6 +19,11 @@ export interface TraceModelProps {
   points?: readonly (readonly [number, number])[];
   /** Fill the area under the line. Default false. */
   fill?: boolean;
+  /**
+   * A filled band between a low and a high edge, evenly spaced across: each `[low, high]`, 0 to 1.
+   * A sample's peaks are a band. Drawn with, or in place of, the line.
+   */
+  band?: readonly (readonly [number, number])[];
   /** A stretch lit between two places across, 0 to 1 (a loop, a selection). */
   region?: readonly [number, number];
   /** Upright marks at places across the trace. */
@@ -51,8 +56,18 @@ export function traceArea(points: readonly (readonly [number, number])[] = []): 
   return `${line} L ${fmt(clamp01(points[points.length - 1][0]) * TRACE_BOX.w)} ${TRACE_BOX.h} L ${fmt(clamp01(points[0][0]) * TRACE_BOX.w)} ${TRACE_BOX.h} Z`;
 }
 
+/** A band as a closed SVG path: along its high edge, back along its low one. '' for fewer than two. */
+export function traceBand(band: readonly (readonly [number, number])[] = []): string {
+  if (band.length < 2) return '';
+  const x = (i: number) => fmt((i / (band.length - 1)) * TRACE_BOX.w);
+  const y = (v: number) => fmt((1 - clamp01(v)) * TRACE_BOX.h);
+  const top = band.map(([, high], i) => `${i ? 'L' : 'M'} ${x(i)} ${y(high)}`);
+  const bottom = band.map(([low], i) => `L ${x(i)} ${y(low)}`).reverse();
+  return `${[...top, ...bottom].join(' ')} Z`;
+}
+
 /** The tree Trace draws: the region, the fill, the line and the markers, in one SVG. */
-export function traceView({ points = [], fill = false, region, markers = [], hue, name, disabled = false, className }: TraceModelProps): Node {
+export function traceView({ points = [], fill = false, band, region, markers = [], hue, name, disabled = false, className }: TraceModelProps): Node {
   const line = tracePath(points);
   const from = region ? clamp01(Math.min(region[0], region[1])) : 0;
   const to = region ? clamp01(Math.max(region[0], region[1])) : 0;
@@ -70,6 +85,7 @@ export function traceView({ points = [], fill = false, region, markers = [], hue
       'aria-hidden': name ? undefined : 'true',
     },
     region ? h('rect', { class: 'push-trace__region', 'data-part': 'region', x: fmt(from * TRACE_BOX.w), y: '0', width: fmt((to - from) * TRACE_BOX.w), height: String(TRACE_BOX.h) }) : null,
+    band && band.length > 1 ? h('path', { class: 'push-trace__band', 'data-part': 'band', d: traceBand(band) }) : null,
     fill && line ? h('path', { class: 'push-trace__fill', 'data-part': 'fill', d: traceArea(points) }) : null,
     line ? h('path', { class: 'push-trace__line', 'data-part': 'line', d: line, 'vector-effect': 'non-scaling-stroke' }) : null,
     ...markers.map((m) =>

@@ -232,3 +232,14 @@ export const RED = 'var(--danger)';
 export const padColour = (canvas: HTMLElement, row: number, col: number) => lamp(canvas, `pad-${row}-${col}`).colour;
 /** Press a pad by row and column. */
 export const hit = (canvas: HTMLElement, row: number, col: number, hold = 0) => press(canvas, `pad-${row}-${col}`, hold);
+
+/** An element's words, each run of text apart from the next: a name and its value read "Name value". */
+export function words(el: Element | null | undefined): string {
+  if (!el) return '';
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const out: string[] = [];
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) if (node.textContent?.trim()) out.push(node.textContent.trim());
+  return out.join(' ');
+}
+/** The parameter cell that starts at a column, as words. */
+export const paramText = (canvas: HTMLElement, col: number) => words(display(canvas).querySelector(`[data-type="param"][data-col="${col}"]`));

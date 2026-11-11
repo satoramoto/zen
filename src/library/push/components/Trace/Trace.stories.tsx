@@ -53,6 +53,16 @@ export const Marked: Story = {
     await expect(canvasElement.querySelector('[data-part="region"]')).toHaveAttribute('width', '50');
   },
 };
+/** A band between a low and a high edge: a sample's peaks. */
+export const Band: Story = {
+  ...story(s.Band),
+  play: async ({ canvasElement }) => {
+    const band = canvasElement.querySelector('[data-part="band"]')!;
+    await expect(band.getAttribute('d')).toMatch(/^M 0 .* Z$/);
+    await expect(canvasElement.querySelector('[data-part="line"]')).toBeNull();
+    await expect(canvasElement.querySelectorAll('[data-part="marker"][data-strong]')).toHaveLength(2);
+  },
+};
 export const Disabled: Story = story(s.Disabled);
 /** No points: the box is kept and nothing is drawn in it. */
 export const Empty: Story = {
