@@ -134,6 +134,8 @@
   --control-h: calc(var(--push-px) * 31);
 }
 /* A parameter's knob: the ring with its value inside, and its name over it. */
+/* Its reading is in the colour of what it belongs to, as its arc is: a track's, white in a menu, grey when off. */
+.push-display__cell[data-type='param'] .yh-knob__value { color: var(--push-lit); }
 .push-display__cell[data-type='param'] {
   --control-h: calc(var(--push-px) * 28);
   --size-numeral: calc(var(--push-px) * 11);
