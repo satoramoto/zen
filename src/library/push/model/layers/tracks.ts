@@ -296,7 +296,8 @@ export const tracks: Layer = {
 /** Ask to select what a row item is. */
 function select(ctx: Ctx, item: RowItem): void {
   if (item.pad) {
-    push(ctx, 'select-drum-pad', { track: item.track.id, device: item.rack, note: item.pad.note });
+    // Chosen from the row, the pad's own device is what the device then shows.
+    push(ctx, 'select-drum-pad', { track: item.track.id, device: item.rack, note: item.pad.note, show: true });
     if (item.rack && !ctx.state.device.unfolded.includes(item.rack)) ctx.state.device.unfolded.push(item.rack);
   } else if (item.chain) push(ctx, 'select-chain', { track: item.track.id, device: item.rack, chain: item.chain.id });
   else push(ctx, 'select-track', { track: item.track.id });

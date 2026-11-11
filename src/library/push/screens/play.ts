@@ -3,6 +3,7 @@
 // through the DOM the surface draws, with real pointer and key events, so a play exercises either
 // renderer the same way.
 import { expect, fireEvent, waitFor } from 'storybook/test';
+import { lampShadeCss, lampVar, type LampShade } from '../../foundation/themes/lamps';
 import { HOLD_MS } from '../model/timing';
 import type { PushInput, PushIntent, PushSet } from '../model/types';
 import type { EmulatorHandle } from './Emulator/handle';
@@ -215,3 +216,19 @@ export async function holdDown(canvas: HTMLElement, id: string, during: () => Pr
   await during();
   await touch.up();
 }
+
+/* ---------- lamp colours, as the surface writes them ---------- */
+
+/** A table colour, or a shade of it, as a cell's `--push-lamp` reads. */
+export const tableLamp = (index: number, shade: LampShade = 'lit') => lampShadeCss(lampVar(index), shade, 'var(--push-unlit)');
+/** White, or a shade of it. */
+export const whiteLamp = (shade: LampShade = 'lit') => lampShadeCss('var(--push-white)', shade, 'var(--push-unlit)');
+/** The grey of an empty pad or step. */
+export const GREY = whiteLamp('dark');
+/** The colours that mean a state. */
+export const GREEN = 'var(--success)';
+export const RED = 'var(--danger)';
+/** A pad's lamp colour, by row and column from the top left. */
+export const padColour = (canvas: HTMLElement, row: number, col: number) => lamp(canvas, `pad-${row}-${col}`).colour;
+/** Press a pad by row and column. */
+export const hit = (canvas: HTMLElement, row: number, col: number, hold = 0) => press(canvas, `pad-${row}-${col}`, hold);

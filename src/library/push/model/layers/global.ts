@@ -3,6 +3,7 @@
 import { PEDAL_DOUBLE_MS, POWER_HOLD_MS } from '../timing';
 import { choice, DIM, isDown, lamp, pressed, push, screen, shift, type Combo, type Ctx, type Layer } from '../engine';
 import { notify } from './overlays';
+import { activeClip, selectedTrack } from '../state';
 import type { DisplayMode, PushSet } from '../types';
 import { padMode } from './modes';
 
@@ -102,6 +103,13 @@ export const global: Layer = {
 
     if (isDown(ctx, 'play')) {
       push(ctx, set.transport.playing ? 'stop' : 'play');
+      return true;
+    }
+    // Delete alone, in Note Mode, removes the clip the pads are working on. Held with something else it is that thing's.
+    if (id === 'delete') {
+      const track = selectedTrack(set);
+      const slot = activeClip(set, track);
+      if (pressed(ctx, 'delete') && padMode(state) === 'note' && slot) push(ctx, 'delete-clip', { track: track.id, scene: slot.scene });
       return true;
     }
     if (isDown(ctx, 'undo')) {

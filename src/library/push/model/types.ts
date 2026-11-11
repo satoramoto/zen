@@ -721,6 +721,12 @@ export interface Held {
   /** A held pad's pressure, and the pad it has slid on to (for a glissando). */
   pressure?: number;
   glide?: number;
+  /** A held step of a sequencer: where it starts in the clip, in beats, and the pitch it is a row of (the Melodic Sequencer). */
+  step?: { start: number; pitch?: number };
+  /** A held Drum Rack pad's note. */
+  drum?: number;
+  /** A held loop length pad's page. */
+  page?: number;
 }
 
 /** A place in a list: the path of ids chosen so far and the highlighted row in the last column. */
@@ -762,7 +768,7 @@ export interface PushState {
   /** Text being entered, and what it is for. */
   textEntry?: { title: string; text: string; highlighted: number; caret?: number; then: PushIntent };
   /** Colours offered on the pads, for a track, a clip or a drum pad. */
-  colourPick?: { of: 'track' | 'clip' | 'pad'; track?: string; scene?: number; note?: number };
+  colourPick?: { of: 'track' | 'clip' | 'pad'; track?: string; scene?: number; note?: number; device?: string };
   /** The Scale menu is open. */
   scaleMenu?: boolean;
   /** Mix View. */
@@ -796,9 +802,26 @@ export interface PushState {
   /** The note grid: octave per track, layout per track. */
   notes: { octave: Record<string, number>; layout: Record<string, string>; shift: number };
   /** Drum layouts: the bank's lowest note per track, the velocity pad chosen, the borrowed quarter. */
-  drums: { base: Record<string, number>; borrow?: 'held' | 'locked' };
+  drums: { base: Record<string, number>; borrow?: 'locked'; copy?: number };
   /** The sequencers: step size, the page in view, whether it follows, what is selected. */
-  seq: { step: number; page: number; follow: boolean; pageCopied?: number; selected?: number[]; rowBase: Record<string, number>; loopRow?: boolean; stepCopied?: number; velocity?: number };
+  seq: {
+    /** The step size: an index into the scene buttons' intervals, 1/32t to 1/4. */
+    step: number;
+    /** The page of steps in view when it is not following playback. */
+    page: number;
+    follow: boolean;
+    /** A page or a step picked up with Duplicate, waiting for where to put it. */
+    pageCopied?: number;
+    stepCopied?: number;
+    /** The pitches chosen on Melodic + 32 Notes' lower half, to place on steps. */
+    selected?: number[];
+    /** The Melodic Sequencer's lowest row, in scale notes from the grid's start, by track. */
+    rowBase: Record<string, number>;
+    /** Tracks whose loop length row is locked on. */
+    loopRows?: Record<string, boolean>;
+    /** The velocity the next step takes, from a velocity pad. */
+    velocity?: number;
+  };
   /** Repeat and Accent, per track where the manual says so. */
   repeat: { on: boolean; interval: number };
   accent: boolean;

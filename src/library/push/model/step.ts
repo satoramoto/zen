@@ -50,7 +50,9 @@ export function stepTraced(state: PushState, set: PushSet, input: PushInput): St
     if (layer.active && !layer.active(next, set)) continue;
     const combo = layer.combos ? findCombo(ctx, layer.combos, MODIFIERS) : undefined;
     if (combo) {
-      use(ctx, ...combo.hold);
+      // The held buttons were modifiers, and the control pressed with them did the combination's
+      // job: none of them also does its own when it comes up.
+      use(ctx, ...combo.hold, id);
       combo.run(ctx);
       ctx.combo = combo.id;
       break;

@@ -98,7 +98,7 @@ export function use(ctx: Ctx, ...ids: ControlId[]) {
 }
 
 /** Whether a control has a hold job: the buttons the manual gives two jobs, and the upper display buttons (a Rack's chains). */
-export const canHold = (id: ControlId) => (HOLD_BUTTONS as readonly string[]).includes(id) || id.startsWith('upper-');
+export const canHold = (id: ControlId) => (HOLD_BUTTONS as readonly string[]).includes(id) || id.startsWith('upper-') || id === 'page-left' || id === 'page-right';
 
 /** Begin the hold job of every such button that has been down long enough. */
 export function matureHolds(state: PushState, time: number) {

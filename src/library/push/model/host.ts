@@ -92,13 +92,20 @@ const APPLY: Record<string, Apply> = {
     if (!d) return;
     d.selectedPad = Number(i.note);
     const pad = d.pads?.find((p) => p.note === d.selectedPad);
-    if (pad?.devices?.[0]) s.selection.device = pad.devices[0].id;
+    if (pad?.devices?.[0] && s.selection.device !== d.id && s.selection.device?.startsWith(`${d.id}.`)) s.selection.device = pad.devices[0].id;
+    else if (pad?.devices?.[0] && i.show) s.selection.device = pad.devices[0].id;
+  },
+  'select-slice': (s, i) => {
+    const d = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device);
+    if (d?.sampler) d.sampler.selectedSlice = Number(i.slice);
   },
   'set-drum-pad': (s, i) => {
     const pad = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device)?.pads?.find((p) => p.note === i.note);
     if (!pad) return;
     if (typeof i.choke === 'number') pad.choke = i.choke;
     if (typeof i.transpose === 'number') pad.transpose = i.transpose;
+    if (typeof i.muted === 'boolean') pad.muted = i.muted;
+    if (typeof i.soloed === 'boolean') pad.soloed = i.soloed;
   },
   rename: (s, i) => {
     const t = track(s, i.track);
@@ -133,6 +140,68 @@ const APPLY: Record<string, Apply> = {
     macro.mappings = (macro.mappings ?? 0) + 1;
     // A macro mapped to one thing takes its name; mapped to two, it reads its default name.
     macro.name = macro.mappings === 1 ? p.name : `Macro ${i.macro}`;
+  },
+  'add-note': (s, i) => {
+    const t = track(s, i.track);
+    if (!t) return;
+    const scene = Number(i.scene);
+    t.clips[scene] ??= { name: '', colour: t.colour, kind: 'midi', state: 'stopped', length: 4, loop: { on: true, start: 0, end: 4 }, startMarker: 0, notes: [] };
+    const clip = t.clips[scene]!;
+    clip.notes ??= [];
+    clip.notes.push({ id: `h${clip.notes.length + 1}-${Math.round(Number(i.start) * 1000)}-${i.pitch}`, pitch: Number(i.pitch), start: Number(i.start), length: Number(i.length), velocity: Number(i.velocity ?? 100) });
+  },
+  'remove-note': (s, i) => {
+    const clip = track(s, i.track)?.clips[Number(i.scene)];
+    if (clip?.notes) clip.notes = clip.notes.filter((n) => !(i.notes as string[]).includes(n.id));
+  },
+  'delete-notes': (s, i) => {
+    const clip = track(s, i.track)?.clips[Number(i.scene)];
+    if (!clip?.notes) return;
+    clip.notes = clip.notes.filter((n) => (Array.isArray(i.notes) ? !(i.notes as string[]).includes(n.id) : n.pitch !== i.pitch));
+  },
+  'mute-notes': (s, i) => {
+    for (const n of track(s, i.track)?.clips[Number(i.scene)]?.notes ?? []) if ((i.notes as string[]).includes(n.id)) n.muted = Boolean(i.muted);
+  },
+  'set-note': (s, i) => {
+    for (const n of track(s, i.track)?.clips[Number(i.scene)]?.notes ?? []) {
+      if (!(i.notes as string[]).includes(n.id)) continue;
+      const change = (key: 'velocity' | 'length' | 'nudge' | 'pitch' | 'velocityRange' | 'probability', low: number, high: number, start = 0) => {
+        const v = i[key];
+        if (typeof v === 'number') n[key] = Math.min(high, Math.max(low, v));
+        else if (v && typeof v === 'object') n[key] = Math.min(high, Math.max(low, (n[key] ?? start) + Number((v as { delta: number }).delta)));
+      };
+      change('velocity', 1, 127);
+      change('length', 0.0625, 64);
+      change('nudge', -0.5, 0.5);
+      change('pitch', 0, 127);
+      change('velocityRange', -127, 127);
+      change('probability', 0, 1, 1);
+      const position = i.position as { delta: number } | undefined;
+      if (position) n.start = Math.max(0, n.start + position.delta);
+    }
+  },
+  'set-loop': (s, i) => {
+    const clip = track(s, i.track)?.clips[Number(i.scene)];
+    if (!clip) return;
+    if (typeof i.start === 'number') clip.loop.start = i.start;
+    if (typeof i.end === 'number') clip.loop.end = i.end;
+    if (typeof i.on === 'boolean') clip.loop.on = i.on;
+    clip.length = Math.max(clip.length, clip.loop.end);
+  },
+  'clear-steps': (s, i) => {
+    const clip = track(s, i.track)?.clips[Number(i.scene)];
+    if (clip?.notes) clip.notes = clip.notes.filter((n) => n.start < Number(i.start) || n.start >= Number(i.start) + Number(i.length));
+  },
+  'copy-steps': (s, i) => {
+    const clip = track(s, i.track)?.clips[Number(i.scene)];
+    if (!clip?.notes) return;
+    const from = Number(i.from);
+    const copies = clip.notes.filter((n) => n.start >= from && n.start < from + Number(i.length)).map((n) => ({ ...n, id: `${n.id}-copy${clip.notes!.length}`, start: n.start - from + Number(i.to) }));
+    clip.notes.push(...copies);
+  },
+  'delete-clip': (s, i) => {
+    const t = track(s, i.track);
+    if (t) t.clips[Number(i.scene)] = null;
   },
   'set-monitor': (s, i) => {
     const t = track(s, i.track);

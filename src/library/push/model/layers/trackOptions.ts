@@ -10,6 +10,15 @@ import type { PushSet, PushState, RowCell } from '../types';
 /** The pads show the first sixty-four colours of the lamp table, in its order, from the top left. */
 export const pickerColour = (row: number, col: number) => (row - 1) * 8 + (col - 1);
 
+/** The outer ring of pads, clockwise from the top left: twenty-eight pads, for the table's first twenty-eight colours. */
+export const RING: readonly [number, number][] = [
+  ...Array.from({ length: 8 }, (_, i): [number, number] => [1, i + 1]),
+  ...Array.from({ length: 6 }, (_, i): [number, number] => [i + 2, 8]),
+  ...Array.from({ length: 8 }, (_, i): [number, number] => [8, 8 - i]),
+  ...Array.from({ length: 6 }, (_, i): [number, number] => [7 - i, 1]),
+];
+const ringColour = (row: number, col: number) => RING.findIndex(([r, c]) => r === row && c === col);
+
 /** The colour the thing being coloured has now. */
 function currentColour(state: PushState, set: PushSet): number | undefined {
   const pick = state.colourPick;
@@ -28,8 +37,13 @@ export const colourPicker: Layer = {
     if (target?.kind !== 'pad') return false;
     if (input.kind === 'down') {
       const { row, col } = padAt(target.id)!;
-      const { of, track, scene, note } = state.colourPick!;
-      push(ctx, 'set-colour', { of, track, ...(scene === undefined ? {} : { scene }), ...(note === undefined ? {} : { note }), colour: pickerColour(row, col) });
+      const { of, track, scene, note, device } = state.colourPick!;
+      // A drum pad's colours are on the outer ring; a tap on one gives it and the grid returns to its layout.
+      const colour = of === 'pad' ? ringColour(row, col) : pickerColour(row, col);
+      if (colour >= 0) push(ctx, 'set-colour', { of, track, ...(scene === undefined ? {} : { scene }), ...(note === undefined ? {} : { note }), ...(device === undefined ? {} : { device }), colour });
+      if (of !== 'track') delete state.colourPick;
+      // The tap chose a colour: when it comes up it is not also a press of what the pad is underneath.
+      state.held[target.id].used = true;
     }
     return true;
   },
@@ -37,8 +51,8 @@ export const colourPicker: Layer = {
     const now = currentColour(paint.state, paint.set);
     for (let row = 1; row <= 8; row++)
       for (let col = 1; col <= 8; col++) {
-        const colour = pickerColour(row, col);
-        paint.lamps[padId(row, col)] = lamp(colour === now ? 'pulse' : 'lit', colour);
+        const colour = paint.state.colourPick!.of === 'pad' ? ringColour(row, col) : pickerColour(row, col);
+        paint.lamps[padId(row, col)] = colour < 0 ? { state: 'off' } : lamp(colour === now ? 'pulse' : 'lit', colour);
         paint.notes[padId(row, col)] = null;
       }
   },

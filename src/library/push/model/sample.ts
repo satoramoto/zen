@@ -56,7 +56,8 @@ const compressor = (id: string) => effect(id, 'Compressor', [bank('Compressor', 
 const tuner = (id: string) => effect(id, 'Tuner', [bank('Tuner', [null, null, null, null, null, null, null, param(`${id}.ref`, 'Reference', 0.5, '440 Hz')], { kind: 'tuner', col: 1, span: 7, value: -0.12, label: 'A' })]);
 
 const DRUM_NAMES = ['Kick', 'Rim', 'Snare', 'Clap', 'Snare 2', 'Tom Low', 'Hat Closed', 'Tom Mid', 'Hat Pedal', 'Tom High', 'Hat Open', 'Perc', 'Crash', 'Shaker', 'Ride', 'Cowbell'];
-const DRUM_KINDS: DrumPad['kind'][] = ['kick', 'perc', 'snare', 'snare', 'snare', 'tom', 'hat', 'tom', 'hat', 'tom', 'hat', 'perc', 'cymbal', 'perc', 'cymbal', 'perc'];
+/** What kind of sound each of the sixteen is, for a kit that shades its pads by kind. */
+export const DRUM_KINDS: DrumPad['kind'][] = ['kick', 'perc', 'snare', 'snare', 'snare', 'tom', 'hat', 'tom', 'hat', 'tom', 'hat', 'perc', 'cymbal', 'perc', 'cymbal', 'perc'];
 const DRUM_COLOURS = [14, 1, 3, 3, 3, 15, 5, 15, 5, 15, 5, 9, 12, 9, 12, 9];
 
 function simpler(id: string, name: string, mode: 'classic' | 'one-shot' | 'slicing' = 'classic'): Device {
@@ -80,7 +81,6 @@ function drumRack(id: string): Device {
     note: 36 + i,
     name,
     colour: DRUM_COLOURS[i],
-    kind: DRUM_KINDS[i],
     choke: name.startsWith('Hat') ? 1 : 0,
     transpose: 0,
     devices: [simpler(`${id}.pad${36 + i}`, name, 'one-shot')],
@@ -88,7 +88,7 @@ function drumRack(id: string): Device {
     pan: pan(`${id}.pad${36 + i}.pan`),
   }));
   // The next bank up has two filled pads and the rest empty.
-  for (let i = 16; i < 32; i++) pads.push(i < 18 ? { note: 36 + i, name: `FX ${i - 15}`, colour: 11, kind: 'other', devices: [simpler(`${id}.pad${36 + i}`, `FX ${i - 15}`, 'one-shot')] } : { note: 36 + i, name: '', empty: true });
+  for (let i = 16; i < 32; i++) pads.push(i < 18 ? { note: 36 + i, name: `FX ${i - 15}`, colour: 11, devices: [simpler(`${id}.pad${36 + i}`, `FX ${i - 15}`, 'one-shot')] } : { note: 36 + i, name: '', empty: true });
   return {
     id,
     name: '808 Core Kit',

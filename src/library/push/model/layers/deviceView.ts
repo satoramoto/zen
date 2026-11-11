@@ -85,7 +85,7 @@ function macroRack(state: PushState, set: PushSet): Device | undefined {
 }
 
 /** The parameters under the eight encoders now, whatever mode Device View is in. */
-function columns(state: PushState, set: PushSet): (Parameter | null)[] {
+export function columns(state: PushState, set: PushSet): (Parameter | null)[] {
   const item = shownDevice(state, set);
   if (!item) return [];
   if (state.device.macroMap) {
