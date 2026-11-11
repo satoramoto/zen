@@ -8,6 +8,6 @@
     "outDir": "lib",
     "types": ["vite/client"]
   },
-  "include": ["src/library/site/index.ts", "src/library/index.ts", "src/library/storybook.tsx", "src/library/svelte.ts", "src/library/themes.ts", "src/library/compendium/index.ts", "src/library/compendium/model/index.ts", "src/library/math/trig/index.ts", "src/library/math/trig/model/index.ts", "src/library/math/calculator/public.ts", "src/library/push/model/index.ts"],
+  "include": ["src/library/site/index.ts", "src/library/index.ts", "src/library/storybook.tsx", "src/library/svelte.ts", "src/library/themes.ts", "src/library/view.ts", "src/library/view-react.ts", "src/library/view-svelte.ts", "src/library/storybook-renderers.tsx", "src/library/compendium/index.ts", "src/library/compendium/model/index.ts", "src/library/math/trig/index.ts", "src/library/math/trig/model/index.ts", "src/library/math/calculator/public.ts", "src/library/push/model/index.ts"],
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx", "src/**/*.story.tsx"]
 }

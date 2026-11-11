@@ -12,6 +12,12 @@
 //   the theme scope's model) → `lib/themes.js`. Framework-free: it and its chunks reach neither
 //   React nor Svelte.
 //
+// - `view` (`src/library/view.ts`, `./view`: the view tree's builders and store contract) →
+//   `lib/view.js`, framework-free; `view-react` and `view-svelte` (`./view/react`, `./view/svelte`)
+//   are its renderers with their registries.
+// - `storybook-renderers` (`./storybook/renderers`: the Renderer decorator and the fixture story
+//   helpers) → `lib/storybook-renderers.js`; it needs Svelte, so it is apart from `storybook`.
+//
 // - `push-model` (`src/library/push/model/index.ts`, `./push/model`: the Push device model, its layout
 //   table and sample Set) → `lib/push-model.js`. Framework-free, as `themes` is.
 //
@@ -69,6 +75,10 @@ export default defineConfig({
         storybook: 'src/library/storybook.tsx',
         svelte: 'src/library/svelte.ts',
         themes: 'src/library/themes.ts',
+        view: 'src/library/view.ts',
+        'view-react': 'src/library/view-react.ts',
+        'view-svelte': 'src/library/view-svelte.ts',
+        'storybook-renderers': 'src/library/storybook-renderers.tsx',
         compendium: 'src/library/compendium/index.ts',
         'compendium-model': 'src/library/compendium/model/index.ts',
         'math-trig': 'src/library/math/trig/index.ts',
