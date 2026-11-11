@@ -549,9 +549,14 @@ ShellRoot {
         for (var k = 0; k < props.length; k++) {
           var v = it[props[k]]
           if (v !== null && typeof v === "object") {
+            // Qt's value types read as Qt writes them ("#ff8800", "QFont(…)");
+            // plain objects and arrays, which would read "[object Object]", as JSON.
+            var str = String(v)
             var plain
-            try { plain = JSON.parse(JSON.stringify(v)) } catch (e) { plain = undefined }
-            values[props[k]] = plain === undefined ? String(v) : plain
+            if (Array.isArray(v) || str.indexOf("[object") === 0) {
+              try { plain = JSON.parse(JSON.stringify(v)) } catch (e) { plain = undefined }
+            }
+            values[props[k]] = plain === undefined ? str : plain
           } else values[props[k]] = v
         }
         return host.reply(id, values)
