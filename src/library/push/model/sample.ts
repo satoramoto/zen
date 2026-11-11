@@ -232,13 +232,13 @@ function unit(): Unit {
     displayLight: 100,
     wifi: { on: true, networks: [{ name: 'Studio', strength: 0.9, secured: true, known: true, connected: true }, { name: 'Upstairs', strength: 0.5, secured: true }, { name: 'Cafe', strength: 0.3, secured: false }], address: '192.168.1.42' },
     hotspot: { on: false, name: 'Push-1A2B', password: 'makemusic' },
-    expression: { mode: 'mpe', noteBend: 'auto', slideRange: 'full', inTune: 'pad', inTuneWidth: 0.25, trace: false },
+    expression: { mode: 'mpe', noteBend: 'auto', slideRange: 'full', inTune: 'pad', inTuneWidth: 0.25, trace: false, slideHeight: 16 },
     sensitivity: { threshold: 0.2, drive: 0.5, compand: 0.5, range: 1, curve: 'linear' },
     audio: {
-      sampleRate: '48000', sampleRates: ['44100', '48000', '88200', '96000'], buffer: '128', buffers: ['64', '128', '256', '512'],
+      sampleRate: '48000', sampleRates: ['44100', '48000', '88200', '96000'], buffer: '128', buffers: ['128', '256', '512', '1024', '2048'],
       inputs: [{ name: 'In 1', type: 'line', types: ['Line', 'Instrument', 'High'], gain: 0.3, level: 0.2 }, { name: 'In 2', type: 'line', types: ['Line', 'Instrument', 'High'], gain: 0.3, level: 0.1, linked: false }],
       outputs: [{ name: 'Out 1/2', level: 0.8, source: 'Main', sources: ['Main', 'Cue'] }, { name: 'Phones', level: 0.6, source: 'Main', sources: ['Main', 'Cue'] }],
-      clock: 'Internal', clocks: ['Internal', 'ADAT'], latency: '5.3 ms',
+      clock: 'Internal', clocks: ['Internal', 'ADAT In'], latency: '5.3 ms',
     },
     midi: { ports: [{ id: 'din', name: 'MIDI In/Out', input: { track: true, sync: false, remote: false }, output: { track: true, sync: false, remote: false } }, { id: 'usb', name: 'Keystation', input: { track: true, sync: false, remote: true } }], externalSync: false },
     jacks: {
@@ -251,9 +251,9 @@ function unit(): Unit {
       'Exclusive Arm': { value: 'On', choices: ['On', 'Off'] },
       'Exclusive Solo': { value: 'On', choices: ['On', 'Off'] },
       'Pad Preview': { value: 'On', choices: ['On', 'Off'] },
-      'Record Count-In': { value: '1 bar', choices: ['none', '1 bar', '2 bars', '4 bars'] },
+      'Select on Launch': { value: 'On', choices: ['On', 'Off'] },
     },
-    software: { version: '12.3', licence: 'Live 12 Suite', authorized: true, usageData: false },
+    software: { version: '12.3', licence: 'Live 12 Suite', authorized: true, usageData: false, account: 'producer@example.com' },
     volumeTarget: 'Main Out', volumeTargets: ['Main Out', 'Phones', 'Main Track', 'Cue'],
     volume: { value: 0.8, display: '-6.0 dB' },
   };
@@ -311,7 +311,7 @@ export function sampleSet(): PushSet {
       { id: 'pack-4', name: 'Chop and Swing', size: '640 MB', state: 'downloaded' },
     ],
     lessons: [
-      { id: 'lesson-1', name: 'A tour of Push', steps: ['The pads', 'The display', 'The encoders'] },
+      { id: 'lesson-1', name: 'A tour of Push', steps: ['The pads play notes and launch clips.', 'The display shows what the encoders set.', 'The encoders turn without end.'], link: 'ableton.com/learn-push' },
       { id: 'lesson-2', name: 'Make a beat', steps: ['Add a Drum Rack', 'Tap steps', 'Change the loop length'], done: true },
       { id: 'lesson-3', name: 'Play a melody', steps: ['Pick a scale', 'Record a clip'] },
     ],

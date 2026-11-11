@@ -274,7 +274,7 @@
       <KnobReadout label="" name="Volume" value="" @onstep=step:volume @onpress=press:volume>
     <div class="push-surface__cell" data-cap="legend" data-cluster="edit" data-control="undo" data-kind="button" data-lamp="dim" style="--x: 51.2; --y: 60.1; --w: 12.5; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Undo" name="Undo" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="edit" data-control="save" data-kind="button" data-lamp="off" style="--x: 51.2; --y: 89.3; --w: 12.5; --h: 12.3">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="edit" data-control="save" data-kind="button" data-lamp="dim" style="--x: 51.2; --y: 89.3; --w: 12.5; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Save" name="Save" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="track" data-control="lock" data-kind="button" data-lamp="dim" style="--x: 7.7; --y: 112.3; --w: 14; --h: 12.6; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Lock" name="Lock" state="idle">
@@ -312,9 +312,9 @@
       <Pad fillCell=true label="Clip" name="Clip" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="top-right" data-control="session-screen" data-kind="button" data-lamp="dim" style="--x: 355.6; --y: 36.7; --w: 14.1; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Session" name="Session Screen" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="add" data-kind="button" data-lamp="off" data-sign="true" style="--x: 313.4; --y: 59.7; --w: 12.5; --h: 12.6">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="add" data-kind="button" data-lamp="dim" data-sign="true" style="--x: 313.4; --y: 59.7; --w: 12.5; --h: 12.6; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="+" name="Add" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="swap" data-kind="button" data-lamp="off" data-sign="true" style="--x: 313.4; --y: 89.3; --w: 12.5; --h: 12.3">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="swap" data-kind="button" data-lamp="dim" data-sign="true" style="--x: 313.4; --y: 89.3; --w: 12.5; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="⇄" name="Swap" state="idle">
     <div class="push-surface__cell" data-cluster="jog" data-control="jog" data-kind="wheel" data-round="true" style="--x: 333.2; --y: 61.9; --w: 37.9; --h: 37.8">
       <KnobReadout label="" name="Jog wheel" value="" @onstep=step:jog @onpress=press:jog>
@@ -2119,7 +2119,7 @@
       <KnobReadout label="" name="Volume" value="" @onstep=step:volume @onpress=press:volume>
     <div class="push-surface__cell" data-cap="legend" data-cluster="edit" data-control="undo" data-kind="button" data-lamp="dim" style="--x: 51.2; --y: 60.1; --w: 12.5; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Undo" name="Undo" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="edit" data-control="save" data-kind="button" data-lamp="off" style="--x: 51.2; --y: 89.3; --w: 12.5; --h: 12.3">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="edit" data-control="save" data-kind="button" data-lamp="dim" style="--x: 51.2; --y: 89.3; --w: 12.5; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Save" name="Save" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="track" data-control="lock" data-kind="button" data-lamp="dim" style="--x: 7.7; --y: 112.3; --w: 14; --h: 12.6; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Lock" name="Lock" state="idle">
@@ -2157,9 +2157,9 @@
       <Pad fillCell=true label="Clip" name="Clip" state="idle">
     <div class="push-surface__cell" data-cap="legend" data-cluster="top-right" data-control="session-screen" data-kind="button" data-lamp="dim" style="--x: 355.6; --y: 36.7; --w: 14.1; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="Session" name="Session Screen" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="add" data-kind="button" data-lamp="off" data-sign="true" style="--x: 313.4; --y: 59.7; --w: 12.5; --h: 12.6">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="add" data-kind="button" data-lamp="dim" data-sign="true" style="--x: 313.4; --y: 59.7; --w: 12.5; --h: 12.6; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="+" name="Add" state="idle">
-    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="swap" data-kind="button" data-lamp="off" data-sign="true" style="--x: 313.4; --y: 89.3; --w: 12.5; --h: 12.3">
+    <div class="push-surface__cell" data-cap="legend" data-cluster="browse" data-control="swap" data-kind="button" data-lamp="dim" data-sign="true" style="--x: 313.4; --y: 89.3; --w: 12.5; --h: 12.3; --push-lamp: color-mix(in oklab, var(--push-white) 45%, var(--push-unlit))">
       <Pad fillCell=true label="⇄" name="Swap" state="idle">
     <div class="push-surface__cell" data-cluster="jog" data-control="jog" data-kind="wheel" data-round="true" style="--x: 333.2; --y: 61.9; --w: 37.9; --h: 37.8">
       <KnobReadout label="" name="Jog wheel" value="" @onstep=step:jog @onpress=press:jog>

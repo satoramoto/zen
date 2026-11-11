@@ -371,7 +371,10 @@ export interface Lesson {
   id: string;
   name: string;
   done?: boolean;
+  /** The lesson's pages. */
   steps?: string[];
+  /** An address with further material. */
+  link?: string;
 }
 
 export interface WifiNetwork {
@@ -412,9 +415,9 @@ export interface Unit {
   /** 0 to 100. */
   ledBrightness: number;
   displayLight: number;
-  /** A startup's progress, 0 to 1, and whether the first-run guide is showing. */
+  /** A startup's progress, 0 to 1, and the first-run guide's steps when it is showing, with the one reached. */
   starting?: number;
-  onboarding?: boolean;
+  onboarding?: { steps: string[]; step: number };
   wifi: { on: boolean; networks: WifiNetwork[]; connecting?: string; address?: string };
   hotspot: { on: boolean; name?: string; password?: string };
   /** Pad expression. */
@@ -428,6 +431,8 @@ export interface Unit {
     inTuneWidth: number;
     /** Draw where each held touch is, with its slide and bend. */
     trace: boolean;
+    /** The height of a pad over which slide runs, in millimetres (10 to 16). */
+    slideHeight?: number;
   };
   /** The velocity curve. Each 0 to 1. */
   sensitivity: { threshold: number; drive: number; compand: number; range: number; curve: 'linear' | 'custom' };
@@ -442,7 +447,7 @@ export interface Unit {
     clocks: string[];
     latency?: string;
   };
-  midi: { ports: MidiPort[]; externalSync?: boolean };
+  midi: { ports: MidiPort[]; externalSync?: boolean; /** Milliseconds the incoming clock is shifted by. */ syncDelay?: number };
   /** The two pedal and CV jacks, and the other ports, by name. */
   jacks: Record<string, Jack>;
   preferences: Record<string, { value: string; choices: string[] }>;
@@ -451,9 +456,12 @@ export interface Unit {
     licence: string;
     authorized: boolean;
     usageData: boolean;
+    /** A beta build: usage data is always sent, so the switch is not offered. */
+    beta?: boolean;
+    account?: string;
     update?: { version: string; state: 'available' | 'downloading' | 'installing' | 'ready'; progress?: number };
     /** A code and an address to show for authorization, Cloud, crash reports or pairing. */
-    code?: { purpose: 'authorize' | 'cloud' | 'crash-reports' | 'pair'; code: string; address: string };
+    code?: { purpose: 'authorize' | 'cloud' | 'crash-reports' | 'pair'; code: string; address?: string };
   };
   /** What the Volume encoder can control, and what it does now. */
   volumeTarget: string;
@@ -487,6 +495,8 @@ export interface PushSet {
   sounding?: number[];
   /** Where the Session Ring of another controller is, if the app shares one. */
   ring?: { track: number; scene: number };
+  /** The Set holds User Mode mappings, so User Mode is offered in Standalone too. */
+  userMappings?: boolean;
   /** Lamps the app sets in User Mode, by control. */
   userLamps?: Record<ControlId, Lamp>;
 }
@@ -910,7 +920,17 @@ export interface PushState {
     places: Record<string, ListPlace>;
   };
   sets: { highlight: number; sort: 'date' | 'name'; ascending?: boolean; menu?: number; cloud?: boolean };
-  setup: { tab: number; highlight: number; advanced?: boolean; network?: string };
+  setup: {
+    tab: number;
+    /** The network highlighted on Status, the port on MIDI and which side of it. */
+    highlight: number;
+    port?: number;
+    side?: 'input' | 'output';
+    /** Where the last pad press fell on the sensitivity curve, 0 to 1 of the velocity range. */
+    press?: number;
+    /** The legal or crash information dialog is open. */
+    info?: 'legal' | 'crash';
+  };
   learn: { highlight: number; lesson?: string; step?: number };
   /** Track options (Shift and a track's button): the tracks marked, the first being the one whose options show. */
   trackOptions?: string[];

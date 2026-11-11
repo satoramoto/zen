@@ -398,6 +398,68 @@ const APPLY: Record<string, Apply> = {
   'open-set': (s, i) => {
     for (const file of s.sets) file.current = file.id === i.set;
   },
+  'set-setting': (s, i) => {
+    const u = s.unit;
+    const v = i.value;
+    const inputs = (Array.isArray(i.inputs) ? i.inputs : []) as number[];
+    switch (i.setting) {
+      case 'display-light': u.displayLight = Number(v); break;
+      case 'led-brightness': u.ledBrightness = Number(v); break;
+      case 'wifi': u.wifi.on = Boolean(v); break;
+      case 'hotspot': u.hotspot.on = Boolean(v); break;
+      case 'link': s.transport.link = { ...(s.transport.link ?? { peers: 0 }), on: Boolean(v) }; break;
+      case 'play-sync': s.transport.link = { ...(s.transport.link ?? { on: false, peers: 0 }), playSync: Boolean(v) }; break;
+      case 'expression-mode': u.expression.mode = v as typeof u.expression.mode; break;
+      case 'note-pitch-bend': u.expression.noteBend = v as typeof u.expression.noteBend; break;
+      case 'in-tune-location': u.expression.inTune = v as typeof u.expression.inTune; break;
+      case 'in-tune-width': u.expression.inTuneWidth = Number(v) / 26.5; break;
+      case 'slide-height': u.expression.slideHeight = Number(v); u.expression.slideRange = Number(v) < 13 ? 'half' : 'full'; break;
+      case 'sensitivity-threshold': u.sensitivity.threshold = Number(v); break;
+      case 'sensitivity-drive': u.sensitivity.drive = Number(v); break;
+      case 'sensitivity-compand': u.sensitivity.compand = Number(v); break;
+      case 'sensitivity-range': u.sensitivity.range = Number(v); break;
+      case 'sample-rate': u.audio.sampleRate = String(v); break;
+      case 'buffer-size': u.audio.buffer = String(v); break;
+      case 'input-type': for (const n of inputs) if (u.audio.inputs[n - 1]) u.audio.inputs[n - 1].type = v as 'line'; break;
+      case 'input-gain': for (const n of inputs) if (u.audio.inputs[n - 1]) u.audio.inputs[n - 1].gain = Number(v) / 20; break;
+      case 'link-inputs': if (u.audio.inputs[1]) u.audio.inputs[1].linked = Boolean(v); break;
+      case 'output-source': if (u.audio.outputs[0]) u.audio.outputs[0].source = String(v); break;
+      case 'clock-source': u.audio.clock = String(v); break;
+      case 'external-sync': u.midi.externalSync = Boolean(v); break;
+      case 'sync-delay': u.midi.syncDelay = Number(v); break;
+      case 'midi-port': {
+        const side = u.midi.ports.find((p) => p.id === i.port)?.[i.side as 'input' | 'output'];
+        if (side && (i.flag === 'track' || i.flag === 'sync' || i.flag === 'remote')) side[i.flag] = Boolean(v);
+        break;
+      }
+      case 'jack': if (u.jacks[String(i.jack)]) u.jacks[String(i.jack)].job = String(v); break;
+      case 'preference': if (u.preferences[String(i.preference)]) u.preferences[String(i.preference)].value = String(v); break;
+      case 'usage-data': u.software.usageData = Boolean(v); break;
+      default: break;
+    }
+  },
+  'set-unit-mode': (s, i) => void (s.unit.mode = i.mode === 'control' ? 'control' : 'standalone'),
+  'connect-wifi': (s, i) => {
+    for (const n of s.unit.wifi.networks) {
+      n.connected = n.name === i.network;
+      if (n.connected) n.known = true;
+    }
+  },
+  'forget-wifi': (s, i) => {
+    const n = s.unit.wifi.networks.find((x) => x.name === i.network);
+    if (n) Object.assign(n, { connected: false, known: false });
+  },
+  'reset-sensitivity': (s) => void (s.unit.sensitivity = { ...s.unit.sensitivity, threshold: 0.2, drive: 0.5, compand: 0.5, range: 1 }),
+  authorize: (s, i) => {
+    if (i.cancel) delete s.unit.software.code;
+    else s.unit.software.code = { purpose: 'authorize', code: '481205', address: 'push.local/authorize' };
+  },
+  'update-software': (s) => {
+    if (s.unit.software.update) Object.assign(s.unit.software.update, { state: 'installing', progress: 0 });
+  },
+  'cancel-update': (s) => {
+    if (s.unit.software.update) Object.assign(s.unit.software.update, { state: 'available', progress: undefined });
+  },
   'set-monitor': (s, i) => {
     const t = track(s, i.track);
     if (t?.routing) t.routing.monitor = i.monitor as 'in' | 'auto' | 'off';

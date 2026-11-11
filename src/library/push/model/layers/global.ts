@@ -8,8 +8,8 @@ import type { DisplayMode, PushSet } from '../types';
 import { padMode } from './modes';
 import { newJob, recordJob } from './recording';
 
-/** User Mode needs a computer running Live: it is offered in Control Mode only. */
-export const userModeAvailable = (set: PushSet) => set.unit.mode === 'control';
+/** User Mode is offered in Control Mode, and in Standalone when the Set holds mappings for it. */
+export const userModeAvailable = (set: PushSet) => set.unit.mode === 'control' || !!set.userMappings;
 
 const SCREEN_BUTTONS: Record<string, DisplayMode> = { device: 'device', mix: 'mix', clip: 'clip', 'session-screen': 'session' };
 const MENU_BUTTONS: Record<string, DisplayMode> = { sets: 'sets', setup: 'setup', learn: 'learn' };
