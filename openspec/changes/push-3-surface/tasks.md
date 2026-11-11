@@ -101,34 +101,34 @@ both renderers. Each group ends by running the while-building checks from the pr
 - [x] 10.3 Model: delete, mute and move devices; Rack icons, unfolding, chains by hold, Drum Rack pads in the bottom row, a tapped pad's chain with choke and transpose; group and ungroup; save as preset
 - [x] 10.4 Model and screens: macro banks, Macro Map mode, macro edit, unmap, randomize and variations with their menu
 - [x] 10.5 Model: automation dots, Delete with an encoder, automation-marked intents while recording
-- [ ] 10.6 Draw the waveform from `Music.Waveform` inside a `MusicScope` node per the fit review, and Simpler's screens: the three modes' banks, slice markers, manual pad slicing, nudge, split and delete, Edit Mode's actions, the Rack-wrapped preset
-- [ ] 10.7 Table tests, then the `push-device-view` and `push-sampling` scenario stories; they play in both renderers
+- [x] 10.6 Draw the waveform from `Music.Waveform` inside a `MusicScope` node per the fit review, and Simpler's screens: the three modes' banks, slice markers, manual pad slicing, nudge, split and delete, Edit Mode's actions, the Rack-wrapped preset
+- [x] 10.7 Table tests, then the `push-device-view` and `push-sampling` scenario stories; they play in both renderers
 - [ ] 10.8 Browser evidence: Device View, an unfolded Rack and Simpler beside the manual's figures; run the while-building checks
 
 ## 11. Clip View
 
-- [ ] 11.1 Draw the piano roll from `music/components/PianoRoll` per the fit review (notes by velocity and pad colour, beat marks, markers, playhead from the frame reader, the sequenceable box, the pitch strip with density lines) and reuse the waveform for audio
-- [ ] 11.2 Model and screen: loop on and off with its parameters, Shift for sixteenths, Crop, Zoom around the last-moved position, real-time fit
-- [ ] 11.3 Model and screen: Note Edit mode (highlight, selection, the eight parameters, ranges, Select All, Delete), audio warp controls and audio edit (Set 1.1.1, Warp to Grid)
-- [ ] 11.4 Model: Convert's offers by selection and edition, Quantize's quick press, Double Loop, the empty audio slot
-- [ ] 11.5 Table tests, then the `push-clip-view` scenario stories; they play in both renderers; run the while-building checks
+- [x] 11.1 Draw the piano roll from `music/components/PianoRoll` per the fit review (notes by velocity and pad colour, beat marks, markers, playhead from the frame reader, the sequenceable box, the pitch strip with density lines) and reuse the waveform for audio
+- [x] 11.2 Model and screen: loop on and off with its parameters, Shift for sixteenths, Crop, Zoom around the last-moved position, real-time fit
+- [x] 11.3 Model and screen: Note Edit mode (highlight, selection, the eight parameters, ranges, Select All, Delete), audio warp controls and audio edit (Set 1.1.1, Warp to Grid)
+- [x] 11.4 Model: Convert's offers by selection and edition, Quantize's quick press, Double Loop, the empty audio slot
+- [x] 11.5 Table tests, then the `push-clip-view` scenario stories; they play in both renderers; run the while-building checks
 
 ## 12. Browser and Sets
 
-- [ ] 12.1 Model and screen: Browse Mode (the Add menu, lazy folders with loading, load and leave, adding tracks, the path encoder, remembered place), Preview, Favorites and Collections
-- [ ] 12.2 Model: Hot-Swap Mode (opening at the source folder, staying open, Load Next and Previous, a single drum pad with its blink, pads still playing)
-- [ ] 12.3 Model and screen: Packs (installed, available, download progress, pause, install, cancel, offline, delete download, uninstall with confirmation)
-- [ ] 12.4 Model and screen: the Set Library (open, new, sort, Cloud label, Control Mode's list), the three saves, rename and delete from the item menu, Session with New
-- [ ] 12.5 Table tests, then the `push-browser` scenario stories; they play in both renderers; run the while-building checks
+- [x] 12.1 Model and screen: Browse Mode (the Add menu, lazy folders with loading, load and leave, adding tracks, the path encoder, remembered place), Preview, Favorites and Collections
+- [x] 12.2 Model: Hot-Swap Mode (opening at the source folder, staying open, Load Next and Previous, a single drum pad with its blink, pads still playing)
+- [x] 12.3 Model and screen: Packs (installed, available, download progress, pause, install, cancel, offline, delete download, uninstall with confirmation)
+- [x] 12.4 Model and screen: the Set Library (open, new, sort, Cloud label, Control Mode's list), the three saves, rename and delete from the item menu, Session with New
+- [x] 12.5 Table tests, then the `push-browser` scenario stories; they play in both renderers; run the while-building checks
 
 ## 13. Setup, power, Learn and User Mode
 
-- [ ] 13.1 Screens: the Setup menu's eight tabs from the unit readings, each change an intent; Status (mode switch, battery, storage, name, brightness, Wi-Fi list, connect and forget, hotspot, Link, Play Sync) with the processor-less variant
-- [ ] 13.2 Screens: Expression, Sensitivity (the curve drawing with live press marks, Reset), Audio (rates, buffer, preamps, gain, meters, link, outputs, clock), MIDI (ports, input and output switches, External Sync), Pedals & CV, Preferences
-- [ ] 13.3 Screens: Software (licence, Authorize, usage data, update with progress and cancel, the Shift options, Reset with confirmation) and the code dialogs for authorization, Cloud, crash reports and pairing
-- [ ] 13.4 Model and screens: starting up and onboarding, low battery and safe shutdown, off; Learn's lessons; the User button's availability and the User Mode notice; the Volume encoder's choices from the Set
-- [ ] 13.5 Wire brightness and display light to the surface, and the Expression and Sensitivity settings to the pad input store
-- [ ] 13.6 Table tests, then the `push-setup` scenario stories; they play in both renderers
+- [x] 13.1 Screens: the Setup menu's eight tabs from the unit readings, each change an intent; Status (mode switch, battery, storage, name, brightness, Wi-Fi list, connect and forget, hotspot, Link, Play Sync) with the processor-less variant
+- [x] 13.2 Screens: Expression, Sensitivity (the curve drawing with live press marks, Reset), Audio (rates, buffer, preamps, gain, meters, link, outputs, clock), MIDI (ports, input and output switches, External Sync), Pedals & CV, Preferences
+- [x] 13.3 Screens: Software (licence, Authorize, usage data, update with progress and cancel, the Shift options, Reset with confirmation) and the code dialogs for authorization, Cloud, crash reports and pairing
+- [x] 13.4 Model and screens: starting up and onboarding, low battery and safe shutdown, off; Learn's lessons; the User button's availability and the User Mode notice; the Volume encoder's choices from the Set
+- [x] 13.5 Wire brightness and display light to the surface, and the Expression and Sensitivity settings to the pad input store
+- [x] 13.6 Table tests, then the `push-setup` scenario stories; they play in both renderers
 - [ ] 13.7 Browser evidence: each Setup tab beside its manual figure, saved under `docs/push/`; run the while-building checks
 
 ## 14. Integration
