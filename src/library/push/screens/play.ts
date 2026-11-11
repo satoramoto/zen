@@ -236,6 +236,30 @@ export function rgbOf(colour: string): [number, number, number] {
 /** The colour an element is filled with. */
 export const fillOf = (el: Element) => rgbOf(getComputedStyle(el).backgroundColor);
 
+/** The colour an unlit lamp is mixed toward, as the surface around `el` has it (dark on a dark body, pale on a light one). */
+export function unlitOf(el: Element): [number, number, number] {
+  const probe = document.createElement('span');
+  probe.style.background = 'var(--push-unlit)';
+  el.appendChild(probe);
+  const colour = fillOf(probe);
+  probe.remove();
+  return colour;
+}
+/** How far apart two colours are, in RGB. */
+export const distance = (a: readonly number[], b: readonly number[]) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+/**
+ * How lit a lamp looks: how far its colour is from an unlit one. A dimmer lamp is nearer the unlit
+ * colour, which is darker on a dark body and paler on a light one, so this reads the same in both modes.
+ */
+export const litness = (el: Element) => distance(groundOf(el), unlitOf(el));
+/** Whether two lamps are the same colour at different strengths: their colours point the same way from unlit. */
+export function sameHue(a: Element, b: Element): boolean {
+  const u = unlitOf(a);
+  const [x, y] = [groundOf(a), groundOf(b)].map((c) => c.map((v, i) => v - u[i]));
+  const dot = x[0] * y[0] + x[1] * y[1] + x[2] * y[2];
+  return dot / (Math.hypot(...x) * Math.hypot(...y) || 1) > 0.95;
+}
+
 /** The words in the top or bottom row's eight cells. */
 export const rowTexts = (canvas: HTMLElement, row: 'top' | 'bottom'): string[] => [1, 2, 3, 4, 5, 6, 7, 8].map((c) => (tab(canvas, row, c)?.textContent ?? '').trim());
 /** The words of every body cell, by its first column. */

@@ -4,7 +4,7 @@ import { lampVar } from '../../../foundation/themes/lamps';
 import { padPitch } from '../../model/scales';
 import { initialState } from '../../model/state';
 import type { Lamp, PushSet } from '../../model/types';
-import { all, cell, down, expect, face, feel, fillOf, forget, given, intent, lamp, onTrack, pads, press, wait, wheel, groundOf } from '../play';
+import { all, cell, down, expect, face, feel, fillOf, forget, given, intent, lamp, onTrack, pads, press, wait, wheel, groundOf, distance, litness, sameHue } from '../play';
 import type { Play } from '../scenario';
 
 const bass = (more: (set: PushSet) => void = () => {}) => onTrack('t-bass', more);
@@ -310,9 +310,8 @@ export const plays = {
       const [r, g, b] = fillOf(face(c, 'pad-4-4'));
       expect(g).toBeGreaterThan(r * 3 + 60);
       expect(b).toBeGreaterThan(r * 3 + 60);
-      // The unlit pad is see-through: it is read as it looks over the body.
-      const dark = groundOf(face(c, 'pad-4-5'));
-      expect(g - dark[1]).toBeGreaterThan(100);
+      // Far from the unlit pad beside it, read as it looks over the body, in either mode.
+      expect(distance([r, g, b], groundOf(face(c, 'pad-4-5')))).toBeGreaterThan(100);
     },
   },
 
@@ -320,12 +319,11 @@ export const plays = {
     ...userLamps({ 'pad-4-4': { state: 'lit', colour: 20 }, 'pad-4-5': { state: 'dim', colour: 20 } }),
     act: async () => {},
     check: ({ canvasElement: c }) => {
-      const full = fillOf(face(c, 'pad-4-4'));
-      const dim = fillOf(face(c, 'pad-4-5'));
-      // Plainly darker, and still the same teal: green and blue over red.
-      expect(dim[1]).toBeLessThan(full[1] * 0.75);
-      expect(dim[1]).toBeGreaterThan(dim[0] * 2);
-      expect(dim[2]).toBeGreaterThan(dim[0] * 2);
+      const full = face(c, 'pad-4-4');
+      const dim = face(c, 'pad-4-5');
+      // Plainly less lit (darker on a dark body, paler on a light one), and still the same teal.
+      expect(litness(dim)).toBeLessThan(litness(full) * 0.75);
+      expect(sameHue(dim, full)).toBe(true);
     },
   },
 

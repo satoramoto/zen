@@ -4,7 +4,7 @@
 // left to right, top to bottom, on the upper four rows.
 import { initialState } from '../../model/state';
 import type { Clip, PushSet, PushState } from '../../model/types';
-import { all, cell, down, expect, fillOf, face, GREEN, GREY, given, hit, holdDown, holding, intent, lampState, latch, onTrack, overlay, padColour, press, RED, tableLamp, turn, wait, whiteLamp, HOLD } from '../play';
+import { all, cell, down, expect, fillOf, face, GREEN, GREY, given, hit, holdDown, holding, intent, lampState, latch, onTrack, overlay, padColour, press, RED, tableLamp, turn, wait, whiteLamp, HOLD, litness } from '../play';
 import type { Play, PlayContext } from '../scenario';
 
 const none = async () => {};
@@ -19,7 +19,8 @@ const bass = (layout: 'melodic' | 'melodic-32', more: (set: PushSet) => void = (
   ...start(state, { 't-bass': layout }),
 });
 const added = (context: PlayContext) => all(context, 'add-note').map(({ pitch, start: at, length }) => ({ pitch, start: at, length }));
-const brightness = (c: HTMLElement, row: number, col: number) => fillOf(face(c, `pad-${row}-${col}`)).reduce((a, b) => a + b, 0);
+/** How lit a pad looks, in either mode. */
+const brightness = (c: HTMLElement, row: number, col: number) => litness(face(c, `pad-${row}-${col}`));
 /** A two-page loop that is playing on its second page. */
 const twoPages = (playing: boolean) => (set: PushSet) => {
   const clip = beat(set);
