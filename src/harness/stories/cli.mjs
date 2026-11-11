@@ -15,7 +15,8 @@
 //   --config-dir DIR the Storybook config (.storybook)
 //   --list           print the stories and where each would be played, and play nothing
 //
-// A prefix matches a story id or title ("core-primitives", "Core/Primitives").
+// A prefix matches a story id or title ("core-primitives", "Core/Primitives"). STORY_FILTER, as the
+// scripts this replaces read it, keeps the stories whose id contains its text.
 // Tags: `browser` (needs a real browser), `stage` (drawn by the Omarchy stage in Qt).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -73,8 +74,9 @@ async function served() {
 }
 
 const all = await storyIndex(configDir);
-const stories = matching(all, positionals);
-if (!stories.length) { console.error(`no stories match ${positionals.join(', ') || '(all)'}`); process.exit(2); }
+const filter = process.env.STORY_FILTER;
+const stories = matching(all, positionals).filter((s) => !filter || s.id.includes(filter));
+if (!stories.length) { console.error(`no stories match ${[...positionals, ...(filter ? [`STORY_FILTER=${filter}`] : [])].join(', ') || '(all)'}`); process.exit(2); }
 
 // The run for main plays against the served Storybook when one answers, else a built one: plays
 // are written against the dev server, and a build runs React's production code.

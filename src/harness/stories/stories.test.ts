@@ -106,6 +106,11 @@ describe('zen-stories', () => {
     expect(r.code).toBe(0);
   }, 60000);
 
+  it('keeps only the stories whose id contains STORY_FILTER', async () => {
+    const r = await stories(['--list'], { STORY_FILTER: 'renders' });
+    expect(r.lines.filter((l) => l.includes('\t')).map((l) => l.split('\t')[0])).toEqual(['fixture-measured--renders', 'fixture-plain--renders-only']);
+  }, 60000);
+
   it('lists a play that throws on the virtual DOM as FAIL with what it threw, and exits 1', async () => {
     const r = await stories(['--no-browser', 'Fixture/Failing']);
     expect(r.output).toMatch(/^FAIL {2}Fixture\/Failing \/ Play Throws/m);

@@ -30,6 +30,14 @@ on:
       node-version:
         type: string
         default: '24'
+      setup:
+        description: Commands run before npm ci in both jobs (git settings, say)
+        type: string
+        default: ''
+      browser-setup:
+        description: Commands run before the browser plays on main (a tool the dev server calls, say)
+        type: string
+        default: ''
 
 jobs:
   virtual-dom:
@@ -46,6 +54,8 @@ jobs:
           node-version: ${{ inputs.node-version }}
           cache: npm
           cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      - if: inputs.setup != ''
+        run: ${{ inputs.setup }}
       - run: npm ci
       - name: Every story on a virtual DOM
         run: ${{ inputs.stories }} --no-browser
@@ -64,9 +74,13 @@ jobs:
           node-version: ${{ inputs.node-version }}
           cache: npm
           cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      - if: inputs.setup != ''
+        run: ${{ inputs.setup }}
       - run: npm ci
       - name: Install Playwright's Chromium headless shell
         run: npx playwright install --with-deps --only-shell chromium
+      - if: inputs.browser-setup != ''
+        run: ${{ inputs.browser-setup }}
       - name: Serve the Storybook
         run: |
           nohup ${{ inputs.serve }} > "$RUNNER_TEMP/storybook.log" 2>&1 &

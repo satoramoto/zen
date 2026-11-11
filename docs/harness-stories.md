@@ -42,7 +42,8 @@ server failed for those reasons alone.
 Options:
 
 - a prefix of a story id or title plays only that area: `zen-stories core-primitives`,
-  `zen-stories Music/Components`
+  `zen-stories Music/Components`. `STORY_FILTER=text` keeps the stories whose id contains the
+  text, as the scripts zen-stories replaces read it.
 - `--workers N`: how many stories play at once, 2 by default. The two runs, virtual DOM and
   browser, take turns, so no more than N stories are ever being played.
 - `--url URL`: the served Storybook, for `browser` and `stage` stories. By default the port in
@@ -121,6 +122,12 @@ jobs:
   stories:
     uses: satoramoto/zen/.github/workflows/stories.yml@main
 ```
+
+Its inputs, all optional: `working-directory` (where the package and `.storybook` are),
+`stories` (the command, `npx zen-stories` by default, to which the run's flag is added),
+`serve` (the dev server on port 6006), `node-version` (24), `setup` (commands before `npm ci`
+in both jobs) and `browser-setup` (commands before the browser plays on main, for a tool the dev
+server calls: harmonigram installs Lean there).
 
 ## How it works
 
