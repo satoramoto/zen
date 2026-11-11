@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { serveBuilt } from './browser.mjs';
-import { matching, plan } from './select.mjs';
+import { matching, plan, shard } from './select.mjs';
 
 const cli = fileURLToPath(new URL('./cli.mjs', import.meta.url));
 const fixture = fileURLToPath(new URL('../../../fixtures/stories-runner', import.meta.url));
@@ -86,6 +86,13 @@ describe('which stories are played where', () => {
       const p = plan([notATest], { mode, stage: true });
       expect(p.skipped.map((s) => [s.story.id, s.why])).toEqual([['e', 'not a test (tagged !test)']]);
     }
+  });
+
+  it('splits the stories into even shares that together hold each once', () => {
+    const list = ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map((id) => story(id));
+    const shares = [1, 2, 3].map((i) => ids(shard(list, i, 3)));
+    expect(shares).toEqual([['a', 'd', 'g'], ['b', 'e'], ['c', 'f']]);
+    expect(shares.flat().sort()).toEqual(ids(list));
   });
 
   it('matches a prefix of a story id or of a title', () => {

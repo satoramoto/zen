@@ -9,6 +9,7 @@
 //   --gpu            the browser uses this machine's GPU, for WebGL stories
 //   --viewport WxH   the browser's page size (1600x1000), for stories drawn for one screen
 //   --retries N      a story that fails is played N more times; one that then passes is flaky (0)
+//   --shard I/N      play only the Ith of N even shares of the stories, for N runs side by side
 //   --timeout MS     per story (90000)
 //   --url URL        the served Storybook, for `browser` and `stage` stories (default: the port of
 //                    the project's `storybook` script, when something answers there)
@@ -25,7 +26,7 @@ import { parseArgs } from 'node:util';
 
 // Storybook's indexer warns that a Node API it uses is deprecated: nothing a reader can act on.
 process.noDeprecation = true;
-const { matching, plan, storyIndex } = await import('./select.mjs');
+const { matching, plan, shard, storyIndex } = await import('./select.mjs');
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -41,6 +42,7 @@ const { values, positionals } = parseArgs({
     gpu: { type: 'boolean' },
     viewport: { type: 'string', default: '1600x1000' },
     retries: { type: 'string', default: '0' },
+    shard: { type: 'string' },
   },
 });
 if (values['no-browser'] && values['browser-all']) { console.error('--no-browser and --browser-all are two different runs: pick one'); process.exit(2); }
@@ -78,7 +80,10 @@ async function served() {
 
 const all = await storyIndex(configDir);
 const filter = process.env.STORY_FILTER;
-const stories = matching(all, positionals).filter((s) => !filter || s.id.includes(filter));
+const share = values.shard ? /^(\d+)\/(\d+)$/.exec(values.shard) : null;
+if (values.shard && (!share || Number(share[1]) < 1 || Number(share[1]) > Number(share[2]))) { console.error(`--shard is I/N with 1 <= I <= N, as 2/4, not ${values.shard}`); process.exit(2); }
+const picked = matching(all, positionals).filter((s) => !filter || s.id.includes(filter));
+const stories = share ? shard(picked, Number(share[1]), Number(share[2])) : picked;
 if (!stories.length) { console.error(`no stories match ${[...positionals, ...(filter ? [`STORY_FILTER=${filter}`] : [])].join(', ') || '(all)'}`); process.exit(2); }
 
 // The run for main plays against the served Storybook when one answers, else a built one: plays

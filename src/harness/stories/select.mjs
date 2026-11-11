@@ -9,6 +9,11 @@ export async function storyIndex(configDir) {
   return Object.values(index.entries).filter((e) => e.type === 'story').sort((a, b) => a.id.localeCompare(b.id));
 }
 
+/** Every `count`th story from the `index`th (1-based), so `count` runs share the stories evenly. */
+export function shard(stories, index, count) {
+  return stories.filter((_, k) => k % count === index - 1);
+}
+
 /** Stories whose id or title starts with one of `prefixes`; all of them when none is given. */
 export function matching(stories, prefixes) {
   if (!prefixes.length) return stories;

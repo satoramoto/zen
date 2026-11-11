@@ -54,6 +54,8 @@ Options:
 - `--retries N`: a story that fails is played up to N more times. One that then passes is
   reported as flaky (`flaky: failed once, then passed`) and counted in the last line; fix it,
   but it does not fail the run. zen's run on main uses one retry: a slow runner shifts timing.
+- `--shard I/N`: plays only the Ith of N even shares of the stories (every Nth, from the Ith), so
+  N runs side by side play all of them once. CI splits zen's run on main this way.
 - `--viewport WxH`: the browser's page size, 1600x1000 by default. For stories drawn for one
   screen: wavedude-web's are an iPad's, `--viewport 1180x820`.
 - `--timeout MS`: per story, 90000 by default.
@@ -129,7 +131,8 @@ jobs:
 Its inputs, all optional: `working-directory` (where the package and `.storybook` are),
 `stories` (the command, `npx zen-stories` by default, to which the run's flag is added),
 `serve` (the dev server on port 6006), `node-version` (24), `workers` (2), `retries` (0; the run on
-main's `--retries`, which needs a zen that has it), `timeout-minutes` (60, for the run on main), `setup` (commands before `npm ci`
+main's `--retries`, which needs a zen that has it), `shards` (1; runners the run on main is
+split across with `--shard`, which also needs a zen that has it), `timeout-minutes` (60, for the run on main), `setup` (commands before `npm ci`
 in both jobs) and `browser-setup` (commands before the browser plays on main, for a tool the dev
 server calls: harmonigram installs Lean there).
 
