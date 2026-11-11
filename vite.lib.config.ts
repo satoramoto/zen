@@ -12,6 +12,9 @@
 //   the theme scope's model) → `lib/themes.js`. Framework-free: it and its chunks reach neither
 //   React nor Svelte.
 //
+// - `push-model` (`src/library/push/model/index.ts`, `./push/model`: the Push device model, its layout
+//   table and sample Set) → `lib/push-model.js`. Framework-free, as `themes` is.
+//
 // Code the entries share is in shared chunks, `lib/chunks/zen-*.js`, so an app importing both
 // gets one copy. CSS is split per chunk (`cssCodeSplit`), and `joinStyles` then gathers every
 // chunk's stylesheet into `zen.css`.
@@ -71,6 +74,7 @@ export default defineConfig({
         'math-trig': 'src/library/math/trig/index.ts',
         'math-trig-model': 'src/library/math/trig/model/index.ts',
         'math-expression': 'src/library/math/calculator/public.ts',
+        'push-model': 'src/library/push/model/index.ts',
       },
       formats: ['es'],
       fileName: (_format, name) => `${name}.js`,
