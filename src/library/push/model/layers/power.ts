@@ -1,15 +1,20 @@
 // The top layer: a unit that is not on. Off, it is dark and asks nothing, though the surface
 // still reports presses to the app (openspec: push-surface, "A powered-off unit is dark").
 import { CONTROLS } from '../layout';
-import { OFF, screen, type Layer } from '../engine';
+import { OFF, push, screen, type Layer } from '../engine';
 
 export const power: Layer = {
   name: 'power',
   active: (_state, set) => set.unit.power !== 'on',
-  step: () => true,
+  step(ctx) {
+    // Off, the power button switches the unit on. Nothing else is asked.
+    if (ctx.set.unit.power === 'off' && ctx.input.control === 'power' && ctx.input.kind === 'down') push(ctx, 'power', { on: true });
+    return true;
+  },
   paint(paint) {
     for (const c of CONTROLS) paint.lamps[c.id] = OFF;
     paint.notes = {};
+    paint.strip = { kind: 'off' };
     const { power: state, starting } = paint.set.unit;
     if (state === 'off') paint.screen = screen('blank');
     else if (state === 'starting') paint.screen = screen('starting', { overlays: [{ type: 'progress', label: 'Starting up', fraction: starting ?? 0 }] });

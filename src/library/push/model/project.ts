@@ -9,12 +9,12 @@ import type { Lamp, Projection, PushSet, PushState } from './types';
 export function project(state: PushState, set: PushSet): Projection {
   const lamps: Record<string, Lamp> = {};
   for (const c of CONTROLS) lamps[c.id] = OFF;
-  const paint: Paint = { state, set, lamps, screen: screen('empty'), notes: {} };
+  const paint: Paint = { state, set, lamps, screen: screen('empty'), notes: {}, strip: { kind: 'off' } };
   // From the lowest layer up, so a higher layer has the last word.
   for (let i = LAYERS.length - 1; i >= 0; i--) {
     const layer = LAYERS[i];
     if (layer.active && !layer.active(state, set)) continue;
     layer.paint?.(paint);
   }
-  return { lamps: paint.lamps, screen: paint.screen, notes: paint.notes };
+  return { lamps: paint.lamps, strip: paint.strip, screen: paint.screen, notes: paint.notes };
 }

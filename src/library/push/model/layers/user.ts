@@ -54,6 +54,7 @@ export const user: Layer = {
     for (const c of CONTROLS) paint.lamps[c.id] = set[c.id] ?? OFF;
     paint.lamps.user = LIT;
     paint.notes = {};
+    paint.strip = { kind: 'off' };
     paint.screen = screen('user', { body: [{ type: 'text', text: 'User Mode', size: 'large', align: 'centre', col: 1, span: 8 }] });
   },
 };

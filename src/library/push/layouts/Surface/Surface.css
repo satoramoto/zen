@@ -1,0 +1,184 @@
+/* Surface: the unit's face, placed from the layout table and scaled by one property. Reads only
+   contract variables, the lamp table's (--push-lamp-N, set on the face) and the locals below.
+
+   --push-w, --push-h     the face's size in millimetres (set inline: the whole unit or a region)
+   --push-mm              one millimetre, from the frame's width; never under --push-mm-min
+   --push-led             LED brightness, 0 to 1 (set inline)
+   --push-light           the display's light, 0 to 1 (set inline)
+   --push-lamp            a cell's lamp colour (set inline on a lit cell)
+   --push-lit             that colour at the LED brightness: what a cell's fill or legend takes
+   --push-blink, --push-pulse   the beat's two phases, set each frame by the input store
+   --push-pressure, --push-touch-x, --push-touch-y   a held pad's, set by the input store
+   --x, --y, --w, --h     a cell's box in millimetres (set inline)
+
+   A cell restates the variables its component already reads: --hue-1 (a Pad's fill), --text-1 (a
+   Pad's legend), --control-h and the spacing steps (a KnobReadout's and a Slider's size). */
+
+.push-surface {
+  /* Set inline by the model (the face's size, the two brightnesses) and each frame by the input
+     store (the beat's phases); these are what they are until then. */
+  --push-w: 380;
+  --push-h: 318;
+  --push-led: 1;
+  --push-light: 1;
+  --push-blink: 1;
+  --push-pulse: 1;
+  container-type: inline-size;
+  overflow: auto;
+  max-width: 100%;
+}
+
+.push-surface__face {
+  /* The smallest size: under it a legend is too small to read, so the frame scrolls instead. */
+  --push-mm-min: calc(var(--size-caption) * 0.2);
+  --push-mm: max(calc(100cqw / var(--push-w)), var(--push-mm-min));
+  /* The colours a cell restates --text-1 and --hue-1 from, taken here where they still mean the pack's. */
+  --push-white: var(--text-1);
+  --push-select: var(--selected);
+  --push-solo: var(--hue-1);
+  --push-unlit: var(--surface-1);
+  --push-bloom: var(--bloom);
+  --push-print: calc(var(--push-mm) * 2.9);
+  position: relative;
+  width: calc(var(--push-mm) * var(--push-w));
+  height: calc(var(--push-mm) * var(--push-h));
+  background: var(--surface-0);
+  border-radius: var(--radius-card);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+/* The whole unit has its body's edge; a region alone is only its controls. */
+.push-surface[data-region='whole'] .push-surface__face {
+  box-shadow: inset 0 0 0 var(--border-width) var(--border);
+}
+
+.push-surface__cell {
+  /* Set inline: the cell's box, its lamp's colour, and a held pad's touch. */
+  --x: 0;
+  --y: 0;
+  --w: 0;
+  --h: 0;
+  --push-lamp: var(--push-white);
+  --push-pressure: 0;
+  --push-touch-x: 0.5;
+  --push-touch-y: 0.5;
+  --push-lit: color-mix(in oklab, var(--push-lamp) calc(var(--push-led) * 100%), var(--push-unlit));
+  position: absolute;
+  left: calc(var(--push-mm) * var(--x));
+  top: calc(var(--push-mm) * var(--y));
+  width: calc(var(--push-mm) * var(--w));
+  height: calc(var(--push-mm) * var(--h));
+  display: grid;
+  /* The print on a cap, and the room inside it, at the unit's scale. */
+  --size-label: var(--push-print);
+  --space-1: calc(var(--push-mm) * 0.5);
+  --space-2: calc(var(--push-mm) * 0.8);
+  --bloom: calc(var(--push-bloom) * var(--push-led));
+}
+
+/* A sign is printed larger than a word. */
+.push-surface__cell[data-sign] { --size-label: calc(var(--push-print) * 1.7); }
+
+/* A lit cap fills in its lamp's colour (a Pad's hue slot 1). */
+.push-surface__cell[data-cap='fill'] {
+  --hue-1: var(--push-lit);
+}
+/* A legend takes its lamp: barely there unlit, plain when it can be pressed, bright when lit. */
+.push-surface__cell[data-cap='legend'] {
+  --border-strong: var(--border);
+}
+.push-surface__cell[data-cap='legend'][data-lamp='off'] { --text-1: var(--text-3); }
+.push-surface__cell[data-cap='legend'][data-lamp='dim'] { --text-1: var(--text-2); }
+.push-surface__cell[data-cap='legend']:is([data-lamp='lit'], [data-lamp='pulse'], [data-lamp='blink']) {
+  --text-1: var(--push-lit);
+  --border-strong: var(--push-lit);
+}
+/* Shift and Select have no lamp: their print is plain. */
+.push-surface__cell[data-cap='legend']:not([data-lamp]) { --text-1: var(--text-2); }
+
+/* Pulsing and blinking: in time with the beat. Without the properties (reduced motion, or no
+   animated lamp) the cell is steady. */
+.push-surface__cell[data-lamp='blink'] { opacity: calc(0.25 + 0.75 * var(--push-blink)); }
+.push-surface__cell[data-lamp='pulse'] { opacity: calc(0.4 + 0.6 * var(--push-pulse)); }
+/* Steady marks that still tell a blinking and a pulsing lamp from a lit one and from each other. */
+@media (prefers-reduced-motion: reduce) {
+  .push-surface__cell:is([data-lamp='blink'], [data-lamp='pulse'])::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--push-mm) * 0.8);
+    border: var(--border-width) dashed var(--surface-0);
+    border-radius: var(--radius-control);
+    pointer-events: none;
+  }
+  .push-surface__cell[data-lamp='pulse']::after { border-style: dotted; }
+}
+
+/* Held: the cap presses in, deeper with pressure. Latched: a ring that stays. */
+.push-surface__cell[data-held]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--radius-control);
+  background: var(--push-white);
+  opacity: calc(0.12 + 0.4 * var(--push-pressure));
+  pointer-events: none;
+}
+.push-surface__cell[data-round][data-held]::before { border-radius: var(--radius-pill); }
+.push-surface__cell[data-latched] {
+  outline: calc(var(--border-width) * 2) solid var(--accent);
+  outline-offset: var(--border-width);
+  border-radius: var(--radius-control);
+}
+
+/* Where a held touch is, when the trace is on. */
+.push-surface__touch { display: none; }
+.push-surface[data-trace] .push-surface__cell[data-held] .push-surface__touch {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  left: calc(clamp(0, var(--push-touch-x), 1) * 100%);
+  bottom: calc(var(--push-touch-y) * 100%);
+  width: calc(var(--push-mm) * 3);
+  height: calc(var(--push-mm) * 3);
+  translate: -50% 50%;
+  border-radius: var(--radius-pill);
+  background: var(--surface-0);
+  box-shadow: 0 0 0 var(--border-width) var(--push-white);
+  pointer-events: none;
+}
+
+/* A rotary control: the knob's ring fills the cell, with no name row and no room around it. */
+.push-surface__cell:is([data-kind='encoder'], [data-kind='wheel']) {
+  --control-h: calc(var(--push-mm) * var(--w) / 2.25);
+  --size-caption: 0px;
+  --space-1: 0px;
+  --space-2: 0px;
+  place-items: center;
+}
+/* The jog wheel's two nudge keys, on its rim. */
+.push-surface__nudge {
+  position: absolute;
+  top: 34%;
+  width: 18%;
+  height: 32%;
+  --size-label: var(--push-print);
+  --border-strong: transparent;
+  --text-1: var(--text-2);
+}
+.push-surface__nudge[data-side='left'] { left: 0; }
+.push-surface__nudge[data-side='right'] { right: 0; }
+
+/* The touch strip: the slider's track is the strip. */
+.push-surface__cell[data-kind='strip'] {
+  --space-2: calc(var(--push-mm) * var(--w) * 0.5);
+  justify-items: center;
+}
+
+/* The display's glass. */
+.push-surface__glass {
+  background: var(--surface-1);
+  border-radius: var(--radius-control);
+  opacity: calc(0.35 + 0.65 * var(--push-light));
+}

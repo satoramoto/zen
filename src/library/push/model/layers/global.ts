@@ -1,6 +1,6 @@
 // The buttons that mean the same everywhere: transport, undo, the buttons that choose what the
 // display shows and what the pads do, and the pedals. Shift and Select do nothing alone.
-import { PEDAL_DOUBLE_MS } from '../timing';
+import { PEDAL_DOUBLE_MS, POWER_HOLD_MS } from '../timing';
 import { choice, DIM, holdJob, isDown, lamp, pressed, push, screen, type Combo, type Ctx, type Layer } from '../engine';
 import type { DisplayMode, PadMode, PushSet, PushState } from '../types';
 
@@ -48,6 +48,13 @@ export const global: Layer = {
 
     // Pedal 1: one tap is Record, a quick second tap is New instead. The first tap waits out the
     // double-tap time before it acts, so a double tap never also records.
+    // The power button, held for its time, asks to switch the unit off: once, while still held.
+    const power = state.held.power;
+    if (power && !power.used && input.time - power.at >= POWER_HOLD_MS && (input.kind === 'tick' || id === 'power')) {
+      power.used = true;
+      push(ctx, 'power', { on: false });
+    }
+    if (id === 'power') return true;
     if (input.kind === 'tick') {
       if (state.pedalTap !== undefined && input.time - state.pedalTap >= PEDAL_DOUBLE_MS) {
         delete state.pedalTap;

@@ -5,7 +5,7 @@ import { control } from './layout';
 import { findCombo, matureHolds, use, HOLD_BUTTONS, type Ctx } from './engine';
 import { LAYERS } from './layers';
 import { copyState } from './state';
-import { HOLD_MS, PEDAL_DOUBLE_MS } from './timing';
+import { HOLD_MS, PEDAL_DOUBLE_MS, POWER_HOLD_MS } from './timing';
 import type { InputKind, PushInput, PushIntent, PushSet, PushState } from './types';
 
 export interface StepResult {
@@ -14,7 +14,8 @@ export interface StepResult {
 }
 
 const KINDS: ReadonlySet<InputKind> = new Set(['down', 'up', 'turn', 'touch', 'release', 'move', 'nudge', 'pressure', 'slide', 'bend', 'tick']);
-const PEDALS = new Set(['pedal-1', 'pedal-2']);
+/** Inputs that are not on the face: the two pedal jacks and the power button on the back. */
+const PEDALS = new Set(['pedal-1', 'pedal-2', 'power']);
 
 /** Every button some combination holds: only these make a held set. */
 const MODIFIERS: ReadonlySet<string> = new Set(LAYERS.flatMap((l) => l.combos ?? []).flatMap((c) => c.hold));
@@ -81,6 +82,7 @@ export function nextTick(state: PushState): number | undefined {
   }
   if (state.notice) times.push(state.notice.until);
   if (state.pedalTap !== undefined) times.push(state.pedalTap + PEDAL_DOUBLE_MS);
+  if (state.held.power && !state.held.power.used) times.push(state.held.power.at + POWER_HOLD_MS);
   return times.length ? Math.min(...times) : undefined;
 }
 

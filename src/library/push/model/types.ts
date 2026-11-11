@@ -392,7 +392,17 @@ export interface Unit {
   wifi: { on: boolean; networks: WifiNetwork[]; connecting?: string; address?: string };
   hotspot: { on: boolean; name?: string; password?: string };
   /** Pad expression. */
-  expression: { mode: 'mpe' | 'poly-aftertouch' | 'mono-aftertouch' | 'off'; bendRange: number; slideRange: 'full' | 'half'; inTune: 'pad' | 'finger'; pressure: boolean; slide: boolean; bend: boolean; trace: boolean };
+  expression: {
+    mode: 'mpe' | 'poly-aftertouch' | 'mono-aftertouch' | 'off';
+    /** Whether sideways movement bends the note: always, never, or only on an instrument that takes per-note bend. */
+    noteBend: 'auto' | 'on' | 'off';
+    slideRange: 'full' | 'half';
+    inTune: 'pad' | 'finger';
+    /** The width around the in-tune place that does not bend, as a share of a pad's width. */
+    inTuneWidth: number;
+    /** Draw where each held touch is, with its slide and bend. */
+    trace: boolean;
+  };
   /** The velocity curve. Each 0 to 1. */
   sensitivity: { threshold: number; drive: number; compand: number; range: number; curve: 'linear' | 'custom' };
   audio: {
@@ -652,8 +662,15 @@ export interface Screen {
 /** What a pad plays when struck, by pad id: a pitch, or nothing. The surface's input store reads it for glissando. */
 export type PadNotes = Record<ControlId, number | null>;
 
+/**
+ * The touch strip's lamps: a centre mark and the bend (`value` -1 to 1), a level from the bottom
+ * (`value` 0 to 1), or the part in view among all of it (`from` and `to`, 0 at the bottom to 1).
+ */
+export type StripLamps = { kind: 'off' } | { kind: 'bend'; value: number } | { kind: 'level'; value: number } | { kind: 'range'; from: number; to: number };
+
 export interface Projection {
   lamps: Record<ControlId, Lamp>;
+  strip: StripLamps;
   screen: Screen;
   notes: PadNotes;
 }

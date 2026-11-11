@@ -207,7 +207,7 @@ function unit(): Unit {
     displayLight: 100,
     wifi: { on: true, networks: [{ name: 'Studio', strength: 0.9, secured: true, known: true, connected: true }, { name: 'Upstairs', strength: 0.5, secured: true }, { name: 'Cafe', strength: 0.3, secured: false }], address: '192.168.1.42' },
     hotspot: { on: false, name: 'Push-1A2B', password: 'makemusic' },
-    expression: { mode: 'mpe', bendRange: 48, slideRange: 'full', inTune: 'pad', pressure: true, slide: true, bend: true, trace: false },
+    expression: { mode: 'mpe', noteBend: 'auto', slideRange: 'full', inTune: 'pad', inTuneWidth: 0.25, trace: false },
     sensitivity: { threshold: 0.2, drive: 0.5, compand: 0.5, range: 1, curve: 'linear' },
     audio: {
       sampleRate: '48000', sampleRates: ['44100', '48000', '88200', '96000'], buffer: '128', buffers: ['64', '128', '256', '512'],

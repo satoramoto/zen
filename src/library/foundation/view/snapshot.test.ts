@@ -289,3 +289,9 @@ snapshot('TransitionRow', (props) => transitionRowView(props as Parameters<typeo
 snapshot('Show', (props) => showView(props as Parameters<typeof showView>[0], showTab((props as { active?: string }).active)), showStories);
 snapshot('DeviceFace', (props) => deviceFaceView(props as Parameters<typeof deviceFaceView>[0], 'face'), deviceFaceStories);
 snapshot('PianoRoll', (props) => pianoRollView(props as Parameters<typeof pianoRollView>[0], 'full'), pianoRollStories);
+import { surfaceView as pushSurfaceView } from '../../push/layouts/Surface/Surface.model';
+import { surfaceStories as pushSurfaceStories } from '../../push/layouts/Surface/Surface.fixtures';
+import { rearPanelView } from '../../push/layouts/RearPanel/RearPanel.model';
+import { rearPanelStories } from '../../push/layouts/RearPanel/RearPanel.fixtures';
+snapshot('PushSurface', (props) => pushSurfaceView(props as Parameters<typeof pushSurfaceView>[0]), pushSurfaceStories);
+snapshot('PushRearPanel', (props) => rearPanelView(props as Parameters<typeof rearPanelView>[0]), rearPanelStories);

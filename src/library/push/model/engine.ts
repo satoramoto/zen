@@ -6,7 +6,7 @@ import { CONTROLS, control, padAt, type Control } from './layout';
 import { DOUBLE_MS, HOLD_MS } from './timing';
 import type { IntentAction } from './intents';
 import { ask } from './intents';
-import type { ControlId, InputKind, Lamp, Overlay, PadNotes, PushInput, PushIntent, PushSet, PushState, Screen } from './types';
+import type { ControlId, InputKind, Lamp, Overlay, PadNotes, PushInput, PushIntent, PushSet, PushState, Screen, StripLamps } from './types';
 
 /** One step in progress. `state` is a copy the layers change in place. */
 export interface Ctx {
@@ -27,6 +27,7 @@ export interface Paint {
   lamps: Record<ControlId, Lamp>;
   screen: Screen;
   notes: PadNotes;
+  strip: StripLamps;
 }
 
 /** What a combination's `press` may name besides one control's id: any control of a class. */

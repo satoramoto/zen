@@ -1,0 +1,179 @@
+## Sample
+<div aria-label="Push rear panel" class="push-rear" role="group" use:pushSurface={"onInput":"input"}>
+  <div class="push-rear__power" data-control="power" data-kind="button">
+    <Pad fillCell=true label="⏻" name="Power">
+  <ul class="push-rear__ports">
+    <li aria-label="Power: a cable connected" class="push-rear__port" data-plugged="cable" data-port="Power">
+      <StatusDot glow=true hollow=false hue="ok">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Power"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "cable"
+    <li aria-label="USB-C: nothing connected" class="push-rear__port" data-plugged="none" data-port="USB-C">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "USB-C"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="USB-A: a device connected" class="push-rear__port" data-plugged="device" data-port="USB-A">
+      <StatusDot glow=true hollow=false hue="ok">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "USB-A"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "device"
+    <li aria-label="MIDI In: nothing connected" class="push-rear__port" data-plugged="none" data-port="MIDI In">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "MIDI In"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="MIDI Out: nothing connected" class="push-rear__port" data-plugged="none" data-port="MIDI Out">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "MIDI Out"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="ADAT In: nothing connected" class="push-rear__port" data-plugged="none" data-port="ADAT In">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "ADAT In"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="ADAT Out: nothing connected" class="push-rear__port" data-plugged="none" data-port="ADAT Out">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "ADAT Out"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="Pedal 1: a footswitch connected" class="push-rear__port" data-plugged="footswitch" data-port="Pedal 1">
+      <StatusDot glow=true hollow=false hue="ok">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Pedal 1"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "footswitch"
+    <li aria-label="Pedal 2: nothing connected" class="push-rear__port" data-plugged="none" data-port="Pedal 2">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Pedal 2"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "Sustain"
+    <li aria-label="In 1: nothing connected" class="push-rear__port" data-plugged="none" data-port="In 1">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "In 1"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="In 2: nothing connected" class="push-rear__port" data-plugged="none" data-port="In 2">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "In 2"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="Out 1: a cable connected" class="push-rear__port" data-plugged="cable" data-port="Out 1">
+      <StatusDot glow=true hollow=false hue="ok">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Out 1"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "cable"
+    <li aria-label="Out 2: a cable connected" class="push-rear__port" data-plugged="cable" data-port="Out 2">
+      <StatusDot glow=true hollow=false hue="ok">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Out 2"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "cable"
+    <li aria-label="Phones: headphones connected" class="push-rear__port" data-plugged="headphones" data-port="Phones">
+      <StatusDot glow=true hollow=false hue="ok">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Phones"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "headphones"
+
+## Empty
+<div aria-label="Push rear panel" class="push-rear" role="group" use:pushSurface={"onInput":"input"}>
+  <div class="push-rear__power" data-control="power" data-kind="button">
+    <Pad fillCell=true label="⏻" name="Power">
+  <ul class="push-rear__ports">
+    <li aria-label="Power: nothing connected" class="push-rear__port" data-plugged="none" data-port="Power">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Power"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="USB-C: nothing connected" class="push-rear__port" data-plugged="none" data-port="USB-C">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "USB-C"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="USB-A: nothing connected" class="push-rear__port" data-plugged="none" data-port="USB-A">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "USB-A"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="MIDI In: nothing connected" class="push-rear__port" data-plugged="none" data-port="MIDI In">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "MIDI In"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="MIDI Out: nothing connected" class="push-rear__port" data-plugged="none" data-port="MIDI Out">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "MIDI Out"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="ADAT In: nothing connected" class="push-rear__port" data-plugged="none" data-port="ADAT In">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "ADAT In"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="ADAT Out: nothing connected" class="push-rear__port" data-plugged="none" data-port="ADAT Out">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "ADAT Out"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="Pedal 1: nothing connected" class="push-rear__port" data-plugged="none" data-port="Pedal 1">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Pedal 1"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="Pedal 2: nothing connected" class="push-rear__port" data-plugged="none" data-port="Pedal 2">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Pedal 2"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="In 1: nothing connected" class="push-rear__port" data-plugged="none" data-port="In 1">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "In 1"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="In 2: nothing connected" class="push-rear__port" data-plugged="none" data-port="In 2">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "In 2"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="Out 1: nothing connected" class="push-rear__port" data-plugged="none" data-port="Out 1">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Out 1"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="Out 2: nothing connected" class="push-rear__port" data-plugged="none" data-port="Out 2">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Out 2"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
+    <li aria-label="Phones: nothing connected" class="push-rear__port" data-plugged="none" data-port="Phones">
+      <StatusDot glow=false hollow=true hue="d">
+      <span class="lib-text lib-tone" data-part="name" data-role="label" data-text-leading="tight" data-truncate="">
+        "Phones"
+      <span class="lib-text lib-tone" data-part="holds" data-role="caption" data-text-leading="tight" data-tone="muted" data-truncate="">
+        "empty"
