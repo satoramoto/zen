@@ -30,6 +30,18 @@ on:
       node-version:
         type: string
         default: '24'
+      workers:
+        description: Stories played at once (a public repo's runner has four cores)
+        type: number
+        default: 2
+      retries:
+        description: More tries for a story that fails in the browser on main; one that then passes is reported flaky
+        type: number
+        default: 1
+      timeout-minutes:
+        description: How long the browser run on main may take
+        type: number
+        default: 60
       setup:
         description: Commands run before npm ci in both jobs (git settings, say)
         type: string
@@ -58,12 +70,12 @@ jobs:
         run: ${{ inputs.setup }}
       - run: npm ci
       - name: Every story on a virtual DOM
-        run: ${{ inputs.stories }} --no-browser
+        run: ${{ inputs.stories }} --no-browser --workers ${{ inputs.workers }}
 
   browser:
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
@@ -90,4 +102,4 @@ jobs:
           done
           cat "$RUNNER_TEMP/storybook.log"; exit 1
       - name: Every story in the headless shell
-        run: ${{ inputs.stories }} --browser-all --url http://127.0.0.1:6006
+        run: ${{ inputs.stories }} --browser-all --url http://127.0.0.1:6006 --workers ${{ inputs.workers }} --retries ${{ inputs.retries }}

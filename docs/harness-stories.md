@@ -51,6 +51,9 @@ Options:
 - `--list`: prints each story and where it would be played, and plays nothing.
 - `--gpu`: the headless shell uses this machine's GPU (`--enable-gpu`). For a project whose
   stories draw with WebGL and run long, which software WebGL plays too slowly to pass.
+- `--retries N`: a story that fails is played up to N more times. One that then passes is
+  reported as flaky (`flaky: failed once, then passed`) and counted in the last line; fix it,
+  but it does not fail the run. CI's run on main uses one retry: a slow runner shifts timing.
 - `--viewport WxH`: the browser's page size, 1600x1000 by default. For stories drawn for one
   screen: wavedude-web's are an iPad's, `--viewport 1180x820`.
 - `--timeout MS`: per story, 90000 by default.
@@ -125,7 +128,8 @@ jobs:
 
 Its inputs, all optional: `working-directory` (where the package and `.storybook` are),
 `stories` (the command, `npx zen-stories` by default, to which the run's flag is added),
-`serve` (the dev server on port 6006), `node-version` (24), `setup` (commands before `npm ci`
+`serve` (the dev server on port 6006), `node-version` (24), `workers` (2), `retries` (1, for
+the run on main), `timeout-minutes` (60, for the run on main), `setup` (commands before `npm ci`
 in both jobs) and `browser-setup` (commands before the browser plays on main, for a tool the dev
 server calls: harmonigram installs Lean there).
 

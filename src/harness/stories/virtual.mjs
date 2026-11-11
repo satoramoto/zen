@@ -70,7 +70,7 @@ const literal = (p) => p.replace(/[\\()[\]{}!*?@+|]/g, '\\$&');
  * Plays `stories` (index entries) on the virtual DOM, at most `workers` files at a time.
  * `report(result)` is called once per story: { story, ok, ms, problems }.
  */
-export async function playVirtual({ root, configDir, stories, workers, timeout, stageUrl, report }) {
+export async function playVirtual({ root, configDir, stories, workers, timeout, stageUrl, retries = 0, report }) {
   if (!stories.length) return;
   const { startVitest } = await need('vitest/node', 'Vitest');
   await need('jsdom', 'jsdom');
@@ -115,7 +115,8 @@ export async function playVirtual({ root, configDir, stories, workers, timeout, 
     onTestCaseResult(test) {
       const r = test.result();
       if (r.state === 'skipped' || r.state === 'pending') return;
-      say(test.name, { ok: r.state === 'passed', ms: test.diagnostic()?.duration ?? 0, problems: r.state === 'passed' ? [] : (r.errors ?? []).map(text) });
+      const d = test.diagnostic();
+      say(test.name, { ok: r.state === 'passed', ms: d?.duration ?? 0, problems: r.state === 'passed' ? [] : (r.errors ?? []).map(text), flaky: r.state === 'passed' ? d?.retryCount ?? 0 : 0 });
     },
     // A file that could not load, or stopped, takes its unplayed stories with it.
     onTestModuleEnd(module) {
@@ -140,6 +141,7 @@ export async function playVirtual({ root, configDir, stories, workers, timeout, 
     testTimeout: timeout,
     hookTimeout: timeout,
     maxWorkers: workers,
+    retry: retries,
     // Stories files share their worker's modules: each file re-evaluating the preview and every
     // shared import cost three times the CPU for the same results. Each story still ends unmounted.
     pool: 'threads',

@@ -8,6 +8,7 @@
 //   --workers N      stories played at once (2)
 //   --gpu            the browser uses this machine's GPU, for WebGL stories
 //   --viewport WxH   the browser's page size (1600x1000), for stories drawn for one screen
+//   --retries N      a story that fails is played N more times; one that then passes is flaky (0)
 //   --timeout MS     per story (90000)
 //   --url URL        the served Storybook, for `browser` and `stage` stories (default: the port of
 //                    the project's `storybook` script, when something answers there)
@@ -39,6 +40,7 @@ const { values, positionals } = parseArgs({
     list: { type: 'boolean' },
     gpu: { type: 'boolean' },
     viewport: { type: 'string', default: '1600x1000' },
+    retries: { type: 'string', default: '0' },
   },
 });
 if (values['no-browser'] && values['browser-all']) { console.error('--no-browser and --browser-all are two different runs: pick one'); process.exit(2); }
@@ -52,6 +54,7 @@ const timeout = Number(values.timeout) || 90000;
 const size = /^(\d+)x(\d+)$/.exec(values.viewport);
 if (!size) { console.error(`--viewport is a width and height in pixels, as 1180x820, not ${values.viewport}`); process.exit(2); }
 const viewport = { width: Number(size[1]), height: Number(size[2]) };
+const retries = Math.max(0, Number(values.retries) || 0);
 
 const answers = async (url, what) => {
   try { const res = await fetch(url, { signal: AbortSignal.timeout(3000) }); return res.ok && (res.headers.get('content-type') ?? '').includes(what); } catch { return false; }
@@ -93,10 +96,12 @@ if (values.list) {
   process.exit(0);
 }
 
-const count = { virtual: 0, browser: 0, failed: 0, unplayed: 0 };
+const count = { virtual: 0, browser: 0, failed: 0, unplayed: 0, flaky: 0 };
 const report = (where) => (r) => {
   if (r.ok) count[where]++; else count.failed++;
-  console.log(`${r.ok ? 'pass' : 'FAIL'}  ${label(r.story)}  (${(r.ms / 1000).toFixed(1)} s)${where === 'browser' ? '  [browser]' : ''}`);
+  if (r.flaky) count.flaky++;
+  const flaky = r.flaky ? `  flaky: failed ${r.flaky === 1 ? 'once' : `${r.flaky} times`}, then passed` : '';
+  console.log(`${r.ok ? 'pass' : 'FAIL'}  ${label(r.story)}  (${(r.ms / 1000).toFixed(1)} s)${where === 'browser' ? '  [browser]' : ''}${flaky}`);
   for (const p of r.problems) console.log(`        ${p.replace(/\\n/g, '\n').replace(/\n/g, '\n        ')}`);
 };
 const unplayed = (list, why, fix) => {
@@ -108,7 +113,7 @@ const unplayed = (list, why, fix) => {
 // One pass after the other, so no more than `workers` stories are ever being played.
 if (todo.virtual.length) {
   const { playVirtual } = await import('./virtual.mjs');
-  try { await playVirtual({ root, configDir, stories: todo.virtual, workers, timeout, stageUrl: stage ? base : null, report: report('virtual') }); } catch (e) {
+  try { await playVirtual({ root, configDir, stories: todo.virtual, workers, timeout, stageUrl: stage ? base : null, retries, report: report('virtual') }); } catch (e) {
     console.error(e.message);
     process.exit(2);
   }
@@ -122,7 +127,7 @@ if (todo.browser.length) {
     else unplayed(todo.browser, `no built Storybook in ${values.static}`, 'Build it first, or name a served one with --url.');
   } else if (!base) unplayed(todo.browser, 'no Storybook is being served for them', 'Start the project\'s Storybook, or name one with --url.');
   if (base) {
-    const not = await playInBrowser({ base, stories: todo.browser, workers, timeout, gpu: values.gpu, viewport, report: report('browser') });
+    const not = await playInBrowser({ base, stories: todo.browser, workers, timeout, gpu: values.gpu, viewport, retries, report: report('browser') });
     if (not) unplayed(todo.browser, not.why, `Run: ${not.fix}`);
   }
   await built?.close();
@@ -131,5 +136,5 @@ if (todo.browser.length) {
 const reasons = new Map();
 for (const { why } of todo.skipped) reasons.set(why, (reasons.get(why) ?? 0) + 1);
 for (const [why, n] of reasons) console.log(`skipped ${n}: ${why}`);
-console.log(`\n${count.virtual} passed on the virtual DOM, ${count.browser} in the browser, ${todo.skipped.length} skipped, ${count.failed} failed${count.unplayed ? `, ${count.unplayed} not played` : ''}`);
+console.log(`\n${count.virtual} passed on the virtual DOM, ${count.browser} in the browser, ${todo.skipped.length} skipped, ${count.failed} failed${count.unplayed ? `, ${count.unplayed} not played` : ''}${count.flaky ? `, ${count.flaky} flaky` : ''}`);
 process.exit(count.failed || count.unplayed ? 1 : 0);

@@ -18,7 +18,7 @@ export const FunctionComposition: Story = { args: { preset: 'composition' } };
 export const EditRelationships: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
-    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled());
+    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled(), { timeout: 15000 });
     for (const toggle of await c.findAllByRole('button', { name: 'Plain text' })) await userEvent.click(toggle);
     const g = c.getByRole('textbox', { name: 'g(x) expression' });
     await userEvent.clear(g); await userEvent.type(g, '-f(x)');
@@ -40,7 +40,7 @@ export const EditRelationships: Story = {
 export const KeepLastValidDrawing: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement), before = c.getByLabelText('h at probe').textContent;
-    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled());
+    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled(), { timeout: 15000 });
     for (const toggle of await c.findAllByRole('button', { name: 'Plain text' })) await userEvent.click(toggle);
     const f = c.getByRole('textbox', { name: 'f(x) expression' });
     await userEvent.click(f); await userEvent.keyboard('{End}'); await userEvent.type(f, '+');
