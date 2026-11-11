@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn } from 'storybook/test';
 import { withLibraryTheme } from '../../../storybook';
 import { instances } from '../../../fixtures';
 import { fixtureStories, withRenderer } from '../../../foundation/stories/story';
@@ -44,6 +44,20 @@ export const Unused: Story = story(s.Unused);
 export const Hue: Story = story(s.Hue);
 
 /** New: a row of eight as on the board, to check rhythm and alignment across values (a grid, so React draws it). */
+/** `origin="center"`: a value with a middle fills from the top of the ring, and is empty at the middle. */
+export const Center: Story = {
+  ...story(s.Center),
+  play: async ({ canvasElement }) => {
+    const knobs = [...canvasElement.querySelectorAll('[data-part="root"]')];
+    await expect(knobs).toHaveLength(5);
+    for (const knob of knobs) await expect(knob).toHaveAttribute('data-origin', 'center');
+    // At the middle there is no arc; either side of it there is one.
+    await expect(knobs[2].querySelector('[data-part="arc"]')).toBeNull();
+    await expect(knobs[0].querySelector('[data-part="arc"]')).not.toBeNull();
+    await expect(knobs[4].querySelector('[data-part="arc"]')).not.toBeNull();
+  },
+};
+
 export const BoardRow: Story = story(s.BoardRow, {
   render: (args) => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, minmax(0, 1fr))', gap: 'var(--space-2)' }}>
