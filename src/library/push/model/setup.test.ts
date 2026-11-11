@@ -16,15 +16,15 @@ const unit = (change: (set: PushSet) => void): PushSet => {
 
 describe('the Setup menu', () => {
   it.each([
-    ['Status', 'encoder-1', -40, { setting: 'display-light', value: 60 }],
-    ['Status', 'encoder-2', -25, { setting: 'led-brightness', value: 75 }],
+    ['Status', 'encoder-3', -40, { setting: 'display-light', value: 60 }],
+    ['Status', 'encoder-4', -25, { setting: 'led-brightness', value: 75 }],
     ['Expression', 'encoder-1', 4, { setting: 'expression-mode', value: 'poly-aftertouch' }],
-    ['Expression', 'encoder-2', 4, { setting: 'note-pitch-bend', value: 'on' }],
-    ['Expression', 'encoder-3', -4, { setting: 'in-tune-location', value: 'finger' }],
-    ['Expression', 'encoder-4', 8, { setting: 'in-tune-width', value: 15, unit: 'mm' }],
-    ['Expression', 'encoder-5', -3, { setting: 'slide-height', value: 13, unit: 'mm' }],
-    ['Sensitivity', 'encoder-1', 10, { setting: 'sensitivity-threshold', value: 0.3 }],
-    ['Sensitivity', 'encoder-4', -25, { setting: 'sensitivity-range', value: 0.75 }],
+    ['Expression', 'encoder-3', 4, { setting: 'note-pitch-bend', value: 'on' }],
+    ['Expression', 'encoder-4', -4, { setting: 'in-tune-location', value: 'finger' }],
+    ['Expression', 'encoder-5', 8, { setting: 'in-tune-width', value: 15, unit: 'mm' }],
+    ['Expression', 'encoder-6', -3, { setting: 'slide-height', value: 13, unit: 'mm' }],
+    ['Sensitivity', 'encoder-3', 10, { setting: 'sensitivity-threshold', value: 0.3 }],
+    ['Sensitivity', 'encoder-6', -25, { setting: 'sensitivity-range', value: 0.75 }],
     ['Audio', 'encoder-1', 4, { setting: 'sample-rate', value: '88200' }],
     ['Audio', 'encoder-2', 4, { setting: 'buffer-size', value: '256' }],
     ['Audio', 'encoder-3', 4, { setting: 'input-type', value: 'instrument', inputs: [1] }],
@@ -44,15 +44,15 @@ describe('the Setup menu', () => {
 
   it.each([
     ['Status', 'upper-1', { action: 'set-unit-mode', mode: 'control' }],
-    ['Status', 'upper-2', { action: 'set-setting', setting: 'wifi', value: false }],
-    ['Status', 'upper-3', { action: 'connect-wifi', network: 'Studio' }],
-    ['Status', 'upper-4', { action: 'set-setting', setting: 'hotspot', value: true }],
-    ['Status', 'upper-5', { action: 'set-setting', setting: 'play-sync' }],
+    ['Status', 'upper-5', { action: 'set-setting', setting: 'wifi', value: false }],
+    ['Status', 'upper-6', { action: 'connect-wifi', network: 'Studio' }],
+    ['Status', 'upper-7', { action: 'set-setting', setting: 'hotspot', value: true }],
+    ['Status', 'upper-8', { action: 'set-setting', setting: 'play-sync' }],
     ['Sensitivity', 'upper-8', { action: 'reset-sensitivity' }],
     ['Audio', 'upper-3', { action: 'set-setting', setting: 'link-inputs', value: true }],
-    ['MIDI', 'upper-3', { action: 'set-setting', setting: 'midi-port', port: 'din', side: 'input', flag: 'track', value: false }],
-    ['MIDI', 'upper-4', { action: 'set-setting', setting: 'midi-port', port: 'din', side: 'input', flag: 'sync', value: true }],
-    ['MIDI', 'upper-5', { action: 'set-setting', setting: 'midi-port', port: 'din', side: 'input', flag: 'remote', value: true }],
+    ['MIDI', 'upper-2', { action: 'set-setting', setting: 'midi-port', port: 'din', side: 'input', flag: 'track', value: false }],
+    ['MIDI', 'upper-3', { action: 'set-setting', setting: 'midi-port', port: 'din', side: 'input', flag: 'sync', value: true }],
+    ['MIDI', 'upper-4', { action: 'set-setting', setting: 'midi-port', port: 'din', side: 'input', flag: 'remote', value: true }],
     ['Software', 'upper-1', { action: 'authorize', purpose: 'authorize' }],
     ['Software', 'upper-2', { action: 'set-setting', setting: 'usage-data', value: true }],
   ] as const)('%s: pressing %s asks', (tab, button, asked) => {
@@ -62,14 +62,14 @@ describe('the Setup menu', () => {
   });
 
   it('holds no setting of its own: the answer is read back from the Set', () => {
-    const turned = play([twist('encoder-1', -40)], { state: inSetup('Status') });
+    const turned = play([twist('encoder-3', -40)], { state: inSetup('Status') });
     expect(turned.set.unit.displayLight).toBe(60);
     expect(turned.state.setup).toEqual({ tab: 0, highlight: 0 });
     const body = project(turned.state, turned.set).screen.body;
-    expect(body.find((c) => c.type === 'param' && c.col === 1)).toMatchObject({ value: '60 %', fraction: 0.6 });
+    expect(body.find((c) => c.type === 'param' && c.col === 3)).toMatchObject({ value: '60 %', fraction: 0.6 });
     // Unanswered, the reading stays where the app left it.
-    const unanswered = play([twist('encoder-1', -40)], { state: inSetup('Status'), host: false });
-    expect(project(unanswered.state, unanswered.set).screen.body.find((c) => c.type === 'param' && c.col === 1)).toMatchObject({ value: '100 %' });
+    const unanswered = play([twist('encoder-3', -40)], { state: inSetup('Status'), host: false });
+    expect(project(unanswered.state, unanswered.set).screen.body.find((c) => c.type === 'param' && c.col === 3)).toMatchObject({ value: '100 %' });
   });
 
   it('the lower buttons choose a tab; Setup leaves for the screen before', () => {
@@ -82,24 +82,24 @@ describe('the Setup menu', () => {
   });
 
   it('a level stops at its ends and a choice at its last word', () => {
-    expect(play([twist('encoder-1', 5)], { state: inSetup('Status'), host: false }).intents).toEqual([]);
-    expect(play([twist('encoder-5', 9)], { state: inSetup('Expression'), host: false }).intents).toEqual([]);
+    expect(play([twist('encoder-3', 5)], { state: inSetup('Status'), host: false }).intents).toEqual([]);
+    expect(play([twist('encoder-6', 9)], { state: inSetup('Expression'), host: false }).intents).toEqual([]);
     expect(play([twist('encoder-1', -4)], { state: inSetup('Preferences'), host: false }).intents).toEqual([]);
     // Fewer than four steps is not yet a choice.
     expect(play([twist('encoder-1', 3)], { state: inSetup('Preferences'), host: false }).intents).toEqual([]);
   });
 
   it('Wi-Fi: a known or open network connects at once, an unknown secured one asks for its password', () => {
-    const open = play([twist('encoder-3', 8), ...tap('upper-3')], { state: inSetup('Status'), host: false });
+    const open = play([twist('encoder-5', 8), ...tap('upper-6')], { state: inSetup('Status'), host: false });
     expect(open.intents).toEqual([{ kind: 'setting', action: 'connect-wifi', network: 'Cafe' }]);
-    const secured = play([twist('encoder-3', 4), ...tap('upper-3')], { state: inSetup('Status'), host: false });
+    const secured = play([twist('encoder-5', 4), ...tap('upper-6')], { state: inSetup('Status'), host: false });
     expect(secured.intents).toEqual([]);
     expect(secured.state.textEntry).toMatchObject({ title: 'Password for Upstairs', text: '' });
     const typed = play([...tap('jog'), ...tap('upper-8')], { state: secured.state });
     expect(typed.intents).toEqual([{ kind: 'setting', action: 'connect-wifi', network: 'Upstairs', text: 'A' }]);
     expect(typed.set.unit.wifi.networks.filter((n) => n.connected).map((n) => n.name)).toEqual(['Upstairs']);
     // Shift turns Connect into Forget, for the connected network whatever is highlighted.
-    const forgot = play([twist('encoder-3', 4), hold('shift'), ...tap('upper-3'), release('shift')], { state: inSetup('Status') });
+    const forgot = play([twist('encoder-5', 4), hold('shift'), ...tap('upper-6'), release('shift')], { state: inSetup('Status') });
     expect(forgot.intents).toEqual([{ kind: 'setting', action: 'forget-wifi', network: 'Studio' }]);
     expect(forgot.set.unit.wifi.networks[0]).toMatchObject({ connected: false, known: false });
   });
@@ -112,7 +112,7 @@ describe('the Setup menu', () => {
     expect(JSON.stringify(screen.body)).not.toMatch(/Battery|Storage/);
     const off = unit((s) => void (s.unit.wifi.on = false));
     expect(project(inSetup('Status'), off).screen.body.find((c) => c.type === 'list')).toMatchObject({ items: [] });
-    expect(play(tap('upper-3'), { set: off, state: inSetup('Status'), host: false }).intents).toEqual([]);
+    expect(play(tap('upper-6'), { set: off, state: inSetup('Status'), host: false }).intents).toEqual([]);
   });
 
   it('Expression offers bend and slide in MPE only', () => {
@@ -121,7 +121,7 @@ describe('the Setup menu', () => {
     expect(names(unit((s) => void (s.unit.expression.mode = 'poly-aftertouch')))).toEqual(['Expression Mode']);
     expect(names(unit((s) => void (s.unit.expression.mode = 'mono-aftertouch')))).toEqual(['Expression Mode']);
     // A slide height under 13 mm is the half range the pads read.
-    expect(play([twist('encoder-5', -6)], { state: inSetup('Expression') }).set.unit.expression).toMatchObject({ slideHeight: 10, slideRange: 'half' });
+    expect(play([twist('encoder-6', -6)], { state: inSetup('Expression') }).set.unit.expression).toMatchObject({ slideHeight: 10, slideRange: 'half' });
   });
 
   it('Sensitivity draws the curve the pads use and marks the last press on it', () => {
@@ -150,24 +150,24 @@ describe('the Setup menu', () => {
   });
 
   it('MIDI: the direction encoder picks a side the port has; External Sync needs an input that follows clock', () => {
-    const out = play([twist('encoder-3', 4), ...tap('upper-4')], { state: inSetup('MIDI'), host: false });
+    const out = play([twist('encoder-1', 4), ...tap('upper-3')], { state: inSetup('MIDI'), host: false });
     expect(out.intents).toEqual([{ kind: 'setting', action: 'set-setting', setting: 'midi-port', value: true, port: 'din', side: 'output', flag: 'sync' }]);
     // The USB keyboard has no output: it stays on Input.
-    const usb = play([twist('encoder-1', 4), twist('encoder-3', 4), ...tap('upper-5')], { state: inSetup('MIDI'), host: false });
+    const usb = play([twist('encoder-2', 4), twist('encoder-1', 4), ...tap('upper-4')], { state: inSetup('MIDI'), host: false });
     expect(usb.intents[0]).toMatchObject({ port: 'usb', side: 'input', flag: 'remote', value: false });
-    expect(play(tap('upper-7'), { state: inSetup('MIDI'), host: false }).intents).toEqual([]);
+    expect(play([twist('encoder-7', 4)], { state: inSetup('MIDI'), host: false }).intents).toEqual([]);
     const synced = unit((s) => void (s.unit.midi.ports[0].input!.sync = true));
-    expect(play(tap('upper-7'), { set: synced, state: inSetup('MIDI'), host: false }).intents[0]).toMatchObject({ setting: 'external-sync', value: true });
-    expect(play([twist('encoder-4', 12)], { set: synced, state: inSetup('MIDI'), host: false }).intents[0]).toMatchObject({ setting: 'sync-delay', value: 12, unit: 'ms' });
+    expect(play([twist('encoder-7', 4)], { set: synced, state: inSetup('MIDI'), host: false }).intents[0]).toMatchObject({ setting: 'external-sync', value: true });
+    expect(play([twist('encoder-6', 12)], { set: synced, state: inSetup('MIDI'), host: false }).intents[0]).toMatchObject({ setting: 'sync-delay', value: 12, unit: 'ms' });
   });
 
   it('Software: an update, its progress, and the Shift options', () => {
     const ready = unit((s) => void (s.unit.software.update = { version: '12.4', state: 'available' }));
     expect(project(inSetup('Status'), ready).screen.bottom[7]?.label).toBe('Software*');
-    expect(play(tap('upper-3'), { set: ready, state: inSetup('Software'), host: false }).intents).toEqual([{ kind: 'setting', action: 'update-software', version: '12.4' }]);
+    expect(play(tap('upper-5'), { set: ready, state: inSetup('Software'), host: false }).intents).toEqual([{ kind: 'setting', action: 'update-software', version: '12.4' }]);
     const busy = unit((s) => void (s.unit.software.update = { version: '12.4', state: 'installing', progress: 0.4 }));
     expect(project(inSetup('Software'), busy).screen.overlays).toEqual([{ type: 'progress', label: 'Installing version 12.4', fraction: 0.4 }]);
-    expect(play(tap('upper-3'), { set: busy, state: inSetup('Software'), host: false }).actions).toEqual(['cancel-update']);
+    expect(play(tap('upper-5'), { set: busy, state: inSetup('Software'), host: false }).actions).toEqual(['cancel-update']);
     // A beta always sends usage data: the switch is not there.
     expect(play(tap('upper-2'), { set: unit((s) => void (s.unit.software.beta = true)), state: inSetup('Software'), host: false }).intents).toEqual([]);
     const reset = play([hold('shift'), ...tap('upper-3'), release('shift')], { state: inSetup('Software'), host: false });

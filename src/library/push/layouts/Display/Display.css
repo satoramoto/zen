@@ -77,10 +77,11 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* From the column's left edge, as the unit's print is. */
+  justify-content: flex-start;
   gap: calc(var(--push-px) * 4);
   min-width: 0;
-  padding: 0 calc(var(--push-px) * 5);
+  padding: 0 calc(var(--push-px) * 8);
   color: var(--push-lit);
 }
 /* The selected one is a solid block of its colour with dark text. */
@@ -135,38 +136,35 @@
 .push-display__cell[data-type='text'][data-align='start'] { align-items: flex-start; }
 .push-display__cell[data-type='text'][data-align='centre'] { text-align: center; }
 .push-display__cell[data-disabled] { --push-lit: var(--text-3); opacity: 0.6; }
-/* A touched parameter stands out: its value at the large size, on a lifted ground. */
+/* A touched parameter stands out on a lifted ground. */
 .push-display__cell[data-touched] {
   background: var(--surface-2);
 }
-/* Touched: the name, the reading on its own line at the large size, and a smaller dial under them. */
-.push-display__cell[data-type='param'][data-touched] {
+/* A parameter, as on the unit: its name, its reading at the large size with the unit small beside
+   it, and its dial under them, all from the column's left edge. The name is plain print; the
+   reading and the arc are in the colour of what the parameter belongs to (a track's, white in a
+   menu, grey when off). */
+.push-display__cell[data-type='param'] {
   --control-h: calc(var(--push-px) * 20);
+  /* Every parameter's name is at the label size, whichever way its reading is drawn. */
+  --size-caption: var(--push-type-label);
+  align-items: flex-start;
   justify-content: flex-start;
   gap: calc(var(--push-px) * 2);
-  padding-top: calc(var(--push-px) * 8);
+  padding: calc(var(--push-px) * 8) calc(var(--push-px) * 8) 0;
 }
-.push-display__cell[data-type='param'][data-touched] > [data-part='name'] { flex: none; max-width: 100%; }
-/* The dial under them has no name row of its own: its ring is all there is of it. */
-.push-display__cell[data-type='param'][data-touched] .yh-knob { --size-caption: 0px; --space-1: 0px; }
+.push-display__cell[data-type='param'] > [data-part='name'] { flex: none; max-width: 100%; color: var(--text-2); }
+/* The dial has no name row of its own: its ring is all there is of it. */
+.push-display__cell[data-type='param'] .yh-knob { --size-caption: 0px; --space-1: 0px; }
+.push-display__cell[data-type='param'] .yh-knob__value { color: var(--push-lit); }
 .push-display__reading {
   display: flex;
   flex: none;
   align-items: baseline;
-  justify-content: center;
   gap: calc(var(--push-px) * 3);
   max-width: 100%;
   white-space: nowrap;
   color: var(--push-lit);
-}
-/* A parameter's knob: the ring with its value inside, and its name over it. */
-/* Its reading is in the colour of what it belongs to, as its arc is: a track's, white in a menu, grey when off. */
-.push-display__cell[data-type='param'] .yh-knob__value { color: var(--push-lit); }
-.push-display__cell[data-type='param'] {
-  --control-h: calc(var(--push-px) * 28);
-  /* Its name at the label size; its reading at the value size (the knob sets it at the heading size). */
-  --size-caption: var(--push-type-label);
-  padding: 0 calc(var(--push-px) * 6);
 }
 .push-display__cell[data-type='param'][data-style='choice'],
 .push-display__cell[data-type='list'] {

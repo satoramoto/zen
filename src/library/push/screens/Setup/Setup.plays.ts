@@ -26,19 +26,19 @@ export const plays = {
       expect(screenKind(c)).toBe('setup');
       expect(rowTexts(c, 'bottom')).toEqual(['Status', 'Expression', 'Sensitivity', 'Audio', 'MIDI', 'Pedals & CV', 'Preferences', 'Software']);
       expect(tab(c, 'bottom', 1)).toHaveAttribute('data-selected');
-      expect(paramText(c, 1)).toContain('Display Light');
+      expect(paramText(c, 3)).toContain('Display Light');
     },
   },
 
   AChangeTheAppKeeps: {
     ...on('status'),
     act: async ({ canvasElement: c }) => {
-      await turn(c, 'encoder-1', -40);
+      await turn(c, 'encoder-3', -40);
     },
     check: async (context) => {
       const c = context.canvasElement;
       expect(lastSetting(context)).toMatchObject({ setting: 'display-light', value: 60 });
-      await waitFor(() => expect(paramText(c, 1)).toContain('60 %'));
+      await waitFor(() => expect(paramText(c, 3)).toMatch(/60\s*%/));
       // The display's own light follows the reading the app keeps.
       expect(Number(display(c).style.getPropertyValue('--push-light'))).toBeCloseTo(0.6);
     },
@@ -83,9 +83,9 @@ export const plays = {
     ...on('status'),
     act: async ({ canvasElement: c }) => {
       // The Wi-Fi encoder moves to Upstairs, which wants a password this unit does not know.
-      await turn(c, 'encoder-3', CHOICE);
+      await turn(c, 'encoder-5', CHOICE);
       expect(lists(c)[0].chosen).toBe('Upstairs');
-      await press(c, 'upper-3');
+      await press(c, 'upper-6');
       expect(overlay(c, 'text-entry')).toHaveAccessibleName('Password for Upstairs');
       // A, then two to the right for C.
       await click(c, 'jog');
@@ -98,17 +98,17 @@ export const plays = {
       expect(intent(context, 'connect-wifi')).toMatchObject({ network: 'Upstairs', text: 'AC' });
       expect(overlay(c, 'text-entry')).toBeNull();
       // The app answers: Upstairs is the connected network now.
-      await waitFor(() => expect(column(c, 3)!.textContent).toMatch(/Upstairs\s*Connected/));
+      await waitFor(() => expect(column(c, 5)!.textContent).toMatch(/Upstairs\s*Connected/));
     },
   },
 
   Forgetting: {
     ...on('status'),
     act: async ({ canvasElement: c }) => {
-      expect(rowTexts(c, 'top')[2]).toBe('Connect');
+      expect(rowTexts(c, 'top')[5]).toBe('Connect');
       await holding(c, 'shift', async () => {
-        expect(rowTexts(c, 'top')[2]).toBe('Forget');
-        await press(c, 'upper-3');
+        expect(rowTexts(c, 'top')[5]).toBe('Forget');
+        await press(c, 'upper-6');
       });
     },
     check: (context) => {
@@ -120,10 +120,10 @@ export const plays = {
     ...on('status', (set) => void (set.unit.wifi.on = false)),
     act: async () => {},
     check: ({ canvasElement: c }) => {
-      expect(rowTexts(c, 'top')[1]).toBe('Wi-Fi: Off');
+      expect(rowTexts(c, 'top')[4]).toBe('Wi-Fi: Off');
       expect(lists(c)[0].rows).toEqual([]);
       // With nothing to connect to, Connect is not offered.
-      expect(rowTexts(c, 'top')[2]).toBe('');
+      expect(rowTexts(c, 'top')[5]).toBe('');
     },
   },
 
@@ -131,7 +131,7 @@ export const plays = {
     ...on('status', (set) => void (set.unit.hotspot = { on: true, name: 'Push-1A2B', password: 'makemusic' })),
     act: async () => {},
     check: ({ canvasElement: c }) => {
-      expect(rowTexts(c, 'top')[3]).toBe('Hotspot: On');
+      expect(rowTexts(c, 'top')[6]).toBe('Hotspot: On');
       expect(screenText(c)).toContain('Hotspot Push-1A2B');
       expect(screenText(c)).toContain('Password makemusic');
     },
@@ -162,12 +162,12 @@ export const plays = {
     ...on('expression'),
     act: async ({ canvasElement: c }) => {
       // The sample's zone is a quarter of a pad, 7 mm.
-      expect(paramText(c, 4)).toContain('7 mm');
-      await turn(c, 'encoder-4', 8);
+      expect(paramText(c, 5)).toMatch(/7\s*mm/);
+      await turn(c, 'encoder-5', 8);
     },
     check: async (context) => {
       expect(lastSetting(context)).toMatchObject({ setting: 'in-tune-width', value: 15, unit: 'mm' });
-      await waitFor(() => expect(paramText(context.canvasElement, 4)).toContain('15 mm'));
+      await waitFor(() => expect(paramText(context.canvasElement, 5)).toMatch(/15\s*mm/));
     },
   },
 
@@ -237,9 +237,9 @@ export const plays = {
     ...on('midi'),
     act: async ({ canvasElement: c }) => {
       expect(lists(c)[0].chosen).toBe('MIDI In/Out');
-      await turn(c, 'encoder-3', CHOICE);
-      expect(paramText(c, 3)).toContain('Output');
-      await press(c, 'upper-4');
+      await turn(c, 'encoder-1', CHOICE);
+      expect(paramText(c, 1)).toContain('Output');
+      await press(c, 'upper-3');
     },
     check: (context) => {
       expect(lastSetting(context)).toMatchObject({ setting: 'midi-port', port: 'din', side: 'output', flag: 'sync', value: true });
@@ -249,12 +249,12 @@ export const plays = {
   ExternalSync: {
     ...on('midi'),
     act: async ({ canvasElement: c }) => {
-      await press(c, 'upper-7');
+      await turn(c, 'encoder-7', CHOICE);
     },
     check: (context) => {
       const c = context.canvasElement;
-      expect(rowTexts(c, 'top')[6]).toBe('External Sync: Off');
-      expect(tab(c, 'top', 7)).toHaveAttribute('data-dim');
+      expect(paramText(c, 7)).toContain('External Sync');
+      expect(column(c, 7)).toHaveAttribute('data-disabled');
       // Greyed, it asks nothing; and Sync Delay is not offered either.
       expect(all(context, 'set-setting')).toEqual([]);
       expect(screenText(c)).not.toContain('Sync Delay');
@@ -293,7 +293,7 @@ export const plays = {
     },
     check: ({ canvasElement: c }) => {
       expect(rowTexts(c, 'bottom')[7]).toBe('Software*');
-      expect(rowTexts(c, 'top')[2]).toBe('Update');
+      expect(rowTexts(c, 'top')[4]).toBe('Update');
       expect(screenText(c)).toContain('Version 12.4 is available');
     },
   },
@@ -302,8 +302,8 @@ export const plays = {
     ...on('software', (set) => void (set.unit.software.update = { version: '12.4', state: 'installing', progress: 0.4 })),
     act: async ({ canvasElement: c }) => {
       expect(overlay(c, 'progress')).toHaveAttribute('aria-valuenow', '40');
-      expect(rowTexts(c, 'top')[2]).toBe('Cancel');
-      await press(c, 'upper-3');
+      expect(rowTexts(c, 'top')[4]).toBe('Cancel');
+      await press(c, 'upper-5');
     },
     check: (context) => {
       expect(all(context, 'cancel-update')).toHaveLength(1);

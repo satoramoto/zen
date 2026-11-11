@@ -419,32 +419,33 @@ export const plays = {
   },
 
   ALargeValue: {
+    // The bass's first bank: Shape is written under a drawing, Glide has a dial of its own.
+    set: onTrack('t-bass'),
     act: async ({ canvasElement: c }) => {
       // Sizes in the display's own pixels (it is 960 of them wide), whatever size it is drawn at.
       const px = display(c).getBoundingClientRect().width / 960;
       const size = (col: number, part: string) => {
         const el = display(c).querySelector(`.push-display__cell[data-type="param"][data-col="${col}"] [data-part="${part}"]`);
-        return el ? parseFloat(getComputedStyle(el).fontSize) / px : 0;
+        return el ? Math.round((parseFloat(getComputedStyle(el).fontSize) / px) * 10) / 10 : 0;
       };
-      const plain = { value: size(2, 'value'), name: size(2, 'label') };
-      await touching(c, 'encoder-2', async () => {
+      const plain = { value: size(6, 'value'), unit: size(6, 'unit'), name: size(6, 'name') };
+      await touching(c, 'encoder-6', async () => {
         await wait(60);
-        Object.assign(c, { sizes: { plain, touched: { value: size(2, 'value'), name: size(2, 'name'), unit: size(2, 'unit') }, other: { value: size(3, 'value'), name: size(3, 'label') } } });
+        Object.assign(c, { sizes: { plain, touched: { value: size(6, 'value'), unit: size(6, 'unit'), name: size(6, 'name') }, under: { value: size(1, 'value'), name: size(1, 'name') }, marked: display(c).querySelector('.push-display__cell[data-col="6"][data-touched]') !== null } });
       });
     },
     check: ({ canvasElement: c }) => {
-      const { plain, touched, other } = (c as unknown as { sizes: Record<'plain' | 'touched' | 'other', { value: number; name: number; unit?: number }> }).sizes;
+      const { plain, touched, under, marked } = (c as unknown as { sizes: { plain: Record<string, number>; touched: Record<string, number>; under: Record<string, number>; marked: boolean } }).sizes;
       // The three sizes of the 160-pixel screen: label 12, value 15, large 26.
-      expect(plain.value).toBeCloseTo(15, 0);
-      expect(plain.name).toBeCloseTo(12, 0);
+      expect(marked).toBe(true);
       expect(touched.value).toBeCloseTo(26, 0);
       expect(touched.name).toBeCloseTo(12, 0);
-      // The untouched column beside it is as it was.
-      expect(other).toEqual(plain);
-      // Let go, it is the value size again.
-      const px = display(c).getBoundingClientRect().width / 960;
-      const now = display(c).querySelector('.push-display__cell[data-type="param"][data-col="2"] [data-part="value"]')!;
-      expect(parseFloat(getComputedStyle(now).fontSize) / px).toBeCloseTo(15, 0);
+      expect(touched.unit).toBeCloseTo(12, 0);
+      // A reading written under a drawing is at the value size.
+      expect(under.value).toBeCloseTo(15, 0);
+      expect(under.name).toBeCloseTo(12, 0);
+      // Touching changes the ground, not the sizes: nothing jumps.
+      expect(touched).toEqual(plain);
     },
   },
 } satisfies Record<string, Play>;

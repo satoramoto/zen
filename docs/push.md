@@ -307,13 +307,20 @@ Beside the table under "Values to tune on a unit":
 | Colour values, hold times, encoder acceleration, the typeface | The manual prints none. Each is a named value marked `// added`, listed in the tables above. |
 | User Mode numbers for the Push 3's new controls | The controls the Push 2 shares keep its published numbers; the new ones take free control numbers (`model/midi.ts`). |
 | Which colours the pads show when one is chosen | For a track, all 64 pads show the table in a fixed order. For a clip or a drum pad, the outer ring of pads shows them, so the pads inside still play. The current colour pulses. |
-| What a touched parameter looks like | Its name, its value at the large size on a line of its own, and a smaller dial under them. The manual's figures show the emphasis and not its measure. |
+| How a parameter is set out | As the manual's Device View figure has it: its name, its value at the large size with the unit small beside it, and its dial under them, from the column's left edge. A value written under a device's drawing is at the value size. A touched parameter keeps its sizes and stands on a lifted ground. |
 | The display in a pack whose dark ground is not dark | A screen is a lit screen: its ground is the pack's, solid, and no lighter than a screen is; type in a lamp's colour is no darker than can be read on it. Under `push-3` both rules change nothing. |
 | A lamp's darker and lighter versions on a light body | One rule each, toward the unlit pad or toward white. On a light body a "darker" lamp is paler, not darker: it is less lit. |
 
 ### Known gaps
 
 - A lesson's link to further material is shown as its address in text. The unit shows a code image.
+- The sample Set gives Simpler's first bank as Zoom, Start, End, Mode and then the mode's own
+  four, as the plan specified. The manual's Slicing figure has Nudge fourth and Mode last. The
+  banks are the app's to give, so an app can give the unit's order.
+- A list of choices marks the current one with a solid block. The unit sets the current one large
+  and the others dim beneath it.
+- The unit draws a small picture under some Setup values (the finger for In Tune Location, the
+  input and output sign for a MIDI port). Those are not drawn.
 - Holding a switch's display button to map it (the manual's Map by hold) is not modelled; mapping
   goes through the macro screen.
 - A one-shot Simpler's Gain is in its second bank, not its first.
@@ -322,9 +329,13 @@ Beside the table under "Values to tune on a unit":
 
 ## Evidence
 
-`docs/push/` holds zen's own renders (React, at the widths named). The manual's figures are not
-kept in the repo: each render was read against its figure, and the control figure was compared by
-measure.
+`docs/push/` holds zen's own renders (React, at the widths named). The manual's figures are
+Ableton's and are not kept in the repo. The control figure was compared by measure. These screen
+figures were read beside their renders, and the renders changed until they agreed in what is in
+which column and how a parameter is set out: the Status, Expression, Sensitivity, Audio, MIDI and
+Software tabs, a loaded device in Device View, Simpler in Slicing mode, and the Loop Selector
+layout of the pads. The other renders were made from the manual's text and have not been laid
+beside a figure.
 
 - **The face against the manual's control figure**: the surface was drawn at 760, 1100 and 1500
   pixels wide (`surface-760.png`, `surface-1100.png`, `surface-1500.png`) and every one of its 147

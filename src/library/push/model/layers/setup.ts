@@ -68,32 +68,33 @@ function status(state: PushState, set: PushSet): Tab {
   const chosen = networks[clamp(state.setup.highlight, 0, Math.max(0, networks.length - 1))];
   const connected = networks.find((n) => n.connected);
   const forget = holding(state, 'shift');
+  // The columns of the unit's own Status tab: what the unit is at the left, the two lights, the networks, and Link at the right.
   const fields: Field[] = [
-    level(1, 'Display Light', u.displayLight, 0, 100, ' %', (ctx, v) => setting(ctx, 'display-light', v)),
-    level(2, 'LED Brightness', u.ledBrightness, 0, 100, ' %', (ctx, v) => setting(ctx, 'led-brightness', v)),
+    text(1, 2, [u.name, u.mode === 'standalone' ? 'Standalone' : 'Control Mode', ...(u.processor && u.battery ? [`Battery ${u.battery.percent}%${u.battery.charging ? ', charging' : ''}`] : []), ...(u.processor && u.storage ? [`Storage ${u.storage.used} of ${u.storage.total}`] : []), ...(u.hotspot.on ? [`Hotspot ${u.hotspot.name ?? ''}`, `Password ${u.hotspot.password ?? ''}`] : [])].join(' · ')),
+    level(3, 'Display Light', u.displayLight, 0, 100, ' %', (ctx, v) => setting(ctx, 'display-light', v)),
+    level(4, 'LED Brightness', u.ledBrightness, 0, 100, ' %', (ctx, v) => setting(ctx, 'led-brightness', v)),
     {
-      cell: { type: 'list', col: 3, span: 2, label: 'Wi-Fi', items: networks.map((n) => ({ id: n.name, label: n.name, mark: n.connected ? 'Connected' : n.secured ? '' : 'Open', ...(n.connected ? { colour: 5 } : {}) })), chosen: chosen?.name },
+      cell: { type: 'list', col: 5, span: 2, label: 'Wi-Fi', items: networks.map((n) => ({ id: n.name, label: n.name, mark: n.connected ? 'Connected' : n.secured ? '' : 'Open', ...(n.connected ? { colour: 5 } : {}) })), chosen: chosen?.name },
       turn: (ctx, moved) => void (ctx.state.setup.highlight = clamp(ctx.state.setup.highlight + moved, 0, Math.max(0, networks.length - 1))),
     },
-    text(5, 2, [u.name, u.mode === 'standalone' ? 'Standalone' : 'Control Mode', ...(u.processor && u.battery ? [`Battery ${u.battery.percent}%${u.battery.charging ? ', charging' : ''}`] : []), ...(u.processor && u.storage ? [`Storage ${u.storage.used} of ${u.storage.total}`] : []), ...(u.hotspot.on ? [`Hotspot ${u.hotspot.name ?? ''}`, `Password ${u.hotspot.password ?? ''}`] : [])].join(' · ')),
     choice(8, 'Link', onOff(!!set.transport.link?.on), ['Off', 'On'], (ctx, next) => setting(ctx, 'link', next === 'On')),
   ];
   const buttons: Button[] = [
     // A unit with no processor is always a controller: there is no mode to switch.
     ...(u.processor ? [button(1, u.mode === 'standalone' ? 'Control Live' : 'Standalone', (ctx) => push(ctx, 'set-unit-mode', { mode: u.mode === 'standalone' ? 'control' : 'standalone' }))] : []),
-    switchButton(2, 'Wi-Fi', u.wifi.on, (ctx) => setting(ctx, 'wifi', !u.wifi.on)),
+    switchButton(5, 'Wi-Fi', u.wifi.on, (ctx) => setting(ctx, 'wifi', !u.wifi.on)),
     ...(u.wifi.on && (forget ? connected : chosen)
       ? [
           forget
-            ? button(3, 'Forget', (ctx) => push(ctx, 'forget-wifi', { network: connected!.name }))
-            : button(3, 'Connect', (ctx) => {
+            ? button(6, 'Forget', (ctx) => push(ctx, 'forget-wifi', { network: connected!.name }))
+            : button(6, 'Connect', (ctx) => {
                 if (chosen!.secured && !chosen!.known) ctx.state.textEntry = { title: `Password for ${chosen!.name}`, text: '', highlighted: 0, then: { kind: 'setting', action: 'connect-wifi', network: chosen!.name } };
                 else push(ctx, 'connect-wifi', { network: chosen!.name });
               }),
         ]
       : []),
-    switchButton(4, 'Hotspot', u.hotspot.on, (ctx) => setting(ctx, 'hotspot', !u.hotspot.on)),
-    switchButton(5, 'Play Sync', !!set.transport.link?.playSync, (ctx) => setting(ctx, 'play-sync', !set.transport.link?.playSync)),
+    switchButton(7, 'Hotspot', u.hotspot.on, (ctx) => setting(ctx, 'hotspot', !u.hotspot.on)),
+    switchButton(8, 'Play Sync', !!set.transport.link?.playSync, (ctx) => setting(ctx, 'play-sync', !set.transport.link?.playSync)),
   ];
   // The battery's mark, with its bolt while it charges.
   const overlays: Overlay[] = u.processor && u.battery ? [{ type: 'battery', percent: u.battery.percent, charging: u.battery.charging, low: false }] : [];
@@ -104,15 +105,16 @@ function expression(_state: PushState, set: PushSet): Tab {
   const e = set.unit.expression;
   const modes = { mpe: 'MPE', 'poly-aftertouch': 'Poly Aftertouch', 'mono-aftertouch': 'Mono Aftertouch', off: 'Off' } as const;
   const names = ['MPE', 'Poly Aftertouch', 'Mono Aftertouch'];
-  const fields: Field[] = [choice(1, 'Expression Mode', modes[e.mode], names, (ctx, next) => setting(ctx, 'expression-mode', (['mpe', 'poly-aftertouch', 'mono-aftertouch'] as const)[names.indexOf(next)]))];
+  // The mode takes the first two columns, as on the unit.
+  const fields: Field[] = [choice(1, 'Expression Mode', modes[e.mode], names, (ctx, next) => setting(ctx, 'expression-mode', (['mpe', 'poly-aftertouch', 'mono-aftertouch'] as const)[names.indexOf(next)]), { span: 2 })];
   // Bend and slide are MPE's: the other modes send neither.
   if (e.mode === 'mpe') {
     const bends = { auto: 'Automatic', on: 'On', off: 'Off' } as const;
     fields.push(
-      choice(2, 'Note Pitch Bend', bends[e.noteBend], ['Automatic', 'On', 'Off'], (ctx, next) => setting(ctx, 'note-pitch-bend', next === 'Automatic' ? 'auto' : next.toLowerCase())),
-      choice(3, 'In Tune Location', e.inTune === 'finger' ? 'Finger' : 'Pad', ['Finger', 'Pad'], (ctx, next) => setting(ctx, 'in-tune-location', next.toLowerCase())),
-      level(4, 'In Tune Width', Math.round(e.inTuneWidth * PAD_MM), 0, 20, ' mm', (ctx, v) => setting(ctx, 'in-tune-width', v, { unit: 'mm' })),
-      level(5, 'Slide Height', e.slideHeight ?? 16, 10, 16, ' mm', (ctx, v) => setting(ctx, 'slide-height', v, { unit: 'mm' })),
+      choice(3, 'Note Pitch Bend', bends[e.noteBend], ['Automatic', 'On', 'Off'], (ctx, next) => setting(ctx, 'note-pitch-bend', next === 'Automatic' ? 'auto' : next.toLowerCase())),
+      choice(4, 'In Tune Location', e.inTune === 'finger' ? 'Finger' : 'Pad', ['Finger', 'Pad'], (ctx, next) => setting(ctx, 'in-tune-location', next.toLowerCase())),
+      level(5, 'In Tune Width', Math.round(e.inTuneWidth * PAD_MM), 0, 20, ' mm', (ctx, v) => setting(ctx, 'in-tune-width', v, { unit: 'mm' })),
+      level(6, 'Slide Height', e.slideHeight ?? 16, 10, 16, ' mm', (ctx, v) => setting(ctx, 'slide-height', v, { unit: 'mm' })),
     );
   }
   return { fields, buttons: [] };
@@ -127,7 +129,8 @@ function sensitivity(state: PushState, set: PushSet): Tab {
   const s = set.unit.sensitivity;
   const part = (col: number, name: string, key: 'threshold' | 'drive' | 'compand' | 'range'): Field => ({
     level: true,
-    cell: { type: 'param', col, name, value: `${Math.round(s[key] * 100)} %`, fraction: s[key], style: key === 'drive' || key === 'compand' ? 'bipolar' : 'arc' },
+    // A number over the curve, as on the unit: the curve is the picture of all four.
+    cell: { type: 'param', col, name, value: `${Math.round(s[key] * 100)} %`, fraction: s[key], style: 'value' },
     turn: (ctx, _moved, steps) => {
       const next = clamp(Math.round((s[key] + steps / 100) * 100) / 100, 0, 1);
       if (next !== s[key]) setting(ctx, `sensitivity-${key}`, next);
@@ -139,11 +142,11 @@ function sensitivity(state: PushState, set: PushSet): Tab {
   const at = press === undefined ? undefined : (curve.find(([, y]) => y >= press - 1e-6)?.[0] ?? 1);
   return {
     fields: [
-      part(1, 'Threshold', 'threshold'),
-      part(2, 'Drive', 'drive'),
-      part(3, 'Compand', 'compand'),
-      part(4, 'Range', 'range'),
-      { cell: { type: 'trace', col: 5, span: 4, drawing: { kind: 'curve', col: 5, span: 4, label: 'Velocity curve', points: curve, ...(at === undefined ? {} : { markers: [{ at, kind: 'playhead' }] }) } } },
+      { cell: { type: 'trace', col: 3, span: 4, under: true, drawing: { kind: 'curve', col: 3, span: 4, label: 'Velocity curve', points: curve, ...(at === undefined ? {} : { markers: [{ at, kind: 'playhead' }] }) } } },
+      part(3, 'Threshold', 'threshold'),
+      part(4, 'Drive', 'drive'),
+      part(5, 'Compand', 'compand'),
+      part(6, 'Range', 'range'),
     ],
     buttons: [button(8, 'Reset', (ctx) => push(ctx, 'reset-sensitivity'))],
   };
@@ -181,26 +184,20 @@ function midi(state: PushState, set: PushSet): Tab {
   const flags = port?.[side];
   const anySync = ports.some((p) => p.input?.sync);
   const flag = (col: number, label: string, key: 'track' | 'sync' | 'remote'): Button => switchButton(col, label, !!flags?.[key], (ctx) => setting(ctx, 'midi-port', !flags?.[key], { port: port.id, side, flag: key }));
+  // The unit's columns: the direction, the port across four, Sync Delay and External Sync; the switches over the port.
   return {
     fields: [
-      { cell: { type: 'list', col: 1, span: 2, label: 'Port', items: ports.map((p) => ({ id: p.id, label: p.name })), chosen: port?.id }, turn: (ctx, moved) => void (ctx.state.setup.port = clamp((ctx.state.setup.port ?? 0) + moved, 0, Math.max(0, ports.length - 1))) },
       {
-        cell: { type: 'param', col: 3, name: 'Direction', value: side === 'input' ? 'Input' : 'Output', fraction: 0, style: 'choice', choices: ['Input', 'Output'], chosen: side === 'input' ? 0 : 1 },
+        cell: { type: 'param', col: 1, name: 'I/O', value: side === 'input' ? 'Input' : 'Output', fraction: 0, style: 'choice', choices: ['Input', 'Output'], chosen: side === 'input' ? 0 : 1 },
         turn: (ctx, moved) => void (ctx.state.setup.side = moved > 0 ? 'output' : 'input'),
       },
+      { cell: { type: 'list', col: 2, span: 4, label: 'Port', items: ports.map((p) => ({ id: p.id, label: p.name })), chosen: port?.id }, turn: (ctx, moved) => void (ctx.state.setup.port = clamp((ctx.state.setup.port ?? 0) + moved, 0, Math.max(0, ports.length - 1))) },
       // Sync Delay shifts the clock an input follows: it is there when one does.
-      ...(anySync ? [level(4, 'Sync Delay', set.unit.midi.syncDelay ?? 0, -100, 100, ' ms', (ctx, v) => setting(ctx, 'sync-delay', v, { unit: 'ms' }))] : []),
+      ...(anySync ? [level(6, 'Sync Delay', set.unit.midi.syncDelay ?? 0, -100, 100, ' ms', (ctx, v) => setting(ctx, 'sync-delay', v, { unit: 'ms' }))] : []),
+      // External Sync follows an input's clock: with no input's Sync on there is nothing to follow, and it is greyed.
+      choice(7, 'External Sync', onOff(!!set.unit.midi.externalSync), ['Off', 'On'], (ctx, next) => setting(ctx, 'external-sync', next === 'On'), anySync ? {} : { disabled: true }),
     ],
-    buttons: port && flags
-      ? [
-          flag(3, 'Track', 'track'),
-          flag(4, 'Sync', 'sync'),
-          flag(5, 'Remote', 'remote'),
-          ...(side === 'input' ? [switchButton(6, 'MPE', false, (ctx) => setting(ctx, 'midi-port', true, { port: port.id, side, flag: 'mpe' }))] : []),
-          // External Sync follows an input's clock: with no input's Sync on there is nothing to follow.
-          button(7, `External Sync: ${onOff(!!set.unit.midi.externalSync)}`, anySync ? (ctx) => setting(ctx, 'external-sync', !set.unit.midi.externalSync) : undefined, { selected: !!set.unit.midi.externalSync, ...(anySync ? {} : { dim: true }) }),
-        ]
-      : [],
+    buttons: port && flags ? [flag(2, 'Track', 'track'), flag(3, 'Sync', 'sync'), flag(4, 'Remote', 'remote'), ...(side === 'input' ? [switchButton(5, 'MPE', false, (ctx) => setting(ctx, 'midi-port', true, { port: port.id, side, flag: 'mpe' }))] : [])] : [],
   };
 }
 
@@ -231,8 +228,8 @@ function software(state: PushState, set: PushSet): Tab {
   const s = set.unit.software;
   const update = s.update;
   const busy = update?.state === 'downloading' || update?.state === 'installing';
-  const fields: Field[] = [text(1, 3, `Version ${s.version}`, { size: 'value' }), text(4, 3, s.authorized ? `${s.licence}${s.account ? ` · ${s.account}` : ''}` : 'Not authorized')];
-  if (update) fields.push(text(7, 2, `Version ${update.version} ${update.state === 'ready' ? 'is ready to install' : update.state === 'available' ? 'is available' : `is ${update.state}`}`));
+  const fields: Field[] = [text(1, 2, `Version ${s.version}`, { size: 'value' }), text(3, 2, s.authorized ? `${s.licence}${s.account ? ` · ${s.account}` : ''}` : 'Not authorized')];
+  if (update) fields.push(text(5, 4, `Version ${update.version} ${update.state === 'ready' ? 'is ready to install' : update.state === 'available' ? 'is available' : `is ${update.state}`}`));
   // With Shift held the advanced options take the buttons.
   const buttons: Button[] = holding(state, 'shift')
     ? [
@@ -243,8 +240,9 @@ function software(state: PushState, set: PushSet): Tab {
     : [
         button(1, 'Authorize', (ctx) => push(ctx, 'authorize', { purpose: 'authorize' })),
         ...(s.beta ? [] : [switchButton(2, 'Send Usage Data', s.usageData, (ctx) => setting(ctx, 'usage-data', !s.usageData))]),
-        ...(update && !busy ? [button(3, 'Update', (ctx) => push(ctx, 'update-software', { version: update.version }))] : []),
-        ...(busy ? [button(3, 'Cancel', (ctx) => push(ctx, 'cancel-update'))] : []),
+        // Update is over the news of it, at the fifth button, as on the unit.
+        ...(update && !busy ? [button(5, 'Update', (ctx) => push(ctx, 'update-software', { version: update.version }))] : []),
+        ...(busy ? [button(5, 'Cancel', (ctx) => push(ctx, 'cancel-update'))] : []),
       ];
   const overlays: Overlay[] = [];
   if (busy) overlays.push({ type: 'progress', label: `${update!.state === 'installing' ? 'Installing' : 'Downloading'} version ${update!.version}`, fraction: update!.progress ?? 0 });

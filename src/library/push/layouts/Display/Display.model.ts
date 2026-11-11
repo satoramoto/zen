@@ -101,23 +101,19 @@ function param(cell: ParamCell & { col: number }): ChildArg {
   }
   const dial = { fraction: cell.fraction, name, ...(cell.style === 'bipolar' ? { origin: 'center' } : {}), ...hue };
   const on = { on: { onstep: `turn:${cell.col}` } };
-  // The number at its size and its unit small beside it, so both fit the column.
+  // As on the unit: the name, the reading at the large size with its unit small beside it, and the dial under them.
   const reading = cell.unit ? ([cell.value, cell.unit] as const) : splitUnit(cell.value);
-  // Touched, the reading leaves the dial for a line of its own, at the large size.
-  if (cell.touched) {
-    return [
-      textNode({ role: 'caption', weight: 'strong', truncate: true, leading: 'tight' }, { 'data-part': 'name' }, cell.name),
-      h('div', { class: 'push-display__reading', 'data-part': 'reading' }, textNode({ role: TEXT_ROLE.large, leading: 'tight' }, { 'data-part': 'value' }, reading[0]), reading[1] ? textNode({ role: 'label', leading: 'tight' }, { 'data-part': 'unit' }, reading[1]) : null),
-      component('KnobReadout', { label: '', value: '', unit: '', ...dial }, on),
-    ];
-  }
-  return component('KnobReadout', { label: cell.name, value: reading[0], unit: reading[1], ...dial }, on);
+  return [
+    textNode({ role: 'label', truncate: true, leading: 'tight' }, { 'data-part': 'name' }, cell.name),
+    h('div', { class: 'push-display__reading', 'data-part': 'reading' }, textNode({ role: TEXT_ROLE.large, leading: 'tight' }, { 'data-part': 'value' }, reading[0]), reading[1] ? textNode({ role: 'label', leading: 'tight' }, { 'data-part': 'unit' }, reading[1]) : null),
+    component('KnobReadout', { label: '', value: '', unit: '', ...dial }, on),
+  ];
 }
 
-/** "-3.0 dB" as its number and its unit; a reading that is not one number and a unit ("C", "1/8", "Off", "90 to 110") is all value. */
+/** "-3.0 dB" as its number and its unit. A reading that is not one number, a space and a unit ("C", "25R", "1/8", "Off", "90 to 110") is all value. */
 export function splitUnit(reading: string): [string, string] {
-  const parts = /^([-+−]?\d[\d.,]*)\s*([^\d\s/][^\d]*)$/.exec(reading);
-  return parts ? [parts[1], parts[2]] : [reading, ''];
+  const parts = /^([-+−]?\d[\d.,]*)(?:\s+([^\d\s/][^\d]*)|(%))$/.exec(reading);
+  return parts ? [parts[1], parts[2] ?? parts[3]] : [reading, ''];
 }
 
 function list(cell: ListCell): ChildArg {

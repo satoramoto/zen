@@ -59,8 +59,8 @@ export const plays = {
       const measure = () => {
         const d = display(c).getBoundingClientRect();
         const parts = [...display(c).querySelectorAll<HTMLElement>('.push-display__tab, .push-display__cell, [data-part="value"], [data-part="label"]')];
-        return { width: d.width, // A column or a cell by its box; a piece of text by its centre and its line (glyph widths round at small sizes).
-          boxes: parts.map((el) => { const r = el.getBoundingClientRect(); return el.dataset.part ? [r.left + r.width / 2 - d.left, r.top - d.top, r.height] : [r.left - d.left, r.top - d.top, r.width, r.height]; }), type: parts.filter((el) => el.dataset.part).map((el) => parseFloat(getComputedStyle(el).fontSize)) };
+        return { width: d.width, // A column or a cell by its box; a piece of text by where it starts and its line (glyph widths round at small sizes).
+          boxes: parts.map((el) => { const r = el.getBoundingClientRect(); return el.dataset.part ? [r.left - d.left, r.top - d.top, r.height] : [r.left - d.left, r.top - d.top, r.width, r.height]; }), type: parts.filter((el) => el.dataset.part).map((el) => parseFloat(getComputedStyle(el).fontSize)) };
       };
       const holder = display(c).parentElement!;
       holder.style.width = '50%';
@@ -169,9 +169,13 @@ export const plays = {
     check: ({ canvasElement: c }) => {
       const knob = pcell(c, 4).querySelector('[aria-roledescription="knob"]')!;
       expect(knob).toHaveAccessibleName('Frequency 20.0 kHz');
-      expect(knob.querySelector('[data-part="label"]')).toHaveTextContent('Frequency');
-      // The number at the value size, and its unit small beside it.
-      expect(knob.querySelector('[data-part="value"]')).toHaveTextContent(/^20\.0\s*kHz$/);
+      // Its name, then its reading (the number large, the unit small beside it), then the dial.
+      expect(pcell(c, 4).querySelector('[data-part="name"]')).toHaveTextContent('Frequency');
+      expect(pcell(c, 4).querySelector('[data-part="value"]')).toHaveTextContent('20.0');
+      expect(pcell(c, 4).querySelector('[data-part="unit"]')).toHaveTextContent('kHz');
+      const tops = ['name', 'reading'].map((part) => pcell(c, 4).querySelector(`[data-part="${part}"]`)!.getBoundingClientRect().top);
+      expect(tops[0]).toBeLessThan(tops[1]);
+      expect(tops[1]).toBeLessThan(knob.getBoundingClientRect().top);
       // At the top of its range the arc is whole: twice the one at half way.
       expect(arcLength(c, 4)).toBeGreaterThan(0);
       expect(arcLength(c, 4) / arcLength(c, 5)).toBeCloseTo(2, 1);
@@ -274,7 +278,7 @@ export const plays = {
       expect(screenKind(c)).toBe('setup');
       for (const el of paramCells(c)) expect(lampOf(el)).toBe('');
       // White on black: no track's colour.
-      const value = rgbOf(getComputedStyle(pcell(c, 1).querySelector('[data-part="value"]')!).color);
+      const value = rgbOf(getComputedStyle(pcell(c, 3).querySelector('[data-part="value"]')!).color);
       expect(Math.min(...value)).toBeGreaterThan(200);
       expect(Math.max(...value) - Math.min(...value)).toBeLessThan(16);
       const ground = fillOf(display(c));
