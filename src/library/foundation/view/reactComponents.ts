@@ -24,6 +24,7 @@ import { Slider } from '../../components/Slider/Slider';
 import { Popover } from '../../components/Popover/Popover';
 import { Modal, Sheet } from '../../components/Modal/Modal';
 import { Separator } from '../../components/Separator/Separator';
+import { CodeImage } from '../../components/CodeImage/CodeImage';
 import { SettingsRow } from '../../components/SettingsRow/SettingsRow';
 import { StatusDot } from '../../components/StatusDot/StatusDot';
 import { BarBeat } from '../../music/components/BarBeat/BarBeat';
@@ -115,6 +116,7 @@ export function reactComponent(name: string): ComponentType<any> {
     Modal,
     Sheet,
     Separator,
+    CodeImage,
     SettingsRow,
     Stack,
     StatusDot,

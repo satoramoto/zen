@@ -113,7 +113,10 @@ two drew the same pixels), and read against the manual's figures. One verdict pe
 | The unit as a whole | A new layout, `Surface` | Nothing places parts from a table of millimetres. |
 | The display's box | A new layout, `Display` | The 960 by 160 box, its eight columns, two rows and overlays arrange other parts. |
 | A parameter with an arc | `KnobReadout`, with one new prop | Name, value, unit and arc are what the display shows. A bipolar parameter (pan) fills from the middle, which `KnobReadout` cannot draw: it gains `origin`, as `Slider` already has. |
-| A switch, a choice list | `Toggle`, `Segmented`, as they are | |
+| A switch | `Toggle`, as it is | |
+| A choice | `Text` in the display's cell | The unit sets the current choice large with the others dim beneath or beside it. `Segmented` is a row of buttons with one filled, and `FolderList` a list with a block on one row: neither is that with one more prop. A choice is words at two strengths, which is `Text`, as the tab row is. |
+| A setting's small picture | `Icon`, as it is | A few strokes in a 24 by 24 box, in the value's colour. |
+| A code to scan | A new core component, `CodeImage` | Nothing draws a matrix of marks, and it is not the Push's: it is in `components/`, with its own encoder and no dependency. |
 | A touched parameter, an automated one | Local variables on the cell, and a `StatusDot` | |
 | The tab row and the track row | `Text`, `Icon` and `StatusDot` in the display's cells | `Tabs` sizes each tab to its word and underlines the chosen one; the display has eight fixed columns and marks the chosen one with a block. A cell with a `Text` in it is all the row is, so there is no new component. |
 | Menus: the browser, Sets, Setup's choices | `FolderList`, as it is, one per column | It already is the display's list: rows, a solid block on the chosen one, a mark at the right end (the chevron of a folder), rows that cannot be chosen (a folder still loading). |
@@ -126,7 +129,7 @@ two drew the same pixels), and read against the manual's figures. One verdict pe
 | A device's drawing: envelope, filter curve, oscillator shape, spectrum | A new component, `Trace` | A line through a list of points, filled or not. Nothing in the library draws one from numbers within the contract (the math plots are a plotting library). This is the one new component the plan knows of. |
 
 So the device needs two new props on existing parts (`origin` on `KnobReadout`, `level` on a
-`PianoRoll` note) and one new component (`Trace`). Everything else is an existing part, or a
+`PianoRoll` note) and two new components (`Trace`, and the generic `CodeImage`). Everything else is an existing part, or a
 layout of existing parts.
 
 ## The parts
@@ -141,6 +144,7 @@ the device model beside the parts.
 | `Push.Display` | The 960 by 160 screen alone, drawing a `Screen` description. |
 | `Push.RearPanel` | The back of the unit: its ports and the power button. |
 | `Push.Trace` | A line or a band through points, for a device's drawing. |
+| `CodeImage` (package root) | A text as a code a phone can scan. It is generic, so it is a core component, not the Push's: the display draws a lesson's link and a dialog's address with it. |
 | `Push.Emulator` | The device with a stand-in host that answers every intent over the sample Set, a legend of the gestures and an inspector of what was asked. It is the harness of every scenario story. |
 
 ### Building an emulator on it
@@ -222,6 +226,7 @@ With a mouse and keys, as the emulator's legend says:
 | Bend | Drag sideways from a held pad, on to its neighbours |
 | Turn | Drag up on a knob, the wheel, or the arrow keys |
 | Touch a knob | Press and hold it without moving, or latch it |
+| Map a switch to a macro | With a device's banks shown, hold the display button over the switch (or latch it), then press Map on the last lower display button |
 | Nudge the jog wheel | The arrows at its sides |
 | Play from the keys | Focus a pad, then the rows 1 to 8, Q to I, A to K and Z to comma |
 | The pedals | A `pushinput` event on the surface (above) |
@@ -309,33 +314,64 @@ Beside the table under "Values to tune on a unit":
 | Which colours the pads show when one is chosen | For a track, all 64 pads show the table in a fixed order. For a clip or a drum pad, the outer ring of pads shows them, so the pads inside still play. The current colour pulses. |
 | How a parameter is set out | As the manual's Device View figure has it: its name, its value at the large size with the unit small beside it, and its dial under them, from the column's left edge. A value written under a device's drawing is at the value size. A touched parameter keeps its sizes and stands on a lifted ground. |
 | The display in a pack whose dark ground is not dark | A screen is a lit screen: its ground is the pack's, solid, and no lighter than a screen is; type in a lamp's colour is no darker than can be read on it. Under `push-3` both rules change nothing. |
+| How a choice is drawn | Three ways, each from a figure. A setting shows its current choice large with the choices after it dim beneath (Setup's tabs). A parameter over a drawing shows the choices after it dim beside it, in a row (Simpler's Mode). A parameter in a column of its own shows the current one alone, large. A long list of small things (Note Pitch Bend, an output's source) is listed whole, small. |
+| A setting's picture | Where the unit draws a small picture under a value in place of a dial (a finger or a pad, an input or an output, on or off, Scene or Clip, a width or a height), the value names one of ten pictures and the display draws it. No drawing is passed as data. |
+| A bank's switches | A bank may carry switches and pairs of options (`Bank.switches`). While the device's banks are shown, the top row is the device alone, then those, each over its display button. A press switches one; holding one offers Map. A Simpler's Trigger and Gate are such a pair. |
+| Where Map is | On the last lower display button, as both of the manual's figures have it: for a touched parameter and for a held switch. Edit, Unmap and Done stay on the upper buttons, where the figures have them. |
+| Simpler's main bank | The figures' order: Zoom, Start, End, the mode's four, Mode last. Classic: S Start, Length, Loop Length, Loop Fade. One-Shot: Fade In, Fade Out, Transpose, Gain. Slicing: Nudge, Playback, Slice By and its companion. The first plan of this follow-up had Slice By before Playback; the Slicing figure has it after. |
+| The code image's colours | Dark marks on a light ground with a four-module margin, in every pack and mode: a scanner reads nothing else. It is the one thing on the display that is not coloured type on a dark ground. An address over 213 bytes is shown as text alone. |
+| 64 Pads | Four blocks of sixteen. The second is above the first and the right half follows the left, as the manual's figure of a 36-pad kit shows (the left half lit, and four more at the bottom right). The first build had the second block at the bottom right. |
 | A lamp's darker and lighter versions on a light body | One rule each, toward the unlit pad or toward white. On a light body a "darker" lamp is paler, not darker: it is less lit. |
 
 ### Known gaps
 
-- A lesson's link to further material is shown as its address in text. The unit shows a code image.
-- The sample Set gives Simpler's first bank as Zoom, Start, End, Mode and then the mode's own
-  four, as the plan specified. The manual's Slicing figure has Nudge fourth and Mode last. The
-  banks are the app's to give, so an app can give the unit's order.
-- A list of choices marks the current one with a solid block. The unit sets the current one large
-  and the others dim beneath it.
-- The unit draws a small picture under some Setup values (the finger for In Tune Location, the
-  input and output sign for a MIDI port). Those are not drawn.
-- Holding a switch's display button to map it (the manual's Map by hold) is not modelled; mapping
-  goes through the macro screen.
-- A one-shot Simpler's Gain is in its second bank, not its first.
+- **The browser's columns.** The unit keeps the path in the first column (Add, then Device) and
+  lays the current menu out across the other columns, five rows to a column. Here each enclosing
+  menu keeps its own column and the current one scrolls, as the plan specified
+  (`push-display`, "A list shows a highlight and its place"). The buttons agree with the unit
+  (Preview second, the label fourth, Packs seventh); the layout of the lists does not.
+- **Session Screen Mode's top row.** The unit's figure gives the clip grid the whole height of
+  the display. Here the top row shows the selected scene's clips over the buttons that launch
+  them, and the grid has the body.
+- **Small marks the unit draws and this does not**: the icon before each item of a menu, the
+  icons beside Note Pitch Bend's three choices and an output's sources, Zoom as a pair of bars,
+  and the line under the top row in the mix.
+- **A choice's earlier choices.** In a row of choices the unit shows the end of the one before
+  the current one at the left. Here the row starts at the current one.
 - `.svelte` files are not type-checked (the project's standing limit); the plays run every scenario
   in both renderers.
 
 ## Evidence
 
 `docs/push/` holds zen's own renders (React, at the widths named). The manual's figures are
-Ableton's and are not kept in the repo. The control figure was compared by measure. These screen
-figures were read beside their renders, and the renders changed until they agreed in what is in
-which column and how a parameter is set out: the Status, Expression, Sensitivity, Audio, MIDI and
-Software tabs, a loaded device in Device View, Simpler in Slicing mode, and the Loop Selector
-layout of the pads. The other renders were made from the manual's text and have not been laid
-beside a figure.
+Ableton's and are not kept in the repo. The control figure was compared by measure. Every other
+render named below was read beside a figure of the manual's, and changed until it agreed in what
+is in which column, which button does what, and how a parameter is set out. Where one still
+differs, Known gaps says how.
+
+| Render | The manual's figure | What the comparison changed |
+|---|---|---|
+| `setup-status.png`, `setup-sensitivity.png`, `setup-software.png` | Status, Sensitivity, Software tabs | In the first build: the columns. Since: switches drawn as boxes. |
+| `setup-expression.png` | Expression tab | The mode's choices beneath it; a picture under In Tune Location, In Tune Width and Slide Height in place of a dial. |
+| `setup-audio.png` | Audio tab | Sample Rate, Buffer Size and the input types as choices beneath the current one; the output and the clock as small lists. |
+| `setup-midi.png` | MIDI tab | The direction's sign; the port large across four columns; the switches as boxes. |
+| `setup-pedals-cv.png` | Pedals & CV tab, and Enable CV Out | Each jack takes half the display, at the first and fifth columns. |
+| `setup-preferences.png` | Preferences tab | The first, third, fourth and sixth columns; a picture under each value. |
+| `setup-learn.png`, `setup-learn-linear-light.png` | (The manual has no figure of a lesson; its text says a QR code links to further material.) | The link is a code. Both renders were decoded back to the link's address. |
+| `display-device-view.png`, `display-switches.png` | A loaded device; the Map figures | The top row with the banks shown; Map on the last lower button. |
+| `display-rack-unfolded.png` | Expanded Racks | Nothing: the Rack, its devices under one line, then what follows it. |
+| `display-simpler.png`, `display-simpler-slicing.png`, `display-simpler-edit.png` | Simpler in Classic, One-Shot and Slicing mode, and its Edit Mode options | The bank's order, Mode last; Trigger and Gate as a pair; each action at its button; Reset Slices. |
+| `display-mix.png`, `display-mix-track.png` | Global Mix Mode; the mix controls in Track Mix Mode | The meters from the column's left edge with the reading under them; a track's volume as its meters. |
+| `display-clip.png`, `display-clip-audio.png` | Clip View; an audio clip in Clip View | Loop and Warp as boxes, Edit on the last button, the audio clip's three parameters in the last three columns, a length as bars, beats and sixteenths. |
+| `display-session.png` | Session Screen Mode | The scene numbers, which could not be read. The top row differs (Known gaps). |
+| `display-browser.png` | Browse Mode; browse and select devices | Preview, the label and Packs at the unit's buttons. The lists' layout differs (Known gaps). |
+| `display-code-dialog.png` | (No figure: the manual shows the code typed on another device.) | The address is also a code, decoded back from the render. |
+| `pads-64-notes.png` | C major scale on the pads | Nothing: the roots fall on the figure's pads. |
+| `pads-64-pads.png` | The 64 Pads layout | The order of the four blocks. |
+| `pads-loop-selector.png` | The Loop Selector layout | In the first build. |
+
+`display-drum-rack.png`, `display-sets.png`, `pads-session.png` and the light-pack Device View
+were not laid beside a figure in either pass.
 
 - **The face against the manual's control figure**: the surface was drawn at 760, 1100 and 1500
   pixels wide (`surface-760.png`, `surface-1100.png`, `surface-1500.png`) and every one of its 147
@@ -348,13 +384,8 @@ beside a figure.
   against its ground in all thirteen packs, light and dark: 4.5 to 1 for anything that can be
   pressed or read, 2 to 1 for the print of a control that is unavailable.
 - **The pads**: `pads-64-notes.png`, `pads-loop-selector.png`, `pads-64-pads.png`, `pads-session.png`.
-- **The display**: `display-device-view.png`, `display-rack-unfolded.png`, `display-drum-rack.png`,
-  `display-simpler.png`, `display-simpler-slicing.png`, `display-mix.png`, `display-clip.png`,
-  `display-clip-audio.png`, `display-session.png`, `display-browser.png`, `display-sets.png`, and
-  Device View in a light pack (`display-device-view-linear-light.png`).
-- **Setup**, tab by tab: `setup-status.png`, `setup-expression.png`, `setup-sensitivity.png`,
-  `setup-audio.png`, `setup-midi.png`, `setup-pedals-cv.png`, `setup-preferences.png`,
-  `setup-software.png`, and a lesson (`setup-learn.png`).
+- **The display and Setup**: the table above, with `display-drum-rack.png`, `display-sets.png`
+  and Device View in a light pack (`display-device-view-linear-light.png`).
 
 ## Checks
 
@@ -363,7 +394,7 @@ npx vitest run src/library/push          # the model's table tests
 node scripts/push-stories.mjs            # every Push story's play, in React and Svelte, against a served Storybook
 node scripts/push-stories.mjs "Push/Screens/Theme" --theme linear --mode light   # the same plays in another pack
 node scripts/push-stories.mjs push-screens-theme--reduced-motion --reduced-motion
-npx tsx scripts/push-stories.ts push-setup   # regenerate a capability's stories from its spec
+npx tsx scripts/push-stories.ts push-setup   # a new capability's stories from the main specs; an existing stories file owns its scenarios and is not written over without --force
 ```
 
 `scripts/push-stories.mjs` asks the Storybook at `http://localhost:6006` (or `--url`, or

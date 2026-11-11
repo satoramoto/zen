@@ -4,7 +4,7 @@
 import { initialState } from '../../model/state';
 import type { PushSet } from '../../model/types';
 import { CONTROLS } from '../../model/layout';
-import { all, cell, click, column, columns, display, expect, given, go, hit, holding, intent, lampState, lists, overlay, paramText, press, rowTexts, screenKind, screenText, tab, turn, waitFor } from '../play';
+import { all, cell, click, column, columns, display, expect, given, go, hit, holding, intent, lampState, lists, overlay, paramText, readCode, press, rowTexts, screenKind, screenText, tab, turn, waitFor } from '../play';
 import type { Play } from '../scenario';
 
 const TAB = { status: 0, expression: 1, sensitivity: 2, audio: 3, midi: 4, pedals: 5, preferences: 6, software: 7 } as const;
@@ -120,7 +120,7 @@ export const plays = {
     ...on('status', (set) => void (set.unit.wifi.on = false)),
     act: async () => {},
     check: ({ canvasElement: c }) => {
-      expect(rowTexts(c, 'top')[4]).toBe('Wi-Fi: Off');
+      expect(rowTexts(c, 'top')[4]).toBe('□Wi-Fi');
       expect(lists(c)[0].rows).toEqual([]);
       // With nothing to connect to, Connect is not offered.
       expect(rowTexts(c, 'top')[5]).toBe('');
@@ -131,7 +131,7 @@ export const plays = {
     ...on('status', (set) => void (set.unit.hotspot = { on: true, name: 'Push-1A2B', password: 'makemusic' })),
     act: async () => {},
     check: ({ canvasElement: c }) => {
-      expect(rowTexts(c, 'top')[6]).toBe('Hotspot: On');
+      expect(rowTexts(c, 'top')[6]).toBe('■Hotspot');
       expect(screenText(c)).toContain('Hotspot Push-1A2B');
       expect(screenText(c)).toContain('Password makemusic');
     },
@@ -209,7 +209,7 @@ export const plays = {
   LinkedInputs: {
     ...on('audio', (set) => void (set.unit.audio.inputs[1].linked = true)),
     act: async ({ canvasElement: c }) => {
-      expect(tab(c, 'top', 3)).toHaveAttribute('data-selected');
+      expect(rowTexts(c, 'top')[2]).toBe('■Link 1 & 2');
       await turn(c, 'encoder-3', CHOICE);
     },
     check: async (context) => {
@@ -236,7 +236,7 @@ export const plays = {
   ClockOut: {
     ...on('midi'),
     act: async ({ canvasElement: c }) => {
-      expect(lists(c)[0].chosen).toBe('MIDI In/Out');
+      expect(paramText(c, 2)).toBe('Port MIDI In/Out');
       await turn(c, 'encoder-1', CHOICE);
       expect(paramText(c, 1)).toContain('Output');
       await press(c, 'upper-3');
@@ -430,6 +430,67 @@ export const plays = {
       const turns = all(context, 'set-volume');
       expect(turns).toHaveLength(3);
       expect(turns.every((i) => i.target === 'Cue' && Number(i.db) < 0)).toBe(true);
+    },
+  },
+
+  WhereInTuneIs: {
+    ...on('expression', (set) => void ((set.unit.expression.mode = 'mpe'), (set.unit.expression.inTune = 'finger'))),
+    act: async ({ canvasElement: c }) => {
+      cell(c, 'encoder-4').dataset.before = `${paramText(c, 4)}|${column(c, 4)!.querySelector('[data-part="picture"]')?.getAttribute('data-picture')}`;
+      await turn(c, 'encoder-4', CHOICE);
+    },
+    check: async (context) => {
+      const c = context.canvasElement;
+      expect(cell(c, 'encoder-4').dataset.before).toBe('In Tune Location Finger|finger');
+      expect(lastSetting(context)).toMatchObject({ setting: 'in-tune-location', value: 'pad' });
+      await waitFor(() => expect(column(c, 4)!.querySelector('[data-part="picture"]')).toHaveAttribute('data-picture', 'pad'));
+      expect(paramText(c, 4)).toBe('In Tune Location Pad');
+    },
+  },
+
+  InputOrOutput: {
+    ...on('midi'),
+    act: async ({ canvasElement: c }) => {
+      cell(c, 'encoder-1').dataset.before = `${paramText(c, 1)}|${column(c, 1)!.querySelector('[data-part="picture"]')?.getAttribute('data-picture')}`;
+      await turn(c, 'encoder-1', CHOICE);
+    },
+    check: async ({ canvasElement: c }) => {
+      expect(cell(c, 'encoder-1').dataset.before).toBe('I/O Input|input');
+      await waitFor(() => expect(column(c, 1)!.querySelector('[data-part="picture"]')).toHaveAttribute('data-picture', 'output'));
+      expect(paramText(c, 1)).toBe('I/O Output');
+      expect(column(c, 1)!.querySelector('[data-part="picture"]')).toHaveAccessibleName('output');
+    },
+  },
+
+  FurtherMaterial: {
+    act: async ({ canvasElement: c }) => {
+      await press(c, 'learn');
+      await click(c, 'jog');
+    },
+    check: async ({ canvasElement: c }) => {
+      await waitFor(() => expect(screenKind(c)).toBe('lesson'));
+      // The code reads back as the lesson's link, and the address is there in text beside it.
+      expect(readCode(column(c, 6))).toBe('https://www.ableton.com/learn-push');
+      expect(column(c, 6)!.querySelector('.lib-codeimage')).toHaveAccessibleName('Code for more about A tour of Push');
+      expect(column(c, 7)).toHaveTextContent('More at https://www.ableton.com/learn-push');
+      // It fits the body and takes nearly all its height: as large as the screen can draw it.
+      const code = column(c, 6)!.querySelector('.lib-codeimage')!.getBoundingClientRect();
+      const body = { top: tab(c, 'top', 1).getBoundingClientRect().bottom, bottom: tab(c, 'bottom', 1).getBoundingClientRect().top };
+      expect(code.bottom).toBeLessThanOrEqual(body.bottom + 1);
+      expect(code.top).toBeGreaterThanOrEqual(body.top - 1);
+      expect(code.height).toBeGreaterThan((body.bottom - body.top) * 0.85);
+      expect(Math.abs(code.width - code.height)).toBeLessThan(1);
+    },
+  },
+
+  ALessonWithNoLink: {
+    args: { initialState: { ...initialState(), display: 'learn' as const, learn: { highlight: 2, lesson: 'lesson-3', step: 0 } } },
+    act: async () => {},
+    check: ({ canvasElement: c }) => {
+      expect(screenKind(c)).toBe('lesson');
+      expect(screenText(c)).toContain('Pick a scale');
+      expect(display(c).querySelector('.lib-codeimage')).toBeNull();
+      expect(screenText(c)).not.toContain('More at');
     },
   },
 } satisfies Record<string, Play>;

@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./astro": { "types": "./src/site/astro.d.mts", "import": "./src/site/astro.mjs" },
+    "./astro": {
+      "types": "./src/site/astro.d.mts",
+      "import": "./src/site/astro.mjs"
+    },
     "./site": {
       "zen-source": "./src/library/site/index.ts",
       "types": "./lib/site/index.d.ts",
@@ -134,6 +137,7 @@
     "@vitejs/plugin-react": "6.1.2",
     "astro": "7.4.8",
     "jsdom": "30.1.2",
+    "jsqr": "^1.4.0",
     "playwright": "1.64.1",
     "pngjs": "7.0.0",
     "react": "19.3.0",
@@ -146,12 +150,12 @@
     "vitest": "4.1.11"
   },
   "dependencies": {
-    "story-spec": "github:satoramoto/story-spec#cbfaa1b6d1b5dcb80ae0d03184d46241d96f8a76",
     "@cortex-js/compute-engine": "0.182.0",
     "mafs": "0.21.0",
     "marked": "18.2.0",
     "mathbox": "2.3.2-rc1",
     "mathlive": "0.111.4",
+    "story-spec": "github:satoramoto/story-spec#cbfaa1b6d1b5dcb80ae0d03184d46241d96f8a76",
     "temml": "0.14.0",
     "three": "0.139.2"
   },

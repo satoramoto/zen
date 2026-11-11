@@ -57,8 +57,9 @@ export function drumCell(state: PushState, set: PushSet, row: number, col: numbe
   if (layout === '64-pads') {
     // Loop pages along the top row while Layout is held or locked.
     if (row === 1 && (holdJob(state, 'layout') || state.drums.borrow === 'locked')) return { part: 'loop', page: col - 1 };
-    // Four blocks of sixteen: the pads in view stay bottom left.
-    const block = (row <= 4 ? 2 : 0) + (col > 4 ? 1 : 0);
+    // Four blocks of sixteen, as on the unit: the pads in view stay bottom left, the next sixteen are
+    // above them, and the right half follows the left (a kit of 36 fills the left half and four more).
+    const block = (col > 4 ? 2 : 0) + (row <= 4 ? 1 : 0);
     return { part: 'drum', note: base + block * 16 + (3 - ((row - 1) % 4)) * 4 + ((col - 1) % 4) };
   }
   if (row >= 5 && col <= 4) return { part: 'drum', note: base + (8 - row) * 4 + (col - 1) };

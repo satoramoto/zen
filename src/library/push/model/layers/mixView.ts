@@ -172,7 +172,13 @@ export const mixView: Layer = {
         choiceCell(2, 'Routing', (mix.side ?? 'input') === 'input' ? 'Input' : 'Output', ['Input', 'Output'], { colour, ...touched(2) }),
         ...routeColumns(state, r).map((c, i) => choiceCell(3 + i, c.name, c.value, c.choices, { colour, ...touched(3 + i) })),
       ];
-    } else body = trackParameters(state, track).flatMap((p, i) => (p ? [paramCell(p, i + 1, { colour, ...(dim ? { disabled: true } : {}), ...touched(i + 1) })] : []));
+    } else
+      body = trackParameters(state, track).flatMap((p, i): BodyCell[] => {
+        if (!p) return [];
+        // The track's volume is its meters with a mark at the volume, as in the mix of every track; the rest are dials.
+        if (p.id === track.volume.id) return [{ type: 'meter', col: i + 1, track: track.id, name: 'Track Volume', titled: true, value: p.display, fraction: p.value, colour, ...(dim ? { dim: true } : {}), ...touched(i + 1) }];
+        return [paramCell(p, i + 1, { colour, ...(dim ? { disabled: true } : {}), ...touched(i + 1) })];
+      });
     paint.screen = screen('mix-track', { top, body, bottom: paint.screen.bottom, ...(pages > 1 && !mix.io ? { paging: { top: { left: mix.page > 0, right: mix.page < pages - 1 } } } : {}) });
   },
 };

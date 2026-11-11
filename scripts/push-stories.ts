@@ -2,16 +2,18 @@
 // capability (`src/library/push/screens/<Name>/<Name>.stories.tsx`), one `scenario()` story per
 // scenario, with its name, When, Then, requirement and SHALL text as literals (story-spec reads
 // them from the source without running anything). What each story does is hand-written beside it
-// in `<Name>.plays.ts`, by the same export name. Run again only when the list of scenarios
-// changes; after that the stories own the spec (`story-spec sync`).
+// in `<Name>.plays.ts`, by the same export name. The stories own the spec once they exist
+// (`story-spec sync`): a scenario is then added by hand in its stories file, and this script will
+// not write over a stories file unless told to with `--force`.
 //
-//   npx tsx scripts/push-stories.ts [capability ...] [--from <specs dir>]
+//   npx tsx scripts/push-stories.ts [capability ...] [--from <specs dir>] [--force]
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const args = process.argv.slice(2);
 const fromAt = args.indexOf('--from');
-const specs = fromAt >= 0 ? args[fromAt + 1] : 'openspec/changes/push-3-surface/specs';
+const specs = fromAt >= 0 ? args[fromAt + 1] : 'openspec/specs';
+const force = args.includes('--force');
 const only = args.filter((a, i) => !a.startsWith('--') && (fromAt < 0 || i !== fromAt + 1));
 const out = 'src/library/push/screens';
 
@@ -107,8 +109,13 @@ ${stories
   )
   .join('\n\n')}
 `;
+  const storiesFile = join(out, name, `${name}.stories.tsx`);
+  if (existsSync(storiesFile) && !force) {
+    console.log(`${capability}: ${name}/${name}.stories.tsx exists and owns its scenarios; not written (add a scenario there by hand, or pass --force to write it again from ${specs})`);
+    continue;
+  }
   mkdirSync(join(out, name), { recursive: true });
-  writeFileSync(join(out, name, `${name}.stories.tsx`), body);
+  writeFileSync(storiesFile, body);
   const playsFile = join(out, name, `${name}.plays.ts`);
   const have = existsSync(playsFile) ? readFileSync(playsFile, 'utf8') : '';
   const missing = stories.filter((s) => !new RegExp(`^  ${s.id}:`, 'm').test(have));

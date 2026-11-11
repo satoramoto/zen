@@ -18,6 +18,8 @@ const mode = (name: Sampler['mode'], more: (sampler: Sampler) => void = () => {}
   more(sampler);
 });
 const param = paramText;
+/** The lit one of a pair of options at an upper display button. */
+const current = (c: HTMLElement, col: number) => (tab(c, 'top', col)?.querySelector('[data-part="option"][data-current]')?.textContent ?? '').trim();
 const marker = (c: HTMLElement, name: string) => [...display(c).querySelectorAll<SVGLineElement>(`[data-part="marker"][data-name="${name}"]`)];
 const at = (el: Element) => Number(el.getAttribute('x1'));
 const sampler = (c: HTMLElement) => app(c).getSet().tracks[3].devices[0].sampler!;
@@ -33,7 +35,7 @@ export const plays = {
       expect(at(marker(c, 'start')[0])).toBeCloseTo(2, 0);
       expect(at(marker(c, 'end')[0])).toBeCloseTo(90, 0);
       // The main bank sits over it, with Mode on its own encoder.
-      expect([1, 2, 3, 4].map((col) => param(c, col).split(' ')[0])).toEqual(['Zoom', 'Start', 'End', 'Mode']);
+      expect([1, 2, 3, 8].map((col) => param(c, col).split(' ')[0])).toEqual(['Zoom', 'Start', 'End', 'Mode']);
     },
   },
 
@@ -50,9 +52,9 @@ export const plays = {
   ToSlicing: {
     set: mode('classic'),
     act: async ({ canvasElement: c }) => {
-      cell(c, 'encoder-4').dataset.before = `${param(c, 4)}|${param(c, 5)}`;
-      // Classic, One-Shot, Slicing: two choices on.
-      await turn(c, 'encoder-4', 2);
+      cell(c, 'encoder-4').dataset.before = `${param(c, 8)}|${param(c, 4)}`;
+      // Classic, One-Shot, Slicing: two choices on. Mode is on the last encoder.
+      await turn(c, 'encoder-8', 2);
       await wait(40);
     },
     check: (context) => {
@@ -60,9 +62,9 @@ export const plays = {
       expect(cell(c, 'encoder-4').dataset.before).toBe('Mode Classic|S Start 0 %');
       expect(all(context, 'set-parameter').every((i) => i.parameter === 'd-simpler.mode')).toBe(true);
       expect(sampler(c).mode).toBe('slicing');
-      expect(param(c, 4)).toBe('Mode Slicing');
-      expect(param(c, 5)).toContain('Slice By');
-      expect(param(c, 7)).toContain('Playback');
+      expect(param(c, 8)).toBe('Mode Slicing');
+      expect(param(c, 6)).toContain('Slice By');
+      expect(param(c, 5)).toContain('Playback');
     },
   },
 
@@ -86,39 +88,44 @@ export const plays = {
     act: none,
     check: ({ canvasElement: c }) => {
       const greyed = (col: number) => display(c).querySelector(`[data-type="param"][data-col="${col}"]`)!.hasAttribute('data-disabled');
-      expect([5, 6, 7, 8].map((col) => param(c, col).replace(/ \d.*$/, ''))).toEqual(['S Start', 'S Length', 'Loop Length', 'Loop Fade']);
-      expect([5, 6, 7, 8].map(greyed)).toEqual([false, false, true, true]);
+      expect([4, 5, 6, 7].map((col) => param(c, col).replace(/ \d.*$/, ''))).toEqual(['S Start', 'Length', 'Loop Length', 'Loop Fade']);
+      expect([4, 5, 6, 7].map(greyed)).toEqual([false, false, true, true]);
     },
   },
 
   Gate: {
     set: mode('one-shot'),
     act: async ({ canvasElement: c }) => {
-      cell(c, 'encoder-5').dataset.bank = [5, 6, 7, 8].map((col) => param(c, col)).join('|');
-      await turn(c, 'encoder-5', 1);
+      // Trigger and Gate are a pair at the second display button of Edit Mode.
+      await press(c, 'upper-1');
+      cell(c, 'encoder-5').dataset.bank = [4, 5, 6, 7].map((col) => param(c, col)).join('|');
+      cell(c, 'encoder-5').dataset.pair = current(c, 2);
+      await press(c, 'upper-2');
       await wait(40);
     },
     check: (context) => {
       const c = context.canvasElement;
       const bank = cell(c, 'encoder-5').dataset.bank!;
-      for (const word of ['Trigger', 'Fade In', 'Fade Out', 'Transpose']) expect(bank).toContain(word);
-      expect(intent(context, 'set-parameter')).toMatchObject({ parameter: 'd-simpler.trigger', choice: 1 });
+      for (const word of ['Fade In', 'Fade Out', 'Transpose', 'Gain']) expect(bank).toContain(word);
+      expect(cell(c, 'encoder-5').dataset.pair).toBe('Trigger');
+      expect(rowTexts(c, 'top')[1]).toBe('TriggerGate');
+      expect(intent(context, 'set-parameter')).toMatchObject({ parameter: 'd-simpler.trigger', value: 1 });
       expect(sampler(c).trigger).toBe('gate');
-      expect(param(c, 5)).toBe('Trigger Gate');
+      expect(current(c, 2)).toBe('Gate');
     },
   },
 
   ByBeat: {
     set: mode('slicing'),
     act: async ({ canvasElement: c }) => {
-      cell(c, 'encoder-5').dataset.before = `${param(c, 6)}|${marker(c, 'slice').length + marker(c, 'selected').length}`;
-      await turn(c, 'encoder-5', 1);
+      cell(c, 'encoder-5').dataset.before = `${param(c, 7)}|${marker(c, 'slice').length + marker(c, 'selected').length}`;
+      await turn(c, 'encoder-6', 1);
       await wait(40);
     },
     check: ({ canvasElement: c }) => {
       expect(cell(c, 'encoder-5').dataset.before).toBe('Sensitivity 50 %|7');
-      expect(param(c, 5)).toBe('Slice By Beat');
-      expect(param(c, 6)).toContain('Division');
+      expect(param(c, 6)).toBe('Slice By Beat');
+      expect(param(c, 7)).toContain('Division');
       // A marker at each division: eight of them.
       expect(marker(c, 'slice').length + marker(c, 'selected').length).toBe(8);
     },
@@ -127,7 +134,7 @@ export const plays = {
   MoreSensitive: {
     set: mode('slicing'),
     act: async ({ canvasElement: c }) => {
-      await turn(c, 'encoder-6', 40);
+      await turn(c, 'encoder-7', 40);
       await wait(40);
     },
     check: (context) => {
@@ -200,14 +207,14 @@ export const plays = {
   Through: {
     set: mode('slicing'),
     act: async ({ canvasElement: c }) => {
-      await turn(c, 'encoder-7', 2);
+      await turn(c, 'encoder-5', 2);
       await wait(40);
     },
     check: (context) => {
       const c = context.canvasElement;
       expect(all(context, 'set-parameter').every((i) => i.parameter === 'd-simpler.playback')).toBe(true);
       expect(sampler(c).playback).toBe('thru');
-      expect(param(c, 7)).toBe('Playback Through');
+      expect(param(c, 5)).toBe('Playback Through');
     },
   },
 
@@ -216,13 +223,14 @@ export const plays = {
     act: async ({ canvasElement: c }) => {
       await press(c, 'upper-1');
       cell(c, 'upper-1').dataset.edit = `${rowTexts(c, 'top').join('|')}::${rowTexts(c, 'bottom').filter(Boolean).join('|')}`;
-      await press(c, 'upper-7');
+      await press(c, 'upper-8');
     },
     check: async (context) => {
       const c = context.canvasElement;
       const [top, bottom] = cell(c, 'upper-1').dataset.edit!.split('::');
-      expect(top).toBe('Funk Break|Loop: Off|Warp as 2 Bars|:2|x2|Crop|Reverse|');
-      expect(bottom).toBe('Sample|Global|Filter');
+      // Each at the button the unit has it at: the sixth is empty in Classic.
+      expect(top).toBe('‹Funk Break|Loop Off|Warp as 2 Bars|:2|x2||Crop|Reverse');
+      expect(bottom).toBe('Main|Global|Filter');
       expect(all(context, 'sample-action')).toEqual([{ kind: 'edit', action: 'sample-action', track: 't-sampler', device: 'd-simpler', what: 'reverse' }]);
       // The button again leaves Edit Mode.
       await press(c, 'upper-1');
@@ -240,7 +248,7 @@ export const plays = {
       const top = rowTexts(c, 'top');
       expect(top).not.toContain('Crop');
       // Nor Loop, which is Classic's; the rest are there.
-      expect(top.filter(Boolean)).toEqual(['Funk Break', 'Warp as 2 Bars', ':2', 'x2', 'Split Slice', 'Reverse']);
+      expect(top).toEqual(['‹Funk Break', 'TriggerGate', 'Warp as 2 Bars', ':2', 'x2', 'Reset Slices', 'Split Slice', 'Reverse']);
       expect(tab(c, 'top', 1)).toHaveAttribute('data-selected', 'true');
     },
   },
@@ -280,6 +288,73 @@ export const plays = {
       expect(intent(context, 'select-device')).toMatchObject({ device: 'd-simpler' });
       expect(display(c).querySelector('[data-type="wave"] [data-part="band"]')).not.toBeNull();
       expect(tab(c, 'top', 2)).toHaveAttribute('data-selected', 'true');
+    },
+  },
+
+  ModeIsLast: {
+    set: mode('slicing'),
+    act: async ({ canvasElement: c }) => {
+      const read = () => [1, 2, 3, 8].map((col) => param(c, col).split(' ')[0]).join(' ') + ` (${param(c, 8)})`;
+      const seen = [read()];
+      // Back through One-Shot to Classic, on the last encoder.
+      for (let i = 0; i < 2; i++) {
+        await turn(c, 'encoder-8', -1);
+        await wait(40);
+        seen.push(read());
+      }
+      cell(c, 'encoder-8').dataset.seen = seen.join('|');
+    },
+    check: ({ canvasElement: c }) => {
+      expect(cell(c, 'encoder-8').dataset.seen).toBe('Zoom Start End Mode (Mode Slicing)|Zoom Start End Mode (Mode One-Shot)|Zoom Start End Mode (Mode Classic)');
+    },
+  },
+
+  GainIsAtHand: {
+    set: mode('one-shot'),
+    act: none,
+    check: ({ canvasElement: c }) => {
+      expect([4, 5, 6, 7].map((col) => param(c, col).replace(/ [-\d].*$/, ''))).toEqual(['Fade In', 'Fade Out', 'Transpose', 'Gain']);
+      expect(param(c, 7)).toBe('Gain 0.0 dB');
+      // It is the main bank: the first of the device's banks.
+      expect(app(c).getSet().tracks[3].devices[0].banks[0].parameters[6]?.id).toBe('d-simpler.gain');
+    },
+  },
+
+  NudgingASlice: {
+    set: simpler(),
+    act: async ({ canvasElement: c }) => {
+      // The fifth slice.
+      await hit(c, 7, 1);
+      cell(c, 'encoder-4').dataset.before = `${param(c, 4).split(' ')[0]}|${sampler(c).slices![4]}`;
+      await turn(c, 'encoder-4', 12);
+      await wait(40);
+    },
+    check: (context) => {
+      const c = context.canvasElement;
+      const [name, before] = cell(c, 'encoder-4').dataset.before!.split('|');
+      expect(name).toBe('Nudge');
+      const asked = all(context, 'slice');
+      expect(asked.length).toBeGreaterThan(0);
+      expect(asked.every((i) => i.device === 'd-simpler' && i.move === 4 && (i.by as number) > 0)).toBe(true);
+      expect(sampler(c).slices![4]).toBeGreaterThan(Number(before));
+      // Only that slice moved.
+      expect(sampler(c).slices![3]).toBeLessThan(Number(before));
+    },
+  },
+
+  ResettingTheSlices: {
+    set: mode('slicing', (s) => void (s.slices = [0.1, 0.15, 0.5])),
+    act: async ({ canvasElement: c }) => {
+      await press(c, 'upper-1');
+      cell(c, 'upper-6').dataset.offer = rowTexts(c, 'top')[5];
+      await press(c, 'upper-6');
+      await wait(40);
+    },
+    check: (context) => {
+      const c = context.canvasElement;
+      expect(cell(c, 'upper-6').dataset.offer).toBe('Reset Slices');
+      expect(all(context, 'sample-action')).toEqual([{ kind: 'edit', action: 'sample-action', track: 't-sampler', device: 'd-simpler', what: 'reset-slices' }]);
+      expect(sampler(c).slices).toHaveLength(8);
     },
   },
 } satisfies Record<string, Play>;

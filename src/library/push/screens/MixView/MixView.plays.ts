@@ -196,7 +196,7 @@ export const plays = {
     },
     check: async (context) => {
       const c = context.canvasElement;
-      expect(cell(c, 'main').dataset.shown).toContain('mix-track Volume');
+      expect(cell(c, 'main').dataset.shown).toContain('mix-track Track Volume');
       expect(cell(c, 'main').dataset.shown).toContain('lit');
       expect(all(context, 'select-track').map((i) => i.track)).toEqual(['main', 't-keys']);
       await waitFor(() => expect(app(c).getSet().selection.track).toBe('t-keys'));

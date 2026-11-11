@@ -2,6 +2,7 @@
 // turn and touch on the surface; the lamps, the display and what the device asked. Everything goes
 // through the DOM the surface draws, with real pointer and key events, so a play exercises either
 // renderer the same way.
+import jsQR from 'jsqr';
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { lampShadeCss, lampVar, type LampShade } from '../../foundation/themes/lamps';
 import { HOLD_MS } from '../model/timing';
@@ -235,6 +236,30 @@ export function rgbOf(colour: string): [number, number, number] {
 /** The colour an element is filled with. */
 export const fillOf = (el: Element) => rgbOf(getComputedStyle(el).backgroundColor);
 
+/** The colour an unlit lamp is mixed toward, as the surface around `el` has it (dark on a dark body, pale on a light one). */
+export function unlitOf(el: Element): [number, number, number] {
+  const probe = document.createElement('span');
+  probe.style.background = 'var(--push-unlit)';
+  el.appendChild(probe);
+  const colour = fillOf(probe);
+  probe.remove();
+  return colour;
+}
+/** How far apart two colours are, in RGB. */
+export const distance = (a: readonly number[], b: readonly number[]) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+/**
+ * How lit a lamp looks: how far its colour is from an unlit one. A dimmer lamp is nearer the unlit
+ * colour, which is darker on a dark body and paler on a light one, so this reads the same in both modes.
+ */
+export const litness = (el: Element) => distance(groundOf(el), unlitOf(el));
+/** Whether two lamps are the same colour at different strengths: their colours point the same way from unlit. */
+export function sameHue(a: Element, b: Element): boolean {
+  const u = unlitOf(a);
+  const [x, y] = [groundOf(a), groundOf(b)].map((c) => c.map((v, i) => v - u[i]));
+  const dot = x[0] * y[0] + x[1] * y[1] + x[2] * y[2];
+  return dot / (Math.hypot(...x) * Math.hypot(...y) || 1) > 0.95;
+}
+
 /** The words in the top or bottom row's eight cells. */
 export const rowTexts = (canvas: HTMLElement, row: 'top' | 'bottom'): string[] => [1, 2, 3, 4, 5, 6, 7, 8].map((c) => (tab(canvas, row, c)?.textContent ?? '').trim());
 /** The words of every body cell, by its first column. */
@@ -274,7 +299,14 @@ export function words(el: Element | null | undefined): string {
   return out.join(' ');
 }
 /** The parameter cell that starts at a column, as words. */
-export const paramText = (canvas: HTMLElement, col: number) => words(display(canvas).querySelector(`[data-type="param"][data-col="${col}"]`));
+export const paramText = (canvas: HTMLElement, col: number) => {
+  // A choice's other choices, dim beside or beneath the current one, are not its reading.
+  const el = display(canvas).querySelector(`[data-type="param"][data-col="${col}"]`)?.cloneNode(true) as Element | undefined;
+  el?.querySelectorAll('[data-part="choice"]').forEach((other) => other.remove());
+  return words(el);
+};
+/** The choices a parameter shows after its current one, dim. */
+export const otherChoices = (canvas: HTMLElement, col: number): string[] => [...display(canvas).querySelectorAll(`[data-type="param"][data-col="${col}"] [data-part="choice"]`)].map((el) => (el.textContent ?? '').trim());
 
 /** The lists on the display, left to right: each one's name, its rows, the row marked in it, and whether it is an enclosing menu. */
 export function lists(canvas: HTMLElement): { label: string; rows: string[]; chosen: string; enclosing: boolean }[] {
@@ -287,4 +319,28 @@ export function lists(canvas: HTMLElement): { label: string; rows: string[]; cho
 /** Press D-pad buttons in turn: `go(c, 'down', 'down', 'centre')`. */
 export async function go(canvas: HTMLElement, ...ways: ('up' | 'down' | 'left' | 'right' | 'centre')[]): Promise<void> {
   for (const way of ways) await press(canvas, `dpad-${way}`);
+}
+
+/* ---------- a code image ---------- */
+
+/**
+ * What a code image on the screen says, read back from what is drawn: its marks are laid out as
+ * the pixels a camera would see (dark on white, with its margin) and decoded. `undefined` when
+ * there is no code, or it does not read.
+ */
+export function readCode(root: Element | null | undefined): string | undefined {
+  const svg = root?.querySelector('.lib-codeimage svg');
+  const d = svg?.querySelector('[data-part="modules"]')?.getAttribute('d');
+  const side = Number(svg?.getAttribute('viewBox')?.split(' ')[2]);
+  if (!d || !side) return undefined;
+  const scale = 4;
+  const data = new Uint8ClampedArray(side * scale * side * scale * 4).fill(255);
+  for (const [, x, y, w] of d.matchAll(/M(\d+) (\d+)h(\d+)v1/g)) {
+    for (let dy = 0; dy < scale; dy++)
+      for (let px = Number(x) * scale; px < (Number(x) + Number(w)) * scale; px++) {
+        const at = ((Number(y) * scale + dy) * side * scale + px) * 4;
+        data[at] = data[at + 1] = data[at + 2] = 0;
+      }
+  }
+  return jsQR(data, side * scale, side * scale)?.data;
 }
