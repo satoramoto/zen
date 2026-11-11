@@ -5,6 +5,9 @@ export type { TipAction } from './Button/Button';
 export { Button, type ButtonProps, type ButtonGlyph, type ButtonHue, type ButtonSize, type ButtonVariant, type ButtonFace } from './Button/Button';
 export { LampButton, type LampButtonProps, type LampHue, type LampFace } from './LampButton/LampButton';
 export { Separator, type SeparatorProps } from './Separator/Separator';
+/** A text as a code a phone can scan (a QR code), dark on light in every pack. */
+export { CodeImage, type CodeImageProps } from './CodeImage/CodeImage';
+export { encodeCode, CODE_IMAGE_MAX_BYTES } from './CodeImage/CodeImage.model';
 export { SearchField, type SearchFieldProps } from './SearchField/SearchField';
 export { StatusDot, type StatusDotProps, type StatusDotHue } from './StatusDot/StatusDot';
 export { StepValue, type StepValueProps, type StepHue } from './StepValue/StepValue';
