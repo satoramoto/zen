@@ -141,7 +141,7 @@ both renderers. Each group ends by running the while-building checks from the pr
 
 ## 15. Merge
 
-- [ ] 15.1 `npm run typecheck`, `npx vitest run src/library`, `npm run build:storybook` and its story test run, `npm run build:lib` then `npm run check:lib`, `openspec validate push-3-surface --strict` and `story-spec sync --change push-3-surface --check` all pass; pull request from `change/push-3-surface` merged by auto-merge when the `checks` job passes, branch deleted
+- [x] 15.1 `npm run typecheck`, `npx vitest run src/library`, `npm run build:storybook` and its story test run, `npm run build:lib` then `npm run check:lib`, `openspec validate push-3-surface --strict` and `story-spec sync --change push-3-surface --check` all pass; pull request from `change/push-3-surface` merged by auto-merge when the `checks` job passes, branch deleted
 
 ## Workflow follow-up
 
