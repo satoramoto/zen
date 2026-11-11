@@ -1,0 +1,16 @@
+/* CodeImage: a scannable code. Contract variables plus the local --lib-code-size.
+
+   A scanner needs dark marks on a light ground, so this is the one part that does not follow the
+   scope's mode: the ground is the surface's hue made light and the marks the text's hue made dark,
+   whatever the pack. */
+
+.lib-codeimage {
+  --lib-code-size: calc(var(--control-h) * 4);
+  display: inline-block;
+  inline-size: var(--lib-code-size);
+  aspect-ratio: 1;
+}
+.lib-codeimage[data-empty] { display: none; }
+.lib-codeimage svg { display: block; inline-size: 100%; block-size: 100%; }
+.lib-codeimage [data-part='ground'] { fill: oklch(from var(--surface-0) 0.97 min(c, 0.02) h); }
+.lib-codeimage [data-part='modules'] { fill: oklch(from var(--text-1) 0.16 min(c, 0.03) h); }
