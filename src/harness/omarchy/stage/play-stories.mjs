@@ -7,8 +7,9 @@
 //   node play-stories.mjs [--url http://127.0.0.1:6030] [--workers 2] [--timeout 90000] [prefix ...]
 //
 // A prefix matches a story id or title ("omarchy-p5a", "Omarchy/p5a"). With no
-// prefix, every story with a play runs. Needs playwright and a Chromium
-// (CHROMIUM_PATH, default /usr/bin/chromium).
+// prefix, every story with a play runs. Plays in Playwright's own Chromium
+// headless shell and in nothing else: no browser path is read from the
+// environment. Install it once with `npx playwright install --only-shell chromium`.
 import { parseArgs } from 'node:util';
 
 const { values, positionals } = parseArgs({
@@ -32,8 +33,15 @@ const stories = Object.values(index.entries)
 if (!stories.length) { console.error(`no stories match ${positionals.join(', ') || '(all)'}`); process.exit(2); }
 if (values.list) { for (const s of stories) console.log(`${s.id}\t${s.title} / ${s.name}`); process.exit(0); }
 
+if (process.env.CHROMIUM_PATH) console.error('CHROMIUM_PATH is no longer read: stories play in Playwright\'s own Chromium headless shell.');
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright');
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/chromium', headless: true });
+// No executable path and no channel: headless, Playwright launches the headless shell of the
+// revision this repo's Playwright pins.
+const browser = await chromium.launch({ headless: true }).catch((e) => {
+  if (!/Executable doesn't exist/.test(e.message)) throw e;
+  console.error('Playwright\'s Chromium headless shell is not installed. Run: npx playwright install --only-shell chromium');
+  process.exit(2);
+});
 
 function observe() {
   const run = (window.__STAGE_RUN__ = { events: [] });

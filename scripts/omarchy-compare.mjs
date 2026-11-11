@@ -1,4 +1,5 @@
-// Optional tooling dependency: playwright, with a system Chromium. No audio calls.
+// Optional tooling dependency: playwright, with its own Chromium headless shell
+// (`npx playwright install --only-shell chromium`). No audio calls.
 // PLAYWRIGHT_MODULE may point to an isolated install, keeping Zen's lockfile intact.
 import {mkdirSync, writeFileSync, readFileSync} from 'node:fs';
 import {resolve, join} from 'node:path';
@@ -46,7 +47,7 @@ function keyed(nodes) {
 }
 
 mkdirSync(output, {recursive: true});
-const browser = await chromium.launch({executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/chromium', headless: true, args: ['--no-sandbox']});
+const browser = await chromium.launch({headless: true, args: ['--no-sandbox']});
 const reports = [];
 try {
   const page = await browser.newPage({deviceScaleFactor: 1});
