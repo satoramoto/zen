@@ -322,13 +322,16 @@
 .push-display__cell[data-type='meter'] {
   --space-2: calc(var(--push-px) * 5);
   gap: calc(var(--push-px) * 3);
-  padding: calc(var(--push-px) * 5) 0;
+  /* From the column's left edge, as the unit's are, with the reading under them. */
+  align-items: flex-start;
+  padding: calc(var(--push-px) * 5) calc(var(--push-px) * 8);
 }
+.push-display__cell[data-type='meter'] > [data-part='name'] { flex: none; max-width: 100%; color: var(--text-2); }
 .push-display__meter {
   flex: 1;
   display: flex;
   align-items: stretch;
-  justify-content: center;
+  justify-content: flex-start;
   gap: calc(var(--push-px) * 6);
   min-height: 0;
 }
@@ -352,6 +355,7 @@
   min-height: 0;
   /* A clip's block is small: its print and its room are too. */
   --size-label: calc(var(--push-px) * 9);
+  --size-caption: calc(var(--push-px) * 9);
   --space-1: 0px;
   --space-2: 0px;
   --bloom: 0px;
@@ -384,6 +388,10 @@
 /* The scenes' labels sit over the right edge of the last column, as on the unit. */
 .push-display__scene {
   position: absolute;
+  /* As high as its row and no higher, so eight of them stand clear of each other. */
+  inset-block: 0;
+  display: flex;
+  align-items: center;
   right: calc(var(--push-px) * 2);
   padding: 0 calc(var(--push-px) * 3);
   background: var(--push-ground);

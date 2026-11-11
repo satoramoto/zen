@@ -363,9 +363,10 @@ export const browser: Layer = {
         }
         return true;
       }
-      if (upper === 5) push(ctx, 'preview', { on: !set.browser.preview });
-      else if (upper === 6 && item && !item.folder) push(ctx, 'favourite', { item: item.id, label: set.browser.labels?.[b.label ?? 0] ?? 'Favorites', on: !item.favourite });
-      else if (upper === 8) b.packs = { highlight: 0 };
+      // The unit's buttons: Preview at the second, the label at the fourth, Packs at the seventh.
+      if (upper === 2) push(ctx, 'preview', { on: !set.browser.preview });
+      else if (upper === 4 && item && !item.folder) push(ctx, 'favourite', { item: item.id, label: set.browser.labels?.[b.label ?? 0] ?? 'Favorites', on: !item.favourite });
+      else if (upper === 7) b.packs = { highlight: 0 };
       return true;
     }
     // A drum pad tapped while swapping one retargets the swap to it: the folder follows the new selection.
@@ -399,7 +400,7 @@ export const browser: Layer = {
     const label = set.browser.labels?.[b.label ?? 0] ?? 'Favorites';
     const top: (RowCell | null)[] = b.hotSwap
       ? [{ label: device?.name ?? selectedTrack(set).name, colour: selectedTrack(set).colour, selected: true }, null, null, null, null, { label: 'Load Previous' }, { label: 'Load Next' }, null]
-      : [X, null, null, null, { label: 'Preview', selected: set.browser.preview }, { label, selected: !!item?.favourite, ...(item && !item.folder ? {} : { dim: true }) }, null, { label: 'Packs' }];
+      : [X, { label: 'Preview', icon: set.browser.preview ? 'switch-on' : 'switch-off', ...(set.browser.preview ? {} : { dim: true }) }, null, { label, icon: item?.favourite ? 'switch-on' : 'switch-off', ...(item && !item.folder && item.favourite ? {} : { dim: true }) }, null, null, { label: 'Packs' }, null];
     paint.screen = screen('browse', { top, body, close: !b.hotSwap });
     lamps['dpad-up'] = lamp(highlight > 0 ? 'dim' : 'off');
     lamps['dpad-down'] = lamp(highlight < (lists.at(-1)?.length ?? 0) - 1 ? 'dim' : 'off');

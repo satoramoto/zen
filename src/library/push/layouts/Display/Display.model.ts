@@ -178,8 +178,8 @@ function list(cell: ListCell): ChildArg {
   const items = cell.loading ? [{ id: 'loading', label: 'Loading…', disabled: true }] : view.items.map(({ id, label, mark, disabled }) => ({ id, label, count: mark, disabled }));
   return [
     component('FolderList', { label: cell.label, items, chosen: cell.chosen ?? null }),
-    view.more.above ? textNode({ role: 'caption', tone: 'muted' }, { class: 'push-display__more', 'data-more': 'above', 'aria-label': 'more above' }, '▴') : null,
-    view.more.below ? textNode({ role: 'caption', tone: 'muted' }, { class: 'push-display__more', 'data-more': 'below', 'aria-label': 'more below' }, '▾') : null,
+    view.more.above ? h('span', { class: 'push-display__more', 'data-more': 'above', role: 'img', 'aria-label': 'more above' }, textNode({ role: 'caption', tone: 'muted' }, {}, '▴')) : null,
+    view.more.below ? h('span', { class: 'push-display__more', 'data-more': 'below', role: 'img', 'aria-label': 'more below' }, textNode({ role: 'caption', tone: 'muted' }, {}, '▾')) : null,
   ];
 }
 
@@ -207,6 +207,7 @@ function content(cell: BodyCell): ChildArg {
     case 'meter':
       // A stereo meter the frame reader moves, a mark at the volume, and the reading.
       return [
+        cell.titled ? textNode({ role: 'label', truncate: true, leading: 'tight' }, { 'data-part': 'name' }, cell.name) : null,
         wire(
           h(
             'div',
@@ -310,7 +311,8 @@ function content(cell: BodyCell): ChildArg {
                 clip && clip.colour !== undefined ? component('Pad', { label: clip.label, name: `${clip.label}${clip.state && clip.state !== 'stopped' ? `, ${clip.state}` : ''}`, fillCell: true, state: 'playing', hue: 1 }) : null,
               ),
             ),
-            textNode({ role: 'caption', leading: 'tight', truncate: true }, { class: 'push-display__scene', 'data-part': 'scene', role: 'rowheader' }, cell.labels?.[r] ?? ''),
+            // The label is a Text inside its own box: a class on the Text itself would replace the classes that size it.
+            h('span', { class: 'push-display__scene', 'data-part': 'scene', role: 'rowheader' }, textNode({ role: 'caption', leading: 'tight', truncate: true }, {}, cell.labels?.[r] ?? '')),
           ),
         ),
       );

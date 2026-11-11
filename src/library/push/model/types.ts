@@ -656,6 +656,8 @@ export interface TraceCell {
 
 export interface MeterCell {
   type: 'meter';
+  /** Show the name over the meters: a track's own mix, where each column is a different thing. */
+  titled?: boolean;
   /** Whose levels the frame reader is asked for: a track's id, or a chain's or pad's. */
   track: string;
   name: string;

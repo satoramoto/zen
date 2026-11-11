@@ -28,9 +28,9 @@ export const plays = {
       expect(lists(c)).toHaveLength(1);
       expect(last(c).rows).toEqual(['Device', 'MIDI Track', 'Audio Track', 'Return Track']);
       expect(last(c).chosen).toBe('Device');
-      // An X to leave, Preview and Favorites, and Packs at the top right.
+      // An X to leave, then the unit's places: Preview at the second button, Favorites at the fourth, Packs at the seventh.
       expect(tab(c, 'top', 1).querySelector('[role="img"]')).toHaveAccessibleName('close');
-      expect(rowTexts(c, 'top').slice(4)).toEqual(['Preview', 'Favorites', '', 'Packs']);
+      expect(rowTexts(c, 'top').slice(1)).toEqual(['□Preview', '', '□Favorites', '', '', 'Packs', '']);
       expect(lampState(c, 'add')).toBe('lit');
     },
   },
@@ -120,7 +120,7 @@ export const plays = {
       await go(c, 'down');
     },
     check: (context) => {
-      expect(tab(context.canvasElement, 'top', 5)).toHaveAttribute('data-selected', 'true');
+      expect(rowTexts(context.canvasElement, 'top')[1]).toBe('■Preview');
       expect(all(context, 'preview')).toEqual([{ kind: 'navigate', action: 'preview', item: 'sounds.bass.acid' }]);
     },
   },
@@ -128,17 +128,18 @@ export const plays = {
   MarkingAFavourite: {
     ...at(BASS, 1),
     act: async ({ canvasElement: c }) => {
-      cell(c, 'upper-6').dataset.before = String(tab(c, 'top', 6).hasAttribute('data-selected'));
-      await press(c, 'upper-6');
+      // The label's box is at the fourth display button, as on the unit, and Preview's at the second.
+      cell(c, 'upper-6').dataset.before = rowTexts(c, 'top')[3];
+      await press(c, 'upper-4');
     },
     check: async (context) => {
       const c = context.canvasElement;
-      expect(cell(c, 'upper-6').dataset.before).toBe('false');
+      expect(cell(c, 'upper-6').dataset.before).toBe('□Favorites');
       expect(all(context, 'favourite')).toEqual([{ kind: 'file', action: 'favourite', item: 'sounds.bass.acid', label: 'Favorites', on: true }]);
-      await waitFor(() => expect(tab(c, 'top', 6)).toHaveAttribute('data-selected', 'true'));
+      await waitFor(() => expect(rowTexts(c, 'top')[3]).toBe('■Favorites'));
       // Preview is off by default, and its button switches it.
-      expect(tab(c, 'top', 5)).not.toHaveAttribute('data-selected');
-      await press(c, 'upper-5');
+      expect(rowTexts(c, 'top')[1]).toBe('□Preview');
+      await press(c, 'upper-2');
       expect(intent(context, 'preview')).toEqual({ kind: 'navigate', action: 'preview', on: true });
     },
   },
