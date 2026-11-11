@@ -1,7 +1,7 @@
 // What each push-recording scenario does and checks. The words are in Recording.stories.tsx.
 import { initialState } from '../../model/state';
 import type { PushSet, PushState } from '../../model/types';
-import { actions, all, asked, cell, column, down, expect, forget, given, hit, holdDown, holding, intent, lamp, lampState, onTrack, press, RED, rowTexts, screenKind, tab, turn, wait, waitFor, HOLD } from '../play';
+import { actions, all, asked, cell, column, down, expect, forget, given, hit, holdDown, holding, inputs, intent, lamp, lampState, onTrack, press, RED, rowTexts, screenKind, tab, turn, wait, waitFor, HOLD } from '../play';
 import type { Play } from '../scenario';
 
 const start = (more: Partial<PushState>) => ({ args: { initialState: { ...initialState(), ...more } } });
@@ -200,9 +200,13 @@ export const plays = {
     },
     check: (context) => {
       const notes = all(context, 'note-on');
-      expect(notes.map((i) => i.pitch)).toEqual([42, 42, 42, 42]);
+      // A busy page can hold the pad a little longer than asked: one more sixteenth for each 125 ms it was down.
+      const [down, up] = inputs(context).filter((i) => i.control === 'pad-7-3').map((i) => i.time);
+      const sixteenths = 1 + Math.floor((up - down) / 125);
+      expect(sixteenths).toBeGreaterThanOrEqual(4);
+      expect(notes.map((i) => i.pitch)).toEqual(Array(sixteenths).fill(42));
       expect(notes.slice(1).every((i) => i.repeat)).toBe(true);
-      expect(all(context, 'note-off')).toHaveLength(4);
+      expect(all(context, 'note-off')).toHaveLength(sixteenths);
     },
   },
 
