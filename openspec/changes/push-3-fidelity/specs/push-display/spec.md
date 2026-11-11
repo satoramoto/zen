@@ -1,22 +1,22 @@
-# Spec Delta
+# push-display Spec Delta
 
 ## ADDED Requirements
 
-### Requirement: A touched choice shows the choices beside it
+### Requirement: A choice shows the choices after it
 
-While the encoder of a parameter that takes one of a list of choices is touched or turned, its cell SHALL show the current choice at the large size with the other choices dim beneath it in their order, keeping the current one in view; untouched, it SHALL show the current choice alone.
+A parameter that takes one of a list of choices SHALL show the current choice lit; a setting SHALL show the choices after it dim beneath it, and a parameter over a drawing SHALL show them dim beside it in a row.
 
-#### Scenario: Touching a choice
-- **WHEN** a person touches the encoder over a parameter with four choices
-- **THEN** its cell shows the current choice large and the other three dim beneath it
+#### Scenario: Choices beneath a setting
+- **WHEN** the Expression tab shows Expression Mode at MPE
+- **THEN** MPE is large and lit, with Poly Aftertouch and Mono Aftertouch dim beneath it
 
-#### Scenario: Turning to the next choice
-- **WHEN** a person turns that encoder one step clockwise
-- **THEN** the app is asked for the next choice, and it is shown large once the app gives it
+#### Scenario: Choices beside a parameter
+- **WHEN** Device View shows a Simpler in Classic mode
+- **THEN** Mode reads Classic lit, with One-Shot dim beside it on the same line
 
-#### Scenario: Letting go
-- **WHEN** the person lifts their finger from the encoder
-- **THEN** the cell shows the current choice alone
+#### Scenario: The last choice
+- **WHEN** a setting is at the last of its choices
+- **THEN** it is shown alone
 
 ### Requirement: An address can be shown as a code image
 
@@ -36,8 +36,26 @@ The display SHALL be able to show an address as a code image a phone can scan, d
 
 ### Requirement: A value may carry a small picture
 
-A setting's value SHALL be able to name a small picture, drawn under the value in the value's colour, and a value that names none SHALL be drawn as before.
+A setting's value SHALL be able to name a small picture, drawn under the value in the value's colour in place of a dial, and a value that names none SHALL be drawn as before.
 
 #### Scenario: A value with a picture
 - **WHEN** the app gives a setting's value with the picture of a finger
-- **THEN** a finger is drawn under the value
+- **THEN** a finger is drawn under the value, in its colour, where a dial would be
+
+## MODIFIED Requirements
+
+### Requirement: A parameter cell shows a name, a value and a drawing
+
+A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, the current choice at the large size for a choice, a switch for an on or off, and a bar for a level.
+
+#### Scenario: A continuous parameter
+- **WHEN** a column shows a filter frequency of 20.0 kHz
+- **THEN** it reads its name, 20.0 kHz, and an arc filled to its place in the range
+
+#### Scenario: A choice
+- **WHEN** a column shows a parameter with four named choices
+- **THEN** the current choice is shown alone at the large size
+
+#### Scenario: A bipolar value
+- **WHEN** a column shows a pan at centre
+- **THEN** its arc is empty from the centre and reads C

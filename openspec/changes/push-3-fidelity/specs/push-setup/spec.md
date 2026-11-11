@@ -1,4 +1,4 @@
-# Spec Delta
+# push-setup Spec Delta
 
 ## MODIFIED Requirements
 
@@ -16,7 +16,7 @@ The Expression tab SHALL set the Expression Mode (MPE, Poly Aftertouch, Mono Aft
 
 #### Scenario: Where in tune is
 - **WHEN** In Tune Location is Finger
-- **THEN** a finger is drawn under it, and a pad when it is Pad
+- **THEN** a finger is drawn under it, and a pad once it is Pad
 
 ### Requirement: MIDI sets each port
 
@@ -44,7 +44,7 @@ Pressing Learn SHALL show the lessons the app lists, opened with the jog wheel a
 
 #### Scenario: Further material
 - **WHEN** a lesson's page has a link to further material
-- **THEN** the page shows a code image that reads back as the link's address
+- **THEN** the page shows a code image that reads back as the link's address, and the address in text
 
 #### Scenario: A lesson with no link
 - **WHEN** a lesson's page has no link
