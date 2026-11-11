@@ -1,0 +1,6 @@
+schema: zen-flow
+created: 2026-11-10
+goal: Replicate the whole Ableton Push 3 surface and its display's interface system in zen, with a pure model of the device, as the basis for a Push 3 emulator
+affected_areas:
+  - zen
+x-review: look
