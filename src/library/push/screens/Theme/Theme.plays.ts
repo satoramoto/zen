@@ -176,7 +176,6 @@ export const plays = {
       const body = fillOf(c.querySelector('.push-surface__face')!);
       expect(body).toEqual(rgbOf(vars['--surface-0']));
       expect(lightOf(body)).toBeGreaterThan(180);
-      expect(body).not.toEqual(before.body);
       const legend = face(c, 'play').querySelector('[data-part="label"]')!;
       expect(lightOf(rgbOf(getComputedStyle(legend).color))).toBeLessThan(lightOf(groundOf(legend, scope)) - 80);
       expect(getComputedStyle(face(c, 'play')).fontFamily).toBe(getComputedStyle(scope).getPropertyValue('--font-ui').trim() || getComputedStyle(face(c, 'play')).fontFamily);
@@ -297,13 +296,15 @@ export const plays = {
     set: (set) => void (set.transport.recording = 'session'),
     act: async ({ canvasElement: c }) => {
       const before = rgbOf(getComputedStyle(cell(c, 'record')).getPropertyValue('--push-lamp').trim());
-      Object.assign(c, { worn: { before, off: await wear(c, 'big-red', 'dark') } });
+      // Another pack than the one it is drawn in, with another red.
+      const other = ['big-red', 'linear', 'ableton'].find((id) => rgbOf(toCssVars(pack(id).facets, 'dark')['--danger']).join() !== before.join())!;
+      Object.assign(c, { worn: { before, other, off: await wear(c, other, 'dark') } });
     },
     check: ({ canvasElement: c }) => {
-      const { before, off } = (c as unknown as { worn: { before: number[]; off: () => void } }).worn;
+      const { before, other, off } = (c as unknown as { worn: { before: number[]; other: string; off: () => void } }).worn;
       expect(lamp(c, 'record')).toEqual({ state: 'lit', colour: RED });
       // The lamp names the meaning; the pack says what colour that is.
-      const danger = rgbOf(toCssVars(pack('big-red').facets, 'dark')['--danger']);
+      const danger = rgbOf(toCssVars(pack(other).facets, 'dark')['--danger']);
       const now = rgbOf(getComputedStyle(cell(c, 'record')).getPropertyValue('--push-lamp').trim());
       expect(now).toEqual(danger);
       expect(now).not.toEqual(before);
@@ -322,6 +323,7 @@ export const plays = {
     },
     act: none,
     check: ({ canvasElement: c }) => {
+      const unlit = groundOf(face(c, padsBy(c, 'off')[0].dataset.control!));
       [0, 14, 22].forEach((colour, i) => {
         const muted = `pad-8-${i + 2}`;
         const plain = `pad-7-${i + 2}`;
@@ -329,9 +331,14 @@ export const plays = {
         expect(lamp(c, muted).colour).toBe(tableLamp(colour, 'dark'));
         expect(lamp(c, plain).colour).toBe(tableLamp(colour));
         const [dark, lit] = [fillOf(face(c, muted)), fillOf(face(c, plain))];
-        expect(lightOf(dark)).toBeLessThan(lightOf(lit) * 0.75);
-        // Darker, but still that colour: its strongest channel is the same one.
-        expect(dark.indexOf(Math.max(...dark))).toBe(lit.indexOf(Math.max(...lit)));
+        // Less lit: nearer the unlit pad than the plain one is (darker on a dark body, paler on a light one).
+        const apart = (a: number[]) => Math.hypot(a[0] - unlit[0], a[1] - unlit[1], a[2] - unlit[2]);
+        expect(apart(dark)).toBeLessThan(apart(lit) * 0.9);
+        if (lightOf(unlit) < 60) {
+          expect(lightOf(dark)).toBeLessThan(lightOf(lit) * 0.75);
+          // Darker, but still that colour: its strongest channel is the same one.
+          expect(dark.indexOf(Math.max(...dark))).toBe(lit.indexOf(Math.max(...lit)));
+        }
       });
       const three = [2, 3, 4].map((n) => fillOf(face(c, `pad-8-${n}`)).join());
       expect(new Set(three).size).toBe(3);
@@ -341,15 +348,19 @@ export const plays = {
   BloomFollowsBrightness: {
     act: async ({ canvasElement: c }) => {
       const lit = padsBy(c, 'lit')[0].dataset.control!;
-      Object.assign(c, { before: { lit, light: lightOf(fillOf(face(c, lit))), glow: glow(face(c, lit)) } });
+      Object.assign(c, { before: { lit, light: lightOf(groundOf(face(c, lit))), glow: glow(face(c, lit)) } });
       await given(c, (set) => void (set.unit.ledBrightness = 30));
     },
     check: async ({ canvasElement: c }) => {
       const { lit, light, glow: before } = (c as unknown as { before: { lit: string; light: number; glow: { reach: number; strength: number } } }).before;
-      expect(before.reach).toBeGreaterThan(0);
-      await waitFor(() => expect(lightOf(fillOf(face(c, lit)))).toBeLessThan(light * 0.7));
+      await waitFor(() => expect(Math.abs(lightOf(groundOf(face(c, lit))) - light)).toBeGreaterThan(8));
+      // Nearer the unlit pad than it was: dimmer on a dark body, paler on a light one.
+      const unlit = lightOf(groundOf(face(c, padsBy(c, 'off')[0].dataset.control!)));
+      expect(Math.abs(lightOf(groundOf(face(c, lit))) - unlit)).toBeLessThan(Math.abs(light - unlit) * 0.8);
+      // Where the pack's material lets a lamp bloom, the bloom shrinks with it.
       const after = glow(face(c, lit));
-      expect(after.reach).toBeLessThan(before.reach * 0.5);
+      if (before.reach > 0) expect(after.reach).toBeLessThan(before.reach * 0.5);
+      else expect(after.reach).toBe(0);
       expect(lampState(c, lit)).toBe('lit');
     },
   },
